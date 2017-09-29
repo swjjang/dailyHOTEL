@@ -90,7 +90,7 @@ public class StayListAdapter extends PlaceListAdapter
                 // 원래 높이 175dp + 상단 툴바 높이 52dp
                 viewDataBinding.footerTextView.getLayoutParams().height = ScreenUtils.dpToPx(mContext, 227);
 
-                return new FooterViewHolder(viewDataBinding);
+                return new BaseDataBindingViewHolder(viewDataBinding);
             }
 
             case PlaceViewItem.TYPE_LOADING_VIEW:
@@ -162,10 +162,10 @@ public class StayListAdapter extends PlaceListAdapter
 
         if (stay.isSoldOut == true)
         {
-            holder.stayCardView.setPriceText(0, 0, 0, null, 0);
+            holder.stayCardView.setPriceText(0, 0, 0, null, false);
         } else
         {
-            holder.stayCardView.setPriceText(0, stay.discountPrice, stay.price, null, mNights);
+            holder.stayCardView.setPriceText(0, stay.discountPrice, stay.price, null, mNights > 1);
         }
 
         holder.stayCardView.setBenefitText(stay.dBenefitText);

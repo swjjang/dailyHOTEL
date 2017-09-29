@@ -57,18 +57,12 @@ public class GourmetSearchResultListAdapter extends GourmetListAdapter
             holder.gourmetCardView.setPriceText(0, 0, 0, null, 0);
         } else
         {
-            if (gourmet.price > 0 && gourmet.price > gourmet.discountPrice)
-            {
-                holder.gourmetCardView.setPriceText(gourmet.price > 0 ? 100 * (gourmet.price - gourmet.discountPrice) / gourmet.price : 0, gourmet.discountPrice, gourmet.price, null, gourmet.persons);
-            } else
-            {
-                holder.gourmetCardView.setPriceText(0, gourmet.discountPrice, gourmet.price, null, gourmet.persons);
-            }
+            holder.gourmetCardView.setPriceText(0, gourmet.discountPrice, gourmet.price, null, gourmet.persons);
         }
 
         holder.gourmetCardView.setBenefitText(gourmet.dBenefitText);
 
-        if (position < getItemCount() - 1 && getItem(position + 1).mType == PlaceViewItem.TYPE_SECTION)
+        if (position == 0)
         {
             holder.gourmetCardView.setDividerVisible(false);
         } else

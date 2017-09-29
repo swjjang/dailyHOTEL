@@ -157,10 +157,10 @@ public class CollectionStayAdapter extends PlaceListAdapter
 
         if (recommendationStay.availableRooms > 0)
         {
-            holder.stayCardView.setPriceText(0, recommendationStay.discount, recommendationStay.price, null, mNights);
+            holder.stayCardView.setPriceText(0, recommendationStay.discount, recommendationStay.price, null, mNights > 1);
         } else
         {
-            holder.stayCardView.setPriceText(0, 0, 0, null, 0);
+            holder.stayCardView.setPriceText(0, 0, 0, null, false);
         }
 
         holder.stayCardView.setBenefitText(recommendationStay.benefit);

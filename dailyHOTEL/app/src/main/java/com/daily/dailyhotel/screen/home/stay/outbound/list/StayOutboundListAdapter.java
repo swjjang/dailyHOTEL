@@ -15,7 +15,7 @@ import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.view.DailyStayOutboundCardView;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.ListRowFooterDataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutFooterDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowLoadingDataBinding;
 
 import java.util.ArrayList;
@@ -144,20 +144,16 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
             case ObjectItem.TYPE_FOOTER_VIEW:
             {
-                ListRowFooterDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_footer_data, parent, false);
+                LayoutFooterDataBinding viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_footer_data, parent, false);
 
-                BlankViewHolder blankViewHolder = new BlankViewHolder(dataBinding);
-
-                return blankViewHolder;
+                return new BaseDataBindingViewHolder(viewDataBinding);
             }
 
             case ObjectItem.TYPE_LOADING_VIEW:
             {
                 ListRowLoadingDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_loading_data, parent, false);
 
-                BlankViewHolder blankViewHolder = new BlankViewHolder(dataBinding);
-
-                return blankViewHolder;
+                return new BaseDataBindingViewHolder(dataBinding);
             }
         }
 
@@ -217,16 +213,16 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         holder.stayOutboundCardView.setAddressText(stayOutbound.locationDescription);
 
-
         if (stayOutbound.promo == true)
         {
             holder.stayOutboundCardView.setPriceText(0, stayOutbound.nightlyRate, stayOutbound.nightlyBaseRate, null, mNightsEnabled);
         } else
         {
-            holder.stayOutboundCardView.setPriceText(0, stayOutbound.nightlyRate, stayOutbound.nightlyBaseRate, null, mNightsEnabled);
+            holder.stayOutboundCardView.setPriceText(0, stayOutbound.nightlyRate, stayOutbound.nightlyRate, null, mNightsEnabled);
         }
 
         holder.stayOutboundCardView.setBenefitText(null);
+        holder.stayOutboundCardView.setDividerVisible(true);
 
 
         //        holder.dataBinding.addressTextView.setText(stayOutbound.locationDescription);
@@ -434,9 +430,9 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
     }
 
-    protected class BlankViewHolder extends RecyclerView.ViewHolder
+    private class BaseDataBindingViewHolder extends RecyclerView.ViewHolder
     {
-        public BlankViewHolder(ViewDataBinding dataBinding)
+        public BaseDataBindingViewHolder(ViewDataBinding dataBinding)
         {
             super(dataBinding.getRoot());
         }

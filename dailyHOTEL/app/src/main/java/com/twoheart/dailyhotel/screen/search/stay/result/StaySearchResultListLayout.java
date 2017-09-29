@@ -33,7 +33,7 @@ public class StaySearchResultListLayout extends StayListLayout
     {
         super.initLayout(view);
 
-        mResultTextView = (TextView) view.findViewById(R.id.resultCountView);
+        mResultTextView = (TextView) view.findViewById(R.id.resultCountTextView);
 
         //        setBannerVisibility(false);
     }

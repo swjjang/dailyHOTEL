@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.place.adapter;
 
 import android.content.Context;
+import android.databinding.ViewDataBinding;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
@@ -256,9 +257,9 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
         }
     }
 
-    protected class FooterViewHolder extends RecyclerView.ViewHolder
+    protected class BaseDataBindingViewHolder extends RecyclerView.ViewHolder
     {
-        public FooterViewHolder(LayoutFooterDataBinding dataBinding)
+        public BaseDataBindingViewHolder(ViewDataBinding dataBinding)
         {
             super(dataBinding.getRoot());
         }

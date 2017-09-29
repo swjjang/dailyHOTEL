@@ -24,7 +24,7 @@
             android:layout_width="0dp"
             android:layout_height="44dp"
             android:background="@color/white"
-            app:layout_constraintBottom_toTopOf="@+id/resultCountView"
+            app:layout_constraintBottom_toTopOf="@+id/resultCountTextView"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbarView">
@@ -82,7 +82,7 @@
         </android.support.constraint.ConstraintLayout>
 
         <com.daily.base.widget.DailyTextView
-            android:id="@+id/resultCountView"
+            android:id="@+id/resultCountTextView"
             android:layout_width="0dp"
             android:layout_height="34dp"
             android:background="@color/default_background"

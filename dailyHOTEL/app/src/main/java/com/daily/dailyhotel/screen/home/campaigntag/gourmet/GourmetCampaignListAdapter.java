@@ -94,7 +94,7 @@ public class GourmetCampaignListAdapter extends PlaceListAdapter
             {
                 LayoutFooterDataBinding viewDataBinding = DataBindingUtil.inflate(mInflater, R.layout.layout_footer_data, parent, false);
 
-                return new FooterViewHolder(viewDataBinding);
+                return new BaseDataBindingViewHolder(viewDataBinding);
             }
         }
 

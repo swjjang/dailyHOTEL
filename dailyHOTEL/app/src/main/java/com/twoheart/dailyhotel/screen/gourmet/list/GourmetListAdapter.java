@@ -72,7 +72,7 @@ public class GourmetListAdapter extends PlaceListAdapter
                 // 원래 높이 175dp + 상단 툴바 높이 52dp
                 viewDataBinding.footerTextView.setHeight(ScreenUtils.dpToPx(mContext, 227));
 
-                return new FooterViewHolder(viewDataBinding);
+                return new BaseDataBindingViewHolder(viewDataBinding);
             }
 
             case PlaceViewItem.TYPE_LOADING_VIEW:

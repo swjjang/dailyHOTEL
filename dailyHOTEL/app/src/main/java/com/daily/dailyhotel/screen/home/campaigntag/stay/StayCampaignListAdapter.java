@@ -105,7 +105,7 @@ public class StayCampaignListAdapter extends PlaceListAdapter
             {
                 LayoutFooterDataBinding viewDataBinding = DataBindingUtil.inflate(mInflater, R.layout.layout_footer_data, parent, false);
 
-                return new FooterViewHolder(viewDataBinding);
+                return new BaseDataBindingViewHolder(viewDataBinding);
             }
         }
 
@@ -161,10 +161,10 @@ public class StayCampaignListAdapter extends PlaceListAdapter
 
         if (stay.availableRooms > 0)
         {
-            holder.stayCardView.setPriceText(0, stay.discountPrice, stay.price, null, mNights);
+            holder.stayCardView.setPriceText(0, stay.discountPrice, stay.price, null, mNights > 1);
         } else
         {
-            holder.stayCardView.setPriceText(0, 0, 0, null, 0);
+            holder.stayCardView.setPriceText(0, 0, 0, null, false);
         }
 
         holder.stayCardView.setBenefitText(stay.dBenefitText);

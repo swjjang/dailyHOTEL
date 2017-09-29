@@ -274,7 +274,7 @@ public class DailyStayCardView extends ConstraintLayout
         mViewDataBinding.couponTextView.setVisibility(visibility);
     }
 
-    public void setPriceText(int discountPercent, int discountPrice, int price, String couponPrice, int nights)
+    public void setPriceText(int discountPercent, int discountPrice, int price, String couponPrice, boolean nightsEnabled)
     {
         if (mViewDataBinding == null)
         {
@@ -297,7 +297,7 @@ public class DailyStayCardView extends ConstraintLayout
             DecimalFormat decimalFormat = new DecimalFormat("###,##0");
             mViewDataBinding.discountPriceTextView.setText(decimalFormat.format(discountPrice));
             mViewDataBinding.discountPriceWonTextView.setVisibility(VISIBLE);
-            mViewDataBinding.discountPriceWonTextView.setText(nights > 1 ?//
+            mViewDataBinding.discountPriceWonTextView.setText(nightsEnabled ?//
                 getContext().getString(R.string.currency) + "/" + getContext().getString(R.string.label_stay_1_nights) : getContext().getString(R.string.currency));
         } else
         {

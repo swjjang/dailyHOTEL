@@ -14,6 +14,24 @@
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="wrap_content">-->
 
+        <View
+            android:id="@+id/cardTopDividerView"
+            android:layout_width="0dp"
+            android:layout_height="15dp"
+            android:background="@color/default_background"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <View
+            android:id="@+id/cardTopLineView"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/default_line_ce1e1e1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cardTopDividerView"/>
+
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/simpleDraweeView"
             android:layout_width="0dp"
@@ -21,15 +39,16 @@
             app:layout_constraintDimensionRatio="H,21:9"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cardTopLineView"
             fresco:actualImageScaleType="centerCrop"/>
 
         <ImageView
             android:id="@+id/stickerImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:layout_marginTop="13dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="14dp"
+            android:src="@drawable/r_ic_small_02_shadow"
             android:visibility="gone"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="@id/simpleDraweeView"/>
@@ -38,23 +57,23 @@
             android:id="@+id/deleteImageView"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
-            android:visibility="gone"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/simpleDraweeView"
-            app:srcCompat="@drawable/ic_delete_white_shadow"/>
-
-        <ImageView
-            android:id="@+id/wishImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_marginRight="14dp"
             android:layout_marginTop="15dp"
             android:visibility="gone"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/simpleDraweeView"
-            app:srcCompat="@drawable/vector_navibar_ic_heart_off_black"/>
+            app:srcCompat="@drawable/ic_delete_white_shadow"/>
+
+        <com.daily.base.widget.DailyImageView
+            android:id="@+id/wishImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="3dp"
+            android:background="@drawable/img_list_heart_gradient"
+            android:visibility="visible"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/simpleDraweeView"
+            app:srcCompat="@drawable/vector_list_ic_heart_off"/>
 
         <View
             android:id="@+id/gradientTopView"
@@ -69,7 +88,6 @@
             android:id="@+id/gradientBottomView"
             android:layout_width="0dp"
             android:layout_height="63dp"
-            android:background="@drawable/shape_gradient_card_bottom"
             app:layout_constraintBottom_toBottomOf="@id/simpleDraweeView"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
@@ -77,16 +95,14 @@
         <com.daily.base.widget.DailyTextView
             android:id="@+id/gradeTextView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/nameTextView"
-            android:layout_marginBottom="15dp"
+            android:layout_height="18dp"
+            android:layout_marginBottom="14dp"
             android:layout_marginLeft="15dp"
             android:background="@drawable/shape_fillrect_cccffffff_b4c000000_w1px"
-            android:gravity="center"
-            android:paddingBottom="2dp"
+            android:freezesText="true"
+            android:gravity="center_vertical"
             android:paddingLeft="6dp"
             android:paddingRight="6dp"
-            android:paddingTop="2dp"
             android:textColor="@color/white"
             android:textSize="11dp"
             app:layout_constraintBottom_toBottomOf="@id/simpleDraweeView"
@@ -95,14 +111,13 @@
         <com.daily.base.widget.DailyTextView
             android:id="@+id/vrTextView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="18dp"
             android:layout_marginLeft="3dp"
             android:background="@drawable/shape_fillrect_cccffffff_b4c000000_w1px"
-            android:gravity="center"
-            android:paddingBottom="2dp"
+            android:freezesText="true"
+            android:gravity="center_vertical"
             android:paddingLeft="6dp"
             android:paddingRight="6dp"
-            android:paddingTop="2dp"
             android:text="@string/label_vr"
             android:textColor="@color/white"
             android:textSize="11dp"
@@ -151,32 +166,22 @@
                 android:textSize="12dp"/>
         </LinearLayout>
 
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/newStayTextView"
+        <com.daily.base.widget.DailyImageView
+            android:id="@+id/newStayImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/shape_rect_cffffff"
-            android:gravity="center"
-            android:paddingBottom="1px"
-            android:paddingLeft="5.5dp"
-            android:paddingRight="5.5dp"
-            android:paddingTop="2px"
-            android:textColor="@color/default_text_c323232"
-            android:textSize="11dp"
+            android:layout_marginBottom="14dp"
+            android:layout_marginRight="15dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/simpleDraweeView"
-            app:layout_constraintRight_toRightOf="parent"/>
+            app:layout_constraintRight_toRightOf="parent"
+            app:srcCompat="@drawable/vector_img_list_new"/>
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/stayInformationLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:paddingTop="12dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/simpleDraweeView">
@@ -185,6 +190,9 @@
                 android:id="@+id/stayNameTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="12dp"
                 android:ellipsize="end"
                 android:freezesText="true"
                 android:singleLine="true"
@@ -199,6 +207,8 @@
                 android:id="@+id/stayEnglishNameTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
                 android:ellipsize="end"
                 android:freezesText="true"
                 android:singleLine="true"
@@ -209,55 +219,74 @@
                 app:layout_constraintTop_toBottomOf="@id/stayNameTextView"
                 dailyFont:style="Medium"/>
 
+            <com.daily.base.widget.DailyImageView
+                android:id="@+id/distanceImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:layout_marginTop="5dp"
+                android:visibility="visible"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/stayEnglishNameTextView"
+                app:srcCompat="@drawable/vector_list_ic_region"/>
+
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/distanceTextView"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
+                android:layout_height="19dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="4dp"
+                android:freezesText="true"
+                android:gravity="bottom"
                 android:textColor="@color/default_text_c929292"
-                android:textSize="12dp"
-                android:visibility="gone"
-                app:drawableCompatLeft="@drawable/vector_popup_ic_access_02_location"
-                app:layout_constraintBottom_toBottomOf="@+id/addressTextView"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/addressTextView"
-                dailyFont:style="DemiLight"/>
+                android:textSize="13dp"
+                android:visibility="visible"
+                app:layout_constraintLeft_toRightOf="@id/distanceImageView"
+                app:layout_constraintTop_toBottomOf="@id/stayEnglishNameTextView"/>
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/addressTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
+                android:layout_width="0dp"
+                android:layout_height="19dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="15dp"
                 android:layout_marginTop="4dp"
                 android:ellipsize="end"
+                android:freezesText="true"
+                android:gravity="bottom"
                 android:maxLines="1"
                 android:singleLine="true"
                 android:textColor="@color/default_text_c929292"
                 android:textSize="13dp"
                 app:layout_constraintLeft_toRightOf="@id/distanceTextView"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/stayEnglishNameTextView"
-                app:layout_goneMarginLeft="0dp"/>
+                app:layout_goneMarginLeft="15dp"/>
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/discountPercentTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="6dp"
+                android:freezesText="true"
                 android:textColor="@color/dh_theme_color"
                 android:textSize="17dp"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/discountPriceTextView"
+                app:layout_constraintTop_toBottomOf="@id/addressTextView"
                 dailyFont:style="Medium"/>
 
-            <ImageView
-                android:id="@+id/percentImageView"
+            <com.daily.base.widget.DailyImageView
+                android:id="@+id/discountPercentImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="1dp"
-                app:layout_constraintBottom_toBottomOf="@+id/discountPriceTextView"
+                android:layout_marginLeft="1px"
+                android:layout_marginTop="7dp"
+                android:visibility="visible"
                 app:layout_constraintLeft_toRightOf="@id/discountPercentTextView"
-                app:srcCompat="@drawable/vector_percentage"/>
+                app:layout_constraintTop_toTopOf="@id/discountPercentTextView"
+                app:srcCompat="@drawable/vector_img_list_percentage"/>
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/discountPriceTextView"
@@ -265,11 +294,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="6dp"
                 android:layout_marginTop="6dp"
+                android:freezesText="true"
                 android:textColor="@color/default_text_c323232"
                 android:textSize="17dp"
-                app:layout_constraintLeft_toRightOf="@id/percentImageView"
+                app:layout_constraintLeft_toRightOf="@id/discountPercentImageView"
                 app:layout_constraintTop_toBottomOf="@id/addressTextView"
-                app:layout_goneMarginLeft="0dp"
+                app:layout_goneMarginLeft="15dp"
                 dailyFont:style="Medium"/>
 
             <com.daily.base.widget.DailyTextView
@@ -277,6 +307,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="2dp"
+                android:layout_marginLeft="1px"
+                android:freezesText="true"
                 android:text="@string/currency"
                 android:textColor="@color/default_text_c323232"
                 android:textSize="12dp"
@@ -284,48 +316,39 @@
                 app:layout_constraintLeft_toRightOf="@id/discountPriceTextView"/>
 
             <com.daily.base.widget.DailyTextView
-                android:id="@+id/averageNightsTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:layout_marginLeft="10dp"
-                android:text="@string/label_hotel_list_extendedstay_average"
-                android:textColor="@color/default_text_c323232"
-                android:textSize="12dp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@id/discountPriceWonTextView"
-                app:layout_constraintLeft_toRightOf="@id/discountPriceWonTextView"/>
-
-            <com.daily.base.widget.DailyTextView
                 android:id="@+id/priceTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
                 android:layout_marginLeft="4dp"
+                android:freezesText="true"
                 android:textColor="@color/default_text_cc5c5c5"
                 android:textSize="12dp"
                 android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@id/discountPriceTextView"
-                app:layout_constraintLeft_toRightOf="@id/averageNightsTextView"/>
+                app:layout_constraintLeft_toRightOf="@id/discountPriceWonTextView"
+                app:layout_constraintTop_toTopOf="@id/discountPriceWonTextView"/>
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/couponTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="3dp"
+                android:background="@drawable/home_coupon"
+                android:freezesText="true"
                 android:textColor="@color/dh_theme_color"
-                android:textSize="12dp"
-                android:visibility="gone"
+                android:textSize="11dp"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="@id/discountPriceTextView"
                 app:layout_constraintLeft_toRightOf="@id/priceTextView"
                 app:layout_constraintTop_toTopOf="@id/discountPriceTextView"
-                dailyFont:style="DemiLight"/>
+                app:layout_goneMarginLeft="4dp"/>
 
             <View
                 android:id="@+id/benefitTopLineView"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="14dp"
                 android:background="@color/default_line_cf0f0f0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -335,6 +358,8 @@
                 android:id="@+id/benefitTextView"
                 android:layout_width="0dp"
                 android:layout_height="36dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
                 android:gravity="center_vertical"
                 android:textColor="@color/default_text_c323232"
                 android:textSize="12dp"
@@ -344,9 +369,10 @@
         </android.support.constraint.ConstraintLayout>
 
         <View
+            android:id="@+id/cardBottomLineView"
             android:layout_width="0dp"
-            android:layout_height="17dp"
-            android:background="@drawable/layerlist_divider_line_ce1e1e1"
+            android:layout_height="1dp"
+            android:background="@color/default_line_ce1e1e1"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/stayInformationLayout"/>
