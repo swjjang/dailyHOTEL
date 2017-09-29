@@ -148,23 +148,17 @@ public class GourmetListAdapter extends PlaceListAdapter
             holder.gourmetCardView.setPriceText(0, 0, 0, null, 0);
         } else
         {
-            if (gourmet.price > 0 && gourmet.price > gourmet.discountPrice)
-            {
-                holder.gourmetCardView.setPriceText(0, gourmet.discountPrice, gourmet.price, null, gourmet.persons);
-            } else
-            {
-                holder.gourmetCardView.setPriceText(0, gourmet.discountPrice, gourmet.price, null, gourmet.persons);
-            }
+            holder.gourmetCardView.setPriceText(0, gourmet.discountPrice, gourmet.price, null, gourmet.persons);
         }
 
         holder.gourmetCardView.setBenefitText(gourmet.dBenefitText);
 
-        if (position < getItemCount() - 1 && getItem(position + 1).mType == PlaceViewItem.TYPE_SECTION)
-        {
-            holder.gourmetCardView.setDividerVisible(false);
-        } else
+        if (position == 0 || getItem(position - 1).mType != PlaceViewItem.TYPE_SECTION)
         {
             holder.gourmetCardView.setDividerVisible(true);
+        } else
+        {
+            holder.gourmetCardView.setDividerVisible(false);
         }
 
 

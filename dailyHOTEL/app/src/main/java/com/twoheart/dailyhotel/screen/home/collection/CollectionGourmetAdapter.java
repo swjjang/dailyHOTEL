@@ -76,6 +76,7 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
             case PlaceViewItem.TYPE_EMPTY_VIEW:
             {
                 View view = mInflater.inflate(R.layout.view_empty_gourmet_collection, parent, false);
+
                 ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT//
                     , ScreenUtils.getScreenHeight(mContext) - ScreenUtils.dpToPx(mContext, 97) - ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext)) + ScreenUtils.dpToPx(mContext, 81) - ScreenUtils.dpToPx(mContext, 97));
                 view.setLayoutParams(layoutParams);
@@ -131,20 +132,9 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
         holder.gourmetCardView.setGradeText(DailyTextUtils.isTextEmpty(recommendationGourmet.categorySub) == false ? recommendationGourmet.categorySub : recommendationGourmet.category);
         holder.gourmetCardView.setVRVisible(false);
         holder.gourmetCardView.setReviewText(recommendationGourmet.rating, 0);
-
         holder.gourmetCardView.setNewVisible(false);
-
         holder.gourmetCardView.setGourmetNameText(recommendationGourmet.name);
-
-        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
-        {
-            holder.gourmetCardView.setDistanceVisible(true);
-            holder.gourmetCardView.setDistanceText(recommendationGourmet.distance);
-        } else
-        {
-            holder.gourmetCardView.setDistanceVisible(false);
-        }
-
+        holder.gourmetCardView.setDistanceVisible(false);
         holder.gourmetCardView.setAddressText(recommendationGourmet.addrSummary);
 
         if (recommendationGourmet.availableTicketNumbers == 0 //

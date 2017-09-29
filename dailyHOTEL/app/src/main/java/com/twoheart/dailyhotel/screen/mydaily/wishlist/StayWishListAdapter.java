@@ -87,9 +87,6 @@ public class StayWishListAdapter extends PlaceWishListAdapter
             case PlaceViewItem.TYPE_ENTRY:
                 onBindViewHolder((StayWishViewHolder) viewHolder, item, position);
                 break;
-
-            case PlaceViewItem.TYPE_FOOTER_VIEW:
-                break;
         }
     }
 
@@ -102,7 +99,9 @@ public class StayWishListAdapter extends PlaceWishListAdapter
         holder.stayCardView.setDeleteVisible(false);
         holder.stayCardView.setWishVisible(true);
         holder.stayCardView.setWish(true);
+
         holder.stayCardView.setImage(stay.imageUrl);
+
         holder.stayCardView.setGradeText(stay.getGrade().getName(mContext));
         holder.stayCardView.setVRVisible(stay.truevr && mTrueVREnabled);
         holder.stayCardView.setReviewText(stay.satisfaction, 0);

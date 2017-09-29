@@ -86,6 +86,7 @@ public class GourmetCampaignListAdapter extends PlaceListAdapter
             case PlaceViewItem.TYPE_EMPTY_VIEW:
             {
                 ViewEmptyCampaignTagListBinding dataBinding = DataBindingUtil.inflate(mInflater, R.layout.view_empty_campaign_tag_list, parent, false);
+
                 return new EmptyViewHolder(dataBinding);
             }
 
@@ -145,16 +146,7 @@ public class GourmetCampaignListAdapter extends PlaceListAdapter
         holder.gourmetCardView.setNewVisible(false);
 
         holder.gourmetCardView.setGourmetNameText(gourmet.name);
-
-        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
-        {
-            holder.gourmetCardView.setDistanceVisible(true);
-            holder.gourmetCardView.setDistanceText(gourmet.distance);
-        } else
-        {
-            holder.gourmetCardView.setDistanceVisible(false);
-        }
-
+        holder.gourmetCardView.setDistanceVisible(false);
         holder.gourmetCardView.setAddressText(gourmet.addressSummary);
 
         if (gourmet.availableTicketNumbers == 0 || gourmet.availableTicketNumbers < gourmet.minimumOrderQuantity || gourmet.expired == true)
@@ -162,13 +154,7 @@ public class GourmetCampaignListAdapter extends PlaceListAdapter
             holder.gourmetCardView.setPriceText(0, 0, 0, null, 0);
         } else
         {
-            if (gourmet.price > 0 && gourmet.price > gourmet.discountPrice)
-            {
-                holder.gourmetCardView.setPriceText(0, gourmet.discountPrice, gourmet.price, null, gourmet.persons);
-            } else
-            {
-                holder.gourmetCardView.setPriceText(0, gourmet.discountPrice, gourmet.price, null, gourmet.persons);
-            }
+            holder.gourmetCardView.setPriceText(0, gourmet.discountPrice, gourmet.price, null, gourmet.persons);
         }
 
         holder.gourmetCardView.setBenefitText(gourmet.dBenefitText);

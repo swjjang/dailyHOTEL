@@ -297,7 +297,8 @@ public class DailyStayCardView extends ConstraintLayout
             DecimalFormat decimalFormat = new DecimalFormat("###,##0");
             mViewDataBinding.discountPriceTextView.setText(decimalFormat.format(discountPrice));
             mViewDataBinding.discountPriceWonTextView.setVisibility(VISIBLE);
-            mViewDataBinding.discountPriceWonTextView.setText(nights > 1 ? getContext().getString(R.string.currency) + getContext().getString(R.string.label_stay_1_nights) : getContext().getString(R.string.currency));
+            mViewDataBinding.discountPriceWonTextView.setText(nights > 1 ?//
+                getContext().getString(R.string.currency) + "/" + getContext().getString(R.string.label_stay_1_nights) : getContext().getString(R.string.currency));
         } else
         {
             mViewDataBinding.discountPriceTextView.setText(R.string.label_soldout);

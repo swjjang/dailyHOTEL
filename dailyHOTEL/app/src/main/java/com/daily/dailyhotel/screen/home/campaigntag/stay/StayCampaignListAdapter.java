@@ -156,16 +156,7 @@ public class StayCampaignListAdapter extends PlaceListAdapter
         holder.stayCardView.setNewVisible(false);
 
         holder.stayCardView.setStayNameText(stay.name);
-
-        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
-        {
-            holder.stayCardView.setDistanceVisible(true);
-            holder.stayCardView.setDistanceText(stay.distance);
-        } else
-        {
-            holder.stayCardView.setDistanceVisible(false);
-        }
-
+        holder.stayCardView.setDistanceVisible(false);
         holder.stayCardView.setAddressText(stay.addressSummary);
 
         if (stay.availableRooms > 0)

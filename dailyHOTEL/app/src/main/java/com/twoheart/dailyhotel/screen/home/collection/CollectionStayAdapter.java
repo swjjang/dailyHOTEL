@@ -150,20 +150,9 @@ public class CollectionStayAdapter extends PlaceListAdapter
         holder.stayCardView.setGradeText(Stay.Grade.valueOf(recommendationStay.grade).getName(mContext));
         holder.stayCardView.setVRVisible(recommendationStay.truevr && mTrueVREnabled);
         holder.stayCardView.setReviewText(recommendationStay.rating, 0);
-
         holder.stayCardView.setNewVisible(false);
-
         holder.stayCardView.setStayNameText(recommendationStay.name);
-
-        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
-        {
-            holder.stayCardView.setDistanceVisible(true);
-            holder.stayCardView.setDistanceText(recommendationStay.distance);
-        } else
-        {
-            holder.stayCardView.setDistanceVisible(false);
-        }
-
+        holder.stayCardView.setDistanceVisible(false);
         holder.stayCardView.setAddressText(recommendationStay.addrSummary);
 
         if (recommendationStay.availableRooms > 0)
