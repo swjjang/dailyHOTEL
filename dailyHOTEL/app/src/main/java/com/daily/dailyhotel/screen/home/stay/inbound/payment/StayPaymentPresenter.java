@@ -37,6 +37,9 @@ import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.screen.common.PaymentWebActivity;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.thankyou.StayThankYouActivity;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
+import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.Setting;
@@ -49,9 +52,6 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
-import com.daily.dailyhotel.storage.preference.DailyPreference;
-import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
-import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
@@ -729,13 +729,13 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
         mAnalytics.onEventCallClick(getActivity());
 
-//        startActivityForResult(StayThankYouActivity.newInstance(getActivity(), mOverseas, mStayName, mImageUrl//
-//            , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-//            , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-//            , mRoomName, "12345678", mStayPayment.waitingForBooking //
-//            , mLatitude, mLongitude //
-//            , mAnalytics.getThankYouAnalyticsParam())//
-//            , StayPaymentActivity.REQUEST_CODE_THANK_YOU);
+        //        startActivityForResult(StayThankYouActivity.newInstance(getActivity(), mOverseas, mStayName, mImageUrl//
+        //            , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+        //            , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+        //            , mRoomName, "12345678", mStayPayment.waitingForBooking //
+        //            , mLatitude, mLongitude //
+        //            , mAnalytics.getThankYouAnalyticsParam())//
+        //            , StayPaymentActivity.REQUEST_CODE_THANK_YOU);
     }
 
     @Override

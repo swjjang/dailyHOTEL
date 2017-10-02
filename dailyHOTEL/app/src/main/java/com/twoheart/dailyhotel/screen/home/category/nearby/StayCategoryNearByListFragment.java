@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.home.category.nearby;
 
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.PlaceCuration;
@@ -10,7 +11,6 @@ import com.twoheart.dailyhotel.model.StayCategoryNearByParams;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListLayout;
-import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;

@@ -34,6 +34,7 @@ import com.daily.dailyhotel.screen.booking.detail.stay.outbound.refund.StayOutbo
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
+import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
@@ -42,7 +43,6 @@ import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -642,8 +642,8 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
             String checkOutTime = getString(R.string.label_stay_outbound_payment_hour, mStayOutboundBookingDetail.checkOutTime.split(":")[0]);
             String checkOutDate = DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkOutDate, "yyyy-MM-dd", "yyyy-MM-dd(EEE)");
 
-//            int nights = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkOutDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
-//                , DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
+            //            int nights = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkOutDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
+            //                , DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
 
             String message = getString(R.string.message_booking_stay_share_sms, //
                 userName, mStayOutboundBookingDetail.name, mStayOutboundBookingDetail.guestLastName + " " + mStayOutboundBookingDetail.guestFirstName,//

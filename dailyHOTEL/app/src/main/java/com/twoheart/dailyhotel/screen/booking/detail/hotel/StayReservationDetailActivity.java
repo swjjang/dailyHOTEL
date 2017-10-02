@@ -1119,7 +1119,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                         public void accept(@NonNull Throwable throwable) throws Exception
                         {
                             unLockUI();
-                            
+
                             ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetData(null);
 
                             AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_DETAIL//

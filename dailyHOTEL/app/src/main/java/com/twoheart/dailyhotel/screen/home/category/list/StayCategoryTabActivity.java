@@ -21,6 +21,8 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.daily.dailyhotel.view.DailyStayCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -55,8 +57,6 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
-import com.daily.dailyhotel.storage.preference.DailyPreference;
-import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -816,19 +816,19 @@ public class StayCategoryTabActivity extends PlaceMainActivity
             Intent intent = StayCategoryCurationActivity.newInstance(StayCategoryTabActivity.this, mViewType, mStayCategoryCuration);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
 
-//            String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
-//
-//            switch (mViewType)
-//            {
-//                case LIST:
-//                    viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
-//                    break;
-//
-//                case MAP:
-//                    viewType = AnalyticsManager.Label.VIEWTYPE_MAP;
-//                    break;
-//            }
-//
+            //            String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
+            //
+            //            switch (mViewType)
+            //            {
+            //                case LIST:
+            //                    viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
+            //                    break;
+            //
+            //                case MAP:
+            //                    viewType = AnalyticsManager.Label.VIEWTYPE_MAP;
+            //                    break;
+            //            }
+            //
             //            AnalyticsManager.getInstance(StaySubCategoryActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
             //                , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, viewType, null);
         }

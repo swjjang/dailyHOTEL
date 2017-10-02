@@ -41,6 +41,7 @@ import com.daily.dailyhotel.repository.remote.model.UserData;
 import com.daily.dailyhotel.repository.remote.model.UserInformationData;
 import com.daily.dailyhotel.repository.remote.model.UserTrackingData;
 import com.daily.dailyhotel.repository.remote.model.WaitingDepositData;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
@@ -68,7 +69,6 @@ import com.twoheart.dailyhotel.network.model.TrueVRParams;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
-import com.daily.dailyhotel.storage.preference.DailyPreference;
 
 import org.json.JSONObject;
 
@@ -1831,9 +1831,9 @@ public class DailyMobileAPI
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/coupons/history"//
             : "NTgkMjgkMzMkNTYkNzEkNTYkNDQkODYkMzAkNTAkMjEkMTkkOSQzMCQyOSQyOCQ=$ODlCNTQ1OOTA3NjczNkJVEQCjRBQSjNFOEXOXDMyPMzM5ODE4RTOBEMEZFGRjA1RTFZg5MjXk2QTVGNUJCDMzMzMzI4ODJJCNzY0Mg==$";
 
-//        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestCouponHistoryList(Crypto.getUrlDecoderEx(URL));
-//        executorCallbackCall.setTag(tag);
-//        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+        //        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestCouponHistoryList(Crypto.getUrlDecoderEx(URL));
+        //        executorCallbackCall.setTag(tag);
+        //        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
 
         return mDailyMobileService.getCouponHistoryList(Crypto.getUrlDecoderEx(URL)).subscribeOn(Schedulers.io());
     }

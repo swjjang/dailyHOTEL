@@ -47,10 +47,10 @@ public class Coupon implements Parcelable
     public Coupon(String userCouponCode, int amount, String title, String validFrom, //
                   String validTo, int amountMinimum, boolean isDownloaded, String availableItem, //
                   String serverDate, String couponCode, String stayFrom, String stayTo, //
-//                  String downloadedAt, boolean availableInDomestic, boolean availableInOverseas, //
-//                  boolean availableInStay, boolean availableInGourmet)
-                      String downloadedAt, String disabledAt, boolean availableInDomestic, boolean availableInOverseas, //
-                      boolean availableInStay, boolean availableInGourmet, boolean isRedeemed, boolean isExpired)
+        //                  String downloadedAt, boolean availableInDomestic, boolean availableInOverseas, //
+        //                  boolean availableInStay, boolean availableInGourmet)
+                  String downloadedAt, String disabledAt, boolean availableInDomestic, boolean availableInOverseas, //
+                  boolean availableInStay, boolean availableInGourmet, boolean isRedeemed, boolean isExpired)
     {
         this.userCouponCode = userCouponCode;
         this.amount = amount;

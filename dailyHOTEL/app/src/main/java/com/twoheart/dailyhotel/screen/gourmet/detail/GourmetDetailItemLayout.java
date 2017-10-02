@@ -24,6 +24,8 @@ import android.widget.TextView;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailMoreMenuDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowDetailProductDataBinding;
@@ -35,8 +37,6 @@ import com.twoheart.dailyhotel.network.model.GourmetProduct;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
 import com.twoheart.dailyhotel.network.model.ProductImageInformation;
 import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
-import com.daily.dailyhotel.storage.preference.DailyPreference;
-import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 
 import java.text.DecimalFormat;
 import java.util.List;

@@ -216,10 +216,11 @@ public class ImageListView extends BaseDialogView<ImageListView.OnEventListener,
 
         if (mImageDetailListAdapter == null)
         {
-            mImageDetailListAdapter = new ImageDetailListAdapter(getContext(), 0, imageList);
+            mImageDetailListAdapter = new ImageDetailListAdapter(getContext(), 0);
             getViewDataBinding().listView.setAdapter(mImageDetailListAdapter);
         }
 
+        mImageDetailListAdapter.clear();
         mImageDetailListAdapter.addAll(imageList);
         getViewDataBinding().listView.setSelection(position);
         mImageDetailListAdapter.notifyDataSetChanged();
@@ -260,9 +261,9 @@ public class ImageListView extends BaseDialogView<ImageListView.OnEventListener,
 
     private class ImageDetailListAdapter extends ArrayAdapter<BaseDetailImage>
     {
-        public ImageDetailListAdapter(Context context, int resourceId, List<BaseDetailImage> list)
+        public ImageDetailListAdapter(Context context, int resourceId)
         {
-            super(context, resourceId, list);
+            super(context, resourceId);
         }
 
         @Override

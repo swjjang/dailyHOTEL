@@ -20,6 +20,7 @@ import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CalendarImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
@@ -38,7 +39,6 @@ import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.EditProfilePhoneActivity;
 import com.twoheart.dailyhotel.util.AppResearch;
-import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 

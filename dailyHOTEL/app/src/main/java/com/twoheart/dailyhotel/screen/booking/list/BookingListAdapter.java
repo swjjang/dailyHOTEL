@@ -422,8 +422,7 @@ public class BookingListAdapter extends RecyclerView.Adapter<BookingListAdapter.
                 case Booking.BOOKING_STATE_DEPOSIT_WAITING:
                 case Booking.BOOKING_STATE_WAITING_REFUND:
 
-                    holder.dataBinding.getRoot().measure(View.MeasureSpec.makeMeasureSpec(mRecyclerView.getWidth(), View.MeasureSpec.EXACTLY),
-                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                    holder.dataBinding.getRoot().measure(View.MeasureSpec.makeMeasureSpec(mRecyclerView.getWidth(), View.MeasureSpec.EXACTLY), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
 
                     final int height = holder.dataBinding.getRoot().getMeasuredHeight() - ScreenUtils.dpToPx(mContext, 13) - (isFirstPosition ? ScreenUtils.dpToPx(mContext, 51) : 0);
                     final int remainder = height % ScreenUtils.dpToPx(mContext, 6);

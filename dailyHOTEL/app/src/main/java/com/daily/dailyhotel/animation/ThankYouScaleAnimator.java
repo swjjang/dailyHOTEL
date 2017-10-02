@@ -49,7 +49,8 @@ public class ThankYouScaleAnimator
         if (VersionUtils.isOverAPI21() == true)
         {
             animationDuration = 200;
-        } else {
+        } else
+        {
             animationDuration = 200;
         }
 

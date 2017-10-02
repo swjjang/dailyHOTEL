@@ -13,13 +13,13 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 
 import com.daily.base.util.VersionUtils;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.daily.dailyhotel.storage.preference.DailyPreference;
 
 import java.util.List;
 

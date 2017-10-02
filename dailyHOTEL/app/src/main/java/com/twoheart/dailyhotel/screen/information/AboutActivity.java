@@ -6,11 +6,11 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.daily.base.widget.DailyWebView;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 

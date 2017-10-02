@@ -1,11 +1,7 @@
 package com.twoheart.dailyhotel.model;
 
-import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.daily.base.util.DailyTextUtils;
-import com.twoheart.dailyhotel.R;
 
 public class CreditCard implements Parcelable
 {

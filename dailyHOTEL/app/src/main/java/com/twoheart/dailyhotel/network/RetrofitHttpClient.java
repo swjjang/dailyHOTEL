@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.network;
 
 import android.content.Context;
 
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.github.aurae.retrofit2.LoganSquareConverterFactory;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.Setting;
@@ -9,7 +10,6 @@ import com.twoheart.dailyhotel.network.factory.JSONConverterFactory;
 import com.twoheart.dailyhotel.network.factory.TagCancellableCallAdapterFactory;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
-import com.daily.dailyhotel.storage.preference.DailyPreference;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;

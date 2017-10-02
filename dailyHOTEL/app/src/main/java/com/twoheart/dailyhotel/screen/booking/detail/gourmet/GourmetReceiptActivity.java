@@ -20,11 +20,11 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyEditText;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
+import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
-import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 
 import org.json.JSONObject;
 

@@ -17,6 +17,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.view.DailyFloatingActionView;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
@@ -37,9 +38,7 @@ public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnC
 
     protected AppBarLayout mAppBarLayout;
     protected DailyToolbarView mToolbarView;
-    protected View mBottomOptionLayout;
-    private View mViewTypeOptionImageView;
-    private View mFilterOptionImageView;
+    protected DailyFloatingActionView mFloatingActionView;
 
     TabLayout mCategoryTabLayout;
     private View mAppBarUnderlineView;
@@ -69,7 +68,8 @@ public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnC
         void onPageSelected(int changedPosition, int prevPosition);
     }
 
-    protected abstract PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener);
+    protected abstract PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager//
+        , int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener);
 
     protected abstract void onAnalyticsCategoryFlicking(String category);
 
@@ -162,14 +162,10 @@ public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnC
 
     private void initOptionLayout(View view)
     {
-        mBottomOptionLayout = view.findViewById(R.id.bottomOptionLayout);
-
         // 하단 지도 필터
-        mViewTypeOptionImageView = view.findViewById(R.id.viewTypeOptionImageView);
-        mFilterOptionImageView = view.findViewById(R.id.filterOptionImageView);
-
-        mViewTypeOptionImageView.setOnClickListener(this);
-        mFilterOptionImageView.setOnClickListener(this);
+        mFloatingActionView = (DailyFloatingActionView) view.findViewById(R.id.floatingActionView);
+        mFloatingActionView.setOnViewOptionClickListener(v -> ((OnEventListener) mOnEventListener).onViewTypeClick());
+        mFloatingActionView.setOnFilterOptionClickListener(v -> ((OnEventListener) mOnEventListener).onFilterClick());
 
         // 기본 설정
         setOptionViewTypeView(Constants.ViewType.LIST);
@@ -229,11 +225,11 @@ public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnC
         switch (viewType)
         {
             case LIST:
-                mViewTypeOptionImageView.setBackgroundResource(R.drawable.fab_01_map);
+                mFloatingActionView.setViewOptionMapSelected();
                 break;
 
             case MAP:
-                mViewTypeOptionImageView.setBackgroundResource(R.drawable.fab_02_list);
+                mFloatingActionView.setViewOptionListSelected();
                 break;
 
             case GONE:
@@ -288,7 +284,7 @@ public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnC
             size = 1;
             setCategoryTabLayoutVisibility(View.GONE);
 
-            mFragmentPagerAdapter = getPlaceListFragmentPagerAdapter(fragmentManager, size, mBottomOptionLayout, listener);
+            mFragmentPagerAdapter = getPlaceListFragmentPagerAdapter(fragmentManager, size, mFloatingActionView, listener);
 
             mViewPager.removeAllViews();
             mViewPager.setOffscreenPageLimit(size);
@@ -324,7 +320,7 @@ public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnC
                 }
             }
 
-            mFragmentPagerAdapter = getPlaceListFragmentPagerAdapter(fragmentManager, size, mBottomOptionLayout, listener);
+            mFragmentPagerAdapter = getPlaceListFragmentPagerAdapter(fragmentManager, size, mFloatingActionView, listener);
 
             mViewPager.removeAllViews();
             mViewPager.setOffscreenPageLimit(size);
@@ -456,48 +452,37 @@ public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnC
             case R.id.dateTextLayout:
                 ((PlaceMainLayout.OnEventListener) mOnEventListener).onDateClick();
                 break;
-
-            case R.id.viewTypeOptionImageView:
-                ((PlaceMainLayout.OnEventListener) mOnEventListener).onViewTypeClick();
-                break;
-
-            case R.id.filterOptionImageView:
-                ((PlaceMainLayout.OnEventListener) mOnEventListener).onFilterClick();
-                break;
         }
     }
 
-    public void setOptionViewTypeEnabled(boolean isTypeEnabled)
+    public void setOptionViewTypeEnabled(boolean enabled)
     {
-        // disable opacity 40% - 0 ~ 255
-        if (isTypeEnabled == true)
+        if (mFloatingActionView == null)
         {
-            mViewTypeOptionImageView.setAlpha(1.0f);
-        } else
-        {
-            mViewTypeOptionImageView.setAlpha(0.4f);
+            return;
         }
 
-        mViewTypeOptionImageView.setEnabled(isTypeEnabled);
+        mFloatingActionView.setViewOptionEnable(enabled);
     }
 
-    public void setOptionFilterEnabled(boolean isFilterEnabled)
+    public void setOptionFilterEnabled(boolean enabled)
     {
-        // disable opacity 40% - 0 ~ 255
-        if (isFilterEnabled == true)
+        if (mFloatingActionView == null)
         {
-            mFilterOptionImageView.setAlpha(1.0f);
-        } else
-        {
-            mFilterOptionImageView.setAlpha(0.4f);
+            return;
         }
 
-        mFilterOptionImageView.setEnabled(isFilterEnabled);
+        mFloatingActionView.setFilterOptionEnable(enabled);
     }
 
-    public void setOptionFilterSelected(boolean isSelected)
+    public void setOptionFilterSelected(boolean selected)
     {
-        mFilterOptionImageView.setSelected(isSelected);
+        if (mFloatingActionView == null)
+        {
+            return;
+        }
+
+        mFloatingActionView.setFilterOptionSelected(selected);
     }
 
     public synchronized void showAppBarLayout(boolean animate)
@@ -512,41 +497,33 @@ public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnC
 
     public synchronized void showBottomLayout()
     {
-        if (mBottomOptionLayout == null)
+        if (mFloatingActionView == null)
         {
             return;
         }
 
-        mBottomOptionLayout.setVisibility(View.VISIBLE);
-        mBottomOptionLayout.setTranslationY(0);
+        setBottomOptionVisible(true);
+        mFloatingActionView.setTranslationY(0);
     }
 
     public void hideBottomLayout()
     {
-        if (mBottomOptionLayout == null)
+        if (mFloatingActionView == null)
         {
             return;
         }
 
-        mBottomOptionLayout.setVisibility(View.GONE);
+        setBottomOptionVisible(false);
     }
 
     public void setBottomOptionVisible(boolean visible)
     {
-        if (mBottomOptionLayout == null)
+        if (mFloatingActionView == null)
         {
             return;
         }
 
-        if (visible == true)
-        {
-            mViewTypeOptionImageView.setVisibility(View.VISIBLE);
-            mFilterOptionImageView.setVisibility(View.VISIBLE);
-        } else
-        {
-            mViewTypeOptionImageView.setVisibility(View.GONE);
-            mFilterOptionImageView.setVisibility(View.GONE);
-        }
+        mFloatingActionView.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
