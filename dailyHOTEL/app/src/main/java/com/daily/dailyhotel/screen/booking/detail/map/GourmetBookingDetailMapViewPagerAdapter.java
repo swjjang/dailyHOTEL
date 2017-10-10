@@ -59,7 +59,7 @@ public class GourmetBookingDetailMapViewPagerAdapter extends PlaceBookingDetailM
         if (gourmet.persons > 1)
         {
             dataBinding.personsTextView.setVisibility(View.VISIBLE);
-            dataBinding.personsTextView.setText(mContext.getString(R.string.label_persions, gourmet.persons));
+            dataBinding.personsTextView.setText(mContext.getString(R.string.label_persons, gourmet.persons));
         } else
         {
             dataBinding.personsTextView.setVisibility(View.GONE);

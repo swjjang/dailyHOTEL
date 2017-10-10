@@ -83,6 +83,7 @@
     <string name="label_product_detail">상품 상세</string>
     <string name="label_office_hours">이용시간</string>
     <string name="label_checklist">확인사항</string>
+    <string name="label_available_persons">이용인원</string>
     <string name="label_reservation_conditions">예약조건</string>
     <string name="label_truereview">트루리뷰</string>
     <string name="label_password">비밀번호</string>
@@ -870,7 +871,7 @@
     <!-- GOURMET ListFragment -->
     <string name="label_fnblistfragment_empty_text01">레스토랑을 준비하고 있습니다.</string>
     <string name="label_fnblistfragment_empty_text02">멋진 레스토랑을 원하시나요?\n1800–9120으로 전화주세요.</string>
-    <string name="label_persions">%1$d인</string>
+    <string name="label_persons">%1$d인</string>
 
     <!-- Country Code List Activity -->
     <string name="label_select_country">국가 선택</string>
