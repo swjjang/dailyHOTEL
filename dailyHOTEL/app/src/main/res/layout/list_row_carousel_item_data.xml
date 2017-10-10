@@ -109,6 +109,17 @@
                 android:textColor="@color/default_text_cc5c5c5"
                 android:textSize="11dp"
                 dailyFont:style="DemiLight" />
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/contentMultiDayView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:text="@string/label_hotel_list_extendedstay_average"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="11dp"
+                android:visibility="gone"
+                dailyFont:style="DemiLight" />
         </LinearLayout>
 
         <View
@@ -161,6 +172,42 @@
                 android:textColor="@color/default_text_c929292"
                 android:textSize="12dp"
                 dailyFont:style="DemiLight" />
+
+            <LinearLayout
+                android:id="@+id/tripAdvisorLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/tripAdvisorImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/main_ic_widget_owl" />
+
+                <RatingBar
+                    android:id="@+id/tripAdvisorRatingBar"
+                    style="@style/TripAdvisorRatingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="10dp"
+                    android:layout_marginLeft="2dp"
+                    android:numStars="5"
+                    android:stepSize="0.5" />
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/tripAdvisorRatingTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:ellipsize="end"
+                    android:freezesText="true"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="12dp" />
+            </LinearLayout>
         </LinearLayout>
     </android.support.constraint.ConstraintLayout>
 </layout>
