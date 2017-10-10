@@ -28,7 +28,6 @@ import com.daily.dailyhotel.screen.home.gourmet.detail.menus.GourmetMenusActivit
 import com.daily.dailyhotel.screen.home.gourmet.payment.GourmetPaymentActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
-import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -191,8 +190,9 @@ public class GourmetDetailActivity extends PlaceDetailActivity
         }
 
         // 최근 본 업장 저장
-        RecentlyPlaceUtil.addRecentlyItem(this, Constants.ServiceType.GOURMET //
-            , mPlaceDetail.index, placeName, null, mDefaultImageUrl, true);
+        addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem( //
+            Constants.ServiceType.GOURMET, mPlaceDetail.index, placeName, null, mDefaultImageUrl, true) //
+            .observeOn(Schedulers.io()).subscribe());
 
         if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM) == true)
         {
@@ -901,8 +901,9 @@ public class GourmetDetailActivity extends PlaceDetailActivity
 
         GourmetDetailParams gourmetDetailParams = gourmetDetail.getGourmetDetailParams();
 
-        RecentlyPlaceUtil.addRecentlyItem(this, Constants.ServiceType.GOURMET //
-            , gourmetDetail.index, gourmetDetailParams.name, null, gourmetDetailParams.imgUrl, false);
+        addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem( //
+            Constants.ServiceType.GOURMET, gourmetDetail.index, gourmetDetailParams.name, null, gourmetDetailParams.imgUrl, false) //
+            .observeOn(Schedulers.io()).subscribe());
 
         if (mPlaceDetailLayout != null)
         {

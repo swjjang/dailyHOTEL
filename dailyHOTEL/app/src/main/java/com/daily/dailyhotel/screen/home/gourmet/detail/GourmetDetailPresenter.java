@@ -29,6 +29,7 @@ import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.GourmetPaymentAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.TrueReviewAnalyticsParam;
+import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.remote.CalendarImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.GourmetRemoteImpl;
@@ -41,7 +42,6 @@ import com.daily.dailyhotel.screen.home.gourmet.detail.truereview.GourmetTrueRev
 import com.daily.dailyhotel.screen.home.gourmet.payment.GourmetPaymentActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
-import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
@@ -102,6 +102,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     private CommonRemoteImpl mCommonRemoteImpl;
     private ProfileRemoteImpl mProfileRemoteImpl;
     private CalendarImpl mCalendarImpl;
+    private RecentlyLocalImpl mRecentlyLocalImpl;
 
     int mGourmetIndex, mPriceFromList;
     private String mGourmetName, mCategory;
@@ -203,6 +204,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
         mProfileRemoteImpl = new ProfileRemoteImpl(activity);
         mCalendarImpl = new CalendarImpl(activity);
+        mRecentlyLocalImpl = new RecentlyLocalImpl(activity);
 
         setStatus(STATUS_NONE);
 
@@ -335,7 +337,9 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             getViewInterface().setInitializedImage(mImageUrl);
         }
 
-        RecentlyPlaceUtil.addRecentlyItem(getActivity(), Constants.ServiceType.GOURMET, mGourmetIndex, mGourmetName, null, mImageUrl, true);
+        addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem( //
+            Constants.ServiceType.GOURMET, mGourmetIndex, mGourmetName, null, mImageUrl, true) //
+            .observeOn(Schedulers.io()).subscribe());
 
         if (mIsUsedMultiTransition == true)
         {

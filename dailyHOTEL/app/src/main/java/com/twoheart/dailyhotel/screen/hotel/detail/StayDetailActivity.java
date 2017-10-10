@@ -36,7 +36,6 @@ import com.daily.dailyhotel.screen.home.stay.inbound.payment.StayPaymentActivity
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
-import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -203,8 +202,9 @@ public class StayDetailActivity extends PlaceDetailActivity
             mDefaultImageUrl = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_IMAGEURL);
         }
 
-        RecentlyPlaceUtil.addRecentlyItem(this, Constants.ServiceType.HOTEL //
-            , mPlaceDetail.index, placeName, null, mDefaultImageUrl, true);
+        addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem( //
+            Constants.ServiceType.HOTEL, mPlaceDetail.index, placeName, null, mDefaultImageUrl, true) //
+            .observeOn(Schedulers.io()).subscribe());
 
         if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_ANALYTICS_PARAM) == true)
         {
@@ -976,8 +976,9 @@ public class StayDetailActivity extends PlaceDetailActivity
 
         StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
 
-        RecentlyPlaceUtil.addRecentlyItem(this, Constants.ServiceType.HOTEL //
-            , stayDetail.index, stayDetailParams.name, null, stayDetailParams.imgUrl, false);
+        addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem( //
+            Constants.ServiceType.HOTEL, stayDetail.index, stayDetailParams.name, null, stayDetailParams.imgUrl, false) //
+            .observeOn(Schedulers.io()).subscribe());
 
         if (mPlaceDetailLayout != null)
         {
@@ -1751,7 +1752,6 @@ public class StayDetailActivity extends PlaceDetailActivity
             StayDetailActivity.this.onTrueViewClick();
         }
     };
-
 
     private StayDetailNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new StayDetailNetworkController.OnNetworkControllerListener()
     {

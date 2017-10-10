@@ -17,6 +17,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
+import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CalendarImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
@@ -64,6 +65,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
     protected CommonRemoteImpl mCommonRemoteImpl;
     protected CalendarImpl mPlaceDetailCalendarImpl;
+    protected RecentlyLocalImpl mRecentlyLocalImpl;
 
     protected PlaceBookingDay mPlaceBookingDay;
     protected TodayDateTime mTodayDateTime;
@@ -137,6 +139,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
 
         mCommonRemoteImpl = new CommonRemoteImpl(this);
         mPlaceDetailCalendarImpl = new CalendarImpl(this);
+        mRecentlyLocalImpl = new RecentlyLocalImpl(this);
     }
 
     protected void initToolbar(String title)

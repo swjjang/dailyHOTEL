@@ -700,20 +700,6 @@ public class RecentlyPlaceUtil
         return indexList;
     }
 
-    public static void addRecentlyItem(Context context, final Constants.ServiceType serviceType, int index, String name //
-        , String englishName, String imageUrl, boolean isUpdateDate)
-    {
-        if (serviceType == null || index <= 0 || context == null)
-        {
-            return;
-        }
-
-        DailyDb dailyDb = DailyDbHelper.getInstance().open(context);
-        dailyDb.addRecentlyPlace(serviceType, index, name, englishName, imageUrl, isUpdateDate);
-
-        DailyDbHelper.getInstance().close();
-    }
-
     public static void deleteRecentlyItem(Context context, Constants.ServiceType serviceType, int index)
     {
         if (serviceType == null || index <= 0 || context == null)
