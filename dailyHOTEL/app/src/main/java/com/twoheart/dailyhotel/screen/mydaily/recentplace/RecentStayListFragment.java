@@ -531,7 +531,8 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             return;
         }
 
-        RecentlyPlaceUtil.deleteRecentlyItem(getActivity(), Constants.ServiceType.HOTEL, recentlyPlace.index);
+        addCompositeDisposable(mRecentlyLocalImpl.deleteRecentlyItem( //
+            Constants.ServiceType.HOTEL, recentlyPlace.index).observeOn(Schedulers.io()).subscribe());
 
         mListLayout.setData(mListLayout.getList(), mPlaceBookingDay);
         mRecentPlaceListFragmentListener.onDeleteItemClickAnalytics();
@@ -560,7 +561,8 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             return;
         }
 
-        RecentlyPlaceUtil.deleteRecentlyItem(getActivity(), Constants.ServiceType.OB_STAY, stayOutbound.index);
+        addCompositeDisposable(mRecentlyLocalImpl.deleteRecentlyItem( //
+            Constants.ServiceType.OB_STAY, stayOutbound.index).observeOn(Schedulers.io()).subscribe());
 
         mListLayout.setData(mListLayout.getList(), mPlaceBookingDay);
         mRecentPlaceListFragmentListener.onDeleteItemClickAnalytics();

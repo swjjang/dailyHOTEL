@@ -700,19 +700,6 @@ public class RecentlyPlaceUtil
         return indexList;
     }
 
-    public static void deleteRecentlyItem(Context context, Constants.ServiceType serviceType, int index)
-    {
-        if (serviceType == null || index <= 0 || context == null)
-        {
-            return;
-        }
-
-        DailyDb dailyDb = DailyDbHelper.getInstance().open(context);
-        dailyDb.deleteRecentlyItem(serviceType, index);
-
-        DailyDbHelper.getInstance().close();
-    }
-
     public static ArrayList<CarouselListItem> mergeCarouselListItemList(Context context, ArrayList<RecentlyPlace> recentlyPlaceList, StayOutbounds stayOutbounds, boolean useRealm)
     {
         ArrayList<CarouselListItem> carouselListItemList = new ArrayList<>();

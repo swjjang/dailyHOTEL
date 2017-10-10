@@ -12,4 +12,6 @@ public interface RecentlyLocalInterface
 {
     Observable addRecentlyItem(Constants.ServiceType serviceType, int index //
         , String name, String englishName, String imageUrl, boolean isUpdateDate);
+
+    Observable deleteRecentlyItem(Constants.ServiceType serviceType, int index);
 }

@@ -49,4 +49,27 @@ public class RecentlyLocalImpl implements RecentlyLocalInterface
             }
         }).subscribeOn(Schedulers.io());
     }
+
+    @Override
+    public Observable deleteRecentlyItem(Constants.ServiceType serviceType, int index)
+    {
+        return Observable.defer(new Callable<ObservableSource<Boolean>>()
+        {
+            @Override
+            public ObservableSource<Boolean> call() throws Exception
+            {
+                if (serviceType == null || index <= 0)
+                {
+                    return Observable.just(false);
+                }
+
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+                dailyDb.deleteRecentlyItem(serviceType, index);
+
+                DailyDbHelper.getInstance().close();
+
+                return Observable.just(true);
+            }
+        }).subscribeOn(Schedulers.io());
+    }
 }

@@ -352,7 +352,8 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
                 return;
             }
 
-            RecentlyPlaceUtil.deleteRecentlyItem(getActivity(), Constants.ServiceType.GOURMET, recentlyPlace.index);
+            addCompositeDisposable(mRecentlyLocalImpl.deleteRecentlyItem( //
+                Constants.ServiceType.GOURMET, recentlyPlace.index).observeOn(Schedulers.io()).subscribe());
 
             mListLayout.setData(mListLayout.getList(), mPlaceBookingDay);
             mRecentPlaceListFragmentListener.onDeleteItemClickAnalytics();
