@@ -637,18 +637,16 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         @Override
         public void onSearchCampaignTag(CampaignTag campaignTag)
         {
+            if (campaignTag == null)
+            {
+                return;
+            }
+
             if (isDateChanged() == false)
             {
                 mCalenderObject = campaignTag;
 
                 onCalendarClick(true, SearchType.CAMPAIGN_TAG);
-                return;
-            }
-
-            if (campaignTag == null)
-            {
-                NullPointerException exception = new NullPointerException("campaignTag is null");
-                Crashlytics.logException(exception);
                 return;
             }
 
