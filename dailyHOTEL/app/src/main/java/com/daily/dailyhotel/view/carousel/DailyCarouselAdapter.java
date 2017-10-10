@@ -120,6 +120,7 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
         final RecentlyPlace place = item.getItem();
 
         holder.dataBinding.contentImageView.setTag(holder.dataBinding.contentImageView.getId(), item);
+        holder.dataBinding.contentImageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
         Util.requestImageResize(mContext, holder.dataBinding.contentImageView, place.imageUrl);
 
         //        if (VersionUtils.isOverAPI16() == true)
@@ -233,6 +234,7 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
         final Stay stay = item.getItem();
 
         holder.dataBinding.contentImageView.setTag(holder.dataBinding.contentImageView.getId(), item);
+        holder.dataBinding.contentImageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
         Util.requestImageResize(mContext, holder.dataBinding.contentImageView, stay.imageUrl);
 
         //        if (VersionUtils.isOverAPI16() == true)
@@ -397,6 +399,7 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
         final Gourmet gourmet = item.getItem();
 
         holder.dataBinding.contentImageView.setTag(holder.dataBinding.contentImageView.getId(), item);
+        holder.dataBinding.contentImageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
         Util.requestImageResize(mContext, holder.dataBinding.contentImageView, gourmet.imageUrl);
 
         //        if (VersionUtils.isOverAPI16() == true)

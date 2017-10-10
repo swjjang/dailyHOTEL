@@ -236,6 +236,11 @@ public abstract class RecentPlacesListLayout extends BaseBlurLayout
 
             ((OnEventListener) mOnEventListener).onListItemDeleteClick(position);
         }
-    };
 
+        @Override
+        public void onWishClick(boolean myWish)
+        {
+
+        }
+    };
 }

@@ -324,6 +324,8 @@ public abstract class CollectionBaseLayout extends BaseBlurLayout
     {
         mTitleTextView.setText(title);
         mSubTitleTextView.setText(subTitle);
+
+        mSimpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
         Util.requestImageResize(mContext, mSimpleDraweeView, imageUrl);
     }
 

@@ -323,6 +323,7 @@ public class BookingListAdapter extends RecyclerView.Adapter<BookingListAdapter.
         }
 
         // 호텔 이미지
+        holder.dataBinding.simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
         Util.requestImageResize(mContext, holder.dataBinding.simpleDraweeView, booking.imageUrl);
 
         holder.dataBinding.placeNameTextView.setText(booking.placeName);
