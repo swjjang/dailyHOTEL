@@ -102,42 +102,6 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
         ((GourmetSearchResultListNetworkController) mNetworkController).requestGourmetSearchList(params);
     }
 
-    @Override
-    public void refreshList(boolean isShowProgress)
-    {
-        if (mViewType == null)
-        {
-            return;
-        }
-
-        mIsLoadMoreFlag = true;
-
-        int size = mGourmetList.size();
-        if (size == 0)
-        {
-            refreshList(isShowProgress, 1);
-        } else
-        {
-            SortType sortType = mGourmetCuration.getCurationOption().getSortType();
-
-            ArrayList<PlaceViewItem> placeViewItems = makePlaceList(mGourmetList, sortType, false);
-
-            switch (mViewType)
-            {
-                case LIST:
-                    mPlaceListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, sortType, mGourmetCuration.getGourmetBookingDay());
-                    break;
-
-                case MAP:
-                    mPlaceListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, sortType, mGourmetCuration.getGourmetBookingDay());
-                    break;
-
-                default:
-                    break;
-            }
-        }
-    }
-
     public void setIsDeepLink(boolean isDeepLink)
     {
         mIsDeepLink = isDeepLink;
