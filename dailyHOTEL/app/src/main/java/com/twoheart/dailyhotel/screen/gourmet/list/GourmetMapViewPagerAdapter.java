@@ -134,6 +134,7 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
             grade.setText(displayCategory);
         }
 
+        placeImageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
         Util.requestImageResize(mContext, placeImageView, gourmet.imageUrl);
 
         closeView.setOnClickListener(new View.OnClickListener()
