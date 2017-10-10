@@ -21,7 +21,7 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import java.util.List;
 
 /**
- * Created by iseung-won on 2017. 9. 28..
+ * Created by android_sam on 2017. 9. 28..
  */
 
 public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistoryListAdapter.CouponViewHolder>

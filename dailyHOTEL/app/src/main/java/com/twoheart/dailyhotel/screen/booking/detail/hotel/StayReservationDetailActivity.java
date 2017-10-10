@@ -1067,6 +1067,8 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
             {
                 // 고메 추천 Hidden - 현재 시간이 체크인 시간보다 큰 경우
                 ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetLayoutVisible(false);
+
+                unLockUI();
             } else
             {
                 // 고메 추천 Show
@@ -1119,7 +1121,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                         public void accept(@NonNull Throwable throwable) throws Exception
                         {
                             unLockUI();
-                            
+
                             ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetData(null);
 
                             AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_DETAIL//

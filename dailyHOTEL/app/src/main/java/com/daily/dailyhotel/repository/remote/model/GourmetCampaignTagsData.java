@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by iseung-won on 2017. 8. 8..
+ * Created by android_sam on 2017. 8. 8..
  */
 @JsonObject
 public class GourmetCampaignTagsData

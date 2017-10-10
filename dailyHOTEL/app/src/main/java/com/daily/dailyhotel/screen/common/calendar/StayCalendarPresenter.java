@@ -13,9 +13,9 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.daily.dailyhotel.storage.preference.DailyPreference;
 
 import java.util.ArrayList;
 import java.util.Calendar;

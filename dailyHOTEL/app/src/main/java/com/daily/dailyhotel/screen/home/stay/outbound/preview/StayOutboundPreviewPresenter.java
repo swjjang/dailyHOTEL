@@ -19,8 +19,8 @@ import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.entity.StayOutboundRoom;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
-import com.twoheart.dailyhotel.R;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 

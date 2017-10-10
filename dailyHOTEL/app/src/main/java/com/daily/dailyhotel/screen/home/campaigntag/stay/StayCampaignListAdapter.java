@@ -26,7 +26,7 @@ import com.twoheart.dailyhotel.util.Util;
 import java.util.ArrayList;
 
 /**
- * Created by iseung-won on 2017. 8. 8..
+ * Created by android_sam on 2017. 8. 8..
  */
 
 public class StayCampaignListAdapter extends PlaceListAdapter

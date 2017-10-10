@@ -3,32 +3,23 @@ package com.daily.dailyhotel.screen.home.stay.outbound.search;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
-import com.daily.dailyhotel.domain.StayObRecentlySuggestColumns;
 import com.daily.dailyhotel.entity.Suggest;
 import com.daily.dailyhotel.parcel.SuggestParcel;
-import com.daily.dailyhotel.storage.database.DailyDb;
-import com.daily.dailyhotel.storage.database.DailyDbHelper;
+import com.daily.dailyhotel.repository.local.SuggestLocalImpl;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
 import com.twoheart.dailyhotel.R;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by sheldon
@@ -38,6 +29,7 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
 {
     private StayOutboundSearchSuggestAnalyticsInterface mAnalytics;
     private SuggestRemoteImpl mSuggestRemoteImpl;
+    private SuggestLocalImpl mSuggestLocalImpl;
 
     private String mKeyword;
 
@@ -71,6 +63,7 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
         setAnalytics(new StayOutboundSearchSuggestAnalyticsImpl());
 
         mSuggestRemoteImpl = new SuggestRemoteImpl(activity);
+        mSuggestLocalImpl = new SuggestLocalImpl(activity);
 
         setRefresh(true);
     }
@@ -174,95 +167,31 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
             return;
         }
 
-        Observable.defer(new Callable<ObservableSource<List<Suggest>>>()
+        if (lock() == true)
         {
-            @Override
-            public ObservableSource<List<Suggest>> call() throws Exception
-            {
-                List<Suggest> list = getRecentlySuggestList();
-                if (list == null)
-                {
-                    list = new ArrayList<>();
-                }
-
-                return Observable.just(list);
-            }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<Suggest>>()
-        {
-            @Override
-            public void accept(List<Suggest> suggests) throws Exception
-            {
-                getViewInterface().setRecentlySuggests(suggests);
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(Throwable throwable) throws Exception
-            {
-                getViewInterface().setRecentlySuggests(null);
-            }
-        });
-    }
-
-    List<Suggest> getRecentlySuggestList()
-    {
-        DailyDb dailyDb = DailyDbHelper.getInstance().open(getActivity());
-
-        ArrayList<Suggest> suggestList = null;
-        Cursor cursor = null;
-        try
-        {
-            cursor = dailyDb.getStayObRecentlySuggestList(DailyDb.MAX_RECENT_PLACE_COUNT);
-
-            if (cursor == null)
-            {
-                return null;
-            }
-
-            int size = cursor.getCount();
-            if (size == 0)
-            {
-                return null;
-            }
-
-            suggestList = new ArrayList<>();
-
-            for (int i = 0; i < size; i++)
-            {
-                cursor.moveToPosition(i);
-
-                long id = cursor.getLong(cursor.getColumnIndex(StayObRecentlySuggestColumns._ID));
-                String name = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.NAME));
-                String city = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.CITY));
-                String country = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.COUNTRY));
-                String countryCode = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.COUNTRY_CODE));
-                String categoryKey = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.CATEGORY_KEY));
-                String display = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.DISPLAY));
-                double latitude = cursor.getDouble(cursor.getColumnIndex(StayObRecentlySuggestColumns.LATITUDE));
-                double longitude = cursor.getDouble(cursor.getColumnIndex(StayObRecentlySuggestColumns.LONGITUDE));
-
-                suggestList.add(new Suggest(id, name, city, country, countryCode, categoryKey, display, latitude, longitude));
-            }
-
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        } finally
-        {
-            try
-            {
-                if (cursor != null)
-                {
-                    cursor.close();
-                }
-            } catch (Exception e)
-            {
-            }
+            return;
         }
 
-        DailyDbHelper.getInstance().close();
+        addCompositeDisposable(mSuggestLocalImpl.getRecentlySuggestList() //
+            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<Suggest>>()
+            {
+                @Override
+                public void accept(List<Suggest> suggests) throws Exception
+                {
+                    getViewInterface().setRecentlySuggests(suggests);
 
-        return suggestList;
+                    unLockAll();
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    getViewInterface().setRecentlySuggests(null);
+
+                    unLockAll();
+                }
+            }));
     }
 
     @Override
@@ -336,21 +265,33 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
     @Override
     public void onDeleteAllRecentlySuggest()
     {
-        getViewInterface().setRecentlySuggests(null);
-
-        DailyDb dailyDb = DailyDbHelper.getInstance().open(getActivity());
-
-        try
+        if (lock() == true)
         {
-            dailyDb.deleteAllStayObRecentlySuggest();
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
+            return;
         }
 
-        DailyDbHelper.getInstance().close();
+        getViewInterface().setRecentlySuggests(null);
 
-        mAnalytics.onEventDeleteAllRecentlySuggestClick(getActivity());
+        addCompositeDisposable(mSuggestLocalImpl.deleteAllRecentlySuggest() //
+            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer()
+            {
+                @Override
+                public void accept(Object o) throws Exception
+                {
+                    mAnalytics.onEventDeleteAllRecentlySuggestClick(getActivity());
+
+                    unLockAll();
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    mAnalytics.onEventDeleteAllRecentlySuggestClick(getActivity());
+
+                    unLockAll();
+                }
+            }));
     }
 
     private void onSuggestList(List<Suggest> suggestList)

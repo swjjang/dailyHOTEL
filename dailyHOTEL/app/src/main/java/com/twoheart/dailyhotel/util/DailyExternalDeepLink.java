@@ -134,7 +134,6 @@ public class DailyExternalDeepLink extends DailyDeepLink
     private static final String PARAM_V19_CATEGORY_KEY = "ck"; // 해외 호텔 검색에서 사용되는 키값
 
 
-
     // Version
 
     private static final int MINIMUM_VERSION_CODE = 3;
@@ -254,7 +253,6 @@ public class DailyExternalDeepLink extends DailyDeepLink
     {
         return equalsView(20, PLACE_V20_DETAIL);
     }
-
 
 
     ///////////////////////////////////////////////////////////////////////////////////

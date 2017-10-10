@@ -4,9 +4,9 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.daily.dailyhotel.domain.ConfigInterface;
-import com.twoheart.dailyhotel.DailyHotel;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
+import com.twoheart.dailyhotel.DailyHotel;
 
 import java.util.concurrent.Callable;
 

@@ -10,6 +10,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.StayCategoryCuration;
 import com.twoheart.dailyhotel.model.StayCategoryNearByCuration;
@@ -17,7 +18,6 @@ import com.twoheart.dailyhotel.model.StayCategoryNearByParams;
 import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.model.StayFilter;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
-import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 
 import retrofit2.Call;
 import retrofit2.Response;

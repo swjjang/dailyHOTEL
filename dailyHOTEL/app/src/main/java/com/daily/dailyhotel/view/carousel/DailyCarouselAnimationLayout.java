@@ -23,7 +23,7 @@ import com.twoheart.dailyhotel.databinding.LayoutCarouselAnimationDataBinding;
 import java.util.ArrayList;
 
 /**
- * Created by iseung-won on 2017. 8. 25..
+ * Created by android_sam on 2017. 8. 25..
  */
 
 public class DailyCarouselAnimationLayout extends ConstraintLayout

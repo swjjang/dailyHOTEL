@@ -17,7 +17,7 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * Created by iseung-won on 2017. 9. 28..
+ * Created by android_sam on 2017. 9. 28..
  */
 
 public class CouponRemoteImpl implements CouponInterface

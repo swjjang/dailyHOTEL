@@ -26,7 +26,7 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * Created by iseung-won on 2017. 8. 8..
+ * Created by android_sam on 2017. 8. 8..
  */
 
 public class CampaignTagRemoteImpl implements CampaignTagInterface

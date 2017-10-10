@@ -16,11 +16,11 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyEditText;
 import com.daily.dailyhotel.entity.StayOutboundReceipt;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundReceiptDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogStayOutboundReceiptEmailDataBinding;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.Util;
 
 public class StayOutboundReceiptView extends BaseDialogView<StayOutboundReceiptView.OnEventListener, ActivityStayOutboundReceiptDataBinding> implements StayOutboundReceiptInterface

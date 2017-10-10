@@ -114,7 +114,7 @@ public class Util implements Constants
             return;
         }
 
-//        simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
+        //        simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
         if (DailyTextUtils.isTextEmpty(imageUrl) == true)
         {

@@ -22,7 +22,7 @@ import com.twoheart.dailyhotel.widget.DailyPagerSnapHelper;
 import java.util.ArrayList;
 
 /**
- * Created by iseung-won on 2017. 8. 24..
+ * Created by android_sam on 2017. 8. 24..
  */
 
 public class DailyCarouselLayout extends ConstraintLayout

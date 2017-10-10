@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by iseung-won on 2017. 8. 10..
+ * Created by android_sam on 2017. 8. 10..
  */
 
 public class SearchCardViewAdapter extends RecyclerView.Adapter<SearchCardViewAdapter.CardViewHolder>

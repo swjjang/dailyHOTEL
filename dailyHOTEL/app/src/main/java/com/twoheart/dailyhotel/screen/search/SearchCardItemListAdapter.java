@@ -15,7 +15,7 @@ import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import java.util.ArrayList;
 
 /**
- * Created by iseung-won on 2017. 8. 10..
+ * Created by android_sam on 2017. 8. 10..
  */
 
 public class SearchCardItemListAdapter extends RecyclerView.Adapter<SearchCardItemListAdapter.ItemViewHolder>

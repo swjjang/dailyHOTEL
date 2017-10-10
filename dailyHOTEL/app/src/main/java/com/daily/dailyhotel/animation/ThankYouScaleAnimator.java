@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * Created by iseung-won on 2017. 9. 18..
+ * Created by android_sam on 2017. 9. 18..
  */
 
 public class ThankYouScaleAnimator
@@ -49,7 +49,8 @@ public class ThankYouScaleAnimator
         if (VersionUtils.isOverAPI21() == true)
         {
             animationDuration = 200;
-        } else {
+        } else
+        {
             animationDuration = 200;
         }
 
