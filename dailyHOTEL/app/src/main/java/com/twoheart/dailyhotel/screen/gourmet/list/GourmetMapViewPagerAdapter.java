@@ -81,7 +81,7 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         if (gourmet.persons > 1)
         {
             persons.setVisibility(View.VISIBLE);
-            persons.setText(mContext.getString(R.string.label_persions, gourmet.persons));
+            persons.setText(mContext.getString(R.string.label_persons, gourmet.persons));
         } else
         {
             persons.setVisibility(View.GONE);

@@ -1504,6 +1504,16 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
         viewDataBinding.discountPriceTextView.setText(discountPrice);
 
+        // 인원수
+        if (gourmetMenu.persons > 1)
+        {
+            viewDataBinding.personsTextView.setVisibility(View.VISIBLE);
+            viewDataBinding.personsTextView.setText(getString(R.string.label_persons, gourmetMenu.persons));
+        } else
+        {
+            viewDataBinding.personsTextView.setVisibility(View.GONE);
+        }
+
         // 이용시간
         if (DailyTextUtils.isTextEmpty(gourmetMenu.openTime, gourmetMenu.closeTime) == true)
         {
