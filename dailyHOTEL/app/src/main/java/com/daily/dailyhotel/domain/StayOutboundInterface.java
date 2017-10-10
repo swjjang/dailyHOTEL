@@ -10,8 +10,10 @@ import io.reactivex.Observable;
 
 public interface StayOutboundInterface
 {
-    Observable<StayOutbounds> getStayOutboundList(StayBookDateTime stayBookDateTime, long geographyId//
+    Observable<StayOutbounds> getList(StayBookDateTime stayBookDateTime, long geographyId//
         , String geographyType, People people, StayOutboundFilters stayOutboundFilters, String cacheKey, String cacheLocation);
 
-    Observable<StayOutboundDetail> getStayOutboundDetail(int index, StayBookDateTime stayBookDateTime, People people);
+    Observable<StayOutboundDetail> getDetail(int index, StayBookDateTime stayBookDateTime, People people);
+
+    Observable<StayOutbounds> getRecommendAroundList(int index, StayBookDateTime stayBookDateTime, People people);
 }

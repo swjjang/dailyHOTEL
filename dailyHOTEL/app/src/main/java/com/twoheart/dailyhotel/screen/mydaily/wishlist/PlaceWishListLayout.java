@@ -6,12 +6,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.daily.base.widget.DailyTextView;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.base.BaseBlurLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 
 import java.util.ArrayList;

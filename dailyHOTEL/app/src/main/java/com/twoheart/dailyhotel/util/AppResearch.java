@@ -40,12 +40,12 @@ public class AppResearch
     private static final String instagram = "com.instagram.android";
     private static final String youtube = "com.google.android.youtube";
 
-    private static final String[] WATCH_LIST = {yanolja, goodchoice, interpark, hoteltime, hotelscom//
+    static final String[] WATCH_LIST = {yanolja, goodchoice, interpark, hoteltime, hotelscom//
         , expedia, bookingcom, interparktour, timon, coupang, wemakeprice, hotelscombined//
         , hotelnow, facebook, instagram, youtube};
 
-    private Context mContext;
-    private boolean mIsMyProcessInTheForeground;
+    Context mContext;
+    boolean mIsMyProcessInTheForeground;
 
     public AppResearch(Context context)
     {

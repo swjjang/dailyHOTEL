@@ -24,16 +24,16 @@ import java.util.List;
 
 public class TrueVRActivity extends WebViewActivity implements View.OnClickListener
 {
-    private List<TrueVRParams> mTrueVRParamsList;
+    List<TrueVRParams> mTrueVRParamsList;
     private TextView mProductNameTextView;
     private TextView mCurrentPageTextView, mTotalPageTextView;
     private View mPageLayout;
     private View mPrevView, mNextView;
-    private View mWebViewLayout;
+    View mWebViewLayout;
 
-    private int mPlaceIndex;
-    private int mCurrentPage;
-    private PlaceType mPlaceType;
+    int mPlaceIndex;
+    int mCurrentPage;
+    PlaceType mPlaceType;
 
     public static Intent newInstance(Context context, int placeIndex, ArrayList<TrueVRParams> list, PlaceType placeType, String category)
     {

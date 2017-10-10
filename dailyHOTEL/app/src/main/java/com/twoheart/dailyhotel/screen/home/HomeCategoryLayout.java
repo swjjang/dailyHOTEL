@@ -51,7 +51,7 @@ public class HomeCategoryLayout extends RelativeLayout
     private ImageView mStayOutBoundNewView;
     private boolean mIsUseAnimation;
 
-    private OnItemClickListener mOnItemClickListener;
+    OnItemClickListener mOnItemClickListener;
 
 
     public HomeCategoryLayout(Context context)

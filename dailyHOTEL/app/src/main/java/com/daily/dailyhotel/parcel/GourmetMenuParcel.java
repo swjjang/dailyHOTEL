@@ -18,7 +18,7 @@ public class GourmetMenuParcel implements Parcelable
     {
         if (gourmetMenu == null)
         {
-            throw new NullPointerException("reservation == null");
+            throw new NullPointerException("gourmetMenu == null");
         }
 
         mGourmetMenu = gourmetMenu;

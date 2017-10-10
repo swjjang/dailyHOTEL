@@ -37,19 +37,24 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
 import com.daily.base.BaseActivity;
-import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
+import com.daily.dailyhotel.base.BaseBlurView;
+import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.entity.StayOutboundDetailImage;
 import com.daily.dailyhotel.entity.StayOutboundRoom;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
+import com.daily.dailyhotel.view.DailyDetailEmptyView;
 import com.daily.dailyhotel.view.DailyToolbarView;
+import com.daily.dailyhotel.view.carousel.DailyCarouselLayout;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.R;
@@ -63,11 +68,8 @@ import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail05DataBinding
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailAmenityMoreDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailInformationDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailTitleDataBinding;
-import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.AlphaTransition;
-import com.twoheart.dailyhotel.widget.DailyDetailEmptyView;
 import com.twoheart.dailyhotel.widget.TextTransition;
 
 import java.util.ArrayList;
@@ -80,15 +82,15 @@ import java.util.Map;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 
-public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailView.OnEventListener, ActivityStayOutboundDetailDataBinding>//
+public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.OnEventListener, ActivityStayOutboundDetailDataBinding>//
     implements StayOutboundDetailViewInterface, View.OnClickListener, ViewPager.OnPageChangeListener, RadioGroup.OnCheckedChangeListener
 {
     private static final int ANIMATION_DELAY = 250;
 
     private StayOutboundDetailImageViewPagerAdapter mImageViewPagerAdapter;
-    private StayOutboundDetailRoomListAdapter mRoomTypeListAdapter;
+    StayOutboundDetailRoomListAdapter mRoomTypeListAdapter;
 
-    private AnimatorSet mRoomAnimatorSet;
+    AnimatorSet mRoomAnimatorSet;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -129,6 +131,10 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
         void onConciergeCallClick();
 
         void onRoomClick(StayOutboundRoom stayOutboundRoom);
+
+        void onRecommendAroundItemClick(View view, android.support.v4.util.Pair[] pairs);
+
+        void onRecommendAroundItemLongClick(View view, android.support.v4.util.Pair[] pairs);
     }
 
     public StayOutboundDetailView(BaseActivity baseActivity, StayOutboundDetailView.OnEventListener listener)
@@ -198,6 +204,28 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
             public void onClick(View v)
             {
                 // do nothing - 판매 완료 버튼이 뚤리는 이슈 수정
+            }
+        });
+
+        viewDataBinding.recommendAroundListLayout.setTitleText(R.string.label_stay_outbound_recommend_around_title);
+        viewDataBinding.recommendAroundListLayout.setCarouselListener(new DailyCarouselLayout.OnCarouselListener()
+        {
+            @Override
+            public void onViewAllClick()
+            {
+                // do nothing!
+            }
+
+            @Override
+            public void onItemClick(View view, android.support.v4.util.Pair[] pairs)
+            {
+                getEventListener().onRecommendAroundItemClick(view, pairs);
+            }
+
+            @Override
+            public void onItemLongClick(View view, android.support.v4.util.Pair[] pairs)
+            {
+                getEventListener().onRecommendAroundItemLongClick(view, pairs);
             }
         });
     }
@@ -685,7 +713,7 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
         {
             getViewDataBinding().transImageView.setVisibility(View.VISIBLE);
             getViewDataBinding().transGradientBottomView.setVisibility(View.VISIBLE);
-            getViewDataBinding().transTitleLayout.setVisibility(View.VISIBLE);
+            getViewDataBinding().transNameTextView.setVisibility(View.VISIBLE);
             getViewDataBinding().transImageView.setTransitionName(getString(R.string.transition_place_image));
             getViewDataBinding().transGradientBottomView.setTransitionName(getString(R.string.transition_gradient_bottom_view));
             getViewDataBinding().transGradientTopView.setTransitionName(getString(R.string.transition_gradient_top_view));
@@ -710,7 +738,7 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
         {
             getViewDataBinding().transImageView.setVisibility(View.GONE);
             getViewDataBinding().transGradientBottomView.setVisibility(View.GONE);
-            getViewDataBinding().transTitleLayout.setVisibility(View.GONE);
+            getViewDataBinding().transNameTextView.setVisibility(View.GONE);
         }
     }
 
@@ -889,6 +917,29 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
         getViewDataBinding().nestedScrollView.fullScroll(View.FOCUS_UP);
     }
 
+    @Override
+    public void setRecommendAroundList(ArrayList<CarouselListItem> list, StayBookDateTime stayBookDateTime)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        boolean nightsEnabled = false;
+        if (stayBookDateTime != null)
+        {
+            try
+            {
+                nightsEnabled = stayBookDateTime.getNights() > 1;
+            } catch (Exception e)
+            {
+
+            }
+        }
+
+        getViewDataBinding().recommendAroundListLayout.setData(list, nightsEnabled);
+    }
+
     private void initToolbar(ActivityStayOutboundDetailDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
@@ -939,7 +990,7 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
 
     private void setImageList(List<StayOutboundDetailImage> imageList)
     {
-        if (getViewDataBinding() == null || imageList == null)
+        if (getViewDataBinding() == null)
         {
             return;
         }
@@ -1363,7 +1414,7 @@ public class StayOutboundDetailView extends BaseDialogView<StayOutboundDetailVie
 
         List<String> informationList = information.getValue();
 
-        if (informationList == null && informationList.size() == 0)
+        if (informationList == null || informationList.size() == 0)
         {
             return;
         }

@@ -588,7 +588,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     // mOnEventListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private PlaceSearchResultLayout.OnEventListener mOnEventListener = new PlaceSearchResultLayout.OnEventListener()
+    PlaceSearchResultLayout.OnEventListener mOnEventListener = new PlaceSearchResultLayout.OnEventListener()
     {
         @Override
         public void finish()
@@ -843,7 +843,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         }
     };
 
-    private GourmetListFragment.OnGourmetListFragmentListener mOnGourmetListFragmentListener = new GourmetSearchResultListFragment.OnGourmetSearchResultListFragmentListener()
+    GourmetListFragment.OnGourmetListFragmentListener mOnGourmetListFragmentListener = new GourmetSearchResultListFragment.OnGourmetSearchResultListFragmentListener()
     {
         @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
         @Override

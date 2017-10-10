@@ -11,7 +11,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 
 /**
- * Created by iseung-won on 2017. 8. 4..
+ * Created by android_sam on 2017. 8. 4..
  */
 
 public class StayCampaignTagListActivity extends BaseActivity<StayCampaignTagListPresenter>

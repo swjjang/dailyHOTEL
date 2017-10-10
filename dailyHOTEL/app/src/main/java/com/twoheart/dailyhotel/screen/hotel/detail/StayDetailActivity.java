@@ -33,6 +33,9 @@ import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.truereview.StayTrueReviewActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.payment.StayPaymentActivity;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
+import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
@@ -40,7 +43,6 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.model.PlaceDetail;
-import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayDetail;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
@@ -58,6 +60,7 @@ import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.screen.common.TrueVRActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
+import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectStayCouponDialogActivity;
@@ -66,9 +69,6 @@ import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
-import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -220,7 +220,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
             mProductDetailIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_ROOMINDEX, 0);
 
-            initLayout(null, null, null, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
+            initLayout(null, null, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
         } else
         {
             mIsDeepLink = false;
@@ -232,7 +232,6 @@ public class StayDetailActivity extends PlaceDetailActivity
             }
 
             mViewPrice = mAnalyticsParam != null ? mAnalyticsParam.discountPrice : 0;
-            Stay.Grade grade = mAnalyticsParam != null ? Stay.Grade.valueOf(mAnalyticsParam.gradeCode) : Stay.Grade.etc;
 
             int gradientType = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_GRADIENT_TYPE, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
 
@@ -246,7 +245,7 @@ public class StayDetailActivity extends PlaceDetailActivity
                 mIsTransitionEnd = true;
             }
 
-            initLayout(placeName, mDefaultImageUrl, grade, gradientType);
+            initLayout(placeName, mDefaultImageUrl, gradientType);
         }
 
         // VR 여부 판단
@@ -397,7 +396,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
     }
 
-    private void initLayout(String placeName, String imageUrl, Stay.Grade grade, int gradientType)
+    private void initLayout(String placeName, String imageUrl, int gradientType)
     {
         setContentView(mPlaceDetailLayout.onCreateView(R.layout.activity_placedetail));
 
@@ -406,7 +405,7 @@ public class StayDetailActivity extends PlaceDetailActivity
 
         if (mIsDeepLink == false && mIsUsedMultiTransition == true)
         {
-            initTransLayout(placeName, imageUrl, grade);
+            initTransLayout(placeName, imageUrl);
         } else
         {
             mPlaceDetailLayout.setDefaultImage(imageUrl);
@@ -418,7 +417,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         mOnEventListener.hideActionBar(false);
     }
 
-    private void initTransLayout(String placeName, String imageUrl, Stay.Grade grade)
+    private void initTransLayout(String placeName, String imageUrl)
     {
         if (DailyTextUtils.isTextEmpty(placeName, imageUrl) == true)
         {
@@ -426,7 +425,7 @@ public class StayDetailActivity extends PlaceDetailActivity
         }
 
         mPlaceDetailLayout.setTransImageView(imageUrl);
-        ((StayDetailLayout) mPlaceDetailLayout).setTitleText(grade, placeName);
+        ((StayDetailLayout) mPlaceDetailLayout).setTitleText(placeName);
     }
 
     @Override
@@ -1138,8 +1137,10 @@ public class StayDetailActivity extends PlaceDetailActivity
             ? StayCalendarActivity.DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT //
             : StayDetailCalendarActivity.DEFAULT_OVERSEAS_CALENDAR_DAY_OF_MAX_COUNT;
 
+        String callByScreen = isSameCallingActivity(EventWebActivity.class.getName()) ? AnalyticsManager.Label.EVENT : AnalyticsManager.ValueType.DETAIL;
+
         Intent intent = StayDetailCalendarActivity.newInstance(StayDetailActivity.this, todayDateTime //
-            , stayBookingDay, dayCount, placeIndex, AnalyticsManager.ValueType.DETAIL //
+            , stayBookingDay, dayCount, placeIndex, callByScreen //
             , (ArrayList) soldOutList, true, isAnimation, isSingleDay);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_CALENDAR);
 

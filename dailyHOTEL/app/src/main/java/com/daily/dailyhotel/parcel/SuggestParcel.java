@@ -14,7 +14,7 @@ public class SuggestParcel implements Parcelable
     {
         if (suggest == null)
         {
-            throw new NullPointerException("user == null");
+            throw new NullPointerException("suggest == null");
         }
 
         mSuggest = suggest;

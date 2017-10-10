@@ -59,7 +59,7 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
 
     protected PlaceSearchResultLayout mPlaceSearchResultLayout;
 
-    private DailyLocationFactory mDailyLocationFactory;
+    DailyLocationFactory mDailyLocationFactory;
 
     public enum ScreenType
     {

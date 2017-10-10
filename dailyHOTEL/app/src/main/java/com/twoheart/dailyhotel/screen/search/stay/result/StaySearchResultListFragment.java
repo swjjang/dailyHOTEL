@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.search.stay.result;
 
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.PlaceCuration;
@@ -10,7 +11,6 @@ import com.twoheart.dailyhotel.model.StaySearchParams;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
-import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -27,7 +27,7 @@ public class StaySearchResultListFragment extends StayListFragment
 {
     boolean mResetCategory = true;
     boolean mIsDeepLink;
-    private SearchType mSearchType;
+    SearchType mSearchType;
 
     public interface OnStaySearchResultListFragmentListener extends OnStayListFragmentListener
     {
@@ -106,42 +106,6 @@ public class StaySearchResultListFragment extends StayListFragment
         String abTestType = DailyRemoteConfigPreference.getInstance(getContext()).getKeyRemoteConfigStayRankTestType();
 
         ((StaySearchResultListNetworkController) mNetworkController).requestStaySearchList(params, abTestType);
-    }
-
-    @Override
-    public void refreshList(boolean isShowProgress)
-    {
-        if (mViewType == null)
-        {
-            return;
-        }
-
-        mIsLoadMoreFlag = true;
-
-        int size = mStayList.size();
-        if (size == 0)
-        {
-            refreshList(isShowProgress, 1);
-        } else
-        {
-            SortType sortType = mStayCuration.getCurationOption().getSortType();
-
-            ArrayList<PlaceViewItem> placeViewItems = makePlaceList(mStayList, sortType, false);
-
-            switch (mViewType)
-            {
-                case LIST:
-                    mPlaceListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, sortType, mStayCuration.getStayBookingDay());
-                    break;
-
-                case MAP:
-                    mPlaceListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, sortType, mStayCuration.getStayBookingDay());
-                    break;
-
-                default:
-                    break;
-            }
-        }
     }
 
     public void setIsDeepLink(boolean isDeepLink)

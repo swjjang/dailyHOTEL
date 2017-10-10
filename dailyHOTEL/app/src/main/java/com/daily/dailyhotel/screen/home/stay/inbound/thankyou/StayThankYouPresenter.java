@@ -32,6 +32,8 @@ import com.daily.dailyhotel.repository.remote.GourmetRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.screen.booking.detail.map.GourmetBookingDetailMapActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
+import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
@@ -43,8 +45,6 @@ import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
-import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
-import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
@@ -66,24 +66,24 @@ import io.reactivex.functions.Function3;
  */
 public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouActivity, StayThankYouInterface> implements StayThankYouView.OnEventListener
 {
-    private StayThankYouAnalyticsInterface mAnalytics;
+    StayThankYouAnalyticsInterface mAnalytics;
 
     private ProfileRemoteImpl mProfileRemoteImpl;
-    private GourmetRemoteImpl mGourmetRemoteImpl;
+    GourmetRemoteImpl mGourmetRemoteImpl;
     private CommonRemoteImpl mCommonRemoteImpl;
 
     private String mAggregationId;
     private String mStayName;
     private String mImageUrl;
-    private StayBookDateTime mStayBookDateTime;
+    StayBookDateTime mStayBookDateTime;
     private String mRoomName;
     private boolean mOverseas;
     private boolean mWaitingForBooking;
-    private double mLatitude;
-    private double mLongitude;
-    private CommonDateTime mCommonDateTime;
-    private View mViewByLongPress;
-    private Gourmet mGourmetByLongPress;
+    double mLatitude;
+    double mLongitude;
+    CommonDateTime mCommonDateTime;
+    View mViewByLongPress;
+    Gourmet mGourmetByLongPress;
 
     public interface StayThankYouAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -374,7 +374,7 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
                 gourmetCuration.setRadius(10d);
 
                 GourmetSearchParams gourmetParams = (GourmetSearchParams) gourmetCuration.toPlaceParams(1, 10, true);
-                return mGourmetRemoteImpl.getGourmetList(gourmetParams);
+                return mGourmetRemoteImpl.getList(gourmetParams);
             }
         });
 
@@ -618,7 +618,7 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void startGourmetDetail(View view, Gourmet gourmet, CommonDateTime commonDateTime, StayBookDateTime stayBookDateTime)
+    void startGourmetDetail(View view, Gourmet gourmet, CommonDateTime commonDateTime, StayBookDateTime stayBookDateTime)
     {
         if (view == null || gourmet == null || stayBookDateTime == null || commonDateTime == null)
         {
@@ -742,18 +742,16 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
         return DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStampEnabled() && mOverseas == false;
     }
 
-    private ArrayList<CarouselListItem> convertCarouselListItemList(List<Gourmet> list)
+    ArrayList<CarouselListItem> convertCarouselListItemList(List<Gourmet> gourmetList)
     {
-        ArrayList<Gourmet> gourmetList = new ArrayList<>();
-        ArrayList<CarouselListItem> carouselListItemList = new ArrayList<CarouselListItem>();
+        ArrayList<CarouselListItem> carouselListItemList = new ArrayList<>();
 
-        if (list == null || list.size() == 0)
+        if (gourmetList == null || gourmetList.size() == 0)
         {
-            //            mRecommendGourmetList = gourmetList;
             return carouselListItemList;
         }
 
-        for (Gourmet gourmet : list)
+        for (Gourmet gourmet : gourmetList)
         {
             try
             {
@@ -763,8 +761,6 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
                     // ExLog.d(gourmet.name + " , " + gourmet.isSoldOut + " : " + gourmet.availableTicketNumbers);
                     continue;
                 }
-
-                gourmetList.add(gourmet);
 
                 CarouselListItem item = new CarouselListItem(CarouselListItem.TYPE_GOURMET, gourmet);
                 carouselListItemList.add(item);
@@ -777,12 +773,10 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
             }
         }
 
-        //        mRecommendGourmetList = gourmetList;
-
         return carouselListItemList;
     }
 
-    private void startInformationAnimation()
+    void startInformationAnimation()
     {
         getViewInterface().startRecommendNStampAnimation(new Animator.AnimatorListener()
         {

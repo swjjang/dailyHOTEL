@@ -38,6 +38,7 @@ import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.screen.booking.detail.stay.outbound.StayOutboundBookingDetailActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.FragmentBookingListDataBinding;
@@ -58,7 +59,6 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
@@ -86,15 +86,15 @@ import io.reactivex.schedulers.Schedulers;
 public class BookingListFragment extends BaseMenuNavigationFragment implements View.OnClickListener
 {
     private BookingListAdapter mAdapter;
-    private FragmentBookingListDataBinding mViewDataBinding;
+    FragmentBookingListDataBinding mViewDataBinding;
     boolean mDontReload;
 
-    private CommonDateTime mCommonDateTime;
+    CommonDateTime mCommonDateTime;
     private DailyDeepLink mDailyDeepLink;
 
     boolean mCheckVerify; // 인증이 해지되었는지 예약 리스트 진입시 한번만 체크한다.
 
-    private CommonRemoteImpl mCommonRemoteImpl;
+    CommonRemoteImpl mCommonRemoteImpl;
     private BookingRemoteImpl mBookingRemoteImpl;
     private ProfileRemoteImpl mProfileRemoteImpl;
 
@@ -222,7 +222,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
         mViewDataBinding.emptyListLayout.setVisibility(View.GONE);
     }
 
-    private void setBookingList(List<Booking> bookingList)
+    void setBookingList(List<Booking> bookingList)
     {
         if (mViewDataBinding == null)
         {
@@ -396,7 +396,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
         }
     }
 
-    private void onRefresh(boolean showProgress)
+    void onRefresh(boolean showProgress)
     {
         lockUI(showProgress);
 
@@ -441,7 +441,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
         }));
     }
 
-    private void onBookingList(List<Booking> bookingList)
+    void onBookingList(List<Booking> bookingList)
     {
         if (bookingList == null || bookingList.size() == 0)
         {
@@ -602,7 +602,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
         mViewDataBinding.bookingRecyclerView.smoothScrollToPosition(0);
     }
 
-    private List<Booking> getBookingSortList(List<Booking> bookingList) throws Exception
+    List<Booking> getBookingSortList(List<Booking> bookingList) throws Exception
     {
         if (bookingList == null || bookingList.size() == 0)
         {
@@ -809,7 +809,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
         return sortBookingList;
     }
 
-    private void setCommonDateTime(CommonDateTime commonDateTime)
+    void setCommonDateTime(CommonDateTime commonDateTime)
     {
         mCommonDateTime = commonDateTime;
     }
@@ -1098,23 +1098,20 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
                     final int reservationIndex = externalDeepLink.getReservationIndex();
 
-                    if (placeType != null)
+                    String imageUrl = null;
+                    String aggregationId = null;
+
+                    for (Booking booking : bookingList)
                     {
-                        String imageUrl = null;
-                        String aggregationId = null;
-
-                        for (Booking booking : bookingList)
+                        if (booking.reservationIndex == reservationIndex)
                         {
-                            if (booking.reservationIndex == reservationIndex)
-                            {
-                                imageUrl = booking.imageUrl;
-                                aggregationId = booking.aggregationId;
-                                break;
-                            }
+                            imageUrl = booking.imageUrl;
+                            aggregationId = booking.aggregationId;
+                            break;
                         }
-
-                        startBookingDetail(baseActivity, placeType, reservationIndex, aggregationId, imageUrl, true, Booking.BOOKING_STATE_NONE);
                     }
+
+                    startBookingDetail(baseActivity, placeType, reservationIndex, aggregationId, imageUrl, true, Booking.BOOKING_STATE_NONE);
                 }
             }
         } catch (Exception e)
@@ -1134,7 +1131,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
         return true;
     }
 
-    private com.twoheart.dailyhotel.model.Review reviewToReviewParcelable(Review review)
+    com.twoheart.dailyhotel.model.Review reviewToReviewParcelable(Review review)
     {
         com.twoheart.dailyhotel.model.Review reviewParcelable = new com.twoheart.dailyhotel.model.Review();
 

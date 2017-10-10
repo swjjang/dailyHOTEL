@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import io.reactivex.Observable;
 
 /**
- * Created by iseung-won on 2017. 8. 8..
+ * Created by android_sam on 2017. 8. 8..
  */
 
 public interface CampaignTagInterface

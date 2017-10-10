@@ -23,7 +23,7 @@ import com.twoheart.dailyhotel.databinding.LayoutCarouselAnimationDataBinding;
 import java.util.ArrayList;
 
 /**
- * Created by iseung-won on 2017. 8. 25..
+ * Created by android_sam on 2017. 8. 25..
  */
 
 public class DailyCarouselAnimationLayout extends ConstraintLayout
@@ -31,8 +31,8 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
     private static final int LAYOUT_ANIMATION_DURATION = 200;
 
     private Context mContext;
-    private LayoutCarouselAnimationDataBinding mDataBinding;
-    private ValueAnimator mValueAnimator;
+    LayoutCarouselAnimationDataBinding mDataBinding;
+    ValueAnimator mValueAnimator;
     private boolean mIsUseAnimation;
 
     public DailyCarouselAnimationLayout(Context context)
@@ -102,9 +102,13 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
             mIsUseAnimation = typedArray.getBoolean(R.styleable.dailyCarousel_useAnimation, false);
             boolean isUsePrice = typedArray.getBoolean(R.styleable.dailyCarousel_usePriceLayout, true);
             setUsePriceLayout(isUsePrice);
+
+            boolean isUseViewAllButton = typedArray.getBoolean(R.styleable.dailyCarousel_useViewAllButton, true);
+            setUseViewAllButtonLayout(isUseViewAllButton);
         } else
         {
             setUsePriceLayout(true);
+            setUseViewAllButtonLayout(true);
         }
     }
 
@@ -210,14 +214,14 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
         return mDataBinding.contentLayout.getData();
     }
 
-    public void setData(ArrayList<CarouselListItem> list)
+    public void setData(ArrayList<CarouselListItem> list, boolean nightsEnabled)
     {
         if (mDataBinding == null)
         {
             return;
         }
 
-        mDataBinding.contentLayout.setData(list);
+        mDataBinding.contentLayout.setData(list, nightsEnabled);
 
         boolean hasData = list != null && list.size() > 0;
 
@@ -305,6 +309,16 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
         }
 
         mDataBinding.contentLayout.setUsePriceLayout(isUse);
+    }
+
+    public void setUseViewAllButtonLayout(boolean isUse)
+    {
+        if (mDataBinding == null)
+        {
+            return;
+        }
+
+        mDataBinding.contentLayout.setUseViewAllButtonLayout(isUse);
     }
 
     void setHeight(int height)

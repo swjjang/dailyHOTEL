@@ -27,8 +27,8 @@ import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.entity.WishResult;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.GourmetPaymentAnalyticsParam;
-import com.daily.dailyhotel.parcel.analytics.TrueReviewAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.TrueReviewAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CalendarImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.GourmetRemoteImpl;
@@ -40,12 +40,14 @@ import com.daily.dailyhotel.screen.home.gourmet.detail.menus.GourmetMenusActivit
 import com.daily.dailyhotel.screen.home.gourmet.detail.truereview.GourmetTrueReviewActivity;
 import com.daily.dailyhotel.screen.home.gourmet.payment.GourmetPaymentActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
+import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
+import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
@@ -59,7 +61,6 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
-import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -95,19 +96,19 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
     static final int SHOWN_MENU_COUNT = 5;
 
-    private GourmetDetailAnalyticsInterface mAnalytics;
+    GourmetDetailAnalyticsInterface mAnalytics;
 
     private GourmetRemoteImpl mGourmetRemoteImpl;
     private CommonRemoteImpl mCommonRemoteImpl;
     private ProfileRemoteImpl mProfileRemoteImpl;
     private CalendarImpl mCalendarImpl;
 
-    private int mGourmetIndex, mPriceFromList;
+    int mGourmetIndex, mPriceFromList;
     private String mGourmetName, mCategory;
     private String mImageUrl;
-    private GourmetBookDateTime mGourmetBookDateTime;
+    GourmetBookDateTime mGourmetBookDateTime;
     private CommonDateTime mCommonDateTime;
-    private GourmetDetail mGourmetDetail;
+    GourmetDetail mGourmetDetail;
     private ReviewScores mReviewScores;
 
     private int mStatus = STATUS_NONE;
@@ -118,10 +119,10 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     private int mGradientType;
     private List<Integer> mSoldOutDateList;
     private int mSelectedMenuIndex;
-    private boolean mShowCalendar;
-    private boolean mShowTrueVR;
+    boolean mShowCalendar;
+    boolean mShowTrueVR;
 
-    private DailyDeepLink mDailyDeepLink;
+    DailyDeepLink mDailyDeepLink;
     private AppResearch mAppResearch;
 
     public interface GourmetDetailAnalyticsInterface extends BaseAnalyticsInterface
@@ -617,7 +618,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
             if (wish == true)
             {
-                addCompositeDisposable(mGourmetRemoteImpl.addGourmetWish(mGourmetDetail.index)//
+                addCompositeDisposable(mGourmetRemoteImpl.addWish(mGourmetDetail.index)//
                     .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<WishResult>()
                     {
                         @Override
@@ -675,7 +676,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                     }));
             } else
             {
-                addCompositeDisposable(mGourmetRemoteImpl.removeGourmetWish(mGourmetDetail.index)//
+                addCompositeDisposable(mGourmetRemoteImpl.removeWish(mGourmetDetail.index)//
                     .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<WishResult>()
                     {
                         @Override
@@ -738,7 +739,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     @Override
     public void onShareKakaoClick()
     {
-        if (mGourmetDetail == null || mGourmetBookDateTime == null || lock() == true)
+        if (mGourmetDetail == null || mGourmetBookDateTime == null)
         {
             return;
         }
@@ -786,7 +787,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     @Override
     public void onShareSmsClick()
     {
-        if (mGourmetDetail == null || mGourmetBookDateTime == null || lock() == true)
+        if (mGourmetDetail == null || mGourmetBookDateTime == null)
         {
             return;
         }
@@ -1197,7 +1198,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         getViewInterface().setBottomButtonLayout(status);
     }
 
-    private void setCommonDateTime(@NonNull CommonDateTime commonDateTime)
+    void setCommonDateTime(@NonNull CommonDateTime commonDateTime)
     {
         if (commonDateTime == null)
         {
@@ -1207,24 +1208,24 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         mCommonDateTime = commonDateTime;
     }
 
-    private void setReviewScores(ReviewScores reviewScores)
+    void setReviewScores(ReviewScores reviewScores)
     {
         mReviewScores = reviewScores;
     }
 
-    private void setSoldOutDateList(List<Integer> soldOutList)
+    void setSoldOutDateList(List<Integer> soldOutList)
     {
         mSoldOutDateList = soldOutList;
     }
 
-    private void setGourmetDetail(GourmetDetail gourmetDetail)
+    void setGourmetDetail(GourmetDetail gourmetDetail)
     {
         mGourmetDetail = gourmetDetail;
 
         mAnalytics.onScreen(getActivity(), mGourmetBookDateTime, gourmetDetail, mPriceFromList);
     }
 
-    private void notifyGourmetDetailChanged()
+    void notifyGourmetDetailChanged()
     {
         if (mGourmetDetail == null)
         {
@@ -1305,7 +1306,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     /**
      * @param visitDateTime ISO-8601
      */
-    private void setGourmetBookDateTime(String visitDateTime)
+    void setGourmetBookDateTime(String visitDateTime)
     {
         if (DailyTextUtils.isTextEmpty(visitDateTime) == true)
         {
@@ -1326,7 +1327,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         }
     }
 
-    private void setGourmetBookDateTime(String visitDateTime, int afterDay)
+    void setGourmetBookDateTime(String visitDateTime, int afterDay)
     {
         if (DailyTextUtils.isTextEmpty(visitDateTime) == true)
         {
@@ -1347,7 +1348,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         }
     }
 
-    private void notifyWishChanged()
+    void notifyWishChanged()
     {
         if (mGourmetDetail == null)
         {
@@ -1358,7 +1359,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         getViewInterface().setWishSelected(mGourmetDetail.myWish);
     }
 
-    private void notifyWishChanged(int wishCount, boolean myWish)
+    void notifyWishChanged(int wishCount, boolean myWish)
     {
         if (mGourmetDetail == null)
         {
@@ -1377,7 +1378,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             return;
         }
 
-        String callByScreen = mIsDeepLink ? AnalyticsManager.Label.EVENT : AnalyticsManager.ValueType.DETAIL;
+        String callByScreen = equalsCallingActivity(EventWebActivity.class) ? AnalyticsManager.Label.EVENT : AnalyticsManager.ValueType.DETAIL;
 
         Intent intent = GourmetDetailCalendarActivity.newInstance(getActivity(), //
             commonDateTime, gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), gourmetIndex//
@@ -1469,10 +1470,10 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         }
 
         addCompositeDisposable(Observable.zip(observable//
-            , mGourmetRemoteImpl.getGourmetDetail(mGourmetIndex, mGourmetBookDateTime)//
+            , mGourmetRemoteImpl.getDetail(mGourmetIndex, mGourmetBookDateTime)//
             , mCalendarImpl.getGourmetUnavailableDates(mGourmetIndex, GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT, false)//
-            , mGourmetRemoteImpl.getGourmetReviewScores(mGourmetIndex)//
-            , mGourmetRemoteImpl.getGourmetHasCoupon(mGourmetIndex, mGourmetBookDateTime)//
+            , mGourmetRemoteImpl.getReviewScores(mGourmetIndex)//
+            , mGourmetRemoteImpl.getHasCoupon(mGourmetIndex, mGourmetBookDateTime)//
             , mCommonRemoteImpl.getCommonDateTime()//
             , new Function6<Boolean, GourmetDetail, List<Integer>, ReviewScores, Boolean, CommonDateTime, GourmetDetail>()
             {

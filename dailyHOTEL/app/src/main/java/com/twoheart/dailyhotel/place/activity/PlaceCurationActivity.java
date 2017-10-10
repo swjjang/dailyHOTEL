@@ -41,7 +41,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
 
     private Handler mHandler;
 
-    private DailyLocationFactory mDailyLocationFactory;
+    DailyLocationFactory mDailyLocationFactory;
 
     protected boolean mIsFixedLocation;
 

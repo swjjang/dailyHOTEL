@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.Event;
@@ -16,7 +17,6 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;

@@ -38,6 +38,7 @@ import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.entity.CarouselListItem;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.daily.dailyhotel.view.carousel.DailyCarouselAnimationLayout;
 import com.daily.dailyhotel.view.carousel.DailyCarouselLayout;
@@ -52,7 +53,6 @@ import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.place.base.BaseBlurLayout;
 import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
-import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
@@ -85,10 +85,10 @@ public class HomeLayout extends BaseBlurLayout
     private DailyTextView mEventCountTextView;
     EventListAdapter mEventListAdapter;
 
-    private View mActionButtonLayout;
+    View mActionButtonLayout;
     private ValueAnimator mScrollButtonLayoutAnimator;
     private int mActionButtonLayoutVisibility = View.GONE;
-    private int mSkipScrollAnimationGapValue;
+    int mSkipScrollAnimationGapValue;
 
     SwipeRefreshLayout mSwipeRefreshLayout;
     DailyHomeScrollView mDailyHomeScrollView;
@@ -108,7 +108,7 @@ public class HomeLayout extends BaseBlurLayout
 
     LinearLayout mProviderInfoView;
 
-    private BaseMenuNavigationFragment.OnScreenScrollChangeListener mOnScreenScrollChangeListener;
+    BaseMenuNavigationFragment.OnScreenScrollChangeListener mOnScreenScrollChangeListener;
 
 
     public interface OnEventListener extends OnBaseEventListener
@@ -466,13 +466,13 @@ public class HomeLayout extends BaseBlurLayout
             }
 
             @Override
-            public void onItemClick(View view)
+            public void onItemClick(View view, android.support.v4.util.Pair[] pairs)
             {
                 ((HomeLayout.OnEventListener) mOnEventListener).onWishListItemClick(view);
             }
 
             @Override
-            public void onItemLongClick(View view)
+            public void onItemLongClick(View view, android.support.v4.util.Pair[] pairs)
             {
                 ((HomeLayout.OnEventListener) mOnEventListener).onWishListItemLongClick(view);
             }
@@ -504,13 +504,13 @@ public class HomeLayout extends BaseBlurLayout
             }
 
             @Override
-            public void onItemClick(View view)
+            public void onItemClick(View view, android.support.v4.util.Pair[] pairs)
             {
                 ((HomeLayout.OnEventListener) mOnEventListener).onRecentListItemClick(view);
             }
 
             @Override
-            public void onItemLongClick(View view)
+            public void onItemLongClick(View view, android.support.v4.util.Pair[] pairs)
             {
                 ((HomeLayout.OnEventListener) mOnEventListener).onRecentListItemLongClick(view);
             }
@@ -954,7 +954,7 @@ public class HomeLayout extends BaseBlurLayout
 
     public void setWishListData(ArrayList<CarouselListItem> list, boolean isError)
     {
-        mWishListLayout.setData(list);
+        mWishListLayout.setData(list, false);
 
         if (isError == true)
         {
@@ -964,7 +964,7 @@ public class HomeLayout extends BaseBlurLayout
 
     public void setRecentListData(ArrayList<CarouselListItem> list, boolean isError)
     {
-        mRecentListLayout.setData(list);
+        mRecentListLayout.setData(list, false);
 
         if (isError == true)
         {
@@ -1696,7 +1696,7 @@ public class HomeLayout extends BaseBlurLayout
         private static final String DEFAULT_EVENT_IMAGE_URL = "defaultImageUrl";
 
         private List<Event> mHomeEventList;
-        private View.OnClickListener mOnClickListener;
+        View.OnClickListener mOnClickListener;
 
         public EventListAdapter(Context context, View.OnClickListener listener)
         {

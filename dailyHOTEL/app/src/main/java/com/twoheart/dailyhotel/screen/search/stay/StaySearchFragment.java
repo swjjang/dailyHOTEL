@@ -14,6 +14,8 @@ import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchActivity;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
@@ -32,8 +34,6 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
-import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -61,11 +61,11 @@ public class StaySearchFragment extends PlaceSearchFragment
     StayBookingDay mStayBookingDay;
     Disposable mAnalyticsDisposable;
 
-    private ArrayList<RecentlyPlace> mRecentlyStayList;
-    private ArrayList<String> mStayOutboundKeywordList;
+    ArrayList<RecentlyPlace> mRecentlyStayList;
+    ArrayList<String> mStayOutboundKeywordList;
 
-    private String mInputText;
-    private Object mCalenderObject;
+    String mInputText;
+    Object mCalenderObject;
 
     @Override
     protected void initContents()
@@ -502,13 +502,10 @@ public class StaySearchFragment extends PlaceSearchFragment
 
                 ArrayList<String> arrayList = new ArrayList<>();
                 JSONArray jsonArray = new JSONArray(prefereceText);
-                if (jsonArray != null)
+                int length = jsonArray.length();
+                for (int i = 0; i < length; i++)
                 {
-                    int length = jsonArray.length();
-                    for (int i = 0; i < length; i++)
-                    {
-                        arrayList.add(jsonArray.getString(i));
-                    }
+                    arrayList.add(jsonArray.getString(i));
                 }
 
                 return Observable.just(arrayList);
@@ -611,6 +608,13 @@ public class StaySearchFragment extends PlaceSearchFragment
                 // negative
                 try
                 {
+                    if (mOnEventListener == null)
+                    {
+                        return;
+                    }
+
+                    mOnEventListener.onSearch(getSearchKeyword(), true);
+
                     AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.SEARCH //
                         , AnalyticsManager.Action.OB_KEYWORDS_IN_DOMESTIC, AnalyticsManager.Label.NO, null);
                 } catch (Exception e)
@@ -758,7 +762,7 @@ public class StaySearchFragment extends PlaceSearchFragment
         }
 
         @Override
-        public void onSearch(String text)
+        public void onSearch(String text, boolean isSkipCheck)
         {
             if (mIsScrolling == true)
             {
@@ -770,7 +774,7 @@ public class StaySearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            if (showCheckStayOutboundSearchDialog() == true)
+            if (isSkipCheck == false && showCheckStayOutboundSearchDialog() == true)
             {
                 return;
             }

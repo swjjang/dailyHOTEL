@@ -14,7 +14,7 @@ public class BookingParcel implements Parcelable
     {
         if (booking == null)
         {
-            throw new NullPointerException("reservation == null");
+            throw new NullPointerException("booking == null");
         }
 
         mBooking = booking;

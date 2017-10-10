@@ -46,8 +46,8 @@ public abstract class PlaceBookingDetailMapPresenter extends BaseExceptionPresen
 {
     private String mTitle;
     private PlaceBookingDay mPlaceBookingDay;
-    private ArrayList<Place> mPlaceList;
-    private DailyLocationExFactory mDailyLocationExFactory;
+    ArrayList<Place> mPlaceList;
+    DailyLocationExFactory mDailyLocationExFactory;
     private String mPlaceName;
     private Location mPlaceLocation;
 

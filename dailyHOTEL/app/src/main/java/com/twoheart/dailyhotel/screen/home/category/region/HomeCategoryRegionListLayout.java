@@ -35,9 +35,9 @@ import java.util.List;
 public class HomeCategoryRegionListLayout extends BaseLayout
 {
     private View mTermsOfLocationView;
-    private DailyAnimatedExpandableListView mListView;
+    DailyAnimatedExpandableListView mListView;
 
-    private PlaceRegionAnimatedExpandableListAdapter mAdapter; // TODO : 임시로 어뎁터 생성 - 서버에서 어떤 타입이 올지 몰라 생성 안하고 씀
+    PlaceRegionAnimatedExpandableListAdapter mAdapter; // TODO : 임시로 어뎁터 생성 - 서버에서 어떤 타입이 올지 몰라 생성 안하고 씀
 
     private DailyCategoryType mDailyCategoryType;
     private Province mSelectedProvince;
@@ -200,7 +200,7 @@ public class HomeCategoryRegionListLayout extends BaseLayout
         return mContext.getResources().getString(R.string.label_view_my_around_daily_category_format, categoryName);
     }
 
-    private View getGroupView(int groupPosition)
+    View getGroupView(int groupPosition)
     {
         int count = mListView.getChildCount();
 
@@ -290,7 +290,7 @@ public class HomeCategoryRegionListLayout extends BaseLayout
         }
     }
 
-    private void onGroupCollapse(View view, final RegionViewItem regionViewItem)
+    void onGroupCollapse(View view, final RegionViewItem regionViewItem)
     {
         if (view.getVisibility() != View.VISIBLE)
         {
@@ -354,7 +354,7 @@ public class HomeCategoryRegionListLayout extends BaseLayout
         }
     }
 
-    private void expandGroupWidthAnimation(int groupPosition, final RegionViewItem regionViewItem)
+    void expandGroupWidthAnimation(int groupPosition, final RegionViewItem regionViewItem)
     {
         mListView.expandGroupWithAnimation(groupPosition, new DailyAnimatedExpandableListView.OnAnimationListener()
         {
@@ -377,7 +377,7 @@ public class HomeCategoryRegionListLayout extends BaseLayout
         }
     }
 
-    private void postExpandGroupWithAnimation(final int groupPosition)
+    void postExpandGroupWithAnimation(final int groupPosition)
     {
         mListView.postDelayed(new Runnable()
         {

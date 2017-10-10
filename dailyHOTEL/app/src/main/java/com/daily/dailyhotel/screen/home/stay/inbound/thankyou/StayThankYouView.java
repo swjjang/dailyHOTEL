@@ -71,33 +71,18 @@ public class StayThankYouView extends BaseBlurView<StayThankYouView.OnEventListe
             @Override
             public void onViewAllClick()
             {
-                if (getEventListener() == null)
-                {
-                    return;
-                }
-
                 getEventListener().onRecommendGourmetViewAllClick();
             }
 
             @Override
-            public void onItemClick(View view)
+            public void onItemClick(View view, android.support.v4.util.Pair[] pairs)
             {
-                if (getEventListener() == null)
-                {
-                    return;
-                }
-
                 getEventListener().onRecommendGourmetItemClick(view);
             }
 
             @Override
-            public void onItemLongClick(View view)
+            public void onItemLongClick(View view, android.support.v4.util.Pair[] pairs)
             {
-                if (getEventListener() == null)
-                {
-                    return;
-                }
-
                 getEventListener().onRecommendGourmetItemLongClick(view);
             }
         });
@@ -319,7 +304,7 @@ public class StayThankYouView extends BaseBlurView<StayThankYouView.OnEventListe
             return;
         }
 
-        getViewDataBinding().recommendGourmetLayout.setData(carouselListItemList);
+        getViewDataBinding().recommendGourmetLayout.setData(carouselListItemList, false);
     }
 
     @Override

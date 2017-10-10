@@ -28,6 +28,9 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyImageView;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
+import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.firebase.DailyRemoteConfig;
@@ -46,9 +49,6 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
-import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
-import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -73,9 +73,9 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
     MainFragmentManager mMainFragmentManager;
     MenuBarLayout mMenuBarLayout;
     private Dialog mSettingNetworkDialog;
-    private Dialog mAppPermissionsGuideDialog;
+    Dialog mAppPermissionsGuideDialog;
     View mSplashLayout;
-    private DailyDeepLink mDailyDeepLink;
+    DailyDeepLink mDailyDeepLink;
 
     boolean mIsInitialization;
     boolean mIsBenefitAlarm;
@@ -241,7 +241,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
         System.gc();
     }
 
-    private void clearDeepLink()
+    void clearDeepLink()
     {
         if (mDailyDeepLink == null)
         {
@@ -1009,7 +1009,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
         mDistance = 0;
     }
 
-    private void analyticsRankABTest()
+    void analyticsRankABTest()
     {
         try
         {

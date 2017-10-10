@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by iseung-won on 2017. 9. 4..
+ * Created by android_sam on 2017. 9. 4..
  */
 @JsonObject
 public class RecentlyPlaceData

@@ -161,7 +161,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         }));
     }
 
-    private ArrayList<PlaceViewItem> makePlaceViewItemList(ArrayList<RecentlyPlace> stayList, StayOutbounds stayOutbounds)
+    ArrayList<PlaceViewItem> makePlaceViewItemList(ArrayList<RecentlyPlace> stayList, StayOutbounds stayOutbounds)
     {
         ArrayList<PlaceViewItem> list = new ArrayList<>();
 
@@ -224,7 +224,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         });
     }
 
-    private int getPlaceViewItemIndex(PlaceViewItem placeViewItem)
+    int getPlaceViewItemIndex(PlaceViewItem placeViewItem)
     {
         int index;
 
@@ -271,7 +271,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void onStayItemClick(View view, PlaceViewItem placeViewItem)
+    void onStayItemClick(View view, PlaceViewItem placeViewItem)
     {
         if (view == null || placeViewItem == null)
         {
@@ -322,14 +322,12 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                     , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
 
                 View simpleDraweeView = view.findViewById(R.id.imageView);
-                View gradeTextView = view.findViewById(R.id.gradeTextView);
                 View nameTextView = view.findViewById(R.id.nameTextView);
                 View gradientTopView = view.findViewById(R.id.gradientTopView);
                 View gradientBottomView = view.findViewById(R.id.gradientView);
 
                 optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity,//
                     android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
-                    android.support.v4.util.Pair.create(gradeTextView, getString(R.string.transition_place_grade)),//
                     android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)),//
                     android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)),//
                     android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
@@ -365,7 +363,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void onStayOutboundItemClick(View view, PlaceViewItem placeViewItem)
+    void onStayOutboundItemClick(View view, PlaceViewItem placeViewItem)
     {
         StayOutbound stayOutbound = placeViewItem.getItem();
 
@@ -481,7 +479,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             stayOutbound.name, null);
     }
 
-    private void onStayItemLongClick(View view, int position, RecentlyPlace recentlyPlace)
+    void onStayItemLongClick(View view, int position, RecentlyPlace recentlyPlace)
     {
         if (view == null || recentlyPlace == null)
         {
@@ -498,7 +496,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
     }
 
-    private void onStayOutboundItemLongClick(View view, int position, StayOutbound stayOutbound)
+    void onStayOutboundItemLongClick(View view, int position, StayOutbound stayOutbound)
     {
         if (view == null || stayOutbound == null)
         {
@@ -518,7 +516,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             , CODE_REQUEST_ACTIVITY_PREVIEW);
     }
 
-    private void onStayItemDeleteClick(PlaceViewItem placeViewItem)
+    void onStayItemDeleteClick(PlaceViewItem placeViewItem)
     {
         if (placeViewItem == null)
         {
@@ -547,7 +545,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             AnalyticsManager.Action.RECENTVIEW_ITEM_DELETE, Integer.toString(recentlyPlace.index), null);
     }
 
-    private void onStayOutboundItemDeleteClick(PlaceViewItem placeViewItem)
+    void onStayOutboundItemDeleteClick(PlaceViewItem placeViewItem)
     {
         if (placeViewItem == null)
         {

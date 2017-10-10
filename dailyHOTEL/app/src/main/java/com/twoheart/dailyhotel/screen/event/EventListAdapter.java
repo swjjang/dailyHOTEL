@@ -94,6 +94,8 @@ public class EventListAdapter extends ArrayAdapter<Event>
         com.facebook.drawee.view.SimpleDraweeView imageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.eventImageView);
 
         Event event = getItem(position);
+
+        imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
         Util.requestImageResize(mContext, imageView, ScreenUtils.getResolutionImageUrl(mContext, event.defaultImageUrl, event.lowResolutionImageUrl));
 
         return view;

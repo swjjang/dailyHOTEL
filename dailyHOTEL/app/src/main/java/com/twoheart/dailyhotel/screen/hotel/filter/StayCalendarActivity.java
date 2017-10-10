@@ -35,7 +35,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
     public static final int DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT = 60;
     public static final int DEFAULT_OVERSEAS_CALENDAR_DAY_OF_MAX_COUNT = 180;
 
-    private View mCheckInDayView;
+    View mCheckInDayView;
     private View mCheckOutDayView;
     private TextView mConfirmTextView;
 

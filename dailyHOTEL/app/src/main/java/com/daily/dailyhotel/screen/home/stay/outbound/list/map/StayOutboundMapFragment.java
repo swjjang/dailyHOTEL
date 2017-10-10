@@ -54,19 +54,19 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
     implements OnMapReadyCallback, GoogleMap.OnMapClickListener//
     , ClusterManager.OnClusterClickListener<StayOutboundClusterItem>, ClusterManager.OnClusterItemClickListener<StayOutboundClusterItem>
 {
-    private GoogleMap mGoogleMap;
+    GoogleMap mGoogleMap;
 
-    private ImageView mMyLocationView;
-    private Drawable mMyLocationDrawable;
+    ImageView mMyLocationView;
+    Drawable mMyLocationDrawable;
 
     private Marker mMyLocationMarker, mSelectedMarker;
-    private ClusterManager mClusterManager;
-    private StayOutboundClusterRenderer mClusterRenderer;
+    ClusterManager mClusterManager;
+    StayOutboundClusterRenderer mClusterRenderer;
 
     // 특별히 많은 데이터를 관리하기 때문에 넣어주었다.
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
-    private OnEventListener mOnEventListener;
+    OnEventListener mOnEventListener;
 
     public interface OnEventListener
     {
@@ -574,7 +574,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
      * @param stayOutboundList
      * @return
      */
-    private List<StayOutbound> reLocationDuplicateStayOutbound(List<StayOutbound> stayOutboundList)
+    List<StayOutbound> reLocationDuplicateStayOutbound(List<StayOutbound> stayOutboundList)
     {
         List<StayOutbound> stayOutboundArrangeList = new ArrayList<>();
 
@@ -677,7 +677,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
         }
     }
 
-    private void moveCameraBounds(final LatLngBounds bounds, int placeCount)
+    void moveCameraBounds(final LatLngBounds bounds, int placeCount)
     {
         if (placeCount <= 0)
         {
@@ -728,7 +728,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
         mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cp));
     }
 
-    private void directCameraSetting(final LatLngBounds bounds, int hotelCount)
+    void directCameraSetting(final LatLngBounds bounds, int hotelCount)
     {
         if (isFinishing() == true)
         {
@@ -750,7 +750,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
         mClusterManager.cluster();
     }
 
-    private boolean isFinishing()
+    boolean isFinishing()
     {
         return (isAdded() == false || getActivity() == null || getActivity().isFinishing() == true);
     }

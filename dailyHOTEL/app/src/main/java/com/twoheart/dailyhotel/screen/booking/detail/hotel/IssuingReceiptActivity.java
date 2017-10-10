@@ -22,13 +22,13 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyEditText;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
+import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
-import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 

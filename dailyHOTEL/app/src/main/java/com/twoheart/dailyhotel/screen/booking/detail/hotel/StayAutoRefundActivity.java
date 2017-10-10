@@ -53,12 +53,12 @@ public class StayAutoRefundActivity extends BaseActivity
 
     private static final String PAYMENT_TYPE_VBANK = "VBANK_INICIS";
 
-    private RefundRemoteImpl mRefundRemoteImpl;
+    RefundRemoteImpl mRefundRemoteImpl;
 
     protected StayAutoRefundLayout mStayAutoRefundLayout;
     protected StayAutoRefundNetworkController mStayAutoRefundNetworkController;
     StayBookingDetail mStayBookingDetail;
-    private String mAggregationId;
+    String mAggregationId;
     Dialog mDialog;
 
     int mSelectedCancelReason;
@@ -719,7 +719,7 @@ public class StayAutoRefundActivity extends BaseActivity
         return true;
     }
 
-    private void onRefundResult(int msgCode, String message, boolean readyForRefund)
+    void onRefundResult(int msgCode, String message, boolean readyForRefund)
     {
         if (readyForRefund == true)
         {

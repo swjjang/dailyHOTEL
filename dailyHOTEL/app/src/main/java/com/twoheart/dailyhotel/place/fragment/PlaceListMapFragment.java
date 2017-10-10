@@ -79,7 +79,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
     ClusterManager<PlaceClusterItem> mClusterManager;
     PlaceClusterRenderer mPlaceClusterRenderer;
     Marker mSelectedMarker;
-    private ImageView mMyLocationView;
+    ImageView mMyLocationView;
     DailyOverScrollViewPager mViewPager;
 
     protected BaseActivity mBaseActivity;
@@ -90,7 +90,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
     Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
     ValueAnimator mValueAnimator;
 
-    private DailyLocationFactory mDailyLocationFactory;
+    DailyLocationFactory mDailyLocationFactory;
 
     public interface OnPlaceListMapFragmentListener
     {

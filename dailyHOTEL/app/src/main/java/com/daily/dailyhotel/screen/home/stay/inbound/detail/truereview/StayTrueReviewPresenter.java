@@ -304,7 +304,7 @@ public class StayTrueReviewPresenter extends BaseExceptionPresenter<StayTrueRevi
         }
     }
 
-    private void addTrueReviews(TrueReviews trueReviews)
+    void addTrueReviews(TrueReviews trueReviews)
     {
         if (getViewInterface() == null || trueReviews == null)
         {

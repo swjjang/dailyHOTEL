@@ -18,6 +18,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
+import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.daily.dailyhotel.view.DailyStayCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.maps.model.LatLng;
@@ -45,7 +46,6 @@ import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -653,7 +653,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     // mOnEventListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private PlaceSearchResultLayout.OnEventListener mOnEventListener = new PlaceSearchResultLayout.OnEventListener()
+    PlaceSearchResultLayout.OnEventListener mOnEventListener = new PlaceSearchResultLayout.OnEventListener()
     {
         @Override
         public void finish()
@@ -992,7 +992,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 } else
                 {
                     View simpleDraweeView = view.findViewById(R.id.imageView);
-                    View gradeTextView = view.findViewById(R.id.gradeTextView);
                     View nameTextView = view.findViewById(R.id.nameTextView);
                     View gradientTopView = view.findViewById(R.id.gradientTopView);
                     View gradientBottomView = view.findViewById(R.id.gradientView);
@@ -1013,7 +1012,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
                     optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(StaySearchResultActivity.this,//
                         android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
-                        android.support.v4.util.Pair.create(gradeTextView, getString(R.string.transition_place_grade)),//
                         android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)),//
                         android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)),//
                         android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));

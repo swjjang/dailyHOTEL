@@ -23,6 +23,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.view.DailyFloatingActionView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
@@ -48,13 +49,11 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
     private static final int ANIMATION_DELAY = 200;
 
     private View mToolbar;
-    private TextView mCalendarTextView;
+    TextView mCalendarTextView;
     private View mEmptyLayout, mSearchLocationLayout;
     private View mResultLayout;
 
-    protected View mBottomOptionLayout;
-    private View mViewTypeOptionImageView;
-    private View mFilterOptionImageView;
+    private DailyFloatingActionView mFloatingActionView;
 
     protected TabLayout mCategoryTabLayout;
     private View mCalendarUnderlineView;
@@ -284,17 +283,12 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
 
     private void initOptionLayout(View view)
     {
-        mBottomOptionLayout = view.findViewById(R.id.bottomOptionLayout);
-        mBottomOptionLayout.post(() -> mBottomOptionLayout.setTag(mViewPager.getBottom() - mBottomOptionLayout.getTop()));
-
-        // 하단 지도 필터
-        mViewTypeOptionImageView = view.findViewById(R.id.viewTypeOptionImageView);
-        mFilterOptionImageView = view.findViewById(R.id.filterOptionImageView);
+        mFloatingActionView = (DailyFloatingActionView) view.findViewById(R.id.floatingActionView);
+        mFloatingActionView.setOnViewOptionClickListener(v -> ((OnEventListener) mOnEventListener).onViewTypeClick());
+        mFloatingActionView.setOnFilterOptionClickListener(v -> ((OnEventListener) mOnEventListener).onFilterClick());
+        mFloatingActionView.post(() -> mFloatingActionView.setTag(mViewPager.getBottom() - mFloatingActionView.getTop()));
 
         setViewTypeVisibility(false);
-
-        mViewTypeOptionImageView.setOnClickListener(this);
-        mFilterOptionImageView.setOnClickListener(this);
 
         // 기본 설정
         setOptionViewTypeView(Constants.ViewType.LIST);
@@ -305,14 +299,19 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
 
     public void setOptionViewTypeView(Constants.ViewType viewType)
     {
+        if (mFloatingActionView == null)
+        {
+            return;
+        }
+
         switch (viewType)
         {
             case LIST:
-                mViewTypeOptionImageView.setBackgroundResource(R.drawable.fab_01_map);
+                mFloatingActionView.setViewOptionMapSelected();
                 break;
 
             case MAP:
-                mViewTypeOptionImageView.setBackgroundResource(R.drawable.fab_02_list);
+                mFloatingActionView.setViewOptionListSelected();
                 break;
 
             case GONE:
@@ -320,37 +319,34 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
         }
     }
 
-    public void setOptionViewTypeEnabled(boolean isTypeEnabled)
+    public void setOptionViewTypeEnabled(boolean enabled)
     {
-        // disable opacity 40% - 0 ~ 255
-        if (isTypeEnabled == true)
+        if(mFloatingActionView == null)
         {
-            mViewTypeOptionImageView.setAlpha(1.0f);
-        } else
-        {
-            mViewTypeOptionImageView.setAlpha(0.4f);
+            return;
         }
 
-        mViewTypeOptionImageView.setEnabled(isTypeEnabled);
+        mFloatingActionView.setViewOptionEnable(enabled);
     }
 
-    public void setOptionFilterEnabled(boolean isFilterEnabled)
+    public void setOptionFilterEnabled(boolean enabled)
     {
-        // disable opacity 40% - 0 ~ 255
-        if (isFilterEnabled == true)
+        if(mFloatingActionView == null)
         {
-            mFilterOptionImageView.setAlpha(1.0f);
-        } else
-        {
-            mFilterOptionImageView.setAlpha(0.4f);
+            return;
         }
 
-        mFilterOptionImageView.setEnabled(isFilterEnabled);
+        mFloatingActionView.setFilterOptionEnable(enabled);
     }
 
-    public void setOptionFilterSelected(boolean enabled)
+    public void setOptionFilterSelected(boolean selected)
     {
-        mFilterOptionImageView.setSelected(enabled);
+        if(mFloatingActionView == null)
+        {
+            return;
+        }
+
+        mFloatingActionView.setFilterOptionSelected(selected);
     }
 
     public void setCategoryTabLayoutVisibility(int visibility)
@@ -394,7 +390,7 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
         mCategoryTabLayout.removeAllTabs();
         setCategoryTabLayoutVisibility(View.GONE);
 
-        mFragmentPagerAdapter = getPlaceListFragmentPagerAdapter(fragmentManager, mBottomOptionLayout, listener);
+        mFragmentPagerAdapter = getPlaceListFragmentPagerAdapter(fragmentManager, mFloatingActionView, listener);
 
         mViewPager.removeAllViews();
         mViewPager.setOffscreenPageLimit(1);
@@ -444,7 +440,7 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
 
                 StaySearchResultListFragment searchResultListFragment = new StaySearchResultListFragment();
                 searchResultListFragment.setPlaceOnListFragmentListener(listener);
-                searchResultListFragment.setBottomOptionLayout(mBottomOptionLayout);
+                searchResultListFragment.setBottomOptionLayout(mFloatingActionView);
                 list.add(searchResultListFragment);
             }
 
@@ -533,7 +529,7 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
         mDistanceFilterSpinner.setEnabled(isVisible);
     }
 
-    private double getSpinnerRadiusValue(int spinnerPosition)
+    double getSpinnerRadiusValue(int spinnerPosition)
     {
         if (mDistanceFilterSpinner == null)
         {
@@ -649,36 +645,32 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
             case R.id.calendarLayout:
                 ((StayCategoryNearByLayout.OnEventListener) mOnEventListener).onDateClick();
                 break;
-
-            case R.id.viewTypeOptionImageView:
-                ((StayCategoryNearByLayout.OnEventListener) mOnEventListener).onViewTypeClick();
-                break;
-
-            case R.id.filterOptionImageView:
-                ((StayCategoryNearByLayout.OnEventListener) mOnEventListener).onFilterClick();
-                break;
         }
-    }
-
-    void setMenuBarLayoutEnabled(boolean enabled)
-    {
-        mViewTypeOptionImageView.setEnabled(enabled);
-        mFilterOptionImageView.setEnabled(enabled);
     }
 
     void setMenuBarLayoutTranslationY(float dy)
     {
-        mBottomOptionLayout.setTranslationY(dy);
+        if(mFloatingActionView == null)
+        {
+            return;
+        }
+
+        mFloatingActionView.setTranslationY(dy);
     }
 
     public void setMenuBarLayoutVisible(boolean visible)
     {
-        mBottomOptionLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
+        if(mFloatingActionView == null)
+        {
+            return;
+        }
+
+        mFloatingActionView.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     public void calculationMenuBarLayoutTranslationY(int dy)
     {
-        Object tag = mBottomOptionLayout.getTag();
+        Object tag = mFloatingActionView.getTag();
 
         if (tag == null || tag instanceof Integer == false)
         {
@@ -686,7 +678,7 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
         }
 
         int height = (Integer) tag;
-        float translationY = dy + mBottomOptionLayout.getTranslationY();
+        float translationY = dy + mFloatingActionView.getTranslationY();
 
         if (translationY >= height)
         {
@@ -707,10 +699,12 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
         // 움직이는 동안에는 터치가 불가능 하다.
         if (translationY == 0 || translationY == height)
         {
-            setMenuBarLayoutEnabled(true);
+            setOptionViewTypeEnabled(true);
+            setOptionFilterEnabled(true);
         } else
         {
-            setMenuBarLayoutEnabled(false);
+            setOptionViewTypeEnabled(false);
+            setOptionFilterEnabled(false);
         }
 
         setMenuBarLayoutTranslationY(translationY);
@@ -718,7 +712,7 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
 
     public void animationMenuBarLayout()
     {
-        Object tag = mBottomOptionLayout.getTag();
+        Object tag = mFloatingActionView.getTag();
 
         if (tag == null || tag instanceof Integer == false)
         {
@@ -726,18 +720,18 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
         }
 
         int height = (Integer) tag;
-        float translationY = mBottomOptionLayout.getTranslationY();
+        float translationY = mFloatingActionView.getTranslationY();
 
         if (translationY == 0 || translationY == height)
         {
             return;
         }
 
-        mBottomOptionLayout.setTag(mBottomOptionLayout.getId(), translationY);
+        mFloatingActionView.setTag(mFloatingActionView.getId(), translationY);
 
         if (mUpScrolling == true)
         {
-            if (translationY >= mBottomOptionLayout.getHeight() / 2)
+            if (translationY >= mFloatingActionView.getHeight() / 2)
             {
                 hideBottomLayout(true);
             } else
@@ -746,7 +740,7 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
             }
         } else
         {
-            if (translationY <= mBottomOptionLayout.getHeight() / 2)
+            if (translationY <= mFloatingActionView.getHeight() / 2)
             {
                 showBottomLayout(true);
             } else
@@ -778,7 +772,7 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
                 public void onAnimationUpdate(ValueAnimator animation)
                 {
                     int value = (Integer) animation.getAnimatedValue();
-                    float prevTranslationY = (Float) mBottomOptionLayout.getTag(mBottomOptionLayout.getId());
+                    float prevTranslationY = (Float) mFloatingActionView.getTag(mFloatingActionView.getId());
                     float translationY = prevTranslationY * value / 100;
 
                     setMenuBarLayoutTranslationY(prevTranslationY - translationY);
@@ -790,7 +784,8 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
                 @Override
                 public void onAnimationStart(Animator animation)
                 {
-                    setMenuBarLayoutEnabled(false);
+                    setOptionViewTypeEnabled(false);
+                    setOptionFilterEnabled(false);
 
                     mAnimationState = Constants.ANIMATION_STATE.START;
                     mAnimationStatus = Constants.ANIMATION_STATUS.SHOW;
@@ -809,7 +804,8 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
                         mAnimationState = Constants.ANIMATION_STATE.END;
                     }
 
-                    setMenuBarLayoutEnabled(true);
+                    setOptionViewTypeEnabled(true);
+                    setOptionFilterEnabled(true);
                 }
 
                 @Override
@@ -830,7 +826,8 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
         {
             setMenuBarLayoutTranslationY(0);
 
-            setMenuBarLayoutEnabled(true);
+            setOptionViewTypeEnabled(true);
+            setOptionFilterEnabled(true);
         }
     }
 
@@ -856,8 +853,8 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
                 public void onAnimationUpdate(ValueAnimator animation)
                 {
                     int value = (Integer) animation.getAnimatedValue();
-                    float prevTranslationY = (Float) mBottomOptionLayout.getTag(mBottomOptionLayout.getId());
-                    float height = (Integer) mBottomOptionLayout.getTag() - prevTranslationY;
+                    float prevTranslationY = (Float) mFloatingActionView.getTag(mFloatingActionView.getId());
+                    float height = (Integer) mFloatingActionView.getTag() - prevTranslationY;
                     float translationY = height * value / 100;
 
                     setMenuBarLayoutTranslationY(prevTranslationY + translationY);
@@ -872,7 +869,8 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
                     mAnimationState = Constants.ANIMATION_STATE.START;
                     mAnimationStatus = Constants.ANIMATION_STATUS.HIDE;
 
-                    setMenuBarLayoutEnabled(false);
+                    setOptionViewTypeEnabled(false);
+                    setOptionFilterEnabled(false);
                 }
 
                 @Override
@@ -905,15 +903,21 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
             mValueAnimator.start();
         } else
         {
-            setMenuBarLayoutTranslationY((Integer) mBottomOptionLayout.getTag());
+            setMenuBarLayoutTranslationY((Integer) mFloatingActionView.getTag());
 
-            setMenuBarLayoutEnabled(false);
+            setOptionViewTypeEnabled(false);
+            setOptionFilterEnabled(false);
         }
     }
 
-    public void setViewTypeVisibility(boolean isShow)
+    public void setViewTypeVisibility(boolean visible)
     {
-        mViewTypeOptionImageView.setVisibility(isShow ? View.VISIBLE : View.GONE);
+        if(mFloatingActionView == null)
+        {
+            return;
+        }
+
+        mFloatingActionView.setViewOptionVisible(visible);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////

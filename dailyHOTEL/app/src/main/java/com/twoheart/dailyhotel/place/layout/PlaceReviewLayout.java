@@ -38,7 +38,7 @@ import java.util.List;
 
 public class PlaceReviewLayout extends BaseLayout
 {
-    private RecyclerView mRecyclerView;
+    RecyclerView mRecyclerView;
     private ReviewListAdapter mReviewListAdapter;
     private View mTopButton;
 

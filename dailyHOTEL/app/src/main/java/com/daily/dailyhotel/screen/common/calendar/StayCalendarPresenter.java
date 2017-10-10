@@ -13,9 +13,9 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.DailyPreference;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,17 +38,17 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
 {
     private StayCalendarPresenterAnalyticsInterface mAnalytics;
 
-    private String mCheckInDateTime;
-    private String mCheckOutDateTime;
+    String mCheckInDateTime;
+    String mCheckOutDateTime;
 
-    private String mStartDateTime;
-    private String mEndDateTime;
-    private int mNightsOfMaxCount;
+    String mStartDateTime;
+    String mEndDateTime;
+    int mNightsOfMaxCount;
 
     private String mCallByScreen;
-    private boolean mIsSelected;
+    boolean mIsSelected;
     private int mMarginTop;
-    private boolean mIsAnimation;
+    boolean mIsAnimation;
 
     public interface StayCalendarPresenterAnalyticsInterface extends BaseAnalyticsInterface
     {

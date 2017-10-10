@@ -1,6 +1,8 @@
 package com.twoheart.dailyhotel.widget;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -40,6 +42,7 @@ public class DailyHomeScrollView extends ScrollView
         super(context, attrs, defStyle);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public DailyHomeScrollView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);

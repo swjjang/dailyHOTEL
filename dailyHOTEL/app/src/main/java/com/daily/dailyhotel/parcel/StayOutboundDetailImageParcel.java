@@ -15,7 +15,7 @@ public class StayOutboundDetailImageParcel implements Parcelable
     {
         if (stayOutboundDetailImage == null)
         {
-            throw new NullPointerException("user == null");
+            throw new NullPointerException("stayOutboundDetailImage == null");
         }
 
         mStayOutboundDetailImage = stayOutboundDetailImage;

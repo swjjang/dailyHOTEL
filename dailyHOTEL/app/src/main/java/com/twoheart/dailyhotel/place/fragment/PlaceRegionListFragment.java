@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
@@ -22,7 +23,6 @@ import com.twoheart.dailyhotel.place.activity.PlaceRegionListActivity;
 import com.twoheart.dailyhotel.place.adapter.PlaceRegionAnimatedExpandableListAdapter;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyAnimatedExpandableListView;
 

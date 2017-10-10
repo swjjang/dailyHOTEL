@@ -4,9 +4,9 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.daily.dailyhotel.domain.ConfigInterface;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.DailyHotel;
-import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.DailyUserPreference;
 
 import java.util.concurrent.Callable;
 
@@ -18,7 +18,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ConfigLocalImpl implements ConfigInterface
 {
-    private Context mContext;
+    Context mContext;
 
     public ConfigLocalImpl(@NonNull Context context)
     {

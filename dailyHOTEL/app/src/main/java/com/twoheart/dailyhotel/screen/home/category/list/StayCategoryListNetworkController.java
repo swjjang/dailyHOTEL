@@ -64,7 +64,7 @@ public class StayCategoryListNetworkController extends BaseNetworkController
             , params.toLocalPlusParamsMap(), mLocalPlusListCallback);
     }
 
-    private ArrayList<Stay> makeStayList(JSONArray jsonArray, String imageUrl, boolean isLocalPlus) throws JSONException
+    ArrayList<Stay> makeStayList(JSONArray jsonArray, String imageUrl, boolean isLocalPlus) throws JSONException
     {
         if (jsonArray == null)
         {

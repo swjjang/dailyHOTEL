@@ -37,6 +37,7 @@ public class JSONResponseBodyConverters
             } catch (JSONException e)
             {
                 ExLog.e(e.toString());
+                Crashlytics.log(value.string());
                 Crashlytics.logException(e);
             }
             return null;

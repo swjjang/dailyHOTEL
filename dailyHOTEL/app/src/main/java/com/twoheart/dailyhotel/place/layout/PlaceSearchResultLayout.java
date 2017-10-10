@@ -23,6 +23,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.view.DailyFloatingActionView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
@@ -47,9 +48,7 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
     private View mEmptyLayout, mSearchLocationLayout;
     private View mResultLayout;
 
-    protected View mBottomOptionLayout;
-    private View mViewTypeOptionImageView;
-    private View mFilterOptionImageView;
+    protected DailyFloatingActionView mFloatingActionView;
 
     protected TabLayout mCategoryTabLayout;
     private View mCalendarUnderlineView;
@@ -278,22 +277,10 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
 
     private void initOptionLayout(View view)
     {
-        mBottomOptionLayout = view.findViewById(R.id.bottomOptionLayout);
-        mBottomOptionLayout.post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                mBottomOptionLayout.setTag(mViewPager.getBottom() - mBottomOptionLayout.getTop());
-            }
-        });
-
-        // 하단 지도 필터
-        mViewTypeOptionImageView = view.findViewById(R.id.viewTypeOptionImageView);
-        mFilterOptionImageView = view.findViewById(R.id.filterOptionImageView);
-
-        mViewTypeOptionImageView.setOnClickListener(this);
-        mFilterOptionImageView.setOnClickListener(this);
+        mFloatingActionView = (DailyFloatingActionView) view.findViewById(R.id.floatingActionView);
+        mFloatingActionView.setOnViewOptionClickListener(v -> ((OnEventListener) mOnEventListener).onViewTypeClick());
+        mFloatingActionView.setOnFilterOptionClickListener(v -> ((OnEventListener) mOnEventListener).onFilterClick());
+        mFloatingActionView.post(() -> mFloatingActionView.setTag(mViewPager.getBottom() - mFloatingActionView.getTop()));
 
         // 기본 설정
         setOptionViewTypeView(Constants.ViewType.LIST);
@@ -304,14 +291,19 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
 
     public void setOptionViewTypeView(Constants.ViewType viewType)
     {
+        if (mFloatingActionView == null)
+        {
+            return;
+        }
+
         switch (viewType)
         {
             case LIST:
-                mViewTypeOptionImageView.setBackgroundResource(R.drawable.fab_01_map);
+                mFloatingActionView.setViewOptionMapSelected();
                 break;
 
             case MAP:
-                mViewTypeOptionImageView.setBackgroundResource(R.drawable.fab_02_list);
+                mFloatingActionView.setViewOptionListSelected();
                 break;
 
             case GONE:
@@ -319,37 +311,34 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         }
     }
 
-    public void setOptionViewTypeEnabled(boolean isTypeEnabled)
+    public void setOptionViewTypeEnabled(boolean enabled)
     {
-        // disable opacity 40% - 0 ~ 255
-        if (isTypeEnabled == true)
+        if (mFloatingActionView == null)
         {
-            mViewTypeOptionImageView.setAlpha(1.0f);
-        } else
-        {
-            mViewTypeOptionImageView.setAlpha(0.4f);
+            return;
         }
 
-        mViewTypeOptionImageView.setEnabled(isTypeEnabled);
+        mFloatingActionView.setViewOptionEnable(enabled);
     }
 
-    public void setOptionFilterEnabled(boolean isFilterEnabled)
+    public void setOptionFilterEnabled(boolean enabled)
     {
-        // disable opacity 40% - 0 ~ 255
-        if (isFilterEnabled == true)
+        if (mFloatingActionView == null)
         {
-            mFilterOptionImageView.setAlpha(1.0f);
-        } else
-        {
-            mFilterOptionImageView.setAlpha(0.4f);
+            return;
         }
 
-        mFilterOptionImageView.setEnabled(isFilterEnabled);
+        mFloatingActionView.setFilterOptionEnable(enabled);
     }
 
-    public void setOptionFilterSelected(boolean enabled)
+    public void setOptionFilterSelected(boolean selected)
     {
-        mFilterOptionImageView.setSelected(enabled);
+        if (mFloatingActionView == null)
+        {
+            return;
+        }
+
+        mFloatingActionView.setFilterOptionSelected(selected);
     }
 
     public void setCategoryTabLayoutVisibility(int visibility)
@@ -397,7 +386,11 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
 
         setCategoryTabLayoutVisibility(View.INVISIBLE);
 
-        setMenuBarLayoutTranslationY(0);
+
+        if (mFloatingActionView != null)
+        {
+            mFloatingActionView.setTranslationY(0);
+        }
 
         mCategoryTabLayout.removeAllTabs();
 
@@ -407,7 +400,7 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         tab.setTag(Category.ALL);
         mCategoryTabLayout.addTab(tab);
 
-        mFragmentPagerAdapter = getPlaceListFragmentPagerAdapter(fragmentManager, 1, mBottomOptionLayout, listener);
+        mFragmentPagerAdapter = getPlaceListFragmentPagerAdapter(fragmentManager, 1, mFloatingActionView, listener);
         mViewPager.setOffscreenPageLimit(1);
         mViewPager.removeAllViews();
         mViewPager.setAdapter(mFragmentPagerAdapter);
@@ -487,7 +480,7 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
             mCategoryTabLayout.removeAllTabs();
             setCategoryTabLayoutVisibility(View.GONE);
 
-            mFragmentPagerAdapter = getPlaceListFragmentPagerAdapter(fragmentManager, size, mBottomOptionLayout, listener);
+            mFragmentPagerAdapter = getPlaceListFragmentPagerAdapter(fragmentManager, size, mFloatingActionView, listener);
 
             mViewPager.removeAllViews();
             mViewPager.setOffscreenPageLimit(size);
@@ -521,7 +514,7 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
                 }
             }
 
-            mFragmentPagerAdapter = getPlaceListFragmentPagerAdapter(fragmentManager, size, mBottomOptionLayout, listener);
+            mFragmentPagerAdapter = getPlaceListFragmentPagerAdapter(fragmentManager, size, mFloatingActionView, listener);
 
             mViewPager.removeAllViews();
             mViewPager.setOffscreenPageLimit(size);
@@ -630,7 +623,7 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         mDistanceFilterSpinner.setEnabled(isVisible);
     }
 
-    private double getSpinnerRadiusValue(int spinnerPosition)
+    double getSpinnerRadiusValue(int spinnerPosition)
     {
         if (mDistanceFilterSpinner == null)
         {
@@ -746,36 +739,22 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
             case R.id.calendarLayout:
                 ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).onDateClick();
                 break;
-
-            case R.id.viewTypeOptionImageView:
-                ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).onViewTypeClick();
-                break;
-
-            case R.id.filterOptionImageView:
-                ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).onFilterClick();
-                break;
         }
-    }
-
-    void setMenuBarLayoutEnabled(boolean enabled)
-    {
-        mViewTypeOptionImageView.setEnabled(enabled);
-        mFilterOptionImageView.setEnabled(enabled);
-    }
-
-    void setMenuBarLayoutTranslationY(float dy)
-    {
-        mBottomOptionLayout.setTranslationY(dy);
     }
 
     public void setMenuBarLayoutVisible(boolean visible)
     {
-        mBottomOptionLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
+        if (mFloatingActionView == null)
+        {
+            return;
+        }
+
+        mFloatingActionView.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     public void calculationMenuBarLayoutTranslationY(int dy)
     {
-        Object tag = mBottomOptionLayout.getTag();
+        Object tag = mFloatingActionView.getTag();
 
         if (tag == null || tag instanceof Integer == false)
         {
@@ -783,7 +762,7 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         }
 
         int height = (Integer) tag;
-        float translationY = dy + mBottomOptionLayout.getTranslationY();
+        float translationY = dy + mFloatingActionView.getTranslationY();
 
         if (translationY >= height)
         {
@@ -804,18 +783,23 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         // 움직이는 동안에는 터치가 불가능 하다.
         if (translationY == 0 || translationY == height)
         {
-            setMenuBarLayoutEnabled(true);
+            setOptionViewTypeEnabled(true);
+            setOptionFilterEnabled(true);
         } else
         {
-            setMenuBarLayoutEnabled(false);
+            setOptionViewTypeEnabled(false);
+            setOptionFilterEnabled(false);
         }
 
-        setMenuBarLayoutTranslationY(translationY);
+        if (mFloatingActionView != null)
+        {
+            mFloatingActionView.setTranslationY(translationY);
+        }
     }
 
     public void animationMenuBarLayout()
     {
-        Object tag = mBottomOptionLayout.getTag();
+        Object tag = mFloatingActionView.getTag();
 
         if (tag == null || tag instanceof Integer == false)
         {
@@ -823,18 +807,18 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         }
 
         int height = (Integer) tag;
-        float translationY = mBottomOptionLayout.getTranslationY();
+        float translationY = mFloatingActionView.getTranslationY();
 
         if (translationY == 0 || translationY == height)
         {
             return;
         }
 
-        mBottomOptionLayout.setTag(mBottomOptionLayout.getId(), translationY);
+        mFloatingActionView.setTag(mFloatingActionView.getId(), translationY);
 
         if (mUpScrolling == true)
         {
-            if (translationY >= mBottomOptionLayout.getHeight() / 2)
+            if (translationY >= mFloatingActionView.getHeight() / 2)
             {
                 hideBottomLayout(true);
             } else
@@ -843,7 +827,7 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
             }
         } else
         {
-            if (translationY <= mBottomOptionLayout.getHeight() / 2)
+            if (translationY <= mFloatingActionView.getHeight() / 2)
             {
                 showBottomLayout(true);
             } else
@@ -875,10 +859,13 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
                 public void onAnimationUpdate(ValueAnimator animation)
                 {
                     int value = (Integer) animation.getAnimatedValue();
-                    float prevTranslationY = (Float) mBottomOptionLayout.getTag(mBottomOptionLayout.getId());
+                    float prevTranslationY = (Float) mFloatingActionView.getTag(mFloatingActionView.getId());
                     float translationY = prevTranslationY * value / 100;
 
-                    setMenuBarLayoutTranslationY(prevTranslationY - translationY);
+                    if (mFloatingActionView != null)
+                    {
+                        mFloatingActionView.setTranslationY(prevTranslationY - translationY);
+                    }
                 }
             });
 
@@ -887,7 +874,8 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
                 @Override
                 public void onAnimationStart(Animator animation)
                 {
-                    setMenuBarLayoutEnabled(false);
+                    setOptionViewTypeEnabled(false);
+                    setOptionFilterEnabled(false);
 
                     mAnimationState = Constants.ANIMATION_STATE.START;
                     mAnimationStatus = Constants.ANIMATION_STATUS.SHOW;
@@ -906,7 +894,8 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
                         mAnimationState = Constants.ANIMATION_STATE.END;
                     }
 
-                    setMenuBarLayoutEnabled(true);
+                    setOptionViewTypeEnabled(true);
+                    setOptionFilterEnabled(true);
                 }
 
                 @Override
@@ -925,9 +914,13 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
             mValueAnimator.start();
         } else
         {
-            setMenuBarLayoutTranslationY(0);
+            setOptionViewTypeEnabled(true);
+            setOptionFilterEnabled(true);
 
-            setMenuBarLayoutEnabled(true);
+            if (mFloatingActionView != null)
+            {
+                mFloatingActionView.setTranslationY(0);
+            }
         }
     }
 
@@ -953,11 +946,14 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
                 public void onAnimationUpdate(ValueAnimator animation)
                 {
                     int value = (Integer) animation.getAnimatedValue();
-                    float prevTranslationY = (Float) mBottomOptionLayout.getTag(mBottomOptionLayout.getId());
-                    float height = (Integer) mBottomOptionLayout.getTag() - prevTranslationY;
+                    float prevTranslationY = (Float) mFloatingActionView.getTag(mFloatingActionView.getId());
+                    float height = (Integer) mFloatingActionView.getTag() - prevTranslationY;
                     float translationY = height * value / 100;
 
-                    setMenuBarLayoutTranslationY(prevTranslationY + translationY);
+                    if (mFloatingActionView != null)
+                    {
+                        mFloatingActionView.setTranslationY(prevTranslationY + translationY);
+                    }
                 }
             });
 
@@ -969,7 +965,8 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
                     mAnimationState = Constants.ANIMATION_STATE.START;
                     mAnimationStatus = Constants.ANIMATION_STATUS.HIDE;
 
-                    setMenuBarLayoutEnabled(false);
+                    setOptionViewTypeEnabled(false);
+                    setOptionFilterEnabled(false);
                 }
 
                 @Override
@@ -1002,9 +999,13 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
             mValueAnimator.start();
         } else
         {
-            setMenuBarLayoutTranslationY((Integer) mBottomOptionLayout.getTag());
+            if (mFloatingActionView != null)
+            {
+                mFloatingActionView.setTranslationY((Integer) mFloatingActionView.getTag());
+            }
 
-            setMenuBarLayoutEnabled(false);
+            setOptionViewTypeEnabled(false);
+            setOptionFilterEnabled(false);
         }
     }
 

@@ -32,11 +32,8 @@
                 android:id="@+id/calendarTextView"
                 android:layout_width="0dp"
                 android:layout_height="36dp"
-                android:layout_centerVertical="true"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="4dp"
-                android:layout_toLeftOf="@id/calendarDownArrowView"
-                android:layout_toRightOf="@id/calendarImageView"
                 android:layout_weight="1"
                 android:background="@drawable/shape_fillrect_leeeef0_bf8f8f9"
                 android:drawablePadding="6dp"
@@ -52,11 +49,8 @@
                 android:id="@+id/peopleTextView"
                 android:layout_width="0dp"
                 android:layout_height="36dp"
-                android:layout_centerVertical="true"
                 android:layout_marginLeft="4dp"
                 android:layout_marginRight="8dp"
-                android:layout_toLeftOf="@id/calendarDownArrowView"
-                android:layout_toRightOf="@id/calendarImageView"
                 android:layout_weight="1"
                 android:background="@drawable/shape_fillrect_leeeef0_bf8f8f9"
                 android:drawablePadding="6dp"
@@ -251,31 +245,15 @@
             </LinearLayout>
         </ScrollView>
 
-        <LinearLayout
-            android:id="@+id/bottomOptionLayout"
-            android:layout_width="0dp"
+        <com.daily.dailyhotel.view.DailyFloatingActionView
+            android:id="@+id/floatingActionView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent">
-
-            <ImageView
-                android:id="@+id/viewTypeOptionImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="4dp"
-                android:background="@drawable/fab_01_map"/>
-
-            <ImageView
-                android:id="@+id/filterOptionImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/selector_floatingactionview"/>
-        </LinearLayout>
+            app:layout_constraintRight_toRightOf="parent"/>
 
         <RelativeLayout
             android:id="@+id/errorLayout"

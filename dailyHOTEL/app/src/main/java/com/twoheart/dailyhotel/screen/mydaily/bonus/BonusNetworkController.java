@@ -3,12 +3,12 @@ package com.twoheart.dailyhotel.screen.mydaily.bonus;
 import android.content.Context;
 
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.model.Bonus;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 import com.twoheart.dailyhotel.util.DailyCalendar;
-import com.twoheart.dailyhotel.util.DailyUserPreference;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

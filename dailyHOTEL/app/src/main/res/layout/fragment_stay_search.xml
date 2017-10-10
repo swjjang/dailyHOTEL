@@ -95,7 +95,6 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:layout_alignParentBottom="true"
                 android:background="@color/default_line_ce7e7e7" />
         </LinearLayout>
 

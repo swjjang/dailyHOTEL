@@ -93,10 +93,10 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
     private BookingRemoteImpl mBookingRemoteImpl;
     private GourmetRemoteImpl mGourmetRemoteImpl;
 
-    private View mViewByLongPress;
-    private Gourmet mGourmetByLongPress;
+    View mViewByLongPress;
+    Gourmet mGourmetByLongPress;
 
-    private List<Gourmet> mRecommendGourmetList;
+    List<Gourmet> mRecommendGourmetList;
 
     public static Intent newInstance(Context context, int reservationIndex, String aggregationId, String imageUrl, boolean isDeepLink, int bookingState)
     {
@@ -871,7 +871,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         }
     }
 
-    private ArrayList<CarouselListItem> convertCarouselListItemList(List<Gourmet> list)
+    ArrayList<CarouselListItem> convertCarouselListItemList(List<Gourmet> list)
     {
         ArrayList<Gourmet> gourmetList = new ArrayList<>();
         ArrayList<CarouselListItem> carouselListItemList = new ArrayList<CarouselListItem>();
@@ -912,7 +912,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void startGourmetDetail(View view, Gourmet gourmet, TodayDateTime todayDateTime, StayBookingDetail stayBookingDetail)
+    void startGourmetDetail(View view, Gourmet gourmet, TodayDateTime todayDateTime, StayBookingDetail stayBookingDetail)
     {
         if (view == null || gourmet == null || todayDateTime == null || stayBookingDetail == null)
         {
@@ -1020,7 +1020,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         }
     }
 
-    private void onReservationDetail(StayBookingDetail stayBookingDetail)
+    void onReservationDetail(StayBookingDetail stayBookingDetail)
     {
         if (stayBookingDetail == null)
         {
@@ -1067,6 +1067,8 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
             {
                 // 고메 추천 Hidden - 현재 시간이 체크인 시간보다 큰 경우
                 ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetLayoutVisible(false);
+
+                unLockUI();
             } else
             {
                 // 고메 추천 Show
@@ -1090,7 +1092,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
                 GourmetSearchParams gourmetParams = (GourmetSearchParams) gourmetCuration.toPlaceParams(1, 10, true);
 
-                addCompositeDisposable(mGourmetRemoteImpl.getGourmetList(gourmetParams) //
+                addCompositeDisposable(mGourmetRemoteImpl.getList(gourmetParams) //
                     .observeOn(Schedulers.io()).map(new Function<List<Gourmet>, ArrayList<CarouselListItem>>()
                     {
                         @Override
@@ -1119,7 +1121,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                         public void accept(@NonNull Throwable throwable) throws Exception
                         {
                             unLockUI();
-                            
+
                             ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setRecommendGourmetData(null);
 
                             AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_DETAIL//
@@ -1136,7 +1138,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         }
     }
 
-    private void analyticsOnScreen(StayBookingDetail stayBookingDetail, String refundPolicy)
+    void analyticsOnScreen(StayBookingDetail stayBookingDetail, String refundPolicy)
     {
         if (stayBookingDetail == null)
         {

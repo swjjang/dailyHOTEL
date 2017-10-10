@@ -9,11 +9,11 @@ import android.os.Bundle;
 import com.adjust.sdk.Adjust;
 import com.adjust.sdk.AdjustAttribution;
 import com.adjust.sdk.AdjustConfig;
-import com.adjust.sdk.AdjustEvent;
 import com.adjust.sdk.AdjustEventFailure;
 import com.adjust.sdk.AdjustEventSuccess;
 import com.adjust.sdk.AdjustSessionFailure;
 import com.adjust.sdk.AdjustSessionSuccess;
+import com.adjust.sdk.DailyAdjustEvent;
 import com.adjust.sdk.LogLevel;
 import com.adjust.sdk.OnAttributionChangedListener;
 import com.adjust.sdk.OnDeeplinkResponseListener;
@@ -25,12 +25,11 @@ import com.appboy.Appboy;
 import com.appboy.models.outgoing.AttributionData;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
-import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -175,6 +174,11 @@ public class AdjustManager extends BaseAnalyticsManager
         if (event != null)
         {
             Adjust.trackEvent(event);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + event.toString());
+            }
         }
     }
 
@@ -409,6 +413,11 @@ public class AdjustManager extends BaseAnalyticsManager
         if (event != null)
         {
             Adjust.trackEvent(event);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + event.toString());
+            }
         }
     }
 
@@ -552,6 +561,11 @@ public class AdjustManager extends BaseAnalyticsManager
         if (event != null)
         {
             Adjust.trackEvent(event);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + event.toString());
+            }
         }
     }
 
@@ -681,6 +695,11 @@ public class AdjustManager extends BaseAnalyticsManager
 
         DailyAdjustEvent event = new DailyAdjustEvent(EventToken.SOCIAL_SIGNUP);
         Adjust.trackEvent(event);
+
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + event.toString());
+        }
     }
 
     @Override
@@ -691,6 +710,11 @@ public class AdjustManager extends BaseAnalyticsManager
 
         DailyAdjustEvent event = new DailyAdjustEvent(EventToken.SIGNUP);
         Adjust.trackEvent(event);
+
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + event.toString());
+        }
     }
 
     @Override
@@ -706,6 +730,11 @@ public class AdjustManager extends BaseAnalyticsManager
         DailyAdjustEvent event = getPaymentEvent(EventToken.STAY_PURCHASE, params, true);
 
         Adjust.trackEvent(event);
+
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + event.toString());
+        }
     }
 
     @Override
@@ -721,6 +750,11 @@ public class AdjustManager extends BaseAnalyticsManager
         DailyAdjustEvent event = getPaymentEvent(EventToken.STAY_PURCHASE, params, true);
 
         Adjust.trackEvent(event);
+
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + event.toString());
+        }
     }
 
     @Override
@@ -736,6 +770,11 @@ public class AdjustManager extends BaseAnalyticsManager
         DailyAdjustEvent event = getPaymentEvent(EventToken.GOURMET_PURCHASE, params, true);
 
         Adjust.trackEvent(event);
+
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + event.toString());
+        }
     }
 
     @Override
@@ -753,10 +792,20 @@ public class AdjustManager extends BaseAnalyticsManager
 
         if (DailyTextUtils.isTextEmpty(rankTestName) == false)
         {
-            event.addPartnerParameter(Key.TEST_TYPE, rankTestName);
+            Adjust.addSessionPartnerParameter(Key.TEST_TYPE, rankTestName);
+            Adjust.addSessionCallbackParameter(Key.TEST_TYPE, rankTestName);
+        } else
+        {
+            Adjust.removeSessionPartnerParameter(Key.TEST_TYPE);
+            Adjust.removeSessionCallbackParameter(Key.TEST_TYPE);
         }
 
         Adjust.trackEvent(event);
+
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + event.toString());
+        }
     }
 
     @Override
@@ -785,6 +834,11 @@ public class AdjustManager extends BaseAnalyticsManager
             DailyAdjustEvent event = new DailyAdjustEvent(onOff ? EventToken.PUSH_ON : EventToken.PUSH_OFF);
             event.addPartnerParameter(Key.PUSH_SETTING, pushSettingType);
             Adjust.trackEvent(event);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + event.toString());
+            }
         }
     }
 
@@ -793,6 +847,11 @@ public class AdjustManager extends BaseAnalyticsManager
     {
         DailyAdjustEvent event = getCouponEvent(EventToken.PURCHASE_WITH_COUPON, param);
         Adjust.trackEvent(event);
+
+        if (DEBUG == true)
+        {
+            ExLog.d(TAG + event.toString());
+        }
     }
 
     @Override
@@ -1292,74 +1351,10 @@ public class AdjustManager extends BaseAnalyticsManager
         return ynString;
     }
 
-    private class DailyAdjustEvent extends AdjustEvent
-    {
-        public DailyAdjustEvent(String eventToken)
-        {
-            super(eventToken);
-        }
-
-        @Override
-        public void setRevenue(double revenue, String currency)
-        {
-            super.setRevenue(revenue, currency);
-        }
-
-        @Override
-        public void addCallbackParameter(String key, String value)
-        {
-            if (DailyTextUtils.isTextEmpty(value) == true)
-            {
-                value = "";
-            }
-
-            super.addCallbackParameter(key, value);
-        }
-
-        @Override
-        public void addPartnerParameter(String key, String value)
-        {
-            if (DailyTextUtils.isTextEmpty(value) == true)
-            {
-                value = "";
-            }
-
-            super.addPartnerParameter(key, value);
-            super.addCallbackParameter(key, value);
-        }
-
-        public void addPartnerParameter(Map<String, String> paramMap)
-        {
-            if (paramMap == null || paramMap.size() == 0)
-            {
-                return;
-            }
-
-            Iterator<Map.Entry<String, String>> iterator = paramMap.entrySet().iterator();
-            while (iterator.hasNext() == true)
-            {
-                Map.Entry<String, String> entry = iterator.next();
-
-                addPartnerParameter(entry.getKey(), entry.getValue());
-            }
-        }
-
-        @Override
-        public void setOrderId(String orderId)
-        {
-            super.setOrderId(orderId);
-        }
-
-        @Override
-        public boolean isValid()
-        {
-            return super.isValid();
-        }
-    }
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////// Event Token ///////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
+
     protected static final class EventToken
     {
         public static final String LAUNCH = "zglco7"; // 앱이 실행될 경우
@@ -1420,7 +1415,7 @@ public class AdjustManager extends BaseAnalyticsManager
         public static final String RECENTVIEW_LIST_PLACE_INDEXES = "recentview_lists"; // 위시리스트내 담은 업장 개수
         public static final String NUMBER_OF_WISH_LISTS = "number_of_wish_lists"; // 위시리스트내 담은 업장(최근 5개)
         public static final String NUMBER_OF_RECENTVIEWS = "number_of_recentviews"; // 최근 본 업장 개수
-        public static final String TEST_TYPE = "test_type"; // 최근 본 업장 개수
+        public static final String TEST_TYPE = "test_type"; // a/b test
     }
 
     private static final class UserType

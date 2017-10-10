@@ -143,7 +143,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
 
     }
 
-    private ArrayList<PlaceViewItem> makePlaceViewItemList(ArrayList<RecentlyPlace> gourmetList)
+    ArrayList<PlaceViewItem> makePlaceViewItemList(ArrayList<RecentlyPlace> gourmetList)
     {
         if (gourmetList == null || gourmetList.size() == 0)
         {

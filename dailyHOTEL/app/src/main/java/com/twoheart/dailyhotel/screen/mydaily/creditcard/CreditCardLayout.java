@@ -155,7 +155,10 @@ public class CreditCardLayout extends FrameLayout
             mBottomLayout.setVisibility(View.VISIBLE);
         }
 
-        mAdapter.addAll(arrayList);
+        if (arrayList != null)
+        {
+            mAdapter.addAll(arrayList);
+        }
 
         if (selectedCreditCard != null)
         {

@@ -36,7 +36,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
     private View mDefaultRefundPolicyLayout, mWaitRefundPolicyLayout;
     private View mDefaultRefundPolicyUnderLine;
     private View mRecommendGourmetButtonView;
-    private View mRecommendGourmetItemLayout;
+    View mRecommendGourmetItemLayout;
     private DailyCarouselLayout mRecommendGourmetCarouselLayout;
     private ObjectAnimator mRecommendGourmetButtonAnimator;
 
@@ -85,13 +85,13 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
             }
 
             @Override
-            public void onItemClick(View view)
+            public void onItemClick(View view, android.support.v4.util.Pair[] pairs)
             {
                 ((StayReservationDetailLayout.OnEventListener) mOnEventListener).onRecommendListItemClick(view);
             }
 
             @Override
-            public void onItemLongClick(View view)
+            public void onItemLongClick(View view, android.support.v4.util.Pair[] pairs)
             {
                 ((StayReservationDetailLayout.OnEventListener) mOnEventListener).onRecommendListItemLongClick(view);
             }
@@ -524,7 +524,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
             return;
         }
 
-        mRecommendGourmetCarouselLayout.setData(list);
+        mRecommendGourmetCarouselLayout.setData(list, false);
         setRecommendGourmetLayoutVisible(list != null && list.size() > 0);
     }
 

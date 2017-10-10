@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyViewPager;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
@@ -22,7 +23,6 @@ import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -40,14 +40,14 @@ import retrofit2.Response;
 
 public class HomeCategoryRegionListActivity extends BaseActivity
 {
-    private DailyCategoryType mDailyCategoryType;
+    DailyCategoryType mDailyCategoryType;
     private StayBookingDay mStayBookingDay;
 
-    private DailyViewPager mViewPager;
-    private HomeCategoryRegionFragmentPagerAdapter mFragmentPagerAdapter; // 임시
+    DailyViewPager mViewPager;
+    HomeCategoryRegionFragmentPagerAdapter mFragmentPagerAdapter; // 임시
 
     private HomeCategoryRegionListNetworkController mNetworkController;
-    private DailyLocationFactory mDailyLocationFactory;
+    DailyLocationFactory mDailyLocationFactory;
 
     public static Intent newInstance(Context context //
         , DailyCategoryType categoryType, StayBookingDay stayBookingDay)
@@ -316,7 +316,7 @@ public class HomeCategoryRegionListActivity extends BaseActivity
         });
     }
 
-    private void showSearch()
+    void showSearch()
     {
         // 우선 고메가 없음으로 Stay로 고정
         Intent intent = SearchActivity.newInstance(this, PlaceType.HOTEL, mStayBookingDay);
@@ -343,7 +343,7 @@ public class HomeCategoryRegionListActivity extends BaseActivity
             , AnalyticsManager.Action.SEARCH_BUTTON_CLICK, label, null);
     }
 
-    private void requestRegionList(DailyCategoryType dailyCategoryType)
+    void requestRegionList(DailyCategoryType dailyCategoryType)
     {
         if (mNetworkController == null || dailyCategoryType == null)
         {

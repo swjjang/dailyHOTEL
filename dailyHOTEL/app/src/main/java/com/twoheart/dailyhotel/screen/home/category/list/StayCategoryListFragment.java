@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.home.category.list;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -10,7 +11,6 @@ import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
-import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ import retrofit2.Response;
 public class StayCategoryListFragment extends StayListFragment
 {
     private boolean mIsShowLocalPlus;
-    private ArrayList<Stay> mLocalPlusList;
+    ArrayList<Stay> mLocalPlusList;
 
     @Override
     protected BaseNetworkController getNetworkController()
@@ -80,7 +80,7 @@ public class StayCategoryListFragment extends StayListFragment
         mIsShowLocalPlus = isShowLocalPlus;
     }
 
-    private void requestStayCategoryList(int page)
+    void requestStayCategoryList(int page)
     {
         if (mStayCuration == null || mStayCuration.getCurationOption() == null//
             || mStayCuration.getCurationOption().getSortType() == null//
@@ -254,11 +254,11 @@ public class StayCategoryListFragment extends StayListFragment
         {
             ArrayList<PlaceViewItem> oldList = new ArrayList<>(mPlaceListLayout.getList());
 
-            int oldListSize = oldList == null ? 0 : oldList.size();
+            int oldListSize = oldList.size();
             if (oldListSize > 0)
             {
-                int start = oldList == null ? 0 : oldList.size() - 1;
-                int end = oldList == null ? 0 : oldListSize - 5;
+                int start = oldList.size() - 1;
+                int end = oldListSize - 5;
                 end = end < 0 ? 0 : end;
 
                 // 5번안에 검사 안끝나면 그냥 종료, 원래는 1번에 검사되어야 함

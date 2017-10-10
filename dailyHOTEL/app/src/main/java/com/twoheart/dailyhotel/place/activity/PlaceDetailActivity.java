@@ -20,6 +20,7 @@ import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CalendarImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
@@ -38,7 +39,6 @@ import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.EditProfilePhoneActivity;
 import com.twoheart.dailyhotel.util.AppResearch;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -384,6 +384,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                             finish();
                             break;
 
+                        case com.daily.base.BaseActivity.RESULT_CODE_REFRESH:
                         case CODE_RESULT_ACTIVITY_REFRESH:
                         case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
                             mDontReloadAtOnResume = false;
@@ -737,7 +738,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
         {
             if (selected == true)
             {
-                mToolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_OFF, DailyToolbarView.MenuItem.WISH_ON, wishCountText, new View.OnClickListener()
+                mToolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_OFF, DailyToolbarView.MenuItem.WISH_FILL_ON, wishCountText, new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
@@ -756,11 +757,11 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     }
                 });
             }
-        } else if (mToolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_ON) == true)
+        } else if (mToolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_FILL_ON) == true)
         {
             if (selected == true)
             {
-                mToolbarView.updateMenuItem(DailyToolbarView.MenuItem.WISH_ON, wishCountText, new View.OnClickListener()
+                mToolbarView.updateMenuItem(DailyToolbarView.MenuItem.WISH_FILL_ON, wishCountText, new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
@@ -770,7 +771,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 });
             } else
             {
-                mToolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_ON, DailyToolbarView.MenuItem.WISH_OFF, wishCountText, new View.OnClickListener()
+                mToolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_FILL_ON, DailyToolbarView.MenuItem.WISH_OFF, wishCountText, new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
@@ -785,7 +786,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
         {
             if (selected == true)
             {
-                mFakeToolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_OFF, DailyToolbarView.MenuItem.WISH_ON, wishCountText, new View.OnClickListener()
+                mFakeToolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_OFF, DailyToolbarView.MenuItem.WISH_LINE_ON, wishCountText, new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
@@ -804,11 +805,11 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     }
                 });
             }
-        } else if (mFakeToolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_ON) == true)
+        } else if (mFakeToolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_LINE_ON) == true)
         {
             if (selected == true)
             {
-                mFakeToolbarView.updateMenuItem(DailyToolbarView.MenuItem.WISH_ON, wishCountText, new View.OnClickListener()
+                mFakeToolbarView.updateMenuItem(DailyToolbarView.MenuItem.WISH_LINE_ON, wishCountText, new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
@@ -818,7 +819,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 });
             } else
             {
-                mFakeToolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_ON, DailyToolbarView.MenuItem.WISH_OFF, wishCountText, new View.OnClickListener()
+                mFakeToolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_LINE_ON, DailyToolbarView.MenuItem.WISH_OFF, wishCountText, new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
@@ -830,7 +831,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
         }
     }
 
-    private void onShareClick()
+    void onShareClick()
     {
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View dialogView = layoutInflater.inflate(R.layout.view_sharedialog_layout, null, false);

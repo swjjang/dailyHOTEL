@@ -17,9 +17,9 @@ import com.daily.base.util.FontManager;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundThankYouAnalyticsParam;
+import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
-import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
 /**

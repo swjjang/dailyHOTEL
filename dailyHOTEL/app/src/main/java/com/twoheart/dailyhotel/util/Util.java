@@ -36,6 +36,7 @@ import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
@@ -108,7 +109,12 @@ public class Util implements Constants
 
     public static void requestImageResize(Context context, com.facebook.drawee.view.SimpleDraweeView simpleDraweeView, String imageUrl)
     {
-        simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
+        if (context == null || simpleDraweeView == null)
+        {
+            return;
+        }
+
+        //        simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
         if (DailyTextUtils.isTextEmpty(imageUrl) == true)
         {
@@ -898,10 +904,7 @@ public class Util implements Constants
 
             Crashlytics.log(logMessage);
 
-            if (activity != null)
-            {
-                showFailedTMapNaviDialog(activity);
-            }
+            showFailedTMapNaviDialog(activity);
         }
     }
 

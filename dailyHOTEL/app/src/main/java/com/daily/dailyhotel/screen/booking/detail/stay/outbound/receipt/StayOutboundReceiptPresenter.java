@@ -152,7 +152,7 @@ public class StayOutboundReceiptPresenter extends BaseExceptionPresenter<StayOut
         setRefresh(false);
         screenLock(showProgress);
 
-        addCompositeDisposable(mStayOutboundReceiptRemoteImpl.getStayOutboundReceipt(mBookingIndex).subscribe(new Consumer<StayOutboundReceipt>()
+        addCompositeDisposable(mStayOutboundReceiptRemoteImpl.getReceipt(mBookingIndex).subscribe(new Consumer<StayOutboundReceipt>()
         {
             @Override
             public void accept(@io.reactivex.annotations.NonNull StayOutboundReceipt stayOutboundReceipt) throws Exception
@@ -204,7 +204,7 @@ public class StayOutboundReceiptPresenter extends BaseExceptionPresenter<StayOut
             return;
         }
 
-        addCompositeDisposable(mStayOutboundReceiptRemoteImpl.getStayOutboundEmailReceipt(mBookingIndex, email).subscribe(new Consumer<String>()
+        addCompositeDisposable(mStayOutboundReceiptRemoteImpl.getEmailReceipt(mBookingIndex, email).subscribe(new Consumer<String>()
         {
             @Override
             public void accept(@io.reactivex.annotations.NonNull String result) throws Exception
@@ -230,12 +230,12 @@ public class StayOutboundReceiptPresenter extends BaseExceptionPresenter<StayOut
         getViewInterface().setFullScreenEnabled(mFullScreenEnabled);
     }
 
-    private void setStayOutboundReceipt(StayOutboundReceipt stayOutboundReceipt)
+    void setStayOutboundReceipt(StayOutboundReceipt stayOutboundReceipt)
     {
         mStayOutboundReceipt = stayOutboundReceipt;
     }
 
-    private void notifyStayOutboundReceiptChanged()
+    void notifyStayOutboundReceiptChanged()
     {
         if (mStayOutboundReceipt == null)
         {

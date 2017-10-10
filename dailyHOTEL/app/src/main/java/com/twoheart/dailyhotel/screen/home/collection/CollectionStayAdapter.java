@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.home.collection;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Vibrator;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.view.DailyStayCardView;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.databinding.LayoutSectionDataBinding;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
@@ -67,8 +69,9 @@ public class CollectionStayAdapter extends PlaceListAdapter
         {
             case PlaceViewItem.TYPE_SECTION:
             {
-                View view = mInflater.inflate(R.layout.list_row_default_section, parent, false);
-                return new SectionViewHolder(view);
+                LayoutSectionDataBinding viewDataBinding = DataBindingUtil.inflate(mInflater, R.layout.layout_section_data, parent, false);
+
+                return new SectionViewHolder(viewDataBinding);
             }
 
             case PlaceViewItem.TYPE_ENTRY:
@@ -87,10 +90,10 @@ public class CollectionStayAdapter extends PlaceListAdapter
                     , ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext)) + ScreenUtils.dpToPx(mContext, 81) - ScreenUtils.dpToPx(mContext, 97));
                 view.setLayoutParams(layoutParams);
 
-                return new HeaderViewHolder(view);
+                return new BaseViewHolder(view);
             }
 
-            case PlaceViewItem.TYPE_FOOTER_VIEW:
+            case PlaceViewItem.TYPE_EMPTY_VIEW:
             {
                 View view = mInflater.inflate(R.layout.view_empty_stay_collection, parent, false);
 
@@ -98,13 +101,13 @@ public class CollectionStayAdapter extends PlaceListAdapter
                     , ScreenUtils.getScreenHeight(mContext) - ScreenUtils.dpToPx(mContext, 97) - ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext)) + ScreenUtils.dpToPx(mContext, 81) - ScreenUtils.dpToPx(mContext, 97));
                 view.setLayoutParams(layoutParams);
 
-                return new FooterViewHolder(view);
+                return new BaseViewHolder(view);
             }
 
-            case PlaceViewItem.TYPE_FOOTER_GUIDE_VIEW:
+            case PlaceViewItem.TYPE_FOOTER_VIEW:
             {
                 View view = mInflater.inflate(R.layout.list_row_users_place_footer, parent, false);
-                return new FooterGuideViewHolder(view);
+                return new BaseViewHolder(view);
             }
         }
 
@@ -147,39 +150,23 @@ public class CollectionStayAdapter extends PlaceListAdapter
         holder.stayCardView.setGradeText(Stay.Grade.valueOf(recommendationStay.grade).getName(mContext));
         holder.stayCardView.setVRVisible(recommendationStay.truevr && mTrueVREnabled);
         holder.stayCardView.setReviewText(recommendationStay.rating, 0);
-
         holder.stayCardView.setNewVisible(false);
-
         holder.stayCardView.setStayNameText(recommendationStay.name);
-
-        if (mShowDistanceIgnoreSort == true || getSortType() == Constants.SortType.DISTANCE)
-        {
-            holder.stayCardView.setDistanceVisible(true);
-            holder.stayCardView.setDistanceText(recommendationStay.distance);
-        } else
-        {
-            holder.stayCardView.setDistanceVisible(false);
-        }
-
+        holder.stayCardView.setDistanceVisible(false);
         holder.stayCardView.setAddressText(recommendationStay.addrSummary);
 
         if (recommendationStay.availableRooms > 0)
         {
-            if (recommendationStay.price > 0 && recommendationStay.price > recommendationStay.discount)
-            {
-                holder.stayCardView.setPriceText(recommendationStay.price > 0 ? 100 * (recommendationStay.price - recommendationStay.discount) / recommendationStay.price : 0, recommendationStay.discount, recommendationStay.price, null, mNights);
-            } else
-            {
-                holder.stayCardView.setPriceText(0, recommendationStay.discount, recommendationStay.price, null, mNights);
-            }
+            holder.stayCardView.setPriceText(0, recommendationStay.discount, recommendationStay.price, null, mNights > 1);
         } else
         {
-            holder.stayCardView.setPriceText(0, 0, 0, null, 0);
+            holder.stayCardView.setPriceText(0, 0, 0, null, false);
         }
 
         holder.stayCardView.setBenefitText(recommendationStay.benefit);
 
-        if (position < getItemCount() - 1 && getItem(position + 1).mType == PlaceViewItem.TYPE_SECTION)
+        // 최상위에는 빈뷰이가 1번째가 첫번째다.
+        if (position == 1)
         {
             holder.stayCardView.setDividerVisible(false);
         } else
@@ -351,22 +338,6 @@ public class CollectionStayAdapter extends PlaceListAdapter
                     }
                 });
             }
-        }
-    }
-
-    private class HeaderViewHolder extends RecyclerView.ViewHolder
-    {
-        public HeaderViewHolder(View itemView)
-        {
-            super(itemView);
-        }
-    }
-
-    private class FooterGuideViewHolder extends RecyclerView.ViewHolder
-    {
-        public FooterGuideViewHolder(View itemView)
-        {
-            super(itemView);
         }
     }
 }

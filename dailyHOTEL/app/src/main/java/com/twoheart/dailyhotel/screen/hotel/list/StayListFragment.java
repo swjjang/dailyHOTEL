@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.Place;
@@ -19,7 +20,6 @@ import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
-import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
@@ -32,7 +32,6 @@ public class StayListFragment extends PlaceListFragment
 {
     protected StayCuration mStayCuration;
     protected StayListLayout mStayListLayout;
-    protected List<Stay> mStayList = new ArrayList<>();
 
     public interface OnStayListFragmentListener extends OnPlaceListFragmentListener
     {
@@ -133,8 +132,6 @@ public class StayListFragment extends PlaceListFragment
         {
             mPlaceCount = 0;
             mPlaceListLayout.clearList();
-
-            mStayList.clear();
         }
 
         int listSize = list == null ? 0 : list.size();
@@ -148,8 +145,6 @@ public class StayListFragment extends PlaceListFragment
         }
 
         mPlaceCount += listSize;
-
-        mStayList.addAll(list);
 
         SortType sortType = mStayCuration.getCurationOption().getSortType();
 

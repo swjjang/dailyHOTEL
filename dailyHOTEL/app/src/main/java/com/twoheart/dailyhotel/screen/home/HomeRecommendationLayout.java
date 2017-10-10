@@ -35,7 +35,7 @@ public class HomeRecommendationLayout extends LinearLayout
     private static final int MAX_RECOMMENDATION_SIZE = Integer.MAX_VALUE;
 
     private Context mContext;
-    private LinearLayout mContentLayout;
+    LinearLayout mContentLayout;
     HomeRecommendationListener mListener;
     ValueAnimator mValueAnimator;
 
@@ -259,7 +259,7 @@ public class HomeRecommendationLayout extends LinearLayout
         setLayoutParams(params);
     }
 
-    private void startAnimation(boolean isShow)
+    void startAnimation(boolean isShow)
     {
         if (mValueAnimator != null && mValueAnimator.isRunning() == true)
         {

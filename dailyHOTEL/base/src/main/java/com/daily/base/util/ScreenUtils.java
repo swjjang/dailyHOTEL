@@ -14,7 +14,10 @@ import android.view.WindowManager;
 
 public class ScreenUtils
 {
-    public static int DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH = 1000;
+    public static final int DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH = 1000;
+
+    private static int SCREEN_WIDTH;
+    private static int SCREEN_HEIGHT;
 
     public static int dpToPx(Context context, double dp)
     {
@@ -29,16 +32,21 @@ public class ScreenUtils
             return 0;
         }
 
-        try
+        if (SCREEN_WIDTH == 0)
         {
-            return context.getResources().getDisplayMetrics().widthPixels;
-        } catch (Exception e)
-        {
-            DisplayMetrics displayMetrics = new DisplayMetrics();
-            WindowManager windowmanager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-            windowmanager.getDefaultDisplay().getMetrics(displayMetrics);
-            return displayMetrics.widthPixels;
+            try
+            {
+                SCREEN_WIDTH = context.getResources().getDisplayMetrics().widthPixels;
+            } catch (Exception e)
+            {
+                DisplayMetrics displayMetrics = new DisplayMetrics();
+                WindowManager windowmanager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+                windowmanager.getDefaultDisplay().getMetrics(displayMetrics);
+                SCREEN_WIDTH = displayMetrics.widthPixels;
+            }
         }
+
+        return SCREEN_WIDTH;
     }
 
     public static int getScreenHeight(Context context)
@@ -47,16 +55,22 @@ public class ScreenUtils
         {
             return 0;
         }
-        try
+
+        if (SCREEN_HEIGHT == 0)
         {
-            return context.getResources().getDisplayMetrics().heightPixels;
-        } catch (Exception e)
-        {
-            DisplayMetrics displayMetrics = new DisplayMetrics();
-            WindowManager windowmanager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-            windowmanager.getDefaultDisplay().getMetrics(displayMetrics);
-            return displayMetrics.heightPixels;
+            try
+            {
+                SCREEN_HEIGHT = context.getResources().getDisplayMetrics().heightPixels;
+            } catch (Exception e)
+            {
+                DisplayMetrics displayMetrics = new DisplayMetrics();
+                WindowManager windowmanager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+                windowmanager.getDefaultDisplay().getMetrics(displayMetrics);
+                SCREEN_HEIGHT = displayMetrics.heightPixels;
+            }
         }
+
+        return SCREEN_HEIGHT;
     }
 
     /**

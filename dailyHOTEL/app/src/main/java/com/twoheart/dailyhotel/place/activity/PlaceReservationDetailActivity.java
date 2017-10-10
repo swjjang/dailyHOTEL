@@ -39,7 +39,7 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
 
     protected PlaceBookingDetail mPlaceBookingDetail;
     protected TodayDateTime mTodayDateTime;
-    private DailyLocationFactory mDailyLocationFactory;
+    DailyLocationFactory mDailyLocationFactory;
 
     protected PlaceReservationDetailLayout mPlaceReservationDetailLayout;
 

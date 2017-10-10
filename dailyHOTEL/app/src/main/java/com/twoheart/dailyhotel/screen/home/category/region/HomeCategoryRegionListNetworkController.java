@@ -149,11 +149,6 @@ public class HomeCategoryRegionListNetworkController extends BaseNetworkControll
     {
         ArrayList<Province> provinceList = new ArrayList<>();
 
-        if (provinceList == null)
-        {
-            return provinceList;
-        }
-
         int length = jsonArray.length();
 
         for (int i = 0; i < length; i++)

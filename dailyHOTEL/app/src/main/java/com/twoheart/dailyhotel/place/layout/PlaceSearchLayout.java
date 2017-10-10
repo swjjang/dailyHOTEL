@@ -27,6 +27,7 @@ import com.daily.base.widget.DailyEditText;
 import com.daily.base.widget.DailyScrollView;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.RecentlyPlace;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.view.DailySearchCircleIndicator;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
@@ -34,7 +35,6 @@ import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.screen.search.SearchCardViewAdapter;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.StringFilter;
 import com.twoheart.dailyhotel.util.Util;
@@ -78,7 +78,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
         void onAutoCompleteKeyword(String keyword);
 
-        void onSearch(String text);
+        void onSearch(String text, boolean isSkipCheck);
 
         void onSearch(String text, Keyword keyword);
 
@@ -568,7 +568,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         hideAutoCompleteScrollView();
     }
 
-    private void showAutoCompleteScrollView()
+    void showAutoCompleteScrollView()
     {
         ((OnEventListener) mOnEventListener).onChangeAutoCompleteScrollView(true);
 
@@ -602,7 +602,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
             return;
         }
 
-        ((OnEventListener) mOnEventListener).onSearch(text);
+        ((OnEventListener) mOnEventListener).onSearch(text, false);
     }
 
     void validateKeyword(Keyword keyword)

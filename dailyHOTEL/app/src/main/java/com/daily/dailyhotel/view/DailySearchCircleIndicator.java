@@ -11,7 +11,7 @@ import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 
 /**
- * Created by iseung-won on 2017. 8. 9..
+ * Created by android_sam on 2017. 8. 9..
  */
 
 public class DailySearchCircleIndicator extends View

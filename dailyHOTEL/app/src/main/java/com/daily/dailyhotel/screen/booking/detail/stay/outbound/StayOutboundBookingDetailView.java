@@ -74,14 +74,14 @@ import io.reactivex.functions.Consumer;
 public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBookingDetailView.OnEventListener, ActivityStayOutboundBookingDetailDataBinding>//
     implements StayOutboundBookingDetailInterface, View.OnClickListener
 {
-    private ImageView mMyLocationView;
-    private Drawable mMyLocationDrawable;
-    private View mZoomControl;
+    ImageView mMyLocationView;
+    Drawable mMyLocationDrawable;
+    View mZoomControl;
     private MarkerOptions mMyLocationMarkerOptions;
-    private Marker mMyLocationMarker, mPlaceLocationMarker;
-    private GoogleMap mGoogleMap;
-    private LatLng mCenterLatLng;
-    private boolean mMapLoaded;
+    Marker mMyLocationMarker, mPlaceLocationMarker;
+    GoogleMap mGoogleMap;
+    LatLng mCenterLatLng;
+    boolean mMapLoaded;
 
     private LayoutStayOutboundBookingDetail01DataBinding mBookingDetail01DataBinding;
     private LayoutStayOutboundBookingDetail02DataBinding mBookingDetail02DataBinding;
@@ -1088,7 +1088,7 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
         }
     }
 
-    private void relocationMyLocation(View view)
+    void relocationMyLocation(View view)
     {
         mMyLocationView = (ImageView) view.findViewById(0x2);
 
@@ -1108,7 +1108,7 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
         }
     }
 
-    private void relocationZoomControl(View view)
+    void relocationZoomControl(View view)
     {
         mZoomControl = view.findViewById(0x1);
 
@@ -1128,7 +1128,7 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
         }
     }
 
-    private void addMarker(GoogleMap googleMap, double lat, double lng, String hotel_name)
+    void addMarker(GoogleMap googleMap, double lat, double lng, String hotel_name)
     {
         if (googleMap != null)
         {

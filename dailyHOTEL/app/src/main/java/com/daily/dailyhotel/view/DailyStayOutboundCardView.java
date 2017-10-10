@@ -2,7 +2,6 @@ package com.daily.dailyhotel.view;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Shader;
@@ -34,7 +33,7 @@ import java.text.DecimalFormat;
 
 public class DailyStayOutboundCardView extends ConstraintLayout
 {
-    private DailyViewStayOutboundCardDataBinding mViewDataBinding;
+    DailyViewStayOutboundCardDataBinding mViewDataBinding;
 
     public DailyStayOutboundCardView(Context context)
     {
@@ -60,6 +59,9 @@ public class DailyStayOutboundCardView extends ConstraintLayout
     private void initLayout(Context context)
     {
         mViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_stay_outbound_card_data, this, true);
+        mViewDataBinding.simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
+
+        setGradientView(mViewDataBinding.gradientBottomView);
     }
 
     /**
@@ -90,9 +92,6 @@ public class DailyStayOutboundCardView extends ConstraintLayout
         {
             return;
         }
-
-        // Image
-        mViewDataBinding.simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
         String url;
 
@@ -186,6 +185,16 @@ public class DailyStayOutboundCardView extends ConstraintLayout
         mViewDataBinding.wishImageView.setVisibility(visible ? VISIBLE : GONE);
     }
 
+    public void setWish(boolean wish)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.wishImageView.setVectorImageResource(wish ? R.drawable.vector_list_ic_heart_on : R.drawable.vector_list_ic_heart_off);
+    }
+
     public void setOnWishClickListener(OnClickListener onClickListener)
     {
         if (mViewDataBinding == null)
@@ -255,7 +264,7 @@ public class DailyStayOutboundCardView extends ConstraintLayout
             return;
         }
 
-        mViewDataBinding.newStayTextView.setVisibility(visible ? VISIBLE : GONE);
+        mViewDataBinding.newStayImageView.setVisibility(visible ? VISIBLE : GONE);
     }
 
     public void setStayNameText(String stayName, String stayEnglishName)
@@ -276,7 +285,10 @@ public class DailyStayOutboundCardView extends ConstraintLayout
             return;
         }
 
-        mViewDataBinding.distanceTextView.setVisibility(visible ? VISIBLE : GONE);
+        int visibility = visible ? VISIBLE : GONE;
+
+        mViewDataBinding.distanceTextView.setVisibility(visibility);
+        mViewDataBinding.distanceImageView.setVisibility(visibility);
     }
 
     public void setDistanceText(double distance)
@@ -306,15 +318,14 @@ public class DailyStayOutboundCardView extends ConstraintLayout
             return;
         }
 
-        int flag = visible ? VISIBLE : GONE;
+        int visibility = visible ? VISIBLE : GONE;
 
-        mViewDataBinding.discountPercentTextView.setVisibility(flag);
-        mViewDataBinding.percentImageView.setVisibility(flag);
-        mViewDataBinding.discountPriceTextView.setVisibility(flag);
-        mViewDataBinding.discountPriceWonTextView.setVisibility(flag);
-        mViewDataBinding.priceTextView.setVisibility(flag);
-        mViewDataBinding.couponTextView.setVisibility(flag);
-        mViewDataBinding.averageNightsTextView.setVisibility(flag);
+        mViewDataBinding.discountPercentTextView.setVisibility(visibility);
+        mViewDataBinding.discountPercentImageView.setVisibility(visibility);
+        mViewDataBinding.discountPriceTextView.setVisibility(visibility);
+        mViewDataBinding.discountPriceWonTextView.setVisibility(visibility);
+        mViewDataBinding.priceTextView.setVisibility(visibility);
+        mViewDataBinding.couponTextView.setVisibility(visibility);
     }
 
 
@@ -328,12 +339,12 @@ public class DailyStayOutboundCardView extends ConstraintLayout
         if (discountPercent > 0)
         {
             mViewDataBinding.discountPercentTextView.setVisibility(VISIBLE);
-            mViewDataBinding.percentImageView.setVisibility(VISIBLE);
+            mViewDataBinding.discountPercentImageView.setVisibility(VISIBLE);
             mViewDataBinding.discountPercentTextView.setText(Integer.toString(discountPercent));
         } else
         {
             mViewDataBinding.discountPercentTextView.setVisibility(GONE);
-            mViewDataBinding.percentImageView.setVisibility(GONE);
+            mViewDataBinding.discountPercentImageView.setVisibility(GONE);
         }
 
         if (discountPrice > 0)
@@ -341,6 +352,8 @@ public class DailyStayOutboundCardView extends ConstraintLayout
             DecimalFormat decimalFormat = new DecimalFormat("###,##0");
             mViewDataBinding.discountPriceTextView.setText(decimalFormat.format(discountPrice));
             mViewDataBinding.discountPriceWonTextView.setVisibility(VISIBLE);
+            mViewDataBinding.discountPriceWonTextView.setText(nightsEnabled ?//
+                getContext().getString(R.string.currency) + "/" + getContext().getString(R.string.label_stay_1_nights) : getContext().getString(R.string.currency));
         } else
         {
             mViewDataBinding.discountPriceTextView.setText(R.string.label_soldout);
@@ -365,8 +378,16 @@ public class DailyStayOutboundCardView extends ConstraintLayout
             mViewDataBinding.couponTextView.setVisibility(VISIBLE);
             mViewDataBinding.couponTextView.setText(couponPrice);
         }
+    }
 
-        mViewDataBinding.averageNightsTextView.setVisibility(nightsEnabled ? VISIBLE : GONE);
+    public void setDividerVisible(boolean visible)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.cardTopDividerView.setVisibility(visible ? VISIBLE : GONE);
     }
 
     public android.support.v4.util.Pair[] getOptionsCompat()
@@ -383,5 +404,39 @@ public class DailyStayOutboundCardView extends ConstraintLayout
         pairs[3] = android.support.v4.util.Pair.create(mViewDataBinding.gradientBottomView, getContext().getString(R.string.transition_gradient_bottom_view));
 
         return pairs;
+    }
+
+    private static void setGradientView(View view)
+    {
+        if (view == null)
+        {
+            return;
+        }
+
+        // 그라디에이션 만들기.
+        final int colors[] = {0x99000000, 0x66000000, 0x19000000, 0x00000000};
+        final float positions[] = {0.0f, 0.42f, 0.8f, 1.0f};
+
+        PaintDrawable paintDrawable = new PaintDrawable();
+        paintDrawable.setShape(new RectShape());
+
+        ShapeDrawable.ShaderFactory shaderFactory = new ShapeDrawable.ShaderFactory()
+        {
+            @Override
+            public Shader resize(int width, int height)
+            {
+                return new LinearGradient(0, height, 0, 0, colors, positions, Shader.TileMode.CLAMP);
+            }
+        };
+
+        paintDrawable.setShaderFactory(shaderFactory);
+
+        if (VersionUtils.isOverAPI16() == true)
+        {
+            view.setBackground(paintDrawable);
+        } else
+        {
+            view.setBackgroundDrawable(paintDrawable);
+        }
     }
 }

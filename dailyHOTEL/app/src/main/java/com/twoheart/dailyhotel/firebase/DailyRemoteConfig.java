@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
@@ -14,7 +15,6 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.Util;
 
 import org.json.JSONArray;
@@ -26,8 +26,8 @@ import java.util.Locale;
 
 public class DailyRemoteConfig
 {
-    private Context mContext;
-    private FirebaseRemoteConfig mFirebaseRemoteConfig;
+    Context mContext;
+    FirebaseRemoteConfig mFirebaseRemoteConfig;
 
     public interface OnCompleteListener
     {
@@ -97,7 +97,7 @@ public class DailyRemoteConfig
         });
     }
 
-    private void setConfig(final OnCompleteListener listener)
+    void setConfig(final OnCompleteListener listener)
     {
         String androidUpdateVersion = mFirebaseRemoteConfig.getString("androidUpdateVersion");
         String androidPaymentType = mFirebaseRemoteConfig.getString("androidPaymentType");

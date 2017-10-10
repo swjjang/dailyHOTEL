@@ -7,8 +7,8 @@ import io.reactivex.Observable;
 public interface StayOutboundReceiptInterface
 {
     // 영수증 화면
-    Observable<StayOutboundReceipt> getStayOutboundReceipt(int bookingIndex);
+    Observable<StayOutboundReceipt> getReceipt(int bookingIndex);
 
     // 영수증 이메일로 신청
-    Observable<String> getStayOutboundEmailReceipt(int bookingIndex, String email);
+    Observable<String> getEmailReceipt(int bookingIndex, String email);
 }

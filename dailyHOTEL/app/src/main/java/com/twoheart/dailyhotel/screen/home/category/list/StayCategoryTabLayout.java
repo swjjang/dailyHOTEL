@@ -8,14 +8,14 @@ import android.view.View;
 import android.view.animation.LinearInterpolator;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
-import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -28,7 +28,7 @@ public class StayCategoryTabLayout extends PlaceMainLayout
 {
     private String mTitleText;
     private DailyCategoryType mDailyCategoryType;
-    private View mTooltipLayout;
+    View mTooltipLayout;
 
     public StayCategoryTabLayout(Context context, String titleText, DailyCategoryType dailyCategoryType, PlaceMainLayout.OnEventListener onEventListener)
     {

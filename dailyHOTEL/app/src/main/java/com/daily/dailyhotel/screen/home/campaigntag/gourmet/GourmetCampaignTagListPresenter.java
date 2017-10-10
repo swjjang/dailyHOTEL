@@ -51,26 +51,26 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * Created by iseung-won on 2017. 8. 4..
+ * Created by android_sam on 2017. 8. 4..
  */
 
 public class GourmetCampaignTagListPresenter //
     extends BaseExceptionPresenter<GourmetCampaignTagListActivity, GourmetCampaignTagListInterface> //
     implements GourmetCampaignTagListView.OnEventListener
 {
-    private CampaignTagListAnalyticsInterface mAnalytics;
+    CampaignTagListAnalyticsInterface mAnalytics;
 
     private CommonRemoteImpl mCommonRemoteImpl;
-    private CampaignTagRemoteImpl mCampaignTagRemoteImpl;
+    CampaignTagRemoteImpl mCampaignTagRemoteImpl;
 
-    private int mTagIndex;
-    private int mListCountByLongPress;
-    private String mTitle;
-    private GourmetBookingDay mGourmetBookingDay;
-    private CommonDateTime mCommonDateTime;
-    private GourmetCampaignTags mGourmetCampaignTags;
-    private PlaceViewItem mPlaceViewItemByLongPress;
-    private View mViewByLongPress;
+    int mTagIndex;
+    int mListCountByLongPress;
+    String mTitle;
+    GourmetBookingDay mGourmetBookingDay;
+    CommonDateTime mCommonDateTime;
+    GourmetCampaignTags mGourmetCampaignTags;
+    PlaceViewItem mPlaceViewItemByLongPress;
+    View mViewByLongPress;
 
     public GourmetCampaignTagListPresenter(@NonNull GourmetCampaignTagListActivity activity)
     {
@@ -476,9 +476,8 @@ public class GourmetCampaignTagListPresenter //
         }
 
         CampaignTag campaignTag = gourmetCampaignTags.getCampaignTag();
-        String campaignTagName = campaignTag == null ? null : campaignTag.campaignTag;
 
-        return DailyTextUtils.isTextEmpty(campaignTagName) == true ? mTitle : campaignTag.campaignTag;
+        return (campaignTag == null || DailyTextUtils.isTextEmpty(campaignTag.campaignTag) == true) ? mTitle : campaignTag.campaignTag;
     }
 
     public void setCalendarText(GourmetBookingDay stayBookingDay)
@@ -509,13 +508,13 @@ public class GourmetCampaignTagListPresenter //
         getViewInterface().setData(list, gourmetBookingDay);
     }
 
-    private ArrayList<PlaceViewItem> makePlaceList(ArrayList<Gourmet> gourmetList)
+    ArrayList<PlaceViewItem> makePlaceList(ArrayList<Gourmet> gourmetList)
     {
         ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>();
 
         if (gourmetList == null || gourmetList.size() == 0)
         {
-            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
+            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_EMPTY_VIEW, null));
         } else
         {
             int entryPosition = 0;
@@ -527,7 +526,7 @@ public class GourmetCampaignTagListPresenter //
                 placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, gourmet));
             }
 
-            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_GUIDE_VIEW, null));
+            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
         }
 
         return placeViewItemList;
@@ -694,7 +693,7 @@ public class GourmetCampaignTagListPresenter //
         startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PREVIEW);
     }
 
-    private GourmetBookingDay getGourmetBookingDay(CommonDateTime commonDateTime)
+    GourmetBookingDay getGourmetBookingDay(CommonDateTime commonDateTime)
     {
         if (commonDateTime == null)
         {

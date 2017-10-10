@@ -21,6 +21,8 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.daily.dailyhotel.view.DailyStayCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -55,8 +57,6 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
-import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -79,9 +79,9 @@ import retrofit2.Response;
  */
 public class StayCategoryTabActivity extends PlaceMainActivity
 {
-    private StayCategoryCuration mStayCategoryCuration;
-    private DailyCategoryType mDailyCategoryType;
-    private DailyDeepLink mDailyDeepLink;
+    StayCategoryCuration mStayCategoryCuration;
+    DailyCategoryType mDailyCategoryType;
+    DailyDeepLink mDailyDeepLink;
 
     public static Intent newInstance(Context context, DailyCategoryType categoryType, String deepLink)
     {
@@ -816,19 +816,19 @@ public class StayCategoryTabActivity extends PlaceMainActivity
             Intent intent = StayCategoryCurationActivity.newInstance(StayCategoryTabActivity.this, mViewType, mStayCategoryCuration);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
 
-            String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
-
-            switch (mViewType)
-            {
-                case LIST:
-                    viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
-                    break;
-
-                case MAP:
-                    viewType = AnalyticsManager.Label.VIEWTYPE_MAP;
-                    break;
-            }
-
+            //            String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
+            //
+            //            switch (mViewType)
+            //            {
+            //                case LIST:
+            //                    viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
+            //                    break;
+            //
+            //                case MAP:
+            //                    viewType = AnalyticsManager.Label.VIEWTYPE_MAP;
+            //                    break;
+            //            }
+            //
             //            AnalyticsManager.getInstance(StaySubCategoryActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
             //                , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, viewType, null);
         }
@@ -1134,7 +1134,6 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                         } else
                         {
                             View simpleDraweeView = view.findViewById(R.id.imageView);
-                            View gradeTextView = view.findViewById(R.id.gradeTextView);
                             View nameTextView = view.findViewById(R.id.nameTextView);
                             View gradientTopView = view.findViewById(R.id.gradientTopView);
                             View gradientBottomView = view.findViewById(R.id.gradientView);
@@ -1155,7 +1154,6 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
                             optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(StayCategoryTabActivity.this,//
                                 android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
-                                android.support.v4.util.Pair.create(gradeTextView, getString(R.string.transition_place_grade)),//
                                 android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)),//
                                 android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)),//
                                 android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
@@ -1183,6 +1181,8 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                         AnalyticsManager.getInstance(StayCategoryTabActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                             , AnalyticsManager.Action.STAY_ITEM_CLICK, String.format(Locale.KOREA, "%d_%d", stay.entryPosition, stay.index), null);
 
+                        AnalyticsManager.getInstance(StayCategoryTabActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                            , AnalyticsManager.Action.STAY_DAILYCHOICE_CLICK, stay.isDailyChoice ? AnalyticsManager.Label.Y : AnalyticsManager.Label.N, null);
 
                         if (stay.truevr == true)
                         {

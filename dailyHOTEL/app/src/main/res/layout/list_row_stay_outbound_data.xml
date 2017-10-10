@@ -60,8 +60,7 @@
                 android:paddingRight="6dp"
                 android:paddingTop="2px"
                 android:textColor="@color/white"
-                android:textSize="11dp"
-                android:transitionName="@string/transition_place_grade"/>
+                android:textSize="11dp"/>
 
             <RatingBar
                 android:id="@+id/ratingBar"

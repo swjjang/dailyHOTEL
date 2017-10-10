@@ -43,7 +43,7 @@ public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventList
     private static final int ANIMATION_DELAY = 200;
     protected List<View> mDaysViewList;
 
-    private AnimatorSet mAnimatorSet;
+    AnimatorSet mAnimatorSet;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -475,7 +475,7 @@ public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventList
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void setStatusBarColor(int color)
+    void setStatusBarColor(int color)
     {
         if (VersionUtils.isOverAPI21() == true)
         {

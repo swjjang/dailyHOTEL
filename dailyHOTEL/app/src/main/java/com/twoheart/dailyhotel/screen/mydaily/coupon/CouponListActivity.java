@@ -11,6 +11,8 @@ import android.view.View;
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.screen.mydaily.coupon.CouponHistoryActivity;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
@@ -20,7 +22,6 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.text.ParseException;

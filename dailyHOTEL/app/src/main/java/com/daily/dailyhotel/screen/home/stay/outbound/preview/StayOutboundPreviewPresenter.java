@@ -19,8 +19,8 @@ import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.entity.StayOutboundRoom;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
+import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -184,7 +184,7 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
         setRefresh(false);
         screenLock(showProgress);
 
-        addCompositeDisposable(mStayOutboundRemoteImpl.getStayOutboundDetail(mStayIndex, mStayBookDateTime, mPeople).subscribe(new Consumer<StayOutboundDetail>()
+        addCompositeDisposable(mStayOutboundRemoteImpl.getDetail(mStayIndex, mStayBookDateTime, mPeople).subscribe(new Consumer<StayOutboundDetail>()
         {
             @Override
             public void accept(@io.reactivex.annotations.NonNull StayOutboundDetail stayOutboundDetail) throws Exception
@@ -360,7 +360,7 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
         }
     }
 
-    private void onStayOutboundDetail(StayOutboundDetail stayOutboundDetail)
+    void onStayOutboundDetail(StayOutboundDetail stayOutboundDetail)
     {
         if (stayOutboundDetail == null || mStayBookDateTime == null)
         {

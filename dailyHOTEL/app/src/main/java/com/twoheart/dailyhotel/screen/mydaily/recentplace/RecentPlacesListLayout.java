@@ -7,12 +7,12 @@ import android.view.View;
 
 import com.daily.base.widget.DailyImageView;
 import com.daily.base.widget.DailyTextView;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseBlurLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 
 import java.util.ArrayList;
@@ -236,6 +236,11 @@ public abstract class RecentPlacesListLayout extends BaseBlurLayout
 
             ((OnEventListener) mOnEventListener).onListItemDeleteClick(position);
         }
-    };
 
+        @Override
+        public void onWishClick(boolean myWish)
+        {
+
+        }
+    };
 }

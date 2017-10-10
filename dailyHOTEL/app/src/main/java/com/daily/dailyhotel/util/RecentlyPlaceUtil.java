@@ -13,11 +13,11 @@ import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutbounds;
-import com.daily.dailyhotel.repository.local.DailyDb;
-import com.daily.dailyhotel.repository.local.DailyDbHelper;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.local.model.RecentlyList;
 import com.daily.dailyhotel.repository.local.model.RecentlyRealmObject;
+import com.daily.dailyhotel.storage.database.DailyDb;
+import com.daily.dailyhotel.storage.database.DailyDbHelper;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.HomeRecentParam;
 import com.twoheart.dailyhotel.model.RecentPlaces;
@@ -324,7 +324,10 @@ public class RecentlyPlaceUtil
         {
             try
             {
-                cursor.close();
+                if (cursor != null)
+                {
+                    cursor.close();
+                }
             } catch (Exception e)
             {
             }
@@ -577,7 +580,10 @@ public class RecentlyPlaceUtil
         {
             try
             {
-                cursor.close();
+                if (cursor != null)
+                {
+                    cursor.close();
+                }
             } catch (Exception e)
             {
             }
@@ -662,7 +668,10 @@ public class RecentlyPlaceUtil
         {
             try
             {
-                cursor.close();
+                if (cursor != null)
+                {
+                    cursor.close();
+                }
             } catch (Exception e)
             {
             }

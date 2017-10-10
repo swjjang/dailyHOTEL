@@ -24,7 +24,7 @@ public class MenuBarLayout implements View.OnClickListener
     private BaseActivity mBaseActivity;
     private ViewGroup mViewGroup;
     private boolean mEnabled;
-    private ValueAnimator mValueAnimator;
+    ValueAnimator mValueAnimator;
 
     public static class MenuBarLayoutOnPageChangeListener
     {
@@ -160,7 +160,7 @@ public class MenuBarLayout implements View.OnClickListener
         return mViewGroup.getVisibility() == View.VISIBLE;
     }
 
-    private void setTranslationY(float translationY)
+    void setTranslationY(float translationY)
     {
         if (mViewGroup == null)
         {

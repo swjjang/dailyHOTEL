@@ -32,6 +32,9 @@ import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.screen.common.PaymentWebActivity;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.thankyou.StayOutboundThankYouActivity;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
+import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.Setting;
@@ -42,9 +45,6 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
-import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
-import com.twoheart.dailyhotel.util.DailyUserPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
@@ -78,17 +78,17 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     private PaymentRemoteImpl mPaymentRemoteImpl;
     private ProfileRemoteImpl mProfileRemoteImpl;
 
-    private StayBookDateTime mStayBookDateTime;
-    private int mStayIndex, mRoomPrice, mRoomBedTypeId;
+    StayBookDateTime mStayBookDateTime;
+    int mStayIndex, mRoomPrice, mRoomBedTypeId;
     private People mPeople;
     private String mStayName, mRoomType, mImageUrl;
     private String mRateCode, mRateKey, mRoomTypeCode;
-    private StayOutboundPayment mStayOutboundPayment;
+    StayOutboundPayment mStayOutboundPayment;
     private Card mSelectedCard;
     private OverseasGuest mGuest;
     private DailyBookingPaymentTypeView.PaymentType mPaymentType;
     private boolean mBonusSelected, mAgreedThirdPartyTerms;
-    private UserSimpleInformation mUserSimpleInformation;
+    UserSimpleInformation mUserSimpleInformation;
 
     public interface StayOutboundPaymentAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -548,6 +548,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 {
                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_payment_changed_price)//
                         , getString(R.string.dialog_btn_text_confirm), null);
+
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
                 } else if (mStayOutboundPayment.availableRooms == 0) // 솔드 아웃인 경우
                 {
                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_outbound_payment_sold_out)//
@@ -556,6 +558,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                             @Override
                             public void onDismiss(DialogInterface dialog)
                             {
+                                setResult(BaseActivity.RESULT_CODE_REFRESH);
                                 onBackClick();
                             }
                         });
@@ -578,6 +581,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                         @Override
                         public void onDismiss(DialogInterface dialog)
                         {
+                            setResult(BaseActivity.RESULT_CODE_REFRESH);
                             onBackClick();
                         }
                     });
@@ -789,7 +793,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         }));
     }
 
-    private void showAgreementPopup()
+    void showAgreementPopup()
     {
         // 보너스로만 결제하는 경우
         if (mBonusSelected == true && mStayOutboundPayment.totalPrice <= mUserSimpleInformation.bonus)
@@ -847,7 +851,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         }
     }
 
-    private synchronized void onAgreedPaymentClick()
+    synchronized void onAgreedPaymentClick()
     {
         if (lock() == true)
         {
@@ -979,7 +983,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         }
     }
 
-    private void startThankYou(int bookingIndex, boolean fullBonus)
+    void startThankYou(int bookingIndex, boolean fullBonus)
     {
         // ThankYou 페이지를 홈탭에서 띄우기 위한 코드
         startActivity(DailyInternalDeepLink.getHomeScreenLink(getActivity()));
@@ -1108,7 +1112,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         return roomJSONArray;
     }
 
-    private void onBookingInformation(StayOutboundPayment stayOutboundPayment, StayBookDateTime stayBookDateTime)
+    void onBookingInformation(StayOutboundPayment stayOutboundPayment, StayBookDateTime stayBookDateTime)
     {
         if (stayOutboundPayment == null || stayBookDateTime == null)
         {
@@ -1145,12 +1149,12 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         }
     }
 
-    private void notifyEasyCardChanged()
+    void notifyEasyCardChanged()
     {
         getViewInterface().setEasyCard(mSelectedCard);
     }
 
-    private void notifyStayOutboundPaymentChanged()
+    void notifyStayOutboundPaymentChanged()
     {
         if (mUserSimpleInformation == null || mStayOutboundPayment == null || mStayBookDateTime == null)
         {
@@ -1179,7 +1183,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 , discountPrice, mStayOutboundPayment.feeTotalAmountUsd);
 
             // 1000원 미만 결제시에 간편/일반 결제 불가 - 쿠폰 또는 적립금 전체 사용이 아닌경우 조건 추가
-            DailyBookingPaymentTypeView.PaymentType paymentType = null;
+            DailyBookingPaymentTypeView.PaymentType paymentType;
 
             if (paymentPrice > 0 && paymentPrice < CARD_MIN_PRICE)
             {
@@ -1334,17 +1338,17 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         getViewInterface().setRefundPolicyList(mStayOutboundPayment.getRefundPolicyList());
     }
 
-    private void setStayOutboundPayment(StayOutboundPayment stayOutboundPayment)
+    void setStayOutboundPayment(StayOutboundPayment stayOutboundPayment)
     {
         mStayOutboundPayment = stayOutboundPayment;
     }
 
-    private void setUserInformation(UserSimpleInformation userSimpleInformation)
+    void setUserInformation(UserSimpleInformation userSimpleInformation)
     {
         mUserSimpleInformation = userSimpleInformation;
     }
 
-    private OverseasGuest getGuestInformation(UserSimpleInformation userSimpleInformation)
+    OverseasGuest getGuestInformation(UserSimpleInformation userSimpleInformation)
     {
         OverseasGuest guest = new OverseasGuest();
 
@@ -1407,7 +1411,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         mPaymentType = paymentType;
     }
 
-    private void setSelectCard(Card card)
+    void setSelectCard(Card card)
     {
         mSelectedCard = card;
 
@@ -1417,7 +1421,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         }
     }
 
-    private void setBonusSelected(boolean selected)
+    void setBonusSelected(boolean selected)
     {
         mBonusSelected = selected;
     }
@@ -1442,7 +1446,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         DailyPreference.getInstance(getActivity()).setFavoriteCard(mSelectedCard.number, mSelectedCard.billKey);
     }
 
-    private void notifyGuestInformationChanged(OverseasGuest guest)
+    void notifyGuestInformationChanged(OverseasGuest guest)
     {
         if (guest == null || mPeople == null)
         {
@@ -1458,7 +1462,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         getViewInterface().setGuestMobileInformation(mobile);
     }
 
-    private void notifyPaymentTypeChanged()
+    void notifyPaymentTypeChanged()
     {
         if (mPaymentType == null)
         {
@@ -1468,7 +1472,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         getViewInterface().setPaymentType(mPaymentType);
     }
 
-    private void notifyBonusEnabledChanged()
+    void notifyBonusEnabledChanged()
     {
         if (mUserSimpleInformation == null)
         {
@@ -1487,7 +1491,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         }
     }
 
-    private Card getSelectedCard(List<Card> cardList)
+    Card getSelectedCard(List<Card> cardList)
     {
         if (cardList == null || cardList.size() == 0)
         {
@@ -1690,7 +1694,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         }
     }
 
-    private void onPaymentError(BaseException baseException)
+    void onPaymentError(BaseException baseException)
     {
         unLockAll();
 

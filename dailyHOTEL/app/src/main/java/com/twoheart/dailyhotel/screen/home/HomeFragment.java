@@ -28,8 +28,6 @@ import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
-import com.daily.dailyhotel.repository.local.DailyDb;
-import com.daily.dailyhotel.repository.local.DailyDbHelper;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
@@ -37,6 +35,10 @@ import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.preview.StayOutboundPreviewActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchActivity;
+import com.daily.dailyhotel.storage.database.DailyDb;
+import com.daily.dailyhotel.storage.database.DailyDbHelper;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -78,8 +80,6 @@ import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
-import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -124,15 +124,15 @@ public class HomeFragment extends BaseMenuNavigationFragment
     boolean mDontReload;
     private boolean mIsLogin;
 
-    private boolean mIsMigrationComplete;
+    boolean mIsMigrationComplete;
 
     int mNetworkRunState = IS_RUNNED_NONE; // 0x0000 : 초기 상태, Ox0010 : 위시 완료 , Ox0100 : 최근 본 업장완료!
 
     private DailyDeepLink mDailyDeepLink;
 
-    private View mViewByLongPress;
-    private CarouselListItem mCarouselListItemByLongPress;
-    private DailyLocationFactory mDailyLocationFactory;
+    View mViewByLongPress;
+    CarouselListItem mCarouselListItemByLongPress;
+    DailyLocationFactory mDailyLocationFactory;
 
     private RecentlyRemoteImpl mRecentlyRemoteImpl;
 
@@ -703,7 +703,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
         }
     }
 
-    private void checkStayOutboundCutNewVisible(TodayDateTime todayDateTime)
+    void checkStayOutboundCutNewVisible(TodayDateTime todayDateTime)
     {
         if (todayDateTime == null)
         {
@@ -1052,7 +1052,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void startStayOutboundDetail(View view, CarouselListItem carouselListItem, TodayDateTime todayDateTime)
+    void startStayOutboundDetail(View view, CarouselListItem carouselListItem, TodayDateTime todayDateTime)
     {
         if (carouselListItem == null)
         {
@@ -1290,7 +1290,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
         }));
     }
 
-    private void setRecentlyList(ArrayList<CarouselListItem> carouselListItemList, boolean isError)
+    void setRecentlyList(ArrayList<CarouselListItem> carouselListItemList, boolean isError)
     {
         ArrayList<CarouselListItem> list = new ArrayList<>();
 
@@ -1346,7 +1346,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
         }));
     }
 
-    private void setCommonDateTime(TodayDateTime todayDateTime)
+    void setCommonDateTime(TodayDateTime todayDateTime)
     {
         if (isFinishing() == true)
         {
@@ -1494,7 +1494,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
         });
     }
 
-    private void onSearchLocation()
+    void onSearchLocation()
     {
         if (mTodayDateTime == null)
         {
@@ -1517,7 +1517,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
     }
 
-    private void onSearchClick()
+    void onSearchClick()
     {
         if (mBaseActivity == null)
         {
@@ -1546,7 +1546,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
         }
     }
 
-    private void onStayClick(boolean isDeepLink, DailyDeepLink dailyDeepLink)
+    void onStayClick(boolean isDeepLink, DailyDeepLink dailyDeepLink)
     {
         if (mBaseActivity == null)
         {
@@ -1569,7 +1569,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
         }
     }
 
-    private void onGourmetClick(boolean isDeepLink, DailyDeepLink dailyDeepLink)
+    void onGourmetClick(boolean isDeepLink, DailyDeepLink dailyDeepLink)
     {
         if (mBaseActivity == null)
         {

@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -19,7 +20,6 @@ import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.base.BaseBlurLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
@@ -81,9 +81,9 @@ public abstract class CollectionBaseLayout extends BaseBlurLayout
         mSimpleDraweeView.setLayoutParams(layoutParams);
 
         final FrameLayout titleBoxLayout = (FrameLayout) view.findViewById(R.id.titleBoxLayout);
-        final int dp15Height = ScreenUtils.dpToPx(mContext, 15);
-        int titleBoxTopPadding = ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext)) + ScreenUtils.dpToPx(mContext, 81) - dp15Height - ScreenUtils.dpToPx(mContext, 118);
-        titleBoxLayout.setPadding(dp15Height, titleBoxTopPadding + ScreenUtils.dpToPx(mContext, 21), dp15Height, dp15Height);
+        final int DP_15 = ScreenUtils.dpToPx(mContext, 15);
+        int titleBoxTopPadding = ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext)) + ScreenUtils.dpToPx(mContext, 81) - DP_15 - ScreenUtils.dpToPx(mContext, 118);
+        titleBoxLayout.setPadding(DP_15, titleBoxTopPadding + ScreenUtils.dpToPx(mContext, 21), DP_15, DP_15);
 
         final View fakeBackImageView = titleBoxLayout.findViewById(R.id.fakeBackImageView);
         final View subTitleLayout = view.findViewById(R.id.subTitleLayout);
@@ -324,6 +324,8 @@ public abstract class CollectionBaseLayout extends BaseBlurLayout
     {
         mTitleTextView.setText(title);
         mSubTitleTextView.setText(subTitle);
+
+        mSimpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
         Util.requestImageResize(mContext, mSimpleDraweeView, imageUrl);
     }
 

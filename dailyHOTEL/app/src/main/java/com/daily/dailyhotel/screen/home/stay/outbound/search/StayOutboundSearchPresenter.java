@@ -3,7 +3,6 @@ package com.daily.dailyhotel.screen.home.stay.outbound.search;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,26 +13,24 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
-import com.daily.dailyhotel.domain.StayObRecentlySuggestColumns;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.Suggest;
 import com.daily.dailyhotel.parcel.SuggestParcel;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
-import com.daily.dailyhotel.repository.local.DailyDb;
-import com.daily.dailyhotel.repository.local.DailyDbHelper;
+import com.daily.dailyhotel.repository.local.SuggestLocalImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.StayOutboundListActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONObject;
@@ -43,6 +40,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by sheldon
@@ -55,6 +55,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
     private StayOutboundSearchAnalyticsInterface mAnalytics;
     private CommonRemoteImpl mCommonRemoteImpl;
+    private SuggestLocalImpl mSuggestLocalImpl;
 
     private CommonDateTime mCommonDateTime;
     private StayBookDateTime mStayBookDateTime;
@@ -98,13 +99,42 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         setAnalytics(new StayOutboundSearchAnalyticsImpl());
 
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
+        mSuggestLocalImpl = new SuggestLocalImpl(activity);
 
-        setLastSuggestByDb();
+        addCompositeDisposable(mSuggestLocalImpl.getRecentlySuggest().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Suggest>()
+        {
+            @Override
+            public void accept(Suggest suggest) throws Exception
+            {
+                if (suggest == null)
+                {
+                    mIsShowCalendar = true;
+                } else
+                {
+                    mIsShowCalendar = false;
+                }
+
+                mSuggest = suggest;
+                notifySuggestsChanged();
+
+                onAfterGetRecentlySuggest();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                mIsShowCalendar = true;
+                mSuggest = null;
+                notifySuggestsChanged();
+
+                onAfterGetRecentlySuggest();
+            }
+        }));
+
         // 기본 성인 2명, 아동 0명
         setLastPeopleByPreference();
-
         notifyPeopleChanged();
-        notifySuggestsChanged();
 
         setRefresh(true);
     }
@@ -344,19 +374,10 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                     }
                 }
 
-                if (mDailyDeepLink != null)
+                if (processDeepLinkAfterCommonDateTime(mDailyDeepLink, commonDateTime) == true)
                 {
-                    if (processDeepLink(mDailyDeepLink, commonDateTime) == true)
-                    {
-                        mDailyDeepLink.clear();
-                        mDailyDeepLink = null;
-                    }
-                } else
-                {
-                    if (isSuggestChanged() == false)
-                    {
-                        onSuggestClick(false);
-                    }
+                    mDailyDeepLink.clear();
+                    mDailyDeepLink = null;
                 }
 
                 notifyStayBookDateTimeChanged();
@@ -545,79 +566,28 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
     private void setSuggest(Suggest suggest)
     {
-        mSuggest = suggest;
-
-        addSuggestDb(suggest);
-    }
-
-    private void setLastSuggestByDb()
-    {
-        DailyDb dailyDb = DailyDbHelper.getInstance().open(getActivity());
-
-        Suggest suggest = null;
-        Cursor cursor = null;
-
-        try
-        {
-            cursor = dailyDb.getStayObRecentlySuggestList(1);
-
-            if (cursor != null && cursor.getCount() > 0)
-            {
-                cursor.moveToFirst();
-
-                long id = cursor.getLong(cursor.getColumnIndex(StayObRecentlySuggestColumns._ID));
-                String name = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.NAME));
-                String city = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.CITY));
-                String country = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.COUNTRY));
-                String countryCode = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.COUNTRY_CODE));
-                String categoryKey = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.CATEGORY_KEY));
-                String display = cursor.getString(cursor.getColumnIndex(StayObRecentlySuggestColumns.DISPLAY));
-                double latitude = cursor.getDouble(cursor.getColumnIndex(StayObRecentlySuggestColumns.LATITUDE));
-                double longitude = cursor.getDouble(cursor.getColumnIndex(StayObRecentlySuggestColumns.LONGITUDE));
-
-                suggest = new Suggest(id, name, city, country, countryCode, categoryKey, display, latitude, longitude);
-
-                mIsShowCalendar = false;
-            } else
-            {
-                mIsShowCalendar = true;
-            }
-
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-
-            suggest = null;
-            mIsShowCalendar = true;
-        } finally
-        {
-            try
-            {
-                cursor.close();
-            } catch (Exception e)
-            {
-            }
-        }
-
-        DailyDbHelper.getInstance().close();
-
-        mSuggest = suggest;
-    }
-
-    private void addSuggestDb(Suggest suggest)
-    {
-        if (suggest == null)
+        if (lock() == true)
         {
             return;
         }
 
-        DailyDb dailyDb = DailyDbHelper.getInstance().open(getActivity());
+        mSuggest = suggest;
 
-        dailyDb.addStayObRecentlySuggest(suggest.id, suggest.name, suggest.city, suggest.country //
-            , suggest.countryCode, suggest.categoryKey, suggest.display, suggest.latitude //
-            , suggest.longitude, true);
-
-        DailyDbHelper.getInstance().close();
+        addCompositeDisposable(mSuggestLocalImpl.addSuggestDb(suggest).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer()
+        {
+            @Override
+            public void accept(Object o) throws Exception
+            {
+                unLockAll();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                unLockAll();
+            }
+        }));
     }
 
     private void setKeyword(String keyword)
@@ -691,7 +661,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         getViewInterface().setPeopleText(mPeople.toString(getActivity()));
     }
 
-    private boolean processDeepLink(DailyDeepLink dailyDeepLink, CommonDateTime commonDateTime)
+    private boolean processDeepLinkAfterCommonDateTime(DailyDeepLink dailyDeepLink, CommonDateTime commonDateTime)
     {
         if (dailyDeepLink == null || commonDateTime == null)
         {
@@ -762,7 +732,35 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                     onSearchKeyword();
 
                     return true;
-                } else if (externalDeepLink.isPlaceDetailView() == true)
+                }
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        return false;
+    }
+
+    private boolean processDeepLinkBeforeCommonDateTime(DailyDeepLink dailyDeepLink)
+    {
+        if (dailyDeepLink == null)
+        {
+            return false;
+        }
+
+        if (dailyDeepLink.isValidateLink() == false)
+        {
+            return false;
+        }
+
+        try
+        {
+            if (dailyDeepLink.isExternalDeepLink() == true)
+            {
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+
+                if (externalDeepLink.isPlaceDetailView() == true)
                 {
                     startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), externalDeepLink.getDeepLink())//
                         , StayOutboundSearchActivity.REQUEST_CODE_DETAIL);
@@ -781,9 +779,6 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                     startActivityForResult(intent, StayOutboundSearchActivity.REQUEST_CODE_SUGGEST);
                     return true;
                 }
-            } else
-            {
-
             }
         } catch (Exception e)
         {
@@ -801,5 +796,17 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     private void setSuggestChanged(boolean isSuggestChanged)
     {
         mIsSuggestChanged = isSuggestChanged;
+    }
+
+    private void onAfterGetRecentlySuggest()
+    {
+        if (processDeepLinkBeforeCommonDateTime(mDailyDeepLink) == true)
+        {
+            mDailyDeepLink.clear();
+            mDailyDeepLink = null;
+        } else if (isSuggestChanged() == false)
+        {
+            onSuggestClick(false);
+        }
     }
 }

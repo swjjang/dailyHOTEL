@@ -53,24 +53,24 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * Created by iseung-won on 2017. 8. 4..
+ * Created by android_sam on 2017. 8. 4..
  */
 
 public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCampaignTagListActivity, StayCampaignTagListInterface> implements StayCampaignTagListView.OnEventListener
 {
-    private CampaignTagListAnalyticsInterface mAnalytics;
+    CampaignTagListAnalyticsInterface mAnalytics;
 
     private CommonRemoteImpl mCommonRemoteImpl;
-    private CampaignTagRemoteImpl mCampaignTagRemoteImpl;
+    CampaignTagRemoteImpl mCampaignTagRemoteImpl;
 
-    private int mTagIndex;
-    private int mListCountByLongPress;
-    private String mTitle;
-    private StayBookingDay mStayBookingDay;
-    private CommonDateTime mCommonDateTime;
-    private StayCampaignTags mStayCampaignTags;
-    private PlaceViewItem mPlaceViewItemByLongPress;
-    private View mViewByLongPress;
+    int mTagIndex;
+    int mListCountByLongPress;
+    String mTitle;
+    StayBookingDay mStayBookingDay;
+    CommonDateTime mCommonDateTime;
+    StayCampaignTags mStayCampaignTags;
+    PlaceViewItem mPlaceViewItemByLongPress;
+    View mViewByLongPress;
 
     public StayCampaignTagListPresenter(@NonNull StayCampaignTagListActivity activity)
     {
@@ -513,13 +513,13 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         getViewInterface().setData(list, stayBookingDay);
     }
 
-    private ArrayList<PlaceViewItem> makePlaceList(ArrayList<Stay> stayList)
+    ArrayList<PlaceViewItem> makePlaceList(ArrayList<Stay> stayList)
     {
         ArrayList<PlaceViewItem> placeViewItemList = new ArrayList<>();
 
         if (stayList == null || stayList.size() == 0)
         {
-            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
+            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_EMPTY_VIEW, null));
         } else
         {
             int entryPosition = 0;
@@ -531,7 +531,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
                 placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, stay));
             }
 
-            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_GUIDE_VIEW, null));
+            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
         }
 
         return placeViewItemList;
@@ -618,7 +618,6 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
             } else
             {
                 View simpleDraweeView = view.findViewById(R.id.imageView);
-                View gradeTextView = view.findViewById(R.id.gradeTextView);
                 View nameTextView = view.findViewById(R.id.nameTextView);
                 View gradientTopView = view.findViewById(R.id.gradientTopView);
                 View gradientBottomView = view.findViewById(R.id.gradientView);
@@ -640,7 +639,6 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
 
                 optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),//
                     android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
-                    android.support.v4.util.Pair.create(gradeTextView, getString(R.string.transition_place_grade)),//
                     android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)),//
                     android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)),//
                     android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
@@ -692,7 +690,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PREVIEW);
     }
 
-    private StayBookingDay getStayBookingDay(CommonDateTime commonDateTime)
+    StayBookingDay getStayBookingDay(CommonDateTime commonDateTime)
     {
         if (commonDateTime == null)
         {

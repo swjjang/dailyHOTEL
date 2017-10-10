@@ -375,7 +375,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
 
         if (placeList == null || placeList.size() == 0)
         {
-            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
+            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_EMPTY_VIEW, null));
         } else
         {
             // 개수 넣기
@@ -391,7 +391,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
                 placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, place));
             }
 
-            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_GUIDE_VIEW, null));
+            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
         }
 
         return placeViewItemList;
@@ -465,7 +465,6 @@ public class CollectionStayActivity extends CollectionBaseActivity
                 } else
                 {
                     View simpleDraweeView = view.findViewById(R.id.imageView);
-                    View gradeTextView = view.findViewById(R.id.gradeTextView);
                     View nameTextView = view.findViewById(R.id.nameTextView);
                     View gradientTopView = view.findViewById(R.id.gradientTopView);
                     View gradientBottomView = view.findViewById(R.id.gradientView);
@@ -486,7 +485,6 @@ public class CollectionStayActivity extends CollectionBaseActivity
 
                     optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(CollectionStayActivity.this,//
                         android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
-                        android.support.v4.util.Pair.create(gradeTextView, getString(R.string.transition_place_grade)),//
                         android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)),//
                         android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)),//
                         android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));

@@ -31,16 +31,16 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * Created by iseung-won on 2017. 8. 4..
+ * Created by android_sam on 2017. 8. 4..
  */
 
 public class GourmetCampaignTagListView //
     extends BaseDialogView<GourmetCampaignTagListView.OnEventListener, ActivityPlaceCampaignTagListDataBinding> //
     implements GourmetCampaignTagListInterface
 {
-    private ImageView mBlurImageView;
+    ImageView mBlurImageView;
 
-    private GourmetCampaignListAdapter mRecyclerAdapter;
+    GourmetCampaignListAdapter mRecyclerAdapter;
 
     public GourmetCampaignTagListView(BaseActivity activity, OnEventListener listener)
     {
@@ -219,6 +219,17 @@ public class GourmetCampaignTagListView //
                     {
                         mBlurImageView.setBackgroundDrawable(new BitmapDrawable(getContext().getResources(), bitmap));
                     }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        if (mBlurImageView != null)
+                        {
+                            mBlurImageView.setBackgroundDrawable(null);
+                            mBlurImageView.setVisibility(View.GONE);
+                        }
+                    }
                 });
             }
         } else
@@ -275,11 +286,6 @@ public class GourmetCampaignTagListView //
 
             if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY)
             {
-                if (getEventListener() == null)
-                {
-                    return;
-                }
-
                 getEventListener().onPlaceClick(view, placeViewItem, mRecyclerAdapter.getItemCount());
             }
         }
@@ -323,11 +329,6 @@ public class GourmetCampaignTagListView //
 
             if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY)
             {
-                if (getEventListener() == null)
-                {
-                    return false;
-                }
-
                 getEventListener().onPlaceLongClick(v, placeViewItem, mRecyclerAdapter.getItemCount());
             }
 

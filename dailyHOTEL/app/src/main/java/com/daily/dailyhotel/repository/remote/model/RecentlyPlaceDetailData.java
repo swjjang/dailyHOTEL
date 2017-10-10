@@ -6,7 +6,7 @@ import com.daily.dailyhotel.entity.RecentlyPlaceDetail;
 import com.twoheart.dailyhotel.network.model.Sticker;
 
 /**
- * Created by iseung-won on 2017. 9. 4..
+ * Created by android_sam on 2017. 9. 4..
  */
 @JsonObject
 public class RecentlyPlaceDetailData

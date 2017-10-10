@@ -24,7 +24,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public abstract class BaseBlurView<T1 extends OnBaseEventListener, T2 extends ViewDataBinding> extends BaseDialogView<T1, T2> implements BaseBlurViewInterface
 {
-    private ImageView mBlurImageView;
+    ImageView mBlurImageView;
 
     public BaseBlurView(BaseActivity activity, T1 listener)
     {
@@ -92,6 +92,17 @@ public abstract class BaseBlurView<T1 extends OnBaseEventListener, T2 extends Vi
                     public void accept(@io.reactivex.annotations.NonNull Bitmap bitmap) throws Exception
                     {
                         mBlurImageView.setBackgroundDrawable(new BitmapDrawable(getContext().getResources(), bitmap));
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        if (mBlurImageView != null)
+                        {
+                            mBlurImageView.setBackgroundDrawable(null);
+                            mBlurImageView.setVisibility(View.GONE);
+                        }
                     }
                 });
             }

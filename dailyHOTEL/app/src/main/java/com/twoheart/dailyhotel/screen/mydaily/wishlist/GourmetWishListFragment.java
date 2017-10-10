@@ -265,7 +265,7 @@ public class GourmetWishListFragment extends PlaceWishListFragment
         }
     };
 
-    private GourmetWishListLayout.OnEventListener mEventListener = new PlaceWishListLayout.OnEventListener()
+    GourmetWishListLayout.OnEventListener mEventListener = new PlaceWishListLayout.OnEventListener()
     {
         @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
         @Override

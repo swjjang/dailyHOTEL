@@ -1,9 +1,7 @@
 package com.daily.dailyhotel.screen.home.gourmet.detail;
 
 import android.animation.Animator;
-import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.app.Dialog;
@@ -25,7 +23,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
 
@@ -41,6 +38,9 @@ import com.daily.dailyhotel.entity.GourmetDetail;
 import com.daily.dailyhotel.entity.GourmetMenu;
 import com.daily.dailyhotel.entity.Sticker;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
+import com.daily.dailyhotel.view.DailyDetailEmptyView;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
@@ -63,11 +63,8 @@ import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailMoreMenuDataBindin
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailTitleDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail05DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailInformationDataBinding;
-import com.twoheart.dailyhotel.util.DailyPreference;
-import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.AlphaTransition;
-import com.twoheart.dailyhotel.widget.DailyDetailEmptyView;
 import com.twoheart.dailyhotel.widget.TextTransition;
 
 import java.text.DecimalFormat;
@@ -86,12 +83,11 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 {
     private GourmetDetailImageViewPagerAdapter mImageViewPagerAdapter;
 
-    private LinearLayout mMoreMenuLayout;
-    private LayoutGourmetDetailMoreMenuDataBinding mLayoutGourmetDetailMoreMenuDataBinding;
+    LinearLayout mMoreMenuLayout;
+    LayoutGourmetDetailMoreMenuDataBinding mLayoutGourmetDetailMoreMenuDataBinding;
 
-    private ObjectAnimator mShowBottomAnimator;
-    private ObjectAnimator mHideBottomAnimator;
-    private AnimatorSet mWishAnimatorSet;
+    ObjectAnimator mShowBottomAnimator;
+    ObjectAnimator mHideBottomAnimator;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -203,7 +199,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             }
         });
 
-        viewDataBinding.wishScrollView.setVisibility(View.GONE);
+        viewDataBinding.wishAnimationView.setVisibility(View.GONE);
     }
 
     @Override
@@ -476,7 +472,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         {
             getViewDataBinding().transImageView.setVisibility(View.VISIBLE);
             getViewDataBinding().transGradientBottomView.setVisibility(View.VISIBLE);
-            getViewDataBinding().transTitleLayout.setVisibility(View.VISIBLE);
+            getViewDataBinding().transNameTextView.setVisibility(View.VISIBLE);
             getViewDataBinding().transImageView.setTransitionName(getString(R.string.transition_place_image));
             getViewDataBinding().transGradientBottomView.setTransitionName(getString(R.string.transition_gradient_bottom_view));
             getViewDataBinding().transGradientTopView.setTransitionName(getString(R.string.transition_gradient_top_view));
@@ -501,7 +497,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         {
             getViewDataBinding().transImageView.setVisibility(View.GONE);
             getViewDataBinding().transGradientBottomView.setVisibility(View.GONE);
-            getViewDataBinding().transTitleLayout.setVisibility(View.GONE);
+            getViewDataBinding().transNameTextView.setVisibility(View.GONE);
         }
     }
 
@@ -689,9 +685,9 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                     getEventListener().onWishClick();
                 }
             });
-        } else if (getViewDataBinding().toolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_ON) == true)
+        } else if (getViewDataBinding().toolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_FILL_ON) == true)
         {
-            getViewDataBinding().toolbarView.updateMenuItem(DailyToolbarView.MenuItem.WISH_ON, wishCountText, new View.OnClickListener()
+            getViewDataBinding().toolbarView.updateMenuItem(DailyToolbarView.MenuItem.WISH_FILL_ON, wishCountText, new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -711,9 +707,9 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                     getEventListener().onWishClick();
                 }
             });
-        } else if (getViewDataBinding().fakeToolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_ON) == true)
+        } else if (getViewDataBinding().fakeToolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_LINE_ON) == true)
         {
-            getViewDataBinding().fakeToolbarView.updateMenuItem(DailyToolbarView.MenuItem.WISH_ON, wishCountText, new View.OnClickListener()
+            getViewDataBinding().fakeToolbarView.updateMenuItem(DailyToolbarView.MenuItem.WISH_LINE_ON, wishCountText, new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -736,7 +732,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         {
             if (getViewDataBinding().toolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_OFF) == true)
             {
-                getViewDataBinding().toolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_OFF, DailyToolbarView.MenuItem.WISH_ON, new View.OnClickListener()
+                getViewDataBinding().toolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_OFF, DailyToolbarView.MenuItem.WISH_FILL_ON, new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
@@ -748,7 +744,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
             if (getViewDataBinding().fakeToolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_OFF) == true)
             {
-                getViewDataBinding().fakeToolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_OFF, DailyToolbarView.MenuItem.WISH_ON, new View.OnClickListener()
+                getViewDataBinding().fakeToolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_OFF, DailyToolbarView.MenuItem.WISH_LINE_ON, new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
@@ -759,9 +755,9 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             }
         } else
         {
-            if (getViewDataBinding().toolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_ON) == true)
+            if (getViewDataBinding().toolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_FILL_ON) == true)
             {
-                getViewDataBinding().toolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_ON, DailyToolbarView.MenuItem.WISH_OFF, new View.OnClickListener()
+                getViewDataBinding().toolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_FILL_ON, DailyToolbarView.MenuItem.WISH_OFF, new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
@@ -773,7 +769,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
             if (getViewDataBinding().toolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_OFF) == true)
             {
-                getViewDataBinding().toolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_ON, DailyToolbarView.MenuItem.WISH_OFF, new View.OnClickListener()
+                getViewDataBinding().toolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_LINE_ON, DailyToolbarView.MenuItem.WISH_OFF, new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
@@ -1007,92 +1003,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             return null;
         }
 
-        if (mWishAnimatorSet != null && mWishAnimatorSet.isRunning() == true)
-        {
-            return null;
-        }
-
-        if (myWish == true)
-        {
-            getViewDataBinding().wishTextView.setText(R.string.wishlist_detail_add_message);
-            getViewDataBinding().wishTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_heart_fill_l, 0, 0);
-            getViewDataBinding().wishTextView.setBackgroundResource(R.drawable.shape_filloval_ccdb2453);
-        } else
-        {
-            getViewDataBinding().wishTextView.setText(R.string.wishlist_detail_delete_message);
-            getViewDataBinding().wishTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_heart_stroke_l, 0, 0);
-            getViewDataBinding().wishTextView.setBackgroundResource(R.drawable.shape_filloval_a5000000);
-        }
-
-        ObjectAnimator objectAnimator1 = ObjectAnimator.ofPropertyValuesHolder(getViewDataBinding().wishTextView //
-            , PropertyValuesHolder.ofFloat("scaleX", 0.8f, 1.2f, 1.0f) //
-            , PropertyValuesHolder.ofFloat("scaleY", 0.8f, 1.2f, 1.0f) //
-            , PropertyValuesHolder.ofFloat("alpha", 0.5f, 1.0f, 1.0f) //
-        );
-        objectAnimator1.setInterpolator(new AccelerateInterpolator());
-        objectAnimator1.setDuration(300);
-
-
-        ObjectAnimator objectAnimator2 = ObjectAnimator.ofPropertyValuesHolder(getViewDataBinding().wishTextView //
-            , PropertyValuesHolder.ofFloat("scaleX", 1.0f, 1.0f) //
-            , PropertyValuesHolder.ofFloat("scaleY", 1.0f, 1.0f) //
-            , PropertyValuesHolder.ofFloat("alpha", 1.0f, 1.0f) //
-        );
-        objectAnimator2.setDuration(600);
-
-
-        ObjectAnimator objectAnimator3 = ObjectAnimator.ofPropertyValuesHolder(getViewDataBinding().wishTextView //
-            , PropertyValuesHolder.ofFloat("scaleX", 1.0f, 0.7f) //
-            , PropertyValuesHolder.ofFloat("scaleY", 1.0f, 0.7f) //
-            , PropertyValuesHolder.ofFloat("alpha", 1.0f, 0.0f) //
-        );
-        objectAnimator3.setDuration(200);
-
-        mWishAnimatorSet = new AnimatorSet();
-        mWishAnimatorSet.playSequentially(objectAnimator1, objectAnimator2, objectAnimator3);
-
-        Observable<Boolean> observable = new Observable<Boolean>()
-        {
-            @Override
-            protected void subscribeActual(Observer<? super Boolean> observer)
-            {
-                mWishAnimatorSet.addListener(new Animator.AnimatorListener()
-                {
-                    @Override
-                    public void onAnimationStart(Animator animation)
-                    {
-                        getViewDataBinding().wishScrollView.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animator animation)
-                    {
-                        mWishAnimatorSet.removeAllListeners();
-                        mWishAnimatorSet = null;
-
-                        getViewDataBinding().wishScrollView.setVisibility(View.GONE);
-
-                        observer.onNext(true);
-                        observer.onComplete();
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation)
-                    {
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animator animation)
-                    {
-
-                    }
-                });
-
-                mWishAnimatorSet.start();
-            }
-        };
-
-        return observable;
+        return myWish ? getViewDataBinding().wishAnimationView.addWishAnimation() : getViewDataBinding().wishAnimationView.removeWishAnimation();
     }
 
     private void initToolbar(ActivityGourmetDetailDataBinding viewDataBinding)
@@ -1486,7 +1397,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             {
                 if (i < shownMenuCount)
                 {
-                    setMenuLayout(layoutInflater, getViewDataBinding().menuLayout, i, gourmetMenuList.get(i));
+                    setMenuLayout(layoutInflater, getViewDataBinding().menuLayout, i, gourmetMenuList.get(i), true);
                 } else if (i == shownMenuCount)
                 {
                     getViewDataBinding().menuLayout.addView(mMoreMenuLayout, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -1503,10 +1414,10 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                         }
                     });
 
-                    setMenuLayout(layoutInflater, mMoreMenuLayout, i, gourmetMenuList.get(i));
+                    setMenuLayout(layoutInflater, mMoreMenuLayout, i, gourmetMenuList.get(i), true);
                 } else
                 {
-                    setMenuLayout(layoutInflater, mMoreMenuLayout, i, gourmetMenuList.get(i));
+                    setMenuLayout(layoutInflater, mMoreMenuLayout, i, gourmetMenuList.get(i), true);
                 }
             }
 
@@ -1526,12 +1437,12 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         {
             for (int i = 0; i < size; i++)
             {
-                setMenuLayout(layoutInflater, getViewDataBinding().menuLayout, i, gourmetMenuList.get(i));
+                setMenuLayout(layoutInflater, getViewDataBinding().menuLayout, i, gourmetMenuList.get(i), i != size - 1);
             }
         }
     }
 
-    private void setMenuLayout(LayoutInflater layoutInflater, ViewGroup parent, int index, GourmetMenu gourmetMenu)
+    private void setMenuLayout(LayoutInflater layoutInflater, ViewGroup parent, int index, GourmetMenu gourmetMenu, boolean insertUnderLine)
     {
         if (layoutInflater == null || parent == null || gourmetMenu == null)
         {
@@ -1614,14 +1525,17 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             viewDataBinding.benefitTextView.setVisibility(View.VISIBLE);
         }
 
-        // 마지막 라인 넣기
-        final int DP_15 = ScreenUtils.dpToPx(getContext(), 15);
-        View underLineView = new View(getContext());
-        underLineView.setBackgroundResource(R.color.default_line_cdcdcdd);
+        if (insertUnderLine == true)
+        {
+            // 마지막 라인 넣기
+            final int DP_15 = ScreenUtils.dpToPx(getContext(), 15);
+            View underLineView = new View(getContext());
+            underLineView.setBackgroundResource(R.color.default_line_cdcdcdd);
 
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1);
-        layoutParams.setMargins(DP_15, 0, DP_15, 0);
-        parent.addView(underLineView, layoutParams);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1);
+            layoutParams.setMargins(DP_15, 0, DP_15, 0);
+            parent.addView(underLineView, layoutParams);
+        }
     }
 
     /**
@@ -1827,7 +1741,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
         List<String> informationList = information.getValue();
 
-        if (informationList == null && informationList.size() == 0)
+        if (informationList == null || informationList.size() == 0)
         {
             return;
         }
@@ -1912,7 +1826,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
     }
 
 
-    private void showBottomLayout(boolean animation)
+    void showBottomLayout(boolean animation)
     {
         if (getViewDataBinding() == null || mShowBottomAnimator != null)
         {
@@ -1967,7 +1881,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         }
     }
 
-    private void hideBottomLayout(boolean animation)
+    void hideBottomLayout(boolean animation)
     {
         if (getViewDataBinding() == null || mHideBottomAnimator != null)
         {

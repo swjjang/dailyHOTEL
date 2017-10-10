@@ -167,7 +167,7 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
                             ((OnNetworkControllerListener) mOnNetworkControllerListener).onConfirm();
                         } else
                         {
-                            mOnNetworkControllerListener.onErrorPopupMessage(responseJSONObject.getInt("msgCode"), responseJSONObject.getString("msg"));
+                            mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
                         }
                     } catch (Exception e)
                     {

@@ -237,34 +237,31 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
                             }
                         } else
                         {
-                            if (mIsMoved == false)
+                            if ((mIsTop == true && y > 0))
                             {
-                                if ((mIsTop == true && y > 0))
-                                {
-                                    if (mListView.getGlowTopScaleY() == 0.0f)
-                                    {
-                                        mIsMoved = true;
-                                    }
-                                }
-
-                                if (mIsBottom == true && y < 0)
+                                if (mListView.getGlowTopScaleY() == 0.0f)
                                 {
                                     mIsMoved = true;
                                 }
+                            }
 
-                                if (mIsMoved == true)
-                                {
-                                    event.setAction(MotionEvent.ACTION_UP);
-                                    mListView.onTouchEvent(event);
+                            if (mIsBottom == true && y < 0)
+                            {
+                                mIsMoved = true;
+                            }
 
-                                    scrollListEffect(y);
-                                } else
+                            if (mIsMoved == true)
+                            {
+                                event.setAction(MotionEvent.ACTION_UP);
+                                mListView.onTouchEvent(event);
+
+                                scrollListEffect(y);
+                            } else
+                            {
+                                if (y != 0)
                                 {
-                                    if (y != 0)
-                                    {
-                                        mIsTop = false;
-                                        mIsBottom = false;
-                                    }
+                                    mIsTop = false;
+                                    mIsBottom = false;
                                 }
                             }
                         }

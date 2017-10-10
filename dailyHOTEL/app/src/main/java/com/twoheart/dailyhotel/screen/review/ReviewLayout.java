@@ -129,6 +129,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
             return;
         }
 
+        mPlaceImageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
         Util.requestImageResize(context, mPlaceImageView, imageUrl);
     }
 

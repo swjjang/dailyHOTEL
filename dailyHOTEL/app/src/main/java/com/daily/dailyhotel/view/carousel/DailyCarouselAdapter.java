@@ -8,8 +8,10 @@ import android.os.Build;
 import android.os.Vibrator;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
@@ -35,22 +37,23 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Created by iseung-won on 2017. 8. 24..
+ * Created by android_sam on 2017. 8. 24..
  */
 
 public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdapter.PlaceViewHolder>
 {
-    private Context mContext;
+    Context mContext;
     private boolean mIsUsePriceLayout;
+    private boolean mNightsEnabled;
     private ArrayList<CarouselListItem> mList;
     //    protected PaintDrawable mPaintDrawable;
     protected ItemClickListener mItemClickListener;
 
     public interface ItemClickListener
     {
-        void onItemClick(View view);
+        void onItemClick(View view, android.support.v4.util.Pair[] pairs);
 
-        void onItemLongClick(View view);
+        void onItemLongClick(View view, android.support.v4.util.Pair[] pairs);
     }
 
     public DailyCarouselAdapter(Context context, ArrayList<CarouselListItem> list, ItemClickListener listener)
@@ -117,6 +120,7 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
         final RecentlyPlace place = item.getItem();
 
         holder.dataBinding.contentImageView.setTag(holder.dataBinding.contentImageView.getId(), item);
+        holder.dataBinding.contentImageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
         Util.requestImageResize(mContext, holder.dataBinding.contentImageView, place.imageUrl);
 
         //        if (VersionUtils.isOverAPI16() == true)
@@ -146,6 +150,7 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
             holder.dataBinding.contentOriginPriceView.setText("");
             holder.dataBinding.contentDiscountPriceView.setText("");
             holder.dataBinding.contentPersonView.setText("");
+            holder.dataBinding.contentOriginPriceView.setVisibility(View.GONE);
         } else
         {
             holder.dataBinding.priceLayout.setVisibility(View.VISIBLE);
@@ -158,10 +163,12 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
             if (prices.normalPrice <= 0 || prices.normalPrice <= prices.discountPrice)
             {
                 holder.dataBinding.contentOriginPriceView.setText("");
+                holder.dataBinding.contentOriginPriceView.setVisibility(View.GONE);
             } else
             {
                 holder.dataBinding.contentOriginPriceView.setText(strPrice);
                 holder.dataBinding.contentOriginPriceView.setPaintFlags(holder.dataBinding.contentOriginPriceView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                holder.dataBinding.contentOriginPriceView.setVisibility(View.VISIBLE);
             }
         }
 
@@ -217,6 +224,8 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
             holder.dataBinding.contentPersonView.setText("");
             holder.dataBinding.contentPersonView.setVisibility(View.GONE);
         }
+
+        holder.dataBinding.tripAdvisorLayout.setVisibility(View.GONE);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -225,6 +234,7 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
         final Stay stay = item.getItem();
 
         holder.dataBinding.contentImageView.setTag(holder.dataBinding.contentImageView.getId(), item);
+        holder.dataBinding.contentImageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
         Util.requestImageResize(mContext, holder.dataBinding.contentImageView, stay.imageUrl);
 
         //        if (VersionUtils.isOverAPI16() == true)
@@ -255,6 +265,7 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
             holder.dataBinding.contentOriginPriceView.setText("");
             holder.dataBinding.contentDiscountPriceView.setText("");
             holder.dataBinding.contentPersonView.setText("");
+            holder.dataBinding.contentOriginPriceView.setVisibility(View.GONE);
         } else
         {
             holder.dataBinding.priceLayout.setVisibility(View.VISIBLE);
@@ -267,10 +278,12 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
             if (originPrice <= 0 || originPrice <= discountPrice)
             {
                 holder.dataBinding.contentOriginPriceView.setText("");
+                holder.dataBinding.contentOriginPriceView.setVisibility(View.GONE);
             } else
             {
                 holder.dataBinding.contentOriginPriceView.setText(strPrice);
                 holder.dataBinding.contentOriginPriceView.setPaintFlags(holder.dataBinding.contentOriginPriceView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                holder.dataBinding.contentOriginPriceView.setVisibility(View.VISIBLE);
             }
         }
 
@@ -281,6 +294,9 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
 
         holder.dataBinding.contentPersonView.setText("");
         holder.dataBinding.contentPersonView.setVisibility(View.GONE);
+
+        holder.dataBinding.contentMultiDayView.setVisibility(View.GONE);
+        holder.dataBinding.tripAdvisorLayout.setVisibility(View.GONE);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -358,10 +374,13 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
         //            holder.dataBinding.soldOutView.setVisibility(View.GONE);
         //        }
 
-        holder.dataBinding.priceLayout.setVisibility(mIsUsePriceLayout == false ? View.GONE : View.INVISIBLE);
-        holder.dataBinding.contentOriginPriceView.setText("");
-        holder.dataBinding.contentDiscountPriceView.setText("");
-        holder.dataBinding.contentPersonView.setText("");
+        if (stayOutbound.promo == true)
+        {
+            setOutboundPriceText(holder.dataBinding, stayOutbound.nightlyRate, stayOutbound.nightlyBaseRate, mNightsEnabled);
+        } else
+        {
+            setOutboundPriceText(holder.dataBinding, stayOutbound.nightlyRate, stayOutbound.nightlyBaseRate, mNightsEnabled);
+        }
 
         holder.dataBinding.contentTextView.setText(stayOutbound.name);
         //        holder.dataBinding.nameEngTextView.setText("(" + stayOutbound.nameEng + ")");
@@ -370,11 +389,8 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
 
         // Stay Outbound 의 경우 PlaceType 이 없음
         holder.dataBinding.contentGradeView.setText("");
-        holder.dataBinding.contentDotImageView.setVisibility(View.GONE);
 
-        holder.dataBinding.contentPersonView.setText("");
-        holder.dataBinding.contentPersonView.setVisibility(View.GONE);
-
+        setTripAdvisorText(holder.dataBinding, stayOutbound.rating);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -383,6 +399,7 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
         final Gourmet gourmet = item.getItem();
 
         holder.dataBinding.contentImageView.setTag(holder.dataBinding.contentImageView.getId(), item);
+        holder.dataBinding.contentImageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
         Util.requestImageResize(mContext, holder.dataBinding.contentImageView, gourmet.imageUrl);
 
         //        if (VersionUtils.isOverAPI16() == true)
@@ -413,6 +430,7 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
             holder.dataBinding.contentOriginPriceView.setText("");
             holder.dataBinding.contentDiscountPriceView.setText("");
             holder.dataBinding.contentPersonView.setText("");
+            holder.dataBinding.contentOriginPriceView.setVisibility(View.GONE);
         } else
         {
             holder.dataBinding.priceLayout.setVisibility(View.VISIBLE);
@@ -425,10 +443,23 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
             if (originPrice <= 0 || originPrice <= discountPrice)
             {
                 holder.dataBinding.contentOriginPriceView.setText("");
+                holder.dataBinding.contentOriginPriceView.setVisibility(View.GONE);
             } else
             {
                 holder.dataBinding.contentOriginPriceView.setText(strPrice);
                 holder.dataBinding.contentOriginPriceView.setPaintFlags(holder.dataBinding.contentOriginPriceView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                holder.dataBinding.contentOriginPriceView.setVisibility(View.VISIBLE);
+            }
+
+            if (gourmet.persons > 1)
+            {
+                holder.dataBinding.contentPersonView.setText(//
+                    mContext.getString(R.string.label_home_person_format, gourmet.persons));
+                holder.dataBinding.contentPersonView.setVisibility(View.VISIBLE);
+            } else
+            {
+                holder.dataBinding.contentPersonView.setText("");
+                holder.dataBinding.contentPersonView.setVisibility(View.GONE);
             }
         }
 
@@ -447,21 +478,13 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
             holder.dataBinding.contentGradeView.setText(gourmet.category);
         }
 
-        if (gourmet.persons > 1)
-        {
-            holder.dataBinding.contentPersonView.setText(//
-                mContext.getString(R.string.label_home_person_format, gourmet.persons));
-            holder.dataBinding.contentPersonView.setVisibility(View.VISIBLE);
-        } else
-        {
-            holder.dataBinding.contentPersonView.setText("");
-            holder.dataBinding.contentPersonView.setVisibility(View.GONE);
-        }
+        holder.dataBinding.contentMultiDayView.setVisibility(View.GONE);
+        holder.dataBinding.tripAdvisorLayout.setVisibility(View.GONE);
     }
 
     public CarouselListItem getItem(int position)
     {
-        if (position < 0 || mList.size() <= position)
+        if (position < 0 || mList == null || mList.size() <= position)
         {
             return null;
         }
@@ -488,6 +511,100 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
     public void setUsePriceLayout(boolean isUse)
     {
         mIsUsePriceLayout = isUse;
+    }
+
+    public void setNightsEnabled(boolean nightEnabled)
+    {
+        mNightsEnabled = nightEnabled;
+    }
+
+    private void setOutboundPriceText(ListRowCarouselItemDataBinding dataBinding, int discountPrice, int price, boolean nightsEnabled)
+    {
+        if (dataBinding == null)
+        {
+            return;
+        }
+
+        if (mIsUsePriceLayout == false)
+        {
+            // 가격 표시 안함
+            dataBinding.priceLayout.setVisibility(View.GONE);
+            dataBinding.contentOriginPriceView.setText("");
+            dataBinding.contentDiscountPriceView.setText("");
+            dataBinding.contentPersonView.setText("");
+            dataBinding.contentOriginPriceView.setVisibility(View.GONE);
+            return;
+        }
+
+        // 가격 표시 함
+        dataBinding.priceLayout.setVisibility(View.VISIBLE);
+
+        if (discountPrice > 0)
+        {
+            String strDiscount = DailyTextUtils.getPriceFormat(mContext, discountPrice, false);
+            dataBinding.contentDiscountPriceView.setText(strDiscount);
+        } else
+        {
+            dataBinding.contentDiscountPriceView.setText(R.string.label_soldout);
+        }
+
+        if (price <= 0 || price <= discountPrice)
+        {
+            dataBinding.contentOriginPriceView.setVisibility(View.GONE);
+            dataBinding.contentOriginPriceView.setText("");
+        } else
+        {
+            dataBinding.contentOriginPriceView.setVisibility(View.VISIBLE);
+
+            String strPrice = DailyTextUtils.getPriceFormat(mContext, price, false);
+            dataBinding.contentOriginPriceView.setText(strPrice);
+            dataBinding.contentOriginPriceView.setPaintFlags(dataBinding.contentOriginPriceView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        }
+
+        dataBinding.contentPersonView.setText("");
+        dataBinding.contentPersonView.setVisibility(View.GONE);
+
+        if (nightsEnabled == true)
+        {
+            dataBinding.contentMultiDayView.setVisibility(View.VISIBLE);
+
+        } else
+        {
+            dataBinding.contentMultiDayView.setVisibility(View.GONE);
+        }
+    }
+
+    public void setTripAdvisorText(ListRowCarouselItemDataBinding dataBinding, float rating)
+    {
+        if (dataBinding == null)
+        {
+            return;
+        }
+
+        if (rating == 0.0f)
+        {
+            dataBinding.contentDotImageView.setVisibility(View.GONE);
+            dataBinding.tripAdvisorLayout.setVisibility(View.GONE);
+        } else
+        {
+            dataBinding.contentDotImageView.setVisibility(View.VISIBLE);
+            dataBinding.tripAdvisorLayout.setVisibility(View.VISIBLE);
+            dataBinding.tripAdvisorRatingBar.setOnTouchListener(new View.OnTouchListener()
+            {
+                @Override
+                public boolean onTouch(View v, MotionEvent event)
+                {
+                    return true;
+                }
+            });
+            dataBinding.tripAdvisorRatingBar.setRating(rating);
+            dataBinding.tripAdvisorRatingTextView.setText(mContext.getString(R.string.label_stay_outbound_tripadvisor_rating_type_none_bracket, Float.toString(rating)));
+
+            // 별등급이 기본이 5개 이기 때문에 빈공간에도 내용이 존재한다.
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) dataBinding.tripAdvisorRatingTextView.getLayoutParams();
+            layoutParams.leftMargin = ScreenUtils.dpToPx(mContext, 2) - ScreenUtils.dpToPx(mContext, (5 - (int) Math.ceil(rating)) * 10);
+            dataBinding.tripAdvisorRatingTextView.setLayoutParams(layoutParams);
+        }
     }
 
     private void setLayoutMargin(PlaceViewHolder holder, int position)
@@ -540,6 +657,11 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
             dataBinding.contentImageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
             dataBinding.contentImageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
+            android.support.v4.util.Pair[] pairs = { //
+                android.support.v4.util.Pair.create(dataBinding.contentImageView, mContext.getResources().getString(R.string.transition_place_image)) //
+                , android.support.v4.util.Pair.create(dataBinding.gradientTopView, mContext.getResources().getString(R.string.transition_gradient_top_view)) //
+                , android.support.v4.util.Pair.create(dataBinding.gradientBottomView, mContext.getResources().getString(R.string.transition_gradient_bottom_view))};
+
             itemView.setOnClickListener(new View.OnClickListener()
             {
                 @Override
@@ -550,7 +672,7 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
                         return;
                     }
 
-                    mItemClickListener.onItemClick(v);
+                    mItemClickListener.onItemClick(v, pairs);
                 }
             });
 
@@ -569,7 +691,7 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
                             Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
                             vibrator.vibrate(70);
 
-                            mItemClickListener.onItemLongClick(v);
+                            mItemClickListener.onItemLongClick(v, pairs);
                             return true;
                         }
                     }

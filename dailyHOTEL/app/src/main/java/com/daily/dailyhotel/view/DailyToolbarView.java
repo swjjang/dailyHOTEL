@@ -32,7 +32,7 @@ public class DailyToolbarView extends ConstraintLayout
 
     private List<Pair<MenuItem, DailyViewToolbarMenuItemDataBinding>> mMenuItemList;
 
-    private ObjectAnimator mShowAnimator;
+    ObjectAnimator mShowAnimator;
     private ObjectAnimator mHideAnimator;
 
     private ThemeColor mThemeColor;
@@ -47,7 +47,8 @@ public class DailyToolbarView extends ConstraintLayout
         CLOSE(R.drawable.navibar_ic_x, true),
         //        TRUE_VR(R.drawable.vector_navibar_ic_treuvr, true),
         WISH_OFF(R.drawable.vector_navibar_ic_heart_off_black, true),
-        WISH_ON(R.drawable.vector_navibar_ic_heart_on, false),
+        WISH_LINE_ON(R.drawable.vector_navibar_ic_heart_on_strokefill, false),
+        WISH_FILL_ON(R.drawable.vector_navibar_ic_heart_on_fill, false),
         SEARCH(R.drawable.navibar_ic_search, true);
 
         private int mResId;

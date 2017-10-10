@@ -12,10 +12,10 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.GourmetMenu;
 import com.daily.dailyhotel.parcel.GourmetMenuParcel;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyPreference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusActivity, GourmetMenusInterface> implements GourmetMenusView.OnEventListener
 {
-    private GourmetMenusAnalyticsInterface mAnalytics;
+    GourmetMenusAnalyticsInterface mAnalytics;
 
     private List<GourmetMenu> mGourmetMenuList;
     private int mIndex;

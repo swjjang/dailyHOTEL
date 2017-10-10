@@ -20,6 +20,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.view.DailyGourmetCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.maps.model.LatLng;
@@ -53,7 +54,6 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
-import com.twoheart.dailyhotel.util.DailyPreference;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -73,7 +73,7 @@ import retrofit2.Response;
 public class GourmetMainActivity extends PlaceMainActivity
 {
     GourmetCuration mGourmetCuration;
-    private DailyDeepLink mDailyDeepLink;
+    DailyDeepLink mDailyDeepLink;
 
     public static Intent newInstance(Context context, String deepLink)
     {
@@ -1071,6 +1071,9 @@ public class GourmetMainActivity extends PlaceMainActivity
                     {
                         AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                             , AnalyticsManager.Action.GOURMET_ITEM_CLICK, Integer.toString(gourmet.index), null);
+
+                        AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                            , AnalyticsManager.Action.GOURMET_DAILYCHOICE_CLICK, gourmet.isDailyChoice ? AnalyticsManager.Label.Y : AnalyticsManager.Label.N, null);
                     }
                     break;
                 }

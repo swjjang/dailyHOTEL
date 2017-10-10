@@ -29,7 +29,7 @@ public class DailyBookingGuestInformationsView extends ConstraintLayout
 
     private List<Pair<InformationType, ViewDataBinding>> mInformationTypeList;
 
-    private OnGuestInformationsClickListener mOnGuestInformationsClickListener;
+    OnGuestInformationsClickListener mOnGuestInformationsClickListener;
 
     public enum InformationType
     {

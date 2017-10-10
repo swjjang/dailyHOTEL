@@ -1,7 +1,7 @@
 package com.twoheart.dailyhotel.model;
 
 /**
- * Created by iseung-won on 2017. 8. 10..
+ * Created by android_sam on 2017. 8. 10..
  */
 
 public class SearchCardItem

@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.twoheart.dailyhotel.util.DailyRemoteConfigPreference;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.io.File;
