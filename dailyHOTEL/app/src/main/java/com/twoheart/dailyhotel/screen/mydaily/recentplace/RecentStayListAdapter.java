@@ -110,7 +110,7 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
         final RecentlyPlace recentlyPlace = placeViewItem.getItem();
 
         holder.stayCardView.setStickerVisible(false);
-        holder.stayCardView.setDeleteVisible(false);
+        holder.stayCardView.setDeleteVisible(true);
         holder.stayCardView.setWishVisible(false);
 
         holder.stayCardView.setImage(recentlyPlace.imageUrl);

@@ -685,9 +685,9 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                     getEventListener().onWishClick();
                 }
             });
-        } else if (getViewDataBinding().toolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_ON) == true)
+        } else if (getViewDataBinding().toolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_FILL_ON) == true)
         {
-            getViewDataBinding().toolbarView.updateMenuItem(DailyToolbarView.MenuItem.WISH_ON, wishCountText, new View.OnClickListener()
+            getViewDataBinding().toolbarView.updateMenuItem(DailyToolbarView.MenuItem.WISH_FILL_ON, wishCountText, new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -707,9 +707,9 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                     getEventListener().onWishClick();
                 }
             });
-        } else if (getViewDataBinding().fakeToolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_ON) == true)
+        } else if (getViewDataBinding().fakeToolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_LINE_ON) == true)
         {
-            getViewDataBinding().fakeToolbarView.updateMenuItem(DailyToolbarView.MenuItem.WISH_ON, wishCountText, new View.OnClickListener()
+            getViewDataBinding().fakeToolbarView.updateMenuItem(DailyToolbarView.MenuItem.WISH_LINE_ON, wishCountText, new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -732,7 +732,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         {
             if (getViewDataBinding().toolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_OFF) == true)
             {
-                getViewDataBinding().toolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_OFF, DailyToolbarView.MenuItem.WISH_ON, new View.OnClickListener()
+                getViewDataBinding().toolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_OFF, DailyToolbarView.MenuItem.WISH_FILL_ON, new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
@@ -744,7 +744,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
             if (getViewDataBinding().fakeToolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_OFF) == true)
             {
-                getViewDataBinding().fakeToolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_OFF, DailyToolbarView.MenuItem.WISH_ON, new View.OnClickListener()
+                getViewDataBinding().fakeToolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_OFF, DailyToolbarView.MenuItem.WISH_LINE_ON, new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
@@ -755,9 +755,9 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             }
         } else
         {
-            if (getViewDataBinding().toolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_ON) == true)
+            if (getViewDataBinding().toolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_FILL_ON) == true)
             {
-                getViewDataBinding().toolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_ON, DailyToolbarView.MenuItem.WISH_OFF, new View.OnClickListener()
+                getViewDataBinding().toolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_FILL_ON, DailyToolbarView.MenuItem.WISH_OFF, new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
@@ -769,7 +769,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
             if (getViewDataBinding().toolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_OFF) == true)
             {
-                getViewDataBinding().toolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_ON, DailyToolbarView.MenuItem.WISH_OFF, new View.OnClickListener()
+                getViewDataBinding().toolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_LINE_ON, DailyToolbarView.MenuItem.WISH_OFF, new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
