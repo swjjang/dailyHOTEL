@@ -5,7 +5,9 @@ import android.databinding.DataBindingUtil;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.DailyViewFloatingActionDataBinding;
 
@@ -70,6 +72,32 @@ public class DailyFloatingActionView extends ConstraintLayout
 
         mViewDataBinding.viewActionTextView.setEnabled(enable);
         mViewDataBinding.viewActionTextView.setAlpha(enable ? 1.0f : 0.8f);
+    }
+
+    public void setViewOptionVisible(boolean visible)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        final int DP_10 = ScreenUtils.dpToPx(getContext(), 10);
+
+        if (visible == true)
+        {
+            mViewDataBinding.viewActionTextView.setVisibility(View.VISIBLE);
+            mViewDataBinding.verticalLine.setVisibility(View.VISIBLE);
+
+            mViewDataBinding.filterActionTextView.setPadding(ScreenUtils.dpToPx(getContext(), 12), DP_10, ScreenUtils.dpToPx(getContext(), 18), DP_10);
+        } else
+        {
+            mViewDataBinding.viewActionTextView.setVisibility(View.GONE);
+            mViewDataBinding.verticalLine.setVisibility(View.GONE);
+
+            final int DP_18 = ScreenUtils.dpToPx(getContext(), 18);
+
+            mViewDataBinding.filterActionTextView.setPadding(DP_18, DP_10, DP_18, DP_10);
+        }
     }
 
     public void setFilterOptionEnable(boolean enable)

@@ -169,7 +169,7 @@ public class StaySearchResultLayout extends PlaceSearchResultLayout
 
                 StaySearchResultListFragment searchResultListFragment = new StaySearchResultListFragment();
                 searchResultListFragment.setPlaceOnListFragmentListener(listener);
-                searchResultListFragment.setBottomOptionLayout(mBottomOptionLayout);
+                searchResultListFragment.setBottomOptionLayout(mFloatingActionView);
                 list.add(searchResultListFragment);
             }
 

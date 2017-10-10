@@ -164,8 +164,8 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
             }
         });
 
-        viewDataBinding.viewTypeOptionImageView.setOnClickListener(this);
-        viewDataBinding.filterOptionImageView.setOnClickListener(this);
+        viewDataBinding.floatingActionView.setOnViewOptionClickListener(v -> getEventListener().onViewTypeClick());
+        viewDataBinding.floatingActionView.setOnFilterOptionClickListener(v -> getEventListener().onFilterClick());
         viewDataBinding.researchView.setOnClickListener(this);
         viewDataBinding.filterView.setOnClickListener(this);
         viewDataBinding.retryTextView.setOnClickListener(this);
@@ -455,24 +455,24 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         switch (viewState)
         {
             case LIST:
-                getViewDataBinding().viewTypeOptionImageView.setBackgroundResource(R.drawable.fab_01_map);
+                getViewDataBinding().floatingActionView.setViewOptionMapSelected();
                 break;
 
             case MAP:
-                getViewDataBinding().viewTypeOptionImageView.setBackgroundResource(R.drawable.fab_02_list);
+                getViewDataBinding().floatingActionView.setViewOptionListSelected();
                 break;
         }
     }
 
     @Override
-    public void setFilterOptionImage(boolean onOff)
+    public void setFilterOptionImage(boolean selected)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        getViewDataBinding().filterOptionImageView.setSelected(onOff);
+        getViewDataBinding().floatingActionView.setFilterOptionSelected(selected);
     }
 
     /**
@@ -683,15 +683,15 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         {
             case FILTER_ON:
             {
-                getViewDataBinding().viewTypeOptionImageView.setVisibility(View.GONE);
-                getViewDataBinding().filterOptionImageView.setVisibility(View.VISIBLE);
+                getViewDataBinding().floatingActionView.setViewOptionVisible(false);
+                getViewDataBinding().floatingActionView.setFilterOptionEnable(true);
                 break;
             }
 
             case DEFAULT:
             {
-                getViewDataBinding().viewTypeOptionImageView.setVisibility(View.VISIBLE);
-                getViewDataBinding().filterOptionImageView.setVisibility(View.VISIBLE);
+                getViewDataBinding().floatingActionView.setViewOptionVisible(true);
+                getViewDataBinding().floatingActionView.setFilterOptionEnable(true);
                 break;
             }
         }
@@ -705,7 +705,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
             return;
         }
 
-        getViewDataBinding().bottomOptionLayout.setVisibility(visible == true ? View.VISIBLE : View.GONE);
+        getViewDataBinding().floatingActionView.setVisibility(visible == true ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -759,12 +759,6 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
                 getEventListener().onPeopleClick();
                 break;
 
-            case R.id.viewTypeOptionImageView:
-                getEventListener().onViewTypeClick();
-                break;
-
-
-            case R.id.filterOptionImageView:
             case R.id.filterView:
                 getEventListener().onFilterClick();
                 break;
@@ -973,7 +967,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
             return;
         }
 
-        getViewDataBinding().bottomOptionLayout.setTranslationY(dy - ScreenUtils.dpToPx(getContext(), (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP)));
+        getViewDataBinding().floatingActionView.setTranslationY(dy - ScreenUtils.dpToPx(getContext(), (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP)));
 
         if (mViewPager != null)
         {
@@ -988,7 +982,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
             return;
         }
 
-        getViewDataBinding().bottomOptionLayout.setTranslationY(0);
+        getViewDataBinding().floatingActionView.setTranslationY(0);
 
         if (mViewPager != null)
         {
