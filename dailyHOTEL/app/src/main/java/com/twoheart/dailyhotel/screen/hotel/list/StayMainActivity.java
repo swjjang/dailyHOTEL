@@ -19,6 +19,8 @@ import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.StayBookDateTime;
+import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.view.DailyStayCardView;
@@ -1116,9 +1118,19 @@ public class StayMainActivity extends PlaceMainActivity
                         {
                             optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(StayMainActivity.this, ((DailyStayCardView) view).getOptionsCompat());
 
-                            intent = StayDetailActivity.newInstance(StayMainActivity.this //
-                                , mStayCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
-                                , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
+//                            intent = StayDetailActivity.newInstance(StayMainActivity.this //
+//                                , mStayCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
+//                                , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
+
+
+                            StayDetailAnalyticsParam stayDetailAnalyticsParam = new StayDetailAnalyticsParam();
+                            StayBookingDay stayBookingDay = mStayCuration.getStayBookingDay();
+
+                            intent = com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity.newInstance(StayMainActivity.this //
+                                , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
+                                , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                                , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+                                , true, com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, stayDetailAnalyticsParam);
                         } else
                         {
                             View simpleDraweeView = view.findViewById(R.id.imageView);

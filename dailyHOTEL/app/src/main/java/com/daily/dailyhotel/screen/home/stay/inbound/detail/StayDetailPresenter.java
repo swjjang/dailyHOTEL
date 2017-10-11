@@ -81,8 +81,6 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function7;
 import io.reactivex.schedulers.Schedulers;
 
-import static android.R.attr.checked;
-
 /**
  * Created by sheldon
  * Clean Architecture
@@ -1144,31 +1142,17 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             getViewInterface().showTrueVRDialog(new CompoundButton.OnCheckedChangeListener()
             {
                 @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+                public void onCheckedChanged(CompoundButton buttonView, boolean checked)
                 {
-                    DailyPreference.getInstance(getActivity()).setTrueVRCheckDataGuide(isChecked);
+                    DailyPreference.getInstance(getActivity()).setTrueVRCheckDataGuide(checked);
                 }
             }, new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
                 {
-                    startActivityForResult(TrueVRActivity.newInstance(getActivity(), mStayDetail.index, (ArrayList)mTrueVRList//
+                    startActivityForResult(TrueVRActivity.newInstance(getActivity(), mStayDetail.index, mTrueVRList//
                         , Constants.PlaceType.HOTEL, mStayDetail.category), StayDetailActivity.REQUEST_CODE_TRUE_VR);
-                }
-            }, new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-
-                }
-            }, new DialogInterface.OnCancelListener()
-            {
-                @Override
-                public void onCancel(DialogInterface dialog)
-                {
-
                 }
             }, new DialogInterface.OnDismissListener()
             {
@@ -1180,14 +1164,14 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             });
         } else
         {
-            startActivityForResult(TrueVRActivity.newInstance(getActivity(), mStayDetail.index, (ArrayList)mTrueVRList//
+            startActivityForResult(TrueVRActivity.newInstance(getActivity(), mStayDetail.index, (ArrayList) mTrueVRList//
                 , Constants.PlaceType.HOTEL, mStayDetail.category), StayDetailActivity.REQUEST_CODE_TRUE_VR);
         }
 
         try
         {
-            AnalyticsManager.getInstance(StayDetailActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION,//
-                AnalyticsManager.Action.TRUE_VR_CLICK, Integer.toString(((StayDetail) mPlaceDetail).getStayDetailParams().index), null);
+            AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION,//
+                AnalyticsManager.Action.TRUE_VR_CLICK, Integer.toString(mStayDetail.index), null);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -1246,6 +1230,12 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT), mStayDetail.category, mStayDetail.name);
             startActivityForResult(intent, StayDetailActivity.REQUEST_CODE_DOWNLOAD_COUPON);
         }
+    }
+
+    @Override
+    public void onStampClick()
+    {
+
     }
 
     @Override
@@ -1331,6 +1321,9 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         {
             ExLog.e(e.toString());
         }
+
+        RecentlyPlaceUtil.addRecentlyItem(getActivity(), Constants.ServiceType.HOTEL //
+            , mStayDetail.index, mStayDetail.name, null, mImageUrl, false);
 
         getViewInterface().setStayDetail(mStayBookDateTime, mStayDetail//
             , mReviewScores != null ? mReviewScores.reviewScoreTotalCount : 0);

@@ -637,6 +637,13 @@
         <!--  com.daily.dailyhotel.... -->
 
         <activity
+            android:name="com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+
+        <activity
             android:name="com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
@@ -644,13 +651,13 @@
             android:windowSoftInputMode="stateAlwaysHidden"/>
 
         <activity
-            android:name="com.daily.dailyhotel.screen.home.gourmet.detail.truereview.GourmetTrueReviewActivity"
+            android:name="com.daily.dailyhotel.screen.home.stay.inbound.detail.truereview.StayTrueReviewActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name="com.daily.dailyhotel.screen.home.stay.inbound.detail.truereview.StayTrueReviewActivity"
+            android:name="com.daily.dailyhotel.screen.home.gourmet.detail.truereview.GourmetTrueReviewActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>

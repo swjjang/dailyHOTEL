@@ -6,6 +6,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.StayDetail;
 import com.daily.dailyhotel.entity.StayRoom;
+import com.twoheart.dailyhotel.model.Stay;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -129,7 +130,15 @@ public class StayDetailData
         stayDetail.longitude = longitude;
         stayDetail.address = address;
         stayDetail.category = category;
-        stayDetail.grade = grade;
+
+        try
+        {
+            stayDetail.grade = Stay.Grade.valueOf(grade);
+        } catch (Exception e)
+        {
+            stayDetail.grade = Stay.Grade.etc;
+        }
+
         stayDetail.price = price;
         stayDetail.discount = discount;
         stayDetail.ratingPersons = ratingPersons;

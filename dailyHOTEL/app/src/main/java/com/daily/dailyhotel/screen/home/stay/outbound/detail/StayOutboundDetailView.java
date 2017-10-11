@@ -1387,6 +1387,8 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
 
         Iterator<Map.Entry<String, List<String>>> iterator = informationMap.entrySet().iterator();
 
+        getViewDataBinding().descriptionsLayout.removeAllViews();
+
         while (iterator.hasNext() == true)
         {
             Map.Entry<String, List<String>> entry = iterator.next();

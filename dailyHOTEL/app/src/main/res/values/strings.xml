@@ -104,6 +104,8 @@
     <string name="label_all">전체</string>
     <string name="label_truereview_count">트루리뷰 %d개</string>
     <string name="label_soldout">판매완료</string>
+    <string name="label_check_in">체크인</string>
+    <string name="label_check_out">체크아웃</string>
 
     <string name="label_count_stay">%1$d개 스테이</string>
     <string name="label_count_gourmet">%1$d개 고메</string>

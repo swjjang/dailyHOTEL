@@ -13,8 +13,9 @@ import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyWebView;
+import com.daily.dailyhotel.entity.TrueVR;
+import com.daily.dailyhotel.parcel.TrueVRParcel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.model.TrueVRParams;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -24,7 +25,7 @@ import java.util.List;
 
 public class TrueVRActivity extends WebViewActivity implements View.OnClickListener
 {
-    List<TrueVRParams> mTrueVRParamsList;
+    List<TrueVR> mTrueVRList;
     private TextView mProductNameTextView;
     private TextView mCurrentPageTextView, mTotalPageTextView;
     private View mPageLayout;
@@ -35,11 +36,19 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
     int mCurrentPage;
     PlaceType mPlaceType;
 
-    public static Intent newInstance(Context context, int placeIndex, ArrayList<TrueVRParams> list, PlaceType placeType, String category)
+    public static Intent newInstance(Context context, int placeIndex, List<TrueVR> trueVRList, PlaceType placeType, String category)
     {
         Intent intent = new Intent(context, TrueVRActivity.class);
         intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACEIDX, placeIndex);
-        intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_TRUEVR_LIST, list);
+
+        ArrayList<TrueVRParcel> trueVRParcelList = new ArrayList<>(trueVRList.size());
+
+        for (TrueVR trueVR : trueVRList)
+        {
+            trueVRParcelList.add(new TrueVRParcel(trueVR));
+        }
+
+        intent.putParcelableArrayListExtra(Constants.NAME_INTENT_EXTRA_DATA_TRUEVR_LIST, trueVRParcelList);
         intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
         intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_CATEGORY, category);
         return intent;
@@ -60,15 +69,23 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
         }
 
         mPlaceIndex = intent.getIntExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACEIDX, -1);
-        mTrueVRParamsList = intent.getParcelableArrayListExtra(Constants.NAME_INTENT_EXTRA_DATA_TRUEVR_LIST);
-        mPlaceType = PlaceType.valueOf(intent.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACETYPE));
-        String category = intent.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_CATEGORY);
+        List<TrueVRParcel> trueVRParcelList = intent.getParcelableArrayListExtra(Constants.NAME_INTENT_EXTRA_DATA_TRUEVR_LIST);
 
-        if (mTrueVRParamsList == null || mTrueVRParamsList.size() == 0)
+        if (trueVRParcelList == null || trueVRParcelList.size() == 0)
         {
             finish();
             return;
         }
+
+        mTrueVRList = new ArrayList<>(trueVRParcelList.size());
+
+        for (TrueVRParcel trueVRParcel : trueVRParcelList)
+        {
+            mTrueVRList.add(trueVRParcel.getTrueVR());
+        }
+
+        mPlaceType = PlaceType.valueOf(intent.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACETYPE));
+        String category = intent.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_CATEGORY);
 
         initWebView();
         initToolbar();
@@ -122,7 +139,7 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
         mWebViewLayout = findViewById(R.id.webViewLayout);
         mPageLayout = findViewById(R.id.pageLayout);
 
-        if (mTrueVRParamsList != null && mTrueVRParamsList.size() == 1)
+        if (mTrueVRList != null && mTrueVRList.size() == 1)
         {
             mPageLayout.setVisibility(View.GONE);
         } else
@@ -143,16 +160,16 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
 
     private void setTrueViewPage(int page)
     {
-        if (mWebView == null || page >= mTrueVRParamsList.size() || page < 0)
+        if (mWebView == null || page >= mTrueVRList.size() || page < 0)
         {
             return;
         }
 
-        int totalPage = mTrueVRParamsList.size();
+        int totalPage = mTrueVRList.size();
 
-        TrueVRParams trueVRParams = mTrueVRParamsList.get(page);
+        TrueVR trueVR = mTrueVRList.get(page);
 
-        if (trueVRParams == null)
+        if (trueVR == null)
         {
             return;
         }
@@ -179,16 +196,16 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
             }
         }
 
-        mWebView.loadUrl(trueVRParams.url);
+        mWebView.loadUrl(trueVR.url);
         mWebView.setBackgroundColor(getResources().getColor(R.color.black));
 
-        if (DailyTextUtils.isTextEmpty(trueVRParams.name) == true)
+        if (DailyTextUtils.isTextEmpty(trueVR.name) == true)
         {
             mProductNameTextView.setVisibility(View.INVISIBLE);
         } else
         {
             mProductNameTextView.setVisibility(View.VISIBLE);
-            mProductNameTextView.setText(trueVRParams.name);
+            mProductNameTextView.setText(trueVR.name);
         }
     }
 
@@ -256,7 +273,7 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
                             {
                                 case "UNSUPPORTED_BROWSER":
                                 {
-                                    TrueVRParams trueVRParams = mTrueVRParamsList.get(mCurrentPage);
+                                    TrueVR trueVR = mTrueVRList.get(mCurrentPage);
                                     Crashlytics.logException(new Exception("Unsupported browser : " + Build.MODEL + ", " + getWebViewVersion()));
 
                                     showSimpleDialog(null, getString(R.string.message_truevr_not_support_hardware), getString(R.string.dialog_btn_text_confirm), null//
@@ -273,8 +290,8 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
 
                                 case "FAILED_TO_LOAD_PLAYER":
                                 {
-                                    TrueVRParams trueVRParams = mTrueVRParamsList.get(mCurrentPage);
-                                    Crashlytics.logException(new Exception("Failed load True VR : " + mPlaceType.name() + ", " + mPlaceIndex + ", " + trueVRParams.name + ", " + trueVRParams.url));
+                                    TrueVR trueVR = mTrueVRList.get(mCurrentPage);
+                                    Crashlytics.logException(new Exception("Failed load True VR : " + mPlaceType.name() + ", " + mPlaceIndex + ", " + trueVR.name + ", " + trueVR.url));
 
                                     showSimpleDialog(null, getString(R.string.message_truevr_failed_load_truevr), getString(R.string.dialog_btn_text_confirm), null//
                                         , new DialogInterface.OnDismissListener()

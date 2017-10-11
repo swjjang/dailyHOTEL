@@ -1423,7 +1423,7 @@ public class DailyMobileAPI
     public Observable<BaseDto<StayDetailData>> getStayDetail(int stayIndex, String date, int nights)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v3/hotel/{stayIndex}"//
-            : "";
+            : "MTYkMTEkODEkMzMkMTUkMjIkODMkMzEkNjMkNDkkNzgkODgkNDIkNTEkMjkkMjgk$QTY3QjIxODBGFNzIU2MMzFWENzRFQMCTcX3MkNJBRjZBHOEYzRjEMDzMUM2NzkxNzc1RHUQwREY0MTIwRjSAyQkI3ODPWkU0OEQ4QQ==$";
 
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{stayIndex}", Integer.toString(stayIndex));
@@ -1435,7 +1435,7 @@ public class DailyMobileAPI
     public Observable<BaseDto<ExistCouponsData>> getStayHasCoupon(int stayIndex, String date, int nights)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v3/hotel/{stayIndex}/coupons/exist"//
-            : "";
+            : "OTgkMTI0JDExMyQ4NCQ4NCQyMSQxMjAkMTMxJDM0JDU1JDcwJDUyJDEzMiQxMTEkMzkkMTAwJA==$QTRFMkM0NkU2MjhBRjc1NTTIyODUxREQ3RFTIyMZjVENzA0Q0VCNDZk1QK0E2MEFEN0E4N0MW1MEMzNEE3QzJDQ0REXXQzM2NjYwYMzE5MkMVGN0NTBMERDMjFCOOEVQGMzlFMUGVLCXMDM4$";
 
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{stayIndex}", Integer.toString(stayIndex));
@@ -1447,7 +1447,7 @@ public class DailyMobileAPI
     public Observable<BaseDto<String>> addStayWish(int stayIndex)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v4/wishes/hotel/add/{stayIndex}"//
-            : "";
+            : "NjkkNzkkNzkkOTAkNzckMTE4JDY1JDE3JDEzMyQxMDEkNDgkMTEkOTAkMTYkOTIkNDgk$OTM0RTg5QzkA0RkVBDOMDZFNzRFQkFGNzYxMTcwMjU5NzEzMCzAF3NjgyQzZGOUQxNTFCRAEMyNITQ1M0I3UNjGEE0QjHXI3RUFVFRDc0OEWQxQjlBNDNEQzc4NzI2RATYyRjM0MEE2RNDE4$";
 
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{stayIndex}", Integer.toString(stayIndex));
@@ -1459,7 +1459,7 @@ public class DailyMobileAPI
     public Observable<BaseDto<String>> removeStayWish(int stayIndex)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v4/wishes/hotel/remove/{stayIndex}"//
-            : "";
+            : "MTA3JDgxJDk4JDY2JDQkODMkODMkMjQkNTUkNzUkMzUkMjckMTM4JDEwMSQxMzkkMTM1JA==$QjQzUN0UzODUyNkFBM0FBQkJECMZDlFMTNFMKUJDMTE2MzE0MDYyMTZGMBkQ1QkQ5NDU1NTUc3M0QTyOEVGNkI4NQKCTQ4Qjc1QzUGwMjYyMM0U3REY1QTgX2MkYwMkQyRTkxNENM4NzDMQ3$";
 
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{stayIndex}", Integer.toString(stayIndex));
@@ -1471,7 +1471,7 @@ public class DailyMobileAPI
     public Observable<BaseDto<ReviewScoresData>> getStayReviewScores(int stayIndex)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v4/review/hotel/{stayIndex}/statistic"//
-            : "";
+            : "NzckNTkkMTgkODgkMTA4JDExOSQyMyQ2JDE4JDI3JDI3JDEzJDE2JDEzMyQxMTckMTAwJA==$QzQ2OTOMxNUNBJNTBBDQNTDg2RUPFGYGMzZDNzMyNzQxMzA5MzdBM0EzNkI3NEVBNTkE1MjUyMjY5RjA4QUE4MYjMzQjgxQV0Y2NBjk2RjI4MEFCOTU4TOXERCRTI2MzYEwOERDRMzkxQkRC$";
 
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{stayIndex}", Integer.toString(stayIndex));
@@ -1483,7 +1483,7 @@ public class DailyMobileAPI
     public Observable<BaseDto<TrueReviewsData>> getStayTrueReviews(int stayIndex, int page, int limit)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v4/review/hotel/{stayIndex}"//
-            : "NjUkNDgkNzgkMjgkMyQ2MCQ4MyQ0NiQ1OSQ4OSQxNyQxMyQ3OCQxOSQ5NSQyNyQ=$MzUR1QUNBMzQxON0JBYQM0M1NThRBRUI5YRkQxNTVCMkMwOEZDTMEMzTOUZGOUETzNDkI5MjFGRCDBENB0UzOURDINXzc5YRIjg1RQ==$";
+            : "MjUkNjUkNjAkNjYkMzIkMzYkMjIkNzMkOTEkODkkNjMkNSQzOCQzNSQ1NyQ1NSQ=$ODhEOWTEyMTk0RDU1ODkxODSY0OOEVGQzVRDCRUXEM3MTY4QkNGNDc2UN0DU2NzRGODkGVzM0MwXAMzMM4QTg0MDJEODc0MZTVXCNg==$";
 
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{stayIndex}", Integer.toString(stayIndex));
@@ -1495,7 +1495,7 @@ public class DailyMobileAPI
     public Observable<BaseListDto<TrueVRData>> getStayTrueVRList(int stayIndex)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v3/hotel/{stayIndex}/vr-list"//
-            : "";
+            : "NzAkNDIkOCQ2JDg0JDQyJDY5JDU2JDExNSQxMzUkMTEyJDY0JDQxJDk1JDEzNCQxMTIk$NEM4MzEUzSMTg4MzU3NDA4RDQ0NjAxNzVBRkM2RDkN3ZQzJQ4QjAzOThFFREREQ0QAwRTgyRIDU5M0BExNjI4ODI4WMUI2NIjYzNUM3ODQxNEU2NLTFFHOTFWCNkY4RTJEMjA0MKzVFRERQ4$";
 
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{stayIndex}", Integer.toString(stayIndex));

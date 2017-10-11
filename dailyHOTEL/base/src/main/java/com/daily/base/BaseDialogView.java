@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.CheckBox;
 
 import com.daily.base.databinding.DialogLayoutDataBinding;
 import com.daily.base.util.DailyTextUtils;
@@ -98,8 +99,7 @@ public abstract class BaseDialogView<T1 extends OnBaseEventListener, T2 extends 
 
         hideSimpleDialog();
 
-        LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        DialogLayoutDataBinding dataBinding = DataBindingUtil.inflate(layoutInflater, R.layout.dialog_layout_data, null, false);
+        DialogLayoutDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_layout_data, null, false);
 
         mDialog = new Dialog(getActivity());
         mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -174,31 +174,101 @@ public abstract class BaseDialogView<T1 extends OnBaseEventListener, T2 extends 
             });
         }
 
-        if (cancelListener != null)
+        showSimpleDialog(dataBinding.getRoot(), cancelListener, dismissListener, cancelable);
+    }
+
+    protected void showSimpleDialog(String titleText, String msg, String checkBoxText, String positive, String negative//
+        , CheckBox.OnCheckedChangeListener checkedChangeListener, View.OnClickListener positiveListener//
+        , View.OnClickListener negativeListener, DialogInterface.OnCancelListener cancelListener //
+        , DialogInterface.OnDismissListener dismissListener, boolean cancelable)
+    {
+        if (getActivity().isFinishing() == true)
         {
-            mDialog.setOnCancelListener(cancelListener);
+            return;
         }
 
-        if (dismissListener != null)
+        hideSimpleDialog();
+
+        DialogLayoutDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_layout_data, null, false);
+
+        mDialog = new Dialog(getActivity());
+        mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        mDialog.setCanceledOnTouchOutside(false);
+
+        // 상단
+        dataBinding.titleTextView.setVisibility(View.VISIBLE);
+
+        if (DailyTextUtils.isTextEmpty(titleText) == true)
         {
-            mDialog.setOnDismissListener(dismissListener);
+            dataBinding.titleTextView.setText(getString(R.string.label_notice));
+        } else
+        {
+            dataBinding.titleTextView.setText(titleText);
         }
 
-        mDialog.setCancelable(cancelable);
+        // 메시지
+        dataBinding.messageTextView.setText(msg);
 
-        try
+        // 체크 박스
+        dataBinding.checkBoxView.setText(checkBoxText);
+        dataBinding.checkBoxView.setOnCheckedChangeListener(checkedChangeListener);
+
+        // 버튼
+        if (DailyTextUtils.isTextEmpty(positive, negative) == false)
         {
-            mDialog.setContentView(dataBinding.getRoot());
+            dataBinding.twoButtonLayout.setVisibility(View.VISIBLE);
+            dataBinding.oneButtonLayout.setVisibility(View.GONE);
 
-            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(getActivity(), mDialog);
+            dataBinding.negativeTextView.setText(negative);
+            dataBinding.negativeTextView.setOnClickListener(v ->
+            {
+                if (mDialog != null && mDialog.isShowing() == true)
+                {
+                    mDialog.dismiss();
+                }
 
-            mDialog.show();
+                if (negativeListener != null)
+                {
+                    negativeListener.onClick(v);
+                }
+            });
 
-            mDialog.getWindow().setAttributes(layoutParams);
-        } catch (Exception e)
+
+            dataBinding.positiveTextView.setText(positive);
+            dataBinding.positiveTextView.setOnClickListener(v ->
+            {
+                if (mDialog != null && mDialog.isShowing())
+                {
+                    mDialog.dismiss();
+                }
+
+                if (positiveListener != null)
+                {
+                    positiveListener.onClick(v);
+                }
+            });
+        } else
         {
-            ExLog.d(e.toString());
+            dataBinding.twoButtonLayout.setVisibility(View.GONE);
+            dataBinding.oneButtonLayout.setVisibility(View.VISIBLE);
+
+            dataBinding.confirmTextView.setText(positive);
+            dataBinding.oneButtonLayout.setOnClickListener(v ->
+            {
+                if (mDialog != null && mDialog.isShowing())
+                {
+                    mDialog.dismiss();
+                }
+
+                if (positiveListener != null)
+                {
+                    positiveListener.onClick(v);
+                }
+            });
         }
+
+        showSimpleDialog(dataBinding.getRoot(), cancelListener, dismissListener, cancelable);
     }
 
     protected void showSimpleDialog(View view, DialogInterface.OnCancelListener cancelListener//

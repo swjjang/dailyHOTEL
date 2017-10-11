@@ -1719,6 +1719,8 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
 
+        getViewDataBinding().descriptionsLayout.removeAllViews();
+
         for (LinkedHashMap<String, List<String>> descriptionMap : descriptionList)
         {
             Iterator<Map.Entry<String, List<String>>> iterator = descriptionMap.entrySet().iterator();

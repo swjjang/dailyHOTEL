@@ -22,9 +22,7 @@ public class StayDetailActivity extends BaseActivity<StayDetailPresenter>
     public static final int NONE_PRICE = -1;
 
     static final int REQUEST_CODE_CALENDAR = 10000;
-    static final int REQUEST_CODE_PEOPLE = 10001;
     static final int REQUEST_CODE_HAPPYTALK = 10002;
-    static final int REQUEST_CODE_AMENITY = 10003;
     static final int REQUEST_CODE_MAP = 10004;
     static final int REQUEST_CODE_IMAGE_LIST = 10005;
     static final int REQUEST_CODE_CALL = 10006;
@@ -53,12 +51,17 @@ public class StayDetailActivity extends BaseActivity<StayDetailPresenter>
     public static final int TRANS_GRADIENT_BOTTOM_TYPE_LIST = 2;
 
     /**
-     * @param stayIndex
+     *
      * @param context
-     * @param checkInDateTime  ISO-8601
-     * @param checkOutDateTime ISO-8601
-     * @param numberOfAdults
-     * @param childList
+     * @param stayIndex
+     * @param stayName
+     * @param imageUrl
+     * @param listPrice
+     * @param checkInDateTime
+     * @param checkOutDateTime
+     * @param isUsedMultiTransition
+     * @param gradientType
+     * @param analyticsParam
      * @return
      */
     public static Intent newInstance(Context context, int stayIndex, String stayName, String imageUrl//
