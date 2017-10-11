@@ -168,6 +168,15 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
             return;
         }
 
+        dataBinding.cancelHistoryButtonView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                // TODO : 취소내역 보기 화면 이동
+            }
+        });
+
         dataBinding.bookingSwipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
         dataBinding.bookingSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
         {
@@ -220,6 +229,8 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
         mViewDataBinding.logoutLayout.setVisibility(View.VISIBLE);
         mViewDataBinding.bookingSwipeRefreshLayout.setVisibility(View.GONE);
         mViewDataBinding.emptyListLayout.setVisibility(View.GONE);
+
+        setCancelHistoryButtonVisible(false);
     }
 
     void setBookingList(List<Booking> bookingList)
@@ -305,6 +316,8 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
             {
                 onRefresh(true);
             }
+
+            setCancelHistoryButtonVisible(true);
         }
     }
 
@@ -812,6 +825,16 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
     void setCommonDateTime(CommonDateTime commonDateTime)
     {
         mCommonDateTime = commonDateTime;
+    }
+
+    private void setCancelHistoryButtonVisible(boolean isShow)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.cancelHistoryButtonView.setVisibility(isShow == true ? View.VISIBLE : View.GONE);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
