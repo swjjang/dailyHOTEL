@@ -66,6 +66,8 @@ public class DailyPreference
 
     private static final String KEY_IS_VIEW_STAY_CATEGORY_TOOLTIP = "34";
 
+    private static final String KEY_IS_VIEW_STAY_SEARCH_OB_TOOLTIP = "35";
+
     //    private static final String KEY_STAY_LAST_VIEW_DATE = "108";
     //    private static final String KEY_GOURMET_LAST_VIEW_DATE = "109";
 
@@ -209,7 +211,6 @@ public class DailyPreference
     {
         // 해택 알림 내용은 유지 하도록 한다. 단 로그인시에는 서버에서 다시 가져와서 세팅한다.
         boolean isShowBenefitAlarm = isShowBenefitAlarm();
-        //        boolean isShowSearchTooltip = isViewSearchTooltip();
         boolean isShowTrueVRTooltip = isWishTooltip();
         int supportTrueVR = getTrueVRSupport();
 
@@ -228,6 +229,7 @@ public class DailyPreference
         String stayOutboundSearchCheckInDate = getStayOutboundSearchCheckInDate();
         String stayOutboundSearchCheckOutDate = getStayOutboundSearchCheckOutDate();
         JSONObject stayOutboundSearchPeople = getStayOutboundSearchPeople();
+        boolean isStaySearchObTooltip = isStaySearchObTooltip();
 
         if (mEditor != null)
         {
@@ -236,7 +238,6 @@ public class DailyPreference
         }
 
         setShowBenefitAlarm(isShowBenefitAlarm);
-        //        setViewSearchTooltip(isShowSearchTooltip);
         setWishTooltip(isShowTrueVRTooltip);
         setTrueVRSupport(supportTrueVR);
         setAllRecentPlaces(allRecentPlaces);
@@ -252,6 +253,7 @@ public class DailyPreference
         setStayOutboundSearchCheckInDate(stayOutboundSearchCheckInDate);
         setStayOutboundSearchCheckOutDate(stayOutboundSearchCheckOutDate);
         setStayOutboundSearchPeople(stayOutboundSearchPeople == null ? null : stayOutboundSearchPeople.toString());
+        setStaySearchObTooltip(isStaySearchObTooltip);
 
         DailyHotel.AUTHORIZATION = null;
     }
@@ -717,6 +719,16 @@ public class DailyPreference
     public boolean isStayCategoryListTooltip()
     {
         return getValue(mPreferences, KEY_IS_VIEW_STAY_CATEGORY_TOOLTIP, false);
+    }
+
+    public void setStaySearchObTooltip(boolean value)
+    {
+        setValue(mEditor, KEY_IS_VIEW_STAY_SEARCH_OB_TOOLTIP, value);
+    }
+
+    public boolean isStaySearchObTooltip()
+    {
+        return getValue(mPreferences, KEY_IS_VIEW_STAY_SEARCH_OB_TOOLTIP, true);
     }
 
     public void setIsRequestReview(boolean value)
