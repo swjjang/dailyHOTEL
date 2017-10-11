@@ -5,6 +5,7 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.GourmetDetail;
 import com.daily.dailyhotel.entity.GourmetMenu;
+import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.Sticker;
 
 import java.util.ArrayList;
@@ -178,8 +179,14 @@ public class GourmetDetailData
                 for (ImageInformationData imageInformationData : imgPath.get(key))
                 {
                     DetailImageInformation detailImageInformation = new DetailImageInformation();
-                    detailImageInformation.url = imgUrl + key + imageInformationData.name;
+
+                    ImageMap imageMap = new ImageMap();
+                    imageMap.smallUrl = null;
+                    imageMap.mediumUrl = imgUrl + key + imageInformationData.name;
+                    imageMap.bigUrl = imgUrl + key + imageInformationData.name;
+
                     detailImageInformation.caption = imageInformationData.description;
+                    detailImageInformation.setImageMap(imageMap);
 
                     detailImageInformationList.add(detailImageInformation);
                 }
@@ -324,7 +331,14 @@ public class GourmetDetailData
             for (MenuImageData menuImageData : images)
             {
                 DetailImageInformation detailImageInformation = new DetailImageInformation();
-                detailImageInformation.url = menuImageData.imageUrl;
+
+                ImageMap imageMap = new ImageMap();
+                imageMap.smallUrl = null;
+                imageMap.mediumUrl = menuImageData.imageUrl;
+                imageMap.bigUrl = menuImageData.imageUrl;
+
+                detailImageInformation.caption = menuImageData.imageDescription;
+                detailImageInformation.setImageMap(imageMap);
 
                 if (menuImageData.isPrimary == true)
                 {

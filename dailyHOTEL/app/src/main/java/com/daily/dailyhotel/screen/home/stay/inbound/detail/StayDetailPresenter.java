@@ -27,6 +27,7 @@ import com.daily.dailyhotel.entity.StayRoom;
 import com.daily.dailyhotel.entity.TrueVR;
 import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.entity.WishResult;
+import com.daily.dailyhotel.parcel.analytics.ImageListAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayPaymentAnalyticsParam;
@@ -773,7 +774,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 , mStayDetail.name//
                 , mStayDetail.address//
                 , mStayDetail.index//
-                , mStayDetail.getImageInformationList().get(0).url //
+                , mStayDetail.getImageInformationList().get(0).getImageMap().bigUrl //
                 , mStayBookDateTime);
 
             mAnalytics.onEventShareKakaoClick(getActivity(), DailyHotel.isLogin()//
@@ -868,21 +869,13 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             return;
         }
 
+        ImageListAnalyticsParam analyticsParam = new ImageListAnalyticsParam();
+        analyticsParam.serviceType = Constants.ServiceType.HOTEL;
+
         startActivityForResult(ImageListActivity.newInstance(getActivity(), mStayDetail.name//
-            , mStayDetail.getImageInformationList(), position), StayDetailActivity.REQUEST_CODE_IMAGE_LIST);
+            , mStayDetail.getImageInformationList(), position, analyticsParam), StayDetailActivity.REQUEST_CODE_IMAGE_LIST);
 
         mAnalytics.onEventImageClick(getActivity(), mStayDetail.name);
-    }
-
-    @Override
-    public void onImageSelected(int position)
-    {
-        if (mStayDetail == null)
-        {
-            return;
-        }
-
-        getViewInterface().setDetailImageCaption(mStayDetail.getImageInformationList().get(position).caption);
     }
 
     @Override
@@ -1315,7 +1308,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         {
             if (mStayDetail.getImageInformationList() != null && mStayDetail.getImageInformationList().size() > 0)
             {
-                mImageUrl = mStayDetail.getImageInformationList().get(0).url;
+                mImageUrl = mStayDetail.getImageInformationList().get(0).getImageMap().bigUrl;
             }
         } catch (Exception e)
         {
@@ -1688,7 +1681,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
         if (imageInformationList != null && imageInformationList.size() > 0)
         {
-            imageUrl = imageInformationList.get(0).url;
+            imageUrl = imageInformationList.get(0).getImageMap().bigUrl;
         }
 
         StayPaymentAnalyticsParam analyticsParam = new StayPaymentAnalyticsParam();

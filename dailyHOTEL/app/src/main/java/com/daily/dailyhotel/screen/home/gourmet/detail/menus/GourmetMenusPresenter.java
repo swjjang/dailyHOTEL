@@ -12,20 +12,15 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.GourmetMenu;
 import com.daily.dailyhotel.parcel.GourmetMenuParcel;
+import com.daily.dailyhotel.parcel.analytics.ImageListAnalyticsParam;
+import com.daily.dailyhotel.screen.common.images.ImageListActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
 import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by sheldon
@@ -285,42 +280,12 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             return;
         }
 
-        addCompositeDisposable(Observable.just(gourmetMenuImageList).subscribeOn(Schedulers.newThread()).map(new Function<List<DetailImageInformation>, List<com.twoheart.dailyhotel.network.model.ImageInformation>>()
-        {
-            @Override
-            public List<com.twoheart.dailyhotel.network.model.ImageInformation> apply(@io.reactivex.annotations.NonNull List<DetailImageInformation> detailImageInformations) throws Exception
-            {
-                List<com.twoheart.dailyhotel.network.model.ImageInformation> imageInformationList = new ArrayList<>();
+        ImageListAnalyticsParam analyticsParam = new ImageListAnalyticsParam();
+        analyticsParam.serviceType = Constants.ServiceType.GOURMET;
 
-                for (DetailImageInformation gourmetMenuImage : gourmetMenuImageList)
-                {
-                    com.twoheart.dailyhotel.network.model.ImageInformation imageInformation = new com.twoheart.dailyhotel.network.model.ImageInformation();
-                    imageInformation.description = gourmetMenuImage.caption;
-                    imageInformation.setImageUrl(gourmetMenuImage.url);
+        startActivityForResult(ImageListActivity.newInstance(getActivity(), gourmetMenu.name//
+            , gourmetMenuImageList, 0, analyticsParam), GourmetMenusActivity.REQUEST_CODE_IMAGE_LIST);
 
-                    imageInformationList.add(imageInformation);
-                }
-
-                return imageInformationList;
-            }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<com.twoheart.dailyhotel.network.model.ImageInformation>>()
-        {
-            @Override
-            public void accept(@io.reactivex.annotations.NonNull List<com.twoheart.dailyhotel.network.model.ImageInformation> imageInformations) throws Exception
-            {
-                Intent intent = ImageDetailListActivity.newInstance(getActivity(), Constants.PlaceType.FNB//
-                    , gourmetMenu.name, imageInformations, 0);
-                startActivityForResult(intent, GourmetMenusActivity.REQUEST_CODE_IMAGE_LIST);
-
-                mAnalytics.onEventImageClick(getActivity(), Integer.toString(gourmetMenu.index));
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
-            {
-                unLockAll();
-            }
-        }));
+        mAnalytics.onEventImageClick(getActivity(), Integer.toString(gourmetMenu.index));
     }
 }

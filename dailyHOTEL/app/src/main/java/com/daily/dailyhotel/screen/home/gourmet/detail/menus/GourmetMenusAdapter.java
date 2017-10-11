@@ -182,7 +182,7 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
             holder.dataBinding.defaultImageLayout.setVisibility(View.VISIBLE);
 
             holder.dataBinding.simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
-            Util.requestImageResize(mContext, holder.dataBinding.simpleDraweeView, gourmetMenu.getPrimaryImage().url);
+            Util.requestImageResize(mContext, holder.dataBinding.simpleDraweeView, gourmetMenu.getPrimaryImage().getImageMap().bigUrl);
             setLineIndicatorVisible(holder.dataBinding, detailImageInformationList.size());
 
             holder.dataBinding.defaultImageLayout.setOnClickListener(new View.OnClickListener()

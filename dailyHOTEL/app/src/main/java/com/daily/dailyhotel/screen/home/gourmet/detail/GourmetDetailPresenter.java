@@ -28,6 +28,7 @@ import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.entity.WishResult;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.GourmetPaymentAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.ImageListAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.TrueReviewAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CalendarImpl;
@@ -762,7 +763,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
             KakaoLinkManager.newInstance(getActivity()).shareGourmet(name, mGourmetDetail.name, mGourmetDetail.address//
                 , mGourmetDetail.index //
-                , mGourmetDetail.getImageInformationList().get(0).url //
+                , mGourmetDetail.getImageInformationList().get(0).getImageMap().bigUrl //
                 , mGourmetBookDateTime);
 
             mAnalytics.onEventShareKakaoClick(getActivity(), DailyHotel.isLogin()//
@@ -853,21 +854,13 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             return;
         }
 
+        ImageListAnalyticsParam analyticsParam = new ImageListAnalyticsParam();
+        analyticsParam.serviceType = Constants.ServiceType.GOURMET;
+
         startActivityForResult(ImageListActivity.newInstance(getActivity(), mGourmetDetail.name//
-            , mGourmetDetail.getImageInformationList(), position), GourmetDetailActivity.REQUEST_CODE_IMAGE_LIST);
+            , mGourmetDetail.getImageInformationList(), position, analyticsParam), GourmetDetailActivity.REQUEST_CODE_IMAGE_LIST);
 
         mAnalytics.onEventImageClick(getActivity(), mGourmetDetail.name);
-    }
-
-    @Override
-    public void onImageSelected(int position)
-    {
-        if (mGourmetDetail == null)
-        {
-            return;
-        }
-
-        getViewInterface().setDetailImageCaption(mGourmetDetail.getImageInformationList().get(position).caption);
     }
 
     @Override
@@ -1238,7 +1231,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         {
             if (mGourmetDetail.getImageInformationList() != null && mGourmetDetail.getImageInformationList().size() > 0)
             {
-                mImageUrl = mGourmetDetail.getImageInformationList().get(0).url;
+                mImageUrl = mGourmetDetail.getImageInformationList().get(0).getImageMap().bigUrl;
             }
         } catch (Exception e)
         {
@@ -1636,7 +1629,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
         if (imageInformationList != null && imageInformationList.size() > 0)
         {
-            imageUrl = imageInformationList.get(0).url;
+            imageUrl = imageInformationList.get(0).getImageMap().bigUrl;
         }
 
         GourmetPaymentAnalyticsParam analyticsParam = new GourmetPaymentAnalyticsParam();

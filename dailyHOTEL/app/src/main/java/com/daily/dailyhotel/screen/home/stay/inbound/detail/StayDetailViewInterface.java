@@ -30,8 +30,6 @@ public interface StayDetailViewInterface extends BaseDialogViewInterface
 
     void setBottomButtonLayout(int status);
 
-    void setDetailImageCaption(String caption);
-
     void setPriceType(StayDetailPresenter.PriceType priceType);
 
     void showConciergeDialog(Dialog.OnDismissListener listener);

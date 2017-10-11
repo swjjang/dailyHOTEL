@@ -4,6 +4,7 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.DetailImageInformation;
+import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.StayDetail;
 import com.daily.dailyhotel.entity.StayRoom;
 import com.twoheart.dailyhotel.model.Stay;
@@ -231,8 +232,14 @@ public class StayDetailData
                 for (ImageInformationData imageInformationData : imgPath.get(key))
                 {
                     DetailImageInformation detailImageInformation = new DetailImageInformation();
-                    detailImageInformation.url = imgUrl + key + imageInformationData.name;
+
+                    ImageMap imageMap = new ImageMap();
+                    imageMap.smallUrl = null;
+                    imageMap.mediumUrl = imgUrl + key + imageInformationData.name;
+                    imageMap.bigUrl = imgUrl + key + imageInformationData.name;
+
                     detailImageInformation.caption = imageInformationData.description;
+                    detailImageInformation.setImageMap(imageMap);
 
                     detailImageInformationList.add(detailImageInformation);
                 }

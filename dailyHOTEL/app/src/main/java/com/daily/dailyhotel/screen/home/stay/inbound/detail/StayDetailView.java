@@ -46,6 +46,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.entity.DetailImageInformation;
+import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayDetail;
 import com.daily.dailyhotel.entity.StayRoom;
@@ -87,11 +88,10 @@ import io.reactivex.Observable;
 import io.reactivex.Observer;
 
 public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListener, ActivityStayDetailDataBinding>//
-    implements StayDetailViewInterface, View.OnClickListener, ViewPager.OnPageChangeListener, RadioGroup.OnCheckedChangeListener
+    implements StayDetailViewInterface, View.OnClickListener, RadioGroup.OnCheckedChangeListener
 {
     private static final int ANIMATION_DELAY = 250;
 
-    private StayDetailImageViewPagerAdapter mImageViewPagerAdapter;
     StayDetailRoomListAdapter mRoomTypeListAdapter;
 
     AnimatorSet mRoomAnimatorSet;
@@ -107,8 +107,6 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         void onShareSmsClick();
 
         void onImageClick(int position);
-
-        void onImageSelected(int position);
 
         void onCalendarClick();
 
@@ -185,13 +183,6 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
 
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.nestedScrollView, getColor(R.color.default_over_scroll_edge));
 
-        mImageViewPagerAdapter = new StayDetailImageViewPagerAdapter(getContext());
-        viewDataBinding.imageLoopViewPager.setAdapter(mImageViewPagerAdapter);
-        viewDataBinding.viewpagerIndicator.setViewPager(viewDataBinding.imageLoopViewPager);
-
-        viewDataBinding.imageLoopViewPager.setOnPageChangeListener(this);
-        viewDataBinding.viewpagerIndicator.setOnPageChangeListener(this);
-
         // 객실 초기화
         viewDataBinding.roomsViewDataBinding.roomTypeTextView.setText(R.string.act_hotel_search_room);
         viewDataBinding.roomsViewDataBinding.roomTypeTextView.setClickable(true);
@@ -233,24 +224,6 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
                 getEventListener().onActionButtonClick();
                 break;
         }
-    }
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
-    {
-
-    }
-
-    @Override
-    public void onPageSelected(int position)
-    {
-        getEventListener().onImageSelected(position);
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state)
-    {
-
     }
 
     @Override
@@ -622,26 +595,21 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
 
         if (DailyTextUtils.isTextEmpty(url) == true)
         {
-            setViewPagerLineIndicatorVisible(false);
+            getViewDataBinding().imageLoopView.setLineIndicatorVisible(false);
             return;
         }
 
-        setViewPagerLineIndicatorVisible(true);
-
-        if (mImageViewPagerAdapter == null)
-        {
-            mImageViewPagerAdapter = new StayDetailImageViewPagerAdapter(getContext());
-        }
-
         DetailImageInformation detailImage = new DetailImageInformation();
-        detailImage.url = url;
+        ImageMap imageMap = new ImageMap();
+        imageMap.smallUrl = null;
+        imageMap.mediumUrl = url;
+        imageMap.bigUrl = url;
+        detailImage.setImageMap(imageMap);
 
         List<DetailImageInformation> imageList = new ArrayList<>();
         imageList.add(detailImage);
 
-        mImageViewPagerAdapter.setData(imageList);
-        getViewDataBinding().imageLoopViewPager.setAdapter(mImageViewPagerAdapter);
-        getViewDataBinding().viewpagerIndicator.setViewPager(getViewDataBinding().imageLoopViewPager);
+        getViewDataBinding().imageLoopView.setImageList(imageList);
     }
 
     @Override
@@ -656,21 +624,6 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
 
         getViewDataBinding().transImageView.setImageURI(Uri.parse(url));
         getViewDataBinding().transNameTextView.setText(name);
-
-        if (mImageViewPagerAdapter == null)
-        {
-            mImageViewPagerAdapter = new StayDetailImageViewPagerAdapter(getContext());
-        }
-
-        DetailImageInformation detailImage = new DetailImageInformation();
-        detailImage.url = url;
-
-        List<DetailImageInformation> imageList = new ArrayList<>();
-        imageList.add(detailImage);
-
-        mImageViewPagerAdapter.setData(imageList);
-        getViewDataBinding().imageLoopViewPager.setAdapter(mImageViewPagerAdapter);
-        getViewDataBinding().viewpagerIndicator.setViewPager(getViewDataBinding().imageLoopViewPager);
     }
 
     @Override
@@ -768,19 +721,6 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
                 getViewDataBinding().soldoutTextView.setVisibility(View.VISIBLE);
                 break;
             }
-        }
-    }
-
-    @Override
-    public void setDetailImageCaption(String caption)
-    {
-        if (DailyTextUtils.isTextEmpty(caption) == false)
-        {
-            getViewDataBinding().descriptionTextView.setVisibility(View.VISIBLE);
-            getViewDataBinding().descriptionTextView.setText(caption);
-        } else
-        {
-            getViewDataBinding().descriptionTextView.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -1152,29 +1092,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
             return;
         }
 
-        if (imageList == null || imageList.size() == 0)
-        {
-            setViewPagerLineIndicatorVisible(false);
-            return;
-        } else if (imageList.size() == 1)
-        {
-            setViewPagerLineIndicatorVisible(false);
-        } else
-        {
-            setViewPagerLineIndicatorVisible(true);
-        }
-
-        setDetailImageCaption(imageList.get(0).caption);
-
-        if (mImageViewPagerAdapter == null)
-        {
-            mImageViewPagerAdapter = new StayDetailImageViewPagerAdapter(getContext());
-        }
-
-        mImageViewPagerAdapter.setData(imageList);
-        getViewDataBinding().imageLoopViewPager.setAdapter(mImageViewPagerAdapter);
-        getViewDataBinding().viewpagerIndicator.setViewPager(getViewDataBinding().imageLoopViewPager);
-        mImageViewPagerAdapter.notifyDataSetChanged();
+        getViewDataBinding().imageLoopView.setImageList(imageList);
     }
 
     /**
@@ -1196,7 +1114,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
 
                 try
                 {
-                    getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+                    getViewDataBinding().imageLoopView.onTouchEvent(event);
                 } catch (Exception e)
                 {
                 }
@@ -1207,12 +1125,12 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
             {
                 try
                 {
-                    getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+                    getViewDataBinding().imageLoopView.onTouchEvent(event);
                 } catch (Exception e)
                 {
                     event.setAction(MotionEvent.ACTION_CANCEL);
-                    event.setLocation(getViewDataBinding().imageLoopViewPager.getScrollX(), getViewDataBinding().imageLoopViewPager.getScrollY());
-                    getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+                    event.setLocation(getViewDataBinding().imageLoopView.getPageScrollX(), getViewDataBinding().imageLoopView.getPageScrollY());
+                    getViewDataBinding().imageLoopView.onTouchEvent(event);
                 }
             }
 
@@ -1227,12 +1145,12 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
             {
                 try
                 {
-                    getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+                    getViewDataBinding().imageLoopView.onTouchEvent(event);
                 } catch (Exception e)
                 {
                     event.setAction(MotionEvent.ACTION_CANCEL);
-                    event.setLocation(getViewDataBinding().imageLoopViewPager.getScrollX(), getViewDataBinding().imageLoopViewPager.getScrollY());
-                    getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+                    event.setLocation(getViewDataBinding().imageLoopView.getPageScrollX(), getViewDataBinding().imageLoopView.getPageScrollY());
+                    getViewDataBinding().imageLoopView.onTouchEvent(event);
                 }
 
                 getViewDataBinding().nestedScrollView.setScrollingEnabled(true);
@@ -1241,7 +1159,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
             @Override
             public void onImageClick()
             {
-                getEventListener().onImageClick(getViewDataBinding().imageLoopViewPager.getCurrentItem());
+                getEventListener().onImageClick(getViewDataBinding().imageLoopView.getPosition());
             }
         });
     }
@@ -1735,24 +1653,6 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
                 getEventListener().onConciergeClick();
             }
         });
-    }
-
-    private void setViewPagerLineIndicatorVisible(boolean visible)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        if (visible == true)
-        {
-            getViewDataBinding().moreIconView.setVisibility(View.VISIBLE);
-            getViewDataBinding().viewpagerIndicator.setVisibility(View.VISIBLE);
-        } else
-        {
-            getViewDataBinding().moreIconView.setVisibility(View.INVISIBLE);
-            getViewDataBinding().viewpagerIndicator.setVisibility(View.INVISIBLE);
-        }
     }
 
     private void setRoomList(StayBookDateTime stayBookDateTime, List<StayRoom> roomList)

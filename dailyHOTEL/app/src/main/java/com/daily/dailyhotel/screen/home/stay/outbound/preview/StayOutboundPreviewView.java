@@ -15,7 +15,7 @@ import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
-import com.daily.dailyhotel.entity.StayOutboundDetailImage;
+import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundPreviewDataBinding;
@@ -153,7 +153,7 @@ public class StayOutboundPreviewView extends BaseDialogView<StayOutboundPreviewV
     }
 
     @Override
-    public void setImages(List<StayOutboundDetailImage> imageList)
+    public void setImages(List<DetailImageInformation> imageList)
     {
         if (getViewDataBinding() == null || imageList == null)
         {

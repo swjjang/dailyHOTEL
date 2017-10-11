@@ -24,8 +24,6 @@ public interface GourmetDetailViewInterface extends BaseDialogViewInterface
 
     void setBottomButtonLayout(int status);
 
-    void setDetailImageCaption(String caption);
-
     void showConciergeDialog(Dialog.OnDismissListener listener);
 
     void showShareDialog(Dialog.OnDismissListener listener);

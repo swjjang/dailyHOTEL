@@ -1,22 +1,21 @@
 package com.daily.dailyhotel.screen.common.images;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
+import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
-import com.daily.dailyhotel.entity.BaseDetailImage;
 import com.daily.dailyhotel.entity.DetailImageInformation;
-import com.daily.dailyhotel.entity.StayOutboundDetailImage;
-import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
-import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
+import com.daily.dailyhotel.parcel.DetailImageInformationParcel;
+import com.daily.dailyhotel.parcel.analytics.ImageListAnalyticsParam;
 import com.twoheart.dailyhotel.R;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by sheldon
@@ -27,12 +26,21 @@ public class ImageListPresenter extends BaseExceptionPresenter<ImageListActivity
     private ImageListAnalyticsInterface mAnalytics;
 
     private String mTitle;
-    private List<BaseDetailImage> mImageList;
+    private List<DetailImageInformation> mImageList;
     private int mIndex;
     private boolean mTouchMoving;
 
     public interface ImageListAnalyticsInterface extends BaseAnalyticsInterface
     {
+        void setAnalyticsParam(ImageListAnalyticsParam analyticsParam);
+
+        void onScreen(Activity activity);
+
+        void onEventBackClick(Activity activity);
+
+        void onEventSwipe(Activity activity);
+
+        void onEventCloseClick(Activity activity);
     }
 
     public ImageListPresenter(@NonNull ImageListActivity activity)
@@ -73,28 +81,20 @@ public class ImageListPresenter extends BaseExceptionPresenter<ImageListActivity
 
         mTitle = intent.getStringExtra(ImageListActivity.INTENT_EXTRA_DATA_TITLE);
 
-        List<Map<String, String>> imageMapList = (List<Map<String, String>>) intent.getSerializableExtra(ImageListActivity.INTENT_EXTRA_DATA_IMAGE_LIST);
+        List<DetailImageInformationParcel> imageList = (List<DetailImageInformationParcel>) intent.getSerializableExtra(ImageListActivity.INTENT_EXTRA_DATA_IMAGE_LIST);
 
-        if (imageMapList != null)
+        if (imageList != null)
         {
             mImageList = new ArrayList<>();
 
-            if (equalsCallingActivity(GourmetDetailActivity.class) == true)
+            for (DetailImageInformationParcel detailImageInformationParcel : imageList)
             {
-                for (Map<String, String> imageMap : imageMapList)
-                {
-                    mImageList.add(new DetailImageInformation(imageMap));
-                }
-            } else if (equalsCallingActivity(StayOutboundDetailActivity.class) == true)
-            {
-                for (Map<String, String> imageMap : imageMapList)
-                {
-                    mImageList.add(new StayOutboundDetailImage(imageMap));
-                }
+                mImageList.add(detailImageInformationParcel.getDetailImageInformation());
             }
         }
 
         mIndex = intent.getIntExtra(ImageListActivity.INTENT_EXTRA_DATA_INDEX, 0);
+        mAnalytics.setAnalyticsParam(intent.getParcelableExtra(BaseActivity.INTENT_EXTRA_DATA_ANALYTICS));
 
         return true;
     }
@@ -111,6 +111,8 @@ public class ImageListPresenter extends BaseExceptionPresenter<ImageListActivity
     public void onStart()
     {
         super.onStart();
+
+        mAnalytics.onScreen(getActivity());
 
         if (isRefresh() == true)
         {
