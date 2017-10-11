@@ -526,6 +526,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
             case StayDetailActivity.REQUEST_CODE_PROFILE_UPDATE:
             case StayDetailActivity.REQUEST_CODE_LOGIN:
+            case StayDetailActivity.REQUEST_CODE_LOGIN_IN_BY_ORDER:
                 if (resultCode == Activity.RESULT_OK)
                 {
                     onActionButtonClick();
@@ -1513,7 +1514,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 {
                     for (StayRoom room : roomList)
                     {
-                        if (listViewPrice == room.discountTotal)
+                        if (listViewPrice == room.discountAverage)
                         {
                             hasPrice = true;
                             break;

@@ -7,13 +7,14 @@
     <LinearLayout
         android:id="@+id/roomTypeLayout"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:elevation="2dp"
         android:orientation="vertical"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/bottomLayout"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -22,14 +23,25 @@
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/roomTypeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingLeft="15dp"
+                android:text="@string/act_hotel_search_room"
+                android:textColor="@color/default_text_c323232"
+                android:textSize="18dp"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/includeTaxTextView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_centerInParent="true"
                 android:layout_toLeftOf="@+id/closeView"
-                android:gravity="center"
-                android:paddingLeft="45dp"
-                android:textColor="@color/default_text_c323232"
-                android:textSize="16dp"/>
+                android:layout_toRightOf="@+id/roomTypeTextView"
+                android:gravity="center_vertical"
+                android:paddingLeft="5dp"
+                android:text="@string/label_include_tax"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="13dp"/>
 
             <ImageView
                 android:id="@+id/closeView"
@@ -45,7 +57,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1px"
+            android:layout_height="1dp"
             android:background="@color/default_line_ce7e7e7"/>
 
         <RelativeLayout
@@ -61,7 +73,7 @@
                 android:layout_toLeftOf="@+id/priceRadioGroup"
                 android:clickable="true"
                 android:gravity="center_vertical"
-                android:paddingLeft="12dp"
+                android:paddingLeft="15dp"
                 android:text="@string/label_detail_view_price_option"
                 android:textColor="@color/default_text_c666666"
                 android:textSize="13dp"
@@ -96,7 +108,7 @@
                     android:button="@null"
                     android:drawablePadding="4dp"
                     android:paddingLeft="10dp"
-                    android:paddingRight="12dp"
+                    android:paddingRight="15dp"
                     android:text="@string/label_detail_view_total_price"
                     android:textColor="@drawable/selector_text_color_c929292_cb70038"
                     android:textSize="13dp"
@@ -105,7 +117,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1px"
+                android:layout_height="1dp"
                 android:layout_alignParentBottom="true"
                 android:background="@color/default_line_ce7e7e7"/>
         </RelativeLayout>
@@ -113,8 +125,8 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/roomRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:layout_height="match_parent"
+            android:background="@color/default_background"
             android:scrollbars="vertical"/>
     </LinearLayout>
 </layout>

@@ -152,12 +152,22 @@ public class StayDetailData
         stayDetail.overseas = overseas;
         stayDetail.waitingForBooking = waitingForBooking;
 
-        if (DailyTextUtils.isTextEmpty(benefitWarning) == false)
+        if (DailyTextUtils.isTextEmpty(benefit) == false)
         {
-            benefitContents.add(benefitWarning);
-        }
+            List<String> benefitContentList = new ArrayList<>();
 
-        stayDetail.setBenefitContentList(benefitContents);
+            if (benefitContents != null && benefitContents.size() > 0)
+            {
+                benefitContentList.addAll(benefitContentList);
+            }
+
+            if (DailyTextUtils.isTextEmpty(benefitWarning) == false)
+            {
+                benefitContentList.add(benefitWarning);
+            }
+
+            stayDetail.setBenefitContentList(benefitContentList);
+        }
 
         // Pictogram
         List<StayDetail.Pictogram> pictogramList = new ArrayList<>();

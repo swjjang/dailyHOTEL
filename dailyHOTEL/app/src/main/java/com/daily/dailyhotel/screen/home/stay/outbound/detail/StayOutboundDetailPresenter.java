@@ -118,7 +118,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     private CommonRemoteImpl mCommonRemoteImpl;
     private ProfileRemoteImpl mProfileRemoteImpl;
 
-    int mStayIndex, mListPrice;
+    int mStayIndex, mListTotalPrice;
     private String mStayName;
     String mImageUrl;
     StayBookDateTime mStayBookDateTime;
@@ -308,7 +308,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
             mStayName = intent.getStringExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_STAY_NAME);
             mImageUrl = intent.getStringExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_IMAGE_URL);
-            mListPrice = intent.getIntExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_LIST_PRICE, StayOutboundDetailActivity.NONE_PRICE);
+            mListTotalPrice = intent.getIntExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_LIST_PRICE, StayOutboundDetailActivity.NONE_PRICE);
 
             String checkInDateTime = intent.getStringExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_CHECK_IN);
             String checkOutDateTime = intent.getStringExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_CHECK_OUT);
@@ -1372,7 +1372,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         getViewInterface().setStayDetail(mStayBookDateTime, mPeople, stayOutboundDetail);
 
         // 리스트 가격 변동은 진입시 한번 만 한다.
-        checkChangedPrice(mIsDeepLink, stayOutboundDetail, mListPrice, mCheckChangedPrice == false);
+        checkChangedPrice(mIsDeepLink, stayOutboundDetail, mListTotalPrice, mCheckChangedPrice == false);
         mCheckChangedPrice = true;
 
         // 선택된 방이 없으면 처음 방으로 한다.

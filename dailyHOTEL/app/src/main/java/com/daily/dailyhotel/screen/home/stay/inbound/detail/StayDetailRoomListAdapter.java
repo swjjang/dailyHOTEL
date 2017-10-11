@@ -2,14 +2,16 @@ package com.daily.dailyhotel.screen.home.stay.inbound.detail;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.StayRoom;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailRoomDataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutStayDetailRoomDataBinding;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,6 +24,7 @@ public class StayDetailRoomListAdapter extends RecyclerView.Adapter<RecyclerView
     View.OnClickListener mOnClickListener;
     private int mSelectedPosition;
     private StayDetailPresenter.PriceType mPriceType;
+    private int mNights;
 
     public StayDetailRoomListAdapter(Context context, List<StayRoom> arrayList, View.OnClickListener listener)
     {
@@ -48,6 +51,11 @@ public class StayDetailRoomListAdapter extends RecyclerView.Adapter<RecyclerView
         mStayRoomList.addAll(collection);
     }
 
+    public void setNights(int nights)
+    {
+        mNights = nights;
+    }
+
     public void setSelected(int position)
     {
         mSelectedPosition = position;
@@ -71,7 +79,7 @@ public class StayDetailRoomListAdapter extends RecyclerView.Adapter<RecyclerView
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        LayoutStayOutboundDetailRoomDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_stay_outbound_detail_room_data, parent, false);
+        LayoutStayDetailRoomDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_stay_detail_room_data, parent, false);
 
         SaleRoomInformationViewHolder viewHolder = new SaleRoomInformationViewHolder(dataBinding);
 
@@ -90,8 +98,6 @@ public class StayDetailRoomListAdapter extends RecyclerView.Adapter<RecyclerView
 
         SaleRoomInformationViewHolder saleRoomInformationViewHolder = (SaleRoomInformationViewHolder) holder;
 
-        saleRoomInformationViewHolder.dataBinding.getRoot().setTag(position);
-
         if (mSelectedPosition == position)
         {
             saleRoomInformationViewHolder.dataBinding.getRoot().setSelected(true);
@@ -102,103 +108,82 @@ public class StayDetailRoomListAdapter extends RecyclerView.Adapter<RecyclerView
 
         saleRoomInformationViewHolder.dataBinding.roomTypeTextView.setText(stayRoom.name);
 
-        String price, discountPrice;
+        String price = null;
+        String discountPrice;
 
-        //        switch (mPriceType)
-        //        {
-        //            case TOTAL:
-        //            {
-        //                if (stayOutboundRoom.promotion == true)
-        //                {
-        //                    price = DailyTextUtils.getPriceFormat(mContext, stayOutboundRoom.base, false);
-        //                } else
-        //                {
-        //                    price = null;
-        //                }
-        //
-        //                discountPrice = DailyTextUtils.getPriceFormat(mContext, stayOutboundRoom.total, false);
-        //                break;
-        //            }
-        //
-        //            case AVERAGE:
-        //            default:
-        //            {
-        //                if (stayOutboundRoom.promotion == true)
-        //                {
-        //                    price = DailyTextUtils.getPriceFormat(mContext, stayOutboundRoom.baseNightly, false);
-        //                } else
-        //                {
-        //                    price = null;
-        //                }
-        //
-        //                discountPrice = DailyTextUtils.getPriceFormat(mContext, stayOutboundRoom.nightly, false);
-        //                break;
-        //            }
-        //        }
-        //
-        //        if (DailyTextUtils.isTextEmpty(price) == true)
-        //        {
-        //            saleRoomInformationViewHolder.dataBinding.priceTextView.setVisibility(View.GONE);
-        //            saleRoomInformationViewHolder.dataBinding.priceTextView.setText(null);
-        //        } else
-        //        {
-        //            saleRoomInformationViewHolder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
-        //            saleRoomInformationViewHolder.dataBinding.priceTextView.setPaintFlags(saleRoomInformationViewHolder.dataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        //            saleRoomInformationViewHolder.dataBinding.priceTextView.setText(price);
-        //        }
-        //
-        //        saleRoomInformationViewHolder.dataBinding.discountPriceTextView.setText(discountPrice);
-        //
-        //        String personOption;
-        //
-        //        if (stayOutboundRoom.quotedOccupancy == 0 || stayOutboundRoom.rateOccupancyPerRoom == 0)
-        //        {
-        //            personOption = null;
-        //        } else if (stayOutboundRoom.quotedOccupancy == stayOutboundRoom.rateOccupancyPerRoom)
-        //        {
-        //            personOption = mContext.getString(R.string.label_stay_outbound_room_default_person, stayOutboundRoom.quotedOccupancy)//
-        //                + "/" + mContext.getString(R.string.label_stay_outbound_room_max_person_free, stayOutboundRoom.rateOccupancyPerRoom);
-        //        } else
-        //        {
-        //            personOption = mContext.getString(R.string.label_stay_outbound_room_default_person, stayOutboundRoom.quotedOccupancy)//
-        //                + "/" + mContext.getString(R.string.label_stay_outbound_room_max_person_charge, stayOutboundRoom.rateOccupancyPerRoom);
-        //        }
-        //
-        //        if (DailyTextUtils.isTextEmpty(personOption) == true)
-        //        {
-        //            saleRoomInformationViewHolder.dataBinding.optionTextView.setVisibility(View.GONE);
-        //        } else
-        //        {
-        //            saleRoomInformationViewHolder.dataBinding.optionTextView.setVisibility(View.VISIBLE);
-        //            saleRoomInformationViewHolder.dataBinding.optionTextView.setText(personOption);
-        //        }
-        //
-        //        if (DailyTextUtils.isTextEmpty(stayOutboundRoom.valueAddName) == true)
-        //        {
-        //            saleRoomInformationViewHolder.dataBinding.amenitiesTextView.setVisibility(View.GONE);
-        //        } else
-        //        {
-        //            saleRoomInformationViewHolder.dataBinding.amenitiesTextView.setVisibility(View.VISIBLE);
-        //            saleRoomInformationViewHolder.dataBinding.amenitiesTextView.setText(stayOutboundRoom.valueAddName);
-        //        }
-        //
-        //        if (DailyTextUtils.isTextEmpty(stayOutboundRoom.promotionDescription) == true)
-        //        {
-        //            saleRoomInformationViewHolder.dataBinding.benefitTextView.setVisibility(View.GONE);
-        //        } else
-        //        {
-        //            saleRoomInformationViewHolder.dataBinding.benefitTextView.setVisibility(View.VISIBLE);
-        //            saleRoomInformationViewHolder.dataBinding.benefitTextView.setText(stayOutboundRoom.promotionDescription);
-        //        }
-        //
-        //        if (stayOutboundRoom.nonRefundable == false)
-        //        {
-        //            saleRoomInformationViewHolder.dataBinding.nrdTextView.setVisibility(View.GONE);
-        //        } else
-        //        {
-        //            saleRoomInformationViewHolder.dataBinding.nrdTextView.setVisibility(View.VISIBLE);
-        //            saleRoomInformationViewHolder.dataBinding.nrdTextView.setText(stayOutboundRoom.nonRefundableDescription);
-        //        }
+        switch (mPriceType)
+        {
+            case TOTAL:
+            {
+                if (stayRoom.price > 0)
+                {
+                    price = DailyTextUtils.getPriceFormat(mContext, stayRoom.price * mNights, false);
+                }
+
+                discountPrice = DailyTextUtils.getPriceFormat(mContext, stayRoom.discountTotal, false);
+                break;
+            }
+
+            case AVERAGE:
+            default:
+            {
+                if (stayRoom.price > 0)
+                {
+                    price = DailyTextUtils.getPriceFormat(mContext, stayRoom.price, false);
+                }
+
+                discountPrice = DailyTextUtils.getPriceFormat(mContext, stayRoom.discountAverage, false);
+                break;
+            }
+        }
+
+        if (DailyTextUtils.isTextEmpty(price) == true)
+        {
+            saleRoomInformationViewHolder.dataBinding.priceTextView.setVisibility(View.GONE);
+            saleRoomInformationViewHolder.dataBinding.priceTextView.setText(null);
+        } else
+        {
+            saleRoomInformationViewHolder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
+            saleRoomInformationViewHolder.dataBinding.priceTextView.setPaintFlags(saleRoomInformationViewHolder.dataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            saleRoomInformationViewHolder.dataBinding.priceTextView.setText(price);
+        }
+
+        saleRoomInformationViewHolder.dataBinding.discountPriceTextView.setText(discountPrice);
+
+        if (DailyTextUtils.isTextEmpty(stayRoom.description1) == true)
+        {
+            saleRoomInformationViewHolder.dataBinding.optionTextView.setVisibility(View.GONE);
+        } else
+        {
+            saleRoomInformationViewHolder.dataBinding.optionTextView.setVisibility(View.VISIBLE);
+            saleRoomInformationViewHolder.dataBinding.optionTextView.setText(stayRoom.description1);
+        }
+
+        if (DailyTextUtils.isTextEmpty(stayRoom.description2) == true)
+        {
+            saleRoomInformationViewHolder.dataBinding.amenitiesTextView.setVisibility(View.GONE);
+        } else
+        {
+            saleRoomInformationViewHolder.dataBinding.amenitiesTextView.setVisibility(View.VISIBLE);
+            saleRoomInformationViewHolder.dataBinding.amenitiesTextView.setText(stayRoom.description2);
+        }
+
+        if (DailyTextUtils.isTextEmpty(stayRoom.benefit) == true)
+        {
+            saleRoomInformationViewHolder.dataBinding.benefitTextView.setVisibility(View.GONE);
+        } else
+        {
+            saleRoomInformationViewHolder.dataBinding.benefitTextView.setVisibility(View.VISIBLE);
+            saleRoomInformationViewHolder.dataBinding.benefitTextView.setText(stayRoom.benefit);
+        }
+
+        if (stayRoom.nrd == false)
+        {
+            saleRoomInformationViewHolder.dataBinding.nrdTextView.setVisibility(View.GONE);
+        } else
+        {
+            saleRoomInformationViewHolder.dataBinding.nrdTextView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -214,9 +199,9 @@ public class StayDetailRoomListAdapter extends RecyclerView.Adapter<RecyclerView
 
     public class SaleRoomInformationViewHolder extends RecyclerView.ViewHolder
     {
-        LayoutStayOutboundDetailRoomDataBinding dataBinding;
+        LayoutStayDetailRoomDataBinding dataBinding;
 
-        public SaleRoomInformationViewHolder(LayoutStayOutboundDetailRoomDataBinding dataBinding)
+        public SaleRoomInformationViewHolder(LayoutStayDetailRoomDataBinding dataBinding)
         {
             super(dataBinding.getRoot());
 

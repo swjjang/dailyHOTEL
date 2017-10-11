@@ -183,25 +183,23 @@ public class StayRemoteImpl implements StayInterface
     @Override
     public Observable<List<TrueVR>> getTrueVR(int stayIndex)
     {
-        return DailyMobileAPI.getInstance(mContext).getStayTrueVRList(stayIndex).map(baseDto ->
+        return DailyMobileAPI.getInstance(mContext).getStayTrueVRList(stayIndex).map(baseListDto ->
         {
             List<TrueVR> trueVR = new ArrayList<>();
 
-            if (baseDto != null)
+            if (baseListDto != null)
             {
-                if (baseDto.msgCode == 100 && baseDto.data != null)
+                if (baseListDto.msgCode == 100 && baseListDto.data != null)
                 {
-                    for (TrueVRData trueVRData : baseDto.data)
+                    for (TrueVRData trueVRData : baseListDto.data)
                     {
                         trueVR.add(trueVRData.getTrueVR());
                     }
                 } else
                 {
-                    throw new BaseException(baseDto.msgCode, baseDto.msg);
                 }
             } else
             {
-                throw new BaseException(-1, null);
             }
 
             return trueVR;

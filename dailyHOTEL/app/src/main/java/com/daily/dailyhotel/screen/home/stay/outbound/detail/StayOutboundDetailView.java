@@ -17,7 +17,6 @@ import android.graphics.drawable.shapes.RectShape;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.IdRes;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Html;
@@ -176,15 +175,14 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.nestedScrollView, getColor(R.color.default_over_scroll_edge));
 
         // 객실 초기화
-        viewDataBinding.roomsViewDataBinding.roomTypeTextView.setText(R.string.act_hotel_search_room);
         viewDataBinding.roomsViewDataBinding.roomTypeTextView.setClickable(true);
+        viewDataBinding.roomsViewDataBinding.includeTaxTextView.setClickable(true);
         viewDataBinding.roomsViewDataBinding.priceOptionLayout.setVisibility(View.GONE);
 
         viewDataBinding.roomsViewDataBinding.roomRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.roomsViewDataBinding.roomRecyclerView, getColor(R.color.default_over_scroll_edge));
         viewDataBinding.roomsViewDataBinding.roomTypeLayout.setVisibility(View.INVISIBLE);
 
-        viewDataBinding.productTypeBackgroundView.setOnClickListener(this);
         viewDataBinding.roomsViewDataBinding.closeView.setOnClickListener(this);
 
         viewDataBinding.bottomLayout.setOnClickListener(new View.OnClickListener()
@@ -230,7 +228,6 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
         switch (v.getId())
         {
             case R.id.closeView:
-            case R.id.productTypeBackgroundView:
                 getEventListener().onHideRoomListClick(true);
                 break;
 
@@ -1028,28 +1025,17 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
         // tripAdvisor
         if (stayOutboundDetail.tripAdvisorRating == 0.0f)
         {
-            viewDataBinding.tripAdvisorImageView.setVisibility(View.GONE);
-            viewDataBinding.tripAdvisorRatingBar.setVisibility(View.GONE);
-            viewDataBinding.tripAdvisorRatingTextView.setVisibility(View.GONE);
+            viewDataBinding.tripAdvisorLayout.setVisibility(View.GONE);
         } else
         {
-            viewDataBinding.tripAdvisorImageView.setVisibility(View.VISIBLE);
-            viewDataBinding.tripAdvisorRatingBar.setVisibility(View.VISIBLE);
-            viewDataBinding.tripAdvisorRatingTextView.setVisibility(View.VISIBLE);
+            viewDataBinding.tripAdvisorLayout.setVisibility(View.VISIBLE);
 
-            viewDataBinding.tripAdvisorRatingBar.setOnTouchListener(new View.OnTouchListener()
-            {
-                @Override
-                public boolean onTouch(View v, MotionEvent event)
-                {
-                    return true;
-                }
-            });
+            viewDataBinding.tripAdvisorRatingBar.setOnTouchListener((v, event) -> true);
             viewDataBinding.tripAdvisorRatingBar.setRating(stayOutboundDetail.tripAdvisorRating);
             viewDataBinding.tripAdvisorRatingTextView.setText(getString(R.string.label_stay_outbound_tripadvisor_rating, Float.toString(stayOutboundDetail.tripAdvisorRating)));
 
             // 별등급이 기본이 5개 이기 때문에 빈공간에도 내용이 존재한다.
-            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) viewDataBinding.tripAdvisorRatingTextView.getLayoutParams();
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) viewDataBinding.tripAdvisorRatingTextView.getLayoutParams();
             layoutParams.leftMargin = ScreenUtils.dpToPx(getContext(), 3) - ScreenUtils.dpToPx(getContext(), (5 - (int) Math.ceil(stayOutboundDetail.tripAdvisorRating)) * 10);
             viewDataBinding.tripAdvisorRatingTextView.setLayoutParams(layoutParams);
         }
@@ -1424,26 +1410,8 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
             mRoomTypeListAdapter.setSelected(0);
         }
 
-        getViewDataBinding().roomsViewDataBinding.roomRecyclerView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        getViewDataBinding().roomsViewDataBinding.roomRecyclerView.requestLayout();
         getViewDataBinding().roomsViewDataBinding.roomRecyclerView.setAdapter(mRoomTypeListAdapter);
         getViewDataBinding().bookingTextView.setOnClickListener(this);
-
-        getViewDataBinding().roomsViewDataBinding.roomRecyclerView.postDelayed(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                int maxHeight = getViewDataBinding().getRoot().getHeight()//
-                    - getDimensionPixelSize(R.dimen.toolbar_height)//
-                    - ScreenUtils.dpToPx(getContext(), 116) - 1// - (객실 타이틀바 + 하단 하단 버튼) - 라인
-                    - (getViewDataBinding().roomsViewDataBinding.priceOptionLayout.getVisibility() == View.VISIBLE ? getViewDataBinding().roomsViewDataBinding.priceOptionLayout.getHeight() : 0);
-
-                int height = Math.min(maxHeight, getViewDataBinding().roomsViewDataBinding.roomRecyclerView.getHeight());
-                getViewDataBinding().roomsViewDataBinding.roomRecyclerView.getLayoutParams().height = height;
-                getViewDataBinding().roomsViewDataBinding.roomRecyclerView.requestLayout();
-            }
-        }, 100);
     }
 
     /**

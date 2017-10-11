@@ -183,15 +183,14 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.nestedScrollView, getColor(R.color.default_over_scroll_edge));
 
         // 객실 초기화
-        viewDataBinding.roomsViewDataBinding.roomTypeTextView.setText(R.string.act_hotel_search_room);
         viewDataBinding.roomsViewDataBinding.roomTypeTextView.setClickable(true);
+        viewDataBinding.roomsViewDataBinding.includeTaxTextView.setClickable(true);
         viewDataBinding.roomsViewDataBinding.priceOptionLayout.setVisibility(View.GONE);
 
         viewDataBinding.roomsViewDataBinding.roomRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.roomsViewDataBinding.roomRecyclerView, getColor(R.color.default_over_scroll_edge));
         viewDataBinding.roomsViewDataBinding.roomTypeLayout.setVisibility(View.INVISIBLE);
 
-        viewDataBinding.productTypeBackgroundView.setOnClickListener(this);
         viewDataBinding.roomsViewDataBinding.closeView.setOnClickListener(this);
 
         viewDataBinding.bottomLayout.setOnClickListener(new View.OnClickListener()
@@ -215,7 +214,6 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         switch (v.getId())
         {
             case R.id.closeView:
-            case R.id.productTypeBackgroundView:
                 getEventListener().onHideRoomListClick(true);
                 break;
 
@@ -1688,26 +1686,10 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
             mRoomTypeListAdapter.setSelected(0);
         }
 
-        getViewDataBinding().roomsViewDataBinding.roomRecyclerView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        getViewDataBinding().roomsViewDataBinding.roomRecyclerView.requestLayout();
+        mRoomTypeListAdapter.setNights(stayBookDateTime.getNights());
+
         getViewDataBinding().roomsViewDataBinding.roomRecyclerView.setAdapter(mRoomTypeListAdapter);
         getViewDataBinding().bookingTextView.setOnClickListener(this);
-
-        getViewDataBinding().roomsViewDataBinding.roomRecyclerView.postDelayed(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                int maxHeight = getViewDataBinding().getRoot().getHeight()//
-                    - getDimensionPixelSize(R.dimen.toolbar_height)//
-                    - ScreenUtils.dpToPx(getContext(), 116) - 1// - (객실 타이틀바 + 하단 하단 버튼) - 라인
-                    - (getViewDataBinding().roomsViewDataBinding.priceOptionLayout.getVisibility() == View.VISIBLE ? getViewDataBinding().roomsViewDataBinding.priceOptionLayout.getHeight() : 0);
-
-                int height = Math.min(maxHeight, getViewDataBinding().roomsViewDataBinding.roomRecyclerView.getHeight());
-                getViewDataBinding().roomsViewDataBinding.roomRecyclerView.getLayoutParams().height = height;
-                getViewDataBinding().roomsViewDataBinding.roomRecyclerView.requestLayout();
-            }
-        }, 100);
     }
 
     /**

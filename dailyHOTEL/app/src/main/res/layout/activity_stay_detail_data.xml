@@ -231,6 +231,7 @@
             android:id="@+id/roomsViewDataBinding"
             layout="@layout/layout_stay_outbound_detail_rooms_data"
             app:layout_constraintBottom_toTopOf="@+id/bottomLayout"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
 
