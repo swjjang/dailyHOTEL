@@ -221,7 +221,7 @@ public class DailyImageLoopView extends ConstraintLayout implements ViewPager.On
 
     public int getPageScrollX()
     {
-        if(mViewDataBinding == null)
+        if (mViewDataBinding == null)
         {
             return 0;
         }
@@ -231,7 +231,7 @@ public class DailyImageLoopView extends ConstraintLayout implements ViewPager.On
 
     public int getPageScrollY()
     {
-        if(mViewDataBinding == null)
+        if (mViewDataBinding == null)
         {
             return 0;
         }

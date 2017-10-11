@@ -9,9 +9,6 @@ import android.support.annotation.NonNull;
 import com.daily.base.BaseActivity;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
-import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
-
-import java.util.ArrayList;
 
 /**
  * Created by sheldon
@@ -51,7 +48,6 @@ public class StayDetailActivity extends BaseActivity<StayDetailPresenter>
     public static final int TRANS_GRADIENT_BOTTOM_TYPE_LIST = 2;
 
     /**
-     *
      * @param context
      * @param stayIndex
      * @param stayName

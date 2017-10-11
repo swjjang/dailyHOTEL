@@ -2,15 +2,9 @@ package com.daily.dailyhotel.screen.home.stay.inbound.detail;
 
 import android.app.Activity;
 
-import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayDetail;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
-import com.daily.dailyhotel.parcel.analytics.StayPaymentAnalyticsParam;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAnalyticsInterface
 {

@@ -33,7 +33,7 @@ public class ImageListAnalyticsParam implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        if(serviceType != null)
+        if (serviceType != null)
         {
             dest.writeString(serviceType.name());
         }
@@ -43,7 +43,7 @@ public class ImageListAnalyticsParam implements Parcelable
     {
         String serviceTypeName = in.readString();
 
-        if(DailyTextUtils.isTextEmpty(serviceTypeName) == false)
+        if (DailyTextUtils.isTextEmpty(serviceTypeName) == false)
         {
             serviceType = Constants.ServiceType.valueOf(serviceTypeName);
         }

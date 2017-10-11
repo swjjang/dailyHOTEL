@@ -46,6 +46,5 @@ public interface StayDetailViewInterface extends BaseDialogViewInterface
 
     void setTrueVRVisible(boolean visible);
 
-    void showTrueVRDialog(CheckBox.OnCheckedChangeListener checkedChangeListener, View.OnClickListener positiveListener
-        , Dialog.OnDismissListener onDismissListener);
+    void showTrueVRDialog(CheckBox.OnCheckedChangeListener checkedChangeListener, View.OnClickListener positiveListener, Dialog.OnDismissListener onDismissListener);
 }

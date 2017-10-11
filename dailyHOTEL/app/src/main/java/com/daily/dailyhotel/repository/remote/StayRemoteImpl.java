@@ -191,7 +191,7 @@ public class StayRemoteImpl implements StayInterface
             {
                 if (baseDto.msgCode == 100 && baseDto.data != null)
                 {
-                    for(TrueVRData trueVRData : baseDto.data)
+                    for (TrueVRData trueVRData : baseDto.data)
                     {
                         trueVR.add(trueVRData.getTrueVR());
                     }

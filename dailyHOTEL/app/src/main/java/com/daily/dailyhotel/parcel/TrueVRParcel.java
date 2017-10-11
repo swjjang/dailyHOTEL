@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-import com.daily.dailyhotel.entity.Suggest;
 import com.daily.dailyhotel.entity.TrueVR;
 
 public class TrueVRParcel implements Parcelable

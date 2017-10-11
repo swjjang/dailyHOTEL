@@ -19,7 +19,6 @@ import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
-import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
@@ -1118,9 +1117,9 @@ public class StayMainActivity extends PlaceMainActivity
                         {
                             optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(StayMainActivity.this, ((DailyStayCardView) view).getOptionsCompat());
 
-//                            intent = StayDetailActivity.newInstance(StayMainActivity.this //
-//                                , mStayCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
-//                                , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
+                            //                            intent = StayDetailActivity.newInstance(StayMainActivity.this //
+                            //                                , mStayCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
+                            //                                , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
 
 
                             StayDetailAnalyticsParam stayDetailAnalyticsParam = new StayDetailAnalyticsParam();
