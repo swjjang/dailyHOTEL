@@ -16,8 +16,11 @@ import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
 import com.twoheart.dailyhotel.R;
 
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 
@@ -197,7 +200,26 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
     @Override
     public void onBackClick()
     {
-        getActivity().onBackPressed();
+        addCompositeDisposable(Observable.defer(new Callable<ObservableSource<Boolean>>()
+        {
+            @Override
+            public ObservableSource<Boolean> call() throws Exception
+            {
+                if (getViewInterface() != null)
+                {
+                    getViewInterface().hideKeyboard();
+                }
+
+                return Observable.just(true);
+            }
+        }).subscribeOn(AndroidSchedulers.mainThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+        {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception
+            {
+                getActivity().onBackPressed();
+            }
+        }));
     }
 
     @Override
