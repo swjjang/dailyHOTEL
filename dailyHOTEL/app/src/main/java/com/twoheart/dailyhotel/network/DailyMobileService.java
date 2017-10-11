@@ -14,6 +14,7 @@ import com.daily.dailyhotel.repository.remote.model.GourmetListData;
 import com.daily.dailyhotel.repository.remote.model.GourmetPaymentData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
 import com.daily.dailyhotel.repository.remote.model.RecentlyPlacesData;
+import com.daily.dailyhotel.repository.remote.model.BookingCancelData;
 import com.daily.dailyhotel.repository.remote.model.ReviewData;
 import com.daily.dailyhotel.repository.remote.model.ReviewScoresData;
 import com.daily.dailyhotel.repository.remote.model.ShortUrlData;
@@ -703,6 +704,13 @@ public interface DailyMobileService
     @GET("{mobileAPI}")
     Observable<BaseDto<WaitingDepositData>> getWaitingDeposit(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET()
+    Observable<BaseListDto<BookingCancelData>> getStayOutboundBookingCancelList(@Url String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseListDto<BookingCancelData>> getBookingCancelList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // RefundRemoteImpl

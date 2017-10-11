@@ -18,6 +18,7 @@ import com.daily.dailyhotel.repository.remote.model.GourmetListData;
 import com.daily.dailyhotel.repository.remote.model.GourmetPaymentData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
 import com.daily.dailyhotel.repository.remote.model.RecentlyPlacesData;
+import com.daily.dailyhotel.repository.remote.model.BookingCancelData;
 import com.daily.dailyhotel.repository.remote.model.ReviewData;
 import com.daily.dailyhotel.repository.remote.model.ReviewScoresData;
 import com.daily.dailyhotel.repository.remote.model.ShortUrlData;
@@ -1630,6 +1631,24 @@ public class DailyMobileAPI
         urlParams.put("{aggregationId}", aggregationId);
 
         return mDailyMobileService.getWaitingDeposit(Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseListDto<BookingCancelData>> getStayOutboundBookingCancelList()
+    {
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/refunded-reservations"//
+            : "MTEwJDgxJDU4JDI4JDIzJDExOCQ1MCQxMzQkOTckNDEkMzAkMyQ2MCQxMTUkNTUkMTA3JA==$MjFDEQjIyQTVCQjhGMERGNDhIDRkE4NHOTU3MThCQzhUGMzE0MkI1ZRKDE3MTKY1RkRRERTMxRjc2OEQzQTlDQjM4NUDlDQUYyQTg2HRDAxWQjMxNTdGND0QyQzYEwORDQ1NzBDNjkzQUUG5$";
+
+        return mDailyMobileService.getStayOutboundBookingCancelList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseListDto<BookingCancelData>> getBookingCancelList()
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v5/cancel-reservations"//
+            : "MSQyMCQ0NCQyNCQxNCQ0MCQyJDkwJDU4JDEyJDcyJDE4JDQ3JDkzJDIzJDUwJA==$MGQzBBODhGRjWY1QOzEBDRkWICzQjRRBQjBGRTg3QjU0TNjcCzSMDYdFOTgyRTlQBRDAzQUU4RkET4MDVDRkVGNjVEODhDRJjcHyRQ==$";
+
+        return mDailyMobileService.getBookingCancelList(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////

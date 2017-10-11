@@ -7,12 +7,14 @@ import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.BookingInterface;
 import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.GourmetBookingDetail;
+import com.daily.dailyhotel.entity.BookingCancel;
 import com.daily.dailyhotel.entity.StayBookingDetail;
 import com.daily.dailyhotel.entity.StayOutboundBookingDetail;
 import com.daily.dailyhotel.entity.WaitingDeposit;
 import com.daily.dailyhotel.repository.remote.model.BookingData;
 import com.daily.dailyhotel.repository.remote.model.BookingHideData;
 import com.daily.dailyhotel.repository.remote.model.GourmetBookingDetailData;
+import com.daily.dailyhotel.repository.remote.model.BookingCancelData;
 import com.daily.dailyhotel.repository.remote.model.StayBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.WaitingDepositData;
@@ -243,5 +245,69 @@ public class BookingRemoteImpl implements BookingInterface
                 return waitingDeposit;
             }
         }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<List<BookingCancel>> getBookingCancelList()
+    {
+        return DailyMobileAPI.getInstance(mContext).getBookingCancelList().map(new Function<BaseListDto<BookingCancelData>, List<BookingCancel>>()
+        {
+            @Override
+            public List<BookingCancel> apply(@io.reactivex.annotations.NonNull BaseListDto<BookingCancelData> bookingCancelDataBaseListDto) throws Exception
+            {
+                List<BookingCancel> list = new ArrayList<>();
+
+                if (bookingCancelDataBaseListDto != null)
+                {
+                    if (bookingCancelDataBaseListDto.msgCode == 100 && bookingCancelDataBaseListDto.data != null)
+                    {
+                        for (BookingCancelData cancelData : bookingCancelDataBaseListDto.data)
+                        {
+                            list.add(cancelData.getBookingCancel());
+                        }
+                    } else
+                    {
+                        throw new BaseException(bookingCancelDataBaseListDto.msgCode, bookingCancelDataBaseListDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return list;
+            }
+        });
+    }
+
+    @Override
+    public Observable<List<BookingCancel>> getStayOutboundBookingCancelList()
+    {
+        return DailyMobileAPI.getInstance(mContext).getStayOutboundBookingCancelList().map(new Function<BaseListDto<BookingCancelData>, List<BookingCancel>>()
+        {
+            @Override
+            public List<BookingCancel> apply(@io.reactivex.annotations.NonNull BaseListDto<BookingCancelData> bookingCancelDataBaseListDto) throws Exception
+            {
+                List<BookingCancel> list = new ArrayList<>();
+
+                if (bookingCancelDataBaseListDto != null)
+                {
+                    if (bookingCancelDataBaseListDto.msgCode == 100 && bookingCancelDataBaseListDto.data != null)
+                    {
+                        for (BookingCancelData cancelData : bookingCancelDataBaseListDto.data)
+                        {
+                            list.add(cancelData.getBookingCancel());
+                        }
+                    } else
+                    {
+                        throw new BaseException(bookingCancelDataBaseListDto.msgCode, bookingCancelDataBaseListDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return list;
+            }
+        });
     }
 }

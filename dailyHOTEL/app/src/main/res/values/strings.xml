@@ -228,6 +228,7 @@
     <string name="actionbar_title_stamp_history">스탬프 내역</string>
     <string name="actionbar_title_stamp_terms_activity">스탬프 유의사항 안내</string>
     <string name="actionbar_title_review_terms_activity">트루리뷰 운영정책</string>
+    <string name="actionbar_title_booking_cancel_list_activity">취소내역</string>
 
     <!-- Toast Messages -->
     <string name="toast_msg_please_input_guest">투숙자명을 입력해주세요. 예약 확인시 필요한 정보입니다.</string>
@@ -1434,6 +1435,9 @@
     <string name="message_booking_failed_delete_booking">삭제에 실패했습니다.\n잠시 후에 다시 시도해주십시요.</string>
     <string name="label_booking_toolbar_cancel_history_button_text">취소내역 보기</string>
 
+    <!-- Reservation cancel History -->
+    <string name="message_booking_cancel_list_no_cancel_list">최근 1년 이내에 취소된 내역이 없습니다.</string>
+    <string name="message_booking_cancel_list_do_login">로그인하여 취소내역을 확인하세요.</string>
 
     <!-- Stay Out Bound Booking Detail -->
     <!-- Booking Detail -->
