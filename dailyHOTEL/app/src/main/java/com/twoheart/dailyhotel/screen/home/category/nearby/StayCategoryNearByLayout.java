@@ -321,7 +321,7 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
 
     public void setOptionViewTypeEnabled(boolean enabled)
     {
-        if(mFloatingActionView == null)
+        if (mFloatingActionView == null)
         {
             return;
         }
@@ -331,7 +331,7 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
 
     public void setOptionFilterEnabled(boolean enabled)
     {
-        if(mFloatingActionView == null)
+        if (mFloatingActionView == null)
         {
             return;
         }
@@ -341,7 +341,7 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
 
     public void setOptionFilterSelected(boolean selected)
     {
-        if(mFloatingActionView == null)
+        if (mFloatingActionView == null)
         {
             return;
         }
@@ -650,7 +650,7 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
 
     void setMenuBarLayoutTranslationY(float dy)
     {
-        if(mFloatingActionView == null)
+        if (mFloatingActionView == null)
         {
             return;
         }
@@ -660,7 +660,7 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
 
     public void setMenuBarLayoutVisible(boolean visible)
     {
-        if(mFloatingActionView == null)
+        if (mFloatingActionView == null)
         {
             return;
         }
@@ -912,7 +912,7 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
 
     public void setViewTypeVisibility(boolean visible)
     {
-        if(mFloatingActionView == null)
+        if (mFloatingActionView == null)
         {
             return;
         }

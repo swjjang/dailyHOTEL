@@ -74,8 +74,8 @@ public class StayCalendarActivity extends PlaceCalendarActivity
     {
         Intent intent = new Intent(context, StayCalendarActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE, checkInDate);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE, checkOutDate);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECK_IN_DATE, checkInDate);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECK_OUT_DATE, checkOutDate);
         intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
         intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
         intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
@@ -93,18 +93,18 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
         mTodayDateTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME);
 
-        if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE) == true)
+        if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_CHECK_IN_DATE) == true)
         {
             StayBookingDay stayBookingDay = new StayBookingDay();
 
             try
             {
-                String checkInDate = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE);
+                String checkInDate = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CHECK_IN_DATE);
                 stayBookingDay.setCheckInDay(checkInDate);
 
-                if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE) == true)
+                if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_CHECK_OUT_DATE) == true)
                 {
-                    stayBookingDay.setCheckOutDay(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE));
+                    stayBookingDay.setCheckOutDay(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CHECK_OUT_DATE));
                 } else
                 {
                     stayBookingDay.setCheckOutDay(checkInDate, 1);

@@ -50,16 +50,23 @@ public class StayOutboundDetailActivity extends BaseActivity<StayOutboundDetailP
     public static final int TRANS_GRADIENT_BOTTOM_TYPE_LIST = 2;
 
     /**
-     * @param stayIndex
+     *
      * @param context
-     * @param checkInDateTime  ISO-8601
-     * @param checkOutDateTime ISO-8601
+     * @param stayIndex
+     * @param stayName
+     * @param imageUrl
+     * @param listTotalPrice totalPrice가 넘어온다. 평균가로 했더니 리스트와 상세에서 서버 계산이 다른 경우가 발생했다.
+     * @param checkInDateTime   ISO-8601
+     * @param checkOutDateTime  ISO-8601
      * @param numberOfAdults
      * @param childList
+     * @param isUsedMultiTransition
+     * @param gradientType
+     * @param analyticsParam
      * @return
      */
     public static Intent newInstance(Context context, int stayIndex, String stayName, String imageUrl//
-        , int listPrice, String checkInDateTime, String checkOutDateTime//
+        , int listTotalPrice, String checkInDateTime, String checkOutDateTime//
         , int numberOfAdults, ArrayList<Integer> childList, boolean isUsedMultiTransition, int gradientType//
         , StayOutboundDetailAnalyticsParam analyticsParam)
     {
@@ -67,7 +74,7 @@ public class StayOutboundDetailActivity extends BaseActivity<StayOutboundDetailP
         intent.putExtra(INTENT_EXTRA_DATA_STAY_INDEX, stayIndex);
         intent.putExtra(INTENT_EXTRA_DATA_STAY_NAME, stayName);
         intent.putExtra(INTENT_EXTRA_DATA_IMAGE_URL, imageUrl);
-        intent.putExtra(INTENT_EXTRA_DATA_LIST_PRICE, listPrice);
+        intent.putExtra(INTENT_EXTRA_DATA_LIST_PRICE, listTotalPrice);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN, checkInDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT, checkOutDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, numberOfAdults);

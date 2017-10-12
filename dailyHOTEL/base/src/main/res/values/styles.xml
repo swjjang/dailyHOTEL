@@ -11,4 +11,8 @@
         <item name="android:backgroundDimEnabled">false</item>
         <item name="android:background">@android:color/transparent</item>
     </style>
+
+    <style name="CheckBoxTheme">
+        <item name="colorControlNormal">#323232</item>
+    </style>
 </resources>

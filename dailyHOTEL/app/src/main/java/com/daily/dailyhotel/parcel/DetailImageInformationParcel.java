@@ -5,6 +5,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.daily.dailyhotel.entity.DetailImageInformation;
+import com.daily.dailyhotel.entity.ImageMap;
 
 public class DetailImageInformationParcel implements Parcelable
 {
@@ -25,7 +26,7 @@ public class DetailImageInformationParcel implements Parcelable
         readFromParcel(in);
     }
 
-    public DetailImageInformation getGourmetMenuImage()
+    public DetailImageInformation getDetailImageInformation()
     {
         return mDetailImageInformation;
     }
@@ -34,7 +35,15 @@ public class DetailImageInformationParcel implements Parcelable
     public void writeToParcel(Parcel dest, int flags)
     {
         dest.writeString(mDetailImageInformation.caption);
-        dest.writeString(mDetailImageInformation.url);
+
+        ImageMap imageMap = mDetailImageInformation.getImageMap();
+
+        if (imageMap != null)
+        {
+            dest.writeString(imageMap.bigUrl);
+            dest.writeString(imageMap.mediumUrl);
+            dest.writeString(imageMap.smallUrl);
+        }
     }
 
     private void readFromParcel(Parcel in)
@@ -42,7 +51,16 @@ public class DetailImageInformationParcel implements Parcelable
         mDetailImageInformation = new DetailImageInformation();
 
         mDetailImageInformation.caption = in.readString();
-        mDetailImageInformation.url = in.readString();
+
+        if (in.dataSize() > 1)
+        {
+            ImageMap imageMap = new ImageMap();
+            imageMap.bigUrl = in.readString();
+            imageMap.mediumUrl = in.readString();
+            imageMap.smallUrl = in.readString();
+
+            mDetailImageInformation.setImageMap(imageMap);
+        }
     }
 
     @Override

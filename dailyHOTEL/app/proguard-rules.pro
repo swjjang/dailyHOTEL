@@ -148,6 +148,10 @@
 -keep @com.bluelinelabs.logansquare.annotation.JsonObject class *
 -keep class **$$JsonObjectMapper { *; }
 
+#RetroLambda
+-dontwarn java.lang.invoke.*
+-dontwarn **$$Lambda$*
+
 -dontwarn android.support.v4.**, android.support.v7.**, com.ning.http.client.**, org.jboss.netty.**
 -dontwarn org.slf4j.**, com.fasterxml.jackson.databind.**, com.google.android.gms.**, com.crashlytics.**
 -dontwarn com.google.**, android.net.http.AndroidHttpClient, com.android.volley.**

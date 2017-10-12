@@ -11,7 +11,8 @@ import android.view.View;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
+import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.view.DailyStayCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
@@ -25,8 +26,6 @@ import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
 import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.network.model.Sticker;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
-import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
-import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -427,6 +426,19 @@ public class CollectionStayActivity extends CollectionBaseActivity
 
             RecommendationStay recommendationStay = placeViewItem.getItem();
 
+            StayDetailAnalyticsParam analyticsParam = new StayDetailAnalyticsParam();
+            analyticsParam.setAddressAreaName(recommendationStay.addrSummary);
+            analyticsParam.discountPrice = recommendationStay.discount;
+            analyticsParam.price = recommendationStay.price;
+            analyticsParam.setShowOriginalPriceYn(analyticsParam.price, analyticsParam.discountPrice);
+            analyticsParam.setProvince(null);
+            analyticsParam.entryPosition = recommendationStay.entryPosition;
+            analyticsParam.totalListCount = count;
+            analyticsParam.isDailyChoice = recommendationStay.isDailyChoice;
+            analyticsParam.gradeName = recommendationStay.grade;
+
+            StayBookingDay stayBookingDay = (StayBookingDay) mPlaceBookingDay;
+
             if (mIsUsedMultiTransition == true)
             {
                 setExitSharedElementCallback(new SharedElementCallback()
@@ -447,10 +459,10 @@ public class CollectionStayActivity extends CollectionBaseActivity
                     }
                 });
 
-                AnalyticsParam analyticsParam = new AnalyticsParam();
-                analyticsParam.setParam(CollectionStayActivity.this, recommendationStay);
-                analyticsParam.setProvince(null);
-                analyticsParam.setTotalListCount(count);
+                //                AnalyticsParam analyticsParam = new AnalyticsParam();
+                //                analyticsParam.setParam(CollectionStayActivity.this, recommendationStay);
+                //                analyticsParam.setProvince(null);
+                //                analyticsParam.setTotalListCount(count);
 
                 ActivityOptionsCompat optionsCompat;
                 Intent intent;
@@ -459,9 +471,15 @@ public class CollectionStayActivity extends CollectionBaseActivity
                 {
                     optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(CollectionStayActivity.this, ((DailyStayCardView) view).getOptionsCompat());
 
+                    //                    intent = StayDetailActivity.newInstance(CollectionStayActivity.this //
+                    //                        , (StayBookingDay) mPlaceBookingDay, recommendationStay.index, recommendationStay.name, recommendationStay.imageUrl //
+                    //                        , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
+
                     intent = StayDetailActivity.newInstance(CollectionStayActivity.this //
-                        , (StayBookingDay) mPlaceBookingDay, recommendationStay.index, recommendationStay.name, recommendationStay.imageUrl //
-                        , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
+                        , recommendationStay.index, recommendationStay.name, recommendationStay.imageUrl, recommendationStay.discount//
+                        , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                        , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+                        , true, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST, analyticsParam);
                 } else
                 {
                     View simpleDraweeView = view.findViewById(R.id.imageView);
@@ -469,19 +487,15 @@ public class CollectionStayActivity extends CollectionBaseActivity
                     View gradientTopView = view.findViewById(R.id.gradientTopView);
                     View gradientBottomView = view.findViewById(R.id.gradientView);
 
-                    Object mapTag = gradientBottomView.getTag();
+                    //                        intent = StayDetailActivity.newInstance(CollectionStayActivity.this //
+                    //                            , (StayBookingDay) mPlaceBookingDay, recommendationStay.index, recommendationStay.name, recommendationStay.imageUrl //
+                    //                            , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_MAP);
 
-                    if (mapTag != null && "map".equals(mapTag) == true)
-                    {
-                        intent = StayDetailActivity.newInstance(CollectionStayActivity.this //
-                            , (StayBookingDay) mPlaceBookingDay, recommendationStay.index, recommendationStay.name, recommendationStay.imageUrl //
-                            , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_MAP);
-                    } else
-                    {
-                        intent = StayDetailActivity.newInstance(CollectionStayActivity.this //
-                            , (StayBookingDay) mPlaceBookingDay, recommendationStay.index, recommendationStay.name, recommendationStay.imageUrl //
-                            , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
-                    }
+                    intent = StayDetailActivity.newInstance(CollectionStayActivity.this //
+                        , recommendationStay.index, recommendationStay.name, recommendationStay.imageUrl, recommendationStay.discount//
+                        , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                        , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+                        , true, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP, analyticsParam);
 
                     optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(CollectionStayActivity.this,//
                         android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
@@ -493,14 +507,20 @@ public class CollectionStayActivity extends CollectionBaseActivity
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, optionsCompat.toBundle());
             } else
             {
-                AnalyticsParam analyticsParam = new AnalyticsParam();
-                analyticsParam.setParam(CollectionStayActivity.this, recommendationStay);
-                analyticsParam.setProvince(null);
-                analyticsParam.setTotalListCount(count);
+                //                AnalyticsParam analyticsParam = new AnalyticsParam();
+                //                analyticsParam.setParam(CollectionStayActivity.this, recommendationStay);
+                //                analyticsParam.setProvince(null);
+                //                analyticsParam.setTotalListCount(count);
+
+                //                Intent intent = StayDetailActivity.newInstance(CollectionStayActivity.this //
+                //                    , (StayBookingDay) mPlaceBookingDay, recommendationStay.index, recommendationStay.name, recommendationStay.imageUrl //
+                //                    , analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
 
                 Intent intent = StayDetailActivity.newInstance(CollectionStayActivity.this //
-                    , (StayBookingDay) mPlaceBookingDay, recommendationStay.index, recommendationStay.name, recommendationStay.imageUrl //
-                    , analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
+                    , recommendationStay.index, recommendationStay.name, recommendationStay.imageUrl, recommendationStay.discount//
+                    , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                    , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+                    , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 

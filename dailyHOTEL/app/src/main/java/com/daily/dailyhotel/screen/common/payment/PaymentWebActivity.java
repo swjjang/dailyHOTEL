@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.common;
+package com.daily.dailyhotel.screen.common.payment;
 
 import android.content.Context;
 import android.content.Intent;

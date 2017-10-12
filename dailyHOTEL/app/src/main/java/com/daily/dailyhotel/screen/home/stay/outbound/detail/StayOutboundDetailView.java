@@ -17,8 +17,6 @@ import android.graphics.drawable.shapes.RectShape;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.IdRes;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Html;
@@ -44,11 +42,11 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.base.BaseBlurView;
 import com.daily.dailyhotel.entity.CarouselListItem;
+import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
-import com.daily.dailyhotel.entity.StayOutboundDetailImage;
 import com.daily.dailyhotel.entity.StayOutboundRoom;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
@@ -83,11 +81,10 @@ import io.reactivex.Observable;
 import io.reactivex.Observer;
 
 public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.OnEventListener, ActivityStayOutboundDetailDataBinding>//
-    implements StayOutboundDetailViewInterface, View.OnClickListener, ViewPager.OnPageChangeListener, RadioGroup.OnCheckedChangeListener
+    implements StayOutboundDetailViewInterface, View.OnClickListener, RadioGroup.OnCheckedChangeListener
 {
     private static final int ANIMATION_DELAY = 250;
 
-    private StayOutboundDetailImageViewPagerAdapter mImageViewPagerAdapter;
     StayOutboundDetailRoomListAdapter mRoomTypeListAdapter;
 
     AnimatorSet mRoomAnimatorSet;
@@ -101,8 +98,6 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
         void onShareSmsClick();
 
         void onImageClick(int position);
-
-        void onImageSelected(int position);
 
         void onCalendarClick();
 
@@ -179,23 +174,15 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
 
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.nestedScrollView, getColor(R.color.default_over_scroll_edge));
 
-        mImageViewPagerAdapter = new StayOutboundDetailImageViewPagerAdapter(getContext());
-        viewDataBinding.imageLoopViewPager.setAdapter(mImageViewPagerAdapter);
-        viewDataBinding.viewpagerIndicator.setViewPager(viewDataBinding.imageLoopViewPager);
-
-        viewDataBinding.imageLoopViewPager.setOnPageChangeListener(this);
-        viewDataBinding.viewpagerIndicator.setOnPageChangeListener(this);
-
         // 객실 초기화
-        viewDataBinding.roomsViewDataBinding.roomTypeTextView.setText(R.string.act_hotel_search_room);
         viewDataBinding.roomsViewDataBinding.roomTypeTextView.setClickable(true);
+        viewDataBinding.roomsViewDataBinding.includeTaxTextView.setClickable(true);
         viewDataBinding.roomsViewDataBinding.priceOptionLayout.setVisibility(View.GONE);
 
         viewDataBinding.roomsViewDataBinding.roomRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.roomsViewDataBinding.roomRecyclerView, getColor(R.color.default_over_scroll_edge));
         viewDataBinding.roomsViewDataBinding.roomTypeLayout.setVisibility(View.INVISIBLE);
 
-        viewDataBinding.productTypeBackgroundView.setOnClickListener(this);
         viewDataBinding.roomsViewDataBinding.closeView.setOnClickListener(this);
 
         viewDataBinding.bottomLayout.setOnClickListener(new View.OnClickListener()
@@ -241,7 +228,6 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
         switch (v.getId())
         {
             case R.id.closeView:
-            case R.id.productTypeBackgroundView:
                 getEventListener().onHideRoomListClick(true);
                 break;
 
@@ -249,24 +235,6 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
                 getEventListener().onActionButtonClick();
                 break;
         }
-    }
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
-    {
-
-    }
-
-    @Override
-    public void onPageSelected(int position)
-    {
-        getEventListener().onImageSelected(position);
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state)
-    {
-
     }
 
     @Override
@@ -628,30 +596,21 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
 
         if (DailyTextUtils.isTextEmpty(url) == true)
         {
-            setViewPagerLineIndicatorVisible(false);
+            getViewDataBinding().imageLoopView.setLineIndicatorVisible(false);
             return;
         }
 
-        setViewPagerLineIndicatorVisible(true);
-
-        if (mImageViewPagerAdapter == null)
-        {
-            mImageViewPagerAdapter = new StayOutboundDetailImageViewPagerAdapter(getContext());
-        }
-
-        StayOutboundDetailImage detailImage = new StayOutboundDetailImage();
+        DetailImageInformation detailImage = new DetailImageInformation();
         ImageMap imageMap = new ImageMap();
         imageMap.smallUrl = url;
         imageMap.mediumUrl = url;
         imageMap.bigUrl = url;
         detailImage.setImageMap(imageMap);
 
-        List<StayOutboundDetailImage> imageList = new ArrayList<>();
+        List<DetailImageInformation> imageList = new ArrayList<>();
         imageList.add(detailImage);
 
-        mImageViewPagerAdapter.setData(imageList);
-        getViewDataBinding().imageLoopViewPager.setAdapter(mImageViewPagerAdapter);
-        getViewDataBinding().viewpagerIndicator.setViewPager(getViewDataBinding().imageLoopViewPager);
+        getViewDataBinding().imageLoopView.setImageList(imageList);
     }
 
     @Override
@@ -664,28 +623,8 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
 
         setInitializedImage(url);
 
-
         getViewDataBinding().transImageView.setImageURI(Uri.parse(url));
         getViewDataBinding().transNameTextView.setText(name);
-
-        if (mImageViewPagerAdapter == null)
-        {
-            mImageViewPagerAdapter = new StayOutboundDetailImageViewPagerAdapter(getContext());
-        }
-
-        StayOutboundDetailImage detailImage = new StayOutboundDetailImage();
-        ImageMap imageMap = new ImageMap();
-        imageMap.smallUrl = url;
-        imageMap.mediumUrl = url;
-        imageMap.bigUrl = url;
-        detailImage.setImageMap(imageMap);
-
-        List<StayOutboundDetailImage> imageList = new ArrayList<>();
-        imageList.add(detailImage);
-
-        mImageViewPagerAdapter.setData(imageList);
-        getViewDataBinding().imageLoopViewPager.setAdapter(mImageViewPagerAdapter);
-        getViewDataBinding().viewpagerIndicator.setViewPager(getViewDataBinding().imageLoopViewPager);
     }
 
     @Override
@@ -783,19 +722,6 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
                 getViewDataBinding().soldoutTextView.setVisibility(View.VISIBLE);
                 break;
             }
-        }
-    }
-
-    @Override
-    public void setDetailImageCaption(String caption)
-    {
-        if (DailyTextUtils.isTextEmpty(caption) == false)
-        {
-            getViewDataBinding().descriptionTextView.setVisibility(View.VISIBLE);
-            getViewDataBinding().descriptionTextView.setText(caption);
-        } else
-        {
-            getViewDataBinding().descriptionTextView.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -988,36 +914,14 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
         });
     }
 
-    private void setImageList(List<StayOutboundDetailImage> imageList)
+    private void setImageList(List<DetailImageInformation> imageList)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        if (imageList == null || imageList.size() == 0)
-        {
-            setViewPagerLineIndicatorVisible(false);
-            return;
-        } else if (imageList.size() == 1)
-        {
-            setViewPagerLineIndicatorVisible(false);
-        } else
-        {
-            setViewPagerLineIndicatorVisible(true);
-        }
-
-        setDetailImageCaption(imageList.get(0).caption);
-
-        if (mImageViewPagerAdapter == null)
-        {
-            mImageViewPagerAdapter = new StayOutboundDetailImageViewPagerAdapter(getContext());
-        }
-
-        mImageViewPagerAdapter.setData(imageList);
-        getViewDataBinding().imageLoopViewPager.setAdapter(mImageViewPagerAdapter);
-        getViewDataBinding().viewpagerIndicator.setViewPager(getViewDataBinding().imageLoopViewPager);
-        mImageViewPagerAdapter.notifyDataSetChanged();
+        getViewDataBinding().imageLoopView.setImageList(imageList);
     }
 
     /**
@@ -1039,7 +943,7 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
 
                 try
                 {
-                    getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+                    getViewDataBinding().imageLoopView.onTouchEvent(event);
                 } catch (Exception e)
                 {
                 }
@@ -1050,12 +954,12 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
             {
                 try
                 {
-                    getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+                    getViewDataBinding().imageLoopView.onTouchEvent(event);
                 } catch (Exception e)
                 {
                     event.setAction(MotionEvent.ACTION_CANCEL);
-                    event.setLocation(getViewDataBinding().imageLoopViewPager.getScrollX(), getViewDataBinding().imageLoopViewPager.getScrollY());
-                    getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+                    event.setLocation(getViewDataBinding().imageLoopView.getPageScrollX(), getViewDataBinding().imageLoopView.getPageScrollY());
+                    getViewDataBinding().imageLoopView.onTouchEvent(event);
                 }
             }
 
@@ -1070,12 +974,12 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
             {
                 try
                 {
-                    getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+                    getViewDataBinding().imageLoopView.onTouchEvent(event);
                 } catch (Exception e)
                 {
                     event.setAction(MotionEvent.ACTION_CANCEL);
-                    event.setLocation(getViewDataBinding().imageLoopViewPager.getScrollX(), getViewDataBinding().imageLoopViewPager.getScrollY());
-                    getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+                    event.setLocation(getViewDataBinding().imageLoopView.getPageScrollX(), getViewDataBinding().imageLoopView.getPageScrollY());
+                    getViewDataBinding().imageLoopView.onTouchEvent(event);
                 }
 
                 getViewDataBinding().nestedScrollView.setScrollingEnabled(true);
@@ -1084,7 +988,7 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
             @Override
             public void onImageClick()
             {
-                getEventListener().onImageClick(getViewDataBinding().imageLoopViewPager.getCurrentItem());
+                getEventListener().onImageClick(getViewDataBinding().imageLoopView.getPosition());
             }
         });
     }
@@ -1121,28 +1025,17 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
         // tripAdvisor
         if (stayOutboundDetail.tripAdvisorRating == 0.0f)
         {
-            viewDataBinding.tripAdvisorImageView.setVisibility(View.GONE);
-            viewDataBinding.tripAdvisorRatingBar.setVisibility(View.GONE);
-            viewDataBinding.tripAdvisorRatingTextView.setVisibility(View.GONE);
+            viewDataBinding.tripAdvisorLayout.setVisibility(View.GONE);
         } else
         {
-            viewDataBinding.tripAdvisorImageView.setVisibility(View.VISIBLE);
-            viewDataBinding.tripAdvisorRatingBar.setVisibility(View.VISIBLE);
-            viewDataBinding.tripAdvisorRatingTextView.setVisibility(View.VISIBLE);
+            viewDataBinding.tripAdvisorLayout.setVisibility(View.VISIBLE);
 
-            viewDataBinding.tripAdvisorRatingBar.setOnTouchListener(new View.OnTouchListener()
-            {
-                @Override
-                public boolean onTouch(View v, MotionEvent event)
-                {
-                    return true;
-                }
-            });
+            viewDataBinding.tripAdvisorRatingBar.setOnTouchListener((v, event) -> true);
             viewDataBinding.tripAdvisorRatingBar.setRating(stayOutboundDetail.tripAdvisorRating);
             viewDataBinding.tripAdvisorRatingTextView.setText(getString(R.string.label_stay_outbound_tripadvisor_rating, Float.toString(stayOutboundDetail.tripAdvisorRating)));
 
             // 별등급이 기본이 5개 이기 때문에 빈공간에도 내용이 존재한다.
-            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) viewDataBinding.tripAdvisorRatingTextView.getLayoutParams();
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) viewDataBinding.tripAdvisorRatingTextView.getLayoutParams();
             layoutParams.leftMargin = ScreenUtils.dpToPx(getContext(), 3) - ScreenUtils.dpToPx(getContext(), (5 - (int) Math.ceil(stayOutboundDetail.tripAdvisorRating)) * 10);
             viewDataBinding.tripAdvisorRatingTextView.setLayoutParams(layoutParams);
         }
@@ -1387,6 +1280,8 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
 
         Iterator<Map.Entry<String, List<String>>> iterator = informationMap.entrySet().iterator();
 
+        getViewDataBinding().descriptionsLayout.removeAllViews();
+
         while (iterator.hasNext() == true)
         {
             Map.Entry<String, List<String>> entry = iterator.next();
@@ -1481,24 +1376,6 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
         });
     }
 
-    private void setViewPagerLineIndicatorVisible(boolean visible)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        if (visible == true)
-        {
-            getViewDataBinding().moreIconView.setVisibility(View.VISIBLE);
-            getViewDataBinding().viewpagerIndicator.setVisibility(View.VISIBLE);
-        } else
-        {
-            getViewDataBinding().moreIconView.setVisibility(View.INVISIBLE);
-            getViewDataBinding().viewpagerIndicator.setVisibility(View.INVISIBLE);
-        }
-    }
-
     private void setRoomList(StayBookDateTime stayBookDateTime, List<StayOutboundRoom> roomList)
     {
         if (getViewDataBinding() == null || stayBookDateTime == null || roomList == null || roomList.size() == 0)
@@ -1533,26 +1410,8 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
             mRoomTypeListAdapter.setSelected(0);
         }
 
-        getViewDataBinding().roomsViewDataBinding.roomRecyclerView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        getViewDataBinding().roomsViewDataBinding.roomRecyclerView.requestLayout();
         getViewDataBinding().roomsViewDataBinding.roomRecyclerView.setAdapter(mRoomTypeListAdapter);
         getViewDataBinding().bookingTextView.setOnClickListener(this);
-
-        getViewDataBinding().roomsViewDataBinding.roomRecyclerView.postDelayed(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                int maxHeight = getViewDataBinding().getRoot().getHeight()//
-                    - getDimensionPixelSize(R.dimen.toolbar_height)//
-                    - ScreenUtils.dpToPx(getContext(), 116) - 1// - (객실 타이틀바 + 하단 하단 버튼) - 라인
-                    - (getViewDataBinding().roomsViewDataBinding.priceOptionLayout.getVisibility() == View.VISIBLE ? getViewDataBinding().roomsViewDataBinding.priceOptionLayout.getHeight() : 0);
-
-                int height = Math.min(maxHeight, getViewDataBinding().roomsViewDataBinding.roomRecyclerView.getHeight());
-                getViewDataBinding().roomsViewDataBinding.roomRecyclerView.getLayoutParams().height = height;
-                getViewDataBinding().roomsViewDataBinding.roomRecyclerView.requestLayout();
-            }
-        }, 100);
     }
 
     /**

@@ -24,8 +24,6 @@ public interface GourmetDetailViewInterface extends BaseDialogViewInterface
 
     void setBottomButtonLayout(int status);
 
-    void setDetailImageCaption(String caption);
-
     void showConciergeDialog(Dialog.OnDismissListener listener);
 
     void showShareDialog(Dialog.OnDismissListener listener);
@@ -33,6 +31,10 @@ public interface GourmetDetailViewInterface extends BaseDialogViewInterface
     void setWishCount(int count);
 
     void setWishSelected(boolean selected);
+
+    void showWishTooltip();
+
+    void hideWishTooltip();
 
     Observable<Boolean> showWishView(boolean myWish);
 

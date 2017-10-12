@@ -193,7 +193,7 @@ public class StayTrueReviewPresenter extends BaseExceptionPresenter<StayTrueRevi
         {
             screenLock(showProgress);
 
-            addCompositeDisposable(mStayRemoteImpl.getStayTrueReviews(mStayIndex, mLoadingPage, TRUE_REVIEW_MAX_COUNT)//
+            addCompositeDisposable(mStayRemoteImpl.getTrueReviews(mStayIndex, mLoadingPage, TRUE_REVIEW_MAX_COUNT)//
                 .observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<TrueReviews, Observable<Long>>()
                 {
                     @Override
@@ -224,7 +224,7 @@ public class StayTrueReviewPresenter extends BaseExceptionPresenter<StayTrueRevi
                 }));
         } else
         {
-            addCompositeDisposable(mStayRemoteImpl.getStayTrueReviews(mStayIndex, mLoadingPage, TRUE_REVIEW_MAX_COUNT).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<TrueReviews>()
+            addCompositeDisposable(mStayRemoteImpl.getTrueReviews(mStayIndex, mLoadingPage, TRUE_REVIEW_MAX_COUNT).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<TrueReviews>()
             {
                 @Override
                 public void accept(TrueReviews trueReviews) throws Exception

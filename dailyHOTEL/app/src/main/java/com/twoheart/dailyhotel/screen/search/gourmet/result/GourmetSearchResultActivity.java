@@ -909,26 +909,12 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                     View gradientTopView = view.findViewById(R.id.gradientTopView);
                     View gradientBottomView = view.findViewById(R.id.gradientView);
 
-                    Object mapTag = gradientBottomView.getTag();
-
-                    if (mapTag != null && "map".equals(mapTag) == true)
-                    {
-                        intent = GourmetDetailActivity.newInstance(GourmetSearchResultActivity.this //
-                            , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
-                            , mGourmetSearchCuration.getGourmetBookingDay().getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
-                            , gourmet.category, gourmet.isSoldOut, false, false, true//
-                            , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP//
-                            , analyticsParam);
-
-                    } else
-                    {
-                        intent = GourmetDetailActivity.newInstance(GourmetSearchResultActivity.this //
-                            , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
-                            , mGourmetSearchCuration.getGourmetBookingDay().getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
-                            , gourmet.category, gourmet.isSoldOut, false, false, true//
-                            , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST//
-                            , analyticsParam);
-                    }
+                    intent = GourmetDetailActivity.newInstance(GourmetSearchResultActivity.this //
+                        , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
+                        , mGourmetSearchCuration.getGourmetBookingDay().getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
+                        , gourmet.category, gourmet.isSoldOut, false, false, true//
+                        , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP//
+                        , analyticsParam);
 
                     optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(GourmetSearchResultActivity.this,//
                         android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//

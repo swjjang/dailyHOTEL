@@ -9,10 +9,8 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Build;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.transition.Transition;
 import android.transition.TransitionSet;
@@ -36,18 +34,15 @@ import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetDetail;
 import com.daily.dailyhotel.entity.GourmetMenu;
+import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.Sticker;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.view.DailyDetailEmptyView;
 import com.daily.dailyhotel.view.DailyToolbarView;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.drawable.ScalingUtils;
-import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.DraweeTransition;
-import com.facebook.imagepipeline.image.ImageInfo;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityGourmetDetailDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding;
@@ -79,10 +74,8 @@ import io.reactivex.Observable;
 import io.reactivex.Observer;
 
 public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventListener, ActivityGourmetDetailDataBinding>//
-    implements GourmetDetailViewInterface, View.OnClickListener, ViewPager.OnPageChangeListener
+    implements GourmetDetailViewInterface, View.OnClickListener
 {
-    private GourmetDetailImageViewPagerAdapter mImageViewPagerAdapter;
-
     LinearLayout mMoreMenuLayout;
     LayoutGourmetDetailMoreMenuDataBinding mLayoutGourmetDetailMoreMenuDataBinding;
 
@@ -100,8 +93,6 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         void onShareSmsClick();
 
         void onImageClick(int position);
-
-        void onImageSelected(int position);
 
         void onCalendarClick();
 
@@ -128,6 +119,8 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         void onMoreMenuClick();
 
         void onMenuClick(int index);
+
+        void onHideWishTooltipClick();
     }
 
     public GourmetDetailView(BaseActivity baseActivity, GourmetDetailView.OnEventListener listener)
@@ -183,13 +176,6 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.nestedScrollView, getColor(R.color.default_over_scroll_edge));
 
-        mImageViewPagerAdapter = new GourmetDetailImageViewPagerAdapter(getContext());
-        viewDataBinding.imageLoopViewPager.setAdapter(mImageViewPagerAdapter);
-        viewDataBinding.viewpagerIndicator.setViewPager(viewDataBinding.imageLoopViewPager);
-
-        viewDataBinding.imageLoopViewPager.setOnPageChangeListener(this);
-        viewDataBinding.viewpagerIndicator.setOnPageChangeListener(this);
-
         viewDataBinding.bottomLayout.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -200,6 +186,16 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         });
 
         viewDataBinding.wishAnimationView.setVisibility(View.GONE);
+
+        viewDataBinding.wishTooltipLayout.setVisibility(View.GONE);
+        viewDataBinding.wishTooltipLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onHideWishTooltipClick();
+            }
+        });
     }
 
     @Override
@@ -216,24 +212,6 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                 getEventListener().onCalendarClick();
                 break;
         }
-    }
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
-    {
-
-    }
-
-    @Override
-    public void onPageSelected(int position)
-    {
-        getEventListener().onImageSelected(position);
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state)
-    {
-
     }
 
     @Override
@@ -395,26 +373,21 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
         if (DailyTextUtils.isTextEmpty(url) == true)
         {
-            setViewPagerLineIndicatorVisible(false);
+            getViewDataBinding().imageLoopView.setLineIndicatorVisible(false);
             return;
         }
 
-        setViewPagerLineIndicatorVisible(true);
-
-        if (mImageViewPagerAdapter == null)
-        {
-            mImageViewPagerAdapter = new GourmetDetailImageViewPagerAdapter(getContext());
-        }
-
         DetailImageInformation detailImage = new DetailImageInformation();
-        detailImage.url = url;
+        ImageMap imageMap = new ImageMap();
+        imageMap.smallUrl = null;
+        imageMap.mediumUrl = url;
+        imageMap.bigUrl = url;
+        detailImage.setImageMap(imageMap);
 
         List<DetailImageInformation> imageList = new ArrayList<>();
         imageList.add(detailImage);
 
-        mImageViewPagerAdapter.setData(imageList);
-        getViewDataBinding().imageLoopViewPager.setAdapter(mImageViewPagerAdapter);
-        getViewDataBinding().viewpagerIndicator.setViewPager(getViewDataBinding().imageLoopViewPager);
+        getViewDataBinding().imageLoopView.setImageList(imageList);
     }
 
     @Override
@@ -427,24 +400,8 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
         setInitializedImage(url);
 
-
         getViewDataBinding().transImageView.setImageURI(Uri.parse(url));
         getViewDataBinding().transNameTextView.setText(name);
-
-        if (mImageViewPagerAdapter == null)
-        {
-            mImageViewPagerAdapter = new GourmetDetailImageViewPagerAdapter(getContext());
-        }
-
-        DetailImageInformation detailImage = new DetailImageInformation();
-        detailImage.url = url;
-
-        List<DetailImageInformation> imageList = new ArrayList<>();
-        imageList.add(detailImage);
-
-        mImageViewPagerAdapter.setData(imageList);
-        getViewDataBinding().imageLoopViewPager.setAdapter(mImageViewPagerAdapter);
-        getViewDataBinding().viewpagerIndicator.setViewPager(getViewDataBinding().imageLoopViewPager);
     }
 
     @Override
@@ -534,19 +491,6 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                 getViewDataBinding().bookingTextView.setVisibility(View.GONE);
                 getViewDataBinding().soldoutTextView.setVisibility(View.VISIBLE);
                 break;
-        }
-    }
-
-    @Override
-    public void setDetailImageCaption(String caption)
-    {
-        if (DailyTextUtils.isTextEmpty(caption) == false)
-        {
-            getViewDataBinding().descriptionTextView.setVisibility(View.VISIBLE);
-            getViewDataBinding().descriptionTextView.setText(caption);
-        } else
-        {
-            getViewDataBinding().descriptionTextView.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -779,6 +723,28 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                 });
             }
         }
+    }
+
+    @Override
+    public void showWishTooltip()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().wishTooltipLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideWishTooltip()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().wishTooltipLayout.setVisibility(View.GONE);
     }
 
     @Override
@@ -1079,29 +1045,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             return;
         }
 
-        if (imageList == null || imageList.size() == 0)
-        {
-            setViewPagerLineIndicatorVisible(false);
-            return;
-        } else if (imageList.size() == 1)
-        {
-            setViewPagerLineIndicatorVisible(false);
-        } else
-        {
-            setViewPagerLineIndicatorVisible(true);
-        }
-
-        setDetailImageCaption(imageList.get(0).caption);
-
-        if (mImageViewPagerAdapter == null)
-        {
-            mImageViewPagerAdapter = new GourmetDetailImageViewPagerAdapter(getContext());
-        }
-
-        mImageViewPagerAdapter.setData(imageList);
-        getViewDataBinding().imageLoopViewPager.setAdapter(mImageViewPagerAdapter);
-        getViewDataBinding().viewpagerIndicator.setViewPager(getViewDataBinding().imageLoopViewPager);
-        mImageViewPagerAdapter.notifyDataSetChanged();
+        getViewDataBinding().imageLoopView.setImageList(imageList);
     }
 
     /**
@@ -1123,7 +1067,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
                 try
                 {
-                    getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+                    getViewDataBinding().imageLoopView.onTouchEvent(event);
                 } catch (Exception e)
                 {
                 }
@@ -1134,12 +1078,12 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             {
                 try
                 {
-                    getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+                    getViewDataBinding().imageLoopView.onTouchEvent(event);
                 } catch (Exception e)
                 {
                     event.setAction(MotionEvent.ACTION_CANCEL);
-                    event.setLocation(getViewDataBinding().imageLoopViewPager.getScrollX(), getViewDataBinding().imageLoopViewPager.getScrollY());
-                    getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+                    event.setLocation(getViewDataBinding().imageLoopView.getPageScrollX(), getViewDataBinding().imageLoopView.getPageScrollY());
+                    getViewDataBinding().imageLoopView.onTouchEvent(event);
                 }
             }
 
@@ -1154,12 +1098,12 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             {
                 try
                 {
-                    getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+                    getViewDataBinding().imageLoopView.onTouchEvent(event);
                 } catch (Exception e)
                 {
                     event.setAction(MotionEvent.ACTION_CANCEL);
-                    event.setLocation(getViewDataBinding().imageLoopViewPager.getScrollX(), getViewDataBinding().imageLoopViewPager.getScrollY());
-                    getViewDataBinding().imageLoopViewPager.onTouchEvent(event);
+                    event.setLocation(getViewDataBinding().imageLoopView.getPageScrollX(), getViewDataBinding().imageLoopView.getPageScrollY());
+                    getViewDataBinding().imageLoopView.onTouchEvent(event);
                 }
 
                 getViewDataBinding().nestedScrollView.setScrollingEnabled(true);
@@ -1168,7 +1112,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             @Override
             public void onImageClick()
             {
-                getEventListener().onImageClick(getViewDataBinding().imageLoopViewPager.getCurrentItem());
+                getEventListener().onImageClick(getViewDataBinding().imageLoopView.getPosition());
             }
         });
     }
@@ -1187,7 +1131,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
         if (sticker == null)
         {
-            getViewDataBinding().stickerSimpleDraweeView.setVisibility(View.GONE);
+            getViewDataBinding().imageLoopView.setStickerVisible(false);
             return;
         }
 
@@ -1200,37 +1144,8 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             url = sticker.defaultImageUrl;
         }
 
-        if (DailyTextUtils.isTextEmpty(url) == true)
-        {
-            getViewDataBinding().stickerSimpleDraweeView.setVisibility(View.GONE);
-        } else
-        {
-            getViewDataBinding().stickerSimpleDraweeView.setVisibility(View.VISIBLE);
-        }
-
-        DraweeController controller = Fresco.newDraweeControllerBuilder().setControllerListener(new BaseControllerListener<ImageInfo>()
-        {
-            @Override
-            public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable)
-            {
-                ViewGroup.LayoutParams layoutParams = getViewDataBinding().stickerSimpleDraweeView.getLayoutParams();
-
-                int screenWidth = ScreenUtils.getScreenWidth(getContext());
-                if (screenWidth > Sticker.DEFAULT_SCREEN_WIDTH && screenWidth < Sticker.LARGE_SCREEN_WIDTH)
-                {
-                    layoutParams.width = (int) (Sticker.MEDIUM_RATE * imageInfo.getWidth());
-                    layoutParams.height = (int) (Sticker.MEDIUM_RATE * imageInfo.getHeight());
-                } else
-                {
-                    layoutParams.width = imageInfo.getWidth();
-                    layoutParams.height = imageInfo.getHeight();
-                }
-
-                getViewDataBinding().stickerSimpleDraweeView.setLayoutParams(layoutParams);
-            }
-        }).setUri(Uri.parse(url)).build();
-
-        getViewDataBinding().stickerSimpleDraweeView.setController(controller);
+        getViewDataBinding().imageLoopView.setStickerVisible(true);
+        getViewDataBinding().imageLoopView.setStickerUrl(url);
     }
 
     /**
@@ -1460,7 +1375,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             }
         });
 
-        if (gourmetMenu.getPrimaryImage() == null)
+        if (gourmetMenu.getPrimaryImage() == null || gourmetMenu.getPrimaryImage().getImageMap() == null)
         {
             viewDataBinding.simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_failure_image);
         } else
@@ -1479,7 +1394,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                 url = "android_gourmet_product_xxxhdpi";
             }
 
-            viewDataBinding.simpleDraweeView.setImageURI(Uri.parse(gourmetMenu.getPrimaryImage().url + "?impolicy=" + url));
+            viewDataBinding.simpleDraweeView.setImageURI(Uri.parse(gourmetMenu.getPrimaryImage().getImageMap().bigUrl + "?impolicy=" + url));
             viewDataBinding.simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder_s);
             viewDataBinding.simpleDraweeView.getHierarchy().setFailureImage(R.drawable.layerlist_failure_image);
         }
@@ -1520,7 +1435,9 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             viewDataBinding.timeTextView.setVisibility(View.GONE);
         } else
         {
-            String timeFormat = getString(R.string.label_office_hours) + " " + String.format(Locale.KOREA, "%s ~ %s", gourmetMenu.openTime, gourmetMenu.closeTime);
+            String closeTime = "00:00".equalsIgnoreCase(gourmetMenu.closeTime) ? "24:00" : gourmetMenu.closeTime;
+
+            String timeFormat = getString(R.string.label_office_hours) + " " + String.format(Locale.KOREA, "%s ~ %s", gourmetMenu.openTime, closeTime);
             viewDataBinding.timeTextView.setText(timeFormat);
             viewDataBinding.timeTextView.setVisibility(View.VISIBLE);
         }
@@ -1719,6 +1636,8 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
 
+        getViewDataBinding().descriptionsLayout.removeAllViews();
+
         for (LinkedHashMap<String, List<String>> descriptionMap : descriptionList)
         {
             Iterator<Map.Entry<String, List<String>>> iterator = descriptionMap.entrySet().iterator();
@@ -1816,25 +1735,6 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             }
         });
     }
-
-    private void setViewPagerLineIndicatorVisible(boolean visible)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        if (visible == true)
-        {
-            getViewDataBinding().moreIconView.setVisibility(View.VISIBLE);
-            getViewDataBinding().viewpagerIndicator.setVisibility(View.VISIBLE);
-        } else
-        {
-            getViewDataBinding().moreIconView.setVisibility(View.INVISIBLE);
-            getViewDataBinding().viewpagerIndicator.setVisibility(View.INVISIBLE);
-        }
-    }
-
 
     void showBottomLayout(boolean animation)
     {
