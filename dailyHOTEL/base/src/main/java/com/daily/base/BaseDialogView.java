@@ -211,6 +211,7 @@ public abstract class BaseDialogView<T1 extends OnBaseEventListener, T2 extends 
         dataBinding.messageTextView.setText(msg);
 
         // 체크 박스
+        dataBinding.checkBoxView.setVisibility(View.VISIBLE);
         dataBinding.checkBoxView.setText(checkBoxText);
         dataBinding.checkBoxView.setOnCheckedChangeListener(checkedChangeListener);
 
