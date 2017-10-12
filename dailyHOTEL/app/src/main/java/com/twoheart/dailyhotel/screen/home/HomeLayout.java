@@ -1503,7 +1503,8 @@ public class HomeLayout extends BaseBlurLayout
                 @Override
                 public void run()
                 {
-                    mDailyHomeScrollView.fullScroll(View.FOCUS_UP);
+//                    mDailyHomeScrollView.fullScroll(View.FOCUS_UP);
+                    mDailyHomeScrollView.smoothScrollTo(0, 0);
                 }
             }, 50);
         }

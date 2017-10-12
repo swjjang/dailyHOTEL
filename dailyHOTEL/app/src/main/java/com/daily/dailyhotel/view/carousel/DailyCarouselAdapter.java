@@ -657,11 +657,6 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
             dataBinding.contentImageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
             dataBinding.contentImageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
-            android.support.v4.util.Pair[] pairs = { //
-                android.support.v4.util.Pair.create(dataBinding.contentImageView, mContext.getResources().getString(R.string.transition_place_image)) //
-                , android.support.v4.util.Pair.create(dataBinding.gradientTopView, mContext.getResources().getString(R.string.transition_gradient_top_view)) //
-                , android.support.v4.util.Pair.create(dataBinding.gradientBottomView, mContext.getResources().getString(R.string.transition_gradient_bottom_view))};
-
             itemView.setOnClickListener(new View.OnClickListener()
             {
                 @Override
@@ -671,6 +666,11 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
                     {
                         return;
                     }
+
+                    android.support.v4.util.Pair[] pairs = { //
+                        android.support.v4.util.Pair.create(dataBinding.contentImageView, mContext.getResources().getString(R.string.transition_place_image)) //
+                        , android.support.v4.util.Pair.create(dataBinding.gradientTopView, mContext.getResources().getString(R.string.transition_gradient_top_view)) //
+                        , android.support.v4.util.Pair.create(dataBinding.gradientBottomView, mContext.getResources().getString(R.string.transition_gradient_bottom_view))};
 
                     mItemClickListener.onItemClick(v, pairs);
                 }
@@ -688,6 +688,11 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
                             return false;
                         } else
                         {
+                            android.support.v4.util.Pair[] pairs = { //
+                                android.support.v4.util.Pair.create(dataBinding.contentImageView, mContext.getResources().getString(R.string.transition_place_image)) //
+                                , android.support.v4.util.Pair.create(dataBinding.gradientTopView, mContext.getResources().getString(R.string.transition_gradient_top_view)) //
+                                , android.support.v4.util.Pair.create(dataBinding.gradientBottomView, mContext.getResources().getString(R.string.transition_gradient_bottom_view))};
+
                             Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
                             vibrator.vibrate(70);
 
