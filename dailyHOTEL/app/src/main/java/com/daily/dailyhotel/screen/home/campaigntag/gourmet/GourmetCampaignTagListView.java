@@ -13,12 +13,12 @@ import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.view.DailyCampaignTagTitleView;
 import com.facebook.imagepipeline.nativecode.NativeBlurFilter;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityPlaceCampaignTagListDataBinding;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -113,7 +113,7 @@ public class GourmetCampaignTagListView //
     }
 
     @Override
-    public void setData(ArrayList<PlaceViewItem> placeViewItemList, GourmetBookingDay gourmetBookingDay)
+    public void setData(ArrayList<PlaceViewItem> placeViewItemList, GourmetBookDateTime gourmetBookDateTime)
     {
         if (mRecyclerAdapter == null)
         {
@@ -137,7 +137,6 @@ public class GourmetCampaignTagListView //
             getViewDataBinding().campaignTitleLayout.setResultCount(resultCount);
         }
 
-        mRecyclerAdapter.setPlaceBookingDay(gourmetBookingDay);
         mRecyclerAdapter.setAll(placeViewItemList);
         mRecyclerAdapter.notifyDataSetChanged();
     }

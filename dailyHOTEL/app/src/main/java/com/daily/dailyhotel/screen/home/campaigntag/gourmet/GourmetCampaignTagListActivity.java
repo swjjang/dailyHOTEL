@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 
 /**
  * Created by android_sam on 2017. 8. 4..
@@ -18,17 +17,17 @@ public class GourmetCampaignTagListActivity extends BaseActivity<GourmetCampaign
 {
     protected static final String INTENT_EXTRA_DATA_INDEX = "index";
     protected static final String INTENT_EXTRA_DATA_TITLE = "title";
-    protected static final String INTENT_EXTRA_DATA_PLACEBOOKINGDAY = "placeBookingDay";
+    protected static final String INTENT_EXTRA_DATA_VISIT_DATE = "visitDate";
 
     protected static final int REQUEST_CODE_CALL = 10000;
 
-    public static Intent newInstance(Context context, int index, String hashTag, GourmetBookingDay gourmetBookingDay)
+    public static Intent newInstance(Context context, int index, String hashTag, String visitDate)
     {
         Intent intent = new Intent(context, GourmetCampaignTagListActivity.class);
 
         intent.putExtra(INTENT_EXTRA_DATA_INDEX, index);
         intent.putExtra(INTENT_EXTRA_DATA_TITLE, hashTag);
-        intent.putExtra(INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
+        intent.putExtra(INTENT_EXTRA_DATA_VISIT_DATE, visitDate);
 
         return intent;
     }

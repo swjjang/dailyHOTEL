@@ -3,7 +3,6 @@ package com.daily.dailyhotel.domain;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.GourmetCampaignTags;
 import com.daily.dailyhotel.entity.StayCampaignTags;
-import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 
 import java.util.ArrayList;
 
@@ -19,5 +18,5 @@ public interface CampaignTagInterface
 
     Observable<StayCampaignTags> getStayCampaignTags(int index, String checkInDate, int nights);
 
-    Observable<GourmetCampaignTags> getGourmetCampaignTags(int index, GourmetBookingDay gourmetBookingDay);
+    Observable<GourmetCampaignTags> getGourmetCampaignTags(int index, String visitDate);
 }
