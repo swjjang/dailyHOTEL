@@ -598,7 +598,7 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
                 }
             });
             dataBinding.tripAdvisorRatingBar.setRating(rating);
-            dataBinding.tripAdvisorRatingTextView.setText(mContext.getString(R.string.label_stay_outbound_tripadvisor_rating_type_none_bracket, Float.toString(rating)));
+            dataBinding.tripAdvisorRatingTextView.setText(mContext.getString(R.string.label_stay_outbound_tripadvisor_rating, Float.toString(rating)));
 
             // 별등급이 기본이 5개 이기 때문에 빈공간에도 내용이 존재한다.
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) dataBinding.tripAdvisorRatingTextView.getLayoutParams();

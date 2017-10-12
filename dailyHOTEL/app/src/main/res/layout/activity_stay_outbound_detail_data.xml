@@ -211,8 +211,10 @@
                     android:layout_height="wrap_content"
                     dailyCarousel:bottomMarginBackgroundColor="@color/transparent"
                     dailyCarousel:bottomMarginHeight="0dp"
+                    dailyCarousel:bottomLineHeight="0dp"
                     dailyCarousel:topMarginBackgroundColor="@color/default_background"
                     dailyCarousel:topMarginHeight="15dp"
+                    dailyCarousel:topLineHeight="1dp"
                     dailyCarousel:useAnimation="false"
                     dailyCarousel:useViewAllButton="false"/>
 
