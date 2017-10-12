@@ -307,6 +307,9 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
                         mDailyDeepLink.clear();
                         mDailyDeepLink = null;
+
+                        setRefresh(true);
+                        onRefresh(true);
                     }
                 }, new Consumer<Throwable>()
                 {
