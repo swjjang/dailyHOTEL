@@ -13,13 +13,13 @@ import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.view.DailyCampaignTagTitleView;
 import com.facebook.imagepipeline.nativecode.NativeBlurFilter;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityPlaceCampaignTagListDataBinding;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -114,7 +114,7 @@ public class StayCampaignTagListView //
     }
 
     @Override
-    public void setData(ArrayList<PlaceViewItem> placeViewItemList, StayBookingDay stayBookingDay)
+    public void setData(ArrayList<PlaceViewItem> placeViewItemList, StayBookDateTime stayBookDateTime)
     {
         if (mRecyclerAdapter == null)
         {
@@ -138,7 +138,17 @@ public class StayCampaignTagListView //
             getViewDataBinding().campaignTitleLayout.setResultCount(resultCount);
         }
 
-        mRecyclerAdapter.setPlaceBookingDay(stayBookingDay);
+        int nights;
+
+        try
+        {
+            nights = stayBookDateTime.getNights();
+        } catch (Exception e)
+        {
+            nights = 1;
+        }
+
+        mRecyclerAdapter.setNights(nights);
         mRecyclerAdapter.setAll(placeViewItemList);
         mRecyclerAdapter.notifyDataSetChanged();
     }

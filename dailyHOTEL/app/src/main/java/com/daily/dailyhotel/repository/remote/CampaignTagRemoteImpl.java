@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.daily.base.exception.BaseException;
-import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.CampaignTagInterface;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.GourmetCampaignTags;
@@ -13,7 +12,6 @@ import com.daily.dailyhotel.repository.remote.model.CampaignTagData;
 import com.daily.dailyhotel.repository.remote.model.GourmetCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.StayCampaignTagsData;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
-import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
@@ -73,19 +71,8 @@ public class CampaignTagRemoteImpl implements CampaignTagInterface
     }
 
     @Override
-    public Observable<StayCampaignTags> getStayCampaignTags(int index, StayBookingDay stayBookingDay)
+    public Observable<StayCampaignTags> getStayCampaignTags(int index, String checkInDate, int nights)
     {
-        String checkInDate = stayBookingDay.getCheckInDay("yyyy-MM-dd");
-
-        int nights = 1;
-        try
-        {
-            nights = stayBookingDay.getNights();
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
-
         return DailyMobileAPI.getInstance(mContext).getStayCampaignTags(index, checkInDate, nights).map(new Function<BaseDto<StayCampaignTagsData>, StayCampaignTags>()
         {
             @Override
