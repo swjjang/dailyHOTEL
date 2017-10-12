@@ -105,7 +105,7 @@ public class KakaoLinkManager implements Constants
                     .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
 
             String text = mContext.getString(R.string.kakao_btn_share_hotel, name, hotelName//
-                , stayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)"), stayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)"), nights, nights + 1, address);
+                , stayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)"), stayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)"), nights, nights + 1, address);
 
             if (DailyTextUtils.isTextEmpty(imageUrl) == false)
             {
