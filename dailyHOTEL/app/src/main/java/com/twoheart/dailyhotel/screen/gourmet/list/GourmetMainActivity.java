@@ -1336,7 +1336,7 @@ public class GourmetMainActivity extends PlaceMainActivity
             //                Intent intent = GourmetDetailActivity.newInstance(baseActivity, gourmetBookingDay, gourmetIndex, isShowCalendar, isShowVR, false);
             //                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 
-            Intent intent = com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.newInstance(this, dailyDeepLink.getDeepLink());
+            Intent intent = GourmetDetailActivity.newInstance(this, dailyDeepLink.getDeepLink());
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 
             overridePendingTransition(R.anim.slide_in_right, R.anim.hold);

@@ -1401,7 +1401,9 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             viewDataBinding.timeTextView.setVisibility(View.GONE);
         } else
         {
-            String timeFormat = getString(R.string.label_office_hours) + " " + String.format(Locale.KOREA, "%s ~ %s", gourmetMenu.openTime, gourmetMenu.closeTime);
+            String closeTime = "00:00".equalsIgnoreCase(gourmetMenu.closeTime) ? "24:00" : gourmetMenu.closeTime;
+
+            String timeFormat = getString(R.string.label_office_hours) + " " + String.format(Locale.KOREA, "%s ~ %s", gourmetMenu.openTime, closeTime);
             viewDataBinding.timeTextView.setText(timeFormat);
             viewDataBinding.timeTextView.setVisibility(View.VISIBLE);
         }

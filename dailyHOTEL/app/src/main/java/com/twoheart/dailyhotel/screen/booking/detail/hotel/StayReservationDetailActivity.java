@@ -32,12 +32,14 @@ import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.GourmetRemoteImpl;
 import com.daily.dailyhotel.screen.booking.detail.map.GourmetBookingDetailMapActivity;
 import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
@@ -55,7 +57,6 @@ import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
-import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.screen.review.ReviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -1270,8 +1271,15 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
                 stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
 
-                Intent intent = StayDetailActivity.newInstance(StayReservationDetailActivity.this, stayBookingDay//
-                    , mPlaceBookingDetail.isOverseas, mPlaceBookingDetail.placeIndex, 0, false, false, false);
+                //                Intent intent = StayDetailActivity.newInstance(StayReservationDetailActivity.this, stayBookingDay//
+                //                    , mPlaceBookingDetail.isOverseas, mPlaceBookingDetail.placeIndex, 0, false, false, false);
+
+                Intent intent = StayDetailActivity.newInstance(StayReservationDetailActivity.this //
+                    , mPlaceBookingDetail.placeIndex, mPlaceBookingDetail.placeName, null, StayDetailActivity.NONE_PRICE//
+                    , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                    , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+                    , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, new StayDetailAnalyticsParam());
+
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 
                 overridePendingTransition(R.anim.slide_in_right, R.anim.hold);

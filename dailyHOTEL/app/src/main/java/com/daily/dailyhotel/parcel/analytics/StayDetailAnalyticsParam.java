@@ -19,6 +19,7 @@ public class StayDetailAnalyticsParam implements Parcelable
     public int entryPosition = -1;
     public int totalListCount = -1;
     public boolean isDailyChoice;
+    public String gradeName;
 
     private String mAddressAreaName; // addressSummary 의 split 이름 stay.addressSummary.split("\\||l|ㅣ|I")  index : 0;
     private Province mProvince;

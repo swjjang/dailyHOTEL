@@ -2,6 +2,7 @@ package com.daily.dailyhotel.repository.remote.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.GourmetDetail;
 import com.daily.dailyhotel.entity.GourmetMenu;
@@ -313,17 +314,47 @@ public class GourmetDetailData
             gourmetMenu.menuBenefit = menuBenefit;
             gourmetMenu.needToKnow = needToKnow;
             gourmetMenu.reserveCondition = reserveCondition;
-            gourmetMenu.openTime = openTime;
-            gourmetMenu.closeTime = closeTime;
-            gourmetMenu.lastOrderTime = lastOrderTime;
+
+            if (DailyTextUtils.isTextEmpty(openTime) == false)
+            {
+                gourmetMenu.openTime = openTime.substring(0, 5); // hh:mm:ss -> hh:mm
+            }
+
+            if (DailyTextUtils.isTextEmpty(closeTime) == false)
+            {
+                gourmetMenu.closeTime = closeTime.substring(0, 5); // hh:mm:ss -> hh:mm
+            }
+
+            if (DailyTextUtils.isTextEmpty(lastOrderTime) == false)
+            {
+                gourmetMenu.lastOrderTime = lastOrderTime.substring(0, 5); // hh:mm:ss -> hh:mm
+            }
+
             gourmetMenu.menuSummary = menuSummary;
             gourmetMenu.persons = persons;
             gourmetMenu.minimumOrderQuantity = minimumOrderQuantity;
             gourmetMenu.maximumOrderQuantity = maximumOrderQuantity;
-            gourmetMenu.startEatingTime = startEatingTime;
-            gourmetMenu.endEatingTime = endEatingTime;
-            gourmetMenu.readyTime = readyTime;
-            gourmetMenu.expiryTime = expiryTime;
+
+            if (DailyTextUtils.isTextEmpty(startEatingTime) == false)
+            {
+                gourmetMenu.startEatingTime = startEatingTime.substring(0, 5); // hh:mm:ss -> hh:mm
+            }
+
+            if (DailyTextUtils.isTextEmpty(endEatingTime) == false)
+            {
+                gourmetMenu.endEatingTime = endEatingTime.substring(0, 5); // hh:mm:ss -> hh:mm
+            }
+
+            if (DailyTextUtils.isTextEmpty(readyTime) == false)
+            {
+                gourmetMenu.readyTime = readyTime.substring(0, 5); // hh:mm:ss -> hh:mm
+            }
+
+            if (DailyTextUtils.isTextEmpty(expiryTime) == false)
+            {
+                gourmetMenu.expiryTime = expiryTime.substring(0, 5); // hh:mm:ss -> hh:mm
+            }
+
             gourmetMenu.timeInterval = timeInterval;
 
             List<DetailImageInformation> detailImageInformationList = new ArrayList<>();
