@@ -635,8 +635,10 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
             return;
         }
 
-        getViewDataBinding().transImageView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
-        getViewDataBinding().transGradientBottomView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        int flag = visible ? View.VISIBLE : View.INVISIBLE;
+
+        getViewDataBinding().transImageView.setVisibility(flag);
+        getViewDataBinding().transGradientBottomView.setVisibility(flag);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
