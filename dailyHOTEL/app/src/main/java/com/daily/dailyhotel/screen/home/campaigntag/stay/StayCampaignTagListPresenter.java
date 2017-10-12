@@ -17,6 +17,7 @@ import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayCampaignTags;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
@@ -30,7 +31,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
-import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
@@ -65,7 +65,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
     int mTagIndex;
     int mListCountByLongPress;
     String mTitle;
-    StayBookingDay mStayBookingDay;
+    StayBookDateTime mStayBookDateTime;
     CommonDateTime mCommonDateTime;
     StayCampaignTags mStayCampaignTags;
     PlaceViewItem mPlaceViewItemByLongPress;
@@ -112,7 +112,26 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
 
         mTagIndex = intent.getIntExtra(StayCampaignTagListActivity.INTENT_EXTRA_DATA_INDEX, -1);
         mTitle = intent.getStringExtra(StayCampaignTagListActivity.INTENT_EXTRA_DATA_TITLE);
-        mStayBookingDay = intent.getParcelableExtra(StayCampaignTagListActivity.INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
+
+        StayBookDateTime stayBookDateTime = new StayBookDateTime();
+        try
+        {
+            String checkInDate = intent.getStringExtra(StayCampaignTagListActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE);
+            stayBookDateTime.setCheckInDateTime(checkInDate);
+
+            if (intent.hasExtra(StayCampaignTagListActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE) == true)
+            {
+                stayBookDateTime.setCheckOutDateTime(intent.getStringExtra(StayCampaignTagListActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE));
+            } else
+            {
+                stayBookDateTime.setCheckOutDateTime(checkInDate, 1);
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.getMessage());
+        }
+
+        mStayBookDateTime = stayBookDateTime;
 
         return true;
     }
@@ -212,14 +231,34 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
             case Constants.CODE_REQUEST_ACTIVITY_CALENDAR:
                 if (resultCode == Activity.RESULT_OK)
                 {
-                    mStayBookingDay = data.getParcelableExtra(StayCampaignTagListActivity.INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
-
-                    if (mStayBookingDay == null)
+                    try
                     {
+                        String checkInDate = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE);
+                        if (DailyTextUtils.isTextEmpty(checkInDate) == true)
+                        {
+                            return;
+                        }
+
+                        StayBookDateTime stayBookDateTime = new StayBookDateTime();
+                        stayBookDateTime.setCheckInDateTime(checkInDate);
+
+                        if (data.hasExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE) == true)
+                        {
+                            String checkOutDate = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE);
+                            stayBookDateTime.setCheckOutDateTime(checkOutDate);
+                        } else
+                        {
+                            stayBookDateTime.setCheckOutDateTime(checkInDate, 1);
+                        }
+
+                        mStayBookDateTime = stayBookDateTime;
+                    } catch (Exception e)
+                    {
+                        ExLog.e(e.getMessage());
                         return;
                     }
 
-                    setCalendarText(mStayBookingDay);
+                    setCalendarText(mStayBookDateTime);
 
                     setRefresh(true);
                 }
@@ -258,26 +297,37 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         screenLock(showProgress);
 
         // commonDateTime after campainTagList;
-        addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime().map(new Function<CommonDateTime, StayBookingDay>()
+        addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime().map(new Function<CommonDateTime, StayBookDateTime>()
         {
             @Override
-            public StayBookingDay apply(@io.reactivex.annotations.NonNull CommonDateTime commonDateTime) throws Exception
+            public StayBookDateTime apply(@io.reactivex.annotations.NonNull CommonDateTime commonDateTime) throws Exception
             {
                 mCommonDateTime = commonDateTime;
 
-                StayBookingDay stayBookingDay = mStayBookingDay == null //
-                    ? getStayBookingDay(mCommonDateTime) : mStayBookingDay;
+                StayBookDateTime stayBookDateTime = mStayBookDateTime == null //
+                    ? getStayBookDateTime(mCommonDateTime) : mStayBookDateTime;
 
-                return stayBookingDay;
+                return stayBookDateTime;
             }
-        }).observeOn(Schedulers.io()).flatMap(new Function<StayBookingDay, Observable<StayCampaignTags>>()
+        }).observeOn(Schedulers.io()).flatMap(new Function<StayBookDateTime, Observable<StayCampaignTags>>()
         {
             @Override
-            public Observable<StayCampaignTags> apply(@io.reactivex.annotations.NonNull StayBookingDay stayBookingDay) throws Exception
+            public Observable<StayCampaignTags> apply(@io.reactivex.annotations.NonNull StayBookDateTime stayBookDateTime) throws Exception
             {
-                mStayBookingDay = stayBookingDay;
+                mStayBookDateTime = stayBookDateTime;
 
-                return mCampaignTagRemoteImpl.getStayCampaignTags(mTagIndex, mStayBookingDay);
+                String checkInDate = stayBookDateTime.getCheckInDateTime("yyyy-MM-dd");
+
+                int nights = 1;
+                try
+                {
+                    nights = stayBookDateTime.getNights();
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+                }
+
+                return mCampaignTagRemoteImpl.getStayCampaignTags(mTagIndex, checkInDate, nights);
             }
         }).map(new Function<StayCampaignTags, ArrayList<PlaceViewItem>>()
         {
@@ -300,7 +350,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
             @Override
             public void accept(@io.reactivex.annotations.NonNull ArrayList<PlaceViewItem> placeViewItemList) throws Exception
             {
-                setCampaignTagLayout(mTitle, mCommonDateTime, mStayBookingDay, mStayCampaignTags, placeViewItemList);
+                setCampaignTagLayout(mTitle, mCommonDateTime, mStayBookDateTime, mStayCampaignTags, placeViewItemList);
 
                 unLockAll();
 
@@ -327,15 +377,15 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
     }
 
     public void setCampaignTagLayout(String title, CommonDateTime commonDateTime //
-        , StayBookingDay stayBookingDay, StayCampaignTags stayCampaignTags, ArrayList<PlaceViewItem> placeViewItemList)
+        , StayBookDateTime stayBookDateTime, StayCampaignTags stayCampaignTags, ArrayList<PlaceViewItem> placeViewItemList)
     {
         setTitleText(title);
-        setCalendarText(stayBookingDay);
+        setCalendarText(stayBookDateTime);
 
         // 서버에서 전달된 데이터가 없을때 종료된 태그로 설정!
         if (stayCampaignTags == null)
         {
-            setData(null, stayBookingDay);
+            setData(null, stayBookDateTime);
             showFinishedCampaignTagDialog();
             //            mIsFirstUiUpdateCheck = true;
             return;
@@ -346,7 +396,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         {
             if (Constants.ServiceType.HOTEL.name().equalsIgnoreCase(campaignTag.serviceType) == false)
             {
-                setData(null, stayBookingDay);
+                setData(null, stayBookDateTime);
                 showReCheckConnectionDialog();
                 //                mIsFirstUiUpdateCheck = true;
                 return;
@@ -357,7 +407,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         // 메세지코드로 종료된 팝업일때
         if (msgCode == 200)
         {
-            setData(null, stayBookingDay);
+            setData(null, stayBookDateTime);
             showFinishedCampaignTagDialog();
             //            mIsFirstUiUpdateCheck = true;
             return;
@@ -366,7 +416,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         // 메세지 코드로 조회된 데이터가 없을때
         if (msgCode == -101)
         {
-            setData(placeViewItemList, stayBookingDay);
+            setData(placeViewItemList, stayBookDateTime);
 
             //            if (mIsFirstUiUpdateCheck == false)
             //            {
@@ -395,12 +445,12 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         if (endTime < currentTime)
         {
             // 시간 체크시 종료 된 캠페인 태그 일때
-            setData(null, stayBookingDay);
+            setData(null, stayBookDateTime);
             showFinishedCampaignTagDialog();
         } else
         {
             // 일반적인 상황
-            setData(placeViewItemList, stayBookingDay);
+            setData(placeViewItemList, stayBookDateTime);
 
             //            ArrayList<Stay> list = stayCampaignTags.getStayList();
             //            if ((list == null || list.size() == 0) && mIsFirstUiUpdateCheck == false)
@@ -479,24 +529,24 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         return DailyTextUtils.isTextEmpty(campaignTagName) == true ? mTitle : campaignTagName;
     }
 
-    public void setCalendarText(StayBookingDay stayBookingDay)
+    public void setCalendarText(StayBookDateTime stayBookDateTime)
     {
-        getViewInterface().setCalendarText(getCalendarText(stayBookingDay));
+        getViewInterface().setCalendarText(getCalendarText(stayBookDateTime));
     }
 
-    private String getCalendarText(StayBookingDay stayBookingDay)
+    private String getCalendarText(StayBookDateTime stayBookDateTime)
     {
-        if (stayBookingDay == null)
+        if (stayBookDateTime == null)
         {
             return null;
         }
 
         try
         {
-            String checkInDate = stayBookingDay.getCheckInDay("yyyy.MM.dd(EEE)");
-            String checkOutDate = stayBookingDay.getCheckOutDay("yyyy.MM.dd(EEE)");
+            String checkInDate = stayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)");
+            String checkOutDate = stayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)");
 
-            int nights = stayBookingDay.getNights();
+            int nights = stayBookDateTime.getNights();
 
             return String.format(Locale.KOREA, "%s - %s, %d박", checkInDate, checkOutDate, nights);
         } catch (Exception e)
@@ -507,9 +557,9 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         return null;
     }
 
-    private void setData(ArrayList<PlaceViewItem> list, StayBookingDay stayBookingDay)
+    private void setData(ArrayList<PlaceViewItem> list, StayBookDateTime stayBookDateTime)
     {
-        getViewInterface().setData(list, stayBookingDay);
+        getViewInterface().setData(list, stayBookDateTime);
     }
 
     ArrayList<PlaceViewItem> makePlaceList(ArrayList<Stay> stayList)
@@ -551,7 +601,9 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
             , mCommonDateTime.dailyDateTime);
 
         Intent intent = StayCalendarActivity.newInstance(getActivity(), todayDateTime //
-            , mStayBookingDay, StayCalendarActivity.DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT //
+            , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT) //
+            , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT) //
+            , StayCalendarActivity.DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT //
             , AnalyticsManager.ValueType.SEARCH, true, true);
         startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
     }
@@ -630,8 +682,8 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
 
                 intent = StayDetailActivity.newInstance(getActivity() //
                     , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
-                    , mStayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
-                    , mStayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+                    , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                    , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                     , true, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST, analyticsParam);
             } else
             {
@@ -646,8 +698,8 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
 
                 intent = StayDetailActivity.newInstance(getActivity() //
                     , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
-                    , mStayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
-                    , mStayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+                    , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                    , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                     , true, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP, analyticsParam);
 
                 optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),//
@@ -671,8 +723,8 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
 
             Intent intent = StayDetailActivity.newInstance(getActivity() //
                 , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
-                , mStayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
-                , mStayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+                , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam);
 
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY_DETAIL);
@@ -704,29 +756,31 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         mPlaceViewItemByLongPress = placeViewItem;
         mListCountByLongPress = count;
 
-        Intent intent = StayPreviewActivity.newInstance(getActivity(), mStayBookingDay, stay);
+        Intent intent = StayPreviewActivity.newInstance(getActivity() //
+            , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT) //
+            , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT), stay);
 
         startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PREVIEW);
     }
 
-    StayBookingDay getStayBookingDay(CommonDateTime commonDateTime)
+    StayBookDateTime getStayBookDateTime(CommonDateTime commonDateTime)
     {
         if (commonDateTime == null)
         {
-            return mStayBookingDay;
+            return mStayBookDateTime;
         }
 
-        StayBookingDay stayBookingDay = new StayBookingDay();
+        StayBookDateTime stayBookDateTime = new StayBookDateTime();
 
         try
         {
-            stayBookingDay.setCheckInDay(commonDateTime.dailyDateTime);
-            stayBookingDay.setCheckOutDay(commonDateTime.dailyDateTime, 1);
+            stayBookDateTime.setCheckInDateTime(commonDateTime.dailyDateTime);
+            stayBookDateTime.setCheckOutDateTime(commonDateTime.dailyDateTime, 1);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
         }
 
-        return stayBookingDay;
+        return stayBookDateTime;
     }
 }

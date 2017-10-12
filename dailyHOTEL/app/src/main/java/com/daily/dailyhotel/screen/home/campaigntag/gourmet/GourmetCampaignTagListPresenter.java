@@ -17,6 +17,7 @@ import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetCampaignTags;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
@@ -30,7 +31,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
@@ -66,7 +66,7 @@ public class GourmetCampaignTagListPresenter //
     int mTagIndex;
     int mListCountByLongPress;
     String mTitle;
-    GourmetBookingDay mGourmetBookingDay;
+    GourmetBookDateTime mGourmetBookDateTime;
     CommonDateTime mCommonDateTime;
     GourmetCampaignTags mGourmetCampaignTags;
     PlaceViewItem mPlaceViewItemByLongPress;
@@ -113,7 +113,18 @@ public class GourmetCampaignTagListPresenter //
 
         mTagIndex = intent.getIntExtra(GourmetCampaignTagListActivity.INTENT_EXTRA_DATA_INDEX, -1);
         mTitle = intent.getStringExtra(GourmetCampaignTagListActivity.INTENT_EXTRA_DATA_TITLE);
-        mGourmetBookingDay = intent.getParcelableExtra(GourmetCampaignTagListActivity.INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
+
+        GourmetBookDateTime gourmetBookDateTime = new GourmetBookDateTime();
+        try
+        {
+            String visitDate = intent.getStringExtra(GourmetCampaignTagListActivity.INTENT_EXTRA_DATA_VISIT_DATE);
+            gourmetBookDateTime.setVisitDateTime(visitDate);
+        } catch (Exception e)
+        {
+            ExLog.e(e.getMessage());
+        }
+
+        mGourmetBookDateTime = gourmetBookDateTime;
 
         return true;
     }
@@ -213,14 +224,26 @@ public class GourmetCampaignTagListPresenter //
             case Constants.CODE_REQUEST_ACTIVITY_CALENDAR:
                 if (resultCode == Activity.RESULT_OK)
                 {
-                    mGourmetBookingDay = data.getParcelableExtra(GourmetCampaignTagListActivity.INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
-
-                    if (mGourmetBookingDay == null)
+                    try
                     {
+                        String visitDate = data.getStringExtra(GourmetCalendarActivity.INTENT_EXTRA_DATA_VISIT_DATE);
+
+                        if (DailyTextUtils.isTextEmpty(visitDate) == true)
+                        {
+                            return;
+                        }
+
+                        GourmetBookDateTime gourmetBookDateTime = new GourmetBookDateTime();
+                        gourmetBookDateTime.setVisitDateTime(visitDate);
+
+                        mGourmetBookDateTime = gourmetBookDateTime;
+                    } catch (Exception e)
+                    {
+                        ExLog.e(e.getMessage());
                         return;
                     }
 
-                    setCalendarText(mGourmetBookingDay);
+                    setCalendarText(mGourmetBookDateTime);
 
                     setRefresh(true);
                 }
@@ -259,26 +282,28 @@ public class GourmetCampaignTagListPresenter //
         screenLock(showProgress);
 
         // commonDateTime after campainTagList;
-        addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime().map(new Function<CommonDateTime, GourmetBookingDay>()
+        addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime().map(new Function<CommonDateTime, GourmetBookDateTime>()
         {
             @Override
-            public GourmetBookingDay apply(@io.reactivex.annotations.NonNull CommonDateTime commonDateTime) throws Exception
+            public GourmetBookDateTime apply(@io.reactivex.annotations.NonNull CommonDateTime commonDateTime) throws Exception
             {
                 mCommonDateTime = commonDateTime;
 
-                GourmetBookingDay gourmetBookingDay = mGourmetBookingDay == null //
-                    ? getGourmetBookingDay(mCommonDateTime) : mGourmetBookingDay;
+                GourmetBookDateTime gourmetBookDateTime = mGourmetBookDateTime == null //
+                    ? getGourmetBookDateTime(mCommonDateTime) : mGourmetBookDateTime;
 
-                return gourmetBookingDay;
+                return gourmetBookDateTime;
             }
-        }).observeOn(Schedulers.io()).flatMap(new Function<GourmetBookingDay, Observable<GourmetCampaignTags>>()
+        }).observeOn(Schedulers.io()).flatMap(new Function<GourmetBookDateTime, Observable<GourmetCampaignTags>>()
         {
             @Override
-            public Observable<GourmetCampaignTags> apply(@io.reactivex.annotations.NonNull GourmetBookingDay gourmetBookingDay) throws Exception
+            public Observable<GourmetCampaignTags> apply(@io.reactivex.annotations.NonNull GourmetBookDateTime gourmetBookDateTime) throws Exception
             {
-                mGourmetBookingDay = gourmetBookingDay;
+                mGourmetBookDateTime = gourmetBookDateTime;
 
-                return mCampaignTagRemoteImpl.getGourmetCampaignTags(mTagIndex, mGourmetBookingDay);
+                String visitDate = gourmetBookDateTime.getVisitDateTime("yyyy-MM-dd");
+
+                return mCampaignTagRemoteImpl.getGourmetCampaignTags(mTagIndex, visitDate);
             }
         }).map(new Function<GourmetCampaignTags, ArrayList<PlaceViewItem>>()
         {
@@ -301,7 +326,7 @@ public class GourmetCampaignTagListPresenter //
             @Override
             public void accept(@io.reactivex.annotations.NonNull ArrayList<PlaceViewItem> placeViewItemList) throws Exception
             {
-                setCampaignTagLayout(mTitle, mCommonDateTime, mGourmetBookingDay, mGourmetCampaignTags, placeViewItemList);
+                setCampaignTagLayout(mTitle, mCommonDateTime, mGourmetBookDateTime, mGourmetCampaignTags, placeViewItemList);
 
                 unLockAll();
 
@@ -328,15 +353,15 @@ public class GourmetCampaignTagListPresenter //
     }
 
     public void setCampaignTagLayout(String title, CommonDateTime commonDateTime //
-        , GourmetBookingDay gourmetBookingDay, GourmetCampaignTags gourmetCampaignTags, ArrayList<PlaceViewItem> placeViewItemList)
+        , GourmetBookDateTime gourmetBookDateTime, GourmetCampaignTags gourmetCampaignTags, ArrayList<PlaceViewItem> placeViewItemList)
     {
         setTitleText(title);
-        setCalendarText(gourmetBookingDay);
+        setCalendarText(gourmetBookDateTime);
 
         // 서버에서 전달된 데이터가 없을때 종료된 태그로 설정!
         if (gourmetCampaignTags == null)
         {
-            setData(null, gourmetBookingDay);
+            setData(null, gourmetBookDateTime);
             showFinishedCampaignTagDialog();
             //            mIsFirstUiUpdateCheck = true;
             return;
@@ -348,7 +373,7 @@ public class GourmetCampaignTagListPresenter //
             // 진입한 화면과 서버에서 내려받은 서비스 타입이 다른 경우 연결 체크 팝업 후 종료!
             if (Constants.ServiceType.GOURMET.name().equalsIgnoreCase(campaignTag.serviceType) == false)
             {
-                setData(null, gourmetBookingDay);
+                setData(null, gourmetBookDateTime);
                 showReCheckConnectionDialog();
                 //                mIsFirstUiUpdateCheck = true;
                 return;
@@ -359,7 +384,7 @@ public class GourmetCampaignTagListPresenter //
         // 메세지코드로 종료된 팝업일때
         if (msgCode == 200)
         {
-            setData(null, gourmetBookingDay);
+            setData(null, gourmetBookDateTime);
             showFinishedCampaignTagDialog();
             //            mIsFirstUiUpdateCheck = true;
             return;
@@ -368,7 +393,7 @@ public class GourmetCampaignTagListPresenter //
         // 메세지 코드로 조회된 데이터가 없을때
         if (msgCode == -101)
         {
-            setData(placeViewItemList, gourmetBookingDay);
+            setData(placeViewItemList, gourmetBookDateTime);
             //
             //            if (mIsFirstUiUpdateCheck == false)
             //            {
@@ -397,12 +422,12 @@ public class GourmetCampaignTagListPresenter //
         if (endTime < currentTime)
         {
             // 시간 체크시 종료 된 캠페인 태그 일때
-            setData(null, gourmetBookingDay);
+            setData(null, gourmetBookDateTime);
             showFinishedCampaignTagDialog();
         } else
         {
             // 일반적인 상황
-            setData(placeViewItemList, gourmetBookingDay);
+            setData(placeViewItemList, gourmetBookDateTime);
 
             //            ArrayList<Gourmet> list = gourmetCampaignTags.getGourmetList();
             //            if ((list == null || list.size() == 0) && mIsFirstUiUpdateCheck == false)
@@ -480,21 +505,21 @@ public class GourmetCampaignTagListPresenter //
         return (campaignTag == null || DailyTextUtils.isTextEmpty(campaignTag.campaignTag) == true) ? mTitle : campaignTag.campaignTag;
     }
 
-    public void setCalendarText(GourmetBookingDay stayBookingDay)
+    public void setCalendarText(GourmetBookDateTime gourmetBookDateTime)
     {
-        getViewInterface().setCalendarText(getCalendarText(stayBookingDay));
+        getViewInterface().setCalendarText(getCalendarText(gourmetBookDateTime));
     }
 
-    private String getCalendarText(GourmetBookingDay gourmetBookingDay)
+    private String getCalendarText(GourmetBookDateTime gourmetBookDateTime)
     {
-        if (gourmetBookingDay == null)
+        if (gourmetBookDateTime == null)
         {
             return null;
         }
 
         try
         {
-            return gourmetBookingDay.getVisitDay("yyyy.MM.dd(EEE)");
+            return gourmetBookDateTime.getVisitDateTime("yyyy.MM.dd(EEE)");
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -503,9 +528,9 @@ public class GourmetCampaignTagListPresenter //
         return null;
     }
 
-    private void setData(ArrayList<PlaceViewItem> list, GourmetBookingDay gourmetBookingDay)
+    private void setData(ArrayList<PlaceViewItem> list, GourmetBookDateTime gourmetBookDateTime)
     {
-        getViewInterface().setData(list, gourmetBookingDay);
+        getViewInterface().setData(list, gourmetBookDateTime);
     }
 
     ArrayList<PlaceViewItem> makePlaceList(ArrayList<Gourmet> gourmetList)
@@ -547,7 +572,8 @@ public class GourmetCampaignTagListPresenter //
             , mCommonDateTime.dailyDateTime);
 
         Intent intent = GourmetCalendarActivity.newInstance(getActivity(), todayDateTime //
-            , mGourmetBookingDay, GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT //
+            , mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT) //
+            , GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT //
             , AnalyticsManager.ValueType.SEARCH, true, true);
         startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_CALENDAR);
     }
@@ -617,7 +643,7 @@ public class GourmetCampaignTagListPresenter //
 
                 intent = GourmetDetailActivity.newInstance(getActivity() //
                     , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
-                    , mGourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
+                    , mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
                     , gourmet.category, gourmet.isSoldOut, false, false, true//
                     , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST//
                     , analyticsParam);
@@ -630,7 +656,7 @@ public class GourmetCampaignTagListPresenter //
 
                 intent = GourmetDetailActivity.newInstance(getActivity() //
                     , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
-                    , mGourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
+                    , mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
                     , gourmet.category, gourmet.isSoldOut, false, false, true//
                     , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP//
                     , analyticsParam);
@@ -647,7 +673,7 @@ public class GourmetCampaignTagListPresenter //
         {
             Intent intent = GourmetDetailActivity.newInstance(getActivity() //
                 , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
-                , mGourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
+                , mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , gourmet.category, gourmet.isSoldOut, false, false, false//
                 , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
                 , analyticsParam);
@@ -675,28 +701,29 @@ public class GourmetCampaignTagListPresenter //
         mPlaceViewItemByLongPress = placeViewItem;
         mListCountByLongPress = count;
 
-        Intent intent = GourmetPreviewActivity.newInstance(getActivity(), mGourmetBookingDay, gourmet);
+        Intent intent = GourmetPreviewActivity.newInstance(getActivity() //
+            , mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), gourmet);
 
         startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PREVIEW);
     }
 
-    GourmetBookingDay getGourmetBookingDay(CommonDateTime commonDateTime)
+    GourmetBookDateTime getGourmetBookDateTime(CommonDateTime commonDateTime)
     {
         if (commonDateTime == null)
         {
-            return mGourmetBookingDay;
+            return mGourmetBookDateTime;
         }
 
-        GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+        GourmetBookDateTime gourmetBookDateTime = new GourmetBookDateTime();
 
         try
         {
-            gourmetBookingDay.setVisitDay(commonDateTime.dailyDateTime);
+            gourmetBookDateTime.setVisitDateTime(commonDateTime.dailyDateTime);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
         }
 
-        return gourmetBookingDay;
+        return gourmetBookDateTime;
     }
 }

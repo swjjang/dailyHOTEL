@@ -318,7 +318,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         }
 
         Intent intent = GourmetCampaignTagListActivity.newInstance(getActivity() //
-            , index, title, mGourmetBookingDay);
+            , index, title, mGourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT));
 
         startActivityForResult(intent, REQUEST_CODE_GOURMET_CAMPAIGN_TAG_LIST);
     }
