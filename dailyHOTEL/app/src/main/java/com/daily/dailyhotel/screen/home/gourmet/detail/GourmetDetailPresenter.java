@@ -41,6 +41,7 @@ import com.daily.dailyhotel.screen.home.gourmet.detail.menus.GourmetMenusActivit
 import com.daily.dailyhotel.screen.home.gourmet.detail.truereview.GourmetTrueReviewActivity;
 import com.daily.dailyhotel.screen.home.gourmet.payment.GourmetPaymentActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -1184,6 +1185,13 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         }
     }
 
+    @Override
+    public void onHideWishTooltipClick()
+    {
+        DailyPreference.getInstance(getActivity()).setWishTooltip(false);
+        getViewInterface().hideWishTooltip();
+    }
+
     private void setStatus(int status)
     {
         mStatus = status;
@@ -1363,6 +1371,22 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         getViewInterface().setWishSelected(myWish);
     }
 
+    private void showWishTooltip()
+    {
+        getViewInterface().showWishTooltip();
+
+        addCompositeDisposable(Observable.timer(3, TimeUnit.SECONDS).subscribeOn(Schedulers.newThread())//
+            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Long>()
+            {
+                @Override
+                public void accept(Long aLong) throws Exception
+                {
+                    DailyPreference.getInstance(getActivity()).setWishTooltip(false);
+                    getViewInterface().hideWishTooltip();
+                }
+            }));
+    }
+
     private void startCalendar(CommonDateTime commonDateTime, GourmetBookDateTime gourmetBookDateTime//
         , int gourmetIndex, List<Integer> soldOutList, boolean animation) throws Exception
     {
@@ -1499,6 +1523,11 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 if (disposable != null)
                 {
                     disposable.dispose();
+                }
+
+                if (DailyPreference.getInstance(getActivity()).isWishTooltip() == true)
+                {
+                    showWishTooltip();
                 }
 
                 unLockAll();

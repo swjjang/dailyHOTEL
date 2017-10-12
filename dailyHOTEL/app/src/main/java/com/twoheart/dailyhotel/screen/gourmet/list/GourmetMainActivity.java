@@ -1020,25 +1020,12 @@ public class GourmetMainActivity extends PlaceMainActivity
                                 , analyticsParam);
                         } else
                         {
-                            Object mapTag = gradientBottomView.getTag();
-
-                            if (mapTag != null && "map".equals(mapTag) == true)
-                            {
-                                intent = GourmetDetailActivity.newInstance(GourmetMainActivity.this //
-                                    , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
-                                    , mGourmetCuration.getGourmetBookingDay().getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
-                                    , gourmet.category, gourmet.isSoldOut, false, false, true//
-                                    , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP//
-                                    , analyticsParam);
-                            } else
-                            {
-                                intent = GourmetDetailActivity.newInstance(GourmetMainActivity.this //
-                                    , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
-                                    , mGourmetCuration.getGourmetBookingDay().getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
-                                    , gourmet.category, gourmet.isSoldOut, false, false, true//
-                                    , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST//
-                                    , analyticsParam);
-                            }
+                            intent = GourmetDetailActivity.newInstance(GourmetMainActivity.this //
+                                , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
+                                , mGourmetCuration.getGourmetBookingDay().getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
+                                , gourmet.category, gourmet.isSoldOut, false, false, true//
+                                , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP//
+                                , analyticsParam);
 
                             optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(GourmetMainActivity.this,//
                                 android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//

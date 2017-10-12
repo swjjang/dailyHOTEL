@@ -42,9 +42,15 @@ public interface StayDetailViewInterface extends BaseDialogViewInterface
 
     void setWishSelected(boolean selected);
 
+    void showWishTooltip();
+
+    void hideWishTooltip();
+
     Observable<Boolean> showWishView(boolean myWish);
 
     void setTrueVRVisible(boolean visible);
 
     void showTrueVRDialog(CheckBox.OnCheckedChangeListener checkedChangeListener, View.OnClickListener positiveListener, Dialog.OnDismissListener onDismissListener);
+
+    void showStampDialog(Dialog.OnDismissListener listener);
 }

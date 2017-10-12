@@ -1229,7 +1229,26 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     @Override
     public void onStampClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
+        getViewInterface().showStampDialog(new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                unLockAll();
+            }
+        });
+    }
+
+    @Override
+    public void onHideWishTooltipClick()
+    {
+        DailyPreference.getInstance(getActivity()).setWishTooltip(false);
+        getViewInterface().hideWishTooltip();
     }
 
     @Override
@@ -1448,6 +1467,22 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         getViewInterface().setWishSelected(myWish);
     }
 
+    private void showWishTooltip()
+    {
+        getViewInterface().showWishTooltip();
+
+        addCompositeDisposable(Observable.timer(3, TimeUnit.SECONDS).subscribeOn(Schedulers.newThread())//
+            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Long>()
+            {
+                @Override
+                public void accept(Long aLong) throws Exception
+                {
+                    DailyPreference.getInstance(getActivity()).setWishTooltip(false);
+                    getViewInterface().hideWishTooltip();
+                }
+            }));
+    }
+
     private void startCalendar(CommonDateTime commonDateTime, StayBookDateTime stayBookDateTime//
         , int stayIndex, List<Integer> soldOutList, boolean animation) throws Exception
     {
@@ -1587,6 +1622,11 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 if (disposable != null)
                 {
                     disposable.dispose();
+                }
+
+                if (DailyPreference.getInstance(getActivity()).isWishTooltip() == true)
+                {
+                    showWishTooltip();
                 }
 
                 unLockAll();

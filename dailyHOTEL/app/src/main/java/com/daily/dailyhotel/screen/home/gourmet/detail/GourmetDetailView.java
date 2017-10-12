@@ -119,6 +119,8 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         void onMoreMenuClick();
 
         void onMenuClick(int index);
+
+        void onHideWishTooltipClick();
     }
 
     public GourmetDetailView(BaseActivity baseActivity, GourmetDetailView.OnEventListener listener)
@@ -184,6 +186,16 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         });
 
         viewDataBinding.wishAnimationView.setVisibility(View.GONE);
+
+        viewDataBinding.wishTooltipLayout.setVisibility(View.GONE);
+        viewDataBinding.wishTooltipLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onHideWishTooltipClick();
+            }
+        });
     }
 
     @Override
@@ -711,6 +723,28 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                 });
             }
         }
+    }
+
+    @Override
+    public void showWishTooltip()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().wishTooltipLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideWishTooltip()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().wishTooltipLayout.setVisibility(View.GONE);
     }
 
     @Override

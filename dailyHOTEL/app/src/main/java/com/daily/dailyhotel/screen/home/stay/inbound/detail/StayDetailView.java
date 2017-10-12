@@ -59,6 +59,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayDetailDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogShareDataBinding;
+import com.twoheart.dailyhotel.databinding.DialogStampEventDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailAmenitiesDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailBenefitContentBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailBenefitDataBinding;
@@ -138,6 +139,8 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         void onDownloadCouponClick();
 
         void onStampClick();
+
+        void onHideWishTooltipClick();
     }
 
     public StayDetailView(BaseActivity baseActivity, StayDetailView.OnEventListener listener)
@@ -199,6 +202,16 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
             public void onClick(View v)
             {
                 // do nothing - 판매 완료 버튼이 뚤리는 이슈 수정
+            }
+        });
+
+        viewDataBinding.wishTooltipLayout.setVisibility(View.GONE);
+        viewDataBinding.wishTooltipLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onHideWishTooltipClick();
             }
         });
     }
@@ -976,6 +989,28 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
     }
 
     @Override
+    public void showWishTooltip()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().wishTooltipLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideWishTooltip()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().wishTooltipLayout.setVisibility(View.GONE);
+    }
+
+    @Override
     public Observable<Boolean> showWishView(boolean myWish)
     {
         if (getViewDataBinding() == null)
@@ -1014,6 +1049,34 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
             , getString(R.string.dialog_btn_do_continue), getString(R.string.dialog_btn_text_close)//
             , checkedChangeListener, positiveListener//
             , null, null, onDismissListener, true);
+    }
+
+    @Override
+    public void showStampDialog(Dialog.OnDismissListener listener)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        DialogStampEventDataBinding viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_stamp_event_data, null, false);
+
+        // 상단
+        viewDataBinding.titleTextView.setText(DailyRemoteConfigPreference.getInstance(getContext()).getRemoteConfigStampStayDetailPopupTitle());
+
+        // 메시지
+        viewDataBinding.messageTextView.setText(DailyRemoteConfigPreference.getInstance(getContext()).getRemoteConfigStampStayDetailPopupMessage());
+
+        viewDataBinding.confirmTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                hideSimpleDialog();
+            }
+        });
+
+        showSimpleDialog(viewDataBinding.getRoot(), null, listener, true);
     }
 
     private void initToolbar(ActivityStayDetailDataBinding viewDataBinding)

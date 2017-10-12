@@ -32,6 +32,10 @@ public interface GourmetDetailViewInterface extends BaseDialogViewInterface
 
     void setWishSelected(boolean selected);
 
+    void showWishTooltip();
+
+    void hideWishTooltip();
+
     Observable<Boolean> showWishView(boolean myWish);
 
     void scrollTop();

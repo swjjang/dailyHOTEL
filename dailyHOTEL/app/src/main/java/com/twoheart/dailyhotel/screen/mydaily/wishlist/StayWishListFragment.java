@@ -351,11 +351,11 @@ public class StayWishListFragment extends PlaceWishListFragment
                 //                    , (StayBookingDay) mPlaceBookingDay, stay.index, stay.name, stay.imageUrl //
                 //                    , analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
 
-                Intent intent = com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity.newInstance(getActivity() //
+                Intent intent = StayDetailActivity.newInstance(getActivity() //
                     , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
                     , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
                     , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
-                    , false, com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam);
+                    , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam);
 
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 
