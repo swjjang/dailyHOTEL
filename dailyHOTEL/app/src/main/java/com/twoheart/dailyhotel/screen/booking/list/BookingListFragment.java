@@ -35,6 +35,7 @@ import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
+import com.daily.dailyhotel.screen.booking.cancel.BookingCancelListActivity;
 import com.daily.dailyhotel.screen.booking.detail.stay.outbound.StayOutboundBookingDetailActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
@@ -85,6 +86,8 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class BookingListFragment extends BaseMenuNavigationFragment implements View.OnClickListener
 {
+    static final int REQUEST_CODE_BOOKING_CANCEL = 10000;
+
     private BookingListAdapter mAdapter;
     FragmentBookingListDataBinding mViewDataBinding;
     boolean mDontReload;
@@ -173,7 +176,8 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
             @Override
             public void onClick(View v)
             {
-                // TODO : 취소내역 보기 화면 이동
+                Intent intent = BookingCancelListActivity.newInstance(getActivity());
+                startActivityForResult(intent, REQUEST_CODE_BOOKING_CANCEL);
             }
         });
 
