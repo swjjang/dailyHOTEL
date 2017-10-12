@@ -84,7 +84,7 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
         final RecentlyPlace recentlyPlace = placeViewItem.getItem();
 
         holder.gourmetCardView.setStickerVisible(false);
-        holder.gourmetCardView.setDeleteVisible(false);
+        holder.gourmetCardView.setDeleteVisible(true);
         holder.gourmetCardView.setWishVisible(false);
 
         // 스티커

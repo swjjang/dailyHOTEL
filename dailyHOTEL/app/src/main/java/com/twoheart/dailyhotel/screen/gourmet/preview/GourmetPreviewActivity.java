@@ -70,6 +70,28 @@ public class GourmetPreviewActivity extends BaseActivity
     }
 
     /**
+     * 캠페인태그 리스트에서 호출
+     *
+     * @param context
+     * @param visitDate
+     * @param gourmet
+     * @return
+     */
+    public static Intent newInstance(Context context, String visitDate, Gourmet gourmet)
+    {
+        Intent intent = new Intent(context, GourmetPreviewActivity.class);
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_VISIT_DATE, visitDate);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, gourmet.index);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, gourmet.name);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CATEGORY, gourmet.category);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_IS_SOLDOUT, gourmet.isSoldOut);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, gourmet.discountPrice);
+
+        return intent;
+    }
+
+    /**
      * 홈에서 호출
      *
      * @param context
@@ -141,7 +163,24 @@ public class GourmetPreviewActivity extends BaseActivity
         mPreviewLayout = new GourmetPreviewLayout(this, mOnEventListener);
         mNetworkController = new GourmetPreviewNetworkController(this, getNetworkTag(), mOnNetworkControllerListener);
 
-        mPlaceBookingDay = intent.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
+        if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_VISIT_DATE) == true)
+        {
+            GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+
+            try
+            {
+                String visitDate = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_VISIT_DATE);
+                gourmetBookingDay.setVisitDay(visitDate);
+            } catch (Exception e)
+            {
+                ExLog.e(e.getMessage());
+            }
+
+            mPlaceBookingDay = gourmetBookingDay;
+        } else
+        {
+            mPlaceBookingDay = intent.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
+        }
 
         int placeIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, -1);
         mPlaceDetail = new GourmetDetail(placeIndex);

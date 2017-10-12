@@ -3,8 +3,8 @@ package com.daily.dailyhotel.screen.home.campaigntag.gourmet;
 import android.app.Activity;
 
 import com.daily.base.BaseDialogViewInterface;
+import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 
 import java.util.ArrayList;
 
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public interface GourmetCampaignTagListInterface extends BaseDialogViewInterface
 {
-    void setData(ArrayList<PlaceViewItem> placeViewItemList, GourmetBookingDay gourmetBookingDay);
+    void setData(ArrayList<PlaceViewItem> placeViewItemList, GourmetBookDateTime gourmetBookDateTime);
 
     void setCalendarText(String text);
 

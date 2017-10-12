@@ -741,7 +741,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
         {
             if (selected == true)
             {
-                mToolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_OFF, DailyToolbarView.MenuItem.WISH_ON, wishCountText, new View.OnClickListener()
+                mToolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_OFF, DailyToolbarView.MenuItem.WISH_FILL_ON, wishCountText, new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
@@ -760,11 +760,11 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     }
                 });
             }
-        } else if (mToolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_ON) == true)
+        } else if (mToolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_FILL_ON) == true)
         {
             if (selected == true)
             {
-                mToolbarView.updateMenuItem(DailyToolbarView.MenuItem.WISH_ON, wishCountText, new View.OnClickListener()
+                mToolbarView.updateMenuItem(DailyToolbarView.MenuItem.WISH_FILL_ON, wishCountText, new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
@@ -774,7 +774,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 });
             } else
             {
-                mToolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_ON, DailyToolbarView.MenuItem.WISH_OFF, wishCountText, new View.OnClickListener()
+                mToolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_FILL_ON, DailyToolbarView.MenuItem.WISH_OFF, wishCountText, new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
@@ -789,7 +789,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
         {
             if (selected == true)
             {
-                mFakeToolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_OFF, DailyToolbarView.MenuItem.WISH_ON, wishCountText, new View.OnClickListener()
+                mFakeToolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_OFF, DailyToolbarView.MenuItem.WISH_LINE_ON, wishCountText, new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
@@ -808,11 +808,11 @@ public abstract class PlaceDetailActivity extends BaseActivity
                     }
                 });
             }
-        } else if (mFakeToolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_ON) == true)
+        } else if (mFakeToolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_LINE_ON) == true)
         {
             if (selected == true)
             {
-                mFakeToolbarView.updateMenuItem(DailyToolbarView.MenuItem.WISH_ON, wishCountText, new View.OnClickListener()
+                mFakeToolbarView.updateMenuItem(DailyToolbarView.MenuItem.WISH_LINE_ON, wishCountText, new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
@@ -822,7 +822,7 @@ public abstract class PlaceDetailActivity extends BaseActivity
                 });
             } else
             {
-                mFakeToolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_ON, DailyToolbarView.MenuItem.WISH_OFF, wishCountText, new View.OnClickListener()
+                mFakeToolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_LINE_ON, DailyToolbarView.MenuItem.WISH_OFF, wishCountText, new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)

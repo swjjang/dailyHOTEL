@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.time.StayBookingDay;
 
 /**
  * Created by android_sam on 2017. 8. 4..
@@ -18,17 +17,19 @@ public class StayCampaignTagListActivity extends BaseActivity<StayCampaignTagLis
 {
     protected static final String INTENT_EXTRA_DATA_INDEX = "index";
     protected static final String INTENT_EXTRA_DATA_TITLE = "title";
-    protected static final String INTENT_EXTRA_DATA_PLACEBOOKINGDAY = "placeBookingDay";
+    protected static final String INTENT_EXTRA_DATA_CHECK_IN_DATE = "checkInDate";
+    protected static final String INTENT_EXTRA_DATA_CHECK_OUT_DATE = "checkOutDate";
 
     protected static final int REQUEST_CODE_CALL = 10000;
 
-    public static Intent newInstance(Context context, int index, String hashTag, StayBookingDay stayBookingDay)
+    public static Intent newInstance(Context context, int index, String hashTag, String checkInDate, String checkOutDate)
     {
         Intent intent = new Intent(context, StayCampaignTagListActivity.class);
 
         intent.putExtra(INTENT_EXTRA_DATA_INDEX, index);
         intent.putExtra(INTENT_EXTRA_DATA_TITLE, hashTag);
-        intent.putExtra(INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE, checkInDate);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE, checkOutDate);
 
         return intent;
     }

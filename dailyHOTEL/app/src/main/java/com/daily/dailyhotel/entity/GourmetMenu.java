@@ -16,7 +16,7 @@ public class GourmetMenu
     public String closeTime;
     public String lastOrderTime;
     public String menuSummary;
-
+    public int persons;
     public int minimumOrderQuantity;
     public int maximumOrderQuantity;
     public String startEatingTime;
@@ -24,7 +24,6 @@ public class GourmetMenu
     public String readyTime;
     public String expiryTime;
     public int timeInterval;
-
 
     private List<DetailImageInformation> mDetailImageInformationList;
     private List<String> mMenuDetailList;

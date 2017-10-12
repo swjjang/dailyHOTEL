@@ -29,8 +29,6 @@ public class GourmetListFragment extends PlaceListFragment
 {
     protected GourmetCuration mGourmetCuration;
     private GourmetListLayout mGourmetListLayout;
-    protected List<Gourmet> mGourmetList = new ArrayList<>();
-
 
     public interface OnGourmetListFragmentListener extends OnPlaceListFragmentListener
     {
@@ -127,8 +125,6 @@ public class GourmetListFragment extends PlaceListFragment
             mPlaceCount = 0;
             mPlaceListLayout.clearList();
 
-            mGourmetList.clear();
-
             if (mGourmetCuration.getCurationOption().isDefaultFilter() == true)
             {
                 ((OnGourmetListFragmentListener) mOnPlaceListFragmentListener).onGourmetCategoryFilter(page, categoryCodeMap, categorySequenceMap);
@@ -146,11 +142,6 @@ public class GourmetListFragment extends PlaceListFragment
         }
 
         mPlaceCount += listSize;
-
-        if (list != null)
-        {
-            mGourmetList.addAll(list);
-        }
 
         SortType sortType = mGourmetCuration.getCurationOption().getSortType();
 

@@ -141,6 +141,36 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/personsLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="12dp"
+                        android:layout_marginTop="10dp"
+                        android:orientation="vertical">
+
+                        <com.daily.base.widget.DailyTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawablePadding="6dp"
+                            android:freezesText="true"
+                            android:gravity="center_vertical"
+                            android:text="@string/label_available_persons"
+                            android:textColor="@color/default_text_c929292"
+                            android:textSize="13dp"
+                            app:drawableCompatLeft="@drawable/vector_ic_detail_item_05_people"/>
+
+                        <com.daily.base.widget.DailyTextView
+                            android:id="@+id/personsTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="26dp"
+                            android:freezesText="true"
+                            android:textColor="@color/default_text_c323232"
+                            android:textSize="13dp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:id="@+id/checkLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

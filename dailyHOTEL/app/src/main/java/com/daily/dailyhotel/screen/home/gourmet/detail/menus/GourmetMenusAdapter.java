@@ -228,6 +228,16 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
             holder.dataBinding.timeTextView.setText(timeFormat);
         }
 
+        // 이용인원
+        if (gourmetMenu.persons > 1)
+        {
+            holder.dataBinding.personsLayout.setVisibility(View.VISIBLE);
+            holder.dataBinding.personsTextView.setText(mContext.getString(R.string.label_persons, gourmetMenu.persons));
+        } else
+        {
+            holder.dataBinding.personsLayout.setVisibility(View.GONE);
+        }
+
         // 확인사항
         if (DailyTextUtils.isTextEmpty(gourmetMenu.needToKnow) == true)
         {

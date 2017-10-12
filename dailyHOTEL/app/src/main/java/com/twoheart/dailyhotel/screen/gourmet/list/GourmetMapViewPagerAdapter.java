@@ -81,7 +81,7 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         if (gourmet.persons > 1)
         {
             persons.setVisibility(View.VISIBLE);
-            persons.setText(mContext.getString(R.string.label_persions, gourmet.persons));
+            persons.setText(mContext.getString(R.string.label_persons, gourmet.persons));
         } else
         {
             persons.setVisibility(View.GONE);
@@ -134,6 +134,7 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
             grade.setText(displayCategory);
         }
 
+        placeImageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
         Util.requestImageResize(mContext, placeImageView, gourmet.imageUrl);
 
         closeView.setOnClickListener(new View.OnClickListener()

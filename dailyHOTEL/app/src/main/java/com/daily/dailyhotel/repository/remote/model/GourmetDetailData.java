@@ -310,7 +310,7 @@ public class GourmetDetailData
             gourmetMenu.closeTime = closeTime;
             gourmetMenu.lastOrderTime = lastOrderTime;
             gourmetMenu.menuSummary = menuSummary;
-
+            gourmetMenu.persons = persons;
             gourmetMenu.minimumOrderQuantity = minimumOrderQuantity;
             gourmetMenu.maximumOrderQuantity = maximumOrderQuantity;
             gourmetMenu.startEatingTime = startEatingTime;

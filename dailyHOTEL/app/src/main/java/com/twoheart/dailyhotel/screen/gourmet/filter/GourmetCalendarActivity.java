@@ -30,6 +30,8 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
 {
     public static final int DEFAULT_CALENDAR_DAY_OF_MAX_COUNT = 30;
 
+    public static final String INTENT_EXTRA_DATA_VISIT_DATE = "visitDate";
+
     View mDayView;
     private TextView mConfirmTextView;
 
@@ -59,6 +61,21 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         return intent;
     }
 
+    public static Intent newInstance(Context context, TodayDateTime todayDateTime //
+        , String visitDate, int dayOfMaxCount, String screen //
+        , boolean isSelected, boolean isAnimation)
+    {
+        Intent intent = new Intent(context, GourmetCalendarActivity.class);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_VISIT_DATE, visitDate);
+        intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
+        intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
+        intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
+        intent.putExtra(INTENT_EXTRA_DATA_DAY_OF_MAXCOUNT, dayOfMaxCount);
+
+        return intent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -67,7 +84,26 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         Intent intent = getIntent();
 
         mTodayDateTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME);
-        mPlaceBookingDay = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
+
+        if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_VISIT_DATE) == true)
+        {
+            GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+
+            try
+            {
+                String visitDate = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_VISIT_DATE);
+                gourmetBookingDay.setVisitDay(visitDate);
+            } catch (Exception e)
+            {
+                ExLog.e(e.getMessage());
+            }
+
+            mPlaceBookingDay = gourmetBookingDay;
+        } else
+        {
+            mPlaceBookingDay = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
+        }
+
         mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_SCREEN);
         final boolean isSelected = intent.getBooleanExtra(INTENT_EXTRA_DATA_ISSELECTED, true);
         boolean isAnimation = intent.getBooleanExtra(INTENT_EXTRA_DATA_ANIMATION, false);
@@ -280,6 +316,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
     {
         Intent intent = new Intent();
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, placeBookingDay);
+        intent.putExtra(INTENT_EXTRA_DATA_VISIT_DATE, ((GourmetBookingDay) placeBookingDay).getVisitDay(DailyCalendar.ISO_8601_FORMAT));
 
         setResult(resultCode, intent);
     }

@@ -348,7 +348,7 @@ public class DailyGourmetCardView extends ConstraintLayout
             mViewDataBinding.discountPriceTextView.setText(decimalFormat.format(discountPrice));
             mViewDataBinding.discountPriceWonTextView.setVisibility(VISIBLE);
             mViewDataBinding.discountPriceWonTextView.setText(person > 1 ?//
-                getContext().getString(R.string.currency) + "/" + getContext().getString(R.string.label_persions, person) : getContext().getString(R.string.currency));
+                getContext().getString(R.string.currency) + "/" + getContext().getString(R.string.label_persons, person) : getContext().getString(R.string.currency));
         } else
         {
             mViewDataBinding.discountPriceTextView.setText(R.string.label_soldout);

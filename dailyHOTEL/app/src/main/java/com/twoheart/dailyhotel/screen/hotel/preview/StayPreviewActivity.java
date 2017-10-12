@@ -24,7 +24,6 @@ import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.network.model.StayProduct;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -61,6 +60,29 @@ public class StayPreviewActivity extends BaseActivity
         Intent intent = new Intent(context, StayPreviewActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, stay.index);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, stay.name);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, stay.discountPrice);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, stay.getGrade().name());
+
+        return intent;
+    }
+
+    /**
+     * 캠페인 태그 리스트에서 호출
+     *
+     * @param context
+     * @param checkInDate
+     * @param checkOutDate
+     * @param stay
+     * @return
+     */
+    public static Intent newInstance(Context context, String checkInDate, String checkOutDate, Stay stay)
+    {
+        Intent intent = new Intent(context, StayPreviewActivity.class);
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE, checkInDate);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE, checkOutDate);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, stay.index);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, stay.name);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, stay.discountPrice);
@@ -149,7 +171,32 @@ public class StayPreviewActivity extends BaseActivity
         mPreviewLayout = new StayPreviewLayout(this, mOnEventListener);
         mNetworkController = new StayPreviewNetworkController(this, getNetworkTag(), mOnNetworkControllerListener);
 
-        mPlaceBookingDay = intent.getParcelableExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
+        if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE) == true)
+        {
+            StayBookingDay stayBookingDay = new StayBookingDay();
+
+            try
+            {
+                String checkInDate = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE);
+                stayBookingDay.setCheckInDay(checkInDate);
+
+                if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE) == true)
+                {
+                    stayBookingDay.setCheckOutDay(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE));
+                } else
+                {
+                    stayBookingDay.setCheckOutDay(checkInDate, 1);
+                }
+            } catch (Exception e)
+            {
+                ExLog.e(e.getMessage());
+            }
+
+            mPlaceBookingDay = stayBookingDay;
+        } else
+        {
+            mPlaceBookingDay = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
+        }
 
         int placeIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, -1);
         mPlaceDetail = new StayDetail(placeIndex);
