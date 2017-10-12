@@ -9,6 +9,7 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.twoheart.dailyhotel.R;
 
 /**
@@ -21,6 +22,7 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
 
     private CommonRemoteImpl mCommonRemoteImpl;
     private BookingRemoteImpl mBookingRemoteImpl;
+    private ProfileRemoteImpl mProfileRemoteImpl;
 
     public interface BookingCancelListAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -47,6 +49,7 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
 
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
         mBookingRemoteImpl = new BookingRemoteImpl(activity);
+        mProfileRemoteImpl = new ProfileRemoteImpl(activity);
 
         setRefresh(true);
     }
@@ -71,6 +74,7 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
     @Override
     public void onPostCreate()
     {
+        getViewInterface().setToolbarTitle(getString(R.string.actionbar_title_booking_cancel_list_activity));
     }
 
     @Override
