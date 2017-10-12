@@ -341,7 +341,8 @@ public class StaySearchFragment extends PlaceSearchFragment
     public void startCampaignTagList(int index, String title)
     {
         Intent intent = StayCampaignTagListActivity.newInstance(getActivity() //
-            , index, title, mStayBookingDay);
+            , index, title, mStayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT) //
+            , mStayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT));
 
         startActivityForResult(intent, REQUEST_CODE_STAY_CAMPAIGN_TAG_LIST);
     }

@@ -3,8 +3,8 @@ package com.daily.dailyhotel.screen.home.campaigntag.stay;
 import android.app.Activity;
 
 import com.daily.base.BaseDialogViewInterface;
+import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.time.StayBookingDay;
 
 import java.util.ArrayList;
 
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public interface StayCampaignTagListInterface extends BaseDialogViewInterface
 {
-    void setData(ArrayList<PlaceViewItem> placeViewItemList, StayBookingDay stayBookingDay);
+    void setData(ArrayList<PlaceViewItem> placeViewItemList, StayBookDateTime stayBookDateTime);
 
     void setCalendarText(String text);
 
