@@ -1428,83 +1428,83 @@ public class StayCategoryTabActivity extends PlaceMainActivity
     // Deep Link - 해당 경우는 고려하지 않아도 되나 임시로 넣어 둠
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-//    boolean moveDeepLinkDetail(BaseActivity baseActivity, TodayDateTime todayDateTime, DailyDeepLink dailyDeepLink)
-//    {
-//        if (dailyDeepLink == null)
-//        {
-//            return false;
-//        }
-//
-//        try
-//        {
-//            if (dailyDeepLink.isExternalDeepLink() == true)
-//            {
-//                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
-//
-//                // 신규 타입의 화면이동
-//                int hotelIndex = Integer.parseInt(externalDeepLink.getIndex());
-//                int nights = 1;
-//
-//                try
-//                {
-//                    nights = Integer.parseInt(externalDeepLink.getNights());
-//                } catch (Exception e)
-//                {
-//                    ExLog.d(e.toString());
-//                } finally
-//                {
-//                    if (nights <= 0)
-//                    {
-//                        nights = 1;
-//                    }
-//                }
-//
-//                String date = externalDeepLink.getDate();
-//                int datePlus = externalDeepLink.getDatePlus();
-//                boolean isShowCalendar = externalDeepLink.isShowCalendar();
-//                boolean isShowVR = externalDeepLink.isShowVR();
-//                int ticketIndex = externalDeepLink.getOpenTicketIndex();
-//                boolean overseas = externalDeepLink.getIsOverseas();
-//
-//                StayBookingDay stayBookingDay = new StayBookingDay();
-//
-//                if (DailyTextUtils.isTextEmpty(date) == false)
-//                {
-//                    Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
-//                    stayBookingDay.setCheckInDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
-//                } else if (datePlus >= 0)
-//                {
-//                    stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime, datePlus);
-//                } else
-//                {
-//                    stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime);
-//                }
-//
-//                stayBookingDay.setCheckOutDay(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), nights);
-//
-//                mStayCategoryCuration.setStayBookingDay(stayBookingDay);
-//
-//                Intent intent = StayDetailActivity.newInstance(baseActivity, stayBookingDay, overseas, hotelIndex, ticketIndex, isShowCalendar, isShowVR, false);
-//                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
-//
-//                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-//
-//                mIsDeepLink = true;
-//            } else
-//            {
-//
-//            }
-//        } catch (Exception e)
-//        {
-//            ExLog.e(e.toString());
-//            return false;
-//        } finally
-//        {
-//            dailyDeepLink.clear();
-//        }
-//
-//        return true;
-//    }
+    //    boolean moveDeepLinkDetail(BaseActivity baseActivity, TodayDateTime todayDateTime, DailyDeepLink dailyDeepLink)
+    //    {
+    //        if (dailyDeepLink == null)
+    //        {
+    //            return false;
+    //        }
+    //
+    //        try
+    //        {
+    //            if (dailyDeepLink.isExternalDeepLink() == true)
+    //            {
+    //                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+    //
+    //                // 신규 타입의 화면이동
+    //                int hotelIndex = Integer.parseInt(externalDeepLink.getIndex());
+    //                int nights = 1;
+    //
+    //                try
+    //                {
+    //                    nights = Integer.parseInt(externalDeepLink.getNights());
+    //                } catch (Exception e)
+    //                {
+    //                    ExLog.d(e.toString());
+    //                } finally
+    //                {
+    //                    if (nights <= 0)
+    //                    {
+    //                        nights = 1;
+    //                    }
+    //                }
+    //
+    //                String date = externalDeepLink.getDate();
+    //                int datePlus = externalDeepLink.getDatePlus();
+    //                boolean isShowCalendar = externalDeepLink.isShowCalendar();
+    //                boolean isShowVR = externalDeepLink.isShowVR();
+    //                int ticketIndex = externalDeepLink.getOpenTicketIndex();
+    //                boolean overseas = externalDeepLink.getIsOverseas();
+    //
+    //                StayBookingDay stayBookingDay = new StayBookingDay();
+    //
+    //                if (DailyTextUtils.isTextEmpty(date) == false)
+    //                {
+    //                    Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
+    //                    stayBookingDay.setCheckInDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
+    //                } else if (datePlus >= 0)
+    //                {
+    //                    stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime, datePlus);
+    //                } else
+    //                {
+    //                    stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime);
+    //                }
+    //
+    //                stayBookingDay.setCheckOutDay(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), nights);
+    //
+    //                mStayCategoryCuration.setStayBookingDay(stayBookingDay);
+    //
+    //                Intent intent = StayDetailActivity.newInstance(baseActivity, stayBookingDay, overseas, hotelIndex, ticketIndex, isShowCalendar, isShowVR, false);
+    //                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+    //
+    //                overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+    //
+    //                mIsDeepLink = true;
+    //            } else
+    //            {
+    //
+    //            }
+    //        } catch (Exception e)
+    //        {
+    //            ExLog.e(e.toString());
+    //            return false;
+    //        } finally
+    //        {
+    //            dailyDeepLink.clear();
+    //        }
+    //
+    //        return true;
+    //    }
 
     private Province searchDeeLinkRegion(int provinceIndex, int areaIndex, boolean isOverseas, //
                                          List<Province> provinceList, List<Area> areaList)

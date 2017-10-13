@@ -850,7 +850,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         }
 
         getViewDataBinding().nestedScrollView.smoothScrollTo(0, 0);
-//        getViewDataBinding().nestedScrollView.fullScroll(View.FOCUS_UP);
+        //        getViewDataBinding().nestedScrollView.fullScroll(View.FOCUS_UP);
     }
 
     @Override

@@ -50,14 +50,13 @@ public class StayOutboundDetailActivity extends BaseActivity<StayOutboundDetailP
     public static final int TRANS_GRADIENT_BOTTOM_TYPE_LIST = 2;
 
     /**
-     *
      * @param context
      * @param stayIndex
      * @param stayName
      * @param imageUrl
-     * @param listTotalPrice totalPrice가 넘어온다. 평균가로 했더니 리스트와 상세에서 서버 계산이 다른 경우가 발생했다.
-     * @param checkInDateTime   ISO-8601
-     * @param checkOutDateTime  ISO-8601
+     * @param listTotalPrice        totalPrice가 넘어온다. 평균가로 했더니 리스트와 상세에서 서버 계산이 다른 경우가 발생했다.
+     * @param checkInDateTime       ISO-8601
+     * @param checkOutDateTime      ISO-8601
      * @param numberOfAdults
      * @param childList
      * @param isUsedMultiTransition
