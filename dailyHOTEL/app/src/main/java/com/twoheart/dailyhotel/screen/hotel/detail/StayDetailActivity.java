@@ -57,7 +57,6 @@ import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceDetailNetworkController;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.ImageDetailListActivity;
-import com.twoheart.dailyhotel.screen.common.TrueVRActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
@@ -1194,8 +1193,8 @@ public class StayDetailActivity extends PlaceDetailActivity
                     @Override
                     public void onState(View view, boolean checked)
                     {
-                        startActivityForResult(TrueVRActivity.newInstance(StayDetailActivity.this, mPlaceDetail.index, mTrueVRParamsList//
-                            , PlaceType.HOTEL, ((StayDetail) mPlaceDetail).getStayDetailParams().category), CODE_REQUEST_ACTIVITY_TRUEVIEW);
+                        //                        startActivityForResult(TrueVRActivity.newInstance(StayDetailActivity.this, mPlaceDetail.index, mTrueVRParamsList//
+                        //                            , PlaceType.HOTEL, ((StayDetail) mPlaceDetail).getStayDetailParams().category), CODE_REQUEST_ACTIVITY_TRUEVIEW);
                     }
                 }, null, null, new OnCheckDialogStateListener()
                 {
@@ -1208,8 +1207,8 @@ public class StayDetailActivity extends PlaceDetailActivity
                 }, true);
         } else
         {
-            startActivityForResult(TrueVRActivity.newInstance(StayDetailActivity.this, mPlaceDetail.index, mTrueVRParamsList//
-                , PlaceType.HOTEL, ((StayDetail) mPlaceDetail).getStayDetailParams().category), CODE_REQUEST_ACTIVITY_TRUEVIEW);
+            //            startActivityForResult(TrueVRActivity.newInstance(StayDetailActivity.this, mPlaceDetail.index, mTrueVRParamsList//
+            //                , PlaceType.HOTEL, ((StayDetail) mPlaceDetail).getStayDetailParams().category), CODE_REQUEST_ACTIVITY_TRUEVIEW);
         }
 
         try

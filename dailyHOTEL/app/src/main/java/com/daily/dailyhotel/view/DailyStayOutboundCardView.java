@@ -275,7 +275,7 @@ public class DailyStayOutboundCardView extends ConstraintLayout
         }
 
         mViewDataBinding.stayNameTextView.setText(stayName);
-        mViewDataBinding.stayEnglishNameTextView.setText(stayEnglishName);
+        mViewDataBinding.stayEnglishNameTextView.setText("(" + stayEnglishName + ")");
     }
 
     public void setDistanceVisible(boolean visible)

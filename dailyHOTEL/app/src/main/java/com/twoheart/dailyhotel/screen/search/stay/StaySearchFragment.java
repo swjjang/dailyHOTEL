@@ -11,8 +11,9 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.RecentlyPlace;
-import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
+import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
@@ -23,10 +24,8 @@ import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.StayKeyword;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.fragment.PlaceSearchFragment;
-import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetSearchCalendarActivity;
-import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StaySearchCalendarActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
@@ -883,14 +882,45 @@ public class StaySearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            AnalyticsParam analyticsParam = new AnalyticsParam();
-            analyticsParam.setParam(getActivity(), place);
+            StayDetailAnalyticsParam analyticsParam = new StayDetailAnalyticsParam();
+            analyticsParam.setAddressAreaName(place.addrSummary);
+
+            if (place.prices != null)
+            {
+                analyticsParam.price = place.prices.normalPrice;
+
+                if (place.prices.discountPrice > 0)
+                {
+                    analyticsParam.discountPrice = place.prices.discountPrice;
+                }
+            } else
+            {
+                analyticsParam.price = 0;
+                analyticsParam.discountPrice = 0;
+            }
+
+            analyticsParam.setShowOriginalPriceYn(analyticsParam.price, analyticsParam.discountPrice);
             analyticsParam.setProvince(null);
-            analyticsParam.setTotalListCount(0);
+            analyticsParam.entryPosition = -1;
+            analyticsParam.totalListCount = -1;
+            analyticsParam.isDailyChoice = false;
+            analyticsParam.gradeName = place.details.grade;
+
+            //            AnalyticsParam analyticsParam = new AnalyticsParam();
+            //            analyticsParam.setParam(getActivity(), place);
+            //            analyticsParam.setProvince(null);
+            //            analyticsParam.setTotalListCount(0);
+
+            //            Intent intent = StayDetailActivity.newInstance(getActivity() //
+            //                , mStayBookingDay, place.index, place.title, place.imageUrl //
+            //                , analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
 
             Intent intent = StayDetailActivity.newInstance(getActivity() //
-                , mStayBookingDay, place.index, place.title, place.imageUrl //
-                , analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
+                , place.index, place.title, place.imageUrl//
+                , place.prices != null ? place.prices.discountPrice : StayDetailActivity.NONE_PRICE//
+                , mStayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                , mStayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+                , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 

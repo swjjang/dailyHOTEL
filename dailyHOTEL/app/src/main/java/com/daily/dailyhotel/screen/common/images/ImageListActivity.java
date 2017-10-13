@@ -7,12 +7,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
-import com.daily.dailyhotel.entity.BaseDetailImage;
+import com.daily.dailyhotel.entity.DetailImageInformation;
+import com.daily.dailyhotel.parcel.DetailImageInformationParcel;
+import com.daily.dailyhotel.parcel.analytics.ImageListAnalyticsParam;
 import com.twoheart.dailyhotel.R;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by sheldon
@@ -24,24 +25,26 @@ public class ImageListActivity extends BaseActivity<ImageListPresenter>
     static final String INTENT_EXTRA_DATA_IMAGE_LIST = "imageList";
     static final String INTENT_EXTRA_DATA_INDEX = "index";
 
-    public static Intent newInstance(Context context, String title, List<? extends BaseDetailImage> arrayList, int index)
+    public static Intent newInstance(Context context, String title, List<DetailImageInformation> imageList//
+        , int index, ImageListAnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, ImageListActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_TITLE, title);
 
-        if (arrayList != null && arrayList.size() > 0)
+        if (imageList != null && imageList.size() > 0)
         {
-            ArrayList<Map<String, String>> imageMapList = new ArrayList<>();
+            ArrayList<DetailImageInformationParcel> list = new ArrayList<>();
 
-            for (BaseDetailImage detailImage : arrayList)
+            for (DetailImageInformation detailImageInformation : imageList)
             {
-                imageMapList.add(detailImage.getDataMap());
+                list.add(new DetailImageInformationParcel(detailImageInformation));
             }
 
-            intent.putExtra(INTENT_EXTRA_DATA_IMAGE_LIST, imageMapList);
+            intent.putExtra(INTENT_EXTRA_DATA_IMAGE_LIST, list);
         }
 
         intent.putExtra(INTENT_EXTRA_DATA_INDEX, index);
+        intent.putExtra(INTENT_EXTRA_DATA_ANALYTICS, analyticsParam);
 
         return intent;
     }

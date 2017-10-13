@@ -390,7 +390,7 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
         // Stay Outbound 의 경우 PlaceType 이 없음
         holder.dataBinding.contentGradeView.setText("");
 
-        setTripAdvisorText(holder.dataBinding, stayOutbound.rating);
+        setTripAdvisorText(holder.dataBinding, stayOutbound.tripAdvisorRating);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -598,7 +598,7 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
                 }
             });
             dataBinding.tripAdvisorRatingBar.setRating(rating);
-            dataBinding.tripAdvisorRatingTextView.setText(mContext.getString(R.string.label_stay_outbound_tripadvisor_rating_type_none_bracket, Float.toString(rating)));
+            dataBinding.tripAdvisorRatingTextView.setText(mContext.getString(R.string.label_stay_outbound_tripadvisor_rating, Float.toString(rating)));
 
             // 별등급이 기본이 5개 이기 때문에 빈공간에도 내용이 존재한다.
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) dataBinding.tripAdvisorRatingTextView.getLayoutParams();
@@ -657,11 +657,6 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
             dataBinding.contentImageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
             dataBinding.contentImageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
-            android.support.v4.util.Pair[] pairs = { //
-                android.support.v4.util.Pair.create(dataBinding.contentImageView, mContext.getResources().getString(R.string.transition_place_image)) //
-                , android.support.v4.util.Pair.create(dataBinding.gradientTopView, mContext.getResources().getString(R.string.transition_gradient_top_view)) //
-                , android.support.v4.util.Pair.create(dataBinding.gradientBottomView, mContext.getResources().getString(R.string.transition_gradient_bottom_view))};
-
             itemView.setOnClickListener(new View.OnClickListener()
             {
                 @Override
@@ -671,6 +666,11 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
                     {
                         return;
                     }
+
+                    android.support.v4.util.Pair[] pairs = { //
+                        android.support.v4.util.Pair.create(dataBinding.contentImageView, mContext.getResources().getString(R.string.transition_place_image)) //
+                        , android.support.v4.util.Pair.create(dataBinding.gradientTopView, mContext.getResources().getString(R.string.transition_gradient_top_view)) //
+                        , android.support.v4.util.Pair.create(dataBinding.gradientBottomView, mContext.getResources().getString(R.string.transition_gradient_bottom_view))};
 
                     mItemClickListener.onItemClick(v, pairs);
                 }
@@ -688,6 +688,11 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
                             return false;
                         } else
                         {
+                            android.support.v4.util.Pair[] pairs = { //
+                                android.support.v4.util.Pair.create(dataBinding.contentImageView, mContext.getResources().getString(R.string.transition_place_image)) //
+                                , android.support.v4.util.Pair.create(dataBinding.gradientTopView, mContext.getResources().getString(R.string.transition_gradient_top_view)) //
+                                , android.support.v4.util.Pair.create(dataBinding.gradientBottomView, mContext.getResources().getString(R.string.transition_gradient_bottom_view))};
+
                             Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
                             vibrator.vibrate(70);
 

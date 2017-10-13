@@ -27,15 +27,16 @@ import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
-import com.daily.dailyhotel.entity.StayOutboundDetailImage;
 import com.daily.dailyhotel.entity.StayOutboundRoom;
 import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.entity.User;
+import com.daily.dailyhotel.parcel.analytics.ImageListAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundPaymentAnalyticsParam;
@@ -46,8 +47,8 @@ import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
+import com.daily.dailyhotel.screen.common.images.ImageListActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.amenities.AmenityListActivity;
-import com.daily.dailyhotel.screen.home.stay.outbound.detail.images.ImageListActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.payment.StayOutboundPaymentActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.preview.StayOutboundPreviewActivity;
@@ -118,7 +119,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     private ProfileRemoteImpl mProfileRemoteImpl;
     private RecentlyLocalImpl mRecentlyLocalImpl;
 
-    int mStayIndex, mListPrice;
+    int mStayIndex, mListTotalPrice;
     private String mStayName;
     String mImageUrl;
     StayBookDateTime mStayBookDateTime;
@@ -213,6 +214,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         if (intent.hasExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK) == true)
         {
+            mAnalytics.setAnalyticsParam(new StayOutboundDetailAnalyticsParam());
+
             try
             {
                 mDailyDeepLink = DailyDeepLink.getNewInstance(Uri.parse(intent.getStringExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK)));
@@ -309,7 +312,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
             mStayName = intent.getStringExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_STAY_NAME);
             mImageUrl = intent.getStringExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_IMAGE_URL);
-            mListPrice = intent.getIntExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_LIST_PRICE, StayOutboundDetailActivity.NONE_PRICE);
+            mListTotalPrice = intent.getIntExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_LIST_PRICE, StayOutboundDetailActivity.NONE_PRICE);
 
             String checkInDateTime = intent.getStringExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_CHECK_IN);
             String checkOutDateTime = intent.getStringExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_CHECK_OUT);
@@ -790,19 +793,11 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             return;
         }
 
+        ImageListAnalyticsParam analyticsParam = new ImageListAnalyticsParam();
+        analyticsParam.serviceType = Constants.ServiceType.OB_STAY;
+
         startActivityForResult(ImageListActivity.newInstance(getActivity(), mStayOutboundDetail.name//
-            , mStayOutboundDetail.getImageList(), position), StayOutboundDetailActivity.REQUEST_CODE_IMAGE_LIST);
-    }
-
-    @Override
-    public void onImageSelected(int position)
-    {
-        if (mStayOutboundDetail == null)
-        {
-            return;
-        }
-
-        getViewInterface().setDetailImageCaption(mStayOutboundDetail.getImageList().get(position).caption);
+            , mStayOutboundDetail.getImageList(), position, analyticsParam), StayOutboundDetailActivity.REQUEST_CODE_IMAGE_LIST);
     }
 
     @Override
@@ -1359,8 +1354,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         // 리스트에서 이미지가 큰사이즈가 없는 경우 상세에서도 해당 사이즈가 없기 때문에 고려해준다.
         try
         {
-            StayOutboundDetailImage stayOutboundDetailImage = stayOutboundDetail.getImageList().get(0);
-            ImageMap imageMap = stayOutboundDetailImage.getImageMap();
+            DetailImageInformation detailImageInformation = stayOutboundDetail.getImageList().get(0);
+            ImageMap imageMap = detailImageInformation.getImageMap();
 
             if (mImageUrl.equalsIgnoreCase(imageMap.smallUrl) == true)
             {
@@ -1383,7 +1378,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         getViewInterface().setStayDetail(mStayBookDateTime, mPeople, stayOutboundDetail);
 
         // 리스트 가격 변동은 진입시 한번 만 한다.
-        checkChangedPrice(mIsDeepLink, stayOutboundDetail, mListPrice, mCheckChangedPrice == false);
+        checkChangedPrice(mIsDeepLink, stayOutboundDetail, mListTotalPrice, mCheckChangedPrice == false);
         mCheckChangedPrice = true;
 
         // 선택된 방이 없으면 처음 방으로 한다.
@@ -1504,14 +1499,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             setResult(BaseActivity.RESULT_CODE_REFRESH);
 
             getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_outbound_detail_sold_out)//
-                , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
-                {
-                    @Override
-                    public void onDismiss(DialogInterface dialog)
-                    {
-
-                    }
-                });
+                , getString(R.string.dialog_btn_text_confirm), null);
         } else
         {
             if (isDeepLink == false && compareListPrice == true)
@@ -1538,14 +1526,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                     setResult(BaseActivity.RESULT_CODE_REFRESH);
 
                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_outbound_detail_changed_price)//
-                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
-                        {
-                            @Override
-                            public void onDismiss(DialogInterface dialog)
-                            {
-                                onActionButtonClick();
-                            }
-                        });
+                        , getString(R.string.dialog_btn_text_confirm), null);
                 }
             }
         }

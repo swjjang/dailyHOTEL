@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:background="@color/stay_outbound_detail_grade"
+            android:background="@color/default_background_c929292"
             android:gravity="center"
             android:paddingBottom="1px"
             android:paddingLeft="5.5dp"
@@ -26,18 +26,6 @@
             android:textSize="11dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
-
-        <RatingBar
-            android:id="@+id/ratingBar"
-            style="@style/StayOutboundRatingBarGold"
-            android:layout_width="wrap_content"
-            android:layout_height="10dp"
-            android:layout_marginLeft="6dp"
-            android:numStars="5"
-            android:stepSize="0.5"
-            app:layout_constraintBottom_toBottomOf="@+id/gradeTextView"
-            app:layout_constraintLeft_toRightOf="@+id/gradeTextView"
-            app:layout_constraintTop_toTopOf="@+id/gradeTextView"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/nameTextView"
@@ -71,41 +59,43 @@
             app:layout_constraintTop_toBottomOf="@+id/nameTextView"
             dailyFont:style="Medium"/>
 
-        <ImageView
-            android:id="@+id/tripAdvisorImageView"
+        <LinearLayout
+            android:id="@+id/tripAdvisorLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:src="@drawable/main_ic_widget_owl"
-            app:layout_constraintBottom_toBottomOf="@+id/tripAdvisorRatingTextView"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tripAdvisorRatingTextView"/>
-
-        <RatingBar
-            android:id="@+id/tripAdvisorRatingBar"
-            style="@style/TripAdvisorRatingBar"
-            android:layout_width="wrap_content"
-            android:layout_height="10dp"
-            android:layout_marginLeft="2dp"
-            android:numStars="5"
-            android:stepSize="0.5"
-            app:layout_constraintBottom_toBottomOf="@+id/tripAdvisorRatingTextView"
-            app:layout_constraintLeft_toRightOf="@+id/tripAdvisorImageView"
-            app:layout_constraintTop_toTopOf="@+id/tripAdvisorRatingTextView"/>
-
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/tripAdvisorRatingTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="3dp"
             android:layout_marginTop="7dp"
-            android:ellipsize="end"
-            android:freezesText="true"
+            android:layout_marginLeft="15dp"
             android:gravity="center_vertical"
-            android:singleLine="true"
-            android:textColor="@color/default_text_c929292"
-            android:textSize="13dp"
-            app:layout_constraintLeft_toRightOf="@+id/tripAdvisorRatingBar"
-            app:layout_constraintTop_toBottomOf="@+id/nameEngTextView"/>
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nameEngTextView">
+
+            <ImageView
+                android:id="@+id/tripAdvisorImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/main_ic_widget_owl"/>
+
+            <RatingBar
+                android:id="@+id/tripAdvisorRatingBar"
+                style="@style/TripAdvisorRatingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="10dp"
+                android:layout_marginLeft="2dp"
+                android:numStars="5"
+                android:stepSize="0.5"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/tripAdvisorRatingTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:ellipsize="end"
+                android:freezesText="true"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="13dp"/>
+        </LinearLayout>
     </android.support.constraint.ConstraintLayout>
 </layout>

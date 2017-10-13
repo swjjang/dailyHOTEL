@@ -19,6 +19,8 @@ import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.Suggest;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
+import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.StayOutboundListActivity;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.daily.dailyhotel.view.DailyToolbarView;
@@ -34,7 +36,6 @@ import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.screen.common.WebViewActivity;
-import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.CouponListActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.RegisterCouponActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
@@ -342,59 +343,62 @@ public class EventWebActivity extends WebViewActivity implements Constants
         {
             if (dailyDeepLink.isExternalDeepLink() == true)
             {
-                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+                //                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+                //
+                //                // 신규 타입의 화면이동
+                //                int hotelIndex = Integer.parseInt(externalDeepLink.getIndex());
+                //                int nights = 1;
+                //
+                //                try
+                //                {
+                //                    nights = Integer.parseInt(externalDeepLink.getNights());
+                //                } catch (Exception e)
+                //                {
+                //                    ExLog.d(e.toString());
+                //                } finally
+                //                {
+                //                    if (nights <= 0)
+                //                    {
+                //                        nights = 1;
+                //                    }
+                //                }
+                //
+                //                String date = externalDeepLink.getDate();
+                //                int datePlus = externalDeepLink.getDatePlus();
+                //                boolean isShowCalendar = externalDeepLink.isShowCalendar();
+                //                boolean isShowVR = externalDeepLink.isShowVR();
+                //                int ticketIndex = externalDeepLink.getOpenTicketIndex();
+                //                boolean overseas = externalDeepLink.getIsOverseas();
+                //
+                //                StayBookingDay stayBookingDay = new StayBookingDay();
+                //
+                //                if (DailyTextUtils.isTextEmpty(date) == false)
+                //                {
+                //                    Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
+                //                    stayBookingDay.setCheckInDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
+                //                } else if (datePlus >= 0)
+                //                {
+                //                    stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime, datePlus);
+                //                } else
+                //                {
+                //                    stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime);
+                //                }
+                //
+                //                stayBookingDay.setCheckOutDay(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), nights);
 
-                // 신규 타입의 화면이동
-                int hotelIndex = Integer.parseInt(externalDeepLink.getIndex());
-                int nights = 1;
+                //                Intent intent = StayDetailActivity.newInstance(EventWebActivity.this, stayBookingDay, overseas, hotelIndex, ticketIndex, isShowCalendar, isShowVR, false);
+                //
+                Intent intent = StayDetailActivity.newInstance(EventWebActivity.this, dailyDeepLink.getDeepLink());
 
-                try
-                {
-                    nights = Integer.parseInt(externalDeepLink.getNights());
-                } catch (Exception e)
-                {
-                    ExLog.d(e.toString());
-                } finally
-                {
-                    if (nights <= 0)
-                    {
-                        nights = 1;
-                    }
-                }
-
-                String date = externalDeepLink.getDate();
-                int datePlus = externalDeepLink.getDatePlus();
-                boolean isShowCalendar = externalDeepLink.isShowCalendar();
-                boolean isShowVR = externalDeepLink.isShowVR();
-                int ticketIndex = externalDeepLink.getOpenTicketIndex();
-                boolean overseas = externalDeepLink.getIsOverseas();
-
-                StayBookingDay stayBookingDay = new StayBookingDay();
-
-                if (DailyTextUtils.isTextEmpty(date) == false)
-                {
-                    Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
-                    stayBookingDay.setCheckInDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
-                } else if (datePlus >= 0)
-                {
-                    stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime, datePlus);
-                } else
-                {
-                    stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime);
-                }
-
-                stayBookingDay.setCheckOutDay(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), nights);
-
-                Intent intent = StayDetailActivity.newInstance(EventWebActivity.this, stayBookingDay, overseas, hotelIndex, ticketIndex, isShowCalendar, isShowVR, false);
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 
                 overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-
-                if (isShowCalendar == true)
-                {
-                    AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-                        , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.Label.EVENT, null);
-                }
+                //
+                //                if (isShowCalendar == true)
+                //                {
+                //                    AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
+                //                        , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.Label.EVENT, null);
+                //                }
             } else
             {
 
@@ -449,8 +453,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
                 //                Intent intent = GourmetDetailActivity.newInstance(EventWebActivity.this,//
                 //                    gourmetBookingDay, gourmetIndex, isShowCalendar, isShowVR, false);
 
-                Intent intent = com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.newInstance(EventWebActivity.this //
-                    , dailyDeepLink.getDeepLink());
+                Intent intent = GourmetDetailActivity.newInstance(EventWebActivity.this, dailyDeepLink.getDeepLink());
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 

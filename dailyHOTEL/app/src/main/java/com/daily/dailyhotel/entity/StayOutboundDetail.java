@@ -20,7 +20,7 @@ public class StayOutboundDetail
     public double longitude;
 
     LinkedHashMap<String, List<String>> mInformationMap;
-    List<StayOutboundDetailImage> mImageList;
+    List<DetailImageInformation> mImageList;
     List<StayOutboundRoom> mRoomList;
     SparseArray<String> mAmenitySparseArray;
 
@@ -39,12 +39,12 @@ public class StayOutboundDetail
         return mInformationMap;
     }
 
-    public void setImageList(List<StayOutboundDetailImage> imageList)
+    public void setImageList(List<DetailImageInformation> imageList)
     {
         mImageList = imageList;
     }
 
-    public List<StayOutboundDetailImage> getImageList()
+    public List<DetailImageInformation> getImageList()
     {
         return mImageList;
     }

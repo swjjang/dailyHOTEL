@@ -81,8 +81,8 @@ public class StayPreviewActivity extends BaseActivity
     {
         Intent intent = new Intent(context, StayPreviewActivity.class);
 
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE, checkInDate);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE, checkOutDate);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECK_IN_DATE, checkInDate);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECK_OUT_DATE, checkOutDate);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, stay.index);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, stay.name);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, stay.discountPrice);
@@ -171,18 +171,18 @@ public class StayPreviewActivity extends BaseActivity
         mPreviewLayout = new StayPreviewLayout(this, mOnEventListener);
         mNetworkController = new StayPreviewNetworkController(this, getNetworkTag(), mOnNetworkControllerListener);
 
-        if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE) == true)
+        if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_CHECK_IN_DATE) == true)
         {
             StayBookingDay stayBookingDay = new StayBookingDay();
 
             try
             {
-                String checkInDate = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE);
+                String checkInDate = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CHECK_IN_DATE);
                 stayBookingDay.setCheckInDay(checkInDate);
 
-                if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE) == true)
+                if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_CHECK_OUT_DATE) == true)
                 {
-                    stayBookingDay.setCheckOutDay(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE));
+                    stayBookingDay.setCheckOutDay(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CHECK_OUT_DATE));
                 } else
                 {
                     stayBookingDay.setCheckOutDay(checkInDate, 1);

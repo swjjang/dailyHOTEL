@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.screen.hotel.filter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.View;
@@ -22,6 +21,7 @@ import com.twoheart.dailyhotel.place.activity.PlaceCalendarActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.DailyDayStrikeTextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -74,8 +74,8 @@ public class StayCalendarActivity extends PlaceCalendarActivity
     {
         Intent intent = new Intent(context, StayCalendarActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE, checkInDate);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE, checkOutDate);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECK_IN_DATE, checkInDate);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECK_OUT_DATE, checkOutDate);
         intent.putExtra(INTENT_EXTRA_DATA_SCREEN, screen);
         intent.putExtra(INTENT_EXTRA_DATA_ISSELECTED, isSelected);
         intent.putExtra(INTENT_EXTRA_DATA_ANIMATION, isAnimation);
@@ -93,18 +93,18 @@ public class StayCalendarActivity extends PlaceCalendarActivity
 
         mTodayDateTime = intent.getParcelableExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME);
 
-        if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE) == true)
+        if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_CHECK_IN_DATE) == true)
         {
             StayBookingDay stayBookingDay = new StayBookingDay();
 
             try
             {
-                String checkInDate = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CHECKINDATE);
+                String checkInDate = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CHECK_IN_DATE);
                 stayBookingDay.setCheckInDay(checkInDate);
 
-                if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE) == true)
+                if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_CHECK_OUT_DATE) == true)
                 {
-                    stayBookingDay.setCheckOutDay(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CHECKOUTDATE));
+                    stayBookingDay.setCheckOutDay(intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CHECK_OUT_DATE));
                 } else
                 {
                     stayBookingDay.setCheckOutDay(checkInDate, 1);
@@ -442,11 +442,8 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         visitLayoutParams.topMargin = ScreenUtils.dpToPx(this, 5);
         visitTextView.setLayoutParams(visitLayoutParams);
 
-        TextView dayTextView = (TextView) checkInView.findViewById(R.id.dateTextView);
-        if ((dayTextView.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) == Paint.STRIKE_THRU_TEXT_FLAG)
-        {
-            dayTextView.setPaintFlags(dayTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-        }
+        DailyDayStrikeTextView dayTextView = (DailyDayStrikeTextView) checkInView.findViewById(R.id.dateTextView);
+        dayTextView.setStrikeFlag(false);
 
         checkInView.setBackgroundResource(R.drawable.select_date_check_in);
     }
@@ -468,11 +465,8 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         visitLayoutParams.topMargin = ScreenUtils.dpToPx(this, 5);
         visitTextView.setLayoutParams(visitLayoutParams);
 
-        TextView dayTextView = (TextView) checkOutView.findViewById(R.id.dateTextView);
-        if ((dayTextView.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) == Paint.STRIKE_THRU_TEXT_FLAG)
-        {
-            dayTextView.setPaintFlags(dayTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-        }
+        DailyDayStrikeTextView dayTextView = (DailyDayStrikeTextView) checkOutView.findViewById(R.id.dateTextView);
+        dayTextView.setStrikeFlag(false);
 
         checkOutView.setBackgroundResource(R.drawable.select_date_check_out);
     }

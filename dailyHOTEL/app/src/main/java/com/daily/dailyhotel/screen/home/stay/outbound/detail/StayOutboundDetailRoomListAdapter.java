@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.StayOutboundRoom;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailRoomDataBinding;
@@ -200,6 +201,15 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
         {
             saleRoomInformationViewHolder.dataBinding.nrdTextView.setVisibility(View.VISIBLE);
             saleRoomInformationViewHolder.dataBinding.nrdTextView.setText(stayOutboundRoom.nonRefundableDescription);
+        }
+
+        // 마지막 목록에는 하단에 10dp여유를 준다.
+        if (position == getItemCount() - 1)
+        {
+            saleRoomInformationViewHolder.dataBinding.getRoot().setPadding(0, 0, 0, ScreenUtils.dpToPx(mContext, 10));
+        } else
+        {
+            saleRoomInformationViewHolder.dataBinding.getRoot().setPadding(0, 0, 0, 0);
         }
     }
 

@@ -27,11 +27,12 @@ import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
-import com.daily.dailyhotel.repository.local.model.AnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.preview.StayOutboundPreviewActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchActivity;
@@ -52,7 +53,6 @@ import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
-import com.twoheart.dailyhotel.place.layout.PlaceDetailLayout;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
@@ -62,7 +62,6 @@ import com.twoheart.dailyhotel.screen.home.category.nearby.StayCategoryNearByAct
 import com.twoheart.dailyhotel.screen.home.category.region.HomeCategoryRegionListActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionGourmetActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionStayActivity;
-import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.screen.information.terms.LocationTermsActivity;
@@ -883,6 +882,30 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime);
                     stayBookingDay.setCheckOutDay(todayDateTime.dailyDateTime, 1);
 
+                    StayDetailAnalyticsParam analyticsParam = new StayDetailAnalyticsParam();
+                    analyticsParam.setAddressAreaName(recentlyPlace.addrSummary);
+
+                    if (recentlyPlace.prices != null)
+                    {
+                        analyticsParam.price = recentlyPlace.prices.normalPrice;
+
+                        if (recentlyPlace.prices.discountPrice > 0)
+                        {
+                            analyticsParam.discountPrice = recentlyPlace.prices.discountPrice;
+                        }
+                    } else
+                    {
+                        analyticsParam.price = 0;
+                        analyticsParam.discountPrice = 0;
+                    }
+
+                    analyticsParam.setShowOriginalPriceYn(analyticsParam.price, analyticsParam.discountPrice);
+                    analyticsParam.setProvince(null);
+                    analyticsParam.entryPosition = -1;
+                    analyticsParam.totalListCount = -1;
+                    analyticsParam.isDailyChoice = false;
+                    analyticsParam.gradeName = recentlyPlace.details.grade;
+
                     if (Util.isUsedMultiTransition() == true)
                     {
                         mBaseActivity.setExitSharedElementCallback(new SharedElementCallback()
@@ -903,14 +926,20 @@ public class HomeFragment extends BaseMenuNavigationFragment
                             }
                         });
 
-                        AnalyticsParam analyticsParam = new AnalyticsParam();
-                        analyticsParam.setParam(mBaseActivity, recentlyPlace);
-                        analyticsParam.setProvince(null);
-                        analyticsParam.setTotalListCount(-1);
+                        //                        AnalyticsParam analyticsParam = new AnalyticsParam();
+                        //                        analyticsParam.setParam(mBaseActivity, recentlyPlace);
+                        //                        analyticsParam.setProvince(null);
+                        //                        analyticsParam.setTotalListCount(-1);
+
+                        //                        Intent intent = StayDetailActivity.newInstance(mBaseActivity //
+                        //                            , stayBookingDay, recentlyPlace.index, recentlyPlace.title, recentlyPlace.imageUrl //
+                        //                            , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
 
                         Intent intent = StayDetailActivity.newInstance(mBaseActivity //
-                            , stayBookingDay, recentlyPlace.index, recentlyPlace.title, recentlyPlace.imageUrl //
-                            , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
+                            , recentlyPlace.index, recentlyPlace.title, recentlyPlace.imageUrl, StayDetailActivity.NONE_PRICE//
+                            , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                            , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+                            , true, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam);
 
                         if (intent == null)
                         {
@@ -930,14 +959,20 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
                     } else
                     {
-                        AnalyticsParam analyticsParam = new AnalyticsParam();
-                        analyticsParam.setParam(mBaseActivity, recentlyPlace);
-                        analyticsParam.setProvince(null);
-                        analyticsParam.setTotalListCount(-1);
+                        //                        AnalyticsParam analyticsParam = new AnalyticsParam();
+                        //                        analyticsParam.setParam(mBaseActivity, recentlyPlace);
+                        //                        analyticsParam.setProvince(null);
+                        //                        analyticsParam.setTotalListCount(-1);
+
+                        //                        Intent intent = StayDetailActivity.newInstance(mBaseActivity //
+                        //                            , stayBookingDay, recentlyPlace.index, recentlyPlace.title, recentlyPlace.imageUrl //
+                        //                            , analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
 
                         Intent intent = StayDetailActivity.newInstance(mBaseActivity //
-                            , stayBookingDay, recentlyPlace.index, recentlyPlace.title, recentlyPlace.imageUrl //
-                            , analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
+                            , recentlyPlace.index, recentlyPlace.title, recentlyPlace.imageUrl, StayDetailActivity.NONE_PRICE//
+                            , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                            , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+                            , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam);
 
                         if (intent == null)
                         {

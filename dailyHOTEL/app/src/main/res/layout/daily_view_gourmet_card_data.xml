@@ -48,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="12dp"
             android:src="@drawable/r_ic_small_02_shadow"
             android:visibility="gone"
             app:layout_constraintLeft_toLeftOf="parent"
