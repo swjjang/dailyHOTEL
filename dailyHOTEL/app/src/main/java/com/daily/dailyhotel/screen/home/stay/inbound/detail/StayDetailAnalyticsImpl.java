@@ -6,7 +6,9 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayDetail;
+import com.daily.dailyhotel.entity.StayRoom;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.StayPaymentAnalyticsParam;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -22,12 +24,6 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
     public void setAnalyticsParam(StayDetailAnalyticsParam analyticsParam)
     {
         mAnalyticsParam = analyticsParam;
-    }
-
-    @Override
-    public StayDetailAnalyticsParam getAnalyticsParam()
-    {
-        return mAnalyticsParam;
     }
 
     @Override
@@ -567,5 +563,35 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION,//
             AnalyticsManager.Action.STAMP_DETAIL_CLICK, AnalyticsManager.Label.STAY_DETAIL_VIEW, null);
+    }
+
+    @Override
+    public StayPaymentAnalyticsParam getStayPaymentAnalyticsParam(StayDetail stayDetail, StayRoom stayRoom)
+    {
+        StayPaymentAnalyticsParam analyticsParam = new StayPaymentAnalyticsParam();
+
+        if (stayDetail == null || stayRoom == null)
+        {
+            return analyticsParam;
+        }
+
+        if (mAnalyticsParam != null)
+        {
+            analyticsParam.showOriginalPrice = mAnalyticsParam.getShowOriginalPriceYn();
+            analyticsParam.rankingPosition = mAnalyticsParam.entryPosition;
+            analyticsParam.totalListCount = mAnalyticsParam.totalListCount;
+            analyticsParam.dailyChoice = mAnalyticsParam.isDailyChoice;
+            analyticsParam.province = mAnalyticsParam.getProvince();
+            analyticsParam.addressAreaName = mAnalyticsParam.getAddressAreaName();
+        }
+
+        analyticsParam.ratingValue = stayDetail.ratingValue;
+        analyticsParam.benefit = DailyTextUtils.isTextEmpty(stayDetail.benefit) == false;
+        analyticsParam.averageDiscount = stayRoom.discountAverage;
+        analyticsParam.address = stayDetail.address;
+        analyticsParam.nrd = stayRoom.nrd;
+        analyticsParam.grade = stayDetail.grade;
+
+        return analyticsParam;
     }
 }

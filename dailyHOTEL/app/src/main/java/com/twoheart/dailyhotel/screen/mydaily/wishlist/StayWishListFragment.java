@@ -414,6 +414,13 @@ public class StayWishListFragment extends PlaceWishListFragment
             }
 
             PlaceViewItem placeViewItem = mListLayout.getItem(position);
+
+            if (placeViewItem == null)
+            {
+                Util.restartApp(getContext());
+                return;
+            }
+
             Stay stay = placeViewItem.getItem();
             if (stay == null)
             {

@@ -135,7 +135,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     {
         void setAnalyticsParam(StayDetailAnalyticsParam analyticsParam);
 
-        StayDetailAnalyticsParam getAnalyticsParam();
+        StayPaymentAnalyticsParam getStayPaymentAnalyticsParam(StayDetail stayDetail, StayRoom stayRoom);
 
         void onScreen(Activity activity, StayBookDateTime stayBookDateTime, StayDetail stayDetail, int priceFromList);
 
@@ -238,6 +238,8 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
         if (intent.hasExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK) == true)
         {
+            mAnalytics.setAnalyticsParam(new StayDetailAnalyticsParam());
+
             try
             {
                 mDailyDeepLink = DailyDeepLink.getNewInstance(Uri.parse(intent.getStringExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK)));
@@ -1734,33 +1736,13 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             imageUrl = imageInformationList.get(0).getImageMap().bigUrl;
         }
 
-        StayPaymentAnalyticsParam analyticsParam = new StayPaymentAnalyticsParam();
-        StayDetailAnalyticsParam detailAnalyticsParam = mAnalytics.getAnalyticsParam();
-
-        if (detailAnalyticsParam != null)
-        {
-            analyticsParam.showOriginalPrice = detailAnalyticsParam.getShowOriginalPriceYn();
-            analyticsParam.rankingPosition = detailAnalyticsParam.entryPosition;
-            analyticsParam.totalListCount = detailAnalyticsParam.totalListCount;
-            analyticsParam.dailyChoice = detailAnalyticsParam.isDailyChoice;
-            analyticsParam.province = detailAnalyticsParam.getProvince();
-            analyticsParam.addressAreaName = detailAnalyticsParam.getAddressAreaName();
-        }
-
-        analyticsParam.ratingValue = stayDetail.ratingValue;
-        analyticsParam.benefit = DailyTextUtils.isTextEmpty(stayDetail.benefit) == false;
-        analyticsParam.averageDiscount = stayRoom.discountAverage;
-        analyticsParam.address = stayDetail.address;
-        analyticsParam.nrd = stayRoom.nrd;
-        analyticsParam.grade = stayDetail.grade;
-
         Intent intent = StayPaymentActivity.newInstance(getActivity(), stayDetail.index//
             , stayDetail.name, imageUrl, stayRoom.index, stayRoom.discountTotal, stayRoom.name//
             , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , stayDetail.overseas, stayDetail.category //
             , stayDetail.latitude, stayDetail.longitude //
-            , analyticsParam);
+            , mAnalytics.getStayPaymentAnalyticsParam(stayDetail, stayRoom));
 
         startActivityForResult(intent, StayDetailActivity.REQUEST_CODE_PAYMENT);
     }

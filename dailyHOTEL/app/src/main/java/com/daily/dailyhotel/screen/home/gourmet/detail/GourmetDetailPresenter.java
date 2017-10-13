@@ -131,7 +131,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     {
         void setAnalyticsParam(GourmetDetailAnalyticsParam analyticsParam);
 
-        GourmetDetailAnalyticsParam getAnalyticsParam();
+        GourmetPaymentAnalyticsParam getStayPaymentAnalyticsParam(GourmetDetail gourmetDetail, GourmetMenu gourmetMenu);
 
         void onScreen(Activity activity, GourmetBookDateTime gourmetBookDateTime, GourmetDetail gourmetDetail, int priceFromList);
 
@@ -227,6 +227,8 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
         if (intent.hasExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK) == true)
         {
+            mAnalytics.setAnalyticsParam(new GourmetDetailAnalyticsParam());
+
             try
             {
                 mDailyDeepLink = DailyDeepLink.getNewInstance(Uri.parse(intent.getStringExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK)));
@@ -242,8 +244,6 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
             if (mDailyDeepLink.isExternalDeepLink() == true)
             {
-                mAnalytics.setAnalyticsParam(new GourmetDetailAnalyticsParam());
-
                 addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime().subscribe(new Consumer<CommonDateTime>()
                 {
                     @Override
@@ -1643,28 +1643,10 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             imageUrl = imageInformationList.get(0).getImageMap().bigUrl;
         }
 
-        GourmetPaymentAnalyticsParam analyticsParam = new GourmetPaymentAnalyticsParam();
-        GourmetDetailAnalyticsParam detailAnalyticsParam = mAnalytics.getAnalyticsParam();
-
-        if (detailAnalyticsParam != null)
-        {
-            analyticsParam.showOriginalPrice = detailAnalyticsParam.getShowOriginalPriceYn();
-            analyticsParam.rankingPosition = detailAnalyticsParam.entryPosition;
-            analyticsParam.totalListCount = detailAnalyticsParam.totalListCount;
-            analyticsParam.dailyChoice = detailAnalyticsParam.isDailyChoice;
-            analyticsParam.province = detailAnalyticsParam.getProvince();
-            analyticsParam.addressAreaName = detailAnalyticsParam.getAddressAreaName();
-        }
-
-        analyticsParam.ratingValue = gourmetDetail.ratingValue;
-        analyticsParam.benefit = DailyTextUtils.isTextEmpty(gourmetDetail.benefit) == false;
-        analyticsParam.averageDiscount = gourmetMenu.discountPrice;
-        analyticsParam.address = gourmetDetail.address;
-        analyticsParam.categorySub = gourmetDetail.categorySub;
-
         Intent intent = GourmetPaymentActivity.newInstance(getActivity(), gourmetDetail.index//
             , gourmetDetail.name, imageUrl, gourmetMenu.saleIndex, gourmetMenu.discountPrice, gourmetMenu.name//
-            , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), false, gourmetDetail.category, analyticsParam);
+            , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), false, gourmetDetail.category//
+            , mAnalytics.getStayPaymentAnalyticsParam(gourmetDetail, gourmetMenu));
 
         startActivityForResult(intent, GourmetDetailActivity.REQUEST_CODE_PAYMENT);
     }

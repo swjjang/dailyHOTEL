@@ -8,6 +8,7 @@ import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetDetail;
 import com.daily.dailyhotel.entity.GourmetMenu;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.GourmetPaymentAnalyticsParam;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -24,12 +25,6 @@ public class GourmetDetailAnalyticsImpl implements GourmetDetailPresenter.Gourme
     public void setAnalyticsParam(GourmetDetailAnalyticsParam analyticsParam)
     {
         mAnalyticsParam = analyticsParam;
-    }
-
-    @Override
-    public GourmetDetailAnalyticsParam getAnalyticsParam()
-    {
-        return mAnalyticsParam;
     }
 
     @Override
@@ -500,5 +495,34 @@ public class GourmetDetailAnalyticsImpl implements GourmetDetailPresenter.Gourme
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
             , AnalyticsManager.Action.HAPPYTALK_CLICK, AnalyticsManager.Label.GOURMET_DETAIL, null);
+    }
+
+    @Override
+    public GourmetPaymentAnalyticsParam getStayPaymentAnalyticsParam(GourmetDetail gourmetDetail, GourmetMenu gourmetMenu)
+    {
+        GourmetPaymentAnalyticsParam analyticsParam = new GourmetPaymentAnalyticsParam();
+
+        if (gourmetDetail == null || gourmetMenu == null)
+        {
+            return analyticsParam;
+        }
+
+        if (mAnalyticsParam != null)
+        {
+            analyticsParam.showOriginalPrice = mAnalyticsParam.getShowOriginalPriceYn();
+            analyticsParam.rankingPosition = mAnalyticsParam.entryPosition;
+            analyticsParam.totalListCount = mAnalyticsParam.totalListCount;
+            analyticsParam.dailyChoice = mAnalyticsParam.isDailyChoice;
+            analyticsParam.province = mAnalyticsParam.getProvince();
+            analyticsParam.addressAreaName = mAnalyticsParam.getAddressAreaName();
+        }
+
+        analyticsParam.ratingValue = gourmetDetail.ratingValue;
+        analyticsParam.benefit = DailyTextUtils.isTextEmpty(gourmetDetail.benefit) == false;
+        analyticsParam.averageDiscount = gourmetMenu.discountPrice;
+        analyticsParam.address = gourmetDetail.address;
+        analyticsParam.categorySub = gourmetDetail.categorySub;
+
+        return analyticsParam;
     }
 }

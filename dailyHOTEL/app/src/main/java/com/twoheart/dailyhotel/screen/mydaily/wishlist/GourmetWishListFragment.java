@@ -387,6 +387,13 @@ public class GourmetWishListFragment extends PlaceWishListFragment
             }
 
             PlaceViewItem placeViewItem = mListLayout.getItem(position);
+
+            if (placeViewItem == null)
+            {
+                Util.restartApp(getContext());
+                return;
+            }
+
             Gourmet gourmet = placeViewItem.getItem();
             if (gourmet == null)
             {

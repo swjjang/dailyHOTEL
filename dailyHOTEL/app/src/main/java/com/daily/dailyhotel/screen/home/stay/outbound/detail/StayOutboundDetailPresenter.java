@@ -212,6 +212,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         if (intent.hasExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK) == true)
         {
+            mAnalytics.setAnalyticsParam(new StayOutboundDetailAnalyticsParam());
+
             try
             {
                 mDailyDeepLink = DailyDeepLink.getNewInstance(Uri.parse(intent.getStringExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK)));
@@ -227,8 +229,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
             if (mDailyDeepLink != null && mDailyDeepLink.isExternalDeepLink() == true)
             {
-                mAnalytics.setAnalyticsParam(new StayOutboundDetailAnalyticsParam());
-
                 addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime().subscribe(new Consumer<CommonDateTime>()
                 {
                     @Override
