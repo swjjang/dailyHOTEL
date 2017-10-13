@@ -564,6 +564,35 @@ public class PaymentRemoteImpl implements PaymentInterface
         }).observeOn(AndroidSchedulers.mainThread());
     }
 
+    @Override
+    public Observable<String> getStayHasDuplicatePayment(StayBookDateTime stayBookDateTime)
+    {
+        return DailyMobileAPI.getInstance(mContext).getStayHasDuplicatePayment(stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"), stayBookDateTime.getNights()).map(new Function<BaseDto<String>, String>()
+        {
+            @Override
+            public String apply(@io.reactivex.annotations.NonNull BaseDto<String> baseDto) throws Exception
+            {
+                String message;
+
+                if (baseDto != null)
+                {
+                    if (baseDto.msgCode == 100)
+                    {
+                        message = "";
+                    } else
+                    {
+                        message = baseDto.msg;
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return message;
+            }
+        }).observeOn(AndroidSchedulers.mainThread());
+    }
+
     /**
      * @param arrivalDateTime ISO-8601  "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
      * @param menuIndex

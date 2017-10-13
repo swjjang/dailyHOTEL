@@ -91,16 +91,6 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
         // grade
         dataBinding.gradeTextView.setText(mContext.getString(R.string.label_stay_outbound_filter_x_star_rate, (int) stayOutbound.rating));
 
-        dataBinding.ratingBar.setOnTouchListener(new View.OnTouchListener()
-        {
-            @Override
-            public boolean onTouch(View v, MotionEvent event)
-            {
-                return true;
-            }
-        });
-        dataBinding.ratingBar.setRating(stayOutbound.rating);
-
         // Image
         dataBinding.simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
 
