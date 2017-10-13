@@ -1612,6 +1612,15 @@ public class DailyMobileAPI
         return mDailyMobileService.getPaymentTypeBonus(Crypto.getUrlDecoderEx(API), jsonObject).subscribeOn(Schedulers.io());
     }
 
+    public Observable<BaseDto<String>> getStayHasDuplicatePayment(String checkInDate, int nights)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v5/reservations/check/sameday"//
+            : "NTUkOTQkMTckMzAkNzIkMTI3JDgkOTUkMjckMTA2JDEyMyQ5OSQ3JDEzOCQ5MSQxMTkk$MzRBOTgR0YMkMwMEZFMCDNCNjRGRGUJDRXjdERTMwMkM4Njc2Qzc2NUFBMDQK1RTcwMkI0QkI1MUjA2OEY0M0MyNzFGAN0FDNjJJBMOGERDNDUgwMzE0MUJQBOEM4RTPE4NEIxQ0MM1NETI3$";
+
+        return mDailyMobileService.getStayHasDuplicatePayment(Crypto.getUrlDecoderEx(API), checkInDate, nights)//
+            .subscribeOn(Schedulers.io());
+    }
+
     public Observable<BaseDto<PaymentResultData>> getGourmetPaymentTypeBonus(JSONObject jsonObject)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v4/booking/gourmet/daily/only"//

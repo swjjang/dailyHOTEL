@@ -50,6 +50,9 @@ public interface PaymentInterface
 
     Observable<StayRefundPolicy> getStayRefundPolicy(StayBookDateTime stayBookDateTime, int stayIndex, int roomIndex);
 
+
+    Observable<String> getStayHasDuplicatePayment(StayBookDateTime stayBookDateTime);
+
     Observable<PaymentResult> getGourmetPaymentTypeEasy(String arrivalDateTime, int menuIndex//
         , int menuCount, boolean usedBonus, int bonus, boolean usedCoupon, String couponCode, DomesticGuest guest//
         , int totalPrice, String billingKey);

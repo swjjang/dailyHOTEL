@@ -96,7 +96,6 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
     PaymentRemoteImpl mPaymentRemoteImpl;
     private ProfileRemoteImpl mProfileRemoteImpl;
     private CommonRemoteImpl mCommonRemoteImpl;
-    private BookingRemoteImpl mBookingRemoteImpl;
 
     StayBookDateTime mStayBookDateTime;
     CommonDateTime mCommonDateTime;
@@ -186,7 +185,6 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         mPaymentRemoteImpl = new PaymentRemoteImpl(activity);
         mProfileRemoteImpl = new ProfileRemoteImpl(activity);
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
-        mBookingRemoteImpl = new BookingRemoteImpl(activity);
 
         setRefresh(true);
     }
@@ -1010,16 +1008,19 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
     {
         screenLock(true);
 
-        addCompositeDisposable(mBookingRemoteImpl.getBookingList().subscribe(new Consumer<List<Booking>>()
+        addCompositeDisposable(mPaymentRemoteImpl.getStayHasDuplicatePayment(mStayBookDateTime).subscribe(new Consumer<String>()
         {
             @Override
-            public void accept(@io.reactivex.annotations.NonNull List<Booking> bookingList) throws Exception
+            public void accept(@io.reactivex.annotations.NonNull String message) throws Exception
             {
                 unLockAll();
 
-                if (hasOverlapBookingList(mCommonDateTime, mStayBookDateTime, mStayName, bookingList) == true)
+                if (DailyTextUtils.isTextEmpty(message) == true)
                 {
-                    getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_hotel_payment_overlap)//
+                    showAgreementPopup();
+                } else
+                {
+                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), message//
                         , getString(R.string.label_do_booking), getString(R.string.dialog_btn_text_no)//
                         , new View.OnClickListener()
                         {
@@ -1028,10 +1029,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                             {
                                 showAgreementPopup();
                             }
-                        }, null, true);
-                } else
-                {
-                    showAgreementPopup();
+                        }, null, null, null, false);
                 }
             }
         }, new Consumer<Throwable>()
