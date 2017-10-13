@@ -52,6 +52,9 @@ public class StayOutboundData
     @JsonField(name = "city")
     public String city;
 
+    @JsonField(name = "vendorType")
+    public String vendorType;
+
     public StayOutboundData()
     {
 
@@ -75,6 +78,7 @@ public class StayOutboundData
         stayOutbound.total = total;
         stayOutbound.setImageMap(imageMapData.getImageMap());
         stayOutbound.city = city;
+        stayOutbound.vendorType = vendorType;
 
         if (tripAdvisorData != null)
         {

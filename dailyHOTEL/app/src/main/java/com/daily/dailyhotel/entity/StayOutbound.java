@@ -18,6 +18,7 @@ public class StayOutbound
     public float tripAdvisorRating;
     public int tripAdvisorReviewCount;
     public String city;
+    public String vendorType;
 
     public StayOutbound()
     {
