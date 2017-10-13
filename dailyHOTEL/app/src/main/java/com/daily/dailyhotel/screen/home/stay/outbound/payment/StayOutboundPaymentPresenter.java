@@ -73,6 +73,10 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     private static final int CARD_MIN_PRICE = 1000;
     private static final int PHONE_MAX_PRICE = 500000;
 
+    // VENDOR TYPE
+    private static final String VENDOR_FIT_RUMMS = "F";
+    private static final String VENDOR_EAN = "E";
+
     private StayOutboundPaymentAnalyticsInterface mAnalytics;
 
     private PaymentRemoteImpl mPaymentRemoteImpl;
@@ -81,7 +85,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     StayBookDateTime mStayBookDateTime;
     int mStayIndex, mRoomPrice, mRoomBedTypeId;
     private People mPeople;
-    private String mStayName, mRoomType, mImageUrl;
+    private String mStayName, mRoomType, mVendorType, mImageUrl;
     private String mRateCode, mRateKey, mRoomTypeCode;
     StayOutboundPayment mStayOutboundPayment;
     private Card mSelectedCard;
@@ -168,6 +172,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         mRateKey = intent.getStringExtra(StayOutboundPaymentActivity.INTENT_EXTRA_DATA_RATE_KEY);
         mRoomTypeCode = intent.getStringExtra(StayOutboundPaymentActivity.INTENT_EXTRA_DATA_ROOM_TYPE_CODE);
         mRoomBedTypeId = intent.getIntExtra(StayOutboundPaymentActivity.INTENT_EXTRA_DATA_ROOM_BED_TYPE_ID, 0);
+        mVendorType = intent.getStringExtra(StayOutboundPaymentActivity.INTENT_EXTRA_DATA_VENDOR_TYPE);
 
         if (DailyTextUtils.isTextEmpty(mStayName, mRoomType, mRateCode, mRateKey, mRoomTypeCode) == true)
         {
@@ -517,7 +522,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         screenLock(showProgress);
 
         addCompositeDisposable(Observable.zip(mPaymentRemoteImpl.getStayOutboundPayment(mStayBookDateTime, mStayIndex//
-            , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople)//
+            , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople, mVendorType)//
             , mPaymentRemoteImpl.getEasyCardList(), mProfileRemoteImpl.getUserSimpleInformation()//
             , new Function3<StayOutboundPayment, List<Card>, UserSimpleInformation, Boolean>()
             {
@@ -760,7 +765,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
         addCompositeDisposable(mPaymentRemoteImpl.getStayOutboundHasDuplicatePayment(mStayBookDateTime, mStayIndex//
             , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople//
-            , mBonusSelected, mUserSimpleInformation.bonus, mGuest, mStayOutboundPayment.totalPrice).subscribe(new Consumer<String>()
+            , mBonusSelected, mUserSimpleInformation.bonus, mGuest, mStayOutboundPayment.totalPrice, mVendorType).subscribe(new Consumer<String>()
         {
             @Override
             public void accept(@io.reactivex.annotations.NonNull String message) throws Exception
@@ -868,7 +873,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         {
             addCompositeDisposable(mPaymentRemoteImpl.getStayOutboundPaymentTypeBonus(mStayBookDateTime, mStayIndex//
                 , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople//
-                , mBonusSelected, mUserSimpleInformation.bonus, mGuest, mStayOutboundPayment.totalPrice).subscribe(new Consumer<PaymentResult>()
+                , mBonusSelected, mUserSimpleInformation.bonus, mGuest, mStayOutboundPayment.totalPrice, mVendorType).subscribe(new Consumer<PaymentResult>()
             {
                 @Override
                 public void accept(@io.reactivex.annotations.NonNull PaymentResult paymentResult) throws Exception
@@ -917,7 +922,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
                     addCompositeDisposable(mPaymentRemoteImpl.getStayOutboundPaymentTypeEasy(mStayBookDateTime, mStayIndex//
                         , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople//
-                        , mBonusSelected, mUserSimpleInformation.bonus, mGuest, mStayOutboundPayment.totalPrice, mSelectedCard.billKey).subscribe(new Consumer<PaymentResult>()
+                        , mBonusSelected, mUserSimpleInformation.bonus, mGuest, mStayOutboundPayment.totalPrice//
+                        , mSelectedCard.billKey, mVendorType).subscribe(new Consumer<PaymentResult>()
                     {
                         @Override
                         public void accept(@io.reactivex.annotations.NonNull PaymentResult paymentResult) throws Exception
@@ -955,7 +961,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
                     JSONObject jsonObject = getPaymentJSONObject(PAYMENT_TYPE, mStayBookDateTime, mStayIndex//
                         , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople//
-                        , mBonusSelected, mUserSimpleInformation.bonus, mGuest, mStayOutboundPayment.totalPrice);
+                        , mBonusSelected, mUserSimpleInformation.bonus, mGuest, mStayOutboundPayment.totalPrice, mVendorType);
 
                     startActivityForResult(PaymentWebActivity.newInstance(getActivity()//
                         , getWebPaymentUrl(mStayIndex, "card"), jsonObject.toString(), AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_PROCESS_OUTBOUND)//
@@ -971,7 +977,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
                     JSONObject jsonObject = getPaymentJSONObject(PAYMENT_TYPE, mStayBookDateTime, mStayIndex//
                         , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople//
-                        , mBonusSelected, mUserSimpleInformation.bonus, mGuest, mStayOutboundPayment.totalPrice);
+                        , mBonusSelected, mUserSimpleInformation.bonus, mGuest, mStayOutboundPayment.totalPrice, mVendorType);
 
                     startActivityForResult(PaymentWebActivity.newInstance(getActivity()//
                         , getWebPaymentUrl(mStayIndex, "mobile"), jsonObject.toString(), AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_PROCESS_OUTBOUND)//
@@ -1003,7 +1009,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
     private JSONObject getPaymentJSONObject(String paymentType, StayBookDateTime stayBookDateTime, int index//
         , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people//
-        , boolean usedBonus, int bonus, OverseasGuest guest, int totalPrice)
+        , boolean usedBonus, int bonus, OverseasGuest guest, int totalPrice, String vendorType)
     {
         JSONObject jsonObject = new JSONObject();
 
@@ -1030,6 +1036,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             jsonObject.put("phoneNumber", guest.phone.replace("-", ""));
             jsonObject.put("paymentType", paymentType);
             jsonObject.put("total", totalPrice);
+            jsonObject.put("vendorType", vendorType);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -1144,7 +1151,14 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             getViewInterface().setBooking(checkInDateSpannableString, checkOutDateSpannableString, mStayBookDateTime.getNights(), mStayName, mRoomType);
-            getViewInterface().setVendorName(getString(R.string.label_stay_outbound_payment_third_party_vendor));
+
+            if (VENDOR_FIT_RUMMS.equalsIgnoreCase(mVendorType) == true)
+            {
+                getViewInterface().setVendorName(getString(R.string.label_stay_outbound_payment_third_party_fitruums_vendor));
+            } else
+            {
+                getViewInterface().setVendorName(getString(R.string.label_stay_outbound_payment_third_party_ean_vendor));
+            }
         } catch (Exception e)
         {
             ExLog.d(e.toString());

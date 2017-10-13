@@ -1393,7 +1393,8 @@
     <string name="label_stay_outbound_payment_people">투숙인원</string>
     <string name="label_stay_outbound_payment_additional_tax">TAX (DUE AT HOTEL)</string>
     <string name="label_stay_outbound_payment_hour">%1$s시</string>
-    <string name="label_stay_outbound_payment_third_party_vendor">Expedia Affiliate Network\n(미국, +65 665 702 26)</string>
+    <string name="label_stay_outbound_payment_third_party_ean_vendor">Expedia Affiliate Network\n(미국, +65 665 702 26)</string>
+    <string name="label_stay_outbound_payment_third_party_fitruums_vendor">FIT RUUMS PTE. LTD.\n(스페인, +34 971 42 55 88)</string>
     <string name="label_stay_outbound_payment_booking_step2">2. 결제 금액 확인</string>
 
     <string name="message_stay_outbound_payment_additional_tax">현지에서 별도로 지불해야 하는 세금입니다.</string>
