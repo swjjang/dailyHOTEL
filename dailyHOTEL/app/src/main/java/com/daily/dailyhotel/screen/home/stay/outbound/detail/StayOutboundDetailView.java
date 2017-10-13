@@ -663,7 +663,7 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
             switch (gradientType)
             {
                 case StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST:
-                    getViewDataBinding().transGradientBottomView.setBackgroundResource(R.drawable.shape_gradient_card_bottom);
+                    getViewDataBinding().transGradientBottomView.setBackground(getGradientBottomDrawable());
                     break;
 
                 case StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP:
@@ -1011,15 +1011,6 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
         // 등급
         viewDataBinding.gradeTextView.setVisibility(View.VISIBLE);
         viewDataBinding.gradeTextView.setText(getString(R.string.label_stay_outbound_detail_grade, (int) stayOutboundDetail.rating));
-        viewDataBinding.ratingBar.setOnTouchListener(new View.OnTouchListener()
-        {
-            @Override
-            public boolean onTouch(View v, MotionEvent event)
-            {
-                return true;
-            }
-        });
-        viewDataBinding.ratingBar.setRating(stayOutboundDetail.rating);
 
         // 호텔명
         viewDataBinding.nameTextView.setText(stayOutboundDetail.name);
@@ -1425,8 +1416,8 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
     private PaintDrawable getGradientBottomDrawable()
     {
         // 그라디에이션 만들기.
-        final int colors[] = {Color.parseColor("#E6000000"), Color.parseColor("#99000000"), Color.parseColor("#1A000000"), Color.parseColor("#00000000"), Color.parseColor("#00000000")};
-        final float positions[] = {0.0f, 0.24f, 0.66f, 0.8f, 1.0f};
+        final int colors[] = {0x99000000, 0x66000000, 0x19000000, 0x00000000};
+        final float positions[] = {0.0f, 0.42f, 0.8f, 1.0f};
 
         PaintDrawable paintDrawable = new PaintDrawable();
         paintDrawable.setShape(new RectShape());

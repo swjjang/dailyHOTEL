@@ -242,7 +242,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
                 {
 
                     case TRANS_GRADIENT_BOTTOM_TYPE_LIST:
-                        mTransGradientBottomView.setBackgroundResource(R.drawable.shape_gradient_card_bottom);
+//                        mTransGradientBottomView.setBackgroundResource(R.drawable.shape_gradient_card_bottom);
                         break;
 
                     case TRANS_GRADIENT_BOTTOM_TYPE_MAP:
