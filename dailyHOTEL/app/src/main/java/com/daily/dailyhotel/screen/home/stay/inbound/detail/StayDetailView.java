@@ -7,7 +7,6 @@ import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.graphics.Typeface;
@@ -427,7 +426,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
     }
 
     @Override
-    public void setStayDetail(StayBookDateTime stayBookDateTime, StayDetail stayDetail, int trueReviewCount)
+    public void setStayDetail(StayBookDateTime stayBookDateTime, StayDetail stayDetail, int trueReviewCount, boolean showStamp)
     {
         if (getViewDataBinding() == null || stayBookDateTime == null || stayDetail == null)
         {
@@ -450,7 +449,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         setCouponView(stayDetail.hasCoupon);
 
         // 스템프
-        setStampView(stayDetail.overseas);
+        setStampView(showStamp);
 
         // 체크인/체크아웃
         setCheckDateView(stayBookDateTime);
@@ -1313,7 +1312,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
     /**
      * @param overseas
      */
-    private void setStampView(boolean overseas)
+    private void setStampView(boolean showStamp)
     {
         if (getViewDataBinding() == null)
         {
@@ -1322,7 +1321,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
 
         LayoutStayDetailStampDataBinding viewDataBinding = getViewDataBinding().stampViewDataBinding;
 
-        if (overseas == false && DailyRemoteConfigPreference.getInstance(getContext()).isRemoteConfigStampEnabled() == true)
+        if (showStamp)
         {
             // 테블릿 높이 수정 필요한지 확인
             viewDataBinding.getRoot().setVisibility(View.VISIBLE);
