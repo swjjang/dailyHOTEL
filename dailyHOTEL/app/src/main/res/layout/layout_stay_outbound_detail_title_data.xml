@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:background="@color/stay_outbound_detail_grade"
+            android:background="@color/default_background_c929292"
             android:gravity="center"
             android:paddingBottom="1px"
             android:paddingLeft="5.5dp"
@@ -26,18 +26,6 @@
             android:textSize="11dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
-
-        <RatingBar
-            android:id="@+id/ratingBar"
-            style="@style/StayOutboundRatingBarGold"
-            android:layout_width="wrap_content"
-            android:layout_height="10dp"
-            android:layout_marginLeft="6dp"
-            android:numStars="5"
-            android:stepSize="0.5"
-            app:layout_constraintBottom_toBottomOf="@+id/gradeTextView"
-            app:layout_constraintLeft_toRightOf="@+id/gradeTextView"
-            app:layout_constraintTop_toTopOf="@+id/gradeTextView"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/nameTextView"
