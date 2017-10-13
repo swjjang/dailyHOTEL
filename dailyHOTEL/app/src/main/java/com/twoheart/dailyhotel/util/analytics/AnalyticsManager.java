@@ -1071,6 +1071,8 @@ public class AnalyticsManager
         public static final String MEMBER_SELECT = "member_select";
         public static final String SEARCH_CANCEL = "search_cancel";
         public static final String SEARCH_HISTORY_DELETE = "search_history_delete";
+        public static final String RECOMMEND_RESULT = "recommend_result";
+        public static final String NO_RECOMMEND_RESULT = "no_recommend_result";
 
         //
         public static final String BOOKING_HISTORY_DELETE = "booking_history_delete";
@@ -1159,6 +1161,9 @@ public class AnalyticsManager
         public static final String THANKYOU_GOURMET_RECOMMEND_LIST_CLICK = "thankyou_gourmet_recommend_list_click";
         public static final String THANKYOU_GOURMET_RECOMMEND_CLICK = "thankyou_gourmet_recommend_click";
         public static final String ORDER_COMPLETE = "order_complete";
+        public static final String PRODUCT_RECOMMEND = "product_recommend";
+        public static final String PRODUCT_RECOMMEND_PRODUCT_CLICK = "product_recommend_product_click";
+        public static final String PRODUCT_RECOMMEND_PRODUCT = "product_recommend_product";
     }
 
     public static class Label

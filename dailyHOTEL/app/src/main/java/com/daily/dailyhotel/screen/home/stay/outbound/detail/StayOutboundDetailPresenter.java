@@ -155,6 +155,12 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         void onScreenRoomList(Activity activity);
 
+        void onEventHasRecommendList(Activity activity, boolean hasData);
+
+        void onEventRecommendItemClick(Activity activity, int stayIndex, int clickStayIndex);
+
+        void onEventRecommendItemList(Activity activity, int stayIndex, List<Integer> stayIndexList);
+
         StayOutboundPaymentAnalyticsParam getPaymentAnalyticsParam(String grade, boolean nrd, boolean showOriginalPrice);
     }
 
@@ -1180,6 +1186,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         }
 
         startStayOutboundDetail(view, stayOutbound, pairs);
+
+        mAnalytics.onEventRecommendItemClick(getActivity(), mStayIndex, stayOutbound.index);
     }
 
     @Override
@@ -1557,6 +1565,31 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             {
                 onStayOutboundDetail(stayOutboundDetail);
                 notifyRecommendAroundList();
+
+                try
+                {
+                    boolean hasRecommendList = mRecommendAroundList == null || mRecommendAroundList.size() == 0 ? false : true;
+
+                    mAnalytics.onEventHasRecommendList(getActivity(), hasRecommendList);
+
+                    if (hasRecommendList == true)
+                    {
+                        List<Integer> recommendIndexList = new ArrayList<>();
+                        for (CarouselListItem carouselListItem : mRecommendAroundList)
+                        {
+                            StayOutbound stayOutbound = carouselListItem.getItem();
+                            if (stayOutbound != null)
+                            {
+                                recommendIndexList.add(stayOutbound.index);
+                            }
+                        }
+
+                        mAnalytics.onEventRecommendItemList(getActivity(), stayOutboundDetail.index, recommendIndexList);
+                    }
+                } catch (Exception e)
+                {
+                    ExLog.d(e.getMessage());
+                }
 
                 if (disposable != null)
                 {
