@@ -227,6 +227,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
             if (mDailyDeepLink != null && mDailyDeepLink.isExternalDeepLink() == true)
             {
+                mAnalytics.setAnalyticsParam(new StayOutboundDetailAnalyticsParam());
+
                 addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime().subscribe(new Consumer<CommonDateTime>()
                 {
                     @Override
@@ -1493,14 +1495,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             setResult(BaseActivity.RESULT_CODE_REFRESH);
 
             getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_outbound_detail_sold_out)//
-                , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
-                {
-                    @Override
-                    public void onDismiss(DialogInterface dialog)
-                    {
-
-                    }
-                });
+                , getString(R.string.dialog_btn_text_confirm), null);
         } else
         {
             if (isDeepLink == false && compareListPrice == true)
@@ -1527,14 +1522,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                     setResult(BaseActivity.RESULT_CODE_REFRESH);
 
                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_outbound_detail_changed_price)//
-                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
-                        {
-                            @Override
-                            public void onDismiss(DialogInterface dialog)
-                            {
-                                onActionButtonClick();
-                            }
-                        });
+                        , getString(R.string.dialog_btn_text_confirm), null);
                 }
             }
         }

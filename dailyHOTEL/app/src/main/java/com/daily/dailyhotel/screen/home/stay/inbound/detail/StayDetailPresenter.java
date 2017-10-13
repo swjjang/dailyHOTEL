@@ -50,6 +50,7 @@ import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.TrueVRActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
+import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayDetailCalendarActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectStayCouponDialogActivity;
@@ -138,13 +139,15 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
         void onScreen(Activity activity, StayBookDateTime stayBookDateTime, StayDetail stayDetail, int priceFromList);
 
-        void onScreenRoomList(Activity activity);
+        void onScreenRoomList(Activity activity, StayBookDateTime stayBookDateTime, StayDetail stayDetail, int priceFromList);
+
+        void onRoomListClick(Activity activity, String stayName);
 
         void onEventShareKakaoClick(Activity activity, boolean login, String userType, boolean benefitAlarm//
-            , int gourmetIndex, String gourmetName);
+            , int stayIndex, String stayName, boolean overseas);
 
         void onEventShareSmsClick(Activity activity, boolean login, String userType, boolean benefitAlarm//
-            , int gourmetIndex, String gourmetName);
+            , int stayIndex, String stayName, boolean overseas);
 
         void onEventDownloadCoupon(Activity activity, String stayName);
 
@@ -152,22 +155,16 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
         void onEventShare(Activity activity);
 
-        void onEventHasHiddenMenus(Activity activity);
-
         void onEventChangedPrice(Activity activity, boolean deepLink, String stayName, boolean soldOut);
 
         void onEventCalendarClick(Activity activity);
 
-        void onEventOrderClick(Activity activity, StayBookDateTime stayBookDateTime//
-            , String stayName, String menuName, String category, int discountPrice);
-
-        void onEventScrollTopMenuClick(Activity activity, String stayName);
-
-        void onEventMenuClick(Activity activity, int menuIndex, int position);
+        void onEventBookingClick(Activity activity, StayBookDateTime stayBookDateTime//
+            , int stayIndex, String stayName, String roomName, String category, int discountPrice);
 
         void onEventTrueReviewClick(Activity activity);
 
-        void onEventMoreMenuClick(Activity activity, boolean opened, int stayIndex);
+        void onEventTrueVRClick(Activity activity, int stayIndex);
 
         void onEventImageClick(Activity activity, String stayName);
 
@@ -184,6 +181,8 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         void onEventFaqClick(Activity activity);
 
         void onEventHappyTalkClick(Activity activity);
+
+        void onEventStampClick(Activity activity);
     }
 
     public StayDetailPresenter(@NonNull StayDetailActivity activity)
@@ -608,6 +607,8 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 unLockAll();
             }
         });
+
+        mAnalytics.onEventShare(getActivity());
     }
 
     @Override
@@ -783,7 +784,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
             mAnalytics.onEventShareKakaoClick(getActivity(), DailyHotel.isLogin()//
                 , DailyUserPreference.getInstance(getActivity()).getType()//
-                , DailyUserPreference.getInstance(getActivity()).isBenefitAlarm(), mStayDetail.index, mStayDetail.name);
+                , DailyUserPreference.getInstance(getActivity()).isBenefitAlarm(), mStayDetail.index, mStayDetail.name, mStayDetail.overseas);
         } catch (Exception e)
         {
             getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
@@ -855,7 +856,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
             mAnalytics.onEventShareSmsClick(getActivity(), DailyHotel.isLogin()//
                 , DailyUserPreference.getInstance(getActivity()).getType()//
-                , DailyUserPreference.getInstance(getActivity()).isBenefitAlarm(), mStayDetail.index, mStayDetail.name);
+                , DailyUserPreference.getInstance(getActivity()).isBenefitAlarm(), mStayDetail.index, mStayDetail.name, mStayDetail.overseas);
         } catch (Exception e)
         {
             unLockAll();
@@ -1054,7 +1055,8 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                     }));
                 }
 
-                mAnalytics.onScreenRoomList(getActivity());
+                mAnalytics.onScreenRoomList(getActivity(), mStayBookDateTime, mStayDetail, mPriceFromList);
+                mAnalytics.onRoomListClick(getActivity(), mStayDetail.name);
                 break;
 
             default:
@@ -1165,14 +1167,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 , Constants.PlaceType.HOTEL, mStayDetail.category), StayDetailActivity.REQUEST_CODE_TRUE_VR);
         }
 
-        try
-        {
-            AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION,//
-                AnalyticsManager.Action.TRUE_VR_CLICK, Integer.toString(mStayDetail.index), null);
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
+        mAnalytics.onEventTrueVRClick(getActivity(), mStayDetail.index);
     }
 
     @Override
@@ -1224,7 +1219,8 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         } else
         {
             Intent intent = SelectStayCouponDialogActivity.newInstance(getActivity(), mStayDetail.index //
-                , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT), mStayDetail.category, mStayDetail.name);
+                , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT), mStayDetail.category, mStayDetail.name);
             startActivityForResult(intent, StayDetailActivity.REQUEST_CODE_DOWNLOAD_COUPON);
         }
     }
@@ -1245,6 +1241,8 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 unLockAll();
             }
         });
+
+        mAnalytics.onEventStampClick(getActivity());
     }
 
     @Override
@@ -1498,11 +1496,13 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             ? StayDetailCalendarActivity.DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT //
             : StayDetailCalendarActivity.DEFAULT_OVERSEAS_CALENDAR_DAY_OF_MAX_COUNT;
 
-        Intent intent = StayDetailCalendarActivity.newInstance(getActivity(), commonDateTime //
-            , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , dayCount, stayIndex, AnalyticsManager.ValueType.DETAIL //
-            , (ArrayList) soldOutList, true, animation, mStayDetail.singleStay);
+        String callByScreen = equalsCallingActivity(EventWebActivity.class) ? AnalyticsManager.Label.EVENT : AnalyticsManager.ValueType.DETAIL;
 
+        Intent intent = StayDetailCalendarActivity.newInstance(getActivity(), commonDateTime //
+            , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , dayCount, stayIndex, callByScreen //
+            , (ArrayList) soldOutList, true, animation, mStayDetail.singleStay);
 
         startActivityForResult(intent, StayDetailActivity.REQUEST_CODE_CALENDAR);
 
@@ -1524,21 +1524,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             setResult(BaseActivity.RESULT_CODE_REFRESH);
 
             getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_sold_out)//
-                , getString(R.string.label_changing_date), new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        onCalendarClick();
-                    }
-                }, new DialogInterface.OnDismissListener()
-                {
-                    @Override
-                    public void onDismiss(DialogInterface dialog)
-                    {
-
-                    }
-                });
+                , getString(R.string.label_changing_date), v -> onCalendarClick(), null, true);
         } else
         {
             if (isDeepLink == false && compareListPrice == true)
@@ -1573,6 +1559,8 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                                 onActionButtonClick();
                             }
                         });
+
+                    mAnalytics.onEventChangedPrice(getActivity(), isDeepLink, stayDetail.name, false);
                 }
             }
         }
@@ -1711,6 +1699,9 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 }
             }));
         }
+
+        mAnalytics.onEventBookingClick(getActivity(), mStayBookDateTime, mStayDetail.index, mStayDetail.name//
+            , mSelectedRoom.name, mStayDetail.category, mSelectedRoom.discountAverage);
     }
 
     private void startPayment(StayBookDateTime stayBookDateTime, StayDetail stayDetail, StayRoom stayRoom)

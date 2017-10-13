@@ -290,7 +290,7 @@ public class GourmetDetailAnalyticsImpl implements GourmetDetailPresenter.Gourme
 
     @Override
     public void onEventOrderClick(Activity activity, GourmetBookDateTime gourmetBookDateTime//
-        , String gourmetName, String menuName, String category, int discountPrice)
+        , int gourmetIndex, String gourmetName, String menuName, String category, int discountPrice)
     {
         if (activity == null || mAnalyticsParam == null || gourmetBookDateTime == null)
         {
@@ -301,6 +301,7 @@ public class GourmetDetailAnalyticsImpl implements GourmetDetailPresenter.Gourme
 
         Map<String, String> params = new HashMap<>();
         params.put(AnalyticsManager.KeyType.NAME, gourmetName);
+        params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(gourmetIndex));
         params.put(AnalyticsManager.KeyType.CATEGORY, category);
 
         params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getProvinceName());

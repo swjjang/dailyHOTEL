@@ -154,7 +154,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         void onEventCalendarClick(Activity activity);
 
         void onEventOrderClick(Activity activity, GourmetBookDateTime gourmetBookDateTime//
-            , String gourmetName, String menuName, String category, int discountPrice);
+            , int gourmetIndex, String gourmetName, String menuName, String category, int discountPrice);
 
         void onEventScrollTopMenuClick(Activity activity, String gourmetName);
 
@@ -242,6 +242,8 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
             if (mDailyDeepLink.isExternalDeepLink() == true)
             {
+                mAnalytics.setAnalyticsParam(new GourmetDetailAnalyticsParam());
+
                 addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime().subscribe(new Consumer<CommonDateTime>()
                 {
                     @Override
@@ -1423,20 +1425,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
             getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_detail_sold_out)//
                 , getString(R.string.label_changing_date)//
-                , new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        onCalendarClick();
-                    }
-                }, new DialogInterface.OnDismissListener()
-                {
-                    @Override
-                    public void onDismiss(DialogInterface dialog)
-                    {
-                    }
-                }, true);
+                , v -> onCalendarClick(), null, true);
 
             mAnalytics.onEventChangedPrice(getActivity(), isDeepLink, gourmetDetail.name, true);
         } else
@@ -1465,13 +1454,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                     setResult(BaseActivity.RESULT_CODE_REFRESH);
 
                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_detail_sold_out)//
-                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
-                        {
-                            @Override
-                            public void onDismiss(DialogInterface dialog)
-                            {
-                            }
-                        });
+                        , getString(R.string.dialog_btn_text_confirm), null);
 
                     mAnalytics.onEventChangedPrice(getActivity(), isDeepLink, gourmetDetail.name, false);
                 }
@@ -1631,7 +1614,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             }));
         }
 
-        mAnalytics.onEventOrderClick(getActivity(), mGourmetBookDateTime, mGourmetDetail.name//
+        mAnalytics.onEventOrderClick(getActivity(), mGourmetBookDateTime, mGourmetDetail.index, mGourmetDetail.name//
             , gourmetMenu.name, mGourmetDetail.category, gourmetMenu.discountPrice);
     }
 

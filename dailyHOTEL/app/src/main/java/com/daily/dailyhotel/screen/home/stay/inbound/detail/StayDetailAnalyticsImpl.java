@@ -2,9 +2,17 @@ package com.daily.dailyhotel.screen.home.stay.inbound.detail;
 
 import android.app.Activity;
 
+import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayDetail;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAnalyticsInterface
 {
@@ -25,141 +33,539 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
     @Override
     public void onScreen(Activity activity, StayBookDateTime stayBookDateTime, StayDetail stayDetail, int priceFromList)
     {
+        if (activity == null || stayDetail == null)
+        {
+            return;
+        }
 
+        try
+        {
+            Map<String, String> params = new HashMap<>();
+            params.put(AnalyticsManager.KeyType.NAME, stayDetail.name);
+            params.put(AnalyticsManager.KeyType.GRADE, stayDetail.grade.getName(activity)); // 14
+            params.put(AnalyticsManager.KeyType.DBENEFIT, DailyTextUtils.isTextEmpty(stayDetail.benefit) ? "no" : "yes"); // 3
+
+            if (stayDetail.getRoomList() == null || stayDetail.getRoomList().size() == 0)
+            {
+                params.put(AnalyticsManager.KeyType.PRICE, "0");
+            } else
+            {
+                params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(stayDetail.getRoomList().get(0).discountAverage));
+            }
+
+            int nights = stayBookDateTime.getNights();
+
+            params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(nights));
+            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayDetail.index)); // 15
+
+            params.put(AnalyticsManager.KeyType.CHECK_IN, stayBookDateTime.getCheckInDateTime("yyyy-MM-dd")); // 1
+            params.put(AnalyticsManager.KeyType.CHECK_OUT, stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd")); // 2
+
+            params.put(AnalyticsManager.KeyType.ADDRESS, stayDetail.address);
+
+            if (DailyTextUtils.isTextEmpty(stayDetail.category) == true) //
+            {
+                params.put(AnalyticsManager.KeyType.CATEGORY, AnalyticsManager.ValueType.EMPTY);
+            } else
+            {
+                params.put(AnalyticsManager.KeyType.CATEGORY, stayDetail.category);
+            }
+
+            params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getProvinceName());
+            params.put(AnalyticsManager.KeyType.DISTRICT, mAnalyticsParam.getDistrictName());
+            params.put(AnalyticsManager.KeyType.AREA, mAnalyticsParam.getAddressAreaName());
+
+            params.put(AnalyticsManager.KeyType.UNIT_PRICE, Integer.toString(priceFromList));
+            params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, stayBookDateTime.getCheckInDateTime("yyyyMMdd"));
+
+            String listIndex = mAnalyticsParam.entryPosition == -1 //
+                ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mAnalyticsParam.entryPosition);
+
+            params.put(AnalyticsManager.KeyType.LIST_INDEX, listIndex);
+
+            String placeCount = mAnalyticsParam.totalListCount == -1 //
+                ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mAnalyticsParam.totalListCount);
+
+            params.put(AnalyticsManager.KeyType.PLACE_COUNT, placeCount);
+
+            params.put(AnalyticsManager.KeyType.RATING, Integer.toString(stayDetail.ratingValue));
+            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mAnalyticsParam.getShowOriginalPriceYn());
+            params.put(AnalyticsManager.KeyType.DAILYCHOICE, mAnalyticsParam.isDailyChoice ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(nights));
+
+            AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_DETAIL, null, params);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
     @Override
-    public void onScreenRoomList(Activity activity)
+    public void onScreenRoomList(Activity activity, StayBookDateTime stayBookDateTime, StayDetail stayDetail, int priceFromList)
+    {
+        if (activity == null || stayDetail == null)
+        {
+            return;
+        }
+
+        try
+        {
+            Map<String, String> params = new HashMap<>();
+            params.put(AnalyticsManager.KeyType.NAME, stayDetail.name);
+            params.put(AnalyticsManager.KeyType.GRADE, stayDetail.grade.getName(activity)); // 14
+            params.put(AnalyticsManager.KeyType.DBENEFIT, DailyTextUtils.isTextEmpty(stayDetail.benefit) ? "no" : "yes"); // 3
+
+            if (stayDetail.getRoomList() == null || stayDetail.getRoomList().size() == 0)
+            {
+                params.put(AnalyticsManager.KeyType.PRICE, "0");
+            } else
+            {
+                params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(stayDetail.getRoomList().get(0).discountAverage));
+            }
+
+            int nights = stayBookDateTime.getNights();
+
+            params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(nights));
+            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayDetail.index)); // 15
+
+            params.put(AnalyticsManager.KeyType.CHECK_IN, stayBookDateTime.getCheckInDateTime("yyyy-MM-dd")); // 1
+            params.put(AnalyticsManager.KeyType.CHECK_OUT, stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd")); // 2
+
+            params.put(AnalyticsManager.KeyType.ADDRESS, stayDetail.address);
+
+            if (DailyTextUtils.isTextEmpty(stayDetail.category) == true) //
+            {
+                params.put(AnalyticsManager.KeyType.CATEGORY, AnalyticsManager.ValueType.EMPTY);
+            } else
+            {
+                params.put(AnalyticsManager.KeyType.CATEGORY, stayDetail.category);
+            }
+
+            params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getProvinceName());
+            params.put(AnalyticsManager.KeyType.DISTRICT, mAnalyticsParam.getDistrictName());
+            params.put(AnalyticsManager.KeyType.AREA, mAnalyticsParam.getAddressAreaName());
+
+            params.put(AnalyticsManager.KeyType.UNIT_PRICE, Integer.toString(priceFromList));
+            params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, stayBookDateTime.getCheckInDateTime("yyyyMMdd"));
+
+            String listIndex = mAnalyticsParam.entryPosition == -1 //
+                ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mAnalyticsParam.entryPosition);
+
+            params.put(AnalyticsManager.KeyType.LIST_INDEX, listIndex);
+
+            String placeCount = mAnalyticsParam.totalListCount == -1 //
+                ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mAnalyticsParam.totalListCount);
+
+            params.put(AnalyticsManager.KeyType.PLACE_COUNT, placeCount);
+
+            params.put(AnalyticsManager.KeyType.RATING, Integer.toString(stayDetail.ratingValue));
+            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mAnalyticsParam.getShowOriginalPriceYn());
+            params.put(AnalyticsManager.KeyType.DAILYCHOICE, mAnalyticsParam.isDailyChoice ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(nights));
+
+            AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_DETAIL_ROOMTYPE, null, params);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
+    @Override
+    public void onRoomListClick(Activity activity, String stayName)
     {
         if (activity == null)
         {
             return;
         }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
+            , AnalyticsManager.Action.ROOM_TYPE_CLICKED, stayName, null);
     }
 
     @Override
-    public void onEventShareKakaoClick(Activity activity, boolean login, String userType, boolean benefitAlarm, int gourmetIndex, String gourmetName)
+    public void onEventShareKakaoClick(Activity activity, boolean login, String userType, boolean benefitAlarm//
+        , int stayIndex, String stayName, boolean overseas)
     {
+        if (mAnalyticsParam == null || activity == null)
+        {
+            return;
+        }
 
+        try
+        {
+            HashMap<String, String> params = new HashMap<>();
+            params.put(AnalyticsManager.KeyType.SERVICE, AnalyticsManager.ValueType.STAY);
+            params.put(AnalyticsManager.KeyType.COUNTRY, overseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
+
+            params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getProvinceName());
+
+            if (login == true)
+            {
+                params.put(AnalyticsManager.KeyType.USER_TYPE, AnalyticsManager.ValueType.MEMBER);
+
+                switch (userType)
+                {
+                    case Constants.DAILY_USER:
+                        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.UserType.EMAIL);
+                        break;
+
+                    case Constants.KAKAO_USER:
+                        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.UserType.KAKAO);
+                        break;
+
+                    case Constants.FACEBOOK_USER:
+                        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.UserType.FACEBOOK);
+                        break;
+
+                    default:
+                        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.ValueType.EMPTY);
+                        break;
+                }
+            } else
+            {
+                params.put(AnalyticsManager.KeyType.USER_TYPE, AnalyticsManager.ValueType.GUEST);
+                params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.ValueType.EMPTY);
+            }
+
+            params.put(AnalyticsManager.KeyType.PUSH_NOTIFICATION, benefitAlarm ? "on" : "off");
+            params.put(AnalyticsManager.KeyType.SHARE_METHOD, AnalyticsManager.ValueType.KAKAO);
+            params.put(AnalyticsManager.KeyType.VENDOR_ID, Integer.toString(stayIndex));
+            params.put(AnalyticsManager.KeyType.VENDOR_NAME, stayName);
+
+            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SHARE//
+                , AnalyticsManager.Action.STAY_ITEM_SHARE, AnalyticsManager.ValueType.KAKAO, params);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
     @Override
-    public void onEventShareSmsClick(Activity activity, boolean login, String userType, boolean benefitAlarm, int gourmetIndex, String gourmetName)
+    public void onEventShareSmsClick(Activity activity, boolean login, String userType, boolean benefitAlarm//
+        , int stayIndex, String stayName, boolean overseas)
     {
+        if (mAnalyticsParam == null || activity == null)
+        {
+            return;
+        }
 
+        try
+        {
+            HashMap<String, String> params = new HashMap<>();
+            params.put(AnalyticsManager.KeyType.SERVICE, AnalyticsManager.ValueType.STAY);
+            params.put(AnalyticsManager.KeyType.COUNTRY, overseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
+
+            params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getProvinceName());
+
+            if (login == true)
+            {
+                params.put(AnalyticsManager.KeyType.USER_TYPE, AnalyticsManager.ValueType.MEMBER);
+
+                switch (userType)
+                {
+                    case Constants.DAILY_USER:
+                        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.UserType.EMAIL);
+                        break;
+
+                    case Constants.KAKAO_USER:
+                        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.UserType.KAKAO);
+                        break;
+
+                    case Constants.FACEBOOK_USER:
+                        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.UserType.FACEBOOK);
+                        break;
+
+                    default:
+                        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.ValueType.EMPTY);
+                        break;
+                }
+            } else
+            {
+                params.put(AnalyticsManager.KeyType.USER_TYPE, AnalyticsManager.ValueType.GUEST);
+                params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.ValueType.EMPTY);
+            }
+
+            params.put(AnalyticsManager.KeyType.PUSH_NOTIFICATION, benefitAlarm ? "on" : "off");
+            params.put(AnalyticsManager.KeyType.SHARE_METHOD, AnalyticsManager.ValueType.MESSAGE);
+            params.put(AnalyticsManager.KeyType.VENDOR_ID, Integer.toString(stayIndex));
+            params.put(AnalyticsManager.KeyType.VENDOR_NAME, stayName);
+
+            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SHARE//
+                , AnalyticsManager.Action.STAY_ITEM_SHARE, AnalyticsManager.ValueType.MESSAGE, params);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
     @Override
     public void onEventDownloadCoupon(Activity activity, String stayName)
     {
+        if (mAnalyticsParam == null || activity == null)
+        {
+            return;
+        }
 
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
+            , AnalyticsManager.Action.HOTEL_COUPON_DOWNLOAD, stayName, null);
     }
 
     @Override
     public void onEventDownloadCouponByLogin(Activity activity, boolean login)
     {
+        if (activity == null)
+        {
+            return;
+        }
 
+        if (login == true)
+        {
+            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.POPUP_BOXES, AnalyticsManager.Action.COUPON_LOGIN, AnalyticsManager.Label.LOGIN_, null);
+
+        } else
+        {
+            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.POPUP_BOXES, AnalyticsManager.Action.COUPON_LOGIN, AnalyticsManager.Label.CLOSED, null);
+        }
     }
 
     @Override
     public void onEventShare(Activity activity)
     {
+        if (activity == null)
+        {
+            return;
+        }
 
-    }
-
-    @Override
-    public void onEventHasHiddenMenus(Activity activity)
-    {
-
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SHARE,//
+            AnalyticsManager.Action.ITEM_SHARE, AnalyticsManager.Label.STAY, null);
     }
 
     @Override
     public void onEventChangedPrice(Activity activity, boolean deepLink, String stayName, boolean soldOut)
     {
+        if (activity == null)
+        {
+            return;
+        }
 
+        if (soldOut == true)
+        {
+            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
+                deepLink ? AnalyticsManager.Action.SOLDOUT_DEEPLINK : AnalyticsManager.Action.SOLDOUT, stayName, null);
+        } else
+        {
+            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.POPUP_BOXES,//
+                AnalyticsManager.Action.SOLDOUT_CHANGEPRICE, stayName, null);
+        }
     }
 
     @Override
     public void onEventCalendarClick(Activity activity)
     {
+        if (activity == null)
+        {
+            return;
+        }
 
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
+            , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.DETAIL, null);
     }
 
     @Override
-    public void onEventOrderClick(Activity activity, StayBookDateTime stayBookDateTime, String stayName, String menuName, String category, int discountPrice)
+    public void onEventBookingClick(Activity activity, StayBookDateTime stayBookDateTime, int stayIndex//
+        , String stayName, String roomName, String category, int discountPrice)
     {
+        if (activity == null || mAnalyticsParam == null || stayBookDateTime == null)
+        {
+            return;
+        }
 
-    }
+        String label = String.format(Locale.KOREA, "%s-%s", stayName, roomName);
 
-    @Override
-    public void onEventScrollTopMenuClick(Activity activity, String stayName)
-    {
+        int nights = stayBookDateTime.getNights();
 
-    }
+        Map<String, String> params = new HashMap<>();
+        params.put(AnalyticsManager.KeyType.NAME, stayName);
+        params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(nights));
+        params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayIndex));
+        params.put(AnalyticsManager.KeyType.CATEGORY, category);
 
-    @Override
-    public void onEventMenuClick(Activity activity, int menuIndex, int position)
-    {
+        params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getProvinceName());
+        params.put(AnalyticsManager.KeyType.DISTRICT, mAnalyticsParam.getDistrictName());
+        params.put(AnalyticsManager.KeyType.AREA, mAnalyticsParam.getAddressAreaName());
 
+        params.put(AnalyticsManager.KeyType.PRICE_OF_SELECTED_ROOM, Integer.toString(discountPrice));
+        params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, stayBookDateTime.getCheckInDateTime("yyyyMMdd"));
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
+            , AnalyticsManager.Action.BOOKING_CLICKED, label, params);
     }
 
     @Override
     public void onEventTrueReviewClick(Activity activity)
     {
+        if (activity == null)
+        {
+            return;
+        }
 
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            , AnalyticsManager.Action.TRUE_REVIEW_CLICK, AnalyticsManager.Label.STAY, null);
     }
 
     @Override
-    public void onEventMoreMenuClick(Activity activity, boolean opened, int stayIndex)
+    public void onEventTrueVRClick(Activity activity, int stayIndex)
     {
+        if (activity == null)
+        {
+            return;
+        }
 
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION,//
+            AnalyticsManager.Action.TRUE_VR_CLICK, Integer.toString(stayIndex), null);
     }
 
     @Override
     public void onEventImageClick(Activity activity, String stayName)
     {
+        if (activity == null)
+        {
+            return;
+        }
 
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS,//
+            AnalyticsManager.Action.HOTEL_IMAGE_CLICKED, stayName, null);
     }
 
     @Override
     public void onEventConciergeClick(Activity activity)
     {
+        if (activity == null)
+        {
+            return;
+        }
 
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            , AnalyticsManager.Action.CONTACT_DAILY_CONCIERGE, AnalyticsManager.Label.STAY_DETAIL, null);
     }
 
     @Override
     public void onEventMapClick(Activity activity, String stayName)
     {
+        if (activity == null)
+        {
+            return;
+        }
 
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS,//
+            AnalyticsManager.Action.HOTEL_DETAIL_MAP_CLICKED, stayName, null);
     }
 
     @Override
     public void onEventClipAddressClick(Activity activity, String stayName)
     {
+        if (activity == null)
+        {
+            return;
+        }
 
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, //
+            AnalyticsManager.Action.HOTEL_DETAIL_ADDRESS_COPY_CLICKED, stayName, null);
     }
 
     @Override
     public void onEventWishClick(Activity activity, StayBookDateTime stayBookDateTime, StayDetail stayDetail, int priceFromList, boolean myWish)
     {
+        if (activity == null || stayBookDateTime == null || stayDetail == null)
+        {
+            return;
+        }
 
+        try
+        {
+            Map<String, String> params = new HashMap<>();
+            params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
+            params.put(AnalyticsManager.KeyType.NAME, stayDetail.name);
+            params.put(AnalyticsManager.KeyType.VALUE, Integer.toString(priceFromList));
+            params.put(AnalyticsManager.KeyType.COUNTRY, stayDetail.overseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
+            params.put(AnalyticsManager.KeyType.CATEGORY, stayDetail.category);
+
+            params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getProvinceName());
+            params.put(AnalyticsManager.KeyType.DISTRICT, mAnalyticsParam.getDistrictName());
+            params.put(AnalyticsManager.KeyType.AREA, mAnalyticsParam.getAddressAreaName());
+
+            params.put(AnalyticsManager.KeyType.GRADE, stayDetail.grade.getName(activity));
+            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayDetail.index));
+            params.put(AnalyticsManager.KeyType.RATING, Integer.toString(stayDetail.ratingValue));
+
+            String listIndex = mAnalyticsParam.entryPosition == -1 //
+                ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mAnalyticsParam.entryPosition);
+
+            params.put(AnalyticsManager.KeyType.LIST_INDEX, listIndex);
+            params.put(AnalyticsManager.KeyType.DAILYCHOICE, mAnalyticsParam.isDailyChoice ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.DBENEFIT, DailyTextUtils.isTextEmpty(stayDetail.benefit) ? "no" : "yes");
+
+            int nights = stayBookDateTime.getNights();
+
+            params.put(AnalyticsManager.KeyType.CHECK_IN, stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.CHECK_OUT, stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(nights));
+            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mAnalyticsParam.getShowOriginalPriceYn());
+
+            AnalyticsManager.getInstance(activity).recordEvent(//
+                AnalyticsManager.Category.NAVIGATION_,//
+                myWish ? AnalyticsManager.Action.WISHLIST_ON : AnalyticsManager.Action.WISHLIST_OFF, stayDetail.name, params);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
     @Override
     public void onEventCallClick(Activity activity)
     {
+        if (activity == null)
+        {
+            return;
+        }
 
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+            , AnalyticsManager.Action.CALL_CLICK, AnalyticsManager.Label.STAY_DETAIL, null);
     }
 
     @Override
     public void onEventFaqClick(Activity activity)
     {
+        if (activity == null)
+        {
+            return;
+        }
 
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+            , AnalyticsManager.Action.FNQ_CLICK, AnalyticsManager.Label.STAY_DETAIL, null);
     }
 
     @Override
     public void onEventHappyTalkClick(Activity activity)
     {
+        if (activity == null)
+        {
+            return;
+        }
 
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+            , AnalyticsManager.Action.HAPPYTALK_CLICK, AnalyticsManager.Label.STAY_DETAIL, null);
+    }
+
+    @Override
+    public void onEventStampClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION,//
+            AnalyticsManager.Action.STAMP_DETAIL_CLICK, AnalyticsManager.Label.STAY_DETAIL_VIEW, null);
     }
 }
