@@ -1003,6 +1003,11 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     @Override
     public void onHideRoomListClick(boolean animation)
     {
+        if (mStatus != STATUS_BOOKING)
+        {
+            return;
+        }
+
         Observable<Boolean> observable = getViewInterface().hideRoomList(animation);
 
         if (observable != null)
@@ -1347,7 +1352,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         mCheckChangedPrice = true;
 
         // 선택된 방이 없으면 처음 방으로 한다.
-        if (mStayDetail.getRoomList() == null || mStayDetail.getRoomList().size() == 0)
+        if (isSoldOut(mStayDetail) == true)
         {
             setStatus(STATUS_SOLD_OUT);
         } else
@@ -1704,6 +1709,16 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             , mSelectedRoom.name, mStayDetail.category, mSelectedRoom.discountAverage);
     }
 
+    private boolean isSoldOut(StayDetail stayDetail)
+    {
+        if (stayDetail == null)
+        {
+            return true;
+        }
+
+        return (mStayDetail.getRoomList() == null || mStayDetail.getRoomList().size() == 0);
+    }
+
     private void startPayment(StayBookDateTime stayBookDateTime, StayDetail stayDetail, StayRoom stayRoom)
     {
         if (stayBookDateTime == null || stayDetail == null || stayRoom == null)
@@ -1721,7 +1736,6 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
         StayPaymentAnalyticsParam analyticsParam = new StayPaymentAnalyticsParam();
         StayDetailAnalyticsParam detailAnalyticsParam = mAnalytics.getAnalyticsParam();
-
 
         if (detailAnalyticsParam != null)
         {
