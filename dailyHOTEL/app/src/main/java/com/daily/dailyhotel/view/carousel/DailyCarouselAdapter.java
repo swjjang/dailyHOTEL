@@ -390,7 +390,7 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
         // Stay Outbound 의 경우 PlaceType 이 없음
         holder.dataBinding.contentGradeView.setText("");
 
-        setTripAdvisorText(holder.dataBinding, stayOutbound.rating);
+        setTripAdvisorText(holder.dataBinding, stayOutbound.tripAdvisorRating);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
