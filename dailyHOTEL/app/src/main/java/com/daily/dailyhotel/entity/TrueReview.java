@@ -1,8 +1,5 @@
 package com.daily.dailyhotel.entity;
 
-import com.bluelinelabs.logansquare.annotation.JsonObject;
-
-@JsonObject
 public class TrueReview
 {
     public String email;

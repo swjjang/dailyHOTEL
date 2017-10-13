@@ -2,6 +2,7 @@ package com.daily.dailyhotel.screen.common.images;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.graphics.drawable.Animatable;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -16,14 +17,21 @@ import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
-import com.daily.dailyhotel.entity.BaseDetailImage;
+import com.daily.dailyhotel.entity.DetailImageInformation;
+import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.view.DailyToolbarView;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.controller.ControllerListener;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityImageListDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowImageDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.DailyPlaceDetailListView;
 
+import java.io.IOException;
 import java.util.List;
 
 public class ImageListView extends BaseDialogView<ImageListView.OnEventListener, ActivityImageListDataBinding>//
@@ -207,7 +215,7 @@ public class ImageListView extends BaseDialogView<ImageListView.OnEventListener,
     }
 
     @Override
-    public void setImageList(List<BaseDetailImage> imageList, int position)
+    public void setImageList(List<DetailImageInformation> imageList, int position)
     {
         if (getViewDataBinding() == null)
         {
@@ -259,11 +267,15 @@ public class ImageListView extends BaseDialogView<ImageListView.OnEventListener,
         getViewDataBinding().alphaView.setAlpha(1.0f - Math.abs(y * 1.5f) / ScreenUtils.getScreenHeight(getContext()));
     }
 
-    private class ImageDetailListAdapter extends ArrayAdapter<BaseDetailImage>
+    private class ImageDetailListAdapter extends ArrayAdapter<DetailImageInformation>
     {
+        private Context mContext;
+
         public ImageDetailListAdapter(Context context, int resourceId)
         {
             super(context, resourceId);
+
+            mContext = context;
         }
 
         @Override
@@ -273,27 +285,88 @@ public class ImageListView extends BaseDialogView<ImageListView.OnEventListener,
 
             if (convertView == null)
             {
-                dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.list_row_image_data, parent, false);
+                dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_image_data, parent, false);
             } else
             {
                 dataBinding = DataBindingUtil.bind(convertView);
             }
 
-            BaseDetailImage baseDetailImage = getItem(position);
+            DetailImageInformation detailImageInformation = getItem(position);
 
             dataBinding.getRoot().setTag(position);
 
-            if (DailyTextUtils.isTextEmpty(baseDetailImage.caption) == false)
+            if (DailyTextUtils.isTextEmpty(detailImageInformation.caption) == false)
             {
                 dataBinding.descriptionTextView.setVisibility(View.VISIBLE);
-                dataBinding.descriptionTextView.setText(baseDetailImage.caption);
+                dataBinding.descriptionTextView.setText(detailImageInformation.caption);
             } else
             {
                 dataBinding.descriptionTextView.setVisibility(View.INVISIBLE);
             }
 
-            baseDetailImage.setImage(getContext(), dataBinding.imageView);
             dataBinding.imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
+
+            String url;
+            ImageMap imageMap = detailImageInformation.getImageMap();
+            if (ScreenUtils.getScreenWidth(mContext) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
+            {
+                if (DailyTextUtils.isTextEmpty(imageMap.bigUrl) == true)
+                {
+                    url = imageMap.smallUrl;
+                } else
+                {
+                    url = imageMap.bigUrl;
+                }
+            } else
+            {
+                if (DailyTextUtils.isTextEmpty(imageMap.mediumUrl) == true)
+                {
+                    url = imageMap.smallUrl;
+                } else
+                {
+                    url = imageMap.mediumUrl;
+                }
+            }
+
+            ControllerListener controllerListener = new BaseControllerListener<ImageInfo>()
+            {
+                @Override
+                public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable)
+                {
+                    if (imageInfo == null)
+                    {
+                        return;
+                    }
+
+                    setImageViewHeight(dataBinding.imageView, imageInfo.getWidth(), imageInfo.getHeight());
+                }
+
+                @Override
+                public void onFailure(String id, Throwable throwable)
+                {
+                    if (throwable instanceof IOException == true)
+                    {
+                        if (url.equalsIgnoreCase(imageMap.bigUrl) == true)
+                        {
+                            imageMap.bigUrl = null;
+                        } else if (url.equalsIgnoreCase(imageMap.mediumUrl) == true)
+                        {
+                            imageMap.mediumUrl = null;
+                        } else
+                        {
+                            // 작은 이미지를 로딩했지만 실패하는 경우.
+                            return;
+                        }
+
+                        dataBinding.imageView.setImageURI(imageMap.smallUrl);
+                    }
+                }
+            };
+
+            DraweeController draweeController = Fresco.newDraweeControllerBuilder()//
+                .setControllerListener(controllerListener).setUri(url).build();
+
+            dataBinding.imageView.setController(draweeController);
 
             return dataBinding.getRoot();
         }
@@ -302,7 +375,7 @@ public class ImageListView extends BaseDialogView<ImageListView.OnEventListener,
         {
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
 
-            float scale = (float) ScreenUtils.getScreenWidth(getContext()) / width;
+            float scale = (float) ScreenUtils.getScreenWidth(mContext) / width;
             int viewHeight = (int) (scale * height);
 
             if (layoutParams == null)

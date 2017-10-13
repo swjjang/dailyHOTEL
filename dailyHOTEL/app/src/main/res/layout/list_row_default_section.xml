@@ -7,7 +7,7 @@
     <com.daily.base.widget.DailyTextView
         android:id="@+id/sectionTextView"
         android:layout_width="match_parent"
-        android:layout_height="34dp"
+        android:layout_height="30dp"
         android:background="@color/default_background"
         android:gravity="center_vertical"
         android:paddingLeft="15dp"

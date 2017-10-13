@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.screen.gourmet.filter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.View;
@@ -20,6 +19,7 @@ import com.twoheart.dailyhotel.place.activity.PlaceCalendarActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.DailyDayStrikeTextView;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -343,11 +343,8 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         visitLayoutParams.topMargin = ScreenUtils.dpToPx(this, 5);
         visitTextView.setLayoutParams(visitLayoutParams);
 
-        TextView dayTextView = (TextView) view.findViewById(R.id.dateTextView);
-        if ((dayTextView.getPaintFlags() & Paint.STRIKE_THRU_TEXT_FLAG) == Paint.STRIKE_THRU_TEXT_FLAG)
-        {
-            dayTextView.setPaintFlags(dayTextView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-        }
+        DailyDayStrikeTextView dayTextView = (DailyDayStrikeTextView) view.findViewById(R.id.dateTextView);
+        dayTextView.setStrikeFlag(false);
 
         view.setBackgroundResource(R.drawable.select_date_gourmet);
     }

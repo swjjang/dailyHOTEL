@@ -182,7 +182,7 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
             holder.dataBinding.defaultImageLayout.setVisibility(View.VISIBLE);
 
             holder.dataBinding.simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
-            Util.requestImageResize(mContext, holder.dataBinding.simpleDraweeView, gourmetMenu.getPrimaryImage().url);
+            Util.requestImageResize(mContext, holder.dataBinding.simpleDraweeView, gourmetMenu.getPrimaryImage().getImageMap().bigUrl);
             setLineIndicatorVisible(holder.dataBinding, detailImageInformationList.size());
 
             holder.dataBinding.defaultImageLayout.setOnClickListener(new View.OnClickListener()
@@ -218,7 +218,10 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
         } else
         {
             holder.dataBinding.timeLayout.setVisibility(View.VISIBLE);
-            String timeFormat = String.format(Locale.KOREA, "%s ~ %s", gourmetMenu.openTime, gourmetMenu.closeTime);
+
+            String closeTime = "00:00".equalsIgnoreCase(gourmetMenu.closeTime) ? "24:00" : gourmetMenu.closeTime;
+
+            String timeFormat = String.format(Locale.KOREA, "%s ~ %s", gourmetMenu.openTime, closeTime);
 
             if (DailyTextUtils.isTextEmpty(gourmetMenu.lastOrderTime) == false)
             {

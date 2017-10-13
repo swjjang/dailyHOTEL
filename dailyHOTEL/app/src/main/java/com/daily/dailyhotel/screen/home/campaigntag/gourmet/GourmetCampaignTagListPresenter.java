@@ -654,25 +654,12 @@ public class GourmetCampaignTagListPresenter //
                 View gradientTopView = view.findViewById(R.id.gradientTopView);
                 View gradientBottomView = view.findViewById(R.id.gradientView);
 
-                Object mapTag = gradientBottomView.getTag();
-
-                if (mapTag != null && "map".equals(mapTag) == true)
-                {
-                    intent = GourmetDetailActivity.newInstance(getActivity() //
-                        , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
-                        , mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                        , gourmet.category, gourmet.isSoldOut, false, false, true//
-                        , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP//
-                        , analyticsParam);
-                } else
-                {
-                    intent = GourmetDetailActivity.newInstance(getActivity() //
-                        , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
-                        , mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                        , gourmet.category, gourmet.isSoldOut, false, false, true//
-                        , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST//
-                        , analyticsParam);
-                }
+                intent = GourmetDetailActivity.newInstance(getActivity() //
+                    , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
+                    , mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                    , gourmet.category, gourmet.isSoldOut, false, false, true//
+                    , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP//
+                    , analyticsParam);
 
                 optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),//
                     android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//

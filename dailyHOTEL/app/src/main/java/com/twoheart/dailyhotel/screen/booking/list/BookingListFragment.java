@@ -32,12 +32,14 @@ import com.daily.dailyhotel.entity.ReviewQuestionItem;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.screen.booking.cancel.BookingCancelListActivity;
 import com.daily.dailyhotel.screen.booking.detail.stay.outbound.StayOutboundBookingDetailActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -51,7 +53,6 @@ import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
 import com.twoheart.dailyhotel.screen.booking.detail.PaymentWaitActivity;
 import com.twoheart.dailyhotel.screen.booking.detail.gourmet.GourmetReservationDetailActivity;
 import com.twoheart.dailyhotel.screen.booking.detail.hotel.StayReservationDetailActivity;
-import com.twoheart.dailyhotel.screen.hotel.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.screen.main.MainFragmentManager;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.review.ReviewActivity;
@@ -865,8 +866,15 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                         stayBookingDay.setCheckInDay(mCommonDateTime.dailyDateTime);
                         stayBookingDay.setCheckOutDay(mCommonDateTime.dailyDateTime, 1);
 
-                        Intent intent = StayDetailActivity.newInstance(getActivity(), stayBookingDay//
-                            , false, booking.placeIndex, 0, false, false, false);
+                        //                        Intent intent = StayDetailActivity.newInstance(getActivity(), stayBookingDay//
+                        //                            , false, booking.placeIndex, 0, false, false, false);
+
+                        Intent intent = StayDetailActivity.newInstance(getActivity() //
+                            , booking.placeIndex, booking.placeName, null, StayDetailActivity.NONE_PRICE//
+                            , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                            , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+                            , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, new StayDetailAnalyticsParam());
+
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 
                         getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);

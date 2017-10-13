@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.repository.remote.CalendarImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
@@ -55,6 +56,24 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
         intent.putExtra(INTENT_EXTRA_DATA_DAY_OF_MAXCOUNT, dayOfMaxCount);
 
         return intent;
+    }
+
+    public static Intent newInstance(Context context, CommonDateTime commonDateTime, String checkInDateTime, String checkOutDateTime //
+        , int dayOfMaxCount, int hotelIndex, String screen, ArrayList<Integer> soldOutList, boolean isSelected//
+        , boolean isAnimation, boolean isSingleDay) throws Exception
+    {
+        TodayDateTime todayDateTime = new TodayDateTime();
+        todayDateTime.dailyDateTime = commonDateTime.dailyDateTime;
+        todayDateTime.closeDateTime = commonDateTime.closeDateTime;
+        todayDateTime.openDateTime = commonDateTime.openDateTime;
+        todayDateTime.currentDateTime = commonDateTime.currentDateTime;
+
+        StayBookingDay stayBookingDay = new StayBookingDay();
+        stayBookingDay.setCheckInDay(checkInDateTime);
+        stayBookingDay.setCheckOutDay(checkOutDateTime);
+
+        return newInstance(context, todayDateTime, stayBookingDay, dayOfMaxCount, hotelIndex//
+            , screen, soldOutList, isSelected, isAnimation, isSingleDay);
     }
 
     @Override
@@ -133,6 +152,8 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
 
                 Intent intent = new Intent();
                 intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+                intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECK_IN_DATE, stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT));
+                intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECK_OUT_DATE, stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT));
 
                 setResult(RESULT_OK, intent);
                 hideAnimation();

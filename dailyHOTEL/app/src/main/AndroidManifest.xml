@@ -166,12 +166,6 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".screen.hotel.detail.StayDetailActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity
             android:name=".screen.hotel.preview.StayPreviewActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
@@ -637,6 +631,13 @@
         <!--  com.daily.dailyhotel.... -->
 
         <activity
+            android:name="com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+
+        <activity
             android:name="com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
@@ -644,13 +645,13 @@
             android:windowSoftInputMode="stateAlwaysHidden"/>
 
         <activity
-            android:name="com.daily.dailyhotel.screen.home.gourmet.detail.truereview.GourmetTrueReviewActivity"
+            android:name="com.daily.dailyhotel.screen.home.stay.inbound.detail.truereview.StayTrueReviewActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name="com.daily.dailyhotel.screen.home.stay.inbound.detail.truereview.StayTrueReviewActivity"
+            android:name="com.daily.dailyhotel.screen.home.gourmet.detail.truereview.GourmetTrueReviewActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
@@ -721,13 +722,6 @@
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name="com.daily.dailyhotel.screen.home.stay.outbound.detail.images.ImageListActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Translucent"/>
-
-        <activity
             android:name="com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
@@ -784,7 +778,7 @@
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name="com.daily.dailyhotel.screen.common.PaymentWebActivity"
+            android:name="com.daily.dailyhotel.screen.common.payment.PaymentWebActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"

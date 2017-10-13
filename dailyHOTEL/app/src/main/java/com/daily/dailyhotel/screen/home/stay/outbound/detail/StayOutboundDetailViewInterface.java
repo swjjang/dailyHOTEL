@@ -32,8 +32,6 @@ public interface StayOutboundDetailViewInterface extends BaseBlurViewInterface
 
     void setBottomButtonLayout(int status);
 
-    void setDetailImageCaption(String caption);
-
     void setPriceType(StayOutboundDetailPresenter.PriceType priceType);
 
     void showConciergeDialog(Dialog.OnDismissListener listener);

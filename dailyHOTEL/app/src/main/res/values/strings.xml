@@ -104,6 +104,9 @@
     <string name="label_all">전체</string>
     <string name="label_truereview_count">트루리뷰 %d개</string>
     <string name="label_soldout">판매완료</string>
+    <string name="label_check_in">체크인</string>
+    <string name="label_check_out">체크아웃</string>
+    <string name="label_include_tax">(세금/봉사료 포함)</string>
 
     <string name="label_count_stay">%1$d개 스테이</string>
     <string name="label_count_gourmet">%1$d개 고메</string>
@@ -770,7 +773,6 @@
     <string name="act_hotel_search_room">객실 선택하기</string>
     <string name="act_hotel_booking">예약 진행하기</string>
     <string name="act_hotel_soldout">판매완료</string>
-    <string name="label_hoteldetail_dbenefit">D.BENEFIT</string>
 
     <!-- Error Fragment -->
     <string name="frag_error_network_unavail">네트워크 연결이 끊어졌습니다.</string>
@@ -1360,7 +1362,6 @@
     <string name="label_stay_outbound_list_adult_count">성인 %1$d</string>
     <string name="label_stay_outbound_list_child_count">아동 %1$d</string>
     <string name="label_stay_outbound_tripadvisor_rating">(평점 %1$s)</string>
-    <string name="label_stay_outbound_tripadvisor_rating_type_none_bracket">평점 %1$s</string>
     <string name="label_stay_outbound_research_filter_on">조건을 변경하여 검색해보세요.</string>
 
     <string name="message_stay_outbound_search_empty">찾으시는 해외 호텔이 없으신가요?\n데일리 고객센터로 알려주세요!</string>

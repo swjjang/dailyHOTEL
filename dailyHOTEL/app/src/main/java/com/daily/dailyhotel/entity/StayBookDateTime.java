@@ -51,12 +51,20 @@ public class StayBookDateTime extends PlaceBookDateTime
         return getCalendarDateString(mCheckOutCalendar, format);
     }
 
-    public int getNights() throws Exception
+    public int getNights()
     {
-        Calendar checkInCalendar = DailyCalendar.getInstance(getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), true);
-        Calendar checkOutCalendar = DailyCalendar.getInstance(getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT), true);
+        //        Calendar checkInCalendar = DailyCalendar.getInstance(getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), true);
+        //        Calendar checkOutCalendar = DailyCalendar.getInstance(getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT), true);
+        //
+        //        return (int) ((checkOutCalendar.getTimeInMillis() - checkInCalendar.getTimeInMillis()) / DailyCalendar.DAY_MILLISECOND);
 
-        return (int) ((checkOutCalendar.getTimeInMillis() - checkInCalendar.getTimeInMillis()) / DailyCalendar.DAY_MILLISECOND);
+        try
+        {
+            return DailyCalendar.compareDateDay(getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT), getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT));
+        } catch (Exception e)
+        {
+            return 1;
+        }
     }
 
     //    public void verifyCommonDateTime(@NonNull CommonDateTime commonDateTime) throws Exception

@@ -90,7 +90,7 @@ public class GourmetMenuParcel implements Parcelable
 
         for (DetailImageInformationParcel detailImageInformationParcel : detailImageInformationParcelList)
         {
-            detailImageInformationList.add(detailImageInformationParcel.getGourmetMenuImage());
+            detailImageInformationList.add(detailImageInformationParcel.getDetailImageInformation());
         }
 
         mGourmetMenu.setImageList(detailImageInformationList);

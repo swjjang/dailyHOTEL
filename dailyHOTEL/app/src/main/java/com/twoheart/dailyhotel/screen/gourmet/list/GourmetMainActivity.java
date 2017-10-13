@@ -1020,25 +1020,12 @@ public class GourmetMainActivity extends PlaceMainActivity
                                 , analyticsParam);
                         } else
                         {
-                            Object mapTag = gradientBottomView.getTag();
-
-                            if (mapTag != null && "map".equals(mapTag) == true)
-                            {
-                                intent = GourmetDetailActivity.newInstance(GourmetMainActivity.this //
-                                    , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
-                                    , mGourmetCuration.getGourmetBookingDay().getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
-                                    , gourmet.category, gourmet.isSoldOut, false, false, true//
-                                    , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP//
-                                    , analyticsParam);
-                            } else
-                            {
-                                intent = GourmetDetailActivity.newInstance(GourmetMainActivity.this //
-                                    , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
-                                    , mGourmetCuration.getGourmetBookingDay().getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
-                                    , gourmet.category, gourmet.isSoldOut, false, false, true//
-                                    , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST//
-                                    , analyticsParam);
-                            }
+                            intent = GourmetDetailActivity.newInstance(GourmetMainActivity.this //
+                                , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
+                                , mGourmetCuration.getGourmetBookingDay().getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
+                                , gourmet.category, gourmet.isSoldOut, false, false, true//
+                                , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP//
+                                , analyticsParam);
 
                             optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(GourmetMainActivity.this,//
                                 android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
@@ -1336,7 +1323,7 @@ public class GourmetMainActivity extends PlaceMainActivity
             //                Intent intent = GourmetDetailActivity.newInstance(baseActivity, gourmetBookingDay, gourmetIndex, isShowCalendar, isShowVR, false);
             //                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 
-            Intent intent = com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity.newInstance(this, dailyDeepLink.getDeepLink());
+            Intent intent = GourmetDetailActivity.newInstance(this, dailyDeepLink.getDeepLink());
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 
             overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
