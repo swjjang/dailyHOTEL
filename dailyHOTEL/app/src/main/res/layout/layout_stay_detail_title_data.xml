@@ -26,7 +26,6 @@
             android:paddingTop="2px"
             android:textColor="@android:color/white"
             android:textSize="11dp"
-            android:visibility="invisible"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
