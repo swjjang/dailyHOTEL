@@ -45,7 +45,7 @@ public class PaymentRemoteImpl implements PaymentInterface
 
     @Override
     public Observable<StayOutboundPayment> getStayOutboundPayment(StayBookDateTime stayBookDateTime, int index//
-        , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people)
+        , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people, String vendorType)
     {
         JSONObject jsonObject = new JSONObject();
 
@@ -60,6 +60,7 @@ public class PaymentRemoteImpl implements PaymentInterface
             jsonObject.put("rateCode", rateCode);
             jsonObject.put("rateKey", rateKey);
             jsonObject.put("roomTypeCode", roomTypeCode);
+            jsonObject.put("vendorType", vendorType);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -212,7 +213,7 @@ public class PaymentRemoteImpl implements PaymentInterface
     @Override
     public Observable<PaymentResult> getStayOutboundPaymentTypeEasy(StayBookDateTime stayBookDateTime, int index//
         , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people//
-        , boolean usedBonus, int bonus, OverseasGuest guest, int totalPrice, String billingKey)
+        , boolean usedBonus, int bonus, OverseasGuest guest, int totalPrice, String billingKey, String vendorType)
     {
         JSONObject jsonObject = new JSONObject();
 
@@ -241,6 +242,7 @@ public class PaymentRemoteImpl implements PaymentInterface
             jsonObject.put("paymentType", PAYMENT_TYPE);
             jsonObject.put("total", totalPrice);
             jsonObject.put("billingKey", billingKey);
+            jsonObject.put("vendorType", vendorType);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -273,7 +275,7 @@ public class PaymentRemoteImpl implements PaymentInterface
     @Override
     public Observable<PaymentResult> getStayOutboundPaymentTypeBonus(StayBookDateTime stayBookDateTime, int index//
         , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people//
-        , boolean usedBonus, int bonus, OverseasGuest guest, int totalPrice)
+        , boolean usedBonus, int bonus, OverseasGuest guest, int totalPrice, String vendorType)
     {
         JSONObject jsonObject = new JSONObject();
 
@@ -301,6 +303,7 @@ public class PaymentRemoteImpl implements PaymentInterface
             jsonObject.put("phoneNumber", guest.phone.replace("-", ""));
             jsonObject.put("paymentType", PAYMENT_TYPE);
             jsonObject.put("total", totalPrice);
+            jsonObject.put("vendorType", vendorType);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -331,7 +334,9 @@ public class PaymentRemoteImpl implements PaymentInterface
     }
 
     @Override
-    public Observable<String> getStayOutboundHasDuplicatePayment(StayBookDateTime stayBookDateTime, int index, String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people, boolean usedBonus, int bonus, OverseasGuest guest, int totalPrice)
+    public Observable<String> getStayOutboundHasDuplicatePayment(StayBookDateTime stayBookDateTime//
+        , int index, String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId//
+        , People people, boolean usedBonus, int bonus, OverseasGuest guest, int totalPrice, String vendorType)
     {
         JSONObject jsonObject = new JSONObject();
 
@@ -357,6 +362,7 @@ public class PaymentRemoteImpl implements PaymentInterface
             jsonObject.put("email", guest.email);
             jsonObject.put("phoneNumber", guest.phone.replace("-", ""));
             jsonObject.put("total", totalPrice);
+            jsonObject.put("vendorType", vendorType);
         } catch (Exception e)
         {
             ExLog.e(e.toString());

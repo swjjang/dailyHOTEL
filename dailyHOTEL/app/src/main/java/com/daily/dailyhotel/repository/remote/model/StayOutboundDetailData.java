@@ -198,6 +198,9 @@ public class StayOutboundDetailData
         @JsonField(name = "valueAddName")
         public String valueAddName;
 
+        @JsonField(name = "vendorType")
+        public String vendorType;
+
         public RoomData()
         {
 
@@ -222,6 +225,7 @@ public class StayOutboundDetailData
             stayOutboundRoom.nonRefundable = nonRefundable;
             stayOutboundRoom.nonRefundableDescription = nonRefundableDescription;
             stayOutboundRoom.valueAddName = valueAddName;
+            stayOutboundRoom.vendorType = vendorType;
 
             return stayOutboundRoom;
         }
