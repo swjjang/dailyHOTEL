@@ -18,36 +18,20 @@
             android:paddingBottom="16dp"
             android:paddingTop="19dp">
 
-            <LinearLayout
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/gradeTextView"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/gradeTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@color/stay_outbound_detail_grade"
-                    android:gravity="center"
-                    android:paddingBottom="1px"
-                    android:paddingLeft="5.5dp"
-                    android:paddingRight="5.5dp"
-                    android:paddingTop="2px"
-                    android:textColor="@android:color/white"
-                    android:textSize="11dp"
-                    android:visibility="invisible"/>
-
-                <RatingBar
-                    android:id="@+id/ratingBar"
-                    style="@style/StayOutboundRatingBarGold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="10dp"
-                    android:layout_marginLeft="6dp"
-                    android:numStars="5"
-                    android:stepSize="0.5"/>
-            </LinearLayout>
+                android:background="@color/default_background_c929292"
+                android:gravity="center"
+                android:paddingBottom="1px"
+                android:paddingLeft="5.5dp"
+                android:paddingRight="5.5dp"
+                android:paddingTop="2px"
+                android:textColor="@android:color/white"
+                android:textSize="11dp"
+                android:visibility="invisible"/>
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/nameTextView"
@@ -79,8 +63,8 @@
                 android:id="@+id/tripAdvisorLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
                 android:layout_marginLeft="15dp"
+                android:layout_marginTop="7dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:visibility="gone">
