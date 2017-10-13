@@ -183,4 +183,23 @@ public class StayThankYouAnalyticsImpl implements StayThankYouPresenter.StayThan
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.THANKYOU_GOURMET_RECOMMEND_LIST_CLICK //
             , distanceString, placeIndexString, null);
     }
+
+    @Override
+    public void onEventOrderComplete(Activity activity)
+    {
+        if (activity == null || mAnalyticsParam == null || mAnalyticsParam.params == null)
+        {
+            return;
+        }
+
+        try
+        {
+            String placeIndex = mAnalyticsParam.params.get(AnalyticsManager.KeyType.PLACE_INDEX);
+            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.ORDER_COMPLETE //
+                , AnalyticsManager.ValueType.DOMESTIC, placeIndex, null);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
 }

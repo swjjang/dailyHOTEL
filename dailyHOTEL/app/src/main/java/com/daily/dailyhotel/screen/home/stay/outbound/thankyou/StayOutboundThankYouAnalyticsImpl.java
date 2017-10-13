@@ -2,6 +2,7 @@ package com.daily.dailyhotel.screen.home.stay.outbound.thankyou;
 
 import android.app.Activity;
 
+import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundThankYouAnalyticsParam;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -83,5 +84,24 @@ public class StayOutboundThankYouAnalyticsImpl implements StayOutboundThankYouPr
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
             , AnalyticsManager.Action.PAYMENTUSED_OUTBOUND, label, null);
+    }
+
+    @Override
+    public void onEventOrderComplete(Activity activity)
+    {
+        if (activity == null || mAnalyticsParam == null)
+        {
+            return;
+        }
+
+        try
+        {
+            int placeIndex = mAnalyticsParam.stayIndex;
+            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.ORDER_COMPLETE //
+                , AnalyticsManager.ValueType.OVERSEAS, Integer.toString(placeIndex), null);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 }

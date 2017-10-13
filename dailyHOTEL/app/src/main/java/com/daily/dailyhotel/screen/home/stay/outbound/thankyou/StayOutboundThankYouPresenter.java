@@ -47,6 +47,8 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
         void onScreen(Activity activity);
 
         void onEventPayment(Activity activity);
+
+        void onEventOrderComplete(Activity activity);
     }
 
     public StayOutboundThankYouPresenter(@NonNull StayOutboundThankYouActivity activity)
@@ -177,6 +179,7 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
 
         mAnalytics.onScreen(getActivity());
         mAnalytics.onEventPayment(getActivity());
+        mAnalytics.onEventOrderComplete(getActivity());
 
         if (isRefresh() == true)
         {

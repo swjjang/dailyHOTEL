@@ -106,7 +106,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
         void onEventEndPayment(Activity activity, DailyBookingPaymentTypeView.PaymentType paymentType);
 
-        StayOutboundThankYouAnalyticsParam getThankYouAnalyticsParam(DailyBookingPaymentTypeView.PaymentType paymentType, boolean fullBonus, boolean usedBonus, boolean registerEasyCard);
+        StayOutboundThankYouAnalyticsParam getThankYouAnalyticsParam(DailyBookingPaymentTypeView.PaymentType paymentType //
+            , boolean fullBonus, boolean usedBonus, boolean registerEasyCard, int stayIndex);
 
         void setPaymentParam(HashMap<String, String> param);
 
@@ -992,7 +993,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, bookingIndex//
-            , mAnalytics.getThankYouAnalyticsParam(mPaymentType, fullBonus, mBonusSelected, mSelectedCard != null)), StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
+            , mAnalytics.getThankYouAnalyticsParam(mPaymentType, fullBonus, mBonusSelected, mSelectedCard != null, mStayIndex)) //
+            , StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
 
         mAnalytics.onScreenPaymentCompleted(getActivity(), mStayOutboundPayment, mStayBookDateTime, mStayName//
             , mPaymentType, mBonusSelected, mSelectedCard != null, mUserSimpleInformation);

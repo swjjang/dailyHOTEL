@@ -1158,6 +1158,7 @@ public class AnalyticsManager
         public static final String STAY_THANK_YOU = "stay_thankyou";
         public static final String THANKYOU_GOURMET_RECOMMEND_LIST_CLICK = "thankyou_gourmet_recommend_list_click";
         public static final String THANKYOU_GOURMET_RECOMMEND_CLICK = "thankyou_gourmet_recommend_click";
+        public static final String ORDER_COMPLETE = "order_complete";
     }
 
     public static class Label

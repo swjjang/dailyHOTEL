@@ -128,4 +128,23 @@ public class GourmetThankYouAnalyticsImpl implements GourmetThankYouPresenter.Go
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
             , AnalyticsManager.Action.THANKYOU_SCREEN_BUTTON_CLICKED, AnalyticsManager.Label.CLOSE_BUTTON_CLICKED, null);
     }
+
+    @Override
+    public void onEventOrderComplete(Activity activity)
+    {
+        if (activity == null || mAnalyticsParam == null || mAnalyticsParam.params == null)
+        {
+            return;
+        }
+
+        try
+        {
+            String placeIndex = mAnalyticsParam.params.get(AnalyticsManager.KeyType.PLACE_INDEX);
+            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.ORDER_COMPLETE //
+                , AnalyticsManager.ValueType.GOURMET, placeIndex, null);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
 }

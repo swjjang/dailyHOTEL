@@ -54,6 +54,8 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
         void onEventConfirmClick(Activity activity);
 
         void onEventBackClick(Activity activity);
+
+        void onEventOrderComplete(Activity activity);
     }
 
     public GourmetThankYouPresenter(@NonNull GourmetThankYouActivity activity)
@@ -171,6 +173,7 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
         super.onStart();
 
         mAnalytics.onScreen(getActivity());
+        mAnalytics.onEventOrderComplete(getActivity());
 
         if (isRefresh() == true)
         {

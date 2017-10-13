@@ -163,7 +163,7 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
 
     @Override
     public StayOutboundThankYouAnalyticsParam getThankYouAnalyticsParam(DailyBookingPaymentTypeView.PaymentType paymentType//
-        , boolean fullBonus, boolean usedBonus, boolean registerEasyCard)
+        , boolean fullBonus, boolean usedBonus, boolean registerEasyCard, int stayIndex)
     {
         StayOutboundThankYouAnalyticsParam analyticsParam = new StayOutboundThankYouAnalyticsParam();
 
@@ -171,6 +171,7 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
         analyticsParam.fullBonus = fullBonus;
         analyticsParam.usedBonus = usedBonus;
         analyticsParam.registerEasyCard = registerEasyCard;
+        analyticsParam.stayIndex = stayIndex;
 
         return analyticsParam;
     }
