@@ -22,7 +22,6 @@ import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchS
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
-import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.FacebookSdk;
 import com.google.firebase.FirebaseApp;
 import com.kakao.auth.ApprovalType;
@@ -132,8 +131,6 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         }
 
         FontManager.getInstance(getApplicationContext());
-
-        RecentlyPlaceUtil.migrateRecentlyPlaces(DailyHotel.this);
 
         registerActivityLifecycleCallbacks(new DailyActivityLifecycleCallbacks());
     }

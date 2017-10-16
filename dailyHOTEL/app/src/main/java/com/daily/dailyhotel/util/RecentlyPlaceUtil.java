@@ -19,24 +19,19 @@ import com.daily.dailyhotel.repository.local.model.RecentlyRealmObject;
 import com.daily.dailyhotel.storage.database.DailyDb;
 import com.daily.dailyhotel.storage.database.DailyDbHelper;
 import com.twoheart.dailyhotel.model.Gourmet;
-import com.twoheart.dailyhotel.model.HomeRecentParam;
-import com.twoheart.dailyhotel.model.RecentPlaces;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmList;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -52,158 +47,6 @@ public class RecentlyPlaceUtil
     public static final String SERVICE_TYPE_IB_STAY_NAME = "HOTEL";
     public static final String SERVICE_TYPE_OB_STAY_NAME = "OB_STAY";
     public static final String SERVICE_TYPE_GOURMET_NAME = "GOURMET";
-
-    public static void migrateRecentlyPlaces(Context context)
-    {
-        RecentPlaces recentPlaces = new RecentPlaces(context);
-        ArrayList<HomeRecentParam> recentlyParamList = recentPlaces.getParamList(RecentPlaces.MAX_RECENT_PLACE_COUNT);
-
-        changeServiceType();
-
-        if (recentlyParamList == null || recentlyParamList.size() == 0)
-        {
-            return;
-        }
-
-        RealmList<RecentlyRealmObject> realmObjectRealmList = new RealmList<>();
-
-        int size = recentlyParamList.size();
-        // 오래된 리스트부터 저장하기 위한 역순 계산 - 날짜 저장을 위하여...
-        for (int i = size - 1; i >= 0; i--)
-        {
-            HomeRecentParam param = recentlyParamList.get(i);
-
-            RecentlyRealmObject recentlyRealmObject = convertRecentlyRealmObject(param);
-            if (recentlyRealmObject != null)
-            {
-                realmObjectRealmList.add(recentlyRealmObject);
-            }
-        }
-
-        setRecentlyRealmListAsync(recentPlaces, realmObjectRealmList);
-    }
-
-    private static void changeServiceType()
-    {
-
-        Realm realm = Realm.getDefaultInstance();
-        realm.executeTransactionAsync(new Realm.Transaction()
-        {
-            @Override
-            public void execute(Realm realm)
-            {
-                RealmResults<RecentlyRealmObject> results = realm.where(RecentlyRealmObject.class).equalTo("serviceType", "IB_STAY").findAll();
-                if (results == null || results.size() == 0)
-                {
-                    return;
-                }
-
-                RealmList<RecentlyRealmObject> list = new RealmList<RecentlyRealmObject>();
-
-                for (RecentlyRealmObject realmObject : results)
-                {
-                    realmObject.serviceType = Constants.ServiceType.HOTEL.name();
-                    list.add(realmObject);
-                }
-
-                realm.copyToRealmOrUpdate(list);
-            }
-        });
-    }
-
-    private static void setRecentlyRealmListAsync(RecentPlaces recentPlaces, RealmList<RecentlyRealmObject> list)
-    {
-        if (recentPlaces == null)
-        {
-            return;
-        }
-
-        if (list == null || list.size() == 0)
-        {
-            recentPlaces.clear();
-            recentPlaces.savePreference();
-            return;
-        }
-
-        Realm realm = Realm.getDefaultInstance();
-        realm.executeTransactionAsync(new Realm.Transaction()
-        {
-            @Override
-            public void execute(Realm realm)
-            {
-                realm.copyToRealmOrUpdate(list);
-            }
-        }, new Realm.Transaction.OnSuccess()
-        {
-            @Override
-            public void onSuccess()
-            {
-                if (Constants.DEBUG == true)
-                {
-                    ExLog.w("realm Success");
-                }
-
-                recentPlaces.clear();
-                recentPlaces.savePreference();
-
-            }
-        }, new Realm.Transaction.OnError()
-        {
-            @Override
-            public void onError(Throwable error)
-            {
-                if (Constants.DEBUG == true)
-                {
-                    ExLog.w("realm Error , error : " + error.getMessage());
-                }
-
-                recentPlaces.clear();
-            }
-        });
-    }
-
-    private static RecentlyRealmObject convertRecentlyRealmObject(HomeRecentParam param)
-    {
-        if (param == null)
-        {
-            return null;
-        }
-
-        RecentlyRealmObject recentlyRealmObject = null;
-
-        try
-        {
-            recentlyRealmObject = new RecentlyRealmObject();
-            recentlyRealmObject.index = param.index;
-
-            if (SERVICE_TYPE_IB_STAY_NAME.equalsIgnoreCase(param.serviceType) == true)
-            {
-                recentlyRealmObject.serviceType = Constants.ServiceType.HOTEL.name();
-            } else if (SERVICE_TYPE_GOURMET_NAME.equalsIgnoreCase(param.serviceType) == true)
-            {
-                recentlyRealmObject.serviceType = Constants.ServiceType.GOURMET.name();
-            } else if (SERVICE_TYPE_OB_STAY_NAME.equalsIgnoreCase(param.serviceType) == true)
-            {
-                recentlyRealmObject.serviceType = Constants.ServiceType.OB_STAY.name();
-            } else
-            {
-                // 지정 되지 않은 타입
-                return null;
-            }
-
-            // 기존 단말 저장 시간은 그냥 순서이므로 무시하고 다시 시간을 설정 함
-            Calendar calendar = DailyCalendar.getInstance();
-            recentlyRealmObject.savingTime = calendar.getTimeInMillis();
-        } catch (Exception e)
-        {
-            if (Constants.DEBUG == true)
-            {
-                ExLog.w(e.getMessage());
-            }
-        }
-
-        return recentlyRealmObject;
-    }
 
     public static JSONArray getDbRecentlyJsonArray(ArrayList<RecentlyDbPlace> list, int maxSize)
     {
