@@ -1384,6 +1384,7 @@
     <string name="message_stay_outbound_detail_sold_out">마지막 객실이 방금 판매 완료되었습니다.\n날짜를 변경하거나 다른 호텔을 확인해주세요.</string>
     <string name="message_stay_outbound_detail_changed_price">일부 객실의 요금이\n변동되었습니다.\n객실 금액을\n한번 더 확인해주시고\n원하시는 객실이 없으면\n날짜를 변경해보세요.</string>
     <string name="label_stay_outbound_recommend_around_title">주변 추천 스테이</string>
+    <string name="label_carousel_item_stay_1_nights">/1박</string>
 
     <!-- Stay Out Bound Payment -->
     <string name="label_stay_outbound_payment_last_name">영문 성</string>

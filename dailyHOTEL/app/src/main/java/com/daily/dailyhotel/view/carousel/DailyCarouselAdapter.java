@@ -295,7 +295,6 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
         holder.dataBinding.contentPersonView.setText("");
         holder.dataBinding.contentPersonView.setVisibility(View.GONE);
 
-        holder.dataBinding.contentMultiDayView.setVisibility(View.GONE);
         holder.dataBinding.tripAdvisorLayout.setVisibility(View.GONE);
     }
 
@@ -490,7 +489,6 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
             holder.dataBinding.contentGradeView.setText(gourmet.category);
         }
 
-        holder.dataBinding.contentMultiDayView.setVisibility(View.GONE);
         holder.dataBinding.tripAdvisorLayout.setVisibility(View.GONE);
     }
 
@@ -573,16 +571,15 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
             dataBinding.contentOriginPriceView.setPaintFlags(dataBinding.contentOriginPriceView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
-        dataBinding.contentPersonView.setText("");
-        dataBinding.contentPersonView.setVisibility(View.GONE);
-
         if (nightsEnabled == true)
         {
-            dataBinding.contentMultiDayView.setVisibility(View.VISIBLE);
+            dataBinding.contentPersonView.setText(R.string.label_carousel_item_stay_1_nights);
+            dataBinding.contentPersonView.setVisibility(View.VISIBLE);
 
         } else
         {
-            dataBinding.contentMultiDayView.setVisibility(View.GONE);
+            dataBinding.contentPersonView.setText("");
+            dataBinding.contentPersonView.setVisibility(View.GONE);
         }
     }
 
