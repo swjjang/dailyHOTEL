@@ -42,6 +42,7 @@ import com.daily.dailyhotel.screen.common.images.ImageListActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.truereview.StayTrueReviewActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.payment.StayPaymentActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -1346,8 +1347,10 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         RecentlyPlaceUtil.addRecentlyItem(getActivity(), Constants.ServiceType.HOTEL //
             , mStayDetail.index, mStayDetail.name, null, mImageUrl, false);
 
+        boolean showStamp = mStayDetail.overseas == false && DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStampEnabled() == true;
+
         getViewInterface().setStayDetail(mStayBookDateTime, mStayDetail//
-            , mReviewScores != null ? mReviewScores.reviewScoreTotalCount : 0);
+            , mReviewScores != null ? mReviewScores.reviewScoreTotalCount : 0, showStamp);
 
         // 리스트 가격 변동은 진입시 한번 만 한다.
         checkChangedPrice(mIsDeepLink, mStayDetail, mPriceFromList, mCheckChangedPrice == false);
