@@ -334,7 +334,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
     {
         setDateChanged(todayDateTime, mGourmetBookingDay);
 
-        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getInboundRecentlyList(RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT, false, ServiceType.GOURMET) //
+        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getInboundRecentlyList(RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT, ServiceType.GOURMET) //
             , mCampaignTagRemoteImpl.getCampaignTagList(getServiceType().name()) //
             , new BiFunction<ArrayList<RecentlyPlace>, ArrayList<CampaignTag>, List<Keyword>>()
             {

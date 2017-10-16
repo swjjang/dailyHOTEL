@@ -357,7 +357,7 @@ public class StaySearchFragment extends PlaceSearchFragment
     {
         setDateChanged(todayDateTime, mStayBookingDay);
 
-        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getInboundRecentlyList(RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT, false, ServiceType.HOTEL) //
+        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getInboundRecentlyList(RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT, ServiceType.HOTEL) //
             , mCampaignTagRemoteImpl.getCampaignTagList(getServiceType().name()) //
             , new BiFunction<ArrayList<RecentlyPlace>, ArrayList<CampaignTag>, List<Keyword>>()
             {

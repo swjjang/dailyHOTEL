@@ -110,7 +110,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
     {
         lockUI();
 
-        addCompositeDisposable(mRecentlyRemoteImpl.getInboundRecentlyList(RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT, false, ServiceType.GOURMET) //
+        addCompositeDisposable(mRecentlyRemoteImpl.getInboundRecentlyList(RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT, ServiceType.GOURMET) //
             .observeOn(Schedulers.io()).map(new Function<ArrayList<RecentlyPlace>, ArrayList<PlaceViewItem>>()
             {
                 @Override

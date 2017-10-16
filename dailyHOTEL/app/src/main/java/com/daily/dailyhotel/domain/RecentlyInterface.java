@@ -14,7 +14,7 @@ import io.reactivex.Observable;
 
 public interface RecentlyInterface
 {
-    Observable<StayOutbounds> getStayOutboundRecentlyList(int numberOfResults, boolean useRealm);
+    Observable<StayOutbounds> getStayOutboundRecentlyList(int numberOfResults);
 
-    Observable<ArrayList<RecentlyPlace>> getInboundRecentlyList(int maxSize, boolean useRealm, Constants.ServiceType... serviceTypes);
+    Observable<ArrayList<RecentlyPlace>> getInboundRecentlyList(int maxSize, Constants.ServiceType... serviceTypes);
 }

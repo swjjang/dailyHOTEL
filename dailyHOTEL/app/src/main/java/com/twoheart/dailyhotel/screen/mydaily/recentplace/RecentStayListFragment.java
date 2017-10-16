@@ -127,8 +127,8 @@ public class RecentStayListFragment extends RecentPlacesListFragment
     {
         lockUI();
 
-        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getInboundRecentlyList(RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT, false, ServiceType.HOTEL).observeOn(Schedulers.io()) //
-            , mRecentlyRemoteImpl.getStayOutboundRecentlyList(RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT, false).observeOn(Schedulers.io()) //
+        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getInboundRecentlyList(RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT, ServiceType.HOTEL).observeOn(Schedulers.io()) //
+            , mRecentlyRemoteImpl.getStayOutboundRecentlyList(RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT).observeOn(Schedulers.io()) //
             , new BiFunction<ArrayList<RecentlyPlace>, StayOutbounds, ArrayList<PlaceViewItem>>()
             {
                 @Override

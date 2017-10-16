@@ -437,37 +437,6 @@ public class RecentlyPlaceUtil
         return builder.toString();
     }
 
-    public static String getRealmTargetIndices(Constants.ServiceType serviceType, int maxSize)
-    {
-        ArrayList<RecentlyDbPlace> recentlyList = RecentlyPlaceUtil.getRealmRecentlyTypeList(serviceType);
-
-        if (recentlyList == null || recentlyList.size() == 0 || maxSize <= 0)
-        {
-            return "";
-        }
-
-        if (maxSize > recentlyList.size())
-        {
-            maxSize = recentlyList.size();
-        }
-
-        StringBuilder builder = new StringBuilder();
-
-        for (int i = 0; i < maxSize; i++)
-        {
-            RecentlyDbPlace place = recentlyList.get(i);
-
-            if (i != 0)
-            {
-                builder.append(RECENT_PLACE_DELIMITER);
-            }
-
-            builder.append(place.index);
-        }
-
-        return builder.toString();
-    }
-
     public static ArrayList<Integer> getDbRecentlyIndexList(Context context, Constants.ServiceType... serviceTypes)
     {
         if (context == null || serviceTypes == null || serviceTypes.length == 0)
@@ -525,25 +494,7 @@ public class RecentlyPlaceUtil
         return indexList;
     }
 
-    public static ArrayList<Integer> getRealmRecentlyIndexList(Constants.ServiceType... serviceTypes)
-    {
-        ArrayList<RecentlyDbPlace> recentlyList = RecentlyPlaceUtil.getRealmRecentlyTypeList(serviceTypes);
-
-        if (recentlyList == null || recentlyList.size() == 0)
-        {
-            return null;
-        }
-
-        ArrayList<Integer> indexList = new ArrayList<>();
-        for (RecentlyDbPlace place : recentlyList)
-        {
-            indexList.add(place.index);
-        }
-
-        return indexList;
-    }
-
-    public static ArrayList<CarouselListItem> mergeCarouselListItemList(Context context, ArrayList<RecentlyPlace> recentlyPlaceList, StayOutbounds stayOutbounds, boolean useRealm)
+    public static ArrayList<CarouselListItem> mergeCarouselListItemList(Context context, ArrayList<RecentlyPlace> recentlyPlaceList, StayOutbounds stayOutbounds)
     {
         ArrayList<CarouselListItem> carouselListItemList = new ArrayList<>();
         if (recentlyPlaceList != null)
@@ -566,12 +517,12 @@ public class RecentlyPlaceUtil
         }
 
         // sort list
-        sortCarouselListItemList(context, carouselListItemList, useRealm, (Constants.ServiceType[]) null);
+        sortCarouselListItemList(context, carouselListItemList, (Constants.ServiceType[]) null);
 
         return carouselListItemList;
     }
 
-    public static void sortCarouselListItemList(Context context, ArrayList<CarouselListItem> actualList, boolean useRealm, Constants.ServiceType... serviceTypes)
+    public static void sortCarouselListItemList(Context context, ArrayList<CarouselListItem> actualList, Constants.ServiceType... serviceTypes)
     {
         if (context == null || actualList == null || actualList.size() == 0)
         {
@@ -579,23 +530,6 @@ public class RecentlyPlaceUtil
         }
 
         ArrayList<RecentlyDbPlace> recentlyTypeList = RecentlyPlaceUtil.getDbRecentlyTypeList(context, serviceTypes);
-
-        if (useRealm == true)
-        {
-            ArrayList<RecentlyDbPlace> results = RecentlyPlaceUtil.getRealmRecentlyTypeList(serviceTypes);
-            if (results != null && results.size() > 0)
-            {
-                if (recentlyTypeList == null)
-                {
-                    recentlyTypeList = new ArrayList<>();
-                }
-
-                for (RecentlyDbPlace place : results)
-                {
-                    recentlyTypeList.add(place);
-                }
-            }
-        }
 
         Collections.sort(recentlyTypeList, new Comparator<RecentlyDbPlace>()
         {

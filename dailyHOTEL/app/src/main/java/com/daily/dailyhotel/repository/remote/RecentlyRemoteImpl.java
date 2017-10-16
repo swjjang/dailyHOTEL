@@ -43,7 +43,7 @@ public class RecentlyRemoteImpl implements RecentlyInterface
     }
 
     @Override
-    public Observable<StayOutbounds> getStayOutboundRecentlyList(int numberOfResults, boolean useRealm)
+    public Observable<StayOutbounds> getStayOutboundRecentlyList(int numberOfResults)
     {
         return Observable.defer(new Callable<ObservableSource<StayOutbounds>>()
         {
@@ -51,20 +51,6 @@ public class RecentlyRemoteImpl implements RecentlyInterface
             public ObservableSource<StayOutbounds> call() throws Exception
             {
                 String hotelIds = RecentlyPlaceUtil.getDbTargetIndices(mContext, Constants.ServiceType.OB_STAY, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT);
-
-                if (useRealm == true)
-                {
-                    String oldHotelIds = RecentlyPlaceUtil.getRealmTargetIndices(Constants.ServiceType.OB_STAY, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT);
-                    if (DailyTextUtils.isTextEmpty(oldHotelIds) == false)
-                    {
-                        if (DailyTextUtils.isTextEmpty(hotelIds) == false)
-                        {
-                            hotelIds += ",";
-                        }
-
-                        hotelIds += oldHotelIds;
-                    }
-                }
 
                 if (DailyTextUtils.isTextEmpty(hotelIds) == true)
                 {
@@ -105,14 +91,14 @@ public class RecentlyRemoteImpl implements RecentlyInterface
     }
 
     @Override
-    public Observable<ArrayList<RecentlyPlace>> getInboundRecentlyList(int maxSize, boolean useRealm, @NonNull Constants.ServiceType... serviceTypes)
+    public Observable<ArrayList<RecentlyPlace>> getInboundRecentlyList(int maxSize, @NonNull Constants.ServiceType... serviceTypes)
     {
         return Observable.defer(new Callable<ObservableSource<ArrayList<RecentlyPlace>>>()
         {
             @Override
             public ObservableSource<ArrayList<RecentlyPlace>> call() throws Exception
             {
-                ArrayList<RecentlyDbPlace> list = getRecentlyDbPlaceList(useRealm, serviceTypes);
+                ArrayList<RecentlyDbPlace> list = RecentlyPlaceUtil.getDbRecentlyTypeList(mContext, serviceTypes);
                 if (list == null || list.size() == 0)
                 {
                     return Observable.just(new ArrayList<RecentlyPlace>()).subscribeOn(Schedulers.io());
@@ -151,41 +137,6 @@ public class RecentlyRemoteImpl implements RecentlyInterface
                 }).subscribeOn(Schedulers.io());
             }
         }).subscribeOn(Schedulers.io());
-    }
-
-    ArrayList<RecentlyDbPlace> getRecentlyDbPlaceList(boolean useRealm, @NonNull Constants.ServiceType... serviceTypes)
-    {
-        ArrayList<RecentlyDbPlace> list = RecentlyPlaceUtil.getDbRecentlyTypeList(mContext, serviceTypes);
-
-        if (useRealm == false)
-        {
-            return list;
-        }
-
-        ArrayList<RecentlyDbPlace> realmList = RecentlyPlaceUtil.getRealmRecentlyTypeList(serviceTypes);
-        if (realmList == null || realmList.size() == 0)
-        {
-            return list;
-        }
-
-        ArrayList<Integer> indexList = RecentlyPlaceUtil.getDbRecentlyIndexList(mContext, serviceTypes);
-
-        for (RecentlyDbPlace place : realmList)
-        {
-            if (indexList != null && indexList.contains(place.index) == true)
-            {
-                continue;
-            }
-
-            if (list == null)
-            {
-                list = new ArrayList<>();
-            }
-
-            list.add(place);
-        }
-
-        return list;
     }
 
     JSONObject getRecentlyJSONObject(ArrayList<RecentlyDbPlace> list, int maxSize)

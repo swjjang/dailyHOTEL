@@ -36,8 +36,6 @@ import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.preview.StayOutboundPreviewActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchActivity;
-import com.daily.dailyhotel.storage.database.DailyDb;
-import com.daily.dailyhotel.storage.database.DailyDbHelper;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
@@ -97,7 +95,6 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -122,8 +119,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
     boolean mIsAttach;
     boolean mDontReload;
     private boolean mIsLogin;
-
-    boolean mIsMigrationComplete;
 
     int mNetworkRunState = IS_RUNNED_NONE; // 0x0000 : 초기 상태, Ox0010 : 위시 완료 , Ox0100 : 최근 본 업장완료!
 
@@ -1267,43 +1262,16 @@ public class HomeFragment extends BaseMenuNavigationFragment
         mNetworkController.requestWishList();
     }
 
-    private void requestRecentList(boolean useRealm)
+    private void requestRecentList()
     {
-        int maxCount = useRealm == true ? RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT : MAX_REQUEST_SIZE;
-
-        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getInboundRecentlyList(maxCount, useRealm, ServiceType.HOTEL, ServiceType.GOURMET).observeOn(AndroidSchedulers.mainThread()) //
-            , mRecentlyRemoteImpl.getStayOutboundRecentlyList(maxCount, useRealm).observeOn(AndroidSchedulers.mainThread()) //
+        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getInboundRecentlyList(MAX_REQUEST_SIZE, ServiceType.HOTEL, ServiceType.GOURMET).observeOn(AndroidSchedulers.mainThread()) //
+            , mRecentlyRemoteImpl.getStayOutboundRecentlyList(MAX_REQUEST_SIZE).observeOn(AndroidSchedulers.mainThread()) //
             , new BiFunction<ArrayList<RecentlyPlace>, StayOutbounds, ArrayList<CarouselListItem>>()
             {
                 @Override
                 public ArrayList<CarouselListItem> apply(@NonNull ArrayList<RecentlyPlace> recentlyPlaceList, @NonNull StayOutbounds stayOutbounds) throws Exception
                 {
-                    ArrayList<CarouselListItem> carouselListItemList = RecentlyPlaceUtil.mergeCarouselListItemList(mBaseActivity, recentlyPlaceList, stayOutbounds, useRealm);
-
-                    DailyDb dailyDb = DailyDbHelper.getInstance().open(getActivity());
-
-                    mIsMigrationComplete = dailyDb.migrateAllRecentlyPlace(carouselListItemList);
-
-                    DailyDbHelper.getInstance().close();
-
-                    if (mIsMigrationComplete == true)
-                    {
-                        try
-                        {
-                            Realm realm = Realm.getDefaultInstance();
-                            realm.executeTransactionAsync(new Realm.Transaction()
-                            {
-                                @Override
-                                public void execute(Realm realm)
-                                {
-                                    realm.deleteAll();
-                                }
-                            });
-                        } catch (Exception e)
-                        {
-                            ExLog.e(e.toString());
-                        }
-                    }
+                    ArrayList<CarouselListItem> carouselListItemList = RecentlyPlaceUtil.mergeCarouselListItemList(mBaseActivity, recentlyPlaceList, stayOutbounds);
 
                     return carouselListItemList;
                 }
@@ -1320,7 +1288,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
             public void accept(@NonNull Throwable throwable) throws Exception
             {
                 HomeFragment.this.setRecentlyList(null, true);
-                Crashlytics.logException(new Exception("need check recently remote & realm DB", throwable));
+                Crashlytics.logException(new Exception("need check realm DB", throwable));
             }
         }));
     }
@@ -1451,14 +1419,8 @@ public class HomeFragment extends BaseMenuNavigationFragment
             mNetworkController.requestRecommendationList();
             requestWishList();
 
-            ArrayList<Integer> indexList = RecentlyPlaceUtil.getRealmRecentlyIndexList((Constants.ServiceType[]) null);
-            if (indexList == null || indexList.size() == 0)
-            {
-                mIsMigrationComplete = true;
-            }
-
             getCommonDateTime();
-            requestRecentList(mIsMigrationComplete == false);
+            requestRecentList();
 
             if (DailyHotel.isLogin() == true && DailyRemoteConfigPreference.getInstance(mBaseActivity).isRemoteConfigStampEnabled() == true //
                 && DailyRemoteConfigPreference.getInstance(mBaseActivity).isRemoteConfigStampHomeEnabled() == true)
