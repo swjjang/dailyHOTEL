@@ -30,6 +30,7 @@ import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 
+import java.text.DecimalFormat;
 import java.util.Map;
 
 /**
@@ -718,7 +719,7 @@ public class AdjustManager extends BaseAnalyticsManager
     }
 
     @Override
-    void purchaseCompleteHotel(String transId, Map<String, String> params)
+    void purchaseCompleteHotel(String aggregationId, Map<String, String> params)
     {
         if (params == null)
         {
@@ -726,6 +727,11 @@ public class AdjustManager extends BaseAnalyticsManager
         }
 
         params.put(Key.SERVICE, AnalyticsManager.ValueType.STAY);
+
+        if (DailyTextUtils.isTextEmpty(aggregationId) == false)
+        {
+            params.put(AnalyticsManager.KeyType.AGGREGATION_ID, aggregationId);
+        }
 
         DailyAdjustEvent event = getPaymentEvent(EventToken.STAY_PURCHASE, params, true);
 
@@ -738,7 +744,7 @@ public class AdjustManager extends BaseAnalyticsManager
     }
 
     @Override
-    void purchaseCompleteStayOutbound(String transId, Map<String, String> params)
+    void purchaseCompleteStayOutbound(String aggregationId, Map<String, String> params)
     {
         if (params == null)
         {
@@ -746,6 +752,11 @@ public class AdjustManager extends BaseAnalyticsManager
         }
 
         params.put(Key.SERVICE, AnalyticsManager.ValueType.STAY);
+
+        if (DailyTextUtils.isTextEmpty(aggregationId) == false)
+        {
+            params.put(AnalyticsManager.KeyType.AGGREGATION_ID, aggregationId);
+        }
 
         DailyAdjustEvent event = getPaymentEvent(EventToken.STAY_PURCHASE, params, true);
 
@@ -758,7 +769,7 @@ public class AdjustManager extends BaseAnalyticsManager
     }
 
     @Override
-    void purchaseCompleteGourmet(String transId, Map<String, String> params)
+    void purchaseCompleteGourmet(String aggregationId, Map<String, String> params)
     {
         if (params == null)
         {
@@ -766,6 +777,11 @@ public class AdjustManager extends BaseAnalyticsManager
         }
 
         params.put(Key.SERVICE, AnalyticsManager.ValueType.GOURMET);
+
+        if (DailyTextUtils.isTextEmpty(aggregationId) == false)
+        {
+            params.put(AnalyticsManager.KeyType.AGGREGATION_ID, aggregationId);
+        }
 
         DailyAdjustEvent event = getPaymentEvent(EventToken.GOURMET_PURCHASE, params, true);
 
@@ -1009,6 +1025,19 @@ public class AdjustManager extends BaseAnalyticsManager
                 String bonusPrice = params.get(AnalyticsManager.KeyType.USED_BOUNS); // point_value
                 event.addPartnerParameter(Key.BONUS_PRICE, bonusPrice);
             }
+
+            if (params.containsKey(AnalyticsManager.KeyType.AGGREGATION_ID) == true)
+            {
+                event.addPartnerParameter(Key.AGGREGATION_ID, params.get(AnalyticsManager.KeyType.AGGREGATION_ID));
+            }
+        }
+
+        if (EventToken.STAY_FIRST_PURCHASE.equalsIgnoreCase(eventToken) == true //
+            || EventToken.GOURMET_FIRST_PURCHASE.equalsIgnoreCase(eventToken) == true)
+        {
+            int paymentPrice = Integer.parseInt(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
+            DecimalFormat decimalFormat = new DecimalFormat("###,##0");
+            event.addPartnerParameter(Key.EVENT_REVENUE, decimalFormat.format(paymentPrice));
         }
 
         return event;
@@ -1416,6 +1445,8 @@ public class AdjustManager extends BaseAnalyticsManager
         public static final String NUMBER_OF_WISH_LISTS = "number_of_wish_lists"; // 위시리스트내 담은 업장(최근 5개)
         public static final String NUMBER_OF_RECENTVIEWS = "number_of_recentviews"; // 최근 본 업장 개수
         public static final String TEST_TYPE = "test_type"; // a/b test
+        public static final String AGGREGATION_ID = "aggregation_id";
+        public static final String EVENT_REVENUE = "event_revenue";
     }
 
     private static final class UserType

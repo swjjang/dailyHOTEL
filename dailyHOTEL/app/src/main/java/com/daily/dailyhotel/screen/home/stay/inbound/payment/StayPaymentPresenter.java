@@ -128,7 +128,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             , StayPayment stayPayment, boolean registerEasyCard, boolean usedBonus, boolean usedCoupon, Coupon coupon//
             , DailyBookingPaymentTypeView.PaymentType paymentType, UserSimpleInformation userSimpleInformation);
 
-        void onScreenPaymentCompleted(Activity activity, String transId);
+        void onScreenPaymentCompleted(Activity activity, String aggregationId);
 
         void onEventTransportationVisible(Activity activity, boolean visible);
 
@@ -1274,8 +1274,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
         try
         {
-            mAnalytics.onScreenPaymentCompleted(getActivity()//
-                , DailyCalendar.format(new Date(), "yyyyMMddHHmmss") + '_' + mUserSimpleInformation.index);
+            mAnalytics.onScreenPaymentCompleted(getActivity(), aggregationId);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -1387,9 +1386,31 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             getViewInterface().setVendorName(stayPayment.businessName);
             getViewInterface().setTransportation(stayPayment.transportation);
 
-            if (stayPayment.transportation.equalsIgnoreCase(StayPayment.VISIT_TYPE_NONE) == false && mTransportationType == null)
+            if(DailyTextUtils.isTextEmpty(stayPayment.transportation) == false)
             {
-                onTransportationClick(WALKING);
+                switch(stayPayment.transportation)
+                {
+                    case StayPayment.VISIT_TYPE_NONE:
+                        onTransportationClick(UNKNOWN);
+                        break;
+
+                    case StayPayment.VISIT_TYPE_PARKING:
+                        if(DailyTextUtils.isTextEmpty(mTransportationType) == true)
+                        {
+                            onTransportationClick(WALKING);
+                        } else
+                        {
+                            onTransportationClick(mTransportationType);
+                        }
+                        break;
+
+                    case StayPayment.VISIT_TYPE_NO_PARKING:
+                        onTransportationClick(UNKNOWN);
+                        break;
+                }
+            } else
+            {
+                onTransportationClick(UNKNOWN);
             }
         } catch (Exception e)
         {

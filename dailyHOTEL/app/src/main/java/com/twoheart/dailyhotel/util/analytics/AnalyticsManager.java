@@ -454,7 +454,7 @@ public class AnalyticsManager
         }
     }
 
-    public void purchaseCompleteHotel(String transId, Map<String, String> params)
+    public void purchaseCompleteHotel(String aggregationId, Map<String, String> params)
     {
         try
         {
@@ -462,7 +462,7 @@ public class AnalyticsManager
             {
                 try
                 {
-                    analyticsManager.purchaseCompleteHotel(transId, params);
+                    analyticsManager.purchaseCompleteHotel(aggregationId, params);
                 } catch (Exception e)
                 {
                     ExLog.d(TAG + e.toString());
@@ -474,7 +474,7 @@ public class AnalyticsManager
         }
     }
 
-    public void purchaseCompleteStayOutbound(String transId, Map<String, String> params)
+    public void purchaseCompleteStayOutbound(String aggregationId, Map<String, String> params)
     {
         try
         {
@@ -482,7 +482,7 @@ public class AnalyticsManager
             {
                 try
                 {
-                    analyticsManager.purchaseCompleteStayOutbound(transId, params);
+                    analyticsManager.purchaseCompleteStayOutbound(aggregationId, params);
                 } catch (Exception e)
                 {
                     ExLog.d(TAG + e.toString());
@@ -494,7 +494,7 @@ public class AnalyticsManager
         }
     }
 
-    public void purchaseCompleteGourmet(String transId, Map<String, String> params)
+    public void purchaseCompleteGourmet(String aggregationId, Map<String, String> params)
     {
         try
         {
@@ -502,7 +502,7 @@ public class AnalyticsManager
             {
                 try
                 {
-                    analyticsManager.purchaseCompleteGourmet(transId, params);
+                    analyticsManager.purchaseCompleteGourmet(aggregationId, params);
                 } catch (Exception e)
                 {
                     ExLog.d(TAG + e.toString());
@@ -1516,6 +1516,7 @@ public class AnalyticsManager
         public static final String RECOMMEND_ITEM_IDX = "recommend_item_idx";
         public static final String VIEW_TYPE = "view_type";
         public static final String TAG = "tag";
+        public static final String AGGREGATION_ID = "aggregation_id";
     }
 
     public static class ValueType
