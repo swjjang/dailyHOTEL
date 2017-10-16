@@ -385,12 +385,24 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
         holder.dataBinding.contentTextView.setText(stayOutbound.name);
         //        holder.dataBinding.nameEngTextView.setText("(" + stayOutbound.nameEng + ")");
 
-        holder.dataBinding.contentProvinceView.setText(stayOutbound.city);
-
         // Stay Outbound 의 경우 PlaceType 이 없음
         holder.dataBinding.contentGradeView.setText("");
 
         setTripAdvisorText(holder.dataBinding, stayOutbound.tripAdvisorRating);
+
+        // 도시 명을 말줄임 표시 하기 위해 나중에 도시명을 넣어줌
+        holder.dataBinding.contentSubRegionLayout.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                int layoutWidth = holder.dataBinding.contentSubRegionLayout.getWidth();
+                int regionWidth = holder.dataBinding.regionLayout.getWidth();
+
+                holder.dataBinding.contentProvinceView.setMaxWidth(regionWidth - layoutWidth);
+                holder.dataBinding.contentProvinceView.setText(stayOutbound.city);
+            }
+        });
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
