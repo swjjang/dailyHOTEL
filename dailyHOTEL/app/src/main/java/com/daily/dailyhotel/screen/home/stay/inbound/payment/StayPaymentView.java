@@ -395,6 +395,8 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
                 getViewDataBinding().visitCarView.setVisibility(View.GONE);
                 getViewDataBinding().visitWalkView.setVisibility(View.GONE);
                 getViewDataBinding().noParkingView.setVisibility(View.VISIBLE);
+
+                getViewDataBinding().guideTransportationLayout.setVisibility(View.VISIBLE);
                 getViewDataBinding().guideTransportationTextView.setText(R.string.message_visit_no_parking_memo);
                 break;
 

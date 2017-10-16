@@ -26,7 +26,6 @@ public class DailyInternalDeepLink extends DailyDeepLink
     private static final String PARAM_CHECK_IN_TIME = "ci";
     private static final String PARAM_CHECK_OUT_TIME = "co";
     private static final String PARAM_VISIT_TIME = "vt";
-    private static final String PARAM_BOOKING_INDEX = "bid";
     private static final String PARAM_AGGREGATION_ID = "aid";
     private static final String PARAM_KEYWORD = "k";
 
@@ -129,17 +128,6 @@ public class DailyInternalDeepLink extends DailyDeepLink
         return mParamsMap.get(PARAM_KEYWORD);
     }
 
-    public int getBookingIndex()
-    {
-        try
-        {
-            return Integer.parseInt(mParamsMap.get(PARAM_BOOKING_INDEX));
-        } catch (Exception e)
-        {
-            return -1;
-        }
-    }
-
     public String getAggregationId()
     {
         return mParamsMap.get(PARAM_AGGREGATION_ID);
@@ -203,14 +191,14 @@ public class DailyInternalDeepLink extends DailyDeepLink
         return getIntent(context, Uri.parse(stringBuilder.toString()));
     }
 
-    public static Intent getStayOutboundBookingDetailScreenLink(Context context, int bookingIndex)
+    public static Intent getStayOutboundBookingDetailScreenLink(Context context, String aggregationId)
     {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("dailyhotel://");
         stringBuilder.append(HOST_INTERNAL_DAILYHOTEL);
         stringBuilder.append("?" + PARAM_VIEW + "=" + VIEW_BOOKING_DETAIL);
         stringBuilder.append("&" + PARAM_PLACE_TYPE + "=" + STAY_OUTBOUND);
-        stringBuilder.append("&" + PARAM_BOOKING_INDEX + "=" + bookingIndex);
+        stringBuilder.append("&" + PARAM_AGGREGATION_ID + "=" + aggregationId);
 
         return getIntent(context, Uri.parse(stringBuilder.toString()));
     }

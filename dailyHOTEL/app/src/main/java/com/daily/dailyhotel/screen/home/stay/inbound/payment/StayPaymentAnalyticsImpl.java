@@ -196,14 +196,16 @@ public class StayPaymentAnalyticsImpl implements StayPaymentPresenter.StayPaymen
     }
 
     @Override
-    public void onScreenPaymentCompleted(Activity activity, String transId)
+    public void onScreenPaymentCompleted(Activity activity, String aggregationId)
     {
         if (activity == null)
         {
             return;
         }
 
-        AnalyticsManager.getInstance(activity).purchaseCompleteHotel(transId, mPaymentParamMap);
+        mPaymentParamMap.put(AnalyticsManager.KeyType.AGGREGATION_ID, aggregationId);
+
+        AnalyticsManager.getInstance(activity).purchaseCompleteHotel(aggregationId, mPaymentParamMap);
     }
 
     @Override

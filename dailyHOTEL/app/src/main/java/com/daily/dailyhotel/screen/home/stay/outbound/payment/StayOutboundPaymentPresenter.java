@@ -104,7 +104,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
         void onScreenPaymentCompleted(Activity activity, StayOutboundPayment stayOutboundPayment, StayBookDateTime stayBookDateTime//
             , String stayName, DailyBookingPaymentTypeView.PaymentType paymentType, boolean usedBonus//
-            , boolean registerEasyCard, UserSimpleInformation userSimpleInformation);
+            , boolean registerEasyCard, UserSimpleInformation userSimpleInformation, String aggregationId);
 
         void onEventStartPayment(Activity activity, DailyBookingPaymentTypeView.PaymentType paymentType);
 
@@ -878,7 +878,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 @Override
                 public void accept(@io.reactivex.annotations.NonNull PaymentResult paymentResult) throws Exception
                 {
-                    startThankYou(paymentResult.bookingIndex, true);
+                    startThankYou(paymentResult.aggregationId, true);
                 }
             }, new Consumer<Throwable>()
             {
@@ -928,7 +928,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                         @Override
                         public void accept(@io.reactivex.annotations.NonNull PaymentResult paymentResult) throws Exception
                         {
-                            startThankYou(paymentResult.bookingIndex, false);
+                            startThankYou(paymentResult.aggregationId, false);
                         }
                     }, throwable ->
                     {
@@ -990,7 +990,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         }
     }
 
-    void startThankYou(int bookingIndex, boolean fullBonus)
+    void startThankYou(String aggregationId, boolean fullBonus)
     {
         // ThankYou 페이지를 홈탭에서 띄우기 위한 코드
         startActivity(DailyInternalDeepLink.getHomeScreenLink(getActivity()));
@@ -998,12 +998,12 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         startActivityForResult(StayOutboundThankYouActivity.newInstance(getActivity(), mStayName, mImageUrl//
             , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, bookingIndex//
+            , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, aggregationId//
             , mAnalytics.getThankYouAnalyticsParam(mPaymentType, fullBonus, mBonusSelected, mSelectedCard != null, mStayIndex)) //
             , StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
 
         mAnalytics.onScreenPaymentCompleted(getActivity(), mStayOutboundPayment, mStayBookDateTime, mStayName//
-            , mPaymentType, mBonusSelected, mSelectedCard != null, mUserSimpleInformation);
+            , mPaymentType, mBonusSelected, mSelectedCard != null, mUserSimpleInformation, aggregationId);
         mAnalytics.onEventEndPayment(getActivity(), mPaymentType);
     }
 
@@ -1635,7 +1635,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 @Override
                 public void accept(@io.reactivex.annotations.NonNull PaymentResult paymentResult) throws Exception
                 {
-                    startThankYou(paymentResult.bookingIndex, false);
+                    startThankYou(paymentResult.aggregationId, false);
                 }
             }, throwable ->
             {

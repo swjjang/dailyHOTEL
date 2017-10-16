@@ -1063,13 +1063,11 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                             throw new NullPointerException("Booking.PlaceType placeType = null");
                     }
 
-                    int bookingIndex = internalDeepLink.getBookingIndex();
                     String aggregationId = internalDeepLink.getAggregationId();
 
                     for (Booking booking : bookingList)
                     {
-                        if (((aggregationId != null && aggregationId.equalsIgnoreCase(booking.aggregationId))//
-                            || booking.reservationIndex == bookingIndex)//
+                        if ((aggregationId != null && aggregationId.equalsIgnoreCase(booking.aggregationId))//
                             && placeType == booking.placeType)
                         {
                             unLockUI();
