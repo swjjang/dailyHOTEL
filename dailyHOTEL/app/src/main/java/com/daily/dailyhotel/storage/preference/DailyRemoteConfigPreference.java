@@ -116,11 +116,12 @@ public class DailyRemoteConfigPreference
     private static final String KEY_REMOTE_CONFIG_OB_SEARCH_KEYWORD = "390";
 
     // Daily Reward Sticker
-    private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_ENABLED = "400";
-    private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_TITLE_MESSAGE = "401";
-    private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_CAMPAIGN_STATUS = "402";
-    private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_NONMEMBER_DEFAULT_MESSAGE = "403";
-    private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_NONMEMBER_CAMPAIGN_MESSAGE = "404";
+    private static final String KEY_REMOTE_CONFIG_REWARD_ENABLED = "400";
+    private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_ENABLED = "401";
+    private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_TITLE_MESSAGE = "402";
+    private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_CAMPAIGN_STATUS = "403";
+    private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_NONMEMBER_DEFAULT_MESSAGE = "404";
+    private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_NONMEMBER_CAMPAIGN_MESSAGE = "405";
     private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_MEMBER_MESSAGE_0_NIGHTS = "410";
     private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_MEMBER_MESSAGE_1_NIGHTS = "411";
     private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_MEMBER_MESSAGE_2_NIGHTS = "412";
@@ -1071,12 +1072,22 @@ public class DailyRemoteConfigPreference
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_OB_SEARCH_KEYWORD, null);
     }
 
+    public void setKeyRemoteConfigRewardEnabled(boolean value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_REWARD_ENABLED, value);
+    }
+
+    public boolean isKeyRemoteConfigRewardEnabled()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_REWARD_ENABLED, false);
+    }
+
     public void setKeyRemoteConfigRewardStickerEnabled(boolean value)
     {
         setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_REWARD_STICKER_ENABLED, value);
     }
 
-    public boolean getKeyRemoteConfigRewardStickerEnabled()
+    public boolean isKeyRemoteConfigRewardStickerEnabled()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_REWARD_STICKER_ENABLED, false);
     }

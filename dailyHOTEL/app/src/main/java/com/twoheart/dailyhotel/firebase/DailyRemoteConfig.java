@@ -111,7 +111,7 @@ public class DailyRemoteConfig
         String androidStaticUrl = mFirebaseRemoteConfig.getString("androidStaticUrl");
         String androidStayRankABTest = mFirebaseRemoteConfig.getString("androidStayRankABTest");
         String androidOBSearchKeyword = mFirebaseRemoteConfig.getString("androidOBSearchKeyword");
-        String androidRewardSticker = mFirebaseRemoteConfig.getString("androidRewardSticker");
+        String androidReward = mFirebaseRemoteConfig.getString("androidReward");
 
         if (Constants.DEBUG == true)
         {
@@ -144,12 +144,12 @@ public class DailyRemoteConfig
                     ExLog.d("androidOBSearchKeyword : " + new JSONObject(androidOBSearchKeyword).toString());
                 }
 
-                if (DailyTextUtils.isTextEmpty(androidRewardSticker) == true)
+                if (DailyTextUtils.isTextEmpty(androidReward) == true)
                 {
-                    ExLog.d("androidRewardSticker : ");
+                    ExLog.d("androidReward : ");
                 } else
                 {
-                    ExLog.d("androidOBSearchKeyword : " + new JSONObject(androidRewardSticker).toString());
+                    ExLog.d("androidReward : " + new JSONObject(androidReward).toString());
                 }
             } catch (Exception e)
             {
@@ -216,7 +216,7 @@ public class DailyRemoteConfig
         writeOBSearchKeyword(mContext, androidOBSearchKeyword);
 
         // Reward Sticker
-        writeRewardSticker(mContext, androidRewardSticker);
+        writeReward(mContext, androidReward);
 
         if (listener != null)
         {
@@ -707,7 +707,7 @@ public class DailyRemoteConfig
         }
     }
 
-    void writeRewardSticker(Context context, String jsonString)
+    void writeReward(Context context, String jsonString)
     {
         if (context == null)
         {
@@ -729,26 +729,34 @@ public class DailyRemoteConfig
                     ExLog.d("pinkred - reward sticker " + jsonObject);
                 }
 
-                boolean enabled = jsonObject.getBoolean("enabled");
-                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerEnabled(enabled);
+                // Reward
+                boolean rewardEnabled = jsonObject.getBoolean("enabled");
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardEnabled(rewardEnabled);
 
-                String titleMessage = jsonObject.getString("titleMessage");
+
+                // Reward Sticker
+                JSONObject rewardStickerJSONObject = jsonObject.getJSONObject("sticker");
+
+                boolean rewardStickerEnabled = rewardStickerJSONObject.getBoolean("enabled");
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerEnabled(rewardStickerEnabled);
+
+                String titleMessage = rewardStickerJSONObject.getString("titleMessage");
                 DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerTitleMessage(titleMessage);
 
-                boolean campaignStatus = jsonObject.getBoolean("campaignStatus");
+                boolean campaignStatus = rewardStickerJSONObject.getBoolean("campaignStatus");
                 DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerCampaignStatus(campaignStatus);
 
-                String guideMessage = jsonObject.getString("guideMessage");
+                String guideMessage = rewardStickerJSONObject.getString("guideMessage");
                 DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerGuideMessage(guideMessage);
 
-                JSONObject nonMemberMessageJSONObject = jsonObject.getJSONObject("nonMember").getJSONObject("message");
+                JSONObject nonMemberMessageJSONObject = rewardStickerJSONObject.getJSONObject("nonMember").getJSONObject("message");
                 String nonMemberDefaultMessage = nonMemberMessageJSONObject.getString("default");
                 String nonMemberCampaignMessage = nonMemberMessageJSONObject.getString("campaign");
 
                 DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerNonMemberDefaultMessage(nonMemberDefaultMessage);
                 DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerNonMemberCampaignMessage(nonMemberCampaignMessage);
 
-                JSONObject memberMessageJSONObject = jsonObject.getJSONObject("member").getJSONObject("message");
+                JSONObject memberMessageJSONObject = rewardStickerJSONObject.getJSONObject("member").getJSONObject("message");
                 final int MAX_NIGHTS = 9;
 
                 for (int i = 0; i <= MAX_NIGHTS; i++)

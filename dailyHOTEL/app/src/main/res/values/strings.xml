@@ -1501,6 +1501,10 @@
     <string name="message_campaign_empty_popup_message">현재 모든 예약이 완료되었습니다.\n다른 날짜로 확인해보겠어요?</string>
     <string name="message_empty_search_card_format">%1$s가 없습니다.</string>
 
+
+    <!-- Daily Reward -->
+    <string name="label_daily_reward">데일리 리워드</string>
+
     <string-array name="coupon_sort_array">
         <item>전체 쿠폰 보기</item>
         <item>스테이 쿠폰 보기</item>
