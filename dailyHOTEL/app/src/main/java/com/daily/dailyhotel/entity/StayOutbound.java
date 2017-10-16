@@ -19,6 +19,7 @@ public class StayOutbound
     public int tripAdvisorReviewCount;
     public String city;
     public String vendorType;
+    public boolean dailyReward; // 데일리 리워드 아이콘 여부
 
     public StayOutbound()
     {

@@ -5,7 +5,6 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Paint;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -116,6 +115,9 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
                 url = imageMap.mediumUrl;
             }
         }
+
+        // Reward 스티커
+        dataBinding.stickerImageView.setVisibility(stayOutbound.dailyReward ? View.VISIBLE : View.GONE);
 
         ControllerListener controllerListener = new BaseControllerListener<ImageInfo>()
         {
