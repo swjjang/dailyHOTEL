@@ -46,7 +46,6 @@ import com.twoheart.dailyhotel.util.analytics.GoogleAnalyticsManager;
 import java.util.Locale;
 
 import io.fabric.sdk.android.Fabric;
-import io.realm.Realm;
 
 public class DailyHotel extends android.support.multidex.MultiDexApplication implements Constants
 {
@@ -87,9 +86,6 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
                 //                    Util.restartExitApp(getApplicationContext());
             }
         });
-
-
-        Realm.init(this);
 
         Fabric.with(this, new Crashlytics());
 
@@ -358,19 +354,6 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         public void onActivityDestroyed(Activity activity)
         {
             AnalyticsManager.getInstance(activity).onActivityDestroyed(activity);
-
-            //            try
-            //            {
-            //                Realm realm = Realm.getDefaultInstance();
-            //                while (realm != null && realm.isClosed() == false)
-            //                {
-            //                    realm.close();
-            //                }
-            //
-            //            } catch (Exception e)
-            //            {
-            //                ExLog.e(e.toString());
-            //            }
         }
     }
 }

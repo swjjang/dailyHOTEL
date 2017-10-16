@@ -4,9 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Build;
-import android.support.annotation.Nullable;
 
-import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.CarouselListItem;
@@ -15,7 +13,6 @@ import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.local.model.RecentlyList;
-import com.daily.dailyhotel.repository.local.model.RecentlyRealmObject;
 import com.daily.dailyhotel.storage.database.DailyDb;
 import com.daily.dailyhotel.storage.database.DailyDbHelper;
 import com.twoheart.dailyhotel.model.Gourmet;
@@ -30,11 +27,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import io.realm.Realm;
-import io.realm.RealmQuery;
-import io.realm.RealmResults;
-import io.realm.Sort;
 
 /**
  * Created by android_sam on 2017. 6. 8..
@@ -179,200 +171,6 @@ public class RecentlyPlaceUtil
         DailyDbHelper.getInstance().close();
 
         return recentlyList;
-    }
-
-    @Nullable
-    public static ArrayList<RecentlyDbPlace> getRealmRecentlyTypeList(Constants.ServiceType... serviceTypes)
-    {
-        Realm realm = Realm.getDefaultInstance();
-
-        ArrayList<RecentlyDbPlace> resultList = new ArrayList<>();
-
-        try
-        {
-            RealmQuery query = realm.where(RecentlyRealmObject.class);
-
-            if (serviceTypes != null)
-            {
-                if (serviceTypes.length > 1)
-                {
-                    query.beginGroup();
-
-                    for (int i = 0; i < serviceTypes.length; i++)
-                    {
-                        if (i > 0)
-                        {
-                            query.or();
-                        }
-
-                        query.equalTo("serviceType", serviceTypes[i].name());
-                    }
-
-                    query.endGroup();
-                } else
-                {
-                    query.equalTo("serviceType", serviceTypes[0].name());
-                }
-            }
-
-            RealmResults<RecentlyRealmObject> realmResults = query.findAllSorted("savingTime", Sort.DESCENDING);
-
-            if (realmResults != null && realmResults.size() > 0)
-            {
-                for (RecentlyRealmObject realmObject : realmResults)
-                {
-                    Constants.ServiceType serviceType;
-                    try
-                    {
-                        serviceType = Constants.ServiceType.valueOf(realmObject.serviceType);
-                    } catch (Exception e)
-                    {
-                        continue;
-                    }
-
-                    RecentlyDbPlace dbPlace = new RecentlyDbPlace();
-                    dbPlace.index = realmObject.index;
-                    dbPlace.serviceType = serviceType;
-                    dbPlace.savingTime = realmObject.savingTime;
-                    dbPlace.name = realmObject.name;
-                    dbPlace.englishName = realmObject.englishName;
-                    dbPlace.imageUrl = realmObject.imageUrl;
-
-                    resultList.add(dbPlace);
-                }
-            }
-
-        } catch (Exception e)
-        {
-            ExLog.w(e.toString());
-            Crashlytics.logException(new Exception("realm DB parsing fail : change data - list", e));
-        } finally
-        {
-            ExLog.d("realm close");
-            try
-            {
-                realm.close();
-            } catch (Exception e)
-            {
-                ExLog.w(e.toString());
-                Crashlytics.logException(new Exception("realm DB closing fail - list", e));
-            }
-        }
-
-        return resultList;
-    }
-
-    public static long getOldestSavingTime(Constants.ServiceType... serviceTypes)
-    {
-        Realm realm = Realm.getDefaultInstance();
-        long savingTime = -1;
-
-        try
-        {
-            RealmQuery query = realm.where(RecentlyRealmObject.class);
-
-            if (serviceTypes != null)
-            {
-                if (serviceTypes.length > 1)
-                {
-                    query.beginGroup();
-
-                    for (int i = 0; i < serviceTypes.length; i++)
-                    {
-                        if (i > 0)
-                        {
-                            query.or();
-                        }
-
-                        query.equalTo("serviceType", serviceTypes[i].name());
-                    }
-
-                    query.endGroup();
-                } else
-                {
-                    query.equalTo("serviceType", serviceTypes[0].name());
-                }
-            }
-
-            RealmResults<RecentlyRealmObject> realmResults = query.findAllSorted("savingTime", Sort.ASCENDING);
-
-            if (realmResults != null && realmResults.size() > 0)
-            {
-                savingTime = realmResults.get(0).savingTime;
-            }
-        } catch (Exception e)
-        {
-            ExLog.w(e.toString());
-            Crashlytics.logException(new Exception("realm DB parsing fail : change data - time", e));
-        } finally
-        {
-            ExLog.d("realm close");
-
-            try
-            {
-                realm.close();
-            } catch (Exception e)
-            {
-                ExLog.w(e.toString());
-                Crashlytics.logException(new Exception("realm DB closing fail - time", e));
-            }
-        }
-
-        return savingTime;
-    }
-
-    public static RecentlyDbPlace getRecentlyPlace(Constants.ServiceType serviceType, int index)
-    {
-        Realm realm = Realm.getDefaultInstance();
-        RecentlyDbPlace dbPlace = null;
-
-        try
-        {
-            RealmQuery query = realm.where(RecentlyRealmObject.class);
-
-            query.equalTo("serviceType", serviceType.name());
-            query.equalTo("index", index);
-
-            RealmResults<RecentlyRealmObject> realmResults = query.findAllSorted("savingTime", Sort.DESCENDING);
-
-            if (realmResults == null || realmResults.size() == 0)
-            {
-                return null;
-            }
-
-            RecentlyRealmObject realmObject = realmResults.get(0);
-            if (realmObject == null)
-            {
-                return null;
-            }
-
-            dbPlace = new RecentlyDbPlace();
-            dbPlace.index = realmObject.index;
-            dbPlace.serviceType = serviceType;
-            dbPlace.savingTime = realmObject.savingTime;
-            dbPlace.name = realmObject.name;
-            dbPlace.englishName = realmObject.englishName;
-            dbPlace.imageUrl = realmObject.imageUrl;
-
-        } catch (Exception e)
-        {
-            ExLog.w(e.toString());
-            Crashlytics.logException(new Exception("realm DB parsing fail : change data - place", e));
-        } finally
-        {
-            ExLog.d("realm close");
-
-            try
-            {
-                realm.close();
-            } catch (Exception e)
-            {
-                ExLog.w(e.toString());
-                Crashlytics.logException(new Exception("realm DB closing fail - place", e));
-            }
-        }
-
-        return dbPlace;
     }
 
     public static String getDbTargetIndices(Context context, Constants.ServiceType serviceType, int maxSize)

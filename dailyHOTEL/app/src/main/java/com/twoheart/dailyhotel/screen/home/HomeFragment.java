@@ -1288,7 +1288,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
             public void accept(@NonNull Throwable throwable) throws Exception
             {
                 HomeFragment.this.setRecentlyList(null, true);
-                Crashlytics.logException(new Exception("need check realm DB", throwable));
+                Crashlytics.logException(new Exception("need check Daily DB", throwable));
             }
         }));
     }
