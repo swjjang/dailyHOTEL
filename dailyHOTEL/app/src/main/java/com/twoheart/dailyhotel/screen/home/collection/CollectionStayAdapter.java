@@ -141,7 +141,7 @@ public class CollectionStayAdapter extends PlaceListAdapter
     {
         final RecommendationStay recommendationStay = placeViewItem.getItem();
 
-        holder.stayCardView.setStickerVisible(false);
+        holder.stayCardView.setStickerVisible(recommendationStay.dailyReward);
         holder.stayCardView.setDeleteVisible(false);
         holder.stayCardView.setWishVisible(false);
 

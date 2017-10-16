@@ -35,6 +35,9 @@ public class RecommendationStay extends RecommendationPlace
     @JsonField(name = "availableRooms")
     public int availableRooms;
 
+    @JsonField(name = "dailyReward")
+    public boolean dailyReward;
+
     @OnJsonParseComplete
     void onParseComplete()
     {

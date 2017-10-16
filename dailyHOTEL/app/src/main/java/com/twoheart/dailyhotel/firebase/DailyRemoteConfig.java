@@ -111,6 +111,7 @@ public class DailyRemoteConfig
         String androidStaticUrl = mFirebaseRemoteConfig.getString("androidStaticUrl");
         String androidStayRankABTest = mFirebaseRemoteConfig.getString("androidStayRankABTest");
         String androidOBSearchKeyword = mFirebaseRemoteConfig.getString("androidOBSearchKeyword");
+        String androidRewardSticker = mFirebaseRemoteConfig.getString("androidRewardSticker");
 
         if (Constants.DEBUG == true)
         {
@@ -141,6 +142,14 @@ public class DailyRemoteConfig
                 } else
                 {
                     ExLog.d("androidOBSearchKeyword : " + new JSONObject(androidOBSearchKeyword).toString());
+                }
+
+                if (DailyTextUtils.isTextEmpty(androidRewardSticker) == true)
+                {
+                    ExLog.d("androidRewardSticker : ");
+                } else
+                {
+                    ExLog.d("androidOBSearchKeyword : " + new JSONObject(androidRewardSticker).toString());
                 }
             } catch (Exception e)
             {
@@ -205,6 +214,9 @@ public class DailyRemoteConfig
         writeStayRankTest(mContext, androidStayRankABTest);
 
         writeOBSearchKeyword(mContext, androidOBSearchKeyword);
+
+        // Reward Sticker
+        writeRewardSticker(mContext, androidRewardSticker);
 
         if (listener != null)
         {
@@ -688,6 +700,61 @@ public class DailyRemoteConfig
                 }
 
                 DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigObSearchKeyword(arrayString);
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
+        }
+    }
+
+    void writeRewardSticker(Context context, String jsonString)
+    {
+        if (context == null)
+        {
+            return;
+        }
+
+        if (DailyTextUtils.isTextEmpty(jsonString) == true)
+        {
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerEnabled(false);
+        } else
+        {
+
+            try
+            {
+                JSONObject jsonObject = new JSONObject(jsonString);
+
+                if (Constants.DEBUG == true)
+                {
+                    ExLog.d("pinkred - reward sticker " + jsonObject);
+                }
+
+                boolean enabled = jsonObject.getBoolean("enabled");
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerEnabled(enabled);
+
+                String titleMessage = jsonObject.getString("titleMessage");
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerTitleMessage(titleMessage);
+
+                boolean campaignStatus = jsonObject.getBoolean("campaignStatus");
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerCampaignStatus(campaignStatus);
+
+                String guideMessage = jsonObject.getString("guideMessage");
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerGuideMessage(guideMessage);
+
+                JSONObject nonMemberMessageJSONObject = jsonObject.getJSONObject("nonMember").getJSONObject("message");
+                String nonMemberDefaultMessage = nonMemberMessageJSONObject.getString("default");
+                String nonMemberCampaignMessage = nonMemberMessageJSONObject.getString("campaign");
+
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerNonMemberDefaultMessage(nonMemberDefaultMessage);
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerNonMemberCampaignMessage(nonMemberCampaignMessage);
+
+                JSONObject memberMessageJSONObject = jsonObject.getJSONObject("member").getJSONObject("message");
+                final int MAX_NIGHTS = 9;
+
+                for (int i = 0; i <= MAX_NIGHTS; i++)
+                {
+                    DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerMemberMessage(0, memberMessageJSONObject.getString(Integer.toString(i)));
+                }
             } catch (Exception e)
             {
                 ExLog.e(e.toString());

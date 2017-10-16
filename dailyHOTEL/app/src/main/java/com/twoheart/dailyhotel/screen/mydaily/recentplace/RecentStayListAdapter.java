@@ -109,7 +109,7 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
     {
         final RecentlyPlace recentlyPlace = placeViewItem.getItem();
 
-        holder.stayCardView.setStickerVisible(false);
+        holder.stayCardView.setStickerVisible(recentlyPlace.dailyReward);
         holder.stayCardView.setDeleteVisible(true);
         holder.stayCardView.setWishVisible(false);
 
@@ -266,7 +266,7 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
 
         StayOutbound stayOutbound = placeViewItem.getItem();
 
-        holder.stayOutboundCardView.setStickerVisible(false);
+        holder.stayOutboundCardView.setStickerVisible(stayOutbound.dailyReward);
         holder.stayOutboundCardView.setDeleteVisible(true);
         holder.stayOutboundCardView.setWishVisible(false);
 
