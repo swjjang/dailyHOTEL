@@ -178,13 +178,8 @@ public class StayDetailRoomListAdapter extends RecyclerView.Adapter<RecyclerView
             saleRoomInformationViewHolder.dataBinding.benefitTextView.setText(stayRoom.benefit);
         }
 
-        if (stayRoom.nrd == false)
-        {
-            saleRoomInformationViewHolder.dataBinding.nrdTextView.setVisibility(View.GONE);
-        } else
-        {
-            saleRoomInformationViewHolder.dataBinding.nrdTextView.setVisibility(View.VISIBLE);
-        }
+        saleRoomInformationViewHolder.dataBinding.nrdTextView.setVisibility(stayRoom.nrd ? View.VISIBLE : View.GONE);
+        saleRoomInformationViewHolder.dataBinding.rewardTextView.setVisibility(stayRoom.dailyReward ? View.VISIBLE : View.GONE);
 
         // 마지막 목록에는 하단에 10dp여유를 준다.
         if (position == getItemCount() - 1)

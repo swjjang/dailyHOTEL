@@ -203,6 +203,8 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
             saleRoomInformationViewHolder.dataBinding.nrdTextView.setText(stayOutboundRoom.nonRefundableDescription);
         }
 
+        saleRoomInformationViewHolder.dataBinding.rewardTextView.setVisibility(StayOutboundRoom.VENDOR_TYPE_FIT_RUUMS.equalsIgnoreCase(stayOutboundRoom.vendorType) ? View.VISIBLE : View.GONE);
+
         // 마지막 목록에는 하단에 10dp여유를 준다.
         if (position == getItemCount() - 1)
         {

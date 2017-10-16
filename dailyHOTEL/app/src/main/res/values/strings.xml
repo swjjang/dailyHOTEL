@@ -1504,6 +1504,7 @@
 
     <!-- Daily Reward -->
     <string name="label_daily_reward">데일리 리워드</string>
+    <string name="label_used_reward">적립 및 사용</string>
 
     <string-array name="coupon_sort_array">
         <item>전체 쿠폰 보기</item>
