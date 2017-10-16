@@ -116,7 +116,6 @@ public class DailyRemoteConfigPreference
     private static final String KEY_REMOTE_CONFIG_OB_SEARCH_KEYWORD = "390";
 
     // Daily Reward Sticker
-    private static final String KEY_REMOTE_CONFIG_REWARD_ENABLED = "400";
     private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_ENABLED = "401";
     private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_TITLE_MESSAGE = "402";
     private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_CAMPAIGN_STATUS = "403";
@@ -1070,16 +1069,6 @@ public class DailyRemoteConfigPreference
     public String getKeyRemoteConfigObSearchKeyword()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_OB_SEARCH_KEYWORD, null);
-    }
-
-    public void setKeyRemoteConfigRewardEnabled(boolean value)
-    {
-        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_REWARD_ENABLED, value);
-    }
-
-    public boolean isKeyRemoteConfigRewardEnabled()
-    {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_REWARD_ENABLED, false);
     }
 
     public void setKeyRemoteConfigRewardStickerEnabled(boolean value)

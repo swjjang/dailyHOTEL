@@ -729,9 +729,6 @@ public class DailyRemoteConfig
                     ExLog.d("pinkred - reward sticker " + jsonObject);
                 }
 
-                // Reward
-                boolean rewardEnabled = jsonObject.getBoolean("enabled");
-                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardEnabled(rewardEnabled);
 
 
                 // Reward Sticker
