@@ -18,6 +18,7 @@ public class StayOutboundRoom
     public boolean nonRefundable;
     public String nonRefundableDescription;
     public String valueAddName;
+    public String vendorType;
 
     public StayOutboundRoom()
     {

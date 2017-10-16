@@ -194,7 +194,7 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
             saleRoomInformationViewHolder.dataBinding.benefitTextView.setText(stayOutboundRoom.promotionDescription);
         }
 
-        if (stayOutboundRoom.nonRefundable == false)
+        if (stayOutboundRoom.nonRefundable == false || DailyTextUtils.isTextEmpty(stayOutboundRoom.nonRefundableDescription) == true)
         {
             saleRoomInformationViewHolder.dataBinding.nrdTextView.setVisibility(View.GONE);
         } else

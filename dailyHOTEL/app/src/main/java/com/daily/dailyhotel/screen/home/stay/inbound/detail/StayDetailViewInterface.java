@@ -16,7 +16,7 @@ public interface StayDetailViewInterface extends BaseDialogViewInterface
 
     Observable<Boolean> hideRoomList(boolean animation);
 
-    void setStayDetail(StayBookDateTime stayBookDateTime, StayDetail stayDetail, int trueReviewCount);
+    void setStayDetail(StayBookDateTime stayBookDateTime, StayDetail stayDetail, int trueReviewCount, boolean showStamp);
 
     Observable<Boolean> getSharedElementTransition(int gradientType);
 

@@ -108,6 +108,8 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
         void onEventRecommendGourmetViewAllClick(Activity activity);
 
         void onEventRecommendGourmetItemClick(Activity activity, double distance, int placeIndex);
+
+        void onEventOrderComplete(Activity activity);
     }
 
     public StayThankYouPresenter(@NonNull StayThankYouActivity activity)
@@ -236,6 +238,7 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
         super.onStart();
 
         mAnalytics.onScreen(getActivity());
+        mAnalytics.onEventOrderComplete(getActivity());
 
         if (isRefresh() == true)
         {

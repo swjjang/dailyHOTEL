@@ -19,7 +19,7 @@ public interface PaymentInterface
 {
     // Stay Outbound 결제 정보를 가져온다.
     Observable<StayOutboundPayment> getStayOutboundPayment(StayBookDateTime stayBookDateTime, int index//
-        , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people);
+        , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people, String vendorType);
 
     Observable<StayPayment> getStayPayment(StayBookDateTime stayBookDateTime, int roomIndex);
 
@@ -30,15 +30,15 @@ public interface PaymentInterface
 
     Observable<PaymentResult> getStayOutboundPaymentTypeEasy(StayBookDateTime stayBookDateTime, int index//
         , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people//
-        , boolean usedBonus, int bonus, OverseasGuest guest, int totalPrice, String billingKey);
+        , boolean usedBonus, int bonus, OverseasGuest guest, int totalPrice, String billingKey, String vendorType);
 
     Observable<PaymentResult> getStayOutboundPaymentTypeBonus(StayBookDateTime stayBookDateTime, int index//
         , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people//
-        , boolean usedBonus, int bonus, OverseasGuest guest, int totalPrice);
+        , boolean usedBonus, int bonus, OverseasGuest guest, int totalPrice, String vendorType);
 
     Observable<String> getStayOutboundHasDuplicatePayment(StayBookDateTime stayBookDateTime, int index//
         , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people//
-        , boolean usedBonus, int bonus, OverseasGuest guest, int totalPrice);
+        , boolean usedBonus, int bonus, OverseasGuest guest, int totalPrice, String vendorType);
 
     Observable<PaymentResult> getStayPaymentTypeEasy(StayBookDateTime stayBookDateTime, int roomIndex//
         , boolean usedBonus, int bonus, boolean usedCoupon, String couponCode, DomesticGuest guest//
@@ -49,6 +49,9 @@ public interface PaymentInterface
         , int totalPrice, String transportation);
 
     Observable<StayRefundPolicy> getStayRefundPolicy(StayBookDateTime stayBookDateTime, int stayIndex, int roomIndex);
+
+
+    Observable<String> getStayHasDuplicatePayment(StayBookDateTime stayBookDateTime);
 
     Observable<PaymentResult> getGourmetPaymentTypeEasy(String arrivalDateTime, int menuIndex//
         , int menuCount, boolean usedBonus, int bonus, boolean usedCoupon, String couponCode, DomesticGuest guest//

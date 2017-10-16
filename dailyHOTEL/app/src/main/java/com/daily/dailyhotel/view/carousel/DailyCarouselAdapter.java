@@ -295,7 +295,6 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
         holder.dataBinding.contentPersonView.setText("");
         holder.dataBinding.contentPersonView.setVisibility(View.GONE);
 
-        holder.dataBinding.contentMultiDayView.setVisibility(View.GONE);
         holder.dataBinding.tripAdvisorLayout.setVisibility(View.GONE);
     }
 
@@ -385,12 +384,24 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
         holder.dataBinding.contentTextView.setText(stayOutbound.name);
         //        holder.dataBinding.nameEngTextView.setText("(" + stayOutbound.nameEng + ")");
 
-        holder.dataBinding.contentProvinceView.setText(stayOutbound.city);
-
         // Stay Outbound 의 경우 PlaceType 이 없음
         holder.dataBinding.contentGradeView.setText("");
 
         setTripAdvisorText(holder.dataBinding, stayOutbound.tripAdvisorRating);
+
+        // 도시 명을 말줄임 표시 하기 위해 나중에 도시명을 넣어줌
+        holder.dataBinding.contentSubRegionLayout.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                int layoutWidth = holder.dataBinding.contentSubRegionLayout.getWidth();
+                int regionWidth = holder.dataBinding.regionLayout.getWidth();
+
+                holder.dataBinding.contentProvinceView.setMaxWidth(regionWidth - layoutWidth);
+                holder.dataBinding.contentProvinceView.setText(stayOutbound.city);
+            }
+        });
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -478,7 +489,6 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
             holder.dataBinding.contentGradeView.setText(gourmet.category);
         }
 
-        holder.dataBinding.contentMultiDayView.setVisibility(View.GONE);
         holder.dataBinding.tripAdvisorLayout.setVisibility(View.GONE);
     }
 
@@ -561,16 +571,15 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
             dataBinding.contentOriginPriceView.setPaintFlags(dataBinding.contentOriginPriceView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
-        dataBinding.contentPersonView.setText("");
-        dataBinding.contentPersonView.setVisibility(View.GONE);
-
         if (nightsEnabled == true)
         {
-            dataBinding.contentMultiDayView.setVisibility(View.VISIBLE);
+            dataBinding.contentPersonView.setText(R.string.label_carousel_item_stay_1_nights);
+            dataBinding.contentPersonView.setVisibility(View.VISIBLE);
 
         } else
         {
-            dataBinding.contentMultiDayView.setVisibility(View.GONE);
+            dataBinding.contentPersonView.setText("");
+            dataBinding.contentPersonView.setVisibility(View.GONE);
         }
     }
 

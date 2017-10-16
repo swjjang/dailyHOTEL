@@ -130,15 +130,6 @@ public class StayOutboundPreviewView extends BaseDialogView<StayOutboundPreviewV
         // 등급
         getViewDataBinding().gradeTextView.setVisibility(View.VISIBLE);
         getViewDataBinding().gradeTextView.setText(getString(R.string.label_stay_outbound_detail_grade, (int) rating));
-        getViewDataBinding().ratingBar.setOnTouchListener(new View.OnTouchListener()
-        {
-            @Override
-            public boolean onTouch(View v, MotionEvent event)
-            {
-                return true;
-            }
-        });
-        getViewDataBinding().ratingBar.setRating(rating);
     }
 
     @Override

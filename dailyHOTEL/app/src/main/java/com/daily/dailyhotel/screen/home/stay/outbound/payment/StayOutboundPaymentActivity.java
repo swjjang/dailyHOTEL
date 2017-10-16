@@ -36,6 +36,7 @@ public class StayOutboundPaymentActivity extends BaseActivity<StayOutboundPaymen
     static final String INTENT_EXTRA_DATA_NUMBER_OF_ADULTS = "numberOfAdults";
     static final String INTENT_EXTRA_DATA_CHILD_LIST = "childList";
     static final String INTENT_EXTRA_DATA_ROOM_TYPE = "roomType";
+    static final String INTENT_EXTRA_DATA_VENDOR_TYPE = "vendorType";
     static final String INTENT_EXTRA_DATA_RATE_CODE = "rateCode";
     static final String INTENT_EXTRA_DATA_RATE_KEY = "rateKey";
     static final String INTENT_EXTRA_DATA_ROOM_TYPE_CODE = "roomTypeCode";
@@ -45,7 +46,7 @@ public class StayOutboundPaymentActivity extends BaseActivity<StayOutboundPaymen
     public static Intent newInstance(Context context, int stayIndex, String stayName, String imageUrl, int roomPrice//
         , String checkInDateTime, String checkOutDateTime, int numberOfAdults//
         , ArrayList<Integer> childAgeList, String roomType//
-        , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId//
+        , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, String vendorType//
         , StayOutboundPaymentAnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, StayOutboundPaymentActivity.class);
@@ -63,6 +64,7 @@ public class StayOutboundPaymentActivity extends BaseActivity<StayOutboundPaymen
         intent.putExtra(INTENT_EXTRA_DATA_RATE_KEY, rateKey);
         intent.putExtra(INTENT_EXTRA_DATA_ROOM_TYPE_CODE, roomTypeCode);
         intent.putExtra(INTENT_EXTRA_DATA_ROOM_BED_TYPE_ID, roomBedTypeId);
+        intent.putExtra(INTENT_EXTRA_DATA_VENDOR_TYPE, vendorType);
         intent.putExtra(INTENT_EXTRA_DATA_ANALYTICS, analyticsParam);
 
         return intent;
