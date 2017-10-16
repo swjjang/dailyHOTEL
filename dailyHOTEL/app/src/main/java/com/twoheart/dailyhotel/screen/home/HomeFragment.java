@@ -29,6 +29,8 @@ import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
+import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
+import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
@@ -90,11 +92,13 @@ import java.util.TimeZone;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -129,6 +133,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
     DailyLocationFactory mDailyLocationFactory;
 
     private RecentlyRemoteImpl mRecentlyRemoteImpl;
+    private RecentlyLocalImpl mRecentlyLocalImpl;
 
     private CommonRemoteImpl mCommonRemoteImpl;
 
@@ -138,6 +143,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
         super.onCreate(savedInstanceState);
         mCommonRemoteImpl = new CommonRemoteImpl(getActivity());
         mRecentlyRemoteImpl = new RecentlyRemoteImpl(getActivity());
+        mRecentlyLocalImpl = new RecentlyLocalImpl(getActivity());
     }
 
     @Nullable
@@ -1264,7 +1270,17 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
     private void requestRecentList()
     {
-        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getInboundRecentlyList(MAX_REQUEST_SIZE, ServiceType.HOTEL, ServiceType.GOURMET).observeOn(AndroidSchedulers.mainThread()) //
+        Observable<ArrayList<RecentlyPlace>> localObservable = mRecentlyLocalImpl.getRecentlyTypeList(ServiceType.HOTEL, ServiceType.GOURMET) //
+            .observeOn(Schedulers.io()).flatMap(new Function<ArrayList<RecentlyDbPlace>, ObservableSource<ArrayList<RecentlyPlace>>>()
+        {
+            @Override
+            public ObservableSource<ArrayList<RecentlyPlace>> apply(@NonNull ArrayList<RecentlyDbPlace> recentlyDbPlaces) throws Exception
+            {
+                return mRecentlyRemoteImpl.getInboundRecentlyList(recentlyDbPlaces, MAX_REQUEST_SIZE, ServiceType.HOTEL, ServiceType.GOURMET);
+            }
+        });
+
+        addCompositeDisposable(Observable.zip(localObservable.observeOn(AndroidSchedulers.mainThread()) //
             , mRecentlyRemoteImpl.getStayOutboundRecentlyList(MAX_REQUEST_SIZE).observeOn(AndroidSchedulers.mainThread()) //
             , new BiFunction<ArrayList<RecentlyPlace>, StayOutbounds, ArrayList<CarouselListItem>>()
             {

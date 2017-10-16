@@ -1,6 +1,9 @@
 package com.daily.dailyhotel.domain;
 
+import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.twoheart.dailyhotel.util.Constants;
+
+import java.util.ArrayList;
 
 import io.reactivex.Observable;
 
@@ -14,4 +17,6 @@ public interface RecentlyLocalInterface
         , String name, String englishName, String imageUrl, boolean isUpdateDate);
 
     Observable deleteRecentlyItem(Constants.ServiceType serviceType, int index);
+
+    Observable<ArrayList<RecentlyDbPlace>> getRecentlyTypeList(Constants.ServiceType... serviceTypes);
 }

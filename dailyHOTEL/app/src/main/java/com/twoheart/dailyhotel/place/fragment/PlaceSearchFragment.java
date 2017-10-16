@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
@@ -55,6 +56,7 @@ public abstract class PlaceSearchFragment extends BaseFragment
 
     protected CommonRemoteImpl mCommonRemoteImpl;
     protected RecentlyRemoteImpl mRecentlyRemoteImpl;
+    protected RecentlyLocalImpl mRecentlyLocalImpl;
     protected CampaignTagRemoteImpl mCampaignTagRemoteImpl;
     protected SuggestRemoteImpl mSuggestRemoteImpl;
 
@@ -108,6 +110,7 @@ public abstract class PlaceSearchFragment extends BaseFragment
         mPlaceSearchLayout = getPlaceSearchLayout(mBaseActivity);
         mCommonRemoteImpl = new CommonRemoteImpl(mBaseActivity);
         mRecentlyRemoteImpl = new RecentlyRemoteImpl(mBaseActivity);
+        mRecentlyLocalImpl = new RecentlyLocalImpl(mBaseActivity);
         mCampaignTagRemoteImpl = new CampaignTagRemoteImpl(mBaseActivity);
         mSuggestRemoteImpl = new SuggestRemoteImpl(mBaseActivity);
 

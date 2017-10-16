@@ -91,14 +91,13 @@ public class RecentlyRemoteImpl implements RecentlyInterface
     }
 
     @Override
-    public Observable<ArrayList<RecentlyPlace>> getInboundRecentlyList(int maxSize, @NonNull Constants.ServiceType... serviceTypes)
+    public Observable<ArrayList<RecentlyPlace>> getInboundRecentlyList(ArrayList<RecentlyDbPlace> list, int maxSize, Constants.ServiceType... serviceTypes)
     {
         return Observable.defer(new Callable<ObservableSource<ArrayList<RecentlyPlace>>>()
         {
             @Override
             public ObservableSource<ArrayList<RecentlyPlace>> call() throws Exception
             {
-                ArrayList<RecentlyDbPlace> list = RecentlyPlaceUtil.getDbRecentlyTypeList(mContext, serviceTypes);
                 if (list == null || list.size() == 0)
                 {
                     return Observable.just(new ArrayList<RecentlyPlace>()).subscribeOn(Schedulers.io());
