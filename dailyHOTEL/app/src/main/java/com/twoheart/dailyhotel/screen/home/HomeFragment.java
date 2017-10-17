@@ -30,7 +30,6 @@ import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
-import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
@@ -38,6 +37,7 @@ import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.preview.StayOutboundPreviewActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchActivity;
+import com.daily.dailyhotel.storage.database.DailyDb;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -80,6 +80,8 @@ import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -1269,18 +1271,32 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
     private void requestRecentList()
     {
-        Observable<ArrayList<RecentlyPlace>> localObservable = mRecentlyLocalImpl.getRecentlyTypeList(ServiceType.HOTEL, ServiceType.GOURMET) //
-            .observeOn(Schedulers.io()).flatMap(new Function<ArrayList<RecentlyDbPlace>, ObservableSource<ArrayList<RecentlyPlace>>>()
+        Observable<ArrayList<RecentlyPlace>> ibObservable = mRecentlyLocalImpl.getRecentlyJSONObject(MAX_REQUEST_SIZE, ServiceType.HOTEL, ServiceType.GOURMET) //
+            .observeOn(Schedulers.io()).flatMap(new Function<JSONObject, ObservableSource<ArrayList<RecentlyPlace>>>()
             {
                 @Override
-                public ObservableSource<ArrayList<RecentlyPlace>> apply(@NonNull ArrayList<RecentlyDbPlace> recentlyDbPlaces) throws Exception
+                public ObservableSource<ArrayList<RecentlyPlace>> apply(@NonNull JSONObject jsonObject) throws Exception
                 {
-                    return mRecentlyRemoteImpl.getInboundRecentlyList(recentlyDbPlaces, MAX_REQUEST_SIZE, ServiceType.HOTEL, ServiceType.GOURMET);
+                    if (jsonObject == null || jsonObject.has("keys") == false)
+                    {
+                        return Observable.just(new ArrayList<>());
+                    }
+
+                    return mRecentlyRemoteImpl.getInboundRecentlyList(jsonObject);
                 }
             });
 
-        addCompositeDisposable(Observable.zip(localObservable //
-            , mRecentlyRemoteImpl.getStayOutboundRecentlyList(MAX_REQUEST_SIZE) //
+        Observable<StayOutbounds> obObservable = mRecentlyLocalImpl.getDbTargetIndices(Constants.ServiceType.OB_STAY, DailyDb.MAX_RECENT_PLACE_COUNT) //
+            .observeOn(Schedulers.io()).flatMap(new Function<String, ObservableSource<StayOutbounds>>()
+            {
+                @Override
+                public ObservableSource<StayOutbounds> apply(@NonNull String targetIndices) throws Exception
+                {
+                    return mRecentlyRemoteImpl.getStayOutboundRecentlyList(targetIndices, DailyDb.MAX_RECENT_PLACE_COUNT);
+                }
+            });
+
+        addCompositeDisposable(Observable.zip(ibObservable, obObservable //
             , new BiFunction<ArrayList<RecentlyPlace>, StayOutbounds, ArrayList<CarouselListItem>>()
             {
                 @Override
@@ -1313,7 +1329,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
             @Override
             public ObservableSource<ArrayList<CarouselListItem>> apply(@NonNull ArrayList<CarouselListItem> carouselListItems) throws Exception
             {
-                return mRecentlyLocalImpl.sortCarouselListItemList(carouselListItems, null);
+                return mRecentlyLocalImpl.sortCarouselListItemList(carouselListItems, (Constants.ServiceType[]) null);
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<CarouselListItem>>()
         {

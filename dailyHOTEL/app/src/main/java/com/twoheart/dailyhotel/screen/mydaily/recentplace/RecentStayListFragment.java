@@ -23,10 +23,10 @@ import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
-import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.preview.StayOutboundPreviewActivity;
+import com.daily.dailyhotel.storage.database.DailyDb;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.daily.dailyhotel.view.DailyStayCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -39,6 +39,8 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -130,18 +132,32 @@ public class RecentStayListFragment extends RecentPlacesListFragment
     {
         lockUI();
 
-        Observable<ArrayList<RecentlyPlace>> localObservable = mRecentlyLocalImpl.getRecentlyTypeList(ServiceType.HOTEL) //
-            .observeOn(Schedulers.io()).flatMap(new Function<ArrayList<RecentlyDbPlace>, ObservableSource<ArrayList<RecentlyPlace>>>()
+        Observable<ArrayList<RecentlyPlace>> ibObservable = mRecentlyLocalImpl.getRecentlyJSONObject(DailyDb.MAX_RECENT_PLACE_COUNT, ServiceType.HOTEL) //
+            .observeOn(Schedulers.io()).flatMap(new Function<JSONObject, ObservableSource<ArrayList<RecentlyPlace>>>()
             {
                 @Override
-                public ObservableSource<ArrayList<RecentlyPlace>> apply(@NonNull ArrayList<RecentlyDbPlace> recentlyDbPlaces) throws Exception
+                public ObservableSource<ArrayList<RecentlyPlace>> apply(@NonNull JSONObject jsonObject) throws Exception
                 {
-                    return mRecentlyRemoteImpl.getInboundRecentlyList(recentlyDbPlaces, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT, ServiceType.HOTEL);
+                    if (jsonObject == null || jsonObject.has("keys") == false)
+                    {
+                        return Observable.just(new ArrayList<>());
+                    }
+
+                    return mRecentlyRemoteImpl.getInboundRecentlyList(jsonObject);
                 }
             });
 
-        addCompositeDisposable(Observable.zip(localObservable.observeOn(Schedulers.io()) //
-            , mRecentlyRemoteImpl.getStayOutboundRecentlyList(RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT).observeOn(Schedulers.io()) //
+        Observable<StayOutbounds> obObservable = mRecentlyLocalImpl.getDbTargetIndices(Constants.ServiceType.OB_STAY, DailyDb.MAX_RECENT_PLACE_COUNT) //
+            .observeOn(Schedulers.io()).flatMap(new Function<String, ObservableSource<StayOutbounds>>()
+            {
+                @Override
+                public ObservableSource<StayOutbounds> apply(@NonNull String targetIndices) throws Exception
+                {
+                    return mRecentlyRemoteImpl.getStayOutboundRecentlyList(targetIndices, DailyDb.MAX_RECENT_PLACE_COUNT);
+                }
+            });
+
+        addCompositeDisposable(Observable.zip(ibObservable.observeOn(Schedulers.io()), obObservable.observeOn(Schedulers.io()) //
             , new BiFunction<ArrayList<RecentlyPlace>, StayOutbounds, ArrayList<PlaceViewItem>>()
             {
                 @Override

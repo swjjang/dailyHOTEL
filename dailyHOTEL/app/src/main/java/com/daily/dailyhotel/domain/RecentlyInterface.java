@@ -2,8 +2,8 @@ package com.daily.dailyhotel.domain;
 
 import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.StayOutbounds;
-import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
-import com.twoheart.dailyhotel.util.Constants;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -15,8 +15,7 @@ import io.reactivex.Observable;
 
 public interface RecentlyInterface
 {
-    Observable<StayOutbounds> getStayOutboundRecentlyList(int numberOfResults);
+    Observable<StayOutbounds> getStayOutboundRecentlyList(String targetIndices, int numberOfResults);
 
-//    Observable<ArrayList<RecentlyPlace>> getInboundRecentlyList(int maxSize, Constants.ServiceType... serviceTypes);
-    Observable<ArrayList<RecentlyPlace>> getInboundRecentlyList(ArrayList<RecentlyDbPlace> list, int maxSize, Constants.ServiceType... serviceTypes);
+    Observable<ArrayList<RecentlyPlace>> getInboundRecentlyList(JSONObject recentJsonObject);
 }

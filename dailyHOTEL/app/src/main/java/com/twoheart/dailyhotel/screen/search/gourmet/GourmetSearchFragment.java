@@ -12,9 +12,9 @@ import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
-import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.screen.home.campaigntag.gourmet.GourmetCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.daily.dailyhotel.storage.database.DailyDb;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.R;
@@ -31,6 +31,8 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -338,17 +340,22 @@ public class GourmetSearchFragment extends PlaceSearchFragment
     {
         setDateChanged(todayDateTime, mGourmetBookingDay);
 
-        Observable<ArrayList<RecentlyPlace>> localObservable = mRecentlyLocalImpl.getRecentlyTypeList(ServiceType.GOURMET) //
-            .observeOn(Schedulers.io()).flatMap(new Function<ArrayList<RecentlyDbPlace>, ObservableSource<ArrayList<RecentlyPlace>>>()
+        Observable<ArrayList<RecentlyPlace>> ibObservable = mRecentlyLocalImpl.getRecentlyJSONObject(DailyDb.MAX_RECENT_PLACE_COUNT, ServiceType.GOURMET) //
+            .observeOn(Schedulers.io()).flatMap(new Function<JSONObject, ObservableSource<ArrayList<RecentlyPlace>>>()
             {
                 @Override
-                public ObservableSource<ArrayList<RecentlyPlace>> apply(@NonNull ArrayList<RecentlyDbPlace> recentlyDbPlaces) throws Exception
+                public ObservableSource<ArrayList<RecentlyPlace>> apply(@NonNull JSONObject jsonObject) throws Exception
                 {
-                    return mRecentlyRemoteImpl.getInboundRecentlyList(recentlyDbPlaces, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT, ServiceType.GOURMET);
+                    if (jsonObject == null || jsonObject.has("keys") == false)
+                    {
+                        return Observable.just(new ArrayList<>());
+                    }
+
+                    return mRecentlyRemoteImpl.getInboundRecentlyList(jsonObject);
                 }
             });
 
-        addCompositeDisposable(Observable.zip(localObservable //
+        addCompositeDisposable(Observable.zip(ibObservable //
             , mCampaignTagRemoteImpl.getCampaignTagList(getServiceType().name()) //
             , new BiFunction<ArrayList<RecentlyPlace>, ArrayList<CampaignTag>, List<Keyword>>()
             {

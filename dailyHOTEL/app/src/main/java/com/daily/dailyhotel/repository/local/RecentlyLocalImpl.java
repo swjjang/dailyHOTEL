@@ -18,6 +18,10 @@ import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.util.Constants;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -35,6 +39,8 @@ import io.reactivex.schedulers.Schedulers;
 
 public class RecentlyLocalImpl implements RecentlyLocalInterface
 {
+    private static final String RECENT_PLACE_DELIMITER = ",";
+
     private Context mContext;
 
     public RecentlyLocalImpl(Context context)
@@ -219,6 +225,107 @@ public class RecentlyLocalImpl implements RecentlyLocalInterface
         }).subscribeOn(Schedulers.io());
     }
 
+    @Override
+    public Observable<String> getDbTargetIndices(Constants.ServiceType serviceType, final int maxSize)
+    {
+        return Observable.defer(new Callable<ObservableSource<String>>()
+        {
+            @Override
+            public ObservableSource<String> call() throws Exception
+            {
+                int maxCount = maxSize;
+
+                if (serviceType == null || maxCount <= 0)
+                {
+                    return Observable.just("");
+                }
+
+                StringBuilder builder = new StringBuilder();
+
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+
+                Cursor cursor = null;
+
+                try
+                {
+                    cursor = dailyDb.getRecentlyPlaces(-1, serviceType);
+
+                    if (cursor == null || cursor.getCount() == 0 || maxCount <= 0)
+                    {
+                        return Observable.just("");
+                    }
+
+                    int size = cursor.getCount();
+                    if (maxCount > size)
+                    {
+                        maxCount = size;
+                    }
+
+                    for (int i = 0; i < maxCount; i++)
+                    {
+                        cursor.moveToPosition(i);
+
+                        int index = cursor.getInt(cursor.getColumnIndex(RecentlyList.PLACE_INDEX));
+
+                        if (i != 0)
+                        {
+                            builder.append(RECENT_PLACE_DELIMITER);
+                        }
+
+                        builder.append(index);
+                    }
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+                } finally
+                {
+                    try
+                    {
+                        if (cursor != null)
+                        {
+                            cursor.close();
+                        }
+                    } catch (Exception e)
+                    {
+                    }
+                }
+
+                DailyDbHelper.getInstance().close();
+
+                return Observable.just(builder.toString());
+            }
+        });
+    }
+
+    @Override
+    public Observable<JSONObject> getRecentlyJSONObject(int maxSize, Constants.ServiceType... serviceTypes)
+    {
+        return getRecentlyTypeList(serviceTypes).flatMap(new Function<ArrayList<RecentlyDbPlace>, ObservableSource<JSONObject>>()
+        {
+            @Override
+            public ObservableSource<JSONObject> apply(@NonNull ArrayList<RecentlyDbPlace> recentlyDbPlaces) throws Exception
+            {
+                JSONObject recentlyJsonObject = new JSONObject();
+
+                if (recentlyDbPlaces == null || recentlyDbPlaces.size() == 0)
+                {
+                    return Observable.just(recentlyJsonObject).subscribeOn(Schedulers.io());
+                }
+
+                try
+                {
+                    JSONArray recentlyJsonArray = getRecentlyJsonArray(recentlyDbPlaces, maxSize);
+                    recentlyJsonObject.put("keys", recentlyJsonArray);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
+
+                return Observable.just(recentlyJsonObject);
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
     private static int getCarouselListItemIndex(CarouselListItem carouselListItem)
     {
         int index = -1;
@@ -254,5 +361,63 @@ public class RecentlyLocalImpl implements RecentlyLocalInterface
         }
 
         return index;
+    }
+
+    private JSONArray getRecentlyJsonArray(ArrayList<RecentlyDbPlace> list, int maxSize)
+    {
+        JSONArray jsonArray = new JSONArray();
+
+        if (list == null || list.size() == 0 || maxSize == 0)
+        {
+            // dummy Data 생성
+            JSONObject jsonObject = new JSONObject();
+            try
+            {
+                jsonObject.put("serviceType", "HOTEL");
+                jsonObject.put("idx", 0);
+
+                jsonArray.put(jsonObject);
+            } catch (JSONException e)
+            {
+                ExLog.d(e.getMessage());
+            }
+
+            return jsonArray;
+        }
+
+        int size = list.size();
+
+        if (maxSize > size)
+        {
+            maxSize = size;
+        }
+
+        for (int i = 0; i < maxSize; i++)
+        {
+            JSONObject jsonObject = new JSONObject();
+
+            RecentlyDbPlace recentlyDbPlace = list.get(i);
+
+            try
+            {
+                String serviceTypeString = recentlyDbPlace.serviceType.name();
+
+                if (Constants.ServiceType.HOTEL.name().equalsIgnoreCase(serviceTypeString) == true //
+                    || Constants.ServiceType.GOURMET.name().equalsIgnoreCase(serviceTypeString) == true)
+                {
+                    int index = recentlyDbPlace.index;
+
+                    jsonObject.put("serviceType", serviceTypeString);
+                    jsonObject.put("idx", index);
+
+                    jsonArray.put(jsonObject);
+                }
+            } catch (Exception e)
+            {
+                ExLog.d(e.getMessage());
+            }
+        }
+
+        return jsonArray;
     }
 }

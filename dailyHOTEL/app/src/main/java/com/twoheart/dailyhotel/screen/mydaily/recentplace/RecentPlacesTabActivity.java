@@ -271,7 +271,8 @@ public class RecentPlacesTabActivity extends BaseActivity
         // mPlaceType == null 일때 - DeepLink 가 아닐때
         addCompositeDisposable(Observable.zip( //
             mRecentlyLocalImpl.getRecentlyTypeList(Constants.ServiceType.HOTEL, Constants.ServiceType.OB_STAY) //
-            , mRecentlyLocalImpl.getRecentlyTypeList(Constants.ServiceType.GOURMET), new BiFunction<ArrayList<RecentlyDbPlace>, ArrayList<RecentlyDbPlace>, Integer>()
+            , mRecentlyLocalImpl.getRecentlyTypeList(Constants.ServiceType.GOURMET) //
+            , new BiFunction<ArrayList<RecentlyDbPlace>, ArrayList<RecentlyDbPlace>, Integer>()
             {
                 @Override
                 public Integer apply(@NonNull ArrayList<RecentlyDbPlace> stayList, @NonNull ArrayList<RecentlyDbPlace> gourmetList) throws Exception

@@ -4,6 +4,8 @@ import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.twoheart.dailyhotel.util.Constants;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import io.reactivex.Observable;
@@ -22,4 +24,8 @@ public interface RecentlyLocalInterface
     Observable<ArrayList<RecentlyDbPlace>> getRecentlyTypeList(Constants.ServiceType... serviceTypes);
 
     Observable<ArrayList<CarouselListItem>> sortCarouselListItemList(ArrayList<CarouselListItem> actualList, Constants.ServiceType... serviceTypes);
+
+    Observable<String> getDbTargetIndices(Constants.ServiceType serviceType, int maxSize);
+
+    Observable<JSONObject> getRecentlyJSONObject(int maxSize, Constants.ServiceType... serviceTypes);
 }
