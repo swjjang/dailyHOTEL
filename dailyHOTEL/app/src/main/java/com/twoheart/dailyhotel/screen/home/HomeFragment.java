@@ -1286,7 +1286,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 }
             });
 
-        Observable<StayOutbounds> obObservable = mRecentlyLocalImpl.getDbTargetIndices(Constants.ServiceType.OB_STAY, DailyDb.MAX_RECENT_PLACE_COUNT) //
+        Observable<StayOutbounds> obObservable = mRecentlyLocalImpl.getTargetIndices(Constants.ServiceType.OB_STAY, DailyDb.MAX_RECENT_PLACE_COUNT) //
             .observeOn(Schedulers.io()).flatMap(new Function<String, ObservableSource<StayOutbounds>>()
             {
                 @Override

@@ -226,7 +226,7 @@ public class RecentlyLocalImpl implements RecentlyLocalInterface
     }
 
     @Override
-    public Observable<String> getDbTargetIndices(Constants.ServiceType serviceType, final int maxSize)
+    public Observable<String> getTargetIndices(Constants.ServiceType serviceType, final int maxSize)
     {
         return Observable.defer(new Callable<ObservableSource<String>>()
         {

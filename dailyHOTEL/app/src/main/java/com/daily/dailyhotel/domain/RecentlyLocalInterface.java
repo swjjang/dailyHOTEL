@@ -25,7 +25,7 @@ public interface RecentlyLocalInterface
 
     Observable<ArrayList<CarouselListItem>> sortCarouselListItemList(ArrayList<CarouselListItem> actualList, Constants.ServiceType... serviceTypes);
 
-    Observable<String> getDbTargetIndices(Constants.ServiceType serviceType, int maxSize);
+    Observable<String> getTargetIndices(Constants.ServiceType serviceType, int maxSize);
 
     Observable<JSONObject> getRecentlyJSONObject(int maxSize, Constants.ServiceType... serviceTypes);
 }
