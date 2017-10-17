@@ -4,19 +4,14 @@ import android.content.Context;
 
 import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.RecentlyInterface;
 import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.StayOutbounds;
-import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.remote.model.RecentlyPlacesData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
-import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
-import com.twoheart.dailyhotel.util.Constants;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -43,35 +38,19 @@ public class RecentlyRemoteImpl implements RecentlyInterface
     }
 
     @Override
-    public Observable<StayOutbounds> getStayOutboundRecentlyList(int numberOfResults, boolean useRealm)
+    public Observable<StayOutbounds> getStayOutboundRecentlyList(String targetIndices, int numberOfResults)
     {
+        if (DailyTextUtils.isTextEmpty(targetIndices) == true)
+        {
+            return Observable.just(new StayOutbounds()).subscribeOn(Schedulers.io());
+        }
+
         return Observable.defer(new Callable<ObservableSource<StayOutbounds>>()
         {
             @Override
             public ObservableSource<StayOutbounds> call() throws Exception
             {
-                String hotelIds = RecentlyPlaceUtil.getDbTargetIndices(mContext, Constants.ServiceType.OB_STAY, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT);
-
-                if (useRealm == true)
-                {
-                    String oldHotelIds = RecentlyPlaceUtil.getRealmTargetIndices(Constants.ServiceType.OB_STAY, RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT);
-                    if (DailyTextUtils.isTextEmpty(oldHotelIds) == false)
-                    {
-                        if (DailyTextUtils.isTextEmpty(hotelIds) == false)
-                        {
-                            hotelIds += ",";
-                        }
-
-                        hotelIds += oldHotelIds;
-                    }
-                }
-
-                if (DailyTextUtils.isTextEmpty(hotelIds) == true)
-                {
-                    return Observable.just(new StayOutbounds()).subscribeOn(Schedulers.io());
-                }
-
-                return DailyMobileAPI.getInstance(mContext).getStayOutboundRecentlyList(hotelIds, numberOfResults).map(new Function<BaseDto<StayOutboundsData>, StayOutbounds>()
+                return DailyMobileAPI.getInstance(mContext).getStayOutboundRecentlyList(targetIndices, numberOfResults).map(new Function<BaseDto<StayOutboundsData>, StayOutbounds>()
                 {
                     @Override
                     public StayOutbounds apply(@NonNull BaseDto<StayOutboundsData> stayOutboundsDataBaseDto) throws Exception
@@ -105,20 +84,17 @@ public class RecentlyRemoteImpl implements RecentlyInterface
     }
 
     @Override
-    public Observable<ArrayList<RecentlyPlace>> getInboundRecentlyList(int maxSize, boolean useRealm, @NonNull Constants.ServiceType... serviceTypes)
+    public Observable<ArrayList<RecentlyPlace>> getInboundRecentlyList(JSONObject recentJsonObject)
     {
         return Observable.defer(new Callable<ObservableSource<ArrayList<RecentlyPlace>>>()
         {
             @Override
             public ObservableSource<ArrayList<RecentlyPlace>> call() throws Exception
             {
-                ArrayList<RecentlyDbPlace> list = getRecentlyDbPlaceList(useRealm, serviceTypes);
-                if (list == null || list.size() == 0)
+                if (recentJsonObject == null)
                 {
                     return Observable.just(new ArrayList<RecentlyPlace>()).subscribeOn(Schedulers.io());
                 }
-
-                JSONObject recentJsonObject = getRecentlyJSONObject(list, maxSize);
 
                 return DailyMobileAPI.getInstance(mContext).getInboundRecentlyList(recentJsonObject).map(new Function<BaseDto<RecentlyPlacesData>, ArrayList<RecentlyPlace>>()
                 {
@@ -151,56 +127,5 @@ public class RecentlyRemoteImpl implements RecentlyInterface
                 }).subscribeOn(Schedulers.io());
             }
         }).subscribeOn(Schedulers.io());
-    }
-
-    ArrayList<RecentlyDbPlace> getRecentlyDbPlaceList(boolean useRealm, @NonNull Constants.ServiceType... serviceTypes)
-    {
-        ArrayList<RecentlyDbPlace> list = RecentlyPlaceUtil.getDbRecentlyTypeList(mContext, serviceTypes);
-
-        if (useRealm == false)
-        {
-            return list;
-        }
-
-        ArrayList<RecentlyDbPlace> realmList = RecentlyPlaceUtil.getRealmRecentlyTypeList(serviceTypes);
-        if (realmList == null || realmList.size() == 0)
-        {
-            return list;
-        }
-
-        ArrayList<Integer> indexList = RecentlyPlaceUtil.getDbRecentlyIndexList(mContext, serviceTypes);
-
-        for (RecentlyDbPlace place : realmList)
-        {
-            if (indexList != null && indexList.contains(place.index) == true)
-            {
-                continue;
-            }
-
-            if (list == null)
-            {
-                list = new ArrayList<>();
-            }
-
-            list.add(place);
-        }
-
-        return list;
-    }
-
-    JSONObject getRecentlyJSONObject(ArrayList<RecentlyDbPlace> list, int maxSize)
-    {
-        JSONObject recentlyJsonObject = new JSONObject();
-
-        try
-        {
-            JSONArray recentlyJsonArray = RecentlyPlaceUtil.getDbRecentlyJsonArray(list, maxSize);
-            recentlyJsonObject.put("keys", recentlyJsonArray);
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-
-        return recentlyJsonObject;
     }
 }

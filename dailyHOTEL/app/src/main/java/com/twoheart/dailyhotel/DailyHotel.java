@@ -22,7 +22,6 @@ import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchS
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
-import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.FacebookSdk;
 import com.google.firebase.FirebaseApp;
 import com.kakao.auth.ApprovalType;
@@ -47,7 +46,6 @@ import com.twoheart.dailyhotel.util.analytics.GoogleAnalyticsManager;
 import java.util.Locale;
 
 import io.fabric.sdk.android.Fabric;
-import io.realm.Realm;
 
 public class DailyHotel extends android.support.multidex.MultiDexApplication implements Constants
 {
@@ -89,9 +87,6 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
             }
         });
 
-
-        Realm.init(this);
-
         Fabric.with(this, new Crashlytics());
 
         FirebaseApp.initializeApp(this);
@@ -132,8 +127,6 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         }
 
         FontManager.getInstance(getApplicationContext());
-
-        RecentlyPlaceUtil.migrateRecentlyPlaces(DailyHotel.this);
 
         registerActivityLifecycleCallbacks(new DailyActivityLifecycleCallbacks());
     }
@@ -361,19 +354,6 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         public void onActivityDestroyed(Activity activity)
         {
             AnalyticsManager.getInstance(activity).onActivityDestroyed(activity);
-
-            //            try
-            //            {
-            //                Realm realm = Realm.getDefaultInstance();
-            //                while (realm != null && realm.isClosed() == false)
-            //                {
-            //                    realm.close();
-            //                }
-            //
-            //            } catch (Exception e)
-            //            {
-            //                ExLog.e(e.toString());
-            //            }
         }
     }
 }

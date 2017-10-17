@@ -12,20 +12,16 @@ import android.provider.BaseColumns;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.RecentlyColumns;
 import com.daily.dailyhotel.domain.StayObRecentlySuggestColumns;
-import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.StayOutbound;
-import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.local.model.RecentlyList;
 import com.daily.dailyhotel.repository.local.model.StayObRecentlySuggestList;
-import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
@@ -206,7 +202,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM ");
         sqlBuilder.append(T_RECENTLY);
 
-        if (serviceTypes != null)
+        if (serviceTypes != null && serviceTypes.length > 0)
         {
             sqlBuilder.append(" WHERE ");
 
@@ -321,7 +317,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
             StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM ");
             sqlBuilder.append(T_RECENTLY);
 
-            if (serviceTypes != null)
+            if (serviceTypes != null && serviceTypes.length > 0)
             {
                 sqlBuilder.append(" WHERE ");
 
@@ -365,129 +361,6 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         }
 
         return savingTime;
-    }
-
-    // main Activity 에서 진행
-    public boolean migrateAllRecentlyPlace(ArrayList<CarouselListItem> list)
-    {
-        if (list == null || list.size() == 0)
-        {
-            // realm db 에도 결과가 없으면  migration 되었다고 판단함
-            ArrayList<RecentlyDbPlace> realmResultList = RecentlyPlaceUtil.getRealmRecentlyTypeList((Constants.ServiceType[]) null);
-            return realmResultList == null || realmResultList.size() == 0;
-        }
-
-        long oldestSavingTime = -1;
-
-        long oldestRealmSavingTime = RecentlyPlaceUtil.getOldestSavingTime((Constants.ServiceType[]) null);
-        long oldestDbSavingTime = getOldestSavingTime((Constants.ServiceType[]) null);
-
-        if (oldestRealmSavingTime >= 0)
-        {
-            oldestSavingTime = oldestRealmSavingTime;
-        }
-
-        if (oldestDbSavingTime >= 0 && oldestSavingTime > oldestDbSavingTime)
-        {
-            oldestSavingTime = oldestDbSavingTime;
-        }
-
-        if (oldestSavingTime <= 0)
-        {
-            Calendar calendar = DailyCalendar.getInstance();
-            calendar.add(Calendar.DAY_OF_MONTH, -1);
-            oldestSavingTime = calendar.getTimeInMillis();
-        }
-
-        SQLiteDatabase db = getDb();
-        if (db == null)
-        {
-            // db를 사용할 수 없는 상태이므로 migration 실패로 판단
-            return false;
-        }
-
-        boolean isSuccess = false;
-
-        try
-        {
-            db.beginTransaction();
-
-            for (CarouselListItem carouselListItem : list)
-            {
-                Constants.ServiceType serviceType = RecentlyPlaceUtil.getServiceType(carouselListItem);
-                int index = RecentlyPlaceUtil.getCarouselListItemIndex(carouselListItem);
-
-                long oldDbSavingTime = checkExistRecentPlace(serviceType, index);
-
-                if (oldDbSavingTime > 0)
-                {
-                    continue;
-                }
-
-                RecentlyDbPlace oldRecentlyPlace = RecentlyPlaceUtil.getRecentlyPlace(serviceType, index);
-
-                long oldSavingTime = -1;
-                if (oldRecentlyPlace != null)
-                {
-                    oldSavingTime = oldRecentlyPlace.savingTime;
-                }
-
-                if (oldSavingTime <= 0)
-                {
-                    oldSavingTime = --oldestSavingTime;
-                }
-
-                ContentValues contentValues = null;
-                switch (carouselListItem.mType)
-                {
-                    case CarouselListItem.TYPE_RECENTLY_PLACE:
-                    {
-                        contentValues = convertContentValues((RecentlyPlace) carouselListItem.getItem(), oldSavingTime);
-                        break;
-                    }
-
-                    case CarouselListItem.TYPE_IN_STAY:
-                    {
-                        contentValues = convertContentValues((Stay) carouselListItem.getItem(), oldSavingTime);
-                        break;
-                    }
-
-                    case CarouselListItem.TYPE_OB_STAY:
-                    {
-                        contentValues = convertContentValues((StayOutbound) carouselListItem.getItem(), oldSavingTime);
-                        break;
-                    }
-
-                    case CarouselListItem.TYPE_GOURMET:
-                    {
-                        contentValues = convertContentValues((Gourmet) carouselListItem.getItem(), oldSavingTime);
-                        break;
-                    }
-                }
-
-                insertOrUpdate(T_RECENTLY, RecentlyColumns.PLACE_INDEX, contentValues);
-            }
-
-            db.setTransactionSuccessful();
-            isSuccess = true;
-
-            //            exportDatabase(DB_NAME);
-        } catch (Exception e)
-        {
-            isSuccess = false;
-            ExLog.w("migration fail : " + e.toString());
-        } finally
-        {
-            try
-            {
-                db.endTransaction();
-            } catch (IllegalStateException e)
-            {
-                // ignore
-            }
-        }
-
-        return isSuccess;
     }
 
     public void addRecentlyPlace(final Constants.ServiceType serviceType, int index, String name //

@@ -14,9 +14,9 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyViewPager;
+import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
-import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -26,6 +26,12 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by android_sam on 2016. 10. 10..
@@ -41,6 +47,7 @@ public class RecentPlacesTabActivity extends BaseActivity
     private RecentPlacesFragmentPagerAdapter mPageAdapter;
 
     private CommonRemoteImpl mCommonRemoteImpl;
+    private RecentlyLocalImpl mRecentlyLocalImpl;
 
     DailyViewPager mViewPager;
     private TabLayout mTabLayout;
@@ -90,6 +97,7 @@ public class RecentPlacesTabActivity extends BaseActivity
         setContentView(R.layout.activity_recent_places);
 
         mCommonRemoteImpl = new CommonRemoteImpl(this);
+        mRecentlyLocalImpl = new RecentlyLocalImpl(this);
 
         initIntent(getIntent());
 
@@ -243,10 +251,10 @@ public class RecentPlacesTabActivity extends BaseActivity
 
     void setTabLayout()
     {
-        int position = 0;
-
         if (mPlaceType != null)
         {
+            int position = 0;
+
             // deeplink type
             if (PlaceType.FNB.equals(mPlaceType) == true)
             {
@@ -255,17 +263,52 @@ public class RecentPlacesTabActivity extends BaseActivity
 
             // deeplink 로 인한 처리 후 초기화
             mPlaceType = null;
-        } else
-        {
-            if (isEmptyRecentStayPlace() == true && isEmptyRecentGourmetPlace() == true)
-            {
-                AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordScreen(this, AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY, null);
-            } else if (isEmptyRecentStayPlace() == true)
-            {
-                position = 1;
-            }
+
+            setTabLayout(position);
+            return;
         }
 
+        // mPlaceType == null 일때 - DeepLink 가 아닐때
+        addCompositeDisposable(Observable.zip( //
+            mRecentlyLocalImpl.getRecentlyTypeList(Constants.ServiceType.HOTEL, Constants.ServiceType.OB_STAY) //
+            , mRecentlyLocalImpl.getRecentlyTypeList(Constants.ServiceType.GOURMET) //
+            , new BiFunction<ArrayList<RecentlyDbPlace>, ArrayList<RecentlyDbPlace>, Integer>()
+            {
+                @Override
+                public Integer apply(@NonNull ArrayList<RecentlyDbPlace> stayList, @NonNull ArrayList<RecentlyDbPlace> gourmetList) throws Exception
+                {
+                    int position = 0;
+                    boolean isEmptyStayList = stayList == null || stayList.size() == 0;
+                    boolean isEmptyGourmetList = gourmetList == null || gourmetList.size() == 0;
+                    if (isEmptyStayList == true && isEmptyGourmetList == true)
+                    {
+                        AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordScreen(RecentPlacesTabActivity.this, AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY, null);
+                    } else if (isEmptyStayList == true)
+                    {
+                        position = 1;
+                    }
+
+                    return position;
+                }
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Integer>()
+        {
+            @Override
+            public void accept(Integer integer) throws Exception
+            {
+                setTabLayout(integer);
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                setTabLayout(0);
+            }
+        }));
+    }
+
+    private void setTabLayout(int position)
+    {
         mViewPager.removeAllViews();
         mViewPager.setOffscreenPageLimit(1);
 
@@ -294,20 +337,6 @@ public class RecentPlacesTabActivity extends BaseActivity
 
         mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
         //        mViewPager.setCurrentItem(position);
-    }
-
-    private boolean isEmptyRecentStayPlace()
-    {
-        ArrayList<RecentlyDbPlace> resultList = RecentlyPlaceUtil.getDbRecentlyTypeList( //
-            RecentPlacesTabActivity.this, Constants.ServiceType.HOTEL, Constants.ServiceType.OB_STAY);
-        return resultList == null || resultList.size() == 0;
-    }
-
-    private boolean isEmptyRecentGourmetPlace()
-    {
-        ArrayList<RecentlyDbPlace> resultList = RecentlyPlaceUtil.getDbRecentlyTypeList( //
-            RecentPlacesTabActivity.this, Constants.ServiceType.GOURMET);
-        return resultList == null || resultList.size() == 0;
     }
 
     @Override
@@ -383,13 +412,26 @@ public class RecentPlacesTabActivity extends BaseActivity
         @Override
         public void onDeleteItemClickAnalytics()
         {
-            ArrayList<RecentlyDbPlace> resultList = RecentlyPlaceUtil.getDbRecentlyTypeList(RecentPlacesTabActivity.this, (Constants.ServiceType[]) null);
-
-            if (resultList == null || resultList.size() == 0)
-            {
-                AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordScreen( //
-                    RecentPlacesTabActivity.this, AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY, null);
-            }
+            addCompositeDisposable(mRecentlyLocalImpl.getRecentlyTypeList((Constants.ServiceType[]) null) //
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<RecentlyDbPlace>>()
+                {
+                    @Override
+                    public void accept(ArrayList<RecentlyDbPlace> recentlyDbPlaces) throws Exception
+                    {
+                        if (recentlyDbPlaces == null || recentlyDbPlaces.size() == 0)
+                        {
+                            AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordScreen( //
+                                RecentPlacesTabActivity.this, AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY, null);
+                        }
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        ExLog.d(throwable.getMessage());
+                    }
+                }));
         }
     };
 }

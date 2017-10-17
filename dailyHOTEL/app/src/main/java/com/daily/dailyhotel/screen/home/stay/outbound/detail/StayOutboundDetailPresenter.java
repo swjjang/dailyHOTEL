@@ -40,6 +40,7 @@ import com.daily.dailyhotel.parcel.analytics.ImageListAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundPaymentAnalyticsParam;
+import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
@@ -52,7 +53,6 @@ import com.daily.dailyhotel.screen.home.stay.outbound.payment.StayOutboundPaymen
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.preview.StayOutboundPreviewActivity;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
-import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
@@ -117,6 +117,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     private StayOutboundRemoteImpl mStayOutboundRemoteImpl;
     private CommonRemoteImpl mCommonRemoteImpl;
     private ProfileRemoteImpl mProfileRemoteImpl;
+    private RecentlyLocalImpl mRecentlyLocalImpl;
 
     int mStayIndex, mListTotalPrice;
     private String mStayName;
@@ -187,6 +188,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         mStayOutboundRemoteImpl = new StayOutboundRemoteImpl(activity);
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
         mProfileRemoteImpl = new ProfileRemoteImpl(activity);
+        mRecentlyLocalImpl = new RecentlyLocalImpl(activity);
 
         setPeople(People.DEFAULT_ADULTS, null);
 
@@ -347,7 +349,9 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             getViewInterface().setInitializedImage(mImageUrl);
         }
 
-        RecentlyPlaceUtil.addRecentlyItem(getActivity(), Constants.ServiceType.OB_STAY, mStayIndex, mStayName, null, mImageUrl, true);
+        addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem( //
+            Constants.ServiceType.OB_STAY, mStayIndex, mStayName, null, mImageUrl, true) //
+            .observeOn(Schedulers.io()).subscribe());
 
         if (mIsUsedMultiTransition == true)
         {

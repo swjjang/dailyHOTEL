@@ -26,7 +26,7 @@ import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.preview.StayOutboundPreviewActivity;
-import com.daily.dailyhotel.util.RecentlyPlaceUtil;
+import com.daily.dailyhotel.storage.database.DailyDb;
 import com.daily.dailyhotel.view.DailyStayCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
@@ -39,6 +39,8 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -48,10 +50,12 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -127,8 +131,32 @@ public class RecentStayListFragment extends RecentPlacesListFragment
     {
         lockUI();
 
-        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getInboundRecentlyList(RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT, false, ServiceType.HOTEL).observeOn(Schedulers.io()) //
-            , mRecentlyRemoteImpl.getStayOutboundRecentlyList(RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT, false).observeOn(Schedulers.io()) //
+        Observable<ArrayList<RecentlyPlace>> ibObservable = mRecentlyLocalImpl.getRecentlyJSONObject(DailyDb.MAX_RECENT_PLACE_COUNT, ServiceType.HOTEL) //
+            .observeOn(Schedulers.io()).flatMap(new Function<JSONObject, ObservableSource<ArrayList<RecentlyPlace>>>()
+            {
+                @Override
+                public ObservableSource<ArrayList<RecentlyPlace>> apply(@NonNull JSONObject jsonObject) throws Exception
+                {
+                    if (jsonObject == null || jsonObject.has("keys") == false)
+                    {
+                        return Observable.just(new ArrayList<>());
+                    }
+
+                    return mRecentlyRemoteImpl.getInboundRecentlyList(jsonObject);
+                }
+            });
+
+        Observable<StayOutbounds> obObservable = mRecentlyLocalImpl.getTargetIndices(Constants.ServiceType.OB_STAY, DailyDb.MAX_RECENT_PLACE_COUNT) //
+            .observeOn(Schedulers.io()).flatMap(new Function<String, ObservableSource<StayOutbounds>>()
+            {
+                @Override
+                public ObservableSource<StayOutbounds> apply(@NonNull String targetIndices) throws Exception
+                {
+                    return mRecentlyRemoteImpl.getStayOutboundRecentlyList(targetIndices, DailyDb.MAX_RECENT_PLACE_COUNT);
+                }
+            });
+
+        addCompositeDisposable(Observable.zip(ibObservable.observeOn(Schedulers.io()), obObservable.observeOn(Schedulers.io()) //
             , new BiFunction<ArrayList<RecentlyPlace>, StayOutbounds, ArrayList<PlaceViewItem>>()
             {
                 @Override
@@ -191,36 +219,46 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             return list;
         }
 
-        sortList(list);
-
-        list.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
+        sortList(list, true);
 
         return list;
     }
 
-    private void sortList(ArrayList<PlaceViewItem> actualList)
+    private void sortList(ArrayList<PlaceViewItem> actualList, boolean isAddFooter)
     {
         if (actualList == null || actualList.size() == 0)
         {
             return;
         }
 
-        ArrayList<Integer> expectedList = RecentlyPlaceUtil.getDbRecentlyIndexList(getActivity(), Constants.ServiceType.HOTEL, Constants.ServiceType.OB_STAY);
-        if (expectedList == null || expectedList.size() == 0)
-        {
-            return;
-        }
-
-        Collections.sort(actualList, new Comparator<PlaceViewItem>()
-        {
-            @Override
-            public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
+        addCompositeDisposable(mRecentlyLocalImpl.getRecentlyIndexList(Constants.ServiceType.HOTEL, Constants.ServiceType.OB_STAY) //
+            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<Integer>>()
             {
-                Integer position1 = expectedList.indexOf(getPlaceViewItemIndex(placeViewItem1));
-                Integer position2 = expectedList.indexOf(getPlaceViewItemIndex(placeViewItem2));
-                return position1.compareTo(position2);
-            }
-        });
+                @Override
+                public void accept(ArrayList<Integer> expectedList) throws Exception
+                {
+                    if (expectedList == null || expectedList.size() == 0)
+                    {
+                        return;
+                    }
+
+                    Collections.sort(actualList, new Comparator<PlaceViewItem>()
+                    {
+                        @Override
+                        public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
+                        {
+                            Integer position1 = expectedList.indexOf(getPlaceViewItemIndex(placeViewItem1));
+                            Integer position2 = expectedList.indexOf(getPlaceViewItemIndex(placeViewItem2));
+                            return position1.compareTo(position2);
+                        }
+                    });
+
+                    if (isAddFooter == true)
+                    {
+                        actualList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
+                    }
+                }
+            }));
     }
 
     int getPlaceViewItemIndex(PlaceViewItem placeViewItem)
@@ -547,7 +585,8 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             return;
         }
 
-        RecentlyPlaceUtil.deleteRecentlyItem(getActivity(), Constants.ServiceType.HOTEL, recentlyPlace.index);
+        addCompositeDisposable(mRecentlyLocalImpl.deleteRecentlyItem( //
+            Constants.ServiceType.HOTEL, recentlyPlace.index).observeOn(Schedulers.io()).subscribe());
 
         mListLayout.setData(mListLayout.getList(), mPlaceBookingDay);
         mRecentPlaceListFragmentListener.onDeleteItemClickAnalytics();
@@ -576,7 +615,8 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             return;
         }
 
-        RecentlyPlaceUtil.deleteRecentlyItem(getActivity(), Constants.ServiceType.OB_STAY, stayOutbound.index);
+        addCompositeDisposable(mRecentlyLocalImpl.deleteRecentlyItem( //
+            Constants.ServiceType.OB_STAY, stayOutbound.index).observeOn(Schedulers.io()).subscribe());
 
         mListLayout.setData(mListLayout.getList(), mPlaceBookingDay);
         mRecentPlaceListFragmentListener.onDeleteItemClickAnalytics();
