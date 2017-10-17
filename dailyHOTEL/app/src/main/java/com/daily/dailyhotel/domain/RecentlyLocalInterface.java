@@ -1,5 +1,6 @@
 package com.daily.dailyhotel.domain;
 
+import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.twoheart.dailyhotel.util.Constants;
 
@@ -19,4 +20,6 @@ public interface RecentlyLocalInterface
     Observable deleteRecentlyItem(Constants.ServiceType serviceType, int index);
 
     Observable<ArrayList<RecentlyDbPlace>> getRecentlyTypeList(Constants.ServiceType... serviceTypes);
+
+    Observable<ArrayList<CarouselListItem>> sortCarouselListItemList(ArrayList<CarouselListItem> actualList, Constants.ServiceType... serviceTypes);
 }

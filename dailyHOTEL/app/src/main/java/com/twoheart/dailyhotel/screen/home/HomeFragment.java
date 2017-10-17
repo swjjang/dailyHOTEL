@@ -40,7 +40,6 @@ import com.daily.dailyhotel.screen.home.stay.outbound.preview.StayOutboundPrevie
 import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
-import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
@@ -1272,36 +1271,61 @@ public class HomeFragment extends BaseMenuNavigationFragment
     {
         Observable<ArrayList<RecentlyPlace>> localObservable = mRecentlyLocalImpl.getRecentlyTypeList(ServiceType.HOTEL, ServiceType.GOURMET) //
             .observeOn(Schedulers.io()).flatMap(new Function<ArrayList<RecentlyDbPlace>, ObservableSource<ArrayList<RecentlyPlace>>>()
-        {
-            @Override
-            public ObservableSource<ArrayList<RecentlyPlace>> apply(@NonNull ArrayList<RecentlyDbPlace> recentlyDbPlaces) throws Exception
             {
-                return mRecentlyRemoteImpl.getInboundRecentlyList(recentlyDbPlaces, MAX_REQUEST_SIZE, ServiceType.HOTEL, ServiceType.GOURMET);
-            }
-        });
+                @Override
+                public ObservableSource<ArrayList<RecentlyPlace>> apply(@NonNull ArrayList<RecentlyDbPlace> recentlyDbPlaces) throws Exception
+                {
+                    return mRecentlyRemoteImpl.getInboundRecentlyList(recentlyDbPlaces, MAX_REQUEST_SIZE, ServiceType.HOTEL, ServiceType.GOURMET);
+                }
+            });
 
-        addCompositeDisposable(Observable.zip(localObservable.observeOn(AndroidSchedulers.mainThread()) //
-            , mRecentlyRemoteImpl.getStayOutboundRecentlyList(MAX_REQUEST_SIZE).observeOn(AndroidSchedulers.mainThread()) //
+        addCompositeDisposable(Observable.zip(localObservable //
+            , mRecentlyRemoteImpl.getStayOutboundRecentlyList(MAX_REQUEST_SIZE) //
             , new BiFunction<ArrayList<RecentlyPlace>, StayOutbounds, ArrayList<CarouselListItem>>()
             {
                 @Override
                 public ArrayList<CarouselListItem> apply(@NonNull ArrayList<RecentlyPlace> recentlyPlaceList, @NonNull StayOutbounds stayOutbounds) throws Exception
                 {
-                    ArrayList<CarouselListItem> carouselListItemList = RecentlyPlaceUtil.mergeCarouselListItemList(mBaseActivity, recentlyPlaceList, stayOutbounds);
+                    ArrayList<CarouselListItem> carouselListItemList = new ArrayList<>();
+                    if (recentlyPlaceList != null)
+                    {
+                        for (RecentlyPlace recentlyPlace : recentlyPlaceList)
+                        {
+                            CarouselListItem item = new CarouselListItem(CarouselListItem.TYPE_RECENTLY_PLACE, recentlyPlace);
+                            carouselListItemList.add(item);
+                        }
+                    }
+
+                    List<StayOutbound> stayOutboundList = stayOutbounds.getStayOutbound();
+                    if (stayOutboundList != null)
+                    {
+                        for (StayOutbound stayOutbound : stayOutboundList)
+                        {
+                            CarouselListItem item = new CarouselListItem(CarouselListItem.TYPE_OB_STAY, stayOutbound);
+                            carouselListItemList.add(item);
+                        }
+                    }
 
                     return carouselListItemList;
                 }
-            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<CarouselListItem>>()
+            }).flatMap(new Function<ArrayList<CarouselListItem>, ObservableSource<ArrayList<CarouselListItem>>>()
         {
             @Override
-            public void accept(@NonNull ArrayList<CarouselListItem> carouselListItemList) throws Exception
+            public ObservableSource<ArrayList<CarouselListItem>> apply(@NonNull ArrayList<CarouselListItem> carouselListItems) throws Exception
             {
-                HomeFragment.this.setRecentlyList(carouselListItemList, false);
+                return mRecentlyLocalImpl.sortCarouselListItemList(carouselListItems, null);
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<CarouselListItem>>()
+        {
+            @Override
+            public void accept(ArrayList<CarouselListItem> carouselListItems) throws Exception
+            {
+                HomeFragment.this.setRecentlyList(carouselListItems, false);
             }
         }, new Consumer<Throwable>()
         {
             @Override
-            public void accept(@NonNull Throwable throwable) throws Exception
+            public void accept(Throwable throwable) throws Exception
             {
                 HomeFragment.this.setRecentlyList(null, true);
                 Crashlytics.logException(new Exception("need check Daily DB", throwable));

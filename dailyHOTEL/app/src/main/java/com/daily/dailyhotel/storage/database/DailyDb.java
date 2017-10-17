@@ -202,7 +202,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM ");
         sqlBuilder.append(T_RECENTLY);
 
-        if (serviceTypes != null)
+        if (serviceTypes != null && serviceTypes.length > 0)
         {
             sqlBuilder.append(" WHERE ");
 
@@ -317,7 +317,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
             StringBuilder sqlBuilder = new StringBuilder("SELECT * FROM ");
             sqlBuilder.append(T_RECENTLY);
 
-            if (serviceTypes != null)
+            if (serviceTypes != null && serviceTypes.length > 0)
             {
                 sqlBuilder.append(" WHERE ");
 
