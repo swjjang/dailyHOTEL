@@ -118,7 +118,7 @@ public class DailyRemoteConfigPreference
     // Daily Reward Sticker
     private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_ENABLED = "401";
     private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_TITLE_MESSAGE = "402";
-    private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_CAMPAIGN_STATUS = "403";
+    private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_CAMPAIGN_ENALBED = "403";
     private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_NONMEMBER_DEFAULT_MESSAGE = "404";
     private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_NONMEMBER_CAMPAIGN_MESSAGE = "405";
     private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_MEMBER_MESSAGE_0_NIGHTS = "410";
@@ -131,7 +131,8 @@ public class DailyRemoteConfigPreference
     private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_MEMBER_MESSAGE_7_NIGHTS = "417";
     private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_MEMBER_MESSAGE_8_NIGHTS = "418";
     private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_MEMBER_MESSAGE_9_NIGHTS = "419";
-    private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_GUIDE_MESSAGE = "420";
+    private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_GUIDE_TITLE_MESSAGE = "420";
+    private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_GUIDE_DESCRIPTION_MESSAGE = "421";
 
     // A/B Test
     private static final String KEY_REMOTE_CONFIG_STAY_RANK_TEST_NAME = "1000";
@@ -1091,14 +1092,14 @@ public class DailyRemoteConfigPreference
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_REWARD_STICKER_TITLE_MESSAGE, null);
     }
 
-    public void setKeyRemoteConfigRewardStickerCampaignStatus(boolean value)
+    public void setKeyRemoteConfigRewardStickerCampaignEnabled(boolean value)
     {
-        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_REWARD_STICKER_CAMPAIGN_STATUS, value);
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_REWARD_STICKER_CAMPAIGN_ENALBED, value);
     }
 
-    public boolean getKeyRemoteConfigRewardStickerCampaignStatus()
+    public boolean isKeyRemoteConfigRewardStickerCampaignEnabled()
     {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_REWARD_STICKER_CAMPAIGN_STATUS, false);
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_REWARD_STICKER_CAMPAIGN_ENALBED, false);
     }
 
     public void setKeyRemoteConfigRewardStickerNonMemberDefaultMessage(String value)
@@ -1187,13 +1188,23 @@ public class DailyRemoteConfigPreference
         }
     }
 
-    public void setKeyRemoteConfigRewardStickerGuideMessage(String value)
+    public void setKeyRemoteConfigRewardStickerGuideTitleMessage(String value)
     {
-        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_REWARD_STICKER_GUIDE_MESSAGE, value);
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_REWARD_STICKER_GUIDE_TITLE_MESSAGE, value);
     }
 
-    public String getKeyRemoteConfigRewardStickerGuideMessage()
+    public String getKeyRemoteConfigRewardStickerGuideTitleMessage()
     {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_REWARD_STICKER_GUIDE_MESSAGE, null);
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_REWARD_STICKER_GUIDE_TITLE_MESSAGE, null);
+    }
+
+    public void setKeyRemoteConfigRewardStickerGuideDescriptionMessage(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_REWARD_STICKER_GUIDE_DESCRIPTION_MESSAGE, value);
+    }
+
+    public String getKeyRemoteConfigRewardStickerGuideDescriptionMessage()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_REWARD_STICKER_GUIDE_DESCRIPTION_MESSAGE, null);
     }
 }

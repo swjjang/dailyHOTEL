@@ -1,5 +1,5 @@
 package com.daily.dailyhotel.screen.mydaily.reward;
 
-public class RewardAnalyticsImpl implements RewardPresenter.CopyAnalyticsInterface
+public class RewardAnalyticsImpl implements RewardPresenter.RewardAnalyticsInterface
 {
 }

@@ -740,11 +740,14 @@ public class DailyRemoteConfig
                 String titleMessage = rewardStickerJSONObject.getString("titleMessage");
                 DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerTitleMessage(titleMessage);
 
-                boolean campaignStatus = rewardStickerJSONObject.getBoolean("campaignStatus");
-                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerCampaignStatus(campaignStatus);
+                boolean campaignEnabled = rewardStickerJSONObject.getBoolean("campaignEnabled");
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerCampaignEnabled(campaignEnabled);
 
-                String guideMessage = rewardStickerJSONObject.getString("guideMessage");
-                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerGuideMessage(guideMessage);
+                String guideTitleMessage = rewardStickerJSONObject.getString("guideTitleMessage");
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerGuideTitleMessage(guideTitleMessage);
+
+                String guideDescriptionMessage = rewardStickerJSONObject.getString("guideDescriptionMessage");
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerGuideDescriptionMessage(guideDescriptionMessage);
 
                 JSONObject nonMemberMessageJSONObject = rewardStickerJSONObject.getJSONObject("nonMember").getJSONObject("message");
                 String nonMemberDefaultMessage = nonMemberMessageJSONObject.getString("default");

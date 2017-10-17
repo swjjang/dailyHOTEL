@@ -52,6 +52,7 @@
     <color name="grade_not_yet">#aca69c</color>
 
     <color name="white">#FFFFFF</color>
+    <color name="white_a90">#e6ffffff</color>
     <color name="white_a80">#ccffffff</color>
     <color name="white_a70">#B3ffffff</color>
     <color name="white_a60">#99ffffff</color>
@@ -269,6 +270,7 @@
     <color name="default_text_cb4b4b4">#b4b4b4</color>
     <color name="default_text_cda2853">#da2853</color>
     <color name="default_text_ce9a230">#e9a230</color>
+    <color name="default_text_cfaae37">#faae37</color>
 
     <color name="default_over_scroll_edge">#dcdcdc</color>
     <color name="default_text_kakao">#3c1e1e</color>

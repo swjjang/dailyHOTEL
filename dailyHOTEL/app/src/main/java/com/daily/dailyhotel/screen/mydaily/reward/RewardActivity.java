@@ -15,6 +15,8 @@ import com.twoheart.dailyhotel.R;
  */
 public class RewardActivity extends BaseActivity<RewardPresenter>
 {
+    static final int REQUEST_CODE_LOGIN = 10000;
+
     public static Intent newInstance(Context context)
     {
         Intent intent = new Intent(context, RewardActivity.class);

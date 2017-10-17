@@ -1,13 +1,21 @@
 package com.daily.dailyhotel.screen.mydaily.reward;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by sheldon
@@ -15,9 +23,9 @@ import com.twoheart.dailyhotel.R;
  */
 public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, RewardInterface> implements RewardView.OnEventListener
 {
-    private CopyAnalyticsInterface mAnalytics;
+    private RewardAnalyticsInterface mAnalytics;
 
-    public interface CopyAnalyticsInterface extends BaseAnalyticsInterface
+    public interface RewardAnalyticsInterface extends BaseAnalyticsInterface
     {
     }
 
@@ -36,7 +44,7 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
     @Override
     public void constructorInitialize(RewardActivity activity)
     {
-        setContentView(R.layout.activity_copy_data);
+        setContentView(R.layout.activity_reward_data);
 
         setAnalytics(new RewardAnalyticsImpl());
 
@@ -46,7 +54,7 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
     @Override
     public void setAnalytics(BaseAnalyticsInterface analytics)
     {
-        mAnalytics = (CopyAnalyticsInterface) analytics;
+        mAnalytics = (RewardAnalyticsInterface) analytics;
     }
 
     @Override
@@ -63,6 +71,33 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
     @Override
     public void onPostCreate()
     {
+        getViewInterface().setToolbarTitle(getString(R.string.label_daily_reward));
+
+        getViewInterface().setTitleMessage(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage());
+
+        if (DailyHotel.isLogin() == false)
+        {
+            setRefresh(false);
+
+            if (DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerCampaignEnabled() == true)
+            {
+                getViewInterface().setDescriptionMessage(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerNonMemberCampaignMessage());
+            } else
+            {
+                getViewInterface().setDescriptionMessage(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerNonMemberDefaultMessage());
+            }
+
+            getViewInterface().setLoginVisible(true);
+        } else
+        {
+            getViewInterface().setLoginVisible(false);
+        }
+
+        getViewInterface().setGuideTitleMessage(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerGuideTitleMessage());
+        getViewInterface().setGuideDescriptionMessage(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerGuideDescriptionMessage());
+
+        getViewInterface().setIssueCouponVisible(true);
+        getViewInterface().setIssueCouponEnabled(true);
     }
 
     @Override
@@ -118,6 +153,16 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         unLockAll();
+
+        switch (requestCode)
+        {
+            case RewardActivity.REQUEST_CODE_LOGIN:
+                if (resultCode == Activity.RESULT_OK)
+                {
+
+                }
+                break;
+        }
     }
 
     @Override
@@ -128,6 +173,9 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
             return;
         }
 
+        setRefresh(false);
+        screenLock(showProgress);
+
     }
 
     @Override
@@ -136,4 +184,43 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
         getActivity().onBackPressed();
     }
 
+    @Override
+    public void onLoginClick()
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        startActivityForResult(LoginActivity.newInstance(getActivity()), RewardActivity.REQUEST_CODE_LOGIN);
+    }
+
+    @Override
+    public void onIssueCouponClick()
+    {
+        Observable<Boolean> observable = getViewInterface().isOpenedIssueCoupon() ? getViewInterface().closeIssueCouponAnimation() : getViewInterface().openIssueCouponAnimation();
+
+        if (observable == null || lock() == true)
+        {
+            return;
+        }
+
+        screenLock(false);
+
+        addCompositeDisposable(observable.subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+        {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception
+            {
+                unLockAll();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                unLockAll();
+            }
+        }));
+    }
 }
