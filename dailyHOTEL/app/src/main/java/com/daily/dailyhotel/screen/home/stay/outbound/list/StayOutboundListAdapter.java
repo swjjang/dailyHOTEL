@@ -212,14 +212,7 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
 
         holder.stayOutboundCardView.setAddressText(stayOutbound.locationDescription);
-
-        if (stayOutbound.promo == true)
-        {
-            holder.stayOutboundCardView.setPriceText(0, stayOutbound.nightlyRate, stayOutbound.nightlyBaseRate, null, mNightsEnabled);
-        } else
-        {
-            holder.stayOutboundCardView.setPriceText(0, stayOutbound.nightlyRate, stayOutbound.nightlyRate, null, mNightsEnabled);
-        }
+        holder.stayOutboundCardView.setPriceText(0, stayOutbound.nightlyRate, stayOutbound.nightlyBaseRate, null, mNightsEnabled);
 
         holder.stayOutboundCardView.setBenefitText(null);
         holder.stayOutboundCardView.setDividerVisible(true);

@@ -111,7 +111,7 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
         {
             case TOTAL:
             {
-                if (stayOutboundRoom.promotion == true)
+                if (stayOutboundRoom.total < stayOutboundRoom.base)
                 {
                     price = DailyTextUtils.getPriceFormat(mContext, stayOutboundRoom.base, false);
                 } else
@@ -126,7 +126,7 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
             case AVERAGE:
             default:
             {
-                if (stayOutboundRoom.promotion == true)
+                if (stayOutboundRoom.nightly < stayOutboundRoom.baseNightly)
                 {
                     price = DailyTextUtils.getPriceFormat(mContext, stayOutboundRoom.baseNightly, false);
                 } else
@@ -185,13 +185,13 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
             saleRoomInformationViewHolder.dataBinding.amenitiesTextView.setText(stayOutboundRoom.valueAddName);
         }
 
-        if (DailyTextUtils.isTextEmpty(stayOutboundRoom.promotionDescription) == true)
-        {
-            saleRoomInformationViewHolder.dataBinding.benefitTextView.setVisibility(View.GONE);
-        } else
+        if (stayOutboundRoom.promotion == true && DailyTextUtils.isTextEmpty(stayOutboundRoom.promotionDescription) == false)
         {
             saleRoomInformationViewHolder.dataBinding.benefitTextView.setVisibility(View.VISIBLE);
             saleRoomInformationViewHolder.dataBinding.benefitTextView.setText(stayOutboundRoom.promotionDescription);
+        } else
+        {
+            saleRoomInformationViewHolder.dataBinding.benefitTextView.setVisibility(View.GONE);
         }
 
         if (stayOutboundRoom.nonRefundable == false || DailyTextUtils.isTextEmpty(stayOutboundRoom.nonRefundableDescription) == true)
