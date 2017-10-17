@@ -67,7 +67,7 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
         dataBinding.nameTextView.setText(stayOutbound.name);
 
         // 가격
-        if (stayOutbound.promo == true)
+        if (stayOutbound.nightlyRate < stayOutbound.nightlyBaseRate)
         {
             dataBinding.priceTextView.setVisibility(View.VISIBLE);
             dataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayOutbound.nightlyBaseRate, false));
