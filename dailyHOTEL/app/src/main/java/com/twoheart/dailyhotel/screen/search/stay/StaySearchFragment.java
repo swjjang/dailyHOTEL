@@ -18,7 +18,6 @@ import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchA
 import com.daily.dailyhotel.storage.database.DailyDb;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
-import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
@@ -53,9 +52,9 @@ import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.functions.Function3;
 import io.reactivex.schedulers.Schedulers;
 
 public class StaySearchFragment extends PlaceSearchFragment
@@ -377,12 +376,13 @@ public class StaySearchFragment extends PlaceSearchFragment
 
         addCompositeDisposable(Observable.zip(ibObservable //
             , mCampaignTagRemoteImpl.getCampaignTagList(getServiceType().name()) //
-            , new BiFunction<ArrayList<RecentlyPlace>, ArrayList<CampaignTag>, List<Keyword>>()
+            , mRecentlyLocalImpl.getRecentlyIndexList(ServiceType.HOTEL)  //
+            , new Function3<ArrayList<RecentlyPlace>, ArrayList<CampaignTag>, ArrayList<Integer>, List<Keyword>>()
             {
                 @Override
-                public List<Keyword> apply(@NonNull ArrayList<RecentlyPlace> stayList, @NonNull ArrayList<CampaignTag> tagList) throws Exception
+                public List<Keyword> apply(@NonNull ArrayList<RecentlyPlace> stayList //
+                    , @NonNull ArrayList<CampaignTag> tagList, @NonNull ArrayList<Integer> expectedList) throws Exception
                 {
-                    ArrayList<Integer> expectedList = RecentlyPlaceUtil.getDbRecentlyIndexList(mBaseActivity, ServiceType.HOTEL);
                     if (expectedList != null && expectedList.size() > 0)
                     {
                         Collections.sort(stayList, new Comparator<RecentlyPlace>()

@@ -17,7 +17,6 @@ import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.storage.database.DailyDb;
-import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.daily.dailyhotel.view.DailyGourmetCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
@@ -169,42 +168,78 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
             return new ArrayList<>();
         }
 
-        sortList(gourmetList);
-
         ArrayList<PlaceViewItem> list = new ArrayList<>();
         for (RecentlyPlace recentlyPlace : gourmetList)
         {
             list.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, recentlyPlace));
         }
 
-        list.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
+        if (list.size() == 0)
+        {
+            return list;
+        }
+
+        sortList(list, true);
 
         return list;
     }
 
-    private void sortList(ArrayList<RecentlyPlace> actualList)
+    private void sortList(ArrayList<PlaceViewItem> actualList, boolean isAddFooter)
     {
         if (actualList == null || actualList.size() == 0)
         {
             return;
         }
 
-        ArrayList<Integer> expectedList = RecentlyPlaceUtil.getDbRecentlyIndexList(getActivity(), Constants.ServiceType.GOURMET);
-        if (expectedList == null || expectedList.size() == 0)
+        addCompositeDisposable(mRecentlyLocalImpl.getRecentlyIndexList(Constants.ServiceType.GOURMET) //
+            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<Integer>>()
+            {
+                @Override
+                public void accept(ArrayList<Integer> expectedList) throws Exception
+                {
+                    if (expectedList == null || expectedList.size() == 0)
+                    {
+                        return;
+                    }
+
+                    Collections.sort(actualList, new Comparator<PlaceViewItem>()
+                    {
+                        @Override
+                        public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
+                        {
+                            Integer position1 = expectedList.indexOf(getPlaceViewItemIndex(placeViewItem1));
+                            Integer position2 = expectedList.indexOf(getPlaceViewItemIndex(placeViewItem2));
+                            return position1.compareTo(position2);
+                        }
+                    });
+
+                    if (isAddFooter == true)
+                    {
+                        actualList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
+                    }
+                }
+            }));
+    }
+
+    int getPlaceViewItemIndex(PlaceViewItem placeViewItem)
+    {
+        int index;
+
+        Object object = placeViewItem.getItem();
+        if (object == null)
         {
-            return;
+            return -1;
         }
 
-        Collections.sort(actualList, new Comparator<RecentlyPlace>()
+        if (object instanceof RecentlyPlace)
         {
-            @Override
-            public int compare(RecentlyPlace place1, RecentlyPlace place2)
-            {
-                Integer position1 = expectedList.indexOf(place1.index);
-                Integer position2 = expectedList.indexOf(place2.index);
-                return position1.compareTo(position2);
-            }
-        });
+            index = ((RecentlyPlace) object).index;
+        } else
+        {
+            index = -1;
+        }
+
+        return index;
     }
 
     RecentPlacesListLayout.OnEventListener mEventListener = new RecentPlacesListLayout.OnEventListener()

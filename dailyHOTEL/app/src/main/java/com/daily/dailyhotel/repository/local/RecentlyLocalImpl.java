@@ -326,6 +326,71 @@ public class RecentlyLocalImpl implements RecentlyLocalInterface
         }).subscribeOn(Schedulers.io());
     }
 
+    @Override
+    public Observable<ArrayList<Integer>> getRecentlyIndexList(Constants.ServiceType... serviceTypes)
+    {
+        return Observable.defer(new Callable<ObservableSource<ArrayList<Integer>>>()
+        {
+            @Override
+            public ObservableSource<ArrayList<Integer>> call() throws Exception
+            {
+                if (serviceTypes == null || serviceTypes.length == 0)
+                {
+                    return Observable.just(new ArrayList<>());
+                }
+
+                ArrayList<Integer> indexList = new ArrayList<>();
+
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+
+                Cursor cursor = null;
+
+                try
+                {
+                    cursor = dailyDb.getRecentlyPlaces(-1, serviceTypes);
+
+                    if (cursor == null || cursor.getCount() == 0)
+                    {
+                        return Observable.just(new ArrayList<>());
+                    }
+
+                    int size = cursor.getCount();
+                    if (DailyDb.MAX_RECENT_PLACE_COUNT < size)
+                    {
+                        size = DailyDb.MAX_RECENT_PLACE_COUNT;
+                    }
+
+                    for (int i = 0; i < size; i++)
+                    {
+                        cursor.moveToPosition(i);
+
+                        int index = cursor.getInt(cursor.getColumnIndex(RecentlyList.PLACE_INDEX));
+
+                        indexList.add(index);
+                    }
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+                } finally
+                {
+                    try
+                    {
+                        if (cursor != null)
+                        {
+                            cursor.close();
+                        }
+                    } catch (Exception e)
+                    {
+                    }
+                }
+
+                DailyDbHelper.getInstance().close();
+
+                return Observable.just(indexList);
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
     private static int getCarouselListItemIndex(CarouselListItem carouselListItem)
     {
         int index = -1;

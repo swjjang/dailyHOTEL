@@ -16,7 +16,6 @@ import com.daily.dailyhotel.screen.home.campaigntag.gourmet.GourmetCampaignTagLi
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.storage.database.DailyDb;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
-import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
@@ -45,9 +44,9 @@ import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.functions.Function3;
 import io.reactivex.schedulers.Schedulers;
 
 public class GourmetSearchFragment extends PlaceSearchFragment
@@ -357,12 +356,13 @@ public class GourmetSearchFragment extends PlaceSearchFragment
 
         addCompositeDisposable(Observable.zip(ibObservable //
             , mCampaignTagRemoteImpl.getCampaignTagList(getServiceType().name()) //
-            , new BiFunction<ArrayList<RecentlyPlace>, ArrayList<CampaignTag>, List<Keyword>>()
+            , mRecentlyLocalImpl.getRecentlyIndexList(ServiceType.GOURMET) //
+            , new Function3<ArrayList<RecentlyPlace>, ArrayList<CampaignTag>, ArrayList<Integer>, List<Keyword>>()
             {
                 @Override
-                public List<Keyword> apply(@NonNull ArrayList<RecentlyPlace> gourmetList, @NonNull ArrayList<CampaignTag> tagList) throws Exception
+                public List<Keyword> apply(@NonNull ArrayList<RecentlyPlace> gourmetList //
+                    , @NonNull ArrayList<CampaignTag> tagList, @NonNull ArrayList<Integer> expectedList) throws Exception
                 {
-                    ArrayList<Integer> expectedList = RecentlyPlaceUtil.getDbRecentlyIndexList(mBaseActivity, ServiceType.GOURMET);
                     if (expectedList != null && expectedList.size() > 0)
                     {
                         Collections.sort(gourmetList, new Comparator<RecentlyPlace>()

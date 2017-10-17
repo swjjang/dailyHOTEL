@@ -28,4 +28,6 @@ public interface RecentlyLocalInterface
     Observable<String> getTargetIndices(Constants.ServiceType serviceType, int maxSize);
 
     Observable<JSONObject> getRecentlyJSONObject(int maxSize, Constants.ServiceType... serviceTypes);
+
+    Observable<ArrayList<Integer>> getRecentlyIndexList(Constants.ServiceType... serviceTypes);
 }
