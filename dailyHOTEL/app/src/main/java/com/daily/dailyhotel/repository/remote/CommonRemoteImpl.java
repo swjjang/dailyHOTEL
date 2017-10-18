@@ -7,8 +7,12 @@ import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.domain.CommonInterface;
 import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.entity.Notification;
 import com.daily.dailyhotel.entity.Review;
+import com.daily.dailyhotel.repository.remote.model.NotificationData;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.network.dto.BaseDto;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -89,5 +93,32 @@ public class CommonRemoteImpl implements CommonInterface
 
             return shortUrl;
         }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<Notification> updateNotification(boolean agreed)
+    {
+        return DailyMobileAPI.getInstance(mContext).updateNotification(agreed).map((BaseDto<NotificationData> notificationDataBaseDto) ->
+        {
+            Notification notification = null;
+
+            if (notificationDataBaseDto != null)
+            {
+                if (notificationDataBaseDto.msgCode == 100 && notificationDataBaseDto.data != null)
+                {
+                    notification = new Notification();
+                    notification.serverDate = DailyCalendar.convertDateFormatString(notificationDataBaseDto.data.serverDate, DailyCalendar.ISO_8601_FORMAT, "yyyy년 MM월 dd일");
+                    notification.agreed = agreed;
+                } else
+                {
+                    throw new BaseException(notificationDataBaseDto.msgCode, notificationDataBaseDto.msg);
+                }
+            } else
+            {
+                throw new BaseException(-1, null);
+            }
+
+            return notification;
+        });
     }
 }

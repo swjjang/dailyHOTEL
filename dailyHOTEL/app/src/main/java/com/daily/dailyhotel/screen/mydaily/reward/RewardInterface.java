@@ -14,6 +14,14 @@ public interface RewardInterface extends BaseDialogViewInterface
 
     void setSticker(int nights, boolean visible, boolean enabled);
 
+    void startStickerAnimation();
+
+    void stopStickerAnimation();
+
+    void setStickerValidityVisible(boolean visible);
+
+    void setStickerValidity(String message);
+
     void setIssueCouponCount(int count);
 
     void setRewardHistoryEnabled(boolean enabled);
@@ -33,4 +41,6 @@ public interface RewardInterface extends BaseDialogViewInterface
     Observable<Boolean> closeIssueCouponAnimation();
 
     boolean isOpenedIssueCoupon();
+
+    void setIssueCouponAnimation(boolean visible);
 }

@@ -5,6 +5,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -12,10 +13,16 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
+import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityRewardDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -23,12 +30,22 @@ import io.reactivex.Observer;
 public class RewardView extends BaseDialogView<RewardView.OnEventListener, ActivityRewardDataBinding> implements RewardInterface
 {
     private AnimatorSet mIssueCouponAnimatorSet;
+    private AnimatorSet mIssueCouponShakeAnimatorSet;
+    private AnimatorSet mStickerAnimatorSet;
 
     public interface OnEventListener extends OnBaseEventListener
     {
         void onLoginClick();
 
         void onIssueCouponClick();
+
+        void onHistoryClick();
+
+        void onTermsClick();
+
+        void onRewardGuideClick();
+
+        void onNotificationClick();
     }
 
     public RewardView(BaseActivity baseActivity, RewardView.OnEventListener listener)
@@ -47,7 +64,9 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.nestedScrollView, getColor(R.color.default_over_scroll_edge));
 
         viewDataBinding.loginTextView.setOnClickListener(v -> getEventListener().onLoginClick());
-        viewDataBinding.issueCouponLayout.setOnClickListener(v -> getEventListener().onIssueCouponClick());
+        viewDataBinding.rewardHistoryTextView.setOnClickListener(v -> getEventListener().onHistoryClick());
+        viewDataBinding.rewardTermsTextView.setOnClickListener(v -> getEventListener().onTermsClick());
+
         viewDataBinding.issueCouponLayout.setTranslationY(ScreenUtils.dpToPx(getContext(), 192));
 
         viewDataBinding.issueCouponClickView.setOnClickListener(v -> getEventListener().onIssueCouponClick());
@@ -58,10 +77,15 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
         SpannableString spannableString1 = new SpannableString(getString(R.string.label_reward_reward_guide));
         spannableString1.setSpan(new UnderlineSpan(), 0, spannableString1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         viewDataBinding.guideLinkTextView.setText(spannableString1);
+        viewDataBinding.guideLinkTextView.setOnClickListener(v -> getEventListener().onRewardGuideClick());
 
         SpannableString spannableString2 = new SpannableString(getString(R.string.label_reward_notification_on_setting));
         spannableString2.setSpan(new UnderlineSpan(), 0, spannableString2.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         viewDataBinding.guideNotificationLinkTextView.setText(spannableString2);
+        viewDataBinding.guideNotificationLinkTextView.setOnClickListener(v -> getEventListener().onNotificationClick());
+
+        viewDataBinding.issueCouponBackgroundView.setOnClickListener(v -> getEventListener().onIssueCouponClick());
+        viewDataBinding.issueCouponBackgroundView.setVisibility(View.GONE);
 
         viewDataBinding.issueCouponLayout.setVisibility(View.GONE);
         viewDataBinding.issueCouponArrowImageView.setVisibility(View.GONE);
@@ -103,12 +127,31 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
     @Override
     public void setDescriptionMessage(String message)
     {
-        if (getViewDataBinding() == null)
+        if (getViewDataBinding() == null || DailyTextUtils.isTextEmpty(message) == true)
         {
             return;
         }
 
-        getViewDataBinding().stickerDescriptionTextView.setText(message);
+        // ^1박^ 화면에 다르게 보이도록 한다.
+        int startIndex = message.indexOf('^');
+        int endIndex = message.indexOf('^', startIndex + 1);
+
+        message = message.replaceAll("\\^", "");
+
+        if (startIndex >= 0 && endIndex >= 0)
+        {
+            SpannableString spannableString = new SpannableString(message);
+            spannableString.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(getContext()).getMediumTypeface()),//
+                startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            spannableString.setSpan(new ForegroundColorSpan(getColor(R.color.default_text_ce9a230)), //
+                startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            getViewDataBinding().stickerDescriptionTextView.setText(spannableString);
+        } else
+        {
+            getViewDataBinding().stickerDescriptionTextView.setText(message);
+        }
     }
 
     @Override
@@ -122,7 +165,6 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
             return;
         }
 
-        int resourceId = visible ? R.drawable.r_ic_l_47_shadow : R.drawable.r_ic_l_47_placeholder;
         float alpha = enabled ? 1.0f : 0.5f;
 
         final View[] views = {getViewDataBinding().sticker1nightsTextView//
@@ -135,8 +177,141 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
             , getViewDataBinding().sticker8nightsTextView//
             , getViewDataBinding().sticker9nightsTextView};
 
-        views[nights - 1].setBackgroundResource(resourceId);
-        views[nights - 1].setAlpha(alpha);
+        final View[] stickerViews = {getViewDataBinding().sticker1nightsImageView//
+            , getViewDataBinding().sticker2nightsImageView//
+            , getViewDataBinding().sticker3nightsImageView//
+            , getViewDataBinding().sticker4nightsImageView//
+            , getViewDataBinding().sticker5nightsImageView//
+            , getViewDataBinding().sticker6nightsImageView//
+            , getViewDataBinding().sticker7nightsImageView//
+            , getViewDataBinding().sticker8nightsImageView//
+            , getViewDataBinding().sticker9nightsImageView};
+
+        if (visible == true)
+        {
+            views[nights - 1].setAlpha(0.0f);
+            stickerViews[nights - 1].setVisibility(View.VISIBLE);
+        } else
+        {
+            views[nights - 1].setAlpha(1.0f);
+            stickerViews[nights - 1].setVisibility(View.INVISIBLE);
+        }
+
+        stickerViews[nights - 1].setAlpha(alpha);
+        stickerViews[nights - 1].setEnabled(enabled);
+    }
+
+    @Override
+    public void startStickerAnimation()
+    {
+        if (getViewDataBinding() == null || mStickerAnimatorSet != null)
+        {
+            return;
+        }
+
+        final View[] views = {getViewDataBinding().sticker1nightsTextView//
+            , getViewDataBinding().sticker2nightsTextView};
+
+        final View[] stickerViews = {getViewDataBinding().sticker1nightsImageView//
+            , getViewDataBinding().sticker2nightsImageView};
+
+        int length = views.length;
+
+        List<Animator> animatorList = new ArrayList<>();
+
+        for (int i = 0; i < length; i++)
+        {
+            views[i].setAlpha(0.0f);
+            stickerViews[i].setAlpha(0.5f);
+
+            ObjectAnimator stickerHideObjectAnimator = ObjectAnimator.ofFloat(stickerViews[i], View.ALPHA, 0.5f, 0.0f);
+            stickerHideObjectAnimator.setDuration(1000);
+            stickerHideObjectAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+
+            ObjectAnimator stickerEmptyObjectAnimator = ObjectAnimator.ofFloat(views[i], View.ALPHA, 0.0f, 1.0f, 0.0f);
+            stickerEmptyObjectAnimator.setStartDelay(800);
+            stickerEmptyObjectAnimator.setDuration(1000);
+            stickerEmptyObjectAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+
+            ObjectAnimator stickerShowObjectAnimator = ObjectAnimator.ofFloat(stickerViews[i], View.ALPHA, 0.0f, 0.5f);
+            stickerShowObjectAnimator.setStartDelay(1600);
+            stickerShowObjectAnimator.setDuration(1000);
+            stickerShowObjectAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+
+            animatorList.add(stickerHideObjectAnimator);
+            animatorList.add(stickerEmptyObjectAnimator);
+            animatorList.add(stickerShowObjectAnimator);
+        }
+
+        mStickerAnimatorSet = new AnimatorSet();
+        mStickerAnimatorSet.playTogether(animatorList);
+        mStickerAnimatorSet.addListener(new Animator.AnimatorListener()
+        {
+            boolean canceled;
+
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                if (canceled == false)
+                {
+                    mStickerAnimatorSet.start();
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+                canceled = true;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        mStickerAnimatorSet.start();
+    }
+
+    @Override
+    public void stopStickerAnimation()
+    {
+        if (getViewDataBinding() == null || mStickerAnimatorSet == null)
+        {
+            return;
+        }
+
+        mStickerAnimatorSet.cancel();
+        mStickerAnimatorSet = null;
+    }
+
+    @Override
+    public void setStickerValidityVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().stickerValidityTextView.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setStickerValidity(String message)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().stickerValidityTextView.setText(message);
     }
 
     @Override
@@ -230,7 +405,15 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
             return;
         }
 
-        getViewDataBinding().issueCouponLayout.setBackgroundResource(enabled ? R.drawable.r_btn_coupon_on : R.drawable.r_btn_coupon_off);
+        if (enabled == true)
+        {
+            getViewDataBinding().issueCouponLayout.setBackgroundResource(R.drawable.r_btn_coupon_on);
+            getViewDataBinding().issueCouponTitleTextView.setText(R.string.label_reward_issued_reward_coupon);
+        } else
+        {
+            getViewDataBinding().issueCouponLayout.setBackgroundResource(R.drawable.r_btn_coupon_off);
+            getViewDataBinding().issueCouponTitleTextView.setText(R.string.label_reward_to_bo_issued_reward_coupon);
+        }
 
         if (enabled == true && getViewDataBinding().issueCouponLayout.getVisibility() == View.VISIBLE)
         {
@@ -262,9 +445,10 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
         ObjectAnimator issueCouponClickObjectAnimator = ObjectAnimator.ofFloat(getViewDataBinding().issueCouponClickView, View.TRANSLATION_Y//
             , getViewDataBinding().issueCouponClickView.getTranslationY(), 0.0f);
 
+        mIssueCouponAnimatorSet = new AnimatorSet();
         mIssueCouponAnimatorSet.playTogether(issueCouponObjectAnimator, issueCouponArrowObjectAnimator, issueCouponClickObjectAnimator);
         mIssueCouponAnimatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
-        mIssueCouponAnimatorSet.setDuration(200);
+        mIssueCouponAnimatorSet.setDuration(150);
 
         Observable<Boolean> observable = new Observable<Boolean>()
         {
@@ -288,7 +472,11 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
                             mIssueCouponAnimatorSet = null;
                         }
 
-                        getViewDataBinding().issueCouponArrowImageView.setRotation(0.0f);
+                        getViewDataBinding().issueCouponArrowImageView.setRotation(180.0f);
+                        getViewDataBinding().issueCouponBackgroundView.setVisibility(View.VISIBLE);
+
+                        observer.onNext(true);
+                        observer.onComplete();
                     }
 
                     @Override
@@ -314,24 +502,26 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
     @Override
     public Observable<Boolean> closeIssueCouponAnimation()
     {
-        if (getViewDataBinding() == null)
+        if (getViewDataBinding() == null || mIssueCouponAnimatorSet != null)
         {
             return null;
         }
 
+        final int DP_192 = ScreenUtils.dpToPx(getContext(), 192);
+
         ObjectAnimator issueCouponObjectAnimator = ObjectAnimator.ofFloat(getViewDataBinding().issueCouponLayout, View.TRANSLATION_Y//
-            , 0.0f, ScreenUtils.dpToPx(getContext(), 192));
+            , 0.0f, DP_192);
 
         ObjectAnimator issueCouponArrowObjectAnimator = ObjectAnimator.ofFloat(getViewDataBinding().issueCouponArrowImageView, View.TRANSLATION_Y//
-            , 0.0f, ScreenUtils.dpToPx(getContext(), 192));
+            , 0.0f, DP_192);
 
         ObjectAnimator issueCouponClickObjectAnimator = ObjectAnimator.ofFloat(getViewDataBinding().issueCouponClickView, View.TRANSLATION_Y//
-            , 0.0f, ScreenUtils.dpToPx(getContext(), 192));
+            , 0.0f, DP_192);
 
+        mIssueCouponAnimatorSet = new AnimatorSet();
         mIssueCouponAnimatorSet.playTogether(issueCouponObjectAnimator, issueCouponArrowObjectAnimator, issueCouponClickObjectAnimator);
-
         mIssueCouponAnimatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
-        mIssueCouponAnimatorSet.setDuration(200);
+        mIssueCouponAnimatorSet.setDuration(150);
 
         Observable<Boolean> observable = new Observable<Boolean>()
         {
@@ -355,7 +545,11 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
                             mIssueCouponAnimatorSet = null;
                         }
 
-                        getViewDataBinding().issueCouponArrowImageView.setRotation(180.0f);
+                        getViewDataBinding().issueCouponArrowImageView.setRotation(0.0f);
+                        getViewDataBinding().issueCouponBackgroundView.setVisibility(View.GONE);
+
+                        observer.onNext(true);
+                        observer.onComplete();
                     }
 
                     @Override
@@ -381,6 +575,65 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
     @Override
     public boolean isOpenedIssueCoupon()
     {
-        return getViewDataBinding().issueCouponLayout.getTranslationY() == 0;
+        if (getViewDataBinding() == null)
+        {
+            return false;
+        }
+
+        return getViewDataBinding().issueCouponLayout.getTranslationY() == 0.0f;
+    }
+
+    @Override
+    public void setIssueCouponAnimation(boolean enabled)
+    {
+        if (getViewDataBinding() == null || getViewDataBinding().issueCouponLayout.getVisibility() != View.VISIBLE)
+        {
+            return;
+        }
+
+        if (enabled == true)
+        {
+            if (mIssueCouponShakeAnimatorSet != null)
+            {
+                return;
+            }
+
+            final int DP_6 = ScreenUtils.dpToPx(getContext(), 6);
+            final int DP_192 = ScreenUtils.dpToPx(getContext(), 192);
+
+            getViewDataBinding().issueCouponTitleUnderLineView.setVisibility(View.INVISIBLE);
+
+            ObjectAnimator issueCouponObjectAnimator = ObjectAnimator.ofFloat(getViewDataBinding().issueCouponLayout, View.TRANSLATION_Y//
+                , DP_192, DP_192 - DP_6, DP_192);
+
+            issueCouponObjectAnimator.setRepeatCount(ObjectAnimator.INFINITE);
+
+            ObjectAnimator issueCouponArrowObjectAnimator = ObjectAnimator.ofFloat(getViewDataBinding().issueCouponArrowImageView, View.TRANSLATION_Y//
+                , DP_192, DP_192 - DP_6, DP_192);
+
+            issueCouponArrowObjectAnimator.setRepeatCount(ObjectAnimator.INFINITE);
+
+            ObjectAnimator issueCouponClickObjectAnimator = ObjectAnimator.ofFloat(getViewDataBinding().issueCouponClickView, View.TRANSLATION_Y//
+                , DP_192, DP_192 - DP_6, DP_192);
+
+            issueCouponClickObjectAnimator.setRepeatCount(ObjectAnimator.INFINITE);
+
+            mIssueCouponShakeAnimatorSet = new AnimatorSet();
+            mIssueCouponShakeAnimatorSet.playTogether(issueCouponObjectAnimator, issueCouponArrowObjectAnimator, issueCouponClickObjectAnimator);
+            mIssueCouponShakeAnimatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+            mIssueCouponShakeAnimatorSet.setDuration(1600);
+            mIssueCouponShakeAnimatorSet.start();
+        } else
+        {
+            if (mIssueCouponShakeAnimatorSet == null)
+            {
+                return;
+            }
+
+            mIssueCouponShakeAnimatorSet.cancel();
+            mIssueCouponShakeAnimatorSet = null;
+
+            getViewDataBinding().issueCouponTitleUnderLineView.setVisibility(View.VISIBLE);
+        }
     }
 }

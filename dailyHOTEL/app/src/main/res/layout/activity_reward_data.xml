@@ -51,7 +51,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="23dp"
                         android:gravity="center_horizontal"
-                        android:text="스티커 다 모을 때마다\n1박 무료!"
                         android:textColor="@color/default_text_c323232"
                         android:textSize="18dp"
                         app:layout_constraintLeft_toLeftOf="parent"
@@ -64,8 +63,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="14dp"
+                        android:ellipsize="end"
                         android:gravity="center_horizontal"
-                        android:text="지금 회원가입하고 스티커 2개를 바로 적립하세요!"
+                        android:maxLines="2"
                         android:textColor="@color/default_text_c929292"
                         android:textSize="13dp"
                         app:layout_constraintBottom_toTopOf="@+id/loginTextView"
@@ -136,6 +136,15 @@
                         app:layout_constraintRight_toLeftOf="@+id/sticker2nightsTextView"
                         app:layout_constraintTop_toTopOf="parent"/>
 
+                    <ImageView
+                        android:id="@+id/sticker1nightsImageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/r_ic_l_47_shadow"
+                        android:visibility="gone"
+                        app:layout_constraintLeft_toLeftOf="@id/sticker1nightsTextView"
+                        app:layout_constraintTop_toTopOf="@id/sticker1nightsTextView"/>
+
                     <com.daily.base.widget.DailyTextView
                         android:id="@+id/sticker2nightsTextView"
                         android:layout_width="wrap_content"
@@ -151,6 +160,15 @@
                         app:layout_constraintLeft_toRightOf="@+id/sticker1nightsTextView"
                         app:layout_constraintRight_toLeftOf="@+id/sticker3nightsTextView"
                         app:layout_constraintTop_toTopOf="parent"/>
+
+                    <ImageView
+                        android:id="@+id/sticker2nightsImageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/r_ic_l_47_shadow"
+                        android:visibility="gone"
+                        app:layout_constraintLeft_toLeftOf="@id/sticker2nightsTextView"
+                        app:layout_constraintTop_toTopOf="@id/sticker2nightsTextView"/>
 
                     <com.daily.base.widget.DailyTextView
                         android:id="@+id/sticker3nightsTextView"
@@ -168,6 +186,15 @@
                         app:layout_constraintRight_toLeftOf="@+id/sticker4nightsTextView"
                         app:layout_constraintTop_toTopOf="parent"/>
 
+                    <ImageView
+                        android:id="@+id/sticker3nightsImageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/r_ic_l_47_shadow"
+                        android:visibility="gone"
+                        app:layout_constraintLeft_toLeftOf="@id/sticker3nightsTextView"
+                        app:layout_constraintTop_toTopOf="@id/sticker3nightsTextView"/>
+
                     <com.daily.base.widget.DailyTextView
                         android:id="@+id/sticker4nightsTextView"
                         android:layout_width="wrap_content"
@@ -183,6 +210,15 @@
                         app:layout_constraintLeft_toRightOf="@+id/sticker3nightsTextView"
                         app:layout_constraintRight_toLeftOf="@+id/sticker5nightsTextView"
                         app:layout_constraintTop_toTopOf="parent"/>
+
+                    <ImageView
+                        android:id="@+id/sticker4nightsImageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/r_ic_l_47_shadow"
+                        android:visibility="gone"
+                        app:layout_constraintLeft_toLeftOf="@id/sticker4nightsTextView"
+                        app:layout_constraintTop_toTopOf="@id/sticker4nightsTextView"/>
 
                     <com.daily.base.widget.DailyTextView
                         android:id="@+id/sticker5nightsTextView"
@@ -200,6 +236,15 @@
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toTopOf="parent"/>
 
+                    <ImageView
+                        android:id="@+id/sticker5nightsImageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/r_ic_l_47_shadow"
+                        android:visibility="gone"
+                        app:layout_constraintLeft_toLeftOf="@id/sticker5nightsTextView"
+                        app:layout_constraintTop_toTopOf="@id/sticker5nightsTextView"/>
+
                     <com.daily.base.widget.DailyTextView
                         android:id="@+id/sticker6nightsTextView"
                         android:layout_width="wrap_content"
@@ -215,6 +260,15 @@
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toLeftOf="@+id/sticker7nightsTextView"
                         app:layout_constraintTop_toBottomOf="@+id/sticker1nightsTextView"/>
+
+                    <ImageView
+                        android:id="@+id/sticker6nightsImageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/r_ic_l_47_shadow"
+                        android:visibility="gone"
+                        app:layout_constraintLeft_toLeftOf="@id/sticker6nightsTextView"
+                        app:layout_constraintTop_toTopOf="@id/sticker6nightsTextView"/>
 
                     <com.daily.base.widget.DailyTextView
                         android:id="@+id/sticker7nightsTextView"
@@ -233,6 +287,15 @@
                         app:layout_constraintRight_toLeftOf="@+id/sticker8nightsTextView"
                         app:layout_constraintTop_toBottomOf="@+id/sticker1nightsTextView"/>
 
+                    <ImageView
+                        android:id="@+id/sticker7nightsImageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/r_ic_l_47_shadow"
+                        android:visibility="gone"
+                        app:layout_constraintLeft_toLeftOf="@id/sticker7nightsTextView"
+                        app:layout_constraintTop_toTopOf="@id/sticker7nightsTextView"/>
+
                     <com.daily.base.widget.DailyTextView
                         android:id="@+id/sticker8nightsTextView"
                         android:layout_width="wrap_content"
@@ -249,6 +312,15 @@
                         app:layout_constraintLeft_toRightOf="@+id/sticker7nightsTextView"
                         app:layout_constraintRight_toLeftOf="@+id/sticker9nightsTextView"
                         app:layout_constraintTop_toBottomOf="@+id/sticker1nightsTextView"/>
+
+                    <ImageView
+                        android:id="@+id/sticker8nightsImageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/r_ic_l_47_shadow"
+                        android:visibility="gone"
+                        app:layout_constraintLeft_toLeftOf="@id/sticker8nightsTextView"
+                        app:layout_constraintTop_toTopOf="@id/sticker8nightsTextView"/>
 
                     <com.daily.base.widget.DailyTextView
                         android:id="@+id/sticker9nightsTextView"
@@ -267,12 +339,20 @@
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/sticker1nightsTextView"/>
 
+                    <ImageView
+                        android:id="@+id/sticker9nightsImageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/r_ic_l_47_shadow"
+                        android:visibility="gone"
+                        app:layout_constraintLeft_toLeftOf="@id/sticker9nightsTextView"
+                        app:layout_constraintTop_toTopOf="@id/sticker9nightsTextView"/>
+
                     <com.daily.base.widget.DailyTextView
                         android:id="@+id/stickerValidityTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
-                        android:text="스티커 유효 기간 : 2017.08.17까지"
                         android:textColor="@color/default_text_cc5c5c5"
                         android:textSize="13dp"
                         app:layout_constraintLeft_toLeftOf="parent"
@@ -324,7 +404,6 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="8dp"
-                    android:text="스티커를 모아 1박 무료 리워드 쿠폰을 받으세요!"
                     android:textColor="@color/default_text_c323232"
                     android:textSize="13dp"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -338,7 +417,6 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="2dp"
-                    android:text="- 1박 무료 리워드 쿠폰 금액은 예약하신 9박의 평균 결제 금액입니다.(세금 및 제반 수수료 제외)\n- 스티커 적립 상세 조건은 아래 링크로 확인하세요."
                     android:textColor="@color/default_text_c666666"
                     android:textSize="12dp"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -400,12 +478,23 @@
             </android.support.constraint.ConstraintLayout>
         </android.support.v4.widget.NestedScrollView>
 
+        <View
+            android:id="@+id/issueCouponBackgroundView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:clickable="true"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbarView"/>
+
         <android.support.constraint.ConstraintLayout
             android:id="@+id/issueCouponLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
             android:background="@drawable/r_btn_coupon_on"
             android:translationY="192dp"
             android:visibility="gone"
@@ -417,7 +506,6 @@
                 android:id="@+id/issueCouponTitleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="리워드 쿠폰 발행 완료"
                 android:textColor="@color/white"
                 android:textSize="17dp"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -440,7 +528,7 @@
             <View
                 android:id="@+id/issueCouponTitleUnderLineView"
                 android:layout_width="0dp"
-                android:layout_height="1px"
+                android:layout_height="1dp"
                 android:layout_marginTop="15dp"
                 android:background="@color/white_a20"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -492,7 +580,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:rotation="180"
             android:translationY="192dp"
             app:layout_constraintLeft_toLeftOf="@id/issueCouponLayout"
             app:layout_constraintRight_toRightOf="@id/issueCouponLayout"

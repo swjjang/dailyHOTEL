@@ -1510,6 +1510,8 @@
     <string name="label_reward_reward_terms">데일리 리워드 유의사항</string>
     <string name="label_reward_notification_on_setting">혜택 알림 받기 설정하기</string>
     <string name="label_reward_booking">지금 예약하러가기</string>
+    <string name="label_reward_issued_reward_coupon">리워드 쿠폰 발행 완료</string>
+    <string name="label_reward_to_bo_issued_reward_coupon">리워드 쿠폰 발행 예정</string>
     <string name="message_reward_confirm_reward_notification">데일리 리워드 혜택을 알림으로 확인하세요!</string>
     <string name="message_reward_confirm_reward_coupon">할인쿠폰함에서 리워드 쿠폰을 확인해보세요!</string>
 

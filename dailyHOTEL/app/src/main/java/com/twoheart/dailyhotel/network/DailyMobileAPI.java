@@ -16,6 +16,7 @@ import com.daily.dailyhotel.repository.remote.model.GourmetCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.GourmetDetailData;
 import com.daily.dailyhotel.repository.remote.model.GourmetListData;
 import com.daily.dailyhotel.repository.remote.model.GourmetPaymentData;
+import com.daily.dailyhotel.repository.remote.model.NotificationData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
 import com.daily.dailyhotel.repository.remote.model.RecentlyPlacesData;
 import com.daily.dailyhotel.repository.remote.model.ReviewData;
@@ -1243,6 +1244,15 @@ public class DailyMobileAPI
         }
 
         return mDailyMobileService.getShortUrl(Crypto.getUrlDecoderEx(URL), jsonObject)//
+            .subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<NotificationData>> updateNotification(boolean agreed)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/notice/benefit"//
+            : "ODckNDIkMzUkNzYkMzAkNjEkOTAkNTgkNTIkODEkNDckOSQ2MiQzMiQ3NyQ2OSQ=$NjdCRTNCQBTczOUY4RTJGMzY5RDA2NEWTRCMTkX5NDA3NEOE1HRDNBNVjc3NzMAA1NkAQRyNTgwNjBWDNEY3REIXM1NkRCREQ4MVQ=K=$";
+
+        return mDailyMobileService.updateNotification(Crypto.getUrlDecoderEx(API), agreed)//
             .subscribeOn(Schedulers.io());
     }
 

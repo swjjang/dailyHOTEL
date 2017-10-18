@@ -729,8 +729,6 @@ public class DailyRemoteConfig
                     ExLog.d("pinkred - reward sticker " + jsonObject);
                 }
 
-
-
                 // Reward Sticker
                 JSONObject rewardStickerJSONObject = jsonObject.getJSONObject("sticker");
 
@@ -761,7 +759,7 @@ public class DailyRemoteConfig
 
                 for (int i = 0; i <= MAX_NIGHTS; i++)
                 {
-                    DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerMemberMessage(0, memberMessageJSONObject.getString(Integer.toString(i)));
+                    DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerMemberMessage(i, memberMessageJSONObject.getString(Integer.toString(i)));
                 }
             } catch (Exception e)
             {

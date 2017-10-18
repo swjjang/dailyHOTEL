@@ -8,7 +8,10 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.Notification;
+import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
+import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
@@ -24,6 +27,8 @@ import io.reactivex.functions.Consumer;
 public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, RewardInterface> implements RewardView.OnEventListener
 {
     private RewardAnalyticsInterface mAnalytics;
+
+    private CommonRemoteImpl mCommonRemoteImpl;
 
     public interface RewardAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -47,6 +52,8 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
         setContentView(R.layout.activity_reward_data);
 
         setAnalytics(new RewardAnalyticsImpl());
+
+        mCommonRemoteImpl = new CommonRemoteImpl(activity);
 
         setRefresh(true);
     }
@@ -82,12 +89,35 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
             if (DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerCampaignEnabled() == true)
             {
                 getViewInterface().setDescriptionMessage(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerNonMemberCampaignMessage());
+
+                getViewInterface().setSticker(1, true, false);
+                getViewInterface().setSticker(2, true, false);
+                getViewInterface().setSticker(3, false, false);
+                getViewInterface().setSticker(4, false, false);
+                getViewInterface().setSticker(5, false, false);
+                getViewInterface().setSticker(6, false, false);
+                getViewInterface().setSticker(7, false, false);
+                getViewInterface().setSticker(8, false, false);
+                getViewInterface().setSticker(9, false, false);
             } else
             {
                 getViewInterface().setDescriptionMessage(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerNonMemberDefaultMessage());
+
+                getViewInterface().setSticker(1, false, false);
+                getViewInterface().setSticker(2, false, false);
+                getViewInterface().setSticker(3, false, false);
+                getViewInterface().setSticker(4, false, false);
+                getViewInterface().setSticker(5, false, false);
+                getViewInterface().setSticker(6, false, false);
+                getViewInterface().setSticker(7, false, false);
+                getViewInterface().setSticker(8, false, false);
+                getViewInterface().setSticker(9, false, false);
             }
 
             getViewInterface().setLoginVisible(true);
+            getViewInterface().setStickerValidityVisible(false);
+
+            getViewInterface().setRewardHistoryEnabled(false);
         } else
         {
             getViewInterface().setLoginVisible(false);
@@ -98,6 +128,12 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
 
         getViewInterface().setIssueCouponVisible(true);
         getViewInterface().setIssueCouponEnabled(true);
+
+        getViewInterface().setIssueCouponAnimation(true);
+
+        boolean isBenefitAlarm = DailyUserPreference.getInstance(getActivity()).isBenefitAlarm();
+
+        getViewInterface().setNotificationVisible(isBenefitAlarm == false);
     }
 
     @Override
@@ -116,12 +152,28 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
     {
         super.onResume();
 
+        if (isRefresh() == true)
+        {
+            onRefresh(true);
+        }
+
+        if (DailyHotel.isLogin() == false && DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerCampaignEnabled() == true)
+        {
+            getViewInterface().startStickerAnimation();
+        }
+
+        // 쿠폰이 발행된 경우
+        getViewInterface().setIssueCouponAnimation(true);
     }
 
     @Override
     public void onPause()
     {
         super.onPause();
+
+        // 애니메이션 제거
+        getViewInterface().stopStickerAnimation();
+        getViewInterface().setIssueCouponAnimation(false);
     }
 
     @Override
@@ -134,6 +186,12 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
     @Override
     public boolean onBackPressed()
     {
+        if (getViewInterface().isOpenedIssueCoupon() == true)
+        {
+            onIssueCouponClick();
+            return true;
+        }
+
         return super.onBackPressed();
     }
 
@@ -159,7 +217,7 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
             case RewardActivity.REQUEST_CODE_LOGIN:
                 if (resultCode == Activity.RESULT_OK)
                 {
-
+                    setRefresh(true);
                 }
                 break;
         }
@@ -198,7 +256,9 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
     @Override
     public void onIssueCouponClick()
     {
-        Observable<Boolean> observable = getViewInterface().isOpenedIssueCoupon() ? getViewInterface().closeIssueCouponAnimation() : getViewInterface().openIssueCouponAnimation();
+        boolean isOpened = getViewInterface().isOpenedIssueCoupon();
+
+        Observable<Boolean> observable = isOpened ? getViewInterface().closeIssueCouponAnimation() : getViewInterface().openIssueCouponAnimation();
 
         if (observable == null || lock() == true)
         {
@@ -207,12 +267,22 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
 
         screenLock(false);
 
+        if (isOpened == false)
+        {
+            getViewInterface().setIssueCouponAnimation(false);
+        }
+
         addCompositeDisposable(observable.subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
         {
             @Override
             public void accept(Boolean aBoolean) throws Exception
             {
                 unLockAll();
+
+                if (isOpened == true)
+                {
+                    getViewInterface().setIssueCouponAnimation(true);
+                }
             }
         }, new Consumer<Throwable>()
         {
@@ -220,6 +290,62 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
             public void accept(Throwable throwable) throws Exception
             {
                 unLockAll();
+            }
+        }));
+    }
+
+    @Override
+    public void onHistoryClick()
+    {
+
+    }
+
+    @Override
+    public void onTermsClick()
+    {
+
+    }
+
+    @Override
+    public void onRewardGuideClick()
+    {
+
+    }
+
+    @Override
+    public void onNotificationClick()
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        screenLock(true);
+
+        addCompositeDisposable(mCommonRemoteImpl.updateNotification(true).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Notification>()
+        {
+            @Override
+            public void accept(Notification notification) throws Exception
+            {
+                getViewInterface().setNotificationVisible(false);
+
+                DailyUserPreference.getInstance(getActivity()).setBenefitAlarm(notification.agreed);
+
+                // 혜택 알림 설정이 off --> on 일때
+                String title = getString(R.string.label_setting_alarm);
+                String message = getString(R.string.message_benefit_alarm_on_confirm_format, notification.serverDate);
+                String positive = getString(R.string.dialog_btn_text_confirm);
+
+                getViewInterface().showSimpleDialog(title, message, positive, null);
+
+                unLockAll();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                onHandleError(throwable);
             }
         }));
     }
