@@ -127,7 +127,7 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
             stampLayout.setVisibility(View.GONE);
         }
 
-        if (DailyRemoteConfigPreference.getInstance(mContext).isKeyRemoteConfigRewardStickerEnabled() == true)
+        if (DailyRemoteConfigPreference.getInstance(mContext).isKeyRemoteConfigRewardEnabled() == true)
         {
             rewardLayout.setVisibility(View.VISIBLE);
             rewardLayout.setOnClickListener(this);

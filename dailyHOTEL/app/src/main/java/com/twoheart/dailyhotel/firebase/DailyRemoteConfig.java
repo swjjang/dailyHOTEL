@@ -596,6 +596,7 @@ public class DailyRemoteConfig
             String reviewUrl = jsonObject.getString("review");
             String lifeStyleProjectUrl = jsonObject.getString("lifeStyleProject");
             String dailyStampHomeUrl = jsonObject.getString("dailyStampHome");
+            String dailyReward = jsonObject.getString("dailyReward");
 
             DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlPrivacy(privacyUrl);
             DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlTerms(termsUrl);
@@ -613,6 +614,7 @@ public class DailyRemoteConfig
             DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlLifeStyleProject(lifeStyleProjectUrl);
             DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlDailyStampHome(dailyStampHomeUrl);
             DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlCollectPersonalInformation(collectPersonalInformation);
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlDailyReward(dailyReward);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -716,10 +718,9 @@ public class DailyRemoteConfig
 
         if (DailyTextUtils.isTextEmpty(jsonString) == true)
         {
-            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerEnabled(false);
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardEnabled(false);
         } else
         {
-
             try
             {
                 JSONObject jsonObject = new JSONObject(jsonString);
@@ -731,9 +732,6 @@ public class DailyRemoteConfig
 
                 // Reward Sticker
                 JSONObject rewardStickerJSONObject = jsonObject.getJSONObject("sticker");
-
-                boolean rewardStickerEnabled = rewardStickerJSONObject.getBoolean("enabled");
-                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerEnabled(rewardStickerEnabled);
 
                 String titleMessage = rewardStickerJSONObject.getString("titleMessage");
                 DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerTitleMessage(titleMessage);
@@ -761,6 +759,8 @@ public class DailyRemoteConfig
                 {
                     DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerMemberMessage(i, memberMessageJSONObject.getString(Integer.toString(i)));
                 }
+
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardEnabled(true);
             } catch (Exception e)
             {
                 ExLog.e(e.toString());

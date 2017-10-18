@@ -291,6 +291,19 @@ public class InformationFragment extends BaseMenuNavigationFragment implements C
                 , AnalyticsManager.Action.TNC_CLICK, null, null);
         }
 
+        @Override
+        public void onDailyRewardClick()
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            baseActivity.startActivityForResult(DailyRewardActivity.newInstance(baseActivity), Constants.CODE_REQUEST_ACTIVITY_DAILY_REWARD);
+        }
 
         @Override
         public void finish()
