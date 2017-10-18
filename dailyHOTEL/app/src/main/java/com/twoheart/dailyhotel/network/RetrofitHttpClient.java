@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.network;
 
 import android.content.Context;
 
+import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.github.aurae.retrofit2.LoganSquareConverterFactory;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -95,6 +96,17 @@ public class RetrofitHttpClient implements Constants
         public Response intercept(Chain chain) throws IOException
         {
             Request request = chain.request();
+
+            if (Constants.DEBUG == true)
+            {
+                if (request.body() == null)
+                {
+                    ExLog.d("url : " + request.url());
+                } else
+                {
+                    ExLog.d("url : " + request.url() + ", body : " + request.body().toString());
+                }
+            }
 
             if (request.url().host().contains("dailyhotel") == true)
             {

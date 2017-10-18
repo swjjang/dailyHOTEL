@@ -416,12 +416,25 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="10dp"
-                    android:layout_marginTop="2dp"
+                    android:layout_marginTop="4dp"
                     android:textColor="@color/default_text_c666666"
                     android:textSize="12dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/guideTitleTextView"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/guideLinkDescriptionTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="10dp"
+                    android:text="@string/message_reward_reward_guide_description"
+                    android:textColor="@color/default_text_c666666"
+                    android:textSize="12dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/guideDescriptionTextView"/>
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/guideLinkTextView"
@@ -435,7 +448,7 @@
                     android:textColor="@color/default_text_c929292"
                     android:textSize="12dp"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/guideDescriptionTextView"/>
+                    app:layout_constraintTop_toBottomOf="@+id/guideLinkDescriptionTextView"/>
 
                 <View
                     android:id="@+id/guideUnderLineView"

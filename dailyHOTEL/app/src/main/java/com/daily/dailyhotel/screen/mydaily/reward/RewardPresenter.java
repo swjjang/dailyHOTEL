@@ -127,14 +127,7 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
         getViewInterface().setGuideTitleMessage(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerGuideTitleMessage());
         getViewInterface().setGuideDescriptionMessage(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerGuideDescriptionMessage());
 
-        getViewInterface().setIssueCouponVisible(true);
-        getViewInterface().setIssueCouponEnabled(true);
-
-        getViewInterface().setIssueCouponAnimation(true);
-
-        boolean isBenefitAlarm = DailyUserPreference.getInstance(getActivity()).isBenefitAlarm();
-
-        getViewInterface().setNotificationVisible(isBenefitAlarm == false);
+        getViewInterface().setNotificationVisible(DailyUserPreference.getInstance(getActivity()).isBenefitAlarm() == false);
     }
 
     @Override
