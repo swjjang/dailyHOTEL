@@ -241,7 +241,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
 
         android.support.v7.widget.GridLayout.LayoutParams layoutParams = new android.support.v7.widget.GridLayout.LayoutParams();
         layoutParams.width = 0;
-        layoutParams.height = ScreenUtils.dpToPx(this, 74d);
+        layoutParams.height = text == null ? 1 : ScreenUtils.dpToPx(this, 74d);
         layoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f);
 
         dailyTextView.setPadding(0, ScreenUtils.dpToPx(this, 12), 0, 0);
