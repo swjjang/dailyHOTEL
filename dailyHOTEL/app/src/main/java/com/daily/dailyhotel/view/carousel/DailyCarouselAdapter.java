@@ -6,6 +6,7 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Paint;
 import android.os.Build;
 import android.os.Vibrator;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -373,6 +374,14 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
         //            holder.dataBinding.soldOutView.setVisibility(View.GONE);
         //        }
 
+
+        holder.dataBinding.contentProvinceView.getLayoutParams().width = 0;
+        ((ConstraintLayout.LayoutParams) holder.dataBinding.contentProvinceView.getLayoutParams()).rightToLeft = R.id.contentSubRegionLayout;
+        holder.dataBinding.contentProvinceView.setLayoutParams(holder.dataBinding.contentProvinceView.getLayoutParams());
+
+        ((ConstraintLayout.LayoutParams) holder.dataBinding.contentSubRegionLayout.getLayoutParams()).rightToRight = ConstraintLayout.LayoutParams.PARENT_ID;
+        holder.dataBinding.contentSubRegionLayout.setLayoutParams(holder.dataBinding.contentSubRegionLayout.getLayoutParams());
+
         setOutboundPriceText(holder.dataBinding, stayOutbound.nightlyRate, stayOutbound.nightlyBaseRate, mNightsEnabled);
         holder.dataBinding.contentTextView.setText(stayOutbound.name);
         //        holder.dataBinding.nameEngTextView.setText("(" + stayOutbound.nameEng + ")");
@@ -382,17 +391,26 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
 
         setTripAdvisorText(holder.dataBinding, stayOutbound.tripAdvisorRating);
 
+        holder.dataBinding.contentProvinceView.setText(stayOutbound.city);
+
         // 도시 명을 말줄임 표시 하기 위해 나중에 도시명을 넣어줌
-        holder.dataBinding.contentSubRegionLayout.post(new Runnable()
+        holder.dataBinding.regionLayout.post(new Runnable()
         {
             @Override
             public void run()
             {
-                int layoutWidth = holder.dataBinding.contentSubRegionLayout.getWidth();
-                int regionWidth = holder.dataBinding.regionLayout.getWidth();
+                // ... 여부 확인
+                if (holder.dataBinding.contentProvinceView.getLayout().getEllipsisCount(holder.dataBinding.contentProvinceView.getLineCount() - 1) > 0)
+                {
+                } else
+                {
+                    holder.dataBinding.contentProvinceView.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    ((ConstraintLayout.LayoutParams) holder.dataBinding.contentProvinceView.getLayoutParams()).rightToLeft = -1;
+                    holder.dataBinding.contentProvinceView.setLayoutParams(holder.dataBinding.contentProvinceView.getLayoutParams());
 
-                holder.dataBinding.contentProvinceView.setMaxWidth(regionWidth - layoutWidth);
-                holder.dataBinding.contentProvinceView.setText(stayOutbound.city);
+                    ((ConstraintLayout.LayoutParams) holder.dataBinding.contentSubRegionLayout.getLayoutParams()).rightToRight = -1;
+                    holder.dataBinding.contentSubRegionLayout.setLayoutParams(holder.dataBinding.contentSubRegionLayout.getLayoutParams());
+                }
             }
         });
     }
