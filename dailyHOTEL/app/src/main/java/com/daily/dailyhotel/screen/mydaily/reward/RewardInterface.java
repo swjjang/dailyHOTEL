@@ -14,9 +14,9 @@ public interface RewardInterface extends BaseDialogViewInterface
 
     void setSticker(int nights, boolean visible, boolean enabled);
 
-    void startStickerAnimation();
+    void startCampaignStickerAnimation();
 
-    void stopStickerAnimation();
+    void stopCampaignStickerAnimation();
 
     void setStickerValidityVisible(boolean visible);
 

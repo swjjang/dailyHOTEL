@@ -116,11 +116,12 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
 
             getViewInterface().setLoginVisible(true);
             getViewInterface().setStickerValidityVisible(false);
-
             getViewInterface().setRewardHistoryEnabled(false);
+            getViewInterface().setIssueCouponVisible(false);
         } else
         {
             getViewInterface().setLoginVisible(false);
+            getViewInterface().setIssueCouponVisible(false);
         }
 
         getViewInterface().setGuideTitleMessage(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerGuideTitleMessage());
@@ -159,11 +160,8 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
 
         if (DailyHotel.isLogin() == false && DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerCampaignEnabled() == true)
         {
-            getViewInterface().startStickerAnimation();
+            getViewInterface().startCampaignStickerAnimation();
         }
-
-        // 쿠폰이 발행된 경우
-        getViewInterface().setIssueCouponAnimation(true);
     }
 
     @Override
@@ -172,7 +170,7 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
         super.onPause();
 
         // 애니메이션 제거
-        getViewInterface().stopStickerAnimation();
+        getViewInterface().stopCampaignStickerAnimation();
         getViewInterface().setIssueCouponAnimation(false);
     }
 

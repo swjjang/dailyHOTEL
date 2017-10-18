@@ -9,6 +9,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
@@ -202,7 +203,7 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
     }
 
     @Override
-    public void startStickerAnimation()
+    public void startCampaignStickerAnimation()
     {
         if (getViewDataBinding() == null || mStickerAnimatorSet != null)
         {
@@ -225,18 +226,18 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
             stickerViews[i].setAlpha(0.5f);
 
             ObjectAnimator stickerHideObjectAnimator = ObjectAnimator.ofFloat(stickerViews[i], View.ALPHA, 0.5f, 0.0f);
-            stickerHideObjectAnimator.setDuration(1000);
-            stickerHideObjectAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+            stickerHideObjectAnimator.setDuration(500);
+            stickerHideObjectAnimator.setInterpolator(new LinearInterpolator());
 
             ObjectAnimator stickerEmptyObjectAnimator = ObjectAnimator.ofFloat(views[i], View.ALPHA, 0.0f, 1.0f, 0.0f);
-            stickerEmptyObjectAnimator.setStartDelay(800);
+            stickerEmptyObjectAnimator.setStartDelay(400);
             stickerEmptyObjectAnimator.setDuration(1000);
-            stickerEmptyObjectAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+            stickerEmptyObjectAnimator.setInterpolator(new LinearInterpolator());
 
             ObjectAnimator stickerShowObjectAnimator = ObjectAnimator.ofFloat(stickerViews[i], View.ALPHA, 0.0f, 0.5f);
-            stickerShowObjectAnimator.setStartDelay(1600);
+            stickerShowObjectAnimator.setStartDelay(1300);
             stickerShowObjectAnimator.setDuration(1000);
-            stickerShowObjectAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+            stickerShowObjectAnimator.setInterpolator(new LinearInterpolator());
 
             animatorList.add(stickerHideObjectAnimator);
             animatorList.add(stickerEmptyObjectAnimator);
@@ -244,6 +245,7 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
         }
 
         mStickerAnimatorSet = new AnimatorSet();
+        mStickerAnimatorSet.setStartDelay(500);
         mStickerAnimatorSet.playTogether(animatorList);
         mStickerAnimatorSet.addListener(new Animator.AnimatorListener()
         {
@@ -281,7 +283,7 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
     }
 
     @Override
-    public void stopStickerAnimation()
+    public void stopCampaignStickerAnimation()
     {
         if (getViewDataBinding() == null || mStickerAnimatorSet == null)
         {
