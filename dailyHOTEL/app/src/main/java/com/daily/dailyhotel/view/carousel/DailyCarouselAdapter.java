@@ -8,10 +8,12 @@ import android.os.Build;
 import android.os.Vibrator;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 
 import com.daily.base.util.DailyTextUtils;
@@ -374,7 +376,6 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
         //            holder.dataBinding.soldOutView.setVisibility(View.GONE);
         //        }
 
-
         holder.dataBinding.contentProvinceView.getLayoutParams().width = 0;
         ((ConstraintLayout.LayoutParams) holder.dataBinding.contentProvinceView.getLayoutParams()).rightToLeft = R.id.contentSubRegionLayout;
         holder.dataBinding.contentProvinceView.setLayoutParams(holder.dataBinding.contentProvinceView.getLayoutParams());
@@ -393,14 +394,21 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
 
         holder.dataBinding.contentProvinceView.setText(stayOutbound.city);
 
-        // 도시 명을 말줄임 표시 하기 위해 나중에 도시명을 넣어줌
-        holder.dataBinding.regionLayout.post(new Runnable()
+        holder.dataBinding.regionLayout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener()
         {
             @Override
-            public void run()
+            public boolean onPreDraw()
             {
                 // ... 여부 확인
-                if (holder.dataBinding.contentProvinceView.getLayout().getEllipsisCount(holder.dataBinding.contentProvinceView.getLineCount() - 1) > 0)
+                Layout layout = holder.dataBinding.contentProvinceView.getLayout();
+                if (layout == null)
+                {
+                    holder.dataBinding.regionLayout.getViewTreeObserver().removeOnPreDrawListener(this);
+                    return false;
+                }
+
+                int lastLine = holder.dataBinding.contentProvinceView.getLineCount() -1;
+                if (layout.getEllipsisCount(lastLine) > 0)
                 {
                 } else
                 {
@@ -411,6 +419,9 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
                     ((ConstraintLayout.LayoutParams) holder.dataBinding.contentSubRegionLayout.getLayoutParams()).rightToRight = -1;
                     holder.dataBinding.contentSubRegionLayout.setLayoutParams(holder.dataBinding.contentSubRegionLayout.getLayoutParams());
                 }
+
+                holder.dataBinding.regionLayout.getViewTreeObserver().removeOnPreDrawListener(this);
+                return false;
             }
         });
     }
