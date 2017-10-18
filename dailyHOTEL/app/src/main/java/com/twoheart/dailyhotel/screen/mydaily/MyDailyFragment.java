@@ -174,6 +174,12 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
                     {
                         mOnEventListener.startStamp();
                     }
+                } else if (externalDeepLink.isRewardView() == true)
+                {
+                    if (DailyRemoteConfigPreference.getInstance(context).isKeyRemoteConfigRewardEnabled() == true)
+                    {
+                        mOnEventListener.onRewardClick();
+                    }
                 }
 
                 //            else if (DailyDeepLink.getInstance().isWishListHotelView() == true)

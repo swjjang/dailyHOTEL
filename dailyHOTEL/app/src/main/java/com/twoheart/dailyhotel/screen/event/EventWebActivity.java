@@ -22,6 +22,7 @@ import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.StayOutboundListActivity;
+import com.daily.dailyhotel.screen.mydaily.reward.RewardActivity;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.google.android.gms.maps.model.LatLng;
@@ -770,6 +771,37 @@ public class EventWebActivity extends WebViewActivity implements Constants
         return true;
     }
 
+    boolean moveDeepLinkReward(Context context, DailyDeepLink dailyDeepLink)
+    {
+        if (dailyDeepLink == null)
+        {
+            return false;
+        }
+
+        try
+        {
+            if (dailyDeepLink.isExternalDeepLink() == true)
+            {
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+
+                Intent intent = RewardActivity.newInstance(context);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_DAILY_REWARD);
+            } else
+            {
+
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+            return false;
+        } finally
+        {
+            dailyDeepLink.clear();
+        }
+
+        return true;
+    }
+
     boolean moveDeepLinkStayOutboundSearchResult(TodayDateTime todayDateTime, DailyDeepLink dailyDeepLink)
     {
         if (dailyDeepLink == null)
@@ -1064,6 +1096,12 @@ public class EventWebActivity extends WebViewActivity implements Constants
                             } else if (externalDeepLink.isStampView() == true)
                             {
                                 if (moveDeepLinkStamp(EventWebActivity.this, externalDeepLink) == true)
+                                {
+                                    return;
+                                }
+                            } else if (externalDeepLink.isRewardView() == true)
+                            {
+                                if (moveDeepLinkReward(EventWebActivity.this, externalDeepLink) == true)
                                 {
                                     return;
                                 }
