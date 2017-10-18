@@ -218,8 +218,6 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
             }
         }
 
-        mGridLayout.setPadding(ScreenUtils.dpToPx(this, 10), 0, ScreenUtils.dpToPx(this, 10), 0);
-
         requestUpdateResultDelayed();
     }
 
