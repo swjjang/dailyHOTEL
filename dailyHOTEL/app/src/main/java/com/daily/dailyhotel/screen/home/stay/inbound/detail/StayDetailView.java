@@ -1257,7 +1257,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
             viewDataBinding.satisfactionTextView.setVisibility(View.VISIBLE);
 
             DecimalFormat decimalFormat = new DecimalFormat("###,##0");
-            viewDataBinding.satisfactionTextView.setText(getString(R.string.label_gourmet_detail_satisfaction, //
+            viewDataBinding.satisfactionTextView.setText(getString(R.string.label_stay_detail_satisfaction, //
                 ratingValue, decimalFormat.format(ratingPersons)));
         }
 
