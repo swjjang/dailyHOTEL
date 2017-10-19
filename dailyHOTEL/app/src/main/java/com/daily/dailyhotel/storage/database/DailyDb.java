@@ -30,7 +30,7 @@ import java.util.Calendar;
 
 public class DailyDb extends SQLiteOpenHelper implements BaseColumns
 {
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     public static final int MAX_RECENT_PLACE_COUNT = 30;
 
@@ -64,7 +64,8 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         + StayObRecentlySuggestList.DISPLAY + " TEXT NULL, " //
         + StayObRecentlySuggestList.LATITUDE + " DOUBLE NOT NULL DEFAULT 0, " //
         + StayObRecentlySuggestList.LONGITUDE + " DOUBLE NOT NULL DEFAULT 0, " //
-        + StayObRecentlySuggestList.SAVING_TIME + " LONG NOT NULL DEFAULT 0 " + ");";
+        + StayObRecentlySuggestList.SAVING_TIME + " LONG NOT NULL DEFAULT 0, " //
+        + StayObRecentlySuggestList.KEYWORD + " TEXT NULL " + ");"; // added database version 3
 
     public DailyDb(Context context)
     {
@@ -96,8 +97,19 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
 
         if (oldVersion < DATABASE_VERSION)
         {
+            dropAllDbObjects(db);
             createDbObjects(db);
         }
+
+//        if (oldVersion == 2)
+//        {
+//            db.beginTransaction();
+//            db.execSQL("drop table if exists " + T_RECENTLY);
+//            db.execSQL("ALTER TABLE " + CREATE_T_STAY_OB_RECENTLY_SUGGEST + " ADD COLUMN " + StayObRecentlySuggestList.KEYWORD + " TEXT NULL");
+//            db.setTransactionSuccessful();
+//        } else {
+//            createDbObjects(db);
+//        }
     }
 
     private void createDbObjects(SQLiteDatabase db)
@@ -384,6 +396,12 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
             } else
             {
                 savingTime = checkExistRecentPlace(serviceType, index);
+
+                if (savingTime == -1)
+                {
+                    Calendar calendar = DailyCalendar.getInstance();
+                    savingTime = calendar.getTimeInMillis();
+                }
             }
 
             ContentValues contentValues = new ContentValues();
@@ -662,6 +680,47 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         return cursor;
     }
 
+    public String getStayObRecentlySuggestKeyword(long _id)
+    {
+        if (_id <= 0)
+        {
+            return null;
+        }
+
+        Cursor cursor = null;
+
+        try
+        {
+            cursor = getStayObRecentlySuggest(_id);
+
+            if (cursor != null)
+            {
+                cursor.moveToFirst();
+
+                int columnIndex = cursor.getColumnIndex(StayObRecentlySuggestColumns.KEYWORD);
+                return cursor.getString(columnIndex);
+            }
+
+        } catch (Exception e)
+        {
+            return null;
+        } finally
+        {
+            try
+            {
+                if (cursor != null)
+                {
+                    cursor.close();
+                }
+            } catch (Exception e)
+            {
+                // do nothing!
+            }
+        }
+
+        return null;
+    }
+
     public long checkExistStayObRecentlySuggest(long _id)
     {
         if (_id <= 0)
@@ -751,7 +810,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
 
     public void addStayObRecentlySuggest(long _id, String name, String city, String country //
         , String countryCode, String categoryKey, String display //
-        , double latitude, double longitude, boolean isUpdateDate)
+        , double latitude, double longitude, String keyword, boolean isUpdateDate)
     {
         SQLiteDatabase db = getDb();
         if (db == null)
@@ -771,6 +830,12 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
             } else
             {
                 savingTime = checkExistStayObRecentlySuggest(_id);
+
+                if (savingTime == -1)
+                {
+                    Calendar calendar = DailyCalendar.getInstance();
+                    savingTime = calendar.getTimeInMillis();
+                }
             }
 
             ContentValues contentValues = new ContentValues();
@@ -784,6 +849,7 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
             contentValues.put(StayObRecentlySuggestColumns.LATITUDE, latitude);
             contentValues.put(StayObRecentlySuggestColumns.LONGITUDE, longitude);
             contentValues.put(StayObRecentlySuggestColumns.SAVING_TIME, savingTime);
+            contentValues.put(StayObRecentlySuggestColumns.KEYWORD, keyword);
 
             db.beginTransaction();
 

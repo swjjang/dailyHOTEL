@@ -276,12 +276,32 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
             return;
         }
 
-        Intent intent = new Intent();
-        intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new SuggestParcel(suggest));
-        intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_KEYWORD, mKeyword);
+        addCompositeDisposable(mSuggestLocalImpl.getRecentlySuggestKeyword(suggest.id) //
+            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<String>()
+            {
+                @Override
+                public void accept(String keyword) throws Exception
+                {
+                    Intent intent = new Intent();
+                    intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new SuggestParcel(suggest));
+                    intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
 
-        setResult(Activity.RESULT_OK, intent);
-        finish();
+                    setResult(Activity.RESULT_OK, intent);
+                    finish();
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    Intent intent = new Intent();
+                    intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new SuggestParcel(suggest));
+                    intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_KEYWORD, "");
+
+                    setResult(Activity.RESULT_OK, intent);
+                    finish();
+                }
+            }));
     }
 
     @Override

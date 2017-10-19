@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.StayObRecentlySuggestColumns;
 import com.daily.dailyhotel.domain.SuggestLocalInterface;
@@ -32,7 +33,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
     }
 
     @Override
-    public Observable addSuggestDb(Suggest suggest)
+    public Observable addSuggestDb(Suggest suggest, String keyword)
     {
         return Observable.defer(new Callable<ObservableSource<Boolean>>()
         {
@@ -48,7 +49,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
 
                 dailyDb.addStayObRecentlySuggest(suggest.id, suggest.name, suggest.city, suggest.country //
                     , suggest.countryCode, suggest.categoryKey, suggest.display, suggest.latitude //
-                    , suggest.longitude, true);
+                    , suggest.longitude, keyword, true);
 
                 DailyDbHelper.getInstance().close();
 
@@ -187,6 +188,43 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                 }
 
                 return Observable.just(suggestList);
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
+    @Override
+    public Observable<String> getRecentlySuggestKeyword(final long id)
+    {
+        return Observable.defer(new Callable<ObservableSource<String>>()
+        {
+            @Override
+            public ObservableSource<String> call() throws Exception
+            {
+                if (id <= 0)
+                {
+                    return Observable.just("");
+                }
+
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+
+                String keyword = null;
+
+                try
+                {
+                    keyword = dailyDb.getStayObRecentlySuggestKeyword(id);
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+                }
+
+                DailyDbHelper.getInstance().close();
+
+                if (DailyTextUtils.isTextEmpty(keyword) == true)
+                {
+                    keyword = "";
+                }
+
+                return Observable.just(keyword);
             }
         }).subscribeOn(Schedulers.io());
     }
