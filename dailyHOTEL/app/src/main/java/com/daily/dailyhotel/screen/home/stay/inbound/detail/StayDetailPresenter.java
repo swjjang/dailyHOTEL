@@ -42,6 +42,7 @@ import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivi
 import com.daily.dailyhotel.screen.common.images.ImageListActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.truereview.StayTrueReviewActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.payment.StayPaymentActivity;
+import com.daily.dailyhotel.screen.mydaily.reward.RewardActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
@@ -1265,6 +1266,36 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     }
 
     @Override
+    public void onLoginClick()
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        Intent intent = LoginActivity.newInstance(getActivity(), AnalyticsManager.Screen.DAILYHOTEL_DETAIL);
+        startActivityForResult(intent, StayDetailActivity.REQUEST_CODE_LOGIN);
+    }
+
+    @Override
+    public void onRewardClick()
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        Intent intent = RewardActivity.newInstance(getActivity());
+        startActivityForResult(intent, StayDetailActivity.REQUEST_CODE_REWARD);
+    }
+
+    @Override
+    public void onRewardGuideClick()
+    {
+
+    }
+
+    @Override
     public void onPriceTypeClick(PriceType priceType)
     {
         getViewInterface().setPriceType(priceType);
@@ -1411,6 +1442,29 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         }
 
         mIsDeepLink = false;
+    }
+
+    private void notifyRewardChanged()
+    {
+        if (mStayDetail == null)
+        {
+            return;
+        }
+
+        if (DailyHotel.isLogin() == false)
+        {
+            boolean campaignEnabled = DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerCampaignEnabled();
+
+            getViewInterface().setRewardNonMember(DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardEnabled()//
+                , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage()//
+                , getString(R.string.label_reward_login)//
+                , campaignEnabled ? DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerNonMemberCampaignFreeNights() : 0//
+                ,campaignEnabled ? DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerNonMemberCampaignMessage()//
+                    : DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerNonMemberDefaultMessage());
+        } else
+        {
+
+        }
     }
 
     /**
@@ -1624,6 +1678,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             {
                 notifyDetailChanged();
                 notifyWishChanged();
+                notifyRewardChanged();
 
                 if (disposable != null)
                 {

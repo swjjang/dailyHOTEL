@@ -123,6 +123,7 @@ public class DailyRemoteConfigPreference
     private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_CAMPAIGN_ENALBED = "403";
     private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_NONMEMBER_DEFAULT_MESSAGE = "404";
     private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_NONMEMBER_CAMPAIGN_MESSAGE = "405";
+    private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_NONMEMBER_CAMPAIGN_FREE_NIGHTS = "406";
     private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_MEMBER_MESSAGE_0_NIGHTS = "410";
     private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_MEMBER_MESSAGE_1_NIGHTS = "411";
     private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_MEMBER_MESSAGE_2_NIGHTS = "412";
@@ -1142,6 +1143,16 @@ public class DailyRemoteConfigPreference
     public String getKeyRemoteConfigRewardStickerNonMemberCampaignMessage()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_REWARD_STICKER_NONMEMBER_CAMPAIGN_MESSAGE, null);
+    }
+
+    public void setKeyRemoteConfigRewardStickerNonmemberCampaignFreeNights(int value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_REWARD_STICKER_NONMEMBER_CAMPAIGN_FREE_NIGHTS, value);
+    }
+
+    public int getKeyRemoteConfigRewardStickerNonMemberCampaignFreeNights()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_REWARD_STICKER_NONMEMBER_CAMPAIGN_FREE_NIGHTS, 0);
     }
 
     public void setKeyRemoteConfigRewardStickerMemberMessage(int nights, String value)

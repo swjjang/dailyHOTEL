@@ -18,6 +18,10 @@ public interface StayDetailViewInterface extends BaseDialogViewInterface
 
     void setStayDetail(StayBookDateTime stayBookDateTime, StayDetail stayDetail, int trueReviewCount, boolean showStamp);
 
+    void setRewardNonMember(boolean visible, String titleText, String optionText, int campaignFreeNights, String descriptionText);
+
+    void setRewardMember(boolean visible, String titleText, String optionText, int nights, String descriptionText);
+
     Observable<Boolean> getSharedElementTransition(int gradientType);
 
     void setInitializedImage(String url);

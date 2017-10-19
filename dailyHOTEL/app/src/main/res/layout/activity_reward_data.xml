@@ -156,7 +156,6 @@
                         android:text="2"
                         android:textColor="@color/default_text_ce9a230"
                         android:textSize="17dp"
-                        app:layout_constraintHorizontal_chainStyle="packed"
                         app:layout_constraintLeft_toRightOf="@+id/sticker1nightsTextView"
                         app:layout_constraintRight_toLeftOf="@+id/sticker3nightsTextView"
                         app:layout_constraintTop_toTopOf="parent"/>
@@ -181,7 +180,6 @@
                         android:text="3"
                         android:textColor="@color/default_text_ce9a230"
                         android:textSize="17dp"
-                        app:layout_constraintHorizontal_chainStyle="packed"
                         app:layout_constraintLeft_toRightOf="@+id/sticker2nightsTextView"
                         app:layout_constraintRight_toLeftOf="@+id/sticker4nightsTextView"
                         app:layout_constraintTop_toTopOf="parent"/>
@@ -206,7 +204,6 @@
                         android:text="4"
                         android:textColor="@color/default_text_ce9a230"
                         android:textSize="17dp"
-                        app:layout_constraintHorizontal_chainStyle="packed"
                         app:layout_constraintLeft_toRightOf="@+id/sticker3nightsTextView"
                         app:layout_constraintRight_toLeftOf="@+id/sticker5nightsTextView"
                         app:layout_constraintTop_toTopOf="parent"/>
@@ -231,7 +228,6 @@
                         android:text="5"
                         android:textColor="@color/default_text_ce9a230"
                         android:textSize="17dp"
-                        app:layout_constraintHorizontal_chainStyle="packed"
                         app:layout_constraintLeft_toRightOf="@+id/sticker4nightsTextView"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toTopOf="parent"/>
@@ -282,7 +278,6 @@
                         android:text="7"
                         android:textColor="@color/default_text_ce9a230"
                         android:textSize="17dp"
-                        app:layout_constraintHorizontal_chainStyle="packed"
                         app:layout_constraintLeft_toRightOf="@+id/sticker6nightsTextView"
                         app:layout_constraintRight_toLeftOf="@+id/sticker8nightsTextView"
                         app:layout_constraintTop_toBottomOf="@+id/sticker1nightsTextView"/>
@@ -308,7 +303,6 @@
                         android:text="8"
                         android:textColor="@color/default_text_ce9a230"
                         android:textSize="17dp"
-                        app:layout_constraintHorizontal_chainStyle="packed"
                         app:layout_constraintLeft_toRightOf="@+id/sticker7nightsTextView"
                         app:layout_constraintRight_toLeftOf="@+id/sticker9nightsTextView"
                         app:layout_constraintTop_toBottomOf="@+id/sticker1nightsTextView"/>
@@ -334,7 +328,6 @@
                         android:text="9"
                         android:textColor="@color/default_text_ce9a230"
                         android:textSize="17dp"
-                        app:layout_constraintHorizontal_chainStyle="packed"
                         app:layout_constraintLeft_toRightOf="@+id/sticker8nightsTextView"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/sticker1nightsTextView"/>

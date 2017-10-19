@@ -29,6 +29,8 @@ public class StayDetail
     public boolean singleStay;
     public boolean overseas;
     public boolean waitingForBooking;
+    public boolean dailyReward;
+    public int couponPrice;
 
     private List<DetailImageInformation> mDetailImageInformationList;
     private List<LinkedHashMap<String, List<String>>> mDescriptionMap;
