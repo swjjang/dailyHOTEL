@@ -1153,6 +1153,14 @@ public class AnalyticsManager
         public static final String PRODUCT_RECOMMEND = "product_recommend";
         public static final String PRODUCT_RECOMMEND_PRODUCT_CLICK = "product_recommend_product_click";
         public static final String PRODUCT_RECOMMEND_PRODUCT = "product_recommend_product";
+
+        public static final String OB_SEARCH_AUTO_SEARCH = "ob_search_auto_search";
+        public static final String OB_SEARCH_NO_RESULT = "ob_search_no_result";
+        public static final String OB_SEARCH_RESULT = "ob_search_result";
+        public static final String OB_SEARCH_RECENT = "ob_search_recent";
+        public static final String OB_SEARCH_ORIGIN_AUTO = "ob_search_origin_auto";
+        public static final String OB_SEARCH_ORIGIN_RECENT = "ob_search_origin_recent";
+        public static final String OB_SEARCH_ORIGIN_ETC = "ob_search_origin_etc";
     }
 
     public static class Label
