@@ -108,8 +108,8 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
 
     private void dropAllDbObjects(SQLiteDatabase db)
     {
-        db.execSQL("drop table if exists " + CREATE_T_RECENTLY);
-        db.execSQL("drop table if exists " + CREATE_T_STAY_OB_RECENTLY_SUGGEST);
+        db.execSQL("drop table if exists " + T_RECENTLY);
+        db.execSQL("drop table if exists " + T_STAY_OB_RECENTLY_SUGGEST);
     }
 
     private SQLiteDatabase getDb()

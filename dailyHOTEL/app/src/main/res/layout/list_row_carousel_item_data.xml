@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+        xmlns:fresco="http://schemas.android.com/apk/res-auto">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/contentLayout"
@@ -21,7 +21,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_max="239dp"
             fresco:actualImageScaleType="centerCrop"
-            fresco:overlayImage="@drawable/shape_home_viewpager_image_overlay" />
+            fresco:overlayImage="@drawable/shape_home_viewpager_image_overlay"/>
 
         <View
             android:id="@+id/gradientTopView"
@@ -30,7 +30,7 @@
             app:layout_constraintDimensionRatio="H,16:9"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <View
             android:id="@+id/gradientBottomView"
@@ -39,7 +39,7 @@
             app:layout_constraintDimensionRatio="H,16:9"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <ImageView
             android:id="@+id/soldoutView"
@@ -52,7 +52,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/soldout" />
+            app:srcCompat="@drawable/soldout"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/contentTextView"
@@ -68,7 +68,7 @@
             android:textSize="14dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/contentImageView" />
+            app:layout_constraintTop_toBottomOf="@+id/contentImageView"/>
 
         <LinearLayout
             android:id="@+id/priceLayout"
@@ -89,14 +89,14 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/default_text_c323232"
                 android:textSize="13dp"
-                dailyFont:style="Medium" />
+                dailyFont:style="Medium"/>
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/contentPersonView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/default_text_c666666"
-                android:textSize="12dp" />
+                android:textSize="12dp"/>
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/contentOriginPriceView"
@@ -105,7 +105,7 @@
                 android:layout_marginLeft="4dp"
                 android:textColor="@color/default_text_cc5c5c5"
                 android:textSize="11dp"
-                dailyFont:style="DemiLight" />
+                dailyFont:style="DemiLight"/>
         </LinearLayout>
 
         <View
@@ -119,9 +119,9 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/priceLayout"
-            app:layout_goneMarginTop="16dp" />
+            app:layout_goneMarginTop="16dp"/>
 
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
             android:id="@+id/regionLayout"
             android:layout_width="0dp"
             android:layout_height="27dp"
@@ -136,21 +136,29 @@
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/contentProvinceView"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/default_text_c929292"
-                android:singleLine="true"
+                android:textSize="12dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textSize="12dp"
-                dailyFont:style="DemiLight" />
+                android:singleLine="true"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/contentSubRegionLayout"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                dailyFont:style="DemiLight"/>
 
             <LinearLayout
                 android:id="@+id/contentSubRegionLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                app:layout_constraintLeft_toRightOf="@+id/contentProvinceView"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <com.daily.base.widget.DailyImageView
                     android:id="@+id/contentDotImageView"
@@ -159,7 +167,7 @@
                     android:layout_marginLeft="4dp"
                     android:layout_marginRight="4dp"
                     android:visibility="invisible"
-                    app:srcCompat="@drawable/info_ic_text_dot_grey" />
+                    app:srcCompat="@drawable/info_ic_text_dot_grey"/>
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/contentGradeView"
@@ -167,7 +175,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/default_text_c929292"
                     android:textSize="12dp"
-                    dailyFont:style="DemiLight" />
+                    dailyFont:style="DemiLight"/>
 
                 <LinearLayout
                     android:id="@+id/tripAdvisorLayout"
@@ -182,7 +190,7 @@
                         android:id="@+id/tripAdvisorImageView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/main_ic_widget_owl" />
+                        android:src="@drawable/main_ic_widget_owl"/>
 
                     <RatingBar
                         android:id="@+id/tripAdvisorRatingBar"
@@ -191,7 +199,7 @@
                         android:layout_height="10dp"
                         android:layout_marginLeft="2dp"
                         android:numStars="5"
-                        android:stepSize="0.5" />
+                        android:stepSize="0.5"/>
 
                     <com.daily.base.widget.DailyTextView
                         android:id="@+id/tripAdvisorRatingTextView"
@@ -202,9 +210,9 @@
                         android:gravity="center_vertical"
                         android:singleLine="true"
                         android:textColor="@color/default_text_c929292"
-                        android:textSize="12dp" />
+                        android:textSize="12dp"/>
                 </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
+        </android.support.constraint.ConstraintLayout>
     </android.support.constraint.ConstraintLayout>
 </layout>

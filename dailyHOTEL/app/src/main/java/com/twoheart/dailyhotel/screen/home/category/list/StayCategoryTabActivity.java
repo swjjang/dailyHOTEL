@@ -220,7 +220,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                 JSONObject savedRegionJsonObject = DailyPreference.getInstance(this).getDailyRegion(mDailyCategoryType);
                 JSONObject currentRegionJsonObject = Util.getDailyRegionJSONObject(province);
 
-                if (savedRegionJsonObject.equals(currentRegionJsonObject) == false)
+                if (savedRegionJsonObject == null || savedRegionJsonObject.equals(currentRegionJsonObject) == false)
                 {
                     DailyPreference.getInstance(this).setDailyRegion(mDailyCategoryType, currentRegionJsonObject);
 
