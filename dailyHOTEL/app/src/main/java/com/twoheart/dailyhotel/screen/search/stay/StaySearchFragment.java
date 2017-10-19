@@ -557,7 +557,7 @@ public class StaySearchFragment extends PlaceSearchFragment
         return mPlaceSearchLayout.getSearchKeyword();
     }
 
-    public void startStayOutboundSearchActivity(String keyword)
+    public void startStayOutboundSearchSuggestActivity(String keyword)
     {
         if (DailyTextUtils.isTextEmpty(keyword) == false)
         {
@@ -607,7 +607,7 @@ public class StaySearchFragment extends PlaceSearchFragment
             public void onClick(View v)
             {
                 // positive
-                startStayOutboundSearchActivity(getSearchKeyword());
+                startStayOutboundSearchSuggestActivity(getSearchKeyword());
 
                 try
                 {
@@ -668,7 +668,7 @@ public class StaySearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            startStayOutboundSearchActivity(null);
+            startStayOutboundSearchSuggestActivity(null);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                 AnalyticsManager.Category.SEARCH, AnalyticsManager.Action.SEARCH_SCREEN,//
