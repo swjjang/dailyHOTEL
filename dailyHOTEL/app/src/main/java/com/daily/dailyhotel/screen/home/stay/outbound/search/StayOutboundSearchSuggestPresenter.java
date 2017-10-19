@@ -15,6 +15,7 @@ import com.daily.dailyhotel.parcel.SuggestParcel;
 import com.daily.dailyhotel.repository.local.SuggestLocalImpl;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -267,7 +268,7 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
             ExLog.d(e.getMessage());
         }
 
-        startFinishAction(suggest, mKeyword);
+        startFinishAction(suggest, mKeyword, AnalyticsManager.Category.OB_SEARCH_ORIGIN_AUTO);
     }
 
     @Override
@@ -297,7 +298,7 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
                         ExLog.d(e.getMessage());
                     }
 
-                    startFinishAction(suggest, keyword);
+                    startFinishAction(suggest, keyword, AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECENT);
                 }
             }, new Consumer<Throwable>()
             {
@@ -312,16 +313,17 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
                         ExLog.d(e.getMessage());
                     }
 
-                    startFinishAction(suggest, "");
+                    startFinishAction(suggest, "", AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECENT);
                 }
             }));
     }
 
-    private void startFinishAction(Suggest suggest, String keyword)
+    private void startFinishAction(Suggest suggest, String keyword, String analyticsClickType)
     {
         Intent intent = new Intent();
         intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new SuggestParcel(suggest));
         intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
+        intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_CLICK_TYPE, DailyTextUtils.isTextEmpty(analyticsClickType) ? "" : analyticsClickType);
 
         setResult(Activity.RESULT_OK, intent);
         finish();

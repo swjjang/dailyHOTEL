@@ -17,6 +17,7 @@ public class StayOutboundSearchSuggestActivity extends BaseActivity<StayOutbound
 {
     public static final String INTENT_EXTRA_DATA_SUGGEST = "suggest";
     public static final String INTENT_EXTRA_DATA_KEYWORD = "keyword";
+    public static final String INTENT_EXTRA_DATA_CLICK_TYPE = "clickType";
 
     public static Intent newInstance(Context context, String keyword)
     {
