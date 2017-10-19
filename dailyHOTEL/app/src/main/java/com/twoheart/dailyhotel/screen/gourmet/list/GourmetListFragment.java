@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetCuration;
@@ -151,7 +152,8 @@ public class GourmetListFragment extends PlaceListFragment
         {
             case LIST:
             {
-                mPlaceListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, sortType, mGourmetCuration.getGourmetBookingDay());
+                mPlaceListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, sortType, mGourmetCuration.getGourmetBookingDay()//
+                    , DailyRemoteConfigPreference.getInstance(mBaseActivity).isKeyRemoteConfigRewardEnabled());
 
                 int size = mPlaceListLayout.getItemCount();
 
@@ -166,7 +168,8 @@ public class GourmetListFragment extends PlaceListFragment
 
             case MAP:
             {
-                mPlaceListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, sortType, mGourmetCuration.getGourmetBookingDay());
+                mPlaceListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, sortType, mGourmetCuration.getGourmetBookingDay()//
+                    , DailyRemoteConfigPreference.getInstance(mBaseActivity).isKeyRemoteConfigRewardEnabled());
 
                 int mapSize = mPlaceListLayout.getMapItemSize();
                 if (mapSize == 0)

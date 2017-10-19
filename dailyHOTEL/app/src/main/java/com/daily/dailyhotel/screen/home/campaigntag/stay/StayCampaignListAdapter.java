@@ -36,6 +36,8 @@ public class StayCampaignListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     OnEventListener mOnEventListener;
 
+    private boolean mRewardEnabled;
+
     private int mNights;
     private List<PlaceViewItem> mPlaceViewItemList;
     private boolean mTrueVREnabled;
@@ -79,6 +81,11 @@ public class StayCampaignListAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
 
         mNights = nights;
+    }
+
+    public void setRewardEnabled(boolean enabled)
+    {
+        mRewardEnabled = enabled;
     }
 
     @Override
@@ -158,7 +165,7 @@ public class StayCampaignListAdapter extends RecyclerView.Adapter<RecyclerView.V
     {
         final Stay stay = placeViewItem.getItem();
 
-        holder.stayCardView.setStickerVisible(stay.dailyReward);
+        holder.stayCardView.setStickerVisible(mRewardEnabled && stay.dailyReward);
         holder.stayCardView.setDeleteVisible(false);
         holder.stayCardView.setWishVisible(false);
 

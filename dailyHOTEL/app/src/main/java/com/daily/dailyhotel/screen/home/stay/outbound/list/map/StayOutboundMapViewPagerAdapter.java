@@ -31,6 +31,7 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
     protected OnPlaceMapViewPagerAdapterListener mOnPlaceMapViewPagerAdapterListener;
 
     private boolean mNightsEnabled; // 연박 여부
+    private boolean mRewardEnabled;
 
     public interface OnPlaceMapViewPagerAdapterListener
     {
@@ -48,6 +49,11 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
     public void setNightsEnabled(boolean enabled)
     {
         mNightsEnabled = enabled;
+    }
+
+    public void setRewardEnabled(boolean enabled)
+    {
+        mRewardEnabled = enabled;
     }
 
     @Override
@@ -117,7 +123,7 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
         }
 
         // Reward 스티커
-        dataBinding.stickerImageView.setVisibility(stayOutbound.dailyReward ? View.VISIBLE : View.GONE);
+        dataBinding.stickerImageView.setVisibility((mRewardEnabled && stayOutbound.dailyReward) ? View.VISIBLE : View.GONE);
 
         ControllerListener controllerListener = new BaseControllerListener<ImageInfo>()
         {

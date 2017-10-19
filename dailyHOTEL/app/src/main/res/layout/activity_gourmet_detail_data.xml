@@ -113,18 +113,23 @@
                         app:layout_constraintTop_toTopOf="parent"/>
                 </android.support.constraint.ConstraintLayout>
 
-                <include
-                    android:id="@+id/titleViewDataBinding"
-                    layout="@layout/layout_gourmet_detail_title_data"/>
-
-                <include
-                    android:id="@+id/couponViewDataBinding"
-                    layout="@layout/layout_gourmet_detail_coupon_data"/>
+                <com.daily.dailyhotel.view.DailyDetailTitleInformationView
+                    android:id="@+id/titleInformationView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
 
                 <View
+                    android:id="@+id/trueReviewTopLineView"
                     android:layout_width="match_parent"
                     android:layout_height="12dp"
-                    android:background="@drawable/layerlist_divider"/>
+                    android:background="@drawable/layerlist_divider"
+                    android:visibility="gone"/>
+
+                <com.daily.dailyhotel.view.DailyDetailTrueReviewView
+                    android:id="@+id/trueReviewView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"/>
 
                 <com.daily.dailyhotel.view.DailyDateInformationView
                     android:id="@+id/dateInformationView"

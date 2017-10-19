@@ -349,9 +349,10 @@ public abstract class CollectionBaseLayout extends BaseBlurLayout
         mRecyclerView.scrollToPosition(0);
     }
 
-    protected void setData(ArrayList<PlaceViewItem> placeViewItems, PlaceBookingDay placeBookingDay)
+    protected void setData(ArrayList<PlaceViewItem> placeViewItems, PlaceBookingDay placeBookingDay, boolean rewardEnabled)
     {
         mPlaceListAdapter.setPlaceBookingDay(placeBookingDay);
+        mPlaceListAdapter.setRewardEnabled(rewardEnabled);
         mPlaceListAdapter.setAll(placeViewItems);
         postAndNotifyAdapter(mRecyclerView, mPlaceListAdapter);
     }

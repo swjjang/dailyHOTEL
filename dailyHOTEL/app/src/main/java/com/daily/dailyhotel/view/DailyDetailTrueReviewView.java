@@ -46,6 +46,16 @@ public class DailyDetailTrueReviewView extends ConstraintLayout
         setPadding(DP_15, ScreenUtils.dpToPx(context, 20), DP_15, 0);
     }
 
+    public void setNameText(String name)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.nameTextView.setText(name);
+    }
+
     public void setSatisfactionVText(String text)
     {
         if (mViewDataBinding == null)
@@ -118,6 +128,6 @@ public class DailyDetailTrueReviewView extends ConstraintLayout
             return;
         }
 
-        mViewDataBinding.tripAdvisorImageView.setVisibility(visible ? VISIBLE : GONE);
+        mViewDataBinding.tripAdvisorLayout.setVisibility(visible ? VISIBLE : GONE);
     }
 }

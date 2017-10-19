@@ -45,6 +45,8 @@ import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailA
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.view.DailyDetailEmptyView;
+import com.daily.dailyhotel.view.DailyDetailTitleInformationView;
+import com.daily.dailyhotel.view.DailyDetailTrueReviewView;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
@@ -56,11 +58,9 @@ import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailAmenitiesDataBindi
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailBenefitContentBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailBenefitDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailConciergeDataBinding;
-import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailCouponDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailMapDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailMenuDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailMoreMenuDataBinding;
-import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailTitleDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail05DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailInformationDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
@@ -239,11 +239,12 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         setStickerView(gourmetDetail.getSticker());
 
         // 타이틀
-        setTitleView(gourmetDetail.category, gourmetDetail.categorySub, gourmetDetail.name, gourmetDetail.ratingShow//
-            , gourmetDetail.ratingValue, gourmetDetail.ratingPersons, trueReviewCount);
+        String category = gourmetDetail.category + (DailyTextUtils.isTextEmpty(gourmetDetail.categorySub) ? "" : " > " + gourmetDetail.categorySub);
 
-        // 쿠폰
-        setCouponView(gourmetDetail.hasCoupon);
+        setTitleView(category, gourmetDetail.name, gourmetDetail.dailyReward, gourmetDetail.couponPrice);
+
+        // 트루 리뷰
+        setTrueReviewView(gourmetDetail.ratingShow, gourmetDetail.ratingValue, gourmetDetail.ratingPersons, trueReviewCount);
 
         // 방문일
         setVisitDateView(gourmetBookDateTime.getVisitDateTime("yyyy.MM.dd(EEE)"));
@@ -1159,97 +1160,76 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
      *
      * @return
      */
-    private void setTitleView(String category, String categorySub, String name, boolean ratingShow//
-        , int ratingValue, int ratingPersons, int trueReviewCount)
+    private void setTitleView(String category, String name, boolean dailyReward, int couponPrice)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        LayoutGourmetDetailTitleDataBinding viewDataBinding = getViewDataBinding().titleViewDataBinding;
+        DailyDetailTitleInformationView titleInformationView = getViewDataBinding().titleInformationView;
+
+        // 고메명
+        titleInformationView.setNameText(name);
+        titleInformationView.setEnglishNameVisible(false);
 
         // 카테고리
-        if (DailyTextUtils.isTextEmpty(category) == true)
+        titleInformationView.setCategoryText(category);
+
+        // 리워드 여부
+        titleInformationView.setRewardVisible(dailyReward);
+
+        // 쿠폰
+        if (couponPrice > 0)
         {
-            viewDataBinding.categoryTextView.setVisibility(View.GONE);
+            titleInformationView.setCouponVisible(true);
+            titleInformationView.setCouponPriceText(getString(R.string.label_download_coupon_price, DailyTextUtils.getPriceFormat(getContext(), couponPrice, false)));
         } else
         {
-            viewDataBinding.categoryTextView.setVisibility(View.VISIBLE);
-            viewDataBinding.categoryTextView.setText(category);
-        }
-
-        // 서브 카테고리
-        if (DailyTextUtils.isTextEmpty(categorySub) == true)
-        {
-            viewDataBinding.categorySubTextView.setVisibility(View.GONE);
-        } else
-        {
-            viewDataBinding.categorySubTextView.setVisibility(View.VISIBLE);
-            viewDataBinding.categorySubTextView.setText(categorySub);
-        }
-
-        // 레스토랑명
-        viewDataBinding.nameTextView.setText(name);
-
-        // 만족도
-        if (ratingShow == false)
-        {
-            viewDataBinding.satisfactionTextView.setVisibility(View.GONE);
-        } else
-        {
-            viewDataBinding.satisfactionTextView.setVisibility(View.VISIBLE);
-
-            DecimalFormat decimalFormat = new DecimalFormat("###,##0");
-            viewDataBinding.satisfactionTextView.setText(getString(R.string.label_gourmet_detail_satisfaction, //
-                ratingValue, decimalFormat.format(ratingPersons)));
-        }
-
-        // 리뷰
-        if (trueReviewCount > 0)
-        {
-            viewDataBinding.trueReviewTextView.setVisibility(View.VISIBLE);
-            viewDataBinding.trueReviewTextView.setText(getString(R.string.label_detail_view_review_go, trueReviewCount));
-            viewDataBinding.trueReviewTextView.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    getEventListener().onTrueReviewClick();
-                }
-            });
-        } else
-        {
-            viewDataBinding.trueReviewTextView.setVisibility(View.GONE);
+            titleInformationView.setCouponVisible(false);
         }
     }
 
-    /**
-     * @param hasCoupon
-     */
-    private void setCouponView(boolean hasCoupon)
+    private void setTrueReviewView(boolean ratingShow, int ratingValue, int ratingPersons, int trueReviewCount)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        LayoutGourmetDetailCouponDataBinding viewDataBinding = getViewDataBinding().couponViewDataBinding;
+        DailyDetailTrueReviewView trueReviewView = getViewDataBinding().trueReviewView;
 
-        if (hasCoupon == true)
+        if(ratingShow == false && trueReviewCount == 0)
         {
-            viewDataBinding.couponLayout.setVisibility(View.VISIBLE);
-            viewDataBinding.downloadCouponLayout.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    getEventListener().onDownloadCouponClick();
-                }
-            });
+            getViewDataBinding().trueReviewTopLineView.setVisibility(View.GONE);
+            trueReviewView.setVisibility(View.GONE);
         } else
         {
-            viewDataBinding.couponLayout.setVisibility(View.GONE);
+            getViewDataBinding().trueReviewTopLineView.setVisibility(View.VISIBLE);
+            trueReviewView.setVisibility(View.VISIBLE);
+
+            trueReviewView.setTripAdvisorVisible(false);
+
+            // 만족도
+            trueReviewView.setSatisfactionVisible(ratingShow);
+
+            if (ratingShow == true)
+            {
+                DecimalFormat decimalFormat = new DecimalFormat("###,##0");
+                trueReviewView.setSatisfactionVText(getString(R.string.label_stay_detail_satisfaction, //
+                    ratingValue, decimalFormat.format(ratingPersons)));
+            }
+
+            // 리뷰
+            if (trueReviewCount > 0)
+            {
+                trueReviewView.setTrueReviewCountVisible(true);
+                trueReviewView.setTrueReviewCount(trueReviewCount);
+                trueReviewView.setOnTrueReviewCountClickListener(v -> getEventListener().onTrueReviewClick());
+            } else
+            {
+                trueReviewView.setTrueReviewCountVisible(false);
+            }
         }
     }
 

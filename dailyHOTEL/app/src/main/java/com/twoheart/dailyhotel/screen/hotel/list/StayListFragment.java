@@ -154,7 +154,8 @@ public class StayListFragment extends PlaceListFragment
         {
             case LIST:
             {
-                mPlaceListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, sortType, mStayCuration.getStayBookingDay());
+                mPlaceListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, sortType, mStayCuration.getStayBookingDay()//
+                    , DailyRemoteConfigPreference.getInstance(mBaseActivity).isKeyRemoteConfigRewardEnabled());
 
                 int size = mPlaceListLayout.getItemCount();
                 if (size == 0)
@@ -172,7 +173,8 @@ public class StayListFragment extends PlaceListFragment
 
             case MAP:
             {
-                mPlaceListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, sortType, mStayCuration.getStayBookingDay());
+                mPlaceListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, sortType, mStayCuration.getStayBookingDay()//
+                    , DailyRemoteConfigPreference.getInstance(mBaseActivity).isKeyRemoteConfigRewardEnabled());
 
                 int mapSize = mPlaceListLayout.getMapItemSize();
                 if (mapSize == 0)

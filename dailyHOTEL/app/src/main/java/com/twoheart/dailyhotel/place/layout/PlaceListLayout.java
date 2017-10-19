@@ -304,8 +304,8 @@ public abstract class PlaceListLayout extends BaseLayout
         return mSwipeRefreshLayout.isRefreshing();
     }
 
-    public void addResultList(FragmentManager fragmentManager, Constants.ViewType viewType, //
-                              ArrayList<PlaceViewItem> list, Constants.SortType sortType, PlaceBookingDay placeBookingDay)
+    public void addResultList(FragmentManager fragmentManager, Constants.ViewType viewType//
+        ,ArrayList<PlaceViewItem> list, Constants.SortType sortType, PlaceBookingDay placeBookingDay, boolean rewardEnabled)
     {
         mIsLoading = false;
 
@@ -381,6 +381,7 @@ public abstract class PlaceListLayout extends BaseLayout
                 }
 
                 mPlaceListAdapter.setPlaceBookingDay(placeBookingDay);
+                mPlaceListAdapter.setRewardEnabled(rewardEnabled);
                 mPlaceListAdapter.setSortType(sortType);
                 mPlaceListAdapter.addAll(list);
 
@@ -458,7 +459,8 @@ public abstract class PlaceListLayout extends BaseLayout
         return hasPlace;
     }
 
-    public void setList(FragmentManager fragmentManager, Constants.ViewType viewType, List<PlaceViewItem> list, Constants.SortType sortType, PlaceBookingDay placeBookingDay)
+    public void setList(FragmentManager fragmentManager, Constants.ViewType viewType, List<PlaceViewItem> list//
+        , Constants.SortType sortType, PlaceBookingDay placeBookingDay, boolean rewardEnabled)
     {
         mIsLoading = false;
 
@@ -491,7 +493,7 @@ public abstract class PlaceListLayout extends BaseLayout
                     }
                 });
 
-                mPlaceListMapFragment.setPlaceViewItemList(placeBookingDay, list, true);
+                mPlaceListMapFragment.setPlaceViewItemList(placeBookingDay, list, true, rewardEnabled);
 
                 ((OnEventListener) mOnEventListener).onRecordAnalytics(viewType);
             }

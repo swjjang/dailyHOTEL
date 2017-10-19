@@ -135,7 +135,7 @@ public class StayListAdapter extends PlaceListAdapter
     {
         final Stay stay = placeViewItem.getItem();
 
-        holder.stayCardView.setStickerVisible(stay.dailyReward);
+        holder.stayCardView.setStickerVisible(mRewardEnabled && stay.dailyReward);
         holder.stayCardView.setDeleteVisible(false);
         holder.stayCardView.setWishVisible(false);
 

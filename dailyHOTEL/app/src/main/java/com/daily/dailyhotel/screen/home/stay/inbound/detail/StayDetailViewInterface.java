@@ -16,7 +16,7 @@ public interface StayDetailViewInterface extends BaseDialogViewInterface
 
     Observable<Boolean> hideRoomList(boolean animation);
 
-    void setStayDetail(StayBookDateTime stayBookDateTime, StayDetail stayDetail, int trueReviewCount, boolean showStamp);
+    void setStayDetail(StayBookDateTime stayBookDateTime, StayDetail stayDetail, int trueReviewCount, boolean stampEnabled, boolean rewardEnabled);
 
     void setRewardNonMember(boolean visible, String titleText, String optionText, int campaignFreeNights, String descriptionText);
 

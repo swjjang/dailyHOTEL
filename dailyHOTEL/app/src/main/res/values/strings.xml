@@ -86,6 +86,7 @@
     <string name="label_available_persons">이용인원</string>
     <string name="label_reservation_conditions">예약조건</string>
     <string name="label_truereview">트루리뷰</string>
+    <string name="label_tripadvisorrating">트립어드바이저 평점</string>
     <string name="label_password">비밀번호</string>
     <string name="label_daily_truereview">데일리 트루리뷰</string>
     <string name="label_dailyhotel_guide">데일리호텔 소개</string>

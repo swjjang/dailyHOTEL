@@ -18,6 +18,7 @@ public class StayOutboundDetail
     public int tripAdvisorReviewCount;
     public double latitude;
     public double longitude;
+    public int couponPrice;
 
     LinkedHashMap<String, List<String>> mInformationMap;
     List<DetailImageInformation> mImageList;

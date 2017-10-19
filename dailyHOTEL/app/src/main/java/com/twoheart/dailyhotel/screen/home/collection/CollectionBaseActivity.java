@@ -12,6 +12,7 @@ import android.view.View;
 
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.R;
@@ -295,11 +296,11 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
         if (endTime < currentTime)
         {
-            mCollectionBaseLayout.setData(null, mPlaceBookingDay);
+            mCollectionBaseLayout.setData(null, mPlaceBookingDay, DailyRemoteConfigPreference.getInstance(this).isKeyRemoteConfigRewardEnabled());
 
             ArrayList<PlaceViewItem> placeViewItems = makePlaceList(imageBaseUrl, null, stickerList);
 
-            mCollectionBaseLayout.setData(placeViewItems, mPlaceBookingDay);
+            mCollectionBaseLayout.setData(placeViewItems, mPlaceBookingDay, DailyRemoteConfigPreference.getInstance(this).isKeyRemoteConfigRewardEnabled());
 
             showSimpleDialog(null, getString(R.string.message_collection_finished_recommendation), getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
             {
@@ -313,7 +314,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
         {
             ArrayList<PlaceViewItem> placeViewItems = makePlaceList(imageBaseUrl, list, stickerList);
 
-            mCollectionBaseLayout.setData(placeViewItems, mPlaceBookingDay);
+            mCollectionBaseLayout.setData(placeViewItems, mPlaceBookingDay, DailyRemoteConfigPreference.getInstance(this).isKeyRemoteConfigRewardEnabled());
 
             if ((list == null || list.size() == 0) && checkRequestCollection == false)
             {

@@ -32,6 +32,7 @@ public abstract class RecentPlacesListAdapter extends RecyclerView.Adapter<Recyc
     protected PaintDrawable mPaintDrawable;
     protected boolean mShowDistanceIgnoreSort;
     protected boolean mTrueVREnabled;
+    protected boolean mRewardEnabled;
 
     public interface OnRecentPlacesItemListener
     {
@@ -61,6 +62,11 @@ public abstract class RecentPlacesListAdapter extends RecyclerView.Adapter<Recyc
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         makeShaderFactory();
+    }
+
+    public void setRewardEnabled(boolean enabled)
+    {
+        mRewardEnabled = enabled;
     }
 
     public ArrayList<PlaceViewItem> getList()

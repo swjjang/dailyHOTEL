@@ -135,7 +135,7 @@ public class StayMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         Util.requestImageResize(mContext, hotelImageView, stay.imageUrl);
 
         // Reward 스티커
-        stickerImageView.setVisibility(stay.dailyReward ? View.VISIBLE : View.GONE);
+        stickerImageView.setVisibility((mRewardEnabled && stay.dailyReward) ? View.VISIBLE : View.GONE);
 
         closeView.setOnClickListener(new View.OnClickListener()
         {
