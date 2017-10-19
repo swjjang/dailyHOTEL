@@ -32,6 +32,7 @@ import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayPaymentAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.TrueReviewAnalyticsParam;
+import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.remote.CalendarImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
@@ -42,8 +43,8 @@ import com.daily.dailyhotel.screen.common.images.ImageListActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.truereview.StayTrueReviewActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.payment.StayPaymentActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
-import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
@@ -107,6 +108,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     private CommonRemoteImpl mCommonRemoteImpl;
     private ProfileRemoteImpl mProfileRemoteImpl;
     private CalendarImpl mCalendarImpl;
+    private RecentlyLocalImpl mRecentlyLocalImpl;
 
     int mStayIndex, mPriceFromList;
     private String mStayName;
@@ -209,6 +211,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
         mProfileRemoteImpl = new ProfileRemoteImpl(activity);
         mCalendarImpl = new CalendarImpl(activity);
+        mRecentlyLocalImpl = new RecentlyLocalImpl(activity);
 
         setStatus(STATUS_NONE);
 
@@ -362,7 +365,9 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             getViewInterface().setInitializedImage(mImageUrl);
         }
 
-        RecentlyPlaceUtil.addRecentlyItem(getActivity(), Constants.ServiceType.HOTEL, mStayIndex, mStayName, null, mImageUrl, true);
+        addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem( //
+            Constants.ServiceType.HOTEL, mStayIndex, mStayName, null, mImageUrl, true) //
+            .observeOn(Schedulers.io()).subscribe());
 
         if (mIsUsedMultiTransition == true)
         {
@@ -1343,11 +1348,14 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             ExLog.e(e.toString());
         }
 
-        RecentlyPlaceUtil.addRecentlyItem(getActivity(), Constants.ServiceType.HOTEL //
-            , mStayDetail.index, mStayDetail.name, null, mImageUrl, false);
+        addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem( //
+            Constants.ServiceType.HOTEL, mStayDetail.index, mStayDetail.name, null, mImageUrl, false) //
+            .observeOn(Schedulers.io()).subscribe());
+
+        boolean showStamp = mStayDetail.overseas == false && DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStampEnabled() == true;
 
         getViewInterface().setStayDetail(mStayBookDateTime, mStayDetail//
-            , mReviewScores != null ? mReviewScores.reviewScoreTotalCount : 0);
+            , mReviewScores != null ? mReviewScores.reviewScoreTotalCount : 0, showStamp);
 
         // 리스트 가격 변동은 진입시 한번 만 한다.
         checkChangedPrice(mIsDeepLink, mStayDetail, mPriceFromList, mCheckChangedPrice == false);

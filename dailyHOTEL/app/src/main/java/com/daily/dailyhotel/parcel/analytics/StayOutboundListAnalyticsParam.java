@@ -6,6 +6,7 @@ import android.os.Parcelable;
 public class StayOutboundListAnalyticsParam implements Parcelable
 {
     public String keyword;
+    public String analyticsClickType;
 
     public StayOutboundListAnalyticsParam()
     {
@@ -20,11 +21,13 @@ public class StayOutboundListAnalyticsParam implements Parcelable
     public void writeToParcel(Parcel dest, int flags)
     {
         dest.writeString(keyword);
+        dest.writeString(analyticsClickType);
     }
 
     void readFromParcel(Parcel in)
     {
         keyword = in.readString();
+        analyticsClickType = in.readString();
     }
 
     @Override

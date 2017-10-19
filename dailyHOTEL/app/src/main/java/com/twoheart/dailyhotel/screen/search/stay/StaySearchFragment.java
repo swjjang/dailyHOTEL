@@ -15,9 +15,9 @@ import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchActivity;
+import com.daily.dailyhotel.storage.database.DailyDb;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
-import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
@@ -37,6 +37,7 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,8 +52,9 @@ import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Function3;
 import io.reactivex.schedulers.Schedulers;
 
 public class StaySearchFragment extends PlaceSearchFragment
@@ -357,14 +359,30 @@ public class StaySearchFragment extends PlaceSearchFragment
     {
         setDateChanged(todayDateTime, mStayBookingDay);
 
-        addCompositeDisposable(Observable.zip(mRecentlyRemoteImpl.getInboundRecentlyList(RecentlyPlaceUtil.MAX_RECENT_PLACE_COUNT, false, ServiceType.HOTEL) //
-            , mCampaignTagRemoteImpl.getCampaignTagList(getServiceType().name()) //
-            , new BiFunction<ArrayList<RecentlyPlace>, ArrayList<CampaignTag>, List<Keyword>>()
+        Observable<ArrayList<RecentlyPlace>> ibObservable = mRecentlyLocalImpl.getRecentlyJSONObject(DailyDb.MAX_RECENT_PLACE_COUNT, ServiceType.HOTEL) //
+            .observeOn(Schedulers.io()).flatMap(new Function<JSONObject, ObservableSource<ArrayList<RecentlyPlace>>>()
             {
                 @Override
-                public List<Keyword> apply(@NonNull ArrayList<RecentlyPlace> stayList, @NonNull ArrayList<CampaignTag> tagList) throws Exception
+                public ObservableSource<ArrayList<RecentlyPlace>> apply(@NonNull JSONObject jsonObject) throws Exception
                 {
-                    ArrayList<Integer> expectedList = RecentlyPlaceUtil.getDbRecentlyIndexList(mBaseActivity, ServiceType.HOTEL);
+                    if (jsonObject == null || jsonObject.has("keys") == false)
+                    {
+                        return Observable.just(new ArrayList<>());
+                    }
+
+                    return mRecentlyRemoteImpl.getInboundRecentlyList(jsonObject);
+                }
+            });
+
+        addCompositeDisposable(Observable.zip(ibObservable //
+            , mCampaignTagRemoteImpl.getCampaignTagList(getServiceType().name()) //
+            , mRecentlyLocalImpl.getRecentlyIndexList(ServiceType.HOTEL)  //
+            , new Function3<ArrayList<RecentlyPlace>, ArrayList<CampaignTag>, ArrayList<Integer>, List<Keyword>>()
+            {
+                @Override
+                public List<Keyword> apply(@NonNull ArrayList<RecentlyPlace> stayList //
+                    , @NonNull ArrayList<CampaignTag> tagList, @NonNull ArrayList<Integer> expectedList) throws Exception
+                {
                     if (expectedList != null && expectedList.size() > 0)
                     {
                         Collections.sort(stayList, new Comparator<RecentlyPlace>()
@@ -539,7 +557,7 @@ public class StaySearchFragment extends PlaceSearchFragment
         return mPlaceSearchLayout.getSearchKeyword();
     }
 
-    public void startStayOutboundSearchActivity(String keyword)
+    public void startStayOutboundSearchSuggestActivity(String keyword)
     {
         if (DailyTextUtils.isTextEmpty(keyword) == false)
         {
@@ -589,7 +607,7 @@ public class StaySearchFragment extends PlaceSearchFragment
             public void onClick(View v)
             {
                 // positive
-                startStayOutboundSearchActivity(getSearchKeyword());
+                startStayOutboundSearchSuggestActivity(getSearchKeyword());
 
                 try
                 {
@@ -650,7 +668,7 @@ public class StaySearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            startStayOutboundSearchActivity(null);
+            startStayOutboundSearchSuggestActivity(null);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                 AnalyticsManager.Category.SEARCH, AnalyticsManager.Action.SEARCH_SCREEN,//

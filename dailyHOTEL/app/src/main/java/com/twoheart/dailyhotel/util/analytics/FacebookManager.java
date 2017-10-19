@@ -405,7 +405,7 @@ public class FacebookManager extends BaseAnalyticsManager
     }
 
     @Override
-    void purchaseCompleteHotel(String transId, Map<String, String> params)
+    void purchaseCompleteHotel(String aggregationId, Map<String, String> params)
     {
         AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
 
@@ -429,13 +429,13 @@ public class FacebookManager extends BaseAnalyticsManager
     }
 
     @Override
-    void purchaseCompleteStayOutbound(String transId, Map<String, String> params)
+    void purchaseCompleteStayOutbound(String aggregationId, Map<String, String> params)
     {
 
     }
 
     @Override
-    void purchaseCompleteGourmet(String transId, Map<String, String> params)
+    void purchaseCompleteGourmet(String aggregationId, Map<String, String> params)
     {
         AppEventsLogger appEventsLogger = AppEventsLogger.newLogger(mContext);
 

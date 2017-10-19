@@ -105,7 +105,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             , GourmetPayment gourmetPayment, boolean registerEasyCard, boolean usedBonus, boolean usedCoupon//
             , Coupon coupon, DailyBookingPaymentTypeView.PaymentType paymentType, UserSimpleInformation userSimpleInformation);
 
-        void onScreenPaymentCompleted(Activity activity, String transId);
+        void onScreenPaymentCompleted(Activity activity, String aggregationId);
 
         void onEventChangedPrice(Activity activity, String gourmetName);
 
@@ -1265,8 +1265,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
         try
         {
-            mAnalytics.onScreenPaymentCompleted(getActivity()//
-                , DailyCalendar.format(new Date(), "yyyyMMddHHmmss") + '_' + mUserSimpleInformation.index);
+            mAnalytics.onScreenPaymentCompleted(getActivity(), aggregationId);
         } catch (Exception e)
         {
             ExLog.e(e.toString());

@@ -62,6 +62,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
     private Suggest mSuggest;
     private String mKeyword;
+    private String mAnalyticsClickType;
     private People mPeople;
     private boolean mIsSuggestChanged;
     private boolean mIsShowCalendar;
@@ -264,11 +265,12 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                     if (data.hasExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST) == true)
                     {
                         SuggestParcel suggestParcel = data.getParcelableExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
-                        mKeyword = data.getStringExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
+                        String keyword = data.getStringExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
+                        String clickType = data.getStringExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_CLICK_TYPE);
 
                         if (suggestParcel != null)
                         {
-                            setSuggest(suggestParcel.getSuggest());
+                            setSuggestAndKeyword(suggestParcel.getSuggest(), keyword, clickType);
                             notifySuggestsChanged();
 
                             if (mIsShowCalendar == true)
@@ -317,7 +319,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                     if (data.hasExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_RESEARCH) == true//
                         && data.getBooleanExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_RESEARCH, false) == true)
                     {
-                        setSuggest(null);
+                        setSuggestAndKeyword(null, null, null);
                         notifySuggestsChanged();
                     }
                 }
@@ -431,6 +433,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         //        {
         StayOutboundListAnalyticsParam analyticsParam = new StayOutboundListAnalyticsParam();
         analyticsParam.keyword = mKeyword;
+        analyticsParam.analyticsClickType = mAnalyticsClickType;
 
         // Suggest검색인 경우
         intent = StayOutboundListActivity.newInstance(getActivity(), mSuggest//
@@ -564,7 +567,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         }
     }
 
-    private void setSuggest(Suggest suggest)
+    private void setSuggestAndKeyword(Suggest suggest, String keyword, String analyticsClickType)
     {
         if (lock() == true)
         {
@@ -572,8 +575,10 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         }
 
         mSuggest = suggest;
+        mKeyword = keyword;
+        mAnalyticsClickType = analyticsClickType;
 
-        addCompositeDisposable(mSuggestLocalImpl.addSuggestDb(suggest).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer()
+        addCompositeDisposable(mSuggestLocalImpl.addSuggestDb(suggest, keyword).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer()
         {
             @Override
             public void accept(Object o) throws Exception
@@ -588,11 +593,6 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                 unLockAll();
             }
         }));
-    }
-
-    private void setKeyword(String keyword)
-    {
-        mKeyword = keyword;
     }
 
     private void setPeople(int numberOfAdults, ArrayList<Integer> childAgeList)
@@ -686,7 +686,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                     suggest.categoryKey = externalDeepLink.getCategoryKey();
                     suggest.display = externalDeepLink.getTitle();
 
-                    setSuggest(suggest);
+                    setSuggestAndKeyword(suggest, null, AnalyticsManager.Category.OB_SEARCH_ORIGIN_ETC);
 
                     String date = externalDeepLink.getDate();
                     int datePlus = externalDeepLink.getDatePlus();

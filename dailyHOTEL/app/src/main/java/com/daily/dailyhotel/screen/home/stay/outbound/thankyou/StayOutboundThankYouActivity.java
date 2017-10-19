@@ -23,11 +23,11 @@ public class StayOutboundThankYouActivity extends BaseActivity<StayOutboundThank
     static final String INTENT_EXTRA_DATA_CHECK_IN_TIME = "checkInTime";
     static final String INTENT_EXTRA_DATA_CHECK_OUT_TIME = "checkOutTime";
     static final String INTENT_EXTRA_DATA_ROOM_TYPE = "roomType";
-    static final String INTENT_EXTRA_DATA_RESERVATION_ID = "reservationId";
+    static final String INTENT_EXTRA_DATA_AGGREGATION_ID = "aggregationId";
 
     public static Intent newInstance(Context context, String stayName, String imageUrl//
         , String checkInDateTime, String checkOutDateTime, String checkInTime, String checkOutTime//
-        , String roomType, int reservationId, StayOutboundThankYouAnalyticsParam analyticsParam)
+        , String roomType, String aggregationId, StayOutboundThankYouAnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, StayOutboundThankYouActivity.class);
 
@@ -38,7 +38,7 @@ public class StayOutboundThankYouActivity extends BaseActivity<StayOutboundThank
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_TIME, checkInTime);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_TIME, checkOutTime);
         intent.putExtra(INTENT_EXTRA_DATA_ROOM_TYPE, roomType);
-        intent.putExtra(INTENT_EXTRA_DATA_RESERVATION_ID, reservationId);
+        intent.putExtra(INTENT_EXTRA_DATA_AGGREGATION_ID, aggregationId);
         intent.putExtra(INTENT_EXTRA_DATA_ANALYTICS, analyticsParam);
 
         return intent;

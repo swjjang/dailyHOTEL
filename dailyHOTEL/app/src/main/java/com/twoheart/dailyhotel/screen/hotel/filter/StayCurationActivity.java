@@ -262,8 +262,6 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
                 mAmenitiesGridLayout.addView(amenitiesView);
             }
         }
-
-        mAmenitiesGridLayout.setPadding(ScreenUtils.dpToPx(this, 10), 0, ScreenUtils.dpToPx(this, 10), 0);
     }
 
     protected void initInRoomAmenitiesLayout(View view, StayCurationOption stayCurationOption)

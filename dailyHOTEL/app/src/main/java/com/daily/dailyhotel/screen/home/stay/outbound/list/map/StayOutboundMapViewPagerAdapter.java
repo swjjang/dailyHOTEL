@@ -67,7 +67,7 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
         dataBinding.nameTextView.setText(stayOutbound.name);
 
         // 가격
-        if (stayOutbound.promo == true)
+        if (stayOutbound.nightlyRate < stayOutbound.nightlyBaseRate)
         {
             dataBinding.priceTextView.setVisibility(View.VISIBLE);
             dataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(mContext, stayOutbound.nightlyBaseRate, false));
@@ -90,16 +90,6 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
 
         // grade
         dataBinding.gradeTextView.setText(mContext.getString(R.string.label_stay_outbound_filter_x_star_rate, (int) stayOutbound.rating));
-
-        dataBinding.ratingBar.setOnTouchListener(new View.OnTouchListener()
-        {
-            @Override
-            public boolean onTouch(View v, MotionEvent event)
-            {
-                return true;
-            }
-        });
-        dataBinding.ratingBar.setRating(stayOutbound.rating);
 
         // Image
         dataBinding.simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);

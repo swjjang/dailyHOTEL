@@ -61,10 +61,19 @@ public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.
             return;
         }
 
-        String label = DailyTextUtils.isTextEmpty(mAnalyticsParam.keyword) ? AnalyticsManager.ValueType.EMPTY : mAnalyticsParam.keyword;
+        String category = mAnalyticsParam.analyticsClickType;
+        String keyword = DailyTextUtils.isTextEmpty(mAnalyticsParam.keyword) ? AnalyticsManager.ValueType.EMPTY : mAnalyticsParam.keyword;
 
-        AnalyticsManager.getInstance(activity).recordEvent(size == 0 ? AnalyticsManager.Category.AUTOSEARCHNOTFOUND_OUTBOUND : AnalyticsManager.Category.AUTOSEARCH_OUTBOUND//
-            , suggest, label, null);
+        AnalyticsManager.getInstance(activity).recordEvent(size == 0 ? AnalyticsManager.Category.OB_SEARCH_NO_RESULT : AnalyticsManager.Category.OB_SEARCH_RESULT//
+            , suggest, keyword, null);
+
+        if (AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECENT.equalsIgnoreCase(category) == false //
+            && AnalyticsManager.Category.OB_SEARCH_ORIGIN_AUTO.equalsIgnoreCase(category) == false)
+        {
+            category = AnalyticsManager.Category.OB_SEARCH_ORIGIN_ETC;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(category, suggest, keyword, null);
     }
 
     @Override

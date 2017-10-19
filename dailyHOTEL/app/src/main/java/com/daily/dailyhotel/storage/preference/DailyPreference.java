@@ -79,9 +79,10 @@ public class DailyPreference
 
     private static final String KEY_SELECTED_SIMPLE_CARD = "204"; // 마지막으로 간편결제된 카드
 
-    private static final String KEY_STAY_RECENT_PLACES = "210";
-    private static final String KEY_GOURMET_RECENT_PLACES = "211";
-    private static final String KEY_ALL_RECENT_PLACES = "212";
+    // Recently 의 경우 DailyDb 사용으로 변경 됨 또한 해외 호텔 적용으로 기존 Preference 삭제
+//    private static final String KEY_STAY_RECENT_PLACES = "210";
+//    private static final String KEY_GOURMET_RECENT_PLACES = "211";
+//    private static final String KEY_ALL_RECENT_PLACES = "212";
 
     private static final String KEY_TRUE_VR_SUPPORT = "213";
     private static final String KEY_TRUE_VR_CHECK_DATA_GUIDE = "214";
@@ -105,7 +106,7 @@ public class DailyPreference
     private static final String KEY_BASE_URL = "1005"; // 앱의 기본 URL
     private static final String KEY_BASE_OUTBOUND_URL = "1006"; // 앱의 기본 OUTBOUND URL
 
-    private static final String KEY_SETTING_MIGRATION_FLAG = "1003"; // 2.0.0 이후 사용안함
+//    private static final String KEY_SETTING_MIGRATION_FLAG = "1003"; // 2.0.0 이후 사용안함
     private static final String KEY_STAY_CATEGORY_CODE = "1010";
     private static final String KEY_STAY_CATEGORY_NAME = "1011";
 
@@ -214,7 +215,6 @@ public class DailyPreference
         boolean isShowTrueVRTooltip = isWishTooltip();
         int supportTrueVR = getTrueVRSupport();
 
-        String allRecentPlaces = getAllRecentPlaces();
         String baseUrl = getBaseUrl();
         String baseOutBoundUrl = getBaseOutBoundUrl();
         boolean isHomeTextMessageAreaEnable = isHomeTextMessageAreaEnabled();
@@ -240,7 +240,6 @@ public class DailyPreference
         setShowBenefitAlarm(isShowBenefitAlarm);
         setWishTooltip(isShowTrueVRTooltip);
         setTrueVRSupport(supportTrueVR);
-        setAllRecentPlaces(allRecentPlaces);
         setBaseUrl(baseUrl);
         setBaseOutBoundUrl(baseOutBoundUrl);
         setHomeTextMessageAreaEnabled(isHomeTextMessageAreaEnable);
@@ -579,18 +578,6 @@ public class DailyPreference
         setValue(mEditor, KEY_VERIFICATION, value);
     }
 
-    @Deprecated
-    public boolean isMigrationFlag()
-    {
-        return getValue(mPreferences, KEY_SETTING_MIGRATION_FLAG, false);
-    }
-
-    @Deprecated
-    public void setMigrationFlag(boolean value)
-    {
-        setValue(mEditor, KEY_SETTING_MIGRATION_FLAG, value);
-    }
-
     public void setHotelRecentSearches(String text)
     {
         setValue(mEditor, KEY_HOTEL_SEARCH_RECENTLY, text);
@@ -609,16 +596,6 @@ public class DailyPreference
     public String getGourmetRecentSearches()
     {
         return getValue(mPreferences, KEY_GOURMET_SEARCH_RECENTLY, null);
-    }
-
-    public void setAllRecentPlaces(String recentPlaces)
-    {
-        setValue(mEditor, KEY_ALL_RECENT_PLACES, recentPlaces);
-    }
-
-    public String getAllRecentPlaces()
-    {
-        return getValue(mPreferences, KEY_ALL_RECENT_PLACES, null);
     }
 
     public void setTermsOfLocation(boolean value)

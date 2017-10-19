@@ -1306,22 +1306,22 @@ public class DailyMobileAPI
     {
         final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
-        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/geographicalid-find-hotels"//
-            : "MzYkMTYkMTAzJDkxJDE4JDUxJDMyJDEkMTE3JDc0JDExMSQxMjkkMzQkMTIyJDEwJDExNCQ=$QLjEzMUYzQHUYzNjlDJNFjIxNkI3NUU0ODCXY2MTY5VRjA4MUY2RkJELODlGQTcwRkI3NkIzODZGJMDBFM0I1Qzg4MDY2QzVFMWUEwQkNGNUQ1NXUVPI3NEExQWzWY3QzQ1QzOE1NUVEREFC$";
+        final String API = Constants.UNENCRYPTED_URL ? "api/v2/outbound/geographicalid-find-hotels"//
+            : "MzAkNzgkNjAkMTgkMTE2JDEyNSQzNyQxMDckMTE5JDEzNCQ2MyQxMDkkNzMkMTE4JDQ1JDQwJA==$NDEzMDFFRTE4MEYzNkQE5QUQ2OEY4Q0GFBMzZNDMEDA3OTWE5MjVGOUMxMUJDRDQIO0MzFCRDAzUOEZFNjQwNA0FENzhGMTYzOUEyNEU4NTBFQkFGZCOTk1MRjMzGIOUNDQzEyPOUIxMJjNC$";
 
         return mDailyMobileService.getStayOutboundList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API)//
             , jsonObject).subscribeOn(Schedulers.io());
     }
 
-    public Observable<BaseDto<StayOutboundDetailData>> getStayOutboundDetail(int index, JSONObject jsonObject)
+    public Observable<BaseDto<StayOutboundDetailData>> getStayOutboundDetail(int stayIndex, JSONObject jsonObject)
     {
         final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
-        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotels/{hotelId}"//
-            : "MjIkOTkkMTA0JDEyOCQyMyQ0NiQyNSQ0MCQyNCQxMTYkMTMkMjckNjQkNDkkMCQ5MyQ=$FMUFFOEQzM0Y4NL0E5NkQ2ODVLPUPDzQkY0MzVBNTA5REUQzQTAI1FRjhDRDQ5MDJGJQzRDRThCQzBBREVEMjdCOEQ4NDIMwQjA4NEY5NkU4NTEQ1Q0OVDRjlDVQTUyRjQ4MjhCNEY5QQjNF$";
+        final String API = Constants.UNENCRYPTED_URL ? "api/v2/outbound/hotels/{stayIndex}"//
+            : "NTEkMjMkMTEyJDEwMyQ3MSQxMDIkMTA1JDQwJDExMyQ1NCQ5MiQyJDI3JDEwJDEyMSQ0JA==$NkJFKFNjg0MGjBFNDRBRkYxMjFPGORTVBREYyNEM1N0ZZBQjVERUMxRTNGIBNTEyOTM0NjhDODZGRWEFEMTY0N0JFQTkwQ0UU3MjVDQzE5QzBZBMGYDJBODWkxNMkJNBOTNBRTNBMTZFMTAw$";
 
         Map<String, String> urlParams = new HashMap<>();
-        urlParams.put("{hotelId}", Integer.toString(index));
+        urlParams.put("{stayIndex}", Integer.toString(stayIndex));
 
         return mDailyMobileService.getStayOutboundDetail(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
             , jsonObject).subscribeOn(Schedulers.io());
@@ -1513,11 +1513,11 @@ public class DailyMobileAPI
     {
         final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
-        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotels/{hotelId}/room-reservation-saleinfos"//
-            : "MTcxJDEzNSQxMzYkNTYkMzIkMjQkMTI3JDE3OCQ3MyQ2NyQ2MyQ0MCQxMzckNzgkMTgxJDEzOSQ=$RTM0Q0Q1ODFGQjVCOTc5QzlCGMUNGQzJBDRkI2QjSI5OTQyMjQyQ0ZBMjAwBNkMwYMkJCAMEIxMjCZQFQkQyQjVCRTJEQjBFNzIxMzBEMjZFMDk1N0QxOEY4QUUyNzg3NDgzJOTEyNGIDQ1ODRERBMkU4MzIwMTcyMTJDMTg3QjAyN0M2N0I1RZUUVA=$";
+        final String API = Constants.UNENCRYPTED_URL ? "api/v2/outbound/hotels/{stayIndex}/room-reservation-saleinfos"//
+            : "MTcwJDI1JDk0JDEzNSQxNzMkMTYzJDcyJDEzOCQxNDgkNjYkMTA5JDEzNCQ3MiQxNjYkNjAkMTU2JA==$RjNCNjM2RjZFQjFBNUVEMkI1MFkVCRjA1NjZFNDBFOTI3MEM4RDUzN0NFQkZNDQTQ0RPkNDNTQRDBNUU3RDFCNzU1MUIyOUIxQYkQzQkY3ODRFMEjY4QkZGNTZBMDUxQkQzODg2NLUE5RTECRBN0YyM0EU2OHUVBMkE5QUJCVQjc4RREM2MTM1RUWPI=$";
 
         Map<String, String> urlParams = new HashMap<>();
-        urlParams.put("{hotelId}", Integer.toString(index));
+        urlParams.put("{stayIndex}", Integer.toString(index));
 
         return mDailyMobileService.getStayOutboundPayment(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
             , jsonObject).subscribeOn(Schedulers.io());
@@ -1591,15 +1591,15 @@ public class DailyMobileAPI
             , jsonObject).subscribeOn(Schedulers.io());
     }
 
-    public Observable<BaseDto<String>> getStayOutboundHasDuplicatePayment(int index, JSONObject jsonObject)
+    public Observable<BaseDto<String>> getStayOutboundHasDuplicatePayment(int stayIndex, JSONObject jsonObject)
     {
         final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
-        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotels/{hotelId}/valid-reservations"//
-            : "NTEkMTI2JDckMTAwJDE3MyQ5MiQ3OSQ1MCQ3OCQ2OCQzMiQxNTEkNTckMTEkMTI3JDQ0JA==$M0VGMDVDEODJYzQ0NFNzI5MUUwMDRGOEVFBMUQzNDMzNBUE0OTdCQYkFLBRWkE3NkQyOThFOZEI5QzkyQkMI4MCjdBMThCMEZFQzLZFQ0Y3MjIcxNjZENDAzMkVGNDQyENjUyRDkzMCUE2NUQxNDhCNURGRQTcyOTFDQjI1QzlGQTc3Q0UxODFENJUU=$";
+        final String API = Constants.UNENCRYPTED_URL ? "api/v2/outbound/hotels/{stayIndex}/valid-reservations"//
+            : "ODckMTE0JDc0JDEyNCQ0NCQ5NSQxMjckMTEzJDExMCQ2NiQzNyQzMCQxMzIkNjckMyQ2MCQ=$MDcR4OTk3N0Q3ODg0N0YxNzdDMzIxMEUMyQzFGNIzQxQzk1VMkJDRDk4NTU5JNjE3MUMyXOBTQyMDg3RDLU3OEYzQ0RCODIM3QTZGWMUMxMENFOEY2RDJg2NK0VFQHjU5MzBBRRSZDhERDA4QTYyQUE1RkQzNDk5N0RDNDE4NTk4MDFCM0FDQjcxQTg=$";
 
         Map<String, String> urlParams = new HashMap<>();
-        urlParams.put("{hotelId}", Integer.toString(index));
+        urlParams.put("{stayIndex}", Integer.toString(stayIndex));
 
         return mDailyMobileService.getStayOutboundHasDuplicatePayment(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
             , jsonObject).subscribeOn(Schedulers.io());
@@ -1611,6 +1611,15 @@ public class DailyMobileAPI
             : "MzgkNDUkMyQyOSQ2MiQyNCQxNiQ0OSQ0OSQxNCQxMSQ3NyQ2MSQyMCQ0MSQxMyQ=$RTAU0NEFCRjFRQDQQzgAzIOTE0NjAJxMDAxSMEU3NTRU4RUIM0RkE0KXDNjRDMThEEOTQxNzPdBN0VGRkJVCNTgyMzMyN0ZGQzYzOA==$";
 
         return mDailyMobileService.getPaymentTypeBonus(Crypto.getUrlDecoderEx(API), jsonObject).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<String>> getStayHasDuplicatePayment(String checkInDate, int nights)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v5/reservations/check/sameday"//
+            : "NTUkOTQkMTckMzAkNzIkMTI3JDgkOTUkMjckMTA2JDEyMyQ5OSQ3JDEzOCQ5MSQxMTkk$MzRBOTgR0YMkMwMEZFMCDNCNjRGRGUJDRXjdERTMwMkM4Njc2Qzc2NUFBMDQK1RTcwMkI0QkI1MUjA2OEY0M0MyNzFGAN0FDNjJJBMOGERDNDUgwMzE0MUJQBOEM4RTPE4NEIxQ0MM1NETI3$";
+
+        return mDailyMobileService.getStayHasDuplicatePayment(Crypto.getUrlDecoderEx(API), checkInDate, nights)//
+            .subscribeOn(Schedulers.io());
     }
 
     public Observable<BaseDto<PaymentResultData>> getGourmetPaymentTypeBonus(JSONObject jsonObject)

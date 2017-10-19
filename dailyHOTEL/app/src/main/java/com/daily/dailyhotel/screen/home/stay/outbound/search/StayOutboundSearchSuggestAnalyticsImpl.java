@@ -41,5 +41,30 @@ public class StayOutboundSearchSuggestAnalyticsImpl implements StayOutboundSearc
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH//
             , AnalyticsManager.Action.SEARCH_HISTORY_DELETE, null, null);
+
+    }
+
+    @Override
+    public void onEventSuggestClick(Activity activity, String suggestDisplayName, String keyword)
+    {
+        if (activity == null || DailyTextUtils.isTextEmpty(suggestDisplayName) == true)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.OB_SEARCH_AUTO_SEARCH //
+            , suggestDisplayName, keyword, null);
+    }
+
+    @Override
+    public void onEventRecentlySuggestClick(Activity activity, String suggestDisplayName, String keyword)
+    {
+        if (activity == null || DailyTextUtils.isTextEmpty(suggestDisplayName) == true)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.OB_SEARCH_RECENT //
+            , suggestDisplayName, keyword, null);
     }
 }

@@ -8,12 +8,14 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Suggest;
 import com.daily.dailyhotel.parcel.SuggestParcel;
 import com.daily.dailyhotel.repository.local.SuggestLocalImpl;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -44,6 +46,9 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
 
         void onEventDeleteAllRecentlySuggestClick(Activity activity);
 
+        void onEventSuggestClick(Activity activity, String suggestDisplayName, String keyword);
+
+        void onEventRecentlySuggestClick(Activity activity, String suggestDisplayName, String keyword);
     }
 
     public StayOutboundSearchSuggestPresenter(@NonNull StayOutboundSearchSuggestActivity activity)
@@ -255,12 +260,15 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
             return;
         }
 
-        Intent intent = new Intent();
-        intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new SuggestParcel(suggest));
-        intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_KEYWORD, mKeyword);
+        try
+        {
+            mAnalytics.onEventSuggestClick(getActivity(), suggest.display, mKeyword);
+        } catch (Exception e)
+        {
+            ExLog.d(e.getMessage());
+        }
 
-        setResult(Activity.RESULT_OK, intent);
-        finish();
+        startFinishAction(suggest, mKeyword, AnalyticsManager.Category.OB_SEARCH_ORIGIN_AUTO);
     }
 
     @Override
@@ -276,9 +284,46 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
             return;
         }
 
+        addCompositeDisposable(mSuggestLocalImpl.getRecentlySuggestKeyword(suggest.id) //
+            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<String>()
+            {
+                @Override
+                public void accept(String keyword) throws Exception
+                {
+                    try
+                    {
+                        mAnalytics.onEventRecentlySuggestClick(getActivity(), suggest.display, mKeyword);
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.getMessage());
+                    }
+
+                    startFinishAction(suggest, keyword, AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECENT);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    try
+                    {
+                        mAnalytics.onEventRecentlySuggestClick(getActivity(), suggest.display, mKeyword);
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.getMessage());
+                    }
+
+                    startFinishAction(suggest, "", AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECENT);
+                }
+            }));
+    }
+
+    private void startFinishAction(Suggest suggest, String keyword, String analyticsClickType)
+    {
         Intent intent = new Intent();
         intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new SuggestParcel(suggest));
-        intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_KEYWORD, mKeyword);
+        intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
+        intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_CLICK_TYPE, DailyTextUtils.isTextEmpty(analyticsClickType) ? "" : analyticsClickType);
 
         setResult(Activity.RESULT_OK, intent);
         finish();

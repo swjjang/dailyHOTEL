@@ -64,7 +64,7 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
     @Override
     public void onScreenPaymentCompleted(Activity activity, StayOutboundPayment stayOutboundPayment, StayBookDateTime stayBookDateTime//
         , String stayName, DailyBookingPaymentTypeView.PaymentType paymentType, boolean usedBonus//
-        , boolean registerEasyCard, UserSimpleInformation userSimpleInformation)
+        , boolean registerEasyCard, UserSimpleInformation userSimpleInformation, String aggregationId)
     {
         if (activity == null || mAnalyticsParam == null || paymentType == null)
         {
@@ -127,10 +127,7 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
             params.put(AnalyticsManager.KeyType.COUPON_CODE, AnalyticsManager.ValueType.EMPTY);
             params.put(AnalyticsManager.KeyType.USED_BOUNS, usedBonus ? "y" : "n");
 
-            String strDate = DailyCalendar.format(new Date(), "yyyyMMddHHmmss");
-            String transId = strDate + '_' + userSimpleInformation.index;
-
-            AnalyticsManager.getInstance(activity).purchaseCompleteStayOutbound(transId, params);
+            AnalyticsManager.getInstance(activity).purchaseCompleteStayOutbound(aggregationId, params);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -163,7 +160,7 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
 
     @Override
     public StayOutboundThankYouAnalyticsParam getThankYouAnalyticsParam(DailyBookingPaymentTypeView.PaymentType paymentType//
-        , boolean fullBonus, boolean usedBonus, boolean registerEasyCard)
+        , boolean fullBonus, boolean usedBonus, boolean registerEasyCard, int stayIndex)
     {
         StayOutboundThankYouAnalyticsParam analyticsParam = new StayOutboundThankYouAnalyticsParam();
 
@@ -171,6 +168,7 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
         analyticsParam.fullBonus = fullBonus;
         analyticsParam.usedBonus = usedBonus;
         analyticsParam.registerEasyCard = registerEasyCard;
+        analyticsParam.stayIndex = stayIndex;
 
         return analyticsParam;
     }

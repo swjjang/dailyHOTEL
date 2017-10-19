@@ -1320,7 +1320,7 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
             LayoutStayOutboundDetailInformationDataBinding detailInformationDataBinding = DataBindingUtil.inflate(layoutInflater//
                 , R.layout.layout_stay_outbound_detail_information_data, viewDataBinding.informationLayout, true);
 
-            detailInformationDataBinding.textView.setText(Html.fromHtml(informationList.get(i)));
+            detailInformationDataBinding.textView.setText(Html.fromHtml(informationList.get(i).replaceAll("\\<p\\>", "").replaceAll("\\<\\/p\\>", "<br /><br />")));
 
             if (i == size - 1)
             {

@@ -30,7 +30,7 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
 {
     private StayOutboundThankYouAnalyticsInterface mAnalytics;
 
-    private int mReservationId;
+    private String mAggregationId;
     private String mStayName;
     private String mImageUrl;
     private StayBookDateTime mStayBookDateTime;
@@ -47,6 +47,8 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
         void onScreen(Activity activity);
 
         void onEventPayment(Activity activity);
+
+        void onEventOrderComplete(Activity activity);
     }
 
     public StayOutboundThankYouPresenter(@NonNull StayOutboundThankYouActivity activity)
@@ -98,7 +100,7 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
         setStayBookDateTime(checkInDateTime, checkOutDateTime);
 
         mRoomType = intent.getStringExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_ROOM_TYPE);
-        mReservationId = intent.getIntExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_RESERVATION_ID, -1);
+        mAggregationId = intent.getStringExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_AGGREGATION_ID);
 
         mAnalytics.setAnalyticsParam(intent.getParcelableExtra(BaseActivity.INTENT_EXTRA_DATA_ANALYTICS));
 
@@ -177,6 +179,7 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
 
         mAnalytics.onScreen(getActivity());
         mAnalytics.onEventPayment(getActivity());
+        mAnalytics.onEventOrderComplete(getActivity());
 
         if (isRefresh() == true)
         {
@@ -212,7 +215,7 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
             return true;
         }
 
-        startActivity(DailyInternalDeepLink.getStayOutboundBookingDetailScreenLink(getActivity(), mReservationId));
+        startActivity(DailyInternalDeepLink.getStayOutboundBookingDetailScreenLink(getActivity(), mAggregationId));
 
         return super.onBackPressed();
     }

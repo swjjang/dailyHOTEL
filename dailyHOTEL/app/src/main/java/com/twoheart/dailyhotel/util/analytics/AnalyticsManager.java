@@ -6,15 +6,11 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.daily.base.util.ExLog;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
 
 public class AnalyticsManager
 {
@@ -120,13 +116,6 @@ public class AnalyticsManager
         if (mFirebaseManager != null)
         {
             mAnalyticsManagerList.add(mFirebaseManager);
-        }
-
-        // 개발용 코드 - 릴리즈시 삭제 필요. - 이코드가 동작하면 최근 본 업장 데이터가 초기화 될 수 있음
-        if (Constants.DEBUG == true)
-        {
-            RealmConfiguration config = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build();
-            Realm.setDefaultConfiguration(config);
         }
     }
 
@@ -454,7 +443,7 @@ public class AnalyticsManager
         }
     }
 
-    public void purchaseCompleteHotel(String transId, Map<String, String> params)
+    public void purchaseCompleteHotel(String aggregationId, Map<String, String> params)
     {
         try
         {
@@ -462,7 +451,7 @@ public class AnalyticsManager
             {
                 try
                 {
-                    analyticsManager.purchaseCompleteHotel(transId, params);
+                    analyticsManager.purchaseCompleteHotel(aggregationId, params);
                 } catch (Exception e)
                 {
                     ExLog.d(TAG + e.toString());
@@ -474,7 +463,7 @@ public class AnalyticsManager
         }
     }
 
-    public void purchaseCompleteStayOutbound(String transId, Map<String, String> params)
+    public void purchaseCompleteStayOutbound(String aggregationId, Map<String, String> params)
     {
         try
         {
@@ -482,7 +471,7 @@ public class AnalyticsManager
             {
                 try
                 {
-                    analyticsManager.purchaseCompleteStayOutbound(transId, params);
+                    analyticsManager.purchaseCompleteStayOutbound(aggregationId, params);
                 } catch (Exception e)
                 {
                     ExLog.d(TAG + e.toString());
@@ -494,7 +483,7 @@ public class AnalyticsManager
         }
     }
 
-    public void purchaseCompleteGourmet(String transId, Map<String, String> params)
+    public void purchaseCompleteGourmet(String aggregationId, Map<String, String> params)
     {
         try
         {
@@ -502,7 +491,7 @@ public class AnalyticsManager
             {
                 try
                 {
-                    analyticsManager.purchaseCompleteGourmet(transId, params);
+                    analyticsManager.purchaseCompleteGourmet(aggregationId, params);
                 } catch (Exception e)
                 {
                     ExLog.d(TAG + e.toString());
@@ -1071,6 +1060,8 @@ public class AnalyticsManager
         public static final String MEMBER_SELECT = "member_select";
         public static final String SEARCH_CANCEL = "search_cancel";
         public static final String SEARCH_HISTORY_DELETE = "search_history_delete";
+        public static final String RECOMMEND_RESULT = "recommend_result";
+        public static final String NO_RECOMMEND_RESULT = "no_recommend_result";
 
         //
         public static final String BOOKING_HISTORY_DELETE = "booking_history_delete";
@@ -1158,6 +1149,18 @@ public class AnalyticsManager
         public static final String STAY_THANK_YOU = "stay_thankyou";
         public static final String THANKYOU_GOURMET_RECOMMEND_LIST_CLICK = "thankyou_gourmet_recommend_list_click";
         public static final String THANKYOU_GOURMET_RECOMMEND_CLICK = "thankyou_gourmet_recommend_click";
+        public static final String ORDER_COMPLETE = "order_complete";
+        public static final String PRODUCT_RECOMMEND = "product_recommend";
+        public static final String PRODUCT_RECOMMEND_PRODUCT_CLICK = "product_recommend_product_click";
+        public static final String PRODUCT_RECOMMEND_PRODUCT = "product_recommend_product";
+
+        public static final String OB_SEARCH_AUTO_SEARCH = "ob_search_auto_search";
+        public static final String OB_SEARCH_NO_RESULT = "ob_search_no_result";
+        public static final String OB_SEARCH_RESULT = "ob_search_result";
+        public static final String OB_SEARCH_RECENT = "ob_search_recent";
+        public static final String OB_SEARCH_ORIGIN_AUTO = "ob_search_origin_auto";
+        public static final String OB_SEARCH_ORIGIN_RECENT = "ob_search_origin_recent";
+        public static final String OB_SEARCH_ORIGIN_ETC = "ob_search_origin_etc";
     }
 
     public static class Label
@@ -1510,6 +1513,7 @@ public class AnalyticsManager
         public static final String RECOMMEND_ITEM_IDX = "recommend_item_idx";
         public static final String VIEW_TYPE = "view_type";
         public static final String TAG = "tag";
+        public static final String AGGREGATION_ID = "aggregation_id";
     }
 
     public static class ValueType

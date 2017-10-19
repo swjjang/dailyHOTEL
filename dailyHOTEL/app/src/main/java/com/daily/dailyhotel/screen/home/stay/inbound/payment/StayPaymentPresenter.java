@@ -96,7 +96,6 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
     PaymentRemoteImpl mPaymentRemoteImpl;
     private ProfileRemoteImpl mProfileRemoteImpl;
     private CommonRemoteImpl mCommonRemoteImpl;
-    private BookingRemoteImpl mBookingRemoteImpl;
 
     StayBookDateTime mStayBookDateTime;
     CommonDateTime mCommonDateTime;
@@ -129,7 +128,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             , StayPayment stayPayment, boolean registerEasyCard, boolean usedBonus, boolean usedCoupon, Coupon coupon//
             , DailyBookingPaymentTypeView.PaymentType paymentType, UserSimpleInformation userSimpleInformation);
 
-        void onScreenPaymentCompleted(Activity activity, String transId);
+        void onScreenPaymentCompleted(Activity activity, String aggregationId);
 
         void onEventTransportationVisible(Activity activity, boolean visible);
 
@@ -186,7 +185,6 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         mPaymentRemoteImpl = new PaymentRemoteImpl(activity);
         mProfileRemoteImpl = new ProfileRemoteImpl(activity);
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
-        mBookingRemoteImpl = new BookingRemoteImpl(activity);
 
         setRefresh(true);
     }
@@ -1010,16 +1008,19 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
     {
         screenLock(true);
 
-        addCompositeDisposable(mBookingRemoteImpl.getBookingList().subscribe(new Consumer<List<Booking>>()
+        addCompositeDisposable(mPaymentRemoteImpl.getStayHasDuplicatePayment(mStayBookDateTime).subscribe(new Consumer<String>()
         {
             @Override
-            public void accept(@io.reactivex.annotations.NonNull List<Booking> bookingList) throws Exception
+            public void accept(@io.reactivex.annotations.NonNull String message) throws Exception
             {
                 unLockAll();
 
-                if (hasOverlapBookingList(mCommonDateTime, mStayBookDateTime, mStayName, bookingList) == true)
+                if (DailyTextUtils.isTextEmpty(message) == true)
                 {
-                    getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_hotel_payment_overlap)//
+                    showAgreementPopup();
+                } else
+                {
+                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), message//
                         , getString(R.string.label_do_booking), getString(R.string.dialog_btn_text_no)//
                         , new View.OnClickListener()
                         {
@@ -1028,10 +1029,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                             {
                                 showAgreementPopup();
                             }
-                        }, null, true);
-                } else
-                {
-                    showAgreementPopup();
+                        }, null, null, null, false);
                 }
             }
         }, new Consumer<Throwable>()
@@ -1276,8 +1274,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
         try
         {
-            mAnalytics.onScreenPaymentCompleted(getActivity()//
-                , DailyCalendar.format(new Date(), "yyyyMMddHHmmss") + '_' + mUserSimpleInformation.index);
+            mAnalytics.onScreenPaymentCompleted(getActivity(), aggregationId);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -1389,9 +1386,31 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             getViewInterface().setVendorName(stayPayment.businessName);
             getViewInterface().setTransportation(stayPayment.transportation);
 
-            if (stayPayment.transportation.equalsIgnoreCase(StayPayment.VISIT_TYPE_NONE) == false && mTransportationType == null)
+            if(DailyTextUtils.isTextEmpty(stayPayment.transportation) == false)
             {
-                onTransportationClick(WALKING);
+                switch(stayPayment.transportation)
+                {
+                    case StayPayment.VISIT_TYPE_NONE:
+                        onTransportationClick(UNKNOWN);
+                        break;
+
+                    case StayPayment.VISIT_TYPE_PARKING:
+                        if(DailyTextUtils.isTextEmpty(mTransportationType) == true)
+                        {
+                            onTransportationClick(WALKING);
+                        } else
+                        {
+                            onTransportationClick(mTransportationType);
+                        }
+                        break;
+
+                    case StayPayment.VISIT_TYPE_NO_PARKING:
+                        onTransportationClick(UNKNOWN);
+                        break;
+                }
+            } else
+            {
+                onTransportationClick(UNKNOWN);
             }
         } catch (Exception e)
         {

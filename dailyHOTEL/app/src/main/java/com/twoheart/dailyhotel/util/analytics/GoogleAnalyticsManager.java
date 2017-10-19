@@ -697,7 +697,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
     }
 
     @Override
-    void purchaseCompleteHotel(String transId, Map<String, String> params)
+    void purchaseCompleteHotel(String aggregationId, Map<String, String> params)
     {
         double paymentPrice = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
         String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
@@ -706,7 +706,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         product.setBrand("hotel");
 
         ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE)//
-            .setTransactionId(transId)//
+            .setTransactionId(aggregationId)//
             .setTransactionRevenue(paymentPrice)//
             .setTransactionCouponCode(String.format(Locale.KOREA, "credit_%s", credit));
 
@@ -718,7 +718,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         //
         //        ProductAction productCheckoutAction = new ProductAction(ProductAction.ACTION_CHECKOUT)//
         //            .setCheckoutStep(5)//
-        //            .setTransactionId(transId)//
+        //            .setTransactionId(aggregationId)//
         //            .setTransactionRevenue(paymentPrice)//
         //            .setTransactionCouponCode(String.format("credit_%s", credit));
         //
@@ -734,18 +734,18 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
         if (DEBUG == true)
         {
-            ExLog.d(TAG + "checkoutStep : 5 | " + transId + " | " + productAction.toString());
+            ExLog.d(TAG + "checkoutStep : 5 | " + aggregationId + " | " + productAction.toString());
         }
     }
 
     @Override
-    void purchaseCompleteStayOutbound(String transId, Map<String, String> params)
+    void purchaseCompleteStayOutbound(String aggregationId, Map<String, String> params)
     {
 
     }
 
     @Override
-    void purchaseCompleteGourmet(String transId, Map<String, String> params)
+    void purchaseCompleteGourmet(String aggregationId, Map<String, String> params)
     {
         String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
         double paymentPrice = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
@@ -754,7 +754,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         product.setBrand("gourmet");
 
         ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE)//
-            .setTransactionId(transId)//
+            .setTransactionId(aggregationId)//
             .setTransactionRevenue(paymentPrice)//
             .setTransactionCouponCode(String.format(Locale.KOREA, "credit_%s", credit));
 
@@ -766,7 +766,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
         //        ProductAction productCheckoutAction = new ProductAction(ProductAction.ACTION_CHECKOUT)//
         //            .setCheckoutStep(5)//
-        //            .setTransactionId(transId)//
+        //            .setTransactionId(aggregationId)//
         //            .setTransactionRevenue(paymentPrice)//
         //            .setTransactionCouponCode(String.format("credit_%s", credit));
         //
@@ -784,7 +784,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
         if (DEBUG == true)
         {
-            ExLog.d(TAG + "checkoutStep : 5 | " + transId + " | " + productAction.toString());
+            ExLog.d(TAG + "checkoutStep : 5 | " + aggregationId + " | " + productAction.toString());
         }
     }
 
@@ -1018,7 +1018,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         return screenViewBuilder;
     }
 
-    private void checkoutStep(int step, String screen, String transId, Map<String, String> params)
+    private void checkoutStep(int step, String screen, String aggregationId, Map<String, String> params)
     {
         String paymentPrice = params.get(AnalyticsManager.KeyType.PAYMENT_PRICE);
         String credit = params.get(AnalyticsManager.KeyType.USED_BOUNS);
@@ -1027,9 +1027,9 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
         ProductAction productAction = new ProductAction(ProductAction.ACTION_CHECKOUT).setCheckoutStep(step);
 
-        if (DailyTextUtils.isTextEmpty(transId) == false)
+        if (DailyTextUtils.isTextEmpty(aggregationId) == false)
         {
-            productAction.setTransactionId(transId);
+            productAction.setTransactionId(aggregationId);
         }
 
         if (DailyTextUtils.isTextEmpty(paymentPrice) == false)
@@ -1050,7 +1050,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
         if (DEBUG == true)
         {
-            ExLog.d(TAG + "checkoutStep : " + screen + " | " + step + " | " + transId + " | " + productAction.toString() + " | " + screenViewBuilder.build().toString());
+            ExLog.d(TAG + "checkoutStep : " + screen + " | " + step + " | " + aggregationId + " | " + productAction.toString() + " | " + screenViewBuilder.build().toString());
         }
     }
 

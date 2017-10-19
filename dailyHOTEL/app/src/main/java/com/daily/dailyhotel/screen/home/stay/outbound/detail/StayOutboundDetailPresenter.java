@@ -40,6 +40,7 @@ import com.daily.dailyhotel.parcel.analytics.ImageListAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundPaymentAnalyticsParam;
+import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
@@ -52,7 +53,6 @@ import com.daily.dailyhotel.screen.home.stay.outbound.payment.StayOutboundPaymen
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.preview.StayOutboundPreviewActivity;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
-import com.daily.dailyhotel.util.RecentlyPlaceUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
@@ -117,6 +117,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     private StayOutboundRemoteImpl mStayOutboundRemoteImpl;
     private CommonRemoteImpl mCommonRemoteImpl;
     private ProfileRemoteImpl mProfileRemoteImpl;
+    private RecentlyLocalImpl mRecentlyLocalImpl;
 
     int mStayIndex, mListTotalPrice;
     private String mStayName;
@@ -155,6 +156,12 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         void onScreenRoomList(Activity activity);
 
+        void onEventHasRecommendList(Activity activity, boolean hasData);
+
+        void onEventRecommendItemClick(Activity activity, int stayIndex, int clickStayIndex);
+
+        void onEventRecommendItemList(Activity activity, int stayIndex, List<Integer> stayIndexList);
+
         StayOutboundPaymentAnalyticsParam getPaymentAnalyticsParam(String grade, boolean nrd, boolean showOriginalPrice);
     }
 
@@ -181,6 +188,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         mStayOutboundRemoteImpl = new StayOutboundRemoteImpl(activity);
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
         mProfileRemoteImpl = new ProfileRemoteImpl(activity);
+        mRecentlyLocalImpl = new RecentlyLocalImpl(activity);
 
         setPeople(People.DEFAULT_ADULTS, null);
 
@@ -341,7 +349,9 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             getViewInterface().setInitializedImage(mImageUrl);
         }
 
-        RecentlyPlaceUtil.addRecentlyItem(getActivity(), Constants.ServiceType.OB_STAY, mStayIndex, mStayName, null, mImageUrl, true);
+        addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem( //
+            Constants.ServiceType.OB_STAY, mStayIndex, mStayName, null, mImageUrl, true) //
+            .observeOn(Schedulers.io()).subscribe());
 
         if (mIsUsedMultiTransition == true)
         {
@@ -1002,7 +1012,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                                         , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                                         , mPeople.numberOfAdults, mPeople.getChildAgeList()//
                                         , mSelectedRoom.roomName, mSelectedRoom.rateCode, mSelectedRoom.rateKey//
-                                        , mSelectedRoom.roomTypeCode, mSelectedRoom.roomBedTypeId, analyticsParam)//
+                                        , mSelectedRoom.roomTypeCode, mSelectedRoom.roomBedTypeId, mSelectedRoom.vendorType, analyticsParam)//
                                         , StayOutboundDetailActivity.REQUEST_CODE_PAYMENT);
                                 }
                             } else
@@ -1031,7 +1041,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                                         , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                                         , mPeople.numberOfAdults, mPeople.getChildAgeList()//
                                         , mSelectedRoom.roomName, mSelectedRoom.rateCode, mSelectedRoom.rateKey//
-                                        , mSelectedRoom.roomTypeCode, mSelectedRoom.roomBedTypeId, analyticsParam)//
+                                        , mSelectedRoom.roomTypeCode, mSelectedRoom.roomBedTypeId, mSelectedRoom.vendorType, analyticsParam)//
                                         , StayOutboundDetailActivity.REQUEST_CODE_PAYMENT);
                                 }
                             }
@@ -1180,6 +1190,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         }
 
         startStayOutboundDetail(view, stayOutbound, pairs);
+
+        mAnalytics.onEventRecommendItemClick(getActivity(), mStayIndex, stayOutbound.index);
     }
 
     @Override
@@ -1392,6 +1404,16 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         }
 
         mIsDeepLink = false;
+
+        try
+        {
+            addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem( //
+                Constants.ServiceType.OB_STAY, stayOutboundDetail.index, stayOutboundDetail.name, null, mImageUrl, false) //
+                .observeOn(Schedulers.io()).subscribe());
+        } catch (Exception e)
+        {
+            ExLog.d(e.getMessage());
+        }
     }
 
     /**
@@ -1557,6 +1579,31 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             {
                 onStayOutboundDetail(stayOutboundDetail);
                 notifyRecommendAroundList();
+
+                try
+                {
+                    boolean hasRecommendList = mRecommendAroundList == null || mRecommendAroundList.size() == 0 ? false : true;
+
+                    mAnalytics.onEventHasRecommendList(getActivity(), hasRecommendList);
+
+                    if (hasRecommendList == true)
+                    {
+                        List<Integer> recommendIndexList = new ArrayList<>();
+                        for (CarouselListItem carouselListItem : mRecommendAroundList)
+                        {
+                            StayOutbound stayOutbound = carouselListItem.getItem();
+                            if (stayOutbound != null)
+                            {
+                                recommendIndexList.add(stayOutbound.index);
+                            }
+                        }
+
+                        mAnalytics.onEventRecommendItemList(getActivity(), stayOutboundDetail.index, recommendIndexList);
+                    }
+                } catch (Exception e)
+                {
+                    ExLog.d(e.getMessage());
+                }
 
                 if (disposable != null)
                 {

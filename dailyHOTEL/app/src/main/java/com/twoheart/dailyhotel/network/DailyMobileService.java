@@ -791,6 +791,11 @@ public interface DailyMobileService
     Observable<BaseDto<String>> getStayOutboundHasDuplicatePayment(@Url String mobileAPI, @Body JSONObject jsonObject);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<String>> getStayHasDuplicatePayment(@Path(value = "mobileAPI", encoded = true) String mobileAPI//
+        , @Query("checkInDate") String checkInDate, @Query("days") int nights);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @POST("{mobileAPI}")
     Observable<BaseDto<PaymentResultData>> getPaymentTypeBonus(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Body JSONObject jsonObject);
 

@@ -56,11 +56,11 @@ public abstract class BaseAnalyticsManager
 
     abstract void signUpDailyUser(String userIndex, String email, String name, String phoneNumber, String birthday, String userType, String recommender, String callByScreen);
 
-    abstract void purchaseCompleteHotel(String transId, Map<String, String> params);
+    abstract void purchaseCompleteHotel(String aggregationId, Map<String, String> params);
 
-    abstract void purchaseCompleteStayOutbound(String transId, Map<String, String> params);
+    abstract void purchaseCompleteStayOutbound(String aggregationId, Map<String, String> params);
 
-    abstract void purchaseCompleteGourmet(String transId, Map<String, String> params);
+    abstract void purchaseCompleteGourmet(String aggregationId, Map<String, String> params);
 
     abstract void startDeepLink(Uri deepLinkUri);
 

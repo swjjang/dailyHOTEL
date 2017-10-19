@@ -29,36 +29,21 @@
             android:tag="map"
             android:transitionName="@string/transition_gradient_bottom_view"/>
 
-        <LinearLayout
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/gradeTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/nameTextView"
             android:layout_marginBottom="5dp"
-            android:gravity="center_vertical">
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/gradeTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
-                android:background="@drawable/shape_rect_whitecolor"
-                android:gravity="center"
-                android:paddingBottom="1px"
-                android:paddingLeft="5.5dp"
-                android:paddingRight="5.5dp"
-                android:paddingTop="2px"
-                android:textColor="@color/white"
-                android:textSize="11dp"/>
-
-            <RatingBar
-                android:id="@+id/ratingBar"
-                style="@style/StayOutboundRatingBarWhite"
-                android:layout_width="wrap_content"
-                android:layout_height="10dp"
-                android:layout_marginLeft="6dp"
-                android:numStars="5"
-                android:stepSize="0.5"/>
-        </LinearLayout>
+            android:layout_marginLeft="12dp"
+            android:background="@drawable/shape_rect_whitecolor"
+            android:gravity="center"
+            android:paddingBottom="1px"
+            android:paddingLeft="5.5dp"
+            android:paddingRight="5.5dp"
+            android:paddingTop="2px"
+            android:textColor="@color/white"
+            android:textSize="11dp"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/priceTextView"

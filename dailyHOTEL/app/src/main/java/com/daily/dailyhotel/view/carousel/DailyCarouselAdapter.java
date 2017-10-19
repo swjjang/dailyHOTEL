@@ -6,11 +6,14 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Paint;
 import android.os.Build;
 import android.os.Vibrator;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 
 import com.daily.base.util.DailyTextUtils;
@@ -295,7 +298,6 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
         holder.dataBinding.contentPersonView.setText("");
         holder.dataBinding.contentPersonView.setVisibility(View.GONE);
 
-        holder.dataBinding.contentMultiDayView.setVisibility(View.GONE);
         holder.dataBinding.tripAdvisorLayout.setVisibility(View.GONE);
     }
 
@@ -374,23 +376,54 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
         //            holder.dataBinding.soldOutView.setVisibility(View.GONE);
         //        }
 
-        if (stayOutbound.promo == true)
-        {
-            setOutboundPriceText(holder.dataBinding, stayOutbound.nightlyRate, stayOutbound.nightlyBaseRate, mNightsEnabled);
-        } else
-        {
-            setOutboundPriceText(holder.dataBinding, stayOutbound.nightlyRate, stayOutbound.nightlyBaseRate, mNightsEnabled);
-        }
+        holder.dataBinding.contentProvinceView.getLayoutParams().width = 0;
+        ((ConstraintLayout.LayoutParams) holder.dataBinding.contentProvinceView.getLayoutParams()).rightToLeft = R.id.contentSubRegionLayout;
+        holder.dataBinding.contentProvinceView.setLayoutParams(holder.dataBinding.contentProvinceView.getLayoutParams());
 
+        ((ConstraintLayout.LayoutParams) holder.dataBinding.contentSubRegionLayout.getLayoutParams()).rightToRight = ConstraintLayout.LayoutParams.PARENT_ID;
+        holder.dataBinding.contentSubRegionLayout.setLayoutParams(holder.dataBinding.contentSubRegionLayout.getLayoutParams());
+
+        setOutboundPriceText(holder.dataBinding, stayOutbound.nightlyRate, stayOutbound.nightlyBaseRate, mNightsEnabled);
         holder.dataBinding.contentTextView.setText(stayOutbound.name);
         //        holder.dataBinding.nameEngTextView.setText("(" + stayOutbound.nameEng + ")");
-
-        holder.dataBinding.contentProvinceView.setText(stayOutbound.city);
 
         // Stay Outbound 의 경우 PlaceType 이 없음
         holder.dataBinding.contentGradeView.setText("");
 
         setTripAdvisorText(holder.dataBinding, stayOutbound.tripAdvisorRating);
+
+        holder.dataBinding.contentProvinceView.setText(stayOutbound.city);
+
+        holder.dataBinding.regionLayout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener()
+        {
+            @Override
+            public boolean onPreDraw()
+            {
+                // ... 여부 확인
+                Layout layout = holder.dataBinding.contentProvinceView.getLayout();
+                if (layout == null)
+                {
+                    holder.dataBinding.regionLayout.getViewTreeObserver().removeOnPreDrawListener(this);
+                    return false;
+                }
+
+                int lastLine = holder.dataBinding.contentProvinceView.getLineCount() -1;
+                if (layout.getEllipsisCount(lastLine) > 0)
+                {
+                } else
+                {
+                    holder.dataBinding.contentProvinceView.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    ((ConstraintLayout.LayoutParams) holder.dataBinding.contentProvinceView.getLayoutParams()).rightToLeft = -1;
+                    holder.dataBinding.contentProvinceView.setLayoutParams(holder.dataBinding.contentProvinceView.getLayoutParams());
+
+                    ((ConstraintLayout.LayoutParams) holder.dataBinding.contentSubRegionLayout.getLayoutParams()).rightToRight = -1;
+                    holder.dataBinding.contentSubRegionLayout.setLayoutParams(holder.dataBinding.contentSubRegionLayout.getLayoutParams());
+                }
+
+                holder.dataBinding.regionLayout.getViewTreeObserver().removeOnPreDrawListener(this);
+                return false;
+            }
+        });
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -478,7 +511,6 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
             holder.dataBinding.contentGradeView.setText(gourmet.category);
         }
 
-        holder.dataBinding.contentMultiDayView.setVisibility(View.GONE);
         holder.dataBinding.tripAdvisorLayout.setVisibility(View.GONE);
     }
 
@@ -561,16 +593,15 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
             dataBinding.contentOriginPriceView.setPaintFlags(dataBinding.contentOriginPriceView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
-        dataBinding.contentPersonView.setText("");
-        dataBinding.contentPersonView.setVisibility(View.GONE);
-
         if (nightsEnabled == true)
         {
-            dataBinding.contentMultiDayView.setVisibility(View.VISIBLE);
+            dataBinding.contentPersonView.setText(R.string.label_carousel_item_stay_1_nights);
+            dataBinding.contentPersonView.setVisibility(View.VISIBLE);
 
         } else
         {
-            dataBinding.contentMultiDayView.setVisibility(View.GONE);
+            dataBinding.contentPersonView.setText("");
+            dataBinding.contentPersonView.setVisibility(View.GONE);
         }
     }
 
