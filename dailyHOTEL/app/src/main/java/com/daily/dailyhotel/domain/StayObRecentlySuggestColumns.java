@@ -17,4 +17,5 @@ public interface StayObRecentlySuggestColumns extends BaseColumns
     String LATITUDE = "latitude";
     String LONGITUDE = "longitude";
     String SAVING_TIME = "saving_time";
+    String KEYWORD = "keyword";
 }

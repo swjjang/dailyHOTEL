@@ -1404,6 +1404,16 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         }
 
         mIsDeepLink = false;
+
+        try
+        {
+            addCompositeDisposable(mRecentlyLocalImpl.addRecentlyItem( //
+                Constants.ServiceType.OB_STAY, stayOutboundDetail.index, stayOutboundDetail.name, null, mImageUrl, false) //
+                .observeOn(Schedulers.io()).subscribe());
+        } catch (Exception e)
+        {
+            ExLog.d(e.getMessage());
+        }
     }
 
     /**

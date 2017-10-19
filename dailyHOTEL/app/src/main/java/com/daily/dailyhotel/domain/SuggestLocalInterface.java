@@ -12,11 +12,13 @@ import io.reactivex.Observable;
 
 public interface SuggestLocalInterface
 {
-    Observable addSuggestDb(Suggest suggest);
+    Observable addSuggestDb(Suggest suggest, String keyword);
 
     Observable<Suggest> getRecentlySuggest();
 
     Observable<List<Suggest>> getRecentlySuggestList();
+
+    Observable<String> getRecentlySuggestKeyword(final long id);
 
     Observable deleteAllRecentlySuggest();
 }
