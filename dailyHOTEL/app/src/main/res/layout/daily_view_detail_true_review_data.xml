@@ -38,7 +38,6 @@
             android:layout_marginTop="10dp"
             android:freezesText="true"
             android:paddingBottom="23dp"
-            android:text="실제 투숙개 N%가 만족하였습니다. (N 평가)"
             android:textColor="@color/default_text_c323232"
             android:textSize="13dp"
             android:visibility="gone"

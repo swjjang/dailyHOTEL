@@ -83,7 +83,7 @@ public class DailyDetailTrueReviewView extends ConstraintLayout
             return;
         }
 
-        mViewDataBinding.descriptionTextView.setText(getContext().getString(R.string.label_detail_view_review_go, reviewCount));
+        mViewDataBinding.goTrueReviewTextView.setText(getContext().getString(R.string.label_detail_view_review_go, reviewCount));
     }
 
     public void setTrueReviewCountVisible(boolean visible)
