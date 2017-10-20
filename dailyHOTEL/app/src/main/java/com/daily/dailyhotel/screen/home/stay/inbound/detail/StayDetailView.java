@@ -449,7 +449,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         setEmptyView();
 
         // 호텔 이름 / 쿠폰
-        setTitleView(stayDetail.grade, stayDetail.name, rewardEnabled, stayDetail.couponPrice);
+        setTitleView(stayDetail.grade, stayDetail.name, rewardEnabled && stayDetail.dailyReward, stayDetail.couponPrice);
 
         // 트루 리뷰
         setTrueReviewView(stayDetail.ratingShow, stayDetail.ratingValue, stayDetail.ratingPersons, trueReviewCount);

@@ -451,7 +451,7 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
         setEmptyView();
 
         // 호텔 등급과 이름
-        setTitleView(stayOutboundDetail.rating, stayOutboundDetail.name, stayOutboundDetail.nameEng, rewardEnabled, stayOutboundDetail.couponPrice);
+        setTitleView(stayOutboundDetail.rating, stayOutboundDetail.name, stayOutboundDetail.nameEng, rewardEnabled && stayOutboundDetail.dailyReward, stayOutboundDetail.couponPrice);
 
         // 트루 리뷰
         setTrueReviewView(stayOutboundDetail.tripAdvisorRating);

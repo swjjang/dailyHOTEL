@@ -108,7 +108,7 @@
     <string name="label_check_in">체크인</string>
     <string name="label_check_out">체크아웃</string>
     <string name="label_include_tax">(세금/봉사료 포함)</string>
-    <string name="label_download_coupon_price">>%1$s 할인쿠폰 다운받기</string>
+    <string name="label_download_coupon_price">%1$s 할인쿠폰 다운받기</string>
 
     <string name="label_count_stay">%1$d개 스테이</string>
     <string name="label_count_gourmet">%1$d개 고메</string>

@@ -90,11 +90,15 @@ public class StayOutboundDetailData
             for (RoomData roomData : roomDataList)
             {
                 stayOutboundRoomList.add(roomData.getStayOutboundRoom());
+
+                if (StayOutboundRoom.VENDOR_TYPE_FIT_RUUMS.equalsIgnoreCase(roomData.vendorType) == true)
+                {
+                    stayOutboundDetail.dailyReward = true;
+                }
             }
 
             stayOutboundDetail.setRoomList(stayOutboundRoomList);
         }
-
 
         if (amenityDataList != null && amenityDataList.size() > 0)
         {

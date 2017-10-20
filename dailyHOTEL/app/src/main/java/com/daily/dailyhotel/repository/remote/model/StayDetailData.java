@@ -116,6 +116,9 @@ public class StayDetailData
     @JsonField(name = "myWish")
     public boolean myWish;
 
+    @JsonField(name = "couponDiscount")
+    public int couponDiscount;
+
     public StayDetailData()
     {
 
@@ -151,6 +154,7 @@ public class StayDetailData
         stayDetail.singleStay = singleStay;
         stayDetail.overseas = overseas;
         stayDetail.waitingForBooking = waitingForBooking;
+        stayDetail.couponPrice = couponDiscount;
 
         if (DailyTextUtils.isTextEmpty(benefit) == false)
         {
