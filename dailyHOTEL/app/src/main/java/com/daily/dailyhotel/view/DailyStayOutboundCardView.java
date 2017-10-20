@@ -249,11 +249,6 @@ public class DailyStayOutboundCardView extends ConstraintLayout
             });
             mViewDataBinding.tripAdvisorRatingBar.setRating(rating);
             mViewDataBinding.tripAdvisorRatingTextView.setText(getContext().getString(R.string.label_stay_outbound_tripadvisor_rating, Float.toString(rating)));
-
-            // 별등급이 기본이 5개 이기 때문에 빈공간에도 내용이 존재한다.
-            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mViewDataBinding.tripAdvisorRatingTextView.getLayoutParams();
-            layoutParams.leftMargin = ScreenUtils.dpToPx(getContext(), 2) - ScreenUtils.dpToPx(getContext(), (5 - (int) Math.ceil(rating)) * 10);
-            mViewDataBinding.tripAdvisorRatingTextView.setLayoutParams(layoutParams);
         }
     }
 

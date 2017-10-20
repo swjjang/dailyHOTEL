@@ -14,7 +14,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.LinearLayout;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
@@ -651,11 +650,6 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
             });
             dataBinding.tripAdvisorRatingBar.setRating(rating);
             dataBinding.tripAdvisorRatingTextView.setText(mContext.getString(R.string.label_stay_outbound_tripadvisor_rating, Float.toString(rating)));
-
-            // 별등급이 기본이 5개 이기 때문에 빈공간에도 내용이 존재한다.
-            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) dataBinding.tripAdvisorRatingTextView.getLayoutParams();
-            layoutParams.leftMargin = ScreenUtils.dpToPx(mContext, 2) - ScreenUtils.dpToPx(mContext, (5 - (int) Math.ceil(rating)) * 10);
-            dataBinding.tripAdvisorRatingTextView.setLayoutParams(layoutParams);
         }
     }
 
