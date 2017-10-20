@@ -110,6 +110,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
         void onEventEndPayment(Activity activity, DailyBookingPaymentTypeView.PaymentType paymentType);
 
+        void onEventVendorType(Activity activity, int stayIndex, String vendorType);
+
         StayOutboundThankYouAnalyticsParam getThankYouAnalyticsParam(DailyBookingPaymentTypeView.PaymentType paymentType //
             , boolean fullBonus, boolean usedBonus, boolean registerEasyCard, int stayIndex);
 
@@ -1005,6 +1007,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         mAnalytics.onScreenPaymentCompleted(getActivity(), mStayOutboundPayment, mStayBookDateTime, mStayName//
             , mPaymentType, mBonusSelected, mSelectedCard != null, mUserSimpleInformation, aggregationId);
         mAnalytics.onEventEndPayment(getActivity(), mPaymentType);
+        mAnalytics.onEventVendorType(getActivity(), mStayIndex, mVendorType);
     }
 
     private JSONObject getPaymentJSONObject(String paymentType, StayBookDateTime stayBookDateTime, int index//
