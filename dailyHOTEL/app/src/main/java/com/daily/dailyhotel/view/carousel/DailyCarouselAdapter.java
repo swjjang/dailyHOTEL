@@ -175,6 +175,13 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
             }
         }
 
+        holder.dataBinding.contentProvinceView.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
+        ((ConstraintLayout.LayoutParams) holder.dataBinding.contentProvinceView.getLayoutParams()).rightToLeft = -1;
+        holder.dataBinding.contentProvinceView.setLayoutParams(holder.dataBinding.contentProvinceView.getLayoutParams());
+
+        ((ConstraintLayout.LayoutParams) holder.dataBinding.contentSubRegionLayout.getLayoutParams()).rightToRight = -1;
+        holder.dataBinding.contentSubRegionLayout.setLayoutParams(holder.dataBinding.contentSubRegionLayout.getLayoutParams());
+
         holder.dataBinding.contentProvinceView.setText(place.regionName);
 
         if (Constants.ServiceType.HOTEL.name().equalsIgnoreCase(place.serviceType) == true)
@@ -289,6 +296,13 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
                 holder.dataBinding.contentOriginPriceView.setVisibility(View.VISIBLE);
             }
         }
+
+        holder.dataBinding.contentProvinceView.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
+        ((ConstraintLayout.LayoutParams) holder.dataBinding.contentProvinceView.getLayoutParams()).rightToLeft = -1;
+        holder.dataBinding.contentProvinceView.setLayoutParams(holder.dataBinding.contentProvinceView.getLayoutParams());
+
+        ((ConstraintLayout.LayoutParams) holder.dataBinding.contentSubRegionLayout.getLayoutParams()).rightToRight = -1;
+        holder.dataBinding.contentSubRegionLayout.setLayoutParams(holder.dataBinding.contentSubRegionLayout.getLayoutParams());
 
         holder.dataBinding.contentProvinceView.setText(stay.regionName);
 
@@ -495,6 +509,13 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
                 holder.dataBinding.contentPersonView.setVisibility(View.GONE);
             }
         }
+
+        holder.dataBinding.contentProvinceView.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
+        ((ConstraintLayout.LayoutParams) holder.dataBinding.contentProvinceView.getLayoutParams()).rightToLeft = -1;
+        holder.dataBinding.contentProvinceView.setLayoutParams(holder.dataBinding.contentProvinceView.getLayoutParams());
+
+        ((ConstraintLayout.LayoutParams) holder.dataBinding.contentSubRegionLayout.getLayoutParams()).rightToRight = -1;
+        holder.dataBinding.contentSubRegionLayout.setLayoutParams(holder.dataBinding.contentSubRegionLayout.getLayoutParams());
 
         holder.dataBinding.contentProvinceView.setText(gourmet.regionName);
 
