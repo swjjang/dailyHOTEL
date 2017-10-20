@@ -56,9 +56,9 @@ import java.util.List;
 public abstract class PlaceListMapFragment extends com.google.android.gms.maps.SupportMapFragment implements ClusterManager.OnClusterClickListener<PlaceClusterItem>, ClusterManager.OnClusterItemClickListener<PlaceClusterItem>
 {
     private static final int ANIMATION_DELAY = 200;
-    private static final int VIEWPAGER_HEIGHT_DP = 120;
-    private static final int VIEWPAGER_TOP_N_BOTTOM_PADDING_DP = 10;
-    private static final int VIEWPAGER_LEFT_N_RIGHT_PADDING_DP = 15;
+    private static final int VIEWPAGER_HEIGHT_DP = 125;
+    private static final int VIEWPAGER_TOP_PADDING_DP = 10;
+    private static final int VIEWPAGER_OTHER_PADDING_DP = 15;
     private static final int VIEWPAGER_PAGE_MARGIN_DP = 5;
 
     GoogleMap mGoogleMap;
@@ -204,14 +204,14 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             return;
         }
 
-        int paddingLeftRight = ScreenUtils.dpToPx(baseActivity, VIEWPAGER_LEFT_N_RIGHT_PADDING_DP);
-        int paddingTopBottom = ScreenUtils.dpToPx(baseActivity, VIEWPAGER_TOP_N_BOTTOM_PADDING_DP);
+        int paddingOther = ScreenUtils.dpToPx(baseActivity, VIEWPAGER_OTHER_PADDING_DP);
+        int paddingTop = ScreenUtils.dpToPx(baseActivity, VIEWPAGER_TOP_PADDING_DP);
 
         mViewPager = new DailyOverScrollViewPager(baseActivity);
         mViewPager.setOffscreenPageLimit(2);
         mViewPager.setClipToPadding(false);
         mViewPager.setPageMargin(ScreenUtils.dpToPx(baseActivity, VIEWPAGER_PAGE_MARGIN_DP));
-        mViewPager.setPadding(paddingLeftRight, paddingTopBottom, paddingLeftRight, paddingTopBottom);
+        mViewPager.setPadding(paddingOther, paddingTop, paddingOther, paddingOther);
         mViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
 
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(baseActivity, VIEWPAGER_HEIGHT_DP));
@@ -662,7 +662,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             return;
         }
 
-        mBottomOptionLayout.setTranslationY(dy - ScreenUtils.dpToPx(mBaseActivity, (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP)));
+        mBottomOptionLayout.setTranslationY(dy - ScreenUtils.dpToPx(mBaseActivity, (VIEWPAGER_HEIGHT_DP - VIEWPAGER_OTHER_PADDING_DP)));
         mViewPager.setTranslationY(dy);
     }
 
@@ -714,7 +714,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             public void onAnimationUpdate(ValueAnimator animation)
             {
                 int value = (Integer) animation.getAnimatedValue();
-                int height = ScreenUtils.dpToPx(mBaseActivity, (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP));
+                int height = ScreenUtils.dpToPx(mBaseActivity, (VIEWPAGER_HEIGHT_DP - VIEWPAGER_OTHER_PADDING_DP));
                 float translationY = height - height * value / 100;
 
                 setMenuBarLayoutTranslationY(translationY);
@@ -729,7 +729,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
                 //                setMenuBarLayoutEnabled(false);
 
                 mViewPager.setVisibility(View.VISIBLE);
-                mViewPager.setTranslationY(ScreenUtils.dpToPx(mBaseActivity, (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP)));
+                mViewPager.setTranslationY(ScreenUtils.dpToPx(mBaseActivity, (VIEWPAGER_HEIGHT_DP - VIEWPAGER_OTHER_PADDING_DP)));
 
                 mAnimationState = Constants.ANIMATION_STATE.START;
                 mAnimationStatus = Constants.ANIMATION_STATUS.SHOW;
@@ -794,7 +794,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             public void onAnimationUpdate(ValueAnimator animation)
             {
                 int value = (Integer) animation.getAnimatedValue();
-                int height = ScreenUtils.dpToPx(mBaseActivity, (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP));
+                int height = ScreenUtils.dpToPx(mBaseActivity, (VIEWPAGER_HEIGHT_DP - VIEWPAGER_OTHER_PADDING_DP));
                 float translationY = height * value / 100;
 
                 setMenuBarLayoutTranslationY(translationY);
