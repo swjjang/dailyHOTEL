@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
+import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
@@ -20,7 +21,9 @@ import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -117,6 +120,21 @@ public class StayListFragment extends PlaceListFragment
         String abTestType = DailyRemoteConfigPreference.getInstance(getContext()).getKeyRemoteConfigStayRankTestType();
 
         ((StayListNetworkController) mNetworkController).requestStayList(params, abTestType);
+    }
+
+    @Override
+    protected void onChangedWish(int position)
+    {
+        if (position < 0)
+        {
+            return;
+        }
+
+        PlaceViewItem placeViewItem = mPlaceListLayout.getList().get(position);
+        Stay stay = placeViewItem.getItem();
+        stay.myWish = !stay.myWish;
+
+        mPlaceListLayout.notifyItemChanged(position);
     }
 
     protected void onStayList(List<Stay> list, int page, boolean hasSection)
@@ -463,6 +481,20 @@ public class StayListFragment extends PlaceListFragment
         public void onCalendarClick()
         {
             ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onCalendarClick();
+        }
+
+        @Override
+        public void onWishClick(int position, PlaceViewItem placeViewItem)
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            Stay stay = placeViewItem.getItem();
+
+            startActivityForResult(WishDialogActivity.newInstance(mBaseActivity, ServiceType.HOTEL//
+                , stay.index, !stay.myWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);
         }
 
         @Override

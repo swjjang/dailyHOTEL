@@ -119,6 +119,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     private boolean mIsUsedMultiTransition;
     private boolean mIsDeepLink;
     private boolean mCheckChangedPrice;
+    private boolean mSoldOutFromList;
     private int mGradientType;
     private List<Integer> mSoldOutDateList;
     private int mSelectedMenuIndex;
@@ -321,7 +322,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             mCategory = intent.getStringExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_CATEGORY);
 
             // 이미 판매 완료인 경우에는 가격을 검사할 필요가 없다.
-            mCheckChangedPrice = intent.getBooleanExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_SOLDOUT, false);
+            mSoldOutFromList = mCheckChangedPrice = intent.getBooleanExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_SOLDOUT, false);
             mAnalytics.setAnalyticsParam(intent.getParcelableExtra(BaseActivity.INTENT_EXTRA_DATA_ANALYTICS));
         }
 
@@ -1425,7 +1426,10 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
         if (menuList == null || menuList.size() == 0)
         {
-            setResult(BaseActivity.RESULT_CODE_REFRESH);
+            if (mSoldOutFromList == false)
+            {
+                setResult(BaseActivity.RESULT_CODE_REFRESH);
+            }
 
             getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_detail_sold_out)//
                 , getString(R.string.label_changing_date)//
@@ -1455,7 +1459,10 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
                 if (hasPrice == false)
                 {
-                    setResult(BaseActivity.RESULT_CODE_REFRESH);
+                    if (mSoldOutFromList == false)
+                    {
+                        setResult(BaseActivity.RESULT_CODE_REFRESH);
+                    }
 
                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_detail_sold_out)//
                         , getString(R.string.dialog_btn_text_confirm), null);

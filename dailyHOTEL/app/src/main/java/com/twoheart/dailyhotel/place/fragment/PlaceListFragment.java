@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.place.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceCuration;
@@ -76,6 +78,8 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
 
     protected abstract void refreshList(boolean isShowProgress, int page);
 
+    protected abstract void onChangedWish(int position);
+
     public abstract PlaceListLayout getPlaceListLayout();
 
     public abstract void setPlaceCuration(PlaceCuration curation);
@@ -117,14 +121,26 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        if (mViewType == ViewType.MAP)
+        switch (requestCode)
         {
-            PlaceListMapFragment placeListMapFragment = mPlaceListLayout.getListMapFragment();
+            case Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG:
+                if (resultCode == Activity.RESULT_OK && data != null)
+                {
+                    onChangedWish(data.getIntExtra(WishDialogActivity.INTENT_EXTRA_DATA_POSITION, -1));
+                }
+                break;
 
-            if (placeListMapFragment != null)
-            {
-                placeListMapFragment.onActivityResult(requestCode, resultCode, data);
-            }
+            default:
+                if (mViewType == ViewType.MAP)
+                {
+                    PlaceListMapFragment placeListMapFragment = mPlaceListLayout.getListMapFragment();
+
+                    if (placeListMapFragment != null)
+                    {
+                        placeListMapFragment.onActivityResult(requestCode, resultCode, data);
+                    }
+                }
+                break;
         }
     }
 

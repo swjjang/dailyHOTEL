@@ -111,6 +111,12 @@ public class GourmetListFragment extends PlaceListFragment
         ((GourmetListNetworkController) mNetworkController).requestGourmetList(params);
     }
 
+    @Override
+    protected void onChangedWish(int position)
+    {
+
+    }
+
     protected void onGourmetList(List<Gourmet> list, int page, int totalCount, int maxCount, //
                                  HashMap<String, Integer> categoryCodeMap, HashMap<String, Integer> categorySequenceMap, boolean hasSection)
     {
@@ -302,6 +308,12 @@ public class GourmetListFragment extends PlaceListFragment
         public void onCalendarClick()
         {
             ((OnGourmetListFragmentListener) mOnPlaceListFragmentListener).onCalendarClick();
+        }
+
+        @Override
+        public void onWishClick(int position, PlaceViewItem placeViewItem)
+        {
+
         }
 
         @Override

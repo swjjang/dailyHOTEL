@@ -91,6 +91,8 @@ public abstract class PlaceListLayout extends BaseLayout
         void onRegionClick();
 
         void onCalendarClick();
+
+        void onWishClick(int position, PlaceViewItem placeViewItem);
     }
 
     protected abstract PlaceListAdapter getPlaceListAdapter(Context context, ArrayList<PlaceViewItem> arrayList);
@@ -120,6 +122,8 @@ public abstract class PlaceListLayout extends BaseLayout
         EdgeEffectColor.setEdgeGlowColor(mPlaceRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
         mPlaceListAdapter = getPlaceListAdapter(mContext, new ArrayList<PlaceViewItem>());
+
+        mPlaceListAdapter.setOnWishClickListener(mOnWishClickListener);
 
         if (DailyPreference.getInstance(mContext).getTrueVRSupport() > 0)
         {
@@ -593,6 +597,16 @@ public abstract class PlaceListLayout extends BaseLayout
         }
     }
 
+    public void notifyItemChanged(int position)
+    {
+        if (mPlaceListAdapter == null)
+        {
+            return;
+        }
+
+        mPlaceListAdapter.notifyItemChanged(position);
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////         Listener         ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -638,6 +652,27 @@ public abstract class PlaceListLayout extends BaseLayout
             }
 
             return true;
+        }
+    };
+
+    protected View.OnClickListener mOnWishClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View view)
+        {
+            int position = mPlaceRecyclerView.getChildAdapterPosition(view);
+            if (position < 0)
+            {
+                ((OnEventListener) mOnEventListener).onWishClick(-1, null);
+                return;
+            }
+
+            PlaceViewItem placeViewItem = mPlaceListAdapter.getItem(position);
+
+            if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY)
+            {
+                ((OnEventListener) mOnEventListener).onWishClick(position, placeViewItem);
+            }
         }
     };
 

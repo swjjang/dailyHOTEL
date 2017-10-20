@@ -91,9 +91,9 @@ public class StayRemoteImpl implements StayInterface
     }
 
     @Override
-    public Observable<WishResult> addWish(int gourmetIndex)
+    public Observable<WishResult> addWish(int stayIndex)
     {
-        return DailyMobileAPI.getInstance(mContext).addStayWish(gourmetIndex).map(baseDto ->
+        return DailyMobileAPI.getInstance(mContext).addStayWish(stayIndex).map(baseDto ->
         {
             WishResult wishResult = new WishResult();
 
@@ -111,9 +111,9 @@ public class StayRemoteImpl implements StayInterface
     }
 
     @Override
-    public Observable<WishResult> removeWish(int gourmetIndex)
+    public Observable<WishResult> removeWish(int stayIndex)
     {
-        return DailyMobileAPI.getInstance(mContext).removeStayWish(gourmetIndex).map(baseDto ->
+        return DailyMobileAPI.getInstance(mContext).removeStayWish(stayIndex).map(baseDto ->
         {
             WishResult wishResult = new WishResult();
 
@@ -131,9 +131,9 @@ public class StayRemoteImpl implements StayInterface
     }
 
     @Override
-    public Observable<ReviewScores> getReviewScores(int gourmetIndex)
+    public Observable<ReviewScores> getReviewScores(int stayIndex)
     {
-        return DailyMobileAPI.getInstance(mContext).getStayReviewScores(gourmetIndex).map(baseDto ->
+        return DailyMobileAPI.getInstance(mContext).getStayReviewScores(stayIndex).map(baseDto ->
         {
             ReviewScores reviewScores;
 
