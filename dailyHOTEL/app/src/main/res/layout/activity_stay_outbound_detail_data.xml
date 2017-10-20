@@ -185,6 +185,11 @@
                     android:background="@color/white"
                     android:orientation="vertical"/>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="16dp"
+                    android:background="@drawable/layerlist_divider"/>
+
                 <com.daily.dailyhotel.view.carousel.DailyCarouselAnimationLayout
                     android:id="@+id/recommendAroundListLayout"
                     android:layout_width="match_parent"
@@ -192,9 +197,9 @@
                     dailyCarousel:bottomMarginBackgroundColor="@color/transparent"
                     dailyCarousel:bottomMarginHeight="0dp"
                     dailyCarousel:bottomLineHeight="0dp"
-                    dailyCarousel:topMarginBackgroundColor="@color/default_background"
-                    dailyCarousel:topMarginHeight="15dp"
-                    dailyCarousel:topLineHeight="1dp"
+                    dailyCarousel:topMarginBackgroundColor="@color/transparent"
+                    dailyCarousel:topMarginHeight="0dp"
+                    dailyCarousel:topLineHeight="0dp"
                     dailyCarousel:useAnimation="false"
                     dailyCarousel:useViewAllButton="false"/>
 
