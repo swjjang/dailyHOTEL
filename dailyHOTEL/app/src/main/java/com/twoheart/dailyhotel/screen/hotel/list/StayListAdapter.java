@@ -137,15 +137,16 @@ public class StayListAdapter extends PlaceListAdapter
 
         holder.stayCardView.setStickerVisible(false);
         holder.stayCardView.setDeleteVisible(false);
-        holder.stayCardView.setWishVisible(false);
+        holder.stayCardView.setWishVisible(true);
+        holder.stayCardView.setWish(stay.myWish);
 
         holder.stayCardView.setImage(stay.imageUrl);
 
         holder.stayCardView.setGradeText(stay.getGrade().getName(mContext));
         holder.stayCardView.setVRVisible(stay.truevr && mTrueVREnabled);
-        holder.stayCardView.setReviewText(stay.satisfaction, 0);
+        holder.stayCardView.setReviewText(stay.satisfaction, stay.reviewCount);
 
-        holder.stayCardView.setNewVisible(false);
+        holder.stayCardView.setNewVisible(stay.newItem);
 
         holder.stayCardView.setStayNameText(stay.name);
 
@@ -165,7 +166,7 @@ public class StayListAdapter extends PlaceListAdapter
             holder.stayCardView.setPriceText(0, 0, 0, null, false);
         } else
         {
-            holder.stayCardView.setPriceText(0, stay.discountPrice, stay.price, null, mNights > 1);
+            holder.stayCardView.setPriceText(stay.discountRate, stay.discountPrice, stay.price, stay.couponDiscountText, mNights > 1);
         }
 
         holder.stayCardView.setBenefitText(stay.dBenefitText);

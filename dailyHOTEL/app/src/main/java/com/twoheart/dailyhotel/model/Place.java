@@ -22,6 +22,13 @@ public abstract class Place implements Parcelable
     public String stickerUrl;
     public int stickerIndex;
 
+    // 신규 추가
+    public int reviewCount;
+    public int discountRate;
+    public boolean newItem;
+    public boolean myWish;
+    public String couponDiscountText;
+
     public Place()
     {
         super();
@@ -53,6 +60,12 @@ public abstract class Place implements Parcelable
         dest.writeInt(truevr ? 1 : 0);
         dest.writeString(stickerUrl);
         dest.writeInt(stickerIndex);
+
+        dest.writeInt(reviewCount);
+        dest.writeInt(discountRate);
+        dest.writeInt(newItem ? 1 : 0);
+        dest.writeInt(myWish ? 1 : 0);
+        dest.writeString(couponDiscountText);
     }
 
     protected void readFromParcel(Parcel in)
@@ -73,5 +86,11 @@ public abstract class Place implements Parcelable
         truevr = in.readInt() == 1;
         stickerUrl = in.readString();
         stickerIndex = in.readInt();
+
+        reviewCount = in.readInt();
+        discountRate = in.readInt();
+        newItem = in.readInt() == 1;
+        myWish = in.readInt() == 1;
+        couponDiscountText = in.readString();
     }
 }

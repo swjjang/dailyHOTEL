@@ -191,6 +191,12 @@ public class Stay extends Place
             {
                 dBenefitText = null;
             }
+
+            reviewCount = jsonObject.getInt("reviewCount");
+            discountRate = jsonObject.getInt("discountRate");
+            newItem = jsonObject.getBoolean("newItem");
+            myWish = jsonObject.getBoolean("myWish");
+            couponDiscountText = jsonObject.getString("couponDiscountText");
         } catch (JSONException e)
         {
             ExLog.d(e.toString());
@@ -232,6 +238,11 @@ public class Stay extends Place
             }
 
             dBenefitText = null;
+
+            reviewCount = stayWishItem.reviewCount;
+            newItem = stayWishItem.newItem;
+            myWish = stayWishItem.myWish;
+
         } catch (Exception e)
         {
             ExLog.d(e.toString());

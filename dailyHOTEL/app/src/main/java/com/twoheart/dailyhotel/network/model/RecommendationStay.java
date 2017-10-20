@@ -35,6 +35,21 @@ public class RecommendationStay extends RecommendationPlace
     @JsonField(name = "availableRooms")
     public int availableRooms;
 
+    @JsonField(name = "reviewCount")
+    public int reviewCount;
+
+    @JsonField(name = "discountRate")
+    public int discountRate;
+
+    @JsonField(name = "newItem")
+    public boolean newItem;
+
+    @JsonField(name = "myWish")
+    public boolean myWish;
+
+    @JsonField(name = "couponDiscountText")
+    public String couponDiscountText;
+
     @OnJsonParseComplete
     void onParseComplete()
     {

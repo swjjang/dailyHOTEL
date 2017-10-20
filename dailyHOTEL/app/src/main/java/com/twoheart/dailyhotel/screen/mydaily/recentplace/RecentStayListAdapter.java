@@ -111,14 +111,15 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
 
         holder.stayCardView.setStickerVisible(false);
         holder.stayCardView.setDeleteVisible(true);
-        holder.stayCardView.setWishVisible(false);
+        holder.stayCardView.setWishVisible(true);
+        holder.stayCardView.setWish(recentlyPlace.myWish);
 
         holder.stayCardView.setImage(recentlyPlace.imageUrl);
 
         holder.stayCardView.setGradeText(Stay.Grade.valueOf(recentlyPlace.details.grade).getName(mContext));
         holder.stayCardView.setVRVisible(recentlyPlace.details.isTrueVr && mTrueVREnabled);
-        holder.stayCardView.setReviewText(recentlyPlace.rating, 0);
-        holder.stayCardView.setNewVisible(false);
+        holder.stayCardView.setReviewText(recentlyPlace.rating, recentlyPlace.reviewCount);
+        holder.stayCardView.setNewVisible(recentlyPlace.newItem);
         holder.stayCardView.setStayNameText(recentlyPlace.title);
         holder.stayCardView.setDistanceVisible(false);
         holder.stayCardView.setAddressText(recentlyPlace.addrSummary);

@@ -84,6 +84,20 @@ public class StaySalesData
     @JsonField(name = "availableRooms")
     public int availableRooms;
 
+    @JsonField(name = "reviewCount")
+    public int reviewCount;
+
+    @JsonField(name = "discountRate")
+    public int discountRate;
+
+    @JsonField(name = "newItem")
+    public boolean newItem;
+
+    @JsonField(name = "myWish")
+    public boolean myWish;
+
+    @JsonField(name = "couponDiscountText")
+    public String couponDiscountText;
 
     public Stay getStay()
     {
@@ -132,6 +146,12 @@ public class StaySalesData
         stay.sday = sday;
         stay.isOverseas = isOverseas;
         stay.availableRooms = availableRooms;
+
+        stay.reviewCount = reviewCount;
+        stay.discountRate = stay.discountRate;
+        stay.newItem = newItem;
+        stay.myWish = myWish;
+        stay.couponDiscountText = couponDiscountText;
 
         return stay;
     }

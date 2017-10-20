@@ -143,21 +143,22 @@ public class CollectionStayAdapter extends PlaceListAdapter
 
         holder.stayCardView.setStickerVisible(false);
         holder.stayCardView.setDeleteVisible(false);
-        holder.stayCardView.setWishVisible(false);
+        holder.stayCardView.setWishVisible(true);
+        holder.stayCardView.setWish(recommendationStay.myWish);
 
         holder.stayCardView.setImage(recommendationStay.imageUrl);
 
         holder.stayCardView.setGradeText(Stay.Grade.valueOf(recommendationStay.grade).getName(mContext));
         holder.stayCardView.setVRVisible(recommendationStay.truevr && mTrueVREnabled);
-        holder.stayCardView.setReviewText(recommendationStay.rating, 0);
-        holder.stayCardView.setNewVisible(false);
+        holder.stayCardView.setReviewText(recommendationStay.rating, recommendationStay.reviewCount);
+        holder.stayCardView.setNewVisible(recommendationStay.newItem);
         holder.stayCardView.setStayNameText(recommendationStay.name);
         holder.stayCardView.setDistanceVisible(false);
         holder.stayCardView.setAddressText(recommendationStay.addrSummary);
 
         if (recommendationStay.availableRooms > 0)
         {
-            holder.stayCardView.setPriceText(0, recommendationStay.discount, recommendationStay.price, null, mNights > 1);
+            holder.stayCardView.setPriceText(recommendationStay.discountRate, recommendationStay.discount, recommendationStay.price, recommendationStay.couponDiscountText, mNights > 1);
         } else
         {
             holder.stayCardView.setPriceText(0, 0, 0, null, false);
