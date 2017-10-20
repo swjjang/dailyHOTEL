@@ -59,6 +59,21 @@ public abstract class RecommendationPlace
     @JsonField(name = "distance")
     public int distance;
 
+    @JsonField(name = "reviewCount")
+    public int reviewCount;
+
+    @JsonField(name = "discountRate")
+    public int discountRate;
+
+    @JsonField(name = "newItem")
+    public boolean newItem;
+
+    @JsonField(name = "myWish")
+    public boolean myWish;
+
+    @JsonField(name = "couponDiscountText")
+    public String couponDiscountText;
+
     @JsonIgnore
     public String imageUrl;
 

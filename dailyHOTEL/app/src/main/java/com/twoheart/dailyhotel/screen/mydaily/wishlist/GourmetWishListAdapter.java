@@ -91,8 +91,8 @@ public class GourmetWishListAdapter extends PlaceWishListAdapter
 
         holder.gourmetCardView.setGradeText(DailyTextUtils.isTextEmpty(gourmet.subCategory) == false ? gourmet.subCategory : gourmet.category);
         holder.gourmetCardView.setVRVisible(false);
-        holder.gourmetCardView.setReviewText(gourmet.satisfaction, 0);
-        holder.gourmetCardView.setNewVisible(false);
+        holder.gourmetCardView.setReviewText(gourmet.satisfaction, gourmet.reviewCount);
+        holder.gourmetCardView.setNewVisible(gourmet.newItem);
         holder.gourmetCardView.setGourmetNameText(gourmet.name);
         holder.gourmetCardView.setDistanceVisible(false);
         holder.gourmetCardView.setAddressText(gourmet.addressSummary);

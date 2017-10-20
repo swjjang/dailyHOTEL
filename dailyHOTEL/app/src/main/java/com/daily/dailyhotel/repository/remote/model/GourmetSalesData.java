@@ -126,6 +126,21 @@ public class GourmetSalesData
     @JsonField(name = "restaurantName")
     public String restaurantName;
 
+    @JsonField(name = "reviewCount")
+    public int reviewCount;
+
+    @JsonField(name = "discountRate")
+    public int discountRate;
+
+    @JsonField(name = "newItem")
+    public boolean newItem;
+
+    @JsonField(name = "myWish")
+    public boolean myWish;
+
+    @JsonField(name = "couponDiscountText")
+    public String couponDiscountText;
+
     public Gourmet getGourmet()
     {
         Gourmet gourmet = new Gourmet();
@@ -189,6 +204,12 @@ public class GourmetSalesData
         gourmet.primaryTicketImageUrl = primaryTicketImageUrl;
         gourmet.startEatingTime = startEatingTime;
         gourmet.ticketIdx = ticketIdx;
+
+        gourmet.reviewCount = reviewCount;
+        gourmet.discountRate = discountRate;
+        gourmet.newItem = newItem;
+        gourmet.myWish = myWish;
+        gourmet.couponDiscountText = couponDiscountText;
 
         return gourmet;
     }

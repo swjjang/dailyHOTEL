@@ -124,15 +124,16 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
 
         holder.gourmetCardView.setStickerVisible(false);
         holder.gourmetCardView.setDeleteVisible(false);
-        holder.gourmetCardView.setWishVisible(false);
+        holder.gourmetCardView.setWishVisible(true);
+        holder.gourmetCardView.setWish(recommendationGourmet.myWish);
 
         holder.gourmetCardView.setTagStickerImage(recommendationGourmet.stickerUrl);
         holder.gourmetCardView.setImage(recommendationGourmet.imageUrl);
 
         holder.gourmetCardView.setGradeText(DailyTextUtils.isTextEmpty(recommendationGourmet.categorySub) == false ? recommendationGourmet.categorySub : recommendationGourmet.category);
         holder.gourmetCardView.setVRVisible(false);
-        holder.gourmetCardView.setReviewText(recommendationGourmet.rating, 0);
-        holder.gourmetCardView.setNewVisible(false);
+        holder.gourmetCardView.setReviewText(recommendationGourmet.rating, recommendationGourmet.reviewCount);
+        holder.gourmetCardView.setNewVisible(recommendationGourmet.newItem);
         holder.gourmetCardView.setGourmetNameText(recommendationGourmet.name);
         holder.gourmetCardView.setDistanceVisible(false);
         holder.gourmetCardView.setAddressText(recommendationGourmet.addrSummary);
@@ -144,7 +145,7 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
             holder.gourmetCardView.setPriceText(0, 0, 0, null, 0);
         } else
         {
-            holder.gourmetCardView.setPriceText(0, recommendationGourmet.discount, recommendationGourmet.price, null, recommendationGourmet.persons);
+            holder.gourmetCardView.setPriceText(recommendationGourmet.discountRate, recommendationGourmet.discount, recommendationGourmet.price, recommendationGourmet.couponDiscountText, recommendationGourmet.persons);
         }
 
         holder.gourmetCardView.setBenefitText(recommendationGourmet.benefit);

@@ -1,5 +1,7 @@
 package com.daily.dailyhotel.entity;
 
+import java.util.List;
+
 public class StayOutbound
 {
     public int index;
@@ -18,8 +20,9 @@ public class StayOutbound
     public float tripAdvisorRating;
     public int tripAdvisorReviewCount;
     public String city;
-    public String vendorType;
     public boolean dailyReward; // 데일리 리워드 아이콘 여부
+    private List<String> mVendorTypeList;
+    public int discountRate;
 
     public StayOutbound()
     {
@@ -34,5 +37,15 @@ public class StayOutbound
     public void setImageMap(ImageMap imageMap)
     {
         mImageMap = imageMap;
+    }
+
+    public void setVendorTypeList(List<String> vendorTypeList)
+    {
+        mVendorTypeList = vendorTypeList;
+    }
+
+    public List<String> getVendorTypeList()
+    {
+        return mVendorTypeList;
     }
 }

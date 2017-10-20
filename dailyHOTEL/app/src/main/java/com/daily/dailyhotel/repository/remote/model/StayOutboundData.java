@@ -4,6 +4,8 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.daily.dailyhotel.entity.StayOutbound;
 
+import java.util.List;
+
 @JsonObject
 public class StayOutboundData
 {
@@ -52,8 +54,11 @@ public class StayOutboundData
     @JsonField(name = "city")
     public String city;
 
-    @JsonField(name = "vendorType")
-    public String vendorType;
+    @JsonField(name = "vendorTypes")
+    public List<String> vendorTypeList;
+
+    @JsonField(name = "discountRate")
+    public int discountRate;
 
     public StayOutboundData()
     {
@@ -78,7 +83,8 @@ public class StayOutboundData
         stayOutbound.total = total;
         stayOutbound.setImageMap(imageMapData.getImageMap());
         stayOutbound.city = city;
-        stayOutbound.vendorType = vendorType;
+        stayOutbound.discountRate = discountRate;
+        stayOutbound.setVendorTypeList(vendorTypeList);
 
         if (tripAdvisorData != null)
         {
