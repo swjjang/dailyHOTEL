@@ -263,6 +263,12 @@ public class Gourmet extends Place
             {
                 dBenefitText = null;
             }
+
+            reviewCount = jsonObject.getInt("reviewCount");
+            discountRate = jsonObject.getInt("discountRate");
+            newItem = jsonObject.getBoolean("newItem");
+            myWish = jsonObject.getBoolean("myWish");
+            couponDiscountText = jsonObject.getString("couponDiscountText");
         } catch (JSONException e)
         {
             ExLog.d(e.toString());
@@ -320,6 +326,10 @@ public class Gourmet extends Place
             }
 
             dBenefitText = null;
+
+            reviewCount = gourmetWishItem.reviewCount;
+            newItem = gourmetWishItem.newItem;
+            myWish = gourmetWishItem.myWish;
         } catch (Exception e)
         {
             ExLog.d(e.toString());

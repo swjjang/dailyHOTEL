@@ -85,7 +85,8 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
 
         holder.gourmetCardView.setStickerVisible(false);
         holder.gourmetCardView.setDeleteVisible(true);
-        holder.gourmetCardView.setWishVisible(false);
+        holder.gourmetCardView.setWishVisible(true);
+        holder.gourmetCardView.setWish(recentlyPlace.myWish);
 
         // 스티커
         String stickerUrl = null;
@@ -99,8 +100,8 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
 
         holder.gourmetCardView.setGradeText(DailyTextUtils.isTextEmpty(recentlyPlace.details.subCategory) == false ? recentlyPlace.details.subCategory : recentlyPlace.details.category);
         holder.gourmetCardView.setVRVisible(false);
-        holder.gourmetCardView.setReviewText(recentlyPlace.rating, 0);
-        holder.gourmetCardView.setNewVisible(false);
+        holder.gourmetCardView.setReviewText(recentlyPlace.rating, recentlyPlace.reviewCount);
+        holder.gourmetCardView.setNewVisible(recentlyPlace.newItem);
         holder.gourmetCardView.setGourmetNameText(recentlyPlace.title);
         holder.gourmetCardView.setDistanceVisible(false);
         holder.gourmetCardView.setAddressText(recentlyPlace.addrSummary);
