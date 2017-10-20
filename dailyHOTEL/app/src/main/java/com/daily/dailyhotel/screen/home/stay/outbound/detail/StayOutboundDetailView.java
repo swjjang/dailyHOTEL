@@ -656,7 +656,7 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
             getViewDataBinding().transNameTextView.setVisibility(View.VISIBLE);
             getViewDataBinding().transImageView.setTransitionName(getString(R.string.transition_place_image));
             getViewDataBinding().transGradientBottomView.setTransitionName(getString(R.string.transition_gradient_bottom_view));
-            getViewDataBinding().transGradientTopView.setTransitionName(getString(R.string.transition_gradient_top_view));
+            getViewDataBinding().imageLoopView.setTransGradientTopView(getString(R.string.transition_gradient_top_view));
             getViewDataBinding().transNameTextView.setTransitionName(getString(R.string.transition_place_name));
 
             switch (gradientType)
