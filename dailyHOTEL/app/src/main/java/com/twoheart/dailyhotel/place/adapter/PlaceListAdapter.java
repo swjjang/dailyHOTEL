@@ -31,6 +31,7 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
     protected List<PlaceViewItem> mPlaceViewItemList;
     protected boolean mShowDistanceIgnoreSort;
     protected View.OnClickListener mOnEventBannerClickListener;
+    protected View.OnClickListener mOnWishClickListener;
     protected View.OnLongClickListener mOnLongClickListener;
 
     Handler mEventBannerHandler;
@@ -50,6 +51,11 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
         addAll(arrayList);
 
         mInflater = LayoutInflater.from(context);
+    }
+
+    public void setOnWishClickListener(View.OnClickListener listener)
+    {
+        mOnWishClickListener = listener;
     }
 
     public void setOnLongClickListener(View.OnLongClickListener listener)

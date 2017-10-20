@@ -343,6 +343,14 @@ public class StayListAdapter extends PlaceListAdapter
                     }
                 });
             }
+
+            stayCardView.setOnWishClickListener(v ->
+            {
+                if (mOnWishClickListener != null)
+                {
+                    mOnWishClickListener.onClick(stayCardView);
+                }
+            });
         }
     }
 }
