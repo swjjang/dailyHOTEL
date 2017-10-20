@@ -28,6 +28,7 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 public class BookingRemoteImpl implements BookingInterface
 {
@@ -276,7 +277,7 @@ public class BookingRemoteImpl implements BookingInterface
 
                 return list;
             }
-        });
+        }).subscribeOn(Schedulers.io());
     }
 
     @Override
@@ -308,6 +309,6 @@ public class BookingRemoteImpl implements BookingInterface
 
                 return list;
             }
-        });
+        }).subscribeOn(Schedulers.io());
     }
 }

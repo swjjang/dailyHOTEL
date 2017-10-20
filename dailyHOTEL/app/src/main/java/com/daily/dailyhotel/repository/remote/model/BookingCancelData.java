@@ -54,15 +54,33 @@ public class BookingCancelData
         bookingCancel.aggregationId = aggregationId;
         bookingCancel.orderSeq = orderSeq;
         bookingCancel.reservationIdx = reservationIdx;
-        bookingCancel.checkinDate = checkinDate;
-        bookingCancel.checkoutDate = checkoutDate;
-        bookingCancel.checkinTime = checkinTime;
-        bookingCancel.checkoutTime = checkoutTime;
+//        bookingCancel.checkinDate = checkinDate;
+//        bookingCancel.checkoutDate = checkoutDate;
+//        bookingCancel.checkinTime = checkinTime;
+//        bookingCancel.checkoutTime = checkoutTime;
         bookingCancel.cancelDateTime = cancelDateTime;
         bookingCancel.imageUrl = imageUrl;
-        bookingCancel.type = type;
+//        bookingCancel.type = type;
         bookingCancel.name = name;
         bookingCancel.itemIdx = itemIdx;
+
+        switch (type)
+        {
+            case "hotel":
+                bookingCancel.placeType = BookingCancel.PlaceType.STAY;
+                break;
+
+            case "fnb":
+                bookingCancel.placeType = BookingCancel.PlaceType.GOURMET;
+                break;
+
+            case "outbound":
+                bookingCancel.placeType = BookingCancel.PlaceType.STAY_OUTBOUND;
+                break;
+        }
+
+        bookingCancel.checkInDateTime = checkinDate + "T" + checkinTime + "+09:00";
+        bookingCancel.checkOutDateTime = checkoutDate + "T" + checkoutTime + "+09:00";
 
         return bookingCancel;
     }

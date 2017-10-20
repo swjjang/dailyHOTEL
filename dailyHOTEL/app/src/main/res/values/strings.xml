@@ -1437,6 +1437,7 @@
     <string name="message_booking_delete_booking">삭제 되었습니다.</string>
     <string name="message_booking_failed_delete_booking">삭제에 실패했습니다.\n잠시 후에 다시 시도해주십시요.</string>
     <string name="label_booking_toolbar_cancel_history_button_text">취소내역 보기</string>
+    <string name="label_booking_after_cancel">취소 완료</string>
 
     <!-- Reservation cancel History -->
     <string name="message_booking_cancel_list_no_cancel_list">최근 1년 이내에 취소된 내역이 없습니다.</string>
