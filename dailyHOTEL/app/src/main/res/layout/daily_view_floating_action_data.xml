@@ -63,7 +63,7 @@
             android:id="@+id/filterOnView"
             android:layout_width="4dp"
             android:layout_height="4dp"
-            android:layout_marginRight="14dp"
+            android:layout_marginRight="13dp"
             android:layout_marginTop="11dp"
             android:background="@drawable/shape_circle_bb70038"
             android:visibility="invisible"
