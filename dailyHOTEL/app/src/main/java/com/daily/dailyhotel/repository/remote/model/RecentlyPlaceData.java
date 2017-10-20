@@ -45,6 +45,15 @@ public class RecentlyPlaceData
     @JsonField(name = "soldOut")
     public boolean isSoldOut;
 
+    @JsonField(name = "reviewCount")
+    public int reviewCount;
+
+    @JsonField(name = "newItem")
+    public boolean newItem;
+
+    @JsonField(name = "myWish")
+    public boolean myWish;
+
     public RecentlyPlace getRecentlyPlace()
     {
         RecentlyPlace place = new RecentlyPlace();
@@ -59,6 +68,10 @@ public class RecentlyPlaceData
         place.details = details.getDetail();
         place.isSoldOut = isSoldOut;
         place.imageUrl = getImageUrl();
+
+        place.reviewCount = reviewCount;
+        place.newItem = newItem;
+        place.myWish = myWish;
 
         return place;
     }

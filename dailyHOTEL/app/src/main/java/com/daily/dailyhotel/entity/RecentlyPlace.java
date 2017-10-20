@@ -21,5 +21,9 @@ public class RecentlyPlace
     public RecentlyPlaceDetail details;
     public String imageUrl;
     public boolean isSoldOut;
+
     public boolean dailyReward;
+    public int reviewCount;
+    public boolean newItem;
+    public boolean myWish;
 }

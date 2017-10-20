@@ -103,8 +103,8 @@ public class StayWishListAdapter extends PlaceWishListAdapter
 
         holder.stayCardView.setGradeText(stay.getGrade().getName(mContext));
         holder.stayCardView.setVRVisible(stay.truevr && mTrueVREnabled);
-        holder.stayCardView.setReviewText(stay.satisfaction, 0);
-        holder.stayCardView.setNewVisible(false);
+        holder.stayCardView.setReviewText(stay.satisfaction, stay.reviewCount);
+        holder.stayCardView.setNewVisible(stay.newItem);
         holder.stayCardView.setStayNameText(stay.name);
         holder.stayCardView.setDistanceVisible(false);
         holder.stayCardView.setAddressText(stay.addressSummary);

@@ -44,6 +44,15 @@ public abstract class PlaceWishItem<T>
     @JsonField(name = "details")
     public T details;
 
+    @JsonField(name = "reviewCount")
+    public int reviewCount;
+
+    @JsonField(name = "newItem")
+    public boolean newItem;
+
+    @JsonField(name = "myWish")
+    public boolean myWish;
+
     @JsonIgnore
     public String imageUrl;
 

@@ -9,10 +9,8 @@ import com.daily.dailyhotel.entity.UserSimpleInformation;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundPaymentAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundThankYouAnalyticsParam;
 import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -156,6 +154,18 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
             , AnalyticsManager.Action.ENDPAYMENT_OUTBOUND, getPaymentType(paymentType), null);
+    }
+
+    @Override
+    public void onEventVendorType(Activity activity, int stayIndex, String vendorType)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.VENDOR_SELECTION_ORDER_COMPLETION//
+            , vendorType, Integer.toString(stayIndex), null);
     }
 
     @Override
