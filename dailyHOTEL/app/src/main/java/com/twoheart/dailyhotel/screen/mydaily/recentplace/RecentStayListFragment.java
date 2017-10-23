@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
-import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +27,7 @@ import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailA
 import com.daily.dailyhotel.screen.home.stay.outbound.preview.StayOutboundPreviewActivity;
 import com.daily.dailyhotel.storage.database.DailyDb;
 import com.daily.dailyhotel.view.DailyStayCardView;
+import com.daily.dailyhotel.view.DailyStayOutboundCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -498,7 +498,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 }
             });
 
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), ((DailyStayCardView) view).getOptionsCompat());
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), ((DailyStayOutboundCardView) view).getOptionsCompat());
 
             mBaseActivity.startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
                 , stayOutbound.name, imageUrl, StayOutboundDetailActivity.NONE_PRICE//
