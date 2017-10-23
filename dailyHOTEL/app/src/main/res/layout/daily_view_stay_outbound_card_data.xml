@@ -76,7 +76,7 @@
         <View
             android:id="@+id/gradientBottomView"
             android:layout_width="0dp"
-            android:layout_height="63dp"
+            android:layout_height="78dp"
             app:layout_constraintBottom_toBottomOf="@id/simpleDraweeView"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
