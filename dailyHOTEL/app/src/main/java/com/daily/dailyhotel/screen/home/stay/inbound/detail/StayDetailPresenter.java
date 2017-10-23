@@ -543,7 +543,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                     onHideRoomListClick(false);
                 }
 
-                setResult(BaseActivity.RESULT_CODE_REFRESH);
+                setResult(BaseActivity.RESULT_CODE_REFRESH, null);
                 break;
 
             case StayDetailActivity.REQUEST_CODE_DOWNLOAD_COUPON:
@@ -554,7 +554,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 {
                     onWishClick();
 
-                    setResult(BaseActivity.RESULT_CODE_REFRESH);
+                    setResult(BaseActivity.RESULT_CODE_REFRESH, null);
                 }
                 break;
 
@@ -601,6 +601,30 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     public void onBackClick()
     {
         getActivity().onBackPressed();
+    }
+
+    @Override
+    protected void setResult(int resultCode)
+    {
+        if (getResultCode() == BaseActivity.RESULT_CODE_REFRESH)
+        {
+            super.setResult(BaseActivity.RESULT_CODE_REFRESH);
+        } else
+        {
+            super.setResult(resultCode);
+        }
+    }
+
+    @Override
+    protected void setResult(int resultCode, Intent resultData)
+    {
+        if (getResultCode() == BaseActivity.RESULT_CODE_REFRESH)
+        {
+            super.setResult(BaseActivity.RESULT_CODE_REFRESH);
+        } else
+        {
+            super.setResult(resultCode, resultData);
+        }
     }
 
     @Override
