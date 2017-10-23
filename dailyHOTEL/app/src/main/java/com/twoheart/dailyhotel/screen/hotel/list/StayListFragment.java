@@ -500,7 +500,7 @@ public class StayListFragment extends PlaceListFragment
 
             mWishPosition = position;
 
-            startActivityForResult(WishDialogActivity.newInstance(mBaseActivity, ServiceType.HOTEL//
+            mBaseActivity.startActivityForResult(WishDialogActivity.newInstance(mBaseActivity, ServiceType.HOTEL//
                 , stay.index, !stay.myWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);
         }
 

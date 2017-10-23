@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
+import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
@@ -37,6 +38,7 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
     private int mPlaceIndex;
     private boolean mWish;
     private String mCallByScreen;
+    private boolean mNotLoginUser;
 
     public interface WishDialogAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -94,6 +96,7 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
     {
         if (DailyHotel.isLogin() == false)
         {
+            mNotLoginUser = true;
             setRefresh(false);
 
             DailyToast.showToast(getActivity(), R.string.toast_msg_please_login, DailyToast.LENGTH_LONG);
@@ -184,11 +187,11 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
 
         switch (mServiceType)
         {
-            case GOURMET:
+            case HOTEL:
                 wishResultObservable = mWish ? mStayRemoteImpl.addWish(mPlaceIndex) : mStayRemoteImpl.removeWish(mPlaceIndex);
                 break;
 
-            case HOTEL:
+            case GOURMET:
                 wishResultObservable = mWish ? mGourmetRemoteImpl.addWish(mPlaceIndex) : mGourmetRemoteImpl.removeWish(mPlaceIndex);
                 break;
 
@@ -246,10 +249,18 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
                     {
                         unLockAll();
 
-                        Intent intent = new Intent();
-                        intent.putExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, mWish);
+                        // 로그인 후에 변경시에는 전체 리플래쉬가 되어야 한다.
+                        if (mNotLoginUser == true)
+                        {
+                            setResult(BaseActivity.RESULT_CODE_REFRESH);
+                        } else
+                        {
+                            Intent intent = new Intent();
+                            intent.putExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, mWish);
 
-                        setResult(Activity.RESULT_OK, intent);
+                            setResult(Activity.RESULT_OK, intent);
+                        }
+
                         onBackClick();
                     }
                 }));

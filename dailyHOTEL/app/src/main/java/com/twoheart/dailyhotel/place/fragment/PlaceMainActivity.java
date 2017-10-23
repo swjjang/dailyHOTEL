@@ -314,6 +314,8 @@ public abstract class PlaceMainActivity extends BaseActivity
                                             mDontReloadAtOnResume = false;
                                         } else
                                         {
+                                            mDontReloadAtOnResume = true;
+
                                             onActivityCurrentFragmentResult(requestCode, resultCode, data);
                                         }
                                     }
@@ -340,6 +342,8 @@ public abstract class PlaceMainActivity extends BaseActivity
             }
 
             case CODE_REQUEST_ACTIVITY_PREVIEW:
+                mDontReloadAtOnResume = true;
+
                 switch (resultCode)
                 {
                     case Activity.RESULT_OK:
@@ -364,6 +368,18 @@ public abstract class PlaceMainActivity extends BaseActivity
                             onActivityCurrentFragmentResult(requestCode, resultCode, data);
                         }
                         break;
+                }
+                break;
+
+            case Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG:
+                if(resultCode == com.daily.base.BaseActivity.RESULT_CODE_REFRESH)
+                {
+                    mDontReloadAtOnResume = false;
+                } else
+                {
+                    mDontReloadAtOnResume = true;
+
+                    onActivityCurrentFragmentResult(requestCode, resultCode, data);
                 }
                 break;
         }
