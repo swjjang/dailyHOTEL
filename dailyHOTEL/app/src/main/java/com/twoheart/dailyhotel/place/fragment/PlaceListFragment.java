@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
+import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceCuration;
@@ -19,6 +20,7 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
+import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
@@ -29,6 +31,7 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
     protected int mPlaceCount;
     protected int mLoadMorePageIndex;
     protected boolean mIsLoadMoreFlag = true; // 더보기 호출시 마지막 아이템이 성공이고 호텔 SaleList 또는 카운트가 0일때 false, refresh 시 true;
+    protected int mWishPosition;
 
     protected ViewType mViewType;
 
@@ -78,7 +81,7 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
 
     protected abstract void refreshList(boolean isShowProgress, int page);
 
-    protected abstract void onChangedWish(int position);
+    protected abstract void onChangedWish(int position, boolean wish);
 
     public abstract PlaceListLayout getPlaceListLayout();
 
@@ -126,7 +129,30 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
             case Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG:
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
-                    onChangedWish(data.getIntExtra(WishDialogActivity.INTENT_EXTRA_DATA_POSITION, -1));
+                    onChangedWish(mWishPosition, data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false));
+                }
+                break;
+
+            case CODE_REQUEST_ACTIVITY_STAY_DETAIL:
+            case CODE_REQUEST_ACTIVITY_GOURMET_DETAIL:
+            {
+                if (resultCode == com.daily.base.BaseActivity.RESULT_CODE_REFRESH && data != null)
+                {
+                    if (data.hasExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH) == true)
+                    {
+                        onChangedWish(mWishPosition, data.getBooleanExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH, false));
+                    }
+                }
+                break;
+            }
+
+            case CODE_REQUEST_ACTIVITY_PREVIEW:
+                if (resultCode == Activity.RESULT_OK && data != null)
+                {
+                    if (data.hasExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH) == true)
+                    {
+                        onChangedWish(mWishPosition, data.getBooleanExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH, false));
+                    }
                 }
                 break;
 

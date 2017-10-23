@@ -123,7 +123,7 @@ public class StayListFragment extends PlaceListFragment
     }
 
     @Override
-    protected void onChangedWish(int position)
+    protected void onChangedWish(int position, boolean wish)
     {
         if (position < 0)
         {
@@ -132,9 +132,12 @@ public class StayListFragment extends PlaceListFragment
 
         PlaceViewItem placeViewItem = mPlaceListLayout.getList().get(position);
         Stay stay = placeViewItem.getItem();
-        stay.myWish = !stay.myWish;
 
-        mPlaceListLayout.notifyItemChanged(position);
+        if (stay.myWish != wish)
+        {
+            stay.myWish = wish;
+            mPlaceListLayout.notifyWishChanged(position, wish);
+        }
     }
 
     protected void onStayList(List<Stay> list, int page, boolean hasSection)
@@ -391,13 +394,17 @@ public class StayListFragment extends PlaceListFragment
     protected StayListLayout.OnEventListener mEventListener = new StayListLayout.OnEventListener()
     {
         @Override
-        public void onPlaceClick(View view, PlaceViewItem placeViewItem)
+        public void onPlaceClick(int position, View view, PlaceViewItem placeViewItem)
         {
+            mWishPosition = position;
+
             ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onStayClick(view, placeViewItem, getPlaceCount());
         }
 
-        public void onPlaceLongClick(View view, PlaceViewItem placeViewItem)
+        public void onPlaceLongClick(int position, View view, PlaceViewItem placeViewItem)
         {
+            mWishPosition = position;
+
             ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onStayLongClick(view, placeViewItem, getPlaceCount());
         }
 
@@ -490,6 +497,8 @@ public class StayListFragment extends PlaceListFragment
             }
 
             Stay stay = placeViewItem.getItem();
+
+            mWishPosition = position;
 
             startActivityForResult(WishDialogActivity.newInstance(mBaseActivity, ServiceType.HOTEL//
                 , stay.index, !stay.myWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);

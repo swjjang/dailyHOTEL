@@ -43,6 +43,10 @@ public class StayDetailActivity extends BaseActivity<StayDetailPresenter>
     static final String INTENT_EXTRA_DATA_CALL_GRADIENT_TYPE = "gradientType";
     static final String INTENT_EXTRA_DATA_LIST_PRICE = "listPrice";
 
+    public static final String INTENT_EXTRA_DATA_WISH = "wish";
+    public static final String INTENT_EXTRA_DATA_CHANGED_PRICE = "changedPrice";
+    public static final String INTENT_EXTRA_DATA_SOLD_OUT = "soldOut";
+
     public static final int TRANS_GRADIENT_BOTTOM_TYPE_NONE = -1;
     public static final int TRANS_GRADIENT_BOTTOM_TYPE_MAP = 1;
     public static final int TRANS_GRADIENT_BOTTOM_TYPE_LIST = 2;

@@ -55,9 +55,21 @@ public class StayListLayout extends PlaceListLayout
     //    }
 
     @Override
+    public void notifyWishChanged(int position, boolean wish)
+    {
+        if (mPlaceRecyclerView == null)
+        {
+            return;
+        }
+
+        StayListAdapter.StayViewHolder holder = (StayListAdapter.StayViewHolder) mPlaceRecyclerView.findViewHolderForAdapterPosition(position);
+        holder.stayCardView.setWish(wish);
+    }
+
+    @Override
     protected void onInformationClick(View view, PlaceViewItem placeViewItem)
     {
-        ((OnEventListener) mOnEventListener).onPlaceClick(view, placeViewItem);
+        ((OnEventListener) mOnEventListener).onPlaceClick(-1, view, placeViewItem);
 
         AnalyticsManager.getInstance(mContext).recordEvent(AnalyticsManager.Category.NAVIGATION_//
             , AnalyticsManager.Action.HOTEL_MAP_DETAIL_VIEW_CLICKED, placeViewItem.<Place>getItem().name, null);

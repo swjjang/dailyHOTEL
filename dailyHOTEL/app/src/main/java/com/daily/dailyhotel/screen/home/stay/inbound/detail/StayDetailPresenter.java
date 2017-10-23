@@ -58,7 +58,6 @@ import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectStayCouponDialogActiv
 import com.twoheart.dailyhotel.screen.mydaily.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.EditProfilePhoneActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
-import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.util.AppResearch;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -647,10 +646,9 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                         @Override
                         public void accept(@io.reactivex.annotations.NonNull WishResult wishResult) throws Exception
                         {
-                            if (equalsCallingActivity(WishListTabActivity.class) == true)
-                            {
-                                setResult(BaseActivity.RESULT_CODE_REFRESH);
-                            }
+                            Intent intent = new Intent();
+                            intent.putExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH, true);
+                            setResult(BaseActivity.RESULT_CODE_REFRESH, intent);
 
                             if (wishResult.success == true)
                             {
@@ -705,10 +703,9 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                         @Override
                         public void accept(@io.reactivex.annotations.NonNull WishResult wishResult) throws Exception
                         {
-                            if (equalsCallingActivity(WishListTabActivity.class) == true)
-                            {
-                                setResult(BaseActivity.RESULT_CODE_REFRESH);
-                            }
+                            Intent intent = new Intent();
+                            intent.putExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH, false);
+                            setResult(BaseActivity.RESULT_CODE_REFRESH, intent);
 
                             if (wishResult.success == true)
                             {
@@ -1536,7 +1533,9 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
         if (roomList == null || roomList.size() == 0)
         {
-            setResult(BaseActivity.RESULT_CODE_REFRESH);
+            Intent intent = new Intent();
+            intent.putExtra(StayDetailActivity.INTENT_EXTRA_DATA_SOLD_OUT, true);
+            setResult(BaseActivity.RESULT_CODE_REFRESH, intent);
 
             getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_sold_out)//
                 , getString(R.string.label_changing_date), v -> onCalendarClick(), null, true);
@@ -1563,7 +1562,9 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
                 if (hasPrice == false)
                 {
-                    setResult(BaseActivity.RESULT_CODE_REFRESH);
+                    Intent intent = new Intent();
+                    intent.putExtra(StayDetailActivity.INTENT_EXTRA_DATA_CHANGED_PRICE, true);
+                    setResult(BaseActivity.RESULT_CODE_REFRESH, intent);
 
                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_detail_changed_price)//
                         , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
