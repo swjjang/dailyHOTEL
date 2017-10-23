@@ -437,7 +437,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             getViewDataBinding().transNameTextView.setVisibility(View.VISIBLE);
             getViewDataBinding().transImageView.setTransitionName(getString(R.string.transition_place_image));
             getViewDataBinding().transGradientBottomView.setTransitionName(getString(R.string.transition_gradient_bottom_view));
-            getViewDataBinding().transGradientTopView.setTransitionName(getString(R.string.transition_gradient_top_view));
+            getViewDataBinding().imageLoopView.setTransGradientTopView(getString(R.string.transition_gradient_top_view));
             getViewDataBinding().transNameTextView.setTransitionName(getString(R.string.transition_place_name));
 
             switch (gradientType)
@@ -1864,8 +1864,8 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
     private PaintDrawable getGradientBottomDrawable()
     {
         // 그라디에이션 만들기.
-        final int colors[] = {0x99000000, 0x66000000, 0x19000000, 0x00000000};
-        final float positions[] = {0.0f, 0.42f, 0.8f, 1.0f};
+        final int colors[] = {0x99000000, 0x66000000, 0x3d000000, 0x14000000, 0x00000000};
+        final float positions[] = {0.0f, 0.29f, 0.53f, 0.75f, 1.0f};
 
         PaintDrawable paintDrawable = new PaintDrawable();
         paintDrawable.setShape(new RectShape());

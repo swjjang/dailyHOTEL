@@ -1,9 +1,11 @@
 package com.daily.dailyhotel.view;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
+import android.os.Build;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -100,6 +102,17 @@ public class DailyImageLoopView extends ConstraintLayout implements ViewPager.On
         mImageViewPagerAdapter.setData(imageList);
         mViewDataBinding.imageLoopViewPager.setAdapter(mImageViewPagerAdapter);
         mViewDataBinding.viewpagerIndicator.setViewPager(mViewDataBinding.imageLoopViewPager);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public void setTransGradientTopView(String transitionName)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.transGradientTopView.setTransitionName(transitionName);
     }
 
     public void setStickerUrl(String url)

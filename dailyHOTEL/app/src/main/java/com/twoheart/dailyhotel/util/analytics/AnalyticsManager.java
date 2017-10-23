@@ -1161,6 +1161,8 @@ public class AnalyticsManager
         public static final String OB_SEARCH_ORIGIN_AUTO = "ob_search_origin_auto";
         public static final String OB_SEARCH_ORIGIN_RECENT = "ob_search_origin_recent";
         public static final String OB_SEARCH_ORIGIN_ETC = "ob_search_origin_etc";
+
+        public static final String VENDOR_SELECTION_ORDER_COMPLETION = "vendor_selection_order_completion";
     }
 
     public static class Label

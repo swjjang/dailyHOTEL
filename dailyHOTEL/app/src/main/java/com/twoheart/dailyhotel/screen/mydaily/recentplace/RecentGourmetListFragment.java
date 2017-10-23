@@ -136,6 +136,13 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
                 {
                     return makePlaceViewItemList(recentlyPlaceList);
                 }
+            }).flatMap(new Function<ArrayList<PlaceViewItem>, ObservableSource<ArrayList<PlaceViewItem>>>()
+            {
+                @Override
+                public ObservableSource<ArrayList<PlaceViewItem>> apply(@NonNull ArrayList<PlaceViewItem> placeViewItems) throws Exception
+                {
+                    return sortList(placeViewItems, true);
+                }
             }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<PlaceViewItem>>()
             {
                 @Override
@@ -159,6 +166,37 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
                 }
             }));
 
+//        addCompositeDisposable(ibObservable //
+//            .observeOn(Schedulers.io()).map(new Function<ArrayList<RecentlyPlace>, ArrayList<PlaceViewItem>>()
+//            {
+//                @Override
+//                public ArrayList<PlaceViewItem> apply(@NonNull ArrayList<RecentlyPlace> recentlyPlaceList) throws Exception
+//                {
+//                    return makePlaceViewItemList(recentlyPlaceList);
+//                }
+//            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<PlaceViewItem>>()
+//            {
+//                @Override
+//                public void accept(@NonNull ArrayList<PlaceViewItem> list) throws Exception
+//                {
+//                    unLockUI();
+//
+//                    if (isFinishing() == true)
+//                    {
+//                        return;
+//                    }
+//
+//                    mListLayout.setData(list, mPlaceBookingDay);
+//                }
+//            }, new Consumer<Throwable>()
+//            {
+//                @Override
+//                public void accept(@NonNull Throwable throwable) throws Exception
+//                {
+//                    onHandleError(throwable);
+//                }
+//            }));
+
     }
 
     ArrayList<PlaceViewItem> makePlaceViewItemList(ArrayList<RecentlyPlace> gourmetList)
@@ -174,32 +212,25 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
             list.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, recentlyPlace));
         }
 
-        if (list.size() == 0)
-        {
-            return list;
-        }
-
-        sortList(list, true);
-
         return list;
     }
 
-    private void sortList(ArrayList<PlaceViewItem> actualList, boolean isAddFooter)
+    private Observable<ArrayList<PlaceViewItem>> sortList(ArrayList<PlaceViewItem> actualList, boolean isAddFooter)
     {
         if (actualList == null || actualList.size() == 0)
         {
-            return;
+            return Observable.just(new ArrayList<>());
         }
 
-        addCompositeDisposable(mRecentlyLocalImpl.getRecentlyIndexList(Constants.ServiceType.GOURMET) //
-            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<Integer>>()
+        return mRecentlyLocalImpl.getRecentlyIndexList(Constants.ServiceType.GOURMET) //
+            .flatMap(new Function<ArrayList<Integer>, ObservableSource<ArrayList<PlaceViewItem>>>()
             {
                 @Override
-                public void accept(ArrayList<Integer> expectedList) throws Exception
+                public ObservableSource<ArrayList<PlaceViewItem>> apply(@NonNull ArrayList<Integer> expectedList) throws Exception
                 {
                     if (expectedList == null || expectedList.size() == 0)
                     {
-                        return;
+                        return Observable.just(actualList);
                     }
 
                     Collections.sort(actualList, new Comparator<PlaceViewItem>()
@@ -217,8 +248,10 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
                     {
                         actualList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
                     }
+
+                    return Observable.just(actualList);
                 }
-            }));
+            }).subscribeOn(Schedulers.io());
     }
 
     int getPlaceViewItemIndex(PlaceViewItem placeViewItem)
