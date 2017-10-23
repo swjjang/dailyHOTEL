@@ -270,8 +270,12 @@ public class MenuBarLayout implements View.OnClickListener
             @Override
             public void onAnimationEnd(Animator animation)
             {
-                mValueAnimator.removeAllUpdateListeners();
-                mValueAnimator.removeAllListeners();
+                if (mValueAnimator != null)
+                {
+                    mValueAnimator.removeAllUpdateListeners();
+                    mValueAnimator.removeAllListeners();
+                    mValueAnimator = null;
+                }
             }
 
             @Override
@@ -334,8 +338,12 @@ public class MenuBarLayout implements View.OnClickListener
             @Override
             public void onAnimationEnd(Animator animation)
             {
-                mValueAnimator.removeAllUpdateListeners();
-                mValueAnimator.removeAllListeners();
+                if (mValueAnimator != null)
+                {
+                    mValueAnimator.removeAllUpdateListeners();
+                    mValueAnimator.removeAllListeners();
+                    mValueAnimator = null;
+                }
 
                 if (isCanceled == false)
                 {

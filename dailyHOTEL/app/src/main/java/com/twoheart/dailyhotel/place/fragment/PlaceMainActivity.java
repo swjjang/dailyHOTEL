@@ -245,8 +245,7 @@ public abstract class PlaceMainActivity extends BaseActivity
 
                 if (mViewType == ViewType.MAP)
                 {
-                    PlaceListFragment placeListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
-                    placeListFragment.onActivityResult(requestCode, resultCode, data);
+                    onActivityCurrentFragmentResult(requestCode, resultCode, data);
                 } else
                 {
                     searchMyLocation();
@@ -260,8 +259,7 @@ public abstract class PlaceMainActivity extends BaseActivity
 
                 if (mViewType == ViewType.MAP)
                 {
-                    PlaceListFragment placeListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
-                    placeListFragment.onActivityResult(requestCode, resultCode, data);
+                    onActivityCurrentFragmentResult(requestCode, resultCode, data);
                 } else
                 {
                     if (resultCode == Activity.RESULT_OK)
@@ -316,12 +314,7 @@ public abstract class PlaceMainActivity extends BaseActivity
                                             mDontReloadAtOnResume = false;
                                         } else
                                         {
-                                            PlaceListFragment currentListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
-
-                                            if (currentListFragment != null)
-                                            {
-                                                currentListFragment.onActivityResult(requestCode, resultCode, data);
-                                            }
+                                            onActivityCurrentFragmentResult(requestCode, resultCode, data);
                                         }
                                     }
                                     break;
@@ -347,26 +340,30 @@ public abstract class PlaceMainActivity extends BaseActivity
             }
 
             case CODE_REQUEST_ACTIVITY_PREVIEW:
-                if (resultCode == Activity.RESULT_OK)
+                switch (resultCode)
                 {
-                    if (data != null)
-                    {
-                        PlaceListFragment currentListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
-
-                        if (currentListFragment != null)
+                    case Activity.RESULT_OK:
+                        if (data != null)
                         {
-                            currentListFragment.onActivityResult(requestCode, resultCode, data);
+                            onActivityCurrentFragmentResult(requestCode, resultCode, data);
                         }
-                    }
 
-                    Observable.create(new ObservableOnSubscribe<Object>()
-                    {
-                        @Override
-                        public void subscribe(ObservableEmitter<Object> e) throws Exception
+                        Observable.create(new ObservableOnSubscribe<Object>()
                         {
-                            onPlaceDetailClickByLongPress(mViewByLongPress, mPlaceViewItemByLongPress, mListCountByLongPress);
+                            @Override
+                            public void subscribe(ObservableEmitter<Object> e) throws Exception
+                            {
+                                onPlaceDetailClickByLongPress(mViewByLongPress, mPlaceViewItemByLongPress, mListCountByLongPress);
+                            }
+                        }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
+                        break;
+
+                    case CODE_RESULT_ACTIVITY_REFRESH:
+                        if (data != null)
+                        {
+                            onActivityCurrentFragmentResult(requestCode, resultCode, data);
                         }
-                    }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
+                        break;
                 }
                 break;
         }
@@ -551,6 +548,16 @@ public abstract class PlaceMainActivity extends BaseActivity
         if (placeListFragment != null)
         {
             placeListFragment.setScrollListTop();
+        }
+    }
+
+    private void onActivityCurrentFragmentResult(int requestCode, int resultCode, Intent data)
+    {
+        PlaceListFragment currentListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
+
+        if (currentListFragment != null)
+        {
+            currentListFragment.onActivityResult(requestCode, resultCode, data);
         }
     }
 

@@ -884,9 +884,12 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
                 @Override
                 public void onAnimationEnd(Animator animation)
                 {
-                    mValueAnimator.removeAllListeners();
-                    mValueAnimator.removeAllUpdateListeners();
-                    mValueAnimator = null;
+                    if (mValueAnimator != null)
+                    {
+                        mValueAnimator.removeAllListeners();
+                        mValueAnimator.removeAllUpdateListeners();
+                        mValueAnimator = null;
+                    }
 
                     if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
                     {

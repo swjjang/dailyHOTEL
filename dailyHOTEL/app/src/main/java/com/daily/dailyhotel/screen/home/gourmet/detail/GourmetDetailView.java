@@ -1771,8 +1771,11 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                 @Override
                 public void onAnimationEnd(Animator animation)
                 {
-                    mShowBottomAnimator.removeAllListeners();
-                    mShowBottomAnimator = null;
+                    if (mShowBottomAnimator != null)
+                    {
+                        mShowBottomAnimator.removeAllListeners();
+                        mShowBottomAnimator = null;
+                    }
 
                     getViewDataBinding().bottomLayout.setVisibility(View.VISIBLE);
                 }
@@ -1827,8 +1830,11 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                 @Override
                 public void onAnimationEnd(Animator animation)
                 {
-                    mHideBottomAnimator.removeAllListeners();
-                    mHideBottomAnimator = null;
+                    if (mHideBottomAnimator != null)
+                    {
+                        mHideBottomAnimator.removeAllListeners();
+                        mHideBottomAnimator = null;
+                    }
 
                     if (mCanceled == false)
                     {

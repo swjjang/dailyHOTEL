@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ScrollView;
 
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.DailyViewWishAnimationDataBinding;
 
@@ -138,8 +139,11 @@ public class DailyWishAnimationView extends ScrollView
                     @Override
                     public void onAnimationEnd(Animator animation)
                     {
-                        mAnimatorSet.removeAllListeners();
-                        mAnimatorSet = null;
+                        if (mAnimatorSet != null)
+                        {
+                            mAnimatorSet.removeAllListeners();
+                            mAnimatorSet = null;
+                        }
 
                         setVisibility(View.GONE);
 

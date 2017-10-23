@@ -1122,9 +1122,12 @@ public class HomeLayout extends BaseBlurLayout
                     mErrorPopupLayout.setVisibility(View.GONE);
                 }
 
-                mErrorPopupAnimator.removeAllListeners();
-                mErrorPopupAnimator.removeAllUpdateListeners();
-                mErrorPopupAnimator = null;
+                if (mErrorPopupAnimator != null)
+                {
+                    mErrorPopupAnimator.removeAllListeners();
+                    mErrorPopupAnimator.removeAllUpdateListeners();
+                    mErrorPopupAnimator = null;
+                }
 
                 mErrorPopupLayout.setTranslationY(end);
 

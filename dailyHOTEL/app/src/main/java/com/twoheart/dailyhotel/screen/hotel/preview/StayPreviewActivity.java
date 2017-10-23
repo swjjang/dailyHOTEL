@@ -367,12 +367,12 @@ public class StayPreviewActivity extends BaseActivity
 
     private void setResultIntent(boolean wish)
     {
-        if (mResultIntent != null)
+        if (mResultIntent == null)
         {
             mResultIntent = new Intent();
         }
 
-        mResultIntent.getBooleanExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH, wish);
+        mResultIntent.putExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH, wish);
     }
 
     private Intent getResultIntent()
@@ -598,6 +598,7 @@ public class StayPreviewActivity extends BaseActivity
                     mPreviewLayout.updateWishInformation(mPlaceReviewScores.reviewScoreTotalCount, stayDetailParams.wishCount, stayDetailParams.myWish);
 
                     setResultIntent(true);
+                    setResult(CODE_RESULT_ACTIVITY_REFRESH, getResultIntent());
                 }
             } else
             {
@@ -623,6 +624,7 @@ public class StayPreviewActivity extends BaseActivity
                     mPreviewLayout.updateWishInformation(mPlaceReviewScores.reviewScoreTotalCount, stayDetailParams.wishCount, stayDetailParams.myWish);
 
                     setResultIntent(false);
+                    setResult(CODE_RESULT_ACTIVITY_REFRESH, getResultIntent());
                 }
             } else
             {

@@ -190,8 +190,11 @@ public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventList
                     @Override
                     public void onAnimationEnd(Animator animation)
                     {
-                        mAnimatorSet.removeAllListeners();
-                        mAnimatorSet = null;
+                        if (mAnimatorSet != null)
+                        {
+                            mAnimatorSet.removeAllListeners();
+                            mAnimatorSet = null;
+                        }
 
                         observer.onNext(true);
                         observer.onComplete();
@@ -274,8 +277,11 @@ public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventList
                             alphaAnimator.removeAllUpdateListeners();
                         }
 
-                        mAnimatorSet.removeAllListeners();
-                        mAnimatorSet = null;
+                        if (mAnimatorSet != null)
+                        {
+                            mAnimatorSet.removeAllListeners();
+                            mAnimatorSet = null;
+                        }
 
                         observer.onNext(true);
                         observer.onComplete();

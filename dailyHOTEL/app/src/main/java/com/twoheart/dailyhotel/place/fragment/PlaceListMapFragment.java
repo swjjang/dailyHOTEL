@@ -738,9 +738,12 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             @Override
             public void onAnimationEnd(Animator animation)
             {
-                mValueAnimator.removeAllListeners();
-                mValueAnimator.removeAllUpdateListeners();
-                mValueAnimator = null;
+                if (mValueAnimator != null)
+                {
+                    mValueAnimator.removeAllListeners();
+                    mValueAnimator.removeAllUpdateListeners();
+                    mValueAnimator = null;
+                }
 
                 if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
                 {
@@ -817,9 +820,12 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
             @Override
             public void onAnimationEnd(Animator animation)
             {
-                mValueAnimator.removeAllListeners();
-                mValueAnimator.removeAllUpdateListeners();
-                mValueAnimator = null;
+                if (mValueAnimator != null)
+                {
+                    mValueAnimator.removeAllListeners();
+                    mValueAnimator.removeAllUpdateListeners();
+                    mValueAnimator = null;
+                }
 
                 if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
                 {

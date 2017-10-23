@@ -147,7 +147,7 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
             }
 
             case CODE_REQUEST_ACTIVITY_PREVIEW:
-                if (resultCode == Activity.RESULT_OK && data != null)
+                if ((resultCode == Activity.RESULT_OK || resultCode == Constants.CODE_RESULT_ACTIVITY_REFRESH) && data != null)
                 {
                     if (data.hasExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH) == true)
                     {
