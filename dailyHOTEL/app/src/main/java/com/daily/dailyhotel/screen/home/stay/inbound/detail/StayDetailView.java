@@ -1763,7 +1763,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
     private PaintDrawable getGradientBottomDrawable()
     {
         // 그라디에이션 만들기.
-        final int colors[] = {0x99000000, 0x99000000, 0x05000000, 0x00000000, 0x00000000};
+        final int colors[] = {0x99000000, 0x66000000, 0x05000000, 0x00000000, 0x00000000};
         final float positions[] = {0.0f, 0.33f, 0.81f, 0.91f, 1.0f};
 
         PaintDrawable paintDrawable = new PaintDrawable();
