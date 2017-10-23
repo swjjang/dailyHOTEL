@@ -30,6 +30,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyScrollView;
+import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.StayOutboundBookingDetail;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.google.android.gms.maps.CameraUpdate;
@@ -723,14 +724,21 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
     }
 
     @Override
-    public void setDeleteBookingVisible(boolean visible)
+    public void setDeleteBookingVisible(int bookingState)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        if (visible == true)
+        if (Booking.BOOKING_STATE_CANCEL == bookingState)
+        {
+            getViewDataBinding().deleteReservationTextView.setText(R.string.label_booking_cancel_detail_delete_reservation);
+        } else {
+            getViewDataBinding().deleteReservationTextView.setText(R.string.label_booking_detail_delete_reservation);
+        }
+
+        if (Booking.BOOKING_STATE_AFTER_USE == bookingState || Booking.BOOKING_STATE_CANCEL == bookingState)
         {
             getViewDataBinding().deleteReservationTextView.setVisibility(View.VISIBLE);
             getViewDataBinding().deleteReservationTextView.setOnClickListener(this);

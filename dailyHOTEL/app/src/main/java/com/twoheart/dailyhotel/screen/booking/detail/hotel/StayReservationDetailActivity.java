@@ -1059,7 +1059,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 }
             }
 
-            mPlaceReservationDetailLayout.setDeleteReservationVisible(mBookingState == Booking.BOOKING_STATE_AFTER_USE);
+            mPlaceReservationDetailLayout.setDeleteReservationVisible(mBookingState);
 
             long currentDateTime = DailyCalendar.convertStringToDate(mTodayDateTime.currentDateTime).getTime();
             long checkInDateTime = DailyCalendar.convertStringToDate(stayBookingDetail.checkInDate).getTime();
