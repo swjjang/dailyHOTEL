@@ -121,6 +121,7 @@
     <string name="label_truevr">트루VR</string>
     <string name="label_vr">VR</string>
     <string name="label_distance_km">%1$skm</string>
+    <string name="label_distance_100m">100m 이내</string>
 
     <string name="label_currency_usd">USD</string>
 
