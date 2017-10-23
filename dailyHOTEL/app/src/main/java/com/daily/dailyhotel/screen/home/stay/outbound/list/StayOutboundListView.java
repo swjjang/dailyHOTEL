@@ -45,9 +45,9 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
     implements StayOutboundListViewInterface, ViewPager.OnPageChangeListener, View.OnClickListener, StayOutboundMapFragment.OnEventListener
 {
     private static final int ANIMATION_DELAY = 200;
-    private static final int VIEWPAGER_HEIGHT_DP = 120;
-    private static final int VIEWPAGER_TOP_N_BOTTOM_PADDING_DP = 10;
-    private static final int VIEWPAGER_LEFT_N_RIGHT_PADDING_DP = 15;
+    private static final int VIEWPAGER_HEIGHT_DP = 125;
+    private static final int VIEWPAGER_TOP_PADDING_DP = 10;
+    private static final int VIEWPAGER_OTHER_PADDING_DP = 15;
     private static final int VIEWPAGER_PAGE_MARGIN_DP = 5;
 
     StayOutboundListAdapter mStayOutboundListAdapter;
@@ -841,7 +841,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
             public void onAnimationUpdate(ValueAnimator animation)
             {
                 int value = (Integer) animation.getAnimatedValue();
-                int height = ScreenUtils.dpToPx(getContext(), (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP));
+                int height = ScreenUtils.dpToPx(getContext(), (VIEWPAGER_HEIGHT_DP - VIEWPAGER_OTHER_PADDING_DP));
                 float translationY = height - height * value / 100;
 
                 setMenuBarLayoutTranslationY(translationY);
@@ -854,7 +854,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
             public void onAnimationStart(Animator animation)
             {
                 mViewPager.setVisibility(View.VISIBLE);
-                mViewPager.setTranslationY(ScreenUtils.dpToPx(getContext(), (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP)));
+                mViewPager.setTranslationY(ScreenUtils.dpToPx(getContext(), (VIEWPAGER_HEIGHT_DP - VIEWPAGER_OTHER_PADDING_DP)));
             }
 
             @Override
@@ -900,7 +900,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
             public void onAnimationUpdate(ValueAnimator animation)
             {
                 int value = (Integer) animation.getAnimatedValue();
-                int height = ScreenUtils.dpToPx(getContext(), (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP));
+                int height = ScreenUtils.dpToPx(getContext(), (VIEWPAGER_HEIGHT_DP - VIEWPAGER_OTHER_PADDING_DP));
                 float translationY = height * value / 100;
 
                 setMenuBarLayoutTranslationY(translationY);
@@ -967,7 +967,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
             return;
         }
 
-        getViewDataBinding().floatingActionView.setTranslationY(dy - ScreenUtils.dpToPx(getContext(), (VIEWPAGER_HEIGHT_DP - VIEWPAGER_TOP_N_BOTTOM_PADDING_DP)));
+        getViewDataBinding().floatingActionView.setTranslationY(dy - ScreenUtils.dpToPx(getContext(), (VIEWPAGER_HEIGHT_DP - VIEWPAGER_OTHER_PADDING_DP)));
 
         if (mViewPager != null)
         {
@@ -998,14 +998,14 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
             return null;
         }
 
-        int paddingLeftRight = ScreenUtils.dpToPx(context, VIEWPAGER_LEFT_N_RIGHT_PADDING_DP);
-        int paddingTopBottom = ScreenUtils.dpToPx(context, VIEWPAGER_TOP_N_BOTTOM_PADDING_DP);
+        int paddingOther = ScreenUtils.dpToPx(context, VIEWPAGER_OTHER_PADDING_DP);
+        int paddingTop = ScreenUtils.dpToPx(context, VIEWPAGER_TOP_PADDING_DP);
 
         DailyOverScrollViewPager viewPager = new DailyOverScrollViewPager(context);
         viewPager.setOffscreenPageLimit(2);
         viewPager.setClipToPadding(false);
         viewPager.setPageMargin(ScreenUtils.dpToPx(context, VIEWPAGER_PAGE_MARGIN_DP));
-        viewPager.setPadding(paddingLeftRight, paddingTopBottom, paddingLeftRight, paddingTopBottom);
+        viewPager.setPadding(paddingOther, paddingTop, paddingOther, paddingOther);
         viewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
 
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(context, VIEWPAGER_HEIGHT_DP));

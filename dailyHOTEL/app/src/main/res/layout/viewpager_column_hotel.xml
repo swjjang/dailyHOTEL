@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-                xmlns:fresco="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="100dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="100dp">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:transitionName="@string/transition_place_image"
-        fresco:actualImageScaleType="centerCrop"/>
+        fresco:actualImageScaleType="centerCrop" />
 
     <View
         android:id="@+id/gradientTopView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:transitionName="@string/transition_gradient_top_view"/>
+        android:transitionName="@string/transition_gradient_top_view" />
 
     <View
         android:id="@+id/gradientView"
@@ -25,7 +25,7 @@
         android:layout_height="match_parent"
         android:background="@color/black_a28"
         android:tag="map"
-        android:transitionName="@string/transition_gradient_bottom_view"/>
+        android:transitionName="@string/transition_gradient_bottom_view" />
 
     <com.daily.base.widget.DailyTextView
         android:id="@+id/gradeTextView"
@@ -35,13 +35,14 @@
         android:layout_alignParentLeft="true"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="12dp"
+        android:background="@drawable/shape_rect_whitecolor"
         android:gravity="center"
         android:paddingBottom="1px"
         android:paddingLeft="5.5dp"
         android:paddingRight="5.5dp"
         android:paddingTop="2px"
         android:textColor="@color/white"
-        android:textSize="11dp"/>
+        android:textSize="11dp" />
 
     <com.daily.base.widget.DailyTextView
         android:id="@+id/satisfactionView"
@@ -57,7 +58,7 @@
         android:textColor="@color/white"
         android:textSize="12dp"
         android:visibility="gone"
-        dailyFont:style="DemiLight"/>
+        dailyFont:style="DemiLight" />
 
     <com.daily.base.widget.DailyTextView
         android:id="@+id/priceTextView"
@@ -70,7 +71,7 @@
         android:gravity="center_vertical"
         android:textColor="@color/white"
         android:textSize="12dp"
-        dailyFont:style="DemiLight"/>
+        dailyFont:style="DemiLight" />
 
     <com.daily.base.widget.DailyTextView
         android:id="@+id/nameTextView"
@@ -89,7 +90,7 @@
         android:textColor="@android:color/white"
         android:textSize="17dp"
         android:transitionName="@string/transition_place_name"
-        dailyFont:style="Medium"/>
+        dailyFont:style="Medium" />
 
     <LinearLayout
         android:id="@+id/discountPriceLayout"
@@ -109,7 +110,7 @@
             android:textColor="@color/white"
             android:textSize="12dp"
             android:visibility="gone"
-            dailyFont:style="DemiLight"/>
+            dailyFont:style="DemiLight" />
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/discountPriceTextView"
@@ -118,7 +119,7 @@
             android:layout_marginLeft="7dp"
             android:textColor="@color/white"
             android:textSize="17dp"
-            dailyFont:style="Medium"/>
+            dailyFont:style="Medium" />
     </LinearLayout>
 
     <com.daily.base.widget.DailyTextView
@@ -132,7 +133,7 @@
         android:layout_toLeftOf="@+id/discountPriceLayout"
         android:textColor="@color/white"
         android:textSize="12dp"
-        dailyFont:style="DemiLight"/>
+        dailyFont:style="DemiLight" />
 
     <LinearLayout
         android:id="@+id/dBenefitLayout"
@@ -156,7 +157,7 @@
             android:paddingRight="6dp"
             android:singleLine="true"
             android:textColor="@color/white"
-            android:textSize="11dp"/>
+            android:textSize="11dp" />
     </LinearLayout>
 
     <ImageView
@@ -166,5 +167,5 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:scaleType="center"
-        app:srcCompat="@drawable/ic_delete"/>
+        app:srcCompat="@drawable/ic_delete" />
 </RelativeLayout>

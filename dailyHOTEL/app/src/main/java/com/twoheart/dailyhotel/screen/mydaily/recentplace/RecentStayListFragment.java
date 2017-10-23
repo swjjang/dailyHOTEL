@@ -164,7 +164,14 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 {
                     return RecentStayListFragment.this.makePlaceViewItemList(recentlyPlaceList, stayOutbounds);
                 }
-            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<PlaceViewItem>>()
+            }).flatMap(new Function<ArrayList<PlaceViewItem>, ObservableSource<ArrayList<PlaceViewItem>>>()
+        {
+            @Override
+            public ObservableSource<ArrayList<PlaceViewItem>> apply(@NonNull ArrayList<PlaceViewItem> placeViewItems) throws Exception
+            {
+                return sortList(placeViewItems, true);
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<PlaceViewItem>>()
         {
             @Override
             public void accept(@NonNull ArrayList<PlaceViewItem> viewItemList) throws Exception
@@ -214,32 +221,25 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             }
         }
 
-        if (list.size() == 0)
-        {
-            return list;
-        }
-
-        sortList(list, true);
-
         return list;
     }
 
-    private void sortList(ArrayList<PlaceViewItem> actualList, boolean isAddFooter)
+    private Observable<ArrayList<PlaceViewItem>> sortList(ArrayList<PlaceViewItem> actualList, boolean isAddFooter)
     {
         if (actualList == null || actualList.size() == 0)
         {
-            return;
+            return Observable.just(new ArrayList<>());
         }
 
-        addCompositeDisposable(mRecentlyLocalImpl.getRecentlyIndexList(Constants.ServiceType.HOTEL, Constants.ServiceType.OB_STAY) //
-            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<Integer>>()
+        return mRecentlyLocalImpl.getRecentlyIndexList(Constants.ServiceType.HOTEL, Constants.ServiceType.OB_STAY) //
+            .flatMap(new Function<ArrayList<Integer>, ObservableSource<ArrayList<PlaceViewItem>>>()
             {
                 @Override
-                public void accept(ArrayList<Integer> expectedList) throws Exception
+                public ObservableSource<ArrayList<PlaceViewItem>> apply(@NonNull ArrayList<Integer> expectedList) throws Exception
                 {
                     if (expectedList == null || expectedList.size() == 0)
                     {
-                        return;
+                        return Observable.just(actualList);
                     }
 
                     Collections.sort(actualList, new Comparator<PlaceViewItem>()
@@ -257,8 +257,10 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                     {
                         actualList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
                     }
+
+                    return Observable.just(actualList);
                 }
-            }));
+            }).subscribeOn(Schedulers.io());
     }
 
     int getPlaceViewItemIndex(PlaceViewItem placeViewItem)
