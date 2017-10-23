@@ -11,7 +11,7 @@ public class BookingCancelData
     public String aggregationId;
 
     @JsonField(name = "orderSeq")
-    public int orderSeq;
+    public long orderSeq;
 
     @JsonField(name = "reservationIdx")
     public int reservationIdx;

@@ -3,7 +3,7 @@ package com.daily.dailyhotel.entity;
 public class BookingCancel
 {
     public String aggregationId;
-    public int orderSeq;
+    public long orderSeq;
     public int reservationIdx;
 //    public String checkinDate;
 //    public String checkoutDate;

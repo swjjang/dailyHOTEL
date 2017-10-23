@@ -10,13 +10,23 @@ import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.BookingCancel;
 import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.User;
+import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
+import com.daily.dailyhotel.screen.booking.detail.stay.outbound.StayOutboundBookingDetailActivity;
+import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
+import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
+import com.twoheart.dailyhotel.screen.booking.detail.gourmet.GourmetReservationDetailActivity;
+import com.twoheart.dailyhotel.screen.booking.detail.hotel.StayReservationDetailActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -24,7 +34,6 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -229,16 +238,9 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
         if (bookingCancelList == null || bookingCancelList.size() == 0)
         {
             getViewInterface().setBookingCancelList(null);
-
-            //            AnalyticsManager.getInstance(getActivity()).recordScreen(getActivity(), AnalyticsManager.Screen.BOOKING_LIST_EMPTY, null);
         } else
         {
             getViewInterface().setBookingCancelList(bookingCancelList);
-
-            //            Map<String, String> analyticsParams = new HashMap<>();
-            //            analyticsParams.put(AnalyticsManager.KeyType.NUM_OF_BOOKING, Integer.toString(bookingCancelList.size()));
-            //
-            //            AnalyticsManager.getInstance(getActivity()).recordScreen(getActivity(), AnalyticsManager.Screen.BOOKING_LIST, null, analyticsParams);
         }
 
         if (mCheckVerify == true)
@@ -290,10 +292,7 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
             {
                 try
                 {
-                    Date date1 = DailyCalendar.convertDate(cancel1.cancelDateTime, DailyCalendar.ISO_8601_FORMAT, null);
-                    Date date2 = DailyCalendar.convertDate(cancel2.cancelDateTime, DailyCalendar.ISO_8601_FORMAT, null);
-
-                    return date1.compareTo(date2);
+                    return ((Long) cancel1.orderSeq).compareTo((Long) cancel2.orderSeq);
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
@@ -311,6 +310,32 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
         return cancelSortList;
     }
 
+    private boolean startBookingDetail(BookingCancel.PlaceType placeType, int reservationIndex, String aggregationId, String imageUrl)
+    {
+        Intent intent;
+
+        switch (placeType)
+        {
+            case STAY:
+                intent = StayReservationDetailActivity.newInstance(getActivity(), reservationIndex, aggregationId, imageUrl, false, 0);
+                break;
+
+            case GOURMET:
+                intent = GourmetReservationDetailActivity.newInstance(getActivity(), reservationIndex, aggregationId, imageUrl, false, 0);
+                break;
+
+            case STAY_OUTBOUND:
+                intent = StayOutboundBookingDetailActivity.newInstance(getActivity(), reservationIndex, imageUrl, 0);
+                break;
+
+            default:
+                return false;
+        }
+
+        startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_BOOKING_DETAIL);
+
+        return true;
+    }
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // EventListener
 
@@ -323,13 +348,89 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
     @Override
     public void onAgainBookingClick(BookingCancel bookingCancel)
     {
+        if (getActivity() == null || bookingCancel == null)
+        {
+            return;
+        }
 
+        if (lock() == true)
+        {
+            return;
+        }
+
+        try
+        {
+            switch (bookingCancel.placeType)
+            {
+                case STAY:
+                {
+                    StayBookingDay stayBookingDay = new StayBookingDay();
+                    stayBookingDay.setCheckInDay(mCommonDateTime.dailyDateTime);
+                    stayBookingDay.setCheckOutDay(mCommonDateTime.dailyDateTime, 1);
+
+                    Intent intent = StayDetailActivity.newInstance(getActivity() //
+                        , bookingCancel.itemIdx, bookingCancel.name, null, StayDetailActivity.NONE_PRICE//
+                        , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                        , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+                        , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, new StayDetailAnalyticsParam());
+
+                    startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+
+                    getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                    break;
+                }
+
+                case GOURMET:
+                {
+                    Intent intent = GourmetDetailActivity.newInstance(getActivity() //
+                        , bookingCancel.itemIdx, bookingCancel.name, null, GourmetDetailActivity.NONE_PRICE//
+                        , mCommonDateTime.dailyDateTime//
+                        , null, false, false, false, false//
+                        , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
+                        , new GourmetDetailAnalyticsParam());
+
+                    startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
+
+                    getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                    break;
+                }
+
+                case STAY_OUTBOUND:
+                {
+                    StayBookDateTime stayBookDateTime = new StayBookDateTime();
+                    stayBookDateTime.setCheckInDateTime(mCommonDateTime.currentDateTime, 7);
+                    stayBookDateTime.setCheckOutDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), 1);
+
+                    startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity() //
+                        , bookingCancel.itemIdx, bookingCancel.name, null, StayOutboundDetailActivity.NONE_PRICE//
+                        , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                        , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                        , 2, null, false, StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, null), Constants.CODE_REQUEST_ACTIVITY_STAY_OB_DETAIL);
+
+                    getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                    break;
+                }
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     @Override
     public void onBookingClick(BookingCancel bookingCancel)
     {
+        if (getActivity() == null || bookingCancel == null)
+        {
+            return;
+        }
 
+        if (lock() == true)
+        {
+            return;
+        }
+
+        startBookingDetail(bookingCancel.placeType, bookingCancel.reservationIdx, bookingCancel.aggregationId, bookingCancel.imageUrl);
     }
 
     @Override

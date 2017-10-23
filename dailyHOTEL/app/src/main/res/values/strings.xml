@@ -1440,7 +1440,7 @@
     <string name="label_booking_after_cancel">취소 완료</string>
 
     <!-- Reservation cancel History -->
-    <string name="message_booking_cancel_list_no_cancel_list">최근 1년 이내에 취소된 내역이 없습니다.</string>
+    <string name="message_booking_cancel_list_no_cancel_list">최근 1년 이내에 취소된 내역이\n없습니다.</string>
     <string name="message_booking_cancel_list_do_login">로그인하여 취소내역을 확인하세요.</string>
 
     <!-- Stay Out Bound Booking Detail -->
