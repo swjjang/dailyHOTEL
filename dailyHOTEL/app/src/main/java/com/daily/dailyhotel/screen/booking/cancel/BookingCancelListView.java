@@ -133,7 +133,7 @@ public class BookingCancelListView extends BaseDialogView<BookingCancelListView.
                 mAdapter.clear();
             }
 
-            //예약한 호텔이 없는 경우
+            //취소한 호텔이 없는 경우
             getViewDataBinding().bookingCancelSwipeRefreshLayout.setVisibility(View.GONE);
             getViewDataBinding().emptyListLayout.setVisibility(View.VISIBLE);
             getViewDataBinding().loginTextView.setVisibility(View.GONE);

@@ -402,6 +402,31 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                 break;
             }
 
+            case REQUEST_CODE_BOOKING_CANCEL:
+            {
+                if (resultCode == Constants.CODE_RESULT_ACTIVITY_STAY_LIST)
+                {
+                    mDontReload = true;
+
+                    if (mOnMenuChangeListener != null && lockUiComponentAndIsLockUiComponent() == false)
+                    {
+                        mOnMenuChangeListener.onMenu(MainFragmentManager.INDEX_HOME_FRAGMENT, Constants.CODE_RESULT_ACTIVITY_STAY_LIST);
+                    }
+                } else if (resultCode == Constants.CODE_RESULT_ACTIVITY_GOURMET_LIST)
+                {
+                    mDontReload = true;
+
+                    if (mOnMenuChangeListener != null && lockUiComponentAndIsLockUiComponent() == false)
+                    {
+                        mOnMenuChangeListener.onMenu(MainFragmentManager.INDEX_HOME_FRAGMENT, Constants.CODE_RESULT_ACTIVITY_GOURMET_LIST);
+                    }
+                } else
+                {
+                    mDontReload = false;
+                }
+                break;
+            }
+
             case CODE_REQUEST_ACTIVITY_BOOKING_DETAIL:
                 mDontReload = false;
                 break;
