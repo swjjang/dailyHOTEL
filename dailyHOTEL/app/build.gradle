@@ -239,7 +239,7 @@ dependencies {
 
     compile 'com.adjust.sdk:adjust-android:4.11.4'
 
-    compile('com.crashlytics.sdk.android:crashlytics:2.7.0@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
         transitive = true;
     }
     compile 'com.facebook.android:facebook-android-sdk:4.+'
