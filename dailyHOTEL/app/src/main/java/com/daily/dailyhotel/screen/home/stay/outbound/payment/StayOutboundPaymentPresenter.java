@@ -102,6 +102,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
         void onScreen(Activity activity, StayBookDateTime stayBookDateTime);
 
+        void onEventEnterVendorType(Activity activity, int stayIndex, String vendorType);
+
         void onScreenPaymentCompleted(Activity activity, StayOutboundPayment stayOutboundPayment, StayBookDateTime stayBookDateTime//
             , String stayName, DailyBookingPaymentTypeView.PaymentType paymentType, boolean usedBonus//
             , boolean registerEasyCard, UserSimpleInformation userSimpleInformation, String aggregationId);

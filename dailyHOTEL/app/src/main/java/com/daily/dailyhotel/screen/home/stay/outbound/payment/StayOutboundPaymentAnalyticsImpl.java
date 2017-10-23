@@ -60,6 +60,18 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
     }
 
     @Override
+    public void onEventEnterVendorType(Activity activity, int stayIndex, String vendorType)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.VENDOR_SELECTION_ROOM_SELECTION//
+            , vendorType, Integer.toString(stayIndex), null);
+    }
+
+    @Override
     public void onScreenPaymentCompleted(Activity activity, StayOutboundPayment stayOutboundPayment, StayBookDateTime stayBookDateTime//
         , String stayName, DailyBookingPaymentTypeView.PaymentType paymentType, boolean usedBonus//
         , boolean registerEasyCard, UserSimpleInformation userSimpleInformation, String aggregationId)
