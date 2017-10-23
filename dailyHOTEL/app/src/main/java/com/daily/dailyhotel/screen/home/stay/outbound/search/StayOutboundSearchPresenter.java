@@ -415,7 +415,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     @Override
     public void onSearchKeyword()
     {
-        if (mSuggest == null || mPeople == null)
+        if (mSuggest == null || mPeople == null || mStayBookDateTime == null)
         {
             return;
         }

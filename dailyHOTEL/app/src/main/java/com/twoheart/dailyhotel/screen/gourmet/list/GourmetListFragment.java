@@ -112,7 +112,7 @@ public class GourmetListFragment extends PlaceListFragment
     }
 
     @Override
-    protected void onChangedWish(int position)
+    protected void onChangedWish(int position, boolean wish)
     {
 
     }
@@ -219,14 +219,18 @@ public class GourmetListFragment extends PlaceListFragment
     protected GourmetListLayout.OnEventListener mEventListener = new GourmetListLayout.OnEventListener()
     {
         @Override
-        public void onPlaceClick(View view, PlaceViewItem placeViewItem)
+        public void onPlaceClick(int position, View view, PlaceViewItem placeViewItem)
         {
+            mWishPosition = position;
+
             ((OnGourmetListFragmentListener) mOnPlaceListFragmentListener).onGourmetClick(view, placeViewItem, getPlaceCount());
         }
 
         @Override
-        public void onPlaceLongClick(View view, PlaceViewItem placeViewItem)
+        public void onPlaceLongClick(int position, View view, PlaceViewItem placeViewItem)
         {
+            mWishPosition = position;
+
             ((OnGourmetListFragmentListener) mOnPlaceListFragmentListener).onGourmetLongClick(view, placeViewItem, getPlaceCount());
         }
 

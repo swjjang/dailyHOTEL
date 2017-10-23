@@ -36,7 +36,6 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
     private Constants.ServiceType mServiceType;
     private int mPlaceIndex;
     private boolean mWish;
-    private int mPositionByList;
     private String mCallByScreen;
 
     public interface WishDialogAnalyticsInterface extends BaseAnalyticsInterface
@@ -85,7 +84,6 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
         mServiceType = Constants.ServiceType.valueOf(intent.getStringExtra(WishDialogActivity.INTENT_EXTRA_DATA_SERVICE_TYPE));
         mPlaceIndex = intent.getIntExtra(WishDialogActivity.INTENT_EXTRA_DATA_PLACE_INDEX, 0);
         mWish = intent.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_MY_WISH, false);
-        mPositionByList = intent.getIntExtra(WishDialogActivity.INTENT_EXTRA_DATA_POSITION, -1);
         mCallByScreen = intent.getStringExtra(WishDialogActivity.INTENT_EXTRA_DATA_CALL_SCREEN);
 
         return true;
@@ -249,7 +247,7 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
                         unLockAll();
 
                         Intent intent = new Intent();
-                        intent.putExtra(WishDialogActivity.INTENT_EXTRA_DATA_POSITION, mPositionByList);
+                        intent.putExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, mWish);
 
                         setResult(Activity.RESULT_OK, intent);
                         onBackClick();

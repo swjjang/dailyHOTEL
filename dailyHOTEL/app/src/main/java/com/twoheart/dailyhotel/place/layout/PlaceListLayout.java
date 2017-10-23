@@ -60,9 +60,9 @@ public abstract class PlaceListLayout extends BaseLayout
 
     public interface OnEventListener extends OnBaseEventListener
     {
-        void onPlaceClick(View view, PlaceViewItem placeViewItem);
+        void onPlaceClick(int position, View view, PlaceViewItem placeViewItem);
 
-        void onPlaceLongClick(View view, PlaceViewItem placeViewItem);
+        void onPlaceLongClick(int position, View view, PlaceViewItem placeViewItem);
 
         //        void onEventBannerClick(EventBanner eventBanner);
 
@@ -96,6 +96,8 @@ public abstract class PlaceListLayout extends BaseLayout
     }
 
     protected abstract PlaceListAdapter getPlaceListAdapter(Context context, ArrayList<PlaceViewItem> arrayList);
+
+    public abstract void notifyWishChanged(int position, boolean wish);
 
     public abstract void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, boolean isCurrentPage);
 
@@ -597,16 +599,6 @@ public abstract class PlaceListLayout extends BaseLayout
         }
     }
 
-    public void notifyItemChanged(int position)
-    {
-        if (mPlaceListAdapter == null)
-        {
-            return;
-        }
-
-        mPlaceListAdapter.notifyItemChanged(position);
-    }
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////         Listener         ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -619,7 +611,7 @@ public abstract class PlaceListLayout extends BaseLayout
             int position = mPlaceRecyclerView.getChildAdapterPosition(view);
             if (position < 0)
             {
-                ((OnEventListener) mOnEventListener).onPlaceClick(null, null);
+                ((OnEventListener) mOnEventListener).onPlaceClick(-1, null, null);
                 return;
             }
 
@@ -627,7 +619,7 @@ public abstract class PlaceListLayout extends BaseLayout
 
             if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY)
             {
-                ((OnEventListener) mOnEventListener).onPlaceClick(view, placeViewItem);
+                ((OnEventListener) mOnEventListener).onPlaceClick(position, view, placeViewItem);
             }
         }
     };
@@ -640,7 +632,7 @@ public abstract class PlaceListLayout extends BaseLayout
             int position = mPlaceRecyclerView.getChildAdapterPosition(view);
             if (position < 0)
             {
-                ((OnEventListener) mOnEventListener).onPlaceLongClick(null, null);
+                ((OnEventListener) mOnEventListener).onPlaceLongClick(-1, null, null);
                 return true;
             }
 
@@ -648,7 +640,7 @@ public abstract class PlaceListLayout extends BaseLayout
 
             if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY)
             {
-                ((OnEventListener) mOnEventListener).onPlaceLongClick(view, placeViewItem);
+                ((OnEventListener) mOnEventListener).onPlaceLongClick(position, view, placeViewItem);
             }
 
             return true;

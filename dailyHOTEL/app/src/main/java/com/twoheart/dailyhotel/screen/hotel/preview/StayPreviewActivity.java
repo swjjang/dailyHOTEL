@@ -36,6 +36,8 @@ import retrofit2.Response;
 
 public class StayPreviewActivity extends BaseActivity
 {
+    public static final String INTENT_EXTRA_DATA_WISH = "wish";
+
     private static final int SKIP_CHECK_DISCOUNT_PRICE_VALUE = Integer.MIN_VALUE;
 
     protected StayPreviewLayout mPreviewLayout;
@@ -46,6 +48,7 @@ public class StayPreviewActivity extends BaseActivity
     PlaceReviewScores mPlaceReviewScores;
 
     private int mViewPrice;
+    private Intent mResultIntent;
 
     /**
      * 리스트에서 호출, 검색 결과에서 호출
@@ -362,6 +365,21 @@ public class StayPreviewActivity extends BaseActivity
         }
     }
 
+    private void setResultIntent(boolean wish)
+    {
+        if (mResultIntent != null)
+        {
+            mResultIntent = new Intent();
+        }
+
+        mResultIntent.getBooleanExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH, wish);
+    }
+
+    private Intent getResultIntent()
+    {
+        return mResultIntent;
+    }
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -505,7 +523,8 @@ public class StayPreviewActivity extends BaseActivity
             AnalyticsManager.getInstance(StayPreviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.PEEK_POP_RESERVATION, null, null);
 
-            setResult(RESULT_OK);
+            setResult(RESULT_OK, getResultIntent());
+
             StayPreviewActivity.this.finish();
         }
 
@@ -577,6 +596,8 @@ public class StayPreviewActivity extends BaseActivity
                     stayDetailParams.wishCount++;
 
                     mPreviewLayout.updateWishInformation(mPlaceReviewScores.reviewScoreTotalCount, stayDetailParams.wishCount, stayDetailParams.myWish);
+
+                    setResultIntent(true);
                 }
             } else
             {
@@ -600,6 +621,8 @@ public class StayPreviewActivity extends BaseActivity
                     stayDetailParams.wishCount--;
 
                     mPreviewLayout.updateWishInformation(mPlaceReviewScores.reviewScoreTotalCount, stayDetailParams.wishCount, stayDetailParams.myWish);
+
+                    setResultIntent(false);
                 }
             } else
             {

@@ -15,6 +15,7 @@ import android.view.WindowManager;
 
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceCuration;
@@ -281,39 +282,66 @@ public abstract class PlaceMainActivity extends BaseActivity
             case CODE_REQUEST_ACTIVITY_SEARCH_RESULT:
             case CODE_REQUEST_ACTIVITY_COLLECTION:
             {
-                if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
+                switch (resultCode)
                 {
-                    setResult(resultCode);
-                    finish();
-                } else if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
-                {
-                    setResult(CODE_RESULT_ACTIVITY_GO_HOME);
-                    finish();
-                } else if (resultCode == CODE_RESULT_ACTIVITY_GO_REGION_LIST)
-                {
-                    onRegionClick();
-                } else
-                {
-                    if (mIsDeepLink == false)
-                    {
-                        switch (resultCode)
+                    case Activity.RESULT_OK:
+                        setResult(resultCode);
+                        finish();
+                        break;
+
+                    case CODE_RESULT_ACTIVITY_GO_HOME:
+                        setResult(CODE_RESULT_ACTIVITY_GO_HOME);
+                        finish();
+                        break;
+
+                    case CODE_RESULT_ACTIVITY_GO_REGION_LIST:
+                        onRegionClick();
+                        break;
+
+                    default:
+                        if (mIsDeepLink == false)
                         {
-                            case com.daily.base.BaseActivity.RESULT_CODE_REFRESH:
-                            case CODE_RESULT_ACTIVITY_REFRESH:
-                            case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
-                                mDontReloadAtOnResume = false;
-                                break;
+                            switch (resultCode)
+                            {
+                                case com.daily.base.BaseActivity.RESULT_CODE_REFRESH:
 
-                            default:
-                                mDontReloadAtOnResume = true;
-                                break;
+                                    if (data == null)
+                                    {
+                                        mDontReloadAtOnResume = false;
+                                    } else
+                                    {
+                                        if (data.hasExtra(StayDetailActivity.INTENT_EXTRA_DATA_CHANGED_PRICE) == true//
+                                            || data.hasExtra(StayDetailActivity.INTENT_EXTRA_DATA_SOLD_OUT) == true)
+                                        {
+                                            mDontReloadAtOnResume = false;
+                                        } else
+                                        {
+                                            PlaceListFragment currentListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
+
+                                            if (currentListFragment != null)
+                                            {
+                                                currentListFragment.onActivityResult(requestCode, resultCode, data);
+                                            }
+                                        }
+                                    }
+                                    break;
+
+                                case CODE_RESULT_ACTIVITY_REFRESH:
+                                case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
+                                    mDontReloadAtOnResume = false;
+                                    break;
+
+                                default:
+                                    mDontReloadAtOnResume = true;
+                                    break;
+                            }
+                        } else
+                        {
+                            mIsDeepLink = false;
+
+                            mDontReloadAtOnResume = false;
                         }
-                    } else
-                    {
-                        mIsDeepLink = false;
-
-                        mDontReloadAtOnResume = false;
-                    }
+                        break;
                 }
                 break;
             }
@@ -321,6 +349,16 @@ public abstract class PlaceMainActivity extends BaseActivity
             case CODE_REQUEST_ACTIVITY_PREVIEW:
                 if (resultCode == Activity.RESULT_OK)
                 {
+                    if (data != null)
+                    {
+                        PlaceListFragment currentListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
+
+                        if (currentListFragment != null)
+                        {
+                            currentListFragment.onActivityResult(requestCode, resultCode, data);
+                        }
+                    }
+
                     Observable.create(new ObservableOnSubscribe<Object>()
                     {
                         @Override
