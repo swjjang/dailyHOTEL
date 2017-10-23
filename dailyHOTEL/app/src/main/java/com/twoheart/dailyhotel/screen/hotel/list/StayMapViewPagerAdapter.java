@@ -129,7 +129,6 @@ public class StayMapViewPagerAdapter extends PlaceMapViewPagerAdapter
 
         // grade
         grade.setText(stay.getGrade().getName(mContext));
-        grade.setBackgroundResource(stay.getGrade().getColorResId());
 
         hotelImageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
         Util.requestImageResize(mContext, hotelImageView, stay.imageUrl);

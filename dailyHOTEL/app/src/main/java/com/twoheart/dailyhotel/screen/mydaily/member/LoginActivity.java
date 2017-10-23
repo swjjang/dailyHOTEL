@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
@@ -991,6 +992,12 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 } catch (Exception e)
                 {
                     unLockUI();
+
+                    if (response.body() != null)
+                    {
+                        Crashlytics.log(response.body().toString());
+                    }
+
                     LoginActivity.this.onError(e);
                 }
             } else
