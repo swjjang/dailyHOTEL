@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.BookingCancel;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.StayBookDateTime;
@@ -317,15 +318,15 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
         switch (placeType)
         {
             case STAY:
-                intent = StayReservationDetailActivity.newInstance(getActivity(), reservationIndex, aggregationId, imageUrl, false, 0);
+                intent = StayReservationDetailActivity.newInstance(getActivity(), reservationIndex, aggregationId, imageUrl, false, Booking.BOOKING_STATE_CANCEL);
                 break;
 
             case GOURMET:
-                intent = GourmetReservationDetailActivity.newInstance(getActivity(), reservationIndex, aggregationId, imageUrl, false, 0);
+                intent = GourmetReservationDetailActivity.newInstance(getActivity(), reservationIndex, aggregationId, imageUrl, false, Booking.BOOKING_STATE_CANCEL);
                 break;
 
             case STAY_OUTBOUND:
-                intent = StayOutboundBookingDetailActivity.newInstance(getActivity(), reservationIndex, imageUrl, 0);
+                intent = StayOutboundBookingDetailActivity.newInstance(getActivity(), reservationIndex, imageUrl, Booking.BOOKING_STATE_CANCEL);
                 break;
 
             default:

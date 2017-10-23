@@ -121,6 +121,9 @@ public class StayBookingDetailData
     @JsonField(name = "waitingForBooking")
     public boolean waitingForBooking;
 
+    @JsonField(name = "cancelDateTime")
+    public String cancelDateTime;
+
     public StayBookingDetailData()
     {
 
@@ -172,6 +175,7 @@ public class StayBookingDetailData
         stayBookingDetail.readyForRefund = readyForRefund;
         stayBookingDetail.setSpecificationMap(getSpecification(hotelSpec));
         stayBookingDetail.waitingForBooking = waitingForBooking;
+        stayBookingDetail.cancelDateTime = cancelDateTime;
 
         return stayBookingDetail;
     }

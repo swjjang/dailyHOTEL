@@ -32,6 +32,7 @@ public class GourmetBookingDetail
     public int couponAmount;
     public String reviewStatusType;
     public boolean overseas;
+    public String cancelDateTime;
 
     private LinkedHashMap<String, List<String>> mDescriptionMap;
 

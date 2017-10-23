@@ -127,6 +127,8 @@ public class StayBookingDetail extends PlaceBookingDetail
         {
             visitType = VISIT_TYPE_NONE;
         }
+
+        cancelDateTime = stayBookingDetail.cancelDateTime;
     }
 
     public void setData(JSONObject jsonObject) throws Exception
@@ -253,6 +255,11 @@ public class StayBookingDetail extends PlaceBookingDetail
         } else
         {
             visitType = VISIT_TYPE_NONE;
+        }
+
+        if (jsonObject.has("cancelDateTime") == true)
+        {
+            cancelDateTime = jsonObject.getString("cancelDateTime");
         }
     }
 

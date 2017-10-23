@@ -11,6 +11,7 @@ public class Booking
     public static final int BOOKING_STATE_AFTER_USE = 3;
     public static final int BOOKING_STATE_DEPOSIT_WAITING = 4;
     public static final int BOOKING_STATE_RESERVATION_WAITING = 5;
+    public static final int BOOKING_STATE_CANCEL = 6;
 
     public int reservationIndex;
     public String aggregationId;
