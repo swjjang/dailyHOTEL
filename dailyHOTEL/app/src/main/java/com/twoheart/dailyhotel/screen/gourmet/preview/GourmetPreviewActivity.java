@@ -36,6 +36,8 @@ import retrofit2.Response;
 
 public class GourmetPreviewActivity extends BaseActivity
 {
+    public static final String INTENT_EXTRA_DATA_WISH = "wish";
+
     private static final int SKIP_CHECK_DISCOUNT_PRICE_VALUE = Integer.MIN_VALUE;
 
     protected GourmetPreviewLayout mPreviewLayout;
@@ -546,6 +548,10 @@ public class GourmetPreviewActivity extends BaseActivity
                     gourmetDetailParams.wishCount++;
 
                     mPreviewLayout.updateWishInformation(mPlaceReviewScores.reviewScoreTotalCount, gourmetDetailParams.wishCount, gourmetDetailParams.myWish);
+
+                    Intent intent = new Intent();
+                    intent.putExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_WISH, true);
+                    setResult(CODE_RESULT_ACTIVITY_REFRESH, intent);
                 }
             } else
             {
@@ -569,6 +575,10 @@ public class GourmetPreviewActivity extends BaseActivity
                     gourmetDetailParams.wishCount--;
 
                     mPreviewLayout.updateWishInformation(mPlaceReviewScores.reviewScoreTotalCount, gourmetDetailParams.wishCount, gourmetDetailParams.myWish);
+
+                    Intent intent = new Intent();
+                    intent.putExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_WISH, false);
+                    setResult(CODE_RESULT_ACTIVITY_REFRESH, intent);
                 }
             } else
             {

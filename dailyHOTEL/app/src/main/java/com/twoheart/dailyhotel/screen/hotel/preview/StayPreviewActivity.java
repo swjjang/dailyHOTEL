@@ -48,7 +48,6 @@ public class StayPreviewActivity extends BaseActivity
     PlaceReviewScores mPlaceReviewScores;
 
     private int mViewPrice;
-    private Intent mResultIntent;
 
     /**
      * 리스트에서 호출, 검색 결과에서 호출
@@ -365,21 +364,6 @@ public class StayPreviewActivity extends BaseActivity
         }
     }
 
-    private void setResultIntent(boolean wish)
-    {
-        if (mResultIntent == null)
-        {
-            mResultIntent = new Intent();
-        }
-
-        mResultIntent.putExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH, wish);
-    }
-
-    private Intent getResultIntent()
-    {
-        return mResultIntent;
-    }
-
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -523,7 +507,7 @@ public class StayPreviewActivity extends BaseActivity
             AnalyticsManager.getInstance(StayPreviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.PEEK_POP_RESERVATION, null, null);
 
-            setResult(RESULT_OK, getResultIntent());
+            setResult(RESULT_OK);
 
             StayPreviewActivity.this.finish();
         }
@@ -597,8 +581,9 @@ public class StayPreviewActivity extends BaseActivity
 
                     mPreviewLayout.updateWishInformation(mPlaceReviewScores.reviewScoreTotalCount, stayDetailParams.wishCount, stayDetailParams.myWish);
 
-                    setResultIntent(true);
-                    setResult(CODE_RESULT_ACTIVITY_REFRESH, getResultIntent());
+                    Intent intent = new Intent();
+                    intent.putExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH, true);
+                    setResult(CODE_RESULT_ACTIVITY_REFRESH, intent);
                 }
             } else
             {
@@ -623,8 +608,9 @@ public class StayPreviewActivity extends BaseActivity
 
                     mPreviewLayout.updateWishInformation(mPlaceReviewScores.reviewScoreTotalCount, stayDetailParams.wishCount, stayDetailParams.myWish);
 
-                    setResultIntent(false);
-                    setResult(CODE_RESULT_ACTIVITY_REFRESH, getResultIntent());
+                    Intent intent = new Intent();
+                    intent.putExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH, false);
+                    setResult(CODE_RESULT_ACTIVITY_REFRESH, intent);
                 }
             } else
             {
