@@ -22,6 +22,8 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseDial
 
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
+    private int mResultCode;
+
     public BasePresenter(@NonNull T1 activity)
     {
         mActivity = activity;
@@ -152,12 +154,21 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseDial
 
     protected void setResult(int resultCode)
     {
+        mResultCode = resultCode;
+
         mActivity.setResult(resultCode);
     }
 
     protected void setResult(int resultCode, Intent data)
     {
+        mResultCode = resultCode;
+
         mActivity.setResult(resultCode, data);
+    }
+
+    protected int getResultCode()
+    {
+        return mResultCode;
     }
 
     protected void addCompositeDisposable(Disposable disposable)

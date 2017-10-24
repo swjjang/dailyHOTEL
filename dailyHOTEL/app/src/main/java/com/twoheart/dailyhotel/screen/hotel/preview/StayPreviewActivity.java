@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.hotel.preview;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -38,6 +39,8 @@ public class StayPreviewActivity extends BaseActivity
 {
     public static final String INTENT_EXTRA_DATA_WISH = "wish";
 
+    private static final int REQUEST_CODE_LOGIN_IN_BY_WISH = 10000;
+
     private static final int SKIP_CHECK_DISCOUNT_PRICE_VALUE = Integer.MIN_VALUE;
 
     protected StayPreviewLayout mPreviewLayout;
@@ -48,7 +51,7 @@ public class StayPreviewActivity extends BaseActivity
     PlaceReviewScores mPlaceReviewScores;
 
     private int mViewPrice;
-    private Intent mResultIntent;
+    private boolean mEnteredLogin;
 
     /**
      * 리스트에서 호출, 검색 결과에서 호출
@@ -174,6 +177,8 @@ public class StayPreviewActivity extends BaseActivity
         mPreviewLayout = new StayPreviewLayout(this, mOnEventListener);
         mNetworkController = new StayPreviewNetworkController(this, getNetworkTag(), mOnNetworkControllerListener);
 
+        mEnteredLogin = DailyHotel.isLogin();
+
         if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_CHECK_IN_DATE) == true)
         {
             StayBookingDay stayBookingDay = new StayBookingDay();
@@ -259,8 +264,19 @@ public class StayPreviewActivity extends BaseActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        unLockUI();
+
         super.onActivityResult(requestCode, resultCode, data);
 
+        switch (requestCode)
+        {
+            case REQUEST_CODE_LOGIN_IN_BY_WISH:
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    mOnEventListener.onWishClick();
+                }
+                break;
+        }
     }
 
     @Override
@@ -365,21 +381,6 @@ public class StayPreviewActivity extends BaseActivity
         }
     }
 
-    private void setResultIntent(boolean wish)
-    {
-        if (mResultIntent != null)
-        {
-            mResultIntent = new Intent();
-        }
-
-        mResultIntent.getBooleanExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH, wish);
-    }
-
-    private Intent getResultIntent()
-    {
-        return mResultIntent;
-    }
-
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -414,8 +415,7 @@ public class StayPreviewActivity extends BaseActivity
             } else
             {
                 Intent intent = LoginActivity.newInstance(StayPreviewActivity.this);
-                startActivity(intent);
-                StayPreviewActivity.this.finish();
+                startActivityForResult(intent, REQUEST_CODE_LOGIN_IN_BY_WISH);
             }
         }
 
@@ -523,7 +523,7 @@ public class StayPreviewActivity extends BaseActivity
             AnalyticsManager.getInstance(StayPreviewActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.PEEK_POP_RESERVATION, null, null);
 
-            setResult(RESULT_OK, getResultIntent());
+            setResult(RESULT_OK);
 
             StayPreviewActivity.this.finish();
         }
@@ -597,7 +597,16 @@ public class StayPreviewActivity extends BaseActivity
 
                     mPreviewLayout.updateWishInformation(mPlaceReviewScores.reviewScoreTotalCount, stayDetailParams.wishCount, stayDetailParams.myWish);
 
-                    setResultIntent(true);
+                    // 로그인전에는 해당 위시만 갱신하고 로그인 후에는 전체 리스트를 리플래쉬 해야한다.
+                    if (mEnteredLogin == true)
+                    {
+                        Intent intent = new Intent();
+                        intent.putExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH, true);
+                        setResult(CODE_RESULT_ACTIVITY_REFRESH, intent);
+                    } else
+                    {
+                        setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                    }
                 }
             } else
             {
@@ -622,7 +631,16 @@ public class StayPreviewActivity extends BaseActivity
 
                     mPreviewLayout.updateWishInformation(mPlaceReviewScores.reviewScoreTotalCount, stayDetailParams.wishCount, stayDetailParams.myWish);
 
-                    setResultIntent(false);
+                    // 로그인전에는 해당 위시만 갱신하고 로그인 후에는 전체 리스트를 리플래쉬 해야한다.
+                    if (mEnteredLogin == true)
+                    {
+                        Intent intent = new Intent();
+                        intent.putExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH, false);
+                        setResult(CODE_RESULT_ACTIVITY_REFRESH, intent);
+                    } else
+                    {
+                        setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                    }
                 }
             } else
             {

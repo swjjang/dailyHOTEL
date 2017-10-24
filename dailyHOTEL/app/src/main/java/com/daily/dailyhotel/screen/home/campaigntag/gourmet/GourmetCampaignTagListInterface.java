@@ -23,4 +23,8 @@ public interface GourmetCampaignTagListInterface extends BaseDialogViewInterface
     void setBlurVisibility(Activity activity, boolean visible);
 
     void setListScrollTop();
+
+    PlaceViewItem getItem(int position);
+
+    void notifyWishChanged(int position, boolean wish);
 }

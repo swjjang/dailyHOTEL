@@ -1751,8 +1751,11 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                 @Override
                 public void onAnimationEnd(Animator animation)
                 {
-                    mShowBottomAnimator.removeAllListeners();
-                    mShowBottomAnimator = null;
+                    if (mShowBottomAnimator != null)
+                    {
+                        mShowBottomAnimator.removeAllListeners();
+                        mShowBottomAnimator = null;
+                    }
 
                     getViewDataBinding().bottomLayout.setVisibility(View.VISIBLE);
                 }
@@ -1807,8 +1810,11 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                 @Override
                 public void onAnimationEnd(Animator animation)
                 {
-                    mHideBottomAnimator.removeAllListeners();
-                    mHideBottomAnimator = null;
+                    if (mHideBottomAnimator != null)
+                    {
+                        mHideBottomAnimator.removeAllListeners();
+                        mHideBottomAnimator = null;
+                    }
 
                     if (mCanceled == false)
                     {
@@ -1844,8 +1850,8 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
     private PaintDrawable getGradientBottomDrawable()
     {
         // 그라디에이션 만들기.
-        final int colors[] = {0x99000000, 0x66000000, 0x3d000000, 0x14000000, 0x00000000};
-        final float positions[] = {0.0f, 0.29f, 0.53f, 0.75f, 1.0f};
+        final int colors[] = {0x99000000, 0x66000000, 0x05000000, 0x00000000, 0x00000000};
+        final float positions[] = {0.0f, 0.33f, 0.81f, 0.91f, 1.0f};
 
         PaintDrawable paintDrawable = new PaintDrawable();
         paintDrawable.setShape(new RectShape());

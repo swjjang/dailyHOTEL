@@ -102,6 +102,8 @@ public class StayCampaignTagListView //
             mRecyclerAdapter.setOnLongClickListener(mOnLongClickListener);
         }
 
+        mRecyclerAdapter.setOnWishClickListener(mOnWishClickListener);
+
         viewDataBinding.recyclerView.setAdapter(mRecyclerAdapter);
     }
 
@@ -153,7 +155,9 @@ public class StayCampaignTagListView //
 
         mRecyclerAdapter.setNights(nights);
         mRecyclerAdapter.setAll(placeViewItemList);
-        mRecyclerAdapter.notifyDataSetChanged();
+
+        // 리스트를 최상단으로 다시 올린다.
+        getViewDataBinding().recyclerView.setAdapter(mRecyclerAdapter);
     }
 
     @Override
@@ -267,6 +271,33 @@ public class StayCampaignTagListView //
         getViewDataBinding().recyclerView.scrollToPosition(0);
     }
 
+    @Override
+    public PlaceViewItem getItem(int position)
+    {
+        if (getViewDataBinding() == null || mRecyclerAdapter == null)
+        {
+            return null;
+        }
+
+        return mRecyclerAdapter.getItem(position);
+    }
+
+    @Override
+    public void notifyWishChanged(int position, boolean wish)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        StayCampaignListAdapter.StayViewHolder stayViewHolder = (StayCampaignListAdapter.StayViewHolder) getViewDataBinding().recyclerView.findViewHolderForAdapterPosition(position);
+
+        if (stayViewHolder != null)
+        {
+            stayViewHolder.stayCardView.setWish(wish);
+        }
+    }
+
     public interface OnEventListener extends OnBaseEventListener
     {
         void onCalendarClick();
@@ -275,9 +306,11 @@ public class StayCampaignTagListView //
 
         void onCallClick();
 
-        void onPlaceClick(View view, PlaceViewItem placeViewItem, int count);
+        void onPlaceClick(int position, View view, PlaceViewItem placeViewItem, int count);
 
-        void onPlaceLongClick(View view, PlaceViewItem placeViewItem, int count);
+        void onPlaceLongClick(int position, View view, PlaceViewItem placeViewItem, int count);
+
+        void onWishClick(int position, PlaceViewItem placeViewItem);
     }
 
     private StayCampaignListAdapter.OnEventListener mOnEventListener = new StayCampaignListAdapter.OnEventListener()
@@ -300,7 +333,7 @@ public class StayCampaignTagListView //
 
             if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY)
             {
-                getEventListener().onPlaceClick(view, placeViewItem, mRecyclerAdapter.getItemCount());
+                getEventListener().onPlaceClick(position, view, placeViewItem, mRecyclerAdapter.getItemCount());
             }
         }
 
@@ -343,10 +376,35 @@ public class StayCampaignTagListView //
 
             if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY)
             {
-                getEventListener().onPlaceLongClick(v, placeViewItem, mRecyclerAdapter.getItemCount());
+                getEventListener().onPlaceLongClick(position, v, placeViewItem, mRecyclerAdapter.getItemCount());
             }
 
             return true;
+        }
+    };
+
+    protected View.OnClickListener mOnWishClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View view)
+        {
+            if (getViewDataBinding() == null)
+            {
+                return;
+            }
+
+            int position = getViewDataBinding().recyclerView.getChildAdapterPosition(view);
+            if (position < 0)
+            {
+                return;
+            }
+
+            PlaceViewItem placeViewItem = mRecyclerAdapter.getItem(position);
+
+            if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY)
+            {
+                getEventListener().onWishClick(position, placeViewItem);
+            }
         }
     };
 }

@@ -393,9 +393,12 @@ public abstract class PlaceBookingDetailMapView extends BaseDialogView<PlaceBook
             @Override
             public void onAnimationEnd(Animator animation)
             {
-                mValueAnimator.removeAllListeners();
-                mValueAnimator.removeAllUpdateListeners();
-                mValueAnimator = null;
+                if (mValueAnimator != null)
+                {
+                    mValueAnimator.removeAllListeners();
+                    mValueAnimator.removeAllUpdateListeners();
+                    mValueAnimator = null;
+                }
             }
 
             @Override
@@ -457,9 +460,12 @@ public abstract class PlaceBookingDetailMapView extends BaseDialogView<PlaceBook
             @Override
             public void onAnimationEnd(Animator animation)
             {
-                mValueAnimator.removeAllListeners();
-                mValueAnimator.removeAllUpdateListeners();
-                mValueAnimator = null;
+                if (mValueAnimator != null)
+                {
+                    mValueAnimator.removeAllListeners();
+                    mValueAnimator.removeAllUpdateListeners();
+                    mValueAnimator = null;
+                }
 
                 mViewPager.setVisibility(View.INVISIBLE);
 

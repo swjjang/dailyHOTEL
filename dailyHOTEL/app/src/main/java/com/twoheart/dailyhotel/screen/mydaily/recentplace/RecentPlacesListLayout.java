@@ -44,6 +44,8 @@ public abstract class RecentPlacesListLayout extends BaseBlurLayout
         void onRecordAnalyticsList(ArrayList<PlaceViewItem> list);
 
         void onHomeClick();
+
+        void onWishClick(int position, PlaceViewItem placeViewItem);
     }
 
     protected abstract int getEmptyTextResId();
@@ -54,6 +56,8 @@ public abstract class RecentPlacesListLayout extends BaseBlurLayout
 
     protected abstract RecentPlacesListAdapter getRecentPlacesListAdapter(Context context//
         , ArrayList<PlaceViewItem> list, RecentPlacesListAdapter.OnRecentPlacesItemListener listener);
+
+    protected abstract void notifyWishChanged(int position, boolean wish);
 
     public RecentPlacesListLayout(Context context, OnBaseEventListener listener)
     {
@@ -129,15 +133,15 @@ public abstract class RecentPlacesListLayout extends BaseBlurLayout
             {
                 mListAdapter.setTrueVREnabled(true);
             }
-
-            mRecyclerView.setAdapter(mListAdapter);
         } else
         {
             mListAdapter.setPlaceBookingDay(placeBookingDay);
             mListAdapter.setRewardEnabled(DailyRemoteConfigPreference.getInstance(mContext).isKeyRemoteConfigRewardEnabled());
             mListAdapter.setData(list);
-            mListAdapter.notifyDataSetChanged();
         }
+
+        // 리로드시에 리스트를 처음으로 옮긴다.
+        mRecyclerView.setAdapter(mListAdapter);
 
         ((RecentPlacesListLayout.OnEventListener) mOnEventListener).onRecordAnalyticsList(list);
     }
@@ -240,9 +244,22 @@ public abstract class RecentPlacesListLayout extends BaseBlurLayout
         }
 
         @Override
-        public void onWishClick(boolean myWish)
+        public void onWishClick(View view)
         {
+            if (mRecyclerView == null || mListAdapter == null || view == null)
+            {
+                return;
+            }
 
+            int position = mRecyclerView.getChildAdapterPosition(view);
+            if (position < 0)
+            {
+                return;
+            }
+
+            PlaceViewItem placeViewItem = mListAdapter.getItem(position);
+
+            ((OnEventListener) mOnEventListener).onWishClick(position, placeViewItem);
         }
     };
 }

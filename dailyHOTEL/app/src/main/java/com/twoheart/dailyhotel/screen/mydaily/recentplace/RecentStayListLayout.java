@@ -26,6 +26,22 @@ public class RecentStayListLayout extends RecentPlacesListLayout
     }
 
     @Override
+    protected void notifyWishChanged(int position, boolean wish)
+    {
+        if (mRecyclerView == null)
+        {
+            return;
+        }
+
+        RecentStayListAdapter.StayInboundViewHolder stayViewHolder = (RecentStayListAdapter.StayInboundViewHolder) mRecyclerView.findViewHolderForAdapterPosition(position);
+
+        if (stayViewHolder != null)
+        {
+            stayViewHolder.stayCardView.setWish(wish);
+        }
+    }
+
+    @Override
     protected int getEmptyTextResId()
     {
         return R.string.recent_stay_list_empty_message;

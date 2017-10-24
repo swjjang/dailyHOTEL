@@ -46,6 +46,10 @@ public class GourmetDetailActivity extends BaseActivity<GourmetDetailPresenter>
     static final String INTENT_EXTRA_DATA_SHOW_CALENDAR = "showCalendar";
     static final String INTENT_EXTRA_DATA_SHOW_TRUE_VR = "showVR";
 
+    public static final String INTENT_EXTRA_DATA_WISH = "wish";
+    public static final String INTENT_EXTRA_DATA_CHANGED_PRICE = "changedPrice";
+    public static final String INTENT_EXTRA_DATA_SOLD_OUT = "soldOut";
+
     public static final int TRANS_GRADIENT_BOTTOM_TYPE_NONE = -1;
     public static final int TRANS_GRADIENT_BOTTOM_TYPE_MAP = 1;
     public static final int TRANS_GRADIENT_BOTTOM_TYPE_LIST = 2;

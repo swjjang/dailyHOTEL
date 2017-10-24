@@ -242,7 +242,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
                 {
 
                     case TRANS_GRADIENT_BOTTOM_TYPE_LIST:
-//                        mTransGradientBottomView.setBackgroundResource(R.drawable.shape_gradient_card_bottom);
+                        //                        mTransGradientBottomView.setBackgroundResource(R.drawable.shape_gradient_card_bottom);
                         break;
 
                     case TRANS_GRADIENT_BOTTOM_TYPE_MAP:
@@ -582,8 +582,11 @@ public abstract class PlaceDetailLayout extends BaseLayout
                 @Override
                 public void onAnimationEnd(Animator animation)
                 {
-                    mWishPopupAnimatorSet.removeAllListeners();
-                    mWishPopupAnimatorSet = null;
+                    if (mWishPopupAnimatorSet != null)
+                    {
+                        mWishPopupAnimatorSet.removeAllListeners();
+                        mWishPopupAnimatorSet = null;
+                    }
 
                     mWishPopupScrollView.setVisibility(View.INVISIBLE);
                     ((OnEventListener) mOnEventListener).releaseUiComponent();

@@ -861,9 +861,12 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
             @Override
             public void onAnimationEnd(Animator animation)
             {
-                mValueAnimator.removeAllListeners();
-                mValueAnimator.removeAllUpdateListeners();
-                mValueAnimator = null;
+                if (mValueAnimator != null)
+                {
+                    mValueAnimator.removeAllListeners();
+                    mValueAnimator.removeAllUpdateListeners();
+                    mValueAnimator = null;
+                }
             }
 
             @Override
@@ -921,9 +924,12 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
             @Override
             public void onAnimationEnd(Animator animation)
             {
-                mValueAnimator.removeAllListeners();
-                mValueAnimator.removeAllUpdateListeners();
-                mValueAnimator = null;
+                if (mValueAnimator != null)
+                {
+                    mValueAnimator.removeAllListeners();
+                    mValueAnimator.removeAllUpdateListeners();
+                    mValueAnimator = null;
+                }
 
                 mViewPager.setVisibility(View.INVISIBLE);
                 resetMenuBarLayoutTranslation();

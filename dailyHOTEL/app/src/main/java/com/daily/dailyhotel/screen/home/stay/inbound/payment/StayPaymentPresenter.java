@@ -30,7 +30,6 @@ import com.daily.dailyhotel.entity.StayRefundPolicy;
 import com.daily.dailyhotel.entity.UserSimpleInformation;
 import com.daily.dailyhotel.parcel.analytics.StayPaymentAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayThankYouAnalyticsParam;
-import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.PaymentRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
@@ -58,7 +57,6 @@ import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
 import org.json.JSONObject;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1260,6 +1258,14 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
     void startThankYou(String aggregationId, boolean fullBonus)
     {
+        try
+        {
+            mAnalytics.onScreenPaymentCompleted(getActivity(), aggregationId);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
         // ThankYou 페이지를 홈탭에서 띄우기 위한 코드
         startActivity(DailyInternalDeepLink.getHomeScreenLink(getActivity()));
 
@@ -1271,14 +1277,6 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             , StayPaymentActivity.REQUEST_CODE_THANK_YOU);
 
         mAnalytics.onEventTransportationType(getActivity(), mStayPayment.transportation, mTransportationType);
-
-        try
-        {
-            mAnalytics.onScreenPaymentCompleted(getActivity(), aggregationId);
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
     }
 
     private JSONObject getPaymentJSONObject(StayBookDateTime stayBookDateTime, int roomIndex//
@@ -1386,16 +1384,16 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             getViewInterface().setVendorName(stayPayment.businessName);
             getViewInterface().setTransportation(stayPayment.transportation);
 
-            if(DailyTextUtils.isTextEmpty(stayPayment.transportation) == false)
+            if (DailyTextUtils.isTextEmpty(stayPayment.transportation) == false)
             {
-                switch(stayPayment.transportation)
+                switch (stayPayment.transportation)
                 {
                     case StayPayment.VISIT_TYPE_NONE:
                         onTransportationClick(UNKNOWN);
                         break;
 
                     case StayPayment.VISIT_TYPE_PARKING:
-                        if(DailyTextUtils.isTextEmpty(mTransportationType) == true)
+                        if (DailyTextUtils.isTextEmpty(mTransportationType) == true)
                         {
                             onTransportationClick(WALKING);
                         } else

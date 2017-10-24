@@ -554,9 +554,12 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
                 @Override
                 public void onAnimationEnd(Animator animation)
                 {
-                    mObjectAnimator.removeAllListeners();
-                    mObjectAnimator.removeAllUpdateListeners();
-                    mObjectAnimator = null;
+                    if (mObjectAnimator != null)
+                    {
+                        mObjectAnimator.removeAllListeners();
+                        mObjectAnimator.removeAllUpdateListeners();
+                        mObjectAnimator = null;
+                    }
 
                     if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
                     {
@@ -643,9 +646,12 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
                 @Override
                 public void onAnimationEnd(Animator animation)
                 {
-                    mObjectAnimator.removeAllListeners();
-                    mObjectAnimator.removeAllUpdateListeners();
-                    mObjectAnimator = null;
+                    if (mObjectAnimator != null)
+                    {
+                        mObjectAnimator.removeAllListeners();
+                        mObjectAnimator.removeAllUpdateListeners();
+                        mObjectAnimator = null;
+                    }
 
                     if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
                     {
@@ -731,9 +737,12 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
             @Override
             public void onAnimationEnd(Animator animation)
             {
-                mObjectAnimator.removeAllListeners();
-                mObjectAnimator.removeAllUpdateListeners();
-                mObjectAnimator = null;
+                if (mObjectAnimator != null)
+                {
+                    mObjectAnimator.removeAllListeners();
+                    mObjectAnimator.removeAllUpdateListeners();
+                    mObjectAnimator = null;
+                }
 
                 if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
                 {

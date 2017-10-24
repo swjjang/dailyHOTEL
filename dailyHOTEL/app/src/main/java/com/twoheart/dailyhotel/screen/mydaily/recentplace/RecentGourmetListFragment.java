@@ -15,6 +15,7 @@ import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
+import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.storage.database.DailyDb;
 import com.daily.dailyhotel.view.DailyGourmetCardView;
@@ -86,17 +87,45 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
 
         switch (requestCode)
         {
-            case CODE_REQUEST_ACTIVITY_PREVIEW:
-                if (resultCode == Activity.RESULT_OK)
+            case CODE_REQUEST_ACTIVITY_GOURMET_DETAIL:
+            {
+                if (resultCode == com.daily.base.BaseActivity.RESULT_CODE_REFRESH && data != null)
                 {
-                    Observable.create(new ObservableOnSubscribe<Object>()
+                    if (data.hasExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_WISH) == true)
                     {
-                        @Override
-                        public void subscribe(ObservableEmitter<Object> e) throws Exception
+                        onChangedWish(mWishPosition, data.getBooleanExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_WISH, false));
+                    }
+                }
+                break;
+            }
+
+            case CODE_REQUEST_ACTIVITY_PREVIEW:
+                switch(resultCode)
+                {
+                    case Activity.RESULT_OK:
+                        Observable.create(new ObservableOnSubscribe<Object>()
                         {
-                            mEventListener.onListItemClick(mViewByLongPress, mPositionByLongPress);
+                            @Override
+                            public void subscribe(ObservableEmitter<Object> e) throws Exception
+                            {
+                                mEventListener.onListItemClick(mViewByLongPress, mPositionByLongPress);
+                            }
+                        }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
+                        break;
+
+                    case Constants.CODE_RESULT_ACTIVITY_REFRESH:
+                        if (data != null && data.hasExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_WISH) == true)
+                        {
+                            onChangedWish(mWishPosition, data.getBooleanExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_WISH, false));
                         }
-                    }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
+                        break;
+                }
+                break;
+
+            case Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG:
+                if (resultCode == Activity.RESULT_OK && data != null)
+                {
+                    onChangedWish(mWishPosition, data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false));
                 }
                 break;
         }
@@ -166,36 +195,36 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
                 }
             }));
 
-//        addCompositeDisposable(ibObservable //
-//            .observeOn(Schedulers.io()).map(new Function<ArrayList<RecentlyPlace>, ArrayList<PlaceViewItem>>()
-//            {
-//                @Override
-//                public ArrayList<PlaceViewItem> apply(@NonNull ArrayList<RecentlyPlace> recentlyPlaceList) throws Exception
-//                {
-//                    return makePlaceViewItemList(recentlyPlaceList);
-//                }
-//            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<PlaceViewItem>>()
-//            {
-//                @Override
-//                public void accept(@NonNull ArrayList<PlaceViewItem> list) throws Exception
-//                {
-//                    unLockUI();
-//
-//                    if (isFinishing() == true)
-//                    {
-//                        return;
-//                    }
-//
-//                    mListLayout.setData(list, mPlaceBookingDay);
-//                }
-//            }, new Consumer<Throwable>()
-//            {
-//                @Override
-//                public void accept(@NonNull Throwable throwable) throws Exception
-//                {
-//                    onHandleError(throwable);
-//                }
-//            }));
+        //        addCompositeDisposable(ibObservable //
+        //            .observeOn(Schedulers.io()).map(new Function<ArrayList<RecentlyPlace>, ArrayList<PlaceViewItem>>()
+        //            {
+        //                @Override
+        //                public ArrayList<PlaceViewItem> apply(@NonNull ArrayList<RecentlyPlace> recentlyPlaceList) throws Exception
+        //                {
+        //                    return makePlaceViewItemList(recentlyPlaceList);
+        //                }
+        //            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<PlaceViewItem>>()
+        //            {
+        //                @Override
+        //                public void accept(@NonNull ArrayList<PlaceViewItem> list) throws Exception
+        //                {
+        //                    unLockUI();
+        //
+        //                    if (isFinishing() == true)
+        //                    {
+        //                        return;
+        //                    }
+        //
+        //                    mListLayout.setData(list, mPlaceBookingDay);
+        //                }
+        //            }, new Consumer<Throwable>()
+        //            {
+        //                @Override
+        //                public void accept(@NonNull Throwable throwable) throws Exception
+        //                {
+        //                    onHandleError(throwable);
+        //                }
+        //            }));
 
     }
 
@@ -275,6 +304,40 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
         return index;
     }
 
+    private void onChangedWish(int position, boolean wish)
+    {
+        if (position < 0)
+        {
+            return;
+        }
+
+        PlaceViewItem placeViewItem = mListLayout.getItem(position);
+
+        if (placeViewItem == null)
+        {
+            return;
+        }
+
+        Object object = placeViewItem.getItem();
+
+        if (object == null)
+        {
+            return;
+        }
+
+        mWishPosition = position;
+
+        if (object instanceof RecentlyPlace)
+        {
+            RecentlyPlace recentlyPlace = (RecentlyPlace)object;
+            if (recentlyPlace.myWish != wish)
+            {
+                recentlyPlace.myWish = wish;
+                mListLayout.notifyWishChanged(position, wish);
+            }
+        }
+    }
+
     RecentPlacesListLayout.OnEventListener mEventListener = new RecentPlacesListLayout.OnEventListener()
     {
         @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -288,6 +351,8 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
 
             PlaceViewItem placeViewItem = mListLayout.getItem(position);
             RecentlyPlace recentlyPlace = placeViewItem.getItem();
+
+            mWishPosition = position;
 
             // --> 추후에 정리되면 메소드로 수정
             GourmetDetailAnalyticsParam analyticsParam = new GourmetDetailAnalyticsParam();
@@ -379,6 +444,8 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
 
             PlaceViewItem placeViewItem = mListLayout.getItem(position);
             RecentlyPlace recentlyPlace = placeViewItem.getItem();
+
+            mWishPosition = position;
 
             mViewByLongPress = view;
             mPositionByLongPress = position;
@@ -490,6 +557,27 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
 
             baseActivity.setResult(Constants.CODE_RESULT_ACTIVITY_GO_HOME);
             baseActivity.finish();
+        }
+
+        @Override
+        public void onWishClick(int position, PlaceViewItem placeViewItem)
+        {
+            if (placeViewItem == null || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            RecentlyPlace recentlyPlace = placeViewItem.getItem();
+
+            if (recentlyPlace == null)
+            {
+                return;
+            }
+
+            mWishPosition = position;
+
+            mBaseActivity.startActivityForResult(WishDialogActivity.newInstance(mBaseActivity, ServiceType.GOURMET//
+                , recentlyPlace.index, !recentlyPlace.myWish, position, AnalyticsManager.Screen.DAILYGOURMET_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);
         }
 
         @Override

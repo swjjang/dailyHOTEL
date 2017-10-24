@@ -125,8 +125,6 @@ public abstract class PlaceListLayout extends BaseLayout
 
         mPlaceListAdapter = getPlaceListAdapter(mContext, new ArrayList<PlaceViewItem>());
 
-        mPlaceListAdapter.setOnWishClickListener(mOnWishClickListener);
-
         if (DailyPreference.getInstance(mContext).getTrueVRSupport() > 0)
         {
             mPlaceListAdapter.setTrueVREnabled(true);
@@ -136,6 +134,8 @@ public abstract class PlaceListLayout extends BaseLayout
         {
             mPlaceListAdapter.setOnLongClickListener(mOnItemLongClickListener);
         }
+
+        mPlaceListAdapter.setOnWishClickListener(mOnWishClickListener);
 
         mPlaceRecyclerView.setAdapter(mPlaceListAdapter);
 
@@ -240,6 +240,16 @@ public abstract class PlaceListLayout extends BaseLayout
         }
 
         return mPlaceListAdapter.getAll();
+    }
+
+    public PlaceViewItem getItem(int position)
+    {
+        if (mPlaceRecyclerView == null || mPlaceListAdapter == null)
+        {
+            return null;
+        }
+
+        return mPlaceListAdapter.getItem(position);
     }
 
     public int getItemCount()
@@ -652,10 +662,14 @@ public abstract class PlaceListLayout extends BaseLayout
         @Override
         public void onClick(View view)
         {
+            if (mPlaceRecyclerView == null)
+            {
+                return;
+            }
+
             int position = mPlaceRecyclerView.getChildAdapterPosition(view);
             if (position < 0)
             {
-                ((OnEventListener) mOnEventListener).onWishClick(-1, null);
                 return;
             }
 

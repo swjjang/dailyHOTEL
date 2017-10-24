@@ -1,11 +1,14 @@
 package com.twoheart.dailyhotel.screen.hotel.list;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
+import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
@@ -20,7 +23,9 @@ import com.twoheart.dailyhotel.model.StayParams;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
+import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
+import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -45,6 +50,55 @@ public class StayListFragment extends PlaceListFragment
         void onRegionClick();
 
         void onCalendarClick();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        switch (requestCode)
+        {
+            case Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG:
+                if (resultCode == Activity.RESULT_OK && data != null)
+                {
+                    onChangedWish(mWishPosition, data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false));
+                }
+                break;
+
+            case CODE_REQUEST_ACTIVITY_STAY_DETAIL:
+            case CODE_REQUEST_ACTIVITY_GOURMET_DETAIL:
+            {
+                if (resultCode == com.daily.base.BaseActivity.RESULT_CODE_REFRESH && data != null)
+                {
+                    if (data.hasExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH) == true)
+                    {
+                        onChangedWish(mWishPosition, data.getBooleanExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH, false));
+                    }
+                }
+                break;
+            }
+
+            case CODE_REQUEST_ACTIVITY_PREVIEW:
+                if (resultCode == Constants.CODE_RESULT_ACTIVITY_REFRESH)
+                {
+                    if (data != null && data.hasExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH) == true)
+                    {
+                        onChangedWish(mWishPosition, data.getBooleanExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH, false));
+                    }
+                }
+                break;
+
+            default:
+                if (mViewType == ViewType.MAP)
+                {
+                    PlaceListMapFragment placeListMapFragment = mPlaceListLayout.getListMapFragment();
+
+                    if (placeListMapFragment != null)
+                    {
+                        placeListMapFragment.onActivityResult(requestCode, resultCode, data);
+                    }
+                }
+                break;
+        }
     }
 
     @Override
@@ -130,7 +184,13 @@ public class StayListFragment extends PlaceListFragment
             return;
         }
 
-        PlaceViewItem placeViewItem = mPlaceListLayout.getList().get(position);
+        PlaceViewItem placeViewItem = mPlaceListLayout.getItem(position);
+
+        if (placeViewItem == null)
+        {
+            return;
+        }
+
         Stay stay = placeViewItem.getItem();
 
         if (stay.myWish != wish)
@@ -493,7 +553,7 @@ public class StayListFragment extends PlaceListFragment
         @Override
         public void onWishClick(int position, PlaceViewItem placeViewItem)
         {
-            if (lockUiComponentAndIsLockUiComponent() == true)
+            if (placeViewItem == null || lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }
@@ -502,7 +562,7 @@ public class StayListFragment extends PlaceListFragment
 
             mWishPosition = position;
 
-            startActivityForResult(WishDialogActivity.newInstance(mBaseActivity, ServiceType.HOTEL//
+            mBaseActivity.startActivityForResult(WishDialogActivity.newInstance(mBaseActivity, ServiceType.HOTEL//
                 , stay.index, !stay.myWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);
         }
 

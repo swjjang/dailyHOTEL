@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
 import android.view.View;
 
+import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
@@ -23,6 +24,7 @@ import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
+import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.home.campaigntag.CampaignTagListAnalyticsImpl;
 import com.daily.dailyhotel.screen.home.campaigntag.CampaignTagListAnalyticsInterface;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
@@ -71,6 +73,8 @@ public class GourmetCampaignTagListPresenter //
     GourmetCampaignTags mGourmetCampaignTags;
     PlaceViewItem mPlaceViewItemByLongPress;
     View mViewByLongPress;
+
+    private int mWishPosition;
 
     public GourmetCampaignTagListPresenter(@NonNull GourmetCampaignTagListActivity activity)
     {
@@ -217,6 +221,16 @@ public class GourmetCampaignTagListPresenter //
                     case Constants.CODE_RESULT_ACTIVITY_REFRESH:
                         setRefresh(true);
                         break;
+
+                    case com.daily.base.BaseActivity.RESULT_CODE_REFRESH:
+                        if (data != null && data.hasExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_WISH) == true)
+                        {
+                            onChangedWish(mWishPosition, data.getBooleanExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_WISH, false));
+                        } else
+                        {
+                            setRefresh(true);
+                        }
+                        break;
                 }
                 break;
             }
@@ -250,21 +264,49 @@ public class GourmetCampaignTagListPresenter //
                 break;
 
             case Constants.CODE_REQUEST_ACTIVITY_PREVIEW:
-                if (resultCode == Activity.RESULT_OK)
+                switch (resultCode)
                 {
-                    Observable.create(new ObservableOnSubscribe<Object>()
-                    {
-                        @Override
-                        public void subscribe(ObservableEmitter<Object> e) throws Exception
+                    case Activity.RESULT_OK:
+                        Observable.create(new ObservableOnSubscribe<Object>()
                         {
-                            if (mViewByLongPress == null || mPlaceViewItemByLongPress == null)
+                            @Override
+                            public void subscribe(ObservableEmitter<Object> e) throws Exception
                             {
-                                return;
-                            }
+                                if (mViewByLongPress == null || mPlaceViewItemByLongPress == null)
+                                {
+                                    return;
+                                }
 
-                            onPlaceClick(mViewByLongPress, mPlaceViewItemByLongPress, mListCountByLongPress);
+                                onPlaceClick(-1, mViewByLongPress, mPlaceViewItemByLongPress, mListCountByLongPress);
+                            }
+                        }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
+                        break;
+
+                    case Constants.CODE_RESULT_ACTIVITY_REFRESH:
+                        if (data != null && data.hasExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_WISH) == true)
+                        {
+                            onChangedWish(mWishPosition, data.getBooleanExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_WISH, false));
+                        } else
+                        {
+                            setRefresh(true);
                         }
-                    }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
+                        break;
+                }
+                break;
+
+            case GourmetCampaignTagListActivity.REQUEST_CODE_WISH_DIALOG:
+                switch (resultCode)
+                {
+                    case Activity.RESULT_OK:
+                        if (data != null)
+                        {
+                            onChangedWish(mWishPosition, data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false));
+                        }
+                        break;
+
+                    case BaseActivity.RESULT_CODE_REFRESH:
+                        setRefresh(true);
+                        break;
                 }
                 break;
         }
@@ -592,7 +634,7 @@ public class GourmetCampaignTagListPresenter //
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
-    public void onPlaceClick(View view, PlaceViewItem placeViewItem, int count)
+    public void onPlaceClick(int position, View view, PlaceViewItem placeViewItem, int count)
     {
         if (placeViewItem == null || placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
         {
@@ -600,6 +642,8 @@ public class GourmetCampaignTagListPresenter //
         }
 
         Gourmet gourmet = placeViewItem.getItem();
+
+        mWishPosition = position;
 
         // --> 추후에 정리되면 메소드로 수정
         GourmetDetailAnalyticsParam analyticsParam = new GourmetDetailAnalyticsParam();
@@ -685,7 +729,7 @@ public class GourmetCampaignTagListPresenter //
     }
 
     @Override
-    public void onPlaceLongClick(View view, PlaceViewItem placeViewItem, int count)
+    public void onPlaceLongClick(int position, View view, PlaceViewItem placeViewItem, int count)
     {
         if (placeViewItem == null || placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
         {
@@ -695,6 +739,8 @@ public class GourmetCampaignTagListPresenter //
         getViewInterface().setBlurVisibility(getActivity(), true);
 
         Gourmet gourmet = placeViewItem.getItem();
+
+        mWishPosition = position;
 
         // 기존 데이터를 백업한다.
         mViewByLongPress = view;
@@ -706,6 +752,23 @@ public class GourmetCampaignTagListPresenter //
 
         startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PREVIEW);
     }
+
+    @Override
+    public void onWishClick(int position, PlaceViewItem placeViewItem)
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        Gourmet gourmet = placeViewItem.getItem();
+
+        mWishPosition = position;
+
+        startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.GOURMET//
+            , gourmet.index, !gourmet.myWish, position, AnalyticsManager.Screen.DAILYGOURMET_DETAIL), GourmetCampaignTagListActivity.REQUEST_CODE_WISH_DIALOG);
+    }
+
 
     GourmetBookDateTime getGourmetBookDateTime(CommonDateTime commonDateTime)
     {
@@ -725,5 +788,28 @@ public class GourmetCampaignTagListPresenter //
         }
 
         return gourmetBookDateTime;
+    }
+
+    private void onChangedWish(int position, boolean wish)
+    {
+        if (position < 0)
+        {
+            return;
+        }
+
+        PlaceViewItem placeViewItem = getViewInterface().getItem(position);
+
+        if (placeViewItem == null)
+        {
+            return;
+        }
+
+        Gourmet gourmet = placeViewItem.getItem();
+
+        if (gourmet.myWish != wish)
+        {
+            gourmet.myWish = wish;
+            getViewInterface().notifyWishChanged(position, wish);
+        }
     }
 }

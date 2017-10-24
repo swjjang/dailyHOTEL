@@ -535,7 +535,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
             case StayDetailActivity.REQUEST_CODE_PROFILE_UPDATE:
             case StayDetailActivity.REQUEST_CODE_LOGIN:
-            case StayDetailActivity.REQUEST_CODE_LOGIN_IN_BY_ORDER:
+            case StayDetailActivity.REQUEST_CODE_LOGIN_IN_BY_BOOKING:
                 if (resultCode == Activity.RESULT_OK)
                 {
                     onActionButtonClick();
@@ -543,6 +543,8 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 {
                     onHideRoomListClick(false);
                 }
+
+                setResult(BaseActivity.RESULT_CODE_REFRESH);
                 break;
 
             case StayDetailActivity.REQUEST_CODE_DOWNLOAD_COUPON:
@@ -552,6 +554,8 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 if (resultCode == Activity.RESULT_OK)
                 {
                     onWishClick();
+
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
                 }
                 break;
 
@@ -559,6 +563,8 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 if (resultCode == Activity.RESULT_OK)
                 {
                     onDownloadCouponClick();
+
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
                 }
                 break;
 
@@ -596,6 +602,30 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     public void onBackClick()
     {
         getActivity().onBackPressed();
+    }
+
+    @Override
+    protected void setResult(int resultCode)
+    {
+        if (getResultCode() == BaseActivity.RESULT_CODE_REFRESH)
+        {
+            super.setResult(BaseActivity.RESULT_CODE_REFRESH);
+        } else
+        {
+            super.setResult(resultCode);
+        }
+    }
+
+    @Override
+    protected void setResult(int resultCode, Intent resultData)
+    {
+        if (getResultCode() == BaseActivity.RESULT_CODE_REFRESH)
+        {
+            super.setResult(BaseActivity.RESULT_CODE_REFRESH);
+        } else
+        {
+            super.setResult(resultCode, resultData);
+        }
     }
 
     @Override
@@ -1715,7 +1745,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             DailyToast.showToast(getActivity(), R.string.toast_msg_please_login, DailyToast.LENGTH_LONG);
 
             Intent intent = LoginActivity.newInstance(getActivity(), AnalyticsManager.Screen.DAILYHOTEL_DETAIL);
-            startActivityForResult(intent, StayDetailActivity.REQUEST_CODE_LOGIN_IN_BY_ORDER);
+            startActivityForResult(intent, StayDetailActivity.REQUEST_CODE_LOGIN_IN_BY_BOOKING);
         } else
         {
             addCompositeDisposable(mProfileRemoteImpl.getProfile().subscribe(new Consumer<User>()

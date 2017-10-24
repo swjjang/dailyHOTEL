@@ -33,10 +33,12 @@ public class GourmetCampaignListAdapter extends RecyclerView.Adapter<RecyclerVie
     private Context mContext;
 
     private View.OnLongClickListener mOnLongClickListener;
+    private View.OnClickListener mOnWishClickListener;
 
     private List<PlaceViewItem> mPlaceViewItemList;
 
     OnEventListener mOnEventListener;
+
 
     public interface OnEventListener
     {
@@ -61,6 +63,11 @@ public class GourmetCampaignListAdapter extends RecyclerView.Adapter<RecyclerVie
     public void setOnLongClickListener(View.OnLongClickListener listener)
     {
         mOnLongClickListener = listener;
+    }
+
+    public void setOnWishClickListener(View.OnClickListener listener)
+    {
+        mOnWishClickListener = listener;
     }
 
     @Override
@@ -275,7 +282,7 @@ public class GourmetCampaignListAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    private class GourmetViewHolder extends RecyclerView.ViewHolder
+    class GourmetViewHolder extends RecyclerView.ViewHolder
     {
         DailyGourmetCardView gourmetCardView;
 
@@ -319,6 +326,14 @@ public class GourmetCampaignListAdapter extends RecyclerView.Adapter<RecyclerVie
                     }
                 });
             }
+
+            gourmetCardView.setOnWishClickListener(v ->
+            {
+                if (mOnWishClickListener != null)
+                {
+                    mOnWishClickListener.onClick(gourmetCardView);
+                }
+            });
         }
     }
 }

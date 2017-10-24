@@ -381,41 +381,14 @@ public class GourmetListAdapter extends PlaceListAdapter
                     }
                 });
             }
+
+            gourmetCardView.setOnWishClickListener(v ->
+            {
+                if (mOnWishClickListener != null)
+                {
+                    mOnWishClickListener.onClick(gourmetCardView);
+                }
+            });
         }
     }
-    //
-    //    protected class GourmetViewHolder extends RecyclerView.ViewHolder
-    //    {
-    //        public ListRowGourmetDataBinding dataBinding;
-    //
-    //        public GourmetViewHolder(ListRowGourmetDataBinding dataBinding)
-    //        {
-    //            super(dataBinding.getRoot());
-    //
-    //            this.dataBinding = dataBinding;
-    //
-    //            itemView.setOnClickListener(mOnClickListener);
-    //
-    //            if (Util.supportPreview(mContext) == true)
-    //            {
-    //                itemView.setOnLongClickListener(new View.OnLongClickListener()
-    //                {
-    //                    @Override
-    //                    public boolean onLongClick(View v)
-    //                    {
-    //                        if (mOnLongClickListener == null)
-    //                        {
-    //                            return false;
-    //                        } else
-    //                        {
-    //                            Vibrator vibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
-    //                            vibrator.vibrate(70);
-    //
-    //                            return mOnLongClickListener.onLongClick(v);
-    //                        }
-    //                    }
-    //                });
-    //            }
-    //        }
-    //    }
 }

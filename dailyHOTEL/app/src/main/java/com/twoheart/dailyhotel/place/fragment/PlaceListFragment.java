@@ -121,55 +121,6 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        switch (requestCode)
-        {
-            case Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG:
-                if (resultCode == Activity.RESULT_OK && data != null)
-                {
-                    onChangedWish(mWishPosition, data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false));
-                }
-                break;
-
-            case CODE_REQUEST_ACTIVITY_STAY_DETAIL:
-            case CODE_REQUEST_ACTIVITY_GOURMET_DETAIL:
-            {
-                if (resultCode == com.daily.base.BaseActivity.RESULT_CODE_REFRESH && data != null)
-                {
-                    if (data.hasExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH) == true)
-                    {
-                        onChangedWish(mWishPosition, data.getBooleanExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH, false));
-                    }
-                }
-                break;
-            }
-
-            case CODE_REQUEST_ACTIVITY_PREVIEW:
-                if (resultCode == Activity.RESULT_OK && data != null)
-                {
-                    if (data.hasExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH) == true)
-                    {
-                        onChangedWish(mWishPosition, data.getBooleanExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH, false));
-                    }
-                }
-                break;
-
-            default:
-                if (mViewType == ViewType.MAP)
-                {
-                    PlaceListMapFragment placeListMapFragment = mPlaceListLayout.getListMapFragment();
-
-                    if (placeListMapFragment != null)
-                    {
-                        placeListMapFragment.onActivityResult(requestCode, resultCode, data);
-                    }
-                }
-                break;
-        }
-    }
-
     public void clearList()
     {
         mPlaceCount = 0;

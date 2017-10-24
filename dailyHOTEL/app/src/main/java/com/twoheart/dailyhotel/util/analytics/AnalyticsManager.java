@@ -1162,6 +1162,7 @@ public class AnalyticsManager
         public static final String OB_SEARCH_ORIGIN_RECENT = "ob_search_origin_recent";
         public static final String OB_SEARCH_ORIGIN_ETC = "ob_search_origin_etc";
 
+        public static final String VENDOR_SELECTION_ROOM_SELECTION = "vendor_selection_room_selection";
         public static final String VENDOR_SELECTION_ORDER_COMPLETION = "vendor_selection_order_completion";
     }
 

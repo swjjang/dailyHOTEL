@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
 import android.view.View;
 
+import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
@@ -23,6 +24,7 @@ import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
+import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.home.campaigntag.CampaignTagListAnalyticsImpl;
 import com.daily.dailyhotel.screen.home.campaigntag.CampaignTagListAnalyticsInterface;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
@@ -70,6 +72,8 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
     StayCampaignTags mStayCampaignTags;
     PlaceViewItem mPlaceViewItemByLongPress;
     View mViewByLongPress;
+
+    private int mWishPosition;
 
     public StayCampaignTagListPresenter(@NonNull StayCampaignTagListActivity activity)
     {
@@ -224,6 +228,16 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
                     case Constants.CODE_RESULT_ACTIVITY_REFRESH:
                         setRefresh(true);
                         break;
+
+                    case com.daily.base.BaseActivity.RESULT_CODE_REFRESH:
+                        if (data != null && data.hasExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH) == true)
+                        {
+                            onChangedWish(mWishPosition, data.getBooleanExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH, false));
+                        } else
+                        {
+                            setRefresh(true);
+                        }
+                        break;
                 }
                 break;
             }
@@ -265,21 +279,50 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
                 break;
 
             case Constants.CODE_REQUEST_ACTIVITY_PREVIEW:
-                if (resultCode == Activity.RESULT_OK)
+                switch (resultCode)
                 {
-                    Observable.create(new ObservableOnSubscribe<Object>()
-                    {
-                        @Override
-                        public void subscribe(ObservableEmitter<Object> e) throws Exception
+                    case Activity.RESULT_OK:
+                        Observable.create(new ObservableOnSubscribe<Object>()
                         {
-                            if (mViewByLongPress == null || mPlaceViewItemByLongPress == null)
+                            @Override
+                            public void subscribe(ObservableEmitter<Object> e) throws Exception
                             {
-                                return;
-                            }
+                                if (mViewByLongPress == null || mPlaceViewItemByLongPress == null)
+                                {
+                                    return;
+                                }
 
-                            onPlaceClick(mViewByLongPress, mPlaceViewItemByLongPress, mListCountByLongPress);
+                                onPlaceClick(-1, mViewByLongPress, mPlaceViewItemByLongPress, mListCountByLongPress);
+                            }
+                        }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
+                        break;
+
+
+                    case Constants.CODE_RESULT_ACTIVITY_REFRESH:
+                        if (data != null && data.hasExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH) == true)
+                        {
+                            onChangedWish(mWishPosition, data.getBooleanExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH, false));
+                        } else
+                        {
+                            setRefresh(true);
                         }
-                    }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
+                        break;
+                }
+                break;
+
+            case StayCampaignTagListActivity.REQUEST_CODE_WISH_DIALOG:
+                switch (resultCode)
+                {
+                    case Activity.RESULT_OK:
+                        if (data != null)
+                        {
+                            onChangedWish(mWishPosition, data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false));
+                        }
+                        break;
+
+                    case BaseActivity.RESULT_CODE_REFRESH:
+                        setRefresh(true);
+                        break;
                 }
                 break;
         }
@@ -622,7 +665,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
-    public void onPlaceClick(View view, PlaceViewItem placeViewItem, int count)
+    public void onPlaceClick(int position, View view, PlaceViewItem placeViewItem, int count)
     {
         if (placeViewItem == null || placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
         {
@@ -630,6 +673,8 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         }
 
         Stay stay = placeViewItem.getItem();
+
+        mWishPosition = position;
 
         StayDetailAnalyticsParam analyticsParam = new StayDetailAnalyticsParam();
         analyticsParam.setAddressAreaName(stay.addressSummary);
@@ -740,7 +785,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
     }
 
     @Override
-    public void onPlaceLongClick(View view, PlaceViewItem placeViewItem, int count)
+    public void onPlaceLongClick(int position, View view, PlaceViewItem placeViewItem, int count)
     {
         if (placeViewItem == null || placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
         {
@@ -750,6 +795,8 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         getViewInterface().setBlurVisibility(getActivity(), true);
 
         Stay stay = placeViewItem.getItem();
+
+        mWishPosition = position;
 
         // 기존 데이터를 백업한다.
         mViewByLongPress = view;
@@ -761,6 +808,22 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
             , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT), stay);
 
         startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PREVIEW);
+    }
+
+    @Override
+    public void onWishClick(int position, PlaceViewItem placeViewItem)
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        Stay stay = placeViewItem.getItem();
+
+        mWishPosition = position;
+
+        startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.HOTEL//
+            , stay.index, !stay.myWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), StayCampaignTagListActivity.REQUEST_CODE_WISH_DIALOG);
     }
 
     StayBookDateTime getStayBookDateTime(CommonDateTime commonDateTime)
@@ -782,5 +845,28 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         }
 
         return stayBookDateTime;
+    }
+
+    private void onChangedWish(int position, boolean wish)
+    {
+        if (position < 0)
+        {
+            return;
+        }
+
+        PlaceViewItem placeViewItem = getViewInterface().getItem(position);
+
+        if (placeViewItem == null)
+        {
+            return;
+        }
+
+        Stay stay = placeViewItem.getItem();
+
+        if (stay.myWish != wish)
+        {
+            stay.myWish = wish;
+            getViewInterface().notifyWishChanged(position, wish);
+        }
     }
 }

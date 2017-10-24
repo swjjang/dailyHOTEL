@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
+import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
@@ -119,6 +120,10 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
     {
         super.onResume();
 
+        if (isRefresh() == true)
+        {
+            onRefresh(true);
+        }
     }
 
     @Override
@@ -163,7 +168,8 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
                 if (resultCode == Activity.RESULT_OK)
                 {
                     setRefresh(true);
-                    onRefresh(true);
+
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
                 } else
                 {
                     onBackClick();
@@ -180,15 +186,18 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
             return;
         }
 
+        setRefresh(false);
+        screenLock(showProgress);
+
         Observable<WishResult> wishResultObservable = null;
 
         switch (mServiceType)
         {
-            case GOURMET:
+            case HOTEL:
                 wishResultObservable = mWish ? mStayRemoteImpl.addWish(mPlaceIndex) : mStayRemoteImpl.removeWish(mPlaceIndex);
                 break;
 
-            case HOTEL:
+            case GOURMET:
                 wishResultObservable = mWish ? mGourmetRemoteImpl.addWish(mPlaceIndex) : mGourmetRemoteImpl.removeWish(mPlaceIndex);
                 break;
 
@@ -225,6 +234,30 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
         getActivity().onBackPressed();
     }
 
+    @Override
+    protected void setResult(int resultCode)
+    {
+        if (getResultCode() == BaseActivity.RESULT_CODE_REFRESH)
+        {
+            super.setResult(BaseActivity.RESULT_CODE_REFRESH);
+        } else
+        {
+            super.setResult(resultCode);
+        }
+    }
+
+    @Override
+    protected void setResult(int resultCode, Intent resultData)
+    {
+        if (getResultCode() == BaseActivity.RESULT_CODE_REFRESH)
+        {
+            super.setResult(BaseActivity.RESULT_CODE_REFRESH);
+        } else
+        {
+            super.setResult(resultCode, resultData);
+        }
+    }
+
     private void showWishAnimation(WishResult wishResult, boolean wish)
     {
         if (wishResult == null)
@@ -232,6 +265,9 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
             onBackClick();
             return;
         }
+
+        unLockAll();
+        screenLock(false);
 
         if (wishResult.success == true)
         {
@@ -246,10 +282,12 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
                     {
                         unLockAll();
 
+                        // 로그인 후에 변경시에는 전체 리플래쉬가 되어야 한다.
                         Intent intent = new Intent();
                         intent.putExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, mWish);
 
                         setResult(Activity.RESULT_OK, intent);
+
                         onBackClick();
                     }
                 }));

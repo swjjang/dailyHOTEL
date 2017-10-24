@@ -737,8 +737,11 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
                 @Override
                 public void onAnimationEnd(Animator animation)
                 {
-                    mAnimatorSet.removeAllListeners();
-                    mAnimatorSet = null;
+                    if (mAnimatorSet != null)
+                    {
+                        mAnimatorSet.removeAllListeners();
+                        mAnimatorSet = null;
+                    }
 
                     if (mAnimationState != ANIMATION_STATE.CANCEL)
                     {
@@ -848,8 +851,11 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
                         alphaAnimator.removeAllUpdateListeners();
                     }
 
-                    mAnimatorSet.removeAllListeners();
-                    mAnimatorSet = null;
+                    if (mAnimatorSet != null)
+                    {
+                        mAnimatorSet.removeAllListeners();
+                        mAnimatorSet = null;
+                    }
 
                     if (mAnimationState != ANIMATION_STATE.CANCEL)
                     {

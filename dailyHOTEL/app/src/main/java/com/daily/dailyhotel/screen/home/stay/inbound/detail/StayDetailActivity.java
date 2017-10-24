@@ -29,7 +29,7 @@ public class StayDetailActivity extends BaseActivity<StayDetailPresenter>
     static final int REQUEST_CODE_DOWNLOAD_COUPON = 10010;
     static final int REQUEST_CODE_LOGIN_IN_BY_WISH = 10011;
     static final int REQUEST_CODE_LOGIN_IN_BY_COUPON = 10012;
-    static final int REQUEST_CODE_LOGIN_IN_BY_ORDER = 10013;
+    static final int REQUEST_CODE_LOGIN_IN_BY_BOOKING = 10013;
     static final int REQUEST_CODE_TRUE_VIEW = 10014;
     static final int REQUEST_CODE_TRUE_VR = 10015;
     static final int REQUEST_CODE_NAVIGATOR = 10016;

@@ -1,9 +1,13 @@
 package com.twoheart.dailyhotel.screen.gourmet.list;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
+import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
+import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
@@ -16,8 +20,12 @@ import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
+import com.twoheart.dailyhotel.place.fragment.PlaceListMapFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
+import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +50,55 @@ public class GourmetListFragment extends PlaceListFragment
         void onRegionClick();
 
         void onCalendarClick();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        switch (requestCode)
+        {
+            case Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG:
+                if (resultCode == Activity.RESULT_OK && data != null)
+                {
+                    onChangedWish(mWishPosition, data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false));
+                }
+                break;
+
+            case CODE_REQUEST_ACTIVITY_STAY_DETAIL:
+            case CODE_REQUEST_ACTIVITY_GOURMET_DETAIL:
+            {
+                if (resultCode == com.daily.base.BaseActivity.RESULT_CODE_REFRESH && data != null)
+                {
+                    if (data.hasExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_WISH) == true)
+                    {
+                        onChangedWish(mWishPosition, data.getBooleanExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_WISH, false));
+                    }
+                }
+                break;
+            }
+
+            case CODE_REQUEST_ACTIVITY_PREVIEW:
+                if (resultCode == Constants.CODE_RESULT_ACTIVITY_REFRESH)
+                {
+                    if (data != null && data.hasExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_WISH) == true)
+                    {
+                        onChangedWish(mWishPosition, data.getBooleanExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_WISH, false));
+                    }
+                }
+                break;
+
+            default:
+                if (mViewType == ViewType.MAP)
+                {
+                    PlaceListMapFragment placeListMapFragment = mPlaceListLayout.getListMapFragment();
+
+                    if (placeListMapFragment != null)
+                    {
+                        placeListMapFragment.onActivityResult(requestCode, resultCode, data);
+                    }
+                }
+                break;
+        }
     }
 
     @Override
@@ -114,7 +171,25 @@ public class GourmetListFragment extends PlaceListFragment
     @Override
     protected void onChangedWish(int position, boolean wish)
     {
+        if (position < 0)
+        {
+            return;
+        }
 
+        PlaceViewItem placeViewItem = mPlaceListLayout.getItem(position);
+
+        if (placeViewItem == null)
+        {
+            return;
+        }
+
+        Gourmet gourmet = placeViewItem.getItem();
+
+        if (gourmet.myWish != wish)
+        {
+            gourmet.myWish = wish;
+            mPlaceListLayout.notifyWishChanged(position, wish);
+        }
     }
 
     protected void onGourmetList(List<Gourmet> list, int page, int totalCount, int maxCount, //
@@ -317,7 +392,17 @@ public class GourmetListFragment extends PlaceListFragment
         @Override
         public void onWishClick(int position, PlaceViewItem placeViewItem)
         {
+            if (placeViewItem == null || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
 
+            Gourmet gourmet = placeViewItem.getItem();
+
+            mWishPosition = position;
+
+            mBaseActivity.startActivityForResult(WishDialogActivity.newInstance(mBaseActivity, ServiceType.GOURMET//
+                , gourmet.index, !gourmet.myWish, position, AnalyticsManager.Screen.DAILYGOURMET_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);
         }
 
         @Override

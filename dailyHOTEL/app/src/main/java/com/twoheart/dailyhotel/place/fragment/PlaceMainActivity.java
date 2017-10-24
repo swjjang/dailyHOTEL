@@ -15,6 +15,7 @@ import android.view.WindowManager;
 
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.R;
@@ -245,8 +246,7 @@ public abstract class PlaceMainActivity extends BaseActivity
 
                 if (mViewType == ViewType.MAP)
                 {
-                    PlaceListFragment placeListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
-                    placeListFragment.onActivityResult(requestCode, resultCode, data);
+                    onActivityCurrentFragmentResult(requestCode, resultCode, data);
                 } else
                 {
                     searchMyLocation();
@@ -260,8 +260,7 @@ public abstract class PlaceMainActivity extends BaseActivity
 
                 if (mViewType == ViewType.MAP)
                 {
-                    PlaceListFragment placeListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
-                    placeListFragment.onActivityResult(requestCode, resultCode, data);
+                    onActivityCurrentFragmentResult(requestCode, resultCode, data);
                 } else
                 {
                     if (resultCode == Activity.RESULT_OK)
@@ -310,18 +309,15 @@ public abstract class PlaceMainActivity extends BaseActivity
                                         mDontReloadAtOnResume = false;
                                     } else
                                     {
-                                        if (data.hasExtra(StayDetailActivity.INTENT_EXTRA_DATA_CHANGED_PRICE) == true//
-                                            || data.hasExtra(StayDetailActivity.INTENT_EXTRA_DATA_SOLD_OUT) == true)
+                                        if (data.hasExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH) == true//
+                                            || data.hasExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_WISH) == true)
                                         {
-                                            mDontReloadAtOnResume = false;
+                                            mDontReloadAtOnResume = true;
+
+                                            onActivityCurrentFragmentResult(requestCode, resultCode, data);
                                         } else
                                         {
-                                            PlaceListFragment currentListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
-
-                                            if (currentListFragment != null)
-                                            {
-                                                currentListFragment.onActivityResult(requestCode, resultCode, data);
-                                            }
+                                            mDontReloadAtOnResume = false;
                                         }
                                     }
                                     break;
@@ -347,26 +343,42 @@ public abstract class PlaceMainActivity extends BaseActivity
             }
 
             case CODE_REQUEST_ACTIVITY_PREVIEW:
-                if (resultCode == Activity.RESULT_OK)
+                mDontReloadAtOnResume = true;
+
+                switch (resultCode)
                 {
-                    if (data != null)
-                    {
-                        PlaceListFragment currentListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
-
-                        if (currentListFragment != null)
+                    case Activity.RESULT_OK:
+                        Observable.create(new ObservableOnSubscribe<Object>()
                         {
-                            currentListFragment.onActivityResult(requestCode, resultCode, data);
-                        }
-                    }
+                            @Override
+                            public void subscribe(ObservableEmitter<Object> e) throws Exception
+                            {
+                                onPlaceDetailClickByLongPress(mViewByLongPress, mPlaceViewItemByLongPress, mListCountByLongPress);
+                            }
+                        }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
+                        break;
 
-                    Observable.create(new ObservableOnSubscribe<Object>()
-                    {
-                        @Override
-                        public void subscribe(ObservableEmitter<Object> e) throws Exception
+                    case CODE_RESULT_ACTIVITY_REFRESH:
+                        if (data == null)
                         {
-                            onPlaceDetailClickByLongPress(mViewByLongPress, mPlaceViewItemByLongPress, mListCountByLongPress);
+                            mDontReloadAtOnResume = false;
+                        } else
+                        {
+                            onActivityCurrentFragmentResult(requestCode, resultCode, data);
                         }
-                    }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
+                        break;
+                }
+                break;
+
+            case Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG:
+                if (resultCode == com.daily.base.BaseActivity.RESULT_CODE_REFRESH)
+                {
+                    mDontReloadAtOnResume = false;
+                } else
+                {
+                    mDontReloadAtOnResume = true;
+
+                    onActivityCurrentFragmentResult(requestCode, resultCode, data);
                 }
                 break;
         }
@@ -551,6 +563,16 @@ public abstract class PlaceMainActivity extends BaseActivity
         if (placeListFragment != null)
         {
             placeListFragment.setScrollListTop();
+        }
+    }
+
+    private void onActivityCurrentFragmentResult(int requestCode, int resultCode, Intent data)
+    {
+        PlaceListFragment currentListFragment = mPlaceMainLayout.getCurrentPlaceListFragment();
+
+        if (currentListFragment != null)
+        {
+            currentListFragment.onActivityResult(requestCode, resultCode, data);
         }
     }
 

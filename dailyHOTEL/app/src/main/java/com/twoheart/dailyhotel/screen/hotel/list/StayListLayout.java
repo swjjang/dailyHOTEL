@@ -62,8 +62,12 @@ public class StayListLayout extends PlaceListLayout
             return;
         }
 
-        StayListAdapter.StayViewHolder holder = (StayListAdapter.StayViewHolder) mPlaceRecyclerView.findViewHolderForAdapterPosition(position);
-        holder.stayCardView.setWish(wish);
+        StayListAdapter.StayViewHolder stayViewHolder = (StayListAdapter.StayViewHolder) mPlaceRecyclerView.findViewHolderForAdapterPosition(position);
+
+        if (stayViewHolder != null)
+        {
+            stayViewHolder.stayCardView.setWish(wish);
+        }
     }
 
     @Override

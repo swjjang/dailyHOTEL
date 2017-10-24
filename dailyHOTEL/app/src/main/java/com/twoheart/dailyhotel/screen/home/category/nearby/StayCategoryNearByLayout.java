@@ -794,9 +794,12 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
                 @Override
                 public void onAnimationEnd(Animator animation)
                 {
-                    mValueAnimator.removeAllListeners();
-                    mValueAnimator.removeAllUpdateListeners();
-                    mValueAnimator = null;
+                    if (mValueAnimator != null)
+                    {
+                        mValueAnimator.removeAllListeners();
+                        mValueAnimator.removeAllUpdateListeners();
+                        mValueAnimator = null;
+                    }
 
                     if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
                     {
@@ -876,9 +879,12 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
                 @Override
                 public void onAnimationEnd(Animator animation)
                 {
-                    mValueAnimator.removeAllListeners();
-                    mValueAnimator.removeAllUpdateListeners();
-                    mValueAnimator = null;
+                    if (mValueAnimator != null)
+                    {
+                        mValueAnimator.removeAllListeners();
+                        mValueAnimator.removeAllUpdateListeners();
+                        mValueAnimator = null;
+                    }
 
                     if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
                     {

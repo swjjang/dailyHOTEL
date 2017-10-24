@@ -17,6 +17,8 @@ import com.daily.base.widget.DailyViewPager;
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -278,14 +280,22 @@ public class RecentPlacesTabActivity extends BaseActivity
                 public Integer apply(@NonNull ArrayList<RecentlyDbPlace> stayList, @NonNull ArrayList<RecentlyDbPlace> gourmetList) throws Exception
                 {
                     int position = 0;
-                    boolean isEmptyStayList = stayList == null || stayList.size() == 0;
-                    boolean isEmptyGourmetList = gourmetList == null || gourmetList.size() == 0;
-                    if (isEmptyStayList == true && isEmptyGourmetList == true)
+
+                    // 이전에 선택된 탭이 있는 경우
+                    if (mViewPager != null && mViewPager.getChildCount() > 0)
                     {
-                        AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordScreen(RecentPlacesTabActivity.this, AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY, null);
-                    } else if (isEmptyStayList == true)
+                        position = mViewPager.getCurrentItem();
+                    } else
                     {
-                        position = 1;
+                        boolean isEmptyStayList = stayList == null || stayList.size() == 0;
+                        boolean isEmptyGourmetList = gourmetList == null || gourmetList.size() == 0;
+                        if (isEmptyStayList == true && isEmptyGourmetList == true)
+                        {
+                            AnalyticsManager.getInstance(RecentPlacesTabActivity.this).recordScreen(RecentPlacesTabActivity.this, AnalyticsManager.Screen.MENU_RECENT_VIEW_EMPTY, null);
+                        } else if (isEmptyStayList == true)
+                        {
+                            position = 1;
+                        }
                     }
 
                     return position;
@@ -312,6 +322,9 @@ public class RecentPlacesTabActivity extends BaseActivity
         mViewPager.removeAllViews();
         mViewPager.setOffscreenPageLimit(1);
 
+        mViewPager.setAdapter(mPageAdapter);
+        mViewPager.clearOnPageChangeListeners();
+
         TabLayout.Tab selectedTab = mTabLayout.getTabAt(position);
 
         Class reflectionClass = ViewPager.class;
@@ -331,8 +344,6 @@ public class RecentPlacesTabActivity extends BaseActivity
             selectedTab.select();
         }
 
-        mViewPager.setAdapter(mPageAdapter);
-        mViewPager.clearOnPageChangeListeners();
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
 
         mTabLayout.setOnTabSelectedListener(mOnTabSelectedListener);
@@ -357,21 +368,70 @@ public class RecentPlacesTabActivity extends BaseActivity
             {
                 mDontReloadAtOnResume = true;
 
-                setResult(resultCode);
-
-                if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
+                switch (resultCode)
                 {
-                    finish();
+                    case com.daily.base.BaseActivity.RESULT_CODE_REFRESH:
+
+                        if (data == null)
+                        {
+                            mDontReloadAtOnResume = false;
+                        } else
+                        {
+                            if (data.hasExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH) == true//
+                                || data.hasExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_WISH) == true)
+                            {
+                                mFragmentList.get(mViewPager.getCurrentItem()).onActivityResult(requestCode, resultCode, data);
+                            } else
+                            {
+                                mDontReloadAtOnResume = false;
+                            }
+                        }
+                        break;
+
+                    case CODE_RESULT_ACTIVITY_REFRESH:
+                    case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
+                        mDontReloadAtOnResume = false;
+                        break;
+
+                    default:
+                        break;
                 }
+
                 break;
             }
 
             case CODE_REQUEST_ACTIVITY_PREVIEW:
                 mDontReloadAtOnResume = true;
 
-                mFragmentList.get(mViewPager.getCurrentItem()).onActivityResult(requestCode, resultCode, data);
+                switch (resultCode)
+                {
+                    case Activity.RESULT_OK:
+                        mFragmentList.get(mViewPager.getCurrentItem()).onActivityResult(requestCode, resultCode, data);
+                        break;
+
+                    case CODE_RESULT_ACTIVITY_REFRESH:
+                        if (data == null)
+                        {
+                            mDontReloadAtOnResume = false;
+                        } else
+                        {
+                            mFragmentList.get(mViewPager.getCurrentItem()).onActivityResult(requestCode, resultCode, data);
+                        }
+                        break;
+                }
                 break;
 
+            case Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG:
+                if (resultCode == com.daily.base.BaseActivity.RESULT_CODE_REFRESH)
+                {
+                    mDontReloadAtOnResume = false;
+                } else
+                {
+                    mDontReloadAtOnResume = true;
+
+                    mFragmentList.get(mViewPager.getCurrentItem()).onActivityResult(requestCode, resultCode, data);
+                }
+                break;
         }
 
         super.onActivityResult(requestCode, resultCode, data);
