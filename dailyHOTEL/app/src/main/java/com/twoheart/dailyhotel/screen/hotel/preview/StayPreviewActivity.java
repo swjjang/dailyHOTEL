@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.hotel.preview;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -36,6 +37,8 @@ import retrofit2.Response;
 
 public class StayPreviewActivity extends BaseActivity
 {
+    private static final int REQUEST_CODE_LOGIN_IN_BY_WISH = 10000;
+
     private static final int SKIP_CHECK_DISCOUNT_PRICE_VALUE = Integer.MIN_VALUE;
 
     protected StayPreviewLayout mPreviewLayout;
@@ -256,8 +259,19 @@ public class StayPreviewActivity extends BaseActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        unLockUI();
+
         super.onActivityResult(requestCode, resultCode, data);
 
+        switch (requestCode)
+        {
+            case REQUEST_CODE_LOGIN_IN_BY_WISH:
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    mOnEventListener.onWishClick();
+                }
+                break;
+        }
     }
 
     @Override
@@ -396,8 +410,7 @@ public class StayPreviewActivity extends BaseActivity
             } else
             {
                 Intent intent = LoginActivity.newInstance(StayPreviewActivity.this);
-                startActivity(intent);
-                StayPreviewActivity.this.finish();
+                startActivityForResult(intent, REQUEST_CODE_LOGIN_IN_BY_WISH);
             }
         }
 
