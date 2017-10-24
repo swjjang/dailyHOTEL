@@ -44,8 +44,12 @@ public class GourmetListLayout extends PlaceListLayout
             return;
         }
 
-        GourmetListAdapter.GourmetViewHolder holder = (GourmetListAdapter.GourmetViewHolder) mPlaceRecyclerView.findViewHolderForAdapterPosition(position);
-        holder.gourmetCardView.setWish(wish);
+        GourmetListAdapter.GourmetViewHolder gourmetViewHolder = (GourmetListAdapter.GourmetViewHolder) mPlaceRecyclerView.findViewHolderForAdapterPosition(position);
+
+        if (gourmetViewHolder != null)
+        {
+            gourmetViewHolder.gourmetCardView.setWish(wish);
+        }
     }
 
     //    @Override

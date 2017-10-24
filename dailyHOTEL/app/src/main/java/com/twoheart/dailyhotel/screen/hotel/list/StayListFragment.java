@@ -130,7 +130,13 @@ public class StayListFragment extends PlaceListFragment
             return;
         }
 
-        PlaceViewItem placeViewItem = mPlaceListLayout.getList().get(position);
+        PlaceViewItem placeViewItem = mPlaceListLayout.getItem(position);
+
+        if (placeViewItem == null)
+        {
+            return;
+        }
+
         Stay stay = placeViewItem.getItem();
 
         if (stay.myWish != wish)

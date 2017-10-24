@@ -32,4 +32,21 @@ public class CollectionGourmetLayout extends CollectionBaseLayout
             ((CollectionGourmetAdapter) mPlaceListAdapter).setUsedMultiTransition(isUsedMultiTransition);
         }
     }
+
+
+    @Override
+    protected void notifyWishChanged(int position, boolean wish)
+    {
+        if (mRecyclerView == null || mPlaceListAdapter == null)
+        {
+            return;
+        }
+
+        CollectionGourmetAdapter.GourmetViewHolder gourmetViewHolder = (CollectionGourmetAdapter.GourmetViewHolder) mRecyclerView.findViewHolderForAdapterPosition(position);
+
+        if (gourmetViewHolder != null)
+        {
+            gourmetViewHolder.gourmetCardView.setWish(wish);
+        }
+    }
 }

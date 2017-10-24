@@ -347,11 +347,6 @@ public abstract class PlaceMainActivity extends BaseActivity
                 switch (resultCode)
                 {
                     case Activity.RESULT_OK:
-                        if (data != null)
-                        {
-                            onActivityCurrentFragmentResult(requestCode, resultCode, data);
-                        }
-
                         Observable.create(new ObservableOnSubscribe<Object>()
                         {
                             @Override

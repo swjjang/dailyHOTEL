@@ -510,6 +510,8 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 } else
                 {
                 }
+
+                setResult(BaseActivity.RESULT_CODE_REFRESH);
                 break;
 
             case GourmetDetailActivity.REQUEST_CODE_DOWNLOAD_COUPON:
@@ -520,6 +522,8 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 {
                     onWishClick();
                 }
+
+                setResult(BaseActivity.RESULT_CODE_REFRESH);
                 break;
 
             case GourmetDetailActivity.REQUEST_CODE_LOGIN_IN_BY_COUPON:
@@ -527,6 +531,8 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 {
                     onDownloadCouponClick();
                 }
+
+                setResult(BaseActivity.RESULT_CODE_REFRESH);
                 break;
 
             case GourmetDetailActivity.REQUEST_CODE_MENU:
@@ -552,6 +558,8 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 {
                     onOrderMenu(mSelectedMenuIndex);
                 }
+
+                setResult(BaseActivity.RESULT_CODE_REFRESH);
                 break;
         }
     }
@@ -582,6 +590,30 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     public void onBackClick()
     {
         getActivity().onBackPressed();
+    }
+
+    @Override
+    protected void setResult(int resultCode)
+    {
+        if (getResultCode() == BaseActivity.RESULT_CODE_REFRESH)
+        {
+            super.setResult(BaseActivity.RESULT_CODE_REFRESH);
+        } else
+        {
+            super.setResult(resultCode);
+        }
+    }
+
+    @Override
+    protected void setResult(int resultCode, Intent resultData)
+    {
+        if (getResultCode() == BaseActivity.RESULT_CODE_REFRESH)
+        {
+            super.setResult(BaseActivity.RESULT_CODE_REFRESH);
+        } else
+        {
+            super.setResult(resultCode, resultData);
+        }
     }
 
     @Override
@@ -633,10 +665,9 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                         @Override
                         public void accept(@io.reactivex.annotations.NonNull WishResult wishResult) throws Exception
                         {
-                            if (equalsCallingActivity(WishListTabActivity.class) == true)
-                            {
-                                setResult(BaseActivity.RESULT_CODE_REFRESH);
-                            }
+                            Intent intent = new Intent();
+                            intent.putExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_WISH, true);
+                            setResult(BaseActivity.RESULT_CODE_REFRESH, intent);
 
                             if (wishResult.success == true)
                             {
@@ -691,10 +722,9 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                         @Override
                         public void accept(@io.reactivex.annotations.NonNull WishResult wishResult) throws Exception
                         {
-                            if (equalsCallingActivity(WishListTabActivity.class) == true)
-                            {
-                                setResult(BaseActivity.RESULT_CODE_REFRESH);
-                            }
+                            Intent intent = new Intent();
+                            intent.putExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_WISH, false);
+                            setResult(BaseActivity.RESULT_CODE_REFRESH, intent);
 
                             if (wishResult.success == true)
                             {
@@ -1428,7 +1458,9 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         {
             if (mSoldOutFromList == false)
             {
-                setResult(BaseActivity.RESULT_CODE_REFRESH);
+                Intent intent = new Intent();
+                intent.putExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_SOLD_OUT, true);
+                setResult(BaseActivity.RESULT_CODE_REFRESH, intent);
             }
 
             getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_detail_sold_out)//
@@ -1461,7 +1493,9 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 {
                     if (mSoldOutFromList == false)
                     {
-                        setResult(BaseActivity.RESULT_CODE_REFRESH);
+                        Intent intent = new Intent();
+                        intent.putExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_CHANGED_PRICE, true);
+                        setResult(BaseActivity.RESULT_CODE_REFRESH, intent);
                     }
 
                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_detail_sold_out)//

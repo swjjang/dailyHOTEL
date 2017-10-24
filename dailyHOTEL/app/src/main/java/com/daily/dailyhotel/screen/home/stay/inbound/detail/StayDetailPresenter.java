@@ -543,7 +543,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                     onHideRoomListClick(false);
                 }
 
-                setResult(BaseActivity.RESULT_CODE_REFRESH, null);
+                setResult(BaseActivity.RESULT_CODE_REFRESH);
                 break;
 
             case StayDetailActivity.REQUEST_CODE_DOWNLOAD_COUPON:
@@ -554,7 +554,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 {
                     onWishClick();
 
-                    setResult(BaseActivity.RESULT_CODE_REFRESH, null);
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
                 }
                 break;
 

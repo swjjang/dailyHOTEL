@@ -33,6 +33,7 @@ public class StayCampaignListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     //    View.OnClickListener mOnClickListener;
     private View.OnLongClickListener mOnLongClickListener;
+    private View.OnClickListener mOnWishClickListener;
 
     OnEventListener mOnEventListener;
 
@@ -63,6 +64,11 @@ public class StayCampaignListAdapter extends RecyclerView.Adapter<RecyclerView.V
     public void setOnLongClickListener(View.OnLongClickListener listener)
     {
         mOnLongClickListener = listener;
+    }
+
+    public void setOnWishClickListener(View.OnClickListener listener)
+    {
+        mOnWishClickListener = listener;
     }
 
     public void setTrueVREnabled(boolean enabled)
@@ -292,7 +298,7 @@ public class StayCampaignListAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
     }
 
-    private class StayViewHolder extends RecyclerView.ViewHolder
+    class StayViewHolder extends RecyclerView.ViewHolder
     {
         DailyStayCardView stayCardView;
 
@@ -336,6 +342,14 @@ public class StayCampaignListAdapter extends RecyclerView.Adapter<RecyclerView.V
                     }
                 });
             }
+
+            stayCardView.setOnWishClickListener(v ->
+            {
+                if (mOnWishClickListener != null)
+                {
+                    mOnWishClickListener.onClick(stayCardView);
+                }
+            });
         }
     }
 }

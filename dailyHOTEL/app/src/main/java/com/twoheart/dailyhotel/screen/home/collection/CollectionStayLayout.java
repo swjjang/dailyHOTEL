@@ -31,4 +31,20 @@ public class CollectionStayLayout extends CollectionBaseLayout
             ((CollectionStayAdapter) mPlaceListAdapter).setUsedMultiTransition(isUsedMultiTransition);
         }
     }
+
+    @Override
+    protected void notifyWishChanged(int position, boolean wish)
+    {
+        if (mRecyclerView == null || mPlaceListAdapter == null)
+        {
+            return;
+        }
+
+        CollectionStayAdapter.StayViewHolder stayViewHolder = (CollectionStayAdapter.StayViewHolder) mRecyclerView.findViewHolderForAdapterPosition(position);
+
+        if (stayViewHolder != null)
+        {
+            stayViewHolder.stayCardView.setWish(wish);
+        }
+    }
 }

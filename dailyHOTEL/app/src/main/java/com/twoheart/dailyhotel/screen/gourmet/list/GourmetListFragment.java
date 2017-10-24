@@ -113,7 +113,25 @@ public class GourmetListFragment extends PlaceListFragment
     @Override
     protected void onChangedWish(int position, boolean wish)
     {
+        if (position < 0)
+        {
+            return;
+        }
 
+        PlaceViewItem placeViewItem = mPlaceListLayout.getItem(position);
+
+        if (placeViewItem == null)
+        {
+            return;
+        }
+
+        Gourmet gourmet = placeViewItem.getItem();
+
+        if (gourmet.myWish != wish)
+        {
+            gourmet.myWish = wish;
+            mPlaceListLayout.notifyWishChanged(position, wish);
+        }
     }
 
     protected void onGourmetList(List<Gourmet> list, int page, int totalCount, int maxCount, //

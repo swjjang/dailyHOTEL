@@ -42,13 +42,17 @@ public abstract class CollectionBaseLayout extends BaseBlurLayout
 
     protected abstract void setUsedMultiTransition(boolean isUsedMultiTransition);
 
+    protected abstract void notifyWishChanged(int position, boolean wish);
+
     public interface OnEventListener extends OnBaseEventListener
     {
         void onCalendarClick();
 
-        void onPlaceClick(View view, PlaceViewItem placeViewItem, int count);
+        void onPlaceClick(int position, View view, PlaceViewItem placeViewItem, int count);
 
-        void onPlaceLongClick(View view, PlaceViewItem placeViewItem, int count);
+        void onPlaceLongClick(int position, View view, PlaceViewItem placeViewItem, int count);
+
+        void onWishClick(int position, PlaceViewItem placeViewItem);
     }
 
     public CollectionBaseLayout(Context context, OnBaseEventListener listener)
@@ -122,6 +126,8 @@ public abstract class CollectionBaseLayout extends BaseBlurLayout
         {
             mPlaceListAdapter.setOnLongClickListener(mOnItemLongClickListener);
         }
+
+        mPlaceListAdapter.setOnWishClickListener(mOnWishClickListener);
 
         mRecyclerView.setAdapter(mPlaceListAdapter);
 
@@ -349,6 +355,16 @@ public abstract class CollectionBaseLayout extends BaseBlurLayout
         mRecyclerView.scrollToPosition(0);
     }
 
+    public PlaceViewItem getItem(int position)
+    {
+        if(mRecyclerView == null || mPlaceListAdapter == null)
+        {
+            return null;
+        }
+
+        return mPlaceListAdapter.getItem(position);
+    }
+
     protected void setData(ArrayList<PlaceViewItem> placeViewItems, PlaceBookingDay placeBookingDay)
     {
         mPlaceListAdapter.setPlaceBookingDay(placeBookingDay);
@@ -389,7 +405,7 @@ public abstract class CollectionBaseLayout extends BaseBlurLayout
 
             if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY)
             {
-                ((OnEventListener) mOnEventListener).onPlaceClick(view, placeViewItem, mPlaceListAdapter.getItemCount());
+                ((OnEventListener) mOnEventListener).onPlaceClick(position, view, placeViewItem, mPlaceListAdapter.getItemCount());
             }
         }
     };
@@ -409,10 +425,30 @@ public abstract class CollectionBaseLayout extends BaseBlurLayout
 
             if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY)
             {
-                ((OnEventListener) mOnEventListener).onPlaceLongClick(view, placeViewItem, mPlaceListAdapter.getItemCount());
+                ((OnEventListener) mOnEventListener).onPlaceLongClick(position, view, placeViewItem, mPlaceListAdapter.getItemCount());
             }
 
             return true;
+        }
+    };
+
+    private View.OnClickListener mOnWishClickListener = new View.OnClickListener()
+    {
+        @Override
+        public void onClick(View view)
+        {
+            int position = mRecyclerView.getChildAdapterPosition(view);
+            if (position < 0)
+            {
+                return;
+            }
+
+            PlaceViewItem placeViewItem = mPlaceListAdapter.getItem(position);
+
+            if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY)
+            {
+                ((OnEventListener) mOnEventListener).onWishClick(position, placeViewItem);
+            }
         }
     };
 

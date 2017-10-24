@@ -307,7 +307,7 @@ public class CollectionStayAdapter extends PlaceListAdapter
         //        }
     }
 
-    private class StayViewHolder extends RecyclerView.ViewHolder
+    class StayViewHolder extends RecyclerView.ViewHolder
     {
         DailyStayCardView stayCardView;
 
@@ -339,6 +339,14 @@ public class CollectionStayAdapter extends PlaceListAdapter
                     }
                 });
             }
+
+            stayCardView.setOnWishClickListener(v ->
+            {
+                if (mOnWishClickListener != null)
+                {
+                    mOnWishClickListener.onClick(stayCardView);
+                }
+            });
         }
     }
 }

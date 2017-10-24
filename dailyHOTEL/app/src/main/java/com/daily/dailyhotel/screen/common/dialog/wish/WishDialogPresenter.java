@@ -38,7 +38,6 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
     private int mPlaceIndex;
     private boolean mWish;
     private String mCallByScreen;
-    private boolean mNotLoginUser;
 
     public interface WishDialogAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -96,7 +95,6 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
     {
         if (DailyHotel.isLogin() == false)
         {
-            mNotLoginUser = true;
             setRefresh(false);
 
             DailyToast.showToast(getActivity(), R.string.toast_msg_please_login, DailyToast.LENGTH_LONG);
@@ -167,6 +165,8 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
                 {
                     setRefresh(true);
                     onRefresh(true);
+
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
                 } else
                 {
                     onBackClick();
@@ -228,6 +228,30 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
         getActivity().onBackPressed();
     }
 
+    @Override
+    protected void setResult(int resultCode)
+    {
+        if (getResultCode() == BaseActivity.RESULT_CODE_REFRESH)
+        {
+            super.setResult(BaseActivity.RESULT_CODE_REFRESH);
+        } else
+        {
+            super.setResult(resultCode);
+        }
+    }
+
+    @Override
+    protected void setResult(int resultCode, Intent resultData)
+    {
+        if (getResultCode() == BaseActivity.RESULT_CODE_REFRESH)
+        {
+            super.setResult(BaseActivity.RESULT_CODE_REFRESH);
+        } else
+        {
+            super.setResult(resultCode, resultData);
+        }
+    }
+
     private void showWishAnimation(WishResult wishResult, boolean wish)
     {
         if (wishResult == null)
@@ -250,16 +274,10 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
                         unLockAll();
 
                         // 로그인 후에 변경시에는 전체 리플래쉬가 되어야 한다.
-                        if (mNotLoginUser == true)
-                        {
-                            setResult(BaseActivity.RESULT_CODE_REFRESH);
-                        } else
-                        {
-                            Intent intent = new Intent();
-                            intent.putExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, mWish);
+                        Intent intent = new Intent();
+                        intent.putExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, mWish);
 
-                            setResult(Activity.RESULT_OK, intent);
-                        }
+                        setResult(Activity.RESULT_OK, intent);
 
                         onBackClick();
                     }

@@ -12,6 +12,8 @@ import android.view.View;
 
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.R;
@@ -24,6 +26,7 @@ import com.twoheart.dailyhotel.network.model.RecommendationPlace;
 import com.twoheart.dailyhotel.network.model.Sticker;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -52,6 +55,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
     protected PlaceViewItem mPlaceViewItemByLongPress;
     protected int mListCountByLongPress;
     protected View mViewByLongPress;
+    protected int mWishPosition;
 
     private Handler mHandler = new Handler();
 
@@ -72,6 +76,8 @@ public abstract class CollectionBaseActivity extends BaseActivity
     protected abstract ArrayList<PlaceViewItem> makePlaceList(String imageBaseUrl, List<? extends RecommendationPlace> placeList, List<Sticker> stickerList);
 
     protected abstract void onPlaceDetailClickByLongPress(View view, PlaceViewItem placeViewItem, int listCount);
+
+    protected abstract void onChangedWish(int position, boolean wish);
 
     @Override
     protected void onResume()
@@ -220,54 +226,6 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
                 }
             });
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        unLockUI();
-
-        switch (requestCode)
-        {
-            case CODE_REQUEST_ACTIVITY_STAY_DETAIL:
-            case CODE_REQUEST_ACTIVITY_GOURMET_DETAIL:
-            {
-                switch (resultCode)
-                {
-                    case Activity.RESULT_OK:
-                    case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY:
-                    case CODE_RESULT_ACTIVITY_GO_HOME:
-                        setResult(resultCode);
-                        finish();
-                        break;
-
-                    case CODE_RESULT_ACTIVITY_REFRESH:
-                        lockUI();
-
-                        requestCommonDateTime();
-                        break;
-                }
-                break;
-            }
-
-            case CODE_REQUEST_ACTIVITY_CALENDAR:
-                onCalendarActivityResult(resultCode, data);
-                break;
-
-            case CODE_REQUEST_ACTIVITY_PREVIEW:
-                if (resultCode == Activity.RESULT_OK)
-                {
-                    Observable.create(new ObservableOnSubscribe<Object>()
-                    {
-                        @Override
-                        public void subscribe(ObservableEmitter<Object> e) throws Exception
-                        {
-                            onPlaceDetailClickByLongPress(mViewByLongPress, mPlaceViewItemByLongPress, mListCountByLongPress);
-                        }
-                    }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
-                }
-                break;
         }
     }
 

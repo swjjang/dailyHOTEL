@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.home.collection;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -14,6 +15,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
+import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.view.DailyGourmetCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -30,12 +32,17 @@ import com.twoheart.dailyhotel.network.model.Sticker;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -182,6 +189,91 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
             lockUI();
 
             requestCommonDateTime();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        unLockUI();
+
+        switch (requestCode)
+        {
+            case CODE_REQUEST_ACTIVITY_GOURMET_DETAIL:
+            {
+                switch (resultCode)
+                {
+                    case Activity.RESULT_OK:
+                    case CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY:
+                    case CODE_RESULT_ACTIVITY_GO_HOME:
+                        setResult(resultCode);
+                        finish();
+                        break;
+
+                    case CODE_RESULT_ACTIVITY_REFRESH:
+                        lockUI();
+
+                        requestCommonDateTime();
+                        break;
+
+                    case com.daily.base.BaseActivity.RESULT_CODE_REFRESH:
+                        if (data == null)
+                        {
+                            lockUI();
+
+                            requestCommonDateTime();
+                        } else
+                        {
+                            if (data.hasExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_CHANGED_PRICE) == true//
+                                || data.hasExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_SOLD_OUT) == true)
+                            {
+                                lockUI();
+
+                                requestCommonDateTime();
+                            } else
+                            {
+                                onChangedWish(mWishPosition, data.getBooleanExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_WISH, false));
+                            }
+                        }
+                        break;
+                }
+                break;
+            }
+
+            case CODE_REQUEST_ACTIVITY_CALENDAR:
+                onCalendarActivityResult(resultCode, data);
+                break;
+
+            case CODE_REQUEST_ACTIVITY_PREVIEW:
+                switch (resultCode)
+                {
+                    case Activity.RESULT_OK:
+                        Observable.create(new ObservableOnSubscribe<Object>()
+                        {
+                            @Override
+                            public void subscribe(ObservableEmitter<Object> e) throws Exception
+                            {
+                                onPlaceDetailClickByLongPress(mViewByLongPress, mPlaceViewItemByLongPress, mListCountByLongPress);
+                            }
+                        }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
+                        break;
+
+                    case com.daily.base.BaseActivity.RESULT_CODE_REFRESH:
+                        if (data != null && data.hasExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_WISH) == true)
+                        {
+                            onChangedWish(mWishPosition, data.getBooleanExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_WISH, false));
+                        } else
+                        {
+                            lockUI();
+
+                            requestCommonDateTime();
+                        }
+                        break;
+                }
+                break;
+
+            case Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG:
+                break;
         }
     }
 
@@ -404,7 +496,31 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
             return;
         }
 
-        mOnEventListener.onPlaceClick(view, placeViewItem, listCount);
+        mOnEventListener.onPlaceClick(mWishPosition, view, placeViewItem, listCount);
+    }
+
+    @Override
+    protected void onChangedWish(int position, boolean wish)
+    {
+        if (position < 0)
+        {
+            return;
+        }
+
+        PlaceViewItem placeViewItem = mCollectionBaseLayout.getItem(position);
+
+        if (placeViewItem == null)
+        {
+            return;
+        }
+
+        RecommendationGourmet recommendationGourmet = placeViewItem.getItem();
+
+        if (recommendationGourmet.myWish != wish)
+        {
+            recommendationGourmet.myWish = wish;
+            mCollectionBaseLayout.notifyWishChanged(position, wish);
+        }
     }
 
     private CollectionStayLayout.OnEventListener mOnEventListener = new CollectionBaseLayout.OnEventListener()
@@ -417,7 +533,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
 
         @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
         @Override
-        public void onPlaceClick(View view, PlaceViewItem placeViewItem, int count)
+        public void onPlaceClick(int position, View view, PlaceViewItem placeViewItem, int count)
         {
             if (placeViewItem == null || placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
             {
@@ -425,6 +541,8 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
             }
 
             RecommendationGourmet recommendationGourmet = placeViewItem.getItem();
+
+            mWishPosition = position;
 
             // --> 추후에 정리되면 메소드로 수정
             GourmetDetailAnalyticsParam analyticsParam = new GourmetDetailAnalyticsParam();
@@ -495,7 +613,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
         }
 
         @Override
-        public void onPlaceLongClick(View view, PlaceViewItem placeViewItem, int count)
+        public void onPlaceLongClick(int position, View view, PlaceViewItem placeViewItem, int count)
         {
             if (placeViewItem == null || placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
             {
@@ -506,6 +624,8 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
 
             RecommendationGourmet recommendationGourmet = placeViewItem.getItem();
 
+            mWishPosition = position;
+
             // 기존 데이터를 백업한다.
             mViewByLongPress = view;
             mPlaceViewItemByLongPress = placeViewItem;
@@ -514,6 +634,22 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
             Intent intent = GourmetPreviewActivity.newInstance(CollectionGourmetActivity.this, (GourmetBookingDay) mPlaceBookingDay, recommendationGourmet);
 
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
+        }
+
+        @Override
+        public void onWishClick(int position, PlaceViewItem placeViewItem)
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            RecommendationGourmet recommendationGourmet = placeViewItem.getItem();
+
+            mWishPosition = position;
+
+            startActivityForResult(WishDialogActivity.newInstance(CollectionGourmetActivity.this, ServiceType.HOTEL//
+                , recommendationGourmet.index, !recommendationGourmet.myWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);
         }
 
         @Override

@@ -346,7 +346,7 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
 
     }
 
-    private class GourmetViewHolder extends RecyclerView.ViewHolder
+    class GourmetViewHolder extends RecyclerView.ViewHolder
     {
         DailyGourmetCardView gourmetCardView;
 
