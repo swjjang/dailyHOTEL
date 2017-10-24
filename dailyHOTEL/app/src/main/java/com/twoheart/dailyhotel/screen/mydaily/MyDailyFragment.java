@@ -176,7 +176,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
                     }
                 } else if (externalDeepLink.isRewardView() == true)
                 {
-                    if (DailyRemoteConfigPreference.getInstance(context).isKeyRemoteConfigRewardEnabled() == true)
+                    if (DailyRemoteConfigPreference.getInstance(context).isKeyRemoteConfigRewardStickerEnabled() == true)
                     {
                         mOnEventListener.onRewardClick();
                     }

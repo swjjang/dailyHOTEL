@@ -954,7 +954,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             public void accept(@io.reactivex.annotations.NonNull List<StayOutbound> stayOutboundList) throws Exception
             {
                 getViewInterface().setStayOutboundMapViewPagerList(getActivity(), stayOutboundList, mStayBookDateTime.getNights() > 1//
-                    , DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardEnabled());
+                    , DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerEnabled());
                 getViewInterface().setMapViewPagerVisibility(true);
             }
         }));
@@ -1184,7 +1184,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             try
             {
                 getViewInterface().setStayOutboundMapViewPagerList(getActivity(), mStayOutboundList, mStayBookDateTime.getNights() > 1//
-                    , DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardEnabled());
+                    , DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerEnabled());
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -1246,7 +1246,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                     }
 
                     getViewInterface().setStayOutboundList(objectItemList, isSortByDistance, mStayBookDateTime.getNights() > 1//
-                        , DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardEnabled());
+                        , DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerEnabled());
                 } else
                 {
                     setScreenVisible(ScreenType.LIST, mStayOutboundFilters);

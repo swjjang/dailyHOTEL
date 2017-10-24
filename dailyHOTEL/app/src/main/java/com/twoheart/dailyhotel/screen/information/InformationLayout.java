@@ -102,7 +102,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         contactUsLayout.setOnClickListener(this);
         termsNpolicyLayout.setOnClickListener(this);
 
-        dailyRewardLayout.setVisibility(DailyRemoteConfigPreference.getInstance(mContext).isKeyRemoteConfigRewardEnabled() ? View.VISIBLE : View.GONE);
+        dailyRewardLayout.setVisibility(DailyRemoteConfigPreference.getInstance(mContext).isKeyRemoteConfigRewardStickerEnabled() ? View.VISIBLE : View.GONE);
 
         mNewEventIconView = eventLayout.findViewById(R.id.eventNewIconView);
         mNewNoticeIconView = noticeLayout.findViewById(R.id.noticeNewIconView);

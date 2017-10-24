@@ -149,7 +149,7 @@ public class GourmetWishListFragment extends PlaceWishListFragment
                 return;
             }
 
-            mListLayout.setData(list, DailyRemoteConfigPreference.getInstance(mBaseActivity).isKeyRemoteConfigRewardEnabled());
+            mListLayout.setData(list, DailyRemoteConfigPreference.getInstance(mBaseActivity).isKeyRemoteConfigRewardStickerEnabled());
         }
 
         @Override

@@ -136,7 +136,7 @@ public abstract class RecentPlacesListLayout extends BaseBlurLayout
         } else
         {
             mListAdapter.setPlaceBookingDay(placeBookingDay);
-            mListAdapter.setRewardEnabled(DailyRemoteConfigPreference.getInstance(mContext).isKeyRemoteConfigRewardEnabled());
+            mListAdapter.setRewardEnabled(DailyRemoteConfigPreference.getInstance(mContext).isKeyRemoteConfigRewardStickerEnabled());
             mListAdapter.setData(list);
         }
 

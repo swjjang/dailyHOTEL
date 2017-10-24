@@ -246,11 +246,11 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
         if (endTime < currentTime)
         {
-            mCollectionBaseLayout.setData(null, mPlaceBookingDay, DailyRemoteConfigPreference.getInstance(this).isKeyRemoteConfigRewardEnabled());
+            mCollectionBaseLayout.setData(null, mPlaceBookingDay, DailyRemoteConfigPreference.getInstance(this).isKeyRemoteConfigRewardStickerEnabled());
 
             ArrayList<PlaceViewItem> placeViewItems = makePlaceList(imageBaseUrl, null, stickerList);
 
-            mCollectionBaseLayout.setData(placeViewItems, mPlaceBookingDay, DailyRemoteConfigPreference.getInstance(this).isKeyRemoteConfigRewardEnabled());
+            mCollectionBaseLayout.setData(placeViewItems, mPlaceBookingDay, DailyRemoteConfigPreference.getInstance(this).isKeyRemoteConfigRewardStickerEnabled());
 
             showSimpleDialog(null, getString(R.string.message_collection_finished_recommendation), getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
             {
@@ -264,7 +264,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
         {
             ArrayList<PlaceViewItem> placeViewItems = makePlaceList(imageBaseUrl, list, stickerList);
 
-            mCollectionBaseLayout.setData(placeViewItems, mPlaceBookingDay, DailyRemoteConfigPreference.getInstance(this).isKeyRemoteConfigRewardEnabled());
+            mCollectionBaseLayout.setData(placeViewItems, mPlaceBookingDay, DailyRemoteConfigPreference.getInstance(this).isKeyRemoteConfigRewardStickerEnabled());
 
             if ((list == null || list.size() == 0) && checkRequestCollection == false)
             {

@@ -95,7 +95,7 @@ public class StayCampaignTagListView //
             mRecyclerAdapter.setTrueVREnabled(true);
         }
 
-        mRecyclerAdapter.setRewardEnabled(DailyRemoteConfigPreference.getInstance(getContext()).isKeyRemoteConfigRewardEnabled());
+        mRecyclerAdapter.setRewardEnabled(DailyRemoteConfigPreference.getInstance(getContext()).isKeyRemoteConfigRewardStickerEnabled());
 
         if (Util.supportPreview(getContext()) == true)
         {

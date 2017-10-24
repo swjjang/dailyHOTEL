@@ -88,7 +88,7 @@ public abstract class PlaceWishListFragment extends BaseFragment
                     return;
                 }
 
-                mListLayout.setData(null, DailyRemoteConfigPreference.getInstance(mBaseActivity).isKeyRemoteConfigRewardEnabled());
+                mListLayout.setData(null, DailyRemoteConfigPreference.getInstance(mBaseActivity).isKeyRemoteConfigRewardStickerEnabled());
             } else
             {
                 requestWishList();
@@ -98,7 +98,7 @@ public abstract class PlaceWishListFragment extends BaseFragment
 
     public void forceRefreshList()
     {
-        mListLayout.setData(null, false, DailyRemoteConfigPreference.getInstance(mBaseActivity).isKeyRemoteConfigRewardEnabled());
+        mListLayout.setData(null, false, DailyRemoteConfigPreference.getInstance(mBaseActivity).isKeyRemoteConfigRewardStickerEnabled());
         onResume();
     }
 

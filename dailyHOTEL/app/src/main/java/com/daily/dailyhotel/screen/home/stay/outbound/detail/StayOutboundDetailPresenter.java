@@ -1416,7 +1416,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             getViewInterface().setToolbarTitle(stayOutboundDetail.name);
         }
 
-        getViewInterface().setStayDetail(mStayBookDateTime, mPeople, stayOutboundDetail, DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardEnabled());
+        getViewInterface().setStayDetail(mStayBookDateTime, mPeople, stayOutboundDetail, DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerEnabled());
 
         // 리스트 가격 변동은 진입시 한번 만 한다.
         checkChangedPrice(mIsDeepLink, stayOutboundDetail, mListTotalPrice, mCheckChangedPrice == false);
@@ -1546,7 +1546,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         {
             boolean campaignEnabled = DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerCampaignEnabled();
 
-            getViewInterface().setRewardNonMember(DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardEnabled()//
+            getViewInterface().setRewardNonMember(DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerEnabled()//
                 , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage()//
                 , getString(R.string.label_reward_login)//
                 , campaignEnabled ? DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerNonMemberCampaignFreeNights() : 0//

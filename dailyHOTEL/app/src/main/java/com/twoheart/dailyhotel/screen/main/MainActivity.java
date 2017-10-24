@@ -1368,7 +1368,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                         } else if (externalDeepLink.isRewardView() == true)
                         {
                             // 리워드 이벤트가 종료되면 홈에서 팝업을 띄우고 종료시킨다.
-                            if (DailyRemoteConfigPreference.getInstance(MainActivity.this).isKeyRemoteConfigRewardEnabled() == true)
+                            if (DailyRemoteConfigPreference.getInstance(MainActivity.this).isKeyRemoteConfigRewardStickerEnabled() == true)
                             {
                                 mMainFragmentManager.select(false, MainFragmentManager.INDEX_MYDAILY_FRAGMENT, true, bundle);
                             } else

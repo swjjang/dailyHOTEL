@@ -234,7 +234,7 @@ public class GourmetListFragment extends PlaceListFragment
             case LIST:
             {
                 mPlaceListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, sortType, mGourmetCuration.getGourmetBookingDay()//
-                    , DailyRemoteConfigPreference.getInstance(mBaseActivity).isKeyRemoteConfigRewardEnabled());
+                    , DailyRemoteConfigPreference.getInstance(mBaseActivity).isKeyRemoteConfigRewardStickerEnabled());
 
                 int size = mPlaceListLayout.getItemCount();
 
@@ -250,7 +250,7 @@ public class GourmetListFragment extends PlaceListFragment
             case MAP:
             {
                 mPlaceListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, sortType, mGourmetCuration.getGourmetBookingDay()//
-                    , DailyRemoteConfigPreference.getInstance(mBaseActivity).isKeyRemoteConfigRewardEnabled());
+                    , DailyRemoteConfigPreference.getInstance(mBaseActivity).isKeyRemoteConfigRewardStickerEnabled());
 
                 int mapSize = mPlaceListLayout.getMapItemSize();
                 if (mapSize == 0)

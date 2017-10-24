@@ -1413,7 +1413,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         boolean showStamp = mStayDetail.overseas == false && DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStampEnabled() == true;
 
         getViewInterface().setStayDetail(mStayBookDateTime, mStayDetail//
-            , mReviewScores != null ? mReviewScores.reviewScoreTotalCount : 0, showStamp, DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardEnabled());
+            , mReviewScores != null ? mReviewScores.reviewScoreTotalCount : 0, showStamp, DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerEnabled());
 
         // 리스트 가격 변동은 진입시 한번 만 한다.
         checkChangedPrice(mIsDeepLink, mStayDetail, mPriceFromList, mCheckChangedPrice == false);
@@ -1482,7 +1482,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         {
             boolean campaignEnabled = DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerCampaignEnabled();
 
-            getViewInterface().setRewardNonMember(DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardEnabled()//
+            getViewInterface().setRewardNonMember(DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerEnabled()//
                 , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage()//
                 , getString(R.string.label_reward_login)//
                 , campaignEnabled ? DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerNonMemberCampaignFreeNights() : 0//
