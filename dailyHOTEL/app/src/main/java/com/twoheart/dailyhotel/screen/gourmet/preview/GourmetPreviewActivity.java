@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.gourmet.preview;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -36,6 +37,8 @@ import retrofit2.Response;
 
 public class GourmetPreviewActivity extends BaseActivity
 {
+    private static final int REQUEST_CODE_LOGIN_IN_BY_WISH = 10000;
+
     private static final int SKIP_CHECK_DISCOUNT_PRICE_VALUE = Integer.MIN_VALUE;
 
     protected GourmetPreviewLayout mPreviewLayout;
@@ -231,8 +234,19 @@ public class GourmetPreviewActivity extends BaseActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        unLockUI();
+
         super.onActivityResult(requestCode, resultCode, data);
 
+        switch (requestCode)
+        {
+            case REQUEST_CODE_LOGIN_IN_BY_WISH:
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    mOnEventListener.onWishClick();
+                }
+                break;
+        }
     }
 
     private void initLayout(String placeName, String category)
@@ -366,8 +380,7 @@ public class GourmetPreviewActivity extends BaseActivity
             } else
             {
                 Intent intent = LoginActivity.newInstance(GourmetPreviewActivity.this);
-                startActivity(intent);
-                GourmetPreviewActivity.this.finish();
+                startActivityForResult(intent, REQUEST_CODE_LOGIN_IN_BY_WISH);
             }
         }
 

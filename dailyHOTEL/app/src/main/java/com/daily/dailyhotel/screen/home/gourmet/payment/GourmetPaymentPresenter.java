@@ -1255,14 +1255,6 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
     void startThankYou(String aggregationId, boolean fullBonus)
     {
-        // ThankYou 페이지를 홈탭에서 띄우기 위한 코드
-        startActivity(DailyInternalDeepLink.getHomeScreenLink(getActivity()));
-
-        startActivityForResult(GourmetThankYouActivity.newInstance(getActivity(), mGourmetName, mImageUrl//
-            , mVisitDateTime, mMenuName, mMenuCount, aggregationId//
-            , mAnalytics.getThankYouAnalyticsParam())//
-            , GourmetPaymentActivity.REQUEST_CODE_THANK_YOU);
-
         try
         {
             mAnalytics.onScreenPaymentCompleted(getActivity(), aggregationId);
@@ -1270,6 +1262,14 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         {
             ExLog.e(e.toString());
         }
+
+        // ThankYou 페이지를 홈탭에서 띄우기 위한 코드
+        startActivity(DailyInternalDeepLink.getHomeScreenLink(getActivity()));
+
+        startActivityForResult(GourmetThankYouActivity.newInstance(getActivity(), mGourmetName, mImageUrl//
+            , mVisitDateTime, mMenuName, mMenuCount, aggregationId//
+            , mAnalytics.getThankYouAnalyticsParam())//
+            , GourmetPaymentActivity.REQUEST_CODE_THANK_YOU);
     }
 
     private JSONObject getPaymentJSONObject(String arrivalDateTime, int menuIndex, int menuCount//
