@@ -107,26 +107,6 @@
                     android:layout_height="wrap_content"
                     android:visibility="gone"/>
 
-                <LinearLayout
-                    android:id="@+id/rewardCardLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/default_background"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/default_line_cf0f0f0"/>
-
-                    <com.daily.dailyhotel.view.DailyRewardCardView
-                        android:id="@+id/rewardCardView"
-                        android:layout_margin="15dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
-                </LinearLayout>
-
                 <View
                     android:id="@+id/dateInformationViewTopLineView"
                     android:layout_width="match_parent"
@@ -159,7 +139,28 @@
                     android:background="@color/white"
                     android:orientation="vertical"/>
 
+                <LinearLayout
+                    android:id="@+id/rewardCardLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/default_background"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/default_line_cf0f0f0"/>
+
+                    <com.daily.dailyhotel.view.DailyRewardCardView
+                        android:id="@+id/rewardCardView"
+                        android:layout_margin="15dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+
                 <View
+                    android:id="@+id/recommendAroundTopLineView"
                     android:layout_width="match_parent"
                     android:layout_height="12dp"
                     android:background="@drawable/layerlist_divider"/>
@@ -176,6 +177,12 @@
                     dailyCarousel:topLineHeight="0dp"
                     dailyCarousel:useAnimation="false"
                     dailyCarousel:useViewAllButton="false"/>
+
+                <View
+                    android:id="@+id/conciergeTopLineView"
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    android:background="@drawable/layerlist_divider"/>
 
                 <include
                     android:id="@+id/conciergeViewDataBinding"

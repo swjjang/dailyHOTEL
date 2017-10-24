@@ -529,13 +529,13 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
 
             rewardCardView.setCampaignFreeNights(campaignFreeNights);
 
-            getViewDataBinding().dateInformationViewTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 1);
+            getViewDataBinding().recommendAroundTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 1);
         } else
         {
-            getViewDataBinding().dateInformationViewTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 12);
+            getViewDataBinding().recommendAroundTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 12);
         }
 
-        getViewDataBinding().dateInformationViewTopLineView.requestLayout();
+        getViewDataBinding().recommendAroundTopLineView.requestLayout();
     }
 
     @Override

@@ -533,13 +533,13 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
 
             rewardCardView.setCampaignFreeNights(campaignFreeNights);
 
-            getViewDataBinding().dateInformationViewTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 1);
+            getViewDataBinding().conciergeTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 1);
         } else
         {
-            getViewDataBinding().dateInformationViewTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 12);
+            getViewDataBinding().conciergeTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 12);
         }
 
-        getViewDataBinding().dateInformationViewTopLineView.requestLayout();
+        getViewDataBinding().conciergeTopLineView.requestLayout();
     }
 
     @Override
@@ -563,20 +563,20 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
     public Observable<Boolean> getSharedElementTransition(int gradientType)
     {
         TransitionSet inTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
-        Transition inTextTransition;
-
-        if (gradientType == StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP)
-        {
-            inTextTransition = new TextTransition(getColor(R.color.white), getColor(R.color.default_text_c323232)//
-                , 17, 18, new LinearInterpolator());
-        } else
-        {
-            inTextTransition = new TextTransition(getColor(R.color.default_text_c323232), getColor(R.color.default_text_c323232)//
-                , 17, 18, new LinearInterpolator());
-        }
-
-        inTextTransition.addTarget(getString(R.string.transition_place_name));
-        inTransitionSet.addTransition(inTextTransition);
+//        Transition inTextTransition;
+//
+//        if (gradientType == StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP)
+//        {
+//            inTextTransition = new TextTransition(getColor(R.color.white), getColor(R.color.default_text_c323232)//
+//                , 17, 20, new LinearInterpolator());
+//        } else
+//        {
+//            inTextTransition = new TextTransition(getColor(R.color.default_text_c323232), getColor(R.color.default_text_c323232)//
+//                , 17, 20, new LinearInterpolator());
+//        }
+//
+//        inTextTransition.addTarget(getString(R.string.transition_place_name));
+//        inTransitionSet.addTransition(inTextTransition);
 
         Transition inBottomAlphaTransition = new AlphaTransition(1.0f, 0.0f, new LinearInterpolator());
         inBottomAlphaTransition.addTarget(getString(R.string.transition_gradient_bottom_view));
