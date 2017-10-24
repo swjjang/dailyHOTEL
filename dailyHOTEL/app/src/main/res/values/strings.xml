@@ -1519,7 +1519,6 @@
     <string name="label_reward_go_reward">적립 현황 보기</string>
     <string name="message_reward_confirm_reward_notification">데일리 리워드 혜택을 알림으로 확인하세요!</string>
     <string name="message_reward_confirm_reward_coupon">할인쿠폰함에서 리워드 쿠폰을 확인해보세요!</string>
-    <string name="message_reward_reward_guide_description">데일리 리워드 적립 상세 조건은 아래 링크로 확인하세요.</string>
 
     <string-array name="coupon_sort_array">
         <item>전체 쿠폰 보기</item>
