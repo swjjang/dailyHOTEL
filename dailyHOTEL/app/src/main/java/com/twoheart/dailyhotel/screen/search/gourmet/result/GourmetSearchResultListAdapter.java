@@ -28,16 +28,17 @@ public class GourmetSearchResultListAdapter extends GourmetListAdapter
 
         holder.gourmetCardView.setStickerVisible(false);
         holder.gourmetCardView.setDeleteVisible(false);
-        holder.gourmetCardView.setWishVisible(false);
+        holder.gourmetCardView.setWishVisible(true);
+        holder.gourmetCardView.setWish(gourmet.myWish);
 
         holder.gourmetCardView.setTagStickerImage(gourmet.stickerUrl);
         holder.gourmetCardView.setImage(gourmet.imageUrl);
 
         holder.gourmetCardView.setGradeText(DailyTextUtils.isTextEmpty(gourmet.subCategory) == false ? gourmet.subCategory : gourmet.category);
         holder.gourmetCardView.setVRVisible(false);
-        holder.gourmetCardView.setReviewText(gourmet.satisfaction, 0);
+        holder.gourmetCardView.setReviewText(gourmet.satisfaction, gourmet.reviewCount);
 
-        holder.gourmetCardView.setNewVisible(false);
+        holder.gourmetCardView.setNewVisible(gourmet.newItem);
 
         holder.gourmetCardView.setGourmetNameText(gourmet.name);
 
@@ -57,7 +58,7 @@ public class GourmetSearchResultListAdapter extends GourmetListAdapter
             holder.gourmetCardView.setPriceText(0, 0, 0, null, 0);
         } else
         {
-            holder.gourmetCardView.setPriceText(0, gourmet.discountPrice, gourmet.price, null, gourmet.persons);
+            holder.gourmetCardView.setPriceText(gourmet.discountRate, gourmet.discountPrice, gourmet.price, gourmet.couponDiscountText, gourmet.persons);
         }
 
         holder.gourmetCardView.setBenefitText(gourmet.dBenefitText);

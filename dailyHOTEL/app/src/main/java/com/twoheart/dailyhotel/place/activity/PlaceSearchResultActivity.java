@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.PlaceCuration;
@@ -278,27 +280,82 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
             case CODE_REQUEST_ACTIVITY_GOURMET_DETAIL:
             case CODE_REQUEST_ACTIVITY_SEARCH_RESULT:
             {
-                if (resultCode == Activity.RESULT_OK || resultCode == CODE_RESULT_ACTIVITY_PAYMENT_ACCOUNT_READY)
+                switch (resultCode)
                 {
-                    finish(resultCode);
-                } else if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
-                {
-                    finish(resultCode);
+                    case Activity.RESULT_OK:
+                        finish(resultCode);
+                        break;
+
+                    case CODE_RESULT_ACTIVITY_GO_HOME:
+                        finish(resultCode);
+                        break;
+
+                    default:
+                        switch (resultCode)
+                        {
+                            case com.daily.base.BaseActivity.RESULT_CODE_REFRESH:
+                                if (data == null)
+                                {
+                                    refreshCurrentFragment(true);
+                                } else
+                                {
+                                    if (data.hasExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH) == true//
+                                        || data.hasExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_WISH) == true)
+                                    {
+                                        onActivityCurrentFragmentResult(requestCode, resultCode, data);
+                                    } else
+                                    {
+                                        refreshCurrentFragment(true);
+                                    }
+                                }
+                                break;
+
+                            case CODE_RESULT_ACTIVITY_REFRESH:
+                            case CODE_RESULT_ACTIVITY_PAYMENT_TIMEOVER:
+                                refreshCurrentFragment(true);
+                                break;
+
+                            default:
+                                break;
+                        }
+                        break;
                 }
                 break;
             }
 
             case CODE_REQUEST_ACTIVITY_PREVIEW:
-                if (resultCode == Activity.RESULT_OK)
+                switch (resultCode)
                 {
-                    Observable.create(new ObservableOnSubscribe<Object>()
-                    {
-                        @Override
-                        public void subscribe(ObservableEmitter<Object> e) throws Exception
+                    case Activity.RESULT_OK:
+                        Observable.create(new ObservableOnSubscribe<Object>()
                         {
-                            onPlaceDetailClickByLongPress(mViewByLongPress, mPlaceViewItemByLongPress, mListCountByLongPress);
+                            @Override
+                            public void subscribe(ObservableEmitter<Object> e) throws Exception
+                            {
+                                onPlaceDetailClickByLongPress(mViewByLongPress, mPlaceViewItemByLongPress, mListCountByLongPress);
+                            }
+                        }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
+                        break;
+
+                    case CODE_RESULT_ACTIVITY_REFRESH:
+                        if (data == null)
+                        {
+                            refreshCurrentFragment(true);
+                        } else
+                        {
+                            onActivityCurrentFragmentResult(requestCode, resultCode, data);
                         }
-                    }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
+                        break;
+                }
+                break;
+
+            case Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG:
+                if (resultCode == com.daily.base.BaseActivity.RESULT_CODE_REFRESH)
+                {
+                    refreshCurrentFragment(true);
+                } else
+                {
+                    onActivityCurrentFragmentResult(requestCode, resultCode, data);
                 }
                 break;
         }
@@ -482,6 +539,17 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
         if (placeListFragment != null)
         {
             placeListFragment.setScrollListTop();
+        }
+    }
+
+
+    private void onActivityCurrentFragmentResult(int requestCode, int resultCode, Intent data)
+    {
+        PlaceListFragment currentListFragment = mPlaceSearchResultLayout.getCurrentPlaceListFragment();
+
+        if (currentListFragment != null)
+        {
+            currentListFragment.onActivityResult(requestCode, resultCode, data);
         }
     }
 
