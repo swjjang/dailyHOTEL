@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.booking.cancel.detail;
+package com.daily.dailyhotel.screen.booking.cancel.detail.stay.outbound;
 
 
 import android.content.Context;
