@@ -719,6 +719,7 @@
     <string name="label_booking_date">날짜</string>
     <string name="label_reservation_contact">예약자 전화번호</string>
     <string name="label_booking_payment_date">결제일</string>
+    <string name="label_booking_cancel_date">취소일</string>
     <string name="label_booking_view_detail">상세 정보 보기</string>
     <string name="label_booking_view_map">길찾기</string>
     <string name="label_booking_call">문의하기</string>
@@ -727,6 +728,7 @@
     <string name="label_booking_reservation_information">1. 예약 정보</string>
     <string name="label_booking_payment_information">2. 결제 금액 정보</string>
     <string name="label_booking_refund_information">3. 취소 및 환불 규정</string>
+    <string name="label_booking_cancel_information">2. 취소 정보</string>
     <string name="label_booking_reservation_recommend_gourmet_button">주변 추천 레스토랑 확인</string>
     <string name="label_booking_reservation_recommend_gourmet_title">주변 추천 레스토랑</string>
     <string name="message_consult_kakao">무엇을 도와드릴까요?</string>
