@@ -15,6 +15,7 @@ import android.view.WindowManager;
 
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.R;
@@ -308,15 +309,15 @@ public abstract class PlaceMainActivity extends BaseActivity
                                         mDontReloadAtOnResume = false;
                                     } else
                                     {
-                                        if (data.hasExtra(StayDetailActivity.INTENT_EXTRA_DATA_CHANGED_PRICE) == true//
-                                            || data.hasExtra(StayDetailActivity.INTENT_EXTRA_DATA_SOLD_OUT) == true)
-                                        {
-                                            mDontReloadAtOnResume = false;
-                                        } else
+                                        if (data.hasExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH) == true//
+                                            || data.hasExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_WISH) == true)
                                         {
                                             mDontReloadAtOnResume = true;
 
                                             onActivityCurrentFragmentResult(requestCode, resultCode, data);
+                                        } else
+                                        {
+                                            mDontReloadAtOnResume = false;
                                         }
                                     }
                                     break;
@@ -363,8 +364,6 @@ public abstract class PlaceMainActivity extends BaseActivity
                             mDontReloadAtOnResume = false;
                         } else
                         {
-                            mDontReloadAtOnResume = true;
-
                             onActivityCurrentFragmentResult(requestCode, resultCode, data);
                         }
                         break;

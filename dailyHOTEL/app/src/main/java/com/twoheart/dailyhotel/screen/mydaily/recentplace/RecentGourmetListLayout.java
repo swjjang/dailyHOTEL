@@ -26,6 +26,22 @@ public class RecentGourmetListLayout extends RecentPlacesListLayout
     }
 
     @Override
+    protected void notifyWishChanged(int position, boolean wish)
+    {
+        if (mRecyclerView == null)
+        {
+            return;
+        }
+
+        RecentGourmetListAdapter.GourmetViewHolder gourmetViewHolder = (RecentGourmetListAdapter.GourmetViewHolder) mRecyclerView.findViewHolderForAdapterPosition(position);
+
+        if (gourmetViewHolder != null)
+        {
+            gourmetViewHolder.gourmetCardView.setWish(wish);
+        }
+    }
+
+    @Override
     protected int getEmptyTextResId()
     {
         return R.string.recent_gourmet_list_empty_message;

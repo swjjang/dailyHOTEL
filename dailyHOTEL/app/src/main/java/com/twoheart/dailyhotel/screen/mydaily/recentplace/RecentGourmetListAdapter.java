@@ -315,7 +315,7 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
         }
     }
 
-    private class GourmetViewHolder extends RecyclerView.ViewHolder
+    class GourmetViewHolder extends RecyclerView.ViewHolder
     {
         DailyGourmetCardView gourmetCardView;
 
@@ -368,6 +368,14 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
                     {
                         mListener.onDeleteClick(gourmetCardView);
                     }
+                }
+            });
+
+            gourmetCardView.setOnWishClickListener(v ->
+            {
+                if (mListener != null)
+                {
+                    mListener.onWishClick(gourmetCardView);
                 }
             });
         }

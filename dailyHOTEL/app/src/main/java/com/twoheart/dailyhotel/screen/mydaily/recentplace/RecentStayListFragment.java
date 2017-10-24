@@ -22,6 +22,7 @@ import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
+import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.preview.StayOutboundPreviewActivity;
@@ -104,17 +105,46 @@ public class RecentStayListFragment extends RecentPlacesListFragment
 
         switch (requestCode)
         {
-            case CODE_REQUEST_ACTIVITY_PREVIEW:
-                if (resultCode == Activity.RESULT_OK)
+            case CODE_REQUEST_ACTIVITY_STAY_DETAIL:
+            case RecentStayListFragment.REQUEST_CODE_DETAIL:
+            {
+                if (resultCode == com.daily.base.BaseActivity.RESULT_CODE_REFRESH && data != null)
                 {
-                    Observable.create(new ObservableOnSubscribe<Object>()
+                    if (data.hasExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH) == true)
                     {
-                        @Override
-                        public void subscribe(ObservableEmitter<Object> e) throws Exception
+                        onChangedWish(mWishPosition, data.getBooleanExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH, false));
+                    }
+                }
+                break;
+            }
+
+            case CODE_REQUEST_ACTIVITY_PREVIEW:
+                switch(resultCode)
+                {
+                    case Activity.RESULT_OK:
+                        Observable.create(new ObservableOnSubscribe<Object>()
                         {
-                            mEventListener.onListItemClick(mViewByLongPress, mPositionByLongPress);
+                            @Override
+                            public void subscribe(ObservableEmitter<Object> e) throws Exception
+                            {
+                                mEventListener.onListItemClick(mViewByLongPress, mPositionByLongPress);
+                            }
+                        }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
+                        break;
+
+                    case Constants.CODE_RESULT_ACTIVITY_REFRESH:
+                        if (data != null && data.hasExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH) == true)
+                        {
+                            onChangedWish(mWishPosition, data.getBooleanExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH, false));
                         }
-                    }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
+                        break;
+                }
+                break;
+
+            case Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG:
+                if (resultCode == Activity.RESULT_OK && data != null)
+                {
+                    onChangedWish(mWishPosition, data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false));
                 }
                 break;
         }
@@ -621,6 +651,40 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             AnalyticsManager.Action.RECENTVIEW_ITEM_DELETE, Integer.toString(stayOutbound.index), null);
     }
 
+    private void onChangedWish(int position, boolean wish)
+    {
+        if (position < 0)
+        {
+            return;
+        }
+
+        PlaceViewItem placeViewItem = mListLayout.getItem(position);
+
+        if (placeViewItem == null)
+        {
+            return;
+        }
+
+        Object object = placeViewItem.getItem();
+
+        if (object == null)
+        {
+            return;
+        }
+
+        mWishPosition = position;
+
+        if (object instanceof RecentlyPlace)
+        {
+            RecentlyPlace recentlyPlace = (RecentlyPlace)object;
+            if (recentlyPlace.myWish != wish)
+            {
+                recentlyPlace.myWish = wish;
+                mListLayout.notifyWishChanged(position, wish);
+            }
+        }
+    }
+
     RecentPlacesListLayout.OnEventListener mEventListener = new RecentPlacesListLayout.OnEventListener()
     {
         @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -639,6 +703,8 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             {
                 return;
             }
+
+            mWishPosition = position;
 
             if (object instanceof RecentlyPlace)
             {
@@ -665,6 +731,8 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             {
                 return;
             }
+
+            mWishPosition = position;
 
             if (object instanceof RecentlyPlace)
             {
@@ -765,6 +833,34 @@ public class RecentStayListFragment extends RecentPlacesListFragment
 
             baseActivity.setResult(Constants.CODE_RESULT_ACTIVITY_GO_HOME);
             baseActivity.finish();
+        }
+
+        @Override
+        public void onWishClick(int position, PlaceViewItem placeViewItem)
+        {
+            if (placeViewItem == null || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            Object object = placeViewItem.getItem();
+
+            if (object == null)
+            {
+                return;
+            }
+
+            mWishPosition = position;
+
+            if (object instanceof RecentlyPlace)
+            {
+                RecentlyPlace recentlyPlace = (RecentlyPlace) object;
+
+                mBaseActivity.startActivityForResult(WishDialogActivity.newInstance(mBaseActivity, ServiceType.HOTEL//
+                    , recentlyPlace.index, !recentlyPlace.myWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);
+            } else if (object instanceof StayOutbound)
+            {
+            }
         }
 
         @Override

@@ -414,7 +414,7 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
         }
     }
 
-    private class StayInboundViewHolder extends RecyclerView.ViewHolder
+    class StayInboundViewHolder extends RecyclerView.ViewHolder
     {
         DailyStayCardView stayCardView;
 
@@ -468,6 +468,14 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
                     {
                         mListener.onDeleteClick(stayCardView);
                     }
+                }
+            });
+
+            stayCardView.setOnWishClickListener(v ->
+            {
+                if (mListener != null)
+                {
+                    mListener.onWishClick(stayCardView);
                 }
             });
         }
