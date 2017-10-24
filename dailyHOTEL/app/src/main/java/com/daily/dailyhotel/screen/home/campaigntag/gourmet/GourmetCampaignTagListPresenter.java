@@ -283,9 +283,12 @@ public class GourmetCampaignTagListPresenter //
                         break;
 
                     case Constants.CODE_RESULT_ACTIVITY_REFRESH:
-                        if (data.hasExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_WISH) == true)
+                        if (data != null && data.hasExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_WISH) == true)
                         {
                             onChangedWish(mWishPosition, data.getBooleanExtra(GourmetPreviewActivity.INTENT_EXTRA_DATA_WISH, false));
+                        } else
+                        {
+                            setRefresh(true);
                         }
                         break;
                 }
@@ -295,7 +298,10 @@ public class GourmetCampaignTagListPresenter //
                 switch (resultCode)
                 {
                     case Activity.RESULT_OK:
-                        onChangedWish(mWishPosition, data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false));
+                        if (data != null)
+                        {
+                            onChangedWish(mWishPosition, data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false));
+                        }
                         break;
 
                     case BaseActivity.RESULT_CODE_REFRESH:
@@ -760,7 +766,7 @@ public class GourmetCampaignTagListPresenter //
         mWishPosition = position;
 
         startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.GOURMET//
-            , gourmet.index, !gourmet.myWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), GourmetCampaignTagListActivity.REQUEST_CODE_WISH_DIALOG);
+            , gourmet.index, !gourmet.myWish, position, AnalyticsManager.Screen.DAILYGOURMET_DETAIL), GourmetCampaignTagListActivity.REQUEST_CODE_WISH_DIALOG);
     }
 
 

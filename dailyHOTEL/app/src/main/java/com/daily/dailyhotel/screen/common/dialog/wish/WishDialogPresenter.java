@@ -120,6 +120,10 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
     {
         super.onResume();
 
+        if (isRefresh() == true)
+        {
+            onRefresh(true);
+        }
     }
 
     @Override
@@ -164,7 +168,6 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
                 if (resultCode == Activity.RESULT_OK)
                 {
                     setRefresh(true);
-                    onRefresh(true);
 
                     setResult(BaseActivity.RESULT_CODE_REFRESH);
                 } else
@@ -182,6 +185,9 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
         {
             return;
         }
+
+        setRefresh(false);
+        screenLock(showProgress);
 
         Observable<WishResult> wishResultObservable = null;
 
@@ -259,6 +265,9 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
             onBackClick();
             return;
         }
+
+        unLockAll();
+        screenLock(false);
 
         if (wishResult.success == true)
         {

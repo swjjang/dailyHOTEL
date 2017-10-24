@@ -527,7 +527,7 @@ public class GourmetMainActivity extends PlaceMainActivity
         @Override
         public void onCategoryTabReselected(TabLayout.Tab tab)
         {
-
+            setScrollListTop();
         }
 
         @Override

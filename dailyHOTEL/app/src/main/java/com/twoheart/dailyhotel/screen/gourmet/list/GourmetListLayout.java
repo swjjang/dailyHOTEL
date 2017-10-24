@@ -36,22 +36,6 @@ public class GourmetListLayout extends PlaceListLayout
         return new GourmetListAdapter(context, arrayList, mOnItemClickListener, null);
     }
 
-    @Override
-    public void notifyWishChanged(int position, boolean wish)
-    {
-        if (mPlaceRecyclerView == null)
-        {
-            return;
-        }
-
-        GourmetListAdapter.GourmetViewHolder gourmetViewHolder = (GourmetListAdapter.GourmetViewHolder) mPlaceRecyclerView.findViewHolderForAdapterPosition(position);
-
-        if (gourmetViewHolder != null)
-        {
-            gourmetViewHolder.gourmetCardView.setWish(wish);
-        }
-    }
-
     //    @Override
     //    protected EventBanner getEventBanner(int index)
     //    {
@@ -70,6 +54,22 @@ public class GourmetListLayout extends PlaceListLayout
     //            GourmetEventBannerManager.getInstance().getList());
     //        return placeViewItem;
     //    }
+
+    @Override
+    public void notifyWishChanged(int position, boolean wish)
+    {
+        if (mPlaceRecyclerView == null)
+        {
+            return;
+        }
+
+        GourmetListAdapter.GourmetViewHolder gourmetViewHolder = (GourmetListAdapter.GourmetViewHolder) mPlaceRecyclerView.findViewHolderForAdapterPosition(position);
+
+        if (gourmetViewHolder != null)
+        {
+            gourmetViewHolder.gourmetCardView.setWish(wish);
+        }
+    }
 
     @Override
     protected void onInformationClick(View view, PlaceViewItem placeViewItem)

@@ -378,6 +378,14 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
                     }
                 });
             }
+
+            gourmetCardView.setOnWishClickListener(v ->
+            {
+                if (mOnWishClickListener != null)
+                {
+                    mOnWishClickListener.onClick(gourmetCardView);
+                }
+            });
         }
     }
 }

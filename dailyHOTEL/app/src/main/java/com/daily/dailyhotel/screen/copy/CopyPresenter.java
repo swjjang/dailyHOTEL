@@ -81,6 +81,10 @@ public class CopyPresenter extends BaseExceptionPresenter<CopyActivity, CopyInte
     {
         super.onResume();
 
+        if (isRefresh() == true)
+        {
+            onRefresh(true);
+        }
     }
 
     @Override
@@ -128,6 +132,8 @@ public class CopyPresenter extends BaseExceptionPresenter<CopyActivity, CopyInte
             return;
         }
 
+        setRefresh(false);
+        screenLock(showProgress);
     }
 
     @Override

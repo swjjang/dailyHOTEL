@@ -258,7 +258,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
                         }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
                         break;
 
-                    case com.daily.base.BaseActivity.RESULT_CODE_REFRESH:
+                    case Constants.CODE_RESULT_ACTIVITY_REFRESH:
                         if (data != null && data.hasExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_WISH) == true)
                         {
                             onChangedWish(mWishPosition, data.getBooleanExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_WISH, false));
@@ -273,6 +273,21 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
                 break;
 
             case Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG:
+                switch (resultCode)
+                {
+                    case Activity.RESULT_OK:
+                        if (data != null)
+                        {
+                            onChangedWish(mWishPosition, data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false));
+                        }
+                        break;
+
+                    case com.daily.base.BaseActivity.RESULT_CODE_REFRESH:
+                        lockUI();
+
+                        requestCommonDateTime();
+                        break;
+                }
                 break;
         }
     }
@@ -583,7 +598,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
                     , recommendationGourmet.index, recommendationGourmet.name, recommendationGourmet.imageUrl, recommendationGourmet.discount//
                     , ((GourmetBookingDay) mPlaceBookingDay).getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
                     , recommendationGourmet.category, recommendationGourmet.isSoldOut, false, false, true//
-                    , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP//
+                    , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST//
                     , analyticsParam);
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, optionsCompat.toBundle());
@@ -648,8 +663,8 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
 
             mWishPosition = position;
 
-            startActivityForResult(WishDialogActivity.newInstance(CollectionGourmetActivity.this, ServiceType.HOTEL//
-                , recommendationGourmet.index, !recommendationGourmet.myWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);
+            startActivityForResult(WishDialogActivity.newInstance(CollectionGourmetActivity.this, ServiceType.GOURMET//
+                , recommendationGourmet.index, !recommendationGourmet.myWish, position, AnalyticsManager.Screen.DAILYGOURMET_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);
         }
 
         @Override

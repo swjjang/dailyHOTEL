@@ -299,9 +299,12 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
 
 
                     case Constants.CODE_RESULT_ACTIVITY_REFRESH:
-                        if (data.hasExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH) == true)
+                        if (data != null && data.hasExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH) == true)
                         {
                             onChangedWish(mWishPosition, data.getBooleanExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH, false));
+                        } else
+                        {
+                            setRefresh(true);
                         }
                         break;
                 }
@@ -311,7 +314,10 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
                 switch (resultCode)
                 {
                     case Activity.RESULT_OK:
-                        onChangedWish(mWishPosition, data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false));
+                        if (data != null)
+                        {
+                            onChangedWish(mWishPosition, data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false));
+                        }
                         break;
 
                     case BaseActivity.RESULT_CODE_REFRESH:

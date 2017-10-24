@@ -358,8 +358,13 @@ public abstract class PlaceMainActivity extends BaseActivity
                         break;
 
                     case CODE_RESULT_ACTIVITY_REFRESH:
-                        if (data != null)
+                        if (data == null)
                         {
+                            mDontReloadAtOnResume = false;
+                        } else
+                        {
+                            mDontReloadAtOnResume = true;
+
                             onActivityCurrentFragmentResult(requestCode, resultCode, data);
                         }
                         break;
@@ -367,7 +372,7 @@ public abstract class PlaceMainActivity extends BaseActivity
                 break;
 
             case Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG:
-                if(resultCode == com.daily.base.BaseActivity.RESULT_CODE_REFRESH)
+                if (resultCode == com.daily.base.BaseActivity.RESULT_CODE_REFRESH)
                 {
                     mDontReloadAtOnResume = false;
                 } else

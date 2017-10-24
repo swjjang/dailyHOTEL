@@ -51,6 +51,7 @@ public class StayPreviewActivity extends BaseActivity
     PlaceReviewScores mPlaceReviewScores;
 
     private int mViewPrice;
+    private boolean mEnteredLogin;
 
     /**
      * 리스트에서 호출, 검색 결과에서 호출
@@ -175,6 +176,8 @@ public class StayPreviewActivity extends BaseActivity
 
         mPreviewLayout = new StayPreviewLayout(this, mOnEventListener);
         mNetworkController = new StayPreviewNetworkController(this, getNetworkTag(), mOnNetworkControllerListener);
+
+        mEnteredLogin = DailyHotel.isLogin();
 
         if (intent.hasExtra(NAME_INTENT_EXTRA_DATA_CHECK_IN_DATE) == true)
         {
@@ -594,9 +597,16 @@ public class StayPreviewActivity extends BaseActivity
 
                     mPreviewLayout.updateWishInformation(mPlaceReviewScores.reviewScoreTotalCount, stayDetailParams.wishCount, stayDetailParams.myWish);
 
-                    Intent intent = new Intent();
-                    intent.putExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH, true);
-                    setResult(CODE_RESULT_ACTIVITY_REFRESH, intent);
+                    // 로그인전에는 해당 위시만 갱신하고 로그인 후에는 전체 리스트를 리플래쉬 해야한다.
+                    if (mEnteredLogin == true)
+                    {
+                        Intent intent = new Intent();
+                        intent.putExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH, true);
+                        setResult(CODE_RESULT_ACTIVITY_REFRESH, intent);
+                    } else
+                    {
+                        setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                    }
                 }
             } else
             {
@@ -621,9 +631,16 @@ public class StayPreviewActivity extends BaseActivity
 
                     mPreviewLayout.updateWishInformation(mPlaceReviewScores.reviewScoreTotalCount, stayDetailParams.wishCount, stayDetailParams.myWish);
 
-                    Intent intent = new Intent();
-                    intent.putExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH, false);
-                    setResult(CODE_RESULT_ACTIVITY_REFRESH, intent);
+                    // 로그인전에는 해당 위시만 갱신하고 로그인 후에는 전체 리스트를 리플래쉬 해야한다.
+                    if (mEnteredLogin == true)
+                    {
+                        Intent intent = new Intent();
+                        intent.putExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH, false);
+                        setResult(CODE_RESULT_ACTIVITY_REFRESH, intent);
+                    } else
+                    {
+                        setResult(CODE_RESULT_ACTIVITY_REFRESH);
+                    }
                 }
             } else
             {

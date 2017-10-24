@@ -382,6 +382,8 @@ public abstract class CollectionBaseLayout extends BaseBlurLayout
                 if (recyclerView.isComputingLayout() == false)
                 {
                     adapter.notifyDataSetChanged();
+
+                    setListScrollTop();
                 } else
                 {
                     postAndNotifyAdapter(recyclerView, adapter);

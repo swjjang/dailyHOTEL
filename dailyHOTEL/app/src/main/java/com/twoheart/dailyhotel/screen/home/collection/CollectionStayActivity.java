@@ -263,7 +263,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
                         }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
                         break;
 
-                    case com.daily.base.BaseActivity.RESULT_CODE_REFRESH:
+                    case Constants.CODE_RESULT_ACTIVITY_REFRESH:
                         if (data != null && data.hasExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH) == true)
                         {
                             onChangedWish(mWishPosition, data.getBooleanExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH, false));
@@ -278,6 +278,21 @@ public class CollectionStayActivity extends CollectionBaseActivity
                 break;
 
             case Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG:
+                switch (resultCode)
+                {
+                    case Activity.RESULT_OK:
+                        if (data != null)
+                        {
+                            onChangedWish(mWishPosition, data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false));
+                        }
+                        break;
+
+                    case com.daily.base.BaseActivity.RESULT_CODE_REFRESH:
+                        lockUI();
+
+                        requestCommonDateTime();
+                        break;
+                }
                 break;
         }
     }
