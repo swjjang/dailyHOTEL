@@ -370,7 +370,9 @@ public abstract class CollectionBaseLayout extends BaseBlurLayout
         mPlaceListAdapter.setPlaceBookingDay(placeBookingDay);
         mPlaceListAdapter.setRewardEnabled(rewardEnabled);
         mPlaceListAdapter.setAll(placeViewItems);
-        postAndNotifyAdapter(mRecyclerView, mPlaceListAdapter);
+
+        mRecyclerView.setAdapter(mPlaceListAdapter);
+//        postAndNotifyAdapter(mRecyclerView, mPlaceListAdapter);
     }
 
     void postAndNotifyAdapter(final RecyclerView recyclerView, final RecyclerView.Adapter adapter)
@@ -383,8 +385,6 @@ public abstract class CollectionBaseLayout extends BaseBlurLayout
                 if (recyclerView.isComputingLayout() == false)
                 {
                     adapter.notifyDataSetChanged();
-
-                    setListScrollTop();
                 } else
                 {
                     postAndNotifyAdapter(recyclerView, adapter);

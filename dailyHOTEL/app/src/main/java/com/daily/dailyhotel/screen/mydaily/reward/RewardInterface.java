@@ -12,7 +12,9 @@ public interface RewardInterface extends BaseDialogViewInterface
 
     void setDescriptionMessage(String message);
 
-    void setSticker(int nights, boolean visible, boolean enabled);
+    void setStickerCount(int count);
+
+    void setCampaignFreeStickerCount(int count);
 
     void startCampaignStickerAnimation();
 

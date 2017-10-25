@@ -16,6 +16,7 @@ import com.twoheart.dailyhotel.R;
 public class RewardActivity extends BaseActivity<RewardPresenter>
 {
     static final int REQUEST_CODE_LOGIN = 10000;
+    static final int REQUEST_CODE_WEB = 10001;
 
     public static Intent newInstance(Context context)
     {

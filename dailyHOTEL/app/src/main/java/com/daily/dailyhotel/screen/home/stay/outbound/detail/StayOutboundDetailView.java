@@ -512,7 +512,7 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
 
             rewardCardView.setGuideVisible(true);
             rewardCardView.setOnGuideClickListener(v -> getEventListener().onRewardGuideClick());
-            rewardCardView.setNights(0);
+            rewardCardView.setStickerCount(0);
 
             if (DailyTextUtils.isTextEmpty(optionText) == false)
             {
@@ -527,7 +527,7 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
             rewardCardView.setRewardTitleText(titleText);
             rewardCardView.setDescriptionText(descriptionText);
 
-            rewardCardView.setCampaignFreeNights(campaignFreeNights);
+            rewardCardView.setCampaignFreeCount(campaignFreeNights);
 
             getViewDataBinding().recommendAroundTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 1);
         } else

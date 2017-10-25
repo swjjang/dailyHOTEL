@@ -10,6 +10,7 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Notification;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.screen.common.web.DailyWebActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -90,28 +91,12 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
             {
                 getViewInterface().setDescriptionMessage(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerNonMemberCampaignMessage());
 
-                getViewInterface().setSticker(1, true, false);
-                getViewInterface().setSticker(2, true, false);
-                getViewInterface().setSticker(3, false, false);
-                getViewInterface().setSticker(4, false, false);
-                getViewInterface().setSticker(5, false, false);
-                getViewInterface().setSticker(6, false, false);
-                getViewInterface().setSticker(7, false, false);
-                getViewInterface().setSticker(8, false, false);
-                getViewInterface().setSticker(9, false, false);
+                getViewInterface().setCampaignFreeStickerCount(2);
             } else
             {
                 getViewInterface().setDescriptionMessage(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerNonMemberDefaultMessage());
 
-                getViewInterface().setSticker(1, false, false);
-                getViewInterface().setSticker(2, false, false);
-                getViewInterface().setSticker(3, false, false);
-                getViewInterface().setSticker(4, false, false);
-                getViewInterface().setSticker(5, false, false);
-                getViewInterface().setSticker(6, false, false);
-                getViewInterface().setSticker(7, false, false);
-                getViewInterface().setSticker(8, false, false);
-                getViewInterface().setSticker(9, false, false);
+                getViewInterface().setCampaignFreeStickerCount(0);
             }
 
             getViewInterface().setLoginVisible(true);
@@ -300,7 +285,13 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
     @Override
     public void onRewardGuideClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
+        startActivityForResult(DailyWebActivity.newInstance(getActivity(), getString(R.string.label_reward_reward_guide)//
+            , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStaticUrlDailyReward()), RewardActivity.REQUEST_CODE_WEB);
     }
 
     @Override

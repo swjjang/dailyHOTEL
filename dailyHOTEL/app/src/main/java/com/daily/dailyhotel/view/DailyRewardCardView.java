@@ -99,7 +99,7 @@ public class DailyRewardCardView extends ConstraintLayout
         mViewDataBinding.optionTextView.setOnClickListener(listener);
     }
 
-    public void setCampaignFreeNights(int nights)
+    public void setCampaignFreeCount(int count)
     {
         if (mViewDataBinding == null)
         {
@@ -147,14 +147,14 @@ public class DailyRewardCardView extends ConstraintLayout
 
         for (int i = 0; i < dotViewsLength; i++)
         {
-            dotImageViews[i].setVisibility(i < nights ? INVISIBLE : VISIBLE);
+            dotImageViews[i].setVisibility(i < count ? INVISIBLE : VISIBLE);
         }
 
         final int lineViewsLength = lineViews.length;
 
         for (int i = 0; i < lineViewsLength; i++)
         {
-            if (i + 1 < nights)
+            if (i + 1 < count)
             {
                 lineViews[i].setBackgroundResource(R.drawable.shape_line_cfaae37_dw2_dg2);
             } else
@@ -174,11 +174,11 @@ public class DailyRewardCardView extends ConstraintLayout
 
         for (int i = 0; i < campaignViewsLength; i++)
         {
-            campaignViews[i].setVisibility(i < nights ? VISIBLE : GONE);
+            campaignViews[i].setVisibility(i < count ? VISIBLE : GONE);
         }
     }
 
-    public void setNights(int nights)
+    public void setStickerCount(int count)
     {
         if (mViewDataBinding == null)
         {
@@ -228,7 +228,7 @@ public class DailyRewardCardView extends ConstraintLayout
         {
             dotImageViews[i].setVisibility(VISIBLE);
 
-            if (i < nights)
+            if (i < count)
             {
                 dotImageViews[i].setVectorImageResource(R.drawable.vector_ic_reward_circle_active);
             } else
@@ -241,7 +241,7 @@ public class DailyRewardCardView extends ConstraintLayout
 
         for (int i = 0; i < lineViewsLength; i++)
         {
-            if (i + 1 < nights)
+            if (i + 1 < count)
             {
                 lineViews[i].setBackgroundResource(R.drawable.shape_line_cfaae37);
             } else
@@ -254,7 +254,7 @@ public class DailyRewardCardView extends ConstraintLayout
 
         for (int i = 0; i < rewardViewsLength; i++)
         {
-            rewardViews[i].setVisibility(i + 1 == nights ? VISIBLE : GONE);
+            rewardViews[i].setVisibility(i + 1 == count ? VISIBLE : GONE);
         }
 
         final int campaignViewsLength = campaignViews.length;

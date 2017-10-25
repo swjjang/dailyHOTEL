@@ -62,6 +62,8 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
             return;
         }
 
+        initToolbar(viewDataBinding);
+
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.nestedScrollView, getColor(R.color.default_over_scroll_edge));
 
         viewDataBinding.loginTextView.setOnClickListener(v -> getEventListener().onLoginClick());
@@ -156,17 +158,14 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
     }
 
     @Override
-    public void setSticker(int nights, boolean visible, boolean enabled)
+    public void setCampaignFreeStickerCount(int count)
     {
-        final int MIN_NIGHTS = 1;
-        final int MAX_NIGHTS = 9;
+        final int MAX_COUNT = 9;
 
-        if (getViewDataBinding() == null || nights < MIN_NIGHTS || nights > MAX_NIGHTS)
+        if (getViewDataBinding() == null || count > MAX_COUNT)
         {
             return;
         }
-
-        float alpha = enabled ? 1.0f : 0.5f;
 
         final View[] views = {getViewDataBinding().sticker1nightsTextView//
             , getViewDataBinding().sticker2nightsTextView//
@@ -188,18 +187,64 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
             , getViewDataBinding().sticker8nightsImageView//
             , getViewDataBinding().sticker9nightsImageView};
 
-        if (visible == true)
+        for (int i = 0; i < MAX_COUNT; i++)
         {
-            views[nights - 1].setAlpha(0.0f);
-            stickerViews[nights - 1].setVisibility(View.VISIBLE);
-        } else
+            if (i < count)
+            {
+                views[i].setAlpha(0.0f);
+                stickerViews[i].setAlpha(0.5f);
+                stickerViews[i].setVisibility(View.VISIBLE);
+            } else
+            {
+                views[i].setAlpha(1.0f);
+                stickerViews[i].setVisibility(View.INVISIBLE);
+            }
+        }
+    }
+
+    @Override
+    public void setStickerCount(int count)
+    {
+        final int MAX_COUNT = 9;
+
+        if (getViewDataBinding() == null || count > MAX_COUNT)
         {
-            views[nights - 1].setAlpha(1.0f);
-            stickerViews[nights - 1].setVisibility(View.INVISIBLE);
+            return;
         }
 
-        stickerViews[nights - 1].setAlpha(alpha);
-        stickerViews[nights - 1].setEnabled(enabled);
+        final View[] views = {getViewDataBinding().sticker1nightsTextView//
+            , getViewDataBinding().sticker2nightsTextView//
+            , getViewDataBinding().sticker3nightsTextView//
+            , getViewDataBinding().sticker4nightsTextView//
+            , getViewDataBinding().sticker5nightsTextView//
+            , getViewDataBinding().sticker6nightsTextView//
+            , getViewDataBinding().sticker7nightsTextView//
+            , getViewDataBinding().sticker8nightsTextView//
+            , getViewDataBinding().sticker9nightsTextView};
+
+        final View[] stickerViews = {getViewDataBinding().sticker1nightsImageView//
+            , getViewDataBinding().sticker2nightsImageView//
+            , getViewDataBinding().sticker3nightsImageView//
+            , getViewDataBinding().sticker4nightsImageView//
+            , getViewDataBinding().sticker5nightsImageView//
+            , getViewDataBinding().sticker6nightsImageView//
+            , getViewDataBinding().sticker7nightsImageView//
+            , getViewDataBinding().sticker8nightsImageView//
+            , getViewDataBinding().sticker9nightsImageView};
+
+        for (int i = 0; i < MAX_COUNT; i++)
+        {
+            if (i < count)
+            {
+                views[i].setAlpha(0.0f);
+                stickerViews[i].setAlpha(1.0f);
+                stickerViews[i].setVisibility(View.VISIBLE);
+            } else
+            {
+                views[i].setAlpha(1.0f);
+                stickerViews[i].setVisibility(View.INVISIBLE);
+            }
+        }
     }
 
     @Override
@@ -637,5 +682,15 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
 
             getViewDataBinding().issueCouponTitleUnderLineView.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void initToolbar(ActivityRewardDataBinding viewDataBinding)
+    {
+        if (viewDataBinding == null)
+        {
+            return;
+        }
+
+        viewDataBinding.toolbarView.setOnBackClickListener(v -> getEventListener().onBackClick());
     }
 }

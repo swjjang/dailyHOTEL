@@ -516,7 +516,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
 
             rewardCardView.setGuideVisible(true);
             rewardCardView.setOnGuideClickListener(v -> getEventListener().onRewardGuideClick());
-            rewardCardView.setNights(0);
+            rewardCardView.setStickerCount(0);
 
             if (DailyTextUtils.isTextEmpty(optionText) == false)
             {
@@ -531,7 +531,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
             rewardCardView.setRewardTitleText(titleText);
             rewardCardView.setDescriptionText(descriptionText);
 
-            rewardCardView.setCampaignFreeNights(campaignFreeNights);
+            rewardCardView.setCampaignFreeCount(campaignFreeNights);
 
             getViewDataBinding().conciergeTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 1);
         } else
