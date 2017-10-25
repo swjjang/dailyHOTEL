@@ -1,8 +1,8 @@
 package com.daily.dailyhotel.domain;
 
 import com.daily.dailyhotel.entity.Booking;
-import com.daily.dailyhotel.entity.GourmetBookingDetail;
 import com.daily.dailyhotel.entity.BookingCancel;
+import com.daily.dailyhotel.entity.GourmetBookingDetail;
 import com.daily.dailyhotel.entity.StayBookingDetail;
 import com.daily.dailyhotel.entity.StayOutboundBookingDetail;
 import com.daily.dailyhotel.entity.WaitingDeposit;
@@ -27,6 +27,11 @@ public interface BookingInterface
 
     // 스테이 예약 상세
     Observable<StayBookingDetail> getStayBookingDetail(String aggregationId);
+
+    // 스테이 예약 상세
+    Observable<StayBookingDetail> getStayBookingDetail(int reservationIndex);
+
+    Observable<Boolean> getStayHiddenBooking(int reservationIndex);
 
     // 고메 예약 상세
     Observable<GourmetBookingDetail> getGourmetBookingDetail(String aggregationId);

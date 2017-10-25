@@ -5,6 +5,7 @@ import android.content.Context;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.repository.remote.model.BookingData;
+import com.daily.dailyhotel.repository.remote.model.BookingHiddenData;
 import com.daily.dailyhotel.repository.remote.model.BookingHideData;
 import com.daily.dailyhotel.repository.remote.model.CampaignTagData;
 import com.daily.dailyhotel.repository.remote.model.CardData;
@@ -1696,6 +1697,25 @@ public class DailyMobileAPI
         urlParams.put("{aggregationId}", aggregationId);
 
         return mDailyMobileService.getStayBookingDetail(Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<StayBookingDetailData>> getStayBookingDetail(int reservationIndex)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v2/reservation/hotel/{hotelReservationIdx}"//
+            : "MTI3JDExMyQxMTckMCQ4NiQ4JDE1JDU4JDExOSQxMzAkMzUkMTkkNDUkNDEkMTIwJDk3JA==$FMjIxNzUN4MzVDRPUFECOTBDNjg0MjdGQUU0ERDBDFQkRCENEVEREVDQ0ZFRDUWzN0MwRDhDMDFGNDdDRTUxODQzMDQ3OHTdDWMkQ1NDE2REIxNjJDMkJCQTgX3ONJEQyPOEYzNDJE2QkQF4$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{hotelReservationIdx}", Integer.toString(reservationIndex));
+
+        return mDailyMobileService.getStayBookingDetail(Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<BookingHiddenData>> getStayHiddenBooking(int bookingIndex)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/reserv/mine/hidden"//
+            : "MSQ3NiQzJDQ5JDcwJDEzJDE2JDI0JDg4JDY3JDU2JDkyJDE4JDc4JDY3JDI3JA==$MBkWE0QTNGNjIFzRKTAE2RkE5TQBTEzNEJCNTA1QjVDNDY4NEZGRUQL1N0NNDM0RFN0UZ1RNUYzNEYM1YQ0RCMjBPFNDJGYRNjc4MA==$";
+
+        return mDailyMobileService.getStayHiddenBooking(Crypto.getUrlDecoderEx(URL), bookingIndex).subscribeOn(Schedulers.io());
     }
 
     public Observable<BaseDto<GourmetBookingDetailData>> getGourmetBookingDetail(String aggregationId)

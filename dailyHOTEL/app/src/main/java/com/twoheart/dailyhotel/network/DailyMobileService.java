@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.network;
 
 import com.daily.dailyhotel.repository.remote.model.BookingData;
+import com.daily.dailyhotel.repository.remote.model.BookingHiddenData;
 import com.daily.dailyhotel.repository.remote.model.BookingHideData;
 import com.daily.dailyhotel.repository.remote.model.CampaignTagData;
 import com.daily.dailyhotel.repository.remote.model.CardData;
@@ -715,6 +716,10 @@ public interface DailyMobileService
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
     Observable<BaseDto<StayBookingDetailData>> getStayBookingDetail(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @FormUrlEncoded
+    @POST("{mobileAPI}")
+    Observable<BaseDto<BookingHiddenData>> getStayHiddenBooking(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Field("idx") int index);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")

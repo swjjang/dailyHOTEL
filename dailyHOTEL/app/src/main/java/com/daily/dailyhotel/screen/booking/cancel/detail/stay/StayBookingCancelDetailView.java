@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.booking.cancel.detail.stay.outbound;
+package com.daily.dailyhotel.screen.booking.cancel.detail.stay;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
@@ -23,12 +23,13 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
 import com.daily.base.BaseActivity;
-import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyScrollView;
-import com.daily.dailyhotel.entity.StayOutboundBookingDetail;
+import com.daily.dailyhotel.base.BaseBlurView;
+import com.daily.dailyhotel.entity.StayBookingDetail;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -43,11 +44,11 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.ActivityStayOutboundBookingCancelDetailDataBinding;
+import com.twoheart.dailyhotel.databinding.ActivityStayBookingCancelDetailDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogShareDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutPlaceBookingCancelDetailDataBinding;
-import com.twoheart.dailyhotel.databinding.LayoutStayOutboundBookingDetail01DataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutStayBookingDetail01DataBinding;
 import com.twoheart.dailyhotel.model.MyLocationMarker;
 import com.twoheart.dailyhotel.place.adapter.PlaceNameInfoWindowAdapter;
 import com.twoheart.dailyhotel.util.Constants;
@@ -66,8 +67,8 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 
-public class StayOutboundBookingCancelDetailView extends BaseDialogView<StayOutboundBookingCancelDetailView.OnEventListener, ActivityStayOutboundBookingCancelDetailDataBinding>//
-    implements StayOutboundBookingCancelDetailInterface, View.OnClickListener
+public class StayBookingCancelDetailView extends BaseBlurView<StayBookingCancelDetailView.OnEventListener, ActivityStayBookingCancelDetailDataBinding>//
+    implements StayBookingCancelDetailInterface, View.OnClickListener
 {
     ImageView mMyLocationView;
     Drawable mMyLocationDrawable;
@@ -78,7 +79,7 @@ public class StayOutboundBookingCancelDetailView extends BaseDialogView<StayOutb
     LatLng mCenterLatLng;
     boolean mMapLoaded;
 
-    private LayoutStayOutboundBookingDetail01DataBinding mBookingDetail01DataBinding;
+    private LayoutStayBookingDetail01DataBinding mBookingDetail01DataBinding;
     private LayoutPlaceBookingCancelDetailDataBinding mBookingCancelDetailDataBinding;
 
     public interface OnEventListener extends OnBaseEventListener
@@ -116,13 +117,13 @@ public class StayOutboundBookingCancelDetailView extends BaseDialogView<StayOutb
         void onHiddenReservationClick();
     }
 
-    public StayOutboundBookingCancelDetailView(BaseActivity baseActivity, StayOutboundBookingCancelDetailView.OnEventListener listener)
+    public StayBookingCancelDetailView(BaseActivity baseActivity, StayBookingCancelDetailView.OnEventListener listener)
     {
         super(baseActivity, listener);
     }
 
     @Override
-    protected void setContentView(final ActivityStayOutboundBookingCancelDetailDataBinding viewDataBinding)
+    protected void setContentView(final ActivityStayBookingCancelDetailDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -160,7 +161,7 @@ public class StayOutboundBookingCancelDetailView extends BaseDialogView<StayOutb
         viewDataBinding.placeInformationLayout.setVisibility(View.VISIBLE);
 
         mBookingDetail01DataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext())//
-            , R.layout.layout_stay_outbound_booking_detail_01_data, viewDataBinding.detailsLayout, true);
+            , R.layout.layout_stay_booking_detail_01_data, viewDataBinding.detailsLayout, true);
 
         mBookingCancelDetailDataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()) //
             , R.layout.layout_place_booking_cancel_detail_data, viewDataBinding.detailsLayout, true);
@@ -180,7 +181,7 @@ public class StayOutboundBookingCancelDetailView extends BaseDialogView<StayOutb
     }
 
     @Override
-    public void setBookingDetail(StayOutboundBookingDetail stayOutboundBookingDetail)
+    public void setBookingDetail(StayBookingDetail stayOutboundBookingDetail)
     {
         setHeaderLayout(getContext(), stayOutboundBookingDetail);
 
@@ -728,14 +729,14 @@ public class StayOutboundBookingCancelDetailView extends BaseDialogView<StayOutb
         }
     }
 
-    private void initToolbar(ActivityStayOutboundBookingCancelDetailDataBinding viewDataBinding)
+    private void initToolbar(ActivityStayBookingCancelDetailDataBinding viewDataBinding)
     {
         setBookingDetailToolbar();
     }
 
-    private void setHeaderLayout(Context context, StayOutboundBookingDetail stayOutboundBookingDetail)
+    private void setHeaderLayout(Context context, StayBookingDetail stayBookingDetail)
     {
-        if (context == null || stayOutboundBookingDetail == null || getViewDataBinding() == null)
+        if (context == null || stayBookingDetail == null || getViewDataBinding() == null)
         {
             return;
         }
@@ -747,17 +748,17 @@ public class StayOutboundBookingCancelDetailView extends BaseDialogView<StayOutb
         {
             getViewDataBinding().googleMapLayout.setVisibility(View.GONE);
 
-            setImageMapLayout(context, stayOutboundBookingDetail.latitude, stayOutboundBookingDetail.longitude, (int) width, (int) height);
+            setImageMapLayout(context, stayBookingDetail.latitude, stayBookingDetail.longitude, (int) width, (int) height);
         } else
         {
             getViewDataBinding().googleMapLayout.setVisibility(View.VISIBLE);
 
-            setGoogleMapLayout(context, stayOutboundBookingDetail, (int) width, (int) height);
+            setGoogleMapLayout(context, stayBookingDetail, (int) width, (int) height);
         }
 
         getViewDataBinding().viewDetailView.setOnClickListener(this);
         getViewDataBinding().viewMapView.setOnClickListener(this);
-        getViewDataBinding().placeNameTextView.setText(stayOutboundBookingDetail.name);
+        getViewDataBinding().placeNameTextView.setText(stayBookingDetail.stayName);
     }
 
     private void setImageMapLayout(Context context, double latitude, double longitude, int height, int width)
@@ -785,16 +786,16 @@ public class StayOutboundBookingCancelDetailView extends BaseDialogView<StayOutb
         getViewDataBinding().mapImageView.setImageURI(Uri.parse(url));
     }
 
-    private void setGoogleMapLayout(Context context, StayOutboundBookingDetail stayOutboundBookingDetail, int width, int height)
+    private void setGoogleMapLayout(Context context, StayBookingDetail stayBookingDetail, int width, int height)
     {
-        if (context == null || getViewDataBinding() == null || stayOutboundBookingDetail == null)
+        if (context == null || getViewDataBinding() == null || stayBookingDetail == null)
         {
             return;
         }
 
         getViewDataBinding().addressLayout.setVisibility(View.GONE);
         getViewDataBinding().searchMapsLayout.setVisibility(View.GONE);
-        getViewDataBinding().addressTextView.setText(stayOutboundBookingDetail.address);
+        getViewDataBinding().addressTextView.setText(stayBookingDetail.stayAddress);
         getViewDataBinding().copyAddressView.setOnClickListener(this);
         getViewDataBinding().searchMapView.setOnClickListener(this);
 
@@ -833,7 +834,7 @@ public class StayOutboundBookingCancelDetailView extends BaseDialogView<StayOutb
 
                 relocationMyLocation(getViewDataBinding().mapLayout);
                 relocationZoomControl(getViewDataBinding().mapLayout);
-                addMarker(mGoogleMap, stayOutboundBookingDetail.latitude, stayOutboundBookingDetail.longitude, stayOutboundBookingDetail.name);
+                addMarker(mGoogleMap, stayBookingDetail.latitude, stayBookingDetail.longitude, stayBookingDetail.stayName);
 
                 mGoogleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback()
                 {
@@ -844,7 +845,7 @@ public class StayOutboundBookingCancelDetailView extends BaseDialogView<StayOutb
 
                         Projection projection = mGoogleMap.getProjection();
 
-                        Point point = projection.toScreenLocation(new LatLng(stayOutboundBookingDetail.latitude, stayOutboundBookingDetail.longitude));
+                        Point point = projection.toScreenLocation(new LatLng(stayBookingDetail.latitude, stayBookingDetail.longitude));
                         point.y += (point.y - getViewDataBinding().fakeMapLayout.getHeight() / 2);
 
                         mCenterLatLng = projection.fromScreenLocation(point);
@@ -855,41 +856,84 @@ public class StayOutboundBookingCancelDetailView extends BaseDialogView<StayOutb
         });
     }
 
-    private void setBookingInformation(Context context, LayoutStayOutboundBookingDetail01DataBinding dataBinding, StayOutboundBookingDetail stayOutboundBookingDetail)
+    private void setBookingInformation(Context context, LayoutStayBookingDetail01DataBinding dataBinding, StayBookingDetail stayBookingDetail)
     {
-        if (context == null || dataBinding == null || stayOutboundBookingDetail == null)
+        if (context == null || dataBinding == null || stayBookingDetail == null)
         {
             return;
         }
 
-        dataBinding.hotelNameTextView.setText(stayOutboundBookingDetail.name);
-        dataBinding.roomTypeTextView.setText(stayOutboundBookingDetail.roomName);
-        dataBinding.addressTextView.setText(stayOutboundBookingDetail.address);
+        dataBinding.hotelNameTextView.setText(stayBookingDetail.stayName);
+        dataBinding.roomTypeTextView.setText(stayBookingDetail.roomName);
+        dataBinding.addressTextView.setText(stayBookingDetail.stayAddress);
     }
 
-    private void setGuestInformation(Context context, LayoutStayOutboundBookingDetail01DataBinding dataBinding, StayOutboundBookingDetail stayOutboundBookingDetail)
+    private void setGuestInformation(Context context, LayoutStayBookingDetail01DataBinding dataBinding, StayBookingDetail stayBookingDetail)
     {
-        if (context == null || dataBinding == null || stayOutboundBookingDetail == null)
+        if (context == null || dataBinding == null || stayBookingDetail == null)
         {
             return;
         }
 
-        dataBinding.guestNameTextView.setText(stayOutboundBookingDetail.guestLastName + " " + stayOutboundBookingDetail.guestFirstName);
-        dataBinding.guestPhoneTextView.setText(Util.addHyphenMobileNumber(context, stayOutboundBookingDetail.guestPhone));
-        dataBinding.guestEmailTextView.setText(stayOutboundBookingDetail.guestEmail);
-        dataBinding.peopleTextView.setText(stayOutboundBookingDetail.getPeople().toString(context));
+        dataBinding.guestNameTextView.setText(stayBookingDetail.guestName);
+        dataBinding.guestPhoneTextView.setText(Util.addHyphenMobileNumber(context, stayBookingDetail.guestPhone));
+        dataBinding.guestEmailTextView.setText(stayBookingDetail.guestEmail);
+
+
+        if (DailyTextUtils.isTextEmpty(stayBookingDetail.guestTransportation) == true)
+        {
+            dataBinding.visitTypeLayout.setVisibility(View.GONE);
+            dataBinding.guideVisitMemoLayout.setVisibility(View.GONE);
+        } else {
+            switch (stayBookingDetail.guestTransportation)
+            {
+                case "CAR":
+                    dataBinding.visitTypeLayout.setVisibility(View.VISIBLE);
+
+                    dataBinding.visitTypeTitleTextView.setText(R.string.label_how_to_visit);
+                    dataBinding.visitTypeTextView.setText(R.string.label_visit_car);
+
+                    dataBinding.guideVisitMemoLayout.setVisibility(View.VISIBLE);
+                    dataBinding.guideVisitMemoView.setText(R.string.message_visit_car_memo);
+                    break;
+
+                case "NO_PARKING":
+                    dataBinding.visitTypeLayout.setVisibility(View.VISIBLE);
+
+                    dataBinding.visitTypeTitleTextView.setText(R.string.label_parking_information);
+                    dataBinding.visitTypeTextView.setText(R.string.label_no_parking);
+
+                    dataBinding.guideVisitMemoLayout.setVisibility(View.VISIBLE);
+                    dataBinding.guideVisitMemoView.setText(R.string.message_visit_no_parking_memo);
+                    break;
+
+                case "WALKING":
+                    dataBinding.visitTypeLayout.setVisibility(View.VISIBLE);
+
+                    dataBinding.visitTypeTitleTextView.setText(R.string.label_how_to_visit);
+                    dataBinding.visitTypeTextView.setText(R.string.label_visit_walk);
+
+                    dataBinding.guideVisitMemoLayout.setVisibility(View.GONE);
+                    break;
+
+                default:
+                    dataBinding.visitTypeLayout.setVisibility(View.GONE);
+                    dataBinding.guideVisitMemoLayout.setVisibility(View.GONE);
+                    break;
+            }
+        }
     }
 
-    private void setCancelInformation(Context context, LayoutPlaceBookingCancelDetailDataBinding dataBinding, StayOutboundBookingDetail stayOutboundBookingDetail)
+    private void setCancelInformation(Context context, LayoutPlaceBookingCancelDetailDataBinding dataBinding, StayBookingDetail stayBookingDetail)
     {
-        if (context == null || dataBinding == null || stayOutboundBookingDetail == null)
+        if (context == null || dataBinding == null || stayBookingDetail == null)
         {
             return;
         }
 
         try
         {
-            dataBinding.cancelDateTextView.setText(DailyCalendar.convertDateFormatString(stayOutboundBookingDetail.cancelDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
+            dataBinding.cancelDateTextView.setText(DailyCalendar.convertDateFormatString(stayBookingDetail.cancelDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
         } catch (Exception e)
         {
             ExLog.d(e.toString());

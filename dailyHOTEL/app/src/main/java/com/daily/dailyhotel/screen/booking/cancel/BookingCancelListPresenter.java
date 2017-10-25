@@ -18,6 +18,7 @@ import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
+import com.daily.dailyhotel.screen.booking.cancel.detail.stay.StayBookingCancelDetailActivity;
 import com.daily.dailyhotel.screen.booking.cancel.detail.stay.outbound.StayOutboundBookingCancelDetailActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
@@ -27,7 +28,6 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.screen.booking.detail.gourmet.GourmetReservationDetailActivity;
-import com.twoheart.dailyhotel.screen.booking.detail.hotel.StayReservationDetailActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -178,6 +178,11 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         unLockAll();
+
+        if (Constants.CODE_RESULT_ACTIVITY_REFRESH == resultCode)
+        {
+            setRefresh(true);
+        }
     }
 
     @Override
@@ -318,7 +323,7 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
         switch (placeType)
         {
             case STAY:
-                intent = StayReservationDetailActivity.newInstance(getActivity(), reservationIndex, aggregationId, imageUrl, false, Booking.BOOKING_STATE_CANCEL);
+                intent = StayBookingCancelDetailActivity.newInstance(getActivity(), reservationIndex, aggregationId, imageUrl);
                 break;
 
             case GOURMET:
@@ -343,6 +348,7 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
     @Override
     public void onRefreshAll(boolean isShowProgress)
     {
+        setRefresh(true);
         onRefresh(isShowProgress);
     }
 
