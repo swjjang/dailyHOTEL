@@ -388,7 +388,7 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
             return;
         }
 
-        getViewDataBinding().rewardHistoryTextView.setEnabled(false);
+        getViewDataBinding().rewardHistoryTextView.setEnabled(enabled);
     }
 
     @Override

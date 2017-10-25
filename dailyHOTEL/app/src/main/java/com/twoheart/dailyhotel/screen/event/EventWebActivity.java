@@ -1105,6 +1105,12 @@ public class EventWebActivity extends WebViewActivity implements Constants
                                 {
                                     return;
                                 }
+                            } else if (externalDeepLink.isRewardView() == true)
+                            {
+                                if (moveDeepLinkReward(EventWebActivity.this, externalDeepLink) == true)
+                                {
+                                    return;
+                                }
                             } else if (externalDeepLink.isStayOutboundSearchResultView() == true)
                             {
                                 if (moveDeepLinkStayOutboundSearchResult(mTodayDateTime, externalDeepLink) == true)

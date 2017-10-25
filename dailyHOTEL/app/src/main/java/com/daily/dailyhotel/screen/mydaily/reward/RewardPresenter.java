@@ -102,7 +102,7 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
 
             getViewInterface().setLoginVisible(true);
             getViewInterface().setStickerValidityVisible(false);
-            getViewInterface().setRewardHistoryEnabled(false);
+            getViewInterface().setRewardHistoryEnabled(true);
             getViewInterface().setIssueCouponVisible(false);
         } else
         {

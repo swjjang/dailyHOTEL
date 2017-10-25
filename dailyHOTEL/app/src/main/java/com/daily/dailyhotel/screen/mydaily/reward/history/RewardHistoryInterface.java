@@ -7,5 +7,7 @@ import java.util.List;
 
 public interface RewardHistoryInterface extends BaseDialogViewInterface
 {
+    void setStickerValidityText(String text);
+
     void setRewardHistoryData(List<ObjectItem> list);
 }

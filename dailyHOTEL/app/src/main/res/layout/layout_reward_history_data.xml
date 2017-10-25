@@ -6,8 +6,7 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:paddingBottom="18dp">
+        android:background="@color/white">
 
         <View
             android:id="@+id/topLineView"
@@ -18,79 +17,75 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
-        <com.daily.base.widget.DailyImageView
-            android:id="@+id/rewardImageView"
-            android:layout_width="wrap_content"
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="20dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/topLineView"
-            app:srcCompat="@drawable/vector_ic_reward_history_coupon"/>
-
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/titleTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="16dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:text="홀리데이 인 익스프레스 싱가포르 오차드 sadflkjalksdfj"
-            android:textColor="@color/default_text_c323232"
-            android:textSize="14dp"
-            android:visibility="visible"
-            app:layout_constraintLeft_toRightOf="@+id/rewardImageView"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/topLineView"
-            dailyFont:style="Medium"/>
+            app:layout_constraintTop_toBottomOf="@id/topLineView">
 
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/descriptionTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="4dp"
-            android:text="스티커가 적립되었습니다."
-            android:textColor="@color/default_text_c323232"
-            android:textSize="14dp"
-            app:layout_constraintLeft_toRightOf="@+id/rewardImageView"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/titleTextView"
-            app:layout_constraintVertical_chainStyle="packed"
-            app:layout_goneMarginTop="16dp"/>
+            <com.daily.base.widget.DailyImageView
+                android:id="@+id/rewardImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:paddingBottom="20dp"
+                android:paddingTop="20dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/vector_ic_reward_history_coupon"/>
 
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/dateTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="6dp"
-            android:text="결제 적립 | 스티커 적립일: YYYY.MM.YY(요일)"
-            android:textColor="@color/default_text_c929292"
-            android:textSize="12dp"
-            app:layout_constraintLeft_toRightOf="@+id/rewardImageView"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/descriptionTextView"/>
+            <LinearLayout
+                android:id="@+id/descriptionLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="20dp"
+                android:orientation="vertical"
+                android:paddingBottom="18dp"
+                android:paddingTop="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/rewardImageView"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/reservationLinkTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="5dp"
-            android:text="@string/label_reward_view_reservation"
-            android:textColor="@color/default_text_c929292"
-            android:textSize="12dp"
-            android:visibility="visible"
-            app:layout_constraintLeft_toRightOf="@+id/rewardImageView"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/dateTextView"/>
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/titleTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColor="@color/default_text_c323232"
+                    android:textSize="14dp"
+                    android:visibility="visible"
+                    dailyFont:style="Medium"/>
 
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/descriptionTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="4dp"
+                    android:textColor="@color/default_text_c323232"
+                    android:textSize="14dp"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/dateTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="12dp"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/reservationLinkTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="12dp"
+                    android:visibility="visible"/>
+            </LinearLayout>
+        </android.support.constraint.ConstraintLayout>
     </android.support.constraint.ConstraintLayout>
 </layout>

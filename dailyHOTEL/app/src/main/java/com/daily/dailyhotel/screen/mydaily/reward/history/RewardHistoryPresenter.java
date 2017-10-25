@@ -2,6 +2,7 @@ package com.daily.dailyhotel.screen.mydaily.reward.history;
 
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
@@ -9,8 +10,12 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.RewardHistory;
+import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -176,6 +181,15 @@ public class RewardHistoryPresenter extends BaseExceptionPresenter<RewardHistory
         list.add(new ObjectItem(ObjectItem.TYPE_FOOTER_VIEW, null));
 
         getViewInterface().setRewardHistoryData(list);
+        try
+        {
+            getViewInterface().setStickerValidityText(DailyCalendar.convertDateFormatString("2017-10-20T17:32:22+09:00", DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
+        } catch (ParseException e)
+        {
+            e.printStackTrace();
+        }
+
+        unLockAll();
     }
 
     @Override
@@ -184,4 +198,32 @@ public class RewardHistoryPresenter extends BaseExceptionPresenter<RewardHistory
         getActivity().onBackPressed();
     }
 
+    @Override
+    public void onViewReservationClick(RewardHistory rewardHistory)
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        String deepLink = "dailyhotel://dailyhotel.co.kr?vc=12&v=bd&ri=37818&pt=gourmet";
+
+        Intent intent = new Intent(getActivity(), LauncherActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setData(Uri.parse(deepLink));
+
+        startActivity(intent);
+    }
+
+    @Override
+    public void onHomeClick()
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        startActivity(DailyInternalDeepLink.getHomeScreenLink(getActivity()));
+        onBackClick();
+    }
 }

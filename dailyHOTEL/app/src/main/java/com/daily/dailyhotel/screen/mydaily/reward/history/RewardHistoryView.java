@@ -1,10 +1,15 @@
 package com.daily.dailyhotel.screen.mydaily.reward.history;
 
+import android.view.View;
+
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.entity.ObjectItem;
+import com.daily.dailyhotel.entity.RewardHistory;
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityRewardHistoryDataBinding;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 
 import java.util.List;
 
@@ -14,6 +19,9 @@ public class RewardHistoryView extends BaseDialogView<RewardHistoryView.OnEventL
 
     public interface OnEventListener extends OnBaseEventListener
     {
+        void onViewReservationClick(RewardHistory rewardHistory);
+
+        void onHomeClick();
     }
 
     public RewardHistoryView(BaseActivity baseActivity, RewardHistoryView.OnEventListener listener)
@@ -30,21 +38,30 @@ public class RewardHistoryView extends BaseDialogView<RewardHistoryView.OnEventL
         }
 
         initToolbar(viewDataBinding);
+
+        EdgeEffectColor.setEdgeGlowColor(viewDataBinding.recyclerView, getColor(R.color.default_over_scroll_edge));
     }
 
     @Override
     public void setToolbarTitle(String title)
     {
-    }
-
-    private void initToolbar(ActivityRewardHistoryDataBinding viewDataBinding)
-    {
-        if (viewDataBinding == null)
+        if (getViewDataBinding() == null)
         {
             return;
         }
 
-        viewDataBinding.toolbarView.setOnBackClickListener(v -> getEventListener().onBackClick());
+        getViewDataBinding().toolbarView.setTitleText(title);
+    }
+
+    @Override
+    public void setStickerValidityText(String text)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().validityTextView.setText(text);
     }
 
     @Override
@@ -58,9 +75,45 @@ public class RewardHistoryView extends BaseDialogView<RewardHistoryView.OnEventL
         if (mRewardHistoryAdapter == null)
         {
             mRewardHistoryAdapter = new RewardHistoryAdapter(getContext());
+            mRewardHistoryAdapter.setOnClickListener(new RewardHistoryAdapter.OnEventListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    int position = getViewDataBinding().recyclerView.getChildAdapterPosition(view);
+
+                    if (position < 0)
+                    {
+                        return;
+                    }
+
+                    ObjectItem objectItem = mRewardHistoryAdapter.getItem(position);
+
+                    if (objectItem != null && objectItem.mType == ObjectItem.TYPE_ENTRY)
+                    {
+                        getEventListener().onViewReservationClick(objectItem.getItem());
+                    }
+                }
+
+                @Override
+                public void onHomeClick()
+                {
+                    getEventListener().onHomeClick();
+                }
+            });
         }
 
         mRewardHistoryAdapter.setAll(list);
         getViewDataBinding().recyclerView.setAdapter(mRewardHistoryAdapter);
+    }
+
+    private void initToolbar(ActivityRewardHistoryDataBinding viewDataBinding)
+    {
+        if (viewDataBinding == null)
+        {
+            return;
+        }
+
+        viewDataBinding.toolbarView.setOnBackClickListener(v -> getEventListener().onBackClick());
     }
 }
