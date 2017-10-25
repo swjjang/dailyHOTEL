@@ -8,8 +8,6 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.view.View;
 
 import com.daily.base.BaseAnalyticsInterface;
@@ -18,21 +16,18 @@ import com.daily.base.exception.PermissionException;
 import com.daily.base.exception.ProviderException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.daily.base.util.FontManager;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetBookingDetail;
-import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.entity.StayBookingDetail;
+import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
-import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.call.restaurant.RestaurantCallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
-import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
+import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.twoheart.dailyhotel.R;
@@ -45,9 +40,7 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
-import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
-import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.Callable;
 
@@ -85,7 +78,7 @@ public class GourmetBookingCancelDetailPresenter //
     {
         void onScreen(Activity activity, int placeIndex);
 
-        StayDetailAnalyticsParam getDetailAnalyticsParam(StayBookingDetail stayBookingDetail);
+        GourmetDetailAnalyticsParam getDetailAnalyticsParam(GourmetBookingDetail gourmetBookingDetail);
     }
 
     public GourmetBookingCancelDetailPresenter(@NonNull GourmetBookingCancelDetailActivity activity)
@@ -261,37 +254,37 @@ public class GourmetBookingCancelDetailPresenter //
         setRefresh(false);
         screenLock(showProgress);
 
-        Observable<StayBookingDetail> detailObservable = Observable.defer(new Callable<ObservableSource<StayBookingDetail>>()
+        Observable<GourmetBookingDetail> detailObservable = Observable.defer(new Callable<ObservableSource<GourmetBookingDetail>>()
         {
             @Override
-            public ObservableSource<StayBookingDetail> call() throws Exception
+            public ObservableSource<GourmetBookingDetail> call() throws Exception
             {
                 if (DailyTextUtils.isTextEmpty(mAggregationId) == true)
                 {
-                    return mBookingRemoteImpl.getStayBookingDetail(mReservationIndex);
+                    return mBookingRemoteImpl.getGourmetBookingDetail(mReservationIndex);
                 }
 
-                return mBookingRemoteImpl.getStayBookingDetail(mAggregationId);
+                return mBookingRemoteImpl.getGourmetBookingDetail(mAggregationId);
             }
         });
 
-        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime(), detailObservable, new BiFunction<CommonDateTime, StayBookingDetail, StayBookingDetail>()
+        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime(), detailObservable, new BiFunction<CommonDateTime, GourmetBookingDetail, GourmetBookingDetail>()
         {
             @Override
-            public StayBookingDetail apply(@io.reactivex.annotations.NonNull CommonDateTime commonDateTime //
-                , @io.reactivex.annotations.NonNull StayBookingDetail stayBookingDetail) throws Exception
+            public GourmetBookingDetail apply(@io.reactivex.annotations.NonNull CommonDateTime commonDateTime //
+                , @io.reactivex.annotations.NonNull GourmetBookingDetail gourmetBookingDetail) throws Exception
             {
                 setCommonDateTime(commonDateTime);
-                setStayBookingDetail(stayBookingDetail);
+                setGourmetBookingDetail(gourmetBookingDetail);
 
-                return stayBookingDetail;
+                return gourmetBookingDetail;
             }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayBookingDetail>()
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetBookingDetail>()
         {
             @Override
-            public void accept(StayBookingDetail stayBookingDetail) throws Exception
+            public void accept(GourmetBookingDetail stayBookingDetail) throws Exception
             {
-                notifyStayOutboundBookingDetailChanged();
+                notifyGourmetBookingDetailChanged();
 
                 unLockAll();
 
@@ -346,7 +339,7 @@ public class GourmetBookingCancelDetailPresenter //
         }
 
         Intent intent = ZoomMapActivity.newInstance(getActivity()//
-            , ZoomMapActivity.SourceType.HOTEL_BOOKING, mGourmetBookingDetail.stayName, mGourmetBookingDetail.stayAddress//
+            , ZoomMapActivity.SourceType.GOURMET_BOOKING, mGourmetBookingDetail.gourmetName, mGourmetBookingDetail.gourmetAddress//
             , mGourmetBookingDetail.latitude, mGourmetBookingDetail.longitude, true);
 
         startActivityForResult(intent, GourmetBookingCancelDetailActivity.REQUEST_CODE_ZOOMMAP);
@@ -412,17 +405,14 @@ public class GourmetBookingCancelDetailPresenter //
 
         try
         {
-            StayBookDateTime stayBookDateTime = new StayBookDateTime();
-            stayBookDateTime.setCheckInDateTime(mCommonDateTime.dailyDateTime);
-            stayBookDateTime.setCheckOutDateTime(mCommonDateTime.dailyDateTime, 1);
+            GourmetDetailAnalyticsParam analyticsParam = mAnalytics.getDetailAnalyticsParam(mGourmetBookingDetail);
 
-            StayDetailAnalyticsParam analyticsParam = mAnalytics.getDetailAnalyticsParam(mGourmetBookingDetail);
-
-            Intent intent = StayDetailActivity.newInstance(getActivity() //
-                , mGourmetBookingDetail.stayIndex, mGourmetBookingDetail.stayName, null, StayDetailActivity.NONE_PRICE//
-                , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam);
+            Intent intent = GourmetDetailActivity.newInstance(getActivity() //
+                , mGourmetBookingDetail.gourmetIndex, mGourmetBookingDetail.gourmetName, null, GourmetDetailActivity.NONE_PRICE//
+                , mCommonDateTime.dailyDateTime//
+                , null, false, false, false, false//
+                , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
+                , analyticsParam);
 
             startActivityForResult(intent, GourmetBookingCancelDetailActivity.REQUEST_CODE_DETAIL);
 
@@ -445,10 +435,10 @@ public class GourmetBookingCancelDetailPresenter //
         }
 
         NavigatorAnalyticsParam analyticsParam = new NavigatorAnalyticsParam();
-        analyticsParam.category = AnalyticsManager.Category.HOTEL_BOOKINGS;
+        analyticsParam.category = AnalyticsManager.Category.GOURMET_BOOKINGS;
         analyticsParam.action = AnalyticsManager.Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED;
 
-        startActivityForResult(NavigatorDialogActivity.newInstance(getActivity(), mGourmetBookingDetail.stayName//
+        startActivityForResult(NavigatorDialogActivity.newInstance(getActivity(), mGourmetBookingDetail.gourmetName//
             , mGourmetBookingDetail.latitude, mGourmetBookingDetail.longitude, false, analyticsParam), GourmetBookingCancelDetailActivity.REQUEST_CODE_NAVIGATOR);
     }
 
@@ -460,7 +450,7 @@ public class GourmetBookingCancelDetailPresenter //
             return;
         }
 
-        DailyTextUtils.clipText(getActivity(), mGourmetBookingDetail.stayAddress);
+        DailyTextUtils.clipText(getActivity(), mGourmetBookingDetail.gourmetAddress);
 
         DailyToast.showToast(getActivity(), R.string.message_detail_copy_address, DailyToast.LENGTH_SHORT);
     }
@@ -516,7 +506,8 @@ public class GourmetBookingCancelDetailPresenter //
         } else if (DailyTextUtils.isTextEmpty(mGourmetBookingDetail.phone3) == false)
         {
             restaurantPhone = mGourmetBookingDetail.phone3;
-        } else {
+        } else
+        {
             restaurantPhone = null;
         }
 
@@ -549,7 +540,7 @@ public class GourmetBookingCancelDetailPresenter //
     }
 
     @Override
-    public void onConciergeHappyTalkClick(boolean refund)
+    public void onConciergeHappyTalkClick()
     {
         if (mGourmetBookingDetail == null)
         {
@@ -561,15 +552,9 @@ public class GourmetBookingCancelDetailPresenter //
             // 카카오톡 패키지 설치 여부
             getActivity().getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
 
-            if (refund == true)
-            {
-                startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity(), HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_OUTBOUND_REFUND//
-                    , mGourmetBookingDetail.stayIndex, 0, mGourmetBookingDetail.stayName), GourmetBookingCancelDetailActivity.REQUEST_CODE_HAPPYTALK);
-            } else
-            {
-                startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity(), HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_OUTBOUND_BOOKING//
-                    , mGourmetBookingDetail.stayIndex, 0, mGourmetBookingDetail.stayName), GourmetBookingCancelDetailActivity.REQUEST_CODE_HAPPYTALK);
-            }
+            startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity() //
+                , HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_BOOKING//
+                , mGourmetBookingDetail.gourmetIndex, mReservationIndex, mGourmetBookingDetail.gourmetName), GourmetBookingCancelDetailActivity.REQUEST_CODE_HAPPYTALK);
         } catch (Exception e)
         {
             getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
@@ -606,26 +591,16 @@ public class GourmetBookingCancelDetailPresenter //
 
             String userName = DailyUserPreference.getInstance(getActivity()).getName();
 
-            String message = getString(R.string.message_booking_stay_share_kakao, //
-                userName, mGourmetBookingDetail.stayName, mGourmetBookingDetail.guestName,//
+            String message = getString(R.string.message_booking_gourmet_share_kakao, //
+                userName, mGourmetBookingDetail.gourmetName, mGourmetBookingDetail.guestName,//
                 DailyTextUtils.getPriceFormat(getActivity(), mGourmetBookingDetail.priceTotal, false), //
-                mGourmetBookingDetail.roomName, DailyCalendar.convertDateFormatString(mGourmetBookingDetail.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH시"),//
-                DailyCalendar.convertDateFormatString(mGourmetBookingDetail.checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH시"), //
-                mGourmetBookingDetail.stayAddress);
+                DailyCalendar.convertDateFormatString(mGourmetBookingDetail.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"),//
+                DailyCalendar.convertDateFormatString(mGourmetBookingDetail.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm"), //
+                mGourmetBookingDetail.ticketName, getString(R.string.label_booking_count, mGourmetBookingDetail.ticketCount), //
+                mGourmetBookingDetail.gourmetAddress);
 
-            int nights = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(mGourmetBookingDetail.checkOutDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
-                , DailyCalendar.convertDateFormatString(mGourmetBookingDetail.checkInDateTime, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
-
-            //            String[] checkInDates = mGourmetBookingDetail.checkInDateTime.split("T");
-            //            String[] checkOutDates = mGourmetBookingDetail.checkOutDateTime.split("T");
-            //
-            //            Date checkInDate = DailyCalendar.convertDate(checkInDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
-            //            Date checkOutDate = DailyCalendar.convertDate(checkOutDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
-            //
-            //            int nights = (int) ((DailyCalendar.clearTField(checkOutDate.getTime()) - DailyCalendar.clearTField(checkInDate.getTime())) / DailyCalendar.DAY_MILLISECOND);
-
-            KakaoLinkManager.newInstance(getActivity()).shareBookingStay(message, mGourmetBookingDetail.stayIndex,//
-                mImageUrl, DailyCalendar.convertDateFormatString(mGourmetBookingDetail.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"), nights);
+            KakaoLinkManager.newInstance(getActivity()).shareBookingGourmet(message, mGourmetBookingDetail.gourmetIndex,//
+                mImageUrl, DailyCalendar.convertDateFormatString(mGourmetBookingDetail.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
 
         } catch (Exception e)
         {
@@ -656,24 +631,16 @@ public class GourmetBookingCancelDetailPresenter //
         {
             String userName = DailyUserPreference.getInstance(getActivity()).getName();
 
-            String[] checkInDates = mGourmetBookingDetail.checkInDateTime.split("T");
-            String[] checkOutDates = mGourmetBookingDetail.checkOutDateTime.split("T");
+            String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/gourmet/%d?reserveDate=%s"//
+                , mGourmetBookingDetail.gourmetIndex, DailyCalendar.convertDateFormatString(mGourmetBookingDetail.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd"));
 
-            Date checkInDate = DailyCalendar.convertDate(checkInDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
-            Date checkOutDate = DailyCalendar.convertDate(checkOutDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
-
-            int nights = (int) ((DailyCalendar.clearTField(checkOutDate.getTime()) - DailyCalendar.clearTField(checkInDate.getTime())) / DailyCalendar.DAY_MILLISECOND);
-
-            String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d"//
-                , mGourmetBookingDetail.stayIndex, DailyCalendar.convertDateFormatString(mGourmetBookingDetail.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd")//
-                , nights);
-
-            final String message = getString(R.string.message_booking_stay_share_sms, //
-                userName, mGourmetBookingDetail.stayName, mGourmetBookingDetail.guestName,//
+            final String message = getString(R.string.message_booking_gourmet_share_sms, //
+                userName, mGourmetBookingDetail.gourmetName, mGourmetBookingDetail.guestName,//
                 DailyTextUtils.getPriceFormat(getActivity(), mGourmetBookingDetail.priceTotal, false), //
-                mGourmetBookingDetail.roomName, DailyCalendar.convertDateFormatString(mGourmetBookingDetail.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH시"),//
-                DailyCalendar.convertDateFormatString(mGourmetBookingDetail.checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH시"), //
-                mGourmetBookingDetail.stayAddress);
+                DailyCalendar.convertDateFormatString(mGourmetBookingDetail.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"),//
+                DailyCalendar.convertDateFormatString(mGourmetBookingDetail.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm"), //
+                mGourmetBookingDetail.ticketName, getString(R.string.label_booking_count, mGourmetBookingDetail.ticketCount), //
+                mGourmetBookingDetail.gourmetAddress);
 
             CommonRemoteImpl commonRemote = new CommonRemoteImpl(getActivity());
 
@@ -693,7 +660,7 @@ public class GourmetBookingCancelDetailPresenter //
                 {
                     unLockAll();
 
-                    Util.sendSms(getActivity(), message + "https://mobile.dailyhotel.co.kr/stay/" + mGourmetBookingDetail.stayIndex);
+                    Util.sendSms(getActivity(), message + "https://mobile.dailyhotel.co.kr/gourmet/" + mGourmetBookingDetail.gourmetIndex);
                 }
             }));
         } catch (Exception e)
@@ -720,7 +687,7 @@ public class GourmetBookingCancelDetailPresenter //
                 {
                     screenLock(true);
 
-                    addCompositeDisposable(mBookingRemoteImpl.getStayHiddenBooking(mReservationIndex) //
+                    addCompositeDisposable(mBookingRemoteImpl.getGourmetHiddenBooking(mReservationIndex) //
                         .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                         {
                             @Override
@@ -743,7 +710,7 @@ public class GourmetBookingCancelDetailPresenter //
                                         });
 
                                     //                                AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-                                    //                                    , AnalyticsManager.Action.BOOKING_HISTORY_DELETE, "ob_" + mGourmetBookingDetail.stayIndex, null);
+                                    //                                    , AnalyticsManager.Action.BOOKING_HISTORY_DELETE, "gourmet_" + mGourmetBookingDetail.stayIndex, null);
                                 } else
                                 {
                                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2)//
@@ -800,12 +767,12 @@ public class GourmetBookingCancelDetailPresenter //
         mCommonDateTime = commonDateTime;
     }
 
-    void setStayBookingDetail(StayBookingDetail stayBookingDetail)
+    void setGourmetBookingDetail(GourmetBookingDetail gourmetBookingDetail)
     {
-        mGourmetBookingDetail = stayBookingDetail;
+        mGourmetBookingDetail = gourmetBookingDetail;
     }
 
-    void notifyStayOutboundBookingDetailChanged()
+    void notifyGourmetBookingDetailChanged()
     {
         if (mGourmetBookingDetail == null)
         {
@@ -814,29 +781,10 @@ public class GourmetBookingCancelDetailPresenter //
 
         try
         {
-            String checkInDateFormat = DailyCalendar.convertDateFormatString(mGourmetBookingDetail.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.M.d(EEE) HH시");
-            SpannableString checkInSpannableString = new SpannableString(checkInDateFormat);
-            checkInSpannableString.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getMediumTypeface()),//
-                checkInDateFormat.length() - 3, checkInDateFormat.length(),//
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            String ticketDateFormat = DailyCalendar.convertDateFormatString(mGourmetBookingDetail.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.M.d(EEE)");
+            String timeDateFormat = DailyCalendar.convertDateFormatString(mGourmetBookingDetail.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm");
 
-
-            String checkOutDateFormat = DailyCalendar.convertDateFormatString(mGourmetBookingDetail.checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.M.d(EEE) HH시");
-            SpannableString checkOutSpannableString = new SpannableString(checkOutDateFormat);
-            checkOutSpannableString.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getMediumTypeface()),//
-                checkOutDateFormat.length() - 3, checkOutDateFormat.length(),//
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-            // 날짜로 계산한다. 서버에 체크인시간, 체크아웃시간이 잘못 기록되어있는 경우 발생해서 예외 처리 추가
-            String[] checkInDates = mGourmetBookingDetail.checkInDateTime.split("T");
-            String[] checkOutDates = mGourmetBookingDetail.checkOutDateTime.split("T");
-
-            Date checkInDate = DailyCalendar.convertDate(checkInDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
-            Date checkOutDate = DailyCalendar.convertDate(checkOutDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
-
-            int nights = (int) ((DailyCalendar.clearTField(checkOutDate.getTime()) - DailyCalendar.clearTField(checkInDate.getTime())) / DailyCalendar.DAY_MILLISECOND);
-
-            getViewInterface().setBookingDate(checkInSpannableString, checkOutSpannableString, nights);
+            getViewInterface().setBookingDate(ticketDateFormat, timeDateFormat);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

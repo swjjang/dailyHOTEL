@@ -13,10 +13,7 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
-import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
-import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
 /**
@@ -26,8 +23,6 @@ import com.twoheart.dailyhotel.util.Util;
 public class RestaurantCallDialogPresenter extends BaseExceptionPresenter<RestaurantCallDialogActivity, RestaurantCallDialogInterface> implements RestaurantCallDialogView.OnEventListener
 {
     private RestaurantCallDialogAnalyticsInterface mAnalytics;
-
-    private CommonRemoteImpl mCommonRemoteImpl;
 
     private String mPhone;
 
@@ -53,8 +48,6 @@ public class RestaurantCallDialogPresenter extends BaseExceptionPresenter<Restau
         setContentView(0);
 
         setAnalytics(new RestaurantCallDialogAnalyticsImpl());
-
-        mCommonRemoteImpl = new CommonRemoteImpl(activity);
 
         setRefresh(true);
     }
@@ -160,17 +153,19 @@ public class RestaurantCallDialogPresenter extends BaseExceptionPresenter<Restau
     @Override
     public void onCallClick()
     {
-        String remoteConfigPhoneNumber = DailyRemoteConfigPreference.getInstance(getActivity()).getRemoteConfigCompanyPhoneNumber();
-        String phoneNumber = DailyTextUtils.isTextEmpty(remoteConfigPhoneNumber) == false //
-            ? remoteConfigPhoneNumber : Constants.PHONE_NUMBER_DAILYHOTEL;
+        if (DailyTextUtils.isTextEmpty(mPhone) == true)
+        {
+            onBackClick();
+            return;
+        }
 
-        String noCallMessage = getString(R.string.toast_msg_no_gourmet_call, phoneNumber);
+        String noCallMessage = getString(R.string.toast_msg_no_gourmet_call, mPhone);
 
         if (Util.isTelephonyEnabled(getActivity()) == true)
         {
             try
             {
-                startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber)));
+                startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + mPhone)));
 
                 setResult(Activity.RESULT_OK);
             } catch (ActivityNotFoundException e)

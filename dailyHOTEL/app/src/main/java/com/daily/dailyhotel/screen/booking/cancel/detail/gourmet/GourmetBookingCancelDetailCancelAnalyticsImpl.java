@@ -2,8 +2,8 @@ package com.daily.dailyhotel.screen.booking.cancel.detail.gourmet;
 
 import android.app.Activity;
 
-import com.daily.dailyhotel.entity.StayBookingDetail;
-import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
+import com.daily.dailyhotel.entity.GourmetBookingDetail;
+import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 
 public class GourmetBookingCancelDetailCancelAnalyticsImpl implements GourmetBookingCancelDetailPresenter.GourmetBookingCancelAnalyticsInterface
 {
@@ -72,9 +72,9 @@ public class GourmetBookingCancelDetailCancelAnalyticsImpl implements GourmetBoo
     }
 
     @Override
-    public StayDetailAnalyticsParam getDetailAnalyticsParam(StayBookingDetail stayBookingDetail)
+    public GourmetDetailAnalyticsParam getDetailAnalyticsParam(GourmetBookingDetail gourmetBookingDetail)
     {
-        StayDetailAnalyticsParam analyticsParam = new StayDetailAnalyticsParam();
+        GourmetDetailAnalyticsParam analyticsParam = new GourmetDetailAnalyticsParam();
 
         return analyticsParam;
     }

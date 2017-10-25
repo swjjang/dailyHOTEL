@@ -321,8 +321,6 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
             {
                 onRefresh(true);
             }
-
-            setCancelHistoryButtonVisible(true);
         }
     }
 
@@ -442,6 +440,8 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
     void onRefresh(boolean showProgress)
     {
         lockUI(showProgress);
+
+        setCancelHistoryButtonVisible(true);
 
         addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime()//
             , mBookingRemoteImpl.getBookingList(), mBookingRemoteImpl.getStayOutboundBookingList()//

@@ -23,12 +23,14 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
 import com.daily.base.BaseActivity;
+import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyScrollView;
 import com.daily.dailyhotel.base.BaseBlurView;
+import com.daily.dailyhotel.entity.GourmetBookingDetail;
 import com.daily.dailyhotel.entity.StayBookingDetail;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.google.android.gms.maps.CameraUpdate;
@@ -48,6 +50,7 @@ import com.twoheart.dailyhotel.databinding.ActivityGourmetBookingCancelDetailDat
 import com.twoheart.dailyhotel.databinding.ActivityStayBookingCancelDetailDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogShareDataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutGourmetBookingDetail01DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutPlaceBookingCancelDetailDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayBookingDetail01DataBinding;
 import com.twoheart.dailyhotel.model.MyLocationMarker;
@@ -68,7 +71,7 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 
-public class GourmetBookingCancelDetailView extends BaseBlurView<GourmetBookingCancelDetailView.OnEventListener, ActivityGourmetBookingCancelDetailDataBinding>//
+public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookingCancelDetailView.OnEventListener, ActivityGourmetBookingCancelDetailDataBinding>//
     implements GourmetBookingCancelDetailInterface, View.OnClickListener
 {
     ImageView mMyLocationView;
@@ -80,7 +83,7 @@ public class GourmetBookingCancelDetailView extends BaseBlurView<GourmetBookingC
     LatLng mCenterLatLng;
     boolean mMapLoaded;
 
-    private LayoutStayBookingDetail01DataBinding mBookingDetail01DataBinding;
+    private LayoutGourmetBookingDetail01DataBinding mBookingDetail01DataBinding;
     private LayoutPlaceBookingCancelDetailDataBinding mBookingCancelDetailDataBinding;
 
     public interface OnEventListener extends OnBaseEventListener
@@ -109,7 +112,7 @@ public class GourmetBookingCancelDetailView extends BaseBlurView<GourmetBookingC
 
         void onRestaurantCallClick(String restaurantPhone);
 
-        void onConciergeHappyTalkClick(boolean refund);
+        void onConciergeHappyTalkClick();
 
         void onConciergeCallClick();
 
@@ -164,7 +167,7 @@ public class GourmetBookingCancelDetailView extends BaseBlurView<GourmetBookingC
         viewDataBinding.placeInformationLayout.setVisibility(View.VISIBLE);
 
         mBookingDetail01DataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext())//
-            , R.layout.layout_stay_booking_detail_01_data, viewDataBinding.detailsLayout, true);
+            , R.layout.layout_gourmet_booking_detail_01_data, viewDataBinding.detailsLayout, true);
 
         mBookingCancelDetailDataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()) //
             , R.layout.layout_place_booking_cancel_detail_data, viewDataBinding.detailsLayout, true);
@@ -184,15 +187,15 @@ public class GourmetBookingCancelDetailView extends BaseBlurView<GourmetBookingC
     }
 
     @Override
-    public void setBookingDetail(StayBookingDetail stayOutboundBookingDetail)
+    public void setBookingDetail(GourmetBookingDetail gourmetBookingDetail)
     {
-        setHeaderLayout(getContext(), stayOutboundBookingDetail);
+        setHeaderLayout(getContext(), gourmetBookingDetail);
 
-        setBookingInformation(getContext(), mBookingDetail01DataBinding, stayOutboundBookingDetail);
+        setBookingInformation(getContext(), mBookingDetail01DataBinding, gourmetBookingDetail);
 
-        setGuestInformation(getContext(), mBookingDetail01DataBinding, stayOutboundBookingDetail);
+        setGuestInformation(getContext(), mBookingDetail01DataBinding, gourmetBookingDetail);
 
-        setCancelInformation(getContext(), mBookingCancelDetailDataBinding, stayOutboundBookingDetail);
+        setCancelInformation(getContext(), mBookingCancelDetailDataBinding, gourmetBookingDetail);
     }
 
     @Override
@@ -397,16 +400,15 @@ public class GourmetBookingCancelDetailView extends BaseBlurView<GourmetBookingC
     }
 
     @Override
-    public void setBookingDate(SpannableString checkInDate, SpannableString checkOutDate, int nights)
+    public void setBookingDate(String ticketDate, String ticketTime)
     {
         if (getViewDataBinding() == null || mBookingDetail01DataBinding == null)
         {
             return;
         }
 
-        mBookingDetail01DataBinding.checkInDayTextView.setText(checkInDate);
-        mBookingDetail01DataBinding.checkOutDayTextView.setText(checkOutDate);
-        mBookingDetail01DataBinding.nightsTextView.setText(getString(R.string.label_nights, nights));
+        mBookingDetail01DataBinding.ticketDateTextView.setText(ticketDate);
+        mBookingDetail01DataBinding.ticketTimeTextView.setText(ticketTime);
     }
 
     @Override
@@ -458,7 +460,7 @@ public class GourmetBookingCancelDetailView extends BaseBlurView<GourmetBookingC
             {
                 hideSimpleDialog();
 
-                getEventListener().onConciergeHappyTalkClick(false);
+                getEventListener().onConciergeHappyTalkClick();
             }
         });
 
@@ -757,9 +759,9 @@ public class GourmetBookingCancelDetailView extends BaseBlurView<GourmetBookingC
         setBookingDetailToolbar();
     }
 
-    private void setHeaderLayout(Context context, StayBookingDetail stayBookingDetail)
+    private void setHeaderLayout(Context context, GourmetBookingDetail gourmetBookingDetail)
     {
-        if (context == null || stayBookingDetail == null || getViewDataBinding() == null)
+        if (context == null || gourmetBookingDetail == null || getViewDataBinding() == null)
         {
             return;
         }
@@ -771,17 +773,17 @@ public class GourmetBookingCancelDetailView extends BaseBlurView<GourmetBookingC
         {
             getViewDataBinding().googleMapLayout.setVisibility(View.GONE);
 
-            setImageMapLayout(context, stayBookingDetail.latitude, stayBookingDetail.longitude, (int) width, (int) height);
+            setImageMapLayout(context, gourmetBookingDetail.latitude, gourmetBookingDetail.longitude, (int) width, (int) height);
         } else
         {
             getViewDataBinding().googleMapLayout.setVisibility(View.VISIBLE);
 
-            setGoogleMapLayout(context, stayBookingDetail, (int) width, (int) height);
+            setGoogleMapLayout(context, gourmetBookingDetail, (int) width, (int) height);
         }
 
         getViewDataBinding().viewDetailView.setOnClickListener(this);
         getViewDataBinding().viewMapView.setOnClickListener(this);
-        getViewDataBinding().placeNameTextView.setText(stayBookingDetail.stayName);
+        getViewDataBinding().placeNameTextView.setText(gourmetBookingDetail.gourmetName);
     }
 
     private void setImageMapLayout(Context context, double latitude, double longitude, int height, int width)
@@ -809,16 +811,16 @@ public class GourmetBookingCancelDetailView extends BaseBlurView<GourmetBookingC
         getViewDataBinding().mapImageView.setImageURI(Uri.parse(url));
     }
 
-    private void setGoogleMapLayout(Context context, StayBookingDetail stayBookingDetail, int width, int height)
+    private void setGoogleMapLayout(Context context, GourmetBookingDetail gourmetBookingDetail, int width, int height)
     {
-        if (context == null || getViewDataBinding() == null || stayBookingDetail == null)
+        if (context == null || getViewDataBinding() == null || gourmetBookingDetail == null)
         {
             return;
         }
 
         getViewDataBinding().addressLayout.setVisibility(View.GONE);
         getViewDataBinding().searchMapsLayout.setVisibility(View.GONE);
-        getViewDataBinding().addressTextView.setText(stayBookingDetail.stayAddress);
+        getViewDataBinding().addressTextView.setText(gourmetBookingDetail.gourmetAddress);
         getViewDataBinding().copyAddressView.setOnClickListener(this);
         getViewDataBinding().searchMapView.setOnClickListener(this);
 
@@ -857,7 +859,7 @@ public class GourmetBookingCancelDetailView extends BaseBlurView<GourmetBookingC
 
                 relocationMyLocation(getViewDataBinding().mapLayout);
                 relocationZoomControl(getViewDataBinding().mapLayout);
-                addMarker(mGoogleMap, stayBookingDetail.latitude, stayBookingDetail.longitude, stayBookingDetail.stayName);
+                addMarker(mGoogleMap, gourmetBookingDetail.latitude, gourmetBookingDetail.longitude, gourmetBookingDetail.gourmetName);
 
                 mGoogleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback()
                 {
@@ -868,7 +870,7 @@ public class GourmetBookingCancelDetailView extends BaseBlurView<GourmetBookingC
 
                         Projection projection = mGoogleMap.getProjection();
 
-                        Point point = projection.toScreenLocation(new LatLng(stayBookingDetail.latitude, stayBookingDetail.longitude));
+                        Point point = projection.toScreenLocation(new LatLng(gourmetBookingDetail.latitude, gourmetBookingDetail.longitude));
                         point.y += (point.y - getViewDataBinding().fakeMapLayout.getHeight() / 2);
 
                         mCenterLatLng = projection.fromScreenLocation(point);
@@ -879,84 +881,41 @@ public class GourmetBookingCancelDetailView extends BaseBlurView<GourmetBookingC
         });
     }
 
-    private void setBookingInformation(Context context, LayoutStayBookingDetail01DataBinding dataBinding, StayBookingDetail stayBookingDetail)
+    private void setBookingInformation(Context context, LayoutGourmetBookingDetail01DataBinding dataBinding, GourmetBookingDetail gourmetBookingDetail)
     {
-        if (context == null || dataBinding == null || stayBookingDetail == null)
+        if (context == null || dataBinding == null || gourmetBookingDetail == null)
         {
             return;
         }
 
-        dataBinding.hotelNameTextView.setText(stayBookingDetail.stayName);
-        dataBinding.roomTypeTextView.setText(stayBookingDetail.roomName);
-        dataBinding.addressTextView.setText(stayBookingDetail.stayAddress);
+        dataBinding.gourmetNameTextView.setText(gourmetBookingDetail.gourmetName);
+        dataBinding.ticketTypeTextView.setText(gourmetBookingDetail.ticketName);
+        dataBinding.ticketCountTextView.setText(getContext().getString(R.string.label_booking_count, gourmetBookingDetail.ticketCount));
+        dataBinding.addressTextView.setText(gourmetBookingDetail.gourmetAddress);
     }
 
-    private void setGuestInformation(Context context, LayoutStayBookingDetail01DataBinding dataBinding, StayBookingDetail stayBookingDetail)
+    private void setGuestInformation(Context context, LayoutGourmetBookingDetail01DataBinding dataBinding, GourmetBookingDetail gourmetBookingDetail)
     {
-        if (context == null || dataBinding == null || stayBookingDetail == null)
+        if (context == null || dataBinding == null || gourmetBookingDetail == null)
         {
             return;
         }
 
-        dataBinding.guestNameTextView.setText(stayBookingDetail.guestName);
-        dataBinding.guestPhoneTextView.setText(Util.addHyphenMobileNumber(context, stayBookingDetail.guestPhone));
-        dataBinding.guestEmailTextView.setText(stayBookingDetail.guestEmail);
-
-
-        if (DailyTextUtils.isTextEmpty(stayBookingDetail.guestTransportation) == true)
-        {
-            dataBinding.visitTypeLayout.setVisibility(View.GONE);
-            dataBinding.guideVisitMemoLayout.setVisibility(View.GONE);
-        } else {
-            switch (stayBookingDetail.guestTransportation)
-            {
-                case "CAR":
-                    dataBinding.visitTypeLayout.setVisibility(View.VISIBLE);
-
-                    dataBinding.visitTypeTitleTextView.setText(R.string.label_how_to_visit);
-                    dataBinding.visitTypeTextView.setText(R.string.label_visit_car);
-
-                    dataBinding.guideVisitMemoLayout.setVisibility(View.VISIBLE);
-                    dataBinding.guideVisitMemoView.setText(R.string.message_visit_car_memo);
-                    break;
-
-                case "NO_PARKING":
-                    dataBinding.visitTypeLayout.setVisibility(View.VISIBLE);
-
-                    dataBinding.visitTypeTitleTextView.setText(R.string.label_parking_information);
-                    dataBinding.visitTypeTextView.setText(R.string.label_no_parking);
-
-                    dataBinding.guideVisitMemoLayout.setVisibility(View.VISIBLE);
-                    dataBinding.guideVisitMemoView.setText(R.string.message_visit_no_parking_memo);
-                    break;
-
-                case "WALKING":
-                    dataBinding.visitTypeLayout.setVisibility(View.VISIBLE);
-
-                    dataBinding.visitTypeTitleTextView.setText(R.string.label_how_to_visit);
-                    dataBinding.visitTypeTextView.setText(R.string.label_visit_walk);
-
-                    dataBinding.guideVisitMemoLayout.setVisibility(View.GONE);
-                    break;
-
-                default:
-                    dataBinding.visitTypeLayout.setVisibility(View.GONE);
-                    dataBinding.guideVisitMemoLayout.setVisibility(View.GONE);
-                    break;
-            }
-        }
+        dataBinding.guestNameTextView.setText(gourmetBookingDetail.guestName);
+        dataBinding.guestPhoneTextView.setText(Util.addHyphenMobileNumber(context, gourmetBookingDetail.guestPhone));
+        dataBinding.guestEmailTextView.setText(gourmetBookingDetail.guestEmail);
     }
 
-    private void setCancelInformation(Context context, LayoutPlaceBookingCancelDetailDataBinding dataBinding, StayBookingDetail stayBookingDetail)
+    private void setCancelInformation(Context context, LayoutPlaceBookingCancelDetailDataBinding dataBinding, GourmetBookingDetail gourmetBookingDetail)
     {
-        if (context == null || dataBinding == null || stayBookingDetail == null)
+        if (context == null || dataBinding == null || gourmetBookingDetail == null)
         {
             return;
         }
 
         try
         {
-            dataBinding.cancelDateTextView.setText(DailyCalendar.convertDateFormatString(stayBookingDetail.cancelDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
+            dataBinding.cancelDateTextView.setText(DailyCalendar.convertDateFormatString(gourmetBookingDetail.cancelDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
         } catch (Exception e)
         {
             ExLog.d(e.toString());

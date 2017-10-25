@@ -23,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
 import com.daily.base.BaseActivity;
+import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
@@ -67,7 +68,7 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 
-public class StayBookingCancelDetailView extends BaseBlurView<StayBookingCancelDetailView.OnEventListener, ActivityStayBookingCancelDetailDataBinding>//
+public class StayBookingCancelDetailView extends BaseDialogView<StayBookingCancelDetailView.OnEventListener, ActivityStayBookingCancelDetailDataBinding>//
     implements StayBookingCancelDetailInterface, View.OnClickListener
 {
     ImageView mMyLocationView;
@@ -106,7 +107,7 @@ public class StayBookingCancelDetailView extends BaseBlurView<StayBookingCancelD
 
         void onConciergeFaqClick();
 
-        void onConciergeHappyTalkClick(boolean refund);
+        void onConciergeHappyTalkClick();
 
         void onConciergeCallClick();
 
@@ -181,15 +182,15 @@ public class StayBookingCancelDetailView extends BaseBlurView<StayBookingCancelD
     }
 
     @Override
-    public void setBookingDetail(StayBookingDetail stayOutboundBookingDetail)
+    public void setBookingDetail(StayBookingDetail stayBookingDetail)
     {
-        setHeaderLayout(getContext(), stayOutboundBookingDetail);
+        setHeaderLayout(getContext(), stayBookingDetail);
 
-        setBookingInformation(getContext(), mBookingDetail01DataBinding, stayOutboundBookingDetail);
+        setBookingInformation(getContext(), mBookingDetail01DataBinding, stayBookingDetail);
 
-        setGuestInformation(getContext(), mBookingDetail01DataBinding, stayOutboundBookingDetail);
+        setGuestInformation(getContext(), mBookingDetail01DataBinding, stayBookingDetail);
 
-        setCancelInformation(getContext(), mBookingCancelDetailDataBinding, stayOutboundBookingDetail);
+        setCancelInformation(getContext(), mBookingCancelDetailDataBinding, stayBookingDetail);
     }
 
     @Override
@@ -435,7 +436,7 @@ public class StayBookingCancelDetailView extends BaseBlurView<StayBookingCancelD
             {
                 hideSimpleDialog();
 
-                getEventListener().onConciergeHappyTalkClick(false);
+                getEventListener().onConciergeHappyTalkClick();
             }
         });
 

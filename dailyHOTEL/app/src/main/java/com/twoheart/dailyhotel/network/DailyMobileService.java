@@ -725,6 +725,10 @@ public interface DailyMobileService
     @GET("{mobileAPI}")
     Observable<BaseDto<GourmetBookingDetailData>> getGourmetBookingDetail(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
+    @FormUrlEncoded
+    @POST("{mobileAPI}")
+    Observable<BaseDto<BookingHiddenData>> getGourmetHiddenBooking(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Field("reservation_rec_idx") int index);
+
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
     Observable<BaseDto<WaitingDepositData>> getWaitingDeposit(@Path(value = "mobileAPI", encoded = true) String mobileAPI);

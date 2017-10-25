@@ -4,12 +4,12 @@ import android.app.Dialog;
 import android.location.Location;
 import android.text.SpannableString;
 
-import com.daily.dailyhotel.base.BaseBlurViewInterface;
+import com.daily.base.BaseDialogViewInterface;
 import com.daily.dailyhotel.entity.StayBookingDetail;
 
 import io.reactivex.Observable;
 
-public interface StayBookingCancelDetailInterface extends BaseBlurViewInterface
+public interface StayBookingCancelDetailInterface extends BaseDialogViewInterface
 {
     void setBookingDetail(StayBookingDetail stayBookingDetail);
 

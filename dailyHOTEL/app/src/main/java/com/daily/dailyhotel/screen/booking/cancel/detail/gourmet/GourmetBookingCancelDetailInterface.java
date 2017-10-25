@@ -2,22 +2,21 @@ package com.daily.dailyhotel.screen.booking.cancel.detail.gourmet;
 
 import android.app.Dialog;
 import android.location.Location;
-import android.text.SpannableString;
 
-import com.daily.dailyhotel.base.BaseBlurViewInterface;
-import com.daily.dailyhotel.entity.StayBookingDetail;
+import com.daily.base.BaseDialogViewInterface;
+import com.daily.dailyhotel.entity.GourmetBookingDetail;
 
 import io.reactivex.Observable;
 
-public interface GourmetBookingCancelDetailInterface extends BaseBlurViewInterface
+public interface GourmetBookingCancelDetailInterface extends BaseDialogViewInterface
 {
-    void setBookingDetail(StayBookingDetail stayBookingDetail);
+    void setBookingDetail(GourmetBookingDetail gourmetBookingDetail);
 
     Observable<Boolean> expandMap(double latitude, double longitude);
 
     Observable<Boolean> collapseMap();
 
-    void setBookingDate(SpannableString checkInDate, SpannableString checkOutDate, int nights);
+    void setBookingDate(String ticketDate, String ticketTime);
 
     void showConciergeDialog(String restaurantPhone, Dialog.OnDismissListener listener);
 

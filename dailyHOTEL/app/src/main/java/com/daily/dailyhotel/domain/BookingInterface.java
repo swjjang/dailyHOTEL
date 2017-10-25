@@ -31,10 +31,17 @@ public interface BookingInterface
     // 스테이 예약 상세
     Observable<StayBookingDetail> getStayBookingDetail(int reservationIndex);
 
+    // 스테이 숨기기
     Observable<Boolean> getStayHiddenBooking(int reservationIndex);
 
     // 고메 예약 상세
     Observable<GourmetBookingDetail> getGourmetBookingDetail(String aggregationId);
+
+    // 고메 예약 상세
+    Observable<GourmetBookingDetail> getGourmetBookingDetail(int reservationIndex);
+
+    // 고메 숨기기
+    Observable<Boolean> getGourmetHiddenBooking(int reservationIndex);
 
     // 임금 대기
     Observable<WaitingDeposit> getWaitingDeposit(String aggregationId);

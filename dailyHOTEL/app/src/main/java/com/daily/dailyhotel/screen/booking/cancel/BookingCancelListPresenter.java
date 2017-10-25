@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
-import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.BookingCancel;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.StayBookDateTime;
@@ -18,6 +17,7 @@ import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
+import com.daily.dailyhotel.screen.booking.cancel.detail.gourmet.GourmetBookingCancelDetailActivity;
 import com.daily.dailyhotel.screen.booking.cancel.detail.stay.StayBookingCancelDetailActivity;
 import com.daily.dailyhotel.screen.booking.cancel.detail.stay.outbound.StayOutboundBookingCancelDetailActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
@@ -27,7 +27,6 @@ import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
-import com.twoheart.dailyhotel.screen.booking.detail.gourmet.GourmetReservationDetailActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -327,7 +326,7 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
                 break;
 
             case GOURMET:
-                intent = GourmetReservationDetailActivity.newInstance(getActivity(), reservationIndex, aggregationId, imageUrl, false, Booking.BOOKING_STATE_CANCEL);
+                intent = GourmetBookingCancelDetailActivity.newInstance(getActivity(), reservationIndex, aggregationId, imageUrl);
                 break;
 
             case STAY_OUTBOUND:

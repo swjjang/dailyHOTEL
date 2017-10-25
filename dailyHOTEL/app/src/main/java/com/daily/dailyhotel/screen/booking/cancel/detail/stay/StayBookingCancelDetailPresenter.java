@@ -289,7 +289,7 @@ public class StayBookingCancelDetailPresenter //
             @Override
             public void accept(StayBookingDetail stayBookingDetail) throws Exception
             {
-                notifyStayOutboundBookingDetailChanged();
+                notifyStayBookingDetailChanged();
 
                 unLockAll();
 
@@ -345,7 +345,7 @@ public class StayBookingCancelDetailPresenter //
 
         Intent intent = ZoomMapActivity.newInstance(getActivity()//
             , ZoomMapActivity.SourceType.HOTEL_BOOKING, mStayBookingDetail.stayName, mStayBookingDetail.stayAddress//
-            , mStayBookingDetail.latitude, mStayBookingDetail.longitude, true);
+            , mStayBookingDetail.latitude, mStayBookingDetail.longitude, mStayBookingDetail.overseas);
 
         startActivityForResult(intent, StayBookingCancelDetailActivity.REQUEST_CODE_ZOOMMAP);
         //
@@ -518,7 +518,7 @@ public class StayBookingCancelDetailPresenter //
     }
 
     @Override
-    public void onConciergeHappyTalkClick(boolean refund)
+    public void onConciergeHappyTalkClick()
     {
         if (mStayBookingDetail == null)
         {
@@ -530,15 +530,8 @@ public class StayBookingCancelDetailPresenter //
             // 카카오톡 패키지 설치 여부
             getActivity().getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
 
-            if (refund == true)
-            {
-                startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity(), HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_OUTBOUND_REFUND//
-                    , mStayBookingDetail.stayIndex, 0, mStayBookingDetail.stayName), StayBookingCancelDetailActivity.REQUEST_CODE_HAPPYTALK);
-            } else
-            {
-                startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity(), HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_OUTBOUND_BOOKING//
-                    , mStayBookingDetail.stayIndex, 0, mStayBookingDetail.stayName), StayBookingCancelDetailActivity.REQUEST_CODE_HAPPYTALK);
-            }
+            startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity(), HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_BOOKING//
+                , mStayBookingDetail.stayIndex, mReservationIndex, mStayBookingDetail.stayName), StayBookingCancelDetailActivity.REQUEST_CODE_HAPPYTALK);
         } catch (Exception e)
         {
             getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
@@ -691,30 +684,48 @@ public class StayBookingCancelDetailPresenter //
 
                     addCompositeDisposable(mBookingRemoteImpl.getStayHiddenBooking(mReservationIndex) //
                         .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
-                    {
-                        @Override
-                        public void accept(@NonNull Boolean result) throws Exception
                         {
-                            unLockAll();
-
-                            if (result == true)
+                            @Override
+                            public void accept(@NonNull Boolean result) throws Exception
                             {
-                                getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2)//
-                                    , getString(R.string.message_booking_delete_booking)//
-                                    , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
-                                    {
-                                        @Override
-                                        public void onDismiss(DialogInterface dialog)
+                                unLockAll();
+
+                                if (result == true)
+                                {
+                                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2)//
+                                        , getString(R.string.message_booking_delete_booking)//
+                                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
                                         {
-                                            setResult(Constants.CODE_RESULT_ACTIVITY_REFRESH);
-                                            finish();
-                                        }
-                                    });
+                                            @Override
+                                            public void onDismiss(DialogInterface dialog)
+                                            {
+                                                setResult(Constants.CODE_RESULT_ACTIVITY_REFRESH);
+                                                finish();
+                                            }
+                                        });
 
-                                //                                AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-                                //                                    , AnalyticsManager.Action.BOOKING_HISTORY_DELETE, "ob_" + mStayBookingDetail.stayIndex, null);
-                            } else
+                                    //                                AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+                                    //                                    , AnalyticsManager.Action.BOOKING_HISTORY_DELETE, "ob_" + mStayBookingDetail.stayIndex, null);
+                                } else
+                                {
+                                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2)//
+                                        , getString(R.string.message_booking_failed_delete_booking)//
+                                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                                        {
+                                            @Override
+                                            public void onDismiss(DialogInterface dialog)
+                                            {
+                                            }
+                                        });
+                                }
+                            }
+                        }, new Consumer<Throwable>()
+                        {
+                            @Override
+                            public void accept(@NonNull Throwable throwable) throws Exception
                             {
+                                unLockAll();
+
                                 getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2)//
                                     , getString(R.string.message_booking_failed_delete_booking)//
                                     , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
@@ -725,25 +736,7 @@ public class StayBookingCancelDetailPresenter //
                                         }
                                     });
                             }
-                        }
-                    }, new Consumer<Throwable>()
-                    {
-                        @Override
-                        public void accept(@NonNull Throwable throwable) throws Exception
-                        {
-                            unLockAll();
-
-                            getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2)//
-                                , getString(R.string.message_booking_failed_delete_booking)//
-                                , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
-                                {
-                                    @Override
-                                    public void onDismiss(DialogInterface dialog)
-                                    {
-                                    }
-                                });
-                        }
-                    }));
+                        }));
                 }
             }, null, null, new DialogInterface.OnDismissListener()
             {
@@ -774,7 +767,7 @@ public class StayBookingCancelDetailPresenter //
         mStayBookingDetail = stayBookingDetail;
     }
 
-    void notifyStayOutboundBookingDetailChanged()
+    void notifyStayBookingDetailChanged()
     {
         if (mStayBookingDetail == null)
         {

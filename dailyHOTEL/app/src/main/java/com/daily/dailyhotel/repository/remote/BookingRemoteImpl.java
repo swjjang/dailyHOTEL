@@ -281,6 +281,65 @@ public class BookingRemoteImpl implements BookingInterface
     }
 
     @Override
+    public Observable<GourmetBookingDetail> getGourmetBookingDetail(int reservationIndex)
+    {
+        return DailyMobileAPI.getInstance(mContext).getGourmetBookingDetail(reservationIndex).map(new Function<BaseDto<GourmetBookingDetailData>, GourmetBookingDetail>()
+        {
+            @Override
+            public GourmetBookingDetail apply(@io.reactivex.annotations.NonNull BaseDto<GourmetBookingDetailData> gourmetBookingDetailDataBaseDto) throws Exception
+            {
+                GourmetBookingDetail gourmetBookingDetail;
+
+                if (gourmetBookingDetailDataBaseDto != null)
+                {
+                    if (gourmetBookingDetailDataBaseDto.msgCode == 100 && gourmetBookingDetailDataBaseDto.data != null)
+                    {
+                        gourmetBookingDetail = gourmetBookingDetailDataBaseDto.data.getGourmetBookingDetail();
+                    } else
+                    {
+                        throw new BaseException(gourmetBookingDetailDataBaseDto.msgCode, gourmetBookingDetailDataBaseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return gourmetBookingDetail;
+            }
+        }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<Boolean> getGourmetHiddenBooking(int reservationIndex)
+    {
+        return DailyMobileAPI.getInstance(mContext).getGourmetHiddenBooking(reservationIndex).map(new Function<BaseDto<BookingHiddenData>, Boolean>()
+        {
+            @Override
+            public Boolean apply(@io.reactivex.annotations.NonNull BaseDto<BookingHiddenData> bookingHiddenDataBaseDto) throws Exception
+            {
+                BookingHidden bookingHidden;
+                if (bookingHiddenDataBaseDto != null)
+                {
+                    // 이 요청은 메세지 코드를 보지 않음
+                    //                    if (bookingHiddenDataBaseDto.msgCode == 100 && bookingHiddenDataBaseDto.data != null)
+                    if (bookingHiddenDataBaseDto.data != null)
+                    {
+                        bookingHidden = bookingHiddenDataBaseDto.data.getBookingHidden();
+                    } else
+                    {
+                        throw new BaseException(bookingHiddenDataBaseDto.msgCode, bookingHiddenDataBaseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return bookingHidden.isSuccess;
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
+    @Override
     public Observable<WaitingDeposit> getWaitingDeposit(String aggregationId)
     {
         return DailyMobileAPI.getInstance(mContext).getWaitingDeposit(aggregationId).map(new Function<BaseDto<WaitingDepositData>, WaitingDeposit>()

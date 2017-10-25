@@ -1710,12 +1710,12 @@ public class DailyMobileAPI
         return mDailyMobileService.getStayBookingDetail(Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io());
     }
 
-    public Observable<BaseDto<BookingHiddenData>> getStayHiddenBooking(int bookingIndex)
+    public Observable<BaseDto<BookingHiddenData>> getStayHiddenBooking(int reservationIndex)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/reserv/mine/hidden"//
             : "MSQ3NiQzJDQ5JDcwJDEzJDE2JDI0JDg4JDY3JDU2JDkyJDE4JDc4JDY3JDI3JA==$MBkWE0QTNGNjIFzRKTAE2RkE5TQBTEzNEJCNTA1QjVDNDY4NEZGRUQL1N0NNDM0RFN0UZ1RNUYzNEYM1YQ0RCMjBPFNDJGYRNjc4MA==$";
 
-        return mDailyMobileService.getStayHiddenBooking(Crypto.getUrlDecoderEx(URL), bookingIndex).subscribeOn(Schedulers.io());
+        return mDailyMobileService.getStayHiddenBooking(Crypto.getUrlDecoderEx(URL), reservationIndex).subscribeOn(Schedulers.io());
     }
 
     public Observable<BaseDto<GourmetBookingDetailData>> getGourmetBookingDetail(String aggregationId)
@@ -1727,6 +1727,25 @@ public class DailyMobileAPI
         urlParams.put("{aggregationId}", aggregationId);
 
         return mDailyMobileService.getGourmetBookingDetail(Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<GourmetBookingDetailData>> getGourmetBookingDetail(int reservationIndex)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v2/reservation/fnb/{fnbReservationIdx}"//
+            : "ODQkNDQkNDckODEkMTIyJDE0JDQ2JDAkMTckMjQkNzEkMzEkMTAzJDQxJDEyNiQxMTYk$NNzVFQUVFRDlBRTYkO0NzQxOWDJGNjAZ4MEI2RDBBTREZCNURGLZQzUYyQkNBQjJGMDU5RDJERQjAwMkFDODE0OTIOyNzMxTOEUwQjNEQREVDNTAyMzIJ1RUI0Q0U0OTDBDOEXY2RTIzRkQ2$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{fnbReservationIdx}", Integer.toString(reservationIndex));
+
+        return mDailyMobileService.getGourmetBookingDetail(Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<BookingHiddenData>> getGourmetHiddenBooking(int reservationIndex)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/reservation/session/hidden"//
+            : "MTEzJDQ4JDM1JDEzJDI4JDY5JDkzJDcxJDEzMSQ5NiQxNSQxMzckMTIwJDUzJDU4JDk0JA==$N0U1RjY2MjIzQPzRkyOEVEQzQ0RkED4Mjg4RDEW5RTM3MzkwRTZGZQQTBEBMTczQzNDQUMwNFUJIxQkE1NkZGOUJGODY3QRzBFMNS0RCMkNFNDgxRERCNTZDQ0EX1NFEI3RjNBQzYE4QzOM2$";
+
+        return mDailyMobileService.getGourmetHiddenBooking(Crypto.getUrlDecoderEx(URL), reservationIndex).subscribeOn(Schedulers.io());
     }
 
     public Observable<BaseDto<WaitingDepositData>> getWaitingDeposit(String aggregationId)
