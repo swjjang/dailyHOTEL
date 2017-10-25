@@ -71,7 +71,7 @@ public class DailyFloatingActionView extends ConstraintLayout
         }
 
         mViewDataBinding.viewActionTextView.setEnabled(enable);
-        mViewDataBinding.viewActionTextView.setAlpha(enable ? 1.0f : 0.8f);
+        mViewDataBinding.viewActionTextView.setAlpha(enable ? 1.0f : 0.2f);
     }
 
     public void setViewOptionVisible(boolean visible)

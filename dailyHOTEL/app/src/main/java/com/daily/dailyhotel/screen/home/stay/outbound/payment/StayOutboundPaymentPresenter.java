@@ -207,6 +207,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         checkAvailablePaymentType();
 
         setBonusSelected(false);
+
+        mAnalytics.onEventEnterVendorType(getActivity(), mStayIndex, mVendorType);
     }
 
     @Override
