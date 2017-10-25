@@ -1517,8 +1517,16 @@
     <string name="label_reward_to_bo_issued_reward_coupon">리워드 쿠폰 발행 예정</string>
     <string name="label_reward_login">회원가입/로그인</string>
     <string name="label_reward_go_reward">적립 현황 보기</string>
+    <string name="label_reward_coupon_issue_date">쿠폰 발행일: %1$s</string>
+    <string name="label_reward_sticker_expiration_date">스티커 소멸일: %1$s</string>
+    <string name="label_reward_sticker_issue_date">스티커 적립일: %1$s</string>
+    <string name="label_reward_payment_deposit">결제 적립 | 스티커 적립일: %1$s</string>
+    <string name="label_reward_view_reservation">예약내역 보기</string>
+
     <string name="message_reward_confirm_reward_notification">데일리 리워드 혜택을 알림으로 확인하세요!</string>
     <string name="message_reward_confirm_reward_coupon">할인쿠폰함에서 리워드 쿠폰을 확인해보세요!</string>
+    <string name="message_reward_issue_sticker">스티커가 적립되었습니다.</string>
+    <string name="message_reward_recent_stickers_are_displayed_in_order">최근 적립한 스티커 순으로 표시됩니다.</string>
 
     <string-array name="coupon_sort_array">
         <item>전체 쿠폰 보기</item>

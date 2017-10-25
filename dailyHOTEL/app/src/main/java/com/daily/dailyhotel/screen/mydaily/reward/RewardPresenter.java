@@ -11,6 +11,7 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Notification;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.common.web.DailyWebActivity;
+import com.daily.dailyhotel.screen.mydaily.reward.history.RewardHistoryActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -273,13 +274,24 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
     @Override
     public void onHistoryClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
+        startActivityForResult(RewardHistoryActivity.newInstance(getActivity()), RewardActivity.REQUEST_CODE_REWARD_HISTORY);
     }
 
     @Override
     public void onTermsClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
+        startActivityForResult(DailyWebActivity.newInstance(getActivity(), getString(R.string.label_reward_reward_terms)//
+            , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStaticUrlDailyRewardTerms()), RewardActivity.REQUEST_CODE_WEB);
     }
 
     @Override
