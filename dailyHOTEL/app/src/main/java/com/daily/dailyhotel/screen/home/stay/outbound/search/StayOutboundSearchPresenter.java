@@ -661,6 +661,37 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         getViewInterface().setPeopleText(mPeople.toString(getActivity()));
     }
 
+    private boolean checkDeepLinkAfterCommonDateTime(DailyDeepLink dailyDeepLink)
+    {
+        if (dailyDeepLink == null)
+        {
+            return false;
+        }
+
+        if (dailyDeepLink.isValidateLink() == false)
+        {
+            return false;
+        }
+
+        try
+        {
+            if (dailyDeepLink.isExternalDeepLink() == true)
+            {
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+
+                if (externalDeepLink.isStayOutboundSearchResultView() == true)
+                {
+                    return true;
+                }
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        return false;
+    }
+
     private boolean processDeepLinkAfterCommonDateTime(DailyDeepLink dailyDeepLink, CommonDateTime commonDateTime)
     {
         if (dailyDeepLink == null || commonDateTime == null)
@@ -760,7 +791,11 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
             {
                 DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
 
-                if (externalDeepLink.isPlaceDetailView() == true)
+
+                if (externalDeepLink.isStayOutboundSearchResultView() == true)
+                {
+
+                } else if (externalDeepLink.isPlaceDetailView() == true)
                 {
                     startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), externalDeepLink.getDeepLink())//
                         , StayOutboundSearchActivity.REQUEST_CODE_DETAIL);
@@ -804,7 +839,11 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         {
             mDailyDeepLink.clear();
             mDailyDeepLink = null;
-        } else if (isSuggestChanged() == false)
+        } else if (checkDeepLinkAfterCommonDateTime(mDailyDeepLink) == true)
+        {
+            // do nothing! - skip deepLink
+        }
+        else if (isSuggestChanged() == false)
         {
             onSuggestClick(false);
         }
