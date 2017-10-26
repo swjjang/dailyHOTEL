@@ -879,6 +879,7 @@
     <string name="label_send_email">이메일로 발송하기</string>
     <string name="label_receipt_email">영수증 이메일 발송</string>
     <string name="message_send_email">아래 이메일 주소로\n영수증을 전송할까요?</string>
+    <string name="label_receipt_booking_state_reservation_wait"><![CDATA[해당 예약은 확정 예약이 아닌 <font color=0xb70038>대기 예약</font> 상태입니다.</font>]]></string>
 
     <!-- Area -->
     <string name="label_selectarea_stay_area">스테이 지역 선택</string>

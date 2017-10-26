@@ -1229,7 +1229,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 return;
             }
 
-            startActivityForResult(IssuingReceiptActivity.newInstance(StayReservationDetailActivity.this, mReservationIndex), CODE_REQUEST_ACTIVITY_RECEIPT);
+            startActivityForResult(IssuingReceiptActivity.newInstance(StayReservationDetailActivity.this, mReservationIndex, mBookingState), CODE_REQUEST_ACTIVITY_RECEIPT);
         }
 
         @Override

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyEditText;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.daily.dailyhotel.view.DailyToolbarView;
@@ -40,16 +42,18 @@ import retrofit2.Response;
 public class IssuingReceiptActivity extends BaseActivity
 {
     private int mBookingIdx;
+    private int mBookingState;
     String mReservationIndex;
     boolean mIsFullscreen;
     private View mBottomLayout;
     private DailyToolbarView mDailyToolbarView;
 
-    public static Intent newInstance(Context context, int bookingIndex)
+    public static Intent newInstance(Context context, int bookingIndex, int bookingState)
     {
         Intent intent = new Intent(context, IssuingReceiptActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, bookingIndex);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKING_STATE, bookingState);
 
         return intent;
     }
@@ -75,6 +79,14 @@ public class IssuingReceiptActivity extends BaseActivity
         {
             finish();
             return;
+        }
+
+        if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_BOOKING_STATE) == true)
+        {
+            mBookingState = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_BOOKING_STATE, Booking.BOOKING_STATE_NONE);
+        } else
+        {
+            mBookingState = Booking.BOOKING_STATE_NONE;
         }
 
         mIsFullscreen = false;
@@ -115,6 +127,18 @@ public class IssuingReceiptActivity extends BaseActivity
                 }
             }
         });
+
+        View bookingStateLayout = findViewById(R.id.bookingStateLayout);
+        if (Booking.BOOKING_STATE_RESERVATION_WAITING == mBookingState)
+        {
+            bookingStateLayout.setVisibility(View.VISIBLE);
+
+            TextView bookingStateTextView = (TextView) findViewById(R.id.bookingStateTextView);
+            bookingStateTextView.setText(Html.fromHtml(getString(R.string.label_receipt_booking_state_reservation_wait)));
+        } else
+        {
+            bookingStateLayout.setVisibility(View.GONE);
+        }
     }
 
     @Override

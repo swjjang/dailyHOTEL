@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
     xmlns:dailyToolbar="http://schemas.android.com/apk/res-auto"
@@ -17,7 +16,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        dailyToolbar:underLineHeight="@dimen/gradient_1dp_line_height_under_21"/>
+        dailyToolbar:underLineHeight="@dimen/gradient_1dp_line_height_under_21" />
 
     <ScrollView
         android:layout_width="0dp"
@@ -33,9 +32,36 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="8dp"
-            android:paddingLeft="7dp"
-            android:paddingRight="7dp"
             android:paddingTop="8dp">
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/bookingStateLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/bookingStateTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/default_text_c323232"
+                    android:textSize="13dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="7dp"
+                    android:background="@color/default_line_ce7e7e7"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/bookingStateTextView" />
+            </android.support.constraint.ConstraintLayout>
 
             <!-- 예약 세부정보 -->
 
@@ -43,6 +69,9 @@
                 android:id="@+id/bookingInfoLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/bookingStateLayout"
+                android:layout_marginLeft="7dp"
+                android:layout_marginRight="7dp"
                 android:background="@drawable/receipt_bg_top"
                 android:minHeight="165dp"
                 android:paddingLeft="11dp"
@@ -56,7 +85,7 @@
                     android:text="@string/label_receipt_bookinginfo"
                     android:textColor="@color/default_text_c323232"
                     android:textSize="13dp"
-                    dailyFont:style="Bold"/>
+                    dailyFont:style="Bold" />
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/textView12"
@@ -67,7 +96,7 @@
                     android:gravity="center_vertical"
                     android:text="@string/label_receipt_reservation_index"
                     android:textColor="@color/default_text_c929292"
-                    android:textSize="10dp"/>
+                    android:textSize="10dp" />
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/textView13"
@@ -79,7 +108,7 @@
                     android:layout_marginTop="@dimen/issuingreceipt_linespacing"
                     android:gravity="right"
                     android:textColor="@color/default_text_c323232"
-                    android:textSize="11dp"/>
+                    android:textSize="11dp" />
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/textView2"
@@ -90,7 +119,7 @@
                     android:gravity="center_vertical"
                     android:text="@string/label_receipt_hotelname"
                     android:textColor="@color/default_text_c929292"
-                    android:textSize="10dp"/>
+                    android:textSize="10dp" />
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/textView3"
@@ -103,7 +132,7 @@
                     android:layout_toRightOf="@id/textView2"
                     android:gravity="right"
                     android:textColor="@color/default_text_c323232"
-                    android:textSize="11dp"/>
+                    android:textSize="11dp" />
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/textView4"
@@ -114,7 +143,7 @@
                     android:gravity="center_vertical"
                     android:text="@string/label_receipt_hoteladdress"
                     android:textColor="@color/default_text_c929292"
-                    android:textSize="10dp"/>
+                    android:textSize="10dp" />
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/textView5"
@@ -128,7 +157,7 @@
                     android:gravity="right"
                     android:maxLines="2"
                     android:textColor="@color/default_text_c323232"
-                    android:textSize="11dp"/>
+                    android:textSize="11dp" />
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/textView6"
@@ -139,7 +168,7 @@
                     android:gravity="center_vertical"
                     android:text="@string/label_receipt_customerinfo"
                     android:textColor="@color/default_text_c929292"
-                    android:textSize="10dp"/>
+                    android:textSize="10dp" />
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/textView7"
@@ -149,7 +178,7 @@
                     android:layout_below="@id/textView5"
                     android:layout_marginTop="@dimen/issuingreceipt_linespacing"
                     android:textColor="@color/default_text_c323232"
-                    android:textSize="11dp"/>
+                    android:textSize="11dp" />
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/textView8"
@@ -160,7 +189,7 @@
                     android:gravity="center_vertical"
                     android:text="@string/label_receipt_checkinout"
                     android:textColor="@color/default_text_c929292"
-                    android:textSize="10dp"/>
+                    android:textSize="10dp" />
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/textView9"
@@ -170,7 +199,7 @@
                     android:layout_below="@id/textView6"
                     android:layout_marginTop="@dimen/issuingreceipt_linespacing"
                     android:textColor="@color/default_text_c323232"
-                    android:textSize="11dp"/>
+                    android:textSize="11dp" />
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/textView10"
@@ -182,7 +211,7 @@
                     android:gravity="center_vertical"
                     android:text="@string/label_receipt_nights_rooms"
                     android:textColor="@color/default_text_c929292"
-                    android:textSize="10dp"/>
+                    android:textSize="10dp" />
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/textView11"
@@ -192,7 +221,7 @@
                     android:layout_below="@id/textView8"
                     android:layout_marginTop="@dimen/issuingreceipt_linespacing"
                     android:textColor="@color/default_text_c323232"
-                    android:textSize="11dp"/>
+                    android:textSize="11dp" />
             </RelativeLayout>
 
             <!-- 결제 정보 -->
@@ -202,6 +231,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/bookingInfoLayout"
+                android:layout_marginLeft="7dp"
+                android:layout_marginRight="7dp"
                 android:background="@drawable/receipt_bg_middle"
                 android:orientation="vertical">
 
@@ -215,7 +246,7 @@
                     android:text="@string/label_receipt_paymentinfo"
                     android:textColor="@color/default_text_c323232"
                     android:textSize="13dp"
-                    dailyFont:style="Bold"/>
+                    dailyFont:style="Bold" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -231,7 +262,7 @@
                         android:gravity="center_vertical"
                         android:text="@string/label_receipt_paymentday"
                         android:textColor="@color/default_text_c929292"
-                        android:textSize="10dp"/>
+                        android:textSize="10dp" />
 
                     <com.daily.base.widget.DailyTextView
                         android:id="@+id/textView23"
@@ -239,7 +270,7 @@
                         android:layout_height="13dp"
                         android:layout_alignParentRight="true"
                         android:textColor="@color/default_text_c323232"
-                        android:textSize="11dp"/>
+                        android:textSize="11dp" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -257,7 +288,7 @@
                         android:gravity="center_vertical"
                         android:text="@string/label_receipt_paymenttype"
                         android:textColor="@color/default_text_c929292"
-                        android:textSize="10dp"/>
+                        android:textSize="10dp" />
 
                     <com.daily.base.widget.DailyTextView
                         android:id="@+id/textView33"
@@ -265,7 +296,7 @@
                         android:layout_height="13dp"
                         android:layout_alignParentRight="true"
                         android:textColor="@color/default_text_c323232"
-                        android:textSize="11dp"/>
+                        android:textSize="11dp" />
                 </RelativeLayout>
 
                 <!--<RelativeLayout-->
@@ -339,7 +370,7 @@
                             android:gravity="center_vertical"
                             android:text="@string/label_receipt_discount"
                             android:textColor="@color/default_text_c929292"
-                            android:textSize="10dp"/>
+                            android:textSize="10dp" />
 
                         <com.daily.base.widget.DailyTextView
                             android:id="@+id/textView29"
@@ -347,14 +378,14 @@
                             android:layout_height="13dp"
                             android:layout_alignParentRight="true"
                             android:textColor="@color/default_text_c323232"
-                            android:textSize="11dp"/>
+                            android:textSize="11dp" />
                     </RelativeLayout>
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1px"
                         android:layout_marginTop="@dimen/issuingreceipt_linespacing"
-                        android:background="@color/default_line_ce6e6e6"/>
+                        android:background="@color/default_line_ce6e6e6" />
 
                     <RelativeLayout
                         android:id="@+id/discountLayout"
@@ -368,7 +399,7 @@
                             android:gravity="center_vertical"
                             android:text="@string/label_receipt_discounted_amount"
                             android:textColor="@color/default_text_c929292"
-                            android:textSize="10dp"/>
+                            android:textSize="10dp" />
 
                         <com.daily.base.widget.DailyTextView
                             android:id="@+id/discountedTextView"
@@ -376,7 +407,7 @@
                             android:layout_height="13dp"
                             android:layout_alignParentRight="true"
                             android:textColor="@color/default_text_c323232"
-                            android:textSize="11dp"/>
+                            android:textSize="11dp" />
                     </RelativeLayout>
                 </LinearLayout>
 
@@ -399,7 +430,7 @@
                         android:text="@string/label_receipt_total_payment"
                         android:textColor="@color/default_text_c323232"
                         android:textSize="12dp"
-                        dailyFont:style="Medium"/>
+                        dailyFont:style="Medium" />
 
                     <com.daily.base.widget.DailyTextView
                         android:id="@+id/totalPaymentTextView"
@@ -408,7 +439,7 @@
                         android:layout_alignParentRight="true"
                         android:textColor="@color/default_text_cb70038"
                         android:textSize="11dp"
-                        dailyFont:style="Bold"/>
+                        dailyFont:style="Bold" />
                 </RelativeLayout>
             </LinearLayout>
 
@@ -419,6 +450,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/paymentInfoLayout"
+                android:layout_marginLeft="7dp"
+                android:layout_marginRight="7dp"
                 android:background="@drawable/receipt_bg_bottom"
                 android:paddingBottom="15dp"
                 android:paddingLeft="11dp"
@@ -428,14 +461,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:background="@drawable/tile_receipt_bottom_underline"/>
+                    android:background="@drawable/tile_receipt_bottom_underline" />
 
                 <ImageView
                     android:id="@+id/imageView1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    app:srcCompat="@drawable/receipt_logo"/>
+                    app:srcCompat="@drawable/receipt_logo" />
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/companyNameTextView"
@@ -444,7 +477,7 @@
                     android:layout_below="@id/imageView1"
                     android:layout_marginTop="9dp"
                     android:textColor="@color/default_text_c929292"
-                    android:textSize="10dp"/>
+                    android:textSize="10dp" />
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/addressTextView"
@@ -453,7 +486,7 @@
                     android:layout_below="@id/companyNameTextView"
                     android:layout_marginTop="9dp"
                     android:textColor="@color/default_text_c929292"
-                    android:textSize="10dp"/>
+                    android:textSize="10dp" />
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/registrationNoTextView"
@@ -462,7 +495,7 @@
                     android:layout_below="@id/addressTextView"
                     android:layout_marginTop="9dp"
                     android:textColor="@color/default_text_c929292"
-                    android:textSize="10dp"/>
+                    android:textSize="10dp" />
             </RelativeLayout>
 
             <com.daily.base.widget.DailyTextView
@@ -471,11 +504,13 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/providerInfoLayout"
                 android:layout_marginBottom="24dp"
+                android:layout_marginLeft="7dp"
+                android:layout_marginRight="7dp"
                 android:layout_marginTop="22dp"
                 android:gravity="center_horizontal"
                 android:lineSpacingExtra="3dp"
                 android:textColor="@color/default_text_cb70038"
-                android:textSize="10dp"/>
+                android:textSize="10dp" />
         </RelativeLayout>
     </ScrollView>
 
@@ -491,7 +526,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:background="@color/default_line_ce7e7e7"/>
+            android:background="@color/default_line_ce7e7e7" />
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/sendEmailView"
@@ -503,6 +538,6 @@
             android:text="@string/label_send_email"
             android:textColor="@color/white"
             android:textSize="17dp"
-            dailyFont:style="Medium"/>
+            dailyFont:style="Medium" />
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>
