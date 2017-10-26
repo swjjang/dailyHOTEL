@@ -22,7 +22,7 @@ public interface RewardInterface extends BaseDialogViewInterface
 
     void setStickerValidityVisible(boolean visible);
 
-    void setStickerValidity(String message);
+    void setStickerValidityText(String message);
 
     void setIssueCouponCount(int count);
 

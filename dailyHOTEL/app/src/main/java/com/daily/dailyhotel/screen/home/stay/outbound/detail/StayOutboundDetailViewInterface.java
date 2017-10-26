@@ -45,4 +45,8 @@ public interface StayOutboundDetailViewInterface extends BaseBlurViewInterface
     void scrollTop();
 
     void setRecommendAroundList(ArrayList<CarouselListItem> list, StayBookDateTime stayBookDateTime);
+
+    void startCampaignStickerAnimation();
+
+    void stopCampaignStickerAnimation();
 }

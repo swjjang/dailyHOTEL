@@ -1,12 +1,8 @@
 package com.daily.dailyhotel.domain;
 
-import com.daily.dailyhotel.entity.RecentlyPlace;
+import com.daily.dailyhotel.entity.RewardDetail;
 import com.daily.dailyhotel.entity.RewardHistory;
-import com.daily.dailyhotel.entity.StayOutbounds;
-
-import org.json.JSONObject;
-
-import java.util.ArrayList;
+import com.daily.dailyhotel.entity.RewardHistoryDetail;
 
 import io.reactivex.Observable;
 
@@ -16,5 +12,7 @@ import io.reactivex.Observable;
 
 public interface RewardInterface
 {
-    Observable<RewardHistory> getRewardHistoryList();
+    Observable<RewardDetail> getRewardDetail();
+
+    Observable<RewardHistoryDetail> getRewardHistoryDetail();
 }

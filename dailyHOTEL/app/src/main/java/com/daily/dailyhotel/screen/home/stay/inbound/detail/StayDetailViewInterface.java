@@ -57,4 +57,8 @@ public interface StayDetailViewInterface extends BaseDialogViewInterface
     void showTrueVRDialog(CheckBox.OnCheckedChangeListener checkedChangeListener, View.OnClickListener positiveListener, Dialog.OnDismissListener onDismissListener);
 
     void showStampDialog(Dialog.OnDismissListener listener);
+
+    void startCampaignStickerAnimation();
+
+    void stopCampaignStickerAnimation();
 }

@@ -1522,7 +1522,8 @@
     <string name="label_reward_sticker_issue_date">스티커 적립일: %1$s</string>
     <string name="label_reward_payment_deposit">결제 적립 | 스티커 적립일: %1$s</string>
     <string name="label_reward_view_reservation">예약내역 보기</string>
-    <string name="label_reward_sticker_validity">보유 스티커 유효기간</string>
+    <string name="label_reward_retention_sticker_validity">보유 스티커 유효기간</string>
+    <string name="label_reward_sticker_validity">스티커 유효기간 : %1$s까지</string>
 
     <string name="message_reward_confirm_reward_notification">데일리 리워드 혜택을 알림으로 확인하세요!</string>
     <string name="message_reward_confirm_reward_coupon">할인쿠폰함에서 리워드 쿠폰을 확인해보세요!</string>

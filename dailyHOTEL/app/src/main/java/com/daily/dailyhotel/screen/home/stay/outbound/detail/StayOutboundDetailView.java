@@ -527,7 +527,7 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
             rewardCardView.setRewardTitleText(titleText);
             rewardCardView.setDescriptionText(descriptionText);
 
-            rewardCardView.setCampaignFreeCount(campaignFreeNights);
+            rewardCardView.setCampaignFreeStickerCount(campaignFreeNights);
 
             getViewDataBinding().recommendAroundTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 1);
         } else
@@ -935,6 +935,28 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
         }
 
         getViewDataBinding().recommendAroundListLayout.setData(list, nightsEnabled);
+    }
+
+    @Override
+    public void startCampaignStickerAnimation()
+    {
+        if (getViewDataBinding() == null || getViewDataBinding().rewardCardLayout.getVisibility() == View.GONE)
+        {
+            return;
+        }
+
+        getViewDataBinding().rewardCardView.startCampaignStickerAnimation();
+    }
+
+    @Override
+    public void stopCampaignStickerAnimation()
+    {
+        if (getViewDataBinding() == null || getViewDataBinding().rewardCardLayout.getVisibility() == View.GONE)
+        {
+            return;
+        }
+
+        getViewDataBinding().rewardCardView.stopCampaignStickerAnimation();
     }
 
     private void initToolbar(ActivityStayOutboundDetailDataBinding viewDataBinding)

@@ -65,7 +65,7 @@ public class RewardHistoryView extends BaseDialogView<RewardHistoryView.OnEventL
     }
 
     @Override
-    public void setRewardHistoryData(List<ObjectItem> list)
+    public void setRewardHistoryList(List<ObjectItem> list)
     {
         if (getViewDataBinding() == null)
         {

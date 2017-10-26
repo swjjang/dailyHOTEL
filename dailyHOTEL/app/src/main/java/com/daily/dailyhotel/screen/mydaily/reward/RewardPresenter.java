@@ -7,9 +7,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Notification;
+import com.daily.dailyhotel.entity.RewardDetail;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.repository.remote.RewardRemoteImpl;
 import com.daily.dailyhotel.screen.common.web.DailyWebActivity;
 import com.daily.dailyhotel.screen.mydaily.reward.history.RewardHistoryActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
@@ -17,6 +20,9 @@ import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
+import com.twoheart.dailyhotel.util.DailyCalendar;
+
+import java.text.ParseException;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -30,6 +36,7 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
 {
     private RewardAnalyticsInterface mAnalytics;
 
+    private RewardRemoteImpl mRewardRemoteImpl;
     private CommonRemoteImpl mCommonRemoteImpl;
 
     public interface RewardAnalyticsInterface extends BaseAnalyticsInterface
@@ -55,6 +62,7 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
 
         setAnalytics(new RewardAnalyticsImpl());
 
+        mRewardRemoteImpl = new RewardRemoteImpl(activity);
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
 
         setRefresh(true);
@@ -102,7 +110,7 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
 
             getViewInterface().setLoginVisible(true);
             getViewInterface().setStickerValidityVisible(false);
-            getViewInterface().setRewardHistoryEnabled(true);
+            getViewInterface().setRewardHistoryEnabled(false);
             getViewInterface().setIssueCouponVisible(false);
         } else
         {
@@ -211,6 +219,23 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
         setRefresh(false);
         screenLock(showProgress);
 
+        addCompositeDisposable(mRewardRemoteImpl.getRewardDetail().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<RewardDetail>()
+        {
+            @Override
+            public void accept(RewardDetail rewardDetail) throws Exception
+            {
+                onRewardDetail(rewardDetail);
+
+                unLockAll();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                onHandleError(throwable);
+            }
+        }));
     }
 
     @Override
@@ -342,5 +367,52 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
                 onHandleError(throwable);
             }
         }));
+    }
+
+    private void onRewardDetail(RewardDetail rewardDetail)
+    {
+        if (rewardDetail == null)
+        {
+            return;
+        }
+
+        final int MAX_COUNT = 9;
+
+        getViewInterface().setDescriptionMessage(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerMemberMessage(rewardDetail.rewardStickerCount));
+
+        getViewInterface().setStickerCount(rewardDetail.rewardStickerCount);
+
+        if (rewardDetail.rewardStickerCount > 0)
+        {
+            getViewInterface().setStickerValidityVisible(true);
+            try
+            {
+                getViewInterface().setStickerValidityText(getString(R.string.label_reward_sticker_validity, DailyCalendar.convertDateFormatString(rewardDetail.expiredAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd")));
+            } catch (ParseException e)
+            {
+                ExLog.e(e.toString());
+            }
+        } else
+        {
+            getViewInterface().setStickerValidityVisible(false);
+        }
+
+        if (rewardDetail.availableRewardCouponCount > 0)
+        {
+            getViewInterface().setIssueCouponVisible(true);
+            getViewInterface().setIssueCouponEnabled(true);
+            getViewInterface().setIssueCouponCount(rewardDetail.availableRewardCouponCount);
+            getViewInterface().setIssueCouponAnimation(true);
+
+        } else if (rewardDetail.rewardStickerCount == MAX_COUNT)
+        {
+            getViewInterface().setIssueCouponVisible(true);
+            getViewInterface().setIssueCouponEnabled(false);
+            getViewInterface().setIssueCouponAnimation(false);
+        } else
+        {
+            getViewInterface().setIssueCouponVisible(false);
+            getViewInterface().setIssueCouponAnimation(false);
+        }
     }
 }

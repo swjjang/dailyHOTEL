@@ -351,7 +351,7 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
     }
 
     @Override
-    public void setStickerValidity(String message)
+    public void setStickerValidityText(String message)
     {
         if (getViewDataBinding() == null)
         {

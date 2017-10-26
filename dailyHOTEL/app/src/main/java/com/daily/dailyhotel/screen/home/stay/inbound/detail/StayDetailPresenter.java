@@ -412,6 +412,11 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             onRefresh(true);
         }
 
+        if (DailyHotel.isLogin() == false && DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerCampaignEnabled() == true)
+        {
+            getViewInterface().startCampaignStickerAnimation();
+        }
+
         mAppResearch.onResume("스테이", mStayIndex);
     }
 
@@ -419,6 +424,8 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     public void onPause()
     {
         super.onPause();
+
+        getViewInterface().stopCampaignStickerAnimation();
 
         mAppResearch.onPause("스테이", mStayIndex);
     }
@@ -1486,8 +1493,13 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage()//
                 , getString(R.string.label_reward_login)//
                 , campaignEnabled ? DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerNonMemberCampaignFreeNights() : 0//
-                ,campaignEnabled ? DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerNonMemberCampaignMessage()//
+                , campaignEnabled ? DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerNonMemberCampaignMessage()//
                     : DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerNonMemberDefaultMessage());
+
+            if (campaignEnabled == true)
+            {
+                getViewInterface().startCampaignStickerAnimation();
+            }
         } else
         {
 

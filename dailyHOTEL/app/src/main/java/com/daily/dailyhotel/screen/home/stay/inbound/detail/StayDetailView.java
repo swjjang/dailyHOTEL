@@ -531,7 +531,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
             rewardCardView.setRewardTitleText(titleText);
             rewardCardView.setDescriptionText(descriptionText);
 
-            rewardCardView.setCampaignFreeCount(campaignFreeNights);
+            rewardCardView.setCampaignFreeStickerCount(campaignFreeNights);
 
             getViewDataBinding().conciergeTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 1);
         } else
@@ -563,20 +563,20 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
     public Observable<Boolean> getSharedElementTransition(int gradientType)
     {
         TransitionSet inTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
-//        Transition inTextTransition;
-//
-//        if (gradientType == StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP)
-//        {
-//            inTextTransition = new TextTransition(getColor(R.color.white), getColor(R.color.default_text_c323232)//
-//                , 17, 20, new LinearInterpolator());
-//        } else
-//        {
-//            inTextTransition = new TextTransition(getColor(R.color.default_text_c323232), getColor(R.color.default_text_c323232)//
-//                , 17, 20, new LinearInterpolator());
-//        }
-//
-//        inTextTransition.addTarget(getString(R.string.transition_place_name));
-//        inTransitionSet.addTransition(inTextTransition);
+        //        Transition inTextTransition;
+        //
+        //        if (gradientType == StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP)
+        //        {
+        //            inTextTransition = new TextTransition(getColor(R.color.white), getColor(R.color.default_text_c323232)//
+        //                , 17, 20, new LinearInterpolator());
+        //        } else
+        //        {
+        //            inTextTransition = new TextTransition(getColor(R.color.default_text_c323232), getColor(R.color.default_text_c323232)//
+        //                , 17, 20, new LinearInterpolator());
+        //        }
+        //
+        //        inTextTransition.addTarget(getString(R.string.transition_place_name));
+        //        inTransitionSet.addTransition(inTextTransition);
 
         Transition inBottomAlphaTransition = new AlphaTransition(1.0f, 0.0f, new LinearInterpolator());
         inBottomAlphaTransition.addTarget(getString(R.string.transition_gradient_bottom_view));
@@ -1143,6 +1143,28 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         showSimpleDialog(viewDataBinding.getRoot(), null, listener, true);
     }
 
+    @Override
+    public void startCampaignStickerAnimation()
+    {
+        if (getViewDataBinding() == null || getViewDataBinding().rewardCardLayout.getVisibility() == View.GONE)
+        {
+            return;
+        }
+
+        getViewDataBinding().rewardCardView.startCampaignStickerAnimation();
+    }
+
+    @Override
+    public void stopCampaignStickerAnimation()
+    {
+        if (getViewDataBinding() == null || getViewDataBinding().rewardCardLayout.getVisibility() == View.GONE)
+        {
+            return;
+        }
+
+        getViewDataBinding().rewardCardView.stopCampaignStickerAnimation();
+    }
+
     private void initToolbar(ActivityStayDetailDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
@@ -1335,7 +1357,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
 
         DailyDetailTrueReviewView trueReviewView = getViewDataBinding().trueReviewView;
 
-        if(ratingShow == false && trueReviewCount == 0)
+        if (ratingShow == false && trueReviewCount == 0)
         {
             getViewDataBinding().trueReviewTopLineView.setVisibility(View.GONE);
             trueReviewView.setVisibility(View.GONE);

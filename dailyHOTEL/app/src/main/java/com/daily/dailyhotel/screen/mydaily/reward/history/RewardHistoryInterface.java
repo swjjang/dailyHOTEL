@@ -9,5 +9,5 @@ public interface RewardHistoryInterface extends BaseDialogViewInterface
 {
     void setStickerValidityText(String text);
 
-    void setRewardHistoryData(List<ObjectItem> list);
+    void setRewardHistoryList(List<ObjectItem> list);
 }

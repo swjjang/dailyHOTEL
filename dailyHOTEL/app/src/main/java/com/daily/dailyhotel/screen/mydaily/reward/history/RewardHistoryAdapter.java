@@ -5,7 +5,6 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.os.Build;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
@@ -185,37 +184,8 @@ public class RewardHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         switch (rewardHistory.type)
         {
-            // 쿠폰 발행
-            case A:
-            {
-                //
-                final int DP_16 = ScreenUtils.dpToPx(mContext, 16);
-                final int DP_18 = ScreenUtils.dpToPx(mContext, 18);
-                holder.dataBinding.descriptionLayout.setPadding(0, DP_16, 0, DP_18);
-
-                holder.dataBinding.rewardImageView.setVectorImageResource(R.drawable.vector_ic_reward_history_coupon);
-
-                holder.dataBinding.titleTextView.setVisibility(View.VISIBLE);
-                holder.dataBinding.titleTextView.setText("90,000원");
-
-                final int DP_4 = ScreenUtils.dpToPx(mContext, 4);
-                holder.dataBinding.descriptionTextView.setPadding(0, DP_4, 0, 0);
-                holder.dataBinding.descriptionTextView.setText("91박 무료 리워드 쿠폰이 발행되었습니다. \n" + "쿠폰함에서 확인해보세요!");
-
-                try
-                {
-                    holder.dataBinding.dateTextView.setText(mContext.getString(R.string.label_reward_coupon_issue_date, DailyCalendar.convertDateFormatString("2017-10-20T17:32:22+09:00", DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT)));
-                } catch (ParseException e)
-                {
-
-                }
-
-                holder.dataBinding.reservationLinkTextView.setVisibility(View.GONE);
-                break;
-            }
-
             // 스티커 적립
-            case B:
+            case RESERVATION_STICKER:
             {
                 final int DP_16 = ScreenUtils.dpToPx(mContext, 16);
                 final int DP_18 = ScreenUtils.dpToPx(mContext, 18);
@@ -247,8 +217,31 @@ public class RewardHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
                 break;
             }
 
+            // 이벤트 스티커
+            case EVENT_STICKER:
+            {
+                holder.dataBinding.descriptionLayout.setPadding(0, 0, 0, 0);
+
+                holder.dataBinding.rewardImageView.setVectorImageResource(R.drawable.vector_ic_reward_history_expired);
+                holder.dataBinding.titleTextView.setVisibility(View.GONE);
+
+                holder.dataBinding.descriptionTextView.setPadding(0, 0, 0, 0);
+                holder.dataBinding.descriptionTextView.setText(R.string.message_reward_issue_sticker);
+
+                try
+                {
+                    holder.dataBinding.dateTextView.setText(mContext.getString(R.string.label_reward_sticker_issue_date, DailyCalendar.convertDateFormatString("2017-10-20T17:32:22+09:00", DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT)));
+                } catch (ParseException e)
+                {
+
+                }
+
+                holder.dataBinding.reservationLinkTextView.setVisibility(View.GONE);
+                break;
+            }
+
             // 스티커 만료
-            case C:
+            case EXPIRED_STICKER:
             {
                 holder.dataBinding.descriptionLayout.setPadding(0, 0, 0, 0);
 
@@ -270,20 +263,26 @@ public class RewardHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
                 break;
             }
 
-            // 스티커 선물
-            case D:
+            // 쿠폰 발행
+            case PUBLISHED_COUPON:
             {
-                holder.dataBinding.descriptionLayout.setPadding(0, 0, 0, 0);
+                //
+                final int DP_16 = ScreenUtils.dpToPx(mContext, 16);
+                final int DP_18 = ScreenUtils.dpToPx(mContext, 18);
+                holder.dataBinding.descriptionLayout.setPadding(0, DP_16, 0, DP_18);
 
-                holder.dataBinding.rewardImageView.setVectorImageResource(R.drawable.vector_ic_reward_history_expired);
-                holder.dataBinding.titleTextView.setVisibility(View.GONE);
+                holder.dataBinding.rewardImageView.setVectorImageResource(R.drawable.vector_ic_reward_history_coupon);
 
-                holder.dataBinding.descriptionTextView.setPadding(0, 0, 0, 0);
-                holder.dataBinding.descriptionTextView.setText(R.string.message_reward_issue_sticker);
+                holder.dataBinding.titleTextView.setVisibility(View.VISIBLE);
+                holder.dataBinding.titleTextView.setText("90,000원");
+
+                final int DP_4 = ScreenUtils.dpToPx(mContext, 4);
+                holder.dataBinding.descriptionTextView.setPadding(0, DP_4, 0, 0);
+                holder.dataBinding.descriptionTextView.setText("91박 무료 리워드 쿠폰이 발행되었습니다. \n" + "쿠폰함에서 확인해보세요!");
 
                 try
                 {
-                    holder.dataBinding.dateTextView.setText(mContext.getString(R.string.label_reward_sticker_issue_date, DailyCalendar.convertDateFormatString("2017-10-20T17:32:22+09:00", DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT)));
+                    holder.dataBinding.dateTextView.setText(mContext.getString(R.string.label_reward_coupon_issue_date, DailyCalendar.convertDateFormatString("2017-10-20T17:32:22+09:00", DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT)));
                 } catch (ParseException e)
                 {
 

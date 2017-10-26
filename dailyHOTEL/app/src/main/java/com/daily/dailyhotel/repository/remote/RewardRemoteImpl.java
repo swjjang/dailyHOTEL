@@ -1,22 +1,18 @@
 package com.daily.dailyhotel.repository.remote;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import com.daily.base.exception.BaseException;
-import com.daily.dailyhotel.domain.CouponInterface;
 import com.daily.dailyhotel.domain.RewardInterface;
-import com.daily.dailyhotel.entity.RewardHistory;
-import com.daily.dailyhotel.repository.remote.model.CouponsData;
-import com.twoheart.dailyhotel.model.Coupon;
+import com.daily.dailyhotel.entity.RewardDetail;
+import com.daily.dailyhotel.entity.RewardHistoryDetail;
+import com.daily.dailyhotel.repository.remote.model.RewardDetailData;
+import com.daily.dailyhotel.repository.remote.model.RewardHistoryDetailData;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 
-import java.util.ArrayList;
-
 import io.reactivex.Observable;
 import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by android_sam on 2017. 9. 28..
@@ -32,8 +28,60 @@ public class RewardRemoteImpl implements RewardInterface
     }
 
     @Override
-    public Observable<RewardHistory> getRewardHistoryList()
+    public Observable<RewardDetail> getRewardDetail()
     {
-        return null;
+        return DailyMobileAPI.getInstance(mContext).getRewardDetail().map(new Function<BaseDto<RewardDetailData>, RewardDetail>()
+        {
+            @Override
+            public RewardDetail apply(@io.reactivex.annotations.NonNull BaseDto<RewardDetailData> rewardDetailDataBaseDto) throws Exception
+            {
+                RewardDetail rewardDetail;
+
+                if (rewardDetailDataBaseDto != null)
+                {
+                    if (rewardDetailDataBaseDto.msgCode == 100 && rewardDetailDataBaseDto.data != null)
+                    {
+                        rewardDetail = rewardDetailDataBaseDto.data.getRewardDetail();
+                    } else
+                    {
+                        throw new BaseException(rewardDetailDataBaseDto.msgCode, rewardDetailDataBaseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return rewardDetail;
+            }
+        });
+    }
+
+    @Override
+    public Observable<RewardHistoryDetail> getRewardHistoryDetail()
+    {
+        return DailyMobileAPI.getInstance(mContext).getRewardHistoryDetail().map(new Function<BaseDto<RewardHistoryDetailData>, RewardHistoryDetail>()
+        {
+            @Override
+            public RewardHistoryDetail apply(@io.reactivex.annotations.NonNull BaseDto<RewardHistoryDetailData> rewardHistoryDataBaseDto) throws Exception
+            {
+                RewardHistoryDetail rewardHistoryDetail;
+
+                if (rewardHistoryDataBaseDto != null)
+                {
+                    if (rewardHistoryDataBaseDto.msgCode == 100 && rewardHistoryDataBaseDto.data != null)
+                    {
+                        rewardHistoryDetail = rewardHistoryDataBaseDto.data.getRewardHistoryDetail();
+                    } else
+                    {
+                        throw new BaseException(rewardHistoryDataBaseDto.msgCode, rewardHistoryDataBaseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return rewardHistoryDetail;
+            }
+        });
     }
 }
