@@ -84,6 +84,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
     }
 
     private static final int MIN_AMOUNT_FOR_BONUS_USAGE = 20000; // 보너스를 사용하기 위한 최소 주문 가격
+    private static final int MIN_AMOUNT_FOR_REWARD_USAGE = 40000; // 리워드 스티커 발급 최소 주문 가격
 
     // 1000원 미만 결제시에 간편/일반 결제 불가 - 쿠폰 또는 적립금 전체 사용이 아닌경우 조건 추가
     private static final int CARD_MIN_PRICE = 1000;
@@ -1355,6 +1356,35 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         if (stayPayment == null || stayBookDateTime == null)
         {
             return;
+        }
+
+        // 리워드
+        if (stayPayment.dailyReward == true)
+        {
+            if (stayPayment.provideRewardSticker == true)
+            {
+                if (stayPayment.totalPrice < MIN_AMOUNT_FOR_REWARD_USAGE)
+                {
+                    getViewInterface().setCheeringMessageVisible(true);
+                    getViewInterface().setCheeringMessage(false//
+                        , getString(R.string.message_booking_reward_cheering_title02)//
+                        , getString(R.string.message_booking_reward_cheering_warning02));
+                } else
+                {
+                    getViewInterface().setCheeringMessageVisible(true);
+                    getViewInterface().setCheeringMessage(true//
+                        , getString(R.string.message_booking_reward_cheering_title01, stayPayment.rewardStickerCount)//
+                        , getString(R.string.message_booking_reward_cheering_warning01));
+                }
+            } else
+            {
+                getViewInterface().setCheeringMessageVisible(true);
+                getViewInterface().setCheeringMessage(false//
+                    , getString(R.string.message_booking_reward_cheering_title02), null);
+            }
+        } else
+        {
+            getViewInterface().setCheeringMessageVisible(false);
         }
 
         final String DATE_FORMAT = "yyyy.MM.dd(EEE)";

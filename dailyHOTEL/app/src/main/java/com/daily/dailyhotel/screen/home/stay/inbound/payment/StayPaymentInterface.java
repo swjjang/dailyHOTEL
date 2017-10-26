@@ -10,6 +10,10 @@ import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 
 public interface StayPaymentInterface extends BaseDialogViewInterface
 {
+    void setCheeringMessage(boolean enabledSticker, String titleText, String warningText);
+
+    void setCheeringMessageVisible(boolean visible);
+
     void setBooking(SpannableString checkInDate, SpannableString checkOutDate, int nights, String stayName, String roomName);
 
     void setUserInformation(String name, String mobile, String email);

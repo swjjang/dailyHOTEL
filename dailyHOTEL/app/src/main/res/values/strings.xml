@@ -733,6 +733,7 @@
     <string name="label_booking_cancel_information">2. 취소 정보</string>
     <string name="label_booking_reservation_recommend_gourmet_button">주변 추천 레스토랑 확인</string>
     <string name="label_booking_reservation_recommend_gourmet_title">주변 추천 레스토랑</string>
+
     <string name="message_consult_kakao">무엇을 도와드릴까요?</string>
     <string name="message_consult01">데일리 컨시어지팀이 친절하고 신속하게 답변해드려요.</string>
     <string name="message_consult02">상담시간 : 오전 %1$s시 ~ 익일 새벽 %2$s시\n(점심시간 : %3$s ~ %4$s)</string>
@@ -749,6 +750,11 @@
     <string name="message_booking_cancel_stay_share_sms">[데일리호텔]%1$s의 취소내역입니다.\n\n%2$s\n예약자명: %3$s\n객실: %4$s\n취소일: %5$s\n주소: %6$s\n\n스테이 상세 확인\n</string>
     <string name="message_booking_cancel_gourmet_share_kakao">%1$s의 취소내역입니다.\n\n%2$s\n예약자명: %3$s\n상품: %4$s\n수량: %5$s\n취소일: %6$s\n주소: %7$s\n\n지금 데일리호텔에서 레스토랑 정보를 확인할 수 있어요.</string>
     <string name="message_booking_cancel_gourmet_share_sms">[데일리호텔]%1$s의 취소내역입니다.\n\n%2$s\n예약자명: %3$s\n상품: %4$s\n수량: %5$s\n취소일: %6$s\n주소: %7$s\n\n레스토랑 상세 확인\n</string>
+
+    <string name="message_booking_reward_cheering_title01">예약을 완료하시면 %1$d박 스티커가 추가 적립됩니다.</string>
+    <string name="message_booking_reward_cheering_title02">스티커 적립을 할수 없는 예약입니다.</string>
+    <string name="message_booking_reward_cheering_warning01">(적립금, 할인쿠폰, 휴대폰 결제 수단 선택 시 적립 불가)</string>
+    <string name="message_booking_reward_cheering_warning02">(1박 기준 4만원 미만 예약)</string>
 
     <!-- TabInfo/TabMap Fragment -->
     <string name="frag_tab_info_title">정보</string>

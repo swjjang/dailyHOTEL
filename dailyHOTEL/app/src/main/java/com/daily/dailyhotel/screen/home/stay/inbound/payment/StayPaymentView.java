@@ -106,6 +106,41 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
     }
 
     @Override
+    public void setCheeringMessage(boolean enabledSticker, String titleText, String warningText)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (enabledSticker == true)
+        {
+            getViewDataBinding().cheeringLayout.setBackgroundColor(getColor(R.color.default_background_cfff9f0));
+            getViewDataBinding().cheeringUnderLineView.setBackgroundColor(getColor(R.color.default_line_cf4ebde));
+        } else
+        {
+            getViewDataBinding().cheeringLayout.setBackgroundColor(getColor(R.color.default_background_cf0f0f2));
+            getViewDataBinding().cheeringUnderLineView.setBackgroundColor(getColor(R.color.default_line_ce7e7e7));
+        }
+
+        getViewDataBinding().cheeringTitleTextView.setText(titleText);
+
+        getViewDataBinding().cheeringWarningTextView.setVisibility(DailyTextUtils.isTextEmpty(warningText) ? View.VISIBLE : View.GONE);
+        getViewDataBinding().cheeringWarningTextView.setText(warningText);
+    }
+
+    @Override
+    public void setCheeringMessageVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().cheeringLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
     public void setBooking(SpannableString checkInDate, SpannableString checkOutDate, int nights, String stayName, String roomName)
     {
         if (getViewDataBinding() == null)
