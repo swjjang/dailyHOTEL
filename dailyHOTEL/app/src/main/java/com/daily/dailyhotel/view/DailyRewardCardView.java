@@ -1,5 +1,8 @@
 package com.daily.dailyhotel.view;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.constraint.ConstraintLayout;
@@ -9,6 +12,7 @@ import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.daily.base.util.FontManager;
 import com.daily.base.widget.DailyImageView;
@@ -16,9 +20,14 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.DailyViewRewardCardDataBinding;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DailyRewardCardView extends ConstraintLayout
 {
     private DailyViewRewardCardDataBinding mViewDataBinding;
+
+    private AnimatorSet mStickerAnimatorSet;
 
     public DailyRewardCardView(Context context)
     {
@@ -99,7 +108,7 @@ public class DailyRewardCardView extends ConstraintLayout
         mViewDataBinding.optionTextView.setOnClickListener(listener);
     }
 
-    public void setCampaignFreeCount(int count)
+    public void setCampaignFreeStickerCount(int count)
     {
         if (mViewDataBinding == null)
         {
@@ -132,7 +141,8 @@ public class DailyRewardCardView extends ConstraintLayout
             , mViewDataBinding.nights5RewardImageView//
             , mViewDataBinding.nights6RewardImageView//
             , mViewDataBinding.nights7RewardImageView//
-            , mViewDataBinding.nights8RewardImageView};
+            , mViewDataBinding.nights8RewardImageView//
+            , mViewDataBinding.nights9RewardImageView};
 
         final View[] campaignViews = {mViewDataBinding.nights1CampaignImageView//
             , mViewDataBinding.nights2CampaignImageView//
@@ -141,7 +151,8 @@ public class DailyRewardCardView extends ConstraintLayout
             , mViewDataBinding.nights5CampaignImageView//
             , mViewDataBinding.nights6CampaignImageView//
             , mViewDataBinding.nights7CampaignImageView//
-            , mViewDataBinding.nights8CampaignImageView};
+            , mViewDataBinding.nights8CampaignImageView//
+            , mViewDataBinding.nights9CampaignImageView};
 
         final int dotViewsLength = dotImageViews.length;
 
@@ -211,7 +222,8 @@ public class DailyRewardCardView extends ConstraintLayout
             , mViewDataBinding.nights5RewardImageView//
             , mViewDataBinding.nights6RewardImageView//
             , mViewDataBinding.nights7RewardImageView//
-            , mViewDataBinding.nights8RewardImageView};
+            , mViewDataBinding.nights8RewardImageView//
+            , mViewDataBinding.nights9RewardImageView};
 
         final View[] campaignViews = {mViewDataBinding.nights1CampaignImageView//
             , mViewDataBinding.nights2CampaignImageView//
@@ -220,7 +232,8 @@ public class DailyRewardCardView extends ConstraintLayout
             , mViewDataBinding.nights5CampaignImageView//
             , mViewDataBinding.nights6CampaignImageView//
             , mViewDataBinding.nights7CampaignImageView//
-            , mViewDataBinding.nights8CampaignImageView};
+            , mViewDataBinding.nights8CampaignImageView//
+            , mViewDataBinding.nights9CampaignImageView};
 
         final int dotViewsLength = dotImageViews.length;
 
@@ -322,5 +335,135 @@ public class DailyRewardCardView extends ConstraintLayout
         {
             mViewDataBinding.descriptionTextView.setText(text);
         }
+    }
+
+    public void startCampaignStickerAnimation()
+    {
+        if (mStickerAnimatorSet != null)
+        {
+            return;
+        }
+
+        final View[] lineViews = {mViewDataBinding.nights2LineView//
+            , mViewDataBinding.nights3LineView//
+            , mViewDataBinding.nights4LineView//
+            , mViewDataBinding.nights5LineView//
+            , mViewDataBinding.nights6LineView//
+            , mViewDataBinding.nights7LineView//
+            , mViewDataBinding.nights8LineView//
+            , mViewDataBinding.nights9LineView};
+
+        final View[] campaignViews = {mViewDataBinding.nights1CampaignImageView//
+            , mViewDataBinding.nights2CampaignImageView//
+            , mViewDataBinding.nights3CampaignImageView//
+            , mViewDataBinding.nights4CampaignImageView//
+            , mViewDataBinding.nights5CampaignImageView//
+            , mViewDataBinding.nights6CampaignImageView//
+            , mViewDataBinding.nights7CampaignImageView//
+            , mViewDataBinding.nights8CampaignImageView//
+            , mViewDataBinding.nights9CampaignImageView};
+
+        int campaignCount = 0;
+
+        final int campaignViewsLength = campaignViews.length;
+
+        for (int i = 0; i < campaignViewsLength; i++)
+        {
+            if (campaignViews[i].getVisibility() == VISIBLE)
+            {
+                campaignCount++;
+            } else
+            {
+                break;
+            }
+        }
+
+        if (campaignCount == 0)
+        {
+            return;
+        }
+
+        List<Animator> animatorList = new ArrayList<>();
+
+        final int MS_PER_FRAME = 170;
+
+        for (int i = 0; i < campaignCount; i++)
+        {
+            // 1 set
+            ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(campaignViews[i], View.ALPHA, 0.5f, 0.5f);
+            objectAnimator1.setDuration(MS_PER_FRAME * 3);
+            objectAnimator1.setInterpolator(new AccelerateDecelerateInterpolator());
+
+            ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(campaignViews[i], View.ALPHA, 0.5f, 1.0f, 1.0f, 0.5f);
+            objectAnimator2.setStartDelay(MS_PER_FRAME * 3);
+            objectAnimator2.setDuration(MS_PER_FRAME * 6);
+            objectAnimator2.setInterpolator(new AccelerateDecelerateInterpolator());
+
+            animatorList.add(objectAnimator1);
+            animatorList.add(objectAnimator2);
+
+            if (i < campaignCount - 1)
+            {
+                // 1 set
+                ObjectAnimator objectAnimator3 = ObjectAnimator.ofFloat(lineViews[i], View.ALPHA, 0.5f, 0.5f);
+                objectAnimator3.setDuration(MS_PER_FRAME * 3);
+                objectAnimator3.setInterpolator(new AccelerateDecelerateInterpolator());
+
+                ObjectAnimator objectAnimator4 = ObjectAnimator.ofFloat(lineViews[i], View.ALPHA, 0.5f, 1.0f, 1.0f, 0.5f);
+                objectAnimator4.setStartDelay(MS_PER_FRAME * 3);
+                objectAnimator4.setDuration(MS_PER_FRAME * 6);
+                objectAnimator4.setInterpolator(new AccelerateDecelerateInterpolator());
+
+                animatorList.add(objectAnimator3);
+                animatorList.add(objectAnimator4);
+            }
+        }
+
+        mStickerAnimatorSet = new AnimatorSet();
+        mStickerAnimatorSet.playTogether(animatorList);
+        mStickerAnimatorSet.addListener(new Animator.AnimatorListener()
+        {
+            boolean canceled;
+
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                if (canceled == false)
+                {
+                    mStickerAnimatorSet.start();
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+                canceled = true;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        mStickerAnimatorSet.start();
+    }
+
+    public void stopCampaignStickerAnimation()
+    {
+        if (mStickerAnimatorSet == null)
+        {
+            return;
+        }
+
+        mStickerAnimatorSet.cancel();
+        mStickerAnimatorSet = null;
     }
 }
