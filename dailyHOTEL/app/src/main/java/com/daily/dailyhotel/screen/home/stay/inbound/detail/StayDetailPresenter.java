@@ -1228,7 +1228,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                     @Override
                     public void onClick(View v)
                     {
-                        Intent intent = LoginActivity.newInstance(getActivity(), AnalyticsManager.Screen.DAILYGOURMET_DETAIL);
+                        Intent intent = LoginActivity.newInstance(getActivity(), AnalyticsManager.Screen.DAILYHOTEL_DETAIL);
                         startActivityForResult(intent, StayDetailActivity.REQUEST_CODE_LOGIN_IN_BY_COUPON);
 
                         mAnalytics.onEventDownloadCouponByLogin(getActivity(), true);
@@ -1344,7 +1344,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         }
     }
 
-    void setGourmetDetail(StayDetail stayDetail)
+    void setStayDetail(StayDetail stayDetail)
     {
         mStayDetail = stayDetail;
 
@@ -1644,7 +1644,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                     stayDetail.hasCoupon = hasCoupon;
 
                     setTrueVRList(trueVRList);
-                    setGourmetDetail(stayDetail);
+                    setStayDetail(stayDetail);
 
                     return stayDetail;
                 }
