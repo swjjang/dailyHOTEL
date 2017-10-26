@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
@@ -442,16 +443,20 @@ public class BookingListAdapter extends RecyclerView.Adapter<BookingListAdapter.
             }
         } else
         {
-            holder.dataBinding.getRoot().post(new Runnable()
+            holder.dataBinding.getRoot().getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener()
             {
                 @Override
-                public void run()
+                public boolean onPreDraw()
                 {
+                    holder.dataBinding.getRoot().getViewTreeObserver().removeOnPreDrawListener(this);
+
                     if (holder.dataBinding.getRoot().getBottom() < mRecyclerView.getBottom())
                     {
                         holder.dataBinding.bottomEmptyView.getLayoutParams().height += mRecyclerView.getBottom() - holder.dataBinding.getRoot().getBottom();
                         holder.dataBinding.bottomEmptyView.requestLayout();
                     }
+
+                    return false;
                 }
             });
         }
