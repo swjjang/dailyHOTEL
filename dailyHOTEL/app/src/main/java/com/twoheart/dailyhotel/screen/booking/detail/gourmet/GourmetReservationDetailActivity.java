@@ -626,7 +626,7 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
                     break;
             }
 
-            mPlaceReservationDetailLayout.setDeleteReservationVisible(mBookingState == Booking.BOOKING_STATE_AFTER_USE);
+            mPlaceReservationDetailLayout.setDeleteReservationVisible(mBookingState);
         } catch (Exception e)
         {
             Crashlytics.logException(e);

@@ -99,6 +99,9 @@ public class GourmetBookingDetailData
     @JsonField(name = "overseas")
     public boolean overseas;
 
+    @JsonField(name = "cancelDateTime")
+    public String cancelDateTime;
+
     public GourmetBookingDetailData()
     {
 
@@ -136,6 +139,7 @@ public class GourmetBookingDetailData
         gourmetBookingDetail.reviewStatusType = reviewStatusType;
         gourmetBookingDetail.overseas = overseas;
         gourmetBookingDetail.setDescriptionMap(getDescription(description));
+        gourmetBookingDetail.cancelDateTime = cancelDateTime;
 
         return gourmetBookingDetail;
     }

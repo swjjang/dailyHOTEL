@@ -21,6 +21,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyScrollView;
 import com.daily.base.widget.DailyTextView;
+import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -182,14 +183,21 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
         initRefundPolicyLayout(mContext, mScrollLayout, placeBookingDetail);
     }
 
-    public void setDeleteReservationVisible(boolean visible)
+    public void setDeleteReservationVisible(int bookingState)
     {
         if (mDeleteReservationView == null)
         {
             return;
         }
 
-        if (visible == true)
+        if (Booking.BOOKING_STATE_CANCEL == bookingState)
+        {
+            mDeleteReservationView.setText(R.string.label_booking_cancel_detail_delete_reservation);
+        } else {
+            mDeleteReservationView.setText(R.string.label_booking_detail_delete_reservation);
+        }
+
+        if (Booking.BOOKING_STATE_AFTER_USE == bookingState || Booking.BOOKING_STATE_CANCEL == bookingState)
         {
             mDeleteReservationView.setVisibility(View.VISIBLE);
             mDeleteReservationView.setOnClickListener(this);
@@ -749,6 +757,7 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
         return mMyLocationView;
     }
 
+    @SuppressWarnings("ResourceType")
     void relocationMyLocation(View view)
     {
         mMyLocationView = (ImageView) view.findViewById(0x2);
@@ -767,6 +776,7 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
         }
     }
 
+    @SuppressWarnings("ResourceType")
     void relocationZoomControl(View view)
     {
         mZoomControl = view.findViewById(0x1);

@@ -683,7 +683,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
             mNetworkController.requestStayReservationDetail(reservationIndex);
         } else
         {
-            addCompositeDisposable(mBookingRemoteImpl.getStayBookingDetail(aggregationId).subscribe(new Consumer<com.daily.dailyhotel.entity.StayBookingDetail>()
+            addCompositeDisposable(mBookingRemoteImpl.getStayBookingDetail(aggregationId).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<com.daily.dailyhotel.entity.StayBookingDetail>()
             {
                 @Override
                 public void accept(@NonNull com.daily.dailyhotel.entity.StayBookingDetail stayBookingDetail) throws Exception
@@ -1059,7 +1059,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 }
             }
 
-            mPlaceReservationDetailLayout.setDeleteReservationVisible(mBookingState == Booking.BOOKING_STATE_AFTER_USE);
+            mPlaceReservationDetailLayout.setDeleteReservationVisible(mBookingState);
 
             long currentDateTime = DailyCalendar.convertStringToDate(mTodayDateTime.currentDateTime).getTime();
             long checkInDateTime = DailyCalendar.convertStringToDate(stayBookingDetail.checkInDate).getTime();

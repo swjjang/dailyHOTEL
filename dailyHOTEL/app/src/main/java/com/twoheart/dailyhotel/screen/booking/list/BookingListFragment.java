@@ -36,6 +36,7 @@ import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
+import com.daily.dailyhotel.screen.booking.cancel.BookingCancelListActivity;
 import com.daily.dailyhotel.screen.booking.detail.stay.outbound.StayOutboundBookingDetailActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
@@ -86,6 +87,8 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class BookingListFragment extends BaseMenuNavigationFragment implements View.OnClickListener
 {
+    static final int REQUEST_CODE_BOOKING_CANCEL = 10000;
+
     private BookingListAdapter mAdapter;
     FragmentBookingListDataBinding mViewDataBinding;
     boolean mDontReload;
@@ -169,6 +172,16 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
             return;
         }
 
+        dataBinding.cancelHistoryButtonView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = BookingCancelListActivity.newInstance(getActivity());
+                startActivityForResult(intent, REQUEST_CODE_BOOKING_CANCEL);
+            }
+        });
+
         dataBinding.bookingSwipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
         dataBinding.bookingSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
         {
@@ -221,6 +234,8 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
         mViewDataBinding.logoutLayout.setVisibility(View.VISIBLE);
         mViewDataBinding.bookingSwipeRefreshLayout.setVisibility(View.GONE);
         mViewDataBinding.emptyListLayout.setVisibility(View.GONE);
+
+        setCancelHistoryButtonVisible(false);
     }
 
     void setBookingList(List<Booking> bookingList)
@@ -385,6 +400,31 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                 break;
             }
 
+            case REQUEST_CODE_BOOKING_CANCEL:
+            {
+                if (resultCode == Constants.CODE_RESULT_ACTIVITY_STAY_LIST)
+                {
+                    mDontReload = true;
+
+                    if (mOnMenuChangeListener != null && lockUiComponentAndIsLockUiComponent() == false)
+                    {
+                        mOnMenuChangeListener.onMenu(MainFragmentManager.INDEX_HOME_FRAGMENT, Constants.CODE_RESULT_ACTIVITY_STAY_LIST);
+                    }
+                } else if (resultCode == Constants.CODE_RESULT_ACTIVITY_GOURMET_LIST)
+                {
+                    mDontReload = true;
+
+                    if (mOnMenuChangeListener != null && lockUiComponentAndIsLockUiComponent() == false)
+                    {
+                        mOnMenuChangeListener.onMenu(MainFragmentManager.INDEX_HOME_FRAGMENT, Constants.CODE_RESULT_ACTIVITY_GOURMET_LIST);
+                    }
+                } else
+                {
+                    mDontReload = false;
+                }
+                break;
+            }
+
             case CODE_REQUEST_ACTIVITY_BOOKING_DETAIL:
                 mDontReload = false;
                 break;
@@ -400,6 +440,8 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
     void onRefresh(boolean showProgress)
     {
         lockUI(showProgress);
+
+        setCancelHistoryButtonVisible(true);
 
         addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime()//
             , mBookingRemoteImpl.getBookingList(), mBookingRemoteImpl.getStayOutboundBookingList()//
@@ -813,6 +855,16 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
     void setCommonDateTime(CommonDateTime commonDateTime)
     {
         mCommonDateTime = commonDateTime;
+    }
+
+    private void setCancelHistoryButtonVisible(boolean isShow)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.cancelHistoryButtonView.setVisibility(isShow == true ? View.VISIBLE : View.GONE);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

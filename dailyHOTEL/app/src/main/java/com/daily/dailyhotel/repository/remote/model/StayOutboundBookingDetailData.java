@@ -89,6 +89,9 @@ public class StayOutboundBookingDetailData
     @JsonField(name = "fee")
     public double fee;
 
+    @JsonField(name = "cancelDateTime")
+    public String cancelDateTime;
+
     public StayOutboundBookingDetailData()
     {
 
@@ -122,6 +125,7 @@ public class StayOutboundBookingDetailData
         stayOutboundBookingDetail.checkOutTime = checkoutTime;
         stayOutboundBookingDetail.paymentType = StayOutboundBookingDetail.PaymentType.valueOf(paymentType);
         stayOutboundBookingDetail.paymentDate = paymentDate;
+        stayOutboundBookingDetail.cancelDateTime = cancelDateTime;
 
         return stayOutboundBookingDetail;
     }

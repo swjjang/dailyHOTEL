@@ -97,6 +97,8 @@ public class GourmetBookingDetail extends PlaceBookingDetail
         {
             reviewStatusType = ReviewStatusType.NONE;
         }
+
+        cancelDateTime = gourmetBookingDetail.cancelDateTime;
     }
 
     public void setData(JSONObject jsonObject) throws Exception
@@ -158,6 +160,11 @@ public class GourmetBookingDetail extends PlaceBookingDetail
         } else
         {
             reviewStatusType = ReviewStatusType.NONE;
+        }
+
+        if (jsonObject.has("cancelDateTime") == true)
+        {
+            cancelDateTime = jsonObject.getString("cancelDateTime");
         }
     }
 
