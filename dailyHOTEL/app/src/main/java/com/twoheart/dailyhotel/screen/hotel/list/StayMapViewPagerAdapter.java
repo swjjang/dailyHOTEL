@@ -76,6 +76,7 @@ public class StayMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         View closeView = view.findViewById(R.id.closeImageView);
         View dBenefitLayout = view.findViewById(R.id.dBenefitLayout);
         TextView dBenefitTextView = (TextView) view.findViewById(R.id.dBenefitTextView);
+        View stickerImageView = view.findViewById(R.id.stickerImageView);
 
         addressTextView.setText(stay.addressSummary);
         name.setText(stay.name);
@@ -131,6 +132,9 @@ public class StayMapViewPagerAdapter extends PlaceMapViewPagerAdapter
 
         hotelImageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
         Util.requestImageResize(mContext, hotelImageView, stay.imageUrl);
+
+        // Reward 스티커
+        stickerImageView.setVisibility((mRewardEnabled && stay.dailyReward) ? View.VISIBLE : View.GONE);
 
         closeView.setOnClickListener(new View.OnClickListener()
         {

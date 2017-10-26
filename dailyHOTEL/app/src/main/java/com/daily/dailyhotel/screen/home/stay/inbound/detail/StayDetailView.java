@@ -51,6 +51,9 @@ import com.daily.dailyhotel.entity.StayRoom;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.view.DailyDetailEmptyView;
+import com.daily.dailyhotel.view.DailyDetailTitleInformationView;
+import com.daily.dailyhotel.view.DailyDetailTrueReviewView;
+import com.daily.dailyhotel.view.DailyRewardCardView;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
@@ -63,10 +66,8 @@ import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailAmenitiesDataBindi
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailBenefitContentBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailBenefitDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailConciergeDataBinding;
-import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailCouponDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailMapDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayDetailStampDataBinding;
-import com.twoheart.dailyhotel.databinding.LayoutStayDetailTitleDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayDetailWaitforbookingDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail05DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailInformationDataBinding;
@@ -140,6 +141,12 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         void onStampClick();
 
         void onHideWishTooltipClick();
+
+        void onLoginClick();
+
+        void onRewardClick();
+
+        void onRewardGuideClick();
     }
 
     public StayDetailView(BaseActivity baseActivity, StayDetailView.OnEventListener listener)
@@ -426,7 +433,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
     }
 
     @Override
-    public void setStayDetail(StayBookDateTime stayBookDateTime, StayDetail stayDetail, int trueReviewCount, boolean showStamp)
+    public void setStayDetail(StayBookDateTime stayBookDateTime, StayDetail stayDetail, int trueReviewCount, boolean stampEnabled, boolean rewardEnabled)
     {
         if (getViewDataBinding() == null || stayBookDateTime == null || stayDetail == null)
         {
@@ -441,15 +448,14 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         // 이미지 상단에 빈화면 넣기
         setEmptyView();
 
-        // 호텔 등급과 이름
-        setTitleView(stayDetail.grade, stayDetail.name, stayDetail.ratingShow//
-            , stayDetail.ratingValue, stayDetail.ratingPersons, trueReviewCount);
+        // 호텔 이름 / 쿠폰
+        setTitleView(stayDetail.grade, stayDetail.name, rewardEnabled && stayDetail.dailyReward, stayDetail.couponPrice);
 
-        // 쿠폰
-        setCouponView(stayDetail.hasCoupon);
+        // 트루 리뷰
+        setTrueReviewView(stayDetail.ratingShow, stayDetail.ratingValue, stayDetail.ratingPersons, trueReviewCount);
 
         // 스템프
-        setStampView(showStamp);
+        setStampView(stampEnabled);
 
         // 체크인/체크아웃
         setCheckDateView(stayBookDateTime);
@@ -491,7 +497,65 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         }
 
         // 객실 세팅
-        setRoomList(stayBookDateTime, stayDetail.getRoomList());
+        setRoomList(stayBookDateTime, stayDetail.getRoomList(), rewardEnabled);
+    }
+
+    @Override
+    public void setRewardNonMember(boolean visible, String titleText, String optionText, int campaignFreeNights, String descriptionText)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().rewardCardLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
+
+        if (visible)
+        {
+            DailyRewardCardView rewardCardView = getViewDataBinding().rewardCardView;
+
+            rewardCardView.setGuideVisible(true);
+            rewardCardView.setOnGuideClickListener(v -> getEventListener().onRewardGuideClick());
+            rewardCardView.setStickerCount(0);
+
+            if (DailyTextUtils.isTextEmpty(optionText) == false)
+            {
+                rewardCardView.setOptionVisible(true);
+                rewardCardView.setOptionText(optionText);
+                rewardCardView.setOnClickListener(v -> getEventListener().onLoginClick());
+            } else
+            {
+                rewardCardView.setOptionVisible(false);
+            }
+
+            rewardCardView.setRewardTitleText(titleText);
+            rewardCardView.setDescriptionText(descriptionText);
+
+            rewardCardView.setCampaignFreeStickerCount(campaignFreeNights);
+
+            getViewDataBinding().conciergeTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 1);
+        } else
+        {
+            getViewDataBinding().conciergeTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 12);
+        }
+
+        getViewDataBinding().conciergeTopLineView.requestLayout();
+    }
+
+    @Override
+    public void setRewardMember(boolean visible, String titleText, String optionText, int nights, String descriptionText)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().rewardCardLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
+
+        if (visible)
+        {
+            DailyRewardCardView rewardCardView = getViewDataBinding().rewardCardView;
+        }
     }
 
     @TargetApi(value = 21)
@@ -499,20 +563,20 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
     public Observable<Boolean> getSharedElementTransition(int gradientType)
     {
         TransitionSet inTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
-        Transition inTextTransition;
-
-        if (gradientType == StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP)
-        {
-            inTextTransition = new TextTransition(getColor(R.color.white), getColor(R.color.default_text_c323232)//
-                , 17, 18, new LinearInterpolator());
-        } else
-        {
-            inTextTransition = new TextTransition(getColor(R.color.default_text_c323232), getColor(R.color.default_text_c323232)//
-                , 17, 18, new LinearInterpolator());
-        }
-
-        inTextTransition.addTarget(getString(R.string.transition_place_name));
-        inTransitionSet.addTransition(inTextTransition);
+        //        Transition inTextTransition;
+        //
+        //        if (gradientType == StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP)
+        //        {
+        //            inTextTransition = new TextTransition(getColor(R.color.white), getColor(R.color.default_text_c323232)//
+        //                , 17, 20, new LinearInterpolator());
+        //        } else
+        //        {
+        //            inTextTransition = new TextTransition(getColor(R.color.default_text_c323232), getColor(R.color.default_text_c323232)//
+        //                , 17, 20, new LinearInterpolator());
+        //        }
+        //
+        //        inTextTransition.addTarget(getString(R.string.transition_place_name));
+        //        inTransitionSet.addTransition(inTextTransition);
 
         Transition inBottomAlphaTransition = new AlphaTransition(1.0f, 0.0f, new LinearInterpolator());
         inBottomAlphaTransition.addTarget(getString(R.string.transition_gradient_bottom_view));
@@ -1079,6 +1143,28 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         showSimpleDialog(viewDataBinding.getRoot(), null, listener, true);
     }
 
+    @Override
+    public void startCampaignStickerAnimation()
+    {
+        if (getViewDataBinding() == null || getViewDataBinding().rewardCardLayout.getVisibility() == View.GONE)
+        {
+            return;
+        }
+
+        getViewDataBinding().rewardCardView.startCampaignStickerAnimation();
+    }
+
+    @Override
+    public void stopCampaignStickerAnimation()
+    {
+        if (getViewDataBinding() == null || getViewDataBinding().rewardCardLayout.getVisibility() == View.GONE)
+        {
+            return;
+        }
+
+        getViewDataBinding().rewardCardView.stopCampaignStickerAnimation();
+    }
+
     private void initToolbar(ActivityStayDetailDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
@@ -1227,92 +1313,85 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
     /**
      * 호텔 등급 및 이름
      */
-    private void setTitleView(Stay.Grade grade, String name, boolean ratingShow//
-        , int ratingValue, int ratingPersons, int trueReviewCount)
+    private void setTitleView(Stay.Grade grade, String name, boolean dailyReward, int couponPrice)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        LayoutStayDetailTitleDataBinding viewDataBinding = getViewDataBinding().titleViewDataBinding;
+        DailyDetailTitleInformationView titleInformationView = getViewDataBinding().titleInformationView;
 
         if (grade == null)
         {
             grade = Stay.Grade.etc;
         }
 
-        // 등급
-        viewDataBinding.gradeTextView.setText(grade.getName(getContext()));
-
         // 호텔명
-        viewDataBinding.nameTextView.setText(name);
+        titleInformationView.setNameText(name);
+        titleInformationView.setEnglishNameVisible(false);
 
-        // 만족도
-        if (ratingShow == false)
+        // 등급
+        titleInformationView.setCategoryText(grade.getName(getContext()));
+
+        // 리워드 여부
+        titleInformationView.setRewardVisible(dailyReward);
+
+        // 쿠폰
+        if (couponPrice > 0)
         {
-            viewDataBinding.satisfactionTextView.setVisibility(View.GONE);
+            titleInformationView.setCouponVisible(true);
+            titleInformationView.setCouponPriceText(getString(R.string.label_download_coupon_price, DailyTextUtils.getPriceFormat(getContext(), couponPrice, false)));
         } else
         {
-            viewDataBinding.satisfactionTextView.setVisibility(View.VISIBLE);
-
-            DecimalFormat decimalFormat = new DecimalFormat("###,##0");
-            viewDataBinding.satisfactionTextView.setText(getString(R.string.label_stay_detail_satisfaction, //
-                ratingValue, decimalFormat.format(ratingPersons)));
-        }
-
-        // 리뷰
-        if (trueReviewCount > 0)
-        {
-            viewDataBinding.trueReviewTextView.setVisibility(View.VISIBLE);
-            viewDataBinding.trueReviewTextView.setText(getString(R.string.label_detail_view_review_go, trueReviewCount));
-            viewDataBinding.trueReviewTextView.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    getEventListener().onTrueReviewClick();
-                }
-            });
-        } else
-        {
-            viewDataBinding.trueReviewTextView.setVisibility(View.GONE);
+            titleInformationView.setCouponVisible(false);
         }
     }
 
-    /**
-     * @param hasCoupon
-     */
-    private void setCouponView(boolean hasCoupon)
+    private void setTrueReviewView(boolean ratingShow, int ratingValue, int ratingPersons, int trueReviewCount)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        LayoutGourmetDetailCouponDataBinding viewDataBinding = getViewDataBinding().couponViewDataBinding;
+        DailyDetailTrueReviewView trueReviewView = getViewDataBinding().trueReviewView;
 
-        if (hasCoupon == true)
+        if (ratingShow == false && trueReviewCount == 0)
         {
-            viewDataBinding.couponLayout.setVisibility(View.VISIBLE);
-            viewDataBinding.downloadCouponLayout.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    getEventListener().onDownloadCouponClick();
-                }
-            });
+            getViewDataBinding().trueReviewTopLineView.setVisibility(View.GONE);
+            trueReviewView.setVisibility(View.GONE);
         } else
         {
-            viewDataBinding.couponLayout.setVisibility(View.GONE);
+            getViewDataBinding().trueReviewTopLineView.setVisibility(View.VISIBLE);
+            trueReviewView.setVisibility(View.VISIBLE);
+
+            trueReviewView.setTripAdvisorVisible(false);
+
+            // 만족도
+            trueReviewView.setSatisfactionVisible(ratingShow);
+
+            if (ratingShow == true)
+            {
+                DecimalFormat decimalFormat = new DecimalFormat("###,##0");
+                trueReviewView.setSatisfactionVText(getString(R.string.label_stay_detail_satisfaction, //
+                    ratingValue, decimalFormat.format(ratingPersons)));
+            }
+
+            // 리뷰
+            if (trueReviewCount > 0)
+            {
+                trueReviewView.setTrueReviewCountVisible(true);
+                trueReviewView.setTrueReviewCount(trueReviewCount);
+                trueReviewView.setOnTrueReviewCountClickListener(v -> getEventListener().onTrueReviewClick());
+            } else
+            {
+                trueReviewView.setTrueReviewCountVisible(false);
+            }
         }
     }
 
-    /**
-     * @param overseas
-     */
-    private void setStampView(boolean showStamp)
+    private void setStampView(boolean stampEnabled)
     {
         if (getViewDataBinding() == null)
         {
@@ -1321,7 +1400,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
 
         LayoutStayDetailStampDataBinding viewDataBinding = getViewDataBinding().stampViewDataBinding;
 
-        if (showStamp)
+        if (stampEnabled)
         {
             // 테블릿 높이 수정 필요한지 확인
             viewDataBinding.getRoot().setVisibility(View.VISIBLE);
@@ -1715,7 +1794,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         });
     }
 
-    private void setRoomList(StayBookDateTime stayBookDateTime, List<StayRoom> roomList)
+    private void setRoomList(StayBookDateTime stayBookDateTime, List<StayRoom> roomList, boolean rewardEnabled)
     {
         if (getViewDataBinding() == null || stayBookDateTime == null || roomList == null || roomList.size() == 0)
         {
@@ -1750,6 +1829,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         }
 
         mRoomTypeListAdapter.setNights(stayBookDateTime.getNights());
+        mRoomTypeListAdapter.setRewardEnabled(rewardEnabled);
 
         getViewDataBinding().roomsViewDataBinding.roomRecyclerView.setAdapter(mRoomTypeListAdapter);
         getViewDataBinding().bookingTextView.setOnClickListener(this);

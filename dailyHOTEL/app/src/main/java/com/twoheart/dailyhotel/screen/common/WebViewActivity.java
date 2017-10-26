@@ -50,7 +50,7 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
     protected DailyHotelWebChromeClient webChromeClient;
     protected DailyHotelWebViewClient webViewClient;
     protected WebView mWebView;
-    boolean mEnabledPorgoress = true;
+    boolean mEnabledProgress = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -131,7 +131,7 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
 
     public void setEnabledProgress(boolean enabled)
     {
-        mEnabledPorgoress = enabled;
+        mEnabledProgress = enabled;
     }
 
     protected void smoothScrollTop(WebView webView)
@@ -332,7 +332,7 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon)
         {
-            if (mEnabledPorgoress == true)
+            if (mEnabledProgress == true)
             {
                 lockUI();
             }

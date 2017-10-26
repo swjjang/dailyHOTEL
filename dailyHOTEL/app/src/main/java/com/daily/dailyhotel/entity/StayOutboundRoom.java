@@ -2,6 +2,9 @@ package com.daily.dailyhotel.entity;
 
 public class StayOutboundRoom
 {
+    public static final String VENDOR_TYPE_FIT_RUUMS = "F";
+    public static final String VENDOR_TYPE_EAN = "E";
+
     public String rateKey;
     public String roomTypeCode;
     public String rateCode;

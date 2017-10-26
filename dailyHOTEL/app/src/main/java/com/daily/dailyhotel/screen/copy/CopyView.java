@@ -23,10 +23,22 @@ public class CopyView extends BaseDialogView<CopyView.OnEventListener, ActivityC
         {
             return;
         }
+
+        initToolbar(viewDataBinding);
     }
 
     @Override
     public void setToolbarTitle(String title)
     {
+    }
+
+    private void initToolbar(ActivityCopyDataBinding viewDataBinding)
+    {
+        if (viewDataBinding == null)
+        {
+            return;
+        }
+
+        viewDataBinding.toolbarView.setOnBackClickListener(v -> getEventListener().onBackClick());
     }
 }

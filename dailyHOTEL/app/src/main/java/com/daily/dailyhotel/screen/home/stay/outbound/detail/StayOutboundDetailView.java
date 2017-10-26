@@ -50,6 +50,9 @@ import com.daily.dailyhotel.entity.StayOutboundRoom;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.view.DailyDetailEmptyView;
+import com.daily.dailyhotel.view.DailyDetailTitleInformationView;
+import com.daily.dailyhotel.view.DailyDetailTrueReviewView;
+import com.daily.dailyhotel.view.DailyRewardCardView;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.daily.dailyhotel.view.carousel.DailyCarouselLayout;
 import com.facebook.drawee.drawable.ScalingUtils;
@@ -64,7 +67,6 @@ import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailMapDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail05DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailAmenityMoreDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailInformationDataBinding;
-import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailTitleDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.AlphaTransition;
 import com.twoheart.dailyhotel.widget.TextTransition;
@@ -129,6 +131,12 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
         void onRecommendAroundItemClick(View view, android.support.v4.util.Pair[] pairs);
 
         void onRecommendAroundItemLongClick(View view, android.support.v4.util.Pair[] pairs);
+
+        void onLoginClick();
+
+        void onRewardClick();
+
+        void onRewardGuideClick();
     }
 
     public StayOutboundDetailView(BaseActivity baseActivity, StayOutboundDetailView.OnEventListener listener)
@@ -427,7 +435,7 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
     }
 
     @Override
-    public void setStayDetail(StayBookDateTime stayBookDateTime, People people, StayOutboundDetail stayOutboundDetail)
+    public void setStayDetail(StayBookDateTime stayBookDateTime, People people, StayOutboundDetail stayOutboundDetail, boolean rewardEnabled)
     {
         if (getViewDataBinding() == null || stayBookDateTime == null || stayOutboundDetail == null)
         {
@@ -443,7 +451,10 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
         setEmptyView();
 
         // 호텔 등급과 이름
-        setTitleView(stayOutboundDetail);
+        setTitleView(stayOutboundDetail.rating, stayOutboundDetail.name, stayOutboundDetail.nameEng, rewardEnabled && stayOutboundDetail.dailyReward, stayOutboundDetail.couponPrice);
+
+        // 트루 리뷰
+        setTrueReviewView(stayOutboundDetail.tripAdvisorRating);
 
         //
         setCheckDateView(stayBookDateTime, people);
@@ -482,7 +493,65 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
         }
 
         // 객실 세팅
-        setRoomList(stayBookDateTime, stayOutboundDetail.getRoomList());
+        setRoomList(stayBookDateTime, stayOutboundDetail.getRoomList(), rewardEnabled);
+    }
+
+    @Override
+    public void setRewardNonMember(boolean visible, String titleText, String optionText, int campaignFreeNights, String descriptionText)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().rewardCardLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
+
+        if (visible)
+        {
+            DailyRewardCardView rewardCardView = getViewDataBinding().rewardCardView;
+
+            rewardCardView.setGuideVisible(true);
+            rewardCardView.setOnGuideClickListener(v -> getEventListener().onRewardGuideClick());
+            rewardCardView.setStickerCount(0);
+
+            if (DailyTextUtils.isTextEmpty(optionText) == false)
+            {
+                rewardCardView.setOptionVisible(true);
+                rewardCardView.setOptionText(optionText);
+                rewardCardView.setOnClickListener(v -> getEventListener().onLoginClick());
+            } else
+            {
+                rewardCardView.setOptionVisible(false);
+            }
+
+            rewardCardView.setRewardTitleText(titleText);
+            rewardCardView.setDescriptionText(descriptionText);
+
+            rewardCardView.setCampaignFreeStickerCount(campaignFreeNights);
+
+            getViewDataBinding().recommendAroundTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 1);
+        } else
+        {
+            getViewDataBinding().recommendAroundTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 12);
+        }
+
+        getViewDataBinding().recommendAroundTopLineView.requestLayout();
+    }
+
+    @Override
+    public void setRewardMember(boolean visible, String titleText, String optionText, int nights, String descriptionText)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().rewardCardLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
+
+        if (visible)
+        {
+            DailyRewardCardView rewardCardView = getViewDataBinding().rewardCardView;
+        }
     }
 
     @TargetApi(value = 21)
@@ -868,6 +937,28 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
         getViewDataBinding().recommendAroundListLayout.setData(list, nightsEnabled);
     }
 
+    @Override
+    public void startCampaignStickerAnimation()
+    {
+        if (getViewDataBinding() == null || getViewDataBinding().rewardCardLayout.getVisibility() == View.GONE)
+        {
+            return;
+        }
+
+        getViewDataBinding().rewardCardView.startCampaignStickerAnimation();
+    }
+
+    @Override
+    public void stopCampaignStickerAnimation()
+    {
+        if (getViewDataBinding() == null || getViewDataBinding().rewardCardLayout.getVisibility() == View.GONE)
+        {
+            return;
+        }
+
+        getViewDataBinding().rewardCardView.stopCampaignStickerAnimation();
+    }
+
     private void initToolbar(ActivityStayOutboundDetailDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
@@ -998,34 +1089,64 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
     /**
      * 호텔 등급 및 이름
      */
-    private void setTitleView(StayOutboundDetail stayOutboundDetail)
+    private void setTitleView(float rating, String name, String englishName, boolean rewardEnabled, int couponPrice)
     {
-        if (stayOutboundDetail == null)
+        if (getViewDataBinding() == null)
         {
             return;
         }
 
-        LayoutStayOutboundDetailTitleDataBinding viewDataBinding = getViewDataBinding().titleViewDataBinding;
-
-        // 등급
-        viewDataBinding.gradeTextView.setVisibility(View.VISIBLE);
-        viewDataBinding.gradeTextView.setText(getString(R.string.label_stay_outbound_detail_grade, (int) stayOutboundDetail.rating));
+        DailyDetailTitleInformationView titleInformationView = getViewDataBinding().titleInformationView;
 
         // 호텔명
-        viewDataBinding.nameTextView.setText(stayOutboundDetail.name);
-        viewDataBinding.nameEngTextView.setText("(" + stayOutboundDetail.nameEng + ")");
+        titleInformationView.setNameText(name);
+        titleInformationView.setEnglishNameVisible(true);
+        titleInformationView.setEnglishNameText(englishName);
 
-        // tripAdvisor
-        if (stayOutboundDetail.tripAdvisorRating == 0.0f)
+        // 등급
+        titleInformationView.setCategoryText(getString(R.string.label_stay_outbound_detail_grade, (int) rating));
+
+        // 리워드 여부
+        titleInformationView.setRewardVisible(rewardEnabled);
+
+        // 쿠폰
+        if (couponPrice > 0)
         {
-            viewDataBinding.tripAdvisorLayout.setVisibility(View.GONE);
+            titleInformationView.setCouponVisible(true);
+            titleInformationView.setCouponPriceText(getString(R.string.label_download_coupon_price, DailyTextUtils.getPriceFormat(getContext(), couponPrice, false)));
         } else
         {
-            viewDataBinding.tripAdvisorLayout.setVisibility(View.VISIBLE);
+            titleInformationView.setCouponVisible(false);
+        }
+    }
 
-            viewDataBinding.tripAdvisorRatingBar.setOnTouchListener((v, event) -> true);
-            viewDataBinding.tripAdvisorRatingBar.setRating(stayOutboundDetail.tripAdvisorRating);
-            viewDataBinding.tripAdvisorRatingTextView.setText(getString(R.string.label_stay_outbound_tripadvisor_rating, Float.toString(stayOutboundDetail.tripAdvisorRating)));
+    private void setTrueReviewView(float tripAdvisorRating)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        DailyDetailTrueReviewView trueReviewView = getViewDataBinding().trueReviewView;
+
+        if (tripAdvisorRating <= 0.0f)
+        {
+            getViewDataBinding().trueReviewTopLineView.setVisibility(View.GONE);
+            trueReviewView.setVisibility(View.GONE);
+        } else
+        {
+            getViewDataBinding().trueReviewTopLineView.setVisibility(View.VISIBLE);
+            trueReviewView.setVisibility(View.VISIBLE);
+
+            trueReviewView.setSatisfactionVisible(false);
+            trueReviewView.setTrueReviewCountVisible(false);
+            trueReviewView.setTripAdvisorVisible(true);
+
+            // 제목 변경
+            trueReviewView.setNameText(getString(R.string.label_tripadvisorrating));
+
+            // 만족도
+            trueReviewView.setTripAdvisorRating(tripAdvisorRating);
         }
     }
 
@@ -1364,7 +1485,7 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
         });
     }
 
-    private void setRoomList(StayBookDateTime stayBookDateTime, List<StayOutboundRoom> roomList)
+    private void setRoomList(StayBookDateTime stayBookDateTime, List<StayOutboundRoom> roomList, boolean rewardEnabled)
     {
         if (getViewDataBinding() == null || stayBookDateTime == null || roomList == null || roomList.size() == 0)
         {
@@ -1397,6 +1518,8 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
             mRoomTypeListAdapter.addAll(roomList);
             mRoomTypeListAdapter.setSelected(0);
         }
+
+        mRoomTypeListAdapter.setRewardEnabled(rewardEnabled);
 
         getViewDataBinding().roomsViewDataBinding.roomRecyclerView.setAdapter(mRoomTypeListAdapter);
         getViewDataBinding().bookingTextView.setOnClickListener(this);

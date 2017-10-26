@@ -158,14 +158,14 @@ public class GourmetSearchResultListLayout extends GourmetListLayout
     }
 
     @Override
-    public void addResultList(FragmentManager fragmentManager, Constants.ViewType viewType, //
-                              ArrayList<PlaceViewItem> list, Constants.SortType sortType, PlaceBookingDay placeBookingDay)
+    public void addResultList(FragmentManager fragmentManager, Constants.ViewType viewType//
+        , ArrayList<PlaceViewItem> list, Constants.SortType sortType, PlaceBookingDay placeBookingDay, boolean rewardEnabled)
     {
         if (mSearchType == Constants.SearchType.LOCATION)
         {
             mPlaceListAdapter.setShowDistanceIgnoreSort(true);
         }
 
-        super.addResultList(fragmentManager, viewType, list, sortType, placeBookingDay);
+        super.addResultList(fragmentManager, viewType, list, sortType, placeBookingDay, rewardEnabled);
     }
 }

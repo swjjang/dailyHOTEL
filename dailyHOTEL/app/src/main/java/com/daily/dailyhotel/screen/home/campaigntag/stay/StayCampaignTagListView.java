@@ -15,6 +15,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.view.DailyCampaignTagTitleView;
 import com.facebook.imagepipeline.nativecode.NativeBlurFilter;
 import com.twoheart.dailyhotel.R;
@@ -93,6 +94,8 @@ public class StayCampaignTagListView //
         {
             mRecyclerAdapter.setTrueVREnabled(true);
         }
+
+        mRecyclerAdapter.setRewardEnabled(DailyRemoteConfigPreference.getInstance(getContext()).isKeyRemoteConfigRewardStickerEnabled());
 
         if (Util.supportPreview(getContext()) == true)
         {

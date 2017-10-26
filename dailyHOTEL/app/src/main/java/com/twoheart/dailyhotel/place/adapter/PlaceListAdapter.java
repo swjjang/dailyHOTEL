@@ -38,6 +38,7 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
     int mLastEventBannerPosition;
     private Constants.SortType mSortType;
     protected boolean mTrueVREnabled;
+    protected boolean mRewardEnabled;
 
     public abstract void setPlaceBookingDay(PlaceBookingDay placeBookingDay);
 
@@ -77,6 +78,11 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
         {
             mEventBannerHandler.removeMessages(0);
         }
+    }
+
+    public void setRewardEnabled(boolean enabled)
+    {
+        mRewardEnabled = enabled;
     }
 
     public void clear()

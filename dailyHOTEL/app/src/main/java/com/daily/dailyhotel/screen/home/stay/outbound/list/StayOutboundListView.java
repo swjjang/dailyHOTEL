@@ -256,7 +256,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
     }
 
     @Override
-    public void setStayOutboundList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean isNights)
+    public void setStayOutboundList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean isNights, boolean rewardEnabled)
     {
         if (getViewDataBinding() == null)
         {
@@ -393,7 +393,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
     }
 
     @Override
-    public void setStayOutboundMapViewPagerList(Context context, List<StayOutbound> stayOutboundList, boolean isNights)
+    public void setStayOutboundMapViewPagerList(Context context, List<StayOutbound> stayOutboundList, boolean isNights, boolean rewardEnabled)
     {
         if (context == null)
         {
@@ -435,6 +435,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         mViewPagerAdapter.clear();
         mViewPagerAdapter.setData(stayOutboundList);
         mViewPagerAdapter.setNightsEnabled(isNights);
+        mViewPagerAdapter.setRewardEnabled(rewardEnabled);
         mViewPagerAdapter.notifyDataSetChanged();
     }
 

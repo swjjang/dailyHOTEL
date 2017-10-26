@@ -52,10 +52,13 @@ import com.daily.dailyhotel.screen.home.stay.outbound.detail.amenities.AmenityLi
 import com.daily.dailyhotel.screen.home.stay.outbound.payment.StayOutboundPaymentActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.preview.StayOutboundPreviewActivity;
+import com.daily.dailyhotel.screen.mydaily.reward.RewardActivity;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.firebase.DailyRemoteConfig;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
@@ -390,19 +393,16 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     {
         super.onResume();
 
-        if (Util.supportPreview(getActivity()) == true)
-        {
-            if (getViewInterface().isBlurVisible() == true)
-            {
-                getViewInterface().setBlurVisible(getActivity(), false);
-            }
-        }
-
         onHideRoomListClick(false);
 
         if (isRefresh() == true)
         {
             onRefresh(true);
+        }
+
+        if (DailyHotel.isLogin() == false && DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerCampaignEnabled() == true)
+        {
+            getViewInterface().startCampaignStickerAnimation();
         }
 
         mAppResearch.onResume("outbound_스테이", mStayIndex);
@@ -412,6 +412,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     public void onPause()
     {
         super.onPause();
+
+        getViewInterface().stopCampaignStickerAnimation();
 
         mAppResearch.onPause("outbound_스테이", mStayIndex);
     }
@@ -1239,6 +1241,36 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         }
     }
 
+    @Override
+    public void onLoginClick()
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        Intent intent = LoginActivity.newInstance(getActivity(), AnalyticsManager.Screen.DAILYHOTEL_DETAIL);
+        startActivityForResult(intent, StayOutboundDetailActivity.REQUEST_CODE_LOGIN);
+    }
+
+    @Override
+    public void onRewardClick()
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        Intent intent = RewardActivity.newInstance(getActivity());
+        startActivityForResult(intent, StayOutboundDetailActivity.REQUEST_CODE_REWARD);
+    }
+
+    @Override
+    public void onRewardGuideClick()
+    {
+
+    }
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void startStayOutboundDetail(View view, StayOutbound stayOutbound, android.support.v4.util.Pair[] pairs)
     {
@@ -1383,7 +1415,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             getViewInterface().setToolbarTitle(stayOutboundDetail.name);
         }
 
-        getViewInterface().setStayDetail(mStayBookDateTime, mPeople, stayOutboundDetail);
+        getViewInterface().setStayDetail(mStayBookDateTime, mPeople, stayOutboundDetail, DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerEnabled());
 
         // 리스트 가격 변동은 진입시 한번 만 한다.
         checkChangedPrice(mIsDeepLink, stayOutboundDetail, mListTotalPrice, mCheckChangedPrice == false);
@@ -1502,6 +1534,34 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         getViewInterface().setRecommendAroundList(mRecommendAroundList, mStayBookDateTime);
     }
 
+    private void notifyRewardChanged()
+    {
+        if (mStayOutboundDetail == null)
+        {
+            return;
+        }
+
+        if (DailyHotel.isLogin() == false)
+        {
+            boolean campaignEnabled = DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerCampaignEnabled();
+
+            getViewInterface().setRewardNonMember(DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerEnabled()//
+                , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage()//
+                , getString(R.string.label_reward_login)//
+                , campaignEnabled ? DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerNonMemberCampaignFreeNights() : 0//
+                ,campaignEnabled ? DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerNonMemberCampaignMessage()//
+                    : DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerNonMemberDefaultMessage());
+
+            if (campaignEnabled == true)
+            {
+                getViewInterface().startCampaignStickerAnimation();
+            }
+        } else
+        {
+
+        }
+    }
+
     private void checkChangedPrice(boolean isDeepLink, StayOutboundDetail stayOutboundDetail, int listViewPrice, boolean compareListPrice)
     {
         if (stayOutboundDetail == null)
@@ -1579,6 +1639,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             {
                 onStayOutboundDetail(stayOutboundDetail);
                 notifyRecommendAroundList();
+                notifyRewardChanged();
 
                 try
                 {

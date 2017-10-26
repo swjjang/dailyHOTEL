@@ -25,6 +25,8 @@ public class GourmetDetail
     public int wishCount;
     public boolean myWish;
     public boolean hasCoupon;
+    public boolean dailyReward;
+    public int couponPrice;
 
     private Sticker mSticker;
     private List<DetailImageInformation> mDetailImageInformationList;

@@ -28,6 +28,7 @@ import java.util.ArrayList;
 public class RecentStayListAdapter extends RecentPlacesListAdapter
 {
     private int mNights;
+    private boolean mRewardEnabled;
 
     public RecentStayListAdapter(Context context, ArrayList<PlaceViewItem> list, OnRecentPlacesItemListener listener)
     {
@@ -109,7 +110,7 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
     {
         final RecentlyPlace recentlyPlace = placeViewItem.getItem();
 
-        holder.stayCardView.setStickerVisible(false);
+        holder.stayCardView.setStickerVisible(mRewardEnabled && recentlyPlace.dailyReward);
         holder.stayCardView.setDeleteVisible(true);
         holder.stayCardView.setWishVisible(true);
         holder.stayCardView.setWish(recentlyPlace.myWish);
@@ -267,7 +268,7 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
 
         StayOutbound stayOutbound = placeViewItem.getItem();
 
-        holder.stayOutboundCardView.setStickerVisible(false);
+        holder.stayOutboundCardView.setStickerVisible(stayOutbound.dailyReward);
         holder.stayOutboundCardView.setDeleteVisible(true);
         holder.stayOutboundCardView.setWishVisible(false);
 

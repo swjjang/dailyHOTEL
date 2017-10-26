@@ -32,6 +32,7 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     private boolean mDistanceEnabled;
     private boolean mNightsEnabled; // 연박 여부
+    private boolean mRewardEnabled;
 
     public StayOutboundListAdapter(Context context, ArrayList<ObjectItem> arrayList)
     {
@@ -50,6 +51,11 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
     public void setNightsEnabled(boolean enabled)
     {
         mNightsEnabled = enabled;
+    }
+
+    public void setRewardEnabled(boolean enabled)
+    {
+        mRewardEnabled = enabled;
     }
 
     public void setOnClickListener(View.OnClickListener onClickListener, View.OnLongClickListener onLongClickListener)
@@ -188,7 +194,7 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         StayOutbound stayOutbound = objectItem.getItem();
 
-        holder.stayOutboundCardView.setStickerVisible(false);
+        holder.stayOutboundCardView.setStickerVisible(mRewardEnabled && stayOutbound.dailyReward);
         holder.stayOutboundCardView.setDeleteVisible(false);
         holder.stayOutboundCardView.setWishVisible(false);
 

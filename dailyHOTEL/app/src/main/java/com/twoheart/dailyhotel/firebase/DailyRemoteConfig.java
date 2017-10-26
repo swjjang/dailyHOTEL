@@ -111,6 +111,7 @@ public class DailyRemoteConfig
         String androidStaticUrl = mFirebaseRemoteConfig.getString("androidStaticUrl");
         String androidStayRankABTest = mFirebaseRemoteConfig.getString("androidStayRankABTest");
         String androidOBSearchKeyword = mFirebaseRemoteConfig.getString("androidOBSearchKeyword");
+        String androidRewardSticker = mFirebaseRemoteConfig.getString("androidRewardSticker");
 
         if (Constants.DEBUG == true)
         {
@@ -141,6 +142,14 @@ public class DailyRemoteConfig
                 } else
                 {
                     ExLog.d("androidOBSearchKeyword : " + new JSONObject(androidOBSearchKeyword).toString());
+                }
+
+                if (DailyTextUtils.isTextEmpty(androidRewardSticker) == true)
+                {
+                    ExLog.d("androidReward : ");
+                } else
+                {
+                    ExLog.d("androidReward : " + new JSONObject(androidRewardSticker).toString());
                 }
             } catch (Exception e)
             {
@@ -205,6 +214,9 @@ public class DailyRemoteConfig
         writeStayRankTest(mContext, androidStayRankABTest);
 
         writeOBSearchKeyword(mContext, androidOBSearchKeyword);
+
+        // Reward Sticker
+        writeRewardSticker(mContext, androidRewardSticker);
 
         if (listener != null)
         {
@@ -584,6 +596,8 @@ public class DailyRemoteConfig
             String reviewUrl = jsonObject.getString("review");
             String lifeStyleProjectUrl = jsonObject.getString("lifeStyleProject");
             String dailyStampHomeUrl = jsonObject.getString("dailyStampHome");
+            String dailyReward = jsonObject.getString("dailyReward");
+            String dailyRewardTerms = jsonObject.getString("dailyRewardTerms");
 
             DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlPrivacy(privacyUrl);
             DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlTerms(termsUrl);
@@ -601,6 +615,8 @@ public class DailyRemoteConfig
             DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlLifeStyleProject(lifeStyleProjectUrl);
             DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlDailyStampHome(dailyStampHomeUrl);
             DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlCollectPersonalInformation(collectPersonalInformation);
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlDailyReward(dailyReward);
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlDailyRewardTerms(dailyRewardTerms);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -688,6 +704,65 @@ public class DailyRemoteConfig
                 }
 
                 DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigObSearchKeyword(arrayString);
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
+        }
+    }
+
+    void writeRewardSticker(Context context, String jsonString)
+    {
+        if (context == null)
+        {
+            return;
+        }
+
+        if (DailyTextUtils.isTextEmpty(jsonString) == true)
+        {
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerEnabled(false);
+        } else
+        {
+            try
+            {
+                JSONObject jsonObject = new JSONObject(jsonString);
+
+                if (Constants.DEBUG == true)
+                {
+                    ExLog.d("pinkred - reward sticker " + jsonObject);
+                }
+
+                String titleMessage = jsonObject.getString("titleMessage");
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerTitleMessage(titleMessage);
+
+                boolean campaignEnabled = jsonObject.getBoolean("campaignEnabled");
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerCampaignEnabled(campaignEnabled);
+
+                String guideTitleMessage = jsonObject.getString("guideTitleMessage");
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerGuideTitleMessage(guideTitleMessage);
+
+                String guideDescriptionMessage = jsonObject.getString("guideDescriptionMessage");
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerGuideDescriptionMessage(guideDescriptionMessage);
+
+                JSONObject nonMemberJSONObject = jsonObject.getJSONObject("nonMember");
+                JSONObject nonMemberMessageJSONObject = nonMemberJSONObject.getJSONObject("message");
+                String nonMemberDefaultMessage = nonMemberMessageJSONObject.getString("default");
+                String nonMemberCampaignMessage = nonMemberMessageJSONObject.getString("campaign");
+                int campaignFreeNights = nonMemberJSONObject.getInt("campaignFreeNights");
+
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerNonMemberDefaultMessage(nonMemberDefaultMessage);
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerNonMemberCampaignMessage(nonMemberCampaignMessage);
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerNonmemberCampaignFreeNights(campaignFreeNights);
+
+                JSONObject memberMessageJSONObject = jsonObject.getJSONObject("member").getJSONObject("message");
+                final int MAX_NIGHTS = 9;
+
+                for (int i = 0; i <= MAX_NIGHTS; i++)
+                {
+                    DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerMemberMessage(i, memberMessageJSONObject.getString(Integer.toString(i)));
+                }
+
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerEnabled(true);
             } catch (Exception e)
             {
                 ExLog.e(e.toString());
