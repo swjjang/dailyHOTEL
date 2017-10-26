@@ -12,6 +12,8 @@ import io.reactivex.Observable;
 
 public interface RewardInterface
 {
+    Observable<Integer> getRewardStickerCount();
+
     Observable<RewardDetail> getRewardDetail();
 
     Observable<RewardHistoryDetail> getRewardHistoryDetail();

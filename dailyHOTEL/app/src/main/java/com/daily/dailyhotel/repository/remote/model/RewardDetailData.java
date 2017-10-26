@@ -14,8 +14,8 @@ public class RewardDetailData
     @JsonField(name = "availableRewardCouponCount")
     public int availableRewardCouponCount;
 
-    @JsonField(name = "card")
-    public CardData card;
+    @JsonField(name = "rewardCard")
+    public RewardCardData rewardCard;
 
     @JsonField(name = "stickers")
     public List<StickerData> stickers;
@@ -30,8 +30,8 @@ public class RewardDetailData
         RewardDetail rewardDetail = new RewardDetail();
 
         rewardDetail.availableRewardCouponCount = availableRewardCouponCount;
-        rewardDetail.expiredAt = card.expiredAt;
-        rewardDetail.rewardStickerCount = card.rewardStickerCount;
+        rewardDetail.expiredAt = rewardCard.expiredAt;
+        rewardDetail.rewardStickerCount = rewardCard.rewardStickerCount;
 
         if (stickers != null && stickers.size() > 0)
         {
@@ -49,7 +49,7 @@ public class RewardDetailData
     }
 
     @JsonObject
-    static class CardData
+    static class RewardCardData
     {
         @JsonField(name = "expiredAt")
         public String expiredAt;

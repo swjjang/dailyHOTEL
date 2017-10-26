@@ -119,6 +119,9 @@ public class StayDetailData
     @JsonField(name = "couponDiscount")
     public int couponDiscount;
 
+    @JsonField(name = "rewardCard")
+    public RewardCardData rewardCard;
+
     public StayDetailData()
     {
 
@@ -278,6 +281,11 @@ public class StayDetailData
         // Detail
         stayDetail.setDescriptionList(details);
 
+        // 리워드
+        if (rewardCard != null)
+        {
+            stayDetail.rewardStickerCount = rewardCard.rewardStickerCount;
+        }
 
         return stayDetail;
     }
@@ -345,6 +353,9 @@ public class StayDetailData
         @JsonField(name = "refundType")
         public String refundType;
 
+        @JsonField(name = "provideRewardSticker")
+        public boolean provideRewardSticker;
+
         public RoomData()
         {
 
@@ -380,7 +391,24 @@ public class StayDetailData
                 stayRoom.nrd = false;
             }
 
+            stayRoom.provideRewardSticker = provideRewardSticker;
+
             return stayRoom;
+        }
+    }
+
+    @JsonObject
+    static class RewardCardData
+    {
+        @JsonField(name = "expiredAt")
+        public String expiredAt;
+
+        @JsonField(name = "rewardStickerCount")
+        public int rewardStickerCount;
+
+        public RewardCardData()
+        {
+
         }
     }
 }

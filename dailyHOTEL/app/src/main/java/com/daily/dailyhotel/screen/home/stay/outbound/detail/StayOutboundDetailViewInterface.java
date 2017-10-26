@@ -20,9 +20,11 @@ public interface StayOutboundDetailViewInterface extends BaseBlurViewInterface
 
     void setStayDetail(StayBookDateTime stayBookDateTime, People people, StayOutboundDetail stayOutboundDetail, boolean rewardEnabled);
 
-    void setRewardNonMember(boolean visible, String titleText, String optionText, int campaignFreeNights, String descriptionText);
+    void setRewardVisible(boolean visible);
 
-    void setRewardMember(boolean visible, String titleText, String optionText, int nights, String descriptionText);
+    void setRewardNonMember(String titleText, String optionText, int campaignFreeNights, String descriptionText);
+
+    void setRewardMember(String titleText, String optionText, int nights, String descriptionText);
 
     Observable<Boolean> getSharedElementTransition(int gradientType);
 

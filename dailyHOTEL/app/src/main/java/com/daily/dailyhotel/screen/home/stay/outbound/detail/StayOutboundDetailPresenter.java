@@ -58,7 +58,6 @@ import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.firebase.DailyRemoteConfig;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
@@ -1541,24 +1540,35 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             return;
         }
 
-        if (DailyHotel.isLogin() == false)
+        if (DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerEnabled() == true)
         {
-            boolean campaignEnabled = DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerCampaignEnabled();
+            getViewInterface().setRewardVisible(true);
 
-            getViewInterface().setRewardNonMember(DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerEnabled()//
-                , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage()//
-                , getString(R.string.label_reward_login)//
-                , campaignEnabled ? DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerNonMemberCampaignFreeNights() : 0//
-                ,campaignEnabled ? DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerNonMemberCampaignMessage()//
-                    : DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerNonMemberDefaultMessage());
-
-            if (campaignEnabled == true)
+            if (DailyHotel.isLogin() == false)
             {
-                getViewInterface().startCampaignStickerAnimation();
+                boolean campaignEnabled = DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerCampaignEnabled();
+
+                getViewInterface().setRewardNonMember(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage()//
+                    , getString(R.string.label_reward_login)//
+                    , campaignEnabled ? DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerNonMemberCampaignFreeNights() : 0//
+                    , campaignEnabled ? DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerNonMemberCampaignMessage()//
+                        : DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerNonMemberDefaultMessage());
+
+                if (campaignEnabled == true)
+                {
+                    getViewInterface().startCampaignStickerAnimation();
+                }
+            } else
+            {
+                getViewInterface().setRewardMember(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage()//
+                    , getString(R.string.label_reward_go_reward), mStayOutboundDetail.rewardStickerCount//
+                    , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerMemberMessage(mStayOutboundDetail.rewardStickerCount));
+
+                getViewInterface().stopCampaignStickerAnimation();
             }
         } else
         {
-
+            getViewInterface().setRewardVisible(false);
         }
     }
 

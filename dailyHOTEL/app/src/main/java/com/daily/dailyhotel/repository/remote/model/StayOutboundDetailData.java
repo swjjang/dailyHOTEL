@@ -51,6 +51,9 @@ public class StayOutboundDetailData
     @JsonField(name = "dailyHotelDetailImages")
     public List<ImageData> imageDataList;
 
+    @JsonField(name = "rewardCard")
+    public RewardCardData rewardCard;
+
     public StayOutboundDetailData()
     {
 
@@ -122,6 +125,12 @@ public class StayOutboundDetailData
             }
 
             stayOutboundDetail.setImageList(detailImageList);
+        }
+
+        // 리워드
+        if (rewardCard != null)
+        {
+            stayOutboundDetail.rewardStickerCount = rewardCard.rewardStickerCount;
         }
 
         return stayOutboundDetail;
@@ -205,6 +214,9 @@ public class StayOutboundDetailData
         @JsonField(name = "vendorType")
         public String vendorType;
 
+        @JsonField(name = "provideRewardSticker")
+        public boolean provideRewardSticker;
+
         public RoomData()
         {
 
@@ -230,6 +242,7 @@ public class StayOutboundDetailData
             stayOutboundRoom.nonRefundableDescription = nonRefundableDescription;
             stayOutboundRoom.valueAddName = valueAddName;
             stayOutboundRoom.vendorType = vendorType;
+            stayOutboundRoom.provideRewardSticker = provideRewardSticker;
 
             return stayOutboundRoom;
         }
@@ -245,6 +258,21 @@ public class StayOutboundDetailData
         public String amenity;
 
         public AmenityData()
+        {
+
+        }
+    }
+
+    @JsonObject
+    static class RewardCardData
+    {
+        @JsonField(name = "expiredAt")
+        public String expiredAt;
+
+        @JsonField(name = "rewardStickerCount")
+        public int rewardStickerCount;
+
+        public RewardCardData()
         {
 
         }

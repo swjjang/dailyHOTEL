@@ -497,61 +497,84 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
     }
 
     @Override
-    public void setRewardNonMember(boolean visible, String titleText, String optionText, int campaignFreeNights, String descriptionText)
+    public void setRewardVisible(boolean visible)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        getViewDataBinding().rewardCardLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
-
-        if (visible)
+        if (visible == true)
         {
-            DailyRewardCardView rewardCardView = getViewDataBinding().rewardCardView;
-
-            rewardCardView.setGuideVisible(true);
-            rewardCardView.setOnGuideClickListener(v -> getEventListener().onRewardGuideClick());
-            rewardCardView.setStickerCount(0);
-
-            if (DailyTextUtils.isTextEmpty(optionText) == false)
-            {
-                rewardCardView.setOptionVisible(true);
-                rewardCardView.setOptionText(optionText);
-                rewardCardView.setOnClickListener(v -> getEventListener().onLoginClick());
-            } else
-            {
-                rewardCardView.setOptionVisible(false);
-            }
-
-            rewardCardView.setRewardTitleText(titleText);
-            rewardCardView.setDescriptionText(descriptionText);
-
-            rewardCardView.setCampaignFreeStickerCount(campaignFreeNights);
-
             getViewDataBinding().recommendAroundTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 1);
+
+            getViewDataBinding().rewardCardLayout.setVisibility(View.VISIBLE);
         } else
         {
             getViewDataBinding().recommendAroundTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 12);
+
+            getViewDataBinding().rewardCardLayout.setVisibility(View.GONE);
         }
 
         getViewDataBinding().recommendAroundTopLineView.requestLayout();
     }
 
     @Override
-    public void setRewardMember(boolean visible, String titleText, String optionText, int nights, String descriptionText)
+    public void setRewardNonMember(String titleText, String optionText, int campaignFreeNights, String descriptionText)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        getViewDataBinding().rewardCardLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
+        DailyRewardCardView rewardCardView = getViewDataBinding().rewardCardView;
 
-        if (visible)
+        rewardCardView.setGuideVisible(true);
+        rewardCardView.setOnGuideClickListener(v -> getEventListener().onRewardGuideClick());
+
+        if (DailyTextUtils.isTextEmpty(optionText) == false)
         {
-            DailyRewardCardView rewardCardView = getViewDataBinding().rewardCardView;
+            rewardCardView.setOptionVisible(true);
+            rewardCardView.setOptionText(optionText);
+            rewardCardView.setOnClickListener(v -> getEventListener().onLoginClick());
+        } else
+        {
+            rewardCardView.setOptionVisible(false);
         }
+
+        rewardCardView.setRewardTitleText(titleText);
+        rewardCardView.setDescriptionText(descriptionText);
+
+        rewardCardView.setCampaignFreeStickerCount(campaignFreeNights);
+    }
+
+    @Override
+    public void setRewardMember(String titleText, String optionText, int nights, String descriptionText)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        DailyRewardCardView rewardCardView = getViewDataBinding().rewardCardView;
+
+        rewardCardView.setGuideVisible(true);
+        rewardCardView.setOnGuideClickListener(v -> getEventListener().onRewardGuideClick());
+
+        if (DailyTextUtils.isTextEmpty(optionText) == false)
+        {
+            rewardCardView.setOptionVisible(true);
+            rewardCardView.setOptionText(optionText);
+            rewardCardView.setOnClickListener(v -> getEventListener().onRewardClick());
+        } else
+        {
+            rewardCardView.setOptionVisible(false);
+        }
+
+        rewardCardView.setRewardTitleText(titleText);
+        rewardCardView.setDescriptionText(descriptionText);
+
+        rewardCardView.setStickerCount(nights);
     }
 
     @TargetApi(value = 21)

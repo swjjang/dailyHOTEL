@@ -31,6 +31,7 @@ public class StayDetail
     public boolean waitingForBooking;
     public int couponPrice;
     public boolean dailyReward;
+    public int rewardStickerCount;
 
     private List<DetailImageInformation> mDetailImageInformationList;
     private List<LinkedHashMap<String, List<String>>> mDescriptionMap;

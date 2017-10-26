@@ -22,6 +22,7 @@ public class StayOutboundRoom
     public String nonRefundableDescription;
     public String valueAddName;
     public String vendorType;
+    public boolean provideRewardSticker;
 
     public StayOutboundRoom()
     {

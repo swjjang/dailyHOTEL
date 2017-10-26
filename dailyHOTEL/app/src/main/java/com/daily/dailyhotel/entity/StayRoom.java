@@ -18,5 +18,5 @@ public class StayRoom
     public String description2;
     public String refundType;
     public boolean nrd;
-    public boolean dailyReward;
+    public boolean provideRewardSticker;
 }

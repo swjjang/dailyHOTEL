@@ -11,8 +11,8 @@ import java.util.List;
 @JsonObject
 public class RewardHistoryDetailData
 {
-    @JsonField(name = "card")
-    public CardData card;
+    @JsonField(name = "rewardCard")
+    public RewardCardData rewardCard;
 
     @JsonField(name = "histories")
     public List<HistoryData> histories;
@@ -26,8 +26,8 @@ public class RewardHistoryDetailData
     {
         RewardHistoryDetail rewardHistoryDetail = new RewardHistoryDetail();
 
-        rewardHistoryDetail.expiredAt = card.expiredAt;
-        rewardHistoryDetail.rewardStickerCount = card.rewardStickerCount;
+        rewardHistoryDetail.expiredAt = rewardCard.expiredAt;
+        rewardHistoryDetail.rewardStickerCount = rewardCard.rewardStickerCount;
 
         if (histories != null && histories.size() > 0)
         {
@@ -45,7 +45,7 @@ public class RewardHistoryDetailData
     }
 
     @JsonObject
-    static class CardData
+    static class RewardCardData
     {
         @JsonField(name = "expiredAt")
         public String expiredAt;
@@ -75,8 +75,11 @@ public class RewardHistoryDetailData
         @JsonField(name = "reservationName")
         public String reservationName;
 
-        @JsonField(name = "roomnights")
-        public int roomnights;
+        @JsonField(name = "roomNights")
+        public int roomNights;
+
+        @JsonField(name = "serviceType")
+        public String serviceType;
 
         public RewardHistory getRewardHistory()
         {
@@ -88,7 +91,8 @@ public class RewardHistoryDetailData
             rewardHistory.date = historyDate;
             rewardHistory.type = RewardHistory.Type.valueOf(historyType);
             rewardHistory.reservationName = reservationName;
-            rewardHistory.position = roomnights;
+            rewardHistory.nights = roomNights;
+            rewardHistory.serviceType = RewardHistory.ServiceType.valueOf(serviceType);
 
             return rewardHistory;
         }
