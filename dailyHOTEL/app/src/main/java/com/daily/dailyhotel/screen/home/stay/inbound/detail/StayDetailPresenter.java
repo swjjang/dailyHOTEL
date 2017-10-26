@@ -545,6 +545,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             case StayDetailActivity.REQUEST_CODE_LOGIN_IN_BY_BOOKING:
                 if (resultCode == Activity.RESULT_OK)
                 {
+                    setRefresh(true);
                     onActionButtonClick();
                 } else
                 {
@@ -560,6 +561,8 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             case StayDetailActivity.REQUEST_CODE_LOGIN_IN_BY_WISH:
                 if (resultCode == Activity.RESULT_OK)
                 {
+                    setRefresh(true);
+
                     onWishClick();
 
                     setResult(BaseActivity.RESULT_CODE_REFRESH);
@@ -569,6 +572,8 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             case StayDetailActivity.REQUEST_CODE_LOGIN_IN_BY_COUPON:
                 if (resultCode == Activity.RESULT_OK)
                 {
+                    setRefresh(true);
+
                     onDownloadCouponClick();
 
                     setResult(BaseActivity.RESULT_CODE_REFRESH);

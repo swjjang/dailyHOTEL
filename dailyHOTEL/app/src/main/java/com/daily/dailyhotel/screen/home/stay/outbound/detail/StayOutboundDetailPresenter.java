@@ -392,6 +392,11 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     {
         super.onResume();
 
+        if (Util.supportPreview(getActivity()) == true && getViewInterface().isBlurVisible() == true)
+        {
+            getViewInterface().setBlurVisible(getActivity(), false);
+        }
+
         onHideRoomListClick(false);
 
         if (isRefresh() == true)
@@ -547,6 +552,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             case StayOutboundDetailActivity.REQUEST_CODE_LOGIN:
                 if (resultCode == Activity.RESULT_OK)
                 {
+                    setRefresh(true);
+
                     onActionButtonClick();
                 } else
                 {
