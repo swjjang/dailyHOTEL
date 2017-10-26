@@ -217,6 +217,28 @@ public class KakaoLinkManager implements Constants
         }
     }
 
+    public void shareBookingCancelStay(String message, String imageUrl)
+    {
+        try
+        {
+            KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
+
+            if (DailyTextUtils.isTextEmpty(imageUrl) == false)
+            {
+                int lastSlash = imageUrl.lastIndexOf('/');
+                String fileName = imageUrl.substring(lastSlash + 1);
+                messageBuilder.addImage(imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName), 300, 200);
+            }
+
+            messageBuilder.addText(message);
+
+            mKakaoLink.sendMessage(messageBuilder, mContext);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
     public void shareGourmet(String name, String placeName, String address, int index, String imageUrl, GourmetBookingDay gourmetBookingDay)
     {
         try
@@ -295,6 +317,28 @@ public class KakaoLinkManager implements Constants
                 , new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder()//
                     .setExecuteParam(schemeParams).build())//
                     .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
+
+            if (DailyTextUtils.isTextEmpty(imageUrl) == false)
+            {
+                int lastSlash = imageUrl.lastIndexOf('/');
+                String fileName = imageUrl.substring(lastSlash + 1);
+                messageBuilder.addImage(imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName), 300, 200);
+            }
+
+            messageBuilder.addText(message);
+
+            mKakaoLink.sendMessage(messageBuilder, mContext);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
+    public void shareBookingCancelGourmet(String message, String imageUrl)
+    {
+        try
+        {
+            KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
 
             if (DailyTextUtils.isTextEmpty(imageUrl) == false)
             {
