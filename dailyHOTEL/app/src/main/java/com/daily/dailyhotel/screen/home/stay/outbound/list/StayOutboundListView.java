@@ -298,11 +298,10 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
                             View gradientTopView = view.findViewById(R.id.gradientTopView);
                             View gradientBottomView = view.findViewById(R.id.gradientView);
 
-                            android.support.v4.util.Pair[] pairs = new Pair[4];
+                            android.support.v4.util.Pair[] pairs = new Pair[3];
                             pairs[0] = android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image));
-                            pairs[1] = android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name));
-                            pairs[2] = android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view));
-                            pairs[3] = android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view));
+                            pairs[1] = android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view));
+                            pairs[2] = android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view));
 
                             getEventListener().onStayClick(pairs, objectItem.getItem());
                         }
@@ -333,11 +332,10 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
                             View gradientTopView = view.findViewById(R.id.gradientTopView);
                             View gradientBottomView = view.findViewById(R.id.gradientView);
 
-                            android.support.v4.util.Pair[] pairs = new Pair[4];
+                            android.support.v4.util.Pair[] pairs = new Pair[3];
                             pairs[0] = android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image));
-                            pairs[1] = android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name));
-                            pairs[2] = android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view));
-                            pairs[3] = android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view));
+                            pairs[1] = android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view));
+                            pairs[2] = android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view));
 
                             getEventListener().onStayLongClick(pairs, objectItem.getItem());
                         }
@@ -413,11 +411,10 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
                     View gradientTopView = view.findViewById(R.id.gradientTopView);
                     View gradientBottomView = view.findViewById(R.id.gradientView);
 
-                    android.support.v4.util.Pair[] pairs = new Pair[4];
+                    android.support.v4.util.Pair[] pairs = new Pair[3];
                     pairs[0] = android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image));
-                    pairs[1] = android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name));
-                    pairs[2] = android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view));
-                    pairs[3] = android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view));
+                    pairs[1] = android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view));
+                    pairs[2] = android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view));
 
                     getEventListener().onStayClick(pairs, stayOutbound);
                 }

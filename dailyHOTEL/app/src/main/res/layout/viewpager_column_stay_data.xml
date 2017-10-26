@@ -76,7 +76,6 @@
             android:singleLine="true"
             android:textColor="@android:color/white"
             android:textSize="17dp"
-            android:transitionName="@string/transition_place_name"
             dailyFont:style="Medium"/>
 
         <LinearLayout

@@ -125,11 +125,10 @@ public class GourmetBookingDetailMapPresenter extends PlaceBookingDetailMapPrese
             View gradientTopView = view.findViewById(R.id.gradientTopView);
             View gradientBottomView = view.findViewById(R.id.gradientView);
 
-            Pair[] pairs = new Pair[4];
+            Pair[] pairs = new Pair[3];
             pairs[0] = Pair.create(simpleDraweeView, getString(R.string.transition_place_image));
-            pairs[1] = Pair.create(nameTextView, getString(R.string.transition_place_name));
-            pairs[2] = Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view));
-            pairs[3] = Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view));
+            pairs[1] = Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view));
+            pairs[2] = Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view));
 
             ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);
 

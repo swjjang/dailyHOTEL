@@ -1027,7 +1027,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
                     optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(StaySearchResultActivity.this,//
                         android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
-                        android.support.v4.util.Pair.create(nameTextView, getString(R.string.transition_place_name)),//
                         android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)),//
                         android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
                 }

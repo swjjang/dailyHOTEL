@@ -586,20 +586,6 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
     public Observable<Boolean> getSharedElementTransition(int gradientType)
     {
         TransitionSet inTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
-        //        Transition inTextTransition;
-        //
-        //        if (gradientType == StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP)
-        //        {
-        //            inTextTransition = new TextTransition(getColor(R.color.white), getColor(R.color.default_text_c323232)//
-        //                , 17, 20, new LinearInterpolator());
-        //        } else
-        //        {
-        //            inTextTransition = new TextTransition(getColor(R.color.default_text_c323232), getColor(R.color.default_text_c323232)//
-        //                , 17, 20, new LinearInterpolator());
-        //        }
-        //
-        //        inTextTransition.addTarget(getString(R.string.transition_place_name));
-        //        inTransitionSet.addTransition(inTextTransition);
 
         Transition inBottomAlphaTransition = new AlphaTransition(1.0f, 0.0f, new LinearInterpolator());
         inBottomAlphaTransition.addTarget(getString(R.string.transition_gradient_bottom_view));
@@ -612,20 +598,6 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         getWindow().setSharedElementEnterTransition(inTransitionSet);
 
         TransitionSet outTransitionSet = DraweeTransition.createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP, ScalingUtils.ScaleType.CENTER_CROP);
-        Transition outTextTransition;
-
-        if (gradientType == StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP)
-        {
-            outTextTransition = new TextTransition(getColor(R.color.white), getColor(R.color.default_text_c323232)//
-                , 18, 17, new LinearInterpolator());
-        } else
-        {
-            outTextTransition = new TextTransition(getColor(R.color.default_text_c323232), getColor(R.color.default_text_c323232)//
-                , 18, 17, new LinearInterpolator());
-        }
-
-        outTextTransition.addTarget(getString(R.string.transition_place_name));
-        outTransitionSet.addTransition(outTextTransition);
 
         Transition outBottomAlphaTransition = new AlphaTransition(0.0f, 1.0f, new LinearInterpolator());
         outBottomAlphaTransition.addTarget(getString(R.string.transition_gradient_bottom_view));
@@ -751,7 +723,6 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
             getViewDataBinding().transImageView.setTransitionName(getString(R.string.transition_place_image));
             getViewDataBinding().transGradientBottomView.setTransitionName(getString(R.string.transition_gradient_bottom_view));
             getViewDataBinding().imageLoopView.setTransGradientTopView(getString(R.string.transition_gradient_top_view));
-            getViewDataBinding().transNameTextView.setTransitionName(getString(R.string.transition_place_name));
 
             switch (gradientType)
             {

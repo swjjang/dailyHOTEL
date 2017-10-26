@@ -140,11 +140,6 @@ public class StayDetailLayout extends PlaceDetailLayout implements RadioGroup.On
         if (DailyTextUtils.isTextEmpty(placeName) == false)
         {
             mTransPlaceNameTextView.setText(placeName);
-
-            if (VersionUtils.isOverAPI21() == true)
-            {
-                mTransPlaceNameTextView.setTransitionName(mContext.getString(R.string.transition_place_name));
-            }
         }
     }
 
