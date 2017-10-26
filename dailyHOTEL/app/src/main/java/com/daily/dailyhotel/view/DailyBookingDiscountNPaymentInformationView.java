@@ -44,6 +44,45 @@ public class DailyBookingDiscountNPaymentInformationView extends ConstraintLayou
         mViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_booking_discount_information_data, this, true);
     }
 
+    public void setRewardEnabled(boolean enabled)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        if (enabled == true)
+        {
+            mViewDataBinding.discountInformationTextView.setText(R.string.label_booking_discount_reward_information);
+
+
+        } else
+        {
+            mViewDataBinding.discountInformationTextView.setText(R.string.label_booking_discount_information);
+        }
+
+    }
+
+    public void setRewardStickerEnabled(boolean enabled)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.depositStickerLayout.setEnabled(enabled);
+    }
+
+    public void setRewardStickerVisible(boolean visible)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.depositStickerLayout.setVisibility(visible ? View.VISIBLE : GONE);
+    }
+
     public void setDiscountTypeVisible(boolean bonusVisible, boolean couponVisible)
     {
         if (mViewDataBinding == null)

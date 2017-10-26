@@ -42,7 +42,8 @@
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/cheeringLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="63dp">
+                    android:layout_height="63dp"
+                    android:visibility="gone">
 
                     <com.daily.base.widget.DailyTextView
                         android:id="@+id/cheeringTitleTextView"

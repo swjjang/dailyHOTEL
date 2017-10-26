@@ -20,6 +20,7 @@
             app:layout_constraintRight_toRightOf="parent">
 
             <com.daily.base.widget.DailyTextView
+                android:id="@+id/discountInformationTextView"
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
                 android:gravity="center_vertical"
@@ -75,7 +76,7 @@
                         android:layout_height="wrap_content"
                         android:duplicateParentState="true"
                         android:text="@string/label_booking_used_bonus"
-                        android:textColor="@drawable/selector_text_color_c929292_cb70038_cc5c5c5"
+                        android:textColor="@drawable/selector_text_color_c323232_cb70038_cc5c5c5"
                         android:textSize="13dp"/>
 
                     <com.daily.base.widget.DailyTextView
@@ -83,8 +84,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:duplicateParentState="true"
-                        android:textColor="@color/default_text_cc5c5c5"
-                        android:textSize="12dp"/>
+                        android:textColor="@color/default_text_c929292"
+                        android:textSize="11dp"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -139,7 +140,7 @@
                     android:layout_marginLeft="7dp"
                     android:duplicateParentState="true"
                     android:text="@string/label_booking_used_coupon"
-                    android:textColor="@drawable/selector_text_color_c929292_cb70038"
+                    android:textColor="@drawable/selector_text_color_c323232_cb70038_cc5c5c5"
                     android:textSize="13dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toRightOf="@+id/couponRadioView"
@@ -172,6 +173,53 @@
                         android:duplicateParentState="true"
                         android:src="@drawable/selector_booking_used_button"/>
                 </LinearLayout>
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/depositStickerLayout"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp">
+
+                <ImageView
+                    android:id="@+id/depositStickerRadioView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:duplicateParentState="true"
+                    android:src="@drawable/selector_radio_button"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="7dp"
+                    android:duplicateParentState="true"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/depositStickerRadioView"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.daily.base.widget.DailyTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:duplicateParentState="true"
+                        android:text="@string/label_booking_used_deposit_sticker"
+                        android:textColor="@drawable/selector_text_color_c323232_cb70038_cc5c5c5"
+                        android:textSize="13dp"/>
+
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/depositStickerWarningTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/message_booking_reward_warning01"
+                        android:duplicateParentState="true"
+                        android:textColor="@drawable/selector_text_color_c929292_cc5c5c5"
+                        android:textSize="11dp"/>
+                </LinearLayout>
+
             </android.support.constraint.ConstraintLayout>
 
             <View
