@@ -15,7 +15,7 @@ public class RewardHistoryDetailData
     public RewardCardData rewardCard;
 
     @JsonField(name = "histories")
-    public List<HistoryData> histories;
+    public List<RewardHistoryData> histories;
 
     public RewardHistoryDetailData()
     {
@@ -33,9 +33,9 @@ public class RewardHistoryDetailData
         {
             List<RewardHistory> rewardStickerList = new ArrayList<>();
 
-            for (HistoryData historyData : histories)
+            for (RewardHistoryData rewardHistoryData : histories)
             {
-                rewardStickerList.add(historyData.getRewardHistory());
+                rewardStickerList.add(rewardHistoryData.getRewardHistory());
             }
 
             rewardHistoryDetail.setRewardHistoryList(rewardStickerList);
@@ -55,7 +55,7 @@ public class RewardHistoryDetailData
     }
 
     @JsonObject
-    static class HistoryData
+    static class RewardHistoryData
     {
         @JsonField(name = "aggregationId")
         public String aggregationId;
@@ -66,8 +66,11 @@ public class RewardHistoryDetailData
         @JsonField(name = "expiredStickerCount")
         public int expiredStickerCount;
 
-        @JsonField(name = "historyDate")
-        public String historyDate;
+        @JsonField(name = "createdAt")
+        public String createdAt;
+
+        @JsonField(name = "expiredAt")
+        public String expiredAt;
 
         @JsonField(name = "historyType")
         public String historyType;
@@ -75,7 +78,7 @@ public class RewardHistoryDetailData
         @JsonField(name = "reservationName")
         public String reservationName;
 
-        @JsonField(name = "roomNights")
+        @JsonField(name = "roomnights")
         public int roomNights;
 
         @JsonField(name = "serviceType")
@@ -88,8 +91,22 @@ public class RewardHistoryDetailData
             rewardHistory.aggregationId = aggregationId;
             rewardHistory.couponPrice = couponAmount;
             rewardHistory.expiredStickerCount = expiredStickerCount;
-            rewardHistory.date = historyDate;
+
             rewardHistory.type = RewardHistory.Type.valueOf(historyType);
+
+            switch (rewardHistory.type)
+            {
+                case EVENT_STICKER:
+                case PUBLISHED_COUPON:
+                case RESERVATION_STICKER:
+                    rewardHistory.date = createdAt;
+                    break;
+
+                case EXPIRED_STICKER:
+                    rewardHistory.date = expiredAt;
+                    break;
+            }
+
             rewardHistory.reservationName = reservationName;
             rewardHistory.nights = roomNights;
             rewardHistory.serviceType = RewardHistory.ServiceType.valueOf(serviceType);
