@@ -757,6 +757,7 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
         return mMyLocationView;
     }
 
+    @SuppressWarnings("ResourceType")
     void relocationMyLocation(View view)
     {
         mMyLocationView = (ImageView) view.findViewById(0x2);
@@ -775,6 +776,7 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
         }
     }
 
+    @SuppressWarnings("ResourceType")
     void relocationZoomControl(View view)
     {
         mZoomControl = view.findViewById(0x1);

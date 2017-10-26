@@ -1096,6 +1096,7 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
         }
     }
 
+    @SuppressWarnings("ResourceType")
     void relocationMyLocation(View view)
     {
         mMyLocationView = (ImageView) view.findViewById(0x2);
@@ -1116,6 +1117,7 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
         }
     }
 
+    @SuppressWarnings("ResourceType")
     void relocationZoomControl(View view)
     {
         mZoomControl = view.findViewById(0x1);
