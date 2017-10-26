@@ -1577,8 +1577,9 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             @Override
             public void accept(@io.reactivex.annotations.NonNull StayOutboundDetail stayOutboundDetail) throws Exception
             {
-                onStayOutboundDetail(stayOutboundDetail);
+                // 순서 변경 금지... 추천 영역과 상세 데이터 넣는 부분 변경시 Oreo에서 스크롤이 하단가는 이슈 발생
                 notifyRecommendAroundList();
+                onStayOutboundDetail(stayOutboundDetail);
 
                 try
                 {
