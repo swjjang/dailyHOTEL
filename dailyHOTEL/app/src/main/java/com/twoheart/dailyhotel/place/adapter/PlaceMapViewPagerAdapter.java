@@ -18,6 +18,8 @@ public abstract class PlaceMapViewPagerAdapter extends PagerAdapter
     protected ArrayList<PlaceViewItem> mPlaceViewItemList;
     protected OnPlaceMapViewPagerAdapterListener mOnPlaceMapViewPagerAdapterListener;
 
+    protected boolean mRewardEnabled;
+
     public interface OnPlaceMapViewPagerAdapterListener
     {
         void onInformationClick(View view, Place place);
@@ -61,6 +63,11 @@ public abstract class PlaceMapViewPagerAdapter extends PagerAdapter
     public void destroyItem(ViewGroup container, int position, Object object)
     {
         container.removeView((View) object);
+    }
+
+    public void setRewardEnabled(boolean enabled)
+    {
+        mRewardEnabled = enabled;
     }
 
     public void setData(List<PlaceViewItem> list)

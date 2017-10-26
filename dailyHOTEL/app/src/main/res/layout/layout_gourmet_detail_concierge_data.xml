@@ -9,15 +9,6 @@
         android:layout_height="wrap_content"
         android:background="@color/white">
 
-        <View
-            android:id="@+id/conciergeDividerView"
-            android:layout_width="0dp"
-            android:layout_height="12dp"
-            android:background="@drawable/layerlist_divider"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-
         <com.daily.base.widget.DailyTextView
             android:id="@+id/helpTextView"
             android:layout_width="0dp"
@@ -31,7 +22,7 @@
             android:textSize="15dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/conciergeDividerView"
+            app:layout_constraintTop_toTopOf="parent"
             dailyFont:style="Medium"/>
 
         <com.daily.base.widget.DailyTextView

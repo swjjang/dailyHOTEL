@@ -20,8 +20,8 @@ public class StayOutbound
     public float tripAdvisorRating;
     public int tripAdvisorReviewCount;
     public String city;
+    public boolean dailyReward; // 데일리 리워드 아이콘 여부
     private List<String> mVendorTypeList;
-
     public int discountRate;
 
     public StayOutbound()

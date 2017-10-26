@@ -42,12 +42,13 @@
             android:id="@+id/transNameTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="41dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="16dp"
             android:freezesText="true"
+            android:gravity="center_horizontal"
             android:textColor="@color/default_text_c323232"
-            android:textSize="18dp"
+            android:textSize="20dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageLoopView"
@@ -87,15 +88,26 @@
                         app:layout_constraintTop_toTopOf="parent"/>
                 </android.support.constraint.ConstraintLayout>
 
-                <include
-                    android:id="@+id/titleViewDataBinding"
-                    layout="@layout/layout_gourmet_detail_title_data"/>
-
-                <include
-                    android:id="@+id/couponViewDataBinding"
-                    layout="@layout/layout_gourmet_detail_coupon_data"/>
+                <com.daily.dailyhotel.view.DailyDetailTitleInformationView
+                    android:id="@+id/titleInformationView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
 
                 <View
+                    android:id="@+id/trueReviewTopLineView"
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    android:background="@drawable/layerlist_divider"
+                    android:visibility="gone"/>
+
+                <com.daily.dailyhotel.view.DailyDetailTrueReviewView
+                    android:id="@+id/trueReviewView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"/>
+
+                <View
+                    android:id="@+id/dateInformationTopLine"
                     android:layout_width="match_parent"
                     android:layout_height="12dp"
                     android:background="@drawable/layerlist_divider"/>
@@ -142,6 +154,12 @@
                     android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:orientation="vertical"/>
+
+                <View
+                    android:id="@+id/conciergeTopLineView"
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    android:background="@drawable/layerlist_divider"/>
 
                 <include
                     android:id="@+id/conciergeViewDataBinding"

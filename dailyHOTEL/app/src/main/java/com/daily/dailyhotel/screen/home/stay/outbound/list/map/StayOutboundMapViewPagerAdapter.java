@@ -5,7 +5,6 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Paint;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -32,6 +31,7 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
     protected OnPlaceMapViewPagerAdapterListener mOnPlaceMapViewPagerAdapterListener;
 
     private boolean mNightsEnabled; // 연박 여부
+    private boolean mRewardEnabled;
 
     public interface OnPlaceMapViewPagerAdapterListener
     {
@@ -49,6 +49,11 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
     public void setNightsEnabled(boolean enabled)
     {
         mNightsEnabled = enabled;
+    }
+
+    public void setRewardEnabled(boolean enabled)
+    {
+        mRewardEnabled = enabled;
     }
 
     @Override
@@ -116,6 +121,9 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
                 url = imageMap.mediumUrl;
             }
         }
+
+        // Reward 스티커
+        dataBinding.stickerImageView.setVisibility((mRewardEnabled && stayOutbound.dailyReward) ? View.VISIBLE : View.GONE);
 
         ControllerListener controllerListener = new BaseControllerListener<ImageInfo>()
         {

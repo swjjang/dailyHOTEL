@@ -24,6 +24,7 @@ import com.daily.dailyhotel.entity.PaymentResult;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundPayment;
+import com.daily.dailyhotel.entity.StayOutboundRoom;
 import com.daily.dailyhotel.entity.UserSimpleInformation;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundPaymentAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundThankYouAnalyticsParam;
@@ -72,10 +73,6 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     // 1000원 미만 결제시에 간편/일반 결제 불가 - 쿠폰 또는 적립금 전체 사용이 아닌경우 조건 추가
     private static final int CARD_MIN_PRICE = 1000;
     private static final int PHONE_MAX_PRICE = 500000;
-
-    // VENDOR TYPE
-    private static final String VENDOR_FIT_RUMMS = "F";
-    private static final String VENDOR_EAN = "E";
 
     private StayOutboundPaymentAnalyticsInterface mAnalytics;
 
@@ -1159,7 +1156,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
             getViewInterface().setBooking(checkInDateSpannableString, checkOutDateSpannableString, mStayBookDateTime.getNights(), mStayName, mRoomType);
 
-            if (VENDOR_FIT_RUMMS.equalsIgnoreCase(mVendorType) == true)
+            if (StayOutboundRoom.VENDOR_TYPE_FIT_RUUMS.equalsIgnoreCase(mVendorType) == true)
             {
                 getViewInterface().setVendorName(getString(R.string.label_stay_outbound_payment_third_party_fitruums_vendor));
             } else

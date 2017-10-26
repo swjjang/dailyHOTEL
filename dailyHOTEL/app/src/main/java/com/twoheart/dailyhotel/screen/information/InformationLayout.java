@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyScrollView;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.LauncherActivity;
@@ -52,6 +53,8 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         void startContactUs();
 
         void startTermsNPolicy();
+
+        void onDailyRewardClick();
     }
 
     public InformationLayout(Context context, OnEventListener listener)
@@ -81,23 +84,25 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
         View aboutLayout = view.findViewById(R.id.aboutLayout);
         View lifeStyleLayout = view.findViewById(R.id.lifeStyleLayout);
+        View dailyRewardLayout = view.findViewById(R.id.dailyRewardLayout);
         View snsLayout = view.findViewById(R.id.snsLayout);
         View eventLayout = view.findViewById(R.id.eventLayout);
         View noticeLayout = view.findViewById(R.id.noticeLayout);
-
         View faqLayout = view.findViewById(R.id.faqLayout);
         View contactUsLayout = view.findViewById(R.id.contactUsLayout);
         View termsNpolicyLayout = view.findViewById(R.id.termsNpolicyLayout);
 
         aboutLayout.setOnClickListener(this);
         lifeStyleLayout.setOnClickListener(this);
+        dailyRewardLayout.setOnClickListener(this);
         snsLayout.setOnClickListener(this);
         eventLayout.setOnClickListener(this);
         noticeLayout.setOnClickListener(this);
-
         faqLayout.setOnClickListener(this);
         contactUsLayout.setOnClickListener(this);
         termsNpolicyLayout.setOnClickListener(this);
+
+        dailyRewardLayout.setVisibility(DailyRemoteConfigPreference.getInstance(mContext).isKeyRemoteConfigRewardStickerEnabled() ? View.VISIBLE : View.GONE);
 
         mNewEventIconView = eventLayout.findViewById(R.id.eventNewIconView);
         mNewNoticeIconView = noticeLayout.findViewById(R.id.noticeNewIconView);
@@ -253,6 +258,10 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
             case R.id.lifeStyleLayout:
                 ((OnEventListener) mOnEventListener).startLifeStyle();
+                break;
+
+            case R.id.dailyRewardLayout:
+                ((OnEventListener) mOnEventListener).onDailyRewardClick();
                 break;
 
             case R.id.snsLayout:

@@ -92,6 +92,8 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
     DailyLocationFactory mDailyLocationFactory;
 
+    private boolean mRewardEnabled;
+
     public interface OnPlaceListMapFragmentListener
     {
         void onInformationClick(View view, PlaceViewItem placeViewItem);
@@ -313,10 +315,11 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         return mPlaceViewItemList.size();
     }
 
-    public void setPlaceViewItemList(PlaceBookingDay placeBookingDay, List<PlaceViewItem> arrayList, boolean isRefreshAll)
+    public void setPlaceViewItemList(PlaceBookingDay placeBookingDay, List<PlaceViewItem> arrayList, boolean isRefreshAll, boolean rewardEnabled)
     {
         mPlaceBookingDay = placeBookingDay;
         mPlaceViewItemList = arrayList;
+        mRewardEnabled = rewardEnabled;
 
         // Marker 만들기.
         if (mIsCreateView == true)

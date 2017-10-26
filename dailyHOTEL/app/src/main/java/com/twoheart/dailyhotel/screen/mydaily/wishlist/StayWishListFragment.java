@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.view.DailyStayCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
@@ -149,7 +150,7 @@ public class StayWishListFragment extends PlaceWishListFragment
                 return;
             }
 
-            mListLayout.setData(list);
+            mListLayout.setData(list, DailyRemoteConfigPreference.getInstance(mBaseActivity).isKeyRemoteConfigRewardStickerEnabled());
         }
 
         @Override

@@ -142,6 +142,22 @@
                 android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="@id/roomTypeTextView"
                 app:layout_constraintTop_toBottomOf="@id/benefitTextView"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/rewardTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:drawablePadding="3dp"
+                android:gravity="bottom"
+                android:text="@string/label_used_reward"
+                android:textColor="@color/default_text_ce9a230"
+                android:textSize="12dp"
+                android:visibility="gone"
+                app:drawableCompatLeft="@drawable/vector_r_ic_xs_14"
+                app:layout_constraintLeft_toLeftOf="@id/roomTypeTextView"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/nrdTextView"/>
         </android.support.constraint.ConstraintLayout>
 
         <View

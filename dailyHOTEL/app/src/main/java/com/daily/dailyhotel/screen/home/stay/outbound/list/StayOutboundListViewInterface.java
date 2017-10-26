@@ -26,13 +26,13 @@ public interface StayOutboundListViewInterface extends BaseBlurViewInterface
 
     void setPeopleText(String peopleText);
 
-    void setStayOutboundList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean isNights);
+    void setStayOutboundList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean isNights, boolean rewardEnabled);
 
     void addStayOutboundList(List<ObjectItem> objectItemList);
 
     void setStayOutboundMakeMarker(List<StayOutbound> stayOutboundList);
 
-    void setStayOutboundMapViewPagerList(Context context, List<StayOutbound> stayOutboundList, boolean isNights);
+    void setStayOutboundMapViewPagerList(Context context, List<StayOutbound> stayOutboundList, boolean isNights, boolean rewardEnabled);
 
     int getMapLayoutResourceId();
 

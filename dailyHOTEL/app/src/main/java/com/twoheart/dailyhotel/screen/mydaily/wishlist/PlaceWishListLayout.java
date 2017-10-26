@@ -98,12 +98,12 @@ public abstract class PlaceWishListLayout extends BaseBlurLayout
         EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
     }
 
-    public void setData(ArrayList<? extends Place> list)
+    public void setData(ArrayList<? extends Place> list, boolean rewardEnabled)
     {
-        setData(list, true);
+        setData(list, true, rewardEnabled);
     }
 
-    public void setData(ArrayList<? extends Place> list, boolean isShowEmpty)
+    public void setData(ArrayList<? extends Place> list, boolean isShowEmpty, boolean rewardEnabled)
     {
         if (list == null || list.size() == 0)
         {
@@ -132,6 +132,8 @@ public abstract class PlaceWishListLayout extends BaseBlurLayout
             mListAdapter.setData(viewItemList);
             mListAdapter.notifyDataSetChanged();
         }
+
+        mListAdapter.setRewardEnabled(rewardEnabled);
 
         ((OnEventListener) mOnEventListener).onRecordAnalyticsList(list);
     }

@@ -98,6 +98,9 @@ public class GourmetDetailData
     @JsonField(name = "sticker")
     public StickerData sticker;
 
+    @JsonField(name = "couponDiscount")
+    public int couponDiscount;
+
 
     public GourmetDetailData()
     {
@@ -124,6 +127,7 @@ public class GourmetDetailData
         gourmetDetail.setBenefitContentList(benefitContents);
         gourmetDetail.wishCount = wishCount;
         gourmetDetail.myWish = myWish;
+        gourmetDetail.couponPrice = couponDiscount;
 
         if (sticker != null)
         {

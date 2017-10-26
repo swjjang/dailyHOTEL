@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.screen.home.collection;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,8 +11,7 @@ import android.view.View;
 
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
-import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
-import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.R;
@@ -26,7 +24,6 @@ import com.twoheart.dailyhotel.network.model.RecommendationPlace;
 import com.twoheart.dailyhotel.network.model.Sticker;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -34,10 +31,6 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -253,11 +246,11 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
         if (endTime < currentTime)
         {
-            mCollectionBaseLayout.setData(null, mPlaceBookingDay);
+            mCollectionBaseLayout.setData(null, mPlaceBookingDay, DailyRemoteConfigPreference.getInstance(this).isKeyRemoteConfigRewardStickerEnabled());
 
             ArrayList<PlaceViewItem> placeViewItems = makePlaceList(imageBaseUrl, null, stickerList);
 
-            mCollectionBaseLayout.setData(placeViewItems, mPlaceBookingDay);
+            mCollectionBaseLayout.setData(placeViewItems, mPlaceBookingDay, DailyRemoteConfigPreference.getInstance(this).isKeyRemoteConfigRewardStickerEnabled());
 
             showSimpleDialog(null, getString(R.string.message_collection_finished_recommendation), getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
             {
@@ -271,7 +264,7 @@ public abstract class CollectionBaseActivity extends BaseActivity
         {
             ArrayList<PlaceViewItem> placeViewItems = makePlaceList(imageBaseUrl, list, stickerList);
 
-            mCollectionBaseLayout.setData(placeViewItems, mPlaceBookingDay);
+            mCollectionBaseLayout.setData(placeViewItems, mPlaceBookingDay, DailyRemoteConfigPreference.getInstance(this).isKeyRemoteConfigRewardStickerEnabled());
 
             if ((list == null || list.size() == 0) && checkRequestCollection == false)
             {

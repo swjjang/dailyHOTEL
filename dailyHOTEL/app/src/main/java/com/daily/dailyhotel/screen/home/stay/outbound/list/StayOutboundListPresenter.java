@@ -43,6 +43,7 @@ import com.daily.dailyhotel.screen.home.stay.outbound.filter.StayOutboundFilterA
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.preview.StayOutboundPreviewActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
@@ -952,7 +953,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             @Override
             public void accept(@io.reactivex.annotations.NonNull List<StayOutbound> stayOutboundList) throws Exception
             {
-                getViewInterface().setStayOutboundMapViewPagerList(getActivity(), stayOutboundList, mStayBookDateTime.getNights() > 1);
+                getViewInterface().setStayOutboundMapViewPagerList(getActivity(), stayOutboundList, mStayBookDateTime.getNights() > 1//
+                    , DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerEnabled());
                 getViewInterface().setMapViewPagerVisibility(true);
             }
         }));
@@ -1181,7 +1183,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
             try
             {
-                getViewInterface().setStayOutboundMapViewPagerList(getActivity(), mStayOutboundList, mStayBookDateTime.getNights() > 1);
+                getViewInterface().setStayOutboundMapViewPagerList(getActivity(), mStayOutboundList, mStayBookDateTime.getNights() > 1//
+                    , DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerEnabled());
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -1242,7 +1245,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                         setScreenVisible(ScreenType.LIST, mStayOutboundFilters);
                     }
 
-                    getViewInterface().setStayOutboundList(objectItemList, isSortByDistance, mStayBookDateTime.getNights() > 1);
+                    getViewInterface().setStayOutboundList(objectItemList, isSortByDistance, mStayBookDateTime.getNights() > 1//
+                        , DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerEnabled());
                 } else
                 {
                     setScreenVisible(ScreenType.LIST, mStayOutboundFilters);

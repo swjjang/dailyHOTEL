@@ -19,6 +19,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.VersionUtils;
 import com.daily.dailyhotel.entity.UserSimpleInformation;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
+import com.daily.dailyhotel.screen.mydaily.reward.RewardActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
@@ -173,6 +174,12 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
                     {
                         mOnEventListener.startStamp();
                     }
+                } else if (externalDeepLink.isRewardView() == true)
+                {
+                    if (DailyRemoteConfigPreference.getInstance(context).isKeyRemoteConfigRewardStickerEnabled() == true)
+                    {
+                        mOnEventListener.onRewardClick();
+                    }
                 }
 
                 //            else if (DailyDeepLink.getInstance().isWishListHotelView() == true)
@@ -314,6 +321,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
             }
 
             case Constants.CODE_REQUEST_ACTIVITY_STAMP:
+            case Constants.CODE_REQUEST_ACTIVITY_REWARD:
             {
                 mDontReload = false;
                 break;
@@ -483,6 +491,20 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
 
             AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , Action.STAMP_MENU_CLICK, AnalyticsManager.ValueType.EMPTY, null);
+        }
+
+        @Override
+        public void onRewardClick()
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+            baseActivity.startActivityForResult(RewardActivity.newInstance(baseActivity), Constants.CODE_REQUEST_ACTIVITY_REWARD);
         }
 
         @Override

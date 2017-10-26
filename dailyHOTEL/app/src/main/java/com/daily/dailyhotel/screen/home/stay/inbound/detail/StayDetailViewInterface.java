@@ -16,7 +16,11 @@ public interface StayDetailViewInterface extends BaseDialogViewInterface
 
     Observable<Boolean> hideRoomList(boolean animation);
 
-    void setStayDetail(StayBookDateTime stayBookDateTime, StayDetail stayDetail, int trueReviewCount, boolean showStamp);
+    void setStayDetail(StayBookDateTime stayBookDateTime, StayDetail stayDetail, int trueReviewCount, boolean stampEnabled, boolean rewardEnabled);
+
+    void setRewardNonMember(boolean visible, String titleText, String optionText, int campaignFreeNights, String descriptionText);
+
+    void setRewardMember(boolean visible, String titleText, String optionText, int nights, String descriptionText);
 
     Observable<Boolean> getSharedElementTransition(int gradientType);
 
@@ -53,4 +57,8 @@ public interface StayDetailViewInterface extends BaseDialogViewInterface
     void showTrueVRDialog(CheckBox.OnCheckedChangeListener checkedChangeListener, View.OnClickListener positiveListener, Dialog.OnDismissListener onDismissListener);
 
     void showStampDialog(Dialog.OnDismissListener listener);
+
+    void startCampaignStickerAnimation();
+
+    void stopCampaignStickerAnimation();
 }

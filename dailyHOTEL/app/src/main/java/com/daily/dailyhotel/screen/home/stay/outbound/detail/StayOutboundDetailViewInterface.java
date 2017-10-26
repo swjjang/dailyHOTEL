@@ -18,7 +18,11 @@ public interface StayOutboundDetailViewInterface extends BaseBlurViewInterface
 
     Observable<Boolean> hideRoomList(boolean animation);
 
-    void setStayDetail(StayBookDateTime stayBookDateTime, People people, StayOutboundDetail stayOutboundDetail);
+    void setStayDetail(StayBookDateTime stayBookDateTime, People people, StayOutboundDetail stayOutboundDetail, boolean rewardEnabled);
+
+    void setRewardNonMember(boolean visible, String titleText, String optionText, int campaignFreeNights, String descriptionText);
+
+    void setRewardMember(boolean visible, String titleText, String optionText, int nights, String descriptionText);
 
     Observable<Boolean> getSharedElementTransition(int gradientType);
 
@@ -41,4 +45,8 @@ public interface StayOutboundDetailViewInterface extends BaseBlurViewInterface
     void scrollTop();
 
     void setRecommendAroundList(ArrayList<CarouselListItem> list, StayBookDateTime stayBookDateTime);
+
+    void startCampaignStickerAnimation();
+
+    void stopCampaignStickerAnimation();
 }

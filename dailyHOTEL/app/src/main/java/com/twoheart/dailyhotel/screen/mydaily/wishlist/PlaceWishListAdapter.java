@@ -25,6 +25,7 @@ public abstract class PlaceWishListAdapter extends RecyclerView.Adapter<Recycler
     private Constants.SortType mSortType; // TODO : 추후 제거 필요!
     protected boolean mShowDistanceIgnoreSort;
     protected boolean mTrueVREnabled;
+    protected boolean mRewardEnabled;
 
     public interface OnPlaceWishListItemListener
     {
@@ -50,6 +51,11 @@ public abstract class PlaceWishListAdapter extends RecyclerView.Adapter<Recycler
         mListener = listener;
 
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+
+    public void setRewardEnabled(boolean enabled)
+    {
+        mRewardEnabled = enabled;
     }
 
     public ArrayList<PlaceViewItem> getList()

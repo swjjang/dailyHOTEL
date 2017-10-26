@@ -77,6 +77,8 @@ public class DailyExternalDeepLink extends DailyDeepLink
 
     private static final String PLACE_V20_DETAIL = "pd"; // place detail
 
+    private static final String REWARD_V21 = "reward"; // 마이데일리 데일리리워드
+
     // Param
 
     //    private static final String PARAM_V2_VIEW = "view"; // view
@@ -137,7 +139,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
     // Version
 
     private static final int MINIMUM_VERSION_CODE = 3;
-    private static final int MAXIMUM_VERSION_CODE = 20;
+    private static final int MAXIMUM_VERSION_CODE = 21;
 
     private int mVersionCode;
 
@@ -246,7 +248,16 @@ public class DailyExternalDeepLink extends DailyDeepLink
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
-    // Version 19
+    // Version 21
+    ///////////////////////////////////////////////////////////////////////////////////
+
+    public boolean isRewardView()
+    {
+        return equalsView(21, REWARD_V21);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    // Version 20
     ///////////////////////////////////////////////////////////////////////////////////
 
     public boolean isPlaceDetailView()

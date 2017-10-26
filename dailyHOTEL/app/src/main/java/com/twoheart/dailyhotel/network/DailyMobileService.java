@@ -13,11 +13,14 @@ import com.daily.dailyhotel.repository.remote.model.GourmetCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.GourmetDetailData;
 import com.daily.dailyhotel.repository.remote.model.GourmetListData;
 import com.daily.dailyhotel.repository.remote.model.GourmetPaymentData;
+import com.daily.dailyhotel.repository.remote.model.NotificationData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
 import com.daily.dailyhotel.repository.remote.model.RecentlyPlacesData;
 import com.daily.dailyhotel.repository.remote.model.BookingCancelData;
 import com.daily.dailyhotel.repository.remote.model.ReviewData;
 import com.daily.dailyhotel.repository.remote.model.ReviewScoresData;
+import com.daily.dailyhotel.repository.remote.model.RewardDetailData;
+import com.daily.dailyhotel.repository.remote.model.RewardHistoryDetailData;
 import com.daily.dailyhotel.repository.remote.model.ShortUrlData;
 import com.daily.dailyhotel.repository.remote.model.StayBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayCampaignTagsData;
@@ -504,6 +507,10 @@ public interface DailyMobileService
     @POST()
     Observable<ShortUrlData> getShortUrl(@Url String mobileAPI, @Body JSONObject jsonObject);
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @PUT("{mobileAPI}")
+    Observable<BaseDto<NotificationData>> updateNotification(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("isAgreed") boolean agreed);
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // ProfileRemoteImpl
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -898,4 +905,16 @@ public interface DailyMobileService
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
     Observable<BaseDto<CouponsData>> getCouponHistoryList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    // RewardRemoteImpl
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<RewardDetailData>> getRewardDetail(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<RewardHistoryDetailData>> getRewardHistoryDetail(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 }

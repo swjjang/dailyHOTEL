@@ -1352,12 +1352,23 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                         || externalDeepLink.isProfileView() == true//
                         || externalDeepLink.isProfileBirthdayView() == true//
                         || externalDeepLink.isStampView() == true//
+                        || externalDeepLink.isRewardView() == true//
                         )
                     {
                         // 스탬프 이벤트가 종료되면 홈에서 팝업을 띄우고 종료시킨다.
                         if (externalDeepLink.isStampView() == true)
                         {
                             if (DailyRemoteConfigPreference.getInstance(MainActivity.this).isRemoteConfigStampEnabled() == true)
+                            {
+                                mMainFragmentManager.select(false, MainFragmentManager.INDEX_MYDAILY_FRAGMENT, true, bundle);
+                            } else
+                            {
+                                mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, true, bundle);
+                            }
+                        } else if (externalDeepLink.isRewardView() == true)
+                        {
+                            // 리워드 이벤트가 종료되면 홈에서 팝업을 띄우고 종료시킨다.
+                            if (DailyRemoteConfigPreference.getInstance(MainActivity.this).isKeyRemoteConfigRewardStickerEnabled() == true)
                             {
                                 mMainFragmentManager.select(false, MainFragmentManager.INDEX_MYDAILY_FRAGMENT, true, bundle);
                             } else
