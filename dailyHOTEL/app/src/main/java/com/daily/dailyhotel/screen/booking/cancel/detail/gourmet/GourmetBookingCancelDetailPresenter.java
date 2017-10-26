@@ -591,16 +591,13 @@ public class GourmetBookingCancelDetailPresenter //
 
             String userName = DailyUserPreference.getInstance(getActivity()).getName();
 
-            String message = getString(R.string.message_booking_gourmet_share_kakao, //
-                userName, mGourmetBookingDetail.gourmetName, mGourmetBookingDetail.guestName,//
-                DailyTextUtils.getPriceFormat(getActivity(), mGourmetBookingDetail.priceTotal, false), //
-                DailyCalendar.convertDateFormatString(mGourmetBookingDetail.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"),//
-                DailyCalendar.convertDateFormatString(mGourmetBookingDetail.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm"), //
-                mGourmetBookingDetail.ticketName, getString(R.string.label_booking_count, mGourmetBookingDetail.ticketCount), //
-                mGourmetBookingDetail.gourmetAddress);
+            String message = getString(R.string.message_booking_cancel_gourmet_share_kakao, userName //
+                , mGourmetBookingDetail.gourmetName, mGourmetBookingDetail.guestName //
+                , mGourmetBookingDetail.ticketName, mGourmetBookingDetail.ticketCount //
+                , DailyCalendar.convertDateFormatString(mGourmetBookingDetail.cancelDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd") //
+                , mGourmetBookingDetail.gourmetAddress);
 
-            KakaoLinkManager.newInstance(getActivity()).shareBookingGourmet(message, mGourmetBookingDetail.gourmetIndex,//
-                mImageUrl, DailyCalendar.convertDateFormatString(mGourmetBookingDetail.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
+            KakaoLinkManager.newInstance(getActivity()).shareBookingCancelGourmet(message, mImageUrl);
 
         } catch (Exception e)
         {
@@ -634,13 +631,11 @@ public class GourmetBookingCancelDetailPresenter //
             String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/gourmet/%d?reserveDate=%s"//
                 , mGourmetBookingDetail.gourmetIndex, DailyCalendar.convertDateFormatString(mGourmetBookingDetail.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd"));
 
-            final String message = getString(R.string.message_booking_gourmet_share_sms, //
-                userName, mGourmetBookingDetail.gourmetName, mGourmetBookingDetail.guestName,//
-                DailyTextUtils.getPriceFormat(getActivity(), mGourmetBookingDetail.priceTotal, false), //
-                DailyCalendar.convertDateFormatString(mGourmetBookingDetail.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"),//
-                DailyCalendar.convertDateFormatString(mGourmetBookingDetail.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm"), //
-                mGourmetBookingDetail.ticketName, getString(R.string.label_booking_count, mGourmetBookingDetail.ticketCount), //
-                mGourmetBookingDetail.gourmetAddress);
+            final String message = getString(R.string.message_booking_cancel_gourmet_share_sms, userName //
+                , mGourmetBookingDetail.gourmetName, mGourmetBookingDetail.guestName //
+                , mGourmetBookingDetail.ticketName, mGourmetBookingDetail.ticketCount //
+                , DailyCalendar.convertDateFormatString(mGourmetBookingDetail.cancelDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd") //
+                , mGourmetBookingDetail.gourmetAddress);
 
             CommonRemoteImpl commonRemote = new CommonRemoteImpl(getActivity());
 
