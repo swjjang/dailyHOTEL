@@ -39,6 +39,7 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
+import com.daily.dailyhotel.view.DailyRewardCardView;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.daily.dailyhotel.view.carousel.DailyCarouselAnimationLayout;
 import com.daily.dailyhotel.view.carousel.DailyCarouselLayout;
@@ -104,6 +105,8 @@ public class HomeLayout extends BaseBlurLayout
     DailyCarouselAnimationLayout mWishListLayout;
     HomeRecommendationLayout mHomeRecommendationLayout;
 
+    private DailyRewardCardView mDailyRewardCardView;
+
     ObjectAnimator mErrorPopupAnimator;
 
     LinearLayout mProviderInfoView;
@@ -154,6 +157,12 @@ public class HomeLayout extends BaseBlurLayout
         void onCategoryItemClick(DailyCategoryType categoryType);
 
         void onStampEventClick();
+
+        void onRewardGuideClick();
+
+        void onRewardLoginClick();
+
+        void onRewardDetailClick();
     }
 
     public enum MessageType
@@ -333,6 +342,12 @@ public class HomeLayout extends BaseBlurLayout
         initScrollButtonLayout(mHomeContentLayout);
         initCategoryLayout(mHomeContentLayout);
         initTextMessageLayout(mHomeContentLayout);
+
+        if (DailyRemoteConfigPreference.getInstance(mContext).isKeyRemoteConfigRewardStickerEnabled() == true)
+        {
+            initRewardLayout(mHomeContentLayout);
+        }
+
         initRecentListLayout(mHomeContentLayout);
         initWishListLayout(mHomeContentLayout);
 
@@ -439,6 +454,37 @@ public class HomeLayout extends BaseBlurLayout
         });
 
         hideMessageLayout();
+    }
+
+    private void initRewardLayout(LinearLayout layout)
+    {
+        if (layout == null || mContext == null)
+        {
+            return;
+        }
+
+        mDailyRewardCardView = new DailyRewardCardView(mContext);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        final int DP_15 = ScreenUtils.dpToPx(mContext, 15);
+        layoutParams.leftMargin = DP_15;
+        layoutParams.rightMargin = DP_15;
+        layoutParams.topMargin = DP_15;
+
+        mDailyRewardCardView.setLayoutParams(layoutParams);
+
+        layout.addView(mDailyRewardCardView);
+
+        mDailyRewardCardView.setOnGuideClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).onRewardGuideClick();
+            }
+        });
+
+        setRewardVisible(false);
     }
 
     private void initWishListLayout(LinearLayout layout)
@@ -939,6 +985,79 @@ public class HomeLayout extends BaseBlurLayout
         //        setMessageLayoutVisibility(View.INVISIBLE);
         //
         //        mTextMessageLayout.post(() -> startTextLayoutShowAnimation());
+    }
+
+    public void setRewardVisible(boolean visible)
+    {
+        if (mDailyRewardCardView == null)
+        {
+            return;
+        }
+
+        mDailyRewardCardView.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    public void setNonMemberRewardData(String titleText, String descriptionText, String optionText, int stickerCount)
+    {
+        if (mDailyRewardCardView == null)
+        {
+            return;
+        }
+
+        mDailyRewardCardView.setGuideVisible(true);
+        mDailyRewardCardView.setRewardTitleText(titleText);
+        mDailyRewardCardView.setDescriptionText(descriptionText);
+        mDailyRewardCardView.setOptionText(optionText);
+        mDailyRewardCardView.setCampaignFreeStickerCount(stickerCount);
+
+        mDailyRewardCardView.setOnOptionClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).onRewardLoginClick();
+            }
+        });
+
+        mDailyRewardCardView.startCampaignStickerAnimation();
+    }
+
+    public void startRewardCampaignStickerAnimation()
+    {
+        if (mDailyRewardCardView == null || mDailyRewardCardView.getVisibility() == View.GONE)
+        {
+            return;
+        }
+
+        mDailyRewardCardView.startCampaignStickerAnimation();
+    }
+
+    public void stopRewardCampaignStickerAnimation()
+    {
+        if (mDailyRewardCardView == null)
+        {
+            return;
+        }
+
+        mDailyRewardCardView.stopCampaignStickerAnimation();
+    }
+
+    public void setMemberRewardData(String titleText, String descriptionText, String optionText, int stickerCount)
+    {
+        mDailyRewardCardView.setGuideVisible(true);
+        mDailyRewardCardView.setRewardTitleText(titleText);
+        mDailyRewardCardView.setDescriptionText(descriptionText);
+        mDailyRewardCardView.setOptionText(optionText);
+        mDailyRewardCardView.setStickerCount(stickerCount);
+
+        mDailyRewardCardView.setOnOptionClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).onRewardDetailClick();
+            }
+        });
     }
 
     public void setCategoryStayOutboundNewVisible(boolean visible)

@@ -32,11 +32,14 @@ import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
+import com.daily.dailyhotel.repository.remote.RewardRemoteImpl;
+import com.daily.dailyhotel.screen.common.web.DailyWebActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.preview.StayOutboundPreviewActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchActivity;
+import com.daily.dailyhotel.screen.mydaily.reward.RewardActivity;
 import com.daily.dailyhotel.storage.database.DailyDb;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
@@ -67,6 +70,7 @@ import com.twoheart.dailyhotel.screen.information.terms.LocationTermsActivity;
 import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
 import com.twoheart.dailyhotel.screen.information.terms.ProtectYouthTermsActivity;
 import com.twoheart.dailyhotel.screen.information.terms.TermActivity;
+import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.SignupStep1Activity;
 import com.twoheart.dailyhotel.screen.mydaily.recentplace.RecentPlacesTabActivity;
 import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
@@ -135,7 +139,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
     private RecentlyRemoteImpl mRecentlyRemoteImpl;
     private RecentlyLocalImpl mRecentlyLocalImpl;
-
+    private RewardRemoteImpl mRewardRemoteImpl;
     private CommonRemoteImpl mCommonRemoteImpl;
 
     @Override
@@ -145,6 +149,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
         mCommonRemoteImpl = new CommonRemoteImpl(getActivity());
         mRecentlyRemoteImpl = new RecentlyRemoteImpl(getActivity());
         mRecentlyLocalImpl = new RecentlyLocalImpl(getActivity());
+        mRewardRemoteImpl = new RewardRemoteImpl(getActivity());
     }
 
     @Nullable
@@ -242,6 +247,11 @@ public class HomeFragment extends BaseMenuNavigationFragment
         {
             refreshList(true);
         }
+
+        if (mHomeLayout != null && DailyHotel.isLogin() == false && DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerCampaignEnabled() == true)
+        {
+            mHomeLayout.startRewardCampaignStickerAnimation();
+        }
     }
 
     @Override
@@ -254,6 +264,8 @@ public class HomeFragment extends BaseMenuNavigationFragment
         if (mHomeLayout != null)
         {
             mHomeLayout.clearNextEventPosition();
+
+            mHomeLayout.stopRewardCampaignStickerAnimation();
         }
     }
 
@@ -1483,6 +1495,70 @@ public class HomeFragment extends BaseMenuNavigationFragment
             {
                 mNetworkController.requestUserStamps();
             }
+
+            // 리워드
+            if (DailyHotel.isLogin() == true)
+            {
+                addCompositeDisposable(mRewardRemoteImpl.getRewardStickerCount().flatMap(new Function<Integer, Observable<Integer>>()
+                {
+                    @Override
+                    public Observable<Integer> apply(Integer integer) throws Exception
+                    {
+                        // 실제로는 리워드를 운영중이지 않는 경우에는 null을 보내서 화면에 안보이도록 한다.
+                        //                    return null;
+
+                        return mRewardRemoteImpl.getRewardStickerCount();
+                    }
+                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Integer>()
+                {
+                    @Override
+                    public void accept(Integer integer) throws Exception
+                    {
+                        DailyRemoteConfigPreference.getInstance(mBaseActivity).setKeyRemoteConfigRewardStickerEnabled(true);
+                        mHomeLayout.setRewardVisible(true);
+
+                        String descriptionText = DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigRewardStickerMemberMessage(integer);
+
+                        mHomeLayout.setMemberRewardData(DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigRewardStickerTitleMessage()//
+                            , descriptionText, getString(R.string.label_reward_go_reward), integer);
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        mHomeLayout.setRewardVisible(false);
+                    }
+                }));
+            } else
+            {
+                addCompositeDisposable(mRewardRemoteImpl.getRewardStickerCount().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Integer>()
+                {
+                    @Override
+                    public void accept(Integer integer) throws Exception
+                    {
+                        DailyRemoteConfigPreference.getInstance(mBaseActivity).setKeyRemoteConfigRewardStickerEnabled(true);
+                        mHomeLayout.setRewardVisible(true);
+
+                        String descriptionText = DailyRemoteConfigPreference.getInstance(mBaseActivity).isKeyRemoteConfigRewardStickerCampaignEnabled() //
+                            ? DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigRewardStickerNonMemberCampaignMessage()//
+                            : DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigRewardStickerNonMemberDefaultMessage();
+
+                        mHomeLayout.setNonMemberRewardData(DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigRewardStickerTitleMessage()//
+                            , descriptionText, getString(R.string.label_reward_login)//
+                            , DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigRewardStickerNonMemberCampaignFreeNights());
+
+                        mHomeLayout.startRewardCampaignStickerAnimation();
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        mHomeLayout.setRewardVisible(false);
+                    }
+                }));
+            }
         }
     }
 
@@ -2191,6 +2267,40 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION,//
                 AnalyticsManager.Action.STAMP_DETAIL_CLICK, AnalyticsManager.Label.HOME, null);
+        }
+
+        @Override
+        public void onRewardGuideClick()
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            startActivityForResult(DailyWebActivity.newInstance(getActivity(), getString(R.string.label_reward_reward_guide)//
+                , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStaticUrlDailyReward()), Constants.CODE_REQUEST_ACTIVITY_REWARD_GUIDE);
+        }
+
+        @Override
+        public void onRewardLoginClick()
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            startActivityForResult(LoginActivity.newInstance(mBaseActivity, AnalyticsManager.Screen.HOME), Constants.CODE_REQUEST_ACTIVITY_LOGIN);
+        }
+
+        @Override
+        public void onRewardDetailClick()
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            startActivityForResult(RewardActivity.newInstance(mBaseActivity), Constants.CODE_REQUEST_ACTIVITY_REWARD);
         }
 
         @Override

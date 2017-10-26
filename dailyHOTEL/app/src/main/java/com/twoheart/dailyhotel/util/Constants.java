@@ -312,6 +312,7 @@ public interface Constants
     int CODE_REQUEST_ACTIVITY_WISH_DIALOG = 79;
     int CODE_REQUEST_ACTIVITY_REWARD = 80; // 마이 데일리의 데일리리워드
     int CODE_REQUEST_ACTIVITY_DAILY_REWARD = 81; // 더보기의 데일리 리워드
+    int CODE_REQUEST_ACTIVITY_REWARD_GUIDE = 82; // 마이 데일리의 데일리리워드 가이드
 
 
     // Android Activity의 Result Code들이다.

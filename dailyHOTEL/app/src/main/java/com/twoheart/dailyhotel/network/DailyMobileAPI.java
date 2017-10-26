@@ -23,6 +23,7 @@ import com.daily.dailyhotel.repository.remote.model.RecentlyPlacesData;
 import com.daily.dailyhotel.repository.remote.model.BookingCancelData;
 import com.daily.dailyhotel.repository.remote.model.ReviewData;
 import com.daily.dailyhotel.repository.remote.model.ReviewScoresData;
+import com.daily.dailyhotel.repository.remote.model.RewardCountData;
 import com.daily.dailyhotel.repository.remote.model.RewardDetailData;
 import com.daily.dailyhotel.repository.remote.model.RewardHistoryDetailData;
 import com.daily.dailyhotel.repository.remote.model.ShortUrlData;
@@ -2003,6 +2004,14 @@ public class DailyMobileAPI
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // RewardRemoteImpl
     /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public Observable<BaseDto<RewardCountData>> getRewardStickerCount()
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v5/reward"//
+            : "MjUkMzYkNiQzMSQ0MCQzMSQyOCQyMyQxMSQzNyQ0OCQ0NiQyNCQ0NCQyMiQ1JA==$NDI5NLEYFDRkHM5ODY1MDEyYQkBGE3RBjLREOKKDANCQjJKCEUGNkGIzNTE=$";
+
+        return mDailyMobileService.getRewardStickerCount(Crypto.getUrlDecoderEx(URL)).subscribeOn(Schedulers.io());
+    }
 
     public Observable<BaseDto<RewardDetailData>> getRewardDetail()
     {
