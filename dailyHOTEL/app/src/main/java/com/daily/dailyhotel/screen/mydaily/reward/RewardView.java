@@ -9,7 +9,6 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.LinearInterpolator;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
@@ -255,43 +254,56 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
             return;
         }
 
-        final View[] views = {getViewDataBinding().sticker1nightsTextView//
-            , getViewDataBinding().sticker2nightsTextView};
-
         final View[] stickerViews = {getViewDataBinding().sticker1nightsImageView//
-            , getViewDataBinding().sticker2nightsImageView};
+            , getViewDataBinding().sticker2nightsImageView//
+            , getViewDataBinding().sticker3nightsImageView//
+            , getViewDataBinding().sticker4nightsImageView//
+            , getViewDataBinding().sticker5nightsImageView//
+            , getViewDataBinding().sticker6nightsImageView//
+            , getViewDataBinding().sticker7nightsImageView//
+            , getViewDataBinding().sticker8nightsImageView//
+            , getViewDataBinding().sticker9nightsImageView};
 
-        int length = views.length;
+        int campaignCount = 0;
+
+        final int campaignViewsLength = stickerViews.length;
+
+        for (int i = 0; i < campaignViewsLength; i++)
+        {
+            if (stickerViews[i].getVisibility() == View.VISIBLE)
+            {
+                campaignCount++;
+            } else
+            {
+                break;
+            }
+        }
+
+        if (campaignCount == 0)
+        {
+            return;
+        }
 
         List<Animator> animatorList = new ArrayList<>();
 
-        for (int i = 0; i < length; i++)
+        final int MS_PER_FRAME = 170;
+
+        for (int i = 0; i < campaignCount; i++)
         {
-            views[i].setAlpha(0.0f);
-            stickerViews[i].setAlpha(0.5f);
+            ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(stickerViews[i], View.ALPHA, 0.5f, 0.5f);
+            objectAnimator1.setDuration(MS_PER_FRAME * 3);
 
-            ObjectAnimator stickerHideObjectAnimator = ObjectAnimator.ofFloat(stickerViews[i], View.ALPHA, 0.5f, 0.0f);
-            stickerHideObjectAnimator.setDuration(500);
-            stickerHideObjectAnimator.setInterpolator(new LinearInterpolator());
+            ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(stickerViews[i], View.ALPHA, 0.5f, 1.0f, 1.0f, 0.5f);
+            objectAnimator2.setStartDelay(MS_PER_FRAME * 3);
+            objectAnimator2.setDuration(MS_PER_FRAME * 6);
 
-            ObjectAnimator stickerEmptyObjectAnimator = ObjectAnimator.ofFloat(views[i], View.ALPHA, 0.0f, 1.0f, 0.0f);
-            stickerEmptyObjectAnimator.setStartDelay(400);
-            stickerEmptyObjectAnimator.setDuration(1000);
-            stickerEmptyObjectAnimator.setInterpolator(new LinearInterpolator());
-
-            ObjectAnimator stickerShowObjectAnimator = ObjectAnimator.ofFloat(stickerViews[i], View.ALPHA, 0.0f, 0.5f);
-            stickerShowObjectAnimator.setStartDelay(1300);
-            stickerShowObjectAnimator.setDuration(1000);
-            stickerShowObjectAnimator.setInterpolator(new LinearInterpolator());
-
-            animatorList.add(stickerHideObjectAnimator);
-            animatorList.add(stickerEmptyObjectAnimator);
-            animatorList.add(stickerShowObjectAnimator);
+            animatorList.add(objectAnimator1);
+            animatorList.add(objectAnimator2);
         }
 
         mStickerAnimatorSet = new AnimatorSet();
-        mStickerAnimatorSet.setStartDelay(500);
         mStickerAnimatorSet.playTogether(animatorList);
+        mStickerAnimatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
         mStickerAnimatorSet.addListener(new Animator.AnimatorListener()
         {
             boolean canceled;

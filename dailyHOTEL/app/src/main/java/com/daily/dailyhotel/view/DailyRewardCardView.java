@@ -392,12 +392,10 @@ public class DailyRewardCardView extends ConstraintLayout
             // 1 set
             ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(campaignViews[i], View.ALPHA, 0.5f, 0.5f);
             objectAnimator1.setDuration(MS_PER_FRAME * 3);
-            objectAnimator1.setInterpolator(new AccelerateDecelerateInterpolator());
 
             ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(campaignViews[i], View.ALPHA, 0.5f, 1.0f, 1.0f, 0.5f);
             objectAnimator2.setStartDelay(MS_PER_FRAME * 3);
             objectAnimator2.setDuration(MS_PER_FRAME * 6);
-            objectAnimator2.setInterpolator(new AccelerateDecelerateInterpolator());
 
             animatorList.add(objectAnimator1);
             animatorList.add(objectAnimator2);
@@ -407,12 +405,10 @@ public class DailyRewardCardView extends ConstraintLayout
                 // 1 set
                 ObjectAnimator objectAnimator3 = ObjectAnimator.ofFloat(lineViews[i], View.ALPHA, 0.5f, 0.5f);
                 objectAnimator3.setDuration(MS_PER_FRAME * 3);
-                objectAnimator3.setInterpolator(new AccelerateDecelerateInterpolator());
 
                 ObjectAnimator objectAnimator4 = ObjectAnimator.ofFloat(lineViews[i], View.ALPHA, 0.5f, 1.0f, 1.0f, 0.5f);
                 objectAnimator4.setStartDelay(MS_PER_FRAME * 3);
                 objectAnimator4.setDuration(MS_PER_FRAME * 6);
-                objectAnimator4.setInterpolator(new AccelerateDecelerateInterpolator());
 
                 animatorList.add(objectAnimator3);
                 animatorList.add(objectAnimator4);
@@ -421,6 +417,7 @@ public class DailyRewardCardView extends ConstraintLayout
 
         mStickerAnimatorSet = new AnimatorSet();
         mStickerAnimatorSet.playTogether(animatorList);
+        mStickerAnimatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
         mStickerAnimatorSet.addListener(new Animator.AnimatorListener()
         {
             boolean canceled;
