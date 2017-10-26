@@ -232,6 +232,7 @@
     <string name="actionbar_title_stamp_history">스탬프 내역</string>
     <string name="actionbar_title_stamp_terms_activity">스탬프 유의사항 안내</string>
     <string name="actionbar_title_review_terms_activity">트루리뷰 운영정책</string>
+    <string name="actionbar_title_booking_cancel_list_activity">취소내역</string>
 
     <!-- Toast Messages -->
     <string name="toast_msg_please_input_guest">투숙자명을 입력해주세요. 예약 확인시 필요한 정보입니다.</string>
@@ -718,6 +719,7 @@
     <string name="label_booking_date">날짜</string>
     <string name="label_reservation_contact">예약자 전화번호</string>
     <string name="label_booking_payment_date">결제일</string>
+    <string name="label_booking_cancel_date">취소일</string>
     <string name="label_booking_view_detail">상세 정보 보기</string>
     <string name="label_booking_view_map">길찾기</string>
     <string name="label_booking_call">문의하기</string>
@@ -726,6 +728,7 @@
     <string name="label_booking_reservation_information">1. 예약 정보</string>
     <string name="label_booking_payment_information">2. 결제 금액 정보</string>
     <string name="label_booking_refund_information">3. 취소 및 환불 규정</string>
+    <string name="label_booking_cancel_information">2. 취소 정보</string>
     <string name="label_booking_reservation_recommend_gourmet_button">주변 추천 레스토랑 확인</string>
     <string name="label_booking_reservation_recommend_gourmet_title">주변 추천 레스토랑</string>
     <string name="message_consult_kakao">무엇을 도와드릴까요?</string>
@@ -740,6 +743,10 @@
     <string name="message_booking_stay_outbound_share_kakao">%1$s님이 예약하신 호텔\n\n%2$s\n예약자명: %3$s\n결제금액: %4$s\n객실: %5$s\n체크인: %6$s\n체크아웃: %7$s\n주소: %8$s\n\n지금 데일리호텔에서 호텔 정보를 확인할 수 있어요!</string>
     <string name="message_booking_gourmet_share_sms">[데일리호텔] %1$s님이 예약하신 레스토랑\n\n%2$s\n예약자명: %3$s\n결제금액: %4$s\n방문일: %5$s\n방문시간: %6$s\n상품: %7$s\n수량: %8$s\n주소: %9$s\n\n예약 레스토랑 확인\n</string>
     <string name="message_booking_gourmet_share_kakao">%1$s님이 예약하신 레스토랑\n\n%2$s\n예약자명: %3$s\n결제금액: %4$s\n방문일: %5$s\n방문시간: %6$s\n상품: %7$s\n수량: %8$s\n주소: %9$s\n\n지금 데일리호텔에서 레스토랑 정보를 확인할 수 있어요!</string>
+    <string name="message_booking_cancel_stay_share_kakao">%1$s의 취소내역입니다.\n\n%2$2\n예약자명: %3$s\n객실: %4$s\n취소일: %5$s\n주소: %6$s\n\n지금 데일리호텔에서 스테이 정보를 확인할 수 있어요.</string>
+    <string name="message_booking_cancel_stay_share_sms">[데일리호텔]%1$s의 취소내역입니다.\n\n%2$s\n예약자명: %3$s\n객실: %4$s\n취소일: %5$s\n주소: %6$s\n\n스테이 상세 확인\n%7$s</string>
+    <string name="message_booking_cancel_gourmet_share_kakao">%1$s의 취소내역입니다.\n\n%2$s\n예약자명: %3$s\n상품: %4$s\n수량: %5$s\n취소일: %6$s\n주소: %7$s\n\n지금 데일리호텔에서 레스토랑 정보를 확인할 수 있어요.</string>
+    <string name="message_booking_cancel_gourmet_share_sms">[데일리호텔]%1$s의 취소내역입니다.\n\n%2$s\n예약자명: %3$s\n상품: %4$s\n수량: %5$s\n취소일: %6$s\n주소: %7$s\n\n레스토랑 상세 확인\n%8$s</string>
 
     <!-- TabInfo/TabMap Fragment -->
     <string name="frag_tab_info_title">정보</string>
@@ -1436,13 +1443,19 @@
     <string name="message_booking_do_login">로그인하여 예약내역을 확인하세요.</string>
     <string name="message_booking_delete_booking">삭제 되었습니다.</string>
     <string name="message_booking_failed_delete_booking">삭제에 실패했습니다.\n잠시 후에 다시 시도해주십시요.</string>
+    <string name="label_booking_toolbar_cancel_history_button_text">취소내역 보기</string>
+    <string name="label_booking_after_cancel">취소 완료</string>
 
+    <!-- Reservation cancel History -->
+    <string name="message_booking_cancel_list_no_cancel_list">최근 1년 이내에 취소된 내역이\n없습니다.</string>
+    <string name="message_booking_cancel_list_do_login">로그인하여 취소내역을 확인하세요.</string>
 
     <!-- Stay Out Bound Booking Detail -->
     <!-- Booking Detail -->
     <string name="label_booking_detail_delete_reservation">예약내역 삭제하기</string>
     <string name="message_stay_outbound_booking_detail_current_time">날짜는 현지시간 기준입니다.</string>
     <string name="message_booking_detail_wait_message">현재 예약대기 상태입니다.\n예약 확정시, 확정 문자를 발송해 드립니다.</string>
+    <string name="label_booking_cancel_detail_delete_reservation">취소내역 삭제하기</string>
 
     <!-- Stay Out Bound Booking Refund -->
     <string name="message_stay_outbound_refund_cancel_free">무료 취소를 진행할까요?</string>

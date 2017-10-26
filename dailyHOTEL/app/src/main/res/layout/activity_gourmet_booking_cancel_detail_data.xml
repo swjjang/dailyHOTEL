@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyToolbar="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.daily.dailyhotel.view.DailyToolbarView
+            android:id="@+id/toolbarView"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/toolbar_height"
+            android:background="@color/white"
+            android:elevation="2dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            dailyToolbar:underLineHeight="@dimen/gradient_1dp_line_height_under_21" />
+
+        <RelativeLayout
+            android:id="@+id/googleMapLayout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbarView">
+
+            <FrameLayout
+                android:id="@+id/mapLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="138dp"
+                android:visibility="visible">
+
+                <fragment
+                    android:id="@+id/supportMapFragment"
+                    class="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </FrameLayout>
+
+            <View
+                android:id="@+id/fakeMapLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible" />
+
+            <RelativeLayout
+                android:id="@+id/addressLayout"
+                android:layout_width="match_parent"
+                android:layout_height="74dp"
+                android:layout_above="@+id/searchMapsLayout"
+                android:background="@color/white"
+                android:visibility="gone">
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/copyAddressView"
+                    android:layout_width="58dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/more_btn_padding"
+                    android:freezesText="true"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text="@string/label_copy_address"
+                    android:textColor="@color/hoteldetail_title_text"
+                    android:textSize="11dp" />
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/addressTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@id/copyAddressView"
+                    android:freezesText="true"
+                    android:gravity="left|center_vertical"
+                    android:textColor="@color/hoteldetail_title_text"
+                    android:textSize="13dp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/searchMapsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/white"
+                android:visibility="gone">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/default_line_ce7e7e7" />
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/searchMapView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/shape_fillrect_bb70038_r2"
+                    android:gravity="center"
+                    android:text="@string/label_map_searchmap"
+                    android:textColor="@color/white"
+                    android:textSize="17dp"
+                    dailyFont:style="Medium" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <com.daily.base.widget.DailyScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:fadingEdge="none"
+            android:fillViewport="true"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbarView">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/mapImageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="202dp"
+                        android:adjustViewBounds="true"
+                        fresco:actualImageScaleType="focusCrop" />
+
+                    <ImageView
+                        android:id="@+id/mapExpandedView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginTop="10dp"
+                        android:src="@drawable/ic_map_expand" />
+
+                    <View
+                        android:id="@+id/lineView"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@id/mapImageView"
+                        android:background="@color/default_line_cdcdcdd" />
+
+                    <View
+                        android:id="@+id/emptyView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/placeInformationLayout"
+                        android:layout_below="@+id/lineView"
+                        android:background="@color/default_background" />
+
+                    <com.daily.base.widget.DailyTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:layout_below="@+id/emptyView"
+                        android:background="@color/default_background"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:paddingTop="20dp"
+                        android:text="@string/label_booking_reservation_information"
+                        android:textColor="@color/default_text_c323232"
+                        android:textSize="14dp"
+                        dailyFont:style="Medium" />
+
+                    <!-- 소스에서 Margin Top 조절 -->
+                    <LinearLayout
+                        android:id="@+id/placeInformationLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginTop="131dp"
+                        android:background="@drawable/shape_fillrect_l1a000000_bffffff"
+                        android:orientation="vertical"
+                        android:visibility="invisible">
+
+                        <com.daily.base.widget.DailyTextView
+                            android:id="@+id/placeNameTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:minHeight="46dp"
+                            android:paddingBottom="10dp"
+                            android:paddingLeft="20dp"
+                            android:paddingRight="20dp"
+                            android:paddingTop="10dp"
+                            android:textColor="@color/default_text_c323232"
+                            android:textSize="18dp"
+                            dailyFont:style="Medium" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:background="@color/default_line_cf0f0f0" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="68dp">
+
+                            <com.daily.base.widget.DailyTextView
+                                android:id="@+id/viewDetailView"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:paddingTop="10dp"
+                                android:text="@string/label_booking_view_detail"
+                                android:textColor="@color/default_text_c323232"
+                                android:textSize="12dp"
+                                app:drawableCompatTop="@drawable/reservation_ic_detail_info" />
+
+                            <View
+                                android:layout_width="1dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="center_vertical"
+                                android:background="@color/default_line_cf0f0f0" />
+
+                            <com.daily.base.widget.DailyTextView
+                                android:id="@+id/viewMapView"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:paddingTop="10dp"
+                                android:text="@string/label_booking_view_map"
+                                android:textColor="@color/default_text_c323232"
+                                android:textSize="12dp"
+                                app:drawableCompatTop="@drawable/reservation_ic_directions" />
+
+                            <View
+                                android:id="@+id/inputReviewVerticalLine"
+                                android:layout_width="1dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="center_vertical"
+                                android:background="@color/default_line_cf0f0f0"
+                                android:visibility="gone" />
+
+                            <com.daily.base.widget.DailyTextView
+                                android:id="@+id/inputReviewView"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
+                                android:paddingTop="10dp"
+                                android:text="@string/label_booking_input_review"
+                                android:textColor="@color/default_text_c323232"
+                                android:textSize="12dp"
+                                android:visibility="gone"
+                                app:drawableCompatTop="@drawable/reservation_ic_review" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/detailsLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="vertical">
+
+                    <!--<include-->
+                        <!--layout="@layout/layout_gourmet_reservation_detail_01"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:visibility="visible"/>-->
+
+                    <!--<include-->
+                        <!--layout="@layout/layout_gourmet_reservation_detail_02"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:visibility="visible"/>-->
+                </LinearLayout>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/deleteReservationTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="37dp"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="37dp"
+                    android:text="@string/label_booking_cancel_detail_delete_reservation"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="13dp" />
+            </LinearLayout>
+        </com.daily.base.widget.DailyScrollView>
+    </android.support.constraint.ConstraintLayout>
+</layout>

@@ -42,6 +42,7 @@ public class StayBookingDetail
     public boolean overseas;
     public boolean readyForRefund;
     public boolean waitingForBooking;
+    public String cancelDateTime;
 
     private LinkedHashMap<String, List<String>> mSpecificationMap;
 

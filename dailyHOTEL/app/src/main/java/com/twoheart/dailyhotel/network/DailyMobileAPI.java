@@ -5,6 +5,7 @@ import android.content.Context;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.repository.remote.model.BookingData;
+import com.daily.dailyhotel.repository.remote.model.BookingHiddenData;
 import com.daily.dailyhotel.repository.remote.model.BookingHideData;
 import com.daily.dailyhotel.repository.remote.model.CampaignTagData;
 import com.daily.dailyhotel.repository.remote.model.CardData;
@@ -18,6 +19,7 @@ import com.daily.dailyhotel.repository.remote.model.GourmetListData;
 import com.daily.dailyhotel.repository.remote.model.GourmetPaymentData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
 import com.daily.dailyhotel.repository.remote.model.RecentlyPlacesData;
+import com.daily.dailyhotel.repository.remote.model.BookingCancelData;
 import com.daily.dailyhotel.repository.remote.model.ReviewData;
 import com.daily.dailyhotel.repository.remote.model.ReviewScoresData;
 import com.daily.dailyhotel.repository.remote.model.ShortUrlData;
@@ -1697,6 +1699,25 @@ public class DailyMobileAPI
         return mDailyMobileService.getStayBookingDetail(Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io());
     }
 
+    public Observable<BaseDto<StayBookingDetailData>> getStayBookingDetail(int reservationIndex)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v2/reservation/hotel/{hotelReservationIdx}"//
+            : "MTI3JDExMyQxMTckMCQ4NiQ4JDE1JDU4JDExOSQxMzAkMzUkMTkkNDUkNDEkMTIwJDk3JA==$FMjIxNzUN4MzVDRPUFECOTBDNjg0MjdGQUU0ERDBDFQkRCENEVEREVDQ0ZFRDUWzN0MwRDhDMDFGNDdDRTUxODQzMDQ3OHTdDWMkQ1NDE2REIxNjJDMkJCQTgX3ONJEQyPOEYzNDJE2QkQF4$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{hotelReservationIdx}", Integer.toString(reservationIndex));
+
+        return mDailyMobileService.getStayBookingDetail(Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<BookingHiddenData>> getStayHiddenBooking(int reservationIndex)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/reserv/mine/hidden"//
+            : "MSQ3NiQzJDQ5JDcwJDEzJDE2JDI0JDg4JDY3JDU2JDkyJDE4JDc4JDY3JDI3JA==$MBkWE0QTNGNjIFzRKTAE2RkE5TQBTEzNEJCNTA1QjVDNDY4NEZGRUQL1N0NNDM0RFN0UZ1RNUYzNEYM1YQ0RCMjBPFNDJGYRNjc4MA==$";
+
+        return mDailyMobileService.getStayHiddenBooking(Crypto.getUrlDecoderEx(URL), reservationIndex).subscribeOn(Schedulers.io());
+    }
+
     public Observable<BaseDto<GourmetBookingDetailData>> getGourmetBookingDetail(String aggregationId)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v5/reservation/detail/gourmet/{aggregationId}"//
@@ -1708,6 +1729,25 @@ public class DailyMobileAPI
         return mDailyMobileService.getGourmetBookingDetail(Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io());
     }
 
+    public Observable<BaseDto<GourmetBookingDetailData>> getGourmetBookingDetail(int reservationIndex)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v2/reservation/fnb/{fnbReservationIdx}"//
+            : "ODQkNDQkNDckODEkMTIyJDE0JDQ2JDAkMTckMjQkNzEkMzEkMTAzJDQxJDEyNiQxMTYk$NNzVFQUVFRDlBRTYkO0NzQxOWDJGNjAZ4MEI2RDBBTREZCNURGLZQzUYyQkNBQjJGMDU5RDJERQjAwMkFDODE0OTIOyNzMxTOEUwQjNEQREVDNTAyMzIJ1RUI0Q0U0OTDBDOEXY2RTIzRkQ2$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{fnbReservationIdx}", Integer.toString(reservationIndex));
+
+        return mDailyMobileService.getGourmetBookingDetail(Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseDto<BookingHiddenData>> getGourmetHiddenBooking(int reservationIndex)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/reservation/session/hidden"//
+            : "MTEzJDQ4JDM1JDEzJDI4JDY5JDkzJDcxJDEzMSQ5NiQxNSQxMzckMTIwJDUzJDU4JDk0JA==$N0U1RjY2MjIzQPzRkyOEVEQzQ0RkED4Mjg4RDEW5RTM3MzkwRTZGZQQTBEBMTczQzNDQUMwNFUJIxQkE1NkZGOUJGODY3QRzBFMNS0RCMkNFNDgxRERCNTZDQ0EX1NFEI3RjNBQzYE4QzOM2$";
+
+        return mDailyMobileService.getGourmetHiddenBooking(Crypto.getUrlDecoderEx(URL), reservationIndex).subscribeOn(Schedulers.io());
+    }
+
     public Observable<BaseDto<WaitingDepositData>> getWaitingDeposit(String aggregationId)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v5/reservation/vbank/{aggregationId}"//
@@ -1717,6 +1757,24 @@ public class DailyMobileAPI
         urlParams.put("{aggregationId}", aggregationId);
 
         return mDailyMobileService.getWaitingDeposit(Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseListDto<BookingCancelData>> getStayOutboundBookingCancelList()
+    {
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/refunded-reservations"//
+            : "MTEwJDgxJDU4JDI4JDIzJDExOCQ1MCQxMzQkOTckNDEkMzAkMyQ2MCQxMTUkNTUkMTA3JA==$MjFDEQjIyQTVCQjhGMERGNDhIDRkE4NHOTU3MThCQzhUGMzE0MkI1ZRKDE3MTKY1RkRRERTMxRjc2OEQzQTlDQjM4NUDlDQUYyQTg2HRDAxWQjMxNTdGND0QyQzYEwORDQ1NzBDNjkzQUUG5$";
+
+        return mDailyMobileService.getStayOutboundBookingCancelList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
+    }
+
+    public Observable<BaseListDto<BookingCancelData>> getBookingCancelList()
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v5/cancel-reservations"//
+            : "MSQyMCQ0NCQyNCQxNCQ0MCQyJDkwJDU4JDEyJDcyJDE4JDQ3JDkzJDIzJDUwJA==$MGQzBBODhGRjWY1QOzEBDRkWICzQjRRBQjBGRTg3QjU0TNjcCzSMDYdFOTgyRTlQBRDAzQUU4RkET4MDVDRkVGNjVEODhDRJjcHyRQ==$";
+
+        return mDailyMobileService.getBookingCancelList(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////

@@ -45,6 +45,8 @@ public abstract class PlaceBookingDetail implements Parcelable
     public String phone2;
     public String phone3;
 
+    public String cancelDateTime; // 취소 일시(취소가 아닐때에는 내려오지 않음)
+
     private Map<String, List<String>> mSpecification = new LinkedHashMap<>();
 
     @Override
@@ -73,6 +75,7 @@ public abstract class PlaceBookingDetail implements Parcelable
         dest.writeInt(paymentPrice);
         dest.writeInt(reservationIndex);
         dest.writeString(reviewStatusType);
+        dest.writeString(cancelDateTime);
     }
 
     protected void readFromParcel(Parcel in)
@@ -100,6 +103,7 @@ public abstract class PlaceBookingDetail implements Parcelable
         paymentPrice = in.readInt();
         reservationIndex = in.readInt();
         reviewStatusType = in.readString();
+        cancelDateTime = in.readString();
     }
 
     public Map<String, List<String>> getSpecification()

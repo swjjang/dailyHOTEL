@@ -6,13 +6,17 @@ import android.support.annotation.NonNull;
 import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.BookingInterface;
 import com.daily.dailyhotel.entity.Booking;
+import com.daily.dailyhotel.entity.BookingHidden;
 import com.daily.dailyhotel.entity.GourmetBookingDetail;
+import com.daily.dailyhotel.entity.BookingCancel;
 import com.daily.dailyhotel.entity.StayBookingDetail;
 import com.daily.dailyhotel.entity.StayOutboundBookingDetail;
 import com.daily.dailyhotel.entity.WaitingDeposit;
 import com.daily.dailyhotel.repository.remote.model.BookingData;
+import com.daily.dailyhotel.repository.remote.model.BookingHiddenData;
 import com.daily.dailyhotel.repository.remote.model.BookingHideData;
 import com.daily.dailyhotel.repository.remote.model.GourmetBookingDetailData;
+import com.daily.dailyhotel.repository.remote.model.BookingCancelData;
 import com.daily.dailyhotel.repository.remote.model.StayBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.WaitingDepositData;
@@ -26,6 +30,7 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 public class BookingRemoteImpl implements BookingInterface
 {
@@ -184,7 +189,66 @@ public class BookingRemoteImpl implements BookingInterface
 
                 return stayBookingDetail;
             }
-        }).observeOn(AndroidSchedulers.mainThread());
+        }).subscribeOn(Schedulers.io());
+    }
+
+    @Override
+    public Observable<StayBookingDetail> getStayBookingDetail(int reservationIndex)
+    {
+        return DailyMobileAPI.getInstance(mContext).getStayBookingDetail(reservationIndex).map(new Function<BaseDto<StayBookingDetailData>, StayBookingDetail>()
+        {
+            @Override
+            public StayBookingDetail apply(@io.reactivex.annotations.NonNull BaseDto<StayBookingDetailData> stayBookingDetailDataBaseDto) throws Exception
+            {
+                StayBookingDetail stayBookingDetail;
+
+                if (stayBookingDetailDataBaseDto != null)
+                {
+                    if (stayBookingDetailDataBaseDto.msgCode == 100 && stayBookingDetailDataBaseDto.data != null)
+                    {
+                        stayBookingDetail = stayBookingDetailDataBaseDto.data.getStayBookingDetail();
+                    } else
+                    {
+                        throw new BaseException(stayBookingDetailDataBaseDto.msgCode, stayBookingDetailDataBaseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return stayBookingDetail;
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
+    @Override
+    public Observable<Boolean> getStayHiddenBooking(int reservationIndex)
+    {
+        return DailyMobileAPI.getInstance(mContext).getStayHiddenBooking(reservationIndex).map(new Function<BaseDto<BookingHiddenData>, Boolean>()
+        {
+            @Override
+            public Boolean apply(@io.reactivex.annotations.NonNull BaseDto<BookingHiddenData> bookingHiddenDataBaseDto) throws Exception
+            {
+                BookingHidden bookingHidden;
+                if (bookingHiddenDataBaseDto != null)
+                {
+                    // 이 요청은 메세지 코드를 보지 않음
+//                    if (bookingHiddenDataBaseDto.msgCode == 100 && bookingHiddenDataBaseDto.data != null)
+                    if (bookingHiddenDataBaseDto.data != null)
+                    {
+                        bookingHidden = bookingHiddenDataBaseDto.data.getBookingHidden();
+                    } else
+                    {
+                        throw new BaseException(bookingHiddenDataBaseDto.msgCode, bookingHiddenDataBaseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return bookingHidden.isSuccess;
+            }
+        }).subscribeOn(Schedulers.io());
     }
 
     @Override
@@ -217,6 +281,65 @@ public class BookingRemoteImpl implements BookingInterface
     }
 
     @Override
+    public Observable<GourmetBookingDetail> getGourmetBookingDetail(int reservationIndex)
+    {
+        return DailyMobileAPI.getInstance(mContext).getGourmetBookingDetail(reservationIndex).map(new Function<BaseDto<GourmetBookingDetailData>, GourmetBookingDetail>()
+        {
+            @Override
+            public GourmetBookingDetail apply(@io.reactivex.annotations.NonNull BaseDto<GourmetBookingDetailData> gourmetBookingDetailDataBaseDto) throws Exception
+            {
+                GourmetBookingDetail gourmetBookingDetail;
+
+                if (gourmetBookingDetailDataBaseDto != null)
+                {
+                    if (gourmetBookingDetailDataBaseDto.msgCode == 100 && gourmetBookingDetailDataBaseDto.data != null)
+                    {
+                        gourmetBookingDetail = gourmetBookingDetailDataBaseDto.data.getGourmetBookingDetail();
+                    } else
+                    {
+                        throw new BaseException(gourmetBookingDetailDataBaseDto.msgCode, gourmetBookingDetailDataBaseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return gourmetBookingDetail;
+            }
+        }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<Boolean> getGourmetHiddenBooking(int reservationIndex)
+    {
+        return DailyMobileAPI.getInstance(mContext).getGourmetHiddenBooking(reservationIndex).map(new Function<BaseDto<BookingHiddenData>, Boolean>()
+        {
+            @Override
+            public Boolean apply(@io.reactivex.annotations.NonNull BaseDto<BookingHiddenData> bookingHiddenDataBaseDto) throws Exception
+            {
+                BookingHidden bookingHidden;
+                if (bookingHiddenDataBaseDto != null)
+                {
+                    // 이 요청은 메세지 코드를 보지 않음
+                    //                    if (bookingHiddenDataBaseDto.msgCode == 100 && bookingHiddenDataBaseDto.data != null)
+                    if (bookingHiddenDataBaseDto.data != null)
+                    {
+                        bookingHidden = bookingHiddenDataBaseDto.data.getBookingHidden();
+                    } else
+                    {
+                        throw new BaseException(bookingHiddenDataBaseDto.msgCode, bookingHiddenDataBaseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return bookingHidden.isSuccess;
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
+    @Override
     public Observable<WaitingDeposit> getWaitingDeposit(String aggregationId)
     {
         return DailyMobileAPI.getInstance(mContext).getWaitingDeposit(aggregationId).map(new Function<BaseDto<WaitingDepositData>, WaitingDeposit>()
@@ -243,5 +366,69 @@ public class BookingRemoteImpl implements BookingInterface
                 return waitingDeposit;
             }
         }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<List<BookingCancel>> getBookingCancelList()
+    {
+        return DailyMobileAPI.getInstance(mContext).getBookingCancelList().map(new Function<BaseListDto<BookingCancelData>, List<BookingCancel>>()
+        {
+            @Override
+            public List<BookingCancel> apply(@io.reactivex.annotations.NonNull BaseListDto<BookingCancelData> bookingCancelDataBaseListDto) throws Exception
+            {
+                List<BookingCancel> list = new ArrayList<>();
+
+                if (bookingCancelDataBaseListDto != null)
+                {
+                    if (bookingCancelDataBaseListDto.msgCode == 100 && bookingCancelDataBaseListDto.data != null)
+                    {
+                        for (BookingCancelData cancelData : bookingCancelDataBaseListDto.data)
+                        {
+                            list.add(cancelData.getBookingCancel());
+                        }
+                    } else
+                    {
+                        throw new BaseException(bookingCancelDataBaseListDto.msgCode, bookingCancelDataBaseListDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return list;
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
+    @Override
+    public Observable<List<BookingCancel>> getStayOutboundBookingCancelList()
+    {
+        return DailyMobileAPI.getInstance(mContext).getStayOutboundBookingCancelList().map(new Function<BaseListDto<BookingCancelData>, List<BookingCancel>>()
+        {
+            @Override
+            public List<BookingCancel> apply(@io.reactivex.annotations.NonNull BaseListDto<BookingCancelData> bookingCancelDataBaseListDto) throws Exception
+            {
+                List<BookingCancel> list = new ArrayList<>();
+
+                if (bookingCancelDataBaseListDto != null)
+                {
+                    if (bookingCancelDataBaseListDto.msgCode == 100 && bookingCancelDataBaseListDto.data != null)
+                    {
+                        for (BookingCancelData cancelData : bookingCancelDataBaseListDto.data)
+                        {
+                            list.add(cancelData.getBookingCancel());
+                        }
+                    } else
+                    {
+                        throw new BaseException(bookingCancelDataBaseListDto.msgCode, bookingCancelDataBaseListDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return list;
+            }
+        }).subscribeOn(Schedulers.io());
     }
 }

@@ -134,7 +134,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
         getViewInterface().setToolbarTitle(getString(R.string.actionbar_title_booking_list_frag));
         getViewInterface().setBookingDetailToolbar();
 
-        getViewInterface().setDeleteBookingVisible(mBookingState == Booking.BOOKING_STATE_AFTER_USE);
+        getViewInterface().setDeleteBookingVisible(mBookingState);
     }
 
     @Override

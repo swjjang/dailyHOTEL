@@ -35,6 +35,8 @@ public class StayOutboundBookingDetail
     public PaymentType paymentType;
     public String paymentDate;
 
+    public String cancelDateTime; // 취소 일시(취소가 아닐때에는 내려오지 않음)
+
     public enum PaymentType
     {
         CREDIT_CARD,
