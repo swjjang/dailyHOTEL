@@ -93,12 +93,23 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
 
+        <com.daily.base.widget.DailyImageView
+            android:id="@+id/newGourmetImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="14dp"
+            android:layout_marginLeft="15dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/simpleDraweeView"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:srcCompat="@drawable/vector_img_list_new"/>
+
         <com.daily.base.widget.DailyTextView
             android:id="@+id/gradeTextView"
             android:layout_width="wrap_content"
             android:layout_height="18dp"
             android:layout_marginBottom="14dp"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="3dp"
             android:background="@drawable/shape_fillrect_cccffffff_b4c000000_w1px"
             android:freezesText="true"
             android:gravity="center_vertical"
@@ -107,7 +118,8 @@
             android:textColor="@color/white"
             android:textSize="11dp"
             app:layout_constraintBottom_toBottomOf="@id/simpleDraweeView"
-            app:layout_constraintLeft_toLeftOf="parent"/>
+            app:layout_constraintLeft_toRightOf="@id/newGourmetImageView"
+            app:layout_goneMarginLeft="15dp"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/vrTextView"
@@ -142,17 +154,6 @@
             app:layout_constraintBottom_toBottomOf="@id/gradeTextView"
             app:layout_constraintLeft_toRightOf="@id/vrTextView"
             app:layout_constraintTop_toTopOf="@id/gradeTextView"/>
-
-        <com.daily.base.widget.DailyImageView
-            android:id="@+id/newGourmetImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="14dp"
-            android:layout_marginRight="15dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/simpleDraweeView"
-            app:layout_constraintRight_toRightOf="parent"
-            app:srcCompat="@drawable/vector_img_list_new"/>
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/gourmetInformationLayout"
