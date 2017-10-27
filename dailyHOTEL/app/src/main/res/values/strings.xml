@@ -634,6 +634,7 @@
     <string name="message_booking_memo">예약시 요청사항이 있으면 남겨주세요.\n(※요청 내용은 업체 사정에 따라 반영되지 않을 수도 있습니다.)</string>
     <string name="message_gourmet_please_input_guest">방문자명을 입력해주세요. 예약 확인시 필요한 정보입니다.</string>
     <string name="message_booking_cancel_coupon">쿠폰 적용을 취소할까요?</string>
+    <string name="message_booking_cancel_deposit_sticker">스티커 적립 적용을 취소할까요?</string>
     <string name="message_booking_cancel_bonus">적립금 적용을 취소할까요?</string>
     <string name="message_over_coupon_price">할인쿠폰 금액이\n총결제금액 보다 %1$s 더 많습니다.\n그대로 적용할까요?</string>
     <string name="message_dont_support_payment_type">일시적으로 %1$s 수단은 사용할 수 없습니다.</string>
@@ -654,6 +655,7 @@
     <string name="message_payment_agree_personal_information06">고객님께서는 정보제공에 동의하지 않을 수 있으나, 이 경우\n서비스 이용이 제한될 수 있습니다.</string>
 
     <string name="message_payment_please_agree_personal_information">개인정보 제 3자 제공에 동의해주세요.</string>
+    <string name="message_payment_used_reward_coupon">무료 리워드 쿠폰 %1$s을 사용했습니다.</string>
 
     <!-- Payment Activity -->
     <string name="act_payment_isp_error">ISP 결제 오류</string>
@@ -756,7 +758,6 @@
     <string name="message_booking_reward_cheering_title01">예약을 완료하시면 %1$d박 스티커가 추가 적립됩니다.</string>
     <string name="message_booking_reward_cheering_title02">스티커 적립을 할수 없는 예약입니다.</string>
     <string name="message_booking_reward_cheering_warning01">(적립금, 할인쿠폰, 휴대폰 결제 수단 선택 시 적립 불가)</string>
-    <string name="message_booking_reward_cheering_warning02">(1박 기준 4만원 미만 예약)</string>
     <string name="message_booking_reward_warning01">(4만원 이상 결제, 적립금/할인쿠폰 미사용, 휴대폰 외 결제 수단 선택시 사용 가능)</string>
     <string name="message_booking_reward_warning02">(4만원 이상 결제, 적립금 미사용, 휴대폰 외 결제 수단 선택시 사용 가능)</string>
 

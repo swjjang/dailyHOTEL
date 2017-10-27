@@ -214,8 +214,8 @@
                         android:id="@+id/depositStickerWarningTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/message_booking_reward_warning01"
                         android:duplicateParentState="true"
+                        android:text="@string/message_booking_reward_warning01"
                         android:textColor="@drawable/selector_text_color_c929292_cc5c5c5"
                         android:textSize="11dp"/>
                 </LinearLayout>
@@ -308,8 +308,7 @@
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/discountPriceLayout"
                 android:layout_width="match_parent"
-                android:layout_height="36dp"
-                android:layout_marginBottom="10dp">
+                android:layout_height="36dp">
 
                 <com.daily.base.widget.DailyTextView
                     android:layout_width="wrap_content"
@@ -334,9 +333,20 @@
                     app:layout_constraintTop_toTopOf="parent"/>
             </android.support.constraint.ConstraintLayout>
 
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/usedRewardCouponTextView"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:duplicateParentState="true"
+                android:gravity="center_vertical|right"
+                android:text="@string/message_payment_used_reward_coupon"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="11dp"/>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
+                android:layout_marginTop="10dp"
                 android:background="@color/default_line_cdcdcdd"/>
 
             <android.support.constraint.ConstraintLayout

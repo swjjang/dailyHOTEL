@@ -44,45 +44,6 @@ public class DailyBookingDiscountNPaymentInformationView extends ConstraintLayou
         mViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_booking_discount_information_data, this, true);
     }
 
-    public void setRewardEnabled(boolean enabled)
-    {
-        if (mViewDataBinding == null)
-        {
-            return;
-        }
-
-        if (enabled == true)
-        {
-            mViewDataBinding.discountInformationTextView.setText(R.string.label_booking_discount_reward_information);
-
-
-        } else
-        {
-            mViewDataBinding.discountInformationTextView.setText(R.string.label_booking_discount_information);
-        }
-
-    }
-
-    public void setRewardStickerEnabled(boolean enabled)
-    {
-        if (mViewDataBinding == null)
-        {
-            return;
-        }
-
-        mViewDataBinding.depositStickerLayout.setEnabled(enabled);
-    }
-
-    public void setRewardStickerVisible(boolean visible)
-    {
-        if (mViewDataBinding == null)
-        {
-            return;
-        }
-
-        mViewDataBinding.depositStickerLayout.setVisibility(visible ? View.VISIBLE : GONE);
-    }
-
     public void setDiscountTypeVisible(boolean bonusVisible, boolean couponVisible)
     {
         if (mViewDataBinding == null)
@@ -203,6 +164,16 @@ public class DailyBookingDiscountNPaymentInformationView extends ConstraintLayou
         mViewDataBinding.couponTabLayout.setOnClickListener(listener);
     }
 
+    public void setOnDepositStickerClickListener(View.OnClickListener listener)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.depositStickerLayout.setOnClickListener(listener);
+    }
+
     public void setTotalBonus(int bonus)
     {
         if (mViewDataBinding == null)
@@ -300,6 +271,95 @@ public class DailyBookingDiscountNPaymentInformationView extends ConstraintLayou
         {
             mViewDataBinding.couponTabTextView.setText(DailyTextUtils.getPriceFormat(getContext(), couponPrice, false));
         }
+    }
+
+    public void setRewardEnabled(boolean enabled)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        if (enabled == true)
+        {
+            mViewDataBinding.discountInformationTextView.setText(R.string.label_booking_discount_reward_information);
+
+
+        } else
+        {
+            mViewDataBinding.discountInformationTextView.setText(R.string.label_booking_discount_information);
+        }
+
+    }
+
+    public boolean isDepositStickerEnabled()
+    {
+        if (mViewDataBinding == null)
+        {
+            return false;
+        }
+
+        return mViewDataBinding.depositStickerLayout.isEnabled();
+    }
+
+    public void setRewardStickerEnabled(boolean enabled)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.depositStickerLayout.setEnabled(enabled);
+    }
+
+    public boolean isDepositStickerSelected()
+    {
+        if (mViewDataBinding == null)
+        {
+            return false;
+        }
+
+        return mViewDataBinding.depositStickerLayout.isSelected();
+    }
+
+    public void setDepositStickerSelected(boolean selected)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.depositStickerLayout.setSelected(selected);
+    }
+
+    public void setRewardStickerVisible(boolean visible)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.depositStickerLayout.setVisibility(visible ? View.VISIBLE : GONE);
+    }
+
+    public void setUsedRewardCouponVisible(boolean visible)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.usedRewardCouponTextView.setVisibility(visible ? View.VISIBLE : GONE);
+    }
+
+    public void setUsedRewardCouponText(String text)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.usedRewardCouponTextView.setText(text);
     }
 
     /**

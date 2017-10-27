@@ -26,6 +26,8 @@ public interface StayPaymentInterface extends BaseDialogViewInterface
 
     void setCoupon(boolean selected, int couponPrice);
 
+    void setDepositSticker(boolean selected);
+
     void setStayPayment(int nights, int totalPrice, int discountPrice);
 
     void setEasyCard(Card card);

@@ -55,6 +55,8 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
 
         void onCouponClick(boolean selected);
 
+        void onDepositStickerClick(boolean selected);
+
         void onChangedGuestClick(boolean show);
 
         void onEasyCardManagerClick();
@@ -272,6 +274,17 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
 
         setCouponSelected(selected);
         getViewDataBinding().informationView.setCoupon(couponPrice);
+    }
+
+    @Override
+    public void setDepositSticker(boolean selected)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        setDepositStickerSelected(selected);
     }
 
     @Override
@@ -615,6 +628,7 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
 
         setBonusSelected(false);
         setCouponSelected(false);
+        setDepositStickerSelected(false);
     }
 
     private void initPaymentLayout()
@@ -809,6 +823,36 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
                     }
 
                     getEventListener().onCouponClick(getViewDataBinding().informationView.isCouponSelected() == false);
+                }
+            });
+        }
+    }
+
+    private void setDepositStickerSelected(boolean selected)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        //selected가 true enabled가 false일수는 없다.
+        if (getViewDataBinding().informationView.isDepositStickerEnabled() == false)
+        {
+            return;
+        }
+
+        if (selected == true)
+        {
+            getViewDataBinding().informationView.setDepositStickerSelected(true);
+        } else
+        {
+            getViewDataBinding().informationView.setDepositStickerSelected(false);
+            getViewDataBinding().informationView.setOnDepositStickerClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    getEventListener().onDepositStickerClick(true);
                 }
             });
         }
