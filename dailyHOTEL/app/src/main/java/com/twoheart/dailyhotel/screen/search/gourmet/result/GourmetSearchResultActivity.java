@@ -638,7 +638,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onViewTypeClick()
         {
-            mPlaceSearchResultLayout.showBottomLayout(false);
+            mPlaceSearchResultLayout.showBottomLayout();
 
             changeViewType();
         }
@@ -1058,7 +1058,6 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy)
         {
-            mPlaceSearchResultLayout.calculationMenuBarLayoutTranslationY(dy);
         }
 
         @Override
@@ -1068,10 +1067,6 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             {
                 case RecyclerView.SCROLL_STATE_IDLE:
                 {
-                    mPlaceSearchResultLayout.animationMenuBarLayout();
-
-                    //                    ExLog.d("offset : " + recyclerView.computeVerticalScrollOffset() + ", " + recyclerView.computeVerticalScrollExtent() + ", " + recyclerView.computeVerticalScrollRange());
-
                     if (recyclerView.computeVerticalScrollOffset() + recyclerView.computeVerticalScrollExtent() >= recyclerView.computeVerticalScrollRange())
                     {
                         GourmetListAdapter gourmetListAdapter = (GourmetListAdapter) recyclerView.getAdapter();
@@ -1088,7 +1083,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
                                 if (placeViewItem != null && placeViewItem.mType == PlaceViewItem.TYPE_FOOTER_VIEW)
                                 {
-                                    mPlaceSearchResultLayout.showBottomLayout(false);
+                                    mPlaceSearchResultLayout.showBottomLayout();
                                 }
                             }
                         }

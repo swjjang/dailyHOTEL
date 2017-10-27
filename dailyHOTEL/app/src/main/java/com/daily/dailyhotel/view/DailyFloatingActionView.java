@@ -109,7 +109,7 @@ public class DailyFloatingActionView extends ConstraintLayout
 
         mViewDataBinding.filterActionTextView.setEnabled(enable);
 
-        float alpha = enable ? 1.0f : 0.8f;
+        float alpha = enable ? 1.0f : 0.2f;
 
         mViewDataBinding.filterActionTextView.setAlpha(alpha);
         mViewDataBinding.filterOnView.setAlpha(alpha);
