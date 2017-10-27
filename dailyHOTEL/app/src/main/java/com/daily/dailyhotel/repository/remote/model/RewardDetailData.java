@@ -14,6 +14,9 @@ public class RewardDetailData
     @JsonField(name = "availableRewardCouponCount")
     public int availableRewardCouponCount;
 
+    @JsonField(name = "hasRewardHistory")
+    public boolean hasRewardHistory;
+
     @JsonField(name = "rewardCard")
     public RewardCardData rewardCard;
 
@@ -30,6 +33,7 @@ public class RewardDetailData
         RewardDetail rewardDetail = new RewardDetail();
 
         rewardDetail.availableRewardCouponCount = availableRewardCouponCount;
+        rewardDetail.hasRewardHistory = hasRewardHistory;
         rewardDetail.expiredAt = rewardCard.expiredAt;
         rewardDetail.rewardStickerCount = rewardCard.rewardStickerCount;
 

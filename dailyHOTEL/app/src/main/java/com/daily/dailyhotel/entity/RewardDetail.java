@@ -11,6 +11,7 @@ public class RewardDetail
     public int availableRewardCouponCount;
     public int rewardStickerCount;
     public String expiredAt;
+    public boolean hasRewardHistory;
 
     private List<RewardSticker> mRewardStickerList;
 

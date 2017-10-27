@@ -414,5 +414,7 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
             getViewInterface().setIssueCouponVisible(false);
             getViewInterface().setIssueCouponAnimation(false);
         }
+
+        getViewInterface().setRewardHistoryEnabled(rewardDetail.hasRewardHistory);
     }
 }
