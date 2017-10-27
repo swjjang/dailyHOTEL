@@ -377,7 +377,7 @@ public class DailyGourmetCardView extends ConstraintLayout
         } else
         {
             mViewDataBinding.couponTextView.setVisibility(VISIBLE);
-            mViewDataBinding.couponTextView.setText(couponPrice);
+            mViewDataBinding.couponTextView.setText(getContext().getString(R.string.label_price_coupon, couponPrice));
         }
     }
 

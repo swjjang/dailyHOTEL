@@ -126,6 +126,7 @@
     <string name="label_distance_100m">100m 이내</string>
 
     <string name="label_currency_usd">USD</string>
+    <string name="label_price_coupon">%1$s쿠폰</string>
 
     <string name="label_cardcd01">외환</string>
     <string name="label_cardcd03">롯데</string>
