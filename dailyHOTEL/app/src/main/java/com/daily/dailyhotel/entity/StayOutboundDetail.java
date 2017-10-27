@@ -19,7 +19,8 @@ public class StayOutboundDetail
     public double latitude;
     public double longitude;
     public int couponPrice;
-    public boolean dailyReward;
+    public boolean activeReward;
+    public boolean provideRewardSticker;
     public int rewardStickerCount;
 
     LinkedHashMap<String, List<String>> mInformationMap;

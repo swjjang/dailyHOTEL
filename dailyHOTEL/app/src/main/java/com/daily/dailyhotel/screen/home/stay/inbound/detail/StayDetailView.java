@@ -433,7 +433,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
     }
 
     @Override
-    public void setStayDetail(StayBookDateTime stayBookDateTime, StayDetail stayDetail, int trueReviewCount, boolean stampEnabled, boolean rewardEnabled)
+    public void setStayDetail(StayBookDateTime stayBookDateTime, StayDetail stayDetail, int trueReviewCount, boolean stampEnabled)
     {
         if (getViewDataBinding() == null || stayBookDateTime == null || stayDetail == null)
         {
@@ -449,7 +449,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         setEmptyView();
 
         // 호텔 이름 / 쿠폰
-        setTitleView(stayDetail.grade, stayDetail.name, rewardEnabled && stayDetail.dailyReward, stayDetail.couponPrice);
+        setTitleView(stayDetail.grade, stayDetail.name, stayDetail.provideRewardSticker, stayDetail.couponPrice);
 
         // 트루 리뷰
         setTrueReviewView(stayDetail.ratingShow, stayDetail.ratingValue, stayDetail.ratingPersons, trueReviewCount);
@@ -497,7 +497,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         }
 
         // 객실 세팅
-        setRoomList(stayBookDateTime, stayDetail.getRoomList(), rewardEnabled);
+        setRoomList(stayBookDateTime, stayDetail.getRoomList());
     }
 
     @Override
@@ -1307,7 +1307,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
     /**
      * 호텔 등급 및 이름
      */
-    private void setTitleView(Stay.Grade grade, String name, boolean dailyReward, int couponPrice)
+    private void setTitleView(Stay.Grade grade, String name, boolean hasProviderSticker, int couponPrice)
     {
         if (getViewDataBinding() == null)
         {
@@ -1329,7 +1329,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         titleInformationView.setCategoryText(grade.getName(getContext()));
 
         // 리워드 여부
-        titleInformationView.setRewardVisible(dailyReward);
+        titleInformationView.setRewardVisible(hasProviderSticker);
 
         // 쿠폰
         if (couponPrice > 0)
@@ -1788,7 +1788,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         });
     }
 
-    private void setRoomList(StayBookDateTime stayBookDateTime, List<StayRoom> roomList, boolean rewardEnabled)
+    private void setRoomList(StayBookDateTime stayBookDateTime, List<StayRoom> roomList)
     {
         if (getViewDataBinding() == null || stayBookDateTime == null || roomList == null || roomList.size() == 0)
         {
@@ -1823,7 +1823,6 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         }
 
         mRoomTypeListAdapter.setNights(stayBookDateTime.getNights());
-        mRoomTypeListAdapter.setRewardEnabled(rewardEnabled);
 
         getViewDataBinding().roomsViewDataBinding.roomRecyclerView.setAdapter(mRoomTypeListAdapter);
         getViewDataBinding().bookingTextView.setOnClickListener(this);

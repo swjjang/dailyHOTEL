@@ -273,6 +273,11 @@ public class StayDetailData
             for (RoomData roomData : rooms)
             {
                 stayRoomList.add(roomData.getRoom());
+
+                if (roomData.provideRewardSticker == true)
+                {
+                    stayDetail.provideRewardSticker = true;
+                }
             }
         }
 

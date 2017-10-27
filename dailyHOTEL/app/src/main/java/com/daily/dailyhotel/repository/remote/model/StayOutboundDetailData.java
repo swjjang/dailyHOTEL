@@ -94,9 +94,9 @@ public class StayOutboundDetailData
             {
                 stayOutboundRoomList.add(roomData.getStayOutboundRoom());
 
-                if (StayOutboundRoom.VENDOR_TYPE_FIT_RUUMS.equalsIgnoreCase(roomData.vendorType) == true)
+                if (roomData.provideRewardSticker == true)
                 {
-                    stayOutboundDetail.dailyReward = true;
+                    stayOutboundDetail.provideRewardSticker = true;
                 }
             }
 

@@ -30,7 +30,8 @@ public class StayDetail
     public boolean overseas;
     public boolean waitingForBooking;
     public int couponPrice;
-    public boolean dailyReward;
+    public boolean activeReward;
+    public boolean provideRewardSticker;
     public int rewardStickerCount;
 
     private List<DetailImageInformation> mDetailImageInformationList;

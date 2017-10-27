@@ -57,7 +57,6 @@ import com.twoheart.dailyhotel.screen.mydaily.coupon.SelectGourmetCouponDialogAc
 import com.twoheart.dailyhotel.screen.mydaily.member.AddProfileSocialActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.EditProfilePhoneActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
-import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.util.AppResearch;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -502,16 +501,23 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 }
                 break;
 
+            case GourmetDetailActivity.REQUEST_CODE_LOGIN_IN_BY_ORDER:
             case GourmetDetailActivity.REQUEST_CODE_PROFILE_UPDATE:
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    onOrderMenu(mSelectedMenuIndex);
+
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
+                }
+                break;
+
             case GourmetDetailActivity.REQUEST_CODE_LOGIN:
                 if (resultCode == Activity.RESULT_OK)
                 {
-                    onActionButtonClick();
-                } else
-                {
-                }
+                    setRefresh(true);
 
-                setResult(BaseActivity.RESULT_CODE_REFRESH);
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
+                }
                 break;
 
             case GourmetDetailActivity.REQUEST_CODE_DOWNLOAD_COUPON:
@@ -521,18 +527,18 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 if (resultCode == Activity.RESULT_OK)
                 {
                     onWishClick();
-                }
 
-                setResult(BaseActivity.RESULT_CODE_REFRESH);
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
+                }
                 break;
 
             case GourmetDetailActivity.REQUEST_CODE_LOGIN_IN_BY_COUPON:
                 if (resultCode == Activity.RESULT_OK)
                 {
                     onDownloadCouponClick();
-                }
 
-                setResult(BaseActivity.RESULT_CODE_REFRESH);
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
+                }
                 break;
 
             case GourmetDetailActivity.REQUEST_CODE_MENU:
@@ -552,15 +558,6 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 }
                 break;
             }
-
-            case GourmetDetailActivity.REQUEST_CODE_LOGIN_IN_BY_ORDER:
-                if (resultCode == Activity.RESULT_OK)
-                {
-                    onOrderMenu(mSelectedMenuIndex);
-                }
-
-                setResult(BaseActivity.RESULT_CODE_REFRESH);
-                break;
         }
     }
 

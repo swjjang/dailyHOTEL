@@ -534,25 +534,33 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 break;
 
             case StayDetailActivity.REQUEST_CODE_PAYMENT:
-                if (resultCode == BaseActivity.RESULT_CODE_REFRESH)
-                {
-                    setRefresh(true);
-                }
+                setRefresh(true);
                 break;
 
             case StayDetailActivity.REQUEST_CODE_PROFILE_UPDATE:
-            case StayDetailActivity.REQUEST_CODE_LOGIN:
             case StayDetailActivity.REQUEST_CODE_LOGIN_IN_BY_BOOKING:
                 if (resultCode == Activity.RESULT_OK)
                 {
-                    setRefresh(true);
                     onActionButtonClick();
+
+                    // 결제 후에 돌아올때 리플래쉬 한다.
+                    //                    setRefresh(true);
+
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
                 } else
                 {
                     onHideRoomListClick(false);
                 }
+                break;
 
-                setResult(BaseActivity.RESULT_CODE_REFRESH);
+            case StayDetailActivity.REQUEST_CODE_LOGIN:
+
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    setRefresh(true);
+
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
+                }
                 break;
 
             case StayDetailActivity.REQUEST_CODE_DOWNLOAD_COUPON:
@@ -561,9 +569,9 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             case StayDetailActivity.REQUEST_CODE_LOGIN_IN_BY_WISH:
                 if (resultCode == Activity.RESULT_OK)
                 {
-                    setRefresh(true);
-
                     onWishClick();
+
+                    setRefresh(true);
 
                     setResult(BaseActivity.RESULT_CODE_REFRESH);
                 }
@@ -572,9 +580,9 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             case StayDetailActivity.REQUEST_CODE_LOGIN_IN_BY_COUPON:
                 if (resultCode == Activity.RESULT_OK)
                 {
-                    setRefresh(true);
-
                     onDownloadCouponClick();
+
+                    setRefresh(true);
 
                     setResult(BaseActivity.RESULT_CODE_REFRESH);
                 }
@@ -1425,7 +1433,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         boolean showStamp = mStayDetail.overseas == false && DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStampEnabled() == true;
 
         getViewInterface().setStayDetail(mStayBookDateTime, mStayDetail//
-            , mReviewScores != null ? mReviewScores.reviewScoreTotalCount : 0, showStamp, DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerEnabled());
+            , mReviewScores != null ? mReviewScores.reviewScoreTotalCount : 0, showStamp);
 
         // 리스트 가격 변동은 진입시 한번 만 한다.
         checkChangedPrice(mIsDeepLink, mStayDetail, mPriceFromList, mCheckChangedPrice == false);
@@ -1490,7 +1498,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             return;
         }
 
-        if (DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerEnabled() == true)
+        if (mStayDetail.activeReward == true)
         {
             getViewInterface().setRewardVisible(true);
 

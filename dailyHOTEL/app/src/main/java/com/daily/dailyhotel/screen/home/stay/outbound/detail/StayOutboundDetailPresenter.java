@@ -542,22 +542,32 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 break;
 
             case StayOutboundDetailActivity.REQUEST_CODE_PAYMENT:
-                if (resultCode == BaseActivity.RESULT_CODE_REFRESH)
-                {
-                    setRefresh(true);
-                }
+                setRefresh(true);
                 break;
 
             case StayOutboundDetailActivity.REQUEST_CODE_PROFILE_UPDATE:
+            case StayOutboundDetailActivity.REQUEST_CODE_LOGIN_IN_BY_BOOKING:
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    onActionButtonClick();
+
+                    // 결제 후에 돌아올때 리플래쉬 한다.
+                    //                    setRefresh(true);
+
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
+                } else
+                {
+                    onHideRoomListClick(false);
+                }
+                break;
+
             case StayOutboundDetailActivity.REQUEST_CODE_LOGIN:
+
                 if (resultCode == Activity.RESULT_OK)
                 {
                     setRefresh(true);
 
-                    onActionButtonClick();
-                } else
-                {
-                    onHideRoomListClick(false);
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
                 }
                 break;
 
@@ -992,7 +1002,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                     DailyToast.showToast(getActivity(), R.string.toast_msg_please_login, DailyToast.LENGTH_LONG);
 
                     startActivityForResult(LoginActivity.newInstance(getActivity(), AnalyticsManager.Screen.DAILYHOTEL_HOTELDETAILVIEW_OUTBOUND)//
-                        , StayOutboundDetailActivity.REQUEST_CODE_LOGIN);
+                        , StayOutboundDetailActivity.REQUEST_CODE_LOGIN_IN_BY_BOOKING);
                 } else
                 {
                     addCompositeDisposable(mProfileRemoteImpl.getProfile().subscribe(new Consumer<User>()
@@ -1421,7 +1431,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             getViewInterface().setToolbarTitle(stayOutboundDetail.name);
         }
 
-        getViewInterface().setStayDetail(mStayBookDateTime, mPeople, stayOutboundDetail, DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerEnabled());
+        getViewInterface().setStayDetail(mStayBookDateTime, mPeople, stayOutboundDetail);
 
         // 리스트 가격 변동은 진입시 한번 만 한다.
         checkChangedPrice(mIsDeepLink, stayOutboundDetail, mListTotalPrice, mCheckChangedPrice == false);
@@ -1547,7 +1557,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             return;
         }
 
-        if (DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerEnabled() == true)
+        if (mStayOutboundDetail.activeReward == true)
         {
             getViewInterface().setRewardVisible(true);
 

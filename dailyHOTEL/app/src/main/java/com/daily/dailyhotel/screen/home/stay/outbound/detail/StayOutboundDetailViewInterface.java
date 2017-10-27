@@ -18,7 +18,7 @@ public interface StayOutboundDetailViewInterface extends BaseBlurViewInterface
 
     Observable<Boolean> hideRoomList(boolean animation);
 
-    void setStayDetail(StayBookDateTime stayBookDateTime, People people, StayOutboundDetail stayOutboundDetail, boolean rewardEnabled);
+    void setStayDetail(StayBookDateTime stayBookDateTime, People people, StayOutboundDetail stayOutboundDetail);
 
     void setRewardVisible(boolean visible);
 
