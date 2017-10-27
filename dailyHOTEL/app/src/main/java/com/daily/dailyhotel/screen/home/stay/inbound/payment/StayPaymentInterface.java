@@ -24,9 +24,15 @@ public interface StayPaymentInterface extends BaseDialogViewInterface
 
     void setBonus(boolean selected, int bonus, int discountPrice);
 
-    void setCoupon(boolean selected, int couponPrice);
+    void setCoupon(boolean selected, int couponPrice, boolean rewardCoupon);
 
     void setDepositSticker(boolean selected);
+
+    void setDepositStickerVisible(boolean visible);
+
+    void setDepositStickerCardVisible(boolean visible);
+
+    void setDepositStickerCard(String titleText, int nights, CharSequence descriptionText);
 
     void setStayPayment(int nights, int totalPrice, int discountPrice);
 
@@ -56,4 +62,6 @@ public interface StayPaymentInterface extends BaseDialogViewInterface
 
     void showAgreeTermDialog(DailyBookingPaymentTypeView.PaymentType paymentType, int[] messages//
         , View.OnClickListener onClickListener, DialogInterface.OnCancelListener cancelListener);
+
+    void setPaymentTypeDescriptionText(DailyBookingPaymentTypeView.PaymentType paymentType, String text);
 }

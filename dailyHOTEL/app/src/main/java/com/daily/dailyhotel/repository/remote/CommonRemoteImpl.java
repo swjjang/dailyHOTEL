@@ -7,6 +7,7 @@ import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.domain.CommonInterface;
 import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.entity.Configurations;
 import com.daily.dailyhotel.entity.Notification;
 import com.daily.dailyhotel.entity.Review;
 import com.daily.dailyhotel.repository.remote.model.NotificationData;
@@ -119,6 +120,30 @@ public class CommonRemoteImpl implements CommonInterface
             }
 
             return notification;
+        });
+    }
+
+    public Observable<Configurations> getConfigurations()
+    {
+        return DailyMobileAPI.getInstance(mContext).getConfigurations().map((configurationDataBaseDto) ->
+        {
+            Configurations configuration;
+
+            if (configurationDataBaseDto != null)
+            {
+                if (configurationDataBaseDto.msgCode == 100 && configurationDataBaseDto.data != null)
+                {
+                    configuration = configurationDataBaseDto.data.getConfiguration();
+                } else
+                {
+                    throw new BaseException(configurationDataBaseDto.msgCode, configurationDataBaseDto.msg);
+                }
+            } else
+            {
+                throw new BaseException(-1, null);
+            }
+
+            return configuration;
         });
     }
 }

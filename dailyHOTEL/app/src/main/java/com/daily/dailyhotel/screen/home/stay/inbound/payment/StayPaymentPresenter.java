@@ -19,7 +19,6 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
-import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.Card;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.DomesticGuest;
@@ -241,7 +240,9 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
         setBonusSelected(false);
         setCouponSelected(false, null);
+        setDepositStickerSelected(false);
 
+        getViewInterface().setDepositStickerVisible(false);
         getViewInterface().setOverseas(mOverseas);
     }
 
@@ -614,6 +615,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 setStayRefundPolicy(stayRefundPolicy);
 
                 onBookingInformation(mStayPayment, mStayBookDateTime);
+                onRewardStickerInformation(mStayPayment, mStayBookDateTime);
 
                 notifyUserInformationChanged();
 
@@ -773,6 +775,21 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                         onBonusClick(true);
                     }
                 }, null);
+        } else if (mDepositStickerSelected == true)
+        {
+            getViewInterface().showSimpleDialog(null, getString(R.string.message_booking_cancel_deposit_sticker), getString(R.string.dialog_btn_text_yes), //
+                getString(R.string.dialog_btn_text_no), new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        setDepositStickerSelected(false);
+
+                        notifyStayPaymentChanged();
+
+                        onBonusClick(true);
+                    }
+                }, null);
         } else
         {
             if (selected == true)
@@ -792,6 +809,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                         public void onClick(View v)
                         {
                             setBonusSelected(false);
+                            setDepositStickerSelected(true);
 
                             notifyStayPaymentChanged();
 
@@ -827,6 +845,21 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                         onCouponClick(true);
                     }
                 }, null);
+        } else if (mDepositStickerSelected == true)
+        {
+            getViewInterface().showSimpleDialog(null, getString(R.string.message_booking_cancel_deposit_sticker), getString(R.string.dialog_btn_text_yes), //
+                getString(R.string.dialog_btn_text_no), new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        setDepositStickerSelected(false);
+
+                        notifyStayPaymentChanged();
+
+                        onCouponClick(true);
+                    }
+                }, null);
         } else
         {
             if (selected == true)
@@ -847,6 +880,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                         public void onClick(View v)
                         {
                             setCouponSelected(false, null);
+                            setDepositStickerSelected(true);
 
                             notifyStayPaymentChanged();
                         }
@@ -880,7 +914,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                         onDepositStickerClick(true);
                     }
                 }, null);
-        } else if(mCouponSelected == true)
+        } else if (mCouponSelected == true)
         {
             getViewInterface().showSimpleDialog(null, getString(R.string.message_booking_cancel_coupon), getString(R.string.dialog_btn_text_yes), //
                 getString(R.string.dialog_btn_text_no), new View.OnClickListener()
@@ -1422,26 +1456,6 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             return;
         }
 
-        // 리워드
-        if (stayPayment.dailyReward == true)
-        {
-            if (stayPayment.provideRewardSticker == true && stayPayment.totalPrice >= MIN_AMOUNT_FOR_REWARD_USAGE)
-            {
-                getViewInterface().setCheeringMessageVisible(true);
-                getViewInterface().setCheeringMessage(true//
-                    , getString(R.string.message_booking_reward_cheering_title01, stayPayment.rewardStickerCount)//
-                    , getString(R.string.message_booking_reward_cheering_warning01));
-            } else
-            {
-                getViewInterface().setCheeringMessageVisible(true);
-                getViewInterface().setCheeringMessage(false//
-                    , getString(R.string.message_booking_reward_cheering_title02), null);
-            }
-        } else
-        {
-            getViewInterface().setCheeringMessageVisible(false);
-        }
-
         final String DATE_FORMAT = "yyyy.MM.dd(EEE)";
         final String TIME_FORMAT = "HH:mm";
 
@@ -1501,6 +1515,51 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         }
     }
 
+    void onRewardStickerInformation(StayPayment stayPayment, StayBookDateTime stayBookDateTime)
+    {
+        if (stayPayment == null || stayBookDateTime == null)
+        {
+            return;
+        }
+
+        // 리워드
+        if (stayPayment.activeReward == true)
+        {
+            getViewInterface().setCheeringMessageVisible(true);
+
+            if (stayPayment.provideRewardSticker == true && stayPayment.totalPrice >= MIN_AMOUNT_FOR_REWARD_USAGE)
+            {
+                getViewInterface().setCheeringMessage(true//
+                    , getString(R.string.message_booking_reward_cheering_title01, stayBookDateTime.getNights())//
+                    , getString(R.string.message_booking_reward_cheering_warning01));
+
+                getViewInterface().setDepositStickerVisible(true);
+                getViewInterface().setDepositStickerCardVisible(true);
+
+                if (mBonusSelected == false && mCouponSelected == false && mDepositStickerSelected == false)
+                {
+                    setDepositStickerSelected(true);
+                }
+            } else
+            {
+                getViewInterface().setCheeringMessage(false//
+                    , getString(R.string.message_booking_reward_cheering_title02), null);
+
+                getViewInterface().setDepositStickerVisible(false);
+                getViewInterface().setDepositStickerCardVisible(false);
+            }
+
+            getViewInterface().setPaymentTypeDescriptionText(DailyBookingPaymentTypeView.PaymentType.PHONE, getString(R.string.label_booking_reward_phonepay_description));
+        } else
+        {
+            getViewInterface().setCheeringMessageVisible(false);
+            getViewInterface().setDepositStickerVisible(false);
+            getViewInterface().setDepositStickerCardVisible(false);
+
+            getViewInterface().setPaymentTypeDescriptionText(DailyBookingPaymentTypeView.PaymentType.PHONE, getString(R.string.label_booking_phonepay_description));
+        }
+    }
+
     void notifyEasyCardChanged()
     {
         getViewInterface().setEasyCard(mSelectedCard);
@@ -1523,7 +1582,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 discountPrice = paymentPrice < 0 ? mStayPayment.totalPrice : mUserSimpleInformation.bonus;
 
                 getViewInterface().setBonus(true, mUserSimpleInformation.bonus, discountPrice);
-                getViewInterface().setCoupon(false, 0);
+                getViewInterface().setCoupon(false, 0, false);
                 getViewInterface().setDepositSticker(false);
             } else if (mCouponSelected == true)
             {
@@ -1531,25 +1590,20 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 discountPrice = paymentPrice < 0 ? mStayPayment.totalPrice : mSelectedCoupon.amount;
 
                 getViewInterface().setBonus(false, mUserSimpleInformation.bonus, 0);
-                getViewInterface().setCoupon(true, mSelectedCoupon.amount);
+                getViewInterface().setCoupon(true, mSelectedCoupon.amount, mSelectedCoupon.rewardCoupon);
                 getViewInterface().setDepositSticker(false);
-            } else if(mDepositStickerSelected == true)
-            {
-                paymentPrice = mStayPayment.totalPrice;
-                discountPrice = 0;
-
-                getViewInterface().setBonus(false, mUserSimpleInformation.bonus, 0);
-                getViewInterface().setCoupon(false, 0);
-                getViewInterface().setDepositSticker(true);
             } else
             {
+                // 기본이 스티커 적립 상태이다.
                 paymentPrice = mStayPayment.totalPrice;
                 discountPrice = 0;
 
                 getViewInterface().setBonus(false, mUserSimpleInformation.bonus, 0);
-                getViewInterface().setCoupon(false, 0);
-                getViewInterface().setDepositSticker(false);
+                getViewInterface().setCoupon(false, 0, false);
+                getViewInterface().setDepositSticker(true);
             }
+
+            setDepositStickerCard(mStayPayment, mStayBookDateTime);
 
             getViewInterface().setStayPayment(mStayBookDateTime.getNights(), mStayPayment.totalPrice, discountPrice);
 
@@ -1713,21 +1767,32 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                     }
                 }
 
-                if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStayPhonePaymentEnabled() == true)
-                {
-                    getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.PHONE, true);
-
-                    if (paymentType == null)
-                    {
-                        paymentType = DailyBookingPaymentTypeView.PaymentType.PHONE;
-                    }
-                } else
+                if (mDepositStickerSelected == true)
                 {
                     getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.PHONE, false);
 
                     if (paymentType == DailyBookingPaymentTypeView.PaymentType.PHONE)
                     {
                         paymentType = null;
+                    }
+                } else
+                {
+                    if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStayPhonePaymentEnabled() == true)
+                    {
+                        getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.PHONE, true);
+
+                        if (paymentType == null)
+                        {
+                            paymentType = DailyBookingPaymentTypeView.PaymentType.PHONE;
+                        }
+                    } else
+                    {
+                        getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.PHONE, false);
+
+                        if (paymentType == DailyBookingPaymentTypeView.PaymentType.PHONE)
+                        {
+                            paymentType = null;
+                        }
                     }
                 }
 
@@ -1863,6 +1928,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         if (coupon == null || mStayPayment == null)
         {
             setCouponSelected(false, null);
+            setDepositStickerSelected(true);
 
             notifyStayPaymentChanged();
             return;
@@ -2276,41 +2342,31 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         return messageList;
     }
 
-    boolean hasOverlapBookingList(CommonDateTime commonDateTime, StayBookDateTime stayBookDateTime//
-        , String stayName, List<Booking> bookingList) throws Exception
+    private void setDepositStickerCard(StayPayment stayPayment, StayBookDateTime stayBookDateTime)
     {
-        if (commonDateTime == null || bookingList == null || bookingList.size() == 0)
+        if (stayPayment == null || stayBookDateTime == null)
         {
-            return false;
+            return;
         }
 
-        String checkInDateTime = stayBookDateTime.getCheckInDateTime("yyyy-MM-dd");
+        SpannableString spannableString;
 
-        for (Booking booking : bookingList)
+        if (mDepositStickerSelected == true)
         {
-            if (booking.readyForRefund == false)
-            {
-                switch (booking.statePayment)
-                {
-                    case Booking.PAYMENT_COMPLETED:
-                    case Booking.PAYMENT_WAITING:
-                        // 이미 이용한 Stay인 경우
-                        if (DailyCalendar.compareDateDay(booking.checkOutDateTime, commonDateTime.currentDateTime) < 0)
-                        {
-                            continue;
-                        }
+            spannableString = new SpannableString(getString(R.string.message_payment_reward_sticker_deposit_after_checkout, stayBookDateTime.getNights()));
+        } else
+        {
+            String text = getString(R.string.message_payment_dont_reward_sticker);
+            spannableString = new SpannableString(text);
 
-                        if (checkInDateTime.equalsIgnoreCase(DailyCalendar.convertDateFormatString(booking.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd")) == true//
-                            && booking.placeName.equalsIgnoreCase(stayName) == true)
-                        {
-                            return true;
-                        }
-                        break;
-                }
-            }
+            int startIndex = text.indexOf('\n') + 1;
+
+            spannableString.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getMediumTypeface()),//
+                startIndex, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
-        return false;
+        getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage()//
+            , stayPayment.rewardStickerCount, spannableString);
     }
 
     private void onPaymentWebResult(DailyBookingPaymentTypeView.PaymentType paymentType, int resultCode, String result)

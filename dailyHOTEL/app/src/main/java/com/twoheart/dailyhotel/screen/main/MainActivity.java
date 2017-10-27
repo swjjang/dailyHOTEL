@@ -28,6 +28,8 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyImageView;
+import com.daily.dailyhotel.entity.Configurations;
+import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
@@ -59,6 +61,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -1241,38 +1245,55 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
         public void onCheckServerResponse(String title, String message)
         {
             mDelayTimeHandler.removeMessages(0);
-            unLockUI();
 
-            if (DailyTextUtils.isTextEmpty(title, message) == true)
+            addCompositeDisposable(new CommonRemoteImpl(MainActivity.this).getConfigurations().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Configurations>()
             {
-                new DailyRemoteConfig(MainActivity.this).requestRemoteConfig(new DailyRemoteConfig.OnCompleteListener()
+                @Override
+                public void accept(Configurations configurations) throws Exception
                 {
-                    @Override
-                    public void onComplete(String currentVersion, String forceVersion)
-                    {
-                        if (DailyTextUtils.isTextEmpty(currentVersion, forceVersion) == true)
-                        {
-                            mNetworkController.requestVersion();
-                        } else
-                        {
-                            checkAppVersion(currentVersion, forceVersion);
-                        }
+                    unLockUI();
 
-                        analyticsRankABTest();
-                    }
-                });
-            } else
-            {
-                showSimpleDialog(title, message, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
+                    DailyRemoteConfigPreference.getInstance(MainActivity.this).setKeyRemoteConfigRewardStickerEnabled(configurations.activeReward);
+
+                    if (DailyTextUtils.isTextEmpty(title, message) == true)
                     {
-                        setResult(RESULT_CANCELED);
-                        finish();
+                        new DailyRemoteConfig(MainActivity.this).requestRemoteConfig(new DailyRemoteConfig.OnCompleteListener()
+                        {
+                            @Override
+                            public void onComplete(String currentVersion, String forceVersion)
+                            {
+                                if (DailyTextUtils.isTextEmpty(currentVersion, forceVersion) == true)
+                                {
+                                    mNetworkController.requestVersion();
+                                } else
+                                {
+                                    checkAppVersion(currentVersion, forceVersion);
+                                }
+
+                                analyticsRankABTest();
+                            }
+                        });
+                    } else
+                    {
+                        showSimpleDialog(title, message, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                setResult(RESULT_CANCELED);
+                                finish();
+                            }
+                        }, null, false);
                     }
-                }, null, false);
-            }
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    onHandleError(throwable);
+                }
+            }));
         }
 
         @Override

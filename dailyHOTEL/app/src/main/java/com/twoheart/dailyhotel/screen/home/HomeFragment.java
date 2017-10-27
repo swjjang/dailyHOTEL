@@ -1499,17 +1499,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
             // 리워드
             if (DailyHotel.isLogin() == true)
             {
-                addCompositeDisposable(mRewardRemoteImpl.getRewardStickerCount().flatMap(new Function<Integer, Observable<Integer>>()
-                {
-                    @Override
-                    public Observable<Integer> apply(Integer integer) throws Exception
-                    {
-                        // 실제로는 리워드를 운영중이지 않는 경우에는 null을 보내서 화면에 안보이도록 한다.
-                        //                    return null;
-
-                        return mRewardRemoteImpl.getRewardStickerCount();
-                    }
-                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Integer>()
+                addCompositeDisposable(mRewardRemoteImpl.getRewardStickerCount().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Integer>()
                 {
                     @Override
                     public void accept(Integer integer) throws Exception

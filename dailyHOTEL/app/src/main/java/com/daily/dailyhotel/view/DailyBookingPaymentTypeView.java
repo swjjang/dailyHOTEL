@@ -205,7 +205,7 @@ public class DailyBookingPaymentTypeView extends ConstraintLayout implements Vie
         }
     }
 
-    public void setPaymentTypeEnable(PaymentType paymentType, boolean enable)
+    public void setPaymentTypeEnabled(PaymentType paymentType, boolean enabled)
     {
         if (mViewDataBinding == null || paymentType == null)
         {
@@ -215,19 +215,19 @@ public class DailyBookingPaymentTypeView extends ConstraintLayout implements Vie
         switch (paymentType)
         {
             case EASY_CARD:
-                setPaymentTypeEnabled(mViewDataBinding.disableSimpleCardView, enable);
+                setPaymentTypeEnabled(mViewDataBinding.disableSimpleCardView, enabled);
                 break;
 
             case CARD:
-                setPaymentTypeEnabled(mViewDataBinding.disableCardView, enable);
+                setPaymentTypeEnabled(mViewDataBinding.disableCardView, enabled);
                 break;
 
             case PHONE:
-                setPaymentTypeEnabled(mViewDataBinding.disablePhoneView, enable);
+                setPaymentTypeEnabled(mViewDataBinding.disablePhoneView, enabled);
                 break;
 
             case VBANK:
-                setPaymentTypeEnabled(mViewDataBinding.disableTransferView, enable);
+                setPaymentTypeEnabled(mViewDataBinding.disableTransferView, enabled);
                 break;
 
             case FREE:
@@ -378,6 +378,36 @@ public class DailyBookingPaymentTypeView extends ConstraintLayout implements Vie
 
             mViewDataBinding.logoTextView.setText(cardName);
             mViewDataBinding.numberTextView.setText(cardNumber);
+        }
+    }
+
+    public void setPaymentDescriptionText(PaymentType paymentType, String text)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        switch (paymentType)
+        {
+            case EASY_CARD:
+                mViewDataBinding.simpleCardGuideTextView.setText(text);
+                break;
+
+            case CARD:
+                mViewDataBinding.cardGuideTextView.setText(text);
+                break;
+
+            case PHONE:
+                mViewDataBinding.phoneGuideTextView.setText(text);
+                break;
+
+            case VBANK:
+                mViewDataBinding.transferGuideTextView.setText(text);
+                break;
+
+            case FREE:
+                break;
         }
     }
 

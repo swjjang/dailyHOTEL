@@ -718,10 +718,7 @@ public class DailyRemoteConfig
             return;
         }
 
-        if (DailyTextUtils.isTextEmpty(jsonString) == true)
-        {
-            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerEnabled(false);
-        } else
+        if (DailyTextUtils.isTextEmpty(jsonString) == false)
         {
             try
             {
@@ -761,8 +758,6 @@ public class DailyRemoteConfig
                 {
                     DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerMemberMessage(i, memberMessageJSONObject.getString(Integer.toString(i)));
                 }
-
-                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerEnabled(true);
             } catch (Exception e)
             {
                 ExLog.e(e.toString());

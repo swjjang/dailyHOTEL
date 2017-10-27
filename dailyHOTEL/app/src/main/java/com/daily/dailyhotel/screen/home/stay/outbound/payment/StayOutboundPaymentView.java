@@ -278,7 +278,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
             return;
         }
 
-        getViewDataBinding().paymentTypeView.setPaymentTypeEnable(paymentType, enabled);
+        getViewDataBinding().paymentTypeView.setPaymentTypeEnabled(paymentType, enabled);
     }
 
     @Override

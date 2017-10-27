@@ -366,7 +366,7 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
             return;
         }
 
-        getViewDataBinding().paymentTypeView.setPaymentTypeEnable(paymentType, enabled);
+        getViewDataBinding().paymentTypeView.setPaymentTypeEnabled(paymentType, enabled);
     }
 
     @Override

@@ -118,16 +118,18 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
         if (enabledSticker == true)
         {
             getViewDataBinding().cheeringLayout.setBackgroundColor(getColor(R.color.default_background_cfff9f0));
+            getViewDataBinding().cheeringTitleTextView.setTextColor(getColor(R.color.default_text_ce9a230));
             getViewDataBinding().cheeringUnderLineView.setBackgroundColor(getColor(R.color.default_line_cf4ebde));
         } else
         {
             getViewDataBinding().cheeringLayout.setBackgroundColor(getColor(R.color.default_background_cf0f0f2));
+            getViewDataBinding().cheeringTitleTextView.setTextColor(getColor(R.color.default_text_c929292));
             getViewDataBinding().cheeringUnderLineView.setBackgroundColor(getColor(R.color.default_line_ce7e7e7));
         }
 
         getViewDataBinding().cheeringTitleTextView.setText(titleText);
 
-        getViewDataBinding().cheeringWarningTextView.setVisibility(DailyTextUtils.isTextEmpty(warningText) ? View.VISIBLE : View.GONE);
+        getViewDataBinding().cheeringWarningTextView.setVisibility(DailyTextUtils.isTextEmpty(warningText) == false ? View.VISIBLE : View.GONE);
         getViewDataBinding().cheeringWarningTextView.setText(warningText);
     }
 
@@ -265,7 +267,7 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
     }
 
     @Override
-    public void setCoupon(boolean selected, int couponPrice)
+    public void setCoupon(boolean selected, int couponPrice, boolean rewardCoupon)
     {
         if (getViewDataBinding() == null)
         {
@@ -274,6 +276,13 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
 
         setCouponSelected(selected);
         getViewDataBinding().informationView.setCoupon(couponPrice);
+
+        getViewDataBinding().informationView.setUsedRewardCouponVisible(rewardCoupon);
+
+        if (rewardCoupon == true)
+        {
+            getViewDataBinding().informationView.setUsedRewardCouponText(getString(R.string.message_payment_used_reward_coupon, DailyTextUtils.getPriceFormat(getContext(), couponPrice, false)));
+        }
     }
 
     @Override
@@ -285,6 +294,51 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
         }
 
         setDepositStickerSelected(selected);
+    }
+
+    @Override
+    public void setDepositStickerVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().informationView.setDepositStickerVisible(visible);
+    }
+
+    @Override
+    public void setDepositStickerCardVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (visible == true)
+        {
+            getViewDataBinding().depositStickerLayout.setVisibility(View.VISIBLE);
+            getViewDataBinding().refundAgreementPolicyTextView.setText(R.string.label_booking_step5);
+        } else
+        {
+            getViewDataBinding().depositStickerLayout.setVisibility(View.GONE);
+            getViewDataBinding().refundAgreementPolicyTextView.setText(R.string.label_booking_step4_empty_reward);
+        }
+    }
+
+    @Override
+    public void setDepositStickerCard(String titleText, int nights, CharSequence descriptionText)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().rewardCardView.setGuideVisible(false);
+        getViewDataBinding().rewardCardView.setOptionVisible(false);
+        getViewDataBinding().rewardCardView.setRewardTitleText(titleText);
+        getViewDataBinding().rewardCardView.setDescriptionText(descriptionText);
+        getViewDataBinding().rewardCardView.setStickerCount(nights);
     }
 
     @Override
@@ -380,7 +434,7 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
             return;
         }
 
-        getViewDataBinding().paymentTypeView.setPaymentTypeEnable(paymentType, enabled);
+        getViewDataBinding().paymentTypeView.setPaymentTypeEnabled(paymentType, enabled);
     }
 
     @Override
@@ -516,6 +570,17 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
             default:
                 return;
         }
+    }
+
+    @Override
+    public void setPaymentTypeDescriptionText(DailyBookingPaymentTypeView.PaymentType paymentType, String text)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().paymentTypeView.setPaymentDescriptionText(paymentType, text);
     }
 
     @Override

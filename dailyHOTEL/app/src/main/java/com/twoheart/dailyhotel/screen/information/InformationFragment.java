@@ -11,7 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.daily.dailyhotel.screen.common.web.DailyWebActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
@@ -302,7 +304,9 @@ public class InformationFragment extends BaseMenuNavigationFragment implements C
             lockUiComponent();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
-            baseActivity.startActivityForResult(DailyRewardActivity.newInstance(baseActivity), Constants.CODE_REQUEST_ACTIVITY_DAILY_REWARD);
+
+            baseActivity.startActivityForResult(DailyWebActivity.newInstance(baseActivity, getString(R.string.label_reward_reward_guide)//
+                , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStaticUrlDailyReward()), Constants.CODE_REQUEST_ACTIVITY_DAILY_REWARD);
         }
 
         @Override

@@ -337,6 +337,16 @@ public class DailyRewardCardView extends ConstraintLayout
         }
     }
 
+    public void setDescriptionText(CharSequence text)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.descriptionTextView.setText(text);
+    }
+
     public void startCampaignStickerAnimation()
     {
         if (mStickerAnimatorSet != null)
