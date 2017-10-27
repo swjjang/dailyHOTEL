@@ -60,7 +60,6 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
 
     Constants.ANIMATION_STATUS mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
     Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
-    private boolean mUpScrolling;
     ValueAnimator mValueAnimator;
 
     protected String mCallByScreen;
@@ -385,7 +384,6 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         }
 
         setCategoryTabLayoutVisibility(View.INVISIBLE);
-
 
         if (mFloatingActionView != null)
         {
@@ -752,264 +750,35 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         mFloatingActionView.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
-    public void calculationMenuBarLayoutTranslationY(int dy)
+    public synchronized void showBottomLayout()
     {
-        Object tag = mFloatingActionView.getTag();
-
-        if (tag == null || tag instanceof Integer == false)
-        {
-            return;
-        }
-
-        int height = (Integer) tag;
-        float translationY = dy + mFloatingActionView.getTranslationY();
-
-        if (translationY >= height)
-        {
-            translationY = height;
-        } else if (translationY <= 0)
-        {
-            translationY = 0;
-        }
-
-        if (dy > 0)
-        {
-            mUpScrolling = true;
-        } else if (dy < 0)
-        {
-            mUpScrolling = false;
-        }
-
-        // 움직이는 동안에는 터치가 불가능 하다.
-        if (translationY == 0 || translationY == height)
-        {
-            setOptionViewTypeEnabled(true);
-            setOptionFilterEnabled(true);
-        } else
-        {
-            setOptionViewTypeEnabled(false);
-            setOptionFilterEnabled(false);
-        }
+        setOptionViewTypeEnabled(true);
+        setOptionFilterEnabled(true);
 
         if (mFloatingActionView != null)
         {
-            mFloatingActionView.setTranslationY(translationY);
+            mFloatingActionView.setTranslationY(0);
         }
     }
 
-    public void animationMenuBarLayout()
+    public void hideBottomLayout()
     {
-        Object tag = mFloatingActionView.getTag();
-
-        if (tag == null || tag instanceof Integer == false)
+        if (mFloatingActionView == null)
         {
             return;
         }
 
-        int height = (Integer) tag;
-        float translationY = mFloatingActionView.getTranslationY();
-
-        if (translationY == 0 || translationY == height)
-        {
-            return;
-        }
-
-        mFloatingActionView.setTag(mFloatingActionView.getId(), translationY);
-
-        if (mUpScrolling == true)
-        {
-            if (translationY >= mFloatingActionView.getHeight() / 2)
-            {
-                hideBottomLayout(true);
-            } else
-            {
-                showBottomLayout(true);
-            }
-        } else
-        {
-            if (translationY <= mFloatingActionView.getHeight() / 2)
-            {
-                showBottomLayout(true);
-            } else
-            {
-                hideBottomLayout(true);
-            }
-        }
+        setBottomOptionVisible(false);
     }
 
-    public synchronized void showBottomLayout(boolean isAnimation)
+    public void setBottomOptionVisible(boolean visible)
     {
-        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.SHOW)
+        if (mFloatingActionView == null)
         {
             return;
         }
 
-        if (mValueAnimator != null && mValueAnimator.isRunning() == true)
-        {
-            mValueAnimator.cancel();
-        }
-
-        if (isAnimation == true)
-        {
-            mValueAnimator = ValueAnimator.ofInt(0, 100);
-            mValueAnimator.setDuration(ANIMATION_DELAY);
-            mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-            {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation)
-                {
-                    int value = (Integer) animation.getAnimatedValue();
-                    float prevTranslationY = (Float) mFloatingActionView.getTag(mFloatingActionView.getId());
-                    float translationY = prevTranslationY * value / 100;
-
-                    if (mFloatingActionView != null)
-                    {
-                        mFloatingActionView.setTranslationY(prevTranslationY - translationY);
-                    }
-                }
-            });
-
-            mValueAnimator.addListener(new Animator.AnimatorListener()
-            {
-                @Override
-                public void onAnimationStart(Animator animation)
-                {
-                    setOptionViewTypeEnabled(false);
-                    setOptionFilterEnabled(false);
-
-                    mAnimationState = Constants.ANIMATION_STATE.START;
-                    mAnimationStatus = Constants.ANIMATION_STATUS.SHOW;
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation)
-                {
-                    if (mValueAnimator != null)
-                    {
-                        mValueAnimator.removeAllListeners();
-                        mValueAnimator.removeAllUpdateListeners();
-                        mValueAnimator = null;
-                    }
-
-                    if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
-                    {
-                        mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
-                        mAnimationState = Constants.ANIMATION_STATE.END;
-                    }
-
-                    setOptionViewTypeEnabled(true);
-                    setOptionFilterEnabled(true);
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation)
-                {
-                    mAnimationState = Constants.ANIMATION_STATE.CANCEL;
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation)
-                {
-
-                }
-            });
-
-            mValueAnimator.start();
-        } else
-        {
-            setOptionViewTypeEnabled(true);
-            setOptionFilterEnabled(true);
-
-            if (mFloatingActionView != null)
-            {
-                mFloatingActionView.setTranslationY(0);
-            }
-        }
-    }
-
-    public void hideBottomLayout(boolean isAnimation)
-    {
-        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.HIDE)
-        {
-            return;
-        }
-
-        if (mValueAnimator != null && mValueAnimator.isRunning() == true)
-        {
-            mValueAnimator.cancel();
-        }
-
-        if (isAnimation == true)
-        {
-            mValueAnimator = ValueAnimator.ofInt(0, 100);
-            mValueAnimator.setDuration(ANIMATION_DELAY);
-            mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-            {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation)
-                {
-                    int value = (Integer) animation.getAnimatedValue();
-                    float prevTranslationY = (Float) mFloatingActionView.getTag(mFloatingActionView.getId());
-                    float height = (Integer) mFloatingActionView.getTag() - prevTranslationY;
-                    float translationY = height * value / 100;
-
-                    if (mFloatingActionView != null)
-                    {
-                        mFloatingActionView.setTranslationY(prevTranslationY + translationY);
-                    }
-                }
-            });
-
-            mValueAnimator.addListener(new Animator.AnimatorListener()
-            {
-                @Override
-                public void onAnimationStart(Animator animation)
-                {
-                    mAnimationState = Constants.ANIMATION_STATE.START;
-                    mAnimationStatus = Constants.ANIMATION_STATUS.HIDE;
-
-                    setOptionViewTypeEnabled(false);
-                    setOptionFilterEnabled(false);
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation)
-                {
-                    mValueAnimator.removeAllListeners();
-                    mValueAnimator.removeAllUpdateListeners();
-                    mValueAnimator = null;
-
-                    if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
-                    {
-                        mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
-                        mAnimationState = Constants.ANIMATION_STATE.END;
-                    }
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation)
-                {
-                    mAnimationState = Constants.ANIMATION_STATE.CANCEL;
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation)
-                {
-
-                }
-            });
-
-            mValueAnimator.start();
-        } else
-        {
-            if (mFloatingActionView != null)
-            {
-                mFloatingActionView.setTranslationY((Integer) mFloatingActionView.getTag());
-            }
-
-            setOptionViewTypeEnabled(false);
-            setOptionFilterEnabled(false);
-        }
+        mFloatingActionView.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////

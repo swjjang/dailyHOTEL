@@ -668,7 +668,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             mStaySearchCuration.setCategory(category);
 
             mPlaceSearchResultLayout.setCurrentItem(tab.getPosition());
-            mPlaceSearchResultLayout.showBottomLayout(false);
+            mPlaceSearchResultLayout.showBottomLayout();
 
             refreshCurrentFragment(false);
         }
@@ -709,7 +709,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onViewTypeClick()
         {
-            mPlaceSearchResultLayout.showBottomLayout(false);
+            mPlaceSearchResultLayout.showBottomLayout();
 
             changeViewType();
         }
@@ -1175,7 +1175,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy)
         {
-            mPlaceSearchResultLayout.calculationMenuBarLayoutTranslationY(dy);
         }
 
         @Override
@@ -1185,10 +1184,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             {
                 case RecyclerView.SCROLL_STATE_IDLE:
                 {
-                    mPlaceSearchResultLayout.animationMenuBarLayout();
-
-                    //                    ExLog.d("offset : " + recyclerView.computeVerticalScrollOffset() + ", " + recyclerView.computeVerticalScrollExtent() + ", " + recyclerView.computeVerticalScrollRange());
-
                     if (recyclerView.computeVerticalScrollOffset() + recyclerView.computeVerticalScrollExtent() >= recyclerView.computeVerticalScrollRange())
                     {
                         StayListAdapter stayListAdapter = (StayListAdapter) recyclerView.getAdapter();
@@ -1205,7 +1200,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
                                 if (placeViewItem != null && placeViewItem.mType == PlaceViewItem.TYPE_FOOTER_VIEW)
                                 {
-                                    mPlaceSearchResultLayout.showBottomLayout(false);
+                                    mPlaceSearchResultLayout.showBottomLayout();
                                 }
                             }
                         }
