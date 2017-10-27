@@ -28,7 +28,6 @@ import java.util.ArrayList;
 public class RecentStayListAdapter extends RecentPlacesListAdapter
 {
     private int mNights;
-    private boolean mRewardEnabled;
 
     public RecentStayListAdapter(Context context, ArrayList<PlaceViewItem> list, OnRecentPlacesItemListener listener)
     {

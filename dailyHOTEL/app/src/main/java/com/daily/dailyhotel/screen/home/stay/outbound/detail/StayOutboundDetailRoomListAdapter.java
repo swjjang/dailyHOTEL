@@ -25,6 +25,7 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
     View.OnClickListener mOnClickListener;
     private int mSelectedPosition;
     private StayOutboundDetailPresenter.PriceType mPriceType;
+    private boolean mRewardEnabled;
 
     public StayOutboundDetailRoomListAdapter(Context context, List<StayOutboundRoom> arrayList, View.OnClickListener listener)
     {
@@ -54,6 +55,11 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
     public void setSelected(int position)
     {
         mSelectedPosition = position;
+    }
+
+    public void setRewardEnabled(boolean enabled)
+    {
+        mRewardEnabled = enabled;
     }
 
     public StayOutboundRoom getItem(int position)
@@ -203,7 +209,7 @@ public class StayOutboundDetailRoomListAdapter extends RecyclerView.Adapter<Recy
             saleRoomInformationViewHolder.dataBinding.nrdTextView.setText(stayOutboundRoom.nonRefundableDescription);
         }
 
-        saleRoomInformationViewHolder.dataBinding.rewardTextView.setVisibility(stayOutboundRoom.provideRewardSticker ? View.VISIBLE : View.GONE);
+        saleRoomInformationViewHolder.dataBinding.rewardTextView.setVisibility((mRewardEnabled && stayOutboundRoom.provideRewardSticker) ? View.VISIBLE : View.GONE);
 
         // 마지막 목록에는 하단에 10dp여유를 준다.
         if (position == getItemCount() - 1)

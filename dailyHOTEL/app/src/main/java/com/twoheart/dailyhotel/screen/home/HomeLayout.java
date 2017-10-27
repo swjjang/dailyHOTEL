@@ -484,7 +484,7 @@ public class HomeLayout extends BaseBlurLayout
             }
         });
 
-        setRewardVisible(false);
+        setRewardCardVisible(false);
     }
 
     private void initWishListLayout(LinearLayout layout)
@@ -987,7 +987,7 @@ public class HomeLayout extends BaseBlurLayout
         //        mTextMessageLayout.post(() -> startTextLayoutShowAnimation());
     }
 
-    public void setRewardVisible(boolean visible)
+    public void setRewardCardVisible(boolean visible)
     {
         if (mDailyRewardCardView == null)
         {

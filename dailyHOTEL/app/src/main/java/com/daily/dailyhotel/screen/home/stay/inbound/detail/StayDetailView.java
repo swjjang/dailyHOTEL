@@ -74,7 +74,6 @@ import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailInformationDa
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.AlphaTransition;
-import com.twoheart.dailyhotel.widget.TextTransition;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -449,7 +448,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         setEmptyView();
 
         // 호텔 이름 / 쿠폰
-        setTitleView(stayDetail.grade, stayDetail.name, stayDetail.provideRewardSticker, stayDetail.couponPrice);
+        setTitleView(stayDetail.grade, stayDetail.name, stayDetail.activeReward && stayDetail.provideRewardSticker, stayDetail.couponPrice);
 
         // 트루 리뷰
         setTrueReviewView(stayDetail.ratingShow, stayDetail.ratingValue, stayDetail.ratingPersons, trueReviewCount);
@@ -497,7 +496,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         }
 
         // 객실 세팅
-        setRoomList(stayBookDateTime, stayDetail.getRoomList());
+        setRoomList(stayBookDateTime, stayDetail.getRoomList(), stayDetail.activeReward);
     }
 
     @Override
@@ -1788,7 +1787,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         });
     }
 
-    private void setRoomList(StayBookDateTime stayBookDateTime, List<StayRoom> roomList)
+    private void setRoomList(StayBookDateTime stayBookDateTime, List<StayRoom> roomList, boolean activeReward)
     {
         if (getViewDataBinding() == null || stayBookDateTime == null || roomList == null || roomList.size() == 0)
         {
@@ -1823,6 +1822,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         }
 
         mRoomTypeListAdapter.setNights(stayBookDateTime.getNights());
+        mRoomTypeListAdapter.setRewardEnabled(activeReward);
 
         getViewDataBinding().roomsViewDataBinding.roomRecyclerView.setAdapter(mRoomTypeListAdapter);
         getViewDataBinding().bookingTextView.setOnClickListener(this);

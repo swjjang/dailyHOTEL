@@ -1505,7 +1505,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     public void accept(Integer integer) throws Exception
                     {
                         DailyRemoteConfigPreference.getInstance(mBaseActivity).setKeyRemoteConfigRewardStickerEnabled(true);
-                        mHomeLayout.setRewardVisible(true);
+                        mHomeLayout.setRewardCardVisible(true);
 
                         String descriptionText = DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigRewardStickerMemberMessage(integer);
 
@@ -1517,7 +1517,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     @Override
                     public void accept(Throwable throwable) throws Exception
                     {
-                        mHomeLayout.setRewardVisible(false);
+                        mHomeLayout.setRewardCardVisible(false);
                     }
                 }));
             } else
@@ -1528,7 +1528,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     public void accept(Integer integer) throws Exception
                     {
                         DailyRemoteConfigPreference.getInstance(mBaseActivity).setKeyRemoteConfigRewardStickerEnabled(true);
-                        mHomeLayout.setRewardVisible(true);
+                        mHomeLayout.setRewardCardVisible(true);
 
                         String descriptionText = DailyRemoteConfigPreference.getInstance(mBaseActivity).isKeyRemoteConfigRewardStickerCampaignEnabled() //
                             ? DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigRewardStickerNonMemberCampaignMessage()//
@@ -1545,7 +1545,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     @Override
                     public void accept(Throwable throwable) throws Exception
                     {
-                        mHomeLayout.setRewardVisible(false);
+                        mHomeLayout.setRewardCardVisible(false);
                     }
                 }));
             }
