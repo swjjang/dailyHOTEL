@@ -20,8 +20,8 @@ public class StayOutboundPayment
     public int roomBedTypeId;
 
     // reward
-    public boolean activeReward;
-    public boolean provideRewardSticker;
+    public boolean activeReward = true;
+    public boolean provideRewardSticker = true;
     public int rewardStickerCount;
 
     public StayOutboundPayment()

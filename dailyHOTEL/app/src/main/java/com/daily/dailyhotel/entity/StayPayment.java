@@ -14,6 +14,8 @@ public class StayPayment
     public String businessName;
     public String transportation;
     public boolean waitingForBooking;
+
+    // reward
     public boolean provideRewardSticker = true;
     public boolean activeReward = true;
     public int rewardStickerCount;
