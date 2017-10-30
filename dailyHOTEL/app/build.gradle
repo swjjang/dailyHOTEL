@@ -61,14 +61,6 @@ android {
 //        resConfigs "nodpi", "hdpi", "xhdpi", "xxhdpi"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
-//        jackOptions {
-//            enabled true
-//            additionalParameters("jack.dex.output.policy" : "multidex")
-//            additionalParameters("jack.preprocessor.file" : "legacyMultidexInstallation.jpp")
-//            additionalParameters("jack.preprocessor" : "true")
-//            additionalParameters("jack.dex.output.multidex.legacy": "true")
-//        }
     }
 
     compileOptions {
