@@ -35,4 +35,8 @@ public interface StayThankYouInterface extends BaseBlurViewInterface
     Observable<Boolean> getReceiptAnimation();
 
     ArrayList<CarouselListItem> getRecommendGourmetData();
+
+    void setDepositStickerCardVisible(boolean visible);
+
+    void setDepositStickerCard(String titleText, int nights, String warningText, String descriptionText);
 }

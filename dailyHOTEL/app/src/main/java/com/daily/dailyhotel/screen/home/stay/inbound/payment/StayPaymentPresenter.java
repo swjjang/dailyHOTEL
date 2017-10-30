@@ -1376,11 +1376,32 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         // ThankYou 페이지를 홈탭에서 띄우기 위한 코드
         startActivity(DailyInternalDeepLink.getHomeScreenLink(getActivity()));
 
+
+        String descriptionTitle;
+        String descriptionMessage;
+
+        if (mDepositStickerSelected == true)
+        {
+            descriptionTitle = getString(R.string.message_payment_reward_sticker_deposit_after_checkout, mStayBookDateTime.getNights());
+            descriptionMessage = null;
+        } else
+        {
+            if (hasDepositSticker() == true)
+            {
+                descriptionTitle = getString(R.string.message_payment_dont_reward_sticker);
+                descriptionMessage = getString(R.string.message_payment_dont_reward_sticker_used_bonus_coupon_payment_phone);
+            } else
+            {
+                descriptionTitle = getString(R.string.message_payment_dont_reward_sticker);
+                descriptionMessage = null;
+            }
+        }
+
         startActivityForResult(StayThankYouActivity.newInstance(getActivity(), mOverseas, mStayName, mImageUrl//
             , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mRoomName, aggregationId, mStayPayment.waitingForBooking //
-            , mLatitude, mLongitude, mAnalytics.getThankYouAnalyticsParam())//
+            , mLatitude, mLongitude, descriptionTitle, descriptionMessage, mAnalytics.getThankYouAnalyticsParam())//
             , StayPaymentActivity.REQUEST_CODE_THANK_YOU);
 
         mAnalytics.onEventTransportationType(getActivity(), mStayPayment.transportation, mTransportationType);
@@ -2357,24 +2378,22 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             return;
         }
 
-        SpannableString spannableString;
-
         if (mDepositStickerSelected == true)
         {
-            spannableString = new SpannableString(getString(R.string.message_payment_reward_sticker_deposit_after_checkout, stayBookDateTime.getNights()));
+            getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage()//
+                , stayPayment.rewardStickerCount, null, getString(R.string.message_payment_reward_sticker_deposit_after_checkout, stayBookDateTime.getNights()));
         } else
         {
-            String text = getString(R.string.message_payment_dont_reward_sticker);
-            spannableString = new SpannableString(text);
-
-            int startIndex = text.indexOf('\n') + 1;
-
-            spannableString.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getMediumTypeface()),//
-                startIndex, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            if (hasDepositSticker() == true)
+            {
+                getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage()//
+                    , stayPayment.rewardStickerCount, getString(R.string.message_payment_dont_reward_sticker), getString(R.string.message_payment_dont_reward_sticker_used_bonus_coupon_payment_phone));
+            } else
+            {
+                getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage()//
+                    , stayPayment.rewardStickerCount, getString(R.string.message_payment_dont_reward_sticker), null);
+            }
         }
-
-        getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage()//
-            , stayPayment.rewardStickerCount, spannableString);
     }
 
     private boolean hasDepositSticker()

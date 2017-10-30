@@ -24,7 +24,7 @@ import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
 import com.daily.dailyhotel.repository.remote.model.RecentlyPlacesData;
 import com.daily.dailyhotel.repository.remote.model.ReviewData;
 import com.daily.dailyhotel.repository.remote.model.ReviewScoresData;
-import com.daily.dailyhotel.repository.remote.model.RewardCountData;
+import com.daily.dailyhotel.repository.remote.model.RewardInformationData;
 import com.daily.dailyhotel.repository.remote.model.RewardDetailData;
 import com.daily.dailyhotel.repository.remote.model.RewardHistoryDetailData;
 import com.daily.dailyhotel.repository.remote.model.ShortUrlData;
@@ -2015,7 +2015,7 @@ public class DailyMobileAPI
     // RewardRemoteImpl
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Observable<BaseDto<RewardCountData>> getRewardStickerCount()
+    public Observable<BaseDto<RewardInformationData>> getRewardStickerCount()
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v5/reward"//
             : "MjUkMzYkNiQzMSQ0MCQzMSQyOCQyMyQxMSQzNyQ0OCQ0NiQyNCQ0NCQyMiQ1JA==$NDI5NLEYFDRkHM5ODY1MDEyYQkBGE3RBjLREOKKDANCQjJKCEUGNkGIzNTE=$";

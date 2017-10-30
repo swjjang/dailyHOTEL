@@ -30,10 +30,14 @@ public class StayThankYouActivity extends BaseActivity<StayThankYouPresenter>
     static final String INTENT_EXTRA_DATA_WAITING_FOR_BOOKING = "waitingForBooking";
     static final String INTENT_EXTRA_DATA_LATITUDE = "latitude";
     static final String INTENT_EXTRA_DATA_LONGITUDE = "longitude";
+    static final String INTENT_EXTRA_DATA_REWARD_DESCRIPTION_TITLE = "descriptionTitle";
+    static final String INTENT_EXTRA_DATA_REWARD_DESCRIPTION_MESSAGE = "descriptionMessage";
+
 
     public static Intent newInstance(Context context, boolean overseas, String stayName, String imageUrl//
         , String checkInDateTime, String checkOutDateTime, String roomName, String aggregationId//
-        , boolean waitingForBooking, double latitude, double longitude, StayThankYouAnalyticsParam analyticsParam)
+        , boolean waitingForBooking, double latitude, double longitude
+        , String descriptionTitle, String descriptionMessage, StayThankYouAnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, StayThankYouActivity.class);
 
@@ -47,6 +51,8 @@ public class StayThankYouActivity extends BaseActivity<StayThankYouPresenter>
         intent.putExtra(INTENT_EXTRA_DATA_WAITING_FOR_BOOKING, waitingForBooking);
         intent.putExtra(INTENT_EXTRA_DATA_LATITUDE, latitude);
         intent.putExtra(INTENT_EXTRA_DATA_LONGITUDE, longitude);
+        intent.putExtra(INTENT_EXTRA_DATA_REWARD_DESCRIPTION_TITLE, descriptionTitle);
+        intent.putExtra(INTENT_EXTRA_DATA_REWARD_DESCRIPTION_MESSAGE, descriptionMessage);
         intent.putExtra(INTENT_EXTRA_DATA_ANALYTICS, analyticsParam);
 
         return intent;

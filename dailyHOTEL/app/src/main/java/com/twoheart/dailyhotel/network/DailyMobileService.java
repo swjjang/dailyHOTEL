@@ -20,7 +20,7 @@ import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
 import com.daily.dailyhotel.repository.remote.model.RecentlyPlacesData;
 import com.daily.dailyhotel.repository.remote.model.ReviewData;
 import com.daily.dailyhotel.repository.remote.model.ReviewScoresData;
-import com.daily.dailyhotel.repository.remote.model.RewardCountData;
+import com.daily.dailyhotel.repository.remote.model.RewardInformationData;
 import com.daily.dailyhotel.repository.remote.model.RewardDetailData;
 import com.daily.dailyhotel.repository.remote.model.RewardHistoryDetailData;
 import com.daily.dailyhotel.repository.remote.model.ShortUrlData;
@@ -918,7 +918,7 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Observable<BaseDto<RewardCountData>> getRewardStickerCount(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+    Observable<BaseDto<RewardInformationData>> getRewardStickerCount(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")

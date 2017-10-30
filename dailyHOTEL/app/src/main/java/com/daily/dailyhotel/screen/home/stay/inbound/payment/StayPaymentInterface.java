@@ -32,7 +32,7 @@ public interface StayPaymentInterface extends BaseDialogViewInterface
 
     void setDepositStickerCardVisible(boolean visible);
 
-    void setDepositStickerCard(String titleText, int nights, CharSequence descriptionText);
+    void setDepositStickerCard(String titleText, int nights, String warningText, String descriptionText);
 
     void setStayPayment(int nights, int totalPrice, int discountPrice);
 

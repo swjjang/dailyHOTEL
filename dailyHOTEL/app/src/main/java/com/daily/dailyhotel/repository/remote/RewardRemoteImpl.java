@@ -6,9 +6,10 @@ import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.RewardInterface;
 import com.daily.dailyhotel.entity.RewardDetail;
 import com.daily.dailyhotel.entity.RewardHistoryDetail;
-import com.daily.dailyhotel.repository.remote.model.RewardCountData;
+import com.daily.dailyhotel.entity.RewardInformation;
 import com.daily.dailyhotel.repository.remote.model.RewardDetailData;
 import com.daily.dailyhotel.repository.remote.model.RewardHistoryDetailData;
+import com.daily.dailyhotel.repository.remote.model.RewardInformationData;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 
@@ -29,20 +30,20 @@ public class RewardRemoteImpl implements RewardInterface
     }
 
     @Override
-    public Observable<Integer> getRewardStickerCount()
+    public Observable<RewardInformation> getRewardStickerCount()
     {
-        return DailyMobileAPI.getInstance(mContext).getRewardStickerCount().map(new Function<BaseDto<RewardCountData>, Integer>()
+        return DailyMobileAPI.getInstance(mContext).getRewardStickerCount().map(new Function<BaseDto<RewardInformationData>, RewardInformation>()
         {
             @Override
-            public Integer apply(@io.reactivex.annotations.NonNull BaseDto<RewardCountData> rewardCountDataBaseDto) throws Exception
+            public RewardInformation apply(@io.reactivex.annotations.NonNull BaseDto<RewardInformationData> rewardCountDataBaseDto) throws Exception
             {
-                Integer rewardCount;
+                RewardInformation rewardInformation;
 
                 if (rewardCountDataBaseDto != null)
                 {
                     if (rewardCountDataBaseDto.msgCode == 100 && rewardCountDataBaseDto.data != null)
                     {
-                        rewardCount = rewardCountDataBaseDto.data.rewardStickerCount;
+                        rewardInformation = rewardCountDataBaseDto.data.getRewardInformation();
                     } else
                     {
                         throw new BaseException(rewardCountDataBaseDto.msgCode, rewardCountDataBaseDto.msg);
@@ -52,7 +53,7 @@ public class RewardRemoteImpl implements RewardInterface
                     throw new BaseException(-1, null);
                 }
 
-                return rewardCount;
+                return rewardInformation;
             }
         });
     }

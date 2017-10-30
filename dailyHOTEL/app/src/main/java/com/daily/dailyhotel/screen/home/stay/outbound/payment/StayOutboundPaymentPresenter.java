@@ -1759,24 +1759,22 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             return;
         }
 
-        SpannableString spannableString;
-
         if (mDepositStickerSelected == true)
         {
-            spannableString = new SpannableString(getString(R.string.message_payment_reward_sticker_deposit_after_checkout, stayBookDateTime.getNights()));
+            getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage()//
+                , stayOutboundPayment.rewardStickerCount, null, getString(R.string.message_payment_reward_sticker_deposit_after_checkout, stayBookDateTime.getNights()));
         } else
         {
-            String text = getString(R.string.message_payment_dont_reward_sticker);
-            spannableString = new SpannableString(text);
-
-            int startIndex = text.indexOf('\n') + 1;
-
-            spannableString.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getMediumTypeface()),//
-                startIndex, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            if (hasDepositSticker() == true)
+            {
+                getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage()//
+                    , stayOutboundPayment.rewardStickerCount, getString(R.string.message_payment_dont_reward_sticker), getString(R.string.message_payment_dont_reward_sticker_used_bonus__payment_phone));
+            } else
+            {
+                getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage()//
+                    , stayOutboundPayment.rewardStickerCount, getString(R.string.message_payment_dont_reward_sticker), null);
+            }
         }
-
-        getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage()//
-            , stayOutboundPayment.rewardStickerCount, spannableString);
     }
 
     private boolean hasDepositSticker()

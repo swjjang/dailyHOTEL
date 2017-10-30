@@ -23,6 +23,7 @@ import com.daily.base.util.FontManager;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.entity.RewardInformation;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.UserTracking;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
@@ -30,6 +31,7 @@ import com.daily.dailyhotel.parcel.analytics.StayThankYouAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.GourmetRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
+import com.daily.dailyhotel.repository.remote.RewardRemoteImpl;
 import com.daily.dailyhotel.screen.booking.detail.map.GourmetBookingDetailMapActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
@@ -58,7 +60,7 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function3;
+import io.reactivex.functions.Function4;
 
 /**
  * Created by sheldon
@@ -71,6 +73,7 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
     private ProfileRemoteImpl mProfileRemoteImpl;
     GourmetRemoteImpl mGourmetRemoteImpl;
     private CommonRemoteImpl mCommonRemoteImpl;
+    private RewardRemoteImpl mRewardRemoteImpl;
 
     private String mAggregationId;
     private String mStayName;
@@ -84,6 +87,9 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
     CommonDateTime mCommonDateTime;
     View mViewByLongPress;
     Gourmet mGourmetByLongPress;
+    private RewardInformation mRewardInformation;
+    private String mRewardDescriptionTitle;
+    private String mRewardDescriptionMessage;
 
     public interface StayThankYouAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -136,6 +142,7 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
         mProfileRemoteImpl = new ProfileRemoteImpl(activity);
         mGourmetRemoteImpl = new GourmetRemoteImpl(activity);
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
+        mRewardRemoteImpl = new RewardRemoteImpl(activity);
 
         setRefresh(true);
     }
@@ -169,6 +176,9 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
 
         mLatitude = intent.getDoubleExtra(StayThankYouActivity.INTENT_EXTRA_DATA_LATITUDE, 0d);
         mLongitude = intent.getDoubleExtra(StayThankYouActivity.INTENT_EXTRA_DATA_LONGITUDE, 0d);
+
+        mRewardDescriptionTitle = intent.getStringExtra(StayThankYouActivity.INTENT_EXTRA_DATA_REWARD_DESCRIPTION_TITLE);
+        mRewardDescriptionMessage = intent.getStringExtra(StayThankYouActivity.INTENT_EXTRA_DATA_REWARD_DESCRIPTION_MESSAGE);
 
         mAnalytics.setAnalyticsParam(intent.getParcelableExtra(BaseActivity.INTENT_EXTRA_DATA_ANALYTICS));
 
@@ -382,15 +392,19 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
         });
 
         addCompositeDisposable(Observable.zip(getViewInterface().getReceiptAnimation() //
-            , mCommonRemoteImpl.getCommonDateTime(), recommendObservable //
-            , new Function3<Boolean, CommonDateTime, List<Gourmet>, ArrayList<CarouselListItem>>()
+            , mCommonRemoteImpl.getCommonDateTime(), mRewardRemoteImpl.getRewardStickerCount(), recommendObservable //
+            , new Function4<Boolean, CommonDateTime, RewardInformation, List<Gourmet>, ArrayList<CarouselListItem>>()
             {
                 @Override
                 public ArrayList<CarouselListItem> apply(@io.reactivex.annotations.NonNull Boolean animationComplete //
                     , @io.reactivex.annotations.NonNull CommonDateTime commonDateTime //
+                    , @io.reactivex.annotations.NonNull RewardInformation rewardInformation //
                     , @io.reactivex.annotations.NonNull List<Gourmet> gourmetList) throws Exception
                 {
                     mCommonDateTime = commonDateTime;
+
+                    setRewardInformation(rewardInformation);
+
                     return convertCarouselListItemList(gourmetList);
                 }
             }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<CarouselListItem>>()
@@ -399,6 +413,8 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
             public void accept(ArrayList<CarouselListItem> carouselListItemList) throws Exception
             {
                 getViewInterface().setRecommendGourmetData(carouselListItemList);
+
+                notifyRewardInformationChanged();
 
                 startInformationAnimation();
 
@@ -415,6 +431,8 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
             {
                 ExLog.w(throwable.toString());
                 getViewInterface().setRecommendGourmetData(null);
+
+                notifyRewardInformationChanged();
 
                 startInformationAnimation();
 
@@ -745,6 +763,11 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
         return DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStampEnabled() && mOverseas == false;
     }
 
+    private void setRewardInformation(RewardInformation rewardInformation)
+    {
+        mRewardInformation = rewardInformation;
+    }
+
     ArrayList<CarouselListItem> convertCarouselListItemList(List<Gourmet> gourmetList)
     {
         ArrayList<CarouselListItem> carouselListItemList = new ArrayList<>();
@@ -807,5 +830,21 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
 
             }
         }, isStampEnabled());
+    }
+
+    private void notifyRewardInformationChanged()
+    {
+        if (mRewardInformation == null || mStayBookDateTime == null)
+        {
+            return;
+        }
+
+        getViewInterface().setDepositStickerCardVisible(mRewardInformation.activeReward);
+
+        if (mRewardInformation.activeReward == true)
+        {
+            getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage()//
+                , mRewardInformation.rewardStickerCount, mRewardDescriptionTitle, mRewardDescriptionMessage);
+        }
     }
 }

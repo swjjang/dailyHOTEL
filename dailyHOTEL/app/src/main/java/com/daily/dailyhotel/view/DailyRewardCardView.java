@@ -347,6 +347,16 @@ public class DailyRewardCardView extends ConstraintLayout
         mViewDataBinding.descriptionTextView.setText(text);
     }
 
+    public void setDescriptionVisible(boolean visible)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.descriptionTextView.setVisibility(visible ? VISIBLE : GONE);
+    }
+
     public void startCampaignStickerAnimation()
     {
         if (mStickerAnimatorSet != null)

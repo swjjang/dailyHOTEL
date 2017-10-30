@@ -246,6 +246,49 @@ public class StayThankYouView extends BaseBlurView<StayThankYouView.OnEventListe
     }
 
     @Override
+    public void setDepositStickerCardVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().rewardCardView.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setDepositStickerCard(String titleText, int nights, String warningText, String descriptionText)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().rewardCardView.setGuideVisible(false);
+        getViewDataBinding().rewardCardView.setOptionVisible(false);
+        getViewDataBinding().rewardCardView.setRewardTitleText(titleText);
+        getViewDataBinding().rewardCardView.setStickerCount(nights);
+
+        if (DailyTextUtils.isTextEmpty(warningText) == true)
+        {
+            getViewDataBinding().rewardCardView.setWarningVisible(false);
+        } else
+        {
+            getViewDataBinding().rewardCardView.setWarningVisible(false);
+            getViewDataBinding().rewardCardView.setWarningText(warningText);
+        }
+
+        if (DailyTextUtils.isTextEmpty(descriptionText) == true)
+        {
+            getViewDataBinding().rewardCardView.setDescriptionVisible(false);
+        } else
+        {
+            getViewDataBinding().rewardCardView.setDescriptionVisible(true);
+            getViewDataBinding().rewardCardView.setDescriptionText(descriptionText);
+        }
+    }
+
+    @Override
     public void setNoticeVisible(boolean visible)
     {
         if (getViewDataBinding() == null)

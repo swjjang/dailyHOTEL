@@ -23,6 +23,7 @@ import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.RecentlyPlace;
+import com.daily.dailyhotel.entity.RewardInformation;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutbounds;
@@ -1499,18 +1500,21 @@ public class HomeFragment extends BaseMenuNavigationFragment
             // 리워드
             if (DailyHotel.isLogin() == true)
             {
-                addCompositeDisposable(mRewardRemoteImpl.getRewardStickerCount().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Integer>()
+                addCompositeDisposable(mRewardRemoteImpl.getRewardStickerCount().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<RewardInformation>()
                 {
                     @Override
-                    public void accept(Integer integer) throws Exception
+                    public void accept(RewardInformation rewardInformation) throws Exception
                     {
-                        DailyRemoteConfigPreference.getInstance(mBaseActivity).setKeyRemoteConfigRewardStickerEnabled(true);
-                        mHomeLayout.setRewardCardVisible(true);
+                        DailyRemoteConfigPreference.getInstance(mBaseActivity).setKeyRemoteConfigRewardStickerEnabled(rewardInformation.activeReward);
+                        mHomeLayout.setRewardCardVisible(rewardInformation.activeReward);
 
-                        String descriptionText = DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigRewardStickerMemberMessage(integer);
+                        if (rewardInformation.activeReward == true)
+                        {
+                            String descriptionText = DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigRewardStickerMemberMessage(rewardInformation.rewardStickerCount);
 
-                        mHomeLayout.setMemberRewardData(DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigRewardStickerTitleMessage()//
-                            , descriptionText, getString(R.string.label_reward_go_reward), integer);
+                            mHomeLayout.setMemberRewardData(DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigRewardStickerTitleMessage()//
+                                , descriptionText, getString(R.string.label_reward_go_reward), rewardInformation.rewardStickerCount);
+                        }
                     }
                 }, new Consumer<Throwable>()
                 {
@@ -1522,23 +1526,26 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 }));
             } else
             {
-                addCompositeDisposable(mRewardRemoteImpl.getRewardStickerCount().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Integer>()
+                addCompositeDisposable(mRewardRemoteImpl.getRewardStickerCount().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<RewardInformation>()
                 {
                     @Override
-                    public void accept(Integer integer) throws Exception
+                    public void accept(RewardInformation rewardInformation) throws Exception
                     {
-                        DailyRemoteConfigPreference.getInstance(mBaseActivity).setKeyRemoteConfigRewardStickerEnabled(true);
-                        mHomeLayout.setRewardCardVisible(true);
+                        DailyRemoteConfigPreference.getInstance(mBaseActivity).setKeyRemoteConfigRewardStickerEnabled(rewardInformation.activeReward);
+                        mHomeLayout.setRewardCardVisible(rewardInformation.activeReward);
 
-                        String descriptionText = DailyRemoteConfigPreference.getInstance(mBaseActivity).isKeyRemoteConfigRewardStickerCampaignEnabled() //
-                            ? DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigRewardStickerNonMemberCampaignMessage()//
-                            : DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigRewardStickerNonMemberDefaultMessage();
+                        if (rewardInformation.activeReward == true)
+                        {
+                            String descriptionText = DailyRemoteConfigPreference.getInstance(mBaseActivity).isKeyRemoteConfigRewardStickerCampaignEnabled() //
+                                ? DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigRewardStickerNonMemberCampaignMessage()//
+                                : DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigRewardStickerNonMemberDefaultMessage();
 
-                        mHomeLayout.setNonMemberRewardData(DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigRewardStickerTitleMessage()//
-                            , descriptionText, getString(R.string.label_reward_login)//
-                            , DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigRewardStickerNonMemberCampaignFreeNights());
+                            mHomeLayout.setNonMemberRewardData(DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigRewardStickerTitleMessage()//
+                                , descriptionText, getString(R.string.label_reward_login)//
+                                , DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigRewardStickerNonMemberCampaignFreeNights());
 
-                        mHomeLayout.startRewardCampaignStickerAnimation();
+                            mHomeLayout.startRewardCampaignStickerAnimation();
+                        }
                     }
                 }, new Consumer<Throwable>()
                 {

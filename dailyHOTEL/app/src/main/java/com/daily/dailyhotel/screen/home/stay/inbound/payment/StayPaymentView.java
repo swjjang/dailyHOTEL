@@ -327,7 +327,7 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
     }
 
     @Override
-    public void setDepositStickerCard(String titleText, int nights, CharSequence descriptionText)
+    public void setDepositStickerCard(String titleText, int nights, String warningText, String descriptionText)
     {
         if (getViewDataBinding() == null)
         {
@@ -337,8 +337,25 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
         getViewDataBinding().rewardCardView.setGuideVisible(false);
         getViewDataBinding().rewardCardView.setOptionVisible(false);
         getViewDataBinding().rewardCardView.setRewardTitleText(titleText);
-        getViewDataBinding().rewardCardView.setDescriptionText(descriptionText);
         getViewDataBinding().rewardCardView.setStickerCount(nights);
+
+        if (DailyTextUtils.isTextEmpty(warningText) == true)
+        {
+            getViewDataBinding().rewardCardView.setWarningVisible(false);
+        } else
+        {
+            getViewDataBinding().rewardCardView.setWarningVisible(false);
+            getViewDataBinding().rewardCardView.setWarningText(warningText);
+        }
+
+        if (DailyTextUtils.isTextEmpty(descriptionText) == true)
+        {
+            getViewDataBinding().rewardCardView.setDescriptionVisible(false);
+        } else
+        {
+            getViewDataBinding().rewardCardView.setDescriptionVisible(true);
+            getViewDataBinding().rewardCardView.setDescriptionText(descriptionText);
+        }
     }
 
     @Override
