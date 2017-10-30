@@ -34,6 +34,7 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -297,7 +298,10 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
             {
                 try
                 {
-                    return ((Long) cancel1.orderSeq).compareTo((Long) cancel2.orderSeq);
+                    Date date1 = DailyCalendar.convertDate(cancel1.cancelDateTime, DailyCalendar.ISO_8601_FORMAT, null);
+                    Date date2 = DailyCalendar.convertDate(cancel2.cancelDateTime, DailyCalendar.ISO_8601_FORMAT, null);
+
+                    return date1.compareTo(date2);
                 } catch (Exception e)
                 {
                     ExLog.d(e.toString());
