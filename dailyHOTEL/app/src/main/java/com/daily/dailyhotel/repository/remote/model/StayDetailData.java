@@ -165,7 +165,7 @@ public class StayDetailData
 
             if (benefitContents != null && benefitContents.size() > 0)
             {
-                benefitContentList.addAll(benefitContentList);
+                benefitContentList.addAll(benefitContents);
             }
 
             if (DailyTextUtils.isTextEmpty(benefitWarning) == false)
