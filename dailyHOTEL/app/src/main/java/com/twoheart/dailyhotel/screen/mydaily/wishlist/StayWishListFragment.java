@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
@@ -323,16 +324,7 @@ public class StayWishListFragment extends PlaceWishListFragment
                     }
                 });
 
-                //                AnalyticsParam analyticsParam = new AnalyticsParam();
-                //                analyticsParam.setParam(mBaseActivity, stay);
-                //                analyticsParam.setProvince(null);
-                //                analyticsParam.setTotalListCount(-1);
-
                 ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), ((DailyStayCardView) view).getOptionsCompat());
-
-                //                    intent = StayDetailActivity.newInstance(mBaseActivity //
-                //                        , (StayBookingDay) mPlaceBookingDay, stay.index, stay.name, stay.imageUrl //
-                //                        , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
 
                 Intent intent = StayDetailActivity.newInstance(getActivity() //
                     , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
@@ -343,15 +335,6 @@ public class StayWishListFragment extends PlaceWishListFragment
                 mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, optionsCompat.toBundle());
             } else
             {
-                //                AnalyticsParam analyticsParam = new AnalyticsParam();
-                //                analyticsParam.setParam(mBaseActivity, stay);
-                //                analyticsParam.setProvince(null);
-                //                analyticsParam.setTotalListCount(-1);
-
-                //                Intent intent = StayDetailActivity.newInstance(mBaseActivity //
-                //                    , (StayBookingDay) mPlaceBookingDay, stay.index, stay.name, stay.imageUrl //
-                //                    , analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
-
                 Intent intent = StayDetailActivity.newInstance(getActivity() //
                     , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
                     , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
@@ -367,6 +350,19 @@ public class StayWishListFragment extends PlaceWishListFragment
                 AnalyticsManager.Category.NAVIGATION_, //
                 AnalyticsManager.Action.WISHLIST_CLICKED, //
                 stay.name, null);
+
+            // 할인 쿠폰이 보이는 경우
+            if (DailyTextUtils.isTextEmpty(stay.couponDiscountText) == false)
+            {
+                AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                    , AnalyticsManager.Action.COUPON_STAY, Integer.toString(stay.index), null);
+            }
+
+            if (stay.reviewCount > 0)
+            {
+                AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                    , AnalyticsManager.Action.TRUE_REVIEW_STAY, Integer.toString(stay.index), null);
+            }
 
             if (stay.truevr == true)
             {
@@ -429,6 +425,9 @@ public class StayWishListFragment extends PlaceWishListFragment
             }
 
             StayWishListFragment.this.requestRemoveWishListItem(stay.index);
+
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                , AnalyticsManager.Action.WISH_STAY, AnalyticsManager.Label.OFF.toLowerCase(), null);
         }
 
         @Override

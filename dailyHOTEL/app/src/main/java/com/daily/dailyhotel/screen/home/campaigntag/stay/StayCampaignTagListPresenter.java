@@ -707,23 +707,12 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
                 }
             });
 
-            //            AnalyticsParam analyticsParam = new AnalyticsParam();
-            //            analyticsParam.setParam(getActivity(), stay);
-            //            analyticsParam.setProvince(null);
-            //            analyticsParam.setTotalListCount(count);
-
-
             ActivityOptionsCompat optionsCompat;
             Intent intent;
 
             if (view instanceof DailyStayCardView == true)
             {
                 optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), ((DailyStayCardView) view).getOptionsCompat());
-
-                //                intent = StayDetailActivity.newInstance(getActivity(), mStayBookingDay //
-                //                    , stay.index, stay.name, stay.imageUrl //
-                //                    , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
-
 
                 intent = StayDetailActivity.newInstance(getActivity() //
                     , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
@@ -736,10 +725,6 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
                 View nameTextView = view.findViewById(R.id.nameTextView);
                 View gradientTopView = view.findViewById(R.id.gradientTopView);
                 View gradientBottomView = view.findViewById(R.id.gradientView);
-
-                //                    intent = StayDetailActivity.newInstance(getActivity(), mStayBookingDay //
-                //                        , stay.index, stay.name, stay.imageUrl //
-                //                        , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_MAP);
 
                 intent = StayDetailActivity.newInstance(getActivity() //
                     , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
@@ -756,15 +741,6 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY_DETAIL, optionsCompat.toBundle());
         } else
         {
-            //            AnalyticsParam analyticsParam = new AnalyticsParam();
-            //            analyticsParam.setParam(getActivity(), stay);
-            //            analyticsParam.setProvince(null);
-            //            analyticsParam.setTotalListCount(count);
-
-            //            Intent intent = StayDetailActivity.newInstance(getActivity(), mStayBookingDay //
-            //                , stay.index, stay.name, stay.imageUrl //
-            //                , analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
-
             Intent intent = StayDetailActivity.newInstance(getActivity() //
                 , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
@@ -774,6 +750,19 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 
             getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+        }
+
+        // 할인 쿠폰이 보이는 경우
+        if (DailyTextUtils.isTextEmpty(stay.couponDiscountText) == false)
+        {
+            AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                , AnalyticsManager.Action.COUPON_STAY, Integer.toString(stay.index), null);
+        }
+
+        if (stay.reviewCount > 0)
+        {
+            AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                , AnalyticsManager.Action.TRUE_REVIEW_STAY, Integer.toString(stay.index), null);
         }
 
         if (stay.truevr == true)
@@ -823,6 +812,9 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
 
         startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.HOTEL//
             , stay.index, !stay.myWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), StayCampaignTagListActivity.REQUEST_CODE_WISH_DIALOG);
+
+        AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+            , AnalyticsManager.Action.WISH_STAY, !stay.myWish ? AnalyticsManager.Label.ON.toLowerCase() : AnalyticsManager.Label.OFF.toLowerCase(), null);
     }
 
     StayBookDateTime getStayBookDateTime(CommonDateTime commonDateTime)

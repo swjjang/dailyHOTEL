@@ -725,6 +725,19 @@ public class GourmetCampaignTagListPresenter //
 
             getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         }
+
+        // 할인 쿠폰이 보이는 경우
+        if (DailyTextUtils.isTextEmpty(gourmet.couponDiscountText) == false)
+        {
+            AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                , AnalyticsManager.Action.COUPON_GOURMET, Integer.toString(gourmet.index), null);
+        }
+
+        if (gourmet.reviewCount > 0)
+        {
+            AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                , AnalyticsManager.Action.TRUE_REVIEW_GOURMET, Integer.toString(gourmet.index), null);
+        }
     }
 
     @Override
@@ -766,6 +779,9 @@ public class GourmetCampaignTagListPresenter //
 
         startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.GOURMET//
             , gourmet.index, !gourmet.myWish, position, AnalyticsManager.Screen.DAILYGOURMET_DETAIL), GourmetCampaignTagListActivity.REQUEST_CODE_WISH_DIALOG);
+
+        AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+            , AnalyticsManager.Action.WISH_GOURMET, !gourmet.myWish ? AnalyticsManager.Label.ON.toLowerCase() : AnalyticsManager.Label.OFF.toLowerCase(), null);
     }
 
 

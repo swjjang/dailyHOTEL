@@ -604,12 +604,6 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, optionsCompat.toBundle());
             } else
             {
-                //                Intent intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this //
-                //                    , (GourmetBookingDay) mPlaceBookingDay, recommendationGourmet.index, recommendationGourmet.name //
-                //                    , recommendationGourmet.imageUrl, recommendationGourmet.category, recommendationGourmet.isSoldOut//
-                //                    , analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
-
-
                 Intent intent = GourmetDetailActivity.newInstance(CollectionGourmetActivity.this //
                     , recommendationGourmet.index, recommendationGourmet.name, recommendationGourmet.imageUrl, recommendationGourmet.discount//
                     , ((GourmetBookingDay) mPlaceBookingDay).getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
@@ -625,6 +619,19 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
             AnalyticsManager.getInstance(CollectionGourmetActivity.this).recordEvent(//
                 AnalyticsManager.Category.HOME_RECOMMEND, Integer.toString(mRecommendationIndex),//
                 Integer.toString(recommendationGourmet.index), null);
+
+            // 할인 쿠폰이 보이는 경우
+            if (DailyTextUtils.isTextEmpty(recommendationGourmet.couponDiscountText) == false)
+            {
+                AnalyticsManager.getInstance(CollectionGourmetActivity.this).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                    , AnalyticsManager.Action.COUPON_GOURMET, Integer.toString(recommendationGourmet.index), null);
+            }
+
+            if (recommendationGourmet.reviewCount > 0)
+            {
+                AnalyticsManager.getInstance(CollectionGourmetActivity.this).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                    , AnalyticsManager.Action.TRUE_REVIEW_GOURMET, Integer.toString(recommendationGourmet.index), null);
+            }
         }
 
         @Override
@@ -665,6 +672,9 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
 
             startActivityForResult(WishDialogActivity.newInstance(CollectionGourmetActivity.this, ServiceType.GOURMET//
                 , recommendationGourmet.index, !recommendationGourmet.myWish, position, AnalyticsManager.Screen.DAILYGOURMET_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);
+
+            AnalyticsManager.getInstance(CollectionGourmetActivity.this).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                , AnalyticsManager.Action.WISH_GOURMET, !recommendationGourmet.myWish ? AnalyticsManager.Label.ON.toLowerCase() : AnalyticsManager.Label.OFF.toLowerCase(), null);
         }
 
         @Override

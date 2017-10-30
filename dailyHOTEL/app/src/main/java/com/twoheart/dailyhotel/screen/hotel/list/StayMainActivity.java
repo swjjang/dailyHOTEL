@@ -1079,14 +1079,10 @@ public class StayMainActivity extends PlaceMainActivity
                     Province province = mStayCuration.getProvince();
 
                     // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
-                    //                String savedRegion = DailyPreference.getInstance(this).getSelectedRegion(PlaceType.HOTEL);
-
                     JSONObject jsonObject = DailyPreference.getInstance(StayMainActivity.this).getDailyRegion(DailyCategoryType.STAY_ALL);
                     boolean isSameProvince = Util.isSameProvinceName(province, jsonObject);
                     if (isSameProvince == false)
                     {
-                        //                    DailyPreference.getInstance(this).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
-                        //                    DailyPreference.getInstance(this).setSelectedRegion(PlaceType.HOTEL, province.name);
                         DailyPreference.getInstance(StayMainActivity.this).setDailyRegion(DailyCategoryType.STAY_ALL, Util.getDailyRegionJSONObject(province));
 
                         String country = province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
@@ -1127,23 +1123,12 @@ public class StayMainActivity extends PlaceMainActivity
                             }
                         });
 
-                        //                        AnalyticsParam analyticsParam = new AnalyticsParam();
-                        //                        analyticsParam.setParam(StayMainActivity.this, stay);
-                        //                        analyticsParam.setProvince(province);
-                        //                        analyticsParam.setTotalListCount(listCount);
-
-
                         ActivityOptionsCompat optionsCompat;
                         Intent intent;
 
                         if (view instanceof DailyStayCardView == true)
                         {
                             optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(StayMainActivity.this, ((DailyStayCardView) view).getOptionsCompat());
-
-                            //                            intent = StayDetailActivity.newInstance(StayMainActivity.this //
-                            //                                , mStayCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
-                            //                                , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
-
 
                             intent = StayDetailActivity.newInstance(StayMainActivity.this //
                                 , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
@@ -1157,11 +1142,6 @@ public class StayMainActivity extends PlaceMainActivity
                             View nameTextView = view.findViewById(R.id.nameTextView);
                             View gradientTopView = view.findViewById(R.id.gradientTopView);
                             View gradientBottomView = view.findViewById(R.id.gradientView);
-
-                            //                                intent = StayDetailActivity.newInstance(StayMainActivity.this //
-                            //                                    , mStayCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
-                            //                                    , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_MAP);
-
 
                             intent = StayDetailActivity.newInstance(StayMainActivity.this //
                                 , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
@@ -1178,15 +1158,6 @@ public class StayMainActivity extends PlaceMainActivity
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, optionsCompat.toBundle());
                     } else
                     {
-                        //                        AnalyticsParam analyticsParam = new AnalyticsParam();
-                        //                        analyticsParam.setParam(StayMainActivity.this, stay);
-                        //                        analyticsParam.setProvince(province);
-                        //                        analyticsParam.setTotalListCount(listCount);
-
-                        //                        Intent intent = StayDetailActivity.newInstance(StayMainActivity.this //
-                        //                            , mStayCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
-                        //                            , analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
-
                         Intent intent = StayDetailActivity.newInstance(StayMainActivity.this //
                             , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
                             , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
@@ -1205,6 +1176,19 @@ public class StayMainActivity extends PlaceMainActivity
 
                         AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                             , AnalyticsManager.Action.STAY_DAILYCHOICE_CLICK, stay.isDailyChoice ? AnalyticsManager.Label.Y : AnalyticsManager.Label.N, null);
+
+                        // 할인 쿠폰이 보이는 경우
+                        if (DailyTextUtils.isTextEmpty(stay.couponDiscountText) == false)
+                        {
+                            AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                                , AnalyticsManager.Action.COUPON_STAY, Integer.toString(stay.index), null);
+                        }
+
+                        if (stay.reviewCount > 0)
+                        {
+                            AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                                , AnalyticsManager.Action.TRUE_REVIEW_STAY, Integer.toString(stay.index), null);
+                        }
 
                         if (stay.truevr == true)
                         {

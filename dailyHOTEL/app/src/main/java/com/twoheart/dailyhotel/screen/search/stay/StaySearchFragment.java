@@ -924,15 +924,6 @@ public class StaySearchFragment extends PlaceSearchFragment
             analyticsParam.isDailyChoice = false;
             analyticsParam.gradeName = place.details.grade;
 
-            //            AnalyticsParam analyticsParam = new AnalyticsParam();
-            //            analyticsParam.setParam(getActivity(), place);
-            //            analyticsParam.setProvince(null);
-            //            analyticsParam.setTotalListCount(0);
-
-            //            Intent intent = StayDetailActivity.newInstance(getActivity() //
-            //                , mStayBookingDay, place.index, place.title, place.imageUrl //
-            //                , analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
-
             Intent intent = StayDetailActivity.newInstance(getActivity() //
                 , place.index, place.title, place.imageUrl//
                 , place.prices != null ? place.prices.discountPrice : StayDetailActivity.NONE_PRICE//

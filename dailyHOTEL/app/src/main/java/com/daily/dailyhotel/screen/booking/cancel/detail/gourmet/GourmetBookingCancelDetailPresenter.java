@@ -41,7 +41,6 @@ import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-import java.util.Locale;
 import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
@@ -628,36 +627,13 @@ public class GourmetBookingCancelDetailPresenter //
         {
             String userName = DailyUserPreference.getInstance(getActivity()).getName();
 
-            String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/gourmet/%d?reserveDate=%s"//
-                , mGourmetBookingDetail.gourmetIndex, DailyCalendar.convertDateFormatString(mGourmetBookingDetail.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd"));
-
             final String message = getString(R.string.message_booking_cancel_gourmet_share_sms, userName //
                 , mGourmetBookingDetail.gourmetName, mGourmetBookingDetail.guestName //
                 , mGourmetBookingDetail.ticketName, mGourmetBookingDetail.ticketCount //
                 , DailyCalendar.convertDateFormatString(mGourmetBookingDetail.cancelDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd") //
                 , mGourmetBookingDetail.gourmetAddress);
 
-            CommonRemoteImpl commonRemote = new CommonRemoteImpl(getActivity());
-
-            addCompositeDisposable(commonRemote.getShortUrl(longUrl).subscribe(new Consumer<String>()
-            {
-                @Override
-                public void accept(@io.reactivex.annotations.NonNull String shortUrl) throws Exception
-                {
-                    unLockAll();
-
-                    Util.sendSms(getActivity(), message + shortUrl);
-                }
-            }, new Consumer<Throwable>()
-            {
-                @Override
-                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
-                {
-                    unLockAll();
-
-                    Util.sendSms(getActivity(), message + "https://mobile.dailyhotel.co.kr/gourmet/" + mGourmetBookingDetail.gourmetIndex);
-                }
-            }));
+            Util.sendSms(getActivity(), message);
         } catch (Exception e)
         {
             unLockAll();

@@ -925,10 +925,6 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, optionsCompat.toBundle());
             } else
             {
-                //                Intent intent = GourmetDetailActivity.newInstance(GourmetSearchResultActivity.this //
-                //                    , mGourmetSearchCuration.getGourmetBookingDay(), gourmet.index, gourmet.name //
-                //                    , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
-
                 Intent intent = GourmetDetailActivity.newInstance(GourmetSearchResultActivity.this //
                     , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
                     , mGourmetSearchCuration.getGourmetBookingDay().getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
@@ -943,6 +939,19 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
             AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.GOURMET_ITEM_CLICK, Integer.toString(gourmet.index), null);
+
+            // 할인 쿠폰이 보이는 경우
+            if (DailyTextUtils.isTextEmpty(gourmet.couponDiscountText) == false)
+            {
+                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                    , AnalyticsManager.Action.COUPON_GOURMET, Integer.toString(gourmet.index), null);
+            }
+
+            if (gourmet.reviewCount > 0)
+            {
+                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                    , AnalyticsManager.Action.TRUE_REVIEW_GOURMET, Integer.toString(gourmet.index), null);
+            }
 
             if (gourmet.availableTicketNumbers == 0 || gourmet.availableTicketNumbers < gourmet.minimumOrderQuantity || gourmet.expired == true)
             {

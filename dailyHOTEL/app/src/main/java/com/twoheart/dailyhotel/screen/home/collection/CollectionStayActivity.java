@@ -592,16 +592,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
                     }
                 });
 
-                //                AnalyticsParam analyticsParam = new AnalyticsParam();
-                //                analyticsParam.setParam(CollectionStayActivity.this, recommendationStay);
-                //                analyticsParam.setProvince(null);
-                //                analyticsParam.setTotalListCount(count);
-
                 ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(CollectionStayActivity.this, ((DailyStayCardView) view).getOptionsCompat());
-
-                //                    intent = StayDetailActivity.newInstance(CollectionStayActivity.this //
-                //                        , (StayBookingDay) mPlaceBookingDay, recommendationStay.index, recommendationStay.name, recommendationStay.imageUrl //
-                //                        , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
 
                 Intent intent = StayDetailActivity.newInstance(CollectionStayActivity.this //
                     , recommendationStay.index, recommendationStay.name, recommendationStay.imageUrl, recommendationStay.discount//
@@ -612,15 +603,6 @@ public class CollectionStayActivity extends CollectionBaseActivity
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, optionsCompat.toBundle());
             } else
             {
-                //                AnalyticsParam analyticsParam = new AnalyticsParam();
-                //                analyticsParam.setParam(CollectionStayActivity.this, recommendationStay);
-                //                analyticsParam.setProvince(null);
-                //                analyticsParam.setTotalListCount(count);
-
-                //                Intent intent = StayDetailActivity.newInstance(CollectionStayActivity.this //
-                //                    , (StayBookingDay) mPlaceBookingDay, recommendationStay.index, recommendationStay.name, recommendationStay.imageUrl //
-                //                    , analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
-
                 Intent intent = StayDetailActivity.newInstance(CollectionStayActivity.this //
                     , recommendationStay.index, recommendationStay.name, recommendationStay.imageUrl, recommendationStay.discount//
                     , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
@@ -636,6 +618,18 @@ public class CollectionStayActivity extends CollectionBaseActivity
                 AnalyticsManager.Category.HOME_RECOMMEND, Integer.toString(mRecommendationIndex),//
                 Integer.toString(recommendationStay.index), null);
 
+            // 할인 쿠폰이 보이는 경우
+            if (DailyTextUtils.isTextEmpty(recommendationStay.couponDiscountText) == false)
+            {
+                AnalyticsManager.getInstance(CollectionStayActivity.this).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                    , AnalyticsManager.Action.COUPON_STAY, Integer.toString(recommendationStay.index), null);
+            }
+
+            if (recommendationStay.reviewCount > 0)
+            {
+                AnalyticsManager.getInstance(CollectionStayActivity.this).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                    , AnalyticsManager.Action.TRUE_REVIEW_STAY, Integer.toString(recommendationStay.index), null);
+            }
 
             if (recommendationStay.truevr == true)
             {
@@ -682,6 +676,9 @@ public class CollectionStayActivity extends CollectionBaseActivity
 
             startActivityForResult(WishDialogActivity.newInstance(CollectionStayActivity.this, ServiceType.HOTEL//
                 , recommendationStay.index, !recommendationStay.myWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);
+
+            AnalyticsManager.getInstance(CollectionStayActivity.this).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                , AnalyticsManager.Action.WISH_STAY, !recommendationStay.myWish ? AnalyticsManager.Label.ON.toLowerCase() : AnalyticsManager.Label.OFF.toLowerCase(), null);
         }
 
         @Override
