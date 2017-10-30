@@ -21,7 +21,6 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
-import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundBookingDetail;
@@ -74,7 +73,17 @@ public class StayOutboundBookingCancelDetailPresenter //
 
     public interface StayOutboundBookingCancelAnalyticsInterface extends BaseAnalyticsInterface
     {
-        void onScreen(Activity activity, int bookingState, int placeIndex, StayOutboundBookingDetail.RefundType refundType);
+        void onScreen(Activity activity);
+
+        void onEventShareClick(Activity activity);
+
+        void onEventConciergeClick(Activity activity);
+
+        void onEventViewDetailClick(Activity activity);
+
+        void onEventNavigatorClick(Activity activity);
+
+        void onEventHideBookingCancelClick(Activity activity);
 
         StayOutboundDetailAnalyticsParam getDetailAnalyticsParam(StayOutboundBookingDetail stayOutboundBookingDetail);
     }
@@ -142,13 +151,14 @@ public class StayOutboundBookingCancelDetailPresenter //
         {
             onRefresh(true);
         }
+
+        mAnalytics.onScreen(getActivity());
     }
 
     @Override
     public void onResume()
     {
         super.onResume();
-
     }
 
     @Override
@@ -251,8 +261,6 @@ public class StayOutboundBookingCancelDetailPresenter //
                 notifyStayOutboundBookingDetailChanged();
 
                 unLockAll();
-
-                mAnalytics.onScreen(getActivity(), Booking.BOOKING_STATE_CANCEL, mStayOutboundBookingDetail.stayIndex, mStayOutboundBookingDetail.refundStatus);
             }
         }, new Consumer<Throwable>()
         {
@@ -286,6 +294,8 @@ public class StayOutboundBookingCancelDetailPresenter //
                 unLockAll();
             }
         });
+
+        mAnalytics.onEventShareClick(getActivity());
     }
 
     @Override
@@ -383,8 +393,7 @@ public class StayOutboundBookingCancelDetailPresenter //
 
             getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
 
-//            AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-//                , AnalyticsManager.Action.BOOKING_ITEM_DETAIL_CLICK, AnalyticsManager.ValueType.EMPTY, null);
+            mAnalytics.onEventViewDetailClick(getActivity());
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -403,6 +412,8 @@ public class StayOutboundBookingCancelDetailPresenter //
 
         startActivityForResult(NavigatorDialogActivity.newInstance(getActivity(), mStayOutboundBookingDetail.name//
             , mStayOutboundBookingDetail.latitude, mStayOutboundBookingDetail.longitude, true, analyticsParam), StayOutboundBookingCancelDetailActivity.REQUEST_CODE_NAVIGATOR);
+
+        mAnalytics.onEventNavigatorClick(getActivity());
     }
 
     @Override
@@ -464,6 +475,8 @@ public class StayOutboundBookingCancelDetailPresenter //
                 unLockAll();
             }
         });
+
+        mAnalytics.onEventConciergeClick(getActivity());
     }
 
     @Override
@@ -656,9 +669,7 @@ public class StayOutboundBookingCancelDetailPresenter //
                 }
             }, true);
 
-
-//        AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-//            , AnalyticsManager.Action.BOOKING_HISTORY_DELETE_TRY, "ob_" + mStayOutboundBookingDetail.stayIndex, null);
+        mAnalytics.onEventHideBookingCancelClick(getActivity());
     }
 
     void setCommonDateTime(@NonNull CommonDateTime commonDateTime)

@@ -179,6 +179,14 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
             {
                 Intent intent = BookingCancelListActivity.newInstance(getActivity());
                 startActivityForResult(intent, REQUEST_CODE_BOOKING_CANCEL);
+
+                try
+                {
+                    AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.RESERVATION_CANCEL, AnalyticsManager.Action.CANCEL_HISTORY, null, null);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.getMessage());
+                }
             }
         });
 
