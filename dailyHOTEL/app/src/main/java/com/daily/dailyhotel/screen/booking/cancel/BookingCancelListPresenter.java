@@ -424,7 +424,7 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
     }
 
     @Override
-    public void onBookingClick(BookingCancel bookingCancel)
+    public void onBookingCancelClick(BookingCancel bookingCancel)
     {
         if (getActivity() == null || bookingCancel == null)
         {
