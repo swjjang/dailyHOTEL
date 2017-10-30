@@ -1095,6 +1095,13 @@ public class AnalyticsManager
 
         public static final String OB_KEYWORDS_IN_DOMESTIC = "ob_keywords_in_domestic";
 
+        public static final String COUPON_STAY = "coupon_stay";
+        public static final String COUPON_GOURMET = "coupon_gourmet";
+        public static final String TRUE_REVIEW_STAY = "true_review_stay";
+        public static final String TRUE_REVIEW_GOURMET = "true_review_gourmet";
+        public static final String WISH_STAY = "wish_stay";
+        public static final String WISH_GOURMET = "wish_gourmet";
+
         public static final String CANCEL_HISTORY = "cancel_history";
         public static final String BACK = "back";
         public static final String NO_RESULT = "no_result";
@@ -1178,6 +1185,8 @@ public class AnalyticsManager
 
         public static final String VENDOR_SELECTION_ROOM_SELECTION = "vendor_selection_room_selection";
         public static final String VENDOR_SELECTION_ORDER_COMPLETION = "vendor_selection_order_completion";
+
+        public static final String PRODUCT_LIST = "product_list";
 
         public static final String RESERVATION_CANCEL = "reservation_cancel";
     }

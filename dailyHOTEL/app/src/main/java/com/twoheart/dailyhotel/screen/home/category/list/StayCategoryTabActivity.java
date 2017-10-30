@@ -1088,11 +1088,6 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                     if (isSameProvince == false)
                     {
                         DailyPreference.getInstance(StayCategoryTabActivity.this).setDailyRegion(mDailyCategoryType, Util.getDailyRegionJSONObject(province));
-
-                        //                        String country = province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
-                        //                        String realProvinceName = Util.getRealProvinceName(province);
-                        //                        DailyPreference.getInstance(StayMainActivity.this).setSelectedRegionTypeProvince(PlaceType.HOTEL, realProvinceName);
-                        //                        AnalyticsManager.getInstance(StayMainActivity.this).onRegionChanged(country, realProvinceName);
                     }
 
                     StayDetailAnalyticsParam analyticsParam = new StayDetailAnalyticsParam();
@@ -1128,21 +1123,12 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                             }
                         });
 
-                        //                        AnalyticsParam analyticsParam = new AnalyticsParam();
-                        //                        analyticsParam.setParam(StayCategoryTabActivity.this, stay);
-                        //                        analyticsParam.setProvince(province);
-                        //                        analyticsParam.setTotalListCount(listCount);
-
                         ActivityOptionsCompat optionsCompat;
                         Intent intent;
 
                         if (view instanceof DailyStayCardView == true)
                         {
                             optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(StayCategoryTabActivity.this, ((DailyStayCardView) view).getOptionsCompat());
-
-                            //                            intent = StayDetailActivity.newInstance(StayCategoryTabActivity.this //
-                            //                                , mStayCategoryCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
-                            //                                , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
 
                             intent = StayDetailActivity.newInstance(StayCategoryTabActivity.this //
                                 , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
@@ -1155,10 +1141,6 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                             View nameTextView = view.findViewById(R.id.nameTextView);
                             View gradientTopView = view.findViewById(R.id.gradientTopView);
                             View gradientBottomView = view.findViewById(R.id.gradientView);
-
-                            //                                intent = StayDetailActivity.newInstance(StayCategoryTabActivity.this //
-                            //                                    , mStayCategoryCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
-                            //                                    , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_MAP);
 
                             intent = StayDetailActivity.newInstance(StayCategoryTabActivity.this //
                                 , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
@@ -1176,15 +1158,6 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, optionsCompat.toBundle());
                     } else
                     {
-                        //                        AnalyticsParam analyticsParam = new AnalyticsParam();
-                        //                        analyticsParam.setParam(StayCategoryTabActivity.this, stay);
-                        //                        analyticsParam.setProvince(province);
-                        //                        analyticsParam.setTotalListCount(listCount);
-
-                        //                        Intent intent = StayDetailActivity.newInstance(StayCategoryTabActivity.this //
-                        //                            , mStayCategoryCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
-                        //                            , analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
-
                         Intent intent = StayDetailActivity.newInstance(StayCategoryTabActivity.this //
                             , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
                             , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
@@ -1203,6 +1176,19 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
                         AnalyticsManager.getInstance(StayCategoryTabActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                             , AnalyticsManager.Action.STAY_DAILYCHOICE_CLICK, stay.isDailyChoice ? AnalyticsManager.Label.Y : AnalyticsManager.Label.N, null);
+
+                        // 할인 쿠폰이 보이는 경우
+                        if (DailyTextUtils.isTextEmpty(stay.couponDiscountText) == false)
+                        {
+                            AnalyticsManager.getInstance(StayCategoryTabActivity.this).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                                , AnalyticsManager.Action.COUPON_STAY, Integer.toString(stay.index), null);
+                        }
+
+                        if(stay.reviewCount > 0)
+                        {
+                            AnalyticsManager.getInstance(StayCategoryTabActivity.this).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                                , AnalyticsManager.Action.TRUE_REVIEW_STAY, Integer.toString(stay.index), null);
+                        }
 
                         if (stay.truevr == true)
                         {

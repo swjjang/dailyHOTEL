@@ -119,7 +119,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             }
 
             case CODE_REQUEST_ACTIVITY_PREVIEW:
-                switch(resultCode)
+                switch (resultCode)
                 {
                     case Activity.RESULT_OK:
                         Observable.create(new ObservableOnSubscribe<Object>()
@@ -395,17 +395,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 }
             });
 
-            //            AnalyticsParam analyticsParam = new AnalyticsParam();
-            //            analyticsParam.setParam(mBaseActivity, recentlyPlace);
-            //            analyticsParam.setProvince(null);
-            //            analyticsParam.setTotalListCount(-1);
-
             ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), ((DailyStayCardView) view).getOptionsCompat());
-
-            //                intent = StayDetailActivity.newInstance(mBaseActivity //
-            //                    , (StayBookingDay) mPlaceBookingDay, recentlyPlace.index, recentlyPlace.title, recentlyPlace.imageUrl //
-            //                    , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
-
 
             Intent intent = StayDetailActivity.newInstance(getActivity() //
                 , recentlyPlace.index, recentlyPlace.title, recentlyPlace.imageUrl, StayDetailActivity.NONE_PRICE//
@@ -416,15 +406,6 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, optionsCompat.toBundle());
         } else
         {
-            //            AnalyticsParam analyticsParam = new AnalyticsParam();
-            //            analyticsParam.setParam(mBaseActivity, recentlyPlace);
-            //            analyticsParam.setProvince(null);
-            //            analyticsParam.setTotalListCount(-1);
-
-            //            Intent intent = StayDetailActivity.newInstance(mBaseActivity //
-            //                , (StayBookingDay) mPlaceBookingDay, recentlyPlace.index, recentlyPlace.title, recentlyPlace.imageUrl //
-            //                , analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
-
             Intent intent = StayDetailActivity.newInstance(getActivity() //
                 , recentlyPlace.index, recentlyPlace.title, recentlyPlace.imageUrl, com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity.NONE_PRICE//
                 , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
@@ -440,6 +421,12 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             AnalyticsManager.Category.NAVIGATION_, //
             AnalyticsManager.Action.RECENT_VIEW_CLICKED, //
             recentlyPlace.title, null);
+
+        if (recentlyPlace.reviewCount > 0)
+        {
+            AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                , AnalyticsManager.Action.TRUE_REVIEW_STAY, Integer.toString(recentlyPlace.index), null);
+        }
 
         if (recentlyPlace.details.isTrueVr == true)
         {
@@ -676,7 +663,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
 
         if (object instanceof RecentlyPlace)
         {
-            RecentlyPlace recentlyPlace = (RecentlyPlace)object;
+            RecentlyPlace recentlyPlace = (RecentlyPlace) object;
             if (recentlyPlace.myWish != wish)
             {
                 recentlyPlace.myWish = wish;
@@ -858,6 +845,9 @@ public class RecentStayListFragment extends RecentPlacesListFragment
 
                 mBaseActivity.startActivityForResult(WishDialogActivity.newInstance(mBaseActivity, ServiceType.HOTEL//
                     , recentlyPlace.index, !recentlyPlace.myWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);
+
+                AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                    , AnalyticsManager.Action.WISH_STAY, !recentlyPlace.myWish ? AnalyticsManager.Label.ON.toLowerCase() : AnalyticsManager.Label.OFF.toLowerCase(), null);
             } else if (object instanceof StayOutbound)
             {
             }

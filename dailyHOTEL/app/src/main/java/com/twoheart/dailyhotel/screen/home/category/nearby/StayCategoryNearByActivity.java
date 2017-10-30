@@ -1261,21 +1261,12 @@ public class StayCategoryNearByActivity extends BaseActivity
                     }
                 });
 
-                //                AnalyticsParam analyticsParam = new AnalyticsParam();
-                //                analyticsParam.setParam(StayCategoryNearByActivity.this, stay);
-                //                analyticsParam.setProvince(null);
-                //                analyticsParam.setTotalListCount(listCount);
-
                 ActivityOptionsCompat optionsCompat;
                 Intent intent;
 
                 if (view instanceof DailyStayCardView == true)
                 {
                     optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(StayCategoryNearByActivity.this, ((DailyStayCardView) view).getOptionsCompat());
-
-                    //                    intent = StayDetailActivity.newInstance(StayCategoryNearByActivity.this //
-                    //                        , mStayCategoryNearByCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
-                    //                        , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
 
                     intent = StayDetailActivity.newInstance(StayCategoryNearByActivity.this //
                         , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
@@ -1288,10 +1279,6 @@ public class StayCategoryNearByActivity extends BaseActivity
                     View nameTextView = view.findViewById(R.id.nameTextView);
                     View gradientTopView = view.findViewById(R.id.gradientTopView);
                     View gradientBottomView = view.findViewById(R.id.gradientView);
-
-                    //                        intent = StayDetailActivity.newInstance(StayCategoryNearByActivity.this //
-                    //                            , mStayCategoryNearByCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
-                    //                            , analyticsParam, true, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_MAP);
 
                     intent = StayDetailActivity.newInstance(StayCategoryNearByActivity.this //
                         , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
@@ -1309,15 +1296,6 @@ public class StayCategoryNearByActivity extends BaseActivity
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, optionsCompat.toBundle());
             } else
             {
-                //                AnalyticsParam analyticsParam = new AnalyticsParam();
-                //                analyticsParam.setParam(StayCategoryNearByActivity.this, stay);
-                //                analyticsParam.setProvince(null);
-                //                analyticsParam.setTotalListCount(listCount);
-
-                //                Intent intent = StayDetailActivity.newInstance(StayCategoryNearByActivity.this //
-                //                    , mStayCategoryNearByCuration.getStayBookingDay(), stay.index, stay.name, stay.imageUrl //
-                //                    , analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
-
                 Intent intent = StayDetailActivity.newInstance(StayCategoryNearByActivity.this //
                     , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
                     , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
@@ -1327,6 +1305,19 @@ public class StayCategoryNearByActivity extends BaseActivity
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 
                 overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+            }
+
+            // 할인 쿠폰이 보이는 경우
+            if (DailyTextUtils.isTextEmpty(stay.couponDiscountText) == false)
+            {
+                AnalyticsManager.getInstance(StayCategoryNearByActivity.this).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                    , AnalyticsManager.Action.COUPON_STAY, Integer.toString(stay.index), null);
+            }
+
+            if (stay.reviewCount > 0)
+            {
+                AnalyticsManager.getInstance(StayCategoryNearByActivity.this).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                    , AnalyticsManager.Action.TRUE_REVIEW_STAY, Integer.toString(stay.index), null);
             }
 
             if (stay.truevr == true)

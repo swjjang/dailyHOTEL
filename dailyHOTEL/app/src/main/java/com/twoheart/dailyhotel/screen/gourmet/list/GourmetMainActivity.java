@@ -952,8 +952,6 @@ public class GourmetMainActivity extends PlaceMainActivity
                     Gourmet gourmet = placeViewItem.getItem();
                     Province province = mGourmetCuration.getProvince();
 
-                    //                    String savedRegion = DailyPreference.getInstance(GourmetMainActivity.this).getSelectedRegion(PlaceType.FNB);
-
                     JSONObject jsonObject = DailyPreference.getInstance(GourmetMainActivity.this).getDailyRegion(DailyCategoryType.GOURMET_ALL);
                     boolean isSameProvince = Util.isSameProvinceName(province, jsonObject);
                     if (isSameProvince == false)
@@ -1037,11 +1035,6 @@ public class GourmetMainActivity extends PlaceMainActivity
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL, optionsCompat.toBundle());
                     } else
                     {
-                        //                        Intent intent = GourmetDetailActivity.newInstance(GourmetMainActivity.this //
-                        //                            , mGourmetCuration.getGourmetBookingDay(), gourmet.index, gourmet.name //
-                        //                            , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, false, PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
-
-
                         Intent intent = GourmetDetailActivity.newInstance(GourmetMainActivity.this //
                             , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
                             , mGourmetCuration.getGourmetBookingDay().getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
@@ -1061,6 +1054,19 @@ public class GourmetMainActivity extends PlaceMainActivity
 
                         AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                             , AnalyticsManager.Action.GOURMET_DAILYCHOICE_CLICK, gourmet.isDailyChoice ? AnalyticsManager.Label.Y : AnalyticsManager.Label.N, null);
+
+                        // 할인 쿠폰이 보이는 경우
+                        if (DailyTextUtils.isTextEmpty(gourmet.couponDiscountText) == false)
+                        {
+                            AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                                , AnalyticsManager.Action.COUPON_GOURMET, Integer.toString(gourmet.index), null);
+                        }
+
+                        if (gourmet.reviewCount > 0)
+                        {
+                            AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                                , AnalyticsManager.Action.TRUE_REVIEW_GOURMET, Integer.toString(gourmet.index), null);
+                        }
                     }
                     break;
                 }
