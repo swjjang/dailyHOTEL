@@ -1,15 +1,20 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.thankyou;
 
 import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.ScrollView;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.FontManager;
+import com.daily.base.util.ScreenUtils;
+import com.daily.base.widget.DailyScrollView;
 import com.daily.dailyhotel.animation.ThankYouScaleAnimator;
 import com.daily.dailyhotel.animation.ThankYouScreenAnimator;
 import com.daily.dailyhotel.base.BaseBlurView;
@@ -30,6 +35,8 @@ import io.reactivex.schedulers.Schedulers;
 
 public class StayThankYouView extends BaseBlurView<StayThankYouView.OnEventListener, ActivityStayPaymentThankYouDataBinding> implements StayThankYouInterface, View.OnClickListener
 {
+    private ObjectAnimator mRecommendGourmetAnimator;
+
     public interface OnEventListener extends OnBaseEventListener
     {
         void onConfirmClick();
@@ -88,6 +95,39 @@ public class StayThankYouView extends BaseBlurView<StayThankYouView.OnEventListe
         });
 
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.scrollLayout, getColor(R.color.transparent));
+
+        viewDataBinding.scrollLayout.setOnScrollChangedListener(new DailyScrollView.OnScrollChangedListener()
+        {
+            @Override
+            public void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt)
+            {
+                if (getViewDataBinding().recommendGourmetLayout.hasData() == false //
+                    || View.VISIBLE != getViewDataBinding().recommendGourmetLayout.getVisibility())
+                {
+                    return;
+                }
+
+                int expectedY = getViewDataBinding().recommendGourmetLayout.getTop() - ScreenUtils.getScreenHeight(getContext()) //
+                    + getContext().getResources().getDimensionPixelOffset(R.dimen.toolbar_height) + ScreenUtils.dpToPx(getContext(), 75d);
+
+                if (expectedY <= t)
+                {
+                    setRecommendGourmetViewAnimation(false);
+                } else
+                {
+                    setRecommendGourmetViewAnimation(true);
+                }
+            }
+        });
+
+        viewDataBinding.recommendGourmetButtonView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                viewDataBinding.scrollLayout.smoothScrollTo(0, getViewDataBinding().recommendGourmetLayout.getBottom());
+            }
+        });
     }
 
     @Override
@@ -382,5 +422,41 @@ public class StayThankYouView extends BaseBlurView<StayThankYouView.OnEventListe
                 getEventListener().onBackClick();
             }
         });
+    }
+
+    private void setRecommendGourmetViewAnimation(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        boolean isOldVisible = getViewDataBinding().recommendGourmetButtonView.getVisibility() == View.VISIBLE;
+        if (isOldVisible == visible)
+        {
+            return;
+        }
+
+        if (mRecommendGourmetAnimator != null)
+        {
+            mRecommendGourmetAnimator.cancel();
+            mRecommendGourmetAnimator = null;
+        }
+
+        if (visible == true)
+        {
+            getViewDataBinding().recommendGourmetButtonView.setVisibility(View.VISIBLE);
+
+            float transY = ScreenUtils.dpToPx(getContext(), 6d);
+
+            mRecommendGourmetAnimator = ObjectAnimator.ofFloat(getViewDataBinding().recommendGourmetButtonView, "translationY", 0.0f, transY, 0.0f);
+            mRecommendGourmetAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+            mRecommendGourmetAnimator.setDuration(1600);
+            mRecommendGourmetAnimator.setRepeatCount(ObjectAnimator.INFINITE);
+            mRecommendGourmetAnimator.start();
+        } else
+        {
+            getViewDataBinding().recommendGourmetButtonView.setVisibility(View.GONE);
+        }
     }
 }
