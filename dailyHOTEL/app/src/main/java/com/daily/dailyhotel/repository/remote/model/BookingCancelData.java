@@ -67,14 +67,17 @@ public class BookingCancelData
         switch (type)
         {
             case "hotel":
+            case "HOTEL":
                 bookingCancel.placeType = BookingCancel.PlaceType.STAY;
                 break;
 
             case "fnb":
+            case "FNB":
                 bookingCancel.placeType = BookingCancel.PlaceType.GOURMET;
                 break;
 
             case "outbound":
+            case "OUTBOUND":
                 bookingCancel.placeType = BookingCancel.PlaceType.STAY_OUTBOUND;
                 break;
         }
