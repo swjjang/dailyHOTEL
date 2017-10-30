@@ -63,6 +63,16 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
     public interface BookingCancelListAnalyticsInterface extends BaseAnalyticsInterface
     {
         void onScreen(Activity activity);
+
+        void onEventAgainClick(Activity activity);
+
+        void onEventBackClick(Activity activity);
+
+        void onEventEmptyView(Activity activity);
+
+        void onEventViewStayClick(Activity activity);
+
+        void onEventViewGourmetClick(Activity activity);
     }
 
     public BookingCancelListPresenter(@NonNull BookingCancelListActivity activity)
@@ -163,6 +173,8 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
     @Override
     public boolean onBackPressed()
     {
+        mAnalytics.onEventBackClick(getActivity());
+
         return super.onBackPressed();
     }
 
@@ -228,6 +240,11 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
                 getViewInterface().setRefreshing(false);
 
                 unLockAll();
+
+                if (bookingCancelList == null || bookingCancelList.size() == 0)
+                {
+                    mAnalytics.onEventEmptyView(getActivity());
+                }
             }
         }, new Consumer<Throwable>()
         {
@@ -425,6 +442,8 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
                     break;
                 }
             }
+
+            mAnalytics.onEventAgainClick(getActivity());
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -475,6 +494,8 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
 
         setResult(Constants.CODE_RESULT_ACTIVITY_STAY_LIST);
         finish();
+
+        mAnalytics.onEventViewStayClick(getActivity());
     }
 
     @Override
@@ -487,5 +508,7 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
 
         setResult(Constants.CODE_RESULT_ACTIVITY_GOURMET_LIST);
         finish();
+
+        mAnalytics.onEventViewGourmetClick(getActivity());
     }
 }
