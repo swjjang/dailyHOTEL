@@ -47,6 +47,8 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
 
         void onBonusClick(boolean selected);
 
+        void onDepositStickerClick(boolean selected);
+
         void onEasyCardManagerClick();
 
         void onRegisterEasyCardClick();
@@ -93,6 +95,43 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         }
 
         getViewDataBinding().toolbarView.setTitleText(title);
+    }
+
+    @Override
+    public void setCheeringMessage(boolean enabledSticker, String titleText, String warningText)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (enabledSticker == true)
+        {
+            getViewDataBinding().cheeringLayout.setBackgroundColor(getColor(R.color.default_background_cfff9f0));
+            getViewDataBinding().cheeringTitleTextView.setTextColor(getColor(R.color.default_text_ce9a230));
+            getViewDataBinding().cheeringUnderLineView.setBackgroundColor(getColor(R.color.default_line_cf4ebde));
+        } else
+        {
+            getViewDataBinding().cheeringLayout.setBackgroundColor(getColor(R.color.default_background_cf0f0f2));
+            getViewDataBinding().cheeringTitleTextView.setTextColor(getColor(R.color.default_text_c929292));
+            getViewDataBinding().cheeringUnderLineView.setBackgroundColor(getColor(R.color.default_line_ce7e7e7));
+        }
+
+        getViewDataBinding().cheeringTitleTextView.setText(titleText);
+
+        getViewDataBinding().cheeringWarningTextView.setVisibility(DailyTextUtils.isTextEmpty(warningText) == false ? View.VISIBLE : View.GONE);
+        getViewDataBinding().cheeringWarningTextView.setText(warningText);
+    }
+
+    @Override
+    public void setCheeringMessageVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().cheeringLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -178,6 +217,63 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         setBonusSelected(selected);
         getViewDataBinding().informationView.setTotalBonus(bonus);
         getViewDataBinding().informationView.setBonus(selected ? discountPrice : 0);
+    }
+
+
+    @Override
+    public void setDepositSticker(boolean selected)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        setDepositStickerSelected(selected);
+    }
+
+    @Override
+    public void setDepositStickerVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().informationView.setDepositStickerVisible(visible);
+    }
+
+    @Override
+    public void setDepositStickerCardVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (visible == true)
+        {
+            getViewDataBinding().depositStickerLayout.setVisibility(View.VISIBLE);
+            getViewDataBinding().refundAgreementPolicyTextView.setText(R.string.label_booking_step5);
+        } else
+        {
+            getViewDataBinding().depositStickerLayout.setVisibility(View.GONE);
+            getViewDataBinding().refundAgreementPolicyTextView.setText(R.string.label_booking_step4_empty_reward);
+        }
+    }
+
+    @Override
+    public void setDepositStickerCard(String titleText, int nights, CharSequence descriptionText)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().rewardCardView.setGuideVisible(false);
+        getViewDataBinding().rewardCardView.setOptionVisible(false);
+        getViewDataBinding().rewardCardView.setRewardTitleText(titleText);
+        getViewDataBinding().rewardCardView.setDescriptionText(descriptionText);
+        getViewDataBinding().rewardCardView.setStickerCount(nights);
     }
 
     @Override
@@ -338,6 +434,17 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
     }
 
     @Override
+    public void setPaymentTypeDescriptionText(DailyBookingPaymentTypeView.PaymentType paymentType, String text)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().paymentTypeView.setPaymentDescriptionText(paymentType, text);
+    }
+
+    @Override
     public void onClick(View v)
     {
         switch (v.getId())
@@ -433,6 +540,9 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         getViewDataBinding().informationView.setDiscountTypeVisible(true, false);
 
         setBonusSelected(false);
+        setDepositStickerSelected(false);
+
+        getViewDataBinding().informationView.setDepositStickerDescriptionText(getString(R.string.message_booking_reward_warning02));
     }
 
     private void initPaymentLayout()
@@ -569,6 +679,36 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
                     }
 
                     getEventListener().onBonusClick(getViewDataBinding().informationView.isBonusSelected() == false);
+                }
+            });
+        }
+    }
+
+    private void setDepositStickerSelected(boolean selected)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        //selected가 true enabled가 false일수는 없다.
+        if (getViewDataBinding().informationView.isDepositStickerEnabled() == false)
+        {
+            return;
+        }
+
+        if (selected == true)
+        {
+            getViewDataBinding().informationView.setDepositStickerSelected(true);
+        } else
+        {
+            getViewDataBinding().informationView.setDepositStickerSelected(false);
+            getViewDataBinding().informationView.setOnDepositStickerClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    getEventListener().onDepositStickerClick(true);
                 }
             });
         }

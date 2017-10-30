@@ -809,7 +809,11 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                         public void onClick(View v)
                         {
                             setBonusSelected(false);
-                            setDepositStickerSelected(true);
+
+                            if (hasDepositSticker() == true)
+                            {
+                                setDepositStickerSelected(true);
+                            }
 
                             notifyStayPaymentChanged();
 
@@ -880,7 +884,11 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                         public void onClick(View v)
                         {
                             setCouponSelected(false, null);
-                            setDepositStickerSelected(true);
+
+                            if (hasDepositSticker() == true)
+                            {
+                                setDepositStickerSelected(true);
+                            }
 
                             notifyStayPaymentChanged();
                         }
@@ -1600,7 +1608,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
                 getViewInterface().setBonus(false, mUserSimpleInformation.bonus, 0);
                 getViewInterface().setCoupon(false, 0, false);
-                getViewInterface().setDepositSticker(true);
+                getViewInterface().setDepositSticker(hasDepositSticker());
             }
 
             setDepositStickerCard(mStayPayment, mStayBookDateTime);
@@ -2367,6 +2375,12 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
         getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage()//
             , stayPayment.rewardStickerCount, spannableString);
+    }
+
+    private boolean hasDepositSticker()
+    {
+        return mStayPayment != null && mStayPayment.activeReward == true //
+            && mStayPayment.provideRewardSticker && mStayPayment.totalPrice >= MIN_AMOUNT_FOR_REWARD_USAGE;
     }
 
     private void onPaymentWebResult(DailyBookingPaymentTypeView.PaymentType paymentType, int resultCode, String result)

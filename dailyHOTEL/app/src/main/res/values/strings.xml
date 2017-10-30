@@ -763,6 +763,7 @@
     <string name="message_booking_reward_cheering_title01">예약을 완료하시면 %1$d박 스티커가 추가 적립됩니다.</string>
     <string name="message_booking_reward_cheering_title02">스티커 적립을 할수 없는 예약입니다.</string>
     <string name="message_booking_reward_cheering_warning01">(적립금, 할인쿠폰, 휴대폰 결제 수단 선택 시 적립 불가)</string>
+    <string name="message_booking_reward_cheering_warning02">(적립금, 휴대폰 결제 수단 선택 시 적립 불가)</string>
     <string name="message_booking_reward_warning01">(4만원 이상 결제, 적립금/할인쿠폰 미사용, 휴대폰 외 결제 수단 선택시 사용 가능)</string>
     <string name="message_booking_reward_warning02">(4만원 이상 결제, 적립금 미사용, 휴대폰 외 결제 수단 선택시 사용 가능)</string>
 

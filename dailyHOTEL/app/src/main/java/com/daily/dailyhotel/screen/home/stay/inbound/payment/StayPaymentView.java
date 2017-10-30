@@ -694,6 +694,8 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
         setBonusSelected(false);
         setCouponSelected(false);
         setDepositStickerSelected(false);
+
+        getViewDataBinding().informationView.setDepositStickerDescriptionText(getString(R.string.message_booking_reward_warning01));
     }
 
     private void initPaymentLayout()

@@ -13,6 +13,10 @@ import java.util.List;
 
 public interface StayOutboundPaymentInterface extends BaseDialogViewInterface
 {
+    void setCheeringMessage(boolean enabledSticker, String titleText, String warningText);
+
+    void setCheeringMessageVisible(boolean visible);
+
     void setBooking(SpannableString checkInDate, SpannableString checkOutDate, int nights, String stayName, String roomType);
 
     void setGuestInformation(String firstName, String lastName, String mobile, String email);
@@ -22,6 +26,14 @@ public interface StayOutboundPaymentInterface extends BaseDialogViewInterface
     void setPeople(People people);
 
     void setBonus(boolean selected, int bonus, int discountPrice);
+
+    void setDepositSticker(boolean selected);
+
+    void setDepositStickerVisible(boolean visible);
+
+    void setDepositStickerCardVisible(boolean visible);
+
+    void setDepositStickerCard(String titleText, int nights, CharSequence descriptionText);
 
     void setStayOutboundPayment(int nights, int totalPrice, int discountPrice, double taxPrice);
 
@@ -43,4 +55,6 @@ public interface StayOutboundPaymentInterface extends BaseDialogViewInterface
 
     void showAgreeTermDialog(DailyBookingPaymentTypeView.PaymentType paymentType//
         , View.OnClickListener onClickListener, DialogInterface.OnCancelListener cancelListener);
+
+    void setPaymentTypeDescriptionText(DailyBookingPaymentTypeView.PaymentType paymentType, String text);
 }

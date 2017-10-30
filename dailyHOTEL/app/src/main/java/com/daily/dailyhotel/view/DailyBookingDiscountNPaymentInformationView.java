@@ -342,6 +342,16 @@ public class DailyBookingDiscountNPaymentInformationView extends ConstraintLayou
         mViewDataBinding.depositStickerLayout.setVisibility(visible ? View.VISIBLE : GONE);
     }
 
+    public void setDepositStickerDescriptionText(String text)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.depositStickerWarningTextView.setText(text);
+    }
+
     public void setUsedRewardCouponVisible(boolean visible)
     {
         if (mViewDataBinding == null)

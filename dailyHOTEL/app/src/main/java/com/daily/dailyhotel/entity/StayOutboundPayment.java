@@ -19,6 +19,11 @@ public class StayOutboundPayment
     public String rateCode;
     public int roomBedTypeId;
 
+    // reward
+    public boolean activeReward;
+    public boolean provideRewardSticker;
+    public int rewardStickerCount;
+
     public StayOutboundPayment()
     {
 
