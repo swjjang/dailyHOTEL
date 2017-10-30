@@ -46,7 +46,6 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
 import java.util.Date;
-import java.util.Locale;
 import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
@@ -604,44 +603,12 @@ public class StayBookingCancelDetailPresenter //
         {
             String userName = DailyUserPreference.getInstance(getActivity()).getName();
 
-            String[] checkInDates = mStayBookingDetail.checkInDateTime.split("T");
-            String[] checkOutDates = mStayBookingDetail.checkOutDateTime.split("T");
-
-            Date checkInDate = DailyCalendar.convertDate(checkInDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
-            Date checkOutDate = DailyCalendar.convertDate(checkOutDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
-
-            int nights = (int) ((DailyCalendar.clearTField(checkOutDate.getTime()) - DailyCalendar.clearTField(checkInDate.getTime())) / DailyCalendar.DAY_MILLISECOND);
-
-            String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d"//
-                , mStayBookingDetail.stayIndex, DailyCalendar.convertDateFormatString(mStayBookingDetail.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd")//
-                , nights);
-
             final String message = getString(R.string.message_booking_cancel_stay_share_sms, userName //
                 , mStayBookingDetail.stayName, mStayBookingDetail.guestName, mStayBookingDetail.roomName //
                 , DailyCalendar.convertDateFormatString(mStayBookingDetail.cancelDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd") //
                 , mStayBookingDetail.stayAddress);
 
-            CommonRemoteImpl commonRemote = new CommonRemoteImpl(getActivity());
-
-            addCompositeDisposable(commonRemote.getShortUrl(longUrl).subscribe(new Consumer<String>()
-            {
-                @Override
-                public void accept(@io.reactivex.annotations.NonNull String shortUrl) throws Exception
-                {
-                    unLockAll();
-
-                    Util.sendSms(getActivity(), message + shortUrl);
-                }
-            }, new Consumer<Throwable>()
-            {
-                @Override
-                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
-                {
-                    unLockAll();
-
-                    Util.sendSms(getActivity(), message + "https://mobile.dailyhotel.co.kr/stay/" + mStayBookingDetail.stayIndex);
-                }
-            }));
+            Util.sendSms(getActivity(), message);
         } catch (Exception e)
         {
             unLockAll();
