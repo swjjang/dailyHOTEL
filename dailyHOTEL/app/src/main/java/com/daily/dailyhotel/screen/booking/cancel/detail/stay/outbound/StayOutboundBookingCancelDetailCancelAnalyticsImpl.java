@@ -20,6 +20,61 @@ public class StayOutboundBookingCancelDetailCancelAnalyticsImpl implements StayO
     }
 
     @Override
+    public void onEventShareClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.RESERVATION_CANCEL, AnalyticsManager.Action.SHARE, null, null);
+    }
+
+    @Override
+    public void onEventConciergeClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.RESERVATION_CANCEL, AnalyticsManager.Action.INQUIRY, null, null);
+    }
+
+    @Override
+    public void onEventViewDetailClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.RESERVATION_CANCEL, AnalyticsManager.Action.SHOW_DETAIL, null, null);
+    }
+
+    @Override
+    public void onEventNavigatorClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.RESERVATION_CANCEL, AnalyticsManager.Action.FIND_PATH, null, null);
+    }
+
+    @Override
+    public void onEventHideBookingCancelClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.RESERVATION_CANCEL, AnalyticsManager.Action.DELETE_HISTORY, null, null);
+    }
+
+    @Override
     public StayOutboundDetailAnalyticsParam getDetailAnalyticsParam(StayOutboundBookingDetail stayOutboundBookingDetail)
     {
         StayOutboundDetailAnalyticsParam analyticsParam = new StayOutboundDetailAnalyticsParam();

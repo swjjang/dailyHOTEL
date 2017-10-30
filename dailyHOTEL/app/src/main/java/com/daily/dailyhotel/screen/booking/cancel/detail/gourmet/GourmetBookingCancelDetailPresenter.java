@@ -77,6 +77,16 @@ public class GourmetBookingCancelDetailPresenter //
     {
         void onScreen(Activity activity);
 
+        void onEventShareClick(Activity activity);
+
+        void onEventConciergeClick(Activity activity);
+
+        void onEventViewDetailClick(Activity activity);
+
+        void onEventNavigatorClick(Activity activity);
+
+        void onEventHideBookingCancelClick(Activity activity);
+
         GourmetDetailAnalyticsParam getDetailAnalyticsParam(GourmetBookingDetail gourmetBookingDetail);
     }
 
@@ -323,6 +333,8 @@ public class GourmetBookingCancelDetailPresenter //
                 unLockAll();
             }
         });
+
+        mAnalytics.onEventShareClick(getActivity());
     }
 
     @Override
@@ -419,8 +431,7 @@ public class GourmetBookingCancelDetailPresenter //
 
             getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
 
-            //            AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-            //                , AnalyticsManager.Action.BOOKING_ITEM_DETAIL_CLICK, AnalyticsManager.ValueType.EMPTY, null);
+            mAnalytics.onEventViewDetailClick(getActivity());
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -441,6 +452,8 @@ public class GourmetBookingCancelDetailPresenter //
 
         startActivityForResult(NavigatorDialogActivity.newInstance(getActivity(), mGourmetBookingDetail.gourmetName//
             , mGourmetBookingDetail.latitude, mGourmetBookingDetail.longitude, false, analyticsParam), GourmetBookingCancelDetailActivity.REQUEST_CODE_NAVIGATOR);
+
+        mAnalytics.onEventNavigatorClick(getActivity());
     }
 
     @Override
@@ -520,6 +533,8 @@ public class GourmetBookingCancelDetailPresenter //
                 unLockAll();
             }
         });
+
+        mAnalytics.onEventConciergeClick(getActivity());
     }
 
     @Override
@@ -726,8 +741,7 @@ public class GourmetBookingCancelDetailPresenter //
             }, true);
 
 
-        //        AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-        //            , AnalyticsManager.Action.BOOKING_HISTORY_DELETE_TRY, "ob_" + mGourmetBookingDetail.stayIndex, null);
+        mAnalytics.onEventHideBookingCancelClick(getActivity());
     }
 
     void setCommonDateTime(@NonNull CommonDateTime commonDateTime)

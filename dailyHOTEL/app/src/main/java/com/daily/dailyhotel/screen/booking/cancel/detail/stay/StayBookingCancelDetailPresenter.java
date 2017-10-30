@@ -82,6 +82,16 @@ public class StayBookingCancelDetailPresenter //
     {
         void onScreen(Activity activity);
 
+        void onEventShareClick(Activity activity);
+
+        void onEventConciergeClick(Activity activity);
+
+        void onEventViewDetailClick(Activity activity);
+
+        void onEventNavigatorClick(Activity activity);
+
+        void onEventHideBookingCancelClick(Activity activity);
+
         StayDetailAnalyticsParam getDetailAnalyticsParam(StayBookingDetail stayBookingDetail);
     }
 
@@ -328,6 +338,8 @@ public class StayBookingCancelDetailPresenter //
                 unLockAll();
             }
         });
+
+        mAnalytics.onEventShareClick(getActivity());
     }
 
     @Override
@@ -427,8 +439,7 @@ public class StayBookingCancelDetailPresenter //
 
             getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
 
-            //            AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-            //                , AnalyticsManager.Action.BOOKING_ITEM_DETAIL_CLICK, AnalyticsManager.ValueType.EMPTY, null);
+            mAnalytics.onEventViewDetailClick(getActivity());
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -449,6 +460,8 @@ public class StayBookingCancelDetailPresenter //
 
         startActivityForResult(NavigatorDialogActivity.newInstance(getActivity(), mStayBookingDetail.stayName//
             , mStayBookingDetail.latitude, mStayBookingDetail.longitude, false, analyticsParam), StayBookingCancelDetailActivity.REQUEST_CODE_NAVIGATOR);
+
+        mAnalytics.onEventNavigatorClick(getActivity());
     }
 
     @Override
@@ -510,6 +523,8 @@ public class StayBookingCancelDetailPresenter //
                 unLockAll();
             }
         });
+
+        mAnalytics.onEventConciergeClick(getActivity());
     }
 
     @Override
@@ -701,8 +716,7 @@ public class StayBookingCancelDetailPresenter //
             }, true);
 
 
-        //        AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-        //            , AnalyticsManager.Action.BOOKING_HISTORY_DELETE_TRY, "ob_" + mStayBookingDetail.stayIndex, null);
+        mAnalytics.onEventHideBookingCancelClick(getActivity());
     }
 
     void setCommonDateTime(@NonNull CommonDateTime commonDateTime)

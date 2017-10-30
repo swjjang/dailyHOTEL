@@ -75,6 +75,16 @@ public class StayOutboundBookingCancelDetailPresenter //
     {
         void onScreen(Activity activity);
 
+        void onEventShareClick(Activity activity);
+
+        void onEventConciergeClick(Activity activity);
+
+        void onEventViewDetailClick(Activity activity);
+
+        void onEventNavigatorClick(Activity activity);
+
+        void onEventHideBookingCancelClick(Activity activity);
+
         StayOutboundDetailAnalyticsParam getDetailAnalyticsParam(StayOutboundBookingDetail stayOutboundBookingDetail);
     }
 
@@ -284,6 +294,8 @@ public class StayOutboundBookingCancelDetailPresenter //
                 unLockAll();
             }
         });
+
+        mAnalytics.onEventShareClick(getActivity());
     }
 
     @Override
@@ -381,8 +393,7 @@ public class StayOutboundBookingCancelDetailPresenter //
 
             getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
 
-//            AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-//                , AnalyticsManager.Action.BOOKING_ITEM_DETAIL_CLICK, AnalyticsManager.ValueType.EMPTY, null);
+            mAnalytics.onEventViewDetailClick(getActivity());
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -401,6 +412,8 @@ public class StayOutboundBookingCancelDetailPresenter //
 
         startActivityForResult(NavigatorDialogActivity.newInstance(getActivity(), mStayOutboundBookingDetail.name//
             , mStayOutboundBookingDetail.latitude, mStayOutboundBookingDetail.longitude, true, analyticsParam), StayOutboundBookingCancelDetailActivity.REQUEST_CODE_NAVIGATOR);
+
+        mAnalytics.onEventNavigatorClick(getActivity());
     }
 
     @Override
@@ -462,6 +475,8 @@ public class StayOutboundBookingCancelDetailPresenter //
                 unLockAll();
             }
         });
+
+        mAnalytics.onEventConciergeClick(getActivity());
     }
 
     @Override
@@ -654,9 +669,7 @@ public class StayOutboundBookingCancelDetailPresenter //
                 }
             }, true);
 
-
-//        AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-//            , AnalyticsManager.Action.BOOKING_HISTORY_DELETE_TRY, "ob_" + mStayOutboundBookingDetail.stayIndex, null);
+        mAnalytics.onEventHideBookingCancelClick(getActivity());
     }
 
     void setCommonDateTime(@NonNull CommonDateTime commonDateTime)
