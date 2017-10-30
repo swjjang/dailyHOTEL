@@ -751,6 +751,9 @@ public class AnalyticsManager
         public static final String DAILYHOTEL_PAYMENTCOMPLETE_OUTBOUND = "DailyHotel_PaymentComplete_outbound";
         public static final String DAILYHOTEL_THANKYOU_OUTBOUND = "DailyHotel_Thankyou_outbound";
         public static final String DAILYHOTEL_PAYMENT_PROCESS_OUTBOUND = "DailyHotel_PaymentGateway_outbound";
+
+        public static final String CANCEL_DETAIL = "cancel_detail";
+        public static final String CANCEL_LIST = "cancel_list";
     }
 
     public static class Action
@@ -1091,6 +1094,17 @@ public class AnalyticsManager
         public static final String BUTTONS_AVAILABLE = "buttons_available";
 
         public static final String OB_KEYWORDS_IN_DOMESTIC = "ob_keywords_in_domestic";
+
+        public static final String CANCEL_HISTORY = "cancel_history";
+        public static final String BACK = "back";
+        public static final String NO_RESULT = "no_result";
+        public static final String STAY_CLICK = "stay_click";
+        public static final String GOURMET_CLICK = "gourmet_click";
+        public static final String SHARE = "share";
+        public static final String INQUIRY = "inquiry";
+        public static final String SHOW_DETAIL = "show_detail";
+        public static final String FIND_PATH = "find_path";
+        public static final String DELETE_HISTORY = "delete_history";
     }
 
     public static class Category
@@ -1164,6 +1178,8 @@ public class AnalyticsManager
 
         public static final String VENDOR_SELECTION_ROOM_SELECTION = "vendor_selection_room_selection";
         public static final String VENDOR_SELECTION_ORDER_COMPLETION = "vendor_selection_order_completion";
+
+        public static final String RESERVATION_CANCEL = "reservation_cancel";
     }
 
     public static class Label

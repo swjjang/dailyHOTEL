@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.booking.cancel;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -61,6 +62,7 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
 
     public interface BookingCancelListAnalyticsInterface extends BaseAnalyticsInterface
     {
+        void onScreen(Activity activity);
     }
 
     public BookingCancelListPresenter(@NonNull BookingCancelListActivity activity)
@@ -121,6 +123,8 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
         {
             onRefresh(true);
         }
+
+        mAnalytics.onScreen(getActivity());
     }
 
     @Override

@@ -80,7 +80,7 @@ public class StayBookingCancelDetailPresenter //
 
     public interface StayBookingCancelAnalyticsInterface extends BaseAnalyticsInterface
     {
-        void onScreen(Activity activity, int placeIndex);
+        void onScreen(Activity activity);
 
         StayDetailAnalyticsParam getDetailAnalyticsParam(StayBookingDetail stayBookingDetail);
     }
@@ -155,6 +155,8 @@ public class StayBookingCancelDetailPresenter //
         {
             onRefresh(true);
         }
+
+        mAnalytics.onScreen(getActivity());
     }
 
     @Override

@@ -21,7 +21,6 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
-import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundBookingDetail;
@@ -74,7 +73,7 @@ public class StayOutboundBookingCancelDetailPresenter //
 
     public interface StayOutboundBookingCancelAnalyticsInterface extends BaseAnalyticsInterface
     {
-        void onScreen(Activity activity, int bookingState, int placeIndex, StayOutboundBookingDetail.RefundType refundType);
+        void onScreen(Activity activity);
 
         StayOutboundDetailAnalyticsParam getDetailAnalyticsParam(StayOutboundBookingDetail stayOutboundBookingDetail);
     }
@@ -142,13 +141,14 @@ public class StayOutboundBookingCancelDetailPresenter //
         {
             onRefresh(true);
         }
+
+        mAnalytics.onScreen(getActivity());
     }
 
     @Override
     public void onResume()
     {
         super.onResume();
-
     }
 
     @Override
@@ -251,8 +251,6 @@ public class StayOutboundBookingCancelDetailPresenter //
                 notifyStayOutboundBookingDetailChanged();
 
                 unLockAll();
-
-                mAnalytics.onScreen(getActivity(), Booking.BOOKING_STATE_CANCEL, mStayOutboundBookingDetail.stayIndex, mStayOutboundBookingDetail.refundStatus);
             }
         }, new Consumer<Throwable>()
         {

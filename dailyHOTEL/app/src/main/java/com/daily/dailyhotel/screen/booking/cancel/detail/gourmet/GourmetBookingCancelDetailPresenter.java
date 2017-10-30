@@ -75,7 +75,7 @@ public class GourmetBookingCancelDetailPresenter //
 
     public interface GourmetBookingCancelAnalyticsInterface extends BaseAnalyticsInterface
     {
-        void onScreen(Activity activity, int placeIndex);
+        void onScreen(Activity activity);
 
         GourmetDetailAnalyticsParam getDetailAnalyticsParam(GourmetBookingDetail gourmetBookingDetail);
     }
@@ -150,6 +150,8 @@ public class GourmetBookingCancelDetailPresenter //
         {
             onRefresh(true);
         }
+
+        mAnalytics.onScreen(getActivity());
     }
 
     @Override
