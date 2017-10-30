@@ -180,7 +180,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:paddingLeft="15dp"
-                android:paddingRight="15dp">
+                android:paddingRight="15dp"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/depositStickerRadioView"
@@ -341,7 +342,8 @@
                 android:gravity="center_vertical|right"
                 android:text="@string/message_payment_used_reward_coupon"
                 android:textColor="@color/default_text_c929292"
-                android:textSize="11dp"/>
+                android:textSize="11dp"
+                android:visibility="gone"/>
 
             <View
                 android:layout_width="match_parent"
