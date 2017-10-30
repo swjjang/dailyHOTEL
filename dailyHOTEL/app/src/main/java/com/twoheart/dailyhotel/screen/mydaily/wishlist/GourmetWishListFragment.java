@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
@@ -345,6 +346,19 @@ public class GourmetWishListFragment extends PlaceWishListFragment
                 AnalyticsManager.Category.NAVIGATION_, //
                 AnalyticsManager.Action.WISHLIST_CLICKED, //
                 gourmet.name, null);
+
+            // 할인 쿠폰이 보이는 경우
+            if (DailyTextUtils.isTextEmpty(gourmet.couponDiscountText) == false)
+            {
+                AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                    , AnalyticsManager.Action.COUPON_GOURMET, Integer.toString(gourmet.index), null);
+            }
+
+            if (gourmet.reviewCount > 0)
+            {
+                AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                    , AnalyticsManager.Action.TRUE_REVIEW_GOURMET, Integer.toString(gourmet.index), null);
+            }
         }
 
         @Override
@@ -401,6 +415,9 @@ public class GourmetWishListFragment extends PlaceWishListFragment
             }
 
             GourmetWishListFragment.this.requestRemoveWishListItem(gourmet.index);
+
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                , AnalyticsManager.Action.WISH_GOURMET, AnalyticsManager.Label.OFF.toLowerCase(), null);
         }
 
         @Override
