@@ -15,12 +15,18 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.RewardInformation;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundThankYouAnalyticsParam;
+import com.daily.dailyhotel.repository.remote.RewardRemoteImpl;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by sheldon
@@ -30,6 +36,8 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
 {
     private StayOutboundThankYouAnalyticsInterface mAnalytics;
 
+    private RewardRemoteImpl mRewardRemoteImpl;
+
     private String mAggregationId;
     private String mStayName;
     private String mImageUrl;
@@ -37,6 +45,8 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
     private String mCheckInTime;
     private String mCheckOutTime;
     private String mRoomType;
+    private String mRewardDescriptionTitle;
+    private String mRewardDescriptionMessage;
 
     public interface StayOutboundThankYouAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -72,6 +82,8 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
 
         setAnalytics(new StayOutboundThankYouAnalyticsImpl());
 
+        mRewardRemoteImpl = new RewardRemoteImpl(activity);
+
         setRefresh(true);
     }
 
@@ -101,6 +113,9 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
 
         mRoomType = intent.getStringExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_ROOM_TYPE);
         mAggregationId = intent.getStringExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_AGGREGATION_ID);
+
+        mRewardDescriptionTitle = intent.getStringExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_REWARD_DESCRIPTION_TITLE);
+        mRewardDescriptionMessage = intent.getStringExtra(StayOutboundThankYouActivity.INTENT_EXTRA_DATA_REWARD_DESCRIPTION_MESSAGE);
 
         mAnalytics.setAnalyticsParam(intent.getParcelableExtra(BaseActivity.INTENT_EXTRA_DATA_ANALYTICS));
 
@@ -245,6 +260,35 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
         {
             return;
         }
+
+        setRefresh(false);
+
+        if (getViewInterface() == null)
+        {
+            return;
+        }
+
+        screenLock(showProgress);
+
+        addCompositeDisposable(mRewardRemoteImpl.getRewardStickerCount().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<RewardInformation>()
+        {
+            @Override
+            public void accept(RewardInformation rewardInformation) throws Exception
+            {
+                onRewardInformation(rewardInformation);
+
+                unLockAll();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                unLockAll();
+
+                onReportError(throwable);
+            }
+        }));
     }
 
     @Override
@@ -272,6 +316,22 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
         } catch (Exception e)
         {
             ExLog.e(e.toString());
+        }
+    }
+
+    private void onRewardInformation(RewardInformation rewardInformation)
+    {
+        if (rewardInformation == null || mStayBookDateTime == null)
+        {
+            return;
+        }
+
+        getViewInterface().setDepositStickerCardVisible(rewardInformation.activeReward);
+
+        if (rewardInformation.activeReward == true)
+        {
+            getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage()//
+                , rewardInformation.rewardStickerCount, mRewardDescriptionTitle, mRewardDescriptionMessage);
         }
     }
 }

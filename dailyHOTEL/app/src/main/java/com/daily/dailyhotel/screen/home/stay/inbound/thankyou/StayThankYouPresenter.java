@@ -351,6 +351,8 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
             return;
         }
 
+        screenLock(showProgress);
+
         Observable<List<Gourmet>> recommendObservable = Observable.defer(new Callable<ObservableSource<List<Gourmet>>>()
         {
             @Override

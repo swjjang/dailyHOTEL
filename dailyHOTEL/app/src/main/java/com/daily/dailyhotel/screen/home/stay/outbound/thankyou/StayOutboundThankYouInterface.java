@@ -14,4 +14,8 @@ public interface StayOutboundThankYouInterface extends BaseDialogViewInterface
     void setBooking(SpannableString checkInDate, SpannableString checkOutDate, int nights, String stayName, String roomType);
 
     void startAnimation(Animator.AnimatorListener listener);
+
+    void setDepositStickerCardVisible(boolean visible);
+
+    void setDepositStickerCard(String titleText, int nights, String warningText, String descriptionText);
 }

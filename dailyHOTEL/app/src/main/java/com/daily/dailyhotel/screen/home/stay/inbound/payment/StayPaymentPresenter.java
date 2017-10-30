@@ -1376,7 +1376,6 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         // ThankYou 페이지를 홈탭에서 띄우기 위한 코드
         startActivity(DailyInternalDeepLink.getHomeScreenLink(getActivity()));
 
-
         String descriptionTitle;
         String descriptionMessage;
 

@@ -314,7 +314,7 @@ public class StayThankYouView extends BaseBlurView<StayThankYouView.OnEventListe
             getViewDataBinding().rewardCardView.setWarningVisible(false);
         } else
         {
-            getViewDataBinding().rewardCardView.setWarningVisible(false);
+            getViewDataBinding().rewardCardView.setWarningVisible(true);
             getViewDataBinding().rewardCardView.setWarningText(warningText);
         }
 

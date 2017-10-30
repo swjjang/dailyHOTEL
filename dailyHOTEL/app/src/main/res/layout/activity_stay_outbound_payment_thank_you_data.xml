@@ -93,6 +93,18 @@
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_check_confirm_thinx"/>
+
+                <com.daily.dailyhotel.view.DailyRewardCardView
+                    android:id="@+id/rewardCardView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="15dp"
+                    android:visibility="gone"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/thankYouInformationView"/>
             </android.support.constraint.ConstraintLayout>
         </ScrollView>
 

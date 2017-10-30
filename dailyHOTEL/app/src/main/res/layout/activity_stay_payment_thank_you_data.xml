@@ -233,7 +233,7 @@
             android:id="@+id/recommendGourmetButtonView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="81dp"
             android:background="@drawable/bottom_message"
             android:drawablePadding="6dp"
             android:gravity="center_vertical"

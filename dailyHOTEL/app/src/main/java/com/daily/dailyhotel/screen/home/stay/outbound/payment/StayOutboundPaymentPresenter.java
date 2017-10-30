@@ -1074,10 +1074,31 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         // ThankYou 페이지를 홈탭에서 띄우기 위한 코드
         startActivity(DailyInternalDeepLink.getHomeScreenLink(getActivity()));
 
+        String descriptionTitle;
+        String descriptionMessage;
+
+        if (mDepositStickerSelected == true)
+        {
+            descriptionTitle = getString(R.string.message_payment_reward_sticker_deposit_after_checkout, mStayBookDateTime.getNights());
+            descriptionMessage = null;
+        } else
+        {
+            if (hasDepositSticker() == true)
+            {
+                descriptionTitle = getString(R.string.message_payment_dont_reward_sticker);
+                descriptionMessage = getString(R.string.message_payment_dont_reward_sticker_used_bonus__payment_phone);
+            } else
+            {
+                descriptionTitle = getString(R.string.message_payment_dont_reward_sticker);
+                descriptionMessage = null;
+            }
+        }
+
         startActivityForResult(StayOutboundThankYouActivity.newInstance(getActivity(), mStayName, mImageUrl//
             , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, aggregationId//
+            , descriptionTitle, descriptionMessage//
             , mAnalytics.getThankYouAnalyticsParam(mPaymentType, fullBonus, mBonusSelected, mSelectedCard != null, mStayIndex)) //
             , StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
 

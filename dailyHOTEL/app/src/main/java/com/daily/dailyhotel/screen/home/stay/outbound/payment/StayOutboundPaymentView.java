@@ -279,7 +279,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
             getViewDataBinding().rewardCardView.setWarningVisible(false);
         } else
         {
-            getViewDataBinding().rewardCardView.setWarningVisible(false);
+            getViewDataBinding().rewardCardView.setWarningVisible(true);
             getViewDataBinding().rewardCardView.setWarningText(warningText);
         }
 
