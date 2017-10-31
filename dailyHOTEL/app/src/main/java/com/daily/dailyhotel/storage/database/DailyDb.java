@@ -101,15 +101,15 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
             createDbObjects(db);
         }
 
-//        if (oldVersion == 2)
-//        {
-//            db.beginTransaction();
-//            db.execSQL("drop table if exists " + T_RECENTLY);
-//            db.execSQL("ALTER TABLE " + CREATE_T_STAY_OB_RECENTLY_SUGGEST + " ADD COLUMN " + StayObRecentlySuggestList.KEYWORD + " TEXT NULL");
-//            db.setTransactionSuccessful();
-//        } else {
-//            createDbObjects(db);
-//        }
+        //        if (oldVersion == 2)
+        //        {
+        //            db.beginTransaction();
+        //            db.execSQL("drop table if exists " + T_RECENTLY);
+        //            db.execSQL("ALTER TABLE " + CREATE_T_STAY_OB_RECENTLY_SUGGEST + " ADD COLUMN " + StayObRecentlySuggestList.KEYWORD + " TEXT NULL");
+        //            db.setTransactionSuccessful();
+        //        } else {
+        //            createDbObjects(db);
+        //        }
     }
 
     private void createDbObjects(SQLiteDatabase db)

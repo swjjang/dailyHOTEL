@@ -25,8 +25,7 @@ public class WishDialogActivity extends BaseActivity<WishDialogPresenter>
 
     public static final String INTENT_EXTRA_DATA_WISH = "wish";
 
-    public static Intent newInstance(Context context, Constants.ServiceType serviceType, int placeIndex
-        , boolean myWish, int positionByList, String callByScreen)
+    public static Intent newInstance(Context context, Constants.ServiceType serviceType, int placeIndex, boolean myWish, int positionByList, String callByScreen)
     {
         Intent intent = new Intent(context, WishDialogActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_SERVICE_TYPE, serviceType.name());

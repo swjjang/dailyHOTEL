@@ -200,7 +200,7 @@ public class BookingCancelListView extends BaseDialogView<BookingCancelListView.
         @Override
         public void onAgainBookingClick(BookingCancel bookingCancel)
         {
-           getEventListener().onAgainBookingClick(bookingCancel);
+            getEventListener().onAgainBookingClick(bookingCancel);
         }
 
         @Override

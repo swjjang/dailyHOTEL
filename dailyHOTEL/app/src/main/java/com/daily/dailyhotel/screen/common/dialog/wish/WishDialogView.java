@@ -3,7 +3,6 @@ package com.daily.dailyhotel.screen.common.dialog.wish;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
-import com.twoheart.dailyhotel.databinding.ActivityCopyDataBinding;
 import com.twoheart.dailyhotel.databinding.ActivityWishDialogDataBinding;
 
 import io.reactivex.Observable;

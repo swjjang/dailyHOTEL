@@ -13,7 +13,6 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
 import android.support.v4.graphics.drawable.DrawableCompat;
-import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -29,9 +28,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyScrollView;
-import com.daily.dailyhotel.base.BaseBlurView;
 import com.daily.dailyhotel.entity.GourmetBookingDetail;
-import com.daily.dailyhotel.entity.StayBookingDetail;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -47,12 +44,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityGourmetBookingCancelDetailDataBinding;
-import com.twoheart.dailyhotel.databinding.ActivityStayBookingCancelDetailDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogShareDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetBookingDetail01DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutPlaceBookingCancelDetailDataBinding;
-import com.twoheart.dailyhotel.databinding.LayoutStayBookingDetail01DataBinding;
 import com.twoheart.dailyhotel.model.MyLocationMarker;
 import com.twoheart.dailyhotel.place.adapter.PlaceNameInfoWindowAdapter;
 import com.twoheart.dailyhotel.util.Constants;
@@ -417,7 +412,7 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
         DialogConciergeDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_concierge_data, null, false);
 
         // 버튼
-//        dataBinding.contactUs02Layout.setVisibility(View.GONE);
+        //        dataBinding.contactUs02Layout.setVisibility(View.GONE);
 
         dataBinding.contactUs01TextView.setText(R.string.frag_faqs);
         dataBinding.contactUs01TextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_ops_05_faq, 0, 0, 0);
@@ -436,7 +431,8 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
         if (DailyTextUtils.isTextEmpty(restaurantPhone) == true)
         {
             dataBinding.contactUs02Layout.setVisibility(View.GONE);
-        } else {
+        } else
+        {
             dataBinding.contactUs02TextView.setText(R.string.label_restaurant_direct_phone);
             dataBinding.contactUs02TextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_ops_02_restaurant_call, 0, 0, 0);
 

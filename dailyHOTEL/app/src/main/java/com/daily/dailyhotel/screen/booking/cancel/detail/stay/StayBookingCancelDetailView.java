@@ -29,7 +29,6 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyScrollView;
-import com.daily.dailyhotel.base.BaseBlurView;
 import com.daily.dailyhotel.entity.StayBookingDetail;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.google.android.gms.maps.CameraUpdate;
@@ -885,7 +884,8 @@ public class StayBookingCancelDetailView extends BaseDialogView<StayBookingCance
         {
             dataBinding.visitTypeLayout.setVisibility(View.GONE);
             dataBinding.guideVisitMemoLayout.setVisibility(View.GONE);
-        } else {
+        } else
+        {
             switch (stayBookingDetail.guestTransportation)
             {
                 case "CAR":

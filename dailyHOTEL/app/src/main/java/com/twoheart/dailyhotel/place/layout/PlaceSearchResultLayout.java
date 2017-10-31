@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.place.layout;
 
-import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;

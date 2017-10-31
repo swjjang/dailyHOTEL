@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ScrollView;
 
-import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.DailyViewWishAnimationDataBinding;
 
