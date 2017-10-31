@@ -283,7 +283,7 @@ public class HappyTalkCategoryDialog extends BaseActivity
 
         if (DailyTextUtils.isTextEmpty(mPlaceType) == false)
         {
-            urlStringBuilder.append("&parameter8=" + mPlaceType); // 카테고리 분류
+            urlStringBuilder.append("&parameter8=" + URLEncoder.encode(mPlaceType)); // 카테고리 분류
         }
 
         if (DailyTextUtils.isTextEmpty(DailyUserPreference.getInstance(HappyTalkCategoryDialog.this).getType()) == false)
