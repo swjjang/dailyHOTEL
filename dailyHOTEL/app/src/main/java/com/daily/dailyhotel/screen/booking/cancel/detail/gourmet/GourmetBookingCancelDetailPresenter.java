@@ -697,8 +697,7 @@ public class GourmetBookingCancelDetailPresenter //
                                             }
                                         });
 
-                                    //                                AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-                                    //                                    , AnalyticsManager.Action.BOOKING_HISTORY_DELETE, "gourmet_" + mGourmetBookingDetail.stayIndex, null);
+                                    mAnalytics.onEventHideBookingCancelClick(getActivity());
                                 } else
                                 {
                                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2)//
@@ -739,9 +738,6 @@ public class GourmetBookingCancelDetailPresenter //
                     unLock();
                 }
             }, true);
-
-
-        mAnalytics.onEventHideBookingCancelClick(getActivity());
     }
 
     void setCommonDateTime(@NonNull CommonDateTime commonDateTime)
