@@ -193,7 +193,8 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
         if (Booking.BOOKING_STATE_CANCEL == bookingState)
         {
             mDeleteReservationView.setText(R.string.label_booking_cancel_detail_delete_reservation);
-        } else {
+        } else
+        {
             mDeleteReservationView.setText(R.string.label_booking_detail_delete_reservation);
         }
 

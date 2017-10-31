@@ -6,17 +6,17 @@ import android.support.annotation.NonNull;
 import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.BookingInterface;
 import com.daily.dailyhotel.entity.Booking;
+import com.daily.dailyhotel.entity.BookingCancel;
 import com.daily.dailyhotel.entity.BookingHidden;
 import com.daily.dailyhotel.entity.GourmetBookingDetail;
-import com.daily.dailyhotel.entity.BookingCancel;
 import com.daily.dailyhotel.entity.StayBookingDetail;
 import com.daily.dailyhotel.entity.StayOutboundBookingDetail;
 import com.daily.dailyhotel.entity.WaitingDeposit;
+import com.daily.dailyhotel.repository.remote.model.BookingCancelData;
 import com.daily.dailyhotel.repository.remote.model.BookingData;
 import com.daily.dailyhotel.repository.remote.model.BookingHiddenData;
 import com.daily.dailyhotel.repository.remote.model.BookingHideData;
 import com.daily.dailyhotel.repository.remote.model.GourmetBookingDetailData;
-import com.daily.dailyhotel.repository.remote.model.BookingCancelData;
 import com.daily.dailyhotel.repository.remote.model.StayBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.WaitingDepositData;
@@ -233,7 +233,7 @@ public class BookingRemoteImpl implements BookingInterface
                 if (bookingHiddenDataBaseDto != null)
                 {
                     // 이 요청은 메세지 코드를 보지 않음
-//                    if (bookingHiddenDataBaseDto.msgCode == 100 && bookingHiddenDataBaseDto.data != null)
+                    //                    if (bookingHiddenDataBaseDto.msgCode == 100 && bookingHiddenDataBaseDto.data != null)
                     if (bookingHiddenDataBaseDto.data != null)
                     {
                         bookingHidden = bookingHiddenDataBaseDto.data.getBookingHidden();

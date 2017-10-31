@@ -734,7 +734,8 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
         if (Booking.BOOKING_STATE_CANCEL == bookingState)
         {
             getViewDataBinding().deleteReservationTextView.setText(R.string.label_booking_cancel_detail_delete_reservation);
-        } else {
+        } else
+        {
             getViewDataBinding().deleteReservationTextView.setText(R.string.label_booking_detail_delete_reservation);
         }
 

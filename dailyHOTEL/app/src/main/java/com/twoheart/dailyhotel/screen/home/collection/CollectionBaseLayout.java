@@ -357,7 +357,7 @@ public abstract class CollectionBaseLayout extends BaseBlurLayout
 
     public PlaceViewItem getItem(int position)
     {
-        if(mRecyclerView == null || mPlaceListAdapter == null)
+        if (mRecyclerView == null || mPlaceListAdapter == null)
         {
             return null;
         }

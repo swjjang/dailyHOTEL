@@ -420,7 +420,7 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
                     return false;
                 }
 
-                int lastLine = holder.dataBinding.contentProvinceView.getLineCount() -1;
+                int lastLine = holder.dataBinding.contentProvinceView.getLineCount() - 1;
                 if (layout.getEllipsisCount(lastLine) > 0)
                 {
                 } else

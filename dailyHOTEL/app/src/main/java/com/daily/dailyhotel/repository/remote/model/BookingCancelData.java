@@ -54,13 +54,13 @@ public class BookingCancelData
         bookingCancel.aggregationId = aggregationId;
         bookingCancel.orderSeq = orderSeq;
         bookingCancel.reservationIdx = reservationIdx;
-//        bookingCancel.checkinDate = checkinDate;
-//        bookingCancel.checkoutDate = checkoutDate;
-//        bookingCancel.checkinTime = checkinTime;
-//        bookingCancel.checkoutTime = checkoutTime;
+        //        bookingCancel.checkinDate = checkinDate;
+        //        bookingCancel.checkoutDate = checkoutDate;
+        //        bookingCancel.checkinTime = checkinTime;
+        //        bookingCancel.checkoutTime = checkoutTime;
         bookingCancel.cancelDateTime = cancelDateTime;
         bookingCancel.imageUrl = imageUrl;
-//        bookingCancel.type = type;
+        //        bookingCancel.type = type;
         bookingCancel.name = name;
         bookingCancel.itemIdx = itemIdx;
 
