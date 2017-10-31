@@ -317,9 +317,6 @@ public class StayOutboundBookingCancelDetailPresenter //
             , mStayOutboundBookingDetail.latitude, mStayOutboundBookingDetail.longitude, true);
 
         startActivityForResult(intent, StayOutboundBookingCancelDetailActivity.REQUEST_CODE_ZOOMMAP);
-//
-//        AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-//            , AnalyticsManager.Action.MAP_CLICK, AnalyticsManager.ValueType.EMPTY, null);
     }
 
     @Override
@@ -341,9 +338,6 @@ public class StayOutboundBookingCancelDetailPresenter //
                     unLockAll();
                 }
             }));
-//
-//        AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-//            , AnalyticsManager.Action.MAP_CLICK, AnalyticsManager.ValueType.EMPTY, null);
     }
 
     @Override
@@ -486,7 +480,7 @@ public class StayOutboundBookingCancelDetailPresenter //
     }
 
     @Override
-    public void onConciergeHappyTalkClick(boolean refund)
+    public void onConciergeHappyTalkClick()
     {
         if (mStayOutboundBookingDetail == null)
         {
@@ -498,15 +492,8 @@ public class StayOutboundBookingCancelDetailPresenter //
             // 카카오톡 패키지 설치 여부
             getActivity().getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
 
-            if (refund == true)
-            {
-                startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity(), HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_OUTBOUND_REFUND//
-                    , mStayOutboundBookingDetail.stayIndex, 0, mStayOutboundBookingDetail.name), StayOutboundBookingCancelDetailActivity.REQUEST_CODE_HAPPYTALK);
-            } else
-            {
-                startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity(), HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_OUTBOUND_BOOKING//
-                    , mStayOutboundBookingDetail.stayIndex, 0, mStayOutboundBookingDetail.name), StayOutboundBookingCancelDetailActivity.REQUEST_CODE_HAPPYTALK);
-            }
+            startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity(), HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_OUTBOUND_BOOKING_CANCEL//
+                , mStayOutboundBookingDetail.stayIndex, 0, mStayOutboundBookingDetail.name), StayOutboundBookingCancelDetailActivity.REQUEST_CODE_HAPPYTALK);
         } catch (Exception e)
         {
             getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
@@ -544,7 +531,7 @@ public class StayOutboundBookingCancelDetailPresenter //
             String userName = DailyUserPreference.getInstance(getActivity()).getName();
 
             String message = getString(R.string.message_booking_cancel_stay_share_kakao, userName //
-                , mStayOutboundBookingDetail.name, mStayOutboundBookingDetail.guestLastName + " " +mStayOutboundBookingDetail.guestFirstName, mStayOutboundBookingDetail.roomName //
+                , mStayOutboundBookingDetail.name, mStayOutboundBookingDetail.guestLastName + " " + mStayOutboundBookingDetail.guestFirstName, mStayOutboundBookingDetail.roomName //
                 , DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.cancelDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd") //
                 , mStayOutboundBookingDetail.address);
 
@@ -625,9 +612,6 @@ public class StayOutboundBookingCancelDetailPresenter //
                                             finish();
                                         }
                                     });
-
-//                                AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-//                                    , AnalyticsManager.Action.BOOKING_HISTORY_DELETE, "ob_" + mStayOutboundBookingDetail.stayIndex, null);
                             } else
                             {
                                 getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2)//
