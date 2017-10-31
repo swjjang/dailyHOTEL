@@ -1030,7 +1030,7 @@
     <string name="label_googlemap">구글 지도</string>
 
     <!-- Coupon -->
-    <string name="coupon_notice_text">할인쿠폰\n상세 정보</string>
+    <string name="coupon_notice_text">할인쿠폰\n상세정보</string>
     <string name="coupon_duedate_text">(%1$d일 남음)</string>
     <string name="coupon_today_text">(오늘까지)</string>
     <string name="coupon_download_text">다운로드</string>
@@ -1561,6 +1561,9 @@
     <string name="message_reward_confirm_reward_coupon">할인쿠폰함에서 리워드 쿠폰을 확인해보세요!</string>
     <string name="message_reward_issue_sticker">스티커가 적립되었습니다.</string>
     <string name="message_reward_recent_stickers_are_displayed_in_order">최근 적립한 스티커 순으로 표시됩니다.</string>
+
+
+    <string name="dsfadfdsfdfdfas">150,000원 이상 구매시,\n12.22 - 12.31중 방문시 사용 가능</string>
 
     <string-array name="coupon_sort_array">
         <item>전체 쿠폰 보기</item>

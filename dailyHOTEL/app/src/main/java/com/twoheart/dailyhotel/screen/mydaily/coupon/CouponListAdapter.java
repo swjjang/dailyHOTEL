@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.mydaily.coupon;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -9,16 +10,13 @@ import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
-import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.databinding.LayoutCouponboxCouponDataBinding;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.util.CouponUtil;
 
@@ -122,10 +120,9 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return new FooterViewHolder(view);
         } else
         {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_row_coupon, parent, false);
-            return new ItemViewHolder(view);
+            LayoutCouponboxCouponDataBinding viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.layout_couponbox_coupon_data, parent, false);
+            return new ItemViewHolder(viewDataBinding);
         }
-
     }
 
     @Override
@@ -145,37 +142,13 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private class ItemViewHolder extends RecyclerView.ViewHolder
     {
-        View rootView;
-        View listItemLayout;
-        LinearLayout dateTextLayout;
-        TextView couponPriceTextView;
-        TextView descriptionTextView;
-        TextView expireTextView;
-        DailyTextView dueDateTextView;
-        TextView minPriceTextView;
-        TextView useIconView;
-        TextView downloadIconView;
-        TextView noticeTextView;
-        ImageView useStayIconView;
-        ImageView useGourmetIconView;
+        LayoutCouponboxCouponDataBinding dataBinding;
 
-        public ItemViewHolder(View itemView)
+        public ItemViewHolder(LayoutCouponboxCouponDataBinding dataBinding)
         {
-            super(itemView);
+            super(dataBinding.getRoot());
 
-            rootView = itemView;
-            listItemLayout = itemView.findViewById(R.id.listItemLayout);
-            dateTextLayout = (LinearLayout) itemView.findViewById(R.id.dateTextLayout);
-            couponPriceTextView = (TextView) itemView.findViewById(R.id.couponPriceTextView);
-            descriptionTextView = (TextView) itemView.findViewById(R.id.descriptionTextView);
-            expireTextView = (TextView) itemView.findViewById(R.id.expireTextView);
-            dueDateTextView = (DailyTextView) itemView.findViewById(R.id.dueDateTextView);
-            minPriceTextView = (TextView) itemView.findViewById(R.id.minPriceTextView);
-            useIconView = (TextView) itemView.findViewById(R.id.useIconView);
-            downloadIconView = (TextView) itemView.findViewById(R.id.downloadIconView);
-            noticeTextView = (TextView) itemView.findViewById(R.id.noticeTextView);
-            useStayIconView = (ImageView) itemView.findViewById(R.id.useableStayImageView);
-            useGourmetIconView = (ImageView) itemView.findViewById(R.id.useableGourmetImageView);
+            this.dataBinding = dataBinding;
         }
 
         public void onBindViewHolder(final int position)
@@ -187,11 +160,12 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 return;
             }
 
-            String strAmount = DailyTextUtils.getPriceFormat(mContext, coupon.amount, false);
-            couponPriceTextView.setText(strAmount);
+            dataBinding.couponPriceTextView.setCompoundDrawablesWithIntrinsicBounds(coupon.rewardCoupon ? R.drawable.vector_r_ic_s_17 : 0, 0, 0, 0);
 
-            descriptionTextView.setText(coupon.title);
-            expireTextView.setText(CouponUtil.getAvailableDatesString(coupon.validFrom, coupon.validTo));
+            String strAmount = DailyTextUtils.getPriceFormat(mContext, coupon.amount, false);
+            dataBinding.couponPriceTextView.setText(strAmount);
+            dataBinding.couponNameTextView.setText(coupon.title);
+            dataBinding.expireTextView.setText(CouponUtil.getAvailableDatesString(coupon.validFrom, coupon.validTo));
 
             int dueDate = CouponUtil.getDueDateCount(coupon.serverDate, coupon.validTo);
             String strDueDate;
@@ -209,29 +183,15 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             if (dueDate > 7)
             {
                 // 8일 남음 이상
-                dueDateTextView.setTextColor(mContext.getResources().getColor(R.color.coupon_description_text));
+                dataBinding.dueDateTextView.setTextColor(mContext.getResources().getColor(R.color.coupon_description_text));
 
             } else
             {
                 // 7일 남음 부터 오늘까지
-                dueDateTextView.setTextColor(mContext.getResources().getColor(R.color.coupon_red_wine_text));
+                dataBinding.dueDateTextView.setTextColor(mContext.getResources().getColor(R.color.coupon_red_wine_text));
             }
 
-            dueDateTextView.setText(strDueDate);
-
-            dueDateTextView.post(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    int lineCount = dueDateTextView.getLineCount();
-                    dateTextLayout.setOrientation(lineCount > 1 ? LinearLayout.VERTICAL : LinearLayout.HORIZONTAL);
-                    LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) dueDateTextView.getLayoutParams();
-                    layoutParams.topMargin = lineCount > 1 ? ScreenUtils.dpToPx(mContext, -2d) : 0;
-                    layoutParams.leftMargin = lineCount > 1 ? 0 : ScreenUtils.dpToPx(mContext, 2d);
-                    dueDateTextView.setLayoutParams(layoutParams);
-                }
-            });
+            dataBinding.dueDateTextView.setText(strDueDate);
 
             String lastLineText = "";
             boolean isEmptyStayFromTo = DailyTextUtils.isTextEmpty(coupon.stayFrom, coupon.stayTo);
@@ -255,48 +215,48 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     mContext, coupon.stayFrom, coupon.stayTo);
             }
 
-            int viewWidth = minPriceTextView.getWidth() - minPriceTextView.getPaddingLeft() - minPriceTextView.getPaddingRight();
+            int viewWidth = dataBinding.descriptionTextView.getWidth() - dataBinding.descriptionTextView.getPaddingLeft() - dataBinding.descriptionTextView.getPaddingRight();
             if (viewWidth == 0)
             {
                 final String lineText = lastLineText;
-                minPriceTextView.post(new Runnable()
+                dataBinding.descriptionTextView.post(new Runnable()
                 {
                     @Override
                     public void run()
                     {
-                        int viewWidth = minPriceTextView.getWidth() - minPriceTextView.getPaddingLeft() - minPriceTextView.getPaddingRight();
-                        setMinPriceText(position, viewWidth, lineText);
+                        int viewWidth = dataBinding.descriptionTextView.getWidth() - dataBinding.descriptionTextView.getPaddingLeft() - dataBinding.descriptionTextView.getPaddingRight();
+                        setDescriptionText(position, viewWidth, lineText);
                     }
                 });
             } else
             {
-                setMinPriceText(position, viewWidth, lastLineText);
+                setDescriptionText(position, viewWidth, lastLineText);
             }
 
             if (coupon.isDownloaded == true)
             {
                 //usable
-                downloadIconView.setVisibility(View.GONE);
-                useIconView.setVisibility(View.VISIBLE);
-                listItemLayout.setBackgroundResource(R.drawable.more_coupon_bg);
-                noticeTextView.setTextColor(mContext.getResources().getColor(R.color.coupon_description_text));
+                dataBinding.downloadIconView.setVisibility(View.GONE);
+                dataBinding.useIconView.setVisibility(View.VISIBLE);
+                dataBinding.baseView.setBackgroundResource(R.drawable.more_coupon_bg);
+                dataBinding.noticeTextView.setTextColor(mContext.getResources().getColor(R.color.coupon_description_text));
             } else
             {
                 //download
-                downloadIconView.setVisibility(View.VISIBLE);
-                useIconView.setVisibility(View.GONE);
-                listItemLayout.setBackgroundResource(R.drawable.more_coupon_download_bg);
-                noticeTextView.setTextColor(mContext.getResources().getColor(R.color.white_a80));
+                dataBinding.downloadIconView.setVisibility(View.VISIBLE);
+                dataBinding.useIconView.setVisibility(View.GONE);
+                dataBinding.baseView.setBackgroundResource(R.drawable.more_coupon_download_bg);
+                dataBinding.noticeTextView.setTextColor(mContext.getResources().getColor(R.color.white_a80));
             }
 
-            useStayIconView.setImageResource(coupon.availableInStay == true ? R.drawable.ic_badge_hotel_on : R.drawable.ic_badge_hotel_off);
-            useGourmetIconView.setImageResource(coupon.availableInGourmet == true ? R.drawable.ic_badge_gourmet_on : R.drawable.ic_badge_gourmet_off);
+            dataBinding.useableStayTextView.setVisibility(coupon.availableInStay ? View.VISIBLE : View.GONE);
+            dataBinding.useableGourmetTextView.setVisibility(coupon.availableInGourmet == true ? View.VISIBLE : View.GONE);
 
-            CharSequence charSequence = DailyTextUtils.isTextEmpty(noticeTextView.getText().toString()) ? "" : noticeTextView.getText().toString();
-            SpannableString spannableString = new SpannableString(charSequence);
+            String couponNotice = mContext.getString(R.string.coupon_notice_text);
+            SpannableString spannableString = new SpannableString(couponNotice);
             spannableString.setSpan(new UnderlineSpan(), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            noticeTextView.setText(spannableString);
-            noticeTextView.setOnClickListener(new View.OnClickListener()
+            dataBinding.noticeTextView.setText(spannableString);
+            dataBinding.noticeTextView.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -305,7 +265,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             });
 
-            downloadIconView.setOnClickListener(new View.OnClickListener()
+            dataBinding.downloadIconView.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -315,7 +275,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             });
         }
 
-        void setMinPriceText(int position, int viewWidth, String lastLineText)
+        void setDescriptionText(int position, int viewWidth, String lastLineText)
         {
             if (DailyTextUtils.isTextEmpty(lastLineText) == true)
             {
@@ -335,7 +295,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 lastLineText = lastLineText.replace(", ", ",\n");
             }
 
-            minPriceTextView.setText(lastLineText);
+            dataBinding.descriptionTextView.setText(lastLineText);
         }
     }
 
