@@ -100,7 +100,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
             }
 
             case CODE_REQUEST_ACTIVITY_PREVIEW:
-                switch(resultCode)
+                switch (resultCode)
                 {
                     case Activity.RESULT_OK:
                         Observable.create(new ObservableOnSubscribe<Object>()
@@ -329,7 +329,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
 
         if (object instanceof RecentlyPlace)
         {
-            RecentlyPlace recentlyPlace = (RecentlyPlace)object;
+            RecentlyPlace recentlyPlace = (RecentlyPlace) object;
             if (recentlyPlace.myWish != wish)
             {
                 recentlyPlace.myWish = wish;

@@ -15,14 +15,14 @@ import com.twoheart.dailyhotel.R;
  */
 public class StayBookingCancelDetailActivity extends BaseActivity<StayBookingCancelDetailPresenter>
 {
-//    static final int REQUEST_CODE_ISSUING_RECEIPT = 10000;
+    //    static final int REQUEST_CODE_ISSUING_RECEIPT = 10000;
     static final int REQUEST_CODE_ZOOMMAP = 10001;
     static final int REQUEST_CODE_DETAIL = 10002;
     static final int REQUEST_CODE_CALL = 10003;
     static final int REQUEST_CODE_HAPPYTALK = 10004;
     static final int REQUEST_CODE_PERMISSION_MANAGER = 10005;
     static final int REQUEST_CODE_SETTING_LOCATION = 10006;
-//    static final int REQUEST_CODE_REFUND = 10007;
+    //    static final int REQUEST_CODE_REFUND = 10007;
     static final int REQUEST_CODE_NAVIGATOR = 10008;
 
     static final String INTENT_EXTRA_DATA_BOOKING_INDEX = "index";

@@ -80,9 +80,9 @@ public class DailyPreference
     private static final String KEY_SELECTED_SIMPLE_CARD = "204"; // 마지막으로 간편결제된 카드
 
     // Recently 의 경우 DailyDb 사용으로 변경 됨 또한 해외 호텔 적용으로 기존 Preference 삭제
-//    private static final String KEY_STAY_RECENT_PLACES = "210";
-//    private static final String KEY_GOURMET_RECENT_PLACES = "211";
-//    private static final String KEY_ALL_RECENT_PLACES = "212";
+    //    private static final String KEY_STAY_RECENT_PLACES = "210";
+    //    private static final String KEY_GOURMET_RECENT_PLACES = "211";
+    //    private static final String KEY_ALL_RECENT_PLACES = "212";
 
     private static final String KEY_TRUE_VR_SUPPORT = "213";
     private static final String KEY_TRUE_VR_CHECK_DATA_GUIDE = "214";
@@ -106,7 +106,7 @@ public class DailyPreference
     private static final String KEY_BASE_URL = "1005"; // 앱의 기본 URL
     private static final String KEY_BASE_OUTBOUND_URL = "1006"; // 앱의 기본 OUTBOUND URL
 
-//    private static final String KEY_SETTING_MIGRATION_FLAG = "1003"; // 2.0.0 이후 사용안함
+    //    private static final String KEY_SETTING_MIGRATION_FLAG = "1003"; // 2.0.0 이후 사용안함
     private static final String KEY_STAY_CATEGORY_CODE = "1010";
     private static final String KEY_STAY_CATEGORY_NAME = "1011";
 

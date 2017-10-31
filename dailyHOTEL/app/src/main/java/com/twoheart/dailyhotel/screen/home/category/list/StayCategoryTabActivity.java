@@ -1183,7 +1183,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                                 , AnalyticsManager.Action.COUPON_STAY, Integer.toString(stay.index), null);
                         }
 
-                        if(stay.reviewCount > 0)
+                        if (stay.reviewCount > 0)
                         {
                             AnalyticsManager.getInstance(StayCategoryTabActivity.this).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
                                 , AnalyticsManager.Action.TRUE_REVIEW_STAY, Integer.toString(stay.index), null);

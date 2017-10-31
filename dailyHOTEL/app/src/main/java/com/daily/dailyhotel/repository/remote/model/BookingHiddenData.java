@@ -28,7 +28,8 @@ public class BookingHiddenData
         if (isSuccessValue == 1)
         {
             bookingHidden.isSuccess = true;
-        } else {
+        } else
+        {
             bookingHidden.isSuccess = isSuccess;
         }
 

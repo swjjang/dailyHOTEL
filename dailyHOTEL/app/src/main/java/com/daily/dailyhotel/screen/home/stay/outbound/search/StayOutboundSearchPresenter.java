@@ -842,8 +842,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         } else if (checkDeepLinkAfterCommonDateTime(mDailyDeepLink) == true)
         {
             // do nothing! - skip deepLink
-        }
-        else if (isSuggestChanged() == false)
+        } else if (isSuggestChanged() == false)
         {
             onSuggestClick(false);
         }

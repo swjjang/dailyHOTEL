@@ -15,7 +15,7 @@ import com.twoheart.dailyhotel.R;
  */
 public class StayOutboundBookingCancelDetailActivity extends BaseActivity<StayOutboundBookingCancelDetailPresenter>
 {
-//    static final int REQUEST_CODE_ISSUING_RECEIPT = 10000;
+    //    static final int REQUEST_CODE_ISSUING_RECEIPT = 10000;
     static final int REQUEST_CODE_ZOOMMAP = 10001;
     static final int REQUEST_CODE_DETAIL = 10002;
     static final int REQUEST_CODE_CALL = 10003;
