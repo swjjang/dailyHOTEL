@@ -1388,6 +1388,11 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             getViewInterface().setStayOutboundPayment(mStayBookDateTime.getNights(), mStayOutboundPayment.totalPrice//
                 , discountPrice, mStayOutboundPayment.feeTotalAmountUsd);
 
+            if (mSaleType == STICKER && mPaymentType == DailyBookingPaymentTypeView.PaymentType.PHONE)
+            {
+                setPaymentType(DailyBookingPaymentTypeView.PaymentType.EASY_CARD);
+            }
+
             // 1000원 미만 결제시에 간편/일반 결제 불가 - 쿠폰 또는 적립금 전체 사용이 아닌경우 조건 추가
             DailyBookingPaymentTypeView.PaymentType paymentType;
 
