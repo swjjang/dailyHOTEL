@@ -569,7 +569,7 @@ public class GourmetBookingCancelDetailPresenter //
             getActivity().getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
 
             startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity() //
-                , HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_BOOKING//
+                , HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_BOOKING_CANCEL//
                 , mGourmetBookingDetail.gourmetIndex, mReservationIndex, mGourmetBookingDetail.gourmetName), GourmetBookingCancelDetailActivity.REQUEST_CODE_HAPPYTALK);
         } catch (Exception e)
         {

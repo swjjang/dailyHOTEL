@@ -105,7 +105,7 @@ public class StayOutboundBookingCancelDetailView extends BaseDialogView<StayOutb
 
         void onConciergeFaqClick();
 
-        void onConciergeHappyTalkClick(boolean refund);
+        void onConciergeHappyTalkClick();
 
         void onConciergeCallClick();
 
@@ -434,7 +434,7 @@ public class StayOutboundBookingCancelDetailView extends BaseDialogView<StayOutb
             {
                 hideSimpleDialog();
 
-                getEventListener().onConciergeHappyTalkClick(false);
+                getEventListener().onConciergeHappyTalkClick();
             }
         });
 

@@ -51,9 +51,12 @@ public class HappyTalkCategoryDialog extends BaseActivity
         SCREEN_STAY_OUTBOUND_DETAIL("해외호텔상세"),
         SCREEN_STAY_PAYMENT_WAIT("예약내역>입금대기"),
         SCREEN_GOURMET_PAYMENT_WAIT("예약내역>입금대기"),
-        SCREEN_STAY_BOOKING("예약내역>문의"),
-        SCREEN_GOURMET_BOOKING("예약내역>문의"),
-        SCREEN_STAY_OUTBOUND_BOOKING("해외호텔예약내역>문의"),
+        SCREEN_STAY_BOOKING("예약내역>문의하기"),
+        SCREEN_GOURMET_BOOKING("예약내역>문의하기"),
+        SCREEN_STAY_OUTBOUND_BOOKING("해외호텔예약내역>문의하기"),
+        SCREEN_STAY_BOOKING_CANCEL("취소내역>문의하기"),
+        SCREEN_GOURMET_BOOKING_CANCEL("취소내역>문의하기"),
+        SCREEN_STAY_OUTBOUND_BOOKING_CANCEL("해외호텔취소내역>문의하기"),
         SCREEN_FAQ("더보기>자주묻는질문"),
         SCREEN_CONTACT_US("더보기>문의하기"),
         SCREEN_STAY_REFUND("예약내역>환불문의"),
@@ -179,6 +182,18 @@ public class HappyTalkCategoryDialog extends BaseActivity
             final String STAY_REFUND = "64796";
 
             mOnEventListener.onHappyTalk(STAY_PREFIX, STAY_REFUND);
+        } else if (mCallScreen == CallScreen.SCREEN_STAY_BOOKING_CANCEL || mCallScreen == CallScreen.SCREEN_STAY_OUTBOUND_BOOKING_CANCEL)
+        {
+            final String STAY_PREFIX = "S_";
+            final String STAY_BOOKING_CANCEL = "64796";
+
+            mOnEventListener.onHappyTalk(STAY_PREFIX, STAY_BOOKING_CANCEL);
+        } else if (mCallScreen == CallScreen.SCREEN_GOURMET_BOOKING_CANCEL)
+        {
+            final String GOURMET_PREFIX = "G_";
+            final String GOURMET_BOOKING_CANCEL = "64801";
+
+            mOnEventListener.onHappyTalk(GOURMET_PREFIX, GOURMET_BOOKING_CANCEL);
         } else
         {
             mLayout.setVisibility(View.VISIBLE);
@@ -210,7 +225,18 @@ public class HappyTalkCategoryDialog extends BaseActivity
 
         urlStringBuilder.append("&site_id=" + SITE_ID); // 사이트 아이디
         urlStringBuilder.append("&category_id=" + mMainCategoryId); // 대분류
-        urlStringBuilder.append("&division_id=" + mSubCategoryId.get(mMainCategoryId)); // 중분류는 대분류 첫번째 키로
+
+        if (mCallScreen == CallScreen.SCREEN_STAY_BOOKING_CANCEL || mCallScreen == CallScreen.SCREEN_STAY_OUTBOUND_BOOKING_CANCEL)
+        {
+            urlStringBuilder.append("&division_id=" + "64833"); // 중분류는 취소문의로
+        } else if (mCallScreen == CallScreen.SCREEN_GOURMET_BOOKING_CANCEL)
+        {
+            urlStringBuilder.append("&division_id=" + "64892"); // 중분류는 취소문의로
+        } else
+        {
+            urlStringBuilder.append("&division_id=" + mSubCategoryId.get(mMainCategoryId)); // 중분류는 대분류 첫번째 키로
+        }
+
         urlStringBuilder.append("&title="); // 상담제목
 
         if (mBookingIndex > 0)
