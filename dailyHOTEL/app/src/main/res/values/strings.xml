@@ -657,7 +657,7 @@
     <string name="message_payment_agree_personal_information06">고객님께서는 정보제공에 동의하지 않을 수 있으나, 이 경우\n서비스 이용이 제한될 수 있습니다.</string>
 
     <string name="message_payment_please_agree_personal_information">개인정보 제 3자 제공에 동의해주세요.</string>
-    <string name="message_payment_used_reward_coupon">무료 리워드 쿠폰 %1$s을 사용했습니다.</string>
+    <string name="message_payment_used_reward_coupon">1박 무료 리워드 쿠폰 %1$s을 사용했습니다.</string>
     <string name="message_payment_reward_sticker_deposit_after_checkout">체크아웃 후 3일 이내에 %1$d박 스티커가 적립됩니다.</string>
     <string name="message_payment_dont_reward_sticker">스티커 적립을 할 수 없는 예약입니다.</string>
     <string name="message_payment_dont_reward_sticker_used_bonus_coupon_payment_phone">(적립금, 할인쿠폰, 휴대폰 결제 수단 선택 시)</string>
