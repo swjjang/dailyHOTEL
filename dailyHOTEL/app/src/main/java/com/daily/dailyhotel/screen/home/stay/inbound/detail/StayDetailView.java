@@ -1310,7 +1310,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
     }
 
     /**
-     * @param overseas
+     * @param showStamp
      */
     private void setStampView(boolean showStamp)
     {
@@ -1571,6 +1571,8 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
 
             while (iterator.hasNext() == true)
             {
+                boolean addRefundPolicy = false;
+
                 Map.Entry<String, List<String>> entry = iterator.next();
 
                 if (entry == null)
@@ -1580,6 +1582,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
 
                 if (hasNRD == true && getString(R.string.label_detail_cancellation_refund_policy).equalsIgnoreCase(entry.getKey()) == true)
                 {
+                    addRefundPolicy = true;
                     hasRefundPolicy = true;
                 }
 
@@ -1589,14 +1592,14 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
                     // 마지막인데 취소 환불대기 문구가 없는 경우
                     if (hasNRD == true && hasRefundPolicy == false)
                     {
-                        setDescriptionView(layoutInflater, getViewDataBinding().descriptionsLayout, entry, false, 0, false);
+                        setDescriptionView(layoutInflater, getViewDataBinding().descriptionsLayout, entry, false, false, false);
                     } else
                     {
-                        setDescriptionView(layoutInflater, getViewDataBinding().descriptionsLayout, entry, true, 0, false);
+                        setDescriptionView(layoutInflater, getViewDataBinding().descriptionsLayout, entry, true, addRefundPolicy, false);
                     }
                 } else
                 {
-                    setDescriptionView(layoutInflater, getViewDataBinding().descriptionsLayout, entry, false, 0, false);
+                    setDescriptionView(layoutInflater, getViewDataBinding().descriptionsLayout, entry, false, addRefundPolicy, false);
                 }
             }
         }
@@ -1605,12 +1608,11 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         if (hasNRD == true && hasRefundPolicy == false)
         {
             List<String> refundPolicyList = new ArrayList<>();
-            refundPolicyList.add(getString(R.string.message_stay_detail_nrd));
 
             Map<String, List<String>> refundPolicyMap = new HashMap<>();
             refundPolicyMap.put(getString(R.string.label_detail_cancellation_refund_policy), refundPolicyList);
 
-            setDescriptionView(layoutInflater, getViewDataBinding().descriptionsLayout, refundPolicyMap.entrySet().iterator().next(), waitingForBooking == false, getColor(R.color.dh_theme_color), false);
+            setDescriptionView(layoutInflater, getViewDataBinding().descriptionsLayout, refundPolicyMap.entrySet().iterator().next(), waitingForBooking == false, true, false);
         }
 
         // 대기 예약 안내를 추가한다.
@@ -1624,7 +1626,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
     }
 
     private void setDescriptionView(LayoutInflater layoutInflater, ViewGroup viewGroup, Map.Entry<String, List<String>> information//
-        , boolean lastView, int descriptionColor, boolean html)
+        , boolean lastView, boolean addRefundPolicy, boolean html)
     {
         if (layoutInflater == null || viewGroup == null || information == null)
         {
@@ -1663,17 +1665,25 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
                 detailInformationDataBinding.textView.setText(informationList.get(i));
             }
 
-            if (descriptionColor != 0)
-            {
-                detailInformationDataBinding.textView.setTextColor(descriptionColor);
-            }
-
-            if (i == size - 1)
+            if (i == size - 1 && addRefundPolicy == false)
             {
                 LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) detailInformationDataBinding.textView.getLayoutParams();
                 layoutParams.bottomMargin = 0;
                 detailInformationDataBinding.textView.setLayoutParams(layoutParams);
             }
+        }
+
+        if (addRefundPolicy == true)
+        {
+            LayoutStayOutboundDetailInformationDataBinding detailInformationDataBinding = DataBindingUtil.inflate(layoutInflater//
+                , R.layout.layout_stay_outbound_detail_information_data, viewDataBinding.informationLayout, true);
+
+            detailInformationDataBinding.textView.setText(R.string.message_stay_detail_nrd);
+            detailInformationDataBinding.textView.setTextColor(getColor(R.color.dh_theme_color));
+
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) detailInformationDataBinding.textView.getLayoutParams();
+            layoutParams.bottomMargin = 0;
+            detailInformationDataBinding.textView.setLayoutParams(layoutParams);
         }
 
         if (lastView == true)
