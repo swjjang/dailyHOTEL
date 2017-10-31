@@ -1189,6 +1189,9 @@ public class AnalyticsManager
         public static final String PRODUCT_LIST = "product_list";
 
         public static final String RESERVATION_CANCEL = "reservation_cancel";
+
+        public static final String DETAIL_PAGE_TRUE_REVIEW = "detail_page_true_review";
+        public static final String DETAIL_PAGE_COUPON = "detail_page_coupon";
     }
 
     public static class Label

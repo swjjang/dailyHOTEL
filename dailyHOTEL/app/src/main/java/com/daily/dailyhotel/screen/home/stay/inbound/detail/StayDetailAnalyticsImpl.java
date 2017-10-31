@@ -566,6 +566,30 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
     }
 
     @Override
+    public void onEventShowTrueReview(Activity activity, int stayIndex)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.DETAIL_PAGE_TRUE_REVIEW,//
+            AnalyticsManager.Label.STAY, Integer.toString(stayIndex), null);
+    }
+
+    @Override
+    public void onEventShowCoupon(Activity activity, int stayIndex)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.DETAIL_PAGE_COUPON,//
+            AnalyticsManager.Label.STAY, Integer.toString(stayIndex), null);
+    }
+
+    @Override
     public StayPaymentAnalyticsParam getStayPaymentAnalyticsParam(StayDetail stayDetail, StayRoom stayRoom)
     {
         StayPaymentAnalyticsParam analyticsParam = new StayPaymentAnalyticsParam();

@@ -180,6 +180,10 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         void onEventFaqClick(Activity activity);
 
         void onEventHappyTalkClick(Activity activity);
+
+        void onEventShowTrueReview(Activity activity, int gourmetIndex);
+
+        void onEventShowCoupon(Activity activity, int gourmetIndex);
     }
 
     public GourmetDetailPresenter(@NonNull GourmetDetailActivity activity)
@@ -1556,6 +1560,16 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 }
 
                 unLockAll();
+
+                if (mReviewScores != null && mReviewScores.reviewScoreTotalCount > 0)
+                {
+                    mAnalytics.onEventShowTrueReview(getActivity(), gourmetDetail.index);
+                }
+
+                if (gourmetDetail.couponPrice > 0)
+                {
+                    mAnalytics.onEventShowCoupon(getActivity(), gourmetDetail.index);
+                }
             }
         }, new Consumer<Throwable>()
         {

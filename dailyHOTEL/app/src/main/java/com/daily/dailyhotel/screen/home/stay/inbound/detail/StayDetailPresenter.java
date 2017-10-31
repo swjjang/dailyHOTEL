@@ -185,6 +185,10 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         void onEventHappyTalkClick(Activity activity);
 
         void onEventStampClick(Activity activity);
+
+        void onEventShowTrueReview(Activity activity, int stayIndex);
+
+        void onEventShowCoupon(Activity activity, int stayIndex);
     }
 
     public StayDetailPresenter(@NonNull StayDetailActivity activity)
@@ -1758,6 +1762,16 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 }
 
                 unLockAll();
+
+                if (mReviewScores != null && mReviewScores.reviewScoreTotalCount > 0)
+                {
+                    mAnalytics.onEventShowTrueReview(getActivity(), stayDetail.index);
+                }
+
+                if (stayDetail.couponPrice > 0)
+                {
+                    mAnalytics.onEventShowCoupon(getActivity(), stayDetail.index);
+                }
             }
         }, new Consumer<Throwable>()
         {
