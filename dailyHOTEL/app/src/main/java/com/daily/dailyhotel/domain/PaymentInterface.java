@@ -11,6 +11,8 @@ import com.daily.dailyhotel.entity.StayOutboundPayment;
 import com.daily.dailyhotel.entity.StayPayment;
 import com.daily.dailyhotel.entity.StayRefundPolicy;
 
+import org.json.JSONObject;
+
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -28,36 +30,22 @@ public interface PaymentInterface
     // 간편 결제 카드 리스트를 얻어온다.
     Observable<List<Card>> getEasyCardList();
 
-    Observable<PaymentResult> getStayOutboundPaymentTypeEasy(StayBookDateTime stayBookDateTime, int index//
-        , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people//
-        , boolean usedBonus, int bonus, OverseasGuest guest, int totalPrice, String billingKey, String vendorType);
+    Observable<PaymentResult> getStayOutboundPaymentTypeEasy(int index, JSONObject jsonObject);
 
-    Observable<PaymentResult> getStayOutboundPaymentTypeBonus(StayBookDateTime stayBookDateTime, int index//
-        , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people//
-        , boolean usedBonus, int bonus, OverseasGuest guest, int totalPrice, String vendorType);
+    Observable<PaymentResult> getStayOutboundPaymentTypeBonus(int index, JSONObject jsonObject);
 
-    Observable<String> getStayOutboundHasDuplicatePayment(StayBookDateTime stayBookDateTime, int index//
-        , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people//
-        , boolean usedBonus, int bonus, OverseasGuest guest, int totalPrice, String vendorType);
+    Observable<String> getStayOutboundHasDuplicatePayment(int index, JSONObject jsonObject);
 
-    Observable<PaymentResult> getStayPaymentTypeEasy(StayBookDateTime stayBookDateTime, int roomIndex//
-        , boolean usedBonus, int bonus, boolean usedCoupon, String couponCode, DomesticGuest guest//
-        , int totalPrice, String transportation, String billingKey);
+    Observable<PaymentResult> getStayPaymentTypeEasy(JSONObject jsonObject);
 
-    Observable<PaymentResult> getStayPaymentTypeBonus(StayBookDateTime stayBookDateTime, int roomIndex//
-        , boolean usedBonus, int bonus, boolean usedCoupon, String couponCode, DomesticGuest guest//
-        , int totalPrice, String transportation);
+    Observable<PaymentResult> getStayPaymentTypeBonus(JSONObject jsonObject);
 
     Observable<StayRefundPolicy> getStayRefundPolicy(StayBookDateTime stayBookDateTime, int stayIndex, int roomIndex);
 
 
     Observable<String> getStayHasDuplicatePayment(StayBookDateTime stayBookDateTime);
 
-    Observable<PaymentResult> getGourmetPaymentTypeEasy(String arrivalDateTime, int menuIndex//
-        , int menuCount, boolean usedBonus, int bonus, boolean usedCoupon, String couponCode, DomesticGuest guest//
-        , int totalPrice, String billingKey);
+    Observable<PaymentResult> getGourmetPaymentTypeEasy(JSONObject jsonObject);
 
-    Observable<PaymentResult> getGourmetPaymentTypeBonus(String arrivalDateTime, int menuIndex//
-        , int menuCount, boolean usedBonus, int bonus, boolean usedCoupon, String couponCode//
-        , DomesticGuest guest, int totalPrice);
+    Observable<PaymentResult> getGourmetPaymentTypeBonus(JSONObject jsonObject);
 }

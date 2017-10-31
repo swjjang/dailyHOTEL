@@ -73,7 +73,7 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
 
     @Override
     public void onScreenPaymentCompleted(Activity activity, StayOutboundPayment stayOutboundPayment, StayBookDateTime stayBookDateTime//
-        , String stayName, DailyBookingPaymentTypeView.PaymentType paymentType, boolean usedBonus//
+        , String stayName, DailyBookingPaymentTypeView.PaymentType paymentType, int saleType//
         , boolean registerEasyCard, UserSimpleInformation userSimpleInformation, String aggregationId)
     {
         if (activity == null || mAnalyticsParam == null || paymentType == null)
@@ -85,7 +85,7 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
         {
             Map<String, String> params = new HashMap<>();
 
-            if (usedBonus == true && stayOutboundPayment.totalPrice <= userSimpleInformation.bonus)
+            if (saleType == StayOutboundPaymentPresenter.BONUS && stayOutboundPayment.totalPrice <= userSimpleInformation.bonus)
             {
                 params.put(AnalyticsManager.KeyType.PAYMENT_TYPE, AnalyticsManager.Label.FULLBONUS);
             } else
@@ -135,7 +135,7 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
             params.put(AnalyticsManager.KeyType.RATING, mAnalyticsParam.rating);
             params.put(AnalyticsManager.KeyType.DAILYCHOICE, "n");
             params.put(AnalyticsManager.KeyType.COUPON_CODE, AnalyticsManager.ValueType.EMPTY);
-            params.put(AnalyticsManager.KeyType.USED_BOUNS, usedBonus ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.USED_BOUNS, saleType == StayOutboundPaymentPresenter.BONUS ? "y" : "n");
 
             AnalyticsManager.getInstance(activity).purchaseCompleteStayOutbound(aggregationId, params);
         } catch (Exception e)
@@ -182,13 +182,13 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
 
     @Override
     public StayOutboundThankYouAnalyticsParam getThankYouAnalyticsParam(DailyBookingPaymentTypeView.PaymentType paymentType//
-        , boolean fullBonus, boolean usedBonus, boolean registerEasyCard, int stayIndex)
+        , boolean fullBonus, int saleType, boolean registerEasyCard, int stayIndex)
     {
         StayOutboundThankYouAnalyticsParam analyticsParam = new StayOutboundThankYouAnalyticsParam();
 
         analyticsParam.paymentType = paymentType;
         analyticsParam.fullBonus = fullBonus;
-        analyticsParam.usedBonus = usedBonus;
+        analyticsParam.usedBonus = saleType == StayOutboundPaymentPresenter.BONUS;
         analyticsParam.registerEasyCard = registerEasyCard;
         analyticsParam.stayIndex = stayIndex;
 

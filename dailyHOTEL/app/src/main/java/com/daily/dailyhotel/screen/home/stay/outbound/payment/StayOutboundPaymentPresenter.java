@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -75,6 +76,17 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     private static final int CARD_MIN_PRICE = 1000;
     private static final int PHONE_MAX_PRICE = 500000;
 
+    static final int NONE = 0;
+    static final int BONUS = 1;
+    static final int COUPON = 2;
+    static final int STICKER = 3;
+
+    // 서버로 해당 문자열 그대로 보냄.(수정 금지)
+    @IntDef({NONE, BONUS, COUPON, STICKER})
+    @interface SaleType
+    {
+    }
+
     private StayOutboundPaymentAnalyticsInterface mAnalytics;
 
     private PaymentRemoteImpl mPaymentRemoteImpl;
@@ -89,8 +101,9 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     private Card mSelectedCard;
     private OverseasGuest mGuest;
     private DailyBookingPaymentTypeView.PaymentType mPaymentType;
-    private boolean mBonusSelected, mDepositStickerSelected, mAgreedThirdPartyTerms;
+    private boolean mAgreedThirdPartyTerms;
     UserSimpleInformation mUserSimpleInformation;
+    private int mSaleType;
 
     public interface StayOutboundPaymentAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -103,7 +116,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         void onEventEnterVendorType(Activity activity, int stayIndex, String vendorType);
 
         void onScreenPaymentCompleted(Activity activity, StayOutboundPayment stayOutboundPayment, StayBookDateTime stayBookDateTime//
-            , String stayName, DailyBookingPaymentTypeView.PaymentType paymentType, boolean usedBonus//
+            , String stayName, DailyBookingPaymentTypeView.PaymentType paymentType, int saleType//
             , boolean registerEasyCard, UserSimpleInformation userSimpleInformation, String aggregationId);
 
         void onEventStartPayment(Activity activity, DailyBookingPaymentTypeView.PaymentType paymentType);
@@ -113,7 +126,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         void onEventVendorType(Activity activity, int stayIndex, String vendorType);
 
         StayOutboundThankYouAnalyticsParam getThankYouAnalyticsParam(DailyBookingPaymentTypeView.PaymentType paymentType //
-            , boolean fullBonus, boolean usedBonus, boolean registerEasyCard, int stayIndex);
+            , boolean fullBonus, int saleType, boolean registerEasyCard, int stayIndex);
 
         void setPaymentParam(HashMap<String, String> param);
 
@@ -204,8 +217,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         // 리모트 컨피그에 있는 결제 타입
         checkAvailablePaymentType();
 
-        setBonusSelected(false);
-        setDepositStickerSelected(false);
+        setSaleType(NONE);
 
         getViewInterface().setDepositStickerVisible(false);
         mAnalytics.onEventEnterVendorType(getActivity(), mStayIndex, mVendorType);
@@ -276,7 +288,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             outState.putString("paymentType", mPaymentType.name());
         }
 
-        outState.putBoolean("bonusSelected", mBonusSelected);
+        outState.putInt("saleType", mSaleType);
         outState.putBoolean("agreedThirdPartyTerms", mAgreedThirdPartyTerms);
 
         if (mAnalytics != null)
@@ -329,7 +341,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             mPaymentType = DailyBookingPaymentTypeView.PaymentType.CARD;
         }
 
-        mBonusSelected = savedInstanceState.getBoolean("bonusSelected");
+        mSaleType = savedInstanceState.getInt("saleType", NONE);
         mAgreedThirdPartyTerms = savedInstanceState.getBoolean("agreedThirdPartyTerms");
 
         if (mAnalytics != null)
@@ -627,48 +639,49 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             return;
         }
 
-        if (mDepositStickerSelected == true)
+        switch (mSaleType)
         {
-            getViewInterface().showSimpleDialog(null, getString(R.string.message_booking_cancel_deposit_sticker), getString(R.string.dialog_btn_text_yes), //
-                getString(R.string.dialog_btn_text_no), new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        setDepositStickerSelected(false);
+            case COUPON:
+                break;
 
-                        notifyStayOutboundPaymentChanged();
-
-                        onBonusClick(true);
-                    }
-                }, null);
-        } else
-        {
-            if (selected == true)
-            {
-                setBonusSelected(true);
-
-                notifyStayOutboundPaymentChanged();
-            } else
-            {
-                // 적립금 삭제
-                getViewInterface().showSimpleDialog(null, getString(R.string.message_booking_cancel_bonus), getString(R.string.dialog_btn_text_yes), //
+            case STICKER:
+                getViewInterface().showSimpleDialog(null, getString(R.string.message_booking_cancel_deposit_sticker), getString(R.string.dialog_btn_text_yes), //
                     getString(R.string.dialog_btn_text_no), new View.OnClickListener()
                     {
                         @Override
                         public void onClick(View v)
                         {
-                            setBonusSelected(false);
-
-                            if (hasDepositSticker() == true)
-                            {
-                                setDepositStickerSelected(true);
-                            }
+                            setSaleType(NONE);
 
                             notifyStayOutboundPaymentChanged();
+
+                            onBonusClick(true);
                         }
                     }, null);
-            }
+                break;
+
+            default:
+                if (selected == true)
+                {
+                    setSaleType(BONUS);
+
+                    notifyStayOutboundPaymentChanged();
+                } else
+                {
+                    // 적립금 삭제
+                    getViewInterface().showSimpleDialog(null, getString(R.string.message_booking_cancel_bonus), getString(R.string.dialog_btn_text_yes), //
+                        getString(R.string.dialog_btn_text_no), new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                setSaleType(hasDepositSticker() ? STICKER : NONE);
+
+                                notifyStayOutboundPaymentChanged();
+                            }
+                        }, null);
+                }
+                break;
         }
 
         unLockAll();
@@ -682,42 +695,48 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             return;
         }
 
-        if (mBonusSelected == true)
+        switch (mSaleType)
         {
-            getViewInterface().showSimpleDialog(null, getString(R.string.message_booking_cancel_bonus), getString(R.string.dialog_btn_text_yes), //
-                getString(R.string.dialog_btn_text_no), new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        setBonusSelected(false);
-
-                        notifyStayOutboundPaymentChanged();
-
-                        onDepositStickerClick(true);
-                    }
-                }, null);
-        } else
-        {
-            if (selected == true)
-            {
-                setDepositStickerSelected(true);
-
-                notifyStayOutboundPaymentChanged();
-            } else
-            {
-                getViewInterface().showSimpleDialog(null, getString(R.string.message_booking_cancel_deposit_sticker), getString(R.string.dialog_btn_text_yes), //
+            case BONUS:
+                getViewInterface().showSimpleDialog(null, getString(R.string.message_booking_cancel_bonus), getString(R.string.dialog_btn_text_yes), //
                     getString(R.string.dialog_btn_text_no), new View.OnClickListener()
                     {
                         @Override
                         public void onClick(View v)
                         {
-                            setDepositStickerSelected(false);
+                            setSaleType(NONE);
 
                             notifyStayOutboundPaymentChanged();
+
+                            onDepositStickerClick(true);
                         }
                     }, null);
-            }
+                break;
+
+            case COUPON:
+                break;
+
+            default:
+                if (selected == true)
+                {
+                    setSaleType(STICKER);
+
+                    notifyStayOutboundPaymentChanged();
+                } else
+                {
+                    getViewInterface().showSimpleDialog(null, getString(R.string.message_booking_cancel_deposit_sticker), getString(R.string.dialog_btn_text_yes), //
+                        getString(R.string.dialog_btn_text_no), new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                setSaleType(NONE);
+
+                                notifyStayOutboundPaymentChanged();
+                            }
+                        }, null);
+                }
+                break;
         }
 
         unLockAll();
@@ -842,9 +861,11 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     {
         screenLock(true);
 
-        addCompositeDisposable(mPaymentRemoteImpl.getStayOutboundHasDuplicatePayment(mStayBookDateTime, mStayIndex//
+        JSONObject jsonObject = getPaymentJSONObject(null, mStayBookDateTime//
             , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople//
-            , mBonusSelected, mUserSimpleInformation.bonus, mGuest, mStayOutboundPayment.totalPrice, mVendorType).subscribe(new Consumer<String>()
+            , mSaleType, mUserSimpleInformation.bonus, mGuest, mStayOutboundPayment.totalPrice, mVendorType, null);
+
+        addCompositeDisposable(mPaymentRemoteImpl.getStayOutboundHasDuplicatePayment(mStayIndex, jsonObject).subscribe(new Consumer<String>()
         {
             @Override
             public void accept(@io.reactivex.annotations.NonNull String message) throws Exception
@@ -881,7 +902,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     void showAgreementPopup()
     {
         // 보너스로만 결제하는 경우
-        if (mBonusSelected == true && mStayOutboundPayment.totalPrice <= mUserSimpleInformation.bonus)
+        if (mSaleType == BONUS && mStayOutboundPayment.totalPrice <= mUserSimpleInformation.bonus)
         {
             // 보너스로만 결제할 경우에는 팝업이 기존의 카드 타입과 동일한다.
             getViewInterface().showAgreeTermDialog(DailyBookingPaymentTypeView.PaymentType.CARD, new View.OnClickListener()
@@ -948,11 +969,15 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         // 입력된 내용을 저장한다.
         DailyUserPreference.getInstance(getActivity()).setOverseasInformation(mGuest.firstName, mGuest.lastName, mGuest.phone, mGuest.email);
 
-        if (mBonusSelected == true && mStayOutboundPayment.totalPrice <= mUserSimpleInformation.bonus)
+        if (mSaleType == BONUS && mStayOutboundPayment.totalPrice <= mUserSimpleInformation.bonus)
         {
-            addCompositeDisposable(mPaymentRemoteImpl.getStayOutboundPaymentTypeBonus(mStayBookDateTime, mStayIndex//
+            final String PAYMENT_TYPE = "BONUS";
+
+            JSONObject jsonObject = getPaymentJSONObject(PAYMENT_TYPE, mStayBookDateTime//
                 , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople//
-                , mBonusSelected, mUserSimpleInformation.bonus, mGuest, mStayOutboundPayment.totalPrice, mVendorType).subscribe(new Consumer<PaymentResult>()
+                , mSaleType, mUserSimpleInformation.bonus, mGuest, mStayOutboundPayment.totalPrice, mVendorType, null);
+
+            addCompositeDisposable(mPaymentRemoteImpl.getStayOutboundPaymentTypeBonus(mStayIndex, jsonObject).subscribe(new Consumer<PaymentResult>()
             {
                 @Override
                 public void accept(@io.reactivex.annotations.NonNull PaymentResult paymentResult) throws Exception
@@ -999,10 +1024,14 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                         return;
                     }
 
-                    addCompositeDisposable(mPaymentRemoteImpl.getStayOutboundPaymentTypeEasy(mStayBookDateTime, mStayIndex//
+                    final String PAYMENT_TYPE = "ONE_CLICK";
+
+                    JSONObject jsonObject = getPaymentJSONObject(PAYMENT_TYPE, mStayBookDateTime//
                         , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople//
-                        , mBonusSelected, mUserSimpleInformation.bonus, mGuest, mStayOutboundPayment.totalPrice//
-                        , mSelectedCard.billKey, mVendorType).subscribe(new Consumer<PaymentResult>()
+                        , mSaleType, mUserSimpleInformation.bonus, mGuest, mStayOutboundPayment.totalPrice//
+                        , mVendorType, mSelectedCard.billKey);
+
+                    addCompositeDisposable(mPaymentRemoteImpl.getStayOutboundPaymentTypeEasy(mStayIndex, jsonObject).subscribe(new Consumer<PaymentResult>()
                     {
                         @Override
                         public void accept(@io.reactivex.annotations.NonNull PaymentResult paymentResult) throws Exception
@@ -1038,9 +1067,9 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 {
                     final String PAYMENT_TYPE = "CREDIT_CARD";
 
-                    JSONObject jsonObject = getPaymentJSONObject(PAYMENT_TYPE, mStayBookDateTime, mStayIndex//
+                    JSONObject jsonObject = getPaymentJSONObject(PAYMENT_TYPE, mStayBookDateTime//
                         , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople//
-                        , mBonusSelected, mUserSimpleInformation.bonus, mGuest, mStayOutboundPayment.totalPrice, mVendorType);
+                        , mSaleType, mUserSimpleInformation.bonus, mGuest, mStayOutboundPayment.totalPrice, mVendorType, null);
 
                     startActivityForResult(PaymentWebActivity.newInstance(getActivity()//
                         , getWebPaymentUrl(mStayIndex, "card"), jsonObject.toString(), AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_PROCESS_OUTBOUND)//
@@ -1054,9 +1083,9 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 {
                     final String PAYMENT_TYPE = "MOBILE_PHONE";
 
-                    JSONObject jsonObject = getPaymentJSONObject(PAYMENT_TYPE, mStayBookDateTime, mStayIndex//
+                    JSONObject jsonObject = getPaymentJSONObject(PAYMENT_TYPE, mStayBookDateTime//
                         , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople//
-                        , mBonusSelected, mUserSimpleInformation.bonus, mGuest, mStayOutboundPayment.totalPrice, mVendorType);
+                        , mSaleType, mUserSimpleInformation.bonus, mGuest, mStayOutboundPayment.totalPrice, mVendorType, null);
 
                     startActivityForResult(PaymentWebActivity.newInstance(getActivity()//
                         , getWebPaymentUrl(mStayIndex, "mobile"), jsonObject.toString(), AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_PROCESS_OUTBOUND)//
@@ -1077,7 +1106,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         String descriptionTitle;
         String descriptionMessage;
 
-        if (mDepositStickerSelected == true)
+        if (mSaleType == STICKER)
         {
             descriptionTitle = getString(R.string.message_payment_reward_sticker_deposit_after_checkout, mStayBookDateTime.getNights());
             descriptionMessage = null;
@@ -1099,18 +1128,18 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mStayOutboundPayment.checkInTime, mStayOutboundPayment.checkOutTime, mRoomType, aggregationId//
             , descriptionTitle, descriptionMessage//
-            , mAnalytics.getThankYouAnalyticsParam(mPaymentType, fullBonus, mBonusSelected, mSelectedCard != null, mStayIndex)) //
+            , mAnalytics.getThankYouAnalyticsParam(mPaymentType, fullBonus, mSaleType, mSelectedCard != null, mStayIndex)) //
             , StayOutboundPaymentActivity.REQUEST_CODE_THANK_YOU);
 
         mAnalytics.onScreenPaymentCompleted(getActivity(), mStayOutboundPayment, mStayBookDateTime, mStayName//
-            , mPaymentType, mBonusSelected, mSelectedCard != null, mUserSimpleInformation, aggregationId);
+            , mPaymentType, mSaleType, mSelectedCard != null, mUserSimpleInformation, aggregationId);
         mAnalytics.onEventEndPayment(getActivity(), mPaymentType);
         mAnalytics.onEventVendorType(getActivity(), mStayIndex, mVendorType);
     }
 
-    private JSONObject getPaymentJSONObject(String paymentType, StayBookDateTime stayBookDateTime, int index//
+    private JSONObject getPaymentJSONObject(String paymentType, StayBookDateTime stayBookDateTime//
         , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people//
-        , boolean usedBonus, int bonus, OverseasGuest guest, int totalPrice, String vendorType)
+        , int saleType, int bonus, OverseasGuest guest, int totalPrice, String vendorType, String billingKey)
     {
         JSONObject jsonObject = new JSONObject();
 
@@ -1126,7 +1155,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             jsonObject.put("rateKey", rateKey);
             jsonObject.put("roomTypeCode", roomTypeCode);
 
-            if (usedBonus == true)
+            if (saleType == BONUS)
             {
                 jsonObject.put("bonusAmount", bonus > totalPrice ? totalPrice : bonus);
             }
@@ -1135,9 +1164,19 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             jsonObject.put("lastName", guest.lastName);
             jsonObject.put("email", guest.email);
             jsonObject.put("phoneNumber", guest.phone.replace("-", ""));
-            jsonObject.put("paymentType", paymentType);
+
+            if (DailyTextUtils.isTextEmpty(paymentType) == false)
+            {
+                jsonObject.put("paymentType", paymentType);
+            }
+
             jsonObject.put("total", totalPrice);
             jsonObject.put("vendorType", vendorType);
+
+            if (DailyTextUtils.isTextEmpty(billingKey) == false)
+            {
+                jsonObject.put("billingKey", billingKey);
+            }
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -1287,9 +1326,9 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 getViewInterface().setDepositStickerVisible(true);
                 getViewInterface().setDepositStickerCardVisible(true);
 
-                if (mBonusSelected == false && mDepositStickerSelected == false)
+                if (mSaleType == NONE)
                 {
-                    setDepositStickerSelected(true);
+                    setSaleType(BONUS);
                 }
             } else
             {
@@ -1327,7 +1366,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         {
             int paymentPrice, discountPrice;
 
-            if (mBonusSelected == true)
+            if (mSaleType == BONUS)
             {
                 paymentPrice = mStayOutboundPayment.totalPrice - mUserSimpleInformation.bonus;
                 discountPrice = paymentPrice < 0 ? mStayOutboundPayment.totalPrice : mUserSimpleInformation.bonus;
@@ -1473,7 +1512,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     }
                 }
 
-                if (mDepositStickerSelected == true)
+                if (mSaleType == STICKER)
                 {
                     getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.PHONE, false);
 
@@ -1600,14 +1639,9 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         }
     }
 
-    void setBonusSelected(boolean selected)
+    void setSaleType(int saleType)
     {
-        mBonusSelected = selected;
-    }
-
-    void setDepositStickerSelected(boolean selected)
-    {
-        mDepositStickerSelected = selected;
+        mSaleType = saleType;
     }
 
     private void setSelectCard(String cardName, String cardNumber, String cardBillingKey, String cardCd)
@@ -1780,7 +1814,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             return;
         }
 
-        if (mDepositStickerSelected == true)
+        if (mSaleType == STICKER)
         {
             getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage()//
                 , stayOutboundPayment.rewardStickerCount, null, getString(R.string.message_payment_reward_sticker_deposit_after_checkout, stayBookDateTime.getNights()));

@@ -110,7 +110,7 @@ public class StayPaymentAnalyticsImpl implements StayPaymentPresenter.StayPaymen
     @Override
     public void onScreenAgreeTermDialog(Activity activity, StayBookDateTime stayBookDateTime//
         , int stayIndex, String stayName, int roomIndex, String roomName, String category//
-        , StayPayment stayPayment, boolean registerEasyCard, boolean usedBonus, boolean usedCoupon, Coupon coupon//
+        , StayPayment stayPayment, boolean registerEasyCard, int saleType, Coupon coupon//
         , DailyBookingPaymentTypeView.PaymentType paymentType, UserSimpleInformation userSimpleInformation)
     {
         if (activity == null || mAnalyticsParam == null)
@@ -152,37 +152,48 @@ public class StayPaymentAnalyticsImpl implements StayPaymentPresenter.StayPaymen
             // 여기까지 onScreen과 다름.
             mPaymentParamMap.put(AnalyticsManager.KeyType.PLACE_COUNT, Integer.toString(mAnalyticsParam.totalListCount));
 
-            if (usedBonus == true)
+            switch (saleType)
             {
-                int paymentPrice = stayPayment.totalPrice - userSimpleInformation.bonus;
-                int discountPrice = paymentPrice < 0 ? stayPayment.totalPrice : userSimpleInformation.bonus;
+                case StayPaymentPresenter.BONUS:
+                {
+                    int paymentPrice = stayPayment.totalPrice - userSimpleInformation.bonus;
+                    int discountPrice = paymentPrice < 0 ? stayPayment.totalPrice : userSimpleInformation.bonus;
 
-                mPaymentParamMap.put(AnalyticsManager.KeyType.USED_BOUNS, Integer.toString(discountPrice));
-                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_REDEEM, "false");
-                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_NAME, "");
-                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_CODE, "");
-                mPaymentParamMap.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(paymentPrice < 0 ? 0 : paymentPrice));
-            } else if (usedCoupon == true)
-            {
-                int paymentPrice = stayPayment.totalPrice - coupon.amount;
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.USED_BOUNS, Integer.toString(discountPrice));
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_REDEEM, "false");
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_NAME, "");
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_CODE, "");
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(paymentPrice < 0 ? 0 : paymentPrice));
+                    break;
+                }
 
-                mPaymentParamMap.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
-                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_REDEEM, "true");
-                mPaymentParamMap.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(paymentPrice < 0 ? 0 : paymentPrice));
-                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_NAME, coupon.title);
-                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_CODE, coupon.couponCode);
-                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_AVAILABLE_ITEM, coupon.availableItem);
-                mPaymentParamMap.put(AnalyticsManager.KeyType.PRICE_OFF, Integer.toString(coupon.amount));
+                case StayPaymentPresenter.COUPON:
+                {
+                    int paymentPrice = stayPayment.totalPrice - coupon.amount;
 
-                String expireDate = DailyCalendar.convertDateFormatString(coupon.validTo, DailyCalendar.ISO_8601_FORMAT, "yyyyMMddHHmm");
-                mPaymentParamMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, expireDate);
-            } else
-            {
-                mPaymentParamMap.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
-                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_REDEEM, "false");
-                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_NAME, "");
-                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_CODE, "");
-                mPaymentParamMap.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(stayPayment.totalPrice));
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_REDEEM, "true");
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(paymentPrice < 0 ? 0 : paymentPrice));
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_NAME, coupon.title);
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_CODE, coupon.couponCode);
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_AVAILABLE_ITEM, coupon.availableItem);
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.PRICE_OFF, Integer.toString(coupon.amount));
+
+                    String expireDate = DailyCalendar.convertDateFormatString(coupon.validTo, DailyCalendar.ISO_8601_FORMAT, "yyyyMMddHHmm");
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, expireDate);
+                    break;
+                }
+
+                case StayPaymentPresenter.STICKER:
+                default:
+                {
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_REDEEM, "false");
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_NAME, "");
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_CODE, "");
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(stayPayment.totalPrice));
+                    break;
+                }
             }
 
             mPaymentParamMap.put(AnalyticsManager.KeyType.PAYMENT_TYPE, getPaymentType(paymentType));

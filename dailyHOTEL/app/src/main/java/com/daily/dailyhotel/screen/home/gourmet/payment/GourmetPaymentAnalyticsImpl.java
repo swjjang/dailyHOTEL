@@ -76,7 +76,7 @@ public class GourmetPaymentAnalyticsImpl implements GourmetPaymentPresenter.Gour
     @Override
     public void onScreenAgreeTermDialog(Activity activity, String visitDateTime, int gourmetIndex//
         , String gourmetName, int menuIndex, String menuName, int menuCount, String category//
-        , GourmetPayment gourmetPayment, boolean registerEasyCard, boolean usedBonus, boolean usedCoupon//
+        , GourmetPayment gourmetPayment, boolean registerEasyCard, int saleType//
         , Coupon coupon, DailyBookingPaymentTypeView.PaymentType paymentType, UserSimpleInformation userSimpleInformation)
     {
         if (activity == null || mAnalyticsParam == null)
@@ -111,32 +111,39 @@ public class GourmetPaymentAnalyticsImpl implements GourmetPaymentPresenter.Gour
             mPaymentParamMap.put(AnalyticsManager.KeyType.DISTRICT, mAnalyticsParam.getAnalyticsDistrictName());
             mPaymentParamMap.put(AnalyticsManager.KeyType.AREA, mAnalyticsParam.getAnalyticsAddressAreaName());
 
-            if (usedBonus == true)
+            switch (saleType)
             {
+                case GourmetPaymentPresenter.BONUS:
+                    break;
 
-            } else if (usedCoupon == true)
-            {
-                int paymentPrice = gourmetPayment.totalPrice * menuCount - coupon.amount;
+                case GourmetPaymentPresenter.COUPON:
+                {
+                    int paymentPrice = gourmetPayment.totalPrice * menuCount - coupon.amount;
 
-                mPaymentParamMap.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
-                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_REDEEM, "true");
-                mPaymentParamMap.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(paymentPrice < 0 ? 0 : paymentPrice));
-                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_NAME, coupon.title);
-                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_CODE, coupon.couponCode);
-                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_AVAILABLE_ITEM, coupon.availableItem);
-                mPaymentParamMap.put(AnalyticsManager.KeyType.PRICE_OFF, Integer.toString(coupon.amount));
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_REDEEM, "true");
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(paymentPrice < 0 ? 0 : paymentPrice));
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_NAME, coupon.title);
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_CODE, coupon.couponCode);
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_AVAILABLE_ITEM, coupon.availableItem);
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.PRICE_OFF, Integer.toString(coupon.amount));
 
-                String expireDate = DailyCalendar.convertDateFormatString(coupon.validTo, DailyCalendar.ISO_8601_FORMAT, "yyyyMMddHHmm");
-                mPaymentParamMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, expireDate);
-            } else
-            {
-                int paymentPrice = gourmetPayment.totalPrice * menuCount;
+                    String expireDate = DailyCalendar.convertDateFormatString(coupon.validTo, DailyCalendar.ISO_8601_FORMAT, "yyyyMMddHHmm");
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, expireDate);
+                    break;
+                }
 
-                mPaymentParamMap.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
-                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_REDEEM, "false");
-                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_NAME, "");
-                mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_CODE, "");
-                mPaymentParamMap.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(paymentPrice));
+                default:
+                {
+                    int paymentPrice = gourmetPayment.totalPrice * menuCount;
+
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_REDEEM, "false");
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_NAME, "");
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_CODE, "");
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(paymentPrice));
+                    break;
+                }
             }
 
             mPaymentParamMap.put(AnalyticsManager.KeyType.VISIT_DATE, DailyCalendar.convertDateFormatString(visitDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));

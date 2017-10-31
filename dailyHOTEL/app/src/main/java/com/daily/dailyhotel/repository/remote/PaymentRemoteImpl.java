@@ -4,13 +4,11 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.daily.base.exception.BaseException;
-import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.PaymentInterface;
 import com.daily.dailyhotel.entity.Card;
 import com.daily.dailyhotel.entity.DomesticGuest;
 import com.daily.dailyhotel.entity.GourmetPayment;
-import com.daily.dailyhotel.entity.OverseasGuest;
 import com.daily.dailyhotel.entity.PaymentResult;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
@@ -211,45 +209,8 @@ public class PaymentRemoteImpl implements PaymentInterface
     }
 
     @Override
-    public Observable<PaymentResult> getStayOutboundPaymentTypeEasy(StayBookDateTime stayBookDateTime, int index//
-        , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people//
-        , boolean usedBonus, int bonus, OverseasGuest guest, int totalPrice, String billingKey, String vendorType)
+    public Observable<PaymentResult> getStayOutboundPaymentTypeEasy(int index, JSONObject jsonObject)
     {
-        JSONObject jsonObject = new JSONObject();
-
-        final int NUMBER_OF_ROOMS = 1;
-        final String PAYMENT_TYPE = "ONE_CLICK";
-
-        try
-        {
-            jsonObject.put("arrivalDate", stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
-            jsonObject.put("departureDate", stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd"));
-            jsonObject.put("numberOfRooms", NUMBER_OF_ROOMS);
-            jsonObject.put("rooms", getRooms(new People[]{people}, new int[]{roomBedTypeId}));
-            jsonObject.put("rateCode", rateCode);
-            jsonObject.put("rateKey", rateKey);
-            jsonObject.put("roomTypeCode", roomTypeCode);
-
-            if (usedBonus == true)
-            {
-                jsonObject.put("bonusAmount", bonus);
-            }
-
-            jsonObject.put("firstName", guest.firstName);
-            jsonObject.put("lastName", guest.lastName);
-            jsonObject.put("email", guest.email);
-            jsonObject.put("phoneNumber", guest.phone.replace("-", ""));
-            jsonObject.put("paymentType", PAYMENT_TYPE);
-            jsonObject.put("total", totalPrice);
-            jsonObject.put("billingKey", billingKey);
-            jsonObject.put("vendorType", vendorType);
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-
-            jsonObject = null;
-        }
-
         return DailyMobileAPI.getInstance(mContext).getStayOutboundPaymentTypeEasy(index, jsonObject).map(paymentResultDataBaseDto ->
         {
             PaymentResult paymentResult = null;
@@ -273,44 +234,8 @@ public class PaymentRemoteImpl implements PaymentInterface
     }
 
     @Override
-    public Observable<PaymentResult> getStayOutboundPaymentTypeBonus(StayBookDateTime stayBookDateTime, int index//
-        , String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId, People people//
-        , boolean usedBonus, int bonus, OverseasGuest guest, int totalPrice, String vendorType)
+    public Observable<PaymentResult> getStayOutboundPaymentTypeBonus(int index, JSONObject jsonObject)
     {
-        JSONObject jsonObject = new JSONObject();
-
-        final int NUMBER_OF_ROOMS = 1;
-        final String PAYMENT_TYPE = "BONUS";
-
-        try
-        {
-            jsonObject.put("arrivalDate", stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
-            jsonObject.put("departureDate", stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd"));
-            jsonObject.put("numberOfRooms", NUMBER_OF_ROOMS);
-            jsonObject.put("rooms", getRooms(new People[]{people}, new int[]{roomBedTypeId}));
-            jsonObject.put("rateCode", rateCode);
-            jsonObject.put("rateKey", rateKey);
-            jsonObject.put("roomTypeCode", roomTypeCode);
-
-            if (usedBonus == true)
-            {
-                jsonObject.put("bonusAmount", bonus > totalPrice ? totalPrice : bonus);
-            }
-
-            jsonObject.put("firstName", guest.firstName);
-            jsonObject.put("lastName", guest.lastName);
-            jsonObject.put("email", guest.email);
-            jsonObject.put("phoneNumber", guest.phone.replace("-", ""));
-            jsonObject.put("paymentType", PAYMENT_TYPE);
-            jsonObject.put("total", totalPrice);
-            jsonObject.put("vendorType", vendorType);
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-
-            jsonObject = null;
-        }
-
         return DailyMobileAPI.getInstance(mContext).getStayOutboundPaymentTypeBonus(index, jsonObject).map(paymentResultDataBaseDto ->
         {
             PaymentResult paymentResult = null;
@@ -334,42 +259,8 @@ public class PaymentRemoteImpl implements PaymentInterface
     }
 
     @Override
-    public Observable<String> getStayOutboundHasDuplicatePayment(StayBookDateTime stayBookDateTime//
-        , int index, String rateCode, String rateKey, String roomTypeCode, int roomBedTypeId//
-        , People people, boolean usedBonus, int bonus, OverseasGuest guest, int totalPrice, String vendorType)
+    public Observable<String> getStayOutboundHasDuplicatePayment(int index, JSONObject jsonObject)
     {
-        JSONObject jsonObject = new JSONObject();
-
-        final int NUMBER_OF_ROOMS = 1;
-
-        try
-        {
-            jsonObject.put("arrivalDate", stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
-            jsonObject.put("departureDate", stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd"));
-            jsonObject.put("numberOfRooms", NUMBER_OF_ROOMS);
-            jsonObject.put("rooms", getRooms(new People[]{people}, new int[]{roomBedTypeId}));
-            jsonObject.put("rateCode", rateCode);
-            jsonObject.put("rateKey", rateKey);
-            jsonObject.put("roomTypeCode", roomTypeCode);
-
-            if (usedBonus == true)
-            {
-                jsonObject.put("bonusAmount", bonus > totalPrice ? totalPrice : bonus);
-            }
-
-            jsonObject.put("firstName", guest.firstName);
-            jsonObject.put("lastName", guest.lastName);
-            jsonObject.put("email", guest.email);
-            jsonObject.put("phoneNumber", guest.phone.replace("-", ""));
-            jsonObject.put("total", totalPrice);
-            jsonObject.put("vendorType", vendorType);
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-
-            jsonObject = null;
-        }
-
         return DailyMobileAPI.getInstance(mContext).getStayOutboundHasDuplicatePayment(index, jsonObject).map(new Function<BaseDto<String>, String>()
         {
             @Override
@@ -397,54 +288,8 @@ public class PaymentRemoteImpl implements PaymentInterface
     }
 
     @Override
-    public Observable<PaymentResult> getStayPaymentTypeEasy(StayBookDateTime stayBookDateTime, int roomIndex//
-        , boolean usedBonus, int bonus, boolean usedCoupon, String couponCode, DomesticGuest guest//
-        , int totalPrice, String transportation, String billingKey)
+    public Observable<PaymentResult> getStayPaymentTypeEasy(JSONObject jsonObject)
     {
-        JSONObject jsonObject = new JSONObject();
-
-        try
-        {
-            jsonObject.put("billingKey", billingKey);
-
-            if (usedBonus == true)
-            {
-                jsonObject.put("bonusAmount", bonus > totalPrice ? totalPrice : bonus);
-            } else
-            {
-                jsonObject.put("bonusAmount", 0);
-            }
-
-            jsonObject.put("checkInDate", stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
-            jsonObject.put("days", stayBookDateTime.getNights());
-
-            if (usedCoupon == true)
-            {
-                jsonObject.put("couponCode", couponCode);
-            }
-
-            jsonObject.put("roomIdx", roomIndex);
-
-            JSONObject bookingGuestJSONObject = new JSONObject();
-            bookingGuestJSONObject.put("arrivalDateTime", stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT));
-
-            if (DailyTextUtils.isTextEmpty(transportation) == false)
-            {
-                bookingGuestJSONObject.put("arrivalType", transportation);
-            }
-
-            bookingGuestJSONObject.put("email", guest.email);
-            bookingGuestJSONObject.put("name", guest.name);
-            bookingGuestJSONObject.put("phone", guest.phone);
-
-            jsonObject.put("bookingGuest", bookingGuestJSONObject);
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-
-            jsonObject = null;
-        }
-
         return DailyMobileAPI.getInstance(mContext).getStayPaymentTypeEasy(jsonObject).map(paymentResultDataBaseDto ->
         {
             PaymentResult paymentResult = null;
@@ -468,51 +313,8 @@ public class PaymentRemoteImpl implements PaymentInterface
     }
 
     @Override
-    public Observable<PaymentResult> getStayPaymentTypeBonus(StayBookDateTime stayBookDateTime, int roomIndex//
-        , boolean usedBonus, int bonus, boolean usedCoupon, String couponCode, DomesticGuest guest, int totalPrice, String transportation)
+    public Observable<PaymentResult> getStayPaymentTypeBonus(JSONObject jsonObject)
     {
-        JSONObject jsonObject = new JSONObject();
-
-        try
-        {
-            if (usedBonus == true)
-            {
-                jsonObject.put("bonusAmount", bonus > totalPrice ? totalPrice : bonus);
-            } else
-            {
-                jsonObject.put("bonusAmount", 0);
-            }
-
-            jsonObject.put("checkInDate", stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
-            jsonObject.put("days", stayBookDateTime.getNights());
-
-            if (usedCoupon == true)
-            {
-                jsonObject.put("couponCode", couponCode);
-            }
-
-            jsonObject.put("roomIdx", roomIndex);
-
-            JSONObject bookingGuestJSONObject = new JSONObject();
-            bookingGuestJSONObject.put("arrivalDateTime", stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT));
-
-            if (DailyTextUtils.isTextEmpty(transportation) == false)
-            {
-                bookingGuestJSONObject.put("arrivalType", transportation);
-            }
-
-            bookingGuestJSONObject.put("email", guest.email);
-            bookingGuestJSONObject.put("name", guest.name);
-            bookingGuestJSONObject.put("phone", guest.phone);
-
-            jsonObject.put("bookingGuest", bookingGuestJSONObject);
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-
-            jsonObject = null;
-        }
-
         return DailyMobileAPI.getInstance(mContext).getStayPaymentTypeBonus(jsonObject).map(paymentResultDataBaseDto ->
         {
             PaymentResult paymentResult = null;
@@ -607,47 +409,8 @@ public class PaymentRemoteImpl implements PaymentInterface
      * @return
      */
     @Override
-    public Observable<PaymentResult> getGourmetPaymentTypeEasy(String arrivalDateTime, int menuIndex//
-        , int menuCount, boolean usedBonus, int bonus, boolean usedCoupon, String couponCode, DomesticGuest guest//
-        , int totalPrice, String billingKey)
+    public Observable<PaymentResult> getGourmetPaymentTypeEasy(JSONObject jsonObject)
     {
-        JSONObject jsonObject = new JSONObject();
-
-        try
-        {
-            jsonObject.put("billingKey", billingKey);
-
-            if (usedBonus == true)
-            {
-                jsonObject.put("bonusAmount", bonus > totalPrice ? totalPrice : bonus);
-            } else
-            {
-                jsonObject.put("bonusAmount", 0);
-            }
-
-            if (usedCoupon == true)
-            {
-                jsonObject.put("couponCode", couponCode);
-            }
-
-            jsonObject.put("saleRecoIdx", menuIndex);
-            jsonObject.put("ticketCount", menuCount);
-
-            JSONObject bookingGuestJSONObject = new JSONObject();
-            bookingGuestJSONObject.put("arrivalDateTime", arrivalDateTime);
-
-            bookingGuestJSONObject.put("email", guest.email);
-            bookingGuestJSONObject.put("name", guest.name);
-            bookingGuestJSONObject.put("phone", guest.phone);
-
-            jsonObject.put("bookingGuest", bookingGuestJSONObject);
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-
-            jsonObject = null;
-        }
-
         return DailyMobileAPI.getInstance(mContext).getGourmetPaymentTypeEasy(jsonObject).map(paymentResultDataBaseDto ->
         {
             PaymentResult paymentResult = null;
@@ -683,45 +446,8 @@ public class PaymentRemoteImpl implements PaymentInterface
      * @return
      */
     @Override
-    public Observable<PaymentResult> getGourmetPaymentTypeBonus(String arrivalDateTime, int menuIndex//
-        , int menuCount, boolean usedBonus, int bonus, boolean usedCoupon, String couponCode//
-        , DomesticGuest guest, int totalPrice)
+    public Observable<PaymentResult> getGourmetPaymentTypeBonus(JSONObject jsonObject)
     {
-        JSONObject jsonObject = new JSONObject();
-
-        try
-        {
-            if (usedBonus == true)
-            {
-                jsonObject.put("bonusAmount", bonus > totalPrice ? totalPrice : bonus);
-            } else
-            {
-                jsonObject.put("bonusAmount", 0);
-            }
-
-            if (usedCoupon == true)
-            {
-                jsonObject.put("couponCode", couponCode);
-            }
-
-            jsonObject.put("saleRecoIdx", menuIndex);
-            jsonObject.put("ticketCount", menuCount);
-
-            JSONObject bookingGuestJSONObject = new JSONObject();
-            bookingGuestJSONObject.put("arrivalDateTime", arrivalDateTime);
-
-            bookingGuestJSONObject.put("email", guest.email);
-            bookingGuestJSONObject.put("name", guest.name);
-            bookingGuestJSONObject.put("phone", guest.phone);
-
-            jsonObject.put("bookingGuest", bookingGuestJSONObject);
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-
-            jsonObject = null;
-        }
-
         return DailyMobileAPI.getInstance(mContext).getGourmetPaymentTypeBonus(jsonObject).map(paymentResultDataBaseDto ->
         {
             PaymentResult paymentResult = null;
