@@ -10,6 +10,12 @@ import android.os.Parcelable;
  */
 public class Coupon implements Parcelable
 {
+    public enum Type
+    {
+        NORMAL,
+        REWARD
+    }
+
     public String userCouponCode; // (구 유저 쿠폰 코드 (이벤트 페이지의 쿠폰코드와 틀림),,
     public int amount; // 쿠폰금액 ,,,
     public String title; // 쿠폰명 ,,,
@@ -33,7 +39,7 @@ public class Coupon implements Parcelable
     public boolean isRedeemed; // 이미 사용한 쿠폰인지 여부
     public boolean isExpired; // 만료된 쿠폰인지 여부
 
-    public boolean rewardCoupon;
+    public Type type;
 
     public Coupon(Parcel in)
     {
@@ -52,7 +58,7 @@ public class Coupon implements Parcelable
                   //                  String downloadedAt, boolean availableInDomestic, boolean availableInOverseas, //
                   //                  boolean availableInStay, boolean availableInGourmet)
                   String downloadedAt, String disabledAt, boolean availableInDomestic, boolean availableInOverseas, //
-                  boolean availableInStay, boolean availableInGourmet, boolean isRedeemed, boolean isExpired, boolean rewardCoupon)
+                  boolean availableInStay, boolean availableInGourmet, boolean isRedeemed, boolean isExpired, Coupon.Type couponType)
     {
         this.userCouponCode = userCouponCode;
         this.amount = amount;
@@ -74,7 +80,7 @@ public class Coupon implements Parcelable
         this.availableInGourmet = availableInGourmet;
         this.isRedeemed = isRedeemed;
         this.isExpired = isExpired;
-        this.rewardCoupon = rewardCoupon;
+        this.type = couponType;
     }
 
     @Override
@@ -100,7 +106,11 @@ public class Coupon implements Parcelable
         dest.writeInt(availableInGourmet == true ? 1 : 0);
         dest.writeInt(isRedeemed == true ? 1 : 0);
         dest.writeInt(isExpired == true ? 1 : 0);
-        dest.writeInt(rewardCoupon == true ? 1 : 0);
+
+        if (type != null)
+        {
+            dest.writeString(type.name());
+        }
     }
 
     public void readFromParcel(Parcel in)
@@ -125,7 +135,14 @@ public class Coupon implements Parcelable
         availableInGourmet = in.readInt() == 1;
         isRedeemed = in.readInt() == 1;
         isExpired = in.readInt() == 1;
-        rewardCoupon = in.readInt() == 1;
+
+        try
+        {
+            type = Type.valueOf(in.readString());
+        } catch (Exception e)
+        {
+            type = Type.NORMAL;
+        }
     }
 
     @Override

@@ -1640,7 +1640,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                     discountPrice = paymentPrice < 0 ? mStayPayment.totalPrice : mSelectedCoupon.amount;
 
                     getViewInterface().setBonus(false, mUserSimpleInformation.bonus, 0);
-                    getViewInterface().setCoupon(true, mSelectedCoupon.amount, mSelectedCoupon.rewardCoupon);
+                    getViewInterface().setCoupon(true, mSelectedCoupon.amount, mSelectedCoupon.type == Coupon.Type.REWARD);
                     getViewInterface().setDepositSticker(false);
                     break;
 

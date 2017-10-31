@@ -202,7 +202,15 @@ public class CouponUtil
             availableInGourmet = jsonObject.getBoolean(Type.AVAILABLE_IN_GOURMET);
         }
 
-        boolean rewardCoupon = false;
+        Coupon.Type couponType;
+
+        try
+        {
+            couponType = Coupon.Type.valueOf(jsonObject.getString("couponType"));
+        }catch (Exception e)
+        {
+            couponType = Coupon.Type.NORMAL;
+        }
 
         //            if (jsonObject.has(Type.IS_REDEEMED))
         //            {
@@ -224,7 +232,7 @@ public class CouponUtil
             validTo, amountMinimum, isDownloaded, availableItem, //
             serverDate, couponCode, stayFrom, stayTo, //
             downloadedAt, null, availableInDomestic, availableInOverseas, //
-            availableInHotel, availableInGourmet, false, false, rewardCoupon);
+            availableInHotel, availableInGourmet, false, false, couponType);
 
         return coupon;
     }

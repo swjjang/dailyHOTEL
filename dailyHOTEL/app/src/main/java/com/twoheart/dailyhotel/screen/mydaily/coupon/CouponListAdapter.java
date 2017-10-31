@@ -160,7 +160,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 return;
             }
 
-            dataBinding.couponPriceTextView.setCompoundDrawablesWithIntrinsicBounds(coupon.rewardCoupon ? R.drawable.vector_r_ic_s_17 : 0, 0, 0, 0);
+            dataBinding.couponPriceTextView.setCompoundDrawablesWithIntrinsicBounds(coupon.type == Coupon.Type.REWARD ? R.drawable.vector_r_ic_s_17 : 0, 0, 0, 0);
 
             String strAmount = DailyTextUtils.getPriceFormat(mContext, coupon.amount, false);
             dataBinding.couponPriceTextView.setText(strAmount);
