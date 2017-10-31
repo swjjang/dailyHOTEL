@@ -38,4 +38,8 @@ public interface StayOutboundBookingDetailInterface extends BaseDialogViewInterf
     void setBookingDetailMapToolbar();
 
     void setDeleteBookingVisible(int bookingState);
+
+    void setDepositStickerCardVisible(boolean visible);
+
+    void setDepositStickerCard(String titleText, int nights);
 }

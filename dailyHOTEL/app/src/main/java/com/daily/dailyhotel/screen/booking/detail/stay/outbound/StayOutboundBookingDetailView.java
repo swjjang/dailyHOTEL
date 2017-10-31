@@ -558,9 +558,15 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
         if (refundPolicyList == null || refundPolicyList.size() == 0)
         {
             setRefundLayoutVisible(false);
+
+            // 해당 카테고리가 없으면 번호가 바뀐다.
+            getViewDataBinding().depositStickerTextView.setText("3." + getString(R.string.label_booking_used_deposit_sticker));
         } else
         {
             setRefundLayoutVisible(true);
+
+            // 해당 카테고리가 없으면 번호가 바뀐다.
+            getViewDataBinding().depositStickerTextView.setText("4." + getString(R.string.label_booking_used_deposit_sticker));
 
             mBookingDetail03DataBinding.defaultRefundPolicyLayout.removeAllViews();
 
@@ -734,7 +740,8 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
         if (Booking.BOOKING_STATE_CANCEL == bookingState)
         {
             getViewDataBinding().deleteReservationTextView.setText(R.string.label_booking_cancel_detail_delete_reservation);
-        } else {
+        } else
+        {
             getViewDataBinding().deleteReservationTextView.setText(R.string.label_booking_detail_delete_reservation);
         }
 
@@ -771,6 +778,34 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
                 getViewDataBinding().deleteReservationTextView.requestLayout();
             }
         }
+    }
+
+    @Override
+    public void setDepositStickerCardVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().rewardCardLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setDepositStickerCard(String titleText, int nights)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().rewardCardView.setGuideVisible(false);
+        getViewDataBinding().rewardCardView.setOptionVisible(false);
+        getViewDataBinding().rewardCardView.setRewardTitleText(titleText);
+        getViewDataBinding().rewardCardView.setStickerCount(nights);
+
+        // 한번 호출하면 복구 불가
+        getViewDataBinding().rewardCardView.setEmptyMiddleArrange();
     }
 
     @Override

@@ -40,6 +40,7 @@ import com.daily.dailyhotel.screen.booking.detail.map.GourmetBookingDetailMapAct
 import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
@@ -1060,6 +1061,14 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
             }
 
             mPlaceReservationDetailLayout.setDeleteReservationVisible(mBookingState);
+
+            // Reward
+            ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setDepositStickerCardVisible(stayBookingDetail.activeReward);
+
+            if (stayBookingDetail.activeReward == true)
+            {
+                ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setDepositStickerCard(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigRewardStickerTitleMessage(), stayBookingDetail.rewardStickerCount);
+            }
 
             long currentDateTime = DailyCalendar.convertStringToDate(mTodayDateTime.currentDateTime).getTime();
             long checkInDateTime = DailyCalendar.convertStringToDate(stayBookingDetail.checkInDate).getTime();

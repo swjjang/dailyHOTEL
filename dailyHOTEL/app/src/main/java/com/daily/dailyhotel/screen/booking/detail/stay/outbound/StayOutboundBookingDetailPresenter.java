@@ -34,6 +34,7 @@ import com.daily.dailyhotel.screen.booking.detail.stay.outbound.refund.StayOutbo
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.twoheart.dailyhotel.R;
@@ -790,6 +791,14 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
             int nights = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkOutDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
                 , DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
             getViewInterface().setBookingDate(checkInDateSpannableString, checkOutDateSpannableString, nights);
+
+            // Reward
+            getViewInterface().setDepositStickerCardVisible(mStayOutboundBookingDetail.activeReward);
+
+            if (mStayOutboundBookingDetail.activeReward == true)
+            {
+                getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage(), mStayOutboundBookingDetail.rewardStickerCount);
+            }
         } catch (Exception e)
         {
             ExLog.d(e.toString());

@@ -16,6 +16,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.CarouselListItem;
+import com.daily.dailyhotel.view.DailyRewardCardView;
 import com.daily.dailyhotel.view.carousel.DailyCarouselLayout;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
@@ -38,6 +39,8 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
     private View mRecommendGourmetButtonView;
     View mRecommendGourmetItemLayout;
     private DailyCarouselLayout mRecommendGourmetCarouselLayout;
+    private DailyRewardCardView mRewardCardView;
+    private View mRewardCardLayout;
     private ObjectAnimator mRecommendGourmetButtonAnimator;
 
     public interface OnEventListener extends PlaceReservationDetailLayout.OnEventListener
@@ -71,6 +74,9 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
         });
 
         mRecommendGourmetItemLayout = view.findViewById(R.id.recommendGourmetLayout);
+
+        mRewardCardLayout = view.findViewById(R.id.rewardCardLayout);
+        mRewardCardView = (DailyRewardCardView) view.findViewById(R.id.rewardCardView);
 
         mRecommendGourmetCarouselLayout = (DailyCarouselLayout) view.findViewById(R.id.recommendGourmetCarouselLayout);
 
@@ -379,7 +385,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
         updateRefundPolicyLayout(stayBookingDetail);
     }
 
-    public void updateRefundPolicyLayout(StayBookingDetail stayBookingDetail)
+    private void updateRefundPolicyLayout(StayBookingDetail stayBookingDetail)
     {
         TextView refundPolicyTextView = (TextView) mRefundPolicyLayout.findViewById(R.id.refundPolicyTextView);
 
@@ -396,9 +402,17 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
         if (stayBookingDetail.isVisibleRefundPolicy == false)
         {
             setRefundLayoutVisible(false);
+
+            // 해당 카테고리가 없으면 번호가 바뀐다.
+            TextView depositStickerTextView = (TextView) mRewardCardLayout.findViewById(R.id.depositStickerTextView);
+            depositStickerTextView.setText("3." + mContext.getString(R.string.label_booking_used_deposit_sticker));
         } else
         {
             setRefundLayoutVisible(true);
+
+            // 해당 카테고리가 없으면 번호가 바뀐다.
+            TextView depositStickerTextView = (TextView) mRewardCardLayout.findViewById(R.id.depositStickerTextView);
+            depositStickerTextView.setText("4." + mContext.getString(R.string.label_booking_used_deposit_sticker));
 
             switch (getRefundPolicyStatus(stayBookingDetail))
             {
@@ -595,5 +609,31 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
         {
             setRecommendGourmetButtonAnimation(true);
         }
+    }
+
+    public void setDepositStickerCardVisible(boolean visible)
+    {
+        if (mRewardCardLayout == null)
+        {
+            return;
+        }
+
+        mRewardCardLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    public void setDepositStickerCard(String titleText, int nights)
+    {
+        if (mRewardCardView == null)
+        {
+            return;
+        }
+
+        mRewardCardView.setGuideVisible(false);
+        mRewardCardView.setOptionVisible(false);
+        mRewardCardView.setRewardTitleText(titleText);
+        mRewardCardView.setStickerCount(nights);
+
+        // 한번 호출하면 복구 불가
+        mRewardCardView.setEmptyMiddleArrange();
     }
 }

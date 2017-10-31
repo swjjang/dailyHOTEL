@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.daily.base.util.FontManager;
+import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyImageView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.DailyViewRewardCardDataBinding;
@@ -482,5 +483,21 @@ public class DailyRewardCardView extends ConstraintLayout
 
         mStickerAnimatorSet.cancel();
         mStickerAnimatorSet = null;
+    }
+
+    /**
+     * 강제적으로 예약 완료화면에서 가운데 정렬을 위해서 만들었다.
+     * 한번 세팅하면 복구 하지 않음
+     */
+    public void setEmptyMiddleArrange()
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        setWarningVisible(false);
+        setDescriptionVisible(true);
+        mViewDataBinding.freeCouponImageView.setPadding(0, ScreenUtils.dpToPx(getContext(), 8.5f), 0, 0);
     }
 }

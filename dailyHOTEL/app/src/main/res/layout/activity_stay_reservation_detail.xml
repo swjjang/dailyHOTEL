@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                             xmlns:app="http://schemas.android.com/apk/res-auto"
-                                             xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-                                             xmlns:dailyToolbar="http://schemas.android.com/apk/res-auto"
-                                             xmlns:fresco="http://schemas.android.com/apk/res-auto"
-                                             android:layout_width="match_parent"
-                                             android:layout_height="match_parent">
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyToolbar="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <com.daily.dailyhotel.view.DailyToolbarView
         android:id="@+id/toolbarView"
@@ -289,6 +290,35 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/rewardCardLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/default_background"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/depositStickerTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="@color/default_background"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:paddingTop="25dp"
+                    android:textColor="@color/default_text_c323232"
+                    android:textSize="14dp"
+                    dailyFont:style="Medium"/>
+
+                <com.daily.dailyhotel.view.DailyRewardCardView
+                    android:id="@+id/rewardCardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"/>
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/recommendGourmetLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -322,9 +352,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingBottom="37dp"
                 android:layout_marginTop="37dp"
                 android:gravity="center_horizontal"
+                android:paddingBottom="37dp"
                 android:text="@string/label_booking_detail_delete_reservation"
                 android:textColor="@color/default_text_c929292"
                 android:textSize="13dp"/>

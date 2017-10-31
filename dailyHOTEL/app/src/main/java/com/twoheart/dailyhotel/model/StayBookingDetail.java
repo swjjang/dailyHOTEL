@@ -40,6 +40,10 @@ public class StayBookingDetail extends PlaceBookingDetail
     public String visitType = VISIT_TYPE_NONE; // 방문 타입 "NONE", "WALKING". "CAR", "NO_PARKING"
     public boolean waitingForBooking;
 
+    // reward
+    public boolean activeReward = true;
+    public int rewardStickerCount;
+
     public StayBookingDetail()
     {
     }
@@ -286,6 +290,9 @@ public class StayBookingDetail extends PlaceBookingDetail
         dest.writeInt(readyForRefund ? 1 : 0);
         dest.writeInt(isVisibleRefundPolicy ? 1 : 0);
         dest.writeString(mRefundComment);
+
+        dest.writeInt(activeReward ? 1 : 0);
+        dest.writeInt(rewardStickerCount);
     }
 
     public void readFromParcel(Parcel in)
@@ -305,6 +312,9 @@ public class StayBookingDetail extends PlaceBookingDetail
         readyForRefund = in.readInt() == 1;
         isVisibleRefundPolicy = in.readInt() == 1;
         mRefundComment = in.readString();
+
+        activeReward = in.readInt() == 1;
+        rewardStickerCount = in.readInt();
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()

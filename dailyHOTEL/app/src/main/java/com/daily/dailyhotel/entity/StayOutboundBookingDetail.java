@@ -37,6 +37,9 @@ public class StayOutboundBookingDetail
 
     public String cancelDateTime; // 취소 일시(취소가 아닐때에는 내려오지 않음)
 
+    public boolean activeReward = true;
+    public int rewardStickerCount;
+
     public enum PaymentType
     {
         CREDIT_CARD,

@@ -297,6 +297,35 @@
                     android:background="@color/white"
                     android:orientation="vertical"/>
 
+                <LinearLayout
+                    android:id="@+id/rewardCardLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/default_background"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/depositStickerTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:background="@color/default_background"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:paddingTop="25dp"
+                        android:textColor="@color/default_text_c323232"
+                        android:textSize="14dp"
+                        dailyFont:style="Medium"/>
+
+                    <com.daily.dailyhotel.view.DailyRewardCardView
+                        android:id="@+id/rewardCardView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"/>
+                </LinearLayout>
+
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/deleteReservationTextView"
                     android:layout_width="wrap_content"
