@@ -612,6 +612,8 @@ public class StayOutboundBookingCancelDetailPresenter //
                                             finish();
                                         }
                                     });
+
+                                mAnalytics.onEventHideBookingCancelClick(getActivity());
                             } else
                             {
                                 getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2)//
@@ -652,8 +654,6 @@ public class StayOutboundBookingCancelDetailPresenter //
                     unLock();
                 }
             }, true);
-
-        mAnalytics.onEventHideBookingCancelClick(getActivity());
     }
 
     void setCommonDateTime(@NonNull CommonDateTime commonDateTime)

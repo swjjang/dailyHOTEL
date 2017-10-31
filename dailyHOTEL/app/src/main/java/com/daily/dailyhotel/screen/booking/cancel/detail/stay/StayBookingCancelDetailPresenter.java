@@ -672,8 +672,7 @@ public class StayBookingCancelDetailPresenter //
                                             }
                                         });
 
-                                    //                                AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-                                    //                                    , AnalyticsManager.Action.BOOKING_HISTORY_DELETE, "ob_" + mStayBookingDetail.stayIndex, null);
+                                    mAnalytics.onEventHideBookingCancelClick(getActivity());
                                 } else
                                 {
                                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2)//
@@ -714,9 +713,6 @@ public class StayBookingCancelDetailPresenter //
                     unLock();
                 }
             }, true);
-
-
-        mAnalytics.onEventHideBookingCancelClick(getActivity());
     }
 
     void setCommonDateTime(@NonNull CommonDateTime commonDateTime)
