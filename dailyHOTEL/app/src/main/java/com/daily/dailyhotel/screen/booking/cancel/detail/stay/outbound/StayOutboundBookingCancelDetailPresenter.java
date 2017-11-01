@@ -38,6 +38,7 @@ import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
@@ -609,6 +610,7 @@ public class StayOutboundBookingCancelDetailPresenter //
                                         @Override
                                         public void onDismiss(DialogInterface dialog)
                                         {
+                                            setResult(Constants.CODE_RESULT_ACTIVITY_REFRESH);
                                             finish();
                                         }
                                     });
