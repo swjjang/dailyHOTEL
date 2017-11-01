@@ -386,7 +386,14 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
 
                 screenUnLock();
-            }, throwable -> onHandleErrorAndFinish(throwable)));
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    StayOutboundSearchPresenter.this.onHandleErrorAndFinish(throwable);
+                }
+            }));
     }
 
     @Override

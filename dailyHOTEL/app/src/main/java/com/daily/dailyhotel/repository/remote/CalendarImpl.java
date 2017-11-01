@@ -80,7 +80,7 @@ public class CalendarImpl implements CalendarInterface
 
                             if (unavailableDateList == null)
                             {
-                                unavailableDateList = new ArrayList<String>();
+                                unavailableDateList = new ArrayList<>();
                             }
                         } else
                         {
