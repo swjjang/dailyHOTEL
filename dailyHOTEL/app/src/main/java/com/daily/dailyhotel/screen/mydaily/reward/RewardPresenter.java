@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Notification;
@@ -384,13 +385,19 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
 
         if (rewardDetail.rewardStickerCount > 0)
         {
-            getViewInterface().setStickerValidityVisible(true);
-            try
+            if (DailyTextUtils.isTextEmpty(rewardDetail.expiredAt) == true)
             {
-                getViewInterface().setStickerValidityText(getString(R.string.label_reward_sticker_validity, DailyCalendar.convertDateFormatString(rewardDetail.expiredAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd")));
-            } catch (ParseException e)
+                getViewInterface().setStickerValidityVisible(false);
+            } else
             {
-                ExLog.e(e.toString());
+                getViewInterface().setStickerValidityVisible(true);
+                try
+                {
+                    getViewInterface().setStickerValidityText(getString(R.string.label_reward_sticker_validity, DailyCalendar.convertDateFormatString(rewardDetail.expiredAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd")));
+                } catch (ParseException e)
+                {
+                    ExLog.e(e.toString());
+                }
             }
         } else
         {
