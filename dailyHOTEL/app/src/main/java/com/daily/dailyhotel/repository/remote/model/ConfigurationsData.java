@@ -5,17 +5,17 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.daily.dailyhotel.entity.Configurations;
 
 @JsonObject
-public class ConfigurationData
+public class ConfigurationsData
 {
     @JsonField(name = "activeReward")
     public boolean activeReward;
 
-    public ConfigurationData()
+    public ConfigurationsData()
     {
 
     }
 
-    public Configurations getConfiguration()
+    public Configurations getConfigurations()
     {
         Configurations configuration = new Configurations();
         configuration.activeReward = activeReward;

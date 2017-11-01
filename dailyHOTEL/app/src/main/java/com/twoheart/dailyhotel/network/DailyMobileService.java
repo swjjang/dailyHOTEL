@@ -7,7 +7,7 @@ import com.daily.dailyhotel.repository.remote.model.BookingHideData;
 import com.daily.dailyhotel.repository.remote.model.CampaignTagData;
 import com.daily.dailyhotel.repository.remote.model.CardData;
 import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
-import com.daily.dailyhotel.repository.remote.model.ConfigurationData;
+import com.daily.dailyhotel.repository.remote.model.ConfigurationsData;
 import com.daily.dailyhotel.repository.remote.model.CouponsData;
 import com.daily.dailyhotel.repository.remote.model.ExistCouponsData;
 import com.daily.dailyhotel.repository.remote.model.GourmetBookingDetailData;
@@ -515,7 +515,7 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Observable<BaseDto<ConfigurationData>> getConfigurations(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+    Observable<BaseDto<ConfigurationsData>> getConfigurations(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // ProfileRemoteImpl

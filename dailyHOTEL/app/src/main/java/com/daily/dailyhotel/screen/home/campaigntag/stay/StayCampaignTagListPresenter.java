@@ -28,6 +28,7 @@ import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.home.campaigntag.CampaignTagListAnalyticsImpl;
 import com.daily.dailyhotel.screen.home.campaigntag.CampaignTagListAnalyticsInterface;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.view.DailyStayCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
@@ -386,6 +387,8 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
                     mStayCampaignTags = new StayCampaignTags();
                 }
 
+                DailyRemoteConfigPreference.getInstance(getActivity()).setKeyRemoteConfigRewardStickerEnabled(mStayCampaignTags.activeReward);
+
                 return makePlaceList(mStayCampaignTags.getStayList());
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<PlaceViewItem>>()
@@ -428,7 +431,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         // 서버에서 전달된 데이터가 없을때 종료된 태그로 설정!
         if (stayCampaignTags == null)
         {
-            setData(null, stayBookDateTime);
+            setData(null, stayBookDateTime, false);
             showFinishedCampaignTagDialog();
             //            mIsFirstUiUpdateCheck = true;
             return;
@@ -439,7 +442,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         {
             if (Constants.ServiceType.HOTEL.name().equalsIgnoreCase(campaignTag.serviceType) == false)
             {
-                setData(null, stayBookDateTime);
+                setData(null, stayBookDateTime, stayCampaignTags.activeReward);
                 showReCheckConnectionDialog();
                 //                mIsFirstUiUpdateCheck = true;
                 return;
@@ -450,7 +453,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         // 메세지코드로 종료된 팝업일때
         if (msgCode == 200)
         {
-            setData(null, stayBookDateTime);
+            setData(null, stayBookDateTime, stayCampaignTags.activeReward);
             showFinishedCampaignTagDialog();
             //            mIsFirstUiUpdateCheck = true;
             return;
@@ -459,7 +462,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         // 메세지 코드로 조회된 데이터가 없을때
         if (msgCode == -101)
         {
-            setData(placeViewItemList, stayBookDateTime);
+            setData(placeViewItemList, stayBookDateTime, stayCampaignTags.activeReward);
 
             //            if (mIsFirstUiUpdateCheck == false)
             //            {
@@ -488,12 +491,12 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         if (endTime < currentTime)
         {
             // 시간 체크시 종료 된 캠페인 태그 일때
-            setData(null, stayBookDateTime);
+            setData(null, stayBookDateTime, stayCampaignTags.activeReward);
             showFinishedCampaignTagDialog();
         } else
         {
             // 일반적인 상황
-            setData(placeViewItemList, stayBookDateTime);
+            setData(placeViewItemList, stayBookDateTime, stayCampaignTags.activeReward);
 
             //            ArrayList<Stay> list = stayCampaignTags.getStayList();
             //            if ((list == null || list.size() == 0) && mIsFirstUiUpdateCheck == false)
@@ -600,9 +603,9 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         return null;
     }
 
-    private void setData(ArrayList<PlaceViewItem> list, StayBookDateTime stayBookDateTime)
+    private void setData(ArrayList<PlaceViewItem> list, StayBookDateTime stayBookDateTime, boolean activeReward)
     {
-        getViewInterface().setData(list, stayBookDateTime);
+        getViewInterface().setData(list, stayBookDateTime, activeReward);
     }
 
     ArrayList<PlaceViewItem> makePlaceList(ArrayList<Stay> stayList)

@@ -122,6 +122,9 @@ public class StayDetailData
     @JsonField(name = "rewardCard")
     public RewardCardData rewardCard;
 
+    @JsonField(name = "configurations")
+    public ConfigurationsData configurations;
+
     public StayDetailData()
     {
 
@@ -290,6 +293,11 @@ public class StayDetailData
         if (rewardCard != null)
         {
             stayDetail.rewardStickerCount = rewardCard.rewardStickerCount;
+        }
+
+        if (configurations != null)
+        {
+            stayDetail.activeReward = configurations.activeReward;
         }
 
         return stayDetail;

@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.network.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.daily.dailyhotel.repository.remote.model.ConfigurationsData;
 
 import java.util.List;
 
@@ -19,4 +20,7 @@ public class RecommendationPlaceList<E>
 
     @JsonField(name = "stickers")
     public List<Sticker> stickers;
+
+    @JsonField(name = "configurations")
+    public ConfigurationsData configurations;
 }

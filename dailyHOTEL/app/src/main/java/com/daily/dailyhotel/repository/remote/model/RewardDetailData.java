@@ -23,6 +23,9 @@ public class RewardDetailData
     @JsonField(name = "stickers")
     public List<StickerData> stickers;
 
+    @JsonField(name = "configurations")
+    public ConfigurationsData configurations;
+
     public RewardDetailData()
     {
 
@@ -47,6 +50,11 @@ public class RewardDetailData
             }
 
             rewardDetail.setRewardStickerList(rewardStickerList);
+        }
+
+        if (configurations != null)
+        {
+            rewardDetail.activeReward = configurations.activeReward;
         }
 
         return rewardDetail;

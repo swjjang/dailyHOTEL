@@ -26,7 +26,7 @@ public class StayCategoryNearByListNetworkController extends BaseNetworkControll
 {
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onStayList(ArrayList<Stay> list, int page, int totalCount, int maxCount);
+        void onStayList(ArrayList<Stay> list, int page, int totalCount, int maxCount, boolean activeReward);
     }
 
     public StayCategoryNearByListNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -73,6 +73,13 @@ public class StayCategoryNearByListNetworkController extends BaseNetworkControll
                             hotelJSONArray = dataJSONObject.getJSONArray("hotelSales");
                         }
 
+                        boolean activeReward = false;
+
+                        if (dataJSONObject.has("configurations") == true)
+                        {
+                            activeReward = dataJSONObject.getJSONObject("configurations").getBoolean("activeReward");
+                        }
+
                         int totalCount = 0;
                         int maxCount = dataJSONObject.getInt("searchMaxCount");
                         int page;
@@ -99,7 +106,7 @@ public class StayCategoryNearByListNetworkController extends BaseNetworkControll
                             page = 0;
                         }
 
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayList(stayList, page, totalCount, maxCount);
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayList(stayList, page, totalCount, maxCount, activeReward);
                     } else
                     {
                         String message = responseJSONObject.getString("msg");

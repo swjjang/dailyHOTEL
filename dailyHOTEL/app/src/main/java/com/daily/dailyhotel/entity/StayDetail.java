@@ -8,7 +8,7 @@ import com.twoheart.dailyhotel.model.Stay;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public class StayDetail
+public class StayDetail extends Configurations
 {
     public int index;
     public String name;
@@ -30,7 +30,6 @@ public class StayDetail
     public boolean overseas;
     public boolean waitingForBooking;
     public int couponPrice;
-    public boolean activeReward;
     public boolean provideRewardSticker;
     public int rewardStickerCount;
 

@@ -22,6 +22,9 @@ public class StayCampaignTagsData
     @JsonField(name = "saleRecords")
     public ArrayList<StaySalesData> saleRecords;
 
+    @JsonField(name = "configurations")
+    public ConfigurationsData configurations;
+
     public StayCampaignTags getStayCampaigns()
     {
         StayCampaignTags stayCampaignTags = new StayCampaignTags();
@@ -29,6 +32,11 @@ public class StayCampaignTagsData
         stayCampaignTags.imageUrl = imageUrl;
         stayCampaignTags.setCampaignTag(responseHashtagCampaign.getCampaignTag());
         stayCampaignTags.setStayList(getStayList());
+
+        if (configurations != null)
+        {
+            stayCampaignTags.activeReward = configurations.activeReward;
+        }
 
         return stayCampaignTags;
     }

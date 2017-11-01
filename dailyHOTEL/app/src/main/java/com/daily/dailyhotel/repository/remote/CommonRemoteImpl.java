@@ -133,7 +133,7 @@ public class CommonRemoteImpl implements CommonInterface
             {
                 if (configurationDataBaseDto.msgCode == 100 && configurationDataBaseDto.data != null)
                 {
-                    configuration = configurationDataBaseDto.data.getConfiguration();
+                    configuration = configurationDataBaseDto.data.getConfigurations();
                 } else
                 {
                     throw new BaseException(configurationDataBaseDto.msgCode, configurationDataBaseDto.msg);

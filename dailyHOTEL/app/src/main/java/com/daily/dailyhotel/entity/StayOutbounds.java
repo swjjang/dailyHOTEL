@@ -2,7 +2,7 @@ package com.daily.dailyhotel.entity;
 
 import java.util.List;
 
-public class StayOutbounds
+public class StayOutbounds extends Configurations
 {
     private List<StayOutbound> mStayOutboundList;
 

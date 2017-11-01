@@ -705,7 +705,8 @@ public class CollectionStayActivity extends CollectionBaseActivity
                             ArrayList<RecommendationStay> stayList = new ArrayList<>();
                             stayList.addAll(baseDto.data.items);
 
-                            onPlaceList(baseDto.data.imageBaseUrl, baseDto.data.recommendation, stayList, baseDto.data.stickers);
+                            onPlaceList(baseDto.data.imageBaseUrl, baseDto.data.recommendation, stayList, baseDto.data.stickers//
+                                , baseDto.data.configurations != null ? baseDto.data.configurations.activeReward : false);
                             break;
 
                         // 인트라넷에서 숨김처리가 된경우

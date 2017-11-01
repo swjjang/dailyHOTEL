@@ -11,7 +11,7 @@ import com.daily.dailyhotel.repository.remote.model.BookingHideData;
 import com.daily.dailyhotel.repository.remote.model.CampaignTagData;
 import com.daily.dailyhotel.repository.remote.model.CardData;
 import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
-import com.daily.dailyhotel.repository.remote.model.ConfigurationData;
+import com.daily.dailyhotel.repository.remote.model.ConfigurationsData;
 import com.daily.dailyhotel.repository.remote.model.CouponsData;
 import com.daily.dailyhotel.repository.remote.model.ExistCouponsData;
 import com.daily.dailyhotel.repository.remote.model.GourmetBookingDetailData;
@@ -1262,7 +1262,7 @@ public class DailyMobileAPI
             .subscribeOn(Schedulers.io());
     }
 
-    public Observable<BaseDto<ConfigurationData>> getConfigurations()
+    public Observable<BaseDto<ConfigurationsData>> getConfigurations()
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v4/common/configurations"//
             : "NzYkMTMkNDIkODQkNjQkMCQ5MyQzMiQyNSQ0NyQ3MyQ4MCQ5OSQ2JDEwMSQ3OSQ=$FREQ3QETU4QTIzMHTVGMjE5NjUPzMUVBRTVUzQkY2MTlCMIDAY5NkQ3MDA5RDlEMTBDNDSM5Q0BQyMzUJGIRDY3VMDBGOIDNDOA=FQT=$";

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public interface StayCampaignTagListInterface extends BaseDialogViewInterface
 {
-    void setData(ArrayList<PlaceViewItem> placeViewItemList, StayBookDateTime stayBookDateTime);
+    void setData(ArrayList<PlaceViewItem> placeViewItemList, StayBookDateTime stayBookDateTime, boolean activeReward);
 
     void setCalendarText(String text);
 

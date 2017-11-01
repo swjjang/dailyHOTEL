@@ -132,7 +132,7 @@ public class StayCategoryListFragment extends StayListFragment
      * @param page
      * @param hasSection
      */
-    protected void onStayList(ArrayList<Stay> localPlusList, ArrayList<Stay> list, int page, boolean hasSection)
+    protected void onStayList(ArrayList<Stay> localPlusList, ArrayList<Stay> list, int page, boolean hasSection, boolean activeReward)
     {
         if (isFinishing() == true)
         {
@@ -164,8 +164,8 @@ public class StayCategoryListFragment extends StayListFragment
         {
             case LIST:
             {
-                mPlaceListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, sortType, mStayCuration.getStayBookingDay()//
-                    , DailyRemoteConfigPreference.getInstance(mBaseActivity).isKeyRemoteConfigRewardStickerEnabled());
+                mPlaceListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems//
+                    , sortType, mStayCuration.getStayBookingDay(), activeReward);
 
                 int size = mPlaceListLayout.getItemCount();
                 if (size == 0)
@@ -179,8 +179,8 @@ public class StayCategoryListFragment extends StayListFragment
 
             case MAP:
             {
-                mPlaceListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, sortType, mStayCuration.getStayBookingDay()//
-                    , DailyRemoteConfigPreference.getInstance(mBaseActivity).isKeyRemoteConfigRewardStickerEnabled());
+                mPlaceListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, sortType//
+                    , mStayCuration.getStayBookingDay(), activeReward);
 
                 int mapSize = mPlaceListLayout.getMapItemSize();
                 if (mapSize == 0)
@@ -447,10 +447,10 @@ public class StayCategoryListFragment extends StayListFragment
     private StayCategoryListNetworkController.OnNetworkControllerListener mNetworkControllerListener = new StayCategoryListNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onStayList(ArrayList<Stay> list, int page)
+        public void onStayList(ArrayList<Stay> list, int page, boolean activeReward)
         {
             // 지역플러스를 사용해야 함
-            StayCategoryListFragment.this.onStayList(mLocalPlusList, list, page, true);
+            StayCategoryListFragment.this.onStayList(mLocalPlusList, list, page, true, activeReward);
         }
 
         @Override

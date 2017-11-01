@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * Created by android_sam on 2017. 8. 8..
  */
 
-public class StayCampaignTags
+public class StayCampaignTags extends Configurations
 {
     public int msgCode;
     private CampaignTag mCampaignTag;

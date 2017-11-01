@@ -93,7 +93,7 @@ public class StayCategoryNearByListFragment extends StayListFragment
     }
 
     @Override
-    protected void onStayList(List<Stay> list, int page, boolean hasSection)
+    protected void onStayList(List<Stay> list, int page, boolean hasSection, boolean activeReward)
     {
         if (isFinishing() == true)
         {
@@ -128,8 +128,8 @@ public class StayCategoryNearByListFragment extends StayListFragment
         {
             case LIST:
             {
-                mPlaceListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, sortType, mStayCuration.getStayBookingDay()//
-                    , DailyRemoteConfigPreference.getInstance(getContext()).isKeyRemoteConfigRewardStickerEnabled());
+                mPlaceListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, sortType//
+                    , mStayCuration.getStayBookingDay(), activeReward);
 
                 int size = mPlaceListLayout.getItemCount();
                 if (size == 0)
@@ -143,8 +143,8 @@ public class StayCategoryNearByListFragment extends StayListFragment
 
             case MAP:
             {
-                mPlaceListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, sortType, mStayCuration.getStayBookingDay()//
-                    , DailyRemoteConfigPreference.getInstance(getContext()).isKeyRemoteConfigRewardStickerEnabled());
+                mPlaceListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, sortType//
+                    , mStayCuration.getStayBookingDay(), activeReward);
 
                 int mapSize = mPlaceListLayout.getMapItemSize();
                 if (mapSize == 0)
@@ -167,7 +167,7 @@ public class StayCategoryNearByListFragment extends StayListFragment
     private StayCategoryNearByListNetworkController.OnNetworkControllerListener onNetworkControllerListener = new StayCategoryNearByListNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onStayList(ArrayList<Stay> list, int page, int totalCount, int maxCount)
+        public void onStayList(ArrayList<Stay> list, int page, int totalCount, int maxCount, boolean activeReward)
         {
             // 첫페이지 호출시에 카테고리 목록 조절
             if (mIsOptimizeCategory == false)
@@ -184,7 +184,7 @@ public class StayCategoryNearByListFragment extends StayListFragment
                 }
             }
 
-            StayCategoryNearByListFragment.this.onStayList(list, page, false);
+            StayCategoryNearByListFragment.this.onStayList(list, page, false, activeReward);
 
             if (mViewType == ViewType.MAP)
             {

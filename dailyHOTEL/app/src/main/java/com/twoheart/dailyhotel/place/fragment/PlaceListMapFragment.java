@@ -596,6 +596,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         }
 
         mPlaceMapViewPagerAdapter.setPlaceBookingDay(mPlaceBookingDay);
+        mPlaceMapViewPagerAdapter.setRewardEnabled(mRewardEnabled);
         mPlaceMapViewPagerAdapter.setData(mPlaceViewItemViewPagerList);
         mViewPager.setAdapter(mPlaceMapViewPagerAdapter);
         mPlaceMapViewPagerAdapter.notifyDataSetChanged();

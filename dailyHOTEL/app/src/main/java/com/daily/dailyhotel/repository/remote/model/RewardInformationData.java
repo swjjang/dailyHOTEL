@@ -13,8 +13,8 @@ public class RewardInformationData
     @JsonField(name = "rewardStickerCount")
     public int rewardStickerCount;
 
-    @JsonField(name = "activeReward")
-    public boolean activeReward;
+    @JsonField(name = "configurations")
+    public ConfigurationsData configurations;
 
     public RewardInformationData()
     {
@@ -25,8 +25,11 @@ public class RewardInformationData
     {
         RewardInformation rewardInformation = new RewardInformation();
         rewardInformation.rewardStickerCount = rewardStickerCount;
-//        rewardInformation.activeReward = activeReward;
-        rewardInformation.activeReward = true;
+
+        if (configurations != null)
+        {
+            rewardInformation.activeReward = configurations.activeReward;
+        }
 
         return rewardInformation;
     }

@@ -6,7 +6,7 @@ import java.util.List;
  * Created by android_sam on 2016. 11. 25..
  */
 
-public class RewardDetail
+public class RewardDetail extends Configurations
 {
     public int availableRewardCouponCount;
     public int rewardStickerCount;

@@ -17,6 +17,9 @@ public class RewardHistoryDetailData
     @JsonField(name = "histories")
     public List<RewardHistoryData> histories;
 
+    @JsonField(name = "configurations")
+    public ConfigurationsData configurations;
+
     public RewardHistoryDetailData()
     {
 
@@ -39,6 +42,11 @@ public class RewardHistoryDetailData
             }
 
             rewardHistoryDetail.setRewardHistoryList(rewardStickerList);
+        }
+
+        if (configurations != null)
+        {
+            rewardHistoryDetail.activeReward = configurations.activeReward;
         }
 
         return rewardHistoryDetail;

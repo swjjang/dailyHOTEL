@@ -606,6 +606,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             {
                 setCommonDateTime(commonDateTime);
 
+                DailyRemoteConfigPreference.getInstance(getActivity()).setKeyRemoteConfigRewardStickerEnabled(stayOutbounds.activeReward);
+
                 return stayOutbounds;
             }).subscribe(stayOutbounds ->
         {
@@ -1184,7 +1186,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             try
             {
                 getViewInterface().setStayOutboundMapViewPagerList(getActivity(), mStayOutboundList, mStayBookDateTime.getNights() > 1//
-                    , DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerEnabled());
+                    , stayOutbounds.activeReward);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -1246,7 +1248,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                     }
 
                     getViewInterface().setStayOutboundList(objectItemList, isSortByDistance, mStayBookDateTime.getNights() > 1//
-                        , DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerEnabled());
+                        , stayOutbounds.activeReward);
                 } else
                 {
                     setScreenVisible(ScreenType.LIST, mStayOutboundFilters);

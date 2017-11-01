@@ -95,8 +95,6 @@ public class StayCampaignTagListView //
             mRecyclerAdapter.setTrueVREnabled(true);
         }
 
-        mRecyclerAdapter.setRewardEnabled(DailyRemoteConfigPreference.getInstance(getContext()).isKeyRemoteConfigRewardStickerEnabled());
-
         if (Util.supportPreview(getContext()) == true)
         {
             mRecyclerAdapter.setOnLongClickListener(mOnLongClickListener);
@@ -119,7 +117,7 @@ public class StayCampaignTagListView //
     }
 
     @Override
-    public void setData(ArrayList<PlaceViewItem> placeViewItemList, StayBookDateTime stayBookDateTime)
+    public void setData(ArrayList<PlaceViewItem> placeViewItemList, StayBookDateTime stayBookDateTime, boolean rewardEnabled)
     {
         if (mRecyclerAdapter == null)
         {
@@ -153,6 +151,7 @@ public class StayCampaignTagListView //
             nights = 1;
         }
 
+        mRecyclerAdapter.setRewardEnabled(rewardEnabled);
         mRecyclerAdapter.setNights(nights);
         mRecyclerAdapter.setAll(placeViewItemList);
 

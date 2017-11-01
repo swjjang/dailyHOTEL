@@ -26,6 +26,9 @@ public class StayOutboundsData
     @JsonField(name = "numberOfRoomsRequested")
     public int numberOfRoomsRequested;
 
+    @JsonField(name = "configurations")
+    public ConfigurationsData configurations;
+
     public StayOutboundsData()
     {
 
@@ -47,6 +50,11 @@ public class StayOutboundsData
         stayOutbounds.cacheKey = cacheKey;
         stayOutbounds.cacheLocation = cacheLocation;
         stayOutbounds.moreResultsAvailable = moreResultsAvailable;
+
+        if (configurations == null)
+        {
+            stayOutbounds.activeReward = configurations.activeReward;
+        }
 
         return stayOutbounds;
     }

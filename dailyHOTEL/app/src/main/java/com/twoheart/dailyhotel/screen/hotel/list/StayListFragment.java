@@ -200,7 +200,7 @@ public class StayListFragment extends PlaceListFragment
         }
     }
 
-    protected void onStayList(List<Stay> list, int page, boolean hasSection)
+    protected void onStayList(List<Stay> list, int page, boolean hasSection, boolean activeReward)
     {
         if (isFinishing() == true)
         {
@@ -235,8 +235,8 @@ public class StayListFragment extends PlaceListFragment
         {
             case LIST:
             {
-                mPlaceListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems, sortType, mStayCuration.getStayBookingDay()//
-                    , DailyRemoteConfigPreference.getInstance(mBaseActivity).isKeyRemoteConfigRewardStickerEnabled());
+                mPlaceListLayout.addResultList(getChildFragmentManager(), mViewType, placeViewItems//
+                    , sortType, mStayCuration.getStayBookingDay(), activeReward);
 
                 int size = mPlaceListLayout.getItemCount();
                 if (size == 0)
@@ -254,8 +254,8 @@ public class StayListFragment extends PlaceListFragment
 
             case MAP:
             {
-                mPlaceListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, sortType, mStayCuration.getStayBookingDay()//
-                    , DailyRemoteConfigPreference.getInstance(mBaseActivity).isKeyRemoteConfigRewardStickerEnabled());
+                mPlaceListLayout.setList(getChildFragmentManager(), mViewType, placeViewItems, sortType//
+                    , mStayCuration.getStayBookingDay(), activeReward);
 
                 int mapSize = mPlaceListLayout.getMapItemSize();
                 if (mapSize == 0)
@@ -582,9 +582,11 @@ public class StayListFragment extends PlaceListFragment
     private StayListNetworkController.OnNetworkControllerListener mNetworkControllerListener = new StayListNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onStayList(ArrayList<Stay> list, int page)
+        public void onStayList(ArrayList<Stay> list, int page, boolean activeReward)
         {
-            StayListFragment.this.onStayList(list, page, true);
+            DailyRemoteConfigPreference.getInstance(mBaseActivity).setKeyRemoteConfigRewardStickerEnabled(activeReward);
+
+            StayListFragment.this.onStayList(list, page, true, activeReward);
         }
 
         @Override

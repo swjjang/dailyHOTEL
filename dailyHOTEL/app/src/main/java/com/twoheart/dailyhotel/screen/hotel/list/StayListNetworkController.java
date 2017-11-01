@@ -37,7 +37,7 @@ public class StayListNetworkController extends BaseNetworkController
 {
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onStayList(ArrayList<Stay> list, int page);
+        void onStayList(ArrayList<Stay> list, int page, boolean activeReward);
     }
 
     public StayListNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -109,6 +109,13 @@ public class StayListNetworkController extends BaseNetworkController
                             hotelJSONArray = dataJSONObject.getJSONArray("hotelSales");
                         }
 
+                        boolean activeReward = false;
+
+                        if (dataJSONObject.has("configurations") == true)
+                        {
+                            activeReward = dataJSONObject.getJSONObject("configurations").getBoolean("activeReward");
+                        }
+
                         int page;
                         String imageUrl;
 
@@ -132,7 +139,7 @@ public class StayListNetworkController extends BaseNetworkController
                             page = 0;
                         }
 
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayList(stayList, page);
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onStayList(stayList, page, activeReward);
                     } else
                     {
                         String message = responseJSONObject.getString("msg");

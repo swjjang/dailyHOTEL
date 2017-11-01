@@ -151,7 +151,7 @@ public class StayWishListFragment extends PlaceWishListFragment
                 return;
             }
 
-            mListLayout.setData(list, DailyRemoteConfigPreference.getInstance(mBaseActivity).isKeyRemoteConfigRewardStickerEnabled());
+            mListLayout.setData(list, false);
         }
 
         @Override

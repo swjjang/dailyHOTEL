@@ -34,7 +34,7 @@ public class Stay extends Place
     public String regionName;
     public String sday;
     public boolean isOverseas;
-    public boolean dailyReward; // 데일리 리워드 아이콘 여부
+    public boolean provideRewardSticker; // 데일리 리워드 아이콘 여부
 
     public Stay()
     {
@@ -67,7 +67,7 @@ public class Stay extends Place
         dest.writeString(regionName);
         dest.writeString(sday);
         dest.writeInt(isOverseas == true ? 1 : 0);
-        dest.writeInt(dailyReward == true ? 1 : 0);
+        dest.writeInt(provideRewardSticker == true ? 1 : 0);
     }
 
     protected void readFromParcel(Parcel in)
@@ -84,7 +84,7 @@ public class Stay extends Place
         regionName = in.readString();
         sday = in.readString();
         isOverseas = in.readInt() == 1 ? true : false;
-        dailyReward = in.readInt() == 1 ? true : false;
+        provideRewardSticker = in.readInt() == 1 ? true : false;
     }
 
     public Grade getGrade()
