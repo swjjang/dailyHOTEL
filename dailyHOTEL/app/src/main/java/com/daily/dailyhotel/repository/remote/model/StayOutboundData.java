@@ -60,6 +60,9 @@ public class StayOutboundData
     @JsonField(name = "discountRate")
     public int discountRate;
 
+    @JsonField(name = "provideRewardSticker")
+    public boolean provideRewardSticker;
+
     public StayOutboundData()
     {
 
@@ -91,6 +94,8 @@ public class StayOutboundData
             stayOutbound.tripAdvisorRating = tripAdvisorData.tripAdvisorRating;
             stayOutbound.tripAdvisorReviewCount = tripAdvisorData.tripAdvisorReviewCount;
         }
+
+        stayOutbound.provideRewardSticker = provideRewardSticker;
 
         return stayOutbound;
     }

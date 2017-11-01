@@ -35,8 +35,8 @@ public class RecommendationStay extends RecommendationPlace
     @JsonField(name = "availableRooms")
     public int availableRooms;
 
-    @JsonField(name = "dailyReward")
-    public boolean dailyReward;
+    @JsonField(name = "provideRewardSticker")
+    public boolean provideRewardSticker;
 
     @JsonField(name = "reviewCount")
     public int reviewCount;

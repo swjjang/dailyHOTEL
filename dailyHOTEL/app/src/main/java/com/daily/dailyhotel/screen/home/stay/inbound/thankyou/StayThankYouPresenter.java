@@ -405,6 +405,8 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
                 {
                     mCommonDateTime = commonDateTime;
 
+                    DailyRemoteConfigPreference.getInstance(getActivity()).setKeyRemoteConfigRewardStickerEnabled(rewardInformation.activeReward);
+
                     setRewardInformation(rewardInformation);
 
                     return convertCarouselListItemList(gourmetList);

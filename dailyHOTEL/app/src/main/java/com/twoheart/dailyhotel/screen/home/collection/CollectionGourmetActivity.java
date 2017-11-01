@@ -701,7 +701,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
                             ArrayList<RecommendationGourmet> gourmetList = new ArrayList<>();
                             gourmetList.addAll(baseDto.data.items);
 
-                            onPlaceList(baseDto.data.imageBaseUrl, baseDto.data.recommendation, gourmetList, baseDto.data.stickers);
+                            onPlaceList(baseDto.data.imageBaseUrl, baseDto.data.recommendation, gourmetList, baseDto.data.stickers, false);
                             break;
 
                         // 인트라넷에서 숨김처리가 된경우

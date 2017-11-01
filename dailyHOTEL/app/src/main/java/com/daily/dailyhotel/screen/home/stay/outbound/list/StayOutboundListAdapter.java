@@ -194,7 +194,7 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         StayOutbound stayOutbound = objectItem.getItem();
 
-        holder.stayOutboundCardView.setStickerVisible(mRewardEnabled && stayOutbound.dailyReward);
+        holder.stayOutboundCardView.setStickerVisible(mRewardEnabled && stayOutbound.provideRewardSticker);
         holder.stayOutboundCardView.setDeleteVisible(false);
         holder.stayOutboundCardView.setWishVisible(false);
 

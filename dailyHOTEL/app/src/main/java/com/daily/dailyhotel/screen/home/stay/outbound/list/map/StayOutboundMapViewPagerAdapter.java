@@ -123,7 +123,7 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
         }
 
         // Reward 스티커
-        dataBinding.stickerImageView.setVisibility((mRewardEnabled && stayOutbound.dailyReward) ? View.VISIBLE : View.GONE);
+        dataBinding.stickerImageView.setVisibility((mRewardEnabled && stayOutbound.provideRewardSticker) ? View.VISIBLE : View.GONE);
 
         ControllerListener controllerListener = new BaseControllerListener<ImageInfo>()
         {

@@ -241,7 +241,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         // 타이틀
         String category = gourmetDetail.category + (DailyTextUtils.isTextEmpty(gourmetDetail.categorySub) ? "" : " > " + gourmetDetail.categorySub);
 
-        setTitleView(category, gourmetDetail.name, gourmetDetail.dailyReward, gourmetDetail.couponPrice);
+        setTitleView(category, gourmetDetail.name, false, gourmetDetail.couponPrice);
 
         // 트루 리뷰
         setTrueReviewView(gourmetDetail.ratingShow, gourmetDetail.ratingValue, gourmetDetail.ratingPersons, trueReviewCount);

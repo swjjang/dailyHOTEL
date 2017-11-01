@@ -115,7 +115,7 @@ public class StaySearchResultListFragment extends StayListFragment
     private StaySearchResultListNetworkController.OnNetworkControllerListener onNetworkControllerListener = new StaySearchResultListNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onStayList(ArrayList<Stay> list, int page, int totalCount, int maxCount, List<Category> categoryList)
+        public void onStayList(ArrayList<Stay> list, int page, int totalCount, int maxCount, List<Category> categoryList, boolean activeReward)
         {
             // 첫페이지 호출시에 카테고리 목록 조절
             if (mResetCategory == true)
@@ -177,7 +177,7 @@ public class StaySearchResultListFragment extends StayListFragment
                 ((OnStaySearchResultListFragmentListener) mOnPlaceListFragmentListener).onStayListCount(totalCount);
             }
 
-            StaySearchResultListFragment.this.onStayList(list, page, false);
+            StaySearchResultListFragment.this.onStayList(list, page, false, activeReward);
 
             if (mViewType == ViewType.MAP)
             {
