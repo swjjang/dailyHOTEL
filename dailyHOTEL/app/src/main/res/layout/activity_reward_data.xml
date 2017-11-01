@@ -477,7 +477,7 @@
             android:layout_height="0dp"
             android:clickable="true"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/issueCouponLayout"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbarView"/>
@@ -552,6 +552,7 @@
                 app:layout_constraintTop_toBottomOf="@id/rewardCouponView"/>
 
             <com.daily.base.widget.DailyTextView
+                android:id="@+id/goBookingTextView"
                 android:layout_width="0dp"
                 android:layout_height="38dp"
                 android:layout_marginLeft="15dp"

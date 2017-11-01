@@ -3,6 +3,7 @@ package com.daily.dailyhotel.screen.mydaily.reward;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
@@ -19,6 +20,7 @@ import com.daily.dailyhotel.screen.mydaily.reward.history.RewardHistoryActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.DailyHotel;
+import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -368,6 +370,23 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
                 onHandleError(throwable);
             }
         }));
+    }
+
+    @Override
+    public void onGoBookingClick()
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        final String deepLink = "dailyhotel://dailyhotel.co.kr?vc=12&v=hl&dp=0&n=1";
+
+        Intent intent = new Intent(getActivity(), LauncherActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setData(Uri.parse(deepLink));
+
+        startActivity(intent);
     }
 
     private void onRewardDetail(RewardDetail rewardDetail)

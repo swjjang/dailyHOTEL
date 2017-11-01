@@ -46,6 +46,8 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
         void onRewardGuideClick();
 
         void onNotificationClick();
+
+        void onGoBookingClick();
     }
 
     public RewardView(BaseActivity baseActivity, RewardView.OnEventListener listener)
@@ -91,6 +93,8 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
 
         viewDataBinding.issueCouponLayout.setVisibility(View.GONE);
         viewDataBinding.issueCouponArrowImageView.setVisibility(View.GONE);
+
+        viewDataBinding.goBookingTextView.setOnClickListener(v -> getEventListener().onGoBookingClick());
     }
 
     @Override
