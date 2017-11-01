@@ -1,18 +1,17 @@
 package com.twoheart.dailyhotel.screen.mydaily.coupon;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.daily.base.widget.DailyImageView;
-import com.daily.base.widget.DailyTextView;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.databinding.LayoutSelectCouponDataBinding;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
@@ -23,10 +22,8 @@ import java.util.Locale;
 /**
  * Created by android_sam on 2016. 5. 26..
  */
-public class SelectCouponAdapter extends ArrayAdapter<Coupon>
+public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapter.SelectCouponViewHolder>
 {
-    private static final int RESOURCE_ID = R.layout.list_row_select_coupon;
-
     private Context mContext;
     private List<Coupon> mList;
     OnCouponItemListener mListener;
@@ -42,8 +39,6 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
 
     public SelectCouponAdapter(Context context, List<Coupon> list, OnCouponItemListener listener)
     {
-        super(context, RESOURCE_ID, list);
-
         mContext = context;
         mList = list;
         mListener = listener;
@@ -51,60 +46,70 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent)
+    public int getItemCount()
     {
-        convertView = newView(convertView);
-
-        if (convertView != null)
+        if (mList == null)
         {
-            bindView(position, convertView);
+            return 0;
         }
 
-        return convertView;
+        return mList.size();
     }
 
-
-    private View newView(View convertView)
+    public void clear()
     {
-        if (convertView != null)
-        {
-            return convertView;
-        }
-
-        View view = LayoutInflater.from(mContext).inflate(RESOURCE_ID, null);
-
-        SelectViewHolder holder = new SelectViewHolder();
-
-        holder.couponLayout = view;
-        holder.priceTextView = (DailyTextView) view.findViewById(R.id.priceTextView);
-        holder.titleTextView = (TextView) view.findViewById(R.id.titleTextView);
-        holder.minPriceTextView = (TextView) view.findViewById(R.id.minPriceTextView);
-        holder.expireTextView = (TextView) view.findViewById(R.id.expireTextView);
-        holder.hotelIconView = (DailyImageView) view.findViewById(R.id.hotelIconView);
-        holder.gourmetIconView = (DailyImageView) view.findViewById(R.id.gourmetIconView);
-        holder.downloadCouponView = view.findViewById(R.id.downloadCouponView);
-        holder.underLineView = view.findViewById(R.id.underLineView);
-        view.setTag(holder);
-
-        return view;
-    }
-
-    private void bindView(final int position, View convertView)
-    {
-        final Object tag = convertView.getTag();
-        if (tag == null || !(tag instanceof SelectViewHolder))
+        if (mList == null)
         {
             return;
         }
 
-        SelectViewHolder holder = (SelectViewHolder) convertView.getTag();
+        mList.clear();
+    }
 
+    public void addAll(List<Coupon> list)
+    {
+        if (list == null)
+        {
+            return;
+        }
+
+        mList.addAll(list);
+    }
+
+    public void setAll(List<Coupon> list)
+    {
+        clear();
+        addAll(list);
+    }
+
+    public Coupon getItem(int position)
+    {
+        if (position < 0 || mList.size() <= position)
+        {
+            return null;
+        }
+
+        return mList.get(position);
+    }
+
+
+    @Override
+    public SelectCouponAdapter.SelectCouponViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    {
+        LayoutSelectCouponDataBinding viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_select_coupon_data, parent, false);
+
+        return new SelectCouponViewHolder(viewDataBinding);
+    }
+
+    @Override
+    public void onBindViewHolder(SelectCouponAdapter.SelectCouponViewHolder holder, int position)
+    {
         Coupon coupon = getItem(position);
 
         String strAmount = DailyTextUtils.getPriceFormat(mContext, coupon.amount, false);
-        holder.priceTextView.setText(strAmount);
+        holder.dataBinding.couponPriceTextView.setText(strAmount);
 
-        holder.titleTextView.setText(coupon.title);
+        holder.dataBinding.couponNameTextView.setText(coupon.title);
 
         if (coupon.amountMinimum > 0)
         {
@@ -112,51 +117,37 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
                 R.string.coupon_min_price_text, //
                 DailyTextUtils.getPriceFormat(mContext, coupon.amountMinimum, false));
 
-            holder.minPriceTextView.setText(strAmountMinimum);
-            holder.minPriceTextView.setVisibility(View.VISIBLE);
+            holder.dataBinding.descriptionTextView.setText(strAmountMinimum);
+            holder.dataBinding.descriptionTextView.setVisibility(View.VISIBLE);
         } else
         {
-            holder.minPriceTextView.setText("");
-            holder.minPriceTextView.setVisibility(View.GONE);
+            holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
         }
 
         try
         {
             String expireText = DailyCalendar.convertDateFormatString(coupon.validTo, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
             expireText = String.format(Locale.KOREA, "- %s", expireText);
-            holder.expireTextView.setText(expireText);
-            holder.expireTextView.setVisibility(View.VISIBLE);
+            holder.dataBinding.expireTextView.setText(expireText);
+            holder.dataBinding.expireTextView.setVisibility(View.VISIBLE);
         } catch (ParseException e)
         {
             Crashlytics.log("Select Coupon::coupon.validTo: " + (coupon != null ? coupon.validTo : ""));
             ExLog.d(e.getMessage());
-            holder.expireTextView.setVisibility(View.GONE);
+            holder.dataBinding.expireTextView.setVisibility(View.GONE);
         }
 
         // 스테이, 고메 쿠폰인지
-        if (coupon.availableInStay == true)
-        {
-            holder.hotelIconView.setVectorImageResource(R.drawable.ic_badge_hotel_on);
-        } else
-        {
-            holder.hotelIconView.setVectorImageResource(R.drawable.ic_badge_hotel_off);
-        }
+        holder.dataBinding.useableStayTextView.setVisibility(coupon.availableInStay ? View.VISIBLE : View.GONE);
+        holder.dataBinding.useableGourmetTextView.setVisibility(coupon.availableInGourmet == true ? View.VISIBLE : View.GONE);
 
-        if (coupon.availableInGourmet == true)
-        {
-            holder.gourmetIconView.setVectorImageResource(R.drawable.ic_badge_gourmet_on);
-        } else
-        {
-            holder.gourmetIconView.setVectorImageResource(R.drawable.ic_badge_gourmet_off);
-        }
-
-        setDownLoadLayout(holder, coupon.isDownloaded);
+        setDownLoadLayout(holder, coupon.type == Coupon.Type.REWARD, coupon.isDownloaded);
 
         if (mIsSelectedMode == true && coupon.isDownloaded == true)
         {
-            setSelectedLayout(holder, mSelectPosition == position);
+            setSelectedLayout(holder, coupon.type == Coupon.Type.REWARD, mSelectPosition == position);
 
-            holder.couponLayout.setOnClickListener(new View.OnClickListener()
+            holder.dataBinding.getRoot().setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -177,7 +168,7 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
             });
         } else
         {
-            holder.couponLayout.setOnClickListener(new View.OnClickListener()
+            holder.dataBinding.getRoot().setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -192,12 +183,6 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
         }
     }
 
-    public void setData(List<Coupon> list)
-    {
-        mList = list;
-        clear();
-        addAll(list);
-    }
 
     public void setSelectedMode(boolean selected)
     {
@@ -227,71 +212,70 @@ public class SelectCouponAdapter extends ArrayAdapter<Coupon>
         return mSelectPosition;
     }
 
-    private void setSelectedLayout(SelectViewHolder holder, boolean isSelected)
+    private void setSelectedLayout(SelectCouponViewHolder holder, boolean rewardCoupon, boolean isSelected)
     {
+
         if (isSelected == true)
         {
-            holder.couponLayout.setBackgroundColor(mContext.getResources().getColor(R.color.default_background_cfafafb));
+            holder.dataBinding.getRoot().setBackgroundColor(mContext.getResources().getColor(R.color.default_background_cfafafb));
 
-            holder.priceTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cb70038));
-            holder.priceTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_check_s, 0);
-            holder.priceTextView.setDrawableVectorTint(R.color.default_text_cb70038);
-            holder.priceTextView.setSelected(true);
+            holder.dataBinding.couponPriceTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cb70038));
+            holder.dataBinding.couponPriceTextView.setCompoundDrawablesWithIntrinsicBounds(rewardCoupon ? R.drawable.vector_r_ic_s_17 : 0, 0, R.drawable.ic_check_s, 0);
+            holder.dataBinding.couponPriceTextView.setSelected(true);
 
-            holder.titleTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cb70038));
+            holder.dataBinding.couponNameTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cb70038));
         } else
         {
-            holder.couponLayout.setBackgroundResource(0);
+            holder.dataBinding.getRoot().setBackgroundResource(R.color.white);
 
-            holder.priceTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
-            holder.priceTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-            holder.priceTextView.setSelected(false);
+            holder.dataBinding.couponPriceTextView.setTextColor(mContext.getResources().getColor(R.color.black));
+            holder.dataBinding.couponPriceTextView.setCompoundDrawablesWithIntrinsicBounds(rewardCoupon ? R.drawable.vector_r_ic_s_17 : 0, 0, 0, 0);
+            holder.dataBinding.couponPriceTextView.setSelected(false);
 
-            holder.titleTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
+            holder.dataBinding.couponNameTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
         }
     }
 
-    private void setDownLoadLayout(SelectViewHolder holder, boolean isDownload)
+    private void setDownLoadLayout(SelectCouponViewHolder holder, boolean rewardCoupon, boolean isDownload)
     {
-        holder.priceTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-        holder.couponLayout.setBackgroundResource(0);
+        holder.dataBinding.couponPriceTextView.setCompoundDrawablesWithIntrinsicBounds(rewardCoupon ? R.drawable.vector_r_ic_s_17 : 0, 0, 0, 0);
+        holder.dataBinding.getRoot().setBackgroundResource(R.color.white);
 
         if (isDownload == true)
         {
-            holder.priceTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
-            holder.titleTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c323232));
-            holder.minPriceTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c929292));
-            holder.expireTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c929292));
+            holder.dataBinding.couponPriceTextView.setTextColor(mContext.getResources().getColor(R.color.black));
+            holder.dataBinding.couponNameTextView.setTextColor(mContext.getResources().getColor(R.color.black));
+            holder.dataBinding.descriptionTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c929292));
+            holder.dataBinding.expireTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c929292));
 
-            holder.hotelIconView.setAlpha(1.0f);
-            holder.gourmetIconView.setAlpha(1.0f);
-            holder.downloadCouponView.setVisibility(View.GONE);
+            holder.dataBinding.useableStayTextView.setAlpha(1.0f);
+            holder.dataBinding.useableGourmetTextView.setAlpha(1.0f);
+            holder.dataBinding.downloadCouponLayout.setVisibility(View.GONE);
 
         } else
         {
             int color = mContext.getResources().getColor(R.color.default_text_cc5c5c5);
 
-            holder.priceTextView.setTextColor(color);
-            holder.titleTextView.setTextColor(color);
-            holder.minPriceTextView.setTextColor(color);
-            holder.expireTextView.setTextColor(color);
+            holder.dataBinding.couponPriceTextView.setTextColor(color);
+            holder.dataBinding.couponNameTextView.setTextColor(color);
+            holder.dataBinding.descriptionTextView.setTextColor(color);
+            holder.dataBinding.expireTextView.setTextColor(color);
 
-            holder.hotelIconView.setAlpha(0.5f);
-            holder.gourmetIconView.setAlpha(0.5f);
-            holder.downloadCouponView.setVisibility(View.VISIBLE);
+            holder.dataBinding.useableStayTextView.setAlpha(0.5f);
+            holder.dataBinding.useableGourmetTextView.setAlpha(0.5f);
+            holder.dataBinding.downloadCouponLayout.setVisibility(View.VISIBLE);
         }
     }
 
-    protected class SelectViewHolder
+    class SelectCouponViewHolder extends RecyclerView.ViewHolder
     {
-        View couponLayout;
-        DailyTextView priceTextView;
-        TextView titleTextView;
-        TextView minPriceTextView;
-        TextView expireTextView;
-        DailyImageView hotelIconView;
-        DailyImageView gourmetIconView;
-        View downloadCouponView;
-        View underLineView;
+        public LayoutSelectCouponDataBinding dataBinding;
+
+        public SelectCouponViewHolder(LayoutSelectCouponDataBinding dataBinding)
+        {
+            super(dataBinding.getRoot());
+
+            this.dataBinding = dataBinding;
+        }
     }
 }

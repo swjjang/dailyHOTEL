@@ -11,9 +11,9 @@ import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.Drawable;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.daily.base.util.ScreenUtils;
@@ -43,7 +43,7 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
     private View mOneButtonLayout;
     private View mTwoButtonLayout;
     TextView mPositiveTextView, mNegativeTextView, mConfirmTextView;
-    private ListView mListView;
+    private RecyclerView mRecyclerView;
     SelectCouponAdapter mListAdapter;
 
     public SelectCouponDialogLayout(Context context, OnBaseEventListener listener)
@@ -94,8 +94,8 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
 
     private void initListView(View view)
     {
-        mListView = (ListView) view.findViewById(R.id.listView);
-        EdgeEffectColor.setEdgeGlowColor(mListView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
     }
 
     public void setVisibility(boolean visibility)
@@ -158,10 +158,10 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
         {
             mListAdapter = new SelectCouponAdapter(mContext, list, mCouponItemListener);
             mListAdapter.setSelectedMode(isSelected);
-            mListView.setAdapter(mListAdapter);
+            mRecyclerView.setAdapter(mListAdapter);
         } else
         {
-            mListAdapter.setData(list);
+            mListAdapter.setAll(list);
             mListAdapter.setSelectedMode(isSelected);
             mListAdapter.notifyDataSetChanged();
         }
@@ -179,7 +179,7 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
             return 0;
         }
 
-        return mListAdapter.getCount();
+        return mListAdapter.getItemCount();
     }
 
     @Override

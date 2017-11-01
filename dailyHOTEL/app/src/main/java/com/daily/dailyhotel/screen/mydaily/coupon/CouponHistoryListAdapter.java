@@ -2,12 +2,10 @@ package com.daily.dailyhotel.screen.mydaily.coupon;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
@@ -61,8 +59,7 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
     @Override
     public CouponViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        ListRowCouponHistoryDataBinding dataBinding = DataBindingUtil.inflate( //
-            LayoutInflater.from(mContext), R.layout.list_row_coupon_history_data, parent, false);
+        ListRowCouponHistoryDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_coupon_history_data, parent, false);
 
         return new CouponViewHolder(dataBinding);
     }
@@ -72,37 +69,12 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
     {
         Coupon coupon = getItem(position);
 
+        holder.dataBinding.couponPriceTextView.setCompoundDrawablesWithIntrinsicBounds(coupon.type == Coupon.Type.REWARD ? R.drawable.vector_r_ic_s_17 : 0, 0, 0, 0);
+
         String strAmount = DailyTextUtils.getPriceFormat(mContext, coupon.amount, false);
-        holder.dataBinding.priceTextView.setText(strAmount);
-
-        holder.dataBinding.descriptionTextView.setText(coupon.title);
-
-        RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) holder.dataBinding.getRoot().getLayoutParams();
-
-        if (position == getItemCount() - 1)
-        {
-            layoutParams.bottomMargin = ScreenUtils.dpToPx(mContext, 40);
-
-            holder.dataBinding.lastBottomLine.setVisibility(View.VISIBLE);
-        } else
-        {
-            layoutParams.bottomMargin = 0;
-
-            holder.dataBinding.lastBottomLine.setVisibility(View.GONE);
-        }
-
-        holder.dataBinding.getRoot().setLayoutParams(layoutParams);
-
-        int resId;
-        if (coupon.isRedeemed == true)
-        {
-            resId = R.string.coupon_history_use_text;
-        } else
-        {
-            resId = R.string.coupon_history_expire_text;
-        }
-
-        holder.dataBinding.stateTextView.setText(resId);
+        holder.dataBinding.couponPriceTextView.setText(strAmount);
+        holder.dataBinding.couponNameTextView.setText(coupon.title);
+        holder.dataBinding.stateTextView.setText(coupon.isRedeemed ? R.string.coupon_history_use_text : R.string.coupon_history_expire_text);
 
         // 사용기간 및 사용일자 또는 만료일자 구현 필요
         String strExpire = CouponUtil.getAvailableDatesString(coupon.validFrom, coupon.validTo);
@@ -140,41 +112,20 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
             builder.insert(0, strExpire);
         }
 
-        holder.dataBinding.expireTextView.post(new Runnable()
+        holder.dataBinding.expireTextView.setText(builder.toString());
+        holder.dataBinding.useableStayTextView.setVisibility(coupon.availableInStay ? View.VISIBLE : View.GONE);
+        holder.dataBinding.useableGourmetTextView.setVisibility(coupon.availableInGourmet == true ? View.VISIBLE : View.GONE);
+
+        // 마지막 라인 굵기 수정
+        if(position == getItemCount() - 1)
         {
-            @Override
-            public void run()
-            {
-                Paint paint = holder.dataBinding.expireTextView.getPaint();
-                int width = holder.dataBinding.expireTextView.getMeasuredWidth() //
-                    - holder.dataBinding.expireTextView.getPaddingRight() //
-                    - holder.dataBinding.expireTextView.getPaddingLeft();
-                int textSize = builder.toString().length();
-                int endPosition = paint.breakText(builder.toString(), true, width, null);
+            holder.dataBinding.bottomLineView.getLayoutParams().height = ScreenUtils.dpToPx(mContext, 1);
+        } else
+        {
+            holder.dataBinding.bottomLineView.getLayoutParams().height = 1;
+        }
 
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) holder.dataBinding.expireTextView.getLayoutParams();
-
-                if (textSize > endPosition)
-                {
-                    String findText = " | ";
-                    int index = builder.indexOf(findText);
-                    builder.replace(index, index + findText.length(), "\n");
-                    holder.dataBinding.expireTextView.setLineSpacing(0, 0.8f);
-                    params.topMargin = ScreenUtils.dpToPx(mContext, 2d);
-                } else
-                {
-                    holder.dataBinding.expireTextView.setLineSpacing(0, 1f);
-                    params.topMargin = ScreenUtils.dpToPx(mContext, 4d);
-                }
-
-                holder.dataBinding.expireTextView.setText(builder.toString());
-            }
-        });
-
-        holder.dataBinding.useableStayImageView.setImageResource(coupon.availableInStay == true //
-            ? R.drawable.ic_badge_hotel_on : R.drawable.ic_badge_hotel_off);
-        holder.dataBinding.useableGourmetImageView.setImageResource(coupon.availableInGourmet == true //
-            ? R.drawable.ic_badge_gourmet_on : R.drawable.ic_badge_gourmet_off);
+        holder.dataBinding.bottomLineView.requestLayout();
     }
 
     protected class CouponViewHolder extends RecyclerView.ViewHolder
