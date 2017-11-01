@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.RewardHistory;
@@ -191,10 +192,20 @@ public class RewardHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
                 final int DP_18 = ScreenUtils.dpToPx(mContext, 18);
                 holder.dataBinding.descriptionLayout.setPadding(0, DP_16, 0, DP_18);
 
-                holder.dataBinding.rewardImageView.setVectorImageResource(R.drawable.vector_ic_reward_history_coupon);
+                final int[] RESOURCE_NIGHT = {R.drawable.vector_ic_reward_history_night_1//
+                , R.drawable.vector_ic_reward_history_night_2//
+                , R.drawable.vector_ic_reward_history_night_3//
+                , R.drawable.vector_ic_reward_history_night_4//
+                , R.drawable.vector_ic_reward_history_night_5//
+                , R.drawable.vector_ic_reward_history_night_6//
+                , R.drawable.vector_ic_reward_history_night_7//
+                , R.drawable.vector_ic_reward_history_night_8//
+                , R.drawable.vector_ic_reward_history_night_9};
+
+                holder.dataBinding.rewardImageView.setVectorImageResource(RESOURCE_NIGHT[rewardHistory.nights - 1]);
 
                 holder.dataBinding.titleTextView.setVisibility(View.VISIBLE);
-                holder.dataBinding.titleTextView.setText("홀리데이 인 익스프레스 싱가포르 오차드 호텔 리쿠프트");
+                holder.dataBinding.titleTextView.setText(rewardHistory.reservationName);
 
                 final int DP_4 = ScreenUtils.dpToPx(mContext, 4);
                 holder.dataBinding.descriptionTextView.setPadding(0, DP_4, 0, 0);
@@ -222,7 +233,7 @@ public class RewardHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
             {
                 holder.dataBinding.descriptionLayout.setPadding(0, 0, 0, 0);
 
-                holder.dataBinding.rewardImageView.setVectorImageResource(R.drawable.vector_ic_reward_history_expired);
+                holder.dataBinding.rewardImageView.setVectorImageResource(R.drawable.vector_ic_icon_reward_history_event);
                 holder.dataBinding.titleTextView.setVisibility(View.GONE);
 
                 holder.dataBinding.descriptionTextView.setPadding(0, 0, 0, 0);
@@ -249,7 +260,7 @@ public class RewardHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
                 holder.dataBinding.titleTextView.setVisibility(View.GONE);
 
                 holder.dataBinding.descriptionTextView.setPadding(0, 0, 0, 0);
-                holder.dataBinding.descriptionTextView.setText("보유하신 스티커 N개가 유효기간 만료로\n소멸되었습니다.");
+                holder.dataBinding.descriptionTextView.setText(mContext.getString(R.string.message_reward_expire_sticker, rewardHistory.expiredStickerCount));
 
                 try
                 {
@@ -271,14 +282,14 @@ public class RewardHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
                 final int DP_18 = ScreenUtils.dpToPx(mContext, 18);
                 holder.dataBinding.descriptionLayout.setPadding(0, DP_16, 0, DP_18);
 
-                holder.dataBinding.rewardImageView.setVectorImageResource(R.drawable.vector_ic_reward_history_coupon);
+                holder.dataBinding.rewardImageView.setVectorImageResource(R.drawable.vector_ic_reward_history_coupon );
 
                 holder.dataBinding.titleTextView.setVisibility(View.VISIBLE);
-                holder.dataBinding.titleTextView.setText("90,000원");
+                holder.dataBinding.titleTextView.setText(DailyTextUtils.getPriceFormat(mContext, rewardHistory.couponPrice, false));
 
                 final int DP_4 = ScreenUtils.dpToPx(mContext, 4);
                 holder.dataBinding.descriptionTextView.setPadding(0, DP_4, 0, 0);
-                holder.dataBinding.descriptionTextView.setText("91박 무료 리워드 쿠폰이 발행되었습니다. \n" + "쿠폰함에서 확인해보세요!");
+                holder.dataBinding.descriptionTextView.setText(R.string.message_reward_issue_reward_coupon);
 
                 try
                 {
