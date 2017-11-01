@@ -24,6 +24,8 @@ import com.twoheart.dailyhotel.util.Util;
 
 import java.util.Calendar;
 
+import io.reactivex.functions.Consumer;
+
 /**
  * Created by sheldon
  * Clean Architecture
@@ -156,7 +158,14 @@ public class CallDialogPresenter extends BaseExceptionPresenter<CallDialogActivi
                 onCommonDateTime(commonDateTime);
 
                 screenUnLock();
-            }, throwable -> onHandleErrorAndFinish(throwable)));
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    CallDialogPresenter.this.onHandleErrorAndFinish(throwable);
+                }
+            }));
     }
 
     @Override

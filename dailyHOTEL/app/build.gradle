@@ -128,11 +128,11 @@ android {
             }
         }
 
-        def simpleDateFormat = new SimpleDateFormat("yyMMdd");
-        simpleDateFormat.setTimeZone(TimeZone.getDefault());
+        def simpleDateFormat = new SimpleDateFormat("yyMMdd")
+        simpleDateFormat.setTimeZone(TimeZone.getDefault())
 
-        def apkName = "DH";
-        apkName += "-" + variant.flavorName;
+        def apkName = "DH"
+        apkName += "-" + variant.flavorName
 
 //        if (variant.buildType.name == "release") {
 //            apkName += "-Prod";
@@ -154,13 +154,13 @@ android {
 
         } else {
             if ("$qa" == null || "$qa".length() == 0) {
-                apkName += '-QA-00';
+                apkName += '-QA-00'
             } else {
-                apkName += '-QA-' + "$qa";
+                apkName += '-QA-' + "$qa"
             }
         }
 
-        apkName += "-v" + defaultConfig.versionCode;
+        apkName += "-v" + defaultConfig.versionCode
 
         def getGitName = { ->
             def stdout = new ByteArrayOutputStream()
@@ -169,20 +169,20 @@ android {
                 standardOutput = stdout
             }
 
-            return stdout.toString().trim();
+            return stdout.toString().trim()
         }
 
-        def gitName = getGitName();
+        def gitName = getGitName()
 
         if (gitName == 'sheldon') {
-            apkName += "-Sheldon";
+            apkName += "-Sheldon"
         } else if (gitName == 'android_sam') {
-            apkName += "-Sam";
+            apkName += "-Sam"
         } else {
-            apkName += "-" + gitName;
+            apkName += "-" + gitName
         }
 
-        apkName += "-" + simpleDateFormat.format(new Date());
+        apkName += "-" + simpleDateFormat.format(new Date())
 
         def getGitHash = { ->
             def stdout = new ByteArrayOutputStream()
@@ -191,15 +191,15 @@ android {
                 standardOutput = stdout
             }
 
-            return stdout.toString().trim();
+            return stdout.toString().trim()
         }
 
-        apkName += "-" + getGitHash();
+        apkName += "-" + getGitHash()
 
-        apkName += ".apk";
+        apkName += ".apk"
 
         variant.outputs.each { output ->
-            output.outputFile = new File(output.outputFile.parent, apkName);
+            output.outputFile = new File(output.outputFile.parent, apkName)
         }
     }
 }
@@ -233,7 +233,7 @@ dependencies {
     compile 'com.adjust.sdk:adjust-android:4.11.4'
 
     compile('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
-        transitive = true;
+        transitive = true
     }
     compile 'com.facebook.android:facebook-android-sdk:4.+'
 

@@ -136,7 +136,14 @@ public class RecentPlacesTabActivity extends BaseActivity
                     }
 
                     setTabLayout();
-                }, throwable -> onHandleError(throwable)));
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        RecentPlacesTabActivity.this.onHandleError(throwable);
+                    }
+                }));
         }
 
         super.onResume();

@@ -4,7 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:dailyCarousel="http://schemas.android.com/apk/res-auto"
     xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-    xmlns:dailyLineIndicator="http://schemas.android.com/apk/res-auto"
     xmlns:dailyToolbar="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/apk/res-auto">
 
@@ -169,12 +168,12 @@
                     android:id="@+id/recommendAroundListLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    dailyCarousel:bottomLineHeight="0dp"
                     dailyCarousel:bottomMarginBackgroundColor="@color/transparent"
                     dailyCarousel:bottomMarginHeight="0dp"
-                    dailyCarousel:bottomLineHeight="0dp"
+                    dailyCarousel:topLineHeight="0dp"
                     dailyCarousel:topMarginBackgroundColor="@color/transparent"
                     dailyCarousel:topMarginHeight="0dp"
-                    dailyCarousel:topLineHeight="0dp"
                     dailyCarousel:useAnimation="false"
                     dailyCarousel:useViewAllButton="false"/>
 

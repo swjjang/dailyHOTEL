@@ -876,7 +876,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
     ArrayList<CarouselListItem> convertCarouselListItemList(List<Gourmet> list)
     {
         ArrayList<Gourmet> gourmetList = new ArrayList<>();
-        ArrayList<CarouselListItem> carouselListItemList = new ArrayList<CarouselListItem>();
+        ArrayList<CarouselListItem> carouselListItemList = new ArrayList<>();
 
         if (list == null || list.size() == 0)
         {
