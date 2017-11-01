@@ -92,6 +92,12 @@ public class StayOutboundBookingDetailData
     @JsonField(name = "cancelDateTime")
     public String cancelDateTime;
 
+    @JsonField(name = "rewardCard")
+    public RewardCardData rewardCard;
+
+    @JsonField(name = "configurations")
+    public ConfigurationsData configurations;
+
     public StayOutboundBookingDetailData()
     {
 
@@ -127,6 +133,32 @@ public class StayOutboundBookingDetailData
         stayOutboundBookingDetail.paymentDate = paymentDate;
         stayOutboundBookingDetail.cancelDateTime = cancelDateTime;
 
+        // 리워드
+        if (rewardCard != null)
+        {
+            stayOutboundBookingDetail.rewardStickerCount = rewardCard.rewardStickerCount;
+        }
+
+        if (configurations != null)
+        {
+            stayOutboundBookingDetail.activeReward = configurations.activeReward;
+        }
+
         return stayOutboundBookingDetail;
+    }
+
+    @JsonObject
+    static class RewardCardData
+    {
+        @JsonField(name = "expiredAt")
+        public String expiredAt;
+
+        @JsonField(name = "rewardStickerCount")
+        public int rewardStickerCount;
+
+        public RewardCardData()
+        {
+
+        }
     }
 }
