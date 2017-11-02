@@ -1547,7 +1547,14 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             return;
         }
 
-        getViewInterface().setRecommendAroundList(mRecommendAroundList, mStayBookDateTime);
+        boolean hasRecommendAroundList = mRecommendAroundList == null || mRecommendAroundList.size() == 0 ? false : true;
+
+        getViewInterface().setRecommendAroundVisible(hasRecommendAroundList);
+
+        if (hasRecommendAroundList == true)
+        {
+            getViewInterface().setRecommendAroundList(mRecommendAroundList, mStayBookDateTime);
+        }
     }
 
     private void notifyRewardChanged()
@@ -1590,6 +1597,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             getViewInterface().setRewardVisible(false, hasRecommendAroundList);
         }
     }
+
     private void checkChangedPrice(boolean isDeepLink, StayOutboundDetail stayOutboundDetail, int listViewPrice, boolean compareListPrice)
     {
         if (stayOutboundDetail == null)

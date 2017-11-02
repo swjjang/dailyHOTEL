@@ -923,6 +923,20 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
     }
 
     @Override
+    public void setRecommendAroundVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        int flag = visible ? View.VISIBLE : View.GONE;
+
+        getViewDataBinding().recommendAroundTopLineView.setVisibility(flag);
+        getViewDataBinding().recommendAroundListLayout.setVisibility(flag);
+    }
+
+    @Override
     public void setRecommendAroundList(ArrayList<CarouselListItem> list, StayBookDateTime stayBookDateTime)
     {
         if (getViewDataBinding() == null)
