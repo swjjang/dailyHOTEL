@@ -495,7 +495,7 @@ public class DailyToolbarView extends ConstraintLayout
         mViewDataBinding.dailyToolbarUnderline.setVisibility(visible ? VISIBLE : GONE);
     }
 
-    private void setUnderLineHeight(int height)
+    public void setUnderLineHeight(int height)
     {
         if (mViewDataBinding == null)
         {

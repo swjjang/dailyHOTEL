@@ -47,6 +47,7 @@ public class IssuingReceiptActivity extends BaseActivity
     boolean mIsFullscreen;
     private View mBottomLayout;
     private DailyToolbarView mDailyToolbarView;
+    private View mBookingStateLayout;
 
     public static Intent newInstance(Context context, int bookingIndex, int bookingState)
     {
@@ -110,6 +111,21 @@ public class IssuingReceiptActivity extends BaseActivity
 
     private void initLayout()
     {
+        mBookingStateLayout = findViewById(R.id.bookingStateLayout);
+
+        TextView bookingStateTextView = (TextView) findViewById(R.id.bookingStateTextView);
+        if (Booking.BOOKING_STATE_RESERVATION_WAITING == mBookingState)
+        {
+            bookingStateTextView.setVisibility(View.VISIBLE);
+            mDailyToolbarView.setUnderLineHeight(1);
+
+            bookingStateTextView.setText(Html.fromHtml(getString(R.string.label_receipt_booking_state_reservation_wait)));
+        } else
+        {
+            bookingStateTextView.setVisibility(View.GONE);
+            mDailyToolbarView.setUnderLineHeight(getResources().getDimensionPixelSize(R.dimen.gradient_1dp_line_height_under_21));
+        }
+
         // 영수증 다음 버전으로
         mBottomLayout = findViewById(R.id.bottomLayout);
         View sendEmailView = mBottomLayout.findViewById(R.id.sendEmailView);
@@ -127,18 +143,6 @@ public class IssuingReceiptActivity extends BaseActivity
                 }
             }
         });
-
-        View bookingStateLayout = findViewById(R.id.bookingStateLayout);
-        if (Booking.BOOKING_STATE_RESERVATION_WAITING == mBookingState)
-        {
-            bookingStateLayout.setVisibility(View.VISIBLE);
-
-            TextView bookingStateTextView = (TextView) findViewById(R.id.bookingStateTextView);
-            bookingStateTextView.setText(Html.fromHtml(getString(R.string.label_receipt_booking_state_reservation_wait)));
-        } else
-        {
-            bookingStateLayout.setVisibility(View.GONE);
-        }
     }
 
     @Override
@@ -476,6 +480,7 @@ public class IssuingReceiptActivity extends BaseActivity
         if (bUseFullscreen)
         {
             mDailyToolbarView.setVisibility(View.GONE);
+            mBookingStateLayout.setVisibility(View.GONE);
 
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
@@ -484,6 +489,7 @@ public class IssuingReceiptActivity extends BaseActivity
         } else
         {
             mDailyToolbarView.setVisibility(View.VISIBLE);
+            mBookingStateLayout.setVisibility(View.VISIBLE);
 
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
