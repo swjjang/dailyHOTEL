@@ -21,6 +21,7 @@ import com.twoheart.dailyhotel.databinding.DailyViewStayCardDataBinding;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.text.DecimalFormat;
+import java.util.Locale;
 
 public class DailyStayCardView extends ConstraintLayout
 {
@@ -180,8 +181,7 @@ public class DailyStayCardView extends ConstraintLayout
 
         if (trueReviewCount > 0)
         {
-            DecimalFormat decimalFormat = new DecimalFormat("###,##0");
-            trueReviewCountText = decimalFormat.format(trueReviewCount);
+            trueReviewCountText = DailyTextUtils.convertIntegerToString(trueReviewCount);
         } else
         {
             trueReviewCountText = null;

@@ -229,8 +229,7 @@ public class DailyGourmetCardView extends ConstraintLayout
 
         if (trueReviewCount > 0)
         {
-            DecimalFormat decimalFormat = new DecimalFormat("###,##0");
-            trueReviewCountText = decimalFormat.format(trueReviewCount);
+            trueReviewCountText = DailyTextUtils.convertIntegerToString(trueReviewCount);
         } else
         {
             trueReviewCountText = null;

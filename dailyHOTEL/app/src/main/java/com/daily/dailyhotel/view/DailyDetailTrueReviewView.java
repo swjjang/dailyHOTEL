@@ -7,11 +7,10 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.DailyViewDetailTrueReviewDataBinding;
-
-import java.text.DecimalFormat;
 
 public class DailyDetailTrueReviewView extends ConstraintLayout
 {
@@ -85,8 +84,7 @@ public class DailyDetailTrueReviewView extends ConstraintLayout
             return;
         }
 
-        DecimalFormat decimalFormat = new DecimalFormat("###,##0");
-        mViewDataBinding.goTrueReviewTextView.setText(getContext().getString(R.string.label_detail_view_review_go, decimalFormat.format(trueReviewCount)));
+        mViewDataBinding.goTrueReviewTextView.setText(getContext().getString(R.string.label_detail_view_review_go, DailyTextUtils.convertIntegerToString(trueReviewCount)));
     }
 
     public void setTrueReviewCountVisible(boolean visible)
