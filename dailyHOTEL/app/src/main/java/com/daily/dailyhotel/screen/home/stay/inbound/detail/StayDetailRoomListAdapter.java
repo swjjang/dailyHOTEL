@@ -116,7 +116,7 @@ public class StayDetailRoomListAdapter extends RecyclerView.Adapter<RecyclerView
         {
             case TOTAL:
             {
-                if (stayRoom.price > 0 && stayRoom.price > stayRoom.discountTotal)
+                if (stayRoom.price > 0 && stayRoom.price > stayRoom.discountAverage)
                 {
                     price = DailyTextUtils.getPriceFormat(mContext, stayRoom.price * mNights, false);
                 }
@@ -128,7 +128,7 @@ public class StayDetailRoomListAdapter extends RecyclerView.Adapter<RecyclerView
             case AVERAGE:
             default:
             {
-                if (stayRoom.price > 0)
+                if (stayRoom.price > 0 && stayRoom.price > stayRoom.discountAverage)
                 {
                     price = DailyTextUtils.getPriceFormat(mContext, stayRoom.price, false);
                 }
