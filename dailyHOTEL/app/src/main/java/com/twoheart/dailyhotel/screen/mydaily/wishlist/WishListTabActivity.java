@@ -124,6 +124,14 @@ public class WishListTabActivity extends BaseActivity
     }
 
     @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState)
+    {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        Util.restartApp(this);
+    }
+
+    @Override
     protected void onDestroy()
     {
         super.onDestroy();

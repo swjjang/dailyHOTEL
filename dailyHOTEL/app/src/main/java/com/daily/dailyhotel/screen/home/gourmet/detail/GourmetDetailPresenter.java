@@ -459,6 +459,8 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     public void onRestoreInstanceState(Bundle savedInstanceState)
     {
         super.onRestoreInstanceState(savedInstanceState);
+
+        Util.restartApp(getActivity());
     }
 
     @Override
