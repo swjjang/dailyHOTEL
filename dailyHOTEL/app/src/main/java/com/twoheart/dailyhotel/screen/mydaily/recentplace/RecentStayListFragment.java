@@ -142,9 +142,15 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                 break;
 
             case Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG:
-                if (resultCode == Activity.RESULT_OK && data != null)
+                switch (resultCode)
                 {
-                    onChangedWish(mWishPosition, data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false));
+                    case Activity.RESULT_OK:
+                    case com.daily.base.BaseActivity.RESULT_CODE_ERROR:
+                        if (data != null)
+                        {
+                            onChangedWish(mWishPosition, data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false));
+                        }
+                        break;
                 }
                 break;
         }
@@ -842,6 +848,8 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             if (object instanceof RecentlyPlace)
             {
                 RecentlyPlace recentlyPlace = (RecentlyPlace) object;
+
+                mListLayout.notifyWishChanged(position, !recentlyPlace.myWish);
 
                 mBaseActivity.startActivityForResult(WishDialogActivity.newInstance(mBaseActivity, ServiceType.HOTEL//
                     , recentlyPlace.index, !recentlyPlace.myWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);

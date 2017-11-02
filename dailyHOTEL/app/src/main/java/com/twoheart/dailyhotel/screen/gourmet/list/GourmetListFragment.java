@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.daily.base.BaseActivity;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
@@ -58,9 +59,15 @@ public class GourmetListFragment extends PlaceListFragment
         switch (requestCode)
         {
             case Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG:
-                if (resultCode == Activity.RESULT_OK && data != null)
+                switch (resultCode)
                 {
-                    onChangedWish(mWishPosition, data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false));
+                    case Activity.RESULT_OK:
+                    case BaseActivity.RESULT_CODE_ERROR:
+                        if (data != null)
+                        {
+                            onChangedWish(mWishPosition, data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false));
+                        }
+                        break;
                 }
                 break;
 
@@ -400,6 +407,8 @@ public class GourmetListFragment extends PlaceListFragment
             Gourmet gourmet = placeViewItem.getItem();
 
             mWishPosition = position;
+
+            mPlaceListLayout.notifyWishChanged(position, !gourmet.myWish);
 
             mBaseActivity.startActivityForResult(WishDialogActivity.newInstance(mBaseActivity, ServiceType.GOURMET//
                 , gourmet.index, !gourmet.myWish, position, AnalyticsManager.Screen.DAILYGOURMET_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);

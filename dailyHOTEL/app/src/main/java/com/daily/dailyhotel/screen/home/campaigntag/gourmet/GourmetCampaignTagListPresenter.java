@@ -298,6 +298,7 @@ public class GourmetCampaignTagListPresenter //
                 switch (resultCode)
                 {
                     case Activity.RESULT_OK:
+                    case BaseActivity.RESULT_CODE_ERROR:
                         if (data != null)
                         {
                             onChangedWish(mWishPosition, data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false));
@@ -776,6 +777,8 @@ public class GourmetCampaignTagListPresenter //
         Gourmet gourmet = placeViewItem.getItem();
 
         mWishPosition = position;
+
+        getViewInterface().notifyWishChanged(position, !gourmet.myWish);
 
         startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.GOURMET//
             , gourmet.index, !gourmet.myWish, position, AnalyticsManager.Screen.DAILYGOURMET_DETAIL), GourmetCampaignTagListActivity.REQUEST_CODE_WISH_DIALOG);
