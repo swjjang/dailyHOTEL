@@ -224,6 +224,14 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
             public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
             {
                 onHandleError(throwable);
+
+                // 로그인 후에 변경시에는 전체 리플래쉬가 되어야 한다.
+                Intent intent = new Intent();
+                intent.putExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, !mWish);
+
+                setResult(BaseActivity.RESULT_CODE_ERROR, intent);
+
+                onBackClick();
             }
         }));
     }

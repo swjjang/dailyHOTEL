@@ -11,6 +11,7 @@ import android.support.v4.app.SharedElementCallback;
 import android.util.SparseArray;
 import android.view.View;
 
+import com.daily.base.BaseActivity;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
@@ -276,6 +277,7 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
                 switch (resultCode)
                 {
                     case Activity.RESULT_OK:
+                    case BaseActivity.RESULT_CODE_ERROR:
                         if (data != null)
                         {
                             onChangedWish(mWishPosition, data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false));
@@ -669,6 +671,8 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
             RecommendationGourmet recommendationGourmet = placeViewItem.getItem();
 
             mWishPosition = position;
+
+            mCollectionBaseLayout.notifyWishChanged(position, !recommendationGourmet.myWish);
 
             startActivityForResult(WishDialogActivity.newInstance(CollectionGourmetActivity.this, ServiceType.GOURMET//
                 , recommendationGourmet.index, !recommendationGourmet.myWish, position, AnalyticsManager.Screen.DAILYGOURMET_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);

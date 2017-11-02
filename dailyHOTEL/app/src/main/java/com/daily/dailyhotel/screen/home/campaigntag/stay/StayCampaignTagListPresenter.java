@@ -314,6 +314,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
                 switch (resultCode)
                 {
                     case Activity.RESULT_OK:
+                    case BaseActivity.RESULT_CODE_ERROR:
                         if (data != null)
                         {
                             onChangedWish(mWishPosition, data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false));
@@ -810,6 +811,8 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         Stay stay = placeViewItem.getItem();
 
         mWishPosition = position;
+
+        getViewInterface().notifyWishChanged(position, !stay.myWish);
 
         startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.HOTEL//
             , stay.index, !stay.myWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), StayCampaignTagListActivity.REQUEST_CODE_WISH_DIALOG);

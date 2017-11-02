@@ -22,6 +22,7 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
     public static final String INTENT_EXTRA_DATA_ANALYTICS = "analytics";
 
     public static final int RESULT_CODE_REFRESH = -10000; // 종료시에 화면 리플래쉬를 요청한다.
+    public static final int RESULT_CODE_ERROR = -10001; // 종료시에 에러를 알려준다
 
     private BasePresenter mPresenter;
 
