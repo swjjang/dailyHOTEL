@@ -1123,7 +1123,7 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
         // 호텔명
         titleInformationView.setNameText(name);
         titleInformationView.setEnglishNameVisible(true);
-        titleInformationView.setEnglishNameText(englishName);
+        titleInformationView.setEnglishNameText("(" + englishName + ")");
 
         // 등급
         titleInformationView.setCategoryText(getString(R.string.label_stay_outbound_detail_grade, (int) rating));
