@@ -497,7 +497,7 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
     }
 
     @Override
-    public void setRewardVisible(boolean visible)
+    public void setRewardVisible(boolean visible, boolean hasRecommendAroundList)
     {
         if (getViewDataBinding() == null)
         {
@@ -506,17 +506,31 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
 
         if (visible == true)
         {
-            getViewDataBinding().recommendAroundTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 1);
+            if (hasRecommendAroundList == true)
+            {
+                getViewDataBinding().recommendAroundTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 1);
+                getViewDataBinding().recommendAroundTopLineView.requestLayout();
+            } else
+            {
+                getViewDataBinding().conciergeTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 1);
+                getViewDataBinding().conciergeTopLineView.requestLayout();
+            }
 
             getViewDataBinding().rewardCardLayout.setVisibility(View.VISIBLE);
         } else
         {
-            getViewDataBinding().recommendAroundTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 12);
+            if (hasRecommendAroundList == true)
+            {
+                getViewDataBinding().recommendAroundTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 12);
+                getViewDataBinding().recommendAroundTopLineView.requestLayout();
+            } else
+            {
+                getViewDataBinding().conciergeTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 12);
+                getViewDataBinding().conciergeTopLineView.requestLayout();
+            }
 
             getViewDataBinding().rewardCardLayout.setVisibility(View.GONE);
         }
-
-        getViewDataBinding().recommendAroundTopLineView.requestLayout();
     }
 
     @Override

@@ -1557,9 +1557,11 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             return;
         }
 
+        boolean hasRecommendAroundList = mRecommendAroundList == null || mRecommendAroundList.size() == 0 ? false : true;
+
         if (mStayOutboundDetail.activeReward == true)
         {
-            getViewInterface().setRewardVisible(true);
+            getViewInterface().setRewardVisible(true, hasRecommendAroundList);
 
             if (DailyHotel.isLogin() == false)
             {
@@ -1585,10 +1587,9 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             }
         } else
         {
-            getViewInterface().setRewardVisible(false);
+            getViewInterface().setRewardVisible(false, hasRecommendAroundList);
         }
     }
-
     private void checkChangedPrice(boolean isDeepLink, StayOutboundDetail stayOutboundDetail, int listViewPrice, boolean compareListPrice)
     {
         if (stayOutboundDetail == null)

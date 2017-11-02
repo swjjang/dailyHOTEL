@@ -20,7 +20,7 @@ public interface StayOutboundDetailViewInterface extends BaseBlurViewInterface
 
     void setStayDetail(StayBookDateTime stayBookDateTime, People people, StayOutboundDetail stayOutboundDetail);
 
-    void setRewardVisible(boolean visible);
+    void setRewardVisible(boolean visible, boolean hasRecommandList);
 
     void setRewardNonMember(String titleText, String optionText, int campaignFreeNights, String descriptionText);
 
