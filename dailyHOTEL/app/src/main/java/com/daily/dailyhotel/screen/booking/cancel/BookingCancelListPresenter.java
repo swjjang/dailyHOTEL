@@ -433,7 +433,7 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
                     stayBookDateTime.setCheckOutDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), 1);
 
                     startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity() //
-                        , bookingCancel.itemIdx, bookingCancel.name, null, StayOutboundDetailActivity.NONE_PRICE//
+                        , bookingCancel.itemIdx, bookingCancel.name, null, null, StayOutboundDetailActivity.NONE_PRICE//
                         , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                         , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                         , 2, null, false, StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, null), Constants.CODE_REQUEST_ACTIVITY_STAY_OB_DETAIL);

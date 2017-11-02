@@ -1205,7 +1205,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
             }
 
             mBaseActivity.startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
-                , stayOutbound.name, imageUrl, StayOutboundDetailActivity.NONE_PRICE//
+                , stayOutbound.name, stayOutbound.nameEng, imageUrl, StayOutboundDetailActivity.NONE_PRICE//
                 , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , 2, null, true, StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam)//
@@ -1213,7 +1213,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
         } else
         {
             mBaseActivity.startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
-                , stayOutbound.name, imageUrl, StayOutboundDetailActivity.NONE_PRICE//
+                , stayOutbound.name, stayOutbound.nameEng, imageUrl, StayOutboundDetailActivity.NONE_PRICE//
                 , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , 2, null, false, StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam)//

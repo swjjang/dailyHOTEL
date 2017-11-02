@@ -840,7 +840,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pair);
 
             startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
-                , stayOutbound.name, imageUrl, stayOutbound.total//
+                , stayOutbound.name, stayOutbound.nameEng, imageUrl, stayOutbound.total//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mPeople.numberOfAdults, mPeople.getChildAgeList(), true//
@@ -850,7 +850,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         } else
         {
             startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
-                , stayOutbound.name, imageUrl, stayOutbound.total//
+                , stayOutbound.name, stayOutbound.nameEng, imageUrl, stayOutbound.total//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mPeople.numberOfAdults, mPeople.getChildAgeList(), false, StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam)//

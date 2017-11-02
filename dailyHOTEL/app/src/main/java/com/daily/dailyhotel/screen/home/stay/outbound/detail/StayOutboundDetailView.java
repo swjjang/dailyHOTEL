@@ -691,7 +691,7 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
     }
 
     @Override
-    public void setInitializedTransLayout(String name, String url)
+    public void setInitializedTransLayout(String name, String englishName, String url)
     {
         if (getViewDataBinding() == null || DailyTextUtils.isTextEmpty(name, url) == true)
         {
@@ -702,6 +702,7 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
 
         getViewDataBinding().transImageView.setImageURI(Uri.parse(url));
         getViewDataBinding().transNameTextView.setText(name);
+        getViewDataBinding().transEnglishNameTextView.setText("(" + englishName + ")");
     }
 
     @Override
@@ -732,6 +733,7 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
             getViewDataBinding().transImageView.setVisibility(View.VISIBLE);
             getViewDataBinding().transGradientBottomView.setVisibility(View.VISIBLE);
             getViewDataBinding().transNameTextView.setVisibility(View.VISIBLE);
+            getViewDataBinding().transEnglishNameTextView.setVisibility(View.VISIBLE);
             getViewDataBinding().transImageView.setTransitionName(getString(R.string.transition_place_image));
             getViewDataBinding().transGradientBottomView.setTransitionName(getString(R.string.transition_gradient_bottom_view));
             getViewDataBinding().imageLoopView.setTransGradientTopView(getString(R.string.transition_gradient_top_view));
@@ -756,6 +758,7 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
             getViewDataBinding().transImageView.setVisibility(View.GONE);
             getViewDataBinding().transGradientBottomView.setVisibility(View.GONE);
             getViewDataBinding().transNameTextView.setVisibility(View.GONE);
+            getViewDataBinding().transEnglishNameTextView.setVisibility(View.GONE);
         }
     }
 

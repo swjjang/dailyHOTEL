@@ -381,7 +381,7 @@ public class StayOutboundBookingCancelDetailPresenter //
             StayOutboundDetailAnalyticsParam analyticsParam = mAnalytics.getDetailAnalyticsParam(mStayOutboundBookingDetail);
 
             startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), mStayOutboundBookingDetail.stayIndex//
-                , mStayOutboundBookingDetail.name, null, StayOutboundDetailActivity.NONE_PRICE//
+                , mStayOutboundBookingDetail.name, null, null, StayOutboundDetailActivity.NONE_PRICE//
                 , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , 2, null, false, StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam), StayOutboundBookingCancelDetailActivity.REQUEST_CODE_DETAIL);

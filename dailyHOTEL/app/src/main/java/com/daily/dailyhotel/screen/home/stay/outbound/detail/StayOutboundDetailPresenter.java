@@ -122,7 +122,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     private RecentlyLocalImpl mRecentlyLocalImpl;
 
     int mStayIndex, mListTotalPrice;
-    private String mStayName;
+    private String mStayName, mStayEnglishName;
     String mImageUrl;
     StayBookDateTime mStayBookDateTime;
     private CommonDateTime mCommonDateTime;
@@ -319,6 +319,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             }
 
             mStayName = intent.getStringExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_STAY_NAME);
+            mStayEnglishName = intent.getStringExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_STAY_ENGLISH_NAME);
             mImageUrl = intent.getStringExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_IMAGE_URL);
             mListTotalPrice = intent.getIntExtra(StayOutboundDetailActivity.INTENT_EXTRA_DATA_LIST_PRICE, StayOutboundDetailActivity.NONE_PRICE);
 
@@ -344,7 +345,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         if (mIsDeepLink == false && mIsUsedMultiTransition == true)
         {
             getViewInterface().setSharedElementTransitionEnabled(true, mGradientType);
-            getViewInterface().setInitializedTransLayout(mStayName, mImageUrl);
+            getViewInterface().setInitializedTransLayout(mStayName, mStayEnglishName, mImageUrl);
         } else
         {
             getViewInterface().setSharedElementTransitionEnabled(false, StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
@@ -1348,7 +1349,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 //                    , android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
 
                 getActivity().startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
-                    , stayOutbound.name, imageUrl, stayOutbound.total//
+                    , stayOutbound.name, stayOutbound.nameEng, imageUrl, stayOutbound.total//
                     , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                     , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                     , mPeople.numberOfAdults, mPeople.getChildAgeList(), false, StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam)//
@@ -1356,7 +1357,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             } else
             {
                 startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
-                    , stayOutbound.name, imageUrl, stayOutbound.total//
+                    , stayOutbound.name, stayOutbound.nameEng, imageUrl, stayOutbound.total//
                     , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                     , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                     , mPeople.numberOfAdults, mPeople.getChildAgeList(), false, StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam)//

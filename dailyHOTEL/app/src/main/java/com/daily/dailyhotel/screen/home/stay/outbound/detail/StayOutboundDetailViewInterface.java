@@ -30,7 +30,7 @@ public interface StayOutboundDetailViewInterface extends BaseBlurViewInterface
 
     void setInitializedImage(String url);
 
-    void setInitializedTransLayout(String name, String url);
+    void setInitializedTransLayout(String name, String englishName, String url);
 
     void setTransitionVisible(boolean visible);
 

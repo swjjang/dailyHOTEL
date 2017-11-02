@@ -38,6 +38,7 @@ public class StayOutboundDetailActivity extends BaseActivity<StayOutboundDetailP
 
     static final String INTENT_EXTRA_DATA_STAY_INDEX = "stayIndex";
     static final String INTENT_EXTRA_DATA_STAY_NAME = "stayName";
+    static final String INTENT_EXTRA_DATA_STAY_ENGLISH_NAME = "stayEnglishName";
     static final String INTENT_EXTRA_DATA_IMAGE_URL = "imageUrl";
     static final String INTENT_EXTRA_DATA_CHECK_IN = "checkIn";
     static final String INTENT_EXTRA_DATA_CHECK_OUT = "checkOut";
@@ -66,7 +67,7 @@ public class StayOutboundDetailActivity extends BaseActivity<StayOutboundDetailP
      * @param analyticsParam
      * @return
      */
-    public static Intent newInstance(Context context, int stayIndex, String stayName, String imageUrl//
+    public static Intent newInstance(Context context, int stayIndex, String stayName, String stayEnglishName, String imageUrl//
         , int listTotalPrice, String checkInDateTime, String checkOutDateTime//
         , int numberOfAdults, ArrayList<Integer> childList, boolean isUsedMultiTransition, int gradientType//
         , StayOutboundDetailAnalyticsParam analyticsParam)
@@ -74,6 +75,7 @@ public class StayOutboundDetailActivity extends BaseActivity<StayOutboundDetailP
         Intent intent = new Intent(context, StayOutboundDetailActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_STAY_INDEX, stayIndex);
         intent.putExtra(INTENT_EXTRA_DATA_STAY_NAME, stayName);
+        intent.putExtra(INTENT_EXTRA_DATA_STAY_ENGLISH_NAME, stayEnglishName);
         intent.putExtra(INTENT_EXTRA_DATA_IMAGE_URL, imageUrl);
         intent.putExtra(INTENT_EXTRA_DATA_LIST_PRICE, listTotalPrice);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN, checkInDateTime);

@@ -524,7 +524,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), ((DailyStayOutboundCardView) view).getOptionsCompat());
 
             mBaseActivity.startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
-                , stayOutbound.name, imageUrl, StayOutboundDetailActivity.NONE_PRICE//
+                , stayOutbound.name, stayOutbound.nameEng, imageUrl, StayOutboundDetailActivity.NONE_PRICE//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , 2, null, true, StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST, analyticsParam)//
@@ -532,7 +532,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         } else
         {
             mBaseActivity.startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
-                , stayOutbound.name, imageUrl, StayOutboundDetailActivity.NONE_PRICE//
+                , stayOutbound.name, stayOutbound.nameEng, imageUrl, StayOutboundDetailActivity.NONE_PRICE//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , 2, null, false, StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam)//

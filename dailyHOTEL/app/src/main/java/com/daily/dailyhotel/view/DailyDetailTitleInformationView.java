@@ -60,6 +60,9 @@ public class DailyDetailTitleInformationView extends ConstraintLayout
             return;
         }
 
+        // 영문이 들어가게 되면 기본 이름이 상단에 3dp를 추가한다.
+        mViewDataBinding.nameTextView.setPadding(0, ScreenUtils.dpToPx(getContext(), 3), 0, 0);
+
         mViewDataBinding.englishNameTextView.setText(text);
     }
 
