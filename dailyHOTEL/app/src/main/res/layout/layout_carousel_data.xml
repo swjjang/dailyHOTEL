@@ -46,7 +46,7 @@
             android:paddingTop="5dp"
             android:text="@string/label_home_view_all"
             android:textColor="@color/default_text_c929292"
-            android:textSize="12dp"
+            android:textSize="13dp"
             app:layout_constraintBaseline_toBaselineOf="@+id/titleTextView"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintLeft_toRightOf="@+id/titleTextView"
