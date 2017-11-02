@@ -330,7 +330,8 @@ public class StayThankYouView extends BaseBlurView<StayThankYouView.OnEventListe
     @Override
     public void startRecommendGourmetViewAnimation()
     {
-        if (getViewDataBinding() == null || mRecommendGourmetAnimator != null)
+        if (getViewDataBinding() == null || mRecommendGourmetAnimator != null//
+            || getViewDataBinding().recommendGourmetButtonView.getVisibility() != View.VISIBLE)
         {
             return;
         }
