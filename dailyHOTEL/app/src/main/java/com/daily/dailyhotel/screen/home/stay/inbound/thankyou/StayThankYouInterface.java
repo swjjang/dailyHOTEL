@@ -39,4 +39,10 @@ public interface StayThankYouInterface extends BaseBlurViewInterface
     void setDepositStickerCardVisible(boolean visible);
 
     void setDepositStickerCard(String titleText, int nights, String warningText, String descriptionText);
+
+    void startRecommendGourmetViewAnimation();
+
+    void stopRecommendGourmetViewAnimation();
+
+    void setRecommendGourmetViewVisible(boolean visible);
 }

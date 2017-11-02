@@ -282,6 +282,8 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
     {
         // 꼭 호출해 주세요.
         super.onDestroy();
+
+        getViewInterface().stopRecommendGourmetViewAnimation();
     }
 
     @Override
@@ -416,7 +418,7 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
             @Override
             public void accept(ArrayList<CarouselListItem> carouselListItemList) throws Exception
             {
-                getViewInterface().setRecommendGourmetData(carouselListItemList);
+                onRecommendGourmetData(carouselListItemList);
 
                 notifyRewardInformationChanged();
 
@@ -434,7 +436,8 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
             public void accept(Throwable throwable) throws Exception
             {
                 ExLog.w(throwable.toString());
-                getViewInterface().setRecommendGourmetData(null);
+
+                onRecommendGourmetData(null);
 
                 notifyRewardInformationChanged();
 
@@ -770,6 +773,21 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
     private void setRewardInformation(RewardInformation rewardInformation)
     {
         mRewardInformation = rewardInformation;
+    }
+
+    private void onRecommendGourmetData(ArrayList<CarouselListItem> carouselListItemList)
+    {
+        if (carouselListItemList == null || carouselListItemList.size() == 0)
+        {
+            getViewInterface().setRecommendGourmetViewVisible(false);
+            getViewInterface().stopRecommendGourmetViewAnimation();
+        } else
+        {
+            getViewInterface().setRecommendGourmetViewVisible(true);
+            getViewInterface().startRecommendGourmetViewAnimation();
+
+            getViewInterface().setRecommendGourmetData(carouselListItemList);
+        }
     }
 
     ArrayList<CarouselListItem> convertCarouselListItemList(List<Gourmet> gourmetList)

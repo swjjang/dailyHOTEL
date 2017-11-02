@@ -107,15 +107,14 @@ public class StayThankYouView extends BaseBlurView<StayThankYouView.OnEventListe
                     return;
                 }
 
-                int expectedY = getViewDataBinding().recommendGourmetLayout.getTop() - ScreenUtils.getScreenHeight(getContext()) //
-                    + getContext().getResources().getDimensionPixelOffset(R.dimen.toolbar_height) + ScreenUtils.dpToPx(getContext(), 75d);
-
-                if (expectedY <= t)
+                if (getViewDataBinding().recommendGourmetLayout.getTop() <= t + scrollView.getHeight() - ScreenUtils.dpToPx(getContext(), 50))
                 {
-                    setRecommendGourmetViewAnimation(false);
+                    setRecommendGourmetViewVisible(false);
+                    stopRecommendGourmetViewAnimation();
                 } else
                 {
-                    setRecommendGourmetViewAnimation(true);
+                    setRecommendGourmetViewVisible(true);
+                    startRecommendGourmetViewAnimation();
                 }
             }
         });
@@ -329,6 +328,46 @@ public class StayThankYouView extends BaseBlurView<StayThankYouView.OnEventListe
     }
 
     @Override
+    public void startRecommendGourmetViewAnimation()
+    {
+        if (getViewDataBinding() == null || mRecommendGourmetAnimator != null)
+        {
+            return;
+        }
+
+        float transY = ScreenUtils.dpToPx(getContext(), 6d);
+
+        mRecommendGourmetAnimator = ObjectAnimator.ofFloat(getViewDataBinding().recommendGourmetButtonView, "translationY", 0.0f, transY, 0.0f);
+        mRecommendGourmetAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        mRecommendGourmetAnimator.setDuration(1600);
+        mRecommendGourmetAnimator.setRepeatCount(ObjectAnimator.INFINITE);
+        mRecommendGourmetAnimator.start();
+    }
+
+    @Override
+    public void stopRecommendGourmetViewAnimation()
+    {
+        if (getViewDataBinding() == null || mRecommendGourmetAnimator == null)
+        {
+            return;
+        }
+
+        mRecommendGourmetAnimator.cancel();
+        mRecommendGourmetAnimator = null;
+    }
+
+    @Override
+    public void setRecommendGourmetViewVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().recommendGourmetButtonView.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
     public void setNoticeVisible(boolean visible)
     {
         if (getViewDataBinding() == null)
@@ -422,41 +461,5 @@ public class StayThankYouView extends BaseBlurView<StayThankYouView.OnEventListe
                 getEventListener().onBackClick();
             }
         });
-    }
-
-    private void setRecommendGourmetViewAnimation(boolean visible)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        boolean isOldVisible = getViewDataBinding().recommendGourmetButtonView.getVisibility() == View.VISIBLE;
-        if (isOldVisible == visible)
-        {
-            return;
-        }
-
-        if (mRecommendGourmetAnimator != null)
-        {
-            mRecommendGourmetAnimator.cancel();
-            mRecommendGourmetAnimator = null;
-        }
-
-        if (visible == true)
-        {
-            getViewDataBinding().recommendGourmetButtonView.setVisibility(View.VISIBLE);
-
-            float transY = ScreenUtils.dpToPx(getContext(), 6d);
-
-            mRecommendGourmetAnimator = ObjectAnimator.ofFloat(getViewDataBinding().recommendGourmetButtonView, "translationY", 0.0f, transY, 0.0f);
-            mRecommendGourmetAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-            mRecommendGourmetAnimator.setDuration(1600);
-            mRecommendGourmetAnimator.setRepeatCount(ObjectAnimator.INFINITE);
-            mRecommendGourmetAnimator.start();
-        } else
-        {
-            getViewDataBinding().recommendGourmetButtonView.setVisibility(View.GONE);
-        }
     }
 }
