@@ -1344,7 +1344,8 @@ public class HomeFragment extends BaseMenuNavigationFragment
             public void accept(Throwable throwable) throws Exception
             {
                 HomeFragment.this.setRecentlyList(null, true);
-                Crashlytics.logException(new Exception("need check Daily DB", throwable));
+                Crashlytics.log("need check Daily DB");
+                Crashlytics.logException(throwable);
             }
         }));
     }
