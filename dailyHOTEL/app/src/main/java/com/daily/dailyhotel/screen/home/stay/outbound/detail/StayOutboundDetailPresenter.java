@@ -489,6 +489,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     public void onRestoreInstanceState(Bundle savedInstanceState)
     {
         super.onRestoreInstanceState(savedInstanceState);
+
+        Util.restartApp(getActivity());
     }
 
     @Override
