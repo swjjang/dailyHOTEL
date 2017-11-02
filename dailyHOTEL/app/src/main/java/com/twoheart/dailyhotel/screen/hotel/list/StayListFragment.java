@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.daily.base.BaseActivity;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
@@ -58,9 +59,15 @@ public class StayListFragment extends PlaceListFragment
         switch (requestCode)
         {
             case Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG:
-                if (resultCode == Activity.RESULT_OK && data != null)
+                switch (resultCode)
                 {
-                    onChangedWish(mWishPosition, data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false));
+                    case Activity.RESULT_OK:
+                    case BaseActivity.RESULT_CODE_ERROR:
+                        if (data != null)
+                        {
+                            onChangedWish(mWishPosition, data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false));
+                        }
+                        break;
                 }
                 break;
 
@@ -559,6 +566,8 @@ public class StayListFragment extends PlaceListFragment
             Stay stay = placeViewItem.getItem();
 
             mWishPosition = position;
+
+            mPlaceListLayout.notifyWishChanged(position, !stay.myWish);
 
             mBaseActivity.startActivityForResult(WishDialogActivity.newInstance(mBaseActivity, ServiceType.HOTEL//
                 , stay.index, !stay.myWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);

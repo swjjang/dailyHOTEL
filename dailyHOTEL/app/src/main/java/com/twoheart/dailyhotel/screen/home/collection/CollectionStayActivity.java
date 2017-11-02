@@ -10,6 +10,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
 import android.view.View;
 
+import com.daily.base.BaseActivity;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
@@ -281,6 +282,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
                 switch (resultCode)
                 {
                     case Activity.RESULT_OK:
+                    case BaseActivity.RESULT_CODE_ERROR:
                         if (data != null)
                         {
                             onChangedWish(mWishPosition, data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false));
@@ -673,6 +675,8 @@ public class CollectionStayActivity extends CollectionBaseActivity
             RecommendationStay recommendationStay = placeViewItem.getItem();
 
             mWishPosition = position;
+
+            mCollectionBaseLayout.notifyWishChanged(position, !recommendationStay.myWish);
 
             startActivityForResult(WishDialogActivity.newInstance(CollectionStayActivity.this, ServiceType.HOTEL//
                 , recommendationStay.index, !recommendationStay.myWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);
