@@ -91,4 +91,11 @@
         <attr name="useViewAllButton" format="boolean" />
     </declare-styleable>
 
+    <declare-styleable name="dailyBookingAgreeThirdParty">
+        <attr name="serviceType" format="enum">
+            <enum name="stay_inbound" value="0"/>
+            <enum name="gourmet" value="1"/>
+            <enum name="stay_outbound" value="2"/>
+        </attr>
+    </declare-styleable>
 </resources>

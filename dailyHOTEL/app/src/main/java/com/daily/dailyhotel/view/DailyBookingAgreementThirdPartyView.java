@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.view;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.databinding.DataBindingUtil;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -10,12 +11,15 @@ import android.widget.LinearLayout;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.DailyViewBookingAgreementThirdPartyDataBinding;
+import com.twoheart.dailyhotel.util.Constants;
 
 public class DailyBookingAgreementThirdPartyView extends LinearLayout
 {
     DailyViewBookingAgreementThirdPartyDataBinding mViewDataBinding;
 
     OnAgreementClickListener mOnAgreementClickListener;
+
+    Constants.ServiceType mServiceType;
 
     public interface OnAgreementClickListener
     {
@@ -30,24 +34,24 @@ public class DailyBookingAgreementThirdPartyView extends LinearLayout
     {
         super(context);
 
-        initLayout(context);
+        initLayout(context, null);
     }
 
     public DailyBookingAgreementThirdPartyView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
 
-        initLayout(context);
+        initLayout(context, attrs);
     }
 
     public DailyBookingAgreementThirdPartyView(Context context, AttributeSet attrs, int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
 
-        initLayout(context);
+        initLayout(context, attrs);
     }
 
-    private void initLayout(Context context)
+    private void initLayout(Context context, AttributeSet attrs)
     {
         setOrientation(VERTICAL);
 
@@ -95,6 +99,18 @@ public class DailyBookingAgreementThirdPartyView extends LinearLayout
                 mViewDataBinding.agreeThirdPartyTermsCheckBox.performClick();
             }
         });
+
+        if (context != null && attrs != null)
+        {
+            TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.dailyBookingAgreeThirdParty);
+            if (typedArray.hasValue(R.styleable.dailyBookingAgreeThirdParty_serviceType) == true)
+            {
+                int serviceType = typedArray.getInt(R.styleable.dailyBookingAgreeThirdParty_serviceType, 0);
+                setServiceType(serviceType);
+            }
+        }
+
+        setPersonalInformationText04(mServiceType);
     }
 
     public void setOnAgreementClickListener(OnAgreementClickListener listener)
@@ -133,5 +149,43 @@ public class DailyBookingAgreementThirdPartyView extends LinearLayout
 
         mViewDataBinding.arrowImageView.setRotation(0);
         mViewDataBinding.thirdPartyTermsLayout.setVisibility(View.GONE);
+    }
+
+    private void setServiceType(int serviceType)
+    {
+        switch (serviceType)
+        {
+            case 2: // OB_STAY:
+                mServiceType = Constants.ServiceType.OB_STAY;
+                break;
+
+            case 1: // GOURMET:
+                mServiceType = Constants.ServiceType.GOURMET;
+                break;
+
+            case 0: // HOTEL:
+            default:
+                mServiceType = Constants.ServiceType.HOTEL;
+                break;
+        }
+    }
+
+    public void setPersonalInformationText04(Constants.ServiceType serviceType)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        int resId;
+        if (Constants.ServiceType.OB_STAY == serviceType)
+        {
+            resId = R.string.message_payment_agree_personal_information04_type_ob;
+        } else
+        {
+            resId = R.string.message_payment_agree_personal_information04;
+        }
+
+        mViewDataBinding.personalInformationTextView04.setText(resId);
     }
 }

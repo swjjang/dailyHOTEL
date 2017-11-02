@@ -199,6 +199,7 @@
                     android:background="@color/default_line_c979797"/>
 
                 <com.daily.base.widget.DailyTextView
+                    android:id="@+id/personalInformationTextView04"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
