@@ -99,11 +99,11 @@
         <android.support.constraint.ConstraintLayout
             android:id="@+id/couponLayout"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:layout_marginLeft="18dp"
             android:layout_marginRight="18dp"
             android:layout_marginTop="14dp"
-            android:background="@drawable/shape_fillrect_ld9d9d9_bffffff_r2"
+            android:background="@drawable/detail_coupon"
             android:visibility="gone"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
