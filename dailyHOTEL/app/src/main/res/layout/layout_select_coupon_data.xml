@@ -70,7 +70,7 @@
             android:layout_marginTop="4dp"
             android:gravity="center_vertical"
             android:textColor="@color/default_text_c929292"
-            android:textSize="11dp"
+            android:textSize="10dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/couponNameTextView"/>
@@ -84,7 +84,7 @@
             android:layout_marginTop="4dp"
             android:gravity="center_vertical"
             android:textColor="@color/coupon_description_text"
-            android:textSize="11dp"
+            android:textSize="10dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/descriptionTextView"/>
