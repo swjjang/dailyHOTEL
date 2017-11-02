@@ -11,6 +11,8 @@ import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.DailyViewDetailTrueReviewDataBinding;
 
+import java.text.DecimalFormat;
+
 public class DailyDetailTrueReviewView extends ConstraintLayout
 {
     private DailyViewDetailTrueReviewDataBinding mViewDataBinding;
@@ -76,14 +78,15 @@ public class DailyDetailTrueReviewView extends ConstraintLayout
         mViewDataBinding.descriptionTextView.setVisibility(visible ? VISIBLE : GONE);
     }
 
-    public void setTrueReviewCount(int reviewCount)
+    public void setTrueReviewCount(int trueReviewCount)
     {
-        if (mViewDataBinding == null)
+        if (mViewDataBinding == null || trueReviewCount <= 0)
         {
             return;
         }
 
-        mViewDataBinding.goTrueReviewTextView.setText(getContext().getString(R.string.label_detail_view_review_go, reviewCount));
+        DecimalFormat decimalFormat = new DecimalFormat("###,##0");
+        mViewDataBinding.goTrueReviewTextView.setText(getContext().getString(R.string.label_detail_view_review_go, decimalFormat.format(trueReviewCount)));
     }
 
     public void setTrueReviewCountVisible(boolean visible)
