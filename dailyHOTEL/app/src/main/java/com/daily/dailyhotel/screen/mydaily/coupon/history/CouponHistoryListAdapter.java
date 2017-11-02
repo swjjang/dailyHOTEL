@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.entity.ObjectItem;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowCouponHistoryDataBinding;
 import com.twoheart.dailyhotel.model.Coupon;
@@ -22,12 +23,12 @@ import java.util.List;
  * Created by android_sam on 2017. 9. 28..
  */
 
-public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistoryListAdapter.CouponViewHolder>
+public class CouponHistoryListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
     Context mContext;
-    private List<Coupon> mCouponList;
+    private List<ObjectItem> mCouponList;
 
-    public CouponHistoryListAdapter(Context context, List<Coupon> list)
+    public CouponHistoryListAdapter(Context context, List<ObjectItem> list)
     {
         mContext = context;
 
@@ -45,7 +46,7 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
      * @param position 실제 포지션에서 -1 된 값(헤더 사이즈 뺀값)
      * @return
      */
-    public Coupon getItem(int position)
+    public ObjectItem getItem(int position)
     {
         return mCouponList.get(position);
     }
@@ -57,18 +58,57 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
     }
 
     @Override
-    public CouponViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    public int getItemViewType(int position)
     {
-        ListRowCouponHistoryDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_coupon_history_data, parent, false);
-
-        return new CouponViewHolder(dataBinding);
+        return mCouponList.get(position).mType;
     }
 
     @Override
-    public void onBindViewHolder(CouponViewHolder holder, int position)
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        Coupon coupon = getItem(position);
+        switch (viewType)
+        {
+            case ObjectItem.TYPE_ENTRY:
+            {
+                ListRowCouponHistoryDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_coupon_history_data, parent, false);
 
+                return new CouponViewHolder(dataBinding);
+            }
+
+            case ObjectItem.TYPE_FOOTER_VIEW:
+            {
+                View footerView = new View(mContext);
+                footerView.setBackgroundResource(R.color.default_background);
+                footerView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(mContext, 47)));
+
+                return new FooterViewHolder(footerView);
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position)
+    {
+        ObjectItem item = getItem(position);
+
+        if (item == null)
+        {
+            return;
+        }
+
+        switch (item.mType)
+        {
+            case ObjectItem.TYPE_ENTRY:
+                onBindViewHolder((CouponViewHolder) holder, item.getItem(), position);
+                break;
+        }
+    }
+
+
+    public void onBindViewHolder(CouponViewHolder holder, Coupon coupon, int position)
+    {
         holder.dataBinding.couponPriceTextView.setCompoundDrawablesWithIntrinsicBounds(coupon.type == Coupon.Type.REWARD ? R.drawable.vector_r_ic_s_17 : 0, 0, 0, 0);
 
         String strAmount = DailyTextUtils.getPriceFormat(mContext, coupon.amount, false);
@@ -117,7 +157,7 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
         holder.dataBinding.useableGourmetTextView.setVisibility(coupon.availableInGourmet == true ? View.VISIBLE : View.GONE);
 
         // 마지막 라인 굵기 수정
-        if(position == getItemCount() - 1)
+        if (position == getItemCount() - 1)
         {
             holder.dataBinding.bottomLineView.getLayoutParams().height = ScreenUtils.dpToPx(mContext, 1);
         } else
@@ -137,6 +177,14 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<CouponHistory
             super(dataBinding.getRoot());
 
             this.dataBinding = dataBinding;
+        }
+    }
+
+    private class FooterViewHolder extends RecyclerView.ViewHolder
+    {
+        public FooterViewHolder(View view)
+        {
+            super(view);
         }
     }
 }

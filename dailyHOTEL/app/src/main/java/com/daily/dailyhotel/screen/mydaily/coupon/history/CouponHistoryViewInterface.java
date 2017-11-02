@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.mydaily.coupon.history;
 
 import com.daily.base.BaseDialogViewInterface;
+import com.daily.dailyhotel.entity.ObjectItem;
 import com.twoheart.dailyhotel.model.Coupon;
 
 import java.util.List;
@@ -11,5 +12,5 @@ import java.util.List;
 
 public interface CouponHistoryViewInterface extends BaseDialogViewInterface
 {
-    void setData(List<Coupon> list);
+    void setData(List<ObjectItem> list);
 }

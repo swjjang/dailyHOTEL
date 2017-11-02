@@ -7,8 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:minHeight="108dp"
-        android:paddingTop="16dp">
+        android:minHeight="108dp">
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/stateTextView"
@@ -34,6 +33,7 @@
             android:layout_height="17dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
+            android:layout_marginTop="17dp"
             android:drawablePadding="5dp"
             android:gravity="center_vertical"
             android:textColor="@color/default_text_c323232"

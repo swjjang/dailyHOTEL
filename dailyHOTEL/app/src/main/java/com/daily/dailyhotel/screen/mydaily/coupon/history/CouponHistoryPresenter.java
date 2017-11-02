@@ -7,12 +7,14 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.repository.remote.CouponRemoteImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
@@ -153,7 +155,16 @@ public class CouponHistoryPresenter extends BaseExceptionPresenter<CouponHistory
                 @Override
                 public void accept(ArrayList<Coupon> coupons) throws Exception
                 {
-                    getViewInterface().setData(coupons);
+                    List<ObjectItem> objectItemList = new ArrayList<>(coupons.size() + 1);
+
+                    for (Coupon coupon : coupons)
+                    {
+                        objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, coupon));
+                    }
+
+                    objectItemList.add(new ObjectItem(ObjectItem.TYPE_FOOTER_VIEW, null));
+
+                    getViewInterface().setData(objectItemList);
 
                     unLockAll();
                 }

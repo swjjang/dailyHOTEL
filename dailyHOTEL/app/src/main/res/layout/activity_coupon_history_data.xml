@@ -48,7 +48,7 @@
                 <com.daily.base.widget.DailyTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="2dp"
                     android:text="@string/coupon_history_header_sub_description"
                     android:textColor="@color/default_text_c929292"
                     android:textSize="11dp" />

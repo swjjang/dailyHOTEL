@@ -6,6 +6,7 @@ import android.view.View;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
+import com.daily.dailyhotel.entity.ObjectItem;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityCouponHistoryDataBinding;
 import com.twoheart.dailyhotel.model.Coupon;
@@ -100,7 +101,7 @@ public class CouponHistoryView extends BaseDialogView<CouponHistoryView.OnEventL
     }
 
     @Override
-    public void setData(List<Coupon> list)
+    public void setData(List<ObjectItem> list)
     {
         if (getViewDataBinding() == null)
         {
