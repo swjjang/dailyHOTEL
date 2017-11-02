@@ -122,7 +122,7 @@ public class StayDetailRoomListAdapter extends RecyclerView.Adapter<RecyclerView
         {
             case TOTAL:
             {
-                if (stayRoom.price > 0)
+                if (stayRoom.price > 0 && stayRoom.price > stayRoom.discountTotal)
                 {
                     price = DailyTextUtils.getPriceFormat(mContext, stayRoom.price * mNights, false);
                 }
