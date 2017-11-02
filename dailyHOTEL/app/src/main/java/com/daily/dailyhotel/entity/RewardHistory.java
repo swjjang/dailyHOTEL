@@ -8,9 +8,7 @@ public class RewardHistory
 {
     public enum Type
     {
-        RESERVATION_STICKER // 스티커 적립
-        ,
-        EVENT_STICKER // 이벤트 스티커
+        CREATED_STICKER // 스티커 적립
         ,
         EXPIRED_STICKER // 스티커 만료
         ,
@@ -33,4 +31,5 @@ public class RewardHistory
     public String reservationName;
     public int nights;
     public ServiceType serviceType;
+    public String rewardStickerType; // R(reward), E(event)
 }

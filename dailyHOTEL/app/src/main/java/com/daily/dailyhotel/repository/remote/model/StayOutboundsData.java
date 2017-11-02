@@ -51,7 +51,7 @@ public class StayOutboundsData
         stayOutbounds.cacheLocation = cacheLocation;
         stayOutbounds.moreResultsAvailable = moreResultsAvailable;
 
-        if (configurations == null)
+        if (configurations != null)
         {
             stayOutbounds.activeReward = configurations.activeReward;
         }

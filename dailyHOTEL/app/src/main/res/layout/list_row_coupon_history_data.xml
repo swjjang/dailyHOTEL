@@ -79,7 +79,7 @@
         <com.daily.base.widget.DailyTextView
             android:id="@+id/useableStayTextView"
             android:layout_width="38dp"
-            android:layout_height="wrap_content"
+            android:layout_height="15dp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="15dp"
             android:layout_marginLeft="15dp"
@@ -96,7 +96,7 @@
         <com.daily.base.widget.DailyTextView
             android:id="@+id/useableGourmetTextView"
             android:layout_width="29dp"
-            android:layout_height="wrap_content"
+            android:layout_height="15dp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="15dp"
             android:layout_marginLeft="1dp"

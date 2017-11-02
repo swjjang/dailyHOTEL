@@ -1547,7 +1547,14 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             return;
         }
 
-        getViewInterface().setRecommendAroundList(mRecommendAroundList, mStayBookDateTime);
+        boolean hasRecommendAroundList = mRecommendAroundList == null || mRecommendAroundList.size() == 0 ? false : true;
+
+        getViewInterface().setRecommendAroundVisible(hasRecommendAroundList);
+
+        if (hasRecommendAroundList == true)
+        {
+            getViewInterface().setRecommendAroundList(mRecommendAroundList, mStayBookDateTime);
+        }
     }
 
     private void notifyRewardChanged()
@@ -1557,9 +1564,11 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             return;
         }
 
+        boolean hasRecommendAroundList = mRecommendAroundList == null || mRecommendAroundList.size() == 0 ? false : true;
+
         if (mStayOutboundDetail.activeReward == true)
         {
-            getViewInterface().setRewardVisible(true);
+            getViewInterface().setRewardVisible(true, hasRecommendAroundList);
 
             if (DailyHotel.isLogin() == false)
             {
@@ -1585,7 +1594,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             }
         } else
         {
-            getViewInterface().setRewardVisible(false);
+            getViewInterface().setRewardVisible(false, hasRecommendAroundList);
         }
     }
 

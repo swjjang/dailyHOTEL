@@ -107,6 +107,16 @@ public class DailyDetailTitleInformationView extends ConstraintLayout
         mViewDataBinding.couponLayout.setVisibility(visible ? VISIBLE : GONE);
     }
 
+    public void setOnCouponClickListener(OnClickListener listener)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.couponLayout.setOnClickListener(listener);
+    }
+
     public void setCouponPriceText(String text)
     {
         if (mViewDataBinding == null)

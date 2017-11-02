@@ -10,8 +10,6 @@ import android.widget.TextView;
 
 import com.daily.base.R;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -247,5 +245,41 @@ public class DailyTextUtils
         }
 
         return true;
+    }
+
+    /**
+     * 10000 > 작은경우
+     * 9999 : 9,999
+     * 999 : 999
+     * <p>
+     * 10000 <= 큰경우
+     * 10000 : 1만
+     * 12000 : 1.2만
+     * 12300 : 1.2만
+     * 12700 : 1.3만
+     *
+     * @return
+     */
+    public static String convertIntegerToString(int number)
+    {
+        final int MIN_NUMBER = 10000;
+
+        if (number < MIN_NUMBER)
+        {
+            DecimalFormat decimalFormat = new DecimalFormat("###,##0");
+            return decimalFormat.format(number);
+        } else
+        {
+            float roundCount = (float) (number / 10) / 10.0f;
+            roundCount = Math.round(roundCount);
+
+            if (roundCount % 100 == 0.0f)
+            {
+                return String.format(Locale.KOREA, "%d만", (int) (roundCount / 100));
+            } else
+            {
+                return String.format(Locale.KOREA, "%.1f만", roundCount / 100);
+            }
+        }
     }
 }

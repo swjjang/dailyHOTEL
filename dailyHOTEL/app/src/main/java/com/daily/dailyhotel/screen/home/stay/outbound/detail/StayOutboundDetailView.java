@@ -497,7 +497,7 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
     }
 
     @Override
-    public void setRewardVisible(boolean visible)
+    public void setRewardVisible(boolean visible, boolean hasRecommendAroundList)
     {
         if (getViewDataBinding() == null)
         {
@@ -506,17 +506,31 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
 
         if (visible == true)
         {
-            getViewDataBinding().recommendAroundTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 1);
+            if (hasRecommendAroundList == true)
+            {
+                getViewDataBinding().recommendAroundTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 1);
+                getViewDataBinding().recommendAroundTopLineView.requestLayout();
+            } else
+            {
+                getViewDataBinding().conciergeTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 1);
+                getViewDataBinding().conciergeTopLineView.requestLayout();
+            }
 
             getViewDataBinding().rewardCardLayout.setVisibility(View.VISIBLE);
         } else
         {
-            getViewDataBinding().recommendAroundTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 12);
+            if (hasRecommendAroundList == true)
+            {
+                getViewDataBinding().recommendAroundTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 12);
+                getViewDataBinding().recommendAroundTopLineView.requestLayout();
+            } else
+            {
+                getViewDataBinding().conciergeTopLineView.getLayoutParams().height = ScreenUtils.dpToPx(getContext(), 12);
+                getViewDataBinding().conciergeTopLineView.requestLayout();
+            }
 
             getViewDataBinding().rewardCardLayout.setVisibility(View.GONE);
         }
-
-        getViewDataBinding().recommendAroundTopLineView.requestLayout();
     }
 
     @Override
@@ -906,6 +920,20 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
 
         getViewDataBinding().nestedScrollView.smoothScrollTo(0, 0);
         //        getViewDataBinding().nestedScrollView.fullScroll(View.FOCUS_UP);
+    }
+
+    @Override
+    public void setRecommendAroundVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        int flag = visible ? View.VISIBLE : View.GONE;
+
+        getViewDataBinding().recommendAroundTopLineView.setVisibility(flag);
+        getViewDataBinding().recommendAroundListLayout.setVisibility(flag);
     }
 
     @Override

@@ -225,16 +225,25 @@ public class DailyGourmetCardView extends ConstraintLayout
         }
 
         String reviewText;
+        String trueReviewCountText;
+
+        if (trueReviewCount > 0)
+        {
+            trueReviewCountText = DailyTextUtils.convertIntegerToString(trueReviewCount);
+        } else
+        {
+            trueReviewCountText = null;
+        }
 
         if (satisfaction > 0 && trueReviewCount > 0)
         {
-            reviewText = Integer.toString(satisfaction) + "% (" + getContext().getString(R.string.label_truereview_count, trueReviewCount) + ")";
+            reviewText = Integer.toString(satisfaction) + "% (" + getContext().getString(R.string.label_truereview_count, trueReviewCountText) + ")";
         } else if (satisfaction > 0)
         {
             reviewText = Integer.toString(satisfaction) + "%";
         } else if (trueReviewCount > 0)
         {
-            reviewText = getContext().getString(R.string.label_truereview_count, trueReviewCount);
+            reviewText = getContext().getString(R.string.label_truereview_count, trueReviewCountText);
         } else
         {
             reviewText = null;

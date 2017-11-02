@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.RewardHistory;
@@ -184,61 +185,74 @@ public class RewardHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         switch (rewardHistory.type)
         {
-            // 스티커 적립
-            case RESERVATION_STICKER:
-            {
-                final int DP_16 = ScreenUtils.dpToPx(mContext, 16);
-                final int DP_18 = ScreenUtils.dpToPx(mContext, 18);
-                holder.dataBinding.descriptionLayout.setPadding(0, DP_16, 0, DP_18);
-
-                holder.dataBinding.rewardImageView.setVectorImageResource(R.drawable.vector_ic_reward_history_coupon);
-
-                holder.dataBinding.titleTextView.setVisibility(View.VISIBLE);
-                holder.dataBinding.titleTextView.setText("홀리데이 인 익스프레스 싱가포르 오차드 호텔 리쿠프트");
-
-                final int DP_4 = ScreenUtils.dpToPx(mContext, 4);
-                holder.dataBinding.descriptionTextView.setPadding(0, DP_4, 0, 0);
-                holder.dataBinding.descriptionTextView.setText(R.string.message_reward_issue_sticker);
-
-                try
+            case CREATED_STICKER:
+                switch (rewardHistory.rewardStickerType)
                 {
-                    holder.dataBinding.dateTextView.setText(mContext.getString(R.string.label_reward_payment_deposit, DailyCalendar.convertDateFormatString("2017-10-20T17:32:22+09:00", DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT)));
-                } catch (ParseException e)
-                {
+                    case "R":
+                    {
+                        final int DP_16 = ScreenUtils.dpToPx(mContext, 16);
+                        final int DP_18 = ScreenUtils.dpToPx(mContext, 18);
+                        holder.dataBinding.descriptionLayout.setPadding(0, DP_16, 0, DP_18);
 
+                        final int[] RESOURCE_NIGHT = {R.drawable.vector_ic_reward_history_night_1//
+                            , R.drawable.vector_ic_reward_history_night_2//
+                            , R.drawable.vector_ic_reward_history_night_3//
+                            , R.drawable.vector_ic_reward_history_night_4//
+                            , R.drawable.vector_ic_reward_history_night_5//
+                            , R.drawable.vector_ic_reward_history_night_6//
+                            , R.drawable.vector_ic_reward_history_night_7//
+                            , R.drawable.vector_ic_reward_history_night_8//
+                            , R.drawable.vector_ic_reward_history_night_9};
+
+                        holder.dataBinding.rewardImageView.setVectorImageResource(RESOURCE_NIGHT[rewardHistory.nights - 1]);
+
+                        holder.dataBinding.titleTextView.setVisibility(View.VISIBLE);
+                        holder.dataBinding.titleTextView.setText(rewardHistory.reservationName);
+
+                        final int DP_4 = ScreenUtils.dpToPx(mContext, 4);
+                        holder.dataBinding.descriptionTextView.setPadding(0, DP_4, 0, 0);
+                        holder.dataBinding.descriptionTextView.setText(R.string.message_reward_issue_sticker);
+
+                        try
+                        {
+                            holder.dataBinding.dateTextView.setText(mContext.getString(R.string.label_reward_payment_deposit, DailyCalendar.convertDateFormatString(rewardHistory.date, DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT)));
+                        } catch (ParseException e)
+                        {
+
+                        }
+
+                        final String linkText = mContext.getString(R.string.label_reward_view_reservation);
+
+                        SpannableString spannableString = new SpannableString(linkText);
+                        spannableString.setSpan(new UnderlineSpan(), 0, linkText.length(), 0);
+                        holder.dataBinding.reservationLinkTextView.setVisibility(View.VISIBLE);
+                        holder.dataBinding.reservationLinkTextView.setText(spannableString);
+                        break;
+                    }
+
+                    case "E":
+                    {
+                        holder.dataBinding.descriptionLayout.setPadding(0, 0, 0, 0);
+
+                        holder.dataBinding.rewardImageView.setVectorImageResource(R.drawable.vector_ic_icon_reward_history_event);
+                        holder.dataBinding.titleTextView.setVisibility(View.GONE);
+
+                        holder.dataBinding.descriptionTextView.setPadding(0, 0, 0, 0);
+                        holder.dataBinding.descriptionTextView.setText(R.string.message_reward_issue_sticker);
+
+                        try
+                        {
+                            holder.dataBinding.dateTextView.setText(mContext.getString(R.string.label_reward_sticker_issue_date, DailyCalendar.convertDateFormatString(rewardHistory.date, DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT)));
+                        } catch (ParseException e)
+                        {
+
+                        }
+
+                        holder.dataBinding.reservationLinkTextView.setVisibility(View.GONE);
+                        break;
+                    }
                 }
-
-                final String linkText = mContext.getString(R.string.label_reward_view_reservation);
-
-                SpannableString spannableString = new SpannableString(linkText);
-                spannableString.setSpan(new UnderlineSpan(), 0, linkText.length(), 0);
-                holder.dataBinding.reservationLinkTextView.setVisibility(View.VISIBLE);
-                holder.dataBinding.reservationLinkTextView.setText(spannableString);
                 break;
-            }
-
-            // 이벤트 스티커
-            case EVENT_STICKER:
-            {
-                holder.dataBinding.descriptionLayout.setPadding(0, 0, 0, 0);
-
-                holder.dataBinding.rewardImageView.setVectorImageResource(R.drawable.vector_ic_reward_history_expired);
-                holder.dataBinding.titleTextView.setVisibility(View.GONE);
-
-                holder.dataBinding.descriptionTextView.setPadding(0, 0, 0, 0);
-                holder.dataBinding.descriptionTextView.setText(R.string.message_reward_issue_sticker);
-
-                try
-                {
-                    holder.dataBinding.dateTextView.setText(mContext.getString(R.string.label_reward_sticker_issue_date, DailyCalendar.convertDateFormatString("2017-10-20T17:32:22+09:00", DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT)));
-                } catch (ParseException e)
-                {
-
-                }
-
-                holder.dataBinding.reservationLinkTextView.setVisibility(View.GONE);
-                break;
-            }
 
             // 스티커 만료
             case EXPIRED_STICKER:
@@ -249,11 +263,11 @@ public class RewardHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
                 holder.dataBinding.titleTextView.setVisibility(View.GONE);
 
                 holder.dataBinding.descriptionTextView.setPadding(0, 0, 0, 0);
-                holder.dataBinding.descriptionTextView.setText("보유하신 스티커 N개가 유효기간 만료로\n소멸되었습니다.");
+                holder.dataBinding.descriptionTextView.setText(mContext.getString(R.string.message_reward_expire_sticker, rewardHistory.expiredStickerCount));
 
                 try
                 {
-                    holder.dataBinding.dateTextView.setText(mContext.getString(R.string.label_reward_sticker_expiration_date, DailyCalendar.convertDateFormatString("2017-10-20T17:32:22+09:00", DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT)));
+                    holder.dataBinding.dateTextView.setText(mContext.getString(R.string.label_reward_sticker_expiration_date, DailyCalendar.convertDateFormatString(rewardHistory.date, DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT)));
                 } catch (ParseException e)
                 {
 
@@ -274,15 +288,15 @@ public class RewardHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
                 holder.dataBinding.rewardImageView.setVectorImageResource(R.drawable.vector_ic_reward_history_coupon);
 
                 holder.dataBinding.titleTextView.setVisibility(View.VISIBLE);
-                holder.dataBinding.titleTextView.setText("90,000원");
+                holder.dataBinding.titleTextView.setText(DailyTextUtils.getPriceFormat(mContext, rewardHistory.couponPrice, false));
 
                 final int DP_4 = ScreenUtils.dpToPx(mContext, 4);
                 holder.dataBinding.descriptionTextView.setPadding(0, DP_4, 0, 0);
-                holder.dataBinding.descriptionTextView.setText("91박 무료 리워드 쿠폰이 발행되었습니다. \n" + "쿠폰함에서 확인해보세요!");
+                holder.dataBinding.descriptionTextView.setText(R.string.message_reward_issue_reward_coupon);
 
                 try
                 {
-                    holder.dataBinding.dateTextView.setText(mContext.getString(R.string.label_reward_coupon_issue_date, DailyCalendar.convertDateFormatString("2017-10-20T17:32:22+09:00", DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT)));
+                    holder.dataBinding.dateTextView.setText(mContext.getString(R.string.label_reward_coupon_issue_date, DailyCalendar.convertDateFormatString(rewardHistory.date, DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT)));
                 } catch (ParseException e)
                 {
 

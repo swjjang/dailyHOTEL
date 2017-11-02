@@ -1328,7 +1328,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
                 if (mSaleType == NONE)
                 {
-                    setSaleType(BONUS);
+                    setSaleType(STICKER);
                 }
             } else
             {

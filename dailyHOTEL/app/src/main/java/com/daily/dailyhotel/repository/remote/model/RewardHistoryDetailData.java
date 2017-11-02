@@ -92,6 +92,9 @@ public class RewardHistoryDetailData
         @JsonField(name = "serviceType")
         public String serviceType;
 
+        @JsonField(name = "rewardStickerType")
+        public String rewardStickerType;
+
         public RewardHistory getRewardHistory()
         {
             RewardHistory rewardHistory = new RewardHistory();
@@ -104,9 +107,8 @@ public class RewardHistoryDetailData
 
             switch (rewardHistory.type)
             {
-                case EVENT_STICKER:
+                case CREATED_STICKER:
                 case PUBLISHED_COUPON:
-                case RESERVATION_STICKER:
                     rewardHistory.date = createdAt;
                     break;
 
@@ -118,6 +120,7 @@ public class RewardHistoryDetailData
             rewardHistory.reservationName = reservationName;
             rewardHistory.nights = roomNights;
             rewardHistory.serviceType = RewardHistory.ServiceType.valueOf(serviceType);
+            rewardHistory.rewardStickerType = rewardStickerType;
 
             return rewardHistory;
         }

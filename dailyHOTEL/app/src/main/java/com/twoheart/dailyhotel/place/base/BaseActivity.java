@@ -46,7 +46,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
-import com.twoheart.dailyhotel.place.activity.PlaceDetailActivity;
 import com.twoheart.dailyhotel.screen.common.LoadingDialog;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
@@ -156,10 +155,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     {
         onBackPressed();
 
-        if (this instanceof PlaceDetailActivity == true)
-        {
-
-        } else if (this instanceof MainActivity == false && isFinishing() == false)
+        if (this instanceof MainActivity == false && isFinishing() == false)
         {
             finish();
         }

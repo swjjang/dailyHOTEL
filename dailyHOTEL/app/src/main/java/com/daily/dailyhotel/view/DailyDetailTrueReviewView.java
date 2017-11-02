@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.DailyViewDetailTrueReviewDataBinding;
@@ -76,14 +77,14 @@ public class DailyDetailTrueReviewView extends ConstraintLayout
         mViewDataBinding.descriptionTextView.setVisibility(visible ? VISIBLE : GONE);
     }
 
-    public void setTrueReviewCount(int reviewCount)
+    public void setTrueReviewCount(int trueReviewCount)
     {
-        if (mViewDataBinding == null)
+        if (mViewDataBinding == null || trueReviewCount <= 0)
         {
             return;
         }
 
-        mViewDataBinding.goTrueReviewTextView.setText(getContext().getString(R.string.label_detail_view_review_go, reviewCount));
+        mViewDataBinding.goTrueReviewTextView.setText(getContext().getString(R.string.label_detail_view_review_go, DailyTextUtils.convertIntegerToString(trueReviewCount)));
     }
 
     public void setTrueReviewCountVisible(boolean visible)

@@ -20,7 +20,7 @@ public interface StayOutboundDetailViewInterface extends BaseBlurViewInterface
 
     void setStayDetail(StayBookDateTime stayBookDateTime, People people, StayOutboundDetail stayOutboundDetail);
 
-    void setRewardVisible(boolean visible);
+    void setRewardVisible(boolean visible, boolean hasRecommandList);
 
     void setRewardNonMember(String titleText, String optionText, int campaignFreeNights, String descriptionText);
 
@@ -45,6 +45,8 @@ public interface StayOutboundDetailViewInterface extends BaseBlurViewInterface
     void showShareDialog(Dialog.OnDismissListener listener);
 
     void scrollTop();
+
+    void setRecommendAroundVisible(boolean visible);
 
     void setRecommendAroundList(ArrayList<CarouselListItem> list, StayBookDateTime stayBookDateTime);
 

@@ -103,7 +103,7 @@
     <string name="label_collapse">접기</string>
     <string name="label_searching_around_location">내 주변 검색 중…</string>
     <string name="label_all">전체</string>
-    <string name="label_truereview_count">트루리뷰 %d개</string>
+    <string name="label_truereview_count">트루리뷰 %1$s개</string>
     <string name="label_soldout">판매완료</string>
     <string name="label_check_in">체크인</string>
     <string name="label_check_out">체크아웃</string>
@@ -1122,7 +1122,7 @@
     <string name="label_detail_view_price_option">가격 보기 옵션</string>
     <string name="label_detail_view_average_price">1박 평균 가격</string>
     <string name="label_detail_view_total_price">총가격</string>
-    <string name="label_detail_view_review_go">%1$d개의 트루리뷰 보기</string>
+    <string name="label_detail_view_review_go">%1$s개의 트루리뷰 보기</string>
     <string name="stay_detail_calender_dialog_message">선택한 일정으로 예약할 수 있는\n객실이 없습니다.\n다른 날짜를 선택해주세요.</string>
     <string name="gourmet_detail_calender_dialog_message">선택한 일정으로 예약할 수 있는\n상품이 없습니다.\n다른 날짜를 선택해주세요.</string>
     <string name="message_stay_detail_changed_price">일부 객실의 요금이\n변동되었습니다.\n객실 금액을\n한번 더 확인해주시고\n원하시는 객실이 없으면\n날짜를 변경해보세요.</string>
@@ -1562,9 +1562,9 @@
     <string name="message_reward_confirm_reward_coupon">할인쿠폰함에서 리워드 쿠폰을 확인해보세요!</string>
     <string name="message_reward_issue_sticker">스티커가 적립되었습니다.</string>
     <string name="message_reward_recent_stickers_are_displayed_in_order">최근 적립한 스티커 순으로 표시됩니다.</string>
+    <string name="message_reward_expire_sticker">보유하신 스티커 %1$d개가 유효기간이 만료로 소멸되었습니다.</string>
+    <string name="message_reward_issue_reward_coupon">1박 무료 리워드 쿠폰이 발행되었습니다.\n쿠폰함에서 확인해보세요!</string>
 
-
-    <string name="dsfadfdsfdfdfas">150,000원 이상 구매시,\n12.22 - 12.31중 방문시 사용 가능</string>
 
     <string-array name="coupon_sort_array">
         <item>전체 쿠폰 보기</item>
