@@ -823,7 +823,7 @@
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name="com.daily.dailyhotel.screen.mydaily.coupon.CouponHistoryActivity"
+            android:name="com.daily.dailyhotel.screen.mydaily.coupon.history.CouponHistoryActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>

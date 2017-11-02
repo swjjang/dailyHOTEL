@@ -11,7 +11,7 @@ import android.view.View;
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.daily.dailyhotel.screen.mydaily.coupon.CouponHistoryActivity;
+import com.daily.dailyhotel.screen.mydaily.coupon.history.CouponHistoryActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;

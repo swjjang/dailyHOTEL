@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.mydaily.coupon;
+package com.daily.dailyhotel.screen.mydaily.coupon.history;
 
 import com.daily.base.BaseDialogViewInterface;
 import com.twoheart.dailyhotel.model.Coupon;

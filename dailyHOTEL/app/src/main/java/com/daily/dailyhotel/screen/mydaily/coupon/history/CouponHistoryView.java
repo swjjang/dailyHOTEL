@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.mydaily.coupon;
+package com.daily.dailyhotel.screen.mydaily.coupon.history;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
