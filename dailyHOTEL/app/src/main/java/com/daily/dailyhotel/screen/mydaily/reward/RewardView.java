@@ -65,18 +65,20 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
 
         initToolbar(viewDataBinding);
 
+        final int DP_190 = ScreenUtils.dpToPx(getContext(), 190);
+
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.nestedScrollView, getColor(R.color.default_over_scroll_edge));
 
         viewDataBinding.loginTextView.setOnClickListener(v -> getEventListener().onLoginClick());
         viewDataBinding.rewardHistoryTextView.setOnClickListener(v -> getEventListener().onHistoryClick());
         viewDataBinding.rewardTermsTextView.setOnClickListener(v -> getEventListener().onTermsClick());
 
-        viewDataBinding.issueCouponLayout.setTranslationY(ScreenUtils.dpToPx(getContext(), 192));
+        viewDataBinding.issueCouponLayout.setTranslationY(DP_190);
 
         viewDataBinding.issueCouponClickView.setOnClickListener(v -> getEventListener().onIssueCouponClick());
-        viewDataBinding.issueCouponClickView.setTranslationY(ScreenUtils.dpToPx(getContext(), 192));
+        viewDataBinding.issueCouponClickView.setTranslationY(DP_190);
 
-        viewDataBinding.issueCouponArrowImageView.setTranslationY(ScreenUtils.dpToPx(getContext(), 192));
+        viewDataBinding.issueCouponArrowImageView.setTranslationY(DP_190);
 
         SpannableString spannableString1 = new SpannableString(getString(R.string.label_reward_reward_guide));
         spannableString1.setSpan(new UnderlineSpan(), 0, spannableString1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -570,16 +572,16 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
             return null;
         }
 
-        final int DP_192 = ScreenUtils.dpToPx(getContext(), 192);
+        final int DP_190 = ScreenUtils.dpToPx(getContext(), 190);
 
         ObjectAnimator issueCouponObjectAnimator = ObjectAnimator.ofFloat(getViewDataBinding().issueCouponLayout, View.TRANSLATION_Y//
-            , 0.0f, DP_192);
+            , 0.0f, DP_190);
 
         ObjectAnimator issueCouponArrowObjectAnimator = ObjectAnimator.ofFloat(getViewDataBinding().issueCouponArrowImageView, View.TRANSLATION_Y//
-            , 0.0f, DP_192);
+            , 0.0f, DP_190);
 
         ObjectAnimator issueCouponClickObjectAnimator = ObjectAnimator.ofFloat(getViewDataBinding().issueCouponClickView, View.TRANSLATION_Y//
-            , 0.0f, DP_192);
+            , 0.0f, DP_190);
 
         mIssueCouponAnimatorSet = new AnimatorSet();
         mIssueCouponAnimatorSet.playTogether(issueCouponObjectAnimator, issueCouponArrowObjectAnimator, issueCouponClickObjectAnimator);
@@ -662,22 +664,22 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
             }
 
             final int DP_6 = ScreenUtils.dpToPx(getContext(), 6);
-            final int DP_192 = ScreenUtils.dpToPx(getContext(), 192);
+            final int DP_190 = ScreenUtils.dpToPx(getContext(), 190);
 
             getViewDataBinding().issueCouponTitleUnderLineView.setVisibility(View.INVISIBLE);
 
             ObjectAnimator issueCouponObjectAnimator = ObjectAnimator.ofFloat(getViewDataBinding().issueCouponLayout, View.TRANSLATION_Y//
-                , DP_192, DP_192 - DP_6, DP_192);
+                , DP_190, DP_190 - DP_6, DP_190);
 
             issueCouponObjectAnimator.setRepeatCount(ObjectAnimator.INFINITE);
 
             ObjectAnimator issueCouponArrowObjectAnimator = ObjectAnimator.ofFloat(getViewDataBinding().issueCouponArrowImageView, View.TRANSLATION_Y//
-                , DP_192, DP_192 - DP_6, DP_192);
+                , DP_190, DP_190 - DP_6, DP_190);
 
             issueCouponArrowObjectAnimator.setRepeatCount(ObjectAnimator.INFINITE);
 
             ObjectAnimator issueCouponClickObjectAnimator = ObjectAnimator.ofFloat(getViewDataBinding().issueCouponClickView, View.TRANSLATION_Y//
-                , DP_192, DP_192 - DP_6, DP_192);
+                , DP_190, DP_190 - DP_6, DP_190);
 
             issueCouponClickObjectAnimator.setRepeatCount(ObjectAnimator.INFINITE);
 

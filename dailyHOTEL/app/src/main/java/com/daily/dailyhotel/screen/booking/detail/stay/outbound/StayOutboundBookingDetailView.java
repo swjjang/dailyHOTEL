@@ -804,8 +804,9 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
         getViewDataBinding().rewardCardView.setRewardTitleText(titleText);
         getViewDataBinding().rewardCardView.setStickerCount(nights);
 
-        // 한번 호출하면 복구 불가
-        getViewDataBinding().rewardCardView.setEmptyMiddleArrange();
+        getViewDataBinding().rewardCardView.setWarningVisible(false);
+        getViewDataBinding().rewardCardView.setDescriptionVisible(true);
+        getViewDataBinding().rewardCardView.setDescriptionText(null);
     }
 
     @Override

@@ -633,7 +633,8 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
         mRewardCardView.setRewardTitleText(titleText);
         mRewardCardView.setStickerCount(nights);
 
-        // 한번 호출하면 복구 불가
-        mRewardCardView.setEmptyMiddleArrange();
+        mRewardCardView.setWarningVisible(false);
+        mRewardCardView.setDescriptionVisible(true);
+        mRewardCardView.setDescriptionText(null);
     }
 }

@@ -73,7 +73,7 @@
             android:layout_width="0dp"
             android:layout_height="2dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="8dp"
             android:layout_marginTop="65dp"
             android:background="@drawable/shape_line_ce7e7e7_dw2_dg4"
             android:layerType="software"
@@ -100,6 +100,17 @@
             app:layout_constraintRight_toLeftOf="@id/freeCouponImageView"
             app:layout_constraintTop_toBottomOf="@id/middleLineView">
 
+            <View
+                android:id="@+id/nights2LineView"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:background="@drawable/shape_line_ce7e7e7"
+                android:layerType="software"
+                app:layout_constraintBottom_toBottomOf="@+id/nights1ImageView"
+                app:layout_constraintLeft_toLeftOf="@+id/nights1ImageView"
+                app:layout_constraintRight_toRightOf="@+id/nights2ImageView"
+                app:layout_constraintTop_toTopOf="@+id/nights1ImageView"/>
+
             <com.daily.base.widget.DailyImageView
                 android:id="@+id/nights1ImageView"
                 android:layout_width="wrap_content"
@@ -123,17 +134,6 @@
                 app:layout_constraintRight_toRightOf="@+id/nights1ImageView"
                 app:srcCompat="@drawable/vector_r_ic_s_17_tip"/>
 
-            <View
-                android:id="@+id/nights2LineView"
-                android:layout_width="0dp"
-                android:layout_height="2dp"
-                android:background="@drawable/shape_line_ce7e7e7"
-                android:layerType="software"
-                app:layout_constraintBottom_toBottomOf="@+id/nights1ImageView"
-                app:layout_constraintLeft_toLeftOf="@+id/nights1ImageView"
-                app:layout_constraintRight_toRightOf="@+id/nights2ImageView"
-                app:layout_constraintTop_toTopOf="@+id/nights1ImageView"/>
-
             <com.daily.base.widget.DailyImageView
                 android:id="@+id/nights1CampaignImageView"
                 android:layout_width="wrap_content"
@@ -144,6 +144,17 @@
                 app:layout_constraintRight_toRightOf="@+id/nights1ImageView"
                 app:layout_constraintTop_toTopOf="@+id/nights1ImageView"
                 app:srcCompat="@drawable/vector_ic_reward_circle_stroke"/>
+
+            <View
+                android:id="@+id/nights3LineView"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:background="@drawable/shape_line_ce7e7e7"
+                android:layerType="software"
+                app:layout_constraintBottom_toBottomOf="@+id/nights2ImageView"
+                app:layout_constraintLeft_toLeftOf="@+id/nights2ImageView"
+                app:layout_constraintRight_toRightOf="@+id/nights3ImageView"
+                app:layout_constraintTop_toTopOf="@+id/nights2ImageView"/>
 
             <com.daily.base.widget.DailyImageView
                 android:id="@+id/nights2ImageView"
@@ -166,17 +177,6 @@
                 app:layout_constraintRight_toRightOf="@+id/nights2ImageView"
                 app:srcCompat="@drawable/vector_r_ic_s_17_tip"/>
 
-            <View
-                android:id="@+id/nights3LineView"
-                android:layout_width="0dp"
-                android:layout_height="2dp"
-                android:background="@drawable/shape_line_ce7e7e7"
-                android:layerType="software"
-                app:layout_constraintBottom_toBottomOf="@+id/nights2ImageView"
-                app:layout_constraintLeft_toLeftOf="@+id/nights2ImageView"
-                app:layout_constraintRight_toRightOf="@+id/nights3ImageView"
-                app:layout_constraintTop_toTopOf="@+id/nights2ImageView"/>
-
             <com.daily.base.widget.DailyImageView
                 android:id="@+id/nights2CampaignImageView"
                 android:layout_width="wrap_content"
@@ -187,6 +187,17 @@
                 app:layout_constraintRight_toRightOf="@+id/nights2ImageView"
                 app:layout_constraintTop_toTopOf="@+id/nights2ImageView"
                 app:srcCompat="@drawable/vector_ic_reward_circle_stroke"/>
+
+            <View
+                android:id="@+id/nights4LineView"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:background="@drawable/shape_line_ce7e7e7"
+                android:layerType="software"
+                app:layout_constraintBottom_toBottomOf="@+id/nights3ImageView"
+                app:layout_constraintLeft_toLeftOf="@+id/nights3ImageView"
+                app:layout_constraintRight_toRightOf="@+id/nights4ImageView"
+                app:layout_constraintTop_toTopOf="@+id/nights3ImageView"/>
 
             <com.daily.base.widget.DailyImageView
                 android:id="@+id/nights3ImageView"
@@ -209,17 +220,6 @@
                 app:layout_constraintRight_toRightOf="@+id/nights3ImageView"
                 app:srcCompat="@drawable/vector_r_ic_s_17_tip"/>
 
-            <View
-                android:id="@+id/nights4LineView"
-                android:layout_width="0dp"
-                android:layout_height="2dp"
-                android:background="@drawable/shape_line_ce7e7e7"
-                android:layerType="software"
-                app:layout_constraintBottom_toBottomOf="@+id/nights3ImageView"
-                app:layout_constraintLeft_toLeftOf="@+id/nights3ImageView"
-                app:layout_constraintRight_toRightOf="@+id/nights4ImageView"
-                app:layout_constraintTop_toTopOf="@+id/nights3ImageView"/>
-
             <com.daily.base.widget.DailyImageView
                 android:id="@+id/nights3CampaignImageView"
                 android:layout_width="wrap_content"
@@ -230,6 +230,17 @@
                 app:layout_constraintRight_toRightOf="@+id/nights3ImageView"
                 app:layout_constraintTop_toTopOf="@+id/nights3ImageView"
                 app:srcCompat="@drawable/vector_ic_reward_circle_stroke"/>
+
+            <View
+                android:id="@+id/nights5LineView"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:background="@drawable/shape_line_ce7e7e7"
+                android:layerType="software"
+                app:layout_constraintBottom_toBottomOf="@+id/nights4ImageView"
+                app:layout_constraintLeft_toLeftOf="@+id/nights4ImageView"
+                app:layout_constraintRight_toRightOf="@+id/nights5ImageView"
+                app:layout_constraintTop_toTopOf="@+id/nights4ImageView"/>
 
             <com.daily.base.widget.DailyImageView
                 android:id="@+id/nights4ImageView"
@@ -252,17 +263,6 @@
                 app:layout_constraintRight_toRightOf="@+id/nights4ImageView"
                 app:srcCompat="@drawable/vector_r_ic_s_17_tip"/>
 
-            <View
-                android:id="@+id/nights5LineView"
-                android:layout_width="0dp"
-                android:layout_height="2dp"
-                android:background="@drawable/shape_line_ce7e7e7"
-                android:layerType="software"
-                app:layout_constraintBottom_toBottomOf="@+id/nights4ImageView"
-                app:layout_constraintLeft_toLeftOf="@+id/nights4ImageView"
-                app:layout_constraintRight_toRightOf="@+id/nights5ImageView"
-                app:layout_constraintTop_toTopOf="@+id/nights4ImageView"/>
-
             <com.daily.base.widget.DailyImageView
                 android:id="@+id/nights4CampaignImageView"
                 android:layout_width="wrap_content"
@@ -273,6 +273,17 @@
                 app:layout_constraintRight_toRightOf="@+id/nights4ImageView"
                 app:layout_constraintTop_toTopOf="@+id/nights4ImageView"
                 app:srcCompat="@drawable/vector_ic_reward_circle_stroke"/>
+
+            <View
+                android:id="@+id/nights6LineView"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:background="@drawable/shape_line_ce7e7e7"
+                android:layerType="software"
+                app:layout_constraintBottom_toBottomOf="@+id/nights5ImageView"
+                app:layout_constraintLeft_toLeftOf="@+id/nights5ImageView"
+                app:layout_constraintRight_toRightOf="@+id/nights6ImageView"
+                app:layout_constraintTop_toTopOf="@+id/nights5ImageView"/>
 
             <com.daily.base.widget.DailyImageView
                 android:id="@+id/nights5ImageView"
@@ -295,17 +306,6 @@
                 app:layout_constraintRight_toRightOf="@+id/nights5ImageView"
                 app:srcCompat="@drawable/vector_r_ic_s_17_tip"/>
 
-            <View
-                android:id="@+id/nights6LineView"
-                android:layout_width="0dp"
-                android:layout_height="2dp"
-                android:background="@drawable/shape_line_ce7e7e7"
-                android:layerType="software"
-                app:layout_constraintBottom_toBottomOf="@+id/nights5ImageView"
-                app:layout_constraintLeft_toLeftOf="@+id/nights5ImageView"
-                app:layout_constraintRight_toRightOf="@+id/nights6ImageView"
-                app:layout_constraintTop_toTopOf="@+id/nights5ImageView"/>
-
             <com.daily.base.widget.DailyImageView
                 android:id="@+id/nights5CampaignImageView"
                 android:layout_width="wrap_content"
@@ -316,6 +316,17 @@
                 app:layout_constraintRight_toRightOf="@+id/nights5ImageView"
                 app:layout_constraintTop_toTopOf="@+id/nights5ImageView"
                 app:srcCompat="@drawable/vector_ic_reward_circle_stroke"/>
+
+            <View
+                android:id="@+id/nights7LineView"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:background="@drawable/shape_line_ce7e7e7"
+                android:layerType="software"
+                app:layout_constraintBottom_toBottomOf="@+id/nights6ImageView"
+                app:layout_constraintLeft_toLeftOf="@+id/nights6ImageView"
+                app:layout_constraintRight_toRightOf="@+id/nights7ImageView"
+                app:layout_constraintTop_toTopOf="@+id/nights6ImageView"/>
 
             <com.daily.base.widget.DailyImageView
                 android:id="@+id/nights6ImageView"
@@ -338,17 +349,6 @@
                 app:layout_constraintRight_toRightOf="@+id/nights6ImageView"
                 app:srcCompat="@drawable/vector_r_ic_s_17_tip"/>
 
-            <View
-                android:id="@+id/nights7LineView"
-                android:layout_width="0dp"
-                android:layout_height="2dp"
-                android:background="@drawable/shape_line_ce7e7e7"
-                android:layerType="software"
-                app:layout_constraintBottom_toBottomOf="@+id/nights6ImageView"
-                app:layout_constraintLeft_toLeftOf="@+id/nights6ImageView"
-                app:layout_constraintRight_toRightOf="@+id/nights7ImageView"
-                app:layout_constraintTop_toTopOf="@+id/nights6ImageView"/>
-
             <com.daily.base.widget.DailyImageView
                 android:id="@+id/nights6CampaignImageView"
                 android:layout_width="wrap_content"
@@ -359,6 +359,17 @@
                 app:layout_constraintRight_toRightOf="@+id/nights6ImageView"
                 app:layout_constraintTop_toTopOf="@+id/nights6ImageView"
                 app:srcCompat="@drawable/vector_ic_reward_circle_stroke"/>
+
+            <View
+                android:id="@+id/nights8LineView"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:background="@drawable/shape_line_ce7e7e7"
+                android:layerType="software"
+                app:layout_constraintBottom_toBottomOf="@+id/nights7ImageView"
+                app:layout_constraintLeft_toLeftOf="@+id/nights7ImageView"
+                app:layout_constraintRight_toRightOf="@+id/nights8ImageView"
+                app:layout_constraintTop_toTopOf="@+id/nights7ImageView"/>
 
             <com.daily.base.widget.DailyImageView
                 android:id="@+id/nights7ImageView"
@@ -381,17 +392,6 @@
                 app:layout_constraintRight_toRightOf="@+id/nights7ImageView"
                 app:srcCompat="@drawable/vector_r_ic_s_17_tip"/>
 
-            <View
-                android:id="@+id/nights8LineView"
-                android:layout_width="0dp"
-                android:layout_height="2dp"
-                android:background="@drawable/shape_line_ce7e7e7"
-                android:layerType="software"
-                app:layout_constraintBottom_toBottomOf="@+id/nights7ImageView"
-                app:layout_constraintLeft_toLeftOf="@+id/nights7ImageView"
-                app:layout_constraintRight_toRightOf="@+id/nights8ImageView"
-                app:layout_constraintTop_toTopOf="@+id/nights7ImageView"/>
-
             <com.daily.base.widget.DailyImageView
                 android:id="@+id/nights7CampaignImageView"
                 android:layout_width="wrap_content"
@@ -402,6 +402,17 @@
                 app:layout_constraintRight_toRightOf="@+id/nights7ImageView"
                 app:layout_constraintTop_toTopOf="@+id/nights7ImageView"
                 app:srcCompat="@drawable/vector_ic_reward_circle_stroke"/>
+
+            <View
+                android:id="@+id/nights9LineView"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:background="@drawable/shape_line_ce7e7e7"
+                android:layerType="software"
+                app:layout_constraintBottom_toBottomOf="@+id/nights8ImageView"
+                app:layout_constraintLeft_toLeftOf="@+id/nights8ImageView"
+                app:layout_constraintRight_toRightOf="@+id/nights9ImageView"
+                app:layout_constraintTop_toTopOf="@+id/nights8ImageView"/>
 
             <com.daily.base.widget.DailyImageView
                 android:id="@+id/nights8ImageView"
@@ -423,17 +434,6 @@
                 app:layout_constraintLeft_toLeftOf="@+id/nights8ImageView"
                 app:layout_constraintRight_toRightOf="@+id/nights8ImageView"
                 app:srcCompat="@drawable/vector_r_ic_s_17_tip"/>
-
-            <View
-                android:id="@+id/nights9LineView"
-                android:layout_width="0dp"
-                android:layout_height="2dp"
-                android:background="@drawable/shape_line_ce7e7e7"
-                android:layerType="software"
-                app:layout_constraintBottom_toBottomOf="@+id/nights8ImageView"
-                app:layout_constraintLeft_toLeftOf="@+id/nights8ImageView"
-                app:layout_constraintRight_toRightOf="@+id/nights9ImageView"
-                app:layout_constraintTop_toTopOf="@+id/nights8ImageView"/>
 
             <com.daily.base.widget.DailyImageView
                 android:id="@+id/nights8CampaignImageView"

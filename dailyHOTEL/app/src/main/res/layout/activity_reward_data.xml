@@ -492,7 +492,7 @@
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
             android:background="@drawable/r_btn_coupon_on"
-            android:translationY="192dp"
+            android:translationY="190dp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -506,7 +506,8 @@
                 android:textSize="17dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                dailyFont:style="Medium"/>
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/issueCouponCountTextView"
@@ -577,7 +578,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:translationY="192dp"
+            android:translationY="190dp"
             app:layout_constraintLeft_toLeftOf="@id/issueCouponLayout"
             app:layout_constraintRight_toRightOf="@id/issueCouponLayout"
             app:layout_constraintTop_toTopOf="@id/issueCouponLayout"
@@ -588,7 +589,7 @@
             android:layout_width="0dp"
             android:layout_height="55dp"
             android:layout_marginTop="40dp"
-            android:translationY="192dp"
+            android:translationY="190dp"
             app:layout_constraintLeft_toLeftOf="@id/issueCouponLayout"
             app:layout_constraintRight_toRightOf="@id/issueCouponLayout"
             app:layout_constraintTop_toTopOf="@id/issueCouponLayout"/>
