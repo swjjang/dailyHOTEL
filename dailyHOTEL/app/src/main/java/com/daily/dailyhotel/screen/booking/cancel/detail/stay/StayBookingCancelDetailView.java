@@ -48,7 +48,7 @@ import com.twoheart.dailyhotel.databinding.ActivityStayBookingCancelDetailDataBi
 import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogShareDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutPlaceBookingCancelDetailDataBinding;
-import com.twoheart.dailyhotel.databinding.LayoutStayBookingDetail01DataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutStayBookingCancelDetail01DataBinding;
 import com.twoheart.dailyhotel.model.MyLocationMarker;
 import com.twoheart.dailyhotel.place.adapter.PlaceNameInfoWindowAdapter;
 import com.twoheart.dailyhotel.util.Constants;
@@ -79,7 +79,7 @@ public class StayBookingCancelDetailView extends BaseDialogView<StayBookingCance
     LatLng mCenterLatLng;
     boolean mMapLoaded;
 
-    private LayoutStayBookingDetail01DataBinding mBookingDetail01DataBinding;
+    private LayoutStayBookingCancelDetail01DataBinding mBookingCancelDetail01DataBinding;
     private LayoutPlaceBookingCancelDetailDataBinding mBookingCancelDetailDataBinding;
 
     public interface OnEventListener extends OnBaseEventListener
@@ -160,8 +160,8 @@ public class StayBookingCancelDetailView extends BaseDialogView<StayBookingCance
         viewDataBinding.placeInformationLayout.setLayoutParams(placeInformationLayoutParams);
         viewDataBinding.placeInformationLayout.setVisibility(View.VISIBLE);
 
-        mBookingDetail01DataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext())//
-            , R.layout.layout_stay_booking_detail_01_data, viewDataBinding.detailsLayout, true);
+        mBookingCancelDetail01DataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext())//
+            , R.layout.layout_stay_booking_cancel_detail_01_data, viewDataBinding.detailsLayout, true);
 
         mBookingCancelDetailDataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()) //
             , R.layout.layout_place_booking_cancel_detail_data, viewDataBinding.detailsLayout, true);
@@ -185,9 +185,9 @@ public class StayBookingCancelDetailView extends BaseDialogView<StayBookingCance
     {
         setHeaderLayout(getContext(), stayBookingDetail);
 
-        setBookingInformation(getContext(), mBookingDetail01DataBinding, stayBookingDetail);
+        setBookingInformation(getContext(), mBookingCancelDetail01DataBinding, stayBookingDetail);
 
-        setGuestInformation(getContext(), mBookingDetail01DataBinding, stayBookingDetail);
+        setGuestInformation(getContext(), mBookingCancelDetail01DataBinding, stayBookingDetail);
 
         setCancelInformation(getContext(), mBookingCancelDetailDataBinding, stayBookingDetail);
     }
@@ -396,14 +396,14 @@ public class StayBookingCancelDetailView extends BaseDialogView<StayBookingCance
     @Override
     public void setBookingDate(SpannableString checkInDate, SpannableString checkOutDate, int nights)
     {
-        if (getViewDataBinding() == null || mBookingDetail01DataBinding == null)
+        if (getViewDataBinding() == null || mBookingCancelDetail01DataBinding == null)
         {
             return;
         }
 
-        mBookingDetail01DataBinding.checkInDayTextView.setText(checkInDate);
-        mBookingDetail01DataBinding.checkOutDayTextView.setText(checkOutDate);
-        mBookingDetail01DataBinding.nightsTextView.setText(getString(R.string.label_nights, nights));
+        mBookingCancelDetail01DataBinding.checkInDayTextView.setText(checkInDate);
+        mBookingCancelDetail01DataBinding.checkOutDayTextView.setText(checkOutDate);
+        mBookingCancelDetail01DataBinding.nightsTextView.setText(getString(R.string.label_nights, nights));
     }
 
     @Override
@@ -856,7 +856,7 @@ public class StayBookingCancelDetailView extends BaseDialogView<StayBookingCance
         });
     }
 
-    private void setBookingInformation(Context context, LayoutStayBookingDetail01DataBinding dataBinding, StayBookingDetail stayBookingDetail)
+    private void setBookingInformation(Context context, LayoutStayBookingCancelDetail01DataBinding dataBinding, StayBookingDetail stayBookingDetail)
     {
         if (context == null || dataBinding == null || stayBookingDetail == null)
         {
@@ -868,7 +868,7 @@ public class StayBookingCancelDetailView extends BaseDialogView<StayBookingCance
         dataBinding.addressTextView.setText(stayBookingDetail.stayAddress);
     }
 
-    private void setGuestInformation(Context context, LayoutStayBookingDetail01DataBinding dataBinding, StayBookingDetail stayBookingDetail)
+    private void setGuestInformation(Context context, LayoutStayBookingCancelDetail01DataBinding dataBinding, StayBookingDetail stayBookingDetail)
     {
         if (context == null || dataBinding == null || stayBookingDetail == null)
         {
