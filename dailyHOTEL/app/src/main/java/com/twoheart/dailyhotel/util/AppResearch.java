@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.util;
 import android.content.Context;
 import android.content.pm.PackageManager;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyToast;
@@ -56,11 +57,11 @@ public class AppResearch
             {
                 int length = jsonArray.length();
 
-                WATCH_LIST = new String[length];
+                watchList = new String[length];
 
                 for (int i = 0; i < length; i++)
                 {
-                    WATCH_LIST[i] = jsonArray.getString(i);
+                    watchList[i] = jsonArray.getString(i);
                 }
             }
         } catch (Exception e)
@@ -80,14 +81,15 @@ public class AppResearch
 
         mIsMyProcessInTheForeground = true;
 
-        Observable<Map<String, String>> observable = new Observable<Map<String, String>>()
+        Observable<List<Map<String, String>>> observable = new Observable<List<Map<String, String>>>()
         {
             @Override
-            protected void subscribeActual(Observer<? super Map<String, String>> observer)
+            protected void subscribeActual(Observer<? super List<Map<String, String>>> observer)
             {
                 List<AndroidAppProcess> androidAppProcessList = AndroidProcesses.getRunningAppProcesses();
-                Map<String, String> packageMap = new HashMap<>();
+                List<Map<String, String>> mapList = new ArrayList<>();
 
+                Map<String, String> packageMap = new HashMap<>();
                 PackageManager packageManager = mContext.getPackageManager();
 
                 if (WATCH_LIST == null)
@@ -115,68 +117,31 @@ public class AppResearch
                     }
                 }
 
-                int size = androidAppProcessList.size();
-                int count = 0;
+                mapList.add(packageMap);
+                mapList.add(recentlyApp(androidAppProcessList));
 
-                for (int i = size - 1; i > 0; i--)
-                {
-                    if (androidAppProcessList.get(i).foreground == false)
-                    {
-                        continue;
-                    }
-
-                    if (++count > 4)
-                    {
-                        break;
-                    }
-
-                    try
-                    {
-                        packageMap.put(androidAppProcessList.get(i).getPackageName(), androidAppProcessList.get(i).getPackageInfo(mContext, 0).applicationInfo.loadLabel(packageManager).toString());
-                    } catch (Exception e)
-                    {
-                        ExLog.e(e.toString());
-                    }
-                }
-
-                observer.onNext(packageMap);
+                observer.onNext(mapList);
                 observer.onComplete();
             }
         };
 
-        observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Map<String, String>>()
+        observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<Map<String, String>>>()
         {
             @Override
-            public void accept(@NonNull Map<String, String> packageMap) throws Exception
+            public void accept(@NonNull List<Map<String, String>> mapList) throws Exception
             {
-                List<String> packageList = new ArrayList<>(packageMap.values());
-
-                if (packageList == null || packageList.size() == 0)
+                if (mapList == null || mapList.size() == 0)
                 {
                 } else
                 {
-                    StringBuilder stringBuilder = new StringBuilder();
+                    Map<String, String> knownPackageMap = mapList.get(0);
+                    Map<String, String> unknownPackageMap = mapList.get(1);
 
-                    for (String packageName : packageList)
-                    {
-                        stringBuilder.append(packageName);
-                        stringBuilder.append(',');
-                    }
+                    // known
+                    recordEvent(new ArrayList<>(knownPackageMap.values()), "App_Switch_To_Foreground", placeType, placeIndex);
 
-                    stringBuilder.setLength(stringBuilder.length() - 1);
-
-                    if (Constants.DEBUG == true)
-                    {
-                        DailyToast.showToast(mContext, stringBuilder.toString(), DailyToast.LENGTH_LONG);
-                    }
-
-                    if (placeIndex > 0)
-                    {
-                        AnalyticsManager.getInstance(mContext).recordEvent("App_Switch_To_Foreground", placeType + '_' + placeIndex, stringBuilder.toString(), null);
-                    } else
-                    {
-                        AnalyticsManager.getInstance(mContext).recordEvent("App_Switch_To_Foreground", placeType, stringBuilder.toString(), null);
-                    }
+                    // unknown
+                    recordEvent(new ArrayList<>(unknownPackageMap.values()), "App_Switch", "Entire", placeIndex);
                 }
             }
         }, new Consumer<Throwable>()
@@ -187,7 +152,6 @@ public class AppResearch
                 ExLog.e(throwable.toString());
             }
         });
-
     }
 
     public void onPause(String placeType, int placeIndex)
@@ -197,12 +161,14 @@ public class AppResearch
             return;
         }
 
-        Observable<Map<String, String>> observable = new Observable<Map<String, String>>()
+        Observable<List<Map<String, String>>> observable = new Observable<List<Map<String, String>>>()
         {
             @Override
-            protected void subscribeActual(Observer<? super Map<String, String>> observer)
+            protected void subscribeActual(Observer<? super List<Map<String, String>>> observer)
             {
                 List<AndroidAppProcess> androidAppProcessList = AndroidProcesses.getRunningAppProcesses();
+                List<Map<String, String>> mapList = new ArrayList<>();
+
                 Map<String, String> packageMap = new HashMap<>();
 
                 PackageManager packageManager = mContext.getPackageManager();
@@ -235,39 +201,18 @@ public class AppResearch
                     }
                 }
 
-                int size = androidAppProcessList.size();
-                int count = 0;
+                mapList.add(packageMap);
+                mapList.add(recentlyApp(androidAppProcessList));
 
-                for (int i = size - 1; i > 0; i--)
-                {
-                    if (androidAppProcessList.get(i).foreground == false)
-                    {
-                        continue;
-                    }
-
-                    if (++count > 4)
-                    {
-                        break;
-                    }
-
-                    try
-                    {
-                        packageMap.put(androidAppProcessList.get(i).getPackageName(), androidAppProcessList.get(i).getPackageInfo(mContext, 0).applicationInfo.loadLabel(packageManager).toString());
-                    } catch (Exception e)
-                    {
-                        ExLog.e(e.toString());
-                    }
-                }
-
-                observer.onNext(packageMap);
+                observer.onNext(mapList);
                 observer.onComplete();
             }
         };
 
-        observable.delaySubscription(3, TimeUnit.SECONDS).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Map<String, String>>()
+        observable.delaySubscription(3, TimeUnit.SECONDS).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<Map<String, String>>>()
         {
             @Override
-            public void accept(@NonNull Map<String, String> packageMap) throws Exception
+            public void accept(@NonNull List<Map<String, String>> mapList) throws Exception
             {
                 if (AndroidProcesses.isMyProcessInTheForeground() == true)
                 {
@@ -277,34 +222,19 @@ public class AppResearch
 
                 mIsMyProcessInTheForeground = false;
 
-                List<String> packageList = new ArrayList<>(packageMap.values());
-
-                if (packageList == null || packageList.size() == 0)
+                if (mapList == null || mapList.size() == 0)
                 {
                 } else
                 {
-                    StringBuilder stringBuilder = new StringBuilder();
+                    Map<String, String> knownPackageMap = mapList.get(0);
+                    Map<String, String> unknownPackageMap = mapList.get(1);
 
-                    for (String packageName : packageList)
-                    {
-                        stringBuilder.append(packageName);
-                        stringBuilder.append(',');
-                    }
 
-                    stringBuilder.setLength(stringBuilder.length() - 1);
+                    // known
+                    recordEvent(new ArrayList<>(knownPackageMap.values()), "App_Switch_To_Background", placeType, placeIndex);
 
-                    if (Constants.DEBUG == true)
-                    {
-                        DailyToast.showToast(mContext, stringBuilder.toString(), DailyToast.LENGTH_LONG);
-                    }
-
-                    if (placeIndex > 0)
-                    {
-                        AnalyticsManager.getInstance(mContext).recordEvent("App_Switch_To_Background", placeType + '_' + placeIndex, stringBuilder.toString(), null);
-                    } else
-                    {
-                        AnalyticsManager.getInstance(mContext).recordEvent("App_Switch_To_Background", placeType, stringBuilder.toString(), null);
-                    }
+                    // unknown
+                    recordEvent(new ArrayList<>(unknownPackageMap.values()), "App_Switch", "Entire", placeIndex);
                 }
             }
         }, new Consumer<Throwable>()
@@ -315,5 +245,74 @@ public class AppResearch
                 ExLog.e(throwable.toString());
             }
         });
+    }
+
+    private Map<String, String> recentlyApp(List<AndroidAppProcess> androidAppProcessList)
+    {
+        Map<String, String> unknownPackageMap = new HashMap<>();
+
+        if (androidAppProcessList == null || androidAppProcessList.size() == 0)
+        {
+            return unknownPackageMap;
+        }
+
+        PackageManager packageManager = mContext.getPackageManager();
+
+        int size = androidAppProcessList.size();
+        int count = 0;
+
+        for (int i = size - 1; i > 0; i--)
+        {
+            if (androidAppProcessList.get(i).foreground == false)
+            {
+                continue;
+            }
+
+            if (unknownPackageMap.size() == 5)
+            {
+                break;
+            }
+
+            try
+            {
+                unknownPackageMap.put(androidAppProcessList.get(i).getPackageName(), androidAppProcessList.get(i).getPackageInfo(mContext, 0).applicationInfo.loadLabel(packageManager).toString());
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
+        }
+
+        return unknownPackageMap;
+    }
+
+    private void recordEvent(List<String> packageList, String categoryName, String placeType, int placeIndex)
+    {
+        if (packageList == null || packageList.size() == 0 || DailyTextUtils.isTextEmpty(categoryName) == true)
+        {
+            return;
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (String packageName : packageList)
+        {
+            stringBuilder.append(packageName);
+            stringBuilder.append(',');
+        }
+
+        stringBuilder.setLength(stringBuilder.length() - 1);
+
+        if (Constants.DEBUG == true)
+        {
+            DailyToast.showToast(mContext, stringBuilder.toString(), DailyToast.LENGTH_LONG);
+        }
+
+        if (placeIndex > 0)
+        {
+            AnalyticsManager.getInstance(mContext).recordEvent(categoryName, placeType + '_' + placeIndex, stringBuilder.toString(), null);
+        } else
+        {
+            AnalyticsManager.getInstance(mContext).recordEvent(categoryName, placeType, stringBuilder.toString(), null);
+        }
     }
 }
