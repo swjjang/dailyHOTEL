@@ -271,8 +271,8 @@ public class DailyRemoteConfig
                 DailyRemoteConfigPreference.getInstance(context).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
             } else
             {
-                // 기존 버전과 비교해서 다르면 다운로드를 시도한다.
-                if (DailyTextUtils.isTextEmpty(currentVersion) == true || currentVersion.equalsIgnoreCase(newVersion) == false)
+                // 기존 버전이 없거나 새버전이 현재 버전보다 클 경우 다운로드를 시도한다
+                if (DailyTextUtils.isTextEmpty(currentVersion) == true || currentVersion.compareTo(newVersion) < 0)
                 {
                     new SplashImageDownloadAsyncTask(context).execute(url, newVersion);
                 }
