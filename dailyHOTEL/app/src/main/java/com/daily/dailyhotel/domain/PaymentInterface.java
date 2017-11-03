@@ -1,9 +1,7 @@
 package com.daily.dailyhotel.domain;
 
 import com.daily.dailyhotel.entity.Card;
-import com.daily.dailyhotel.entity.DomesticGuest;
 import com.daily.dailyhotel.entity.GourmetPayment;
-import com.daily.dailyhotel.entity.OverseasGuest;
 import com.daily.dailyhotel.entity.PaymentResult;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;

@@ -207,7 +207,7 @@ public class CouponUtil
         try
         {
             couponType = Coupon.Type.valueOf(jsonObject.getString("couponType"));
-        }catch (Exception e)
+        } catch (Exception e)
         {
             couponType = Coupon.Type.NORMAL;
         }

@@ -372,7 +372,7 @@ public abstract class CollectionBaseLayout extends BaseBlurLayout
         mPlaceListAdapter.setAll(placeViewItems);
 
         mRecyclerView.setAdapter(mPlaceListAdapter);
-//        postAndNotifyAdapter(mRecyclerView, mPlaceListAdapter);
+        //        postAndNotifyAdapter(mRecyclerView, mPlaceListAdapter);
     }
 
     void postAndNotifyAdapter(final RecyclerView recyclerView, final RecyclerView.Adapter adapter)

@@ -65,7 +65,6 @@ import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail05DataBinding
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailInformationDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.AlphaTransition;
-import com.twoheart.dailyhotel.widget.TextTransition;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -1170,7 +1169,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
         DailyDetailTrueReviewView trueReviewView = getViewDataBinding().trueReviewView;
 
-        if(ratingShow == false && trueReviewCount == 0)
+        if (ratingShow == false && trueReviewCount == 0)
         {
             getViewDataBinding().trueReviewTopLineView.setVisibility(View.GONE);
             trueReviewView.setVisibility(View.GONE);

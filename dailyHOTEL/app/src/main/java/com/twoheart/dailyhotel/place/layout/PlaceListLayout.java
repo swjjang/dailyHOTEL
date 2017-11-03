@@ -321,7 +321,7 @@ public abstract class PlaceListLayout extends BaseLayout
     }
 
     public void addResultList(FragmentManager fragmentManager, Constants.ViewType viewType//
-        ,ArrayList<PlaceViewItem> list, Constants.SortType sortType, PlaceBookingDay placeBookingDay, boolean rewardEnabled)
+        , ArrayList<PlaceViewItem> list, Constants.SortType sortType, PlaceBookingDay placeBookingDay, boolean rewardEnabled)
     {
         mIsLoading = false;
 

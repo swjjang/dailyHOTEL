@@ -9,7 +9,6 @@ import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityCouponHistoryDataBinding;
-import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 
 import java.util.ArrayList;

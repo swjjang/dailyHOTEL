@@ -16,7 +16,6 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.FontManager;
-import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyImageView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.DailyViewRewardCardDataBinding;

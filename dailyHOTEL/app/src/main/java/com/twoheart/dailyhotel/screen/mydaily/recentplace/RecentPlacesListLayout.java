@@ -8,7 +8,6 @@ import android.view.View;
 import com.daily.base.widget.DailyImageView;
 import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
-import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
