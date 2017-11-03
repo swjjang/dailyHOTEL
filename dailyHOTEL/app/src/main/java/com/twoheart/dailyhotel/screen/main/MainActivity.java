@@ -289,6 +289,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
 
             if (ScreenUtils.isTabletDevice(this) == true)
             {
+
                 imageView.setBackgroundColor(getResources().getColor(R.color.white));
                 imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             } else
