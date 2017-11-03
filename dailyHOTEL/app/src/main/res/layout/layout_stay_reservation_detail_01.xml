@@ -6,7 +6,7 @@
        android:layout_width="match_parent"
        android:layout_height="match_parent"
        android:orientation="vertical"
-       tools:parentTag="LinearLayout">
+       tools:parentTag="android.widget.LinearLayout">
 
     <!--UI 확인시에만 열어주세요-->
     <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
@@ -33,8 +33,8 @@
             android:id="@+id/remainedDayTextView"
             android:layout_width="match_parent"
             android:layout_height="36dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:drawablePadding="-30dp"
             android:gravity="center"
             android:textColor="@color/default_text_cb70038"

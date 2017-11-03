@@ -46,7 +46,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityGourmetBookingCancelDetailDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogShareDataBinding;
-import com.twoheart.dailyhotel.databinding.LayoutGourmetBookingDetail01DataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutGourmetBookingCancelDetail01DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutPlaceBookingCancelDetailDataBinding;
 import com.twoheart.dailyhotel.model.MyLocationMarker;
 import com.twoheart.dailyhotel.place.adapter.PlaceNameInfoWindowAdapter;
@@ -78,7 +78,7 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
     LatLng mCenterLatLng;
     boolean mMapLoaded;
 
-    private LayoutGourmetBookingDetail01DataBinding mBookingDetail01DataBinding;
+    private LayoutGourmetBookingCancelDetail01DataBinding mBookingCancelDetail01DataBinding;
     private LayoutPlaceBookingCancelDetailDataBinding mBookingCancelDetailDataBinding;
 
     public interface OnEventListener extends OnBaseEventListener
@@ -161,8 +161,8 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
         viewDataBinding.placeInformationLayout.setLayoutParams(placeInformationLayoutParams);
         viewDataBinding.placeInformationLayout.setVisibility(View.VISIBLE);
 
-        mBookingDetail01DataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext())//
-            , R.layout.layout_gourmet_booking_detail_01_data, viewDataBinding.detailsLayout, true);
+        mBookingCancelDetail01DataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext())//
+            , R.layout.layout_gourmet_booking_cancel_detail_01_data, viewDataBinding.detailsLayout, true);
 
         mBookingCancelDetailDataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()) //
             , R.layout.layout_place_booking_cancel_detail_data, viewDataBinding.detailsLayout, true);
@@ -186,9 +186,9 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
     {
         setHeaderLayout(getContext(), gourmetBookingDetail);
 
-        setBookingInformation(getContext(), mBookingDetail01DataBinding, gourmetBookingDetail);
+        setBookingInformation(getContext(), mBookingCancelDetail01DataBinding, gourmetBookingDetail);
 
-        setGuestInformation(getContext(), mBookingDetail01DataBinding, gourmetBookingDetail);
+        setGuestInformation(getContext(), mBookingCancelDetail01DataBinding, gourmetBookingDetail);
 
         setCancelInformation(getContext(), mBookingCancelDetailDataBinding, gourmetBookingDetail);
     }
@@ -397,13 +397,13 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
     @Override
     public void setBookingDate(String ticketDate, String ticketTime)
     {
-        if (getViewDataBinding() == null || mBookingDetail01DataBinding == null)
+        if (getViewDataBinding() == null || mBookingCancelDetail01DataBinding == null)
         {
             return;
         }
 
-        mBookingDetail01DataBinding.ticketDateTextView.setText(ticketDate);
-        mBookingDetail01DataBinding.ticketTimeTextView.setText(ticketTime);
+        mBookingCancelDetail01DataBinding.ticketDateTextView.setText(ticketDate);
+        mBookingCancelDetail01DataBinding.ticketTimeTextView.setText(ticketTime);
     }
 
     @Override
@@ -877,7 +877,7 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
         });
     }
 
-    private void setBookingInformation(Context context, LayoutGourmetBookingDetail01DataBinding dataBinding, GourmetBookingDetail gourmetBookingDetail)
+    private void setBookingInformation(Context context, LayoutGourmetBookingCancelDetail01DataBinding dataBinding, GourmetBookingDetail gourmetBookingDetail)
     {
         if (context == null || dataBinding == null || gourmetBookingDetail == null)
         {
@@ -890,7 +890,7 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
         dataBinding.addressTextView.setText(gourmetBookingDetail.gourmetAddress);
     }
 
-    private void setGuestInformation(Context context, LayoutGourmetBookingDetail01DataBinding dataBinding, GourmetBookingDetail gourmetBookingDetail)
+    private void setGuestInformation(Context context, LayoutGourmetBookingCancelDetail01DataBinding dataBinding, GourmetBookingDetail gourmetBookingDetail)
     {
         if (context == null || dataBinding == null || gourmetBookingDetail == null)
         {
