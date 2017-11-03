@@ -221,7 +221,7 @@ public class SearchCardViewAdapter extends RecyclerView.Adapter<SearchCardViewAd
 
         layout.setTitleText(R.string.label_search_recentsearches);
         layout.setEmptyViewData( //
-            TYPE_GOURMET == mType ? R.drawable.no_gourmet_ic : R.drawable.no_hotel_ic //
+            TYPE_GOURMET == mType ? R.drawable.no_gourmet_search_ic : R.drawable.no_hotel_search_ic //
             , R.string.label_search_recentsearches);
         layout.setDeleteButtonVisible(true);
 
@@ -285,7 +285,7 @@ public class SearchCardViewAdapter extends RecyclerView.Adapter<SearchCardViewAd
         }
 
         layout.setEmptyViewData( //
-            TYPE_GOURMET == mType ? R.drawable.no_gourmet_ic : R.drawable.no_hotel_ic //
+            TYPE_GOURMET == mType ? R.drawable.no_gourmet_search_ic : R.drawable.no_hotel_search_ic //
             , titleResId);
 
         layout.setDeleteButtonVisible(false);

@@ -118,7 +118,7 @@ public class DailyRemoteConfigPreference
     private static final String KEY_REMOTE_CONFIG_OB_SEARCH_KEYWORD = "390";
 
     // Daily Reward Sticker
-//    private static final String KEY_REMOTE_CONFIG_REWARD_ENABLED = "400";
+    //    private static final String KEY_REMOTE_CONFIG_REWARD_ENABLED = "400";
     private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_ENABLED = "401";
     private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_TITLE_MESSAGE = "402";
     private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_CAMPAIGN_ENALBED = "403";
@@ -141,6 +141,9 @@ public class DailyRemoteConfigPreference
     // A/B Test
     private static final String KEY_REMOTE_CONFIG_STAY_RANK_TEST_NAME = "1000";
     private static final String KEY_REMOTE_CONFIG_STAY_RANK_TEST_TYPE = "1001";
+
+    // App Research
+    private static final String KEY_REMOTE_CONFIG_APP_RESEARCH = "1002";
 
     private static DailyRemoteConfigPreference mInstance;
     private SharedPreferences mRemoteConfigPreferences;
@@ -1096,15 +1099,15 @@ public class DailyRemoteConfigPreference
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_OB_SEARCH_KEYWORD, null);
     }
 
-//    public void setKeyRemoteConfigRewardEnabled(boolean value)
-//    {
-//        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_REWARD_ENABLED, value);
-//    }
-//
-//    public boolean isKeyRemoteConfigRewardEnabled()
-//    {
-//        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_REWARD_ENABLED, false);
-//    }
+    //    public void setKeyRemoteConfigRewardEnabled(boolean value)
+    //    {
+    //        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_REWARD_ENABLED, value);
+    //    }
+    //
+    //    public boolean isKeyRemoteConfigRewardEnabled()
+    //    {
+    //        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_REWARD_ENABLED, false);
+    //    }
 
     public void setKeyRemoteConfigRewardStickerEnabled(boolean value)
     {
@@ -1250,5 +1253,15 @@ public class DailyRemoteConfigPreference
     public String getKeyRemoteConfigRewardStickerGuideDescriptionMessage()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_REWARD_STICKER_GUIDE_DESCRIPTION_MESSAGE, null);
+    }
+
+    public void setKeyRemoteConfigAppResearch(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_APP_RESEARCH, value);
+    }
+
+    public String getKeyRemoteConfigAppResearch()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_APP_RESEARCH, null);
     }
 }

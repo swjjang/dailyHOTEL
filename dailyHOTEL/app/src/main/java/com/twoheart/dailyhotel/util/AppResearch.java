@@ -6,12 +6,17 @@ import android.content.pm.PackageManager;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.jaredrummler.android.processes.AndroidProcesses;
 import com.jaredrummler.android.processes.models.AndroidAppProcess;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -23,35 +28,47 @@ import io.reactivex.schedulers.Schedulers;
 
 public class AppResearch
 {
-    private static final String yanolja = "com.cultsotry.yanolja.nativeapp";
-    private static final String goodchoice = "kr.goodchoice.abouthere";
-    private static final String interpark = "com.interpark.app.stay";
-    private static final String hoteltime = "com.withweb.hoteltime";
-    private static final String hotelscom = "com.hcom.android";
-    private static final String expedia = "com.expedia.bookings";
-    private static final String bookingcom = "com.booking";
-    private static final String interparktour = "com.interpark.tour.mobile.main";
-    private static final String timon = "com.tmon";
-    private static final String coupang = "com.coupang.mobile";
-    private static final String wemakeprice = "com.wemakeprice";
-    private static final String hotelscombined = "com.hotelscombined";
-    private static final String hotelnow = "com.hotelnow";
-    private static final String facebook = "com.facebook.katana";
-    private static final String instagram = "com.instagram.android";
-    private static final String youtube = "com.google.android.youtube";
-
-    static final String[] WATCH_LIST = {yanolja, goodchoice, interpark, hoteltime, hotelscom//
-        , expedia, bookingcom, interparktour, timon, coupang, wemakeprice, hotelscombined//
-        , hotelnow, facebook, instagram, youtube};
-
     Context mContext;
     boolean mIsMyProcessInTheForeground;
+    private String[] WATCH_LIST;
 
     public AppResearch(Context context)
     {
         mContext = context;
 
         mIsMyProcessInTheForeground = true;
+
+        if (WATCH_LIST == null)
+        {
+            WATCH_LIST = getWatchList();
+        }
+    }
+
+    private String[] getWatchList()
+    {
+        String[] watchList = null;
+
+        try
+        {
+            JSONArray jsonArray = new JSONArray(DailyRemoteConfigPreference.getInstance(mContext).getKeyRemoteConfigAppResearch());
+
+            if (jsonArray != null && jsonArray.length() > 0)
+            {
+                int length = jsonArray.length();
+
+                WATCH_LIST = new String[length];
+
+                for (int i = 0; i < length; i++)
+                {
+                    WATCH_LIST[i] = jsonArray.getString(i);
+                }
+            }
+        } catch (Exception e)
+        {
+
+        }
+
+        return watchList;
     }
 
     public void onResume(String placeType, int placeIndex)
@@ -63,42 +80,77 @@ public class AppResearch
 
         mIsMyProcessInTheForeground = true;
 
-        Observable<List<String>> observable = new Observable<List<String>>()
+        Observable<Map<String, String>> observable = new Observable<Map<String, String>>()
         {
             @Override
-            protected void subscribeActual(Observer<? super List<String>> observer)
+            protected void subscribeActual(Observer<? super Map<String, String>> observer)
             {
                 List<AndroidAppProcess> androidAppProcessList = AndroidProcesses.getRunningAppProcesses();
-                List<String> findList = new ArrayList<>();
+                Map<String, String> packageMap = new HashMap<>();
 
                 PackageManager packageManager = mContext.getPackageManager();
-                for (AndroidAppProcess androidAppProcess : androidAppProcessList)
+
+                if (WATCH_LIST == null)
                 {
-                    for (String packageName : WATCH_LIST)
+                    WATCH_LIST = getWatchList();
+                }
+
+                if (WATCH_LIST != null)
+                {
+                    for (AndroidAppProcess androidAppProcess : androidAppProcessList)
                     {
-                        if (androidAppProcess.getPackageName().contains(packageName) == true)
+                        for (String packageName : WATCH_LIST)
                         {
-                            try
+                            if (androidAppProcess.getPackageName().contains(packageName) == true)
                             {
-                                findList.add(0, androidAppProcess.getPackageInfo(mContext, 0).applicationInfo.loadLabel(packageManager).toString());
-                            } catch (Exception e)
-                            {
-                                ExLog.e(e.toString());
+                                try
+                                {
+                                    packageMap.put(androidAppProcess.getPackageName(), androidAppProcess.getPackageInfo(mContext, 0).applicationInfo.loadLabel(packageManager).toString());
+                                } catch (Exception e)
+                                {
+                                    ExLog.e(e.toString());
+                                }
                             }
                         }
                     }
                 }
 
-                observer.onNext(findList);
+                int size = androidAppProcessList.size();
+                int count = 0;
+
+                for (int i = size - 1; i > 0; i--)
+                {
+                    if (androidAppProcessList.get(i).foreground == false)
+                    {
+                        continue;
+                    }
+
+                    if (++count > 4)
+                    {
+                        break;
+                    }
+
+                    try
+                    {
+                        packageMap.put(androidAppProcessList.get(i).getPackageName(), androidAppProcessList.get(i).getPackageInfo(mContext, 0).applicationInfo.loadLabel(packageManager).toString());
+                    } catch (Exception e)
+                    {
+                        ExLog.e(e.toString());
+                    }
+                }
+
+                observer.onNext(packageMap);
                 observer.onComplete();
             }
         };
 
-        observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<String>>()
+        observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Map<String, String>>()
         {
             @Override
-            public void accept(@NonNull List<String> packageList) throws Exception
+            public void accept(@NonNull Map<String, String> packageMap) throws Exception
             {
+                List<String> packageList = new ArrayList<>(packageMap.values());
+
                 if (packageList == null || packageList.size() == 0)
                 {
                 } else
@@ -145,44 +197,77 @@ public class AppResearch
             return;
         }
 
-        Observable<List<String>> observable = new Observable<List<String>>()
+        Observable<Map<String, String>> observable = new Observable<Map<String, String>>()
         {
             @Override
-            protected void subscribeActual(Observer<? super List<String>> observer)
+            protected void subscribeActual(Observer<? super Map<String, String>> observer)
             {
                 List<AndroidAppProcess> androidAppProcessList = AndroidProcesses.getRunningAppProcesses();
-                List<String> findList = new ArrayList<>();
+                Map<String, String> packageMap = new HashMap<>();
 
                 PackageManager packageManager = mContext.getPackageManager();
-                for (AndroidAppProcess androidAppProcess : androidAppProcessList)
+
+                if (WATCH_LIST == null)
                 {
-                    for (String packageName : WATCH_LIST)
+                    WATCH_LIST = getWatchList();
+                }
+
+                if (WATCH_LIST != null)
+                {
+                    for (AndroidAppProcess androidAppProcess : androidAppProcessList)
                     {
-                        if (androidAppProcess.getPackageName().contains(packageName) == true)
+                        for (String packageName : WATCH_LIST)
                         {
-                            try
+                            if (androidAppProcess.getPackageName().contains(packageName) == true)
                             {
-                                if (androidAppProcess.foreground == true)
+                                try
                                 {
-                                    findList.add(0, androidAppProcess.getPackageInfo(mContext, 0).applicationInfo.loadLabel(packageManager).toString());
+                                    if (androidAppProcess.foreground == true)
+                                    {
+                                        packageMap.put(androidAppProcess.getPackageName(), androidAppProcess.getPackageInfo(mContext, 0).applicationInfo.loadLabel(packageManager).toString());
+                                    }
+                                } catch (Exception e)
+                                {
+                                    ExLog.e(e.toString());
                                 }
-                            } catch (Exception e)
-                            {
-                                ExLog.e(e.toString());
                             }
                         }
                     }
                 }
 
-                observer.onNext(findList);
+                int size = androidAppProcessList.size();
+                int count = 0;
+
+                for (int i = size - 1; i > 0; i--)
+                {
+                    if (androidAppProcessList.get(i).foreground == false)
+                    {
+                        continue;
+                    }
+
+                    if (++count > 4)
+                    {
+                        break;
+                    }
+
+                    try
+                    {
+                        packageMap.put(androidAppProcessList.get(i).getPackageName(), androidAppProcessList.get(i).getPackageInfo(mContext, 0).applicationInfo.loadLabel(packageManager).toString());
+                    } catch (Exception e)
+                    {
+                        ExLog.e(e.toString());
+                    }
+                }
+
+                observer.onNext(packageMap);
                 observer.onComplete();
             }
         };
 
-        observable.delaySubscription(3, TimeUnit.SECONDS).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<String>>()
+        observable.delaySubscription(3, TimeUnit.SECONDS).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Map<String, String>>()
         {
             @Override
-            public void accept(@NonNull List<String> packageList) throws Exception
+            public void accept(@NonNull Map<String, String> packageMap) throws Exception
             {
                 if (AndroidProcesses.isMyProcessInTheForeground() == true)
                 {
@@ -191,6 +276,8 @@ public class AppResearch
                 }
 
                 mIsMyProcessInTheForeground = false;
+
+                List<String> packageList = new ArrayList<>(packageMap.values());
 
                 if (packageList == null || packageList.size() == 0)
                 {

@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
@@ -98,6 +97,11 @@ public abstract class PlaceWishListFragment extends BaseFragment
 
     public void forceRefreshList()
     {
+        if (mListLayout == null)
+        {
+            return;
+        }
+
         mListLayout.setData(null, false, false);
         onResume();
     }
