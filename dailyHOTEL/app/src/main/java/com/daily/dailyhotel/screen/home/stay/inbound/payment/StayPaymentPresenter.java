@@ -1661,7 +1661,8 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
             getViewInterface().setStayPayment(mStayBookDateTime.getNights(), mStayPayment.totalPrice, discountPrice);
 
-            if (mSaleType == STICKER && mPaymentType == DailyBookingPaymentTypeView.PaymentType.PHONE)
+            if ((mSaleType == STICKER && mPaymentType == DailyBookingPaymentTypeView.PaymentType.PHONE) //
+                || (mSaleType == COUPON && mSelectedCoupon.type == Coupon.Type.REWARD && mPaymentType == DailyBookingPaymentTypeView.PaymentType.PHONE))
             {
                 setPaymentType(DailyBookingPaymentTypeView.PaymentType.EASY_CARD);
             }
@@ -1682,21 +1683,32 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.EASY_CARD, false);
                 getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.CARD, false);
 
-                if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStayPhonePaymentEnabled() == true)
-                {
-                    getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.PHONE, true);
-
-                    if (paymentType == null)
-                    {
-                        paymentType = DailyBookingPaymentTypeView.PaymentType.PHONE;
-                    }
-                } else
+                if (mSaleType == STICKER || (mSaleType == COUPON && mSelectedCoupon.type == Coupon.Type.REWARD))
                 {
                     getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.PHONE, false);
 
                     if (paymentType == DailyBookingPaymentTypeView.PaymentType.PHONE)
                     {
                         paymentType = null;
+                    }
+                } else
+                {
+                    if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStayPhonePaymentEnabled() == true)
+                    {
+                        getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.PHONE, true);
+
+                        if (paymentType == null)
+                        {
+                            paymentType = DailyBookingPaymentTypeView.PaymentType.PHONE;
+                        }
+                    } else
+                    {
+                        getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.PHONE, false);
+
+                        if (paymentType == DailyBookingPaymentTypeView.PaymentType.PHONE)
+                        {
+                            paymentType = null;
+                        }
                     }
                 }
 
@@ -1826,7 +1838,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                     }
                 }
 
-                if (mSaleType == STICKER)
+                if (mSaleType == STICKER || (mSaleType == COUPON && mSelectedCoupon.type == Coupon.Type.REWARD))
                 {
                     getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.PHONE, false);
 
