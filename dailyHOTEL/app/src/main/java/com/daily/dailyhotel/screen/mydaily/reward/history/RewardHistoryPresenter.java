@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.mydaily.reward.history;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -40,6 +41,7 @@ public class RewardHistoryPresenter extends BaseExceptionPresenter<RewardHistory
 
     public interface RewardHistoryAnalyticsInterface extends BaseAnalyticsInterface
     {
+        void onViewReservationClick(Activity activity, String aggregationId);
     }
 
     public RewardHistoryPresenter(@NonNull RewardHistoryActivity activity)
@@ -227,6 +229,8 @@ public class RewardHistoryPresenter extends BaseExceptionPresenter<RewardHistory
         intent.setData(Uri.parse(deepLink));
 
         startActivity(intent);
+
+        mAnalytics.onViewReservationClick(getActivity(), rewardHistory.aggregationId);
     }
 
     @Override

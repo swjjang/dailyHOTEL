@@ -8,6 +8,7 @@ import com.daily.dailyhotel.entity.StayOutboundPayment;
 import com.daily.dailyhotel.entity.UserSimpleInformation;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundPaymentAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundThankYouAnalyticsParam;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -31,7 +32,7 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
     }
 
     @Override
-    public void onScreen(Activity activity, StayBookDateTime stayBookDateTime)
+    public void onScreen(Activity activity, StayBookDateTime stayBookDateTime, int stayIndex)
     {
         if (activity == null || mAnalyticsParam == null)
         {
@@ -56,6 +57,12 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
         } else
         {
             AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_CANCELABLE_OUTBOUND, null, params);
+        }
+
+        if (DailyRemoteConfigPreference.getInstance(activity).isKeyRemoteConfigRewardStickerEnabled() && mAnalyticsParam.provideRewardSticker == true)
+        {
+            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.REWARD//
+                , AnalyticsManager.Action.ORDER_PROCEED, Integer.toString(stayIndex), null);
         }
     }
 

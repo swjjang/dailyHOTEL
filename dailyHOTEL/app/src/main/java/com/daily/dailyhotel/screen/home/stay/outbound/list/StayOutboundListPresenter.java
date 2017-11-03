@@ -126,7 +126,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         void onScreen(Activity activity);
 
-        void onEventStayClick(Activity activity, int index);
+        void onEventStayClick(Activity activity, int index, boolean provideRewardSticker);
 
         void onEventDestroy(Activity activity);
 
@@ -859,7 +859,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         }
 
-        mAnalytics.onEventStayClick(getActivity(), stayOutbound.index);
+        mAnalytics.onEventStayClick(getActivity(), stayOutbound.index, stayOutbound.provideRewardSticker);
     }
 
     @Override

@@ -10,6 +10,7 @@ import com.daily.dailyhotel.entity.StayRefundPolicy;
 import com.daily.dailyhotel.entity.UserSimpleInformation;
 import com.daily.dailyhotel.parcel.analytics.StayPaymentAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayThankYouAnalyticsParam;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -101,6 +102,12 @@ public class StayPaymentAnalyticsImpl implements StayPaymentPresenter.StayPaymen
             params.put(AnalyticsManager.KeyType.AREA, mAnalyticsParam.getAnalyticsAddressAreaName());
 
             AnalyticsManager.getInstance(activity).recordScreen(activity, screenName, null, params);
+
+            if (DailyRemoteConfigPreference.getInstance(activity).isKeyRemoteConfigRewardStickerEnabled() && mAnalyticsParam.provideRewardSticker == true)
+            {
+                AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.REWARD//
+                    , AnalyticsManager.Action.ORDER_PROCEED, Integer.toString(stayIndex), null);
+            }
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -412,6 +419,7 @@ public class StayPaymentAnalyticsImpl implements StayPaymentPresenter.StayPaymen
     {
         StayThankYouAnalyticsParam analyticsParam = new StayThankYouAnalyticsParam();
         analyticsParam.params = mPaymentParamMap;
+        analyticsParam.provideRewardSticker = mAnalyticsParam.provideRewardSticker;
 
         return analyticsParam;
     }

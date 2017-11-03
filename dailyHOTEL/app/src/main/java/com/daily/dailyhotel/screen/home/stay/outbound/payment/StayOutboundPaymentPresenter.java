@@ -111,7 +111,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
         StayOutboundPaymentAnalyticsParam getAnalyticsParam();
 
-        void onScreen(Activity activity, StayBookDateTime stayBookDateTime);
+        void onScreen(Activity activity, StayBookDateTime stayBookDateTime, int stayIndex);
 
         void onEventEnterVendorType(Activity activity, int stayIndex, String vendorType);
 
@@ -228,7 +228,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     {
         super.onStart();
 
-        mAnalytics.onScreen(getActivity(), mStayBookDateTime);
+        mAnalytics.onScreen(getActivity(), mStayBookDateTime, mStayIndex);
 
         if (isRefresh() == true)
         {

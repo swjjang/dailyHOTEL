@@ -156,7 +156,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         void onScreen(Activity activity);
 
-        void onScreenRoomList(Activity activity);
+        void onScreenRoomList(Activity activity, int stayIndex, boolean provideRewardSticker);
 
         void onEventHasRecommendList(Activity activity, boolean hasData);
 
@@ -1097,7 +1097,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                     }));
                 }
 
-                mAnalytics.onScreenRoomList(getActivity());
+                mAnalytics.onScreenRoomList(getActivity(), mStayOutboundDetail.index, mStayOutboundDetail.provideRewardSticker);
                 break;
 
             default:

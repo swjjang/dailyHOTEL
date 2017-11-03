@@ -943,7 +943,6 @@ public class StaySearchFragment extends PlaceSearchFragment
 
             AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.STAY_ITEM_CLICK, String.format(Locale.KOREA, "%d_%d", -1, place.index), null);
-
         }
 
         @Override

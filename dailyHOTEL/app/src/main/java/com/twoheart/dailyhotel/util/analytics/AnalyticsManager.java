@@ -754,6 +754,9 @@ public class AnalyticsManager
 
         public static final String CANCEL_DETAIL = "cancel_detail";
         public static final String CANCEL_LIST = "cancel_list";
+
+        // REWARD
+        public static final String DAILY_REWARD_DETAIL = "daily_reward_detail";
     }
 
     public static class Action
@@ -1112,6 +1115,19 @@ public class AnalyticsManager
         public static final String SHOW_DETAIL = "show_detail";
         public static final String FIND_PATH = "find_path";
         public static final String DELETE_HISTORY = "delete_history";
+
+        // Reward
+        public static final String MORE_INFO = "more_info";
+        public static final String REGISTER_LOGIN = "register_login";
+        public static final String MY_REWARD_STATUS = "my_reward_status";
+        public static final String THUMBNAIL_CLICK = "thumbnail_click";
+        public static final String ROOM_SELECTION = "room_selection";
+        public static final String ORDER_PROCEED = "order_proceed";
+        public static final String ORDER_COMPLETE = "order_complete";
+        public static final String DAILY_REWARD_CLICKED = "daily_reward_clicked";
+        public static final String MYDAILY_REWARD_HISTORY = "mydaily_reward_history";
+        public static final String MYDAILY_REWARD_INFO = "mydaily_reward_info";
+        public static final String REWARD_HISTORY_SEE_RESERVATION = "reward_history_see_reservation";
     }
 
     public static class Category
@@ -1192,6 +1208,8 @@ public class AnalyticsManager
 
         public static final String DETAIL_PAGE_TRUE_REVIEW = "detail_page_true_review";
         public static final String DETAIL_PAGE_COUPON = "detail_page_coupon";
+
+        public static final String REWARD = "reward";
     }
 
     public static class Label

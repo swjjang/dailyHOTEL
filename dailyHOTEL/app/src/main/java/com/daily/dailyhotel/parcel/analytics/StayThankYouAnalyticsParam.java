@@ -9,6 +9,7 @@ import java.util.Map;
 public class StayThankYouAnalyticsParam implements Parcelable
 {
     public Map<String, String> params;
+    public boolean provideRewardSticker;
 
     public StayThankYouAnalyticsParam()
     {
@@ -23,11 +24,13 @@ public class StayThankYouAnalyticsParam implements Parcelable
     public void writeToParcel(Parcel dest, int flags)
     {
         dest.writeMap(params);
+        dest.writeInt(provideRewardSticker == true ? 1 : 0);
     }
 
     void readFromParcel(Parcel in)
     {
         params = in.readHashMap(HashMap.class.getClassLoader());
+        provideRewardSticker = in.readInt() == 1 ? true : false;
     }
 
     @Override

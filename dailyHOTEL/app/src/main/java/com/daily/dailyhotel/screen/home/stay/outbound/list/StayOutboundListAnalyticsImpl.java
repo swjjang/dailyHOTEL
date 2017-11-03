@@ -6,6 +6,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.StayOutboundListAnalyticsInterface
@@ -30,7 +31,7 @@ public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.
     }
 
     @Override
-    public void onEventStayClick(Activity activity, int index)
+    public void onEventStayClick(Activity activity, int index, boolean provideRewardSticker)
     {
         if (activity == null)
         {
@@ -39,6 +40,12 @@ public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION//
             , AnalyticsManager.Action.STAY_ITEM_CLICK_OUTBOUND, Integer.toString(index), null);
+
+        if (DailyRemoteConfigPreference.getInstance(activity).isKeyRemoteConfigRewardStickerEnabled() && provideRewardSticker == true)
+        {
+            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.REWARD//
+                , AnalyticsManager.Action.THUMBNAIL_CLICK, Integer.toString(index), null);
+        }
     }
 
     @Override

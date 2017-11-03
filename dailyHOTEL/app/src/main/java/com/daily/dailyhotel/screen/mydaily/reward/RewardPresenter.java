@@ -44,6 +44,11 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
 
     public interface RewardAnalyticsInterface extends BaseAnalyticsInterface
     {
+        void onScreen(Activity activity);
+
+        void onEventHistoryClick(Activity activity);
+
+        void onEventTermsClick(Activity activity);
     }
 
     public RewardPresenter(@NonNull RewardActivity activity)
@@ -308,6 +313,8 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
         }
 
         startActivityForResult(RewardHistoryActivity.newInstance(getActivity()), RewardActivity.REQUEST_CODE_REWARD_HISTORY);
+
+        mAnalytics.onEventHistoryClick(getActivity());
     }
 
     @Override
@@ -320,6 +327,8 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
 
         startActivityForResult(DailyWebActivity.newInstance(getActivity(), getString(R.string.label_reward_reward_terms)//
             , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStaticUrlDailyRewardTerms()), RewardActivity.REQUEST_CODE_WEB);
+
+        mAnalytics.onEventTermsClick(getActivity());
     }
 
     @Override

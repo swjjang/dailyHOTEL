@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundThankYouAnalyticsParam;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.HashMap;
@@ -59,6 +60,12 @@ public class StayOutboundThankYouAnalyticsImpl implements StayOutboundThankYouPr
         params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, mAnalyticsParam.registerEasyCard ? "y" : "n");
 
         AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_THANKYOU_OUTBOUND, null, params);
+
+        if (DailyRemoteConfigPreference.getInstance(activity).isKeyRemoteConfigRewardStickerEnabled() && mAnalyticsParam.provideRewardSticker == true)
+        {
+            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.REWARD//
+                , AnalyticsManager.Action.ORDER_COMPLETE, Integer.toString(mAnalyticsParam.stayIndex), null);
+        }
     }
 
     @Override

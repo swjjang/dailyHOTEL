@@ -10,6 +10,7 @@ public class StayOutboundPaymentAnalyticsParam implements Parcelable
     public String grade;
     public int rankingPosition;
     public String rating;
+    public boolean provideRewardSticker;
 
     public StayOutboundPaymentAnalyticsParam()
     {
@@ -28,6 +29,7 @@ public class StayOutboundPaymentAnalyticsParam implements Parcelable
         dest.writeString(grade);
         dest.writeInt(rankingPosition);
         dest.writeString(rating);
+        dest.writeInt(provideRewardSticker == true ? 1 : 0);
     }
 
     void readFromParcel(Parcel in)
@@ -37,6 +39,7 @@ public class StayOutboundPaymentAnalyticsParam implements Parcelable
         grade = in.readString();
         rankingPosition = in.readInt();
         rating = in.readString();
+        provideRewardSticker = in.readInt() == 1 ? true : false;
     }
 
     @Override

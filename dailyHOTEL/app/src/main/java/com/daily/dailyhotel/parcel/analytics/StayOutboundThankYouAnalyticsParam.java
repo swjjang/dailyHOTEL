@@ -12,6 +12,7 @@ public class StayOutboundThankYouAnalyticsParam implements Parcelable
     public boolean fullBonus;
     public boolean usedBonus;
     public int stayIndex;
+    public boolean provideRewardSticker;
 
     public StayOutboundThankYouAnalyticsParam()
     {
@@ -30,6 +31,7 @@ public class StayOutboundThankYouAnalyticsParam implements Parcelable
         dest.writeInt(fullBonus == true ? 1 : 0);
         dest.writeInt(usedBonus == true ? 1 : 0);
         dest.writeInt(stayIndex);
+        dest.writeInt(provideRewardSticker == true ? 1 : 0);
     }
 
     void readFromParcel(Parcel in)
@@ -39,6 +41,7 @@ public class StayOutboundThankYouAnalyticsParam implements Parcelable
         fullBonus = in.readInt() == 1 ? true : false;
         usedBonus = in.readInt() == 1 ? true : false;
         stayIndex = in.readInt();
+        provideRewardSticker = in.readInt() == 1 ? true : false;
     }
 
     @Override

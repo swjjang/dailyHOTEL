@@ -12,4 +12,12 @@ import com.daily.dailyhotel.entity.CampaignTag;
 public interface CampaignTagListAnalyticsInterface extends BaseAnalyticsInterface
 {
     void onCampaignTagEvent(Activity activity, CampaignTag campaignTag, int listCount);
+
+    void onEventStayClickOption(Activity activity, int index, boolean hasCoupon, boolean hasReview, boolean trueVR, boolean provideRewardSticker);
+
+    void onEventGourmetClickOption(Activity activity, int index, boolean hasCoupon, boolean hasReview, boolean trueVR);
+
+    void onEventStayWishClick(Activity activity, boolean wish);
+
+    void onEventGourmetWishClick(Activity activity, boolean wish);
 }

@@ -5,6 +5,7 @@ import android.app.Activity;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundPaymentAnalyticsParam;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.List;
@@ -56,7 +57,7 @@ public class StayOutboundDetailAnalyticsImpl implements StayOutboundDetailPresen
     }
 
     @Override
-    public void onScreenRoomList(Activity activity)
+    public void onScreenRoomList(Activity activity, int stayIndex, boolean provideRewardSticker)
     {
         if (activity == null)
         {
@@ -64,6 +65,12 @@ public class StayOutboundDetailAnalyticsImpl implements StayOutboundDetailPresen
         }
 
         AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_HOTELROOMTYPELIST_OUTBOUND, null);
+
+        if (DailyRemoteConfigPreference.getInstance(activity).isKeyRemoteConfigRewardStickerEnabled() && provideRewardSticker == true)
+        {
+            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.REWARD//
+                , AnalyticsManager.Action.ROOM_SELECTION, Integer.toString(stayIndex), null);
+        }
     }
 
     @Override

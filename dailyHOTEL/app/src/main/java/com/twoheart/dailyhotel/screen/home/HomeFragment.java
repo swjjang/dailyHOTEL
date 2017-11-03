@@ -2277,6 +2277,9 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
             startActivityForResult(DailyWebActivity.newInstance(getActivity(), getString(R.string.label_reward_reward_guide)//
                 , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStaticUrlDailyReward()), Constants.CODE_REQUEST_ACTIVITY_REWARD_GUIDE);
+
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.REWARD,//
+                AnalyticsManager.Action.MORE_INFO, null, null);
         }
 
         @Override
@@ -2288,6 +2291,9 @@ public class HomeFragment extends BaseMenuNavigationFragment
             }
 
             startActivityForResult(LoginActivity.newInstance(mBaseActivity, AnalyticsManager.Screen.HOME), Constants.CODE_REQUEST_ACTIVITY_LOGIN);
+
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.REWARD,//
+                AnalyticsManager.Action.REGISTER_LOGIN, null, null);
         }
 
         @Override
@@ -2299,6 +2305,9 @@ public class HomeFragment extends BaseMenuNavigationFragment
             }
 
             startActivityForResult(RewardActivity.newInstance(mBaseActivity), Constants.CODE_REQUEST_ACTIVITY_REWARD);
+
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.REWARD,//
+                AnalyticsManager.Action.MY_REWARD_STATUS, null, null);
         }
 
         @Override

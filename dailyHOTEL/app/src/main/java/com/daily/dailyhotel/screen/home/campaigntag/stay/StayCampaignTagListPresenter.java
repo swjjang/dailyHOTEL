@@ -756,24 +756,9 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
             getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         }
 
-        // 할인 쿠폰이 보이는 경우
-        if (DailyTextUtils.isTextEmpty(stay.couponDiscountText) == false)
-        {
-            AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
-                , AnalyticsManager.Action.COUPON_STAY, Integer.toString(stay.index), null);
-        }
-
-        if (stay.reviewCount > 0)
-        {
-            AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
-                , AnalyticsManager.Action.TRUE_REVIEW_STAY, Integer.toString(stay.index), null);
-        }
-
-        if (stay.truevr == true)
-        {
-            AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                , AnalyticsManager.Action.STAY_ITEM_CLICK_TRUE_VR, Integer.toString(stay.index), null);
-        }
+        mAnalytics.onEventStayClickOption(getActivity(), stay.index, DailyTextUtils.isTextEmpty(stay.couponDiscountText) == false//
+            , stay.reviewCount > 0, stay.truevr == true//
+            , DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerEnabled() && stay.provideRewardSticker);
     }
 
     @Override
@@ -819,8 +804,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.HOTEL//
             , stay.index, !stay.myWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), StayCampaignTagListActivity.REQUEST_CODE_WISH_DIALOG);
 
-        AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
-            , AnalyticsManager.Action.WISH_STAY, !stay.myWish ? AnalyticsManager.Label.ON.toLowerCase() : AnalyticsManager.Label.OFF.toLowerCase(), null);
+        mAnalytics.onEventStayWishClick(getActivity(), !stay.myWish);
     }
 
     StayBookDateTime getStayBookDateTime(CommonDateTime commonDateTime)

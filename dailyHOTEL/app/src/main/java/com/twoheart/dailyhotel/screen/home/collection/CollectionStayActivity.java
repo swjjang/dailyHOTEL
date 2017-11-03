@@ -16,6 +16,7 @@ import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.view.DailyStayCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
@@ -637,6 +638,13 @@ public class CollectionStayActivity extends CollectionBaseActivity
             {
                 AnalyticsManager.getInstance(CollectionStayActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                     , AnalyticsManager.Action.STAY_ITEM_CLICK_TRUE_VR, Integer.toString(recommendationStay.index), null);
+            }
+
+            if (DailyRemoteConfigPreference.getInstance(CollectionStayActivity.this).isKeyRemoteConfigRewardStickerEnabled()//
+                && recommendationStay.provideRewardSticker == true)
+            {
+                AnalyticsManager.getInstance(CollectionStayActivity.this).recordEvent(AnalyticsManager.Category.REWARD//
+                    , AnalyticsManager.Action.THUMBNAIL_CLICK, Integer.toString(recommendationStay.index), null);
             }
         }
 

@@ -9,6 +9,7 @@ import com.daily.dailyhotel.entity.StayDetail;
 import com.daily.dailyhotel.entity.StayRoom;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayPaymentAnalyticsParam;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -160,6 +161,13 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
             params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(nights));
 
             AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_DETAIL_ROOMTYPE, null, params);
+
+
+            if (DailyRemoteConfigPreference.getInstance(activity).isKeyRemoteConfigRewardStickerEnabled() && stayDetail.provideRewardSticker == true)
+            {
+                AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.REWARD//
+                    , AnalyticsManager.Action.ROOM_SELECTION, Integer.toString(stayDetail.index), null);
+            }
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -615,6 +623,7 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
         analyticsParam.address = stayDetail.address;
         analyticsParam.nrd = stayRoom.nrd;
         analyticsParam.grade = stayDetail.grade;
+        analyticsParam.provideRewardSticker = stayDetail.provideRewardSticker;
 
         return analyticsParam;
     }

@@ -505,6 +505,9 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
             baseActivity.startActivityForResult(RewardActivity.newInstance(baseActivity), Constants.CODE_REQUEST_ACTIVITY_REWARD);
+
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.REWARD//
+                , Action.DAILY_REWARD_CLICKED, null, null);
         }
 
         @Override

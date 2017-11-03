@@ -23,6 +23,7 @@ public class StayPaymentAnalyticsParam implements Parcelable
     public Province province;
     public String addressAreaName;
     public Stay.Grade grade;
+    public boolean provideRewardSticker;
 
     public StayPaymentAnalyticsParam()
     {
@@ -86,6 +87,7 @@ public class StayPaymentAnalyticsParam implements Parcelable
         dest.writeParcelable(province, flags);
         dest.writeString(addressAreaName);
         dest.writeString(grade.name());
+        dest.writeInt(provideRewardSticker ? 1: 0);
     }
 
     void readFromParcel(Parcel in)
@@ -109,6 +111,8 @@ public class StayPaymentAnalyticsParam implements Parcelable
         {
             grade = Stay.Grade.etc;
         }
+
+        provideRewardSticker = in.readInt() == 1 ? true : false;
     }
 
     @Override

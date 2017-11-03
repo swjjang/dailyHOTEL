@@ -23,6 +23,7 @@ import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.daily.dailyhotel.view.DailyStayCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -1199,6 +1200,13 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                         {
                             AnalyticsManager.getInstance(StayCategoryTabActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                                 , AnalyticsManager.Action.STAY_ITEM_CLICK_BOUTIQUE_AD, Integer.toString(stay.index), null);
+                        }
+
+                        if (DailyRemoteConfigPreference.getInstance(StayCategoryTabActivity.this).isKeyRemoteConfigRewardStickerEnabled()//
+                            && stay.provideRewardSticker == true)
+                        {
+                            AnalyticsManager.getInstance(StayCategoryTabActivity.this).recordEvent(AnalyticsManager.Category.REWARD//
+                                , AnalyticsManager.Action.THUMBNAIL_CLICK, Integer.toString(stay.index), null);
                         }
                     }
                     break;

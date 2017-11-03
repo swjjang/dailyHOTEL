@@ -5,6 +5,7 @@ import android.app.Activity;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.UserTracking;
 import com.daily.dailyhotel.parcel.analytics.StayThankYouAnalyticsParam;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.Locale;
@@ -34,6 +35,12 @@ public class StayThankYouAnalyticsImpl implements StayThankYouPresenter.StayThan
         }
 
         AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_PAYMENT_THANKYOU, null);
+
+        if (DailyRemoteConfigPreference.getInstance(activity).isKeyRemoteConfigRewardStickerEnabled() && mAnalyticsParam.provideRewardSticker == true)
+        {
+            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.REWARD//
+                , AnalyticsManager.Action.ORDER_COMPLETE, mAnalyticsParam.params.get(AnalyticsManager.KeyType.PLACE_INDEX), null);
+        }
     }
 
     @Override
