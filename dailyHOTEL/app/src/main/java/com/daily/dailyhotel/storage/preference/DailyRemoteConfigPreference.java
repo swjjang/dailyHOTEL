@@ -119,6 +119,9 @@ public class DailyRemoteConfigPreference
     private static final String KEY_REMOTE_CONFIG_STAY_RANK_TEST_NAME = "1000";
     private static final String KEY_REMOTE_CONFIG_STAY_RANK_TEST_TYPE = "1001";
 
+    // App Research
+    private static final String KEY_REMOTE_CONFIG_APP_RESEARCH = "1002";
+
     private static DailyRemoteConfigPreference mInstance;
     private SharedPreferences mRemoteConfigPreferences;
     private Editor mRemoteConfigEditor;
@@ -1051,5 +1054,15 @@ public class DailyRemoteConfigPreference
     public String getKeyRemoteConfigObSearchKeyword()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_OB_SEARCH_KEYWORD, null);
+    }
+
+    public void setKeyRemoteConfigAppResearch(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_APP_RESEARCH, value);
+    }
+
+    public String getKeyRemoteConfigAppResearch()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_APP_RESEARCH, null);
     }
 }

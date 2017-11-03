@@ -97,6 +97,11 @@ public abstract class PlaceWishListFragment extends BaseFragment
 
     public void forceRefreshList()
     {
+        if (mListLayout == null)
+        {
+            return;
+        }
+
         mListLayout.setData(null, false);
         onResume();
     }

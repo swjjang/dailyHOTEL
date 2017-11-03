@@ -111,6 +111,7 @@ public class DailyRemoteConfig
         String androidStaticUrl = mFirebaseRemoteConfig.getString("androidStaticUrl");
         String androidStayRankABTest = mFirebaseRemoteConfig.getString("androidStayRankABTest");
         String androidOBSearchKeyword = mFirebaseRemoteConfig.getString("androidOBSearchKeyword");
+        String androidAppResearch = mFirebaseRemoteConfig.getString("androidAppResearch");
 
         if (Constants.DEBUG == true)
         {
@@ -142,6 +143,8 @@ public class DailyRemoteConfig
                 {
                     ExLog.d("androidOBSearchKeyword : " + new JSONObject(androidOBSearchKeyword).toString());
                 }
+
+                ExLog.d("androidAppResearch : " + androidAppResearch);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -205,6 +208,9 @@ public class DailyRemoteConfig
         writeStayRankTest(mContext, androidStayRankABTest);
 
         writeOBSearchKeyword(mContext, androidOBSearchKeyword);
+
+        // 앱조사
+        writeAppResearch(mContext, androidAppResearch);
 
         if (listener != null)
         {
@@ -693,5 +699,15 @@ public class DailyRemoteConfig
                 ExLog.e(e.toString());
             }
         }
+    }
+
+    void writeAppResearch(Context context, String jsonString)
+    {
+        if (context == null)
+        {
+            return;
+        }
+
+        DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigAppResearch(jsonString);
     }
 }
