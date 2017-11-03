@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -139,17 +138,17 @@ public abstract class PlaceMainActivity extends BaseActivity
 
         mDontReloadAtOnResume = true;
 
-//        if (mPlaceMainLayout.getBlurVisibility() == false)
-//        {
-//            new Handler().postDelayed(new Runnable()
-//            {
-//                @Override
-//                public void run()
-//                {
-//                    mPlaceMainLayout.showAppBarLayout(false);
-//                }
-//            }, 200);
-//        }
+        //        if (mPlaceMainLayout.getBlurVisibility() == false)
+        //        {
+        //            new Handler().postDelayed(new Runnable()
+        //            {
+        //                @Override
+        //                public void run()
+        //                {
+        //                    mPlaceMainLayout.showAppBarLayout(false);
+        //                }
+        //            }, 200);
+        //        }
     }
 
     @Override
