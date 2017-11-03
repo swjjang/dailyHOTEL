@@ -324,7 +324,7 @@ public class DailyRewardCardView extends ConstraintLayout
         mViewDataBinding.rewardTitleTextView.setText(text);
     }
 
-    public void setWarningText(String text)
+    public void setWarningText(CharSequence text)
     {
         if (mViewDataBinding == null)
         {

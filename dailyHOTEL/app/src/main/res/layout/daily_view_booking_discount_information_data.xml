@@ -84,7 +84,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:duplicateParentState="true"
-                        android:textColor="@color/default_text_c929292"
+                        android:textColor="@drawable/selector_text_color_c929292_cc5c5c5"
                         android:textSize="11dp"/>
                 </LinearLayout>
 
@@ -121,6 +121,7 @@
                 android:id="@+id/couponLayout"
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
+                android:layout_marginTop="5dp"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp">
 
@@ -179,9 +180,10 @@
                 android:id="@+id/depositStickerLayout"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
+                android:layout_marginTop="5dp"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <ImageView
                     android:id="@+id/depositStickerRadioView"
@@ -195,8 +197,9 @@
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginLeft="7dp"
+                    android:layout_marginTop="8dp"
                     android:duplicateParentState="true"
                     android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="parent"

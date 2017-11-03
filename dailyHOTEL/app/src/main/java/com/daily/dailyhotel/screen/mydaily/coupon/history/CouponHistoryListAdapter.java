@@ -157,7 +157,7 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<RecyclerView.
         holder.dataBinding.useableGourmetTextView.setVisibility(coupon.availableInGourmet == true ? View.VISIBLE : View.GONE);
 
         // 마지막 라인 굵기 수정
-        if (position == getItemCount() - 1)
+        if (position == getItemCount() - 2)
         {
             holder.dataBinding.bottomLineView.getLayoutParams().height = ScreenUtils.dpToPx(mContext, 1);
         } else

@@ -239,6 +239,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
             return;
         }
 
+        getViewDataBinding().informationView.setRewardEnabled(visible);
         getViewDataBinding().informationView.setDepositStickerVisible(visible);
     }
 
@@ -262,7 +263,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
     }
 
     @Override
-    public void setDepositStickerCard(String titleText, int nights, String warningText, String descriptionText)
+    public void setDepositStickerCard(String titleText, int nights, String warningText, CharSequence descriptionText)
     {
         if (getViewDataBinding() == null)
         {
@@ -283,7 +284,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
             getViewDataBinding().rewardCardView.setWarningText(warningText);
         }
 
-        if (DailyTextUtils.isTextEmpty(descriptionText) == true)
+        if (descriptionText == null || DailyTextUtils.isTextEmpty(descriptionText.toString()) == true)
         {
             getViewDataBinding().rewardCardView.setDescriptionVisible(false);
         } else

@@ -1330,6 +1330,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 {
                     setSaleType(STICKER);
                 }
+
+                getViewInterface().setPaymentTypeDescriptionText(DailyBookingPaymentTypeView.PaymentType.PHONE, getString(R.string.label_booking_reward_phonepay_description));
             } else
             {
                 getViewInterface().setCheeringMessage(false//
@@ -1337,9 +1339,9 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
                 getViewInterface().setDepositStickerVisible(false);
                 getViewInterface().setDepositStickerCardVisible(false);
-            }
 
-            getViewInterface().setPaymentTypeDescriptionText(DailyBookingPaymentTypeView.PaymentType.PHONE, getString(R.string.label_booking_reward_phonepay_description));
+                getViewInterface().setPaymentTypeDescriptionText(DailyBookingPaymentTypeView.PaymentType.PHONE, getString(R.string.label_booking_phonepay_description));
+            }
         } else
         {
             getViewInterface().setCheeringMessageVisible(false);
@@ -1827,12 +1829,16 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         {
             if (hasDepositSticker() == true)
             {
+                String text = getString(R.string.message_payment_dont_reward_sticker_used_bonus__payment_phone);
+
+                SpannableString spannableString = new SpannableString(text);
+
+                int startIndex = text.indexOf('\n');
+                spannableString.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getMediumTypeface()),//
+                    startIndex, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
                 getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage()//
-                    , stayOutboundPayment.rewardStickerCount, getString(R.string.message_payment_dont_reward_sticker), getString(R.string.message_payment_dont_reward_sticker_used_bonus__payment_phone));
-            } else
-            {
-                getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage()//
-                    , stayOutboundPayment.rewardStickerCount, getString(R.string.message_payment_dont_reward_sticker), null);
+                    , stayOutboundPayment.rewardStickerCount, null, spannableString);
             }
         }
     }

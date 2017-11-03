@@ -3,9 +3,6 @@ package com.daily.dailyhotel.view;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.constraint.ConstraintLayout;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -184,21 +181,9 @@ public class DailyBookingDiscountNPaymentInformationView extends ConstraintLayou
         String priceFormat = DailyTextUtils.getPriceFormat(getContext(), bonus, false);
         String text = getContext().getString(R.string.label_booking_own_bonus, priceFormat);
 
-        if (bonus > 0)
-        {
-            int startIndex = text.indexOf(priceFormat);
-            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(text);
+        mViewDataBinding.bonusTextView.setText(text);
 
-            spannableStringBuilder.setSpan(new ForegroundColorSpan(getContext().getResources().getColor(R.color.default_text_c323232)), //
-                startIndex, text.length() - 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-            mViewDataBinding.bonusTextView.setText(spannableStringBuilder);
-        } else
-        {
-            mViewDataBinding.bonusTextView.setText(text);
-
-            setBonusEnabled(false);
-        }
+        setBonusEnabled(bonus > 0);
     }
 
     public void setBonus(int bonus)
@@ -283,8 +268,6 @@ public class DailyBookingDiscountNPaymentInformationView extends ConstraintLayou
         if (enabled == true)
         {
             mViewDataBinding.discountInformationTextView.setText(R.string.label_booking_discount_reward_information);
-
-
         } else
         {
             mViewDataBinding.discountInformationTextView.setText(R.string.label_booking_discount_information);
