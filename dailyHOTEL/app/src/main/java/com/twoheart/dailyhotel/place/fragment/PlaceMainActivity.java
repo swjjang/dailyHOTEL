@@ -139,17 +139,17 @@ public abstract class PlaceMainActivity extends BaseActivity
 
         mDontReloadAtOnResume = true;
 
-        if (mPlaceMainLayout.getBlurVisibility() == false)
-        {
-            new Handler().postDelayed(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    mPlaceMainLayout.showAppBarLayout(false);
-                }
-            }, 200);
-        }
+//        if (mPlaceMainLayout.getBlurVisibility() == false)
+//        {
+//            new Handler().postDelayed(new Runnable()
+//            {
+//                @Override
+//                public void run()
+//                {
+//                    mPlaceMainLayout.showAppBarLayout(false);
+//                }
+//            }, 200);
+//        }
     }
 
     @Override

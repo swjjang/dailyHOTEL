@@ -164,15 +164,39 @@ public class DailyRewardCardView extends ConstraintLayout
 
         final int lineViewsLength = lineViews.length;
 
+        ConstraintLayout.LayoutParams lineLayoutParams;
+
         for (int i = 0; i < lineViewsLength; i++)
         {
+            lineLayoutParams = (ConstraintLayout.LayoutParams) lineViews[i].getLayoutParams();
+
             if (i + 1 < count)
             {
+                lineLayoutParams.leftToLeft = -1;
+                lineLayoutParams.leftToRight = campaignViews[i].getId();
+                lineLayoutParams.rightToRight = -1;
+                lineLayoutParams.rightToLeft = campaignViews[i + 1].getId();
+
                 lineViews[i].setBackgroundResource(R.drawable.shape_line_cfaae37_dw2_dg2);
+            } else if (i + 1 == count)
+            {
+                lineLayoutParams.leftToLeft = -1;
+                lineLayoutParams.leftToRight = campaignViews[i].getId();
+                lineLayoutParams.rightToRight = dotImageViews[i + 1].getId();
+                lineLayoutParams.rightToLeft = -1;
+
+                lineViews[i].setBackgroundResource(R.drawable.shape_line_ce7e7e7);
             } else
             {
+                lineLayoutParams.leftToLeft = dotImageViews[i].getId();
+                lineLayoutParams.leftToRight = -1;
+                lineLayoutParams.rightToRight = dotImageViews[i + 1].getId();
+                lineLayoutParams.rightToLeft = -1;
+
                 lineViews[i].setBackgroundResource(R.drawable.shape_line_ce7e7e7);
             }
+
+            lineViews[i].setLayoutParams(lineLayoutParams);
         }
 
         final int rewardViewsLength = rewardViews.length;
@@ -253,8 +277,17 @@ public class DailyRewardCardView extends ConstraintLayout
 
         final int lineViewsLength = lineViews.length;
 
+        ConstraintLayout.LayoutParams lineLayoutParams;
+
         for (int i = 0; i < lineViewsLength; i++)
         {
+            lineLayoutParams = (ConstraintLayout.LayoutParams) lineViews[i].getLayoutParams();
+
+            lineLayoutParams.leftToLeft = dotImageViews[i].getId();
+            lineLayoutParams.leftToRight = -1;
+            lineLayoutParams.rightToRight = dotImageViews[i + 1].getId();
+            lineLayoutParams.rightToLeft = -1;
+
             if (i + 1 < count)
             {
                 lineViews[i].setBackgroundResource(R.drawable.shape_line_cfaae37);
@@ -262,6 +295,8 @@ public class DailyRewardCardView extends ConstraintLayout
             {
                 lineViews[i].setBackgroundResource(R.drawable.shape_line_ce7e7e7);
             }
+
+            lineViews[i].setLayoutParams(lineLayoutParams);
         }
 
         final int rewardViewsLength = rewardViews.length;

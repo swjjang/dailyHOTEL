@@ -1553,7 +1553,16 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     @Override
                     public void accept(Throwable throwable) throws Exception
                     {
-                        mHomeLayout.setRewardCardVisible(false);
+                        mHomeLayout.setRewardCardVisible(true);
+
+                        String descriptionText = DailyRemoteConfigPreference.getInstance(mBaseActivity).isKeyRemoteConfigRewardStickerCampaignEnabled() //
+                            ? DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigRewardStickerNonMemberCampaignMessage()//
+                            : DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigRewardStickerNonMemberDefaultMessage();
+
+                        mHomeLayout.setNonMemberRewardData(DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigRewardStickerTitleMessage()//
+                            , descriptionText, getString(R.string.label_reward_login)//
+                            , DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigRewardStickerNonMemberCampaignFreeNights());
+
                     }
                 }));
             }

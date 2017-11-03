@@ -130,8 +130,8 @@
                 android:background="@drawable/shape_line_ce7e7e7"
                 android:layerType="software"
                 app:layout_constraintBottom_toBottomOf="@+id/nights1ImageView"
-                app:layout_constraintLeft_toRightOf="@+id/nights1ImageView"
-                app:layout_constraintRight_toLeftOf="@+id/nights2ImageView"
+                app:layout_constraintLeft_toLeftOf="@+id/nights1ImageView"
+                app:layout_constraintRight_toRightOf="@+id/nights2ImageView"
                 app:layout_constraintTop_toTopOf="@+id/nights1ImageView"/>
 
             <com.daily.base.widget.DailyImageView
@@ -173,8 +173,8 @@
                 android:background="@drawable/shape_line_ce7e7e7"
                 android:layerType="software"
                 app:layout_constraintBottom_toBottomOf="@+id/nights2ImageView"
-                app:layout_constraintLeft_toRightOf="@+id/nights2ImageView"
-                app:layout_constraintRight_toLeftOf="@+id/nights3ImageView"
+                app:layout_constraintLeft_toLeftOf="@+id/nights2ImageView"
+                app:layout_constraintRight_toRightOf="@+id/nights3ImageView"
                 app:layout_constraintTop_toTopOf="@+id/nights2ImageView"/>
 
             <com.daily.base.widget.DailyImageView
@@ -216,8 +216,8 @@
                 android:background="@drawable/shape_line_ce7e7e7"
                 android:layerType="software"
                 app:layout_constraintBottom_toBottomOf="@+id/nights3ImageView"
-                app:layout_constraintLeft_toRightOf="@+id/nights3ImageView"
-                app:layout_constraintRight_toLeftOf="@+id/nights4ImageView"
+                app:layout_constraintLeft_toLeftOf="@+id/nights3ImageView"
+                app:layout_constraintRight_toRightOf="@+id/nights4ImageView"
                 app:layout_constraintTop_toTopOf="@+id/nights3ImageView"/>
 
             <com.daily.base.widget.DailyImageView
@@ -259,8 +259,8 @@
                 android:background="@drawable/shape_line_ce7e7e7"
                 android:layerType="software"
                 app:layout_constraintBottom_toBottomOf="@+id/nights4ImageView"
-                app:layout_constraintLeft_toRightOf="@+id/nights4ImageView"
-                app:layout_constraintRight_toLeftOf="@+id/nights5ImageView"
+                app:layout_constraintLeft_toLeftOf="@+id/nights4ImageView"
+                app:layout_constraintRight_toRightOf="@+id/nights5ImageView"
                 app:layout_constraintTop_toTopOf="@+id/nights4ImageView"/>
 
             <com.daily.base.widget.DailyImageView
@@ -302,8 +302,8 @@
                 android:background="@drawable/shape_line_ce7e7e7"
                 android:layerType="software"
                 app:layout_constraintBottom_toBottomOf="@+id/nights5ImageView"
-                app:layout_constraintLeft_toRightOf="@+id/nights5ImageView"
-                app:layout_constraintRight_toLeftOf="@+id/nights6ImageView"
+                app:layout_constraintLeft_toLeftOf="@+id/nights5ImageView"
+                app:layout_constraintRight_toRightOf="@+id/nights6ImageView"
                 app:layout_constraintTop_toTopOf="@+id/nights5ImageView"/>
 
             <com.daily.base.widget.DailyImageView
@@ -345,8 +345,8 @@
                 android:background="@drawable/shape_line_ce7e7e7"
                 android:layerType="software"
                 app:layout_constraintBottom_toBottomOf="@+id/nights6ImageView"
-                app:layout_constraintLeft_toRightOf="@+id/nights6ImageView"
-                app:layout_constraintRight_toLeftOf="@+id/nights7ImageView"
+                app:layout_constraintLeft_toLeftOf="@+id/nights6ImageView"
+                app:layout_constraintRight_toRightOf="@+id/nights7ImageView"
                 app:layout_constraintTop_toTopOf="@+id/nights6ImageView"/>
 
             <com.daily.base.widget.DailyImageView
@@ -388,8 +388,8 @@
                 android:background="@drawable/shape_line_ce7e7e7"
                 android:layerType="software"
                 app:layout_constraintBottom_toBottomOf="@+id/nights7ImageView"
-                app:layout_constraintLeft_toRightOf="@+id/nights7ImageView"
-                app:layout_constraintRight_toLeftOf="@+id/nights8ImageView"
+                app:layout_constraintLeft_toLeftOf="@+id/nights7ImageView"
+                app:layout_constraintRight_toRightOf="@+id/nights8ImageView"
                 app:layout_constraintTop_toTopOf="@+id/nights7ImageView"/>
 
             <com.daily.base.widget.DailyImageView
@@ -431,8 +431,8 @@
                 android:background="@drawable/shape_line_ce7e7e7"
                 android:layerType="software"
                 app:layout_constraintBottom_toBottomOf="@+id/nights8ImageView"
-                app:layout_constraintLeft_toRightOf="@+id/nights8ImageView"
-                app:layout_constraintRight_toLeftOf="@+id/nights9ImageView"
+                app:layout_constraintLeft_toLeftOf="@+id/nights8ImageView"
+                app:layout_constraintRight_toRightOf="@+id/nights9ImageView"
                 app:layout_constraintTop_toTopOf="@+id/nights8ImageView"/>
 
             <com.daily.base.widget.DailyImageView
