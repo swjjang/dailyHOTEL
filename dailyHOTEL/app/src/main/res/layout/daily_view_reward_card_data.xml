@@ -493,7 +493,7 @@
             android:visibility="gone"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nightsRewardLayout"
+            app:layout_constraintTop_toBottomOf="@+id/freeCouponImageView"
             dailyFont:style="Medium"/>
 
         <com.daily.base.widget.DailyTextView
