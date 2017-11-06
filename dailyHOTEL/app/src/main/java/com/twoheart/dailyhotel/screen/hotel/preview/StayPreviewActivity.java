@@ -70,6 +70,7 @@ public class StayPreviewActivity extends BaseActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, stay.name);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, stay.discountPrice);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, stay.getGrade().name());
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVIDE_REWARD_STICKER, stay.provideRewardSticker);
 
         return intent;
     }
@@ -93,6 +94,7 @@ public class StayPreviewActivity extends BaseActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, stay.name);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, stay.discountPrice);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, stay.getGrade().name());
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVIDE_REWARD_STICKER, stay.provideRewardSticker);
 
         return intent;
     }
@@ -157,6 +159,7 @@ public class StayPreviewActivity extends BaseActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, recommendationStay.name);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, recommendationStay.discount);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, recommendationStay.grade);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PROVIDE_REWARD_STICKER, recommendationStay.provideRewardSticker);
 
         return intent;
     }
@@ -222,7 +225,9 @@ public class StayPreviewActivity extends BaseActivity
             grade = null;
         }
 
-        initLayout(placeName, grade);
+        boolean provideRewardSticker = intent.getBooleanExtra(NAME_INTENT_EXTRA_DATA_PROVIDE_REWARD_STICKER, false);
+
+        initLayout(placeName, grade, provideRewardSticker);
 
         onRefresh(placeIndex);
     }
@@ -287,12 +292,12 @@ public class StayPreviewActivity extends BaseActivity
         Util.restartApp(this);
     }
 
-    private void initLayout(String placeName, Stay.Grade grade)
+    private void initLayout(String placeName, Stay.Grade grade, boolean provideRewardSticker)
     {
         setContentView(mPreviewLayout.onCreateView(R.layout.activity_place_preview));
 
-        mPreviewLayout.setGrade(grade);
         mPreviewLayout.setPlaceName(placeName);
+        mPreviewLayout.setCategory(grade, provideRewardSticker);
         mPreviewLayout.showPopAnimation();
     }
 

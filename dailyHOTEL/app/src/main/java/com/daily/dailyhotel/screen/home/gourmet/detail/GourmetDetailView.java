@@ -238,9 +238,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         setStickerView(gourmetDetail.getSticker());
 
         // 타이틀
-        String category = gourmetDetail.category + (DailyTextUtils.isTextEmpty(gourmetDetail.categorySub) ? "" : " > " + gourmetDetail.categorySub);
-
-        setTitleView(category, gourmetDetail.name, false, gourmetDetail.couponPrice);
+        setTitleView(gourmetDetail.category, gourmetDetail.categorySub, gourmetDetail.name, false, gourmetDetail.couponPrice);
 
         // 트루 리뷰
         setTrueReviewView(gourmetDetail.ratingShow, gourmetDetail.ratingValue, gourmetDetail.ratingPersons, trueReviewCount);
@@ -1130,7 +1128,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
      *
      * @return
      */
-    private void setTitleView(String category, String name, boolean dailyReward, int couponPrice)
+    private void setTitleView(String category, String subCategory, String name, boolean dailyReward, int couponPrice)
     {
         if (getViewDataBinding() == null)
         {
@@ -1144,7 +1142,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         titleInformationView.setEnglishNameVisible(false);
 
         // 카테고리
-        titleInformationView.setCategoryText(category);
+        titleInformationView.setCategory(category, subCategory);
 
         // 리워드 여부
         titleInformationView.setRewardVisible(dailyReward);

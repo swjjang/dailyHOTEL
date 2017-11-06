@@ -5,7 +5,9 @@ import android.databinding.DataBindingUtil;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.DailyViewDetailTitleInformationDataBinding;
@@ -98,6 +100,30 @@ public class DailyDetailTitleInformationView extends ConstraintLayout
 
         mViewDataBinding.rewardTextView.setVisibility(flag);
         mViewDataBinding.dotImageView.setVisibility(flag);
+    }
+
+    public void setCategory(String category, String subCategory)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.categoryTextView.setText(category);
+
+        if (DailyTextUtils.isTextEmpty(subCategory) == false)
+        {
+            mViewDataBinding.dotImageView.setVisibility(View.VISIBLE);
+            mViewDataBinding.dotImageView.setPadding(ScreenUtils.dpToPx(getContext(), 5), 0, ScreenUtils.dpToPx(getContext(), 5), 0);
+            mViewDataBinding.dotImageView.setVectorImageResource(R.drawable.vector_ic_gourmet_category_arrow);
+
+            mViewDataBinding.subCategoryTextView.setVisibility(View.VISIBLE);
+            mViewDataBinding.subCategoryTextView.setText(subCategory);
+        } else
+        {
+            mViewDataBinding.dotImageView.setVisibility(View.GONE);
+            mViewDataBinding.subCategoryTextView.setVisibility(View.GONE);
+        }
     }
 
     public void setCouponVisible(boolean visible)

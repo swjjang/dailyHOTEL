@@ -114,7 +114,7 @@ public class StayOutboundDetailAnalyticsImpl implements StayOutboundDetailPresen
     }
 
     @Override
-    public void onEventBookingClick(Activity activity, boolean provideRewardSticker)
+    public void onEventBookingClick(Activity activity, int stayIndex, boolean provideRewardSticker)
     {
         if (activity == null)
         {

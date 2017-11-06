@@ -119,7 +119,7 @@ public class StayOutboundPreviewView extends BaseDialogView<StayOutboundPreviewV
     }
 
     @Override
-    public void setStayRating(float rating)
+    public void setCategory(float rating, boolean provideRewardSticker)
     {
         if (getViewDataBinding() == null)
         {
@@ -127,8 +127,13 @@ public class StayOutboundPreviewView extends BaseDialogView<StayOutboundPreviewV
         }
 
         // 등급
-        getViewDataBinding().gradeTextView.setVisibility(View.VISIBLE);
-        getViewDataBinding().gradeTextView.setText(getString(R.string.label_stay_outbound_detail_grade, (int) rating));
+        getViewDataBinding().categoryTextView.setVisibility(View.VISIBLE);
+        getViewDataBinding().categoryTextView.setText(getString(R.string.label_stay_outbound_detail_grade, (int) rating));
+
+        int flag = provideRewardSticker ? View.VISIBLE : View.GONE;
+
+        getViewDataBinding().dotImageView.setVisibility(flag);
+        getViewDataBinding().rewardTextView.setVisibility(flag);
     }
 
     @Override

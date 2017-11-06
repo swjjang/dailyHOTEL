@@ -26,19 +26,26 @@ public class StayPreviewLayout extends PlacePreviewLayout implements View.OnClic
         super(context, listener);
     }
 
-    public void setGrade(Stay.Grade grade)
+    public void setCategory(Stay.Grade grade, boolean provideRewardSticker)
     {
         if (grade == null)
         {
-            mPlaceGradeTextView.setVisibility(View.INVISIBLE);
-            mPlaceSubGradeTextView.setVisibility(View.GONE);
-            return;
+            mCategoryTextView.setVisibility(View.INVISIBLE);
+            mDotImageView.setVisibility(View.GONE);
+        } else
+        {
+            mCategoryTextView.setText(grade.getName(mContext));
         }
 
-        // 등급
-        mPlaceGradeTextView.setText(grade.getName(mContext));
-        mPlaceGradeTextView.setBackgroundResource(grade.getColorResId());
-        mPlaceSubGradeTextView.setVisibility(View.GONE);
+        if (provideRewardSticker == true)
+        {
+            mDotImageView.setVisibility(View.VISIBLE);
+            mRewardTextView.setVisibility(View.VISIBLE);
+        } else
+        {
+            mDotImageView.setVisibility(View.GONE);
+            mRewardTextView.setVisibility(View.GONE);
+        }
     }
 
     protected void updateLayout(StayBookingDay stayBookingDay, StayDetail stayDetail, int reviewCount, boolean changedPrice, boolean soldOut)

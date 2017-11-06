@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
+import com.daily.base.widget.DailyImageView;
 import com.daily.base.widget.DailyTextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
@@ -40,11 +41,12 @@ public class PlacePreviewLayout extends BaseLayout implements View.OnClickListen
     View mWishPopupLayout;
     private TextView mWishPopupTextView;
 
-    protected TextView mPlaceGradeTextView, mPlaceSubGradeTextView;
+    protected TextView mCategoryTextView, mSubCategoryTextView, mRewardTextView;
     protected TextView mProductCountTextView;
     protected TextView mPriceTextView;
     protected View mStayAverageView;
     protected TextView mBookingTextView;
+    protected DailyImageView mDotImageView;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -84,10 +86,11 @@ public class PlacePreviewLayout extends BaseLayout implements View.OnClickListen
 
         mPopupLayout.setLayoutParams(layoutParams);
 
-        mPlaceGradeTextView = (TextView) view.findViewById(R.id.placeGradeTextView);
-        mPlaceSubGradeTextView = (TextView) view.findViewById(R.id.placeSubGradeTextView);
-        mPlaceSubGradeTextView.setVisibility(View.GONE);
         mPlaceNameTextView = (TextView) view.findViewById(R.id.placeNameTextView);
+        mCategoryTextView = (TextView) view.findViewById(R.id.categoryTextView);
+        mDotImageView = (DailyImageView) view.findViewById(R.id.dotImageView);
+        mRewardTextView = (TextView) view.findViewById(R.id.rewardTextView);
+        mSubCategoryTextView = (TextView) view.findViewById(R.id.subCategoryTextView);
 
         mImageLayout = view.findViewById(R.id.imageLayout);
 

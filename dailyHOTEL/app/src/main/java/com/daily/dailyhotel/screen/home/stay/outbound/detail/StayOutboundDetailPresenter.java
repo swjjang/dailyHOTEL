@@ -164,7 +164,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         void onEventRecommendItemList(Activity activity, int stayIndex, List<Integer> stayIndexList);
 
-        void onEventBookingClick(Activity activity, boolean provideRewardSticker);
+        void onEventBookingClick(Activity activity, int stayIndex, boolean provideRewardSticker);
 
         StayOutboundPaymentAnalyticsParam getPaymentAnalyticsParam(String grade, boolean nrd, boolean showOriginalPrice);
     }
@@ -1081,7 +1081,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                         }
                     }));
 
-                    mAnalytics.onEventBookingClick(getActivity(), mStayOutboundDetail.activeReward && mSelectedRoom.provideRewardSticker);
+                    mAnalytics.onEventBookingClick(getActivity(), mStayOutboundDetail.index, mStayOutboundDetail.activeReward && mSelectedRoom.provideRewardSticker);
                 }
                 break;
 

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface StayOutboundPreviewInterface extends BaseDialogViewInterface
 {
-    void setStayRating(float rating);
+    void setCategory(float rating, boolean provideRewardSticker);
 
     void setStayName(String stayName);
 

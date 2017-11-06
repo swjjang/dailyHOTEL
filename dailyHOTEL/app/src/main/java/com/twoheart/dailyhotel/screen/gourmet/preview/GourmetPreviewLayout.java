@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetDetail;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
@@ -24,30 +25,31 @@ public class GourmetPreviewLayout extends PlacePreviewLayout implements View.OnC
         super(context, listener);
     }
 
-    public void setGrade(String grade)
+    public void setCategory(String grade, String subGrade)
     {
-        if (DailyTextUtils.isTextEmpty(grade) == true)
+        if (DailyTextUtils.isTextEmpty(grade) == false && DailyTextUtils.isTextEmpty(subGrade) == false)
         {
-            mPlaceGradeTextView.setVisibility(View.INVISIBLE);
-            return;
-        }
+            mCategoryTextView.setText(grade);
+            mDotImageView.setVectorImageResource(R.drawable.vector_ic_gourmet_category_arrow);
+            mDotImageView.setPadding(ScreenUtils.dpToPx(mContext, 5), 0, ScreenUtils.dpToPx(mContext, 5), 0);
 
-        // 등급
-        mPlaceGradeTextView.setVisibility(View.VISIBLE);
-        mPlaceGradeTextView.setText(grade);
-    }
-
-    public void setSubGrade(String subGrade)
-    {
-        if (DailyTextUtils.isTextEmpty(subGrade) == true)
+            mSubCategoryTextView.setText(subGrade);
+        } else if (DailyTextUtils.isTextEmpty(grade) == false)
         {
-            mPlaceSubGradeTextView.setVisibility(View.INVISIBLE);
-            return;
+            mCategoryTextView.setText(grade);
+            mDotImageView.setVisibility(View.GONE);
+            mSubCategoryTextView.setVisibility(View.GONE);
+        } else if (DailyTextUtils.isTextEmpty(subGrade) == false)
+        {
+            mCategoryTextView.setVisibility(View.GONE);
+            mDotImageView.setVisibility(View.GONE);
+            mSubCategoryTextView.setText(subGrade);
+        } else
+        {
+            mCategoryTextView.setVisibility(View.GONE);
+            mDotImageView.setVisibility(View.GONE);
+            mSubCategoryTextView.setVisibility(View.GONE);
         }
-
-        // 등급
-        mPlaceSubGradeTextView.setVisibility(View.VISIBLE);
-        mPlaceSubGradeTextView.setText(subGrade);
     }
 
     protected void updateLayout(GourmetBookingDay gourmetBookingDay, GourmetDetail gourmetDetail, int reviewCount, boolean changedPrice, boolean soldOut)

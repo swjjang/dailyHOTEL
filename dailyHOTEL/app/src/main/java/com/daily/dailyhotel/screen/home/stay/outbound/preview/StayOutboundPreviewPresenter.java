@@ -369,7 +369,7 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
 
         mStayOutboundDetail = stayOutboundDetail;
 
-        getViewInterface().setStayRating(stayOutboundDetail.rating);
+        getViewInterface().setCategory(stayOutboundDetail.rating, stayOutboundDetail.provideRewardSticker);
         getViewInterface().setImages(stayOutboundDetail.getImageList());
 
         try

@@ -258,8 +258,9 @@ public class GourmetPreviewActivity extends BaseActivity
     {
         setContentView(mPreviewLayout.onCreateView(R.layout.activity_place_preview));
 
-        mPreviewLayout.setGrade(category);
         mPreviewLayout.setPlaceName(placeName);
+        mPreviewLayout.setCategory(category, null);
+
 
         mPreviewLayout.showPopAnimation();
     }
@@ -292,7 +293,7 @@ public class GourmetPreviewActivity extends BaseActivity
 
         if (mPreviewLayout != null)
         {
-            mPreviewLayout.setSubGrade(gourmetDetailParams.categorySub);
+            mPreviewLayout.setCategory(gourmetDetailParams.category, gourmetDetailParams.categorySub);
 
             List<GourmetProduct> stayProductList = gourmetDetail.getProductList();
 
