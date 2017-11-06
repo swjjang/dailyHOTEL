@@ -37,6 +37,8 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
         void doSignOut();
 
         void doCodeCopy(String code);
+
+        void doValidDateChange(int year);
     }
 
     public ProfileLayout(Context context, OnEventListener mOnEventListener)

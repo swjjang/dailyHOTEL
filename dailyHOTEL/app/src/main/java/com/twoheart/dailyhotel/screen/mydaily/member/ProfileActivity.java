@@ -386,6 +386,12 @@ public class ProfileActivity extends BaseActivity
         }
 
         @Override
+        public void doValidDateChange(int year)
+        {
+            DailyToast.showToast(ProfileActivity.this, R.string.message_copy_recommender_code, Toast.LENGTH_SHORT);
+        }
+
+        @Override
         public void finish()
         {
             ProfileActivity.this.finish();
