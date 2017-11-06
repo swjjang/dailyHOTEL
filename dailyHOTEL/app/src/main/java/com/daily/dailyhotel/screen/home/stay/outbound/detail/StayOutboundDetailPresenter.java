@@ -398,7 +398,10 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             }
         }
 
-        onHideRoomListClick(false);
+        if (mStatus == STATUS_BOOKING)
+        {
+            onHideRoomListClick(false);
+        }
 
         if (isRefresh() == true)
         {
