@@ -111,10 +111,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
 
         initToolbar(viewDataBinding);
 
-        viewDataBinding.calendarTextView.setDrawableVectorTint(R.color.default_background_c454545);
         viewDataBinding.calendarTextView.setOnClickListener(this);
-
-        viewDataBinding.peopleTextView.setDrawableVectorTint(R.color.default_background_c454545);
         viewDataBinding.peopleTextView.setOnClickListener(this);
 
         viewDataBinding.swipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
