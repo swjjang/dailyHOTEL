@@ -1343,8 +1343,14 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         {
             for (String dayString : soldOutList)
             {
-                int soldOutDay = Integer.parseInt(dayString.replaceAll("-", ""));
-                mSoldOutDateList.add(soldOutDay);
+                try
+                {
+                    int soldOutDay = Integer.parseInt(dayString.replaceAll("\\-", ""));
+                    mSoldOutDateList.add(soldOutDay);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
             }
         }
     }
