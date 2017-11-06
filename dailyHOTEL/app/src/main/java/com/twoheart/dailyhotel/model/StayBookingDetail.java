@@ -41,7 +41,7 @@ public class StayBookingDetail extends PlaceBookingDetail
     public boolean waitingForBooking;
 
     // reward
-    public boolean activeReward = true;
+    public boolean activeReward;
     public int rewardStickerCount;
 
     public StayBookingDetail()
