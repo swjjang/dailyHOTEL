@@ -2,6 +2,7 @@ package com.daily.dailyhotel.screen.booking.cancel.detail.gourmet;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -137,7 +138,7 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
 
         double width = ScreenUtils.getScreenWidth(getContext());
         double height = ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(getContext()));
-        final float PLACE_INFORMATION_LAYOUT_RATIO = 0.72f;
+        final float PLACE_INFORMATION_LAYOUT_RATIO = 0.65f;
 
         // Map 4 :2 비율 맞추기
         viewDataBinding.mapImageView.setOnClickListener(this);
@@ -839,6 +840,7 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
         SupportMapFragment supportMapFragment = (SupportMapFragment) findFragmentById(R.id.supportMapFragment);
         supportMapFragment.getMapAsync(new OnMapReadyCallback()
         {
+            @SuppressLint("MissingPermission")
             @Override
             public void onMapReady(GoogleMap googleMap)
             {
@@ -867,7 +869,7 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
                         Projection projection = mGoogleMap.getProjection();
 
                         Point point = projection.toScreenLocation(new LatLng(gourmetBookingDetail.latitude, gourmetBookingDetail.longitude));
-                        point.y += (point.y - getViewDataBinding().fakeMapLayout.getHeight() / 2);
+                        point.y += (point.y - getViewDataBinding().fakeMapLayout.getHeight() * 0.43);
 
                         mCenterLatLng = projection.fromScreenLocation(point);
                         mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(mCenterLatLng), 200, null);
