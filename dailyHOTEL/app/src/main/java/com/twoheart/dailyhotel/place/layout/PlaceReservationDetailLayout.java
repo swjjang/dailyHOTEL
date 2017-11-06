@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.place.layout;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -133,7 +134,7 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
 
         double width = ScreenUtils.getScreenWidth(mContext);
         double height = ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext));
-        final float PLACE_INFORMATION_LAYOUT_RATIO = 0.72f;
+        final float PLACE_INFORMATION_LAYOUT_RATIO = 0.65f;
 
         // Map 4 :2 비율 맞추기
         com.facebook.drawee.view.SimpleDraweeView mapImageView = (com.facebook.drawee.view.SimpleDraweeView) mScrollLayout.findViewById(R.id.mapImageView);
@@ -394,6 +395,7 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
 
         mapFragment.getMapAsync(new OnMapReadyCallback()
         {
+            @SuppressLint("MissingPermission")
             @Override
             public void onMapReady(GoogleMap googleMap)
             {
@@ -422,7 +424,7 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
                         Projection projection = mGoogleMap.getProjection();
 
                         Point point = projection.toScreenLocation(new LatLng(placeBookingDetail.latitude, placeBookingDetail.longitude));
-                        point.y += (point.y - mFakeMapLayout.getHeight() / 2);
+                        point.y += point.y - (mFakeMapLayout.getHeight() * 0.43);
 
                         mCenterLatLng = projection.fromScreenLocation(point);
                         mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(mCenterLatLng), 200, null);

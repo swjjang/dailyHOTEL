@@ -340,7 +340,7 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
         return cancelSortList;
     }
 
-    private boolean startBookingDetail(BookingCancel.PlaceType placeType, int reservationIndex, String aggregationId, String imageUrl)
+    private boolean startBookingCancelDetail(BookingCancel.PlaceType placeType, int reservationIndex, String aggregationId, String imageUrl)
     {
         Intent intent;
 
@@ -463,7 +463,7 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
             return;
         }
 
-        startBookingDetail(bookingCancel.placeType, bookingCancel.reservationIdx, bookingCancel.aggregationId, bookingCancel.imageUrl);
+        startBookingCancelDetail(bookingCancel.placeType, bookingCancel.reservationIdx, bookingCancel.aggregationId, bookingCancel.imageUrl);
     }
 
     @Override
