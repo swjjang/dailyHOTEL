@@ -398,7 +398,10 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             getViewInterface().setBlurVisible(getActivity(), false);
         }
 
-        onHideRoomListClick(false);
+        if (mStatus == STATUS_BOOKING)
+        {
+            onHideRoomListClick(false);
+        }
 
         if (isRefresh() == true)
         {

@@ -409,7 +409,10 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     {
         super.onResume();
 
-        onHideRoomListClick(false);
+        if (mStatus == STATUS_BOOKING)
+        {
+            onHideRoomListClick(false);
+        }
 
         if (isRefresh() == true)
         {
