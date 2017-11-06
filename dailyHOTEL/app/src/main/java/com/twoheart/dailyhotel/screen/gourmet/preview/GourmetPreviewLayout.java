@@ -29,20 +29,28 @@ public class GourmetPreviewLayout extends PlacePreviewLayout implements View.OnC
     {
         if (DailyTextUtils.isTextEmpty(grade) == false && DailyTextUtils.isTextEmpty(subGrade) == false)
         {
+            mCategoryTextView.setVisibility(View.VISIBLE);
             mCategoryTextView.setText(grade);
+
+            mDotImageView.setVisibility(View.VISIBLE);
             mDotImageView.setVectorImageResource(R.drawable.vector_ic_gourmet_category_arrow);
             mDotImageView.setPadding(ScreenUtils.dpToPx(mContext, 5), 0, ScreenUtils.dpToPx(mContext, 5), 0);
 
+            mSubCategoryTextView.setVisibility(View.VISIBLE);
             mSubCategoryTextView.setText(subGrade);
         } else if (DailyTextUtils.isTextEmpty(grade) == false)
         {
+            mCategoryTextView.setVisibility(View.VISIBLE);
             mCategoryTextView.setText(grade);
+
             mDotImageView.setVisibility(View.GONE);
             mSubCategoryTextView.setVisibility(View.GONE);
         } else if (DailyTextUtils.isTextEmpty(subGrade) == false)
         {
             mCategoryTextView.setVisibility(View.GONE);
             mDotImageView.setVisibility(View.GONE);
+
+            mSubCategoryTextView.setVisibility(View.VISIBLE);
             mSubCategoryTextView.setText(subGrade);
         } else
         {

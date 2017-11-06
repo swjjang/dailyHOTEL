@@ -1145,7 +1145,8 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         titleInformationView.setCategory(category, subCategory);
 
         // 리워드 여부
-        titleInformationView.setRewardVisible(dailyReward);
+        // 고메에서는 점 이미지를 화살표 이미지로 바꾸어서 사용한다.
+        //        titleInformationView.setRewardVisible(dailyReward);
 
         // 쿠폰
         if (couponPrice > 0)

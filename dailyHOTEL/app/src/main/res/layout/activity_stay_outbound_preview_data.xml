@@ -34,7 +34,7 @@
                     android:layout_marginTop="16dp"
                     android:ellipsize="end"
                     android:freezesText="true"
-                    android:gravity="center_vertical"
+                    android:gravity="center"
                     android:maxLines="2"
                     android:minHeight="29dp"
                     android:textColor="@color/default_text_c323232"
