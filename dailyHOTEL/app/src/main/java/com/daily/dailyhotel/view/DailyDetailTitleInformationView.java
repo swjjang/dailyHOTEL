@@ -62,9 +62,6 @@ public class DailyDetailTitleInformationView extends ConstraintLayout
             return;
         }
 
-        // 영문이 들어가게 되면 기본 이름이 상단에 3dp를 추가한다.
-        mViewDataBinding.nameTextView.setPadding(0, ScreenUtils.dpToPx(getContext(), 3), 0, 0);
-
         mViewDataBinding.englishNameTextView.setText(text);
     }
 
@@ -76,8 +73,18 @@ public class DailyDetailTitleInformationView extends ConstraintLayout
         }
 
         mViewDataBinding.englishNameTextView.setVisibility(visible ? VISIBLE : GONE);
-    }
 
+        if (visible == true)
+        {
+            final int DP_5 = ScreenUtils.dpToPx(getContext(), 5);
+
+            ((LayoutParams) mViewDataBinding.categoryTextView.getLayoutParams()).topMargin = DP_5;
+            mViewDataBinding.categoryTextView.setLayoutParams(mViewDataBinding.categoryTextView.getLayoutParams());
+
+            ((LayoutParams) mViewDataBinding.rewardTextView.getLayoutParams()).topMargin = DP_5;
+            mViewDataBinding.rewardTextView.setLayoutParams(mViewDataBinding.rewardTextView.getLayoutParams());
+        }
+    }
 
     public void setCategoryText(String text)
     {
