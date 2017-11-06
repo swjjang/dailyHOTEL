@@ -50,7 +50,6 @@
                         android:id="@+id/cheeringTitleTextView"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
                         android:gravity="center_horizontal"
                         android:textColor="@color/default_text_ce9a230"
                         android:textSize="14dp"
