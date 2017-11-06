@@ -65,6 +65,7 @@
                     android:id="@+id/descriptionTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:lineSpacingExtra="-3dp"
                     android:paddingTop="4dp"
                     android:textColor="@color/default_text_c323232"
                     android:textSize="14dp"/>

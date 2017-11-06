@@ -73,7 +73,7 @@
             android:layout_width="0dp"
             android:layout_height="2dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="6dp"
+            android:layout_marginRight="7dp"
             android:layout_marginTop="65dp"
             android:background="@drawable/shape_line_ce7e7e7_dw2_dg4"
             android:layerType="software"

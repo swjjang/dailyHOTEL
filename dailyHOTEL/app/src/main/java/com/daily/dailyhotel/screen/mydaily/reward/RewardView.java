@@ -480,6 +480,8 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
             getViewDataBinding().issueCouponTitleTextView.setText(R.string.label_reward_to_bo_issued_reward_coupon);
         }
 
+        getViewDataBinding().issueCouponTitleUnderLineView.setVisibility(View.INVISIBLE);
+
         if (enabled == true && getViewDataBinding().issueCouponLayout.getVisibility() == View.VISIBLE)
         {
             getViewDataBinding().issueCouponArrowImageView.setVisibility(View.VISIBLE);
@@ -500,6 +502,8 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
         {
             return null;
         }
+
+        getViewDataBinding().issueCouponTitleUnderLineView.setVisibility(View.VISIBLE);
 
         ObjectAnimator issueCouponObjectAnimator = ObjectAnimator.ofFloat(getViewDataBinding().issueCouponLayout, View.TRANSLATION_Y//
             , getViewDataBinding().issueCouponLayout.getTranslationY(), 0.0f);
@@ -613,6 +617,8 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
                         getViewDataBinding().issueCouponArrowImageView.setRotation(0.0f);
                         getViewDataBinding().issueCouponBackgroundView.setVisibility(View.GONE);
 
+                        getViewDataBinding().issueCouponTitleUnderLineView.setVisibility(View.VISIBLE);
+
                         observer.onNext(true);
                         observer.onComplete();
                     }
@@ -697,8 +703,6 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
 
             mIssueCouponShakeAnimatorSet.cancel();
             mIssueCouponShakeAnimatorSet = null;
-
-            getViewDataBinding().issueCouponTitleUnderLineView.setVisibility(View.VISIBLE);
         }
     }
 

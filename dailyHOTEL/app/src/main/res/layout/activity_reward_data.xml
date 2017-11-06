@@ -530,6 +530,7 @@
                 android:layout_height="1dp"
                 android:layout_marginTop="15dp"
                 android:background="@color/white_a20"
+                android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/issueCouponTitleTextView"/>
