@@ -99,6 +99,9 @@ public class StaySalesData
     @JsonField(name = "couponDiscountText")
     public String couponDiscountText;
 
+    @JsonField(name = "provideRewardSticker")
+    public boolean provideRewardSticker;
+
     public Stay getStay()
     {
         Stay stay = new Stay();
@@ -152,6 +155,7 @@ public class StaySalesData
         stay.newItem = newItem;
         stay.myWish = myWish;
         stay.couponDiscountText = couponDiscountText;
+        stay.provideRewardSticker = provideRewardSticker;
 
         return stay;
     }

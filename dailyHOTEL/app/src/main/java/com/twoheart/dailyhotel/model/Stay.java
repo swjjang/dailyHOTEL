@@ -200,6 +200,11 @@ public class Stay extends Place
             newItem = jsonObject.getBoolean("newItem");
             myWish = jsonObject.getBoolean("myWish");
             couponDiscountText = jsonObject.getString("couponDiscountText");
+
+            if (jsonObject.has("provideRewardSticker") == true)
+            {
+                provideRewardSticker = jsonObject.getBoolean("provideRewardSticker");
+            }
         } catch (JSONException e)
         {
             ExLog.d(e.toString());
