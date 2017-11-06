@@ -73,7 +73,7 @@
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/stickerTitleTextView"
-                        app:layout_goneMarginBottom="27dp"/>
+                        app:layout_goneMarginBottom="28dp"/>
 
                     <com.daily.base.widget.DailyTextView
                         android:id="@+id/loginTextView"
@@ -99,7 +99,7 @@
                         android:layout_height="2dp"
                         android:layout_marginBottom="4dp"
                         android:layout_marginLeft="7dp"
-                        android:layout_marginRight="7dp"
+                        android:layout_marginRight="5dp"
                         android:background="@drawable/shape_line_ce7e7e7_dw2_dg3"
                         android:layerType="software"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -502,6 +502,7 @@
                 android:id="@+id/issueCouponTitleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
                 android:textColor="@color/white"
                 android:textSize="17dp"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -514,6 +515,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginRight="15dp"
+                android:layout_marginTop="2dp"
                 android:background="@drawable/shape_rect_cffffff_r2"
                 android:gravity="center"
                 android:textColor="@color/white"
@@ -531,7 +533,6 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/issueCouponTitleTextView"/>
-
 
             <ImageView
                 android:id="@+id/rewardCouponView"
