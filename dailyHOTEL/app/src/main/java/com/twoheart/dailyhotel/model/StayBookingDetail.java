@@ -265,6 +265,16 @@ public class StayBookingDetail extends PlaceBookingDetail
         {
             cancelDateTime = jsonObject.getString("cancelDateTime");
         }
+
+        if (jsonObject.has("configurations") == true)
+        {
+            activeReward = jsonObject.getJSONObject("configurations").getBoolean("activeReward");
+        }
+
+        if (jsonObject.has("rewardCard") == true)
+        {
+            rewardStickerCount = jsonObject.getJSONObject("rewardCard").getInt("rewardStickerCount");
+        }
     }
 
     public StayBookingDetail(Parcel in)

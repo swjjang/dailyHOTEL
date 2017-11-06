@@ -5,7 +5,7 @@ import com.twoheart.dailyhotel.model.Stay;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public class StayBookingDetail
+public class StayBookingDetail extends Configurations
 {
     public int reservationIndex;
     public int stayIndex;
@@ -43,6 +43,7 @@ public class StayBookingDetail
     public boolean readyForRefund;
     public boolean waitingForBooking;
     public String cancelDateTime;
+    public int rewardStickerCount;
 
     private LinkedHashMap<String, List<String>> mSpecificationMap;
 

@@ -124,6 +124,12 @@ public class StayBookingDetailData
     @JsonField(name = "cancelDateTime")
     public String cancelDateTime;
 
+    @JsonField(name = "rewardCard")
+    public RewardCardData rewardCard;
+
+    @JsonField(name = "configurations")
+    public ConfigurationsData configurations;
+
     public StayBookingDetailData()
     {
 
@@ -176,6 +182,16 @@ public class StayBookingDetailData
         stayBookingDetail.setSpecificationMap(getSpecification(hotelSpec));
         stayBookingDetail.waitingForBooking = waitingForBooking;
         stayBookingDetail.cancelDateTime = cancelDateTime;
+
+        if (rewardCard != null)
+        {
+            stayBookingDetail.rewardStickerCount = rewardCard.rewardStickerCount;
+        }
+
+        if (configurations != null)
+        {
+            stayBookingDetail.activeReward = configurations.activeReward;
+        }
 
         return stayBookingDetail;
     }
@@ -230,5 +246,20 @@ public class StayBookingDetailData
         }
 
         return specificationMap;
+    }
+
+    @JsonObject
+    static class RewardCardData
+    {
+        @JsonField(name = "expiredAt")
+        public String expiredAt;
+
+        @JsonField(name = "rewardStickerCount")
+        public int rewardStickerCount;
+
+        public RewardCardData()
+        {
+
+        }
     }
 }
