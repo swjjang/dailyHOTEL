@@ -168,7 +168,7 @@ public class StayOutboundPreviewView extends BaseDialogView<StayOutboundPreviewV
 
         for (int i = 0; i < MAX_COUNT; i++)
         {
-            simpleDraweeViews[i].getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
+            simpleDraweeViews[i].getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder_s);
 
             if (i < size)
             {

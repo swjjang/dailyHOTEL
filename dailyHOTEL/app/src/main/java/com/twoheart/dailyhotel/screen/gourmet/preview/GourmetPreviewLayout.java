@@ -34,7 +34,6 @@ public class GourmetPreviewLayout extends PlacePreviewLayout implements View.OnC
 
             mDotImageView.setVisibility(View.VISIBLE);
             mDotImageView.setVectorImageResource(R.drawable.vector_ic_gourmet_category_arrow);
-            mDotImageView.setPadding(ScreenUtils.dpToPx(mContext, 5), 0, ScreenUtils.dpToPx(mContext, 5), 0);
 
             mSubCategoryTextView.setVisibility(View.VISIBLE);
             mSubCategoryTextView.setText(subGrade);
