@@ -153,9 +153,15 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
             onRefresh(true);
         }
 
-        if (DailyHotel.isLogin() == false && DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerCampaignEnabled() == true)
+        if (DailyHotel.isLogin() == false)
         {
-            getViewInterface().startCampaignStickerAnimation();
+            if (DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerCampaignEnabled() == true)
+            {
+                getViewInterface().startCampaignStickerAnimation();
+            }
+        } else
+        {
+            getViewInterface().setLoginVisible(false);
         }
     }
 
