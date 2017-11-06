@@ -377,7 +377,7 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
 
     @Override
     public void onEventBookingClick(Activity activity, StayBookDateTime stayBookDateTime, int stayIndex//
-        , String stayName, String roomName, String category, int discountPrice)
+        , String stayName, String roomName, String category, int discountPrice, boolean provideRewardSticker)
     {
         if (activity == null || mAnalyticsParam == null || stayBookDateTime == null)
         {
@@ -403,6 +403,12 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
             , AnalyticsManager.Action.BOOKING_CLICKED, label, params);
+
+        if (provideRewardSticker == true)
+        {
+            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.REWARD//
+                , AnalyticsManager.Action.ORDER_PROCEED, Integer.toString(stayIndex), null);
+        }
     }
 
     @Override

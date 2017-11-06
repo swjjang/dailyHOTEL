@@ -162,7 +162,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         void onEventCalendarClick(Activity activity);
 
         void onEventBookingClick(Activity activity, StayBookDateTime stayBookDateTime//
-            , int stayIndex, String stayName, String roomName, String category, int discountPrice);
+            , int stayIndex, String stayName, String roomName, String category, int discountPrice, boolean provideRewardSticker);
 
         void onEventTrueReviewClick(Activity activity);
 
@@ -1857,7 +1857,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         }
 
         mAnalytics.onEventBookingClick(getActivity(), mStayBookDateTime, mStayDetail.index, mStayDetail.name//
-            , mSelectedRoom.name, mStayDetail.category, mSelectedRoom.discountAverage);
+            , mSelectedRoom.name, mStayDetail.category, mSelectedRoom.discountAverage, mStayDetail.activeReward && mSelectedRoom.provideRewardSticker);
     }
 
     private boolean isSoldOut(StayDetail stayDetail)

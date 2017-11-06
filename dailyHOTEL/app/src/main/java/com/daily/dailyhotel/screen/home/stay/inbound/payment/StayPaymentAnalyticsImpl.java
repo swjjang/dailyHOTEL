@@ -102,12 +102,6 @@ public class StayPaymentAnalyticsImpl implements StayPaymentPresenter.StayPaymen
             params.put(AnalyticsManager.KeyType.AREA, mAnalyticsParam.getAnalyticsAddressAreaName());
 
             AnalyticsManager.getInstance(activity).recordScreen(activity, screenName, null, params);
-
-            if (DailyRemoteConfigPreference.getInstance(activity).isKeyRemoteConfigRewardStickerEnabled() && mAnalyticsParam.provideRewardSticker == true)
-            {
-                AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.REWARD//
-                    , AnalyticsManager.Action.ORDER_PROCEED, Integer.toString(stayIndex), null);
-            }
         } catch (Exception e)
         {
             ExLog.d(e.toString());

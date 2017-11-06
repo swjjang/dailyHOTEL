@@ -49,13 +49,14 @@
                         android:id="@+id/cheeringTitleTextView"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
                         android:gravity="center_horizontal"
                         android:textColor="@color/default_text_ce9a230"
                         android:textSize="14dp"
+                        app:layout_constraintBottom_toTopOf="@+id/cheeringWarningTextView"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_chainStyle="packed"
                         dailyFont:style="Medium"/>
 
                     <com.daily.base.widget.DailyTextView

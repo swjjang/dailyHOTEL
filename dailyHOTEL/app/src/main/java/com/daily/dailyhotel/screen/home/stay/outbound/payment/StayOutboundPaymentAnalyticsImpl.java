@@ -58,12 +58,6 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
         {
             AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE_CANCELABLE_OUTBOUND, null, params);
         }
-
-        if (DailyRemoteConfigPreference.getInstance(activity).isKeyRemoteConfigRewardStickerEnabled() && mAnalyticsParam.provideRewardSticker == true)
-        {
-            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.REWARD//
-                , AnalyticsManager.Action.ORDER_PROCEED, Integer.toString(stayIndex), null);
-        }
     }
 
     @Override

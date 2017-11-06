@@ -114,6 +114,21 @@ public class StayOutboundDetailAnalyticsImpl implements StayOutboundDetailPresen
     }
 
     @Override
+    public void onEventBookingClick(Activity activity, boolean provideRewardSticker)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        if (provideRewardSticker == true)
+        {
+            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.REWARD//
+                , AnalyticsManager.Action.ORDER_PROCEED, Integer.toString(stayIndex), null);
+        }
+    }
+
+    @Override
     public StayOutboundPaymentAnalyticsParam getPaymentAnalyticsParam(String grade, boolean nrd, boolean showOriginalPrice)
     {
         StayOutboundPaymentAnalyticsParam analyticsParam = new StayOutboundPaymentAnalyticsParam();
