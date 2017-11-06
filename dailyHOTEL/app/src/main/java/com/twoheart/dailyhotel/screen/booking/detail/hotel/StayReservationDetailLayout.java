@@ -634,7 +634,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
         mRewardCardView.setStickerCount(nights);
 
         mRewardCardView.setWarningVisible(false);
-        mRewardCardView.setDescriptionVisible(true);
-        mRewardCardView.setDescriptionText(null);
+        mRewardCardView.setDescriptionVisible(false);
+        mRewardCardView.setPadding(0, 0, 0, ScreenUtils.dpToPx(mContext, 30));
     }
 }
