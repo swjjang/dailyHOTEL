@@ -25,8 +25,6 @@ import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
-import com.daily.dailyhotel.screen.home.campaigntag.CampaignTagListAnalyticsImpl;
-import com.daily.dailyhotel.screen.home.campaigntag.CampaignTagListAnalyticsInterface;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.view.DailyStayCardView;
@@ -60,7 +58,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCampaignTagListActivity, StayCampaignTagListInterface> implements StayCampaignTagListView.OnEventListener
 {
-    CampaignTagListAnalyticsInterface mAnalytics;
+    StayCampaignTagListAnalyticsImpl mAnalytics;
 
     private CommonRemoteImpl mCommonRemoteImpl;
     CampaignTagRemoteImpl mCampaignTagRemoteImpl;
@@ -75,6 +73,15 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
     View mViewByLongPress;
 
     private int mWishPosition;
+
+    public interface StayCampaignTagListAnalyticsInterface extends BaseAnalyticsInterface
+    {
+        void onCampaignTagEvent(Activity activity, CampaignTag campaignTag, int listCount);
+
+        void onEventStayClickOption(Activity activity, int index, boolean hasCoupon, boolean hasReview, boolean trueVR, boolean provideRewardSticker);
+
+        void onEventStayWishClick(Activity activity, boolean wish);
+    }
 
     public StayCampaignTagListPresenter(@NonNull StayCampaignTagListActivity activity)
     {
@@ -93,7 +100,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
     {
         setContentView(R.layout.activity_place_campaign_tag_list_data);
 
-        setAnalytics(new CampaignTagListAnalyticsImpl());
+        setAnalytics(new StayCampaignTagListAnalyticsImpl());
 
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
         mCampaignTagRemoteImpl = new CampaignTagRemoteImpl(activity);
@@ -104,7 +111,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
     @Override
     public void setAnalytics(BaseAnalyticsInterface analytics)
     {
-        mAnalytics = (CampaignTagListAnalyticsInterface) analytics;
+        mAnalytics = (StayCampaignTagListAnalyticsImpl) analytics;
     }
 
     @Override

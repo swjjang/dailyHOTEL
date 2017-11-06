@@ -25,8 +25,6 @@ import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
-import com.daily.dailyhotel.screen.home.campaigntag.CampaignTagListAnalyticsImpl;
-import com.daily.dailyhotel.screen.home.campaigntag.CampaignTagListAnalyticsInterface;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.view.DailyGourmetCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -60,7 +58,7 @@ public class GourmetCampaignTagListPresenter //
     extends BaseExceptionPresenter<GourmetCampaignTagListActivity, GourmetCampaignTagListInterface> //
     implements GourmetCampaignTagListView.OnEventListener
 {
-    CampaignTagListAnalyticsInterface mAnalytics;
+    GourmetCampaignTagListAnalyticsImpl mAnalytics;
 
     private CommonRemoteImpl mCommonRemoteImpl;
     CampaignTagRemoteImpl mCampaignTagRemoteImpl;
@@ -75,6 +73,16 @@ public class GourmetCampaignTagListPresenter //
     View mViewByLongPress;
 
     private int mWishPosition;
+
+    public interface GourmetCampaignTagListAnalyticsInterface extends BaseAnalyticsInterface
+    {
+        void onCampaignTagEvent(Activity activity, CampaignTag campaignTag, int listCount);
+
+        void onEventGourmetClickOption(Activity activity, int index, boolean hasCoupon, boolean hasReview, boolean trueVR);
+
+        void onEventGourmetWishClick(Activity activity, boolean wish);
+    }
+
 
     public GourmetCampaignTagListPresenter(@NonNull GourmetCampaignTagListActivity activity)
     {
@@ -93,7 +101,7 @@ public class GourmetCampaignTagListPresenter //
     {
         setContentView(R.layout.activity_place_campaign_tag_list_data);
 
-        setAnalytics(new CampaignTagListAnalyticsImpl());
+        setAnalytics(new GourmetCampaignTagListAnalyticsImpl());
 
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
         mCampaignTagRemoteImpl = new CampaignTagRemoteImpl(activity);
@@ -104,7 +112,7 @@ public class GourmetCampaignTagListPresenter //
     @Override
     public void setAnalytics(BaseAnalyticsInterface analytics)
     {
-        mAnalytics = (CampaignTagListAnalyticsInterface) analytics;
+        mAnalytics = (GourmetCampaignTagListAnalyticsImpl) analytics;
     }
 
     @Override
