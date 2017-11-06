@@ -38,6 +38,19 @@
             app:layout_constraintRight_toRightOf="@+id/imageLoopView"
             app:layout_constraintTop_toTopOf="@+id/imageLoopView"/>
 
+        <ImageView
+            android:id="@+id/vrImageView"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="24dp"
+            android:layout_marginLeft="15dp"
+            android:scaleType="center"
+            android:src="@drawable/detail_ic_vr_img"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/imageLoopView"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
         <com.daily.base.widget.DailyTextView
             android:id="@+id/transNameTextView"
             android:layout_width="0dp"
@@ -172,14 +185,12 @@
             </LinearLayout>
         </com.daily.base.widget.DailyNestedScrollView>
 
-        <ImageView
-            android:id="@+id/vrImageView"
+        <View
+            android:id="@+id/fakeVRImageView"
             android:layout_width="60dp"
             android:layout_height="50dp"
-            android:scaleType="center"
-            android:src="@drawable/detail_ic_vr_img"
             android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@id/viewpagerIndicator"
+            app:layout_constraintBottom_toBottomOf="@id/imageLoopView"
             app:layout_constraintLeft_toLeftOf="parent"/>
 
         <com.daily.dailyhotel.view.DailyToolbarView
