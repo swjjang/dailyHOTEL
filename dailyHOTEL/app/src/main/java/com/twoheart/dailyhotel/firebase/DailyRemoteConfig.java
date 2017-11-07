@@ -271,7 +271,7 @@ public class DailyRemoteConfig
                     DailyRemoteConfigPreference.getInstance(context).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
                 } else
                 {
-                    DailyRemoteConfigPreference.getInstance(context).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_CURRENT_VERSION);
+                    DailyRemoteConfigPreference.getInstance(context).setRemoteConfigIntroImageVersion(currentVersion);
                 }
             } else if (Constants.DAILY_INTRO_DEFAULT_VERSION.equalsIgnoreCase(newVersion) == true)
             {
@@ -284,7 +284,7 @@ public class DailyRemoteConfig
             } else
             {
                 // 앱의 스플래쉬 버전이 현재 버전과 같거나 작을때
-                DailyRemoteConfigPreference.getInstance(context).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_CURRENT_VERSION);
+                DailyRemoteConfigPreference.getInstance(context).setRemoteConfigIntroImageVersion(currentVersion);
             }
         } catch (JSONException e)
         {
