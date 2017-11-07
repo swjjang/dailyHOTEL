@@ -30,6 +30,7 @@ import com.daily.dailyhotel.storage.database.DailyDb;
 import com.daily.dailyhotel.view.DailyStayCardView;
 import com.daily.dailyhotel.view.DailyStayOutboundCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
@@ -849,7 +850,10 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             {
                 RecentlyPlace recentlyPlace = (RecentlyPlace) object;
 
-                mListLayout.notifyWishChanged(position, !recentlyPlace.myWish);
+                if (DailyHotel.isLogin() == true)
+                {
+                    mListLayout.notifyWishChanged(position, !recentlyPlace.myWish);
+                }
 
                 mBaseActivity.startActivityForResult(WishDialogActivity.newInstance(mBaseActivity, ServiceType.HOTEL//
                     , recentlyPlace.index, !recentlyPlace.myWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);

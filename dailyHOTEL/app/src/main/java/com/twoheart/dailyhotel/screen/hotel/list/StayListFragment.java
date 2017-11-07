@@ -11,6 +11,7 @@ import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.Place;
@@ -569,7 +570,10 @@ public class StayListFragment extends PlaceListFragment
 
             mWishPosition = position;
 
-            mPlaceListLayout.notifyWishChanged(position, !stay.myWish);
+            if (DailyHotel.isLogin() == true)
+            {
+                mPlaceListLayout.notifyWishChanged(position, !stay.myWish);
+            }
 
             mBaseActivity.startActivityForResult(WishDialogActivity.newInstance(mBaseActivity, ServiceType.HOTEL//
                 , stay.index, !stay.myWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);

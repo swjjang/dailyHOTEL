@@ -29,6 +29,7 @@ import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.view.DailyStayCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
@@ -806,7 +807,10 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
 
         mWishPosition = position;
 
-        getViewInterface().notifyWishChanged(position, !stay.myWish);
+        if (DailyHotel.isLogin() == true)
+        {
+            getViewInterface().notifyWishChanged(position, !stay.myWish);
+        }
 
         startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.HOTEL//
             , stay.index, !stay.myWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), StayCampaignTagListActivity.REQUEST_CODE_WISH_DIALOG);
