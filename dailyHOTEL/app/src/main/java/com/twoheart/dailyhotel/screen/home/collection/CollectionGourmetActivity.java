@@ -20,6 +20,7 @@ import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.view.DailyGourmetCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
@@ -672,7 +673,10 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
 
             mWishPosition = position;
 
-            mCollectionBaseLayout.notifyWishChanged(position, !recommendationGourmet.myWish);
+            if (DailyHotel.isLogin() == true)
+            {
+                mCollectionBaseLayout.notifyWishChanged(position, !recommendationGourmet.myWish);
+            }
 
             startActivityForResult(WishDialogActivity.newInstance(CollectionGourmetActivity.this, ServiceType.GOURMET//
                 , recommendationGourmet.index, !recommendationGourmet.myWish, position, AnalyticsManager.Screen.DAILYGOURMET_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);
