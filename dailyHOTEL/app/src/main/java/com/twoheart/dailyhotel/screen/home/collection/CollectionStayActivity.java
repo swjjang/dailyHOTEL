@@ -18,6 +18,7 @@ import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.view.DailyStayCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
@@ -676,7 +677,10 @@ public class CollectionStayActivity extends CollectionBaseActivity
 
             mWishPosition = position;
 
-            mCollectionBaseLayout.notifyWishChanged(position, !recommendationStay.myWish);
+            if (DailyHotel.isLogin() == true)
+            {
+                mCollectionBaseLayout.notifyWishChanged(position, !recommendationStay.myWish);
+            }
 
             startActivityForResult(WishDialogActivity.newInstance(CollectionStayActivity.this, ServiceType.HOTEL//
                 , recommendationStay.index, !recommendationStay.myWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);

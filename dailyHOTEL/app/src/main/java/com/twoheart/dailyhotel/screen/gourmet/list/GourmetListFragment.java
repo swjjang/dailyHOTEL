@@ -9,6 +9,7 @@ import com.daily.base.BaseActivity;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetCuration;
@@ -405,7 +406,10 @@ public class GourmetListFragment extends PlaceListFragment
 
             mWishPosition = position;
 
-            mPlaceListLayout.notifyWishChanged(position, !gourmet.myWish);
+            if (DailyHotel.isLogin() == true)
+            {
+                mPlaceListLayout.notifyWishChanged(position, !gourmet.myWish);
+            }
 
             mBaseActivity.startActivityForResult(WishDialogActivity.newInstance(mBaseActivity, ServiceType.GOURMET//
                 , gourmet.index, !gourmet.myWish, position, AnalyticsManager.Screen.DAILYGOURMET_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);

@@ -30,6 +30,7 @@ import com.daily.dailyhotel.screen.home.campaigntag.CampaignTagListAnalyticsInte
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.view.DailyGourmetCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -779,7 +780,10 @@ public class GourmetCampaignTagListPresenter //
 
         mWishPosition = position;
 
-        getViewInterface().notifyWishChanged(position, !gourmet.myWish);
+        if (DailyHotel.isLogin() == true)
+        {
+            getViewInterface().notifyWishChanged(position, !gourmet.myWish);
+        }
 
         startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.GOURMET//
             , gourmet.index, !gourmet.myWish, position, AnalyticsManager.Screen.DAILYGOURMET_DETAIL), GourmetCampaignTagListActivity.REQUEST_CODE_WISH_DIALOG);
