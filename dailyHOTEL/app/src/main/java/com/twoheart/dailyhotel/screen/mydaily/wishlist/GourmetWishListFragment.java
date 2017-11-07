@@ -83,16 +83,22 @@ public class GourmetWishListFragment extends PlaceWishListFragment
         switch (requestCode)
         {
             case CODE_REQUEST_ACTIVITY_PREVIEW:
-                if (resultCode == Activity.RESULT_OK)
+                switch (resultCode)
                 {
-                    Observable.create(new ObservableOnSubscribe<Object>()
-                    {
-                        @Override
-                        public void subscribe(ObservableEmitter<Object> e) throws Exception
+                    case Activity.RESULT_OK:
+                        Observable.create(new ObservableOnSubscribe<Object>()
                         {
-                            mEventListener.onListItemClick(mViewByLongPress, mPositionByLongPress);
-                        }
-                    }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
+                            @Override
+                            public void subscribe(ObservableEmitter<Object> e) throws Exception
+                            {
+                                mEventListener.onListItemClick(mViewByLongPress, mPositionByLongPress);
+                            }
+                        }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
+                        break;
+
+                    case Constants.CODE_RESULT_ACTIVITY_REFRESH:
+                        forceRefreshList();
+                        break;
                 }
                 break;
         }
