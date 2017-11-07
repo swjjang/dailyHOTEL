@@ -197,7 +197,7 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
             if (i < count)
             {
                 views[i].setAlpha(0.0f);
-                stickerViews[i].setAlpha(0.5f);
+                stickerViews[i].setAlpha(0.9f);
                 stickerViews[i].setVisibility(View.VISIBLE);
             } else
             {
@@ -292,19 +292,24 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
 
         List<Animator> animatorList = new ArrayList<>();
 
-        final int MS_PER_FRAME = 170;
+        final int MS_PER_FRAME = 166;
 
         for (int i = 0; i < campaignCount; i++)
         {
-            ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(stickerViews[i], View.ALPHA, 0.5f, 0.5f);
-            objectAnimator1.setDuration(MS_PER_FRAME * 3);
+            ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(stickerViews[i], View.ALPHA, 0.9f, 0.9f);
+            objectAnimator1.setDuration(MS_PER_FRAME * 5);
 
-            ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(stickerViews[i], View.ALPHA, 0.5f, 1.0f, 1.0f, 0.5f);
-            objectAnimator2.setStartDelay(MS_PER_FRAME * 3);
-            objectAnimator2.setDuration(MS_PER_FRAME * 6);
+            ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(stickerViews[i], View.ALPHA, 0.9f, 0.5f, 0.5f);
+            objectAnimator2.setStartDelay(MS_PER_FRAME * 5);
+            objectAnimator2.setDuration(MS_PER_FRAME * 4);
+
+            ObjectAnimator objectAnimator3 = ObjectAnimator.ofFloat(stickerViews[i], View.ALPHA, 0.5f, 0.9f);
+            objectAnimator3.setStartDelay(MS_PER_FRAME * 9);
+            objectAnimator3.setDuration(MS_PER_FRAME * 1);
 
             animatorList.add(objectAnimator1);
             animatorList.add(objectAnimator2);
+            animatorList.add(objectAnimator3);
         }
 
         mStickerAnimatorSet = new AnimatorSet();
