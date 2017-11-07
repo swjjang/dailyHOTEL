@@ -3,6 +3,7 @@ package com.twoheart.dailyhotel.screen.mydaily.member;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
@@ -21,6 +22,8 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
     private TextView mEmailLabelTextView, mNameLabelTextView, mPhoneLabelTextView, mBirthdayLabelTextView, mReferralTextView;
     private View mEmailLayout, mPasswordLayout;
     private View mPasswordUnderLine;
+    private RadioGroup mValidDateRadioGroup;
+    private RadioGroup.OnCheckedChangeListener mOnCheckedChangeListener;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -103,6 +106,8 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
 
         View codeCopyView = view.findViewById(R.id.codeCopyView);
         codeCopyView.setOnClickListener(this);
+
+        mValidDateRadioGroup = (RadioGroup) view.findViewById(R.id.privacyValidDateRadioGroup);
     }
 
     public void updateUserInformation(String userType, String email, String name, String phone, String birthday, //
@@ -297,4 +302,29 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
                 break;
         }
     }
+
+//    @Override
+//    public void onCheckedChanged(RadioGroup group, int checkedId)
+//    {
+//        int year;
+//        switch (checkedId)
+//        {
+//            case R.id.yearRadioButton3:
+//                year = 3;
+//                break;
+//
+//            case R.id.yearRadioButton5:
+//                year = 5;
+//                break;
+//
+//            case R.id.yearRadioButton1:
+//            default:
+//                year = 1;
+//                break;
+//        }
+//
+//        ExLog.d("getCheckedRadioButtonId : " + mValidDateRadioGroup.getCheckedRadioButtonId() + " , year : " + year);
+//
+//        ((OnEventListener) mOnEventListener).doValidDateChange(year);
+//    }
 }
