@@ -263,19 +263,28 @@ public class DailyRemoteConfig
             String currentVersion = DailyRemoteConfigPreference.getInstance(context).getRemoteConfigIntroImageVersion();
             String newVersion = updateTimeJSONObject.getString("time");
 
-            if (Constants.DAILY_INTRO_CURRENT_VERSION.equalsIgnoreCase(newVersion) == true)
+            if (DailyTextUtils.isTextEmpty(newVersion) == true)
             {
-                DailyRemoteConfigPreference.getInstance(context).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_CURRENT_VERSION);
+                // 리모트 컨피그에 new version 을 실수로 넣지 않았을때 - 기존 버전이 있을 경우 유지! 없을때는 디폴트 버전 셋팅!
+                if (DailyTextUtils.isTextEmpty(currentVersion) == true)
+                {
+                    DailyRemoteConfigPreference.getInstance(context).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
+                } else
+                {
+                    DailyRemoteConfigPreference.getInstance(context).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_CURRENT_VERSION);
+                }
             } else if (Constants.DAILY_INTRO_DEFAULT_VERSION.equalsIgnoreCase(newVersion) == true)
             {
+                // 앱의 스플래쉬 버전이 기본 버전일때
                 DailyRemoteConfigPreference.getInstance(context).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_DEFAULT_VERSION);
+            } else if (DailyTextUtils.isTextEmpty(currentVersion) == true || currentVersion.compareTo(newVersion) < 0)
+            {
+                // 앱의 스플래쉬 기존 버전이 없거나 새버전이 현재 버전보다 클 경우 다운로드를 시도
+                new SplashImageDownloadAsyncTask(context).execute(url, newVersion);
             } else
             {
-                // 기존 버전이 없거나 새버전이 현재 버전보다 클 경우 다운로드를 시도한다
-                if (DailyTextUtils.isTextEmpty(currentVersion) == true || currentVersion.compareTo(newVersion) < 0)
-                {
-                    new SplashImageDownloadAsyncTask(context).execute(url, newVersion);
-                }
+                // 앱의 스플래쉬 버전이 현재 버전과 같거나 작을때
+                DailyRemoteConfigPreference.getInstance(context).setRemoteConfigIntroImageVersion(Constants.DAILY_INTRO_CURRENT_VERSION);
             }
         } catch (JSONException e)
         {

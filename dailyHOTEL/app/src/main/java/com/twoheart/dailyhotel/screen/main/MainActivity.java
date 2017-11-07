@@ -286,9 +286,11 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
 
         if (DailyTextUtils.isTextEmpty(splashVersion) == true || Constants.DAILY_INTRO_DEFAULT_VERSION.equalsIgnoreCase(splashVersion) == true)
         {
+            // 앱의 스플래쉬 버전이 비었거나 기본 버전일때
             imageView.setVectorImageResource(R.drawable.img_splash_logo);
-        } else if (Constants.DAILY_INTRO_CURRENT_VERSION.equalsIgnoreCase(splashVersion) == true)
+        } else if (Constants.DAILY_INTRO_CURRENT_VERSION.compareTo(splashVersion) >= 0)
         {
+            // 앱의 스플래쉬 버전이 현재 버전과 같거나 작을때
             imageView.setPadding(0, 0, 0, 0);
 
             if (ScreenUtils.isTabletDevice(this) == true)
@@ -304,6 +306,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
             imageView.setImageResource(R.drawable.splash);
         } else
         {
+            // 앱의 스플래쉬 버전이 현재 버전보다 높을때
             String fileName = Util.makeIntroImageFileName(splashVersion);
             File file = new File(getCacheDir(), fileName);
 
