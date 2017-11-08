@@ -1040,6 +1040,14 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 mPlaceReservationDetailLayout.initLayout(mTodayDateTime, stayBookingDetail);
 
                 analyticsOnScreen(stayBookingDetail, null);
+
+                // Reward
+                ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setDepositStickerCardVisible(stayBookingDetail.activeReward);
+
+                if (stayBookingDetail.activeReward == true)
+                {
+                    ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setDepositStickerCard(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigRewardStickerTitleMessage(), stayBookingDetail.rewardStickerCount);
+                }
             } else
             {
                 long checkOutDateTime = DailyCalendar.convertStringToDate(stayBookingDetail.checkOutDate).getTime();
@@ -1057,18 +1065,18 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                     mPlaceReservationDetailLayout.initLayout(mTodayDateTime, stayBookingDetail);
 
                     analyticsOnScreen(stayBookingDetail, null);
+
+                    // Reward
+                    ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setDepositStickerCardVisible(stayBookingDetail.activeReward);
+
+                    if (stayBookingDetail.activeReward == true)
+                    {
+                        ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setDepositStickerCard(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigRewardStickerTitleMessage(), stayBookingDetail.rewardStickerCount);
+                    }
                 }
             }
 
             mPlaceReservationDetailLayout.setDeleteReservationVisible(mBookingState);
-
-            // Reward
-            ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setDepositStickerCardVisible(stayBookingDetail.activeReward);
-
-            if (stayBookingDetail.activeReward == true)
-            {
-                ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setDepositStickerCard(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigRewardStickerTitleMessage(), stayBookingDetail.rewardStickerCount);
-            }
 
             long currentDateTime = DailyCalendar.convertStringToDate(mTodayDateTime.currentDateTime).getTime();
             long checkInDateTime = DailyCalendar.convertStringToDate(stayBookingDetail.checkInDate).getTime();
@@ -1650,6 +1658,14 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 mPlaceReservationDetailLayout.initLayout(mTodayDateTime, stayBookingDetail);
 
                 analyticsOnScreen(stayBookingDetail, null);
+            }
+
+            // Reward
+            ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setDepositStickerCardVisible(stayBookingDetail.activeReward);
+
+            if (stayBookingDetail.activeReward == true)
+            {
+                ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setDepositStickerCard(DailyRemoteConfigPreference.getInstance(StayReservationDetailActivity.this).getKeyRemoteConfigRewardStickerTitleMessage(), stayBookingDetail.rewardStickerCount);
             }
 
             unLockUI();
