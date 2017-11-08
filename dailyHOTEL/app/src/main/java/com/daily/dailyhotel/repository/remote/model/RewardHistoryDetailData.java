@@ -2,6 +2,7 @@ package com.daily.dailyhotel.repository.remote.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.RewardHistory;
 import com.daily.dailyhotel.entity.RewardHistoryDetail;
 
@@ -108,6 +109,9 @@ public class RewardHistoryDetailData
             switch (rewardHistory.type)
             {
                 case CREATED_STICKER:
+                    rewardHistory.serviceType = RewardHistory.ServiceType.valueOf(serviceType);
+                    rewardHistory.date = createdAt;
+                    break;
                 case PUBLISHED_COUPON:
                     rewardHistory.date = createdAt;
                     break;
@@ -119,7 +123,6 @@ public class RewardHistoryDetailData
 
             rewardHistory.reservationName = reservationName;
             rewardHistory.nights = roomNights;
-            rewardHistory.serviceType = RewardHistory.ServiceType.valueOf(serviceType);
             rewardHistory.rewardStickerType = rewardStickerType;
 
             return rewardHistory;
