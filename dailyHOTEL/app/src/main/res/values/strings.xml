@@ -661,12 +661,12 @@
 
     <string name="message_payment_please_agree_personal_information">개인정보 제 3자 제공에 동의해주세요.</string>
     <string name="message_payment_used_reward_coupon">1박 무료 리워드 쿠폰 %1$s을 사용했습니다.</string>
-    <string name="message_payment_reward_sticker_deposit_after_checkout">체크아웃 후 3일 이내에 스티커%1$d개가 적립됩니다.</string>
+    <string name="message_payment_reward_sticker_deposit_after_checkout">체크아웃 후 3일 이내에 스티커 %1$d개가 적립됩니다.</string>
     <string name="message_payment_dont_reward_sticker">스티커 적립을 할 수 없는 예약입니다.</string>
     <string name="message_payment_dont_reward_sticker_used_bonus_coupon_payment_phone">적립금, 할인쿠폰, 휴대폰 결제 수단 선택 시\n스티커 적립을 할 수 없습니다.</string>
-    <string name="message_payment_dont_reward_sticker_used_bonus__payment_phone">적립금, 휴대폰 결제 수단 선택 시\n스티커 적립을 할 수 없습니다.</string>
+    <string name="message_payment_dont_reward_sticker_used_bonus_payment_phone">적립금, 휴대폰 결제 수단 선택 시\n스티커 적립을 할 수 없습니다.</string>
     <string name="message_thankyou_dont_reward_sticker_used_bonus_coupon_payment_phone">(적립금, 할인쿠폰, 휴대폰 결제 수단 선택 시)</string>
-    <string name="message_thankyou_dont_reward_sticker_used_bonus__payment_phone">(적립금, 휴대폰 결제 수단 선택 시)</string>
+    <string name="message_thankyou_dont_reward_sticker_used_bonus_payment_phone">(적립금, 휴대폰 결제 수단 선택 시)</string>
 
     <!-- Payment Activity -->
     <string name="act_payment_isp_error">ISP 결제 오류</string>
@@ -771,7 +771,7 @@
     <string name="message_booking_cancel_gourmet_share_kakao">%1$s의 취소내역입니다.\n\n%2$s\n예약자명: %3$s\n상품: %4$s\n수량: %5$s\n취소일: %6$s\n주소: %7$s</string>
     <string name="message_booking_cancel_gourmet_share_sms">[데일리호텔]%1$s의 취소내역입니다.\n\n%2$s\n예약자명: %3$s\n상품: %4$s\n수량: %5$s\n취소일: %6$s\n주소: %7$s</string>
 
-    <string name="message_booking_reward_cheering_title01">예약을 완료하시면 스티커%1$d개가 추가 적립됩니다.</string>
+    <string name="message_booking_reward_cheering_title01">예약을 완료하시면 스티커 %1$d개가 추가 적립됩니다.</string>
     <string name="message_booking_reward_cheering_title02">스티커 적립을 할수 없는 예약입니다.</string>
     <string name="message_booking_reward_cheering_warning01">(적립금, 할인쿠폰, 휴대폰 결제 수단 선택 시 적립 불가)</string>
     <string name="message_booking_reward_cheering_warning02">(적립금, 휴대폰 결제 수단 선택 시 적립 불가)</string>
@@ -1562,7 +1562,7 @@
     <string name="label_reward_coupon_issue_date">쿠폰 발행일: %1$s</string>
     <string name="label_reward_sticker_expiration_date">스티커 소멸일: %1$s</string>
     <string name="label_reward_sticker_issue_date">스티커 적립일: %1$s</string>
-    <string name="label_reward_payment_deposit">결제 적립 ㅣ 스티커 적립일: %1$s</string>
+    <string name="label_reward_payment_deposit">결제 적립ㅣ스티커 적립일: %1$s</string>
     <string name="label_reward_view_reservation">예약내역 보기</string>
     <string name="label_reward_retention_sticker_validity">보유 스티커 유효기간</string>
     <string name="label_reward_sticker_validity">스티커 유효기간 : %1$s까지</string>

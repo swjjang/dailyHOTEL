@@ -783,9 +783,9 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Observable<BaseDto<StayPaymentData>> getStayPayment(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("room_idx") int roomIndex//
-        , @Query("checkin_date") String date//
-        , @Query("nights") int nights);
+    Observable<BaseDto<StayPaymentData>> getStayPayment(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("roomIdx") int roomIndex//
+        , @Query("dateCheckIn") String date//
+        , @Query("stays") int nights);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")

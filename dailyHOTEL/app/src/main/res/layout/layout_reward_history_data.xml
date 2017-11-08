@@ -74,7 +74,7 @@
                     android:id="@+id/dateTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
+                    android:layout_marginTop="4dp"
                     android:textColor="@color/default_text_c929292"
                     android:textSize="12dp"/>
 

@@ -447,33 +447,43 @@ public class DailyRewardCardView extends ConstraintLayout
 
         List<Animator> animatorList = new ArrayList<>();
 
-        final int MS_PER_FRAME = 170;
+        final int MS_PER_FRAME = 166;
 
         for (int i = 0; i < campaignCount; i++)
         {
             // 1 set
-            ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(campaignViews[i], View.ALPHA, 0.5f, 0.5f);
-            objectAnimator1.setDuration(MS_PER_FRAME * 3);
+            ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(campaignViews[i], View.ALPHA, 1.0f, 1.0f);
+            objectAnimator1.setDuration(MS_PER_FRAME * 5);
 
-            ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(campaignViews[i], View.ALPHA, 0.5f, 1.0f, 1.0f, 0.5f);
-            objectAnimator2.setStartDelay(MS_PER_FRAME * 3);
-            objectAnimator2.setDuration(MS_PER_FRAME * 6);
+            ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(campaignViews[i], View.ALPHA, 1.0f, 0.5f, 0.5f);
+            objectAnimator2.setStartDelay(MS_PER_FRAME * 5);
+            objectAnimator2.setDuration(MS_PER_FRAME * 4);
+
+            ObjectAnimator objectAnimator3 = ObjectAnimator.ofFloat(campaignViews[i], View.ALPHA, 0.5f, 1.0f);
+            objectAnimator3.setStartDelay(MS_PER_FRAME * 9);
+            objectAnimator3.setDuration(MS_PER_FRAME * 1);
 
             animatorList.add(objectAnimator1);
             animatorList.add(objectAnimator2);
+            animatorList.add(objectAnimator3);
 
             if (i < campaignCount - 1)
             {
                 // 1 set
-                ObjectAnimator objectAnimator3 = ObjectAnimator.ofFloat(lineViews[i], View.ALPHA, 0.5f, 0.5f);
-                objectAnimator3.setDuration(MS_PER_FRAME * 3);
+                ObjectAnimator objectAnimator10 = ObjectAnimator.ofFloat(lineViews[i], View.ALPHA, 1.0f, 1.0f);
+                objectAnimator10.setDuration(MS_PER_FRAME * 5);
 
-                ObjectAnimator objectAnimator4 = ObjectAnimator.ofFloat(lineViews[i], View.ALPHA, 0.5f, 1.0f, 1.0f, 0.5f);
-                objectAnimator4.setStartDelay(MS_PER_FRAME * 3);
-                objectAnimator4.setDuration(MS_PER_FRAME * 6);
+                ObjectAnimator objectAnimator11 = ObjectAnimator.ofFloat(lineViews[i], View.ALPHA, 1.0f, 0.5f, 0.5f);
+                objectAnimator11.setStartDelay(MS_PER_FRAME * 5);
+                objectAnimator11.setDuration(MS_PER_FRAME * 4);
 
-                animatorList.add(objectAnimator3);
-                animatorList.add(objectAnimator4);
+                ObjectAnimator objectAnimator12 = ObjectAnimator.ofFloat(lineViews[i], View.ALPHA, 0.5f, 1.0f);
+                objectAnimator12.setStartDelay(MS_PER_FRAME * 9);
+                objectAnimator12.setDuration(MS_PER_FRAME * 1);
+
+                animatorList.add(objectAnimator10);
+                animatorList.add(objectAnimator11);
+                animatorList.add(objectAnimator12);
             }
         }
 

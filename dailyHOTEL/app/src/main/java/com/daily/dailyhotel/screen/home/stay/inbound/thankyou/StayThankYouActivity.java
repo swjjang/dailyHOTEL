@@ -36,7 +36,8 @@ public class StayThankYouActivity extends BaseActivity<StayThankYouPresenter>
 
     public static Intent newInstance(Context context, boolean overseas, String stayName, String imageUrl//
         , String checkInDateTime, String checkOutDateTime, String roomName, String aggregationId//
-        , boolean waitingForBooking, double latitude, double longitude, String descriptionTitle, String descriptionMessage, StayThankYouAnalyticsParam analyticsParam)
+        , boolean waitingForBooking, double latitude, double longitude, String descriptionTitle//
+        , String descriptionMessage, StayThankYouAnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, StayThankYouActivity.class);
 

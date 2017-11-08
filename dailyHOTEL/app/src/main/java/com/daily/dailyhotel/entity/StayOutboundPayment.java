@@ -23,6 +23,7 @@ public class StayOutboundPayment
     public boolean activeReward;
     public boolean provideRewardSticker;
     public int rewardStickerCount;
+    public int providableRewardStickerCount;
 
     public StayOutboundPayment()
     {

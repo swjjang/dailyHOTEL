@@ -6,13 +6,16 @@ import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.RewardHistory;
@@ -215,10 +218,17 @@ public class RewardHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                         try
                         {
-                            holder.dataBinding.dateTextView.setText(mContext.getString(R.string.label_reward_payment_deposit, DailyCalendar.convertDateFormatString(rewardHistory.date, DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT)));
+                            final String text = mContext.getString(R.string.label_reward_payment_deposit, DailyCalendar.convertDateFormatString(rewardHistory.date, DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT));
+                            int startIndex = text.indexOf("ㅣ");
+
+                            SpannableString spannableString = new SpannableString(text);
+                            spannableString.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.cb3b3b3)), //
+                                startIndex, startIndex + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                            holder.dataBinding.dateTextView.setText(spannableString);
                         } catch (ParseException e)
                         {
-
+                            ExLog.d(e.toString());
                         }
 
                         final String linkText = mContext.getString(R.string.label_reward_view_reservation);
