@@ -14,7 +14,6 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
@@ -546,6 +545,10 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
                             mIssueCouponAnimatorSet = null;
                         }
 
+                        getViewDataBinding().issueCouponLayout.setTranslationY(0.0f);
+                        getViewDataBinding().issueCouponArrowImageView.setTranslationY(0.0f);
+                        getViewDataBinding().issueCouponClickView.setTranslationY(0.0f);
+
                         getViewDataBinding().issueCouponArrowImageView.setRotation(180.0f);
                         getViewDataBinding().issueCouponBackgroundView.setVisibility(View.VISIBLE);
 
@@ -618,6 +621,11 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
                             mIssueCouponAnimatorSet = null;
                         }
 
+
+                        getViewDataBinding().issueCouponLayout.setTranslationY(DP_192);
+                        getViewDataBinding().issueCouponArrowImageView.setTranslationY(DP_192);
+                        getViewDataBinding().issueCouponClickView.setTranslationY(DP_192);
+
                         getViewDataBinding().issueCouponArrowImageView.setRotation(0.0f);
                         getViewDataBinding().issueCouponBackgroundView.setVisibility(View.INVISIBLE);
 
@@ -666,6 +674,8 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
             return;
         }
 
+        final int DP_192 = ScreenUtils.dpToPx(getContext(), 192);
+
         if (enabled == true)
         {
             if (mIssueCouponShakeAnimatorSet != null)
@@ -674,7 +684,10 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
             }
 
             final int DP_6 = ScreenUtils.dpToPx(getContext(), 6);
-            final int DP_192 = ScreenUtils.dpToPx(getContext(), 192);
+
+            getViewDataBinding().issueCouponLayout.setTranslationY(DP_192);
+            getViewDataBinding().issueCouponArrowImageView.setTranslationY(DP_192);
+            getViewDataBinding().issueCouponClickView.setTranslationY(DP_192);
 
             getViewDataBinding().issueCouponTitleUnderLineView.setVisibility(View.INVISIBLE);
 
@@ -707,6 +720,10 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
 
             mIssueCouponShakeAnimatorSet.cancel();
             mIssueCouponShakeAnimatorSet = null;
+
+            getViewDataBinding().issueCouponLayout.setTranslationY(DP_192);
+            getViewDataBinding().issueCouponArrowImageView.setTranslationY(DP_192);
+            getViewDataBinding().issueCouponClickView.setTranslationY(DP_192);
         }
     }
 
