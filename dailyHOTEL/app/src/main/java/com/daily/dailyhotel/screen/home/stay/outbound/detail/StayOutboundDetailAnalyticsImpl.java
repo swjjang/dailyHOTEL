@@ -11,6 +11,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class StayOutboundDetailAnalyticsImpl implements StayOutboundDetailPresenter.StayOutboundDetailAnalyticsInterface
@@ -68,7 +69,7 @@ public class StayOutboundDetailAnalyticsImpl implements StayOutboundDetailPresen
         params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(mAnalyticsParam.rankingPosition));
         params.put(AnalyticsManager.KeyType.RATING, DailyTextUtils.isTextEmpty(mAnalyticsParam.rating) == true ? AnalyticsManager.ValueType.EMPTY : mAnalyticsParam.rating);
         params.put(AnalyticsManager.KeyType.PLACE_COUNT, mAnalyticsParam.listSize < 0 ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mAnalyticsParam.listSize));
-        params.put(AnalyticsManager.KeyType.STAY_NAME, mAnalyticsParam.name);
+        params.put(AnalyticsManager.KeyType.NAME, mAnalyticsParam.name);
         params.put(AnalyticsManager.KeyType.UNIT_PRICE, Integer.toString(mAnalyticsParam.nightlyRate));
         params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, checkInDate);
         params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(nights));
@@ -134,12 +135,28 @@ public class StayOutboundDetailAnalyticsImpl implements StayOutboundDetailPresen
     }
 
     @Override
-    public void onEventBookingClick(Activity activity, int stayIndex, boolean provideRewardSticker)
+    public void onEventBookingClick(Activity activity, int stayIndex, String stayName, String roomName //
+        , int discountPrice, boolean provideRewardSticker, String checkInDate, int nights)
     {
-        if (activity == null)
+        if (activity == null || mAnalyticsParam == null || DailyTextUtils.isTextEmpty(checkInDate) == true)
         {
             return;
         }
+
+        String label = String.format(Locale.KOREA, "%s-%s", stayName, roomName);
+
+        Map<String, String> params = new HashMap<>();
+        params.put(AnalyticsManager.KeyType.NAME, mAnalyticsParam.name);
+        params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(nights));
+        params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(mAnalyticsParam.index));
+
+        params.put(AnalyticsManager.KeyType.PRICE_OF_SELECTED_ROOM, Integer.toString(discountPrice));
+        params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, checkInDate);
+        params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.OVERSEAS);
+
+        // TODO : 임시 지정 - Eric.Ann 확인 후 재 지정
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
+            , AnalyticsManager.Action.BOOKING_CLICKED, label, params);
 
         if (provideRewardSticker == true)
         {

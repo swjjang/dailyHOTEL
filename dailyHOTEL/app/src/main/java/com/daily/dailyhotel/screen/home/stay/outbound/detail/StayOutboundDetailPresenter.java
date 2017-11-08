@@ -164,7 +164,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         void onEventRecommendItemList(Activity activity, int stayIndex, List<Integer> stayIndexList);
 
-        void onEventBookingClick(Activity activity, int stayIndex, boolean provideRewardSticker);
+        void onEventBookingClick(Activity activity, int stayIndex, String stayName, String roomName //
+            , int discountPrice, boolean provideRewardSticker, String checkInDate, int nights);
 
         StayOutboundPaymentAnalyticsParam getPaymentAnalyticsParam(String grade, boolean nrd, boolean showOriginalPrice);
     }
@@ -1084,7 +1085,13 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                         }
                     }));
 
-                    mAnalytics.onEventBookingClick(getActivity(), mStayOutboundDetail.index, mStayOutboundDetail.activeReward && mSelectedRoom.provideRewardSticker);
+                    String checkInDate = mStayBookDateTime.getCheckInDateTime("yyyyMMdd");
+                    int nights = mStayBookDateTime.getNights();
+
+                    mAnalytics.onEventBookingClick(getActivity(), mStayOutboundDetail.index //
+                        , mStayOutboundDetail.name, mSelectedRoom.roomName, mSelectedRoom.nightly //
+                        , mStayOutboundDetail.activeReward && mSelectedRoom.provideRewardSticker //
+                        , checkInDate, nights);
                 }
                 break;
 
