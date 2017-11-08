@@ -14,6 +14,7 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
@@ -91,10 +92,10 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
         viewDataBinding.guideNotificationLinkTextView.setOnClickListener(v -> getEventListener().onNotificationClick());
 
         viewDataBinding.issueCouponBackgroundView.setOnClickListener(v -> getEventListener().onIssueCouponClick());
-        viewDataBinding.issueCouponBackgroundView.setVisibility(View.GONE);
+        viewDataBinding.issueCouponBackgroundView.setVisibility(View.INVISIBLE);
 
-        viewDataBinding.issueCouponLayout.setVisibility(View.GONE);
-        viewDataBinding.issueCouponArrowImageView.setVisibility(View.GONE);
+        viewDataBinding.issueCouponLayout.setVisibility(View.INVISIBLE);
+        viewDataBinding.issueCouponArrowImageView.setVisibility(View.INVISIBLE);
 
         viewDataBinding.goBookingTextView.setOnClickListener(v -> getEventListener().onGoBookingClick());
     }
@@ -459,7 +460,7 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
             return;
         }
 
-        int flag = visible ? View.VISIBLE : View.GONE;
+        int flag = visible ? View.VISIBLE : View.INVISIBLE;
 
         getViewDataBinding().issueCouponLayout.setVisibility(flag);
         getViewDataBinding().issueCouponClickView.setVisibility(flag);
@@ -494,7 +495,7 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
             getViewDataBinding().issueCouponClickView.setEnabled(true);
         } else
         {
-            getViewDataBinding().issueCouponArrowImageView.setVisibility(View.GONE);
+            getViewDataBinding().issueCouponArrowImageView.setVisibility(View.INVISIBLE);
 
             getViewDataBinding().issueCouponClickView.setEnabled(false);
         }
@@ -534,7 +535,6 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
                     @Override
                     public void onAnimationStart(Animator animation)
                     {
-
                     }
 
                     @Override
@@ -607,7 +607,6 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
                     @Override
                     public void onAnimationStart(Animator animation)
                     {
-
                     }
 
                     @Override
@@ -620,9 +619,9 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
                         }
 
                         getViewDataBinding().issueCouponArrowImageView.setRotation(0.0f);
-                        getViewDataBinding().issueCouponBackgroundView.setVisibility(View.GONE);
+                        getViewDataBinding().issueCouponBackgroundView.setVisibility(View.INVISIBLE);
 
-                        getViewDataBinding().issueCouponTitleUnderLineView.setVisibility(View.VISIBLE);
+                        getViewDataBinding().issueCouponTitleUnderLineView.setVisibility(View.INVISIBLE);
 
                         observer.onNext(true);
                         observer.onComplete();
