@@ -47,12 +47,23 @@ public class StayOutboundDetailAnalyticsImpl implements StayOutboundDetailPresen
     @Override
     public void onScreen(Activity activity)
     {
-        if (activity == null)
+        if (activity == null || mAnalyticsParam == null)
         {
             return;
         }
 
-        AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.CANCEL_DETAIL, null);
+        Map<String, String> params = new HashMap<>();
+
+        params.put(AnalyticsManager.KeyType.DBENEFIT, mAnalyticsParam.benefit ? "yes" : "no");
+        params.put(AnalyticsManager.KeyType.PLACE_TYPE, "stay");
+        params.put(AnalyticsManager.KeyType.COUNTRY, "overseas");
+        params.put(AnalyticsManager.KeyType.GRADE, mAnalyticsParam.grade);
+        params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(mAnalyticsParam.index));
+        params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(mAnalyticsParam.rankingPosition));
+        params.put(AnalyticsManager.KeyType.RATING, DailyTextUtils.isTextEmpty(mAnalyticsParam.rating) == true ? AnalyticsManager.ValueType.EMPTY : mAnalyticsParam.rating);
+        params.put(AnalyticsManager.KeyType.PLACE_COUNT, mAnalyticsParam.listSize < 0 ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mAnalyticsParam.listSize));
+
+        AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_HOTELDETAILVIEW_OUTBOUND, null, params);
     }
 
     @Override
