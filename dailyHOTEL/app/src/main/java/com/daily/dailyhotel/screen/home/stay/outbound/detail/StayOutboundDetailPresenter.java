@@ -154,7 +154,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         StayOutboundDetailAnalyticsParam getAnalyticsParam(StayOutbound stayOutbound, String grade);
 
-        void onScreen(Activity activity);
+        void onScreen(Activity activity, String checkInDate, int nights);
 
         void onScreenRoomList(Activity activity, int stayIndex, boolean provideRewardSticker);
 
@@ -382,7 +382,10 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     {
         super.onStart();
 
-        mAnalytics.onScreen(getActivity());
+        String checkInDate = mStayBookDateTime == null ? "" : mStayBookDateTime.getCheckInDateTime("yyyyMMdd");
+        int nights = mStayBookDateTime == null ? 1 : mStayBookDateTime.getNights();
+
+        mAnalytics.onScreen(getActivity(), checkInDate, nights);
 
         if (isRefresh() == true)
         {

@@ -20,8 +20,8 @@ public class StayOutboundBookingDetailAnalyticsImpl implements StayOutboundBooki
         }
 
         HashMap<String, String> params = new HashMap();
-        params.put(AnalyticsManager.KeyType.PLACE_TYPE, "stay");
-        params.put(AnalyticsManager.KeyType.COUNTRY, "overseas");
+        params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
+        params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.OVERSEAS);
         params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(placeIndex));
 
         switch (bookingState)

@@ -1165,7 +1165,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
         HashMap<String, String> params = new HashMap();
         params.put(AnalyticsManager.KeyType.PLACE_TYPE, "stay");
-        params.put(AnalyticsManager.KeyType.COUNTRY, stayBookingDetail.isOverseas == false ? "domestic" : "overseas");
+        params.put(AnalyticsManager.KeyType.COUNTRY, stayBookingDetail.isOverseas == false ? AnalyticsManager.ValueType.DOMESTIC : AnalyticsManager.ValueType.OVERSEAS);
         params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayBookingDetail.placeIndex));
 
         if (stayBookingDetail.readyForRefund == true)

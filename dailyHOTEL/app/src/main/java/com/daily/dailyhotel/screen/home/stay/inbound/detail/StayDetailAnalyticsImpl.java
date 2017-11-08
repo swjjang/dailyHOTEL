@@ -89,7 +89,7 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
             params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mAnalyticsParam.getShowOriginalPriceYn());
             params.put(AnalyticsManager.KeyType.DAILYCHOICE, mAnalyticsParam.isDailyChoice ? "y" : "n");
             params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(nights));
-            params.put(AnalyticsManager.KeyType.COUNTRY, stayDetail.overseas == false ? AnalyticsManager.ValueType.DOMESTIC : AnalyticsManager.ValueType.OUTBOUND);
+            params.put(AnalyticsManager.KeyType.COUNTRY, stayDetail.overseas == false ? AnalyticsManager.ValueType.DOMESTIC : AnalyticsManager.ValueType.OVERSEAS);
 
             AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_DETAIL, null, params);
         } catch (Exception e)

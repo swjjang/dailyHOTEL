@@ -19,8 +19,8 @@ public class StayOutboundSearchAnalyticsImpl implements StayOutboundSearchPresen
 
         Map<String, String> params = new HashMap<>();
 
-        params.put(AnalyticsManager.KeyType.PLACE_TYPE, "stay");
-        params.put(AnalyticsManager.KeyType.COUNTRY, "overseas");
+        params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
+        params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.OVERSEAS);
 
         AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.SEARCHSCREENVIEW_OUTBOUND, null, params);
     }

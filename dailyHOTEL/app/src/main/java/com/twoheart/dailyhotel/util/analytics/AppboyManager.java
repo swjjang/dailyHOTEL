@@ -84,18 +84,19 @@ public class AppboyManager extends BaseAnalyticsManager
         //                ExLog.d(e.toString());
         //            }
         //        } else
-        if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screenName) == true)
+        if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screenName) == true
+            || AnalyticsManager.Screen.DAILYHOTEL_HOTELDETAILVIEW_OUTBOUND.equalsIgnoreCase(screenName) == true)
         {
             AppboyProperties appboyProperties = new AppboyProperties();
 
             appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
             appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_CATEGORY, params.get(AnalyticsManager.KeyType.CATEGORY));
             appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_NAME, params.get(AnalyticsManager.KeyType.NAME));
+            appboyProperties.addProperty(AnalyticsManager.KeyType.COUNTRY, params.get(AnalyticsManager.KeyType.COUNTRY));
             appboyProperties.addProperty(AnalyticsManager.KeyType.PROVINCE, params.get(AnalyticsManager.KeyType.PROVINCE));
             appboyProperties.addProperty(AnalyticsManager.KeyType.DISTRICT, params.get(AnalyticsManager.KeyType.DISTRICT));
             appboyProperties.addProperty(AnalyticsManager.KeyType.AREA, params.get(AnalyticsManager.KeyType.AREA));
             appboyProperties.addProperty(AnalyticsManager.KeyType.VIEWED_DATE, new Date());
-            appboyProperties.addProperty(AnalyticsManager.KeyType.COUNTRY, params.get(AnalyticsManager.KeyType.COUNTRY));
 
             try
             {
