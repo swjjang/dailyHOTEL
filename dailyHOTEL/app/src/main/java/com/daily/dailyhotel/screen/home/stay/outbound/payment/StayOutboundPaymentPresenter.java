@@ -1108,14 +1108,14 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
         if (mSaleType == STICKER)
         {
-            descriptionTitle = getString(R.string.message_payment_reward_sticker_deposit_after_checkout, mStayBookDateTime.getNights());
+            descriptionTitle = getString(R.string.message_payment_reward_sticker_deposit_after_checkout, mStayOutboundPayment.providableRewardStickerCount);
             descriptionMessage = null;
         } else
         {
             if (hasDepositSticker() == true)
             {
                 descriptionTitle = getString(R.string.message_payment_dont_reward_sticker);
-                descriptionMessage = getString(R.string.message_payment_dont_reward_sticker_used_bonus__payment_phone);
+                descriptionMessage = getString(R.string.message_thankyou_dont_reward_sticker_used_bonus_payment_phone);
             } else
             {
                 descriptionTitle = getString(R.string.message_payment_dont_reward_sticker);
@@ -1155,9 +1155,24 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             jsonObject.put("rateKey", rateKey);
             jsonObject.put("roomTypeCode", roomTypeCode);
 
-            if (saleType == BONUS)
+            switch (saleType)
             {
-                jsonObject.put("bonusAmount", bonus > totalPrice ? totalPrice : bonus);
+                case BONUS:
+                    jsonObject.put("bonusAmount", bonus > totalPrice ? totalPrice : bonus);
+                    jsonObject.put("rewardSticker", false);
+                    break;
+
+                case COUPON:
+                    jsonObject.put("rewardSticker", false);
+                    break;
+
+                case STICKER:
+                    jsonObject.put("rewardSticker", true);
+                    break;
+
+                default:
+                    jsonObject.put("rewardSticker", false);
+                    break;
             }
 
             jsonObject.put("firstName", guest.firstName);
@@ -1320,7 +1335,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             if (stayOutboundPayment.provideRewardSticker == true && stayOutboundPayment.totalPrice >= MIN_AMOUNT_FOR_REWARD_USAGE)
             {
                 getViewInterface().setCheeringMessage(true//
-                    , getString(R.string.message_booking_reward_cheering_title01, stayBookDateTime.getNights())//
+                    , getString(R.string.message_booking_reward_cheering_title01, stayOutboundPayment.providableRewardStickerCount)//
                     , getString(R.string.message_booking_reward_cheering_warning02));
 
                 getViewInterface().setDepositStickerVisible(true);
@@ -1824,12 +1839,12 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         if (mSaleType == STICKER)
         {
             getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage()//
-                , stayOutboundPayment.rewardStickerCount, null, getString(R.string.message_payment_reward_sticker_deposit_after_checkout, stayBookDateTime.getNights()));
+                , stayOutboundPayment.rewardStickerCount, null, getString(R.string.message_payment_reward_sticker_deposit_after_checkout, stayOutboundPayment.providableRewardStickerCount));
         } else
         {
             if (hasDepositSticker() == true)
             {
-                String text = getString(R.string.message_payment_dont_reward_sticker_used_bonus__payment_phone);
+                String text = getString(R.string.message_payment_dont_reward_sticker_used_bonus_payment_phone);
 
                 SpannableString spannableString = new SpannableString(text);
 

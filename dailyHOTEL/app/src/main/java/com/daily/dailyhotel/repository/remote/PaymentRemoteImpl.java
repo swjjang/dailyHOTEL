@@ -100,7 +100,7 @@ public class PaymentRemoteImpl implements PaymentInterface
             nights = 1;
         }
 
-        return DailyMobileAPI.getInstance(mContext).getStayPayment(index, stayBookDateTime.getCheckInDateTime("yyyyMMdd")//
+        return DailyMobileAPI.getInstance(mContext).getStayPayment(index, stayBookDateTime.getCheckInDateTime("yyyy-MM-dd")//
             , nights).map(stayPaymentDataBaseDto ->
         {
             StayPayment stayPayment = null;
@@ -114,7 +114,7 @@ public class PaymentRemoteImpl implements PaymentInterface
                 // 7    3시부터 9시까지
                 switch (stayPaymentDataBaseDto.msgCode)
                 {
-                    case 0:
+                    case 100:
                         if (stayPaymentDataBaseDto.data != null)
                         {
                             stayPayment = stayPaymentDataBaseDto.data.getStayPayment();

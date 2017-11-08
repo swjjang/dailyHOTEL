@@ -54,6 +54,18 @@ public class StayOutboundPaymentData
     @JsonField(name = "roomBedTypeId")
     public int roomBedTypeId;
 
+    @JsonField(name = "providableRewardStickerCount")
+    public int providableRewardStickerCount;
+
+    @JsonField(name = "provideRewardSticker")
+    public boolean provideRewardSticker;
+
+    @JsonField(name = "rewardCard")
+    public RewardCardData rewardCard;
+
+    @JsonField(name = "configurations")
+    public ConfigurationsData configurations;
+
     public StayOutboundPaymentData()
     {
 
@@ -78,6 +90,34 @@ public class StayOutboundPaymentData
         stayOutboundPayment.rateCode = rateCode;
         stayOutboundPayment.roomBedTypeId = roomBedTypeId;
 
+        if (rewardCard != null)
+        {
+            stayOutboundPayment.rewardStickerCount = rewardCard.rewardStickerCount;
+        }
+
+        if (configurations != null)
+        {
+            stayOutboundPayment.activeReward = configurations.activeReward;
+        }
+
+        stayOutboundPayment.provideRewardSticker = provideRewardSticker;
+        stayOutboundPayment.providableRewardStickerCount = providableRewardStickerCount;
+
         return stayOutboundPayment;
+    }
+
+    @JsonObject
+    static class RewardCardData
+    {
+        @JsonField(name = "expiredAt")
+        public String expiredAt;
+
+        @JsonField(name = "rewardStickerCount")
+        public int rewardStickerCount;
+
+        public RewardCardData()
+        {
+
+        }
     }
 }

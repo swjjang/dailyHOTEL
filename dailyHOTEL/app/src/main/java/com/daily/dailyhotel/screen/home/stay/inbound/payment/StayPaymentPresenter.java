@@ -1394,14 +1394,14 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
         if (mSaleType == STICKER)
         {
-            descriptionTitle = getString(R.string.message_payment_reward_sticker_deposit_after_checkout, mStayBookDateTime.getNights());
+            descriptionTitle = getString(R.string.message_payment_reward_sticker_deposit_after_checkout, mStayPayment.providableRewardStickerCount);
             descriptionMessage = null;
         } else
         {
             if (hasDepositSticker() == true)
             {
                 descriptionTitle = getString(R.string.message_payment_dont_reward_sticker);
-                descriptionMessage = getString(R.string.message_payment_dont_reward_sticker_used_bonus_coupon_payment_phone);
+                descriptionMessage = getString(R.string.message_thankyou_dont_reward_sticker_used_bonus_coupon_payment_phone);
             } else
             {
                 descriptionTitle = getString(R.string.message_payment_dont_reward_sticker);
@@ -1431,14 +1431,22 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             {
                 case BONUS:
                     jsonObject.put("bonusAmount", bonus > totalPrice ? totalPrice : bonus);
+                    jsonObject.put("rewardSticker", false);
                     break;
 
                 case COUPON:
                     jsonObject.put("couponCode", couponCode);
+                    jsonObject.put("rewardSticker", false);
+                    break;
+
+
+                case STICKER:
+                    jsonObject.put("rewardSticker", true);
                     break;
 
                 default:
                     jsonObject.put("bonusAmount", 0);
+                    jsonObject.put("rewardSticker", false);
                     break;
             }
 
@@ -1578,7 +1586,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             if (stayPayment.provideRewardSticker == true && stayPayment.totalPrice >= MIN_AMOUNT_FOR_REWARD_USAGE)
             {
                 getViewInterface().setCheeringMessage(true//
-                    , getString(R.string.message_booking_reward_cheering_title01, stayBookDateTime.getNights())//
+                    , getString(R.string.message_booking_reward_cheering_title01, stayPayment.providableRewardStickerCount)//
                     , getString(R.string.message_booking_reward_cheering_warning01));
 
                 getViewInterface().setDepositStickerVisible(true);
