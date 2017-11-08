@@ -1549,8 +1549,8 @@ public class DailyMobileAPI
 
     public Observable<BaseDto<StayPaymentData>> getStayPayment(int roomIndex, String date, int nights)
     {
-        final String API = Constants.UNENCRYPTED_URL ? "api/hotel/v1/payment/detail"//
-            : "NzckMjIkMTIkNzkkMjYkODEkNTAkNTEkNjUkMzUkOCQ4MyQzMSQyNSQxNCQ5NCQ=$NTZEMEQ4EQ0EyIRMzY0N0IwQzOMYxZMjICwNTQzQMEI5QTVFOEE3RDEIB1MjRFQzZBNzgxVM0ExQzFGODc0NUER4OKNFThOGMzJBNA==$";
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/hotel/payment/preview"//
+            : "MTIkNDQkNTUkNTMkMzYkODQkODQkODQkMTQkNjQkOTUkNjckNTAkMTAwJDE2JDg3JA==$QTBENDRBMzY5VNUDLBEQUExNjlBMTc3ODE4QUQU0N0VENDZXBODNE5NTEM1ML0RGNTYREGRTQ0NzMwNkI5NEQwMPzQYLGwQjEzQKg=A=$";
 
         return mDailyMobileService.getStayPayment(Crypto.getUrlDecoderEx(API), roomIndex, date, nights).subscribeOn(Schedulers.io());
     }

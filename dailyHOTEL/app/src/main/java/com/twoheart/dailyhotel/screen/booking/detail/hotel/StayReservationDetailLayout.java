@@ -405,14 +405,14 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
 
             // 해당 카테고리가 없으면 번호가 바뀐다.
             TextView depositStickerTextView = (TextView) mRewardCardLayout.findViewById(R.id.depositStickerTextView);
-            depositStickerTextView.setText("3." + mContext.getString(R.string.label_booking_used_deposit_sticker));
+            depositStickerTextView.setText("3. " + mContext.getString(R.string.label_booking_used_deposit_sticker));
         } else
         {
             setRefundLayoutVisible(true);
 
             // 해당 카테고리가 없으면 번호가 바뀐다.
             TextView depositStickerTextView = (TextView) mRewardCardLayout.findViewById(R.id.depositStickerTextView);
-            depositStickerTextView.setText("4." + mContext.getString(R.string.label_booking_used_deposit_sticker));
+            depositStickerTextView.setText("4. " + mContext.getString(R.string.label_booking_used_deposit_sticker));
 
             switch (getRefundPolicyStatus(stayBookingDetail))
             {
