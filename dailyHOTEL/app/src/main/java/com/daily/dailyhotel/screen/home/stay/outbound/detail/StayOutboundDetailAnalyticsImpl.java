@@ -2,13 +2,16 @@ package com.daily.dailyhotel.screen.home.stay.outbound.detail;
 
 import android.app.Activity;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundPaymentAnalyticsParam;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class StayOutboundDetailAnalyticsImpl implements StayOutboundDetailPresenter.StayOutboundDetailAnalyticsInterface
 {
