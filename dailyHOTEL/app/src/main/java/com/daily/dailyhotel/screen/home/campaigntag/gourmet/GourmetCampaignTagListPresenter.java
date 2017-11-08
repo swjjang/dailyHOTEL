@@ -776,15 +776,17 @@ public class GourmetCampaignTagListPresenter //
 
         mWishPosition = position;
 
+        boolean currentWish = gourmet.myWish;
+
         if (DailyHotel.isLogin() == true)
         {
-            getViewInterface().notifyWishChanged(position, !gourmet.myWish);
+            onChangedWish(position, !currentWish);
         }
 
         startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.GOURMET//
-            , gourmet.index, !gourmet.myWish, position, AnalyticsManager.Screen.DAILYGOURMET_DETAIL), GourmetCampaignTagListActivity.REQUEST_CODE_WISH_DIALOG);
+            , gourmet.index, !currentWish, position, AnalyticsManager.Screen.DAILYGOURMET_DETAIL), GourmetCampaignTagListActivity.REQUEST_CODE_WISH_DIALOG);
 
-        mAnalytics.onEventGourmetWishClick(getActivity(), !gourmet.myWish);
+        mAnalytics.onEventGourmetWishClick(getActivity(), !currentWish);
     }
 
 
@@ -823,11 +825,7 @@ public class GourmetCampaignTagListPresenter //
         }
 
         Gourmet gourmet = placeViewItem.getItem();
-
-        if (gourmet.myWish != wish)
-        {
-            gourmet.myWish = wish;
-            getViewInterface().notifyWishChanged(position, wish);
-        }
+        gourmet.myWish = wish;
+        getViewInterface().notifyWishChanged(position, wish);
     }
 }

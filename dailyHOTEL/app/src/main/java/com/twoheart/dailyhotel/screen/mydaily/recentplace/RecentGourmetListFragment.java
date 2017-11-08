@@ -337,11 +337,8 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
         if (object instanceof RecentlyPlace)
         {
             RecentlyPlace recentlyPlace = (RecentlyPlace) object;
-            if (recentlyPlace.myWish != wish)
-            {
-                recentlyPlace.myWish = wish;
-                mListLayout.notifyWishChanged(position, wish);
-            }
+            recentlyPlace.myWish = wish;
+            mListLayout.notifyWishChanged(position, wish);
         }
     }
 
@@ -583,13 +580,15 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
 
             mWishPosition = position;
 
+            boolean currentWish = recentlyPlace.myWish;
+
             if (DailyHotel.isLogin() == true)
             {
-                mListLayout.notifyWishChanged(position, !recentlyPlace.myWish);
+                onChangedWish(position, !currentWish);
             }
 
             mBaseActivity.startActivityForResult(WishDialogActivity.newInstance(mBaseActivity, ServiceType.GOURMET//
-                , recentlyPlace.index, !recentlyPlace.myWish, position, AnalyticsManager.Screen.DAILYGOURMET_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);
+                , recentlyPlace.index, !currentWish, position, AnalyticsManager.Screen.DAILYGOURMET_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);
         }
 
         @Override

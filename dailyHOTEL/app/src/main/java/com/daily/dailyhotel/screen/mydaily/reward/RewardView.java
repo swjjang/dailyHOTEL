@@ -395,7 +395,7 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
 
         if (count < 2)
         {
-            getViewDataBinding().issueCouponCountTextView.setVisibility(View.GONE);
+            getViewDataBinding().issueCouponCountTextView.setVisibility(View.INVISIBLE);
         } else
         {
             getViewDataBinding().issueCouponCountTextView.setVisibility(View.VISIBLE);

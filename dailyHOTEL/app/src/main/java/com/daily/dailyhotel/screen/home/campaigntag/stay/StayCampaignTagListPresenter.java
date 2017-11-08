@@ -807,15 +807,17 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
 
         mWishPosition = position;
 
+        boolean currentWish = stay.myWish;
+
         if (DailyHotel.isLogin() == true)
         {
-            getViewInterface().notifyWishChanged(position, !stay.myWish);
+            onChangedWish(position, !currentWish);
         }
 
         startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.HOTEL//
-            , stay.index, !stay.myWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), StayCampaignTagListActivity.REQUEST_CODE_WISH_DIALOG);
+            , stay.index, !currentWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), StayCampaignTagListActivity.REQUEST_CODE_WISH_DIALOG);
 
-        mAnalytics.onEventStayWishClick(getActivity(), !stay.myWish);
+        mAnalytics.onEventStayWishClick(getActivity(), !currentWish);
     }
 
     StayBookDateTime getStayBookDateTime(CommonDateTime commonDateTime)
@@ -854,11 +856,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         }
 
         Stay stay = placeViewItem.getItem();
-
-        if (stay.myWish != wish)
-        {
-            stay.myWish = wish;
-            getViewInterface().notifyWishChanged(position, wish);
-        }
+        stay.myWish = wish;
+        getViewInterface().notifyWishChanged(position, wish);
     }
 }
