@@ -359,6 +359,7 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
         }
 
         mStickerAnimatorSet.cancel();
+        mStickerAnimatorSet.removeAllListeners();
         mStickerAnimatorSet = null;
     }
 
@@ -684,6 +685,8 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
             }
 
             final int DP_6 = ScreenUtils.dpToPx(getContext(), 6);
+            final int UP_DURATION = 500;
+            final int DOWN_DURATION = 900;
 
             getViewDataBinding().issueCouponLayout.setTranslationY(DP_192);
             getViewDataBinding().issueCouponArrowImageView.setTranslationY(DP_192);
@@ -691,25 +694,75 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
 
             getViewDataBinding().issueCouponTitleUnderLineView.setVisibility(View.INVISIBLE);
 
-            ObjectAnimator issueCouponObjectAnimator = ObjectAnimator.ofFloat(getViewDataBinding().issueCouponLayout, View.TRANSLATION_Y//
-                , DP_192, DP_192 - DP_6, DP_192);
+            ObjectAnimator issueCouponObjectAnimator00 = ObjectAnimator.ofFloat(getViewDataBinding().issueCouponLayout, View.TRANSLATION_Y//
+                , DP_192, DP_192 - DP_6);
+            issueCouponObjectAnimator00.setDuration(UP_DURATION);
 
-            issueCouponObjectAnimator.setRepeatCount(ObjectAnimator.INFINITE);
+            ObjectAnimator issueCouponObjectAnimator01 = ObjectAnimator.ofFloat(getViewDataBinding().issueCouponLayout, View.TRANSLATION_Y//
+                , DP_192 - DP_6, DP_192);
+            issueCouponObjectAnimator01.setDuration(DOWN_DURATION);
 
-            ObjectAnimator issueCouponArrowObjectAnimator = ObjectAnimator.ofFloat(getViewDataBinding().issueCouponArrowImageView, View.TRANSLATION_Y//
-                , DP_192, DP_192 - DP_6, DP_192);
+            AnimatorSet animatorSet00 = new AnimatorSet();
+            animatorSet00.playSequentially(issueCouponObjectAnimator00, issueCouponObjectAnimator01);
 
-            issueCouponArrowObjectAnimator.setRepeatCount(ObjectAnimator.INFINITE);
+            ObjectAnimator issueCouponArrowObjectAnimator00 = ObjectAnimator.ofFloat(getViewDataBinding().issueCouponArrowImageView, View.TRANSLATION_Y//
+                , DP_192, DP_192 - DP_6);
+            issueCouponArrowObjectAnimator00.setDuration(UP_DURATION);
 
-            ObjectAnimator issueCouponClickObjectAnimator = ObjectAnimator.ofFloat(getViewDataBinding().issueCouponClickView, View.TRANSLATION_Y//
-                , DP_192, DP_192 - DP_6, DP_192);
+            ObjectAnimator issueCouponArrowObjectAnimator01 = ObjectAnimator.ofFloat(getViewDataBinding().issueCouponArrowImageView, View.TRANSLATION_Y//
+                , DP_192 - DP_6, DP_192);
+            issueCouponArrowObjectAnimator01.setDuration(DOWN_DURATION);
 
-            issueCouponClickObjectAnimator.setRepeatCount(ObjectAnimator.INFINITE);
+            AnimatorSet animatorSet01 = new AnimatorSet();
+            animatorSet01.playSequentially(issueCouponArrowObjectAnimator00, issueCouponArrowObjectAnimator01);
+
+            ObjectAnimator issueCouponClickObjectAnimator00 = ObjectAnimator.ofFloat(getViewDataBinding().issueCouponArrowImageView, View.TRANSLATION_Y//
+                , DP_192, DP_192 - DP_6);
+            issueCouponClickObjectAnimator00.setDuration(UP_DURATION);
+
+            ObjectAnimator issueCouponClickObjectAnimator01 = ObjectAnimator.ofFloat(getViewDataBinding().issueCouponArrowImageView, View.TRANSLATION_Y//
+                , DP_192 - DP_6, DP_192);
+            issueCouponClickObjectAnimator01.setDuration(DOWN_DURATION);
+
+            AnimatorSet animatorSet02 = new AnimatorSet();
+            animatorSet02.playSequentially(issueCouponClickObjectAnimator00, issueCouponClickObjectAnimator01);
 
             mIssueCouponShakeAnimatorSet = new AnimatorSet();
-            mIssueCouponShakeAnimatorSet.playTogether(issueCouponObjectAnimator, issueCouponArrowObjectAnimator, issueCouponClickObjectAnimator);
+            mIssueCouponShakeAnimatorSet.playTogether(animatorSet00, animatorSet01, animatorSet02);
             mIssueCouponShakeAnimatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
-            mIssueCouponShakeAnimatorSet.setDuration(1600);
+
+            mIssueCouponShakeAnimatorSet.addListener(new Animator.AnimatorListener()
+            {
+                boolean canceled;
+
+                @Override
+                public void onAnimationStart(Animator animation)
+                {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation)
+                {
+                    if (canceled == false)
+                    {
+                        mIssueCouponShakeAnimatorSet.start();
+                    }
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation)
+                {
+                    canceled = true;
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation)
+                {
+
+                }
+            });
+
             mIssueCouponShakeAnimatorSet.start();
         } else
         {
@@ -719,6 +772,7 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
             }
 
             mIssueCouponShakeAnimatorSet.cancel();
+            mIssueCouponShakeAnimatorSet.removeAllListeners();
             mIssueCouponShakeAnimatorSet = null;
 
             getViewDataBinding().issueCouponLayout.setTranslationY(DP_192);
