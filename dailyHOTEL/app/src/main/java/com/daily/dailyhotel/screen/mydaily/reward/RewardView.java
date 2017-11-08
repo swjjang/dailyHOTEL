@@ -196,12 +196,12 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
         {
             if (i < count)
             {
-                views[i].setAlpha(0.0f);
+                views[i].setVisibility(View.INVISIBLE);
                 stickerViews[i].setAlpha(0.9f);
                 stickerViews[i].setVisibility(View.VISIBLE);
             } else
             {
-                views[i].setAlpha(1.0f);
+                views[i].setVisibility(View.VISIBLE);
                 stickerViews[i].setVisibility(View.INVISIBLE);
             }
         }
@@ -241,12 +241,12 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
         {
             if (i < count)
             {
-                views[i].setAlpha(0.0f);
+                views[i].setVisibility(View.INVISIBLE);
                 stickerViews[i].setAlpha(1.0f);
                 stickerViews[i].setVisibility(View.VISIBLE);
             } else
             {
-                views[i].setAlpha(1.0f);
+                views[i].setVisibility(View.VISIBLE);
                 stickerViews[i].setVisibility(View.INVISIBLE);
             }
         }
