@@ -24,6 +24,7 @@ public class RewardHistory
     }
 
     public String aggregationId;
+    public int reservationIndex;
     public int couponPrice;
     public int expiredStickerCount;
     public String date;

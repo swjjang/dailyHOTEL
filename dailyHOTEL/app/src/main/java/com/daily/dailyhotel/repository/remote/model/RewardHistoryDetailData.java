@@ -2,7 +2,6 @@ package com.daily.dailyhotel.repository.remote.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.RewardHistory;
 import com.daily.dailyhotel.entity.RewardHistoryDetail;
 
@@ -69,6 +68,9 @@ public class RewardHistoryDetailData
         @JsonField(name = "aggregationId")
         public String aggregationId;
 
+        @JsonField(name = "reservationIdx")
+        public int reservationIdx;
+
         @JsonField(name = "couponAmount")
         public int couponAmount;
 
@@ -101,6 +103,7 @@ public class RewardHistoryDetailData
             RewardHistory rewardHistory = new RewardHistory();
 
             rewardHistory.aggregationId = aggregationId;
+            rewardHistory.reservationIndex = reservationIdx;
             rewardHistory.couponPrice = couponAmount;
             rewardHistory.expiredStickerCount = expiredStickerCount;
 
