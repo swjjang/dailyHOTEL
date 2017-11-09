@@ -565,10 +565,10 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 {
                     case Activity.RESULT_OK:
                         // 결재하기 호출
-                        if (data != null)
-                        {
-                            onOrderMenu(data.getIntExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_INDEX, -1));
-                        }
+                        //                        if (data != null)
+                        //                        {
+                        //                            onOrderMenu(data.getIntExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_INDEX, -1));
+                        //                        }
                         break;
 
                     default:
@@ -1225,7 +1225,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             return;
         }
 
-        startActivityForResult(GourmetMenusActivity.newInstance(getActivity(), mGourmetDetail.getGourmetMenuList(), index)//
+        startActivityForResult(GourmetMenusActivity.newInstance(getActivity(), mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), mGourmetDetail.index, mGourmetDetail.name, mGourmetDetail.getGourmetMenuList(), position, (ArrayList) mOperationTimeList, mVisitTime)//
             , GourmetDetailActivity.REQUEST_CODE_MENU);
 
         try
@@ -1582,7 +1582,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                     {
                         gourmetMenu.visible = true;
 
-                        if (mGourmetCart != null && mGourmetCart.orderTime == mVisitTime)
+                        if (mGourmetCart != null && mGourmetCart.visitTime == mVisitTime)
                         {
                             List<GourmetCartMenu> gourmetCartMenuList = mGourmetCart.getMenus();
 

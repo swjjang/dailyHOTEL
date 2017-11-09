@@ -12,12 +12,11 @@ import java.util.List;
  */
 public class GourmetCart
 {
-    public int orderTime;
+    public int visitTime; // 방문 시간
 
+    public int gourmetIndex;
     public String gourmetName;
-    public String imageUrl;
-    public String visitDateTime; // ISO-8601
-    public String category;
+    public String visitDateTime; // ISO-8601, 방문 날짜
 
     private List<GourmetCartMenu> mOrderMenuList = new ArrayList<>();
 
@@ -54,18 +53,15 @@ public class GourmetCart
     }
 
     /**
-     *
      * @param gourmetName
-     * @param imageUrl
      * @param visitDateTime 실제는 날짜 정보지만 ISO-8601 타입으로 받음
-     * @param category
      */
-    public void setGourmetInformation(String gourmetName, String imageUrl, String visitDateTime, String category)
+    public void setGourmetInformation(int gourmetIndex, String gourmetName, String visitDateTime, int visitTime)
     {
+        this.gourmetIndex = gourmetIndex;
         this.gourmetName = gourmetName;
-        this.imageUrl = imageUrl;
         this.visitDateTime = visitDateTime;
-        this.category = category;
+        this.visitTime = visitTime;
     }
 
     public void removeAllMenu()
@@ -81,10 +77,5 @@ public class GourmetCart
     public boolean equalsDay(String visitDay) throws Exception
     {
         return DailyCalendar.compareDateDay(visitDateTime, visitDay) == 0;
-    }
-
-    public boolean equalsOrderTime(int orderTime)
-    {
-        return this.orderTime == orderTime;
     }
 }

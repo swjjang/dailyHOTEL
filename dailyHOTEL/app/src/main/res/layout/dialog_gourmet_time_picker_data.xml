@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_fillrect_bffffff_r2"
+        android:paddingBottom="10dp"
+        android:paddingTop="24dp">
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/titleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/label_gourmet_product_detail_choose_visit_time"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="17dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            dailyFont:style="Medium"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/messageTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="@string/message_gourmet_product_detail_time_picker_popup_message"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="13dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/titleTextView"/>
+
+        <android.support.v7.widget.GridLayout
+            android:id="@+id/timeGridLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginTop="16dp"
+            app:columnCount="4"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/messageTextView"/>
+
+        <View
+            android:id="@+id/buttonTopLineView"
+            android:layout_width="0dp"
+            android:layout_height="1px"
+            android:layout_marginTop="10dp"
+            android:background="@color/default_line_ce7e7e7"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/timeGridLayout"/>
+
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/negativeTextView"
+            android:layout_width="0dp"
+            android:layout_height="38dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selector_dialog_button02"
+            android:gravity="center"
+            android:text="@string/dialog_btn_text_cancel"
+            android:textColor="@drawable/selector_dialog_text_color02"
+            android:textSize="14dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/positiveTextView"
+            app:layout_constraintTop_toBottomOf="@+id/buttonTopLineView"
+            dailyFont:style="Medium"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/positiveTextView"
+            android:layout_width="0dp"
+            android:layout_height="38dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/selector_dialog_button01"
+            android:gravity="center"
+            android:text="@string/dialog_btn_text_confirm"
+            android:textColor="@drawable/selector_dialog_text_color01"
+            android:textSize="14dp"
+            app:layout_constraintLeft_toRightOf="@+id/negativeTextView"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonTopLineView"
+            dailyFont:style="Medium"/>
+    </android.support.constraint.ConstraintLayout>
+</layout>
