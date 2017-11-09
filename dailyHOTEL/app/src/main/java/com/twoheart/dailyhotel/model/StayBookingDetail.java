@@ -133,6 +133,9 @@ public class StayBookingDetail extends PlaceBookingDetail
         }
 
         cancelDateTime = stayBookingDetail.cancelDateTime;
+
+        rewardStickerCount = stayBookingDetail.rewardStickerCount;
+        activeReward = stayBookingDetail.activeReward;
     }
 
     public void setData(JSONObject jsonObject) throws Exception

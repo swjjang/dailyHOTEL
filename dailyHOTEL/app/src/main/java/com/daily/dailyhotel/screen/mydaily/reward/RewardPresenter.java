@@ -42,6 +42,8 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
     private RewardRemoteImpl mRewardRemoteImpl;
     private CommonRemoteImpl mCommonRemoteImpl;
 
+    private RewardDetail mRewardDetail;
+
     public interface RewardAnalyticsInterface extends BaseAnalyticsInterface
     {
         void onScreen(Activity activity);
@@ -162,6 +164,12 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
         } else
         {
             getViewInterface().setLoginVisible(false);
+
+            if (mRewardDetail != null && mRewardDetail.availableRewardCouponCount > 0 && getViewInterface().isOpenedIssueCoupon() == false)
+            {
+                getViewInterface().setIssueCouponVisible(true);
+                getViewInterface().setIssueCouponAnimation(true);
+            }
         }
     }
 
@@ -238,7 +246,9 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
             @Override
             public void accept(RewardDetail rewardDetail) throws Exception
             {
-                onRewardDetail(rewardDetail);
+                setRewardDetail(rewardDetail);
+
+                notifyRewardDetailChanged();
 
                 unLockAll();
             }
@@ -404,22 +414,27 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
         startActivity(intent);
     }
 
-    private void onRewardDetail(RewardDetail rewardDetail)
+    private void setRewardDetail(RewardDetail rewardDetail)
     {
-        if (rewardDetail == null)
+        mRewardDetail = rewardDetail;
+    }
+
+    private void notifyRewardDetailChanged()
+    {
+        if (mRewardDetail == null)
         {
             return;
         }
 
         final int MAX_COUNT = 9;
 
-        getViewInterface().setDescriptionMessage(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerMemberMessage(rewardDetail.rewardStickerCount));
+        getViewInterface().setDescriptionMessage(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerMemberMessage(mRewardDetail.rewardStickerCount));
 
-        getViewInterface().setStickerCount(rewardDetail.rewardStickerCount);
+        getViewInterface().setStickerCount(mRewardDetail.rewardStickerCount);
 
-        if (rewardDetail.rewardStickerCount > 0)
+        if (mRewardDetail.rewardStickerCount > 0)
         {
-            if (DailyTextUtils.isTextEmpty(rewardDetail.expiredAt) == true)
+            if (DailyTextUtils.isTextEmpty(mRewardDetail.expiredAt) == true)
             {
                 getViewInterface().setStickerValidityVisible(false);
             } else
@@ -427,7 +442,7 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
                 getViewInterface().setStickerValidityVisible(true);
                 try
                 {
-                    getViewInterface().setStickerValidityText(getString(R.string.label_reward_sticker_validity, DailyCalendar.convertDateFormatString(rewardDetail.expiredAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd")));
+                    getViewInterface().setStickerValidityText(getString(R.string.label_reward_sticker_validity, DailyCalendar.convertDateFormatString(mRewardDetail.expiredAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd")));
                 } catch (ParseException e)
                 {
                     ExLog.e(e.toString());
@@ -438,14 +453,14 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
             getViewInterface().setStickerValidityVisible(false);
         }
 
-        if (rewardDetail.availableRewardCouponCount > 0)
+        if (mRewardDetail.availableRewardCouponCount > 0)
         {
             getViewInterface().setIssueCouponVisible(true);
             getViewInterface().setIssueCouponEnabled(true);
-            getViewInterface().setIssueCouponCount(rewardDetail.availableRewardCouponCount);
+            getViewInterface().setIssueCouponCount(mRewardDetail.availableRewardCouponCount);
             getViewInterface().setIssueCouponAnimation(true);
 
-        } else if (rewardDetail.rewardStickerCount == MAX_COUNT)
+        } else if (mRewardDetail.rewardStickerCount == MAX_COUNT)
         {
             getViewInterface().setIssueCouponVisible(true);
             getViewInterface().setIssueCouponEnabled(false);
@@ -456,6 +471,6 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
             getViewInterface().setIssueCouponAnimation(false);
         }
 
-        getViewInterface().setRewardHistoryEnabled(rewardDetail.hasRewardHistory);
+        getViewInterface().setRewardHistoryEnabled(mRewardDetail.hasRewardHistory);
     }
 }

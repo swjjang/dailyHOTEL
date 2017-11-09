@@ -11,6 +11,8 @@ public class StayOutboundDetailAnalyticsParam implements Parcelable
     public int rankingPosition;
     public String rating;
     public int listSize;
+    public String name;
+    public int nightlyRate;
 
     public StayOutboundDetailAnalyticsParam()
     {
@@ -30,6 +32,8 @@ public class StayOutboundDetailAnalyticsParam implements Parcelable
         dest.writeInt(rankingPosition);
         dest.writeString(rating);
         dest.writeInt(listSize);
+        dest.writeString(name);
+        dest.writeInt(nightlyRate);
     }
 
     void readFromParcel(Parcel in)
@@ -40,6 +44,8 @@ public class StayOutboundDetailAnalyticsParam implements Parcelable
         rankingPosition = in.readInt();
         rating = in.readString();
         listSize = in.readInt();
+        name = in.readString();
+        nightlyRate = in.readInt();
     }
 
     @Override

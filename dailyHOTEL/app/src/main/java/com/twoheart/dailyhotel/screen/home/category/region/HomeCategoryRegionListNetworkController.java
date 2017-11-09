@@ -2,6 +2,7 @@ package com.twoheart.dailyhotel.screen.home.category.region;
 
 import android.content.Context;
 
+import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Province;
@@ -235,6 +236,32 @@ public class HomeCategoryRegionListNetworkController extends BaseNetworkControll
                     }
                 } catch (Exception e)
                 {
+                    String logMessage;
+                    try
+                    {
+                        if (call == null)
+                        {
+                            logMessage = "mCategoryRegionListCallback , call is null";
+                        } else if (call.request() == null)
+                        {
+                            logMessage = "mCategoryRegionListCallback , request is null";
+                        } else if (call.request().url() == null)
+                        {
+                            logMessage = "mCategoryRegionListCallback , url is null";
+                        } else
+                        {
+                            logMessage = "mCategoryRegionListCallback , " + call.request().url().toString();
+                        }
+
+                        JSONObject responseJSONObject = response.body();
+                        logMessage += "\n" + responseJSONObject.toString();
+                    } catch (Exception e1)
+                    {
+                        logMessage = "mCategoryRegionListCallback , " + e1.getMessage();
+                    }
+
+                    Crashlytics.log(logMessage);
+
                     mOnNetworkControllerListener.onError(e);
                 }
             } else

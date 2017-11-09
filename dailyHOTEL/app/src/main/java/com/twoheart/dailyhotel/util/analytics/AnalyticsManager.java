@@ -777,6 +777,7 @@ public class AnalyticsManager
         public static final String ROOM_TYPE_ITEM_CLICKED = "RoomTypeItemClicked";
         public static final String ROOM_TYPE_CANCEL_CLICKED = "RoomTypeCancelClicked";
         public static final String BOOKING_CLICKED = "BookingClicked";
+        public static final String BOOKING_CLICKED_OUTBOUND = "BookingClicked_outbound";
         public static final String USING_CREDIT_CLICKED = "UsingCreditClicked";
         public static final String USING_CREDIT_CANCEL_CLICKED = "UsingCreditCancelClicked";
         public static final String PAYMENT_TYPE_ITEM_CLICKED = "PaymentTypeItemClicked";

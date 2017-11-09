@@ -142,7 +142,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/r_ic_l_47_shadow"
-                        android:visibility="gone"
+                        android:visibility="invisible"
                         app:layout_constraintLeft_toLeftOf="@id/sticker1nightsTextView"
                         app:layout_constraintTop_toTopOf="@id/sticker1nightsTextView"/>
 
@@ -166,7 +166,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/r_ic_l_47_shadow"
-                        android:visibility="gone"
+                        android:visibility="invisible"
                         app:layout_constraintLeft_toLeftOf="@id/sticker2nightsTextView"
                         app:layout_constraintTop_toTopOf="@id/sticker2nightsTextView"/>
 
@@ -190,7 +190,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/r_ic_l_47_shadow"
-                        android:visibility="gone"
+                        android:visibility="invisible"
                         app:layout_constraintLeft_toLeftOf="@id/sticker3nightsTextView"
                         app:layout_constraintTop_toTopOf="@id/sticker3nightsTextView"/>
 
@@ -214,7 +214,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/r_ic_l_47_shadow"
-                        android:visibility="gone"
+                        android:visibility="invisible"
                         app:layout_constraintLeft_toLeftOf="@id/sticker4nightsTextView"
                         app:layout_constraintTop_toTopOf="@id/sticker4nightsTextView"/>
 
@@ -238,7 +238,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/r_ic_l_47_shadow"
-                        android:visibility="gone"
+                        android:visibility="invisible"
                         app:layout_constraintLeft_toLeftOf="@id/sticker5nightsTextView"
                         app:layout_constraintTop_toTopOf="@id/sticker5nightsTextView"/>
 
@@ -263,7 +263,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/r_ic_l_47_shadow"
-                        android:visibility="gone"
+                        android:visibility="invisible"
                         app:layout_constraintLeft_toLeftOf="@id/sticker6nightsTextView"
                         app:layout_constraintTop_toTopOf="@id/sticker6nightsTextView"/>
 
@@ -288,7 +288,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/r_ic_l_47_shadow"
-                        android:visibility="gone"
+                        android:visibility="invisible"
                         app:layout_constraintLeft_toLeftOf="@id/sticker7nightsTextView"
                         app:layout_constraintTop_toTopOf="@id/sticker7nightsTextView"/>
 
@@ -313,7 +313,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/r_ic_l_47_shadow"
-                        android:visibility="gone"
+                        android:visibility="invisible"
                         app:layout_constraintLeft_toLeftOf="@id/sticker8nightsTextView"
                         app:layout_constraintTop_toTopOf="@id/sticker8nightsTextView"/>
 
@@ -338,7 +338,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/r_ic_l_47_shadow"
-                        android:visibility="gone"
+                        android:visibility="invisible"
                         app:layout_constraintLeft_toLeftOf="@id/sticker9nightsTextView"
                         app:layout_constraintTop_toTopOf="@id/sticker9nightsTextView"/>
 
@@ -479,8 +479,8 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:clickable="true"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/issueCouponLayout"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbarView"/>
@@ -493,7 +493,7 @@
             android:layout_marginRight="4dp"
             android:background="@drawable/r_btn_coupon_on"
             android:translationY="192dp"
-            android:visibility="gone"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent">
@@ -520,7 +520,7 @@
                 android:gravity="center"
                 android:textColor="@color/white"
                 android:textSize="12dp"
-                android:visibility="gone"
+                android:visibility="invisible"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 

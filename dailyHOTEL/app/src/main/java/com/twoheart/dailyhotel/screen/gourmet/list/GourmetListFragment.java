@@ -191,12 +191,8 @@ public class GourmetListFragment extends PlaceListFragment
         }
 
         Gourmet gourmet = placeViewItem.getItem();
-
-        if (gourmet.myWish != wish)
-        {
-            gourmet.myWish = wish;
-            mPlaceListLayout.notifyWishChanged(position, wish);
-        }
+        gourmet.myWish = wish;
+        mPlaceListLayout.notifyWishChanged(position, wish);
     }
 
     protected void onGourmetList(List<Gourmet> list, int page, int totalCount, int maxCount, //
@@ -408,16 +404,18 @@ public class GourmetListFragment extends PlaceListFragment
 
             mWishPosition = position;
 
+            boolean currentWish = gourmet.myWish;
+
             if (DailyHotel.isLogin() == true)
             {
-                mPlaceListLayout.notifyWishChanged(position, !gourmet.myWish);
+               onChangedWish(position, !currentWish);
             }
 
             mBaseActivity.startActivityForResult(WishDialogActivity.newInstance(mBaseActivity, ServiceType.GOURMET//
-                , gourmet.index, !gourmet.myWish, position, AnalyticsManager.Screen.DAILYGOURMET_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);
+                , gourmet.index, !currentWish, position, AnalyticsManager.Screen.DAILYGOURMET_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);
 
             AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
-                , AnalyticsManager.Action.WISH_GOURMET, !gourmet.myWish ? AnalyticsManager.Label.ON.toLowerCase() : AnalyticsManager.Label.OFF.toLowerCase(), null);
+                , AnalyticsManager.Action.WISH_GOURMET, !currentWish ? AnalyticsManager.Label.ON.toLowerCase() : AnalyticsManager.Label.OFF.toLowerCase(), null);
         }
 
         @Override

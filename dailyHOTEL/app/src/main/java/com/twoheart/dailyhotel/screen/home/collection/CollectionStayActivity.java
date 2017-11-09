@@ -534,12 +534,8 @@ public class CollectionStayActivity extends CollectionBaseActivity
         }
 
         RecommendationStay recommendationStay = placeViewItem.getItem();
-
-        if (recommendationStay.myWish != wish)
-        {
-            recommendationStay.myWish = wish;
-            mCollectionBaseLayout.notifyWishChanged(position, wish);
-        }
+        recommendationStay.myWish = wish;
+        mCollectionBaseLayout.notifyWishChanged(position, wish);
     }
 
     private CollectionStayLayout.OnEventListener mOnEventListener = new CollectionBaseLayout.OnEventListener()
@@ -685,16 +681,18 @@ public class CollectionStayActivity extends CollectionBaseActivity
 
             mWishPosition = position;
 
+            boolean currentWish = recommendationStay.myWish;
+
             if (DailyHotel.isLogin() == true)
             {
-                mCollectionBaseLayout.notifyWishChanged(position, !recommendationStay.myWish);
+                onChangedWish(position, !currentWish);
             }
 
             startActivityForResult(WishDialogActivity.newInstance(CollectionStayActivity.this, ServiceType.HOTEL//
-                , recommendationStay.index, !recommendationStay.myWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);
+                , recommendationStay.index, !currentWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);
 
             AnalyticsManager.getInstance(CollectionStayActivity.this).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
-                , AnalyticsManager.Action.WISH_STAY, !recommendationStay.myWish ? AnalyticsManager.Label.ON.toLowerCase() : AnalyticsManager.Label.OFF.toLowerCase(), null);
+                , AnalyticsManager.Action.WISH_STAY, !currentWish ? AnalyticsManager.Label.ON.toLowerCase() : AnalyticsManager.Label.OFF.toLowerCase(), null);
         }
 
         @Override

@@ -222,7 +222,7 @@ public class RewardHistoryPresenter extends BaseExceptionPresenter<RewardHistory
             return;
         }
 
-        String deepLink = "dailyhotel://dailyhotel.co.kr?vc=12&v=bd&agi=" + rewardHistory.aggregationId + "&pt=stay";
+        String deepLink = "dailyhotel://dailyhotel.co.kr?vc=20&v=bd&agi=" + rewardHistory.aggregationId + "&pt=stay";
 
         Intent intent = new Intent(getActivity(), LauncherActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

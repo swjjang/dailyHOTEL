@@ -89,6 +89,7 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
             params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mAnalyticsParam.getShowOriginalPriceYn());
             params.put(AnalyticsManager.KeyType.DAILYCHOICE, mAnalyticsParam.isDailyChoice ? "y" : "n");
             params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(nights));
+            params.put(AnalyticsManager.KeyType.COUNTRY, stayDetail.overseas == false ? AnalyticsManager.ValueType.DOMESTIC : AnalyticsManager.ValueType.OVERSEAS);
 
             AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_DETAIL, null, params);
         } catch (Exception e)
@@ -377,7 +378,8 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
 
     @Override
     public void onEventBookingClick(Activity activity, StayBookDateTime stayBookDateTime, int stayIndex//
-        , String stayName, String roomName, String category, int discountPrice, boolean provideRewardSticker)
+        , String stayName, String roomName, int discountPrice, String category, boolean provideRewardSticker //
+        , boolean isOverseas)
     {
         if (activity == null || mAnalyticsParam == null || stayBookDateTime == null)
         {
@@ -400,6 +402,7 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
 
         params.put(AnalyticsManager.KeyType.PRICE_OF_SELECTED_ROOM, Integer.toString(discountPrice));
         params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, stayBookDateTime.getCheckInDateTime("yyyyMMdd"));
+        params.put(AnalyticsManager.KeyType.COUNTRY, isOverseas == false ? AnalyticsManager.ValueType.DOMESTIC : AnalyticsManager.ValueType.OVERSEAS);
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
             , AnalyticsManager.Action.BOOKING_CLICKED, label, params);

@@ -200,12 +200,8 @@ public class StayListFragment extends PlaceListFragment
         }
 
         Stay stay = placeViewItem.getItem();
-
-        if (stay.myWish != wish)
-        {
-            stay.myWish = wish;
-            mPlaceListLayout.notifyWishChanged(position, wish);
-        }
+        stay.myWish = wish;
+        mPlaceListLayout.notifyWishChanged(position, wish);
     }
 
     protected void onStayList(List<Stay> list, int page, boolean hasSection, boolean activeReward)
@@ -570,16 +566,18 @@ public class StayListFragment extends PlaceListFragment
 
             mWishPosition = position;
 
+            boolean currentWish = stay.myWish;
+
             if (DailyHotel.isLogin() == true)
             {
-                mPlaceListLayout.notifyWishChanged(position, !stay.myWish);
+                onChangedWish(position, !currentWish);
             }
 
             mBaseActivity.startActivityForResult(WishDialogActivity.newInstance(mBaseActivity, ServiceType.HOTEL//
-                , stay.index, !stay.myWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);
+                , stay.index, !currentWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);
 
             AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
-                , AnalyticsManager.Action.WISH_STAY, !stay.myWish ? AnalyticsManager.Label.ON.toLowerCase() : AnalyticsManager.Label.OFF.toLowerCase(), null);
+                , AnalyticsManager.Action.WISH_STAY, !currentWish ? AnalyticsManager.Label.ON.toLowerCase() : AnalyticsManager.Label.OFF.toLowerCase(), null);
         }
 
         @Override
