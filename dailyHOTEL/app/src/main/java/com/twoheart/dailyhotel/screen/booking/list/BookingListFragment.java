@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.CommonDateTime;
@@ -1125,14 +1126,30 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
                     String aggregationId = internalDeepLink.getAggregationId();
 
-                    for (Booking booking : bookingList)
+                    if (DailyTextUtils.isTextEmpty(aggregationId) == true)
                     {
-                        if ((aggregationId != null && aggregationId.equalsIgnoreCase(booking.aggregationId))//
-                            && placeType == booking.placeType)
+                        int reservationIndex = internalDeepLink.getReservationIndex();
+
+                        for (Booking booking : bookingList)
                         {
-                            unLockUI();
-                            mOnUserActionListener.onBookingClick(booking);
-                            break;
+                            if (booking.reservationIndex == reservationIndex && placeType == booking.placeType)
+                            {
+                                unLockUI();
+                                mOnUserActionListener.onBookingClick(booking);
+                                break;
+                            }
+                        }
+                    } else
+                    {
+                        for (Booking booking : bookingList)
+                        {
+                            if ((aggregationId != null && aggregationId.equalsIgnoreCase(booking.aggregationId))//
+                                && placeType == booking.placeType)
+                            {
+                                unLockUI();
+                                mOnUserActionListener.onBookingClick(booking);
+                                break;
+                            }
                         }
                     }
                 }

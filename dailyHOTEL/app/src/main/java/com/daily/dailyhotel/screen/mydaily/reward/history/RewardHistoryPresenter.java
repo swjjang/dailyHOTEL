@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.ObjectItem;
@@ -223,15 +224,33 @@ public class RewardHistoryPresenter extends BaseExceptionPresenter<RewardHistory
         switch (rewardHistory.serviceType)
         {
             case GOURMET:
-                startActivity(DailyInternalDeepLink.getGourmetBookingDetailScreenLink(getActivity(), rewardHistory.aggregationId));
+                if (DailyTextUtils.isTextEmpty(rewardHistory.aggregationId) == true)
+                {
+                    startActivity(DailyInternalDeepLink.getGourmetBookingDetailScreenLink(getActivity(), rewardHistory.reservationIndex));
+                } else
+                {
+                    startActivity(DailyInternalDeepLink.getGourmetBookingDetailScreenLink(getActivity(), rewardHistory.aggregationId));
+                }
                 break;
 
             case HOTEL:
-                startActivity(DailyInternalDeepLink.getStayBookingDetailScreenLink(getActivity(), rewardHistory.aggregationId));
+                if (DailyTextUtils.isTextEmpty(rewardHistory.aggregationId) == true)
+                {
+                    startActivity(DailyInternalDeepLink.getStayBookingDetailScreenLink(getActivity(), rewardHistory.reservationIndex));
+                } else
+                {
+                    startActivity(DailyInternalDeepLink.getStayBookingDetailScreenLink(getActivity(), rewardHistory.aggregationId));
+                }
                 break;
 
             case OUTBOUND:
-                startActivity(DailyInternalDeepLink.getStayOutboundBookingDetailScreenLink(getActivity(), rewardHistory.aggregationId));
+                if (DailyTextUtils.isTextEmpty(rewardHistory.aggregationId) == true)
+                {
+                    startActivity(DailyInternalDeepLink.getStayOutboundBookingDetailScreenLink(getActivity(), rewardHistory.reservationIndex));
+                } else
+                {
+                    startActivity(DailyInternalDeepLink.getStayOutboundBookingDetailScreenLink(getActivity(), rewardHistory.aggregationId));
+                }
                 break;
 
             default:

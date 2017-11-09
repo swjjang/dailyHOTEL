@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 
 import com.daily.base.util.DailyTextUtils;
-import com.twoheart.dailyhotel.model.PlacePaymentInformation;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
 
 import java.net.URLEncoder;
@@ -17,6 +16,8 @@ public class DailyInternalDeepLink extends DailyDeepLink
 
     ///////////////////////////////////////////////////////////////////////////////////
     // DAILYHOTEL INTERNAL DEEP LINK
+
+    // dailyhotel://internal.dailyhotel.co.kr
     ///////////////////////////////////////////////////////////////////////////////////
 
     private static final String PARAM_VIEW = "v";
@@ -27,8 +28,10 @@ public class DailyInternalDeepLink extends DailyDeepLink
     private static final String PARAM_CHECK_OUT_TIME = "co";
     private static final String PARAM_VISIT_TIME = "vt";
     private static final String PARAM_AGGREGATION_ID = "aid";
+    private static final String PARAM_RESERVATION_INDEX = "ri";
     private static final String PARAM_KEYWORD = "k";
 
+    // 이동하는 딥링크 화면들
     private static final String VIEW_BOOKING_DETAIL = "bd"; // 예약 상세화면
     private static final String VIEW_STAMP = "stamp"; // 스탬프.
     private static final String VIEW_HOME = "home"; // 홈.
@@ -66,6 +69,30 @@ public class DailyInternalDeepLink extends DailyDeepLink
     public void clear()
     {
         super.clear();
+    }
+
+    private int getIntValue(String valueName)
+    {
+        if (DailyTextUtils.isTextEmpty(valueName) == true)
+        {
+            return 0;
+        }
+
+        int value = 0;
+
+        String stringValue = mParamsMap.get(valueName);
+
+        if (DailyTextUtils.isTextEmpty(stringValue) == false)
+        {
+            try
+            {
+                value = Integer.parseInt(stringValue);
+            } catch (NumberFormatException e)
+            {
+            }
+        }
+
+        return value;
     }
 
     private String getView()
@@ -133,6 +160,11 @@ public class DailyInternalDeepLink extends DailyDeepLink
         return mParamsMap.get(PARAM_AGGREGATION_ID);
     }
 
+    public int getReservationIndex()
+    {
+        return getIntValue(PARAM_RESERVATION_INDEX);
+    }
+
     private boolean decodingLink(Uri uri)
     {
         mParamsMap.clear();
@@ -170,27 +202,6 @@ public class DailyInternalDeepLink extends DailyDeepLink
         return intent.setData(uri);
     }
 
-    public static Intent getStayBookingDetailScreenLink(Context context, String placeName//
-        , PlacePaymentInformation.PaymentType paymentType, String checkInTime, String checkOutTime)
-    {
-        if (DailyTextUtils.isTextEmpty(placeName, checkInTime, checkOutTime) == true || paymentType == null)
-        {
-            return null;
-        }
-
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("dailyhotel://");
-        stringBuilder.append(HOST_INTERNAL_DAILYHOTEL);
-        stringBuilder.append("?" + PARAM_VIEW + "=" + VIEW_BOOKING_DETAIL);
-        stringBuilder.append("&" + PARAM_PLACE_TYPE + "=" + STAY);
-        stringBuilder.append("&" + PARAM_PLACE_NAME + "=" + URLEncoder.encode(placeName));
-        stringBuilder.append("&" + PARAM_PAYMENT_METHOD + "=" + URLEncoder.encode(paymentType.name()));
-        stringBuilder.append("&" + PARAM_CHECK_IN_TIME + "=" + URLEncoder.encode(checkInTime));
-        stringBuilder.append("&" + PARAM_CHECK_OUT_TIME + "=" + URLEncoder.encode(checkOutTime));
-
-        return getIntent(context, Uri.parse(stringBuilder.toString()));
-    }
-
     public static Intent getStayOutboundBookingDetailScreenLink(Context context, String aggregationId)
     {
         StringBuilder stringBuilder = new StringBuilder();
@@ -199,6 +210,18 @@ public class DailyInternalDeepLink extends DailyDeepLink
         stringBuilder.append("?" + PARAM_VIEW + "=" + VIEW_BOOKING_DETAIL);
         stringBuilder.append("&" + PARAM_PLACE_TYPE + "=" + STAY_OUTBOUND);
         stringBuilder.append("&" + PARAM_AGGREGATION_ID + "=" + aggregationId);
+
+        return getIntent(context, Uri.parse(stringBuilder.toString()));
+    }
+
+    public static Intent getStayOutboundBookingDetailScreenLink(Context context, int reservationIndex)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("dailyhotel://");
+        stringBuilder.append(HOST_INTERNAL_DAILYHOTEL);
+        stringBuilder.append("?" + PARAM_VIEW + "=" + VIEW_BOOKING_DETAIL);
+        stringBuilder.append("&" + PARAM_PLACE_TYPE + "=" + STAY_OUTBOUND);
+        stringBuilder.append("&" + PARAM_RESERVATION_INDEX + "=" + reservationIndex);
 
         return getIntent(context, Uri.parse(stringBuilder.toString()));
     }
@@ -215,6 +238,18 @@ public class DailyInternalDeepLink extends DailyDeepLink
         return getIntent(context, Uri.parse(stringBuilder.toString()));
     }
 
+    public static Intent getStayBookingDetailScreenLink(Context context, int reservationIndex)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("dailyhotel://");
+        stringBuilder.append(HOST_INTERNAL_DAILYHOTEL);
+        stringBuilder.append("?" + PARAM_VIEW + "=" + VIEW_BOOKING_DETAIL);
+        stringBuilder.append("&" + PARAM_PLACE_TYPE + "=" + STAY);
+        stringBuilder.append("&" + PARAM_RESERVATION_INDEX + "=" + reservationIndex);
+
+        return getIntent(context, Uri.parse(stringBuilder.toString()));
+    }
+
     public static Intent getGourmetBookingDetailScreenLink(Context context, String aggregationId)
     {
         StringBuilder stringBuilder = new StringBuilder();
@@ -227,22 +262,14 @@ public class DailyInternalDeepLink extends DailyDeepLink
         return getIntent(context, Uri.parse(stringBuilder.toString()));
     }
 
-    public static Intent getGourmetBookingDetailScreenLink(Context context, String placeName//
-        , PlacePaymentInformation.PaymentType paymentType, String visitTime)
+    public static Intent getGourmetBookingDetailScreenLink(Context context, int reservationIndex)
     {
-        if (DailyTextUtils.isTextEmpty(placeName, visitTime) == true || paymentType == null)
-        {
-            return null;
-        }
-
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("dailyhotel://");
         stringBuilder.append(HOST_INTERNAL_DAILYHOTEL);
         stringBuilder.append("?" + PARAM_VIEW + "=" + VIEW_BOOKING_DETAIL);
         stringBuilder.append("&" + PARAM_PLACE_TYPE + "=" + GOURMET);
-        stringBuilder.append("&" + PARAM_PLACE_NAME + "=" + URLEncoder.encode(placeName));
-        stringBuilder.append("&" + PARAM_PAYMENT_METHOD + "=" + URLEncoder.encode(paymentType.name()));
-        stringBuilder.append("&" + PARAM_VISIT_TIME + "=" + URLEncoder.encode(visitTime));
+        stringBuilder.append("&" + PARAM_RESERVATION_INDEX + "=" + reservationIndex);
 
         return getIntent(context, Uri.parse(stringBuilder.toString()));
     }
