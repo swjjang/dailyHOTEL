@@ -28,12 +28,14 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
+import com.daily.base.widget.DailyRadioButton;
 import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
@@ -122,9 +124,11 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
         void onMoreMenuClick();
 
-        void onMenuClick(int index);
+        void onMenuClick(int index, int position);
 
         void onHideWishTooltipClick();
+
+        void onVisitTimeClick(int visitTime);
     }
 
     public GourmetDetailView(BaseActivity baseActivity, GourmetDetailView.OnEventListener listener)
@@ -219,7 +223,8 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
     }
 
     @Override
-    public void setGourmetDetail(GourmetBookDateTime gourmetBookDateTime, GourmetDetail gourmetDetail, int trueReviewCount, int shownMenuCount)
+    public void setGourmetDetail(GourmetBookDateTime gourmetBookDateTime, GourmetDetail gourmetDetail//
+        , List<Integer> operationTimeList, int trueReviewCount, int shownMenuCount)
     {
         if (getViewDataBinding() == null || gourmetBookDateTime == null || gourmetDetail == null)
         {
@@ -246,8 +251,11 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         // 방문일
         setVisitDateView(gourmetBookDateTime.getVisitDateTime("yyyy.MM.dd(EEE)"));
 
+        // 전체 시간 메뉴
+        setOperationTimes(operationTimeList);
+
         // 메뉴 리스트
-        setMenuListLayout(gourmetDetail.getGourmetMenuList(), shownMenuCount);
+        //        setMenuListLayout(gourmetDetail.getGourmetMenuList(), shownMenuCount);
 
         // 주소 및 맵
         setAddressView(gourmetDetail.address);
@@ -908,7 +916,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                         if (mLayoutGourmetDetailMoreMenuDataBinding != null)
                         {
                             mLayoutGourmetDetailMoreMenuDataBinding.moreImageView.setRotation(0);
-                            mLayoutGourmetDetailMoreMenuDataBinding.moreTextView.setText(getString(R.string.label_gourmet_detail_view_more, (int) mLayoutGourmetDetailMoreMenuDataBinding.moreTextView.getTag()));
+                            mLayoutGourmetDetailMoreMenuDataBinding.moreTextView.setText((String)mLayoutGourmetDetailMoreMenuDataBinding.moreTextView.getTag());
                         }
 
                         observer.onNext(true);
@@ -934,6 +942,12 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         };
 
         return observable;
+    }
+
+    @Override
+    public void setMenus(List<GourmetMenu> gourmetMenuList, int shownMenuCount)
+    {
+        setMenuListLayout(gourmetMenuList, shownMenuCount);
     }
 
     @Override
@@ -1229,6 +1243,82 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         }, null);
     }
 
+    private void setOperationTimes(List<Integer> operationTimeList)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        int size = operationTimeList == null ? 0 : operationTimeList.size();
+
+        if (size == 0)
+        {
+            getViewDataBinding().timesTopLineView.setVisibility(View.GONE);
+            getViewDataBinding().timesScrollView.setVisibility(View.GONE);
+
+            return;
+        }
+
+        getViewDataBinding().timesRadioGroup.removeAllViews();
+
+        getViewDataBinding().timesTopLineView.setVisibility(View.VISIBLE);
+        getViewDataBinding().timesScrollView.setVisibility(View.VISIBLE);
+
+        View.OnClickListener onClickListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onVisitTimeClick((int) v.getTag());
+            }
+        };
+
+        // 전체 시간 넣기
+        DailyRadioButton fullTimeTextView = new DailyRadioButton(getContext());
+        fullTimeTextView.setText(R.string.label_gourmet_detail_full_time_menu);
+        fullTimeTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
+        fullTimeTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c323232_cffffff));
+        fullTimeTextView.setBackgroundResource(R.drawable.shape_fillrect_selector_de8e8e9_sb70038_r2);
+        fullTimeTextView.setTag(GourmetDetailPresenter.FULL_TIME);
+        fullTimeTextView.setButtonDrawable(null);
+        fullTimeTextView.setGravity(Gravity.CENTER);
+        fullTimeTextView.setOnClickListener(onClickListener);
+
+        RadioGroup.LayoutParams fullTimeLayoutParams = new RadioGroup.LayoutParams(ScreenUtils.dpToPx(getContext(), 95), ScreenUtils.dpToPx(getContext(), 30));
+        fullTimeLayoutParams.leftMargin = ScreenUtils.dpToPx(getContext(), 15);
+        fullTimeLayoutParams.rightMargin = ScreenUtils.dpToPx(getContext(), 10);
+
+        getViewDataBinding().timesRadioGroup.addView(fullTimeTextView, fullTimeLayoutParams);
+
+        // 실제 시간 넣기
+        for (int time : operationTimeList)
+        {
+            // 1시 이후 값은 01:00로 보이도록 한다.
+            if (time >= 2500)
+            {
+                time -= 2400;
+            }
+
+            DailyRadioButton timeTextView = new DailyRadioButton(getContext());
+            timeTextView.setText(String.format(Locale.KOREA, "%02d:%02d", time / 100, time % 100));
+            timeTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
+            timeTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c323232_cffffff));
+            timeTextView.setBackgroundResource(R.drawable.shape_fillrect_selector_de8e8e9_sb70038_r2);
+            timeTextView.setTag(time);
+            timeTextView.setButtonDrawable(null);
+            timeTextView.setGravity(Gravity.CENTER);
+            timeTextView.setOnClickListener(onClickListener);
+
+            RadioGroup.LayoutParams timeLayoutParams = new RadioGroup.LayoutParams(ScreenUtils.dpToPx(getContext(), 56), ScreenUtils.dpToPx(getContext(), 30));
+            timeLayoutParams.rightMargin = ScreenUtils.dpToPx(getContext(), 10);
+
+            getViewDataBinding().timesRadioGroup.addView(timeTextView, timeLayoutParams);
+        }
+
+        fullTimeTextView.setChecked(true);
+    }
+
     private void setMenuListLayout(List<GourmetMenu> gourmetMenuList, int shownMenuCount)
     {
         if (getViewDataBinding() == null)
@@ -1246,35 +1336,46 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
 
-        int size = gourmetMenuList == null ? 0 : gourmetMenuList.size();
+        int visibleCount = 0;
+        int menuCount = gourmetMenuList == null ? 0 : gourmetMenuList.size();
 
-        if (size == 0)
+        if (menuCount == 0)
         {
             getViewDataBinding().menuTopLineView.setVisibility(View.GONE);
             getViewDataBinding().menuLayout.setVisibility(View.GONE);
         } else
         {
+            for (GourmetMenu gourmetMenu : gourmetMenuList)
+            {
+                visibleCount += gourmetMenu.visible ? 1 : 0;
+            }
+
             getViewDataBinding().menuTopLineView.setVisibility(View.VISIBLE);
             getViewDataBinding().menuLayout.setVisibility(View.VISIBLE);
         }
 
-        if (size > shownMenuCount)
+        if (visibleCount > shownMenuCount)
         {
             mMoreMenuLayout = new LinearLayout(getContext());
             mMoreMenuLayout.setOrientation(LinearLayout.VERTICAL);
 
-            for (int i = 0; i < size; i++)
+            for (int i = 0, position = 0; i < menuCount; i++)
             {
-                if (i < shownMenuCount)
+                if (gourmetMenuList.get(i).visible == false)
                 {
-                    setMenuLayout(layoutInflater, getViewDataBinding().menuLayout, i, gourmetMenuList.get(i), true);
+                    continue;
+                }
+
+                if (position < shownMenuCount)
+                {
+                    setMenuLayout(layoutInflater, getViewDataBinding().menuLayout, i, position, gourmetMenuList.get(i), true);
                 } else if (i == shownMenuCount)
                 {
                     getViewDataBinding().menuLayout.addView(mMoreMenuLayout, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
                     mLayoutGourmetDetailMoreMenuDataBinding = DataBindingUtil.inflate(layoutInflater, R.layout.layout_gourmet_detail_more_menu_data, getViewDataBinding().menuLayout, true);
-                    mLayoutGourmetDetailMoreMenuDataBinding.moreTextView.setText(getString(R.string.label_gourmet_detail_view_more, size));
-                    mLayoutGourmetDetailMoreMenuDataBinding.moreTextView.setTag(size);
+                    mLayoutGourmetDetailMoreMenuDataBinding.moreTextView.setText(getString(R.string.label_gourmet_detail_view_more, visibleCount));
+                    mLayoutGourmetDetailMoreMenuDataBinding.moreTextView.setTag(mLayoutGourmetDetailMoreMenuDataBinding.moreTextView.getText());
                     mLayoutGourmetDetailMoreMenuDataBinding.getRoot().setOnClickListener(new View.OnClickListener()
                     {
                         @Override
@@ -1284,11 +1385,13 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                         }
                     });
 
-                    setMenuLayout(layoutInflater, mMoreMenuLayout, i, gourmetMenuList.get(i), true);
+                    setMenuLayout(layoutInflater, mMoreMenuLayout, i, position, gourmetMenuList.get(i), true);
                 } else
                 {
-                    setMenuLayout(layoutInflater, mMoreMenuLayout, i, gourmetMenuList.get(i), true);
+                    setMenuLayout(layoutInflater, mMoreMenuLayout, i, position, gourmetMenuList.get(i), true);
                 }
+
+                position++;
             }
 
             mMoreMenuLayout.post(new Runnable()
@@ -1305,14 +1408,21 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             });
         } else
         {
-            for (int i = 0; i < size; i++)
+            for (int i = 0, position = 0; i < menuCount; i++)
             {
-                setMenuLayout(layoutInflater, getViewDataBinding().menuLayout, i, gourmetMenuList.get(i), i != size - 1);
+                if (gourmetMenuList.get(i).visible == false)
+                {
+                    continue;
+                }
+
+                setMenuLayout(layoutInflater, getViewDataBinding().menuLayout, i, position, gourmetMenuList.get(i), position != visibleCount - 1);
+
+                position++;
             }
         }
     }
 
-    private void setMenuLayout(LayoutInflater layoutInflater, ViewGroup parent, int index, GourmetMenu gourmetMenu, boolean insertUnderLine)
+    private void setMenuLayout(LayoutInflater layoutInflater, ViewGroup parent, int index, int position, GourmetMenu gourmetMenu, boolean insertUnderLine)
     {
         if (layoutInflater == null || parent == null || gourmetMenu == null)
         {
@@ -1326,7 +1436,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             @Override
             public void onClick(View v)
             {
-                getEventListener().onMenuClick(index);
+                getEventListener().onMenuClick(index, position);
             }
         });
 

@@ -5,12 +5,16 @@ import android.app.Dialog;
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetDetail;
+import com.daily.dailyhotel.entity.GourmetMenu;
+
+import java.util.List;
 
 import io.reactivex.Observable;
 
 public interface GourmetDetailViewInterface extends BaseDialogViewInterface
 {
-    void setGourmetDetail(GourmetBookDateTime gourmetBookDateTime, GourmetDetail gourmetDetail, int trueReviewCount, int shownMenuCount);
+    void setGourmetDetail(GourmetBookDateTime gourmetBookDateTime, GourmetDetail gourmetDetail//
+        , List<Integer> operationTimeList, int trueReviewCount, int shownMenuCount);
 
     Observable<Boolean> getSharedElementTransition(int gradientType);
 
@@ -47,4 +51,6 @@ public interface GourmetDetailViewInterface extends BaseDialogViewInterface
     boolean isOpenedMoreMenuList();
 
     Observable<Boolean> closeMoreMenuList();
+
+    void setMenus(List<GourmetMenu> gourmetMenuList, int shownMenuCount);
 }

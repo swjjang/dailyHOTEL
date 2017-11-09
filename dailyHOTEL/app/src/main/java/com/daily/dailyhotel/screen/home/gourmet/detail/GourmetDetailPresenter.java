@@ -20,6 +20,8 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
+import com.daily.dailyhotel.entity.GourmetCart;
+import com.daily.dailyhotel.entity.GourmetCartMenu;
 import com.daily.dailyhotel.entity.GourmetDetail;
 import com.daily.dailyhotel.entity.GourmetMenu;
 import com.daily.dailyhotel.entity.ReviewScores;
@@ -67,10 +69,13 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -94,6 +99,8 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     public static final int STATUS_SELECT_MENU = 2;
     public static final int STATUS_SOLD_OUT = 3;
     public static final int STATUS_FINISH = 4;
+
+    public static final int FULL_TIME = -1;
 
     static final int SHOWN_MENU_COUNT = 5;
 
@@ -124,6 +131,11 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     private int mSelectedMenuIndex;
     boolean mShowCalendar;
     boolean mShowTrueVR;
+
+    // 멀티 구매
+    private int mVisitTime;
+    private List<Integer> mOperationTimeList;
+    private GourmetCart mGourmetCart;
 
     DailyDeepLink mDailyDeepLink;
     private AppResearch mAppResearch;
@@ -1206,7 +1218,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     }
 
     @Override
-    public void onMenuClick(int index)
+    public void onMenuClick(int index, int position)
     {
         if (mGourmetDetail == null || lock() == true)
         {
@@ -1218,7 +1230,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
         try
         {
-            mAnalytics.onEventMenuClick(getActivity(), mGourmetDetail.getGourmetMenuList().get(index).index, index);
+            mAnalytics.onEventMenuClick(getActivity(), mGourmetDetail.getGourmetMenuList().get(index).index, position);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -1230,6 +1242,21 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     {
         DailyPreference.getInstance(getActivity()).setWishTooltip(false);
         getViewInterface().hideWishTooltip();
+    }
+
+    @Override
+    public void onVisitTimeClick(int visitTime)
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        setVisitTime(visitTime);
+
+        notifyOperationTimeChanged();
+
+        unLockAll();
     }
 
     private void setStatus(int status)
@@ -1266,6 +1293,126 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         mAnalytics.onScreen(getActivity(), mGourmetBookDateTime, gourmetDetail, mPriceFromList);
     }
 
+    private void setVisitTime(int time)
+    {
+        mVisitTime = time;
+    }
+
+    private void setOperationTimes(CommonDateTime commonDateTime, GourmetBookDateTime gourmetBookDateTime, List<GourmetMenu> gourmetMenuList)
+    {
+        if (commonDateTime == null || gourmetBookDateTime == null)
+        {
+            return;
+        }
+
+        if (mOperationTimeList == null)
+        {
+            mOperationTimeList = new ArrayList<>();
+        }
+
+        mOperationTimeList.clear();
+
+        if (gourmetMenuList == null || gourmetMenuList.size() == 0)
+        {
+            return;
+        }
+
+        // 업장 시간과 티켓 시간을 만든다
+        // 업장 시간
+        try
+        {
+            String todayDate = DailyCalendar.convertDateFormatString(commonDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd");
+
+            int currentTime;
+
+            if (todayDate.equalsIgnoreCase(gourmetBookDateTime.getVisitDateTime("yyyyMMdd")) == true)
+            {
+                Calendar calendar = DailyCalendar.getInstance();
+                calendar.setTime(DailyCalendar.convertDate(commonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT));
+
+                if (calendar.get(Calendar.MINUTE) >= 30)
+                {
+                    calendar.set(Calendar.MINUTE, 30);
+                    calendar.add(Calendar.HOUR_OF_DAY, 1);
+                } else
+                {
+                    calendar.set(Calendar.MINUTE, 0);
+                    calendar.add(Calendar.HOUR_OF_DAY, 1);
+                }
+
+                currentTime = Integer.parseInt(DailyCalendar.format(calendar.getTime(), "HHmm"));
+            } else
+            {
+                currentTime = -1;
+            }
+
+            TreeSet<Integer> visitTimeSet = new TreeSet<>();
+
+            // 업장 영역 시간 알아내기
+            for (GourmetMenu gourmetMenu : gourmetMenuList)
+            {
+                int openTime = Integer.parseInt(gourmetMenu.openTime.replaceAll(":", "").substring(0, 4));
+                int endTime;
+
+                if (DailyTextUtils.isTextEmpty(gourmetMenu.lastOrderTime) == false)
+                {
+                    endTime = Integer.parseInt(gourmetMenu.lastOrderTime.replaceAll(":", "").substring(0, 4));
+                } else
+                {
+                    endTime = Integer.parseInt(gourmetMenu.closeTime.replaceAll(":", "").substring(0, 4));
+                }
+
+                if (endTime < 300)
+                {
+                    endTime += 2400;
+                }
+
+                int intervalTime = currentTime > openTime ? currentTime : openTime;
+                List<Integer> menuOperationTime = new ArrayList<>();
+
+                StringBuilder logStringBuilder = new StringBuilder();
+
+                do
+                {
+                    menuOperationTime.add(intervalTime);
+                    logStringBuilder.append(intervalTime);
+                    logStringBuilder.append(", ");
+
+                    visitTimeSet.add(intervalTime);
+
+                    intervalTime += 30;
+
+                    if (intervalTime % 100 == 60)
+                    {
+                        intervalTime += 40;
+                    }
+                } while (intervalTime <= endTime);
+
+                gourmetMenu.setOperationTimeList(menuOperationTime);
+
+                ExLog.d("pinkred - ticket - openTime : " + openTime + ", endTime : " + endTime + ", intervalTime : " + logStringBuilder.toString());
+            }
+
+            Iterator<Integer> integerIterator = visitTimeSet.iterator();
+
+            StringBuilder logStringBuilder = new StringBuilder();
+
+            while (integerIterator.hasNext())
+            {
+                int intervalTime = integerIterator.next();
+                mOperationTimeList.add(intervalTime);
+
+                logStringBuilder.append(intervalTime);
+                logStringBuilder.append(", ");
+            }
+
+            ExLog.d("pinkred - currentTime : " + currentTime + ", intervalTime : " + logStringBuilder.toString());
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
     void notifyGourmetDetailChanged()
     {
         if (mGourmetDetail == null)
@@ -1285,7 +1432,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             ExLog.e(e.toString());
         }
 
-        getViewInterface().setGourmetDetail(mGourmetBookDateTime, mGourmetDetail//
+        getViewInterface().setGourmetDetail(mGourmetBookDateTime, mGourmetDetail, mOperationTimeList//
             , mReviewScores != null ? mReviewScores.reviewScoreTotalCount : 0, SHOWN_MENU_COUNT);
 
         // 리스트 가격 변동은 진입시 한번 만 한다.
@@ -1409,6 +1556,52 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
         getViewInterface().setWishCount(wishCount);
         getViewInterface().setWishSelected(myWish);
+    }
+
+    private void notifyOperationTimeChanged()
+    {
+        List<GourmetMenu> menuList = mGourmetDetail.getGourmetMenuList();
+
+        if (mVisitTime == FULL_TIME)
+        {
+            for (GourmetMenu gourmetMenu : menuList)
+            {
+                gourmetMenu.visible = true;
+                gourmetMenu.orderCount = 0;
+            }
+        } else
+        {
+            for (GourmetMenu gourmetMenu : menuList)
+            {
+                gourmetMenu.visible = false;
+                gourmetMenu.orderCount = 0;
+
+                for (int operationTime : gourmetMenu.getOperationTimeList())
+                {
+                    if (operationTime == mVisitTime)
+                    {
+                        gourmetMenu.visible = true;
+
+                        if (mGourmetCart != null && mGourmetCart.orderTime == mVisitTime)
+                        {
+                            List<GourmetCartMenu> gourmetCartMenuList = mGourmetCart.getMenus();
+
+                            for (GourmetCartMenu gourmetCartMenu : gourmetCartMenuList)
+                            {
+                                if (gourmetCartMenu.index == gourmetMenu.index)
+                                {
+                                    gourmetMenu.orderCount = gourmetCartMenu.count;
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        getViewInterface().setMenus(menuList, SHOWN_MENU_COUNT);
     }
 
     private void showWishTooltip()
@@ -1540,6 +1733,8 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                     gourmetDetail.hasCoupon = hasCoupon;
 
                     setGourmetDetail(gourmetDetail);
+                    setOperationTimes(commonDateTime, mGourmetBookDateTime, gourmetDetail.getGourmetMenuList());
+                    setVisitTime(FULL_TIME);
 
                     return gourmetDetail;
                 }
@@ -1549,6 +1744,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             public void accept(@io.reactivex.annotations.NonNull GourmetDetail gourmetDetail) throws Exception
             {
                 notifyGourmetDetailChanged();
+                notifyOperationTimeChanged();
                 notifyWishChanged();
 
                 if (disposable != null)

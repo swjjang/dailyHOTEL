@@ -131,11 +131,35 @@
                     android:layout_height="78dp"
                     android:background="@color/white"/>
 
+                <ImageView
+                    android:id="@+id/timesTopLineView"
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/white"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:src="@color/default_line_cdcdcdd"/>
+
+                <HorizontalScrollView
+                    android:id="@+id/timesScrollView"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="@color/white"
+                    android:scrollbars="none">
+
+                    <RadioGroup
+                        android:id="@+id/timesRadioGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:orientation="horizontal"/>
+                </HorizontalScrollView>
+
                 <View
                     android:id="@+id/menuTopLineView"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/default_line_cf0f0f0"/>
+                    android:layout_height="12dp"
+                    android:background="@drawable/layerlist_divider"/>
 
                 <LinearLayout
                     android:id="@+id/menuLayout"

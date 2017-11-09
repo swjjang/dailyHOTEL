@@ -28,6 +28,11 @@ public class GourmetMenu
     private List<DetailImageInformation> mDetailImageInformationList;
     private List<String> mMenuDetailList;
 
+    // 멀티 메뉴
+    public boolean visible;
+    public int orderCount;
+    private List<Integer> mOperationTimeList;
+
     public GourmetMenu()
     {
     }
@@ -60,5 +65,15 @@ public class GourmetMenu
     public void setMenuDetailList(List<String> menuDetailList)
     {
         mMenuDetailList = menuDetailList;
+    }
+
+    public void setOperationTimeList(List<Integer> operationTimeList)
+    {
+        mOperationTimeList = operationTimeList;
+    }
+
+    public List<Integer> getOperationTimeList()
+    {
+        return mOperationTimeList;
     }
 }
