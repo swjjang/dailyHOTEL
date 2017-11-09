@@ -661,6 +661,7 @@ public class AppboyManager extends BaseAnalyticsManager
             appboyProperties.addProperty(AnalyticsManager.KeyType.CHECK_OUT_DATE, params.get(AnalyticsManager.KeyType.CHECK_OUT_DATE));
             appboyProperties.addProperty(AnalyticsManager.KeyType.USED_CREDITS, Integer.parseInt(params.get(AnalyticsManager.KeyType.USED_BOUNS)));
             appboyProperties.addProperty(AnalyticsManager.KeyType.COUPON_REDEEM, couponRedeem);
+            appboyProperties.addProperty(AnalyticsManager.KeyType.COUNTRY, params.get(AnalyticsManager.KeyType.COUNTRY));
 
             mAppboy.logCustomEvent(EventName.STAY_FIRST_PURCHASE_COMPLETED, appboyProperties);
 

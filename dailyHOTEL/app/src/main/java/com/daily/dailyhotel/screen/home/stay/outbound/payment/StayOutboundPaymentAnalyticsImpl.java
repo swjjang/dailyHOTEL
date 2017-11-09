@@ -137,6 +137,7 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
             params.put(AnalyticsManager.KeyType.DAILYCHOICE, "n");
             params.put(AnalyticsManager.KeyType.COUPON_CODE, AnalyticsManager.ValueType.EMPTY);
             params.put(AnalyticsManager.KeyType.USED_BOUNS, saleType == StayOutboundPaymentPresenter.BONUS ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.OVERSEAS);
 
             AnalyticsManager.getInstance(activity).purchaseCompleteStayOutbound(aggregationId, params);
         } catch (Exception e)
