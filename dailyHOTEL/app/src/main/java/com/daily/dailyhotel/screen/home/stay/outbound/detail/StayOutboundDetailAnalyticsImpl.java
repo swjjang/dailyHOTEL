@@ -154,7 +154,6 @@ public class StayOutboundDetailAnalyticsImpl implements StayOutboundDetailPresen
         params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, checkInDate);
         params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.OVERSEAS);
 
-        // TODO : 임시 지정 - Eric.Ann 확인 후 재 지정
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
             , AnalyticsManager.Action.BOOKING_CLICKED_OUTBOUND, label, params);
 

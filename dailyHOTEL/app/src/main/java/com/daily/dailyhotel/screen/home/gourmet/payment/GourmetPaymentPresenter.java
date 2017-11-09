@@ -103,6 +103,12 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
     UserSimpleInformation mUserSimpleInformation;
     private int mSaleType;
 
+    // ***************************************************************** //
+    // ************** 변수 선언시에 onSaveInstanceState 에 꼭 등록해야하는지 판단한다.
+    // ************** 클래스는 해당 내부 멤버 변수들이 onSaveInstance에 잘처리되고 있는지 확인한다.
+    // ***************************************************************** //
+
+
     public interface GourmetPaymentAnalyticsInterface extends BaseAnalyticsInterface
     {
         void setAnalyticsParam(GourmetPaymentAnalyticsParam analyticsParam);
