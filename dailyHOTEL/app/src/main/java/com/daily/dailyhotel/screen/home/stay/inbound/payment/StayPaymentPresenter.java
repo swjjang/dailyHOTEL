@@ -139,7 +139,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             , StayPayment stayPayment, boolean registerEasyCard, int saleType, Coupon coupon//
             , DailyBookingPaymentTypeView.PaymentType paymentType, UserSimpleInformation userSimpleInformation);
 
-        void onScreenPaymentCompleted(Activity activity, String aggregationId);
+        void onScreenPaymentCompleted(Activity activity, String aggregationId, boolean isOverseas);
 
         void onEventTransportationVisible(Activity activity, boolean visible);
 
@@ -1380,7 +1380,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
     {
         try
         {
-            mAnalytics.onScreenPaymentCompleted(getActivity(), aggregationId);
+            mAnalytics.onScreenPaymentCompleted(getActivity(), aggregationId, mOverseas);
         } catch (Exception e)
         {
             ExLog.e(e.toString());

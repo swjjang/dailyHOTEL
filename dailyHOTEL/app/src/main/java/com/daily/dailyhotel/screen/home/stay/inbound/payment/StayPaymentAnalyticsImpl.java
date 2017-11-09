@@ -208,7 +208,7 @@ public class StayPaymentAnalyticsImpl implements StayPaymentPresenter.StayPaymen
     }
 
     @Override
-    public void onScreenPaymentCompleted(Activity activity, String aggregationId)
+    public void onScreenPaymentCompleted(Activity activity, String aggregationId, boolean isOverseas)
     {
         if (activity == null)
         {
@@ -216,6 +216,7 @@ public class StayPaymentAnalyticsImpl implements StayPaymentPresenter.StayPaymen
         }
 
         mPaymentParamMap.put(AnalyticsManager.KeyType.AGGREGATION_ID, aggregationId);
+        mPaymentParamMap.put(AnalyticsManager.KeyType.COUNTRY, isOverseas == false ? AnalyticsManager.ValueType.DOMESTIC : AnalyticsManager.ValueType.OVERSEAS);
 
         AnalyticsManager.getInstance(activity).purchaseCompleteHotel(aggregationId, mPaymentParamMap);
     }
