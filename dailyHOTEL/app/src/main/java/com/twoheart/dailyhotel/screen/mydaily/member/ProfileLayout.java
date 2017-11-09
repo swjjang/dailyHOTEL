@@ -110,8 +110,9 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
         mValidDateRadioGroup = (RadioGroup) view.findViewById(R.id.privacyValidDateRadioGroup);
     }
 
-    public void updateUserInformation(String userType, String email, String name, String phone, String birthday, //
-                                      String referralCode, boolean isVerified, boolean isPhoneVerified, String verifiedDate)
+    public void updateUserInformation(String userType, String email, String name, String phone //
+        , String birthday, String referralCode, boolean isVerified, boolean isPhoneVerified //
+        , String verifiedDate, int privacyValidMonth)
     {
         if (Constants.DAILY_USER.equalsIgnoreCase(userType) == true)
         {
@@ -122,8 +123,8 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
         }
     }
 
-    private void updateDailyUserInformation(String email, String name, String phone, String birthday, //
-                                            String referralCode, boolean isPhoneVerified, String verifiedDate)
+    private void updateDailyUserInformation(String email, String name, String phone, String birthday //
+        , String referralCode, boolean isPhoneVerified, String verifiedDate, int privacyValidMonth)
     {
         // 이메일
         if (DailyTextUtils.isTextEmpty(email) == true)
@@ -189,6 +190,26 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
         mPasswordLayout.setOnClickListener(this);
 
         mReferralTextView.setText(referralCode);
+
+        mValidDateRadioGroup.setOnCheckedChangeListener(null);
+
+        int buttonResId;
+        switch (privacyValidMonth)
+        {
+            case 60:
+                buttonResId = R.id.yearRadioButton5;
+                break;
+            case 36:
+                buttonResId = R.id.yearRadioButton3;
+                break;
+            case 12:
+            default:
+                buttonResId = R.id.yearRadioButton1;
+                break;
+        }
+
+        mValidDateRadioGroup.check(buttonResId);
+        mValidDateRadioGroup.setOnCheckedChangeListener(mOnCheckedChangeListener);
     }
 
     private void updateSocialUserInformation(String userType, String email, String name, String phone, String birthday, String referralCode)
@@ -303,28 +324,28 @@ public class ProfileLayout extends BaseLayout implements OnClickListener
         }
     }
 
-//    @Override
-//    public void onCheckedChanged(RadioGroup group, int checkedId)
-//    {
-//        int year;
-//        switch (checkedId)
-//        {
-//            case R.id.yearRadioButton3:
-//                year = 3;
-//                break;
-//
-//            case R.id.yearRadioButton5:
-//                year = 5;
-//                break;
-//
-//            case R.id.yearRadioButton1:
-//            default:
-//                year = 1;
-//                break;
-//        }
-//
-//        ExLog.d("getCheckedRadioButtonId : " + mValidDateRadioGroup.getCheckedRadioButtonId() + " , year : " + year);
-//
-//        ((OnEventListener) mOnEventListener).doValidDateChange(year);
-//    }
+    //    @Override
+    //    public void onCheckedChanged(RadioGroup group, int checkedId)
+    //    {
+    //        int year;
+    //        switch (checkedId)
+    //        {
+    //            case R.id.yearRadioButton3:
+    //                year = 3;
+    //                break;
+    //
+    //            case R.id.yearRadioButton5:
+    //                year = 5;
+    //                break;
+    //
+    //            case R.id.yearRadioButton1:
+    //            default:
+    //                year = 1;
+    //                break;
+    //        }
+    //
+    //        ExLog.d("getCheckedRadioButtonId : " + mValidDateRadioGroup.getCheckedRadioButtonId() + " , year : " + year);
+    //
+    //        ((OnEventListener) mOnEventListener).doValidDateChange(year);
+    //    }
 }

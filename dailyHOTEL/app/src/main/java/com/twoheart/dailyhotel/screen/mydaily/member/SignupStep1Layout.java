@@ -54,7 +54,8 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
 
     public interface OnEventListener extends OnBaseEventListener
     {
-        void onValidation(String email, String name, String password1, String confirmPassword, String recommender, String birthday, boolean isBenefit);
+        void onValidation(String email, String name, String password1, String confirmPassword //
+            , String recommender, String birthday, boolean isBenefit, int privacyValidMonth);
 
         void showTermOfService();
 
@@ -356,26 +357,27 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
             }
         }
 
-        int year;
+        int month;
         switch (mValidDateRadioGroup.getCheckedRadioButtonId())
         {
             case R.id.yearRadioButton3:
-                year = 3;
+                month = 36;
                 break;
 
             case R.id.yearRadioButton5:
-                year = 5;
+                month = 60;
                 break;
 
             case R.id.yearRadioButton1:
             default:
-                year = 1;
+                month = 12;
                 break;
         }
 
-        ExLog.d("getCheckedRadioButtonId : " + mValidDateRadioGroup.getCheckedRadioButtonId() + " , year : " + year);
+        ExLog.d("getCheckedRadioButtonId : " + mValidDateRadioGroup.getCheckedRadioButtonId() + " , month : " + month);
 
-        ((OnEventListener) mOnEventListener).onValidation(emailText, nameText, passwordText, confirmPasswordText, recommender, birthday, mBenefitCheckBox.isChecked());
+        ((OnEventListener) mOnEventListener).onValidation(emailText, nameText, passwordText //
+            , confirmPasswordText, recommender, birthday, mBenefitCheckBox.isChecked(), month);
     }
 
     @Override

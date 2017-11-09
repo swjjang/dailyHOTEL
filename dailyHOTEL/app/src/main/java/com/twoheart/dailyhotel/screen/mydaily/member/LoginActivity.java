@@ -964,6 +964,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                         {
                             mStoreParams.put("user_idx", userIndex);
                             mStoreParams.put("user_type", userType);
+                            mStoreParams.put("dataRetentionInMonth", "12"); // 기본 저장기간 1년으로 설정
                         } else
                         {
                             AnalyticsManager.getInstance(LoginActivity.this).recordScreen(LoginActivity.this, Screen.MENU_LOGIN_COMPLETE, null);
