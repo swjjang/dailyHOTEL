@@ -3,7 +3,6 @@ package com.daily.dailyhotel.screen.mydaily.reward.history;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
@@ -14,7 +13,6 @@ import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.RewardHistory;
 import com.daily.dailyhotel.entity.RewardHistoryDetail;
 import com.daily.dailyhotel.repository.remote.RewardRemoteImpl;
-import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
@@ -217,18 +215,28 @@ public class RewardHistoryPresenter extends BaseExceptionPresenter<RewardHistory
     @Override
     public void onViewReservationClick(RewardHistory rewardHistory)
     {
-        if (lock() == true)
+        if (lock() == true || rewardHistory == null)
         {
             return;
         }
 
-        String deepLink = "dailyhotel://dailyhotel.co.kr?vc=20&v=bd&agi=" + rewardHistory.aggregationId + "&pt=stay";
+        switch (rewardHistory.serviceType)
+        {
+            case GOURMET:
+                startActivity(DailyInternalDeepLink.getGourmetBookingDetailScreenLink(getActivity(), rewardHistory.aggregationId));
+                break;
 
-        Intent intent = new Intent(getActivity(), LauncherActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setData(Uri.parse(deepLink));
+            case HOTEL:
+                startActivity(DailyInternalDeepLink.getStayBookingDetailScreenLink(getActivity(), rewardHistory.aggregationId));
+                break;
 
-        startActivity(intent);
+            case OUTBOUND:
+                startActivity(DailyInternalDeepLink.getStayOutboundBookingDetailScreenLink(getActivity(), rewardHistory.aggregationId));
+                break;
+
+            default:
+                return;
+        }
 
         mAnalytics.onViewReservationClick(getActivity(), rewardHistory.aggregationId);
     }
