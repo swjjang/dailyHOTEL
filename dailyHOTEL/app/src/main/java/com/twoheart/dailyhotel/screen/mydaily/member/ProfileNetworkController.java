@@ -12,6 +12,8 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import org.json.JSONObject;
 
 import java.text.ParseException;
+import java.util.Collections;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -21,9 +23,11 @@ public class ProfileNetworkController extends BaseNetworkController
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
         void onUserProfile(String userIndex, String email, String name, String phoneNumber, String birthday//
-            , String referralCode, boolean isVerified, boolean isPhoneVerified, String verifiedDate);
+            , String referralCode, boolean isVerified, boolean isPhoneVerified, String verifiedDate, int privacyValidMonth);
 
         void onUserProfileBenefit(boolean isExceedBonus);
+
+        void onUserPrivacyValidMonth(boolean isSuccess, String errorMessage);
     }
 
     public ProfileNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -39,6 +43,12 @@ public class ProfileNetworkController extends BaseNetworkController
     public void requestUserProfileBenefit()
     {
         DailyMobileAPI.getInstance(mContext).requestUserProfileBenefit(mNetworkTag, mUserInProfileBenefitCallback);
+    }
+
+    public void requestUserPrivacyValidMonth(int month)
+    {
+        Map<String, String> params = Collections.singletonMap("dataRetentionInMonth", Integer.toString(month));
+        DailyMobileAPI.getInstance(mContext).requestUserInformationUpdate(mNetworkTag, params, mDailyUserPrivacyValidMonthCallback);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -99,8 +109,11 @@ public class ProfileNetworkController extends BaseNetworkController
                                 + " , " + Base64.encodeToString(userIndex.getBytes(), Base64.NO_WRAP)));
                         }
 
+                        // TODO : dataRetentionInMonth 임시 저장 값
+                        int privacyValidMonth = jsonObject.getInt("dataRetentionInMonth");
+
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserProfile(userIndex//
-                            , email, name, phone, birthday, referralCode, isVerified, isPhoneVerified, verifiedDate);
+                            , email, name, phone, birthday, referralCode, isVerified, isPhoneVerified, verifiedDate, privacyValidMonth);
                     } else
                     {
                         String msg = responseJSONObject.getString("msg");
@@ -151,6 +164,44 @@ public class ProfileNetworkController extends BaseNetworkController
                     {
                         String msg = responseJSONObject.getString("msg");
                         mOnNetworkControllerListener.onErrorToastMessage(msg);
+                    }
+                } catch (Exception e)
+                {
+                    mOnNetworkControllerListener.onError(e);
+                }
+            } else
+            {
+                mOnNetworkControllerListener.onErrorResponse(call, response);
+            }
+        }
+
+        @Override
+        public void onFailure(Call<JSONObject> call, Throwable t)
+        {
+            mOnNetworkControllerListener.onError(call, t, false);
+        }
+    };
+
+    private retrofit2.Callback mDailyUserPrivacyValidMonthCallback = new retrofit2.Callback<JSONObject>()
+    {
+        @Override
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                try
+                {
+                    JSONObject responseJSONObject = response.body();
+
+                    int msgCode = responseJSONObject.getInt("msgCode");
+
+                    if (msgCode == 100)
+                    {
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserPrivacyValidMonth(true, null);
+                    } else
+                    {
+                        String msg = responseJSONObject.getString("msg");
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onUserPrivacyValidMonth(false, msg);
                     }
                 } catch (Exception e)
                 {

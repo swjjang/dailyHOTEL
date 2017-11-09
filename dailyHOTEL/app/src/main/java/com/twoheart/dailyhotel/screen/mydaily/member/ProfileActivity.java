@@ -386,9 +386,14 @@ public class ProfileActivity extends BaseActivity
         }
 
         @Override
-        public void doValidDateChange(int year)
+        public void doValidMonthChange(int month)
         {
-            DailyToast.showToast(ProfileActivity.this, R.string.message_copy_recommender_code, Toast.LENGTH_SHORT);
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            mNetworkController.requestUserPrivacyValidMonth(month);
         }
 
         @Override
@@ -402,12 +407,14 @@ public class ProfileActivity extends BaseActivity
     {
         @Override
         public void onUserProfile(String userIndex, String email, String name, String phoneNumber, String birthday//
-            , String referralCode, boolean isVerified, boolean isPhoneVerified, String verifiedDate)
+            , String referralCode, boolean isVerified, boolean isPhoneVerified, String verifiedDate, int privacyValidMonth)
         {
             mUserEmail = email;
             String userType = DailyUserPreference.getInstance(ProfileActivity.this).getType();
 
-            mProfileLayout.updateUserInformation(userType, email, name, Util.addHyphenMobileNumber(ProfileActivity.this, phoneNumber), birthday, referralCode, isVerified, isPhoneVerified, verifiedDate);
+            mProfileLayout.updateUserInformation(userType, email, name //
+                , Util.addHyphenMobileNumber(ProfileActivity.this, phoneNumber), birthday //
+                , referralCode, isVerified, isPhoneVerified, verifiedDate, privacyValidMonth);
 
             if (isVerified == true)
             {
@@ -435,6 +442,23 @@ public class ProfileActivity extends BaseActivity
             AnalyticsManager.getInstance(ProfileActivity.this).setExceedBonus(isExceedBonus);
 
             unLockUI();
+        }
+
+        @Override
+        public void onUserPrivacyValidMonth(boolean isSuccess, String errorMessage)
+        {
+            unLockUI();
+
+            String message;
+
+            if (isSuccess == false)
+            {
+                message = DailyTextUtils.isTextEmpty(errorMessage) == false ? errorMessage : "실패하였습니다";
+            } else {
+                message = getString(R.string.message_copy_recommender_code);
+            }
+
+            DailyToast.showToast(ProfileActivity.this, message, Toast.LENGTH_SHORT);
         }
 
         @Override
