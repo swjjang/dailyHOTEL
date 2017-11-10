@@ -30,7 +30,11 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -49,8 +53,6 @@ public abstract class CollectionBaseActivity extends BaseActivity
     protected int mListCountByLongPress;
     protected View mViewByLongPress;
     protected int mWishPosition;
-
-    private Handler mHandler = new Handler();
 
     protected abstract void requestRecommendationPlaceList(PlaceBookingDay placeBookingDay);
 
@@ -146,14 +148,14 @@ public abstract class CollectionBaseActivity extends BaseActivity
 
             mCollectionBaseLayout.setListScrollTop();
 
-            mHandler.postDelayed(new Runnable()
+            Single.just(mIsUsedMultiTransition).delaySubscription(300, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
             {
                 @Override
-                public void run()
+                public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
                 {
                     CollectionBaseActivity.super.onBackPressed();
                 }
-            }, 300);
+            });
 
             return;
         }
