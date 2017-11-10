@@ -865,7 +865,7 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
 
         if (mRewardInformation.activeReward == true)
         {
-            getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage()//
+            getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerCardTitleMessage()//
                 , mRewardInformation.rewardStickerCount, mRewardDescriptionTitle, mRewardDescriptionMessage);
         }
     }

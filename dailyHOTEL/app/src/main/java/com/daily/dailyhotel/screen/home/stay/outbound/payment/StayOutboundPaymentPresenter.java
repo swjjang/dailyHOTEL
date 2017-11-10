@@ -1844,7 +1844,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
         if (mSaleType == STICKER)
         {
-            getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage()//
+            getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerCardTitleMessage()//
                 , stayOutboundPayment.rewardStickerCount, null, getString(R.string.message_payment_reward_sticker_deposit_after_checkout, stayOutboundPayment.providableRewardStickerCount));
         } else
         {
@@ -1858,7 +1858,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 spannableString.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getMediumTypeface()),//
                     startIndex, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage()//
+                getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerCardTitleMessage()//
                     , stayOutboundPayment.rewardStickerCount, null, spannableString);
             }
         }

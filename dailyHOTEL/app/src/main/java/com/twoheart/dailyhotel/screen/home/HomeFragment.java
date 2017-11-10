@@ -1513,7 +1513,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         {
                             String descriptionText = DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigRewardStickerMemberMessage(rewardInformation.rewardStickerCount);
 
-                            mHomeLayout.setMemberRewardData(DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigRewardStickerTitleMessage()//
+                            mHomeLayout.setMemberRewardData(DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigRewardStickerCardTitleMessage()//
                                 , descriptionText, getString(R.string.label_reward_go_reward), rewardInformation.rewardStickerCount);
                         }
                     }
@@ -1541,7 +1541,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                                 ? DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigRewardStickerNonMemberCampaignMessage()//
                                 : DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigRewardStickerNonMemberDefaultMessage();
 
-                            mHomeLayout.setNonMemberRewardData(DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigRewardStickerTitleMessage()//
+                            mHomeLayout.setNonMemberRewardData(DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigRewardStickerCardTitleMessage()//
                                 , descriptionText, getString(R.string.label_reward_login)//
                                 , DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigRewardStickerNonMemberCampaignFreeNights());
 

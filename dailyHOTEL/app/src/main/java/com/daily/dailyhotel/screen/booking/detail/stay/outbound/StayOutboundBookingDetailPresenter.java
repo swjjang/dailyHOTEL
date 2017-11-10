@@ -799,7 +799,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
 
             if (mStayOutboundBookingDetail.activeReward == true)
             {
-                getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage(), mStayOutboundBookingDetail.rewardStickerCount);
+                getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerCardTitleMessage(), mStayOutboundBookingDetail.rewardStickerCount);
             }
         } catch (Exception e)
         {

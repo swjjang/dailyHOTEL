@@ -744,8 +744,11 @@ public class DailyRemoteConfig
                     ExLog.d("pinkred - reward sticker " + jsonObject);
                 }
 
-                String titleMessage = jsonObject.getString("titleMessage");
-                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerTitleMessage(titleMessage);
+                String cardTitleMessage = jsonObject.getString("cardTitleMessage");
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerCardTitleMessage(cardTitleMessage);
+
+                String rewardTitleMessage = jsonObject.getString("rewardTitleMessage");
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerRewardTitleMessage(rewardTitleMessage);
 
                 boolean campaignEnabled = jsonObject.getBoolean("campaignEnabled");
                 DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerCampaignEnabled(campaignEnabled);
