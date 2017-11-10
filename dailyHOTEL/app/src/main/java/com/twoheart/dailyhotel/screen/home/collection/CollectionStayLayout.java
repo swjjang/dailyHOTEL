@@ -40,11 +40,18 @@ public class CollectionStayLayout extends CollectionBaseLayout
             return;
         }
 
-        CollectionStayAdapter.StayViewHolder stayViewHolder = (CollectionStayAdapter.StayViewHolder) mRecyclerView.findViewHolderForAdapterPosition(position);
-
-        if (stayViewHolder != null)
+        mRecyclerView.post(new Runnable()
         {
-            stayViewHolder.stayCardView.setWish(wish);
-        }
+            @Override
+            public void run()
+            {
+                CollectionStayAdapter.StayViewHolder stayViewHolder = (CollectionStayAdapter.StayViewHolder) mRecyclerView.findViewHolderForAdapterPosition(position);
+
+                if (stayViewHolder != null)
+                {
+                    stayViewHolder.stayCardView.setWish(wish);
+                }
+            }
+        });
     }
 }

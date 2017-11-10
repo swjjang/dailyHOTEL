@@ -42,11 +42,18 @@ public class CollectionGourmetLayout extends CollectionBaseLayout
             return;
         }
 
-        CollectionGourmetAdapter.GourmetViewHolder gourmetViewHolder = (CollectionGourmetAdapter.GourmetViewHolder) mRecyclerView.findViewHolderForAdapterPosition(position);
-
-        if (gourmetViewHolder != null)
+        mRecyclerView.post(new Runnable()
         {
-            gourmetViewHolder.gourmetCardView.setWish(wish);
-        }
+            @Override
+            public void run()
+            {
+                CollectionGourmetAdapter.GourmetViewHolder gourmetViewHolder = (CollectionGourmetAdapter.GourmetViewHolder) mRecyclerView.findViewHolderForAdapterPosition(position);
+
+                if (gourmetViewHolder != null)
+                {
+                    gourmetViewHolder.gourmetCardView.setWish(wish);
+                }
+            }
+        });
     }
 }

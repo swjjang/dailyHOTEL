@@ -62,12 +62,19 @@ public class StayListLayout extends PlaceListLayout
             return;
         }
 
-        StayListAdapter.StayViewHolder stayViewHolder = (StayListAdapter.StayViewHolder) mPlaceRecyclerView.findViewHolderForAdapterPosition(position);
-
-        if (stayViewHolder != null)
+        mPlaceRecyclerView.post(new Runnable()
         {
-            stayViewHolder.stayCardView.setWish(wish);
-        }
+            @Override
+            public void run()
+            {
+                StayListAdapter.StayViewHolder stayViewHolder = (StayListAdapter.StayViewHolder) mPlaceRecyclerView.findViewHolderForAdapterPosition(position);
+
+                if (stayViewHolder != null)
+                {
+                    stayViewHolder.stayCardView.setWish(wish);
+                }
+            }
+        });
     }
 
     @Override

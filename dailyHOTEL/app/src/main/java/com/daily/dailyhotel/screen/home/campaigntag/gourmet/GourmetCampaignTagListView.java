@@ -275,13 +275,19 @@ public class GourmetCampaignTagListView //
             return;
         }
 
-        GourmetCampaignListAdapter.GourmetViewHolder gourmetViewHolder = (GourmetCampaignListAdapter.GourmetViewHolder) getViewDataBinding().recyclerView.findViewHolderForAdapterPosition(position);
-
-        if (gourmetViewHolder != null)
+        getViewDataBinding().recyclerView.post(new Runnable()
         {
-            gourmetViewHolder.gourmetCardView.setWish(wish);
-        }
+            @Override
+            public void run()
+            {
+                GourmetCampaignListAdapter.GourmetViewHolder gourmetViewHolder = (GourmetCampaignListAdapter.GourmetViewHolder) getViewDataBinding().recyclerView.findViewHolderForAdapterPosition(position);
 
+                if (gourmetViewHolder != null)
+                {
+                    gourmetViewHolder.gourmetCardView.setWish(wish);
+                }
+            }
+        });
     }
 
     public interface OnEventListener extends OnBaseEventListener
