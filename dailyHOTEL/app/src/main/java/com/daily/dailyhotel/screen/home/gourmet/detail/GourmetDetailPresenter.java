@@ -1585,16 +1585,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
                         if (mGourmetCart != null && mGourmetCart.visitTime == mVisitTime)
                         {
-                            List<GourmetCartMenu> gourmetCartMenuList = mGourmetCart.getMenus();
-
-                            for (GourmetCartMenu gourmetCartMenu : gourmetCartMenuList)
-                            {
-                                if (gourmetCartMenu.index == gourmetMenu.index)
-                                {
-                                    gourmetMenu.orderCount = gourmetCartMenu.count;
-                                    break;
-                                }
-                            }
+                            gourmetMenu.orderCount = mGourmetCart.getCount(gourmetMenu.index);
                         }
                         break;
                     }

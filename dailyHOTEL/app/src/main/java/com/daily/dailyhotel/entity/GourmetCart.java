@@ -3,8 +3,8 @@ package com.daily.dailyhotel.entity;
 
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by sheldon
@@ -18,36 +18,51 @@ public class GourmetCart
     public String gourmetName;
     public String visitDateTime; // ISO-8601, 방문 날짜
 
-    private List<GourmetCartMenu> mOrderMenuList = new ArrayList<>();
+    private Map<Integer, GourmetCartMenu> mOrderMenuMap = new HashMap<>();
 
-    public List<GourmetCartMenu> getMenus()
+    public Map<Integer, GourmetCartMenu> getMenus()
     {
-        return mOrderMenuList;
+        return mOrderMenuMap;
     }
 
-    public void addMenu(GourmetCartMenu menu)
+    public void plus(GourmetCartMenu gourmetCartMenu)
     {
-        if (menu == null)
+        if (gourmetCartMenu == null)
         {
             return;
         }
 
-        mOrderMenuList.add(menu);
+        if (mOrderMenuMap.containsKey(gourmetCartMenu.index) == true)
+        {
+            mOrderMenuMap.get(gourmetCartMenu.index).count++;
+        } else
+        {
+            mOrderMenuMap.put(gourmetCartMenu.index, gourmetCartMenu);
+        }
     }
 
-    public void removeMenu(int index)
+    public void plus(GourmetMenu gourmetMenu)
     {
-        if (index < 0)
+        if (gourmetMenu == null)
         {
             return;
         }
 
-        for (GourmetCartMenu menu : mOrderMenuList)
+        plus(getGourmetCartMenu(gourmetMenu));
+    }
+
+    public void minus(int menuIndex)
+    {
+        if (menuIndex < 0)
         {
-            if (menu.index == index)
+            return;
+        }
+
+        if (mOrderMenuMap.containsKey(menuIndex) == true)
+        {
+            if (--mOrderMenuMap.get(menuIndex).count <= 0)
             {
-                mOrderMenuList.remove(menu);
-                break;
+                mOrderMenuMap.remove(menuIndex);
             }
         }
     }
@@ -64,18 +79,45 @@ public class GourmetCart
         this.visitTime = visitTime;
     }
 
-    public void removeAllMenu()
+    public void clear()
     {
-        mOrderMenuList.clear();
+        visitTime = 0;
+        gourmetIndex = 0;
+        gourmetName = null;
+        visitDateTime = null;
+
+        mOrderMenuMap.clear();
     }
 
-    public int getMenuCount()
+    public int getCount()
     {
-        return mOrderMenuList.size();
+        return mOrderMenuMap.size();
+    }
+
+    public int getCount(int menuIndex)
+    {
+        return (menuIndex > 0 && mOrderMenuMap.containsKey(menuIndex)) ? mOrderMenuMap.get(menuIndex).count : 0;
     }
 
     public boolean equalsDay(String visitDay) throws Exception
     {
         return DailyCalendar.compareDateDay(visitDateTime, visitDay) == 0;
+    }
+
+    private GourmetCartMenu getGourmetCartMenu(GourmetMenu gourmetMenu)
+    {
+        if (gourmetMenu == null)
+        {
+            return null;
+        }
+
+        GourmetCartMenu gourmetCartMenu = new GourmetCartMenu();
+
+        gourmetCartMenu.index = gourmetMenu.index;
+        gourmetCartMenu.price = gourmetMenu.price;
+        gourmetCartMenu.discountPrice = gourmetMenu.discountPrice;
+        gourmetCartMenu.name = gourmetMenu.name;
+
+        return gourmetCartMenu;
     }
 }

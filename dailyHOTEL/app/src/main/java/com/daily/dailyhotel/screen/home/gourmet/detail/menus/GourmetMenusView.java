@@ -548,7 +548,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
             return;
         }
 
-
+        mGourmetMenusAdapter.setMenuOrderCount(getViewDataBinding().recyclerView.findViewHolderForAdapterPosition(position), position, orderCount);
     }
 
     @Override
