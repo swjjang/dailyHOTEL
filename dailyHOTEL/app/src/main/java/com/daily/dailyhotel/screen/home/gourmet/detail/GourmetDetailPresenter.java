@@ -1225,7 +1225,8 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             return;
         }
 
-        startActivityForResult(GourmetMenusActivity.newInstance(getActivity(), mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), mGourmetDetail.index, mGourmetDetail.name, mGourmetDetail.getGourmetMenuList(), position, (ArrayList) mOperationTimeList, mVisitTime)//
+        startActivityForResult(GourmetMenusActivity.newInstance(getActivity(), mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , mGourmetDetail.index, mGourmetDetail.name, mGourmetDetail.getGourmetMenuList(), position, (ArrayList) mOperationTimeList, mVisitTime)//
             , GourmetDetailActivity.REQUEST_CODE_MENU);
 
         try

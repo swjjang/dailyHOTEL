@@ -108,17 +108,23 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
     @Override
     public void setToolbarTitle(String title)
     {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().operationTimeTextView.setText(title);
     }
 
     @Override
-    public void setSubTitle(String text)
+    public void setMenuIndicator(int position, int totalCount)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        getViewDataBinding().menuIndicatorTextView.setText(text);
+        getViewDataBinding().menuIndicatorTextView.setText(String.format(Locale.KOREA, "%d / %d", position, totalCount));
     }
 
     @Override
@@ -319,7 +325,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
 
             GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
             layoutParams.width = ScreenUtils.dpToPx(getContext(), 56);
-            layoutParams.height = ScreenUtils.dpToPx(getContext(), 30);
+            layoutParams.height = 1;
             layoutParams.leftMargin = ScreenUtils.dpToPx(getContext(), 5);
             layoutParams.rightMargin = ScreenUtils.dpToPx(getContext(), 5);
             layoutParams.bottomMargin = ScreenUtils.dpToPx(getContext(), 10);
@@ -399,11 +405,11 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                 }
 
                 float value = (float) animation.getAnimatedValue();
-                float vector = value / getViewDataBinding().operationTimesGridLayout.getHeight();
+                float vector = 1.0f - (value / getViewDataBinding().operationTimesGridLayout.getHeight());
                 float rotation = 180.0f * vector;
 
                 getViewDataBinding().arrowImageView.setRotation(rotation);
-                getViewDataBinding().operationTimesBackgroundView.setAlpha(1.0f - Math.abs(vector));
+                getViewDataBinding().operationTimesBackgroundView.setAlpha(vector);
             }
         });
 
@@ -418,6 +424,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                     public void onAnimationStart(Animator animation)
                     {
                         getViewDataBinding().operationTimesGridLayout.setVisibility(View.VISIBLE);
+                        getViewDataBinding().operationTimesBackgroundView.setAlpha(0.0f);
                         getViewDataBinding().operationTimesBackgroundView.setVisibility(View.VISIBLE);
                     }
 
@@ -478,11 +485,11 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                 }
 
                 float value = (float) animation.getAnimatedValue();
-                float vector = value / getViewDataBinding().operationTimesGridLayout.getHeight();
+                float vector = 1.0f - Math.abs(value / getViewDataBinding().operationTimesGridLayout.getHeight());
                 float rotation = 180.0f * vector;
 
                 getViewDataBinding().arrowImageView.setRotation(rotation);
-                getViewDataBinding().operationTimesBackgroundView.setAlpha(1.0f - Math.abs(vector));
+                getViewDataBinding().operationTimesBackgroundView.setAlpha(vector);
             }
         });
 
@@ -590,6 +597,27 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
             GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
             layoutParams.width = ScreenUtils.dpToPx(getContext(), 56);
             layoutParams.height = ScreenUtils.dpToPx(getContext(), 30);
+            layoutParams.leftMargin = ScreenUtils.dpToPx(getContext(), 5);
+            layoutParams.rightMargin = ScreenUtils.dpToPx(getContext(), 5);
+            layoutParams.bottomMargin = ScreenUtils.dpToPx(getContext(), 10);
+            layoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f);
+
+            dataBinding.timeGridLayout.addView(dailyTextView, layoutParams);
+        }
+
+        // 빈공간 채우기
+        int columnCount = dataBinding.timeGridLayout.getColumnCount();
+        int size = (operationTimeList.size() + 1) % columnCount;
+        size = size > 0 ? columnCount - size : 0;
+
+        for (int i = 0; i < size; i++)
+        {
+            DailyTextView dailyTextView = new DailyTextView(getContext());
+            dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
+
+            GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
+            layoutParams.width = ScreenUtils.dpToPx(getContext(), 56);
+            layoutParams.height = 1;
             layoutParams.leftMargin = ScreenUtils.dpToPx(getContext(), 5);
             layoutParams.rightMargin = ScreenUtils.dpToPx(getContext(), 5);
             layoutParams.bottomMargin = ScreenUtils.dpToPx(getContext(), 10);

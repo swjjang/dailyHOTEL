@@ -114,6 +114,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         }
 
         mGourmetMenuList = new ArrayList<>();
+        mGourmetMenuVisibleList = new ArrayList<>();
 
         for (GourmetMenuParcel gourmetMenuParcel : gourmetMenuParcelList)
         {
@@ -136,9 +137,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             getViewInterface().setGuideVisible(true);
         }
 
-        getViewInterface().setGourmetMenus(mGourmetMenuList, mPosition);
-
-        onScrolled(mPosition, false);
+        setToolbarTitle(mVisitTime);
     }
 
     @Override
@@ -207,6 +206,35 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         {
             return;
         }
+
+        // 카트 데이터를 받는다.
+        //        addCompositeDisposable(mGourmetCartImpl.getGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetCart>()
+        //        {
+        //            @Override
+        //            public void accept(GourmetCart gourmetCart) throws Exception
+        //            {
+        //                mGourmetCart = gourmetCart;
+        //
+        //                notifyOperationTimeChanged();
+        //                getViewInterface().setOperationTimes(mOperationTimeList);
+        //
+        //                onScrolled(mPosition, false);
+        //            }
+        //        }, new Consumer<Throwable>()
+        //        {
+        //            @Override
+        //            public void accept(Throwable throwable) throws Exception
+        //            {
+        mGourmetCart = new GourmetCart();
+
+        getViewInterface().setOperationTimes(mOperationTimeList);
+
+        notifyOperationTimeChanged();
+
+
+        onScrolled(mPosition, false);
+        //            }
+        //        }));
     }
 
     @Override
@@ -278,7 +306,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 
         mCenterPosition = position;
 
-        getViewInterface().setSubTitle(String.format(Locale.KOREA, "%d / %d", position + 1, mGourmetMenuList.size()));
+        getViewInterface().setMenuIndicator(position + 1, mGourmetMenuVisibleList.size());
 
         if (real == true)
         {
@@ -330,6 +358,8 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
                 @Override
                 public void accept(Boolean aBoolean) throws Exception
                 {
+                    setToolbarTitle(mVisitTime);
+
                     unLockAll();
                 }
             }, new Consumer<Throwable>()
@@ -343,6 +373,8 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         } else
         {
             mShowOperationTimeView = true;
+
+            setToolbarTitle(getString(R.string.label_gourmet_product_detail_view_operation_time_list));
 
             addCompositeDisposable(getViewInterface().showOperationTimes(mVisitTime).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
             {
@@ -383,6 +415,8 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             @Override
             public void accept(Boolean aBoolean) throws Exception
             {
+                setToolbarTitle(mVisitTime);
+
                 unLockAll();
             }
         }, new Consumer<Throwable>()
@@ -408,6 +442,8 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             @Override
             public void accept(Boolean aBoolean) throws Exception
             {
+                setToolbarTitle(mVisitTime);
+
                 unLockAll();
             }
         }, new Consumer<Throwable>()
@@ -479,6 +515,22 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
     public void onMenuOderCountMinusClick(int position)
     {
 
+    }
+
+    private void setToolbarTitle(String text)
+    {
+        getViewInterface().setToolbarTitle(text);
+    }
+
+    private void setToolbarTitle(int visitTime)
+    {
+        if (visitTime == GourmetDetailPresenter.FULL_TIME)
+        {
+            getViewInterface().setToolbarTitle(getString(R.string.label_gourmet_product_detail_operation_time_list));
+        } else
+        {
+            getViewInterface().setToolbarTitle(String.format(Locale.KOREA, "%02d:%02d ", visitTime / 100, visitTime % 100) + getString(R.string.label_menu));
+        }
     }
 
     private void setGourmetBookDateTime(String visitDateTime)
@@ -578,6 +630,6 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         }
 
         getViewInterface().setGourmetMenus(mGourmetMenuVisibleList, mPosition);
-        getViewInterface().setSubTitle(String.format(Locale.KOREA, "%d / %d", mPosition + 1, mGourmetMenuVisibleList.size()));
+        getViewInterface().setMenuIndicator(mPosition + 1, mGourmetMenuVisibleList.size());
     }
 }

@@ -12,7 +12,7 @@ import io.reactivex.Observable;
 
 public interface GourmetMenusInterface extends BaseDialogViewInterface
 {
-    void setSubTitle(String text);
+    void setMenuIndicator(int position, int totalCount);
 
     void setGourmetMenus(List<GourmetMenu> gourmetMenuList, int position);
 
