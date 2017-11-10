@@ -288,12 +288,19 @@ public class StayCampaignTagListView //
             return;
         }
 
-        StayCampaignListAdapter.StayViewHolder stayViewHolder = (StayCampaignListAdapter.StayViewHolder) getViewDataBinding().recyclerView.findViewHolderForAdapterPosition(position);
-
-        if (stayViewHolder != null)
+        getViewDataBinding().recyclerView.post(new Runnable()
         {
-            stayViewHolder.stayCardView.setWish(wish);
-        }
+            @Override
+            public void run()
+            {
+                StayCampaignListAdapter.StayViewHolder stayViewHolder = (StayCampaignListAdapter.StayViewHolder) getViewDataBinding().recyclerView.findViewHolderForAdapterPosition(position);
+
+                if (stayViewHolder != null)
+                {
+                    stayViewHolder.stayCardView.setWish(wish);
+                }
+            }
+        });
     }
 
     public interface OnEventListener extends OnBaseEventListener

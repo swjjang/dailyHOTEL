@@ -33,12 +33,19 @@ public class RecentStayListLayout extends RecentPlacesListLayout
             return;
         }
 
-        RecentStayListAdapter.StayInboundViewHolder stayViewHolder = (RecentStayListAdapter.StayInboundViewHolder) mRecyclerView.findViewHolderForAdapterPosition(position);
-
-        if (stayViewHolder != null)
+        mRecyclerView.post(new Runnable()
         {
-            stayViewHolder.stayCardView.setWish(wish);
-        }
+            @Override
+            public void run()
+            {
+                RecentStayListAdapter.StayInboundViewHolder stayViewHolder = (RecentStayListAdapter.StayInboundViewHolder) mRecyclerView.findViewHolderForAdapterPosition(position);
+
+                if (stayViewHolder != null)
+                {
+                    stayViewHolder.stayCardView.setWish(wish);
+                }
+            }
+        });
     }
 
     @Override
