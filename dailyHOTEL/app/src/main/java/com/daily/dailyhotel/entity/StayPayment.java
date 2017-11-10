@@ -1,6 +1,6 @@
 package com.daily.dailyhotel.entity;
 
-public class StayPayment
+public class StayPayment extends Configurations
 {
     public static final String VISIT_TYPE_NONE = "NONE"; // 아무것도 표시하지 않음
     public static final String VISIT_TYPE_PARKING = "PARKING"; // 도보/주차 표시
@@ -17,7 +17,6 @@ public class StayPayment
 
     // reward
     public boolean provideRewardSticker;
-    public boolean activeReward;
     public int rewardStickerCount;
     public int providableRewardStickerCount;
 

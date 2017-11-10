@@ -54,6 +54,9 @@ public class StayOutboundDetailData
     @JsonField(name = "rewardCard")
     public RewardCardData rewardCard;
 
+    @JsonField(name = "configurations")
+    public ConfigurationsData configurations;
+
     public StayOutboundDetailData()
     {
 
@@ -131,6 +134,11 @@ public class StayOutboundDetailData
         if (rewardCard != null)
         {
             stayOutboundDetail.rewardStickerCount = rewardCard.rewardStickerCount;
+        }
+
+        if (configurations != null)
+        {
+            stayOutboundDetail.activeReward = configurations.activeReward;
         }
 
         return stayOutboundDetail;
@@ -258,21 +266,6 @@ public class StayOutboundDetailData
         public String amenity;
 
         public AmenityData()
-        {
-
-        }
-    }
-
-    @JsonObject
-    static class RewardCardData
-    {
-        @JsonField(name = "expiredAt")
-        public String expiredAt;
-
-        @JsonField(name = "rewardStickerCount")
-        public int rewardStickerCount;
-
-        public RewardCardData()
         {
 
         }

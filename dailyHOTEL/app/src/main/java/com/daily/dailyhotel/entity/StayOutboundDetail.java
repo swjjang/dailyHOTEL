@@ -7,7 +7,7 @@ import com.twoheart.dailyhotel.R;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public class StayOutboundDetail
+public class StayOutboundDetail extends Configurations
 {
     public int index;
     public String name;
@@ -19,7 +19,6 @@ public class StayOutboundDetail
     public double latitude;
     public double longitude;
     public int couponPrice;
-    public boolean activeReward;
     public boolean provideRewardSticker;
     public int rewardStickerCount;
 
