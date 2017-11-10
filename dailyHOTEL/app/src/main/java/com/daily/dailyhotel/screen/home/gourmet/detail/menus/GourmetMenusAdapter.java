@@ -108,6 +108,24 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
         return mList.get(position);
     }
 
+    public int getPosition(int menuIndex)
+    {
+        if (menuIndex > 0)
+        {
+            int size = getItemCount();
+
+            for (int i = 0; i < size; i++)
+            {
+                if (mList.get(i).index == menuIndex)
+                {
+                    return i;
+                }
+            }
+        }
+
+        return -1;
+    }
+
     @Override
     public int getItemCount()
     {

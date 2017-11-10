@@ -394,7 +394,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
     }
 
     @Override
-    public void onOperationTimeClick(int time)
+    public void onVisitTimeClick(int time)
     {
         if (lock() == true)
         {
@@ -429,6 +429,25 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
     }
 
     @Override
+    public void onVisitTimeClick(int time, int menuIndex)
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        mVisitTime = time;
+
+        notifyOperationTimeChanged();
+
+        setToolbarTitle(mVisitTime);
+
+        plusMenu(menuIndex);
+
+        unLockAll();
+    }
+
+    @Override
     public void onHideOperationTimesClick()
     {
         if (lock() == true)
@@ -458,12 +477,18 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
     @Override
     public void onMenuOderCountPlusClick(int position)
     {
-        if (position < 0 || lock() == true)
+        if (position < 0 || mGourmetCart == null || lock() == true)
         {
             return;
         }
 
         GourmetMenu gourmetMenu = mGourmetMenuVisibleList.get(position);
+
+        if (gourmetMenu == null)
+        {
+            unLockAll();
+            return;
+        }
 
         // 처음 메뉴 개수가 0인경우
         if (mGourmetCart.getCount() == 0)
@@ -472,7 +497,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             {
                 mGourmetCart.setGourmetInformation(mGourmetIndex, mGourmetName, mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), mVisitTime);
 
-                plusMenu(position);
+                plusMenu(gourmetMenu.index);
             } else
             {
                 onChangeTimeClick(gourmetMenu.index);
@@ -515,7 +540,27 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
     @Override
     public void onMenuOderCountMinusClick(int position)
     {
+        if (position < 0 || mGourmetCart == null || mGourmetCart.getCount() <= 0 || lock() == true)
+        {
+            return;
+        }
 
+        GourmetMenu gourmetMenu = mGourmetMenuVisibleList.get(position);
+
+        if (gourmetMenu == null)
+        {
+            unLockAll();
+            return;
+        }
+
+        minusMenu(gourmetMenu.index);
+
+        if (mGourmetCart.getCount() == 0)
+        {
+            mGourmetCart.clear();
+        }
+
+        unLockAll();
     }
 
     private void setToolbarTitle(String text)
@@ -555,59 +600,72 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         }
     }
 
-    private void onChangeTimeClick(int index)
+    private void onChangeTimeClick(int menuIndex)
     {
-        if (index < 0)
-        {
-            getViewInterface().showTimePickerDialog(mOperationTimeList, null);
-        } else
-        {
-            List<Integer> operationTimeList = null;
-
-            for (GourmetMenu gourmetMenu : mGourmetMenuList)
-            {
-                if (gourmetMenu.index == index)
-                {
-                    operationTimeList = gourmetMenu.getOperationTimeList();
-                    break;
-                }
-            }
-
-            getViewInterface().showTimePickerDialog(operationTimeList, null);
-        }
-    }
-
-    private void plusMenu(int position)
-    {
-        if (position < 0 || mGourmetCart == null || mGourmetMenuVisibleList == null || mGourmetMenuVisibleList.size() == 0)
+        if (menuIndex < 0)
         {
             return;
         }
 
-        GourmetMenu gourmetMenu = mGourmetMenuVisibleList.get(position);
+        GourmetMenu gourmetMenu = getGourmetMenu(menuIndex);
+
+        if (gourmetMenu == null)
+        {
+            return;
+        }
+
+        List<Integer> operationTimeList = gourmetMenu.getOperationTimeList();
+
+        getViewInterface().showTimePickerDialog(operationTimeList, menuIndex);
+    }
+
+    private void plusMenu(int menuIndex)
+    {
+        if (menuIndex < 0 || mGourmetCart == null || mGourmetMenuVisibleList == null || mGourmetMenuVisibleList.size() == 0)
+        {
+            return;
+        }
+
+        GourmetMenu gourmetMenu = getGourmetMenu(menuIndex);
         mGourmetCart.plus(gourmetMenu);
 
-        getViewInterface().setMenuOrderCount(position, mGourmetCart.getCount(gourmetMenu.index));
+        getViewInterface().setMenuOrderCount(menuIndex, mGourmetCart.getCount(menuIndex));
 
     }
 
-    private void minusMenu(int position)
+    private void minusMenu(int menuIndex)
     {
-        if (position < 0 || mGourmetCart == null || mGourmetMenuVisibleList == null || mGourmetMenuVisibleList.size() == 0)
+        if (menuIndex < 0 || mGourmetCart == null || mGourmetMenuVisibleList == null || mGourmetMenuVisibleList.size() == 0)
         {
             return;
         }
 
-        GourmetMenu gourmetMenu = mGourmetMenuVisibleList.get(position);
+        GourmetMenu gourmetMenu = getGourmetMenu(menuIndex);
         mGourmetCart.minus(gourmetMenu.index);
 
-        getViewInterface().setMenuOrderCount(position, mGourmetCart.getCount(gourmetMenu.index));
+        getViewInterface().setMenuOrderCount(menuIndex, mGourmetCart.getCount(gourmetMenu.index));
 
     }
 
     private void setCartInformation(int time)
     {
 
+    }
+
+    private GourmetMenu getGourmetMenu(int menuIndex)
+    {
+        if (menuIndex > 0)
+        {
+            for (GourmetMenu gourmetMenu : mGourmetMenuList)
+            {
+                if (gourmetMenu.index == menuIndex)
+                {
+                    return gourmetMenu;
+                }
+            }
+        }
+
+        return null;
     }
 
     private void notifyOperationTimeChanged()

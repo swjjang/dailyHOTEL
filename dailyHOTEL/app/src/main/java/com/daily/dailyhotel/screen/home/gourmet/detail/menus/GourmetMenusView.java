@@ -3,7 +3,6 @@ package com.daily.dailyhotel.screen.home.gourmet.detail.menus;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.app.Dialog;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.GridLayout;
@@ -55,7 +54,9 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
 
         void onOperationTimeClick();
 
-        void onOperationTimeClick(int time);
+        void onVisitTimeClick(int time);
+
+        void onVisitTimeClick(int time, int menuIndex);
 
         void onHideOperationTimesClick();
 
@@ -260,7 +261,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
             @Override
             public void onClick(View v)
             {
-                getEventListener().onOperationTimeClick((int) v.getTag());
+                getEventListener().onVisitTimeClick((int) v.getTag());
             }
         };
 
@@ -541,24 +542,20 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
     }
 
     @Override
-    public void setMenuOrderCount(int position, int orderCount)
+    public void setMenuOrderCount(int menuIndex, int orderCount)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        mGourmetMenusAdapter.setMenuOrderCount(getViewDataBinding().recyclerView.findViewHolderForAdapterPosition(position), position, orderCount);
+        int position = mGourmetMenusAdapter.getPosition(menuIndex);
+
+        getViewDataBinding().recyclerView.post(() -> mGourmetMenusAdapter.setMenuOrderCount(getViewDataBinding().recyclerView.findViewHolderForAdapterPosition(position), position, orderCount));
     }
 
     @Override
-    public int getMenuCount()
-    {
-        return mGourmetMenusAdapter == null ? 0 : mGourmetMenusAdapter.getItemCount();
-    }
-
-    @Override
-    public void showTimePickerDialog(List<Integer> operationTimeList, Dialog.OnDismissListener listener)
+    public void showTimePickerDialog(List<Integer> operationTimeList, int menuIndex)
     {
         if (getViewDataBinding() == null)
         {
@@ -653,13 +650,13 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                     }
                 }
 
-                getEventListener().onOperationTimeClick(time);
+                getEventListener().onVisitTimeClick(time, menuIndex);
 
                 hideSimpleDialog();
             }
         });
 
-        showSimpleDialog(dataBinding.getRoot(), null, listener, true);
+        showSimpleDialog(dataBinding.getRoot(), null, null, true);
     }
 
 

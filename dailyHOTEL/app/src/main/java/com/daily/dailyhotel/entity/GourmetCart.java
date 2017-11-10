@@ -37,6 +37,7 @@ public class GourmetCart
             mOrderMenuMap.get(gourmetCartMenu.index).count++;
         } else
         {
+            gourmetCartMenu.count = 1;
             mOrderMenuMap.put(gourmetCartMenu.index, gourmetCartMenu);
         }
     }

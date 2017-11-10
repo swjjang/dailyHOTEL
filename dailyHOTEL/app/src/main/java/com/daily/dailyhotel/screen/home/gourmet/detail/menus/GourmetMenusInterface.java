@@ -28,9 +28,7 @@ public interface GourmetMenusInterface extends BaseDialogViewInterface
 
     Observable<Boolean> hideOperationTimes();
 
-    void setMenuOrderCount(int position, int orderCount);
+    void setMenuOrderCount(int menuIndex, int orderCount);
 
-    int getMenuCount();
-
-    void showTimePickerDialog(List<Integer> operationTimeList, Dialog.OnDismissListener listener);
+    void showTimePickerDialog(List<Integer> operationTimeList, int menuIndex);
 }
