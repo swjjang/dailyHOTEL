@@ -330,7 +330,7 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
 
         if (rewardInformation.activeReward == true)
         {
-            getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage()//
+            getViewInterface().setDepositStickerCard(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerCardTitleMessage()//
                 , rewardInformation.rewardStickerCount, mRewardDescriptionTitle, mRewardDescriptionMessage);
         }
     }

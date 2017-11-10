@@ -1046,7 +1046,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
                 if (stayBookingDetail.activeReward == true)
                 {
-                    ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setDepositStickerCard(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigRewardStickerTitleMessage(), stayBookingDetail.rewardStickerCount);
+                    ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setDepositStickerCard(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigRewardStickerCardTitleMessage(), stayBookingDetail.rewardStickerCount);
                 }
             } else
             {
@@ -1071,7 +1071,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
                     if (stayBookingDetail.activeReward == true)
                     {
-                        ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setDepositStickerCard(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigRewardStickerTitleMessage(), stayBookingDetail.rewardStickerCount);
+                        ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setDepositStickerCard(DailyRemoteConfigPreference.getInstance(this).getKeyRemoteConfigRewardStickerCardTitleMessage(), stayBookingDetail.rewardStickerCount);
                     }
                 }
             }
@@ -1665,7 +1665,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
             if (stayBookingDetail.activeReward == true)
             {
-                ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setDepositStickerCard(DailyRemoteConfigPreference.getInstance(StayReservationDetailActivity.this).getKeyRemoteConfigRewardStickerTitleMessage(), stayBookingDetail.rewardStickerCount);
+                ((StayReservationDetailLayout) mPlaceReservationDetailLayout).setDepositStickerCard(DailyRemoteConfigPreference.getInstance(StayReservationDetailActivity.this).getKeyRemoteConfigRewardStickerCardTitleMessage(), stayBookingDetail.rewardStickerCount);
             }
 
             unLockUI();
