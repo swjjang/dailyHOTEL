@@ -296,28 +296,42 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
         if (isOpened == false)
         {
             getViewInterface().setIssueCouponAnimation(false);
-        }
 
-        addCompositeDisposable(observable.subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
-        {
-            @Override
-            public void accept(Boolean aBoolean) throws Exception
+            addCompositeDisposable(observable.subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
             {
-                unLockAll();
-
-                if (isOpened == true)
+                @Override
+                public void accept(Boolean aBoolean) throws Exception
                 {
+                    unLockAll();
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    unLockAll();
+                }
+            }));
+        } else
+        {
+            addCompositeDisposable(observable.subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+            {
+                @Override
+                public void accept(Boolean aBoolean) throws Exception
+                {
+                    unLockAll();
+
                     getViewInterface().setIssueCouponAnimation(true);
                 }
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(Throwable throwable) throws Exception
+            }, new Consumer<Throwable>()
             {
-                unLockAll();
-            }
-        }));
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    unLockAll();
+                }
+            }));
+        }
     }
 
     @Override
