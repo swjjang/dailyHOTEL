@@ -118,6 +118,7 @@ public class RetrofitHttpClient implements Constants
                 if (DailyHotel.isLogin() == true)
                 {
                     builder.addHeader("Authorization", DailyHotel.AUTHORIZATION);
+                    ExLog.d("auth : " +DailyHotel.AUTHORIZATION);
                 }
 
                 return chain.proceed(builder.build());

@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.mydaily.profile;
 
 import android.view.View;
+import android.widget.RadioGroup;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
@@ -8,12 +9,13 @@ import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.entity.User;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityProfileDataBinding;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
-public class ProfileView extends BaseDialogView<ProfileView.OnEventListener, ActivityProfileDataBinding> implements ProfileViewInterface
+public class ProfileView extends BaseDialogView<ProfileView.OnEventListener, ActivityProfileDataBinding> implements ProfileInterface
 {
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -23,13 +25,15 @@ public class ProfileView extends BaseDialogView<ProfileView.OnEventListener, Act
 
         void startEditPhone(String phoneNumber);
 
-        void startEditPassword();
+        void startEditPassword(String email);
 
         void startEditBirthday(String birthday);
 
-        void onLogOutClick();
+        void doLogout();
 
-        void onCodeCopyClick(String code);
+        void doCodeCopy(String code);
+
+        void doValidMonthChange(int month);
     }
 
     public ProfileView(BaseActivity baseActivity, ProfileView.OnEventListener listener)
@@ -38,7 +42,7 @@ public class ProfileView extends BaseDialogView<ProfileView.OnEventListener, Act
     }
 
     @Override
-    protected void setContentView(ActivityProfileDataBinding viewDataBinding)
+    protected void setContentView(final ActivityProfileDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -46,36 +50,18 @@ public class ProfileView extends BaseDialogView<ProfileView.OnEventListener, Act
         }
 
         initToolbar(viewDataBinding);
-
-        // 이름
-        viewDataBinding.nameLayout.setOnClickListener(v -> getEventListener().startEditName(viewDataBinding.nameTextView.getText().toString()));
-
-        // 전화번호
-        viewDataBinding.phoneLayout.setOnClickListener(v -> getEventListener().startEditPhone(viewDataBinding.phoneTextView.getText().toString()));
-
-        // 생일
-        viewDataBinding.birthdayLayout.setOnClickListener(v ->
-        {
-            if (DailyTextUtils.isTextEmpty(viewDataBinding.birthdayTextView.getText().toString()) == false)
-            {
-                getEventListener().startEditBirthday((String) viewDataBinding.birthdayTextView.getTag());
-            } else
-            {
-                getEventListener().startEditBirthday(null);
-            }
-        });
-
-        // 로긍 아웃
-        viewDataBinding.logoutView.setOnClickListener(v -> getEventListener().onLogOutClick());
-
-        // 코드 복사
-        viewDataBinding.codeCopyView.setOnClickListener(v -> getEventListener().onCodeCopyClick(viewDataBinding.referralTextView.getText().toString()));
+        initLayout(viewDataBinding);
     }
 
     @Override
     public void setToolbarTitle(String title)
     {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
 
+        getViewDataBinding().toolbarView.setTitleText(title);
     }
 
     private void initToolbar(ActivityProfileDataBinding viewDataBinding)
@@ -85,200 +71,340 @@ public class ProfileView extends BaseDialogView<ProfileView.OnEventListener, Act
             return;
         }
 
-        viewDataBinding.toolbarView.setTitleText(R.string.actionbar_title_profile_activity);
         viewDataBinding.toolbarView.setOnBackClickListener(v -> getEventListener().onBackClick());
+        viewDataBinding.toolbarView.setTitleText(R.string.actionbar_title_profile_activity);
+    }
+
+    private void initLayout(ActivityProfileDataBinding viewDataBinding)
+    {
+        viewDataBinding.nameLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (getViewDataBinding() == null)
+                {
+                    return;
+                }
+
+                String name = getViewDataBinding().nameTextView.getText().toString();
+                getEventListener().startEditName(name);
+            }
+        });
+
+        viewDataBinding.phoneLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (getViewDataBinding() == null)
+                {
+                    return;
+                }
+
+                String phone = getViewDataBinding().phoneTextView.getText().toString();
+                getEventListener().startEditPhone(phone);
+            }
+        });
+
+        viewDataBinding.birthdayLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (getViewDataBinding() == null)
+                {
+                    return;
+                }
+
+                String birthday = (String) getViewDataBinding().birthdayTextView.getTag();
+
+                getEventListener().startEditBirthday(DailyTextUtils.isTextEmpty(birthday) == false ? birthday : null);
+            }
+        });
+
+        viewDataBinding.logoutView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().doLogout();
+            }
+        });
+
+        viewDataBinding.codeCopyView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (getViewDataBinding() == null)
+                {
+                    return;
+                }
+
+                String code = getViewDataBinding().referralTextView.getText().toString();
+                getEventListener().doCodeCopy(code);
+            }
+        });
+
+        // 개인정보 변경의 경우 리스너를 재 연결 해야 해서 따로 구현
     }
 
     @Override
-    public void setEmail(String userType, String email)
+    public void updateUserInformation(User user)
     {
-        ActivityProfileDataBinding viewDataBinding = getViewDataBinding();
-
-        if (viewDataBinding == null)
+        if (user == null)
         {
             return;
         }
 
-        if (DailyTextUtils.isTextEmpty(userType) == false)
+        if (Constants.DAILY_USER.equalsIgnoreCase(user.userType) == true)
         {
-            userType = Constants.DAILY_USER;
-        }
-
-        if (DailyTextUtils.isTextEmpty(email) == true)
+            updateDailyUserInformation(user);
+        } else
         {
-            viewDataBinding.emailView.setTextColor(getColor(R.color.default_text_c323232));
+            updateSocialUserInformation(user);
         }
-
-        viewDataBinding.emailTextView.setText(email);
-
-        switch (userType)
-        {
-            case Constants.FACEBOOK_USER:
-                if (DailyTextUtils.isTextEmpty(email) == true)
-                {
-                    viewDataBinding.emailTextView.setOnClickListener(v -> getEventListener().startEditEmail());
-                }
-
-                viewDataBinding.emailTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_fb_small, 0, 0, 0);
-                break;
-
-            case Constants.KAKAO_USER:
-                if (DailyTextUtils.isTextEmpty(email) == true)
-                {
-                    viewDataBinding.emailTextView.setOnClickListener(v -> getEventListener().startEditEmail());
-                }
-
-                viewDataBinding.emailTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_kakao_small, 0, 0, 0);
-                break;
-
-            case Constants.DAILY_USER:
-            default:
-                viewDataBinding.emailTextView.setOnClickListener(null);
-                viewDataBinding.emailTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_daily_small, 0, 0, 0);
-                break;
-        }
-
-        viewDataBinding.emailTextView.setCompoundDrawablePadding(ScreenUtils.dpToPx(getContext(), 3));
     }
 
     @Override
-    public void setName(String name)
+    public void resetPrivacyValidDate()
     {
-        ActivityProfileDataBinding viewDataBinding = getViewDataBinding();
-
-        if (viewDataBinding == null)
+        if (getViewDataBinding() == null)
         {
             return;
         }
+
+        int month = (int) getViewDataBinding().privacyValidDateRadioGroup.getTag();
+        setPrivacyValidMonth(month);
+    }
+
+    private void updateDailyUserInformation(User user)
+    {
+        if (getViewDataBinding() == null || getContext() == null || user == null)
+        {
+            return;
+        }
+
+        // 이메일
+        if (DailyTextUtils.isTextEmpty(user.email) == true)
+        {
+            getViewDataBinding().emailView.setTextColor(getContext().getResources().getColor(R.color.default_text_c323232));
+        }
+
+        getViewDataBinding().emailLayout.setOnClickListener(null);
+        getViewDataBinding().emailTextView.setText(user.email);
+        getViewDataBinding().emailTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_daily_small, 0, 0, 0);
+        getViewDataBinding().emailTextView.setCompoundDrawablePadding(ScreenUtils.dpToPx(getContext(), 3));
 
         // 이름
-        if (DailyTextUtils.isTextEmpty(name) == true)
+        if (DailyTextUtils.isTextEmpty(user.name) == true)
         {
-            viewDataBinding.nameView.setTextColor(getColor(R.color.default_text_c323232));
+            getViewDataBinding().nameView.setTextColor(getContext().getResources().getColor(R.color.default_text_c323232));
         }
 
-        viewDataBinding.nameTextView.setText(name);
-    }
+        getViewDataBinding().nameTextView.setText(user.name);
 
-    @Override
-    public void setBirthday(String birthday)
-    {
-        ActivityProfileDataBinding viewDataBinding = getViewDataBinding();
-
-        if (viewDataBinding == null)
+        // 생일
+        if (DailyTextUtils.isTextEmpty(user.birthday) == true)
         {
-            return;
-        }
-
-        if (DailyTextUtils.isTextEmpty(birthday) == true)
-        {
-            viewDataBinding.birthdayView.setTextColor(getColor(R.color.default_text_c323232));
+            getViewDataBinding().birthdayView.setTextColor(getContext().getResources().getColor(R.color.default_text_c323232));
+            getViewDataBinding().birthdayTextView.setText(null);
         } else
         {
             try
             {
-                viewDataBinding.birthdayTextView.setText(DailyCalendar.convertDateFormatString(birthday, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
-                viewDataBinding.birthdayTextView.setTag(birthday);
+                getViewDataBinding().birthdayTextView.setText(DailyCalendar.convertDateFormatString(user.birthday, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
+                getViewDataBinding().birthdayTextView.setTag(user.birthday);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
 
-                viewDataBinding.birthdayTextView.setText(null);
+                getViewDataBinding().birthdayTextView.setText(null);
             }
         }
-    }
 
-    @Override
-    public void setPhoneNumber(String phoneNumber)
-    {
-        ActivityProfileDataBinding viewDataBinding = getViewDataBinding();
-
-        if (viewDataBinding == null)
+        // 휴대폰
+        if (DailyTextUtils.isTextEmpty(user.phone) == true)
         {
-            return;
+            getViewDataBinding().phoneView.setTextColor(getContext().getResources().getColor(R.color.default_text_c323232));
         }
 
-        if (DailyTextUtils.isTextEmpty(phoneNumber) == true)
+        getViewDataBinding().phoneVerifyView.setVisibility(View.VISIBLE);
+        getViewDataBinding().phoneTextView.setText(user.phone);
+
+        String verifiedDate;
+        try
         {
-            viewDataBinding.phoneView.setTextColor(getColor(R.color.default_text_c323232));
-        }
-
-        viewDataBinding.phoneTextView.setText(phoneNumber);
-    }
-
-    @Override
-    public void setPhoneNumberVerifiedVisible(boolean visible)
-    {
-        ActivityProfileDataBinding viewDataBinding = getViewDataBinding();
-
-        if (viewDataBinding == null)
+            verifiedDate = DailyCalendar.convertDateFormatString(user.phoneVerifiedAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
+        } catch (Exception e)
         {
-            return;
-        }
-
-        if (visible == true)
-        {
-            viewDataBinding.phoneVerifyView.setVisibility(View.VISIBLE);
-        } else
-        {
-            viewDataBinding.phoneVerifyView.setVisibility(View.GONE);
-        }
-    }
-
-    @Override
-    public void setPhoneNumberVerified(boolean isPhoneVerified, String verifiedDate)
-    {
-        ActivityProfileDataBinding viewDataBinding = getViewDataBinding();
-
-        if (viewDataBinding == null)
-        {
-            return;
+            verifiedDate = null;
         }
 
         // 인증 여부
-        if (isPhoneVerified == true && DailyTextUtils.isTextEmpty(verifiedDate) == false)
+        if (user.phoneVerified == true && DailyTextUtils.isTextEmpty(verifiedDate) == false)
         {
-            viewDataBinding.phoneVerifyView.setTextColor(getColor(R.color.search_hint_text));
-            viewDataBinding.phoneVerifyView.setText(getString(R.string.label_date_verification, verifiedDate.replaceAll("-", ".")));
+            getViewDataBinding().phoneVerifyView.setTextColor(getContext().getResources().getColor(R.color.search_hint_text));
+            getViewDataBinding().phoneVerifyView.setText(getContext().getString(R.string.label_date_verification, verifiedDate.replaceAll("-", ".")));
         } else
         {
-            viewDataBinding.phoneVerifyView.setTextColor(getColor(R.color.dh_theme_color));
-            viewDataBinding.phoneVerifyView.setText(R.string.label_dont_verification);
+            getViewDataBinding().phoneVerifyView.setTextColor(getContext().getResources().getColor(R.color.dh_theme_color));
+            getViewDataBinding().phoneVerifyView.setText(R.string.label_dont_verification);
         }
+
+        // 페스워드
+        getViewDataBinding().passwordLayout.setVisibility(View.VISIBLE);
+        getViewDataBinding().passwordUnderLine.setVisibility(View.VISIBLE);
+        getViewDataBinding().passwordLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().startEditPassword(user.email);
+            }
+        });
+
+        getViewDataBinding().referralTextView.setText(user.referralCode);
+
+        setPrivacyValidMonth(user.dataRetentionInMonth);
     }
 
-    @Override
-    public void setPasswordVisible(boolean visible)
+    private void updateSocialUserInformation(User user)
     {
-        ActivityProfileDataBinding viewDataBinding = getViewDataBinding();
-
-        if (viewDataBinding == null)
+        if (getViewDataBinding() == null || getContext() == null || user == null)
         {
             return;
         }
 
-        if (visible == true)
+        // 이메일
+        if (DailyTextUtils.isTextEmpty(user.email) == true)
         {
-            viewDataBinding.passwordLayout.setVisibility(View.VISIBLE);
-            viewDataBinding.passwordUnderLine.setVisibility(View.VISIBLE);
-            viewDataBinding.passwordLayout.setOnClickListener(v -> getEventListener().startEditPassword());
+            getViewDataBinding().emailView.setTextColor(getContext().getResources().getColor(R.color.default_text_c323232));
+            getViewDataBinding().emailTextView.setText(null);
+            getViewDataBinding().emailLayout.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    getEventListener().startEditEmail();
+                }
+            });
         } else
         {
-            viewDataBinding.passwordLayout.setVisibility(View.GONE);
-            viewDataBinding.passwordUnderLine.setVisibility(View.GONE);
+            getViewDataBinding().emailTextView.setText(user.email);
+            getViewDataBinding().emailLayout.setOnClickListener(null);
+
+            if (Constants.FACEBOOK_USER.equalsIgnoreCase(user.userType) == true)
+            {
+                getViewDataBinding().emailTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_fb_small, 0, 0, 0);
+
+            } else if (Constants.KAKAO_USER.equalsIgnoreCase(user.userType) == true)
+            {
+                getViewDataBinding().emailTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_kakao_small, 0, 0, 0);
+            }
+
+            getViewDataBinding().emailTextView.setCompoundDrawablePadding(ScreenUtils.dpToPx(getContext(), 3));
         }
-    }
 
-    @Override
-    public void setReferralCode(String referralCode)
-    {
-        ActivityProfileDataBinding viewDataBinding = getViewDataBinding();
-
-        if (viewDataBinding == null)
+        // 이름
+        if (DailyTextUtils.isTextEmpty(user.name) == true)
         {
-            return;
+            getViewDataBinding().nameView.setTextColor(getContext().getResources().getColor(R.color.default_text_c323232));
+            getViewDataBinding().nameTextView.setText(null);
+        } else
+        {
+            getViewDataBinding().nameTextView.setText(user.name);
         }
 
-        viewDataBinding.referralTextView.setText(referralCode);
+        // 생일
+        if (DailyTextUtils.isTextEmpty(user.birthday) == true)
+        {
+            getViewDataBinding().birthdayView.setTextColor(getContext().getResources().getColor(R.color.default_text_c323232));
+            getViewDataBinding().birthdayTextView.setText(null);
+        } else
+        {
+            try
+            {
+                getViewDataBinding().birthdayTextView.setText(DailyCalendar.convertDateFormatString(user.birthday, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
+                getViewDataBinding().birthdayTextView.setTag(user.birthday);
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+
+                getViewDataBinding().birthdayTextView.setText(null);
+            }
+        }
+
+        // 휴대폰 번호
+        // 휴대폰
+        if (DailyTextUtils.isTextEmpty(user.phone) == true)
+        {
+            getViewDataBinding().phoneView.setTextColor(getContext().getResources().getColor(R.color.default_text_c323232));
+        }
+
+        getViewDataBinding().phoneTextView.setText(user.phone);
+        getViewDataBinding().phoneVerifyView.setVisibility(View.GONE);
+
+        // 패스워드
+        getViewDataBinding().passwordLayout.setVisibility(View.GONE);
+        getViewDataBinding().passwordUnderLine.setVisibility(View.GONE);
+
+        getViewDataBinding().referralTextView.setText(user.referralCode);
+
+        setPrivacyValidMonth(user.dataRetentionInMonth);
     }
+
+    private void setPrivacyValidMonth(int month)
+    {
+        if (getViewDataBinding() == null)
+        {
+            getViewDataBinding().privacyValidDateRadioGroup.setOnCheckedChangeListener(null);
+        }
+
+        int buttonResId;
+        switch (month)
+        {
+            case 60:
+                buttonResId = R.id.yearRadioButton5;
+                break;
+            case 36:
+                buttonResId = R.id.yearRadioButton3;
+                break;
+            case 12:
+            default:
+                buttonResId = R.id.yearRadioButton1;
+                break;
+        }
+
+        getViewDataBinding().privacyValidDateRadioGroup.check(buttonResId);
+        getViewDataBinding().privacyValidDateRadioGroup.setTag(month);
+        getViewDataBinding().privacyValidDateRadioGroup.setOnCheckedChangeListener(mOnCheckedChangeListener);
+    }
+
+    private RadioGroup.OnCheckedChangeListener mOnCheckedChangeListener = new RadioGroup.OnCheckedChangeListener()
+    {
+        @Override
+        public void onCheckedChanged(RadioGroup group, int checkedId)
+        {
+            int month;
+            switch (checkedId)
+            {
+                case R.id.yearRadioButton3:
+                    month = 36;
+                    break;
+
+                case R.id.yearRadioButton5:
+                    month = 60;
+                    break;
+
+                case R.id.yearRadioButton1:
+                default:
+                    month = 12;
+                    break;
+            }
+
+            getEventListener().doValidMonthChange(month);
+        }
+    };
 }

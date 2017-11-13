@@ -5,6 +5,8 @@ import com.daily.dailyhotel.entity.UserBenefit;
 import com.daily.dailyhotel.entity.UserSimpleInformation;
 import com.daily.dailyhotel.entity.UserTracking;
 
+import java.util.Map;
+
 import io.reactivex.Observable;
 
 public interface ProfileInterface
@@ -16,4 +18,6 @@ public interface ProfileInterface
     Observable<UserSimpleInformation> getUserSimpleInformation();
 
     Observable<UserTracking> getTracking();
+
+    Observable<User> updateUserInformation(Map<String, String> params);
 }

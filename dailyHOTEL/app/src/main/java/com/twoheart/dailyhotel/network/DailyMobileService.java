@@ -536,6 +536,10 @@ public interface DailyMobileService
     @GET("{mobileAPI}")
     Observable<BaseDto<UserInformationData>> getUserSimpleInformation(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST("{mobileAPI}")
+    Observable<BaseDto<UserData>> updateUserInformation(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @FieldMap Map<String, String> params);
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // SuggestRemoteImpl
     /////////////////////////////////////////////////////////////////////////////////////////////////

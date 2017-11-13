@@ -9,12 +9,18 @@ import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.entity.UserBenefit;
 import com.daily.dailyhotel.entity.UserSimpleInformation;
 import com.daily.dailyhotel.entity.UserTracking;
+import com.daily.dailyhotel.repository.remote.model.UserData;
 import com.daily.dailyhotel.repository.remote.model.UserTrackingData;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 
+import java.util.Map;
+
 import io.reactivex.Observable;
+import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 public class ProfileRemoteImpl implements ProfileInterface
 {
@@ -123,5 +129,34 @@ public class ProfileRemoteImpl implements ProfileInterface
 
             return userTracking;
         }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<User> updateUserInformation(Map<String, String> params)
+    {
+        return DailyMobileAPI.getInstance(mContext).updateUserInformation(params).map(new Function<BaseDto<UserData>, User>()
+        {
+            @Override
+            public User apply(BaseDto<UserData> userDataBaseDto) throws Exception
+            {
+                User user = null;
+
+                if (userDataBaseDto != null)
+                {
+                    if (userDataBaseDto.msgCode == 100 && userDataBaseDto.data != null)
+                    {
+                        user = userDataBaseDto.data.getUser();
+                    } else
+                    {
+                        throw new BaseException(userDataBaseDto.msgCode, userDataBaseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return user;
+            }
+        }).subscribeOn(Schedulers.io());
     }
 }

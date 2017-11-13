@@ -1307,6 +1307,14 @@ public class DailyMobileAPI
         return mDailyMobileService.getUserTracking(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
     }
 
+    public Observable<BaseDto<UserData>> updateUserInformation(Map<String, String> params)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/users/profile"//
+            : "MzEkNTAkNzMkMzAkMzgkNDQkMTckMzIkNjMkOTIkNjAkNzMkOCQ1MiQ1JDM3JA==$RTZGMNDc1TMjhGQTA2QXzM3MTQ3MzY1OTTPVJMFNjJBXOUVGQXTY5NJjg2MUzg5NCDQ3WNDdGQUFFCRjdDOEVODODQ5MTk5MjcO0OA==$";
+
+        return mDailyMobileService.updateUserInformation(Crypto.getUrlDecoderEx(API), params).subscribeOn(Schedulers.io());
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // SuggestRemoteImpl
     /////////////////////////////////////////////////////////////////////////////////////////////////
