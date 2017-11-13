@@ -58,6 +58,10 @@ public class StayProduct implements Parcelable
 
     @JsonField(name = "tv")
     public boolean hasTV;
+
+    @JsonField(name = "provideRewardSticker")
+    public boolean provideRewardSticker;
+
     //
     @JsonIgnore
     public boolean isNRD;
@@ -109,6 +113,7 @@ public class StayProduct implements Parcelable
         dest.writeString(roomName);
         dest.writeInt(hasSpaWhirlpool ? 1 : 0);
         dest.writeInt(hasTV ? 1 : 0);
+        dest.writeInt(provideRewardSticker ? 1 : 0);
         dest.writeInt(isNRD ? 1 : 0);
     }
 
@@ -129,7 +134,7 @@ public class StayProduct implements Parcelable
         roomName = in.readString();
         hasSpaWhirlpool = in.readInt() == 1;
         hasTV = in.readInt() == 1;
-
+        provideRewardSticker = in.readInt() == 1;
         isNRD = in.readInt() == 1;
     }
 
