@@ -532,7 +532,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
                                 mGourmetCart.clear();
                                 mGourmetCart.setGourmetInformation(mGourmetIndex, mGourmetName, mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), mVisitTime);
 
-                                plusMenu(position);
+                                plusMenu(gourmetMenu.index);
                             }
                         }, null);
                 }
