@@ -301,7 +301,6 @@ public class StayPreviewActivity extends BaseActivity
         mPreviewLayout.showPopAnimation();
     }
 
-
     private void onRefresh(int placeIndex)
     {
         lockUI();
@@ -327,8 +326,10 @@ public class StayPreviewActivity extends BaseActivity
 
         StayDetailParams stayDetailParams = stayDetail.getStayDetailParams();
 
-        if (mPreviewLayout != null)
+        if (mPreviewLayout != null && stayDetailParams != null)
         {
+            mPreviewLayout.setCategory(stayDetailParams.getGrade(), stayDetailParams.provideRewardSticker);
+
             List<StayProduct> stayProductList = stayDetail.getProductList();
 
             // SOLD OUT
