@@ -1514,7 +1514,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             return;
         }
 
-        if (mStayDetail.activeReward == true)
+        if (mStayDetail.activeReward == true && mStayDetail.provideRewardSticker == true)
         {
             getViewInterface().setRewardVisible(true);
 
