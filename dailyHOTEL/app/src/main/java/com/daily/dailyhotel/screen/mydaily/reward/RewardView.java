@@ -716,11 +716,11 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
             AnimatorSet animatorSet01 = new AnimatorSet();
             animatorSet01.playSequentially(issueCouponArrowObjectAnimator00, issueCouponArrowObjectAnimator01);
 
-            ObjectAnimator issueCouponClickObjectAnimator00 = ObjectAnimator.ofFloat(getViewDataBinding().issueCouponArrowImageView, View.TRANSLATION_Y//
+            ObjectAnimator issueCouponClickObjectAnimator00 = ObjectAnimator.ofFloat(getViewDataBinding().issueCouponClickView, View.TRANSLATION_Y//
                 , DP_192, DP_192 - DP_6);
             issueCouponClickObjectAnimator00.setDuration(UP_DURATION);
 
-            ObjectAnimator issueCouponClickObjectAnimator01 = ObjectAnimator.ofFloat(getViewDataBinding().issueCouponArrowImageView, View.TRANSLATION_Y//
+            ObjectAnimator issueCouponClickObjectAnimator01 = ObjectAnimator.ofFloat(getViewDataBinding().issueCouponClickView, View.TRANSLATION_Y//
                 , DP_192 - DP_6, DP_192);
             issueCouponClickObjectAnimator01.setDuration(DOWN_DURATION);
 
@@ -738,13 +738,23 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
                 @Override
                 public void onAnimationStart(Animator animation)
                 {
-
                 }
 
                 @Override
                 public void onAnimationEnd(Animator animation)
                 {
-                    if (canceled == false)
+                    if (canceled == true)
+                    {
+                        if (mIssueCouponShakeAnimatorSet != null)
+                        {
+                            mIssueCouponShakeAnimatorSet.removeAllListeners();
+                            mIssueCouponShakeAnimatorSet = null;
+                        }
+
+                        getViewDataBinding().issueCouponLayout.setTranslationY(DP_192);
+                        getViewDataBinding().issueCouponArrowImageView.setTranslationY(DP_192);
+                        getViewDataBinding().issueCouponClickView.setTranslationY(DP_192);
+                    } else
                     {
                         mIssueCouponShakeAnimatorSet.start();
                     }
@@ -771,13 +781,41 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
                 return;
             }
 
-            mIssueCouponShakeAnimatorSet.cancel();
-            mIssueCouponShakeAnimatorSet.removeAllListeners();
-            mIssueCouponShakeAnimatorSet = null;
+            // 이상하게 Animator set을 2번 감싸니 cancel을 호출해도 멈추지 않는다.
+            // 원인은 isStarted() 값이 false인데 이미 onAnimationStart에서 로그 볼때는 true인데
+            // 여기서 찍으면 false로 나온다.
+            if (mIssueCouponShakeAnimatorSet.isStarted() == false)
+            {
+                mIssueCouponShakeAnimatorSet.cancel();
 
-            getViewDataBinding().issueCouponLayout.setTranslationY(DP_192);
-            getViewDataBinding().issueCouponArrowImageView.setTranslationY(DP_192);
-            getViewDataBinding().issueCouponClickView.setTranslationY(DP_192);
+                ArrayList<Animator.AnimatorListener> tmpListeners = mIssueCouponShakeAnimatorSet.getListeners();
+                if (tmpListeners != null)
+                {
+                    int size = tmpListeners.size();
+                    for (int i = 0; i < size; i++)
+                    {
+                        tmpListeners.get(i).onAnimationCancel(null);
+                    }
+                }
+                ArrayList<Animator> playingSet = new ArrayList<>(mIssueCouponShakeAnimatorSet.getChildAnimations());
+                int setSize = playingSet.size();
+                for (int i = 0; i < setSize; i++)
+                {
+                    playingSet.get(i).cancel();
+                }
+                if (tmpListeners != null)
+                {
+                    int size = tmpListeners.size();
+                    for (int i = 0; i < size; i++)
+                    {
+                        tmpListeners.get(i).onAnimationEnd(null);
+                    }
+                }
+                mIssueCouponShakeAnimatorSet = null;
+            } else
+            {
+                mIssueCouponShakeAnimatorSet.cancel();
+            }
         }
     }
 
