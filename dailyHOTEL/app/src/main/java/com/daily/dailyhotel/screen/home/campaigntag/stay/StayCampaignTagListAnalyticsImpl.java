@@ -84,7 +84,7 @@ public class StayCampaignTagListAnalyticsImpl implements StayCampaignTagListPres
                 , AnalyticsManager.Action.STAY_ITEM_CLICK_TRUE_VR, Integer.toString(index), null);
         }
 
-        if (DailyRemoteConfigPreference.getInstance(activity).isKeyRemoteConfigRewardStickerEnabled() && provideRewardSticker == true)
+        if (provideRewardSticker == true)
         {
             AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.REWARD//
                 , AnalyticsManager.Action.THUMBNAIL_CLICK, Integer.toString(index), null);

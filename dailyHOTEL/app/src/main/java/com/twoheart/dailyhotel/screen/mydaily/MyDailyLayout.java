@@ -130,11 +130,12 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
         if (DailyRemoteConfigPreference.getInstance(mContext).isKeyRemoteConfigRewardStickerEnabled() == true)
         {
             rewardLayout.setVisibility(View.VISIBLE);
-            rewardLayout.setOnClickListener(this);
         } else
         {
             rewardLayout.setVisibility(View.GONE);
         }
+
+        rewardLayout.setOnClickListener(this);
 
         recommendLayout.setOnClickListener(this);
         recentPlacesLayout.setOnClickListener(this);
