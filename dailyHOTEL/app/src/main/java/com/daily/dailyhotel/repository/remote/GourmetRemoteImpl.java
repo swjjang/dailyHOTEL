@@ -12,28 +12,34 @@ import com.daily.dailyhotel.entity.TrueReviews;
 import com.daily.dailyhotel.entity.WishResult;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetParams;
-import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Crypto;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
-public class GourmetRemoteImpl implements GourmetInterface
+public class GourmetRemoteImpl extends BaseRemoteImpl implements GourmetInterface
 {
-    Context mContext;
-
     public GourmetRemoteImpl(@NonNull Context context)
     {
-        mContext = context;
+        super(context);
     }
 
     @Override
     public Observable<List<Gourmet>> getList(GourmetParams gourmetParams)
     {
-        return DailyMobileAPI.getInstance(mContext) //
-            .getGourmetList(gourmetParams.toParamsMap(), gourmetParams.getCategoryList(), gourmetParams.getTimeList(), gourmetParams.getLuxuryList()).map(baseDto ->
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/sales"//
+            : "NjYkNjMkMzEkNzYkMzckODEkODUkNCQ2NyQ5NiQ2MSQxMyQ0MSQ0MCQ5MSQ2MCQ=$N0M0VNTRCQUIxYMDIzRDdEQTJBODI3QjZFCOEE4NEQVTdBMUVDOUM3QzlDOTRg1MzLBERDYEOzRTKNBQzk2QYUFBIMDAMGwRjNBQw=U=$";
+
+        return mDailyMobileService.getGourmetList(Crypto.getUrlDecoderEx(URL), gourmetParams.toParamsMap() //
+            , gourmetParams.getCategoryList(), gourmetParams.getTimeList(), gourmetParams.getLuxuryList()) //
+            .subscribeOn(Schedulers.io()).map(baseDto ->
             {
                 List<Gourmet> gourmetList = new ArrayList<>();
 
@@ -58,150 +64,193 @@ public class GourmetRemoteImpl implements GourmetInterface
     @Override
     public Observable<GourmetDetail> getDetail(int gourmetIndex, GourmetBookDateTime gourmetBookDateTime)
     {
-        return DailyMobileAPI.getInstance(mContext).getGourmetDetail(gourmetIndex, gourmetBookDateTime.getVisitDateTime("yyyy-MM-dd")).map(baseDto ->
-        {
-            GourmetDetail gourmetDetail;
 
-            if (baseDto != null)
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/{restaurantIdx}"//
+            : "MTckNjMkNTQkNyQ2NSQ1MyQyNSQyMiQ0JDk0JDYxJDM1JDgkNjckMzckMTAxJA==$QkJCSMjBPVENkQ3RTU4MTjkyDOTQVyODZBQjSZFBNTMwMDI3MDQ5N0RDMDYGxRFDFg4NZEI4NTDXM2OUNGRUQ0QTY4N0MyNjVEMRgJ==$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{restaurantIdx}", Integer.toString(gourmetIndex));
+
+        return mDailyMobileService.getGourmetDetail(Crypto.getUrlDecoderEx(API, urlParams), gourmetBookDateTime.getVisitDateTime("yyyy-MM-dd"))//
+            .subscribeOn(Schedulers.io()).map(baseDto ->
             {
-                if (baseDto.data != null)
+                GourmetDetail gourmetDetail;
+
+                if (baseDto != null)
                 {
-                    // 100	성공
-                    // 4	데이터가 없을시
-                    // 5	판매 마감시
-                    switch (baseDto.msgCode)
+                    if (baseDto.data != null)
                     {
-                        case 5:
-                            gourmetDetail = baseDto.data.getGourmetDetail();
-                            gourmetDetail.setGourmetMenuList(null);
-                            break;
+                        // 100	성공
+                        // 4	데이터가 없을시
+                        // 5	판매 마감시
+                        switch (baseDto.msgCode)
+                        {
+                            case 5:
+                                gourmetDetail = baseDto.data.getGourmetDetail();
+                                gourmetDetail.setGourmetMenuList(null);
+                                break;
 
-                        case 100:
-                            gourmetDetail = baseDto.data.getGourmetDetail();
-                            break;
+                            case 100:
+                                gourmetDetail = baseDto.data.getGourmetDetail();
+                                break;
 
-                        default:
-                            throw new BaseException(baseDto.msgCode, baseDto.msg);
+                            default:
+                                throw new BaseException(baseDto.msgCode, baseDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(baseDto.msgCode, baseDto.msg);
                     }
                 } else
                 {
-                    throw new BaseException(baseDto.msgCode, baseDto.msg);
+                    throw new BaseException(-1, null);
                 }
-            } else
-            {
-                throw new BaseException(-1, null);
-            }
 
-            return gourmetDetail;
-        });
+                return gourmetDetail;
+            });
     }
 
     @Override
     public Observable<Boolean> getHasCoupon(int gourmetIndex, GourmetBookDateTime gourmetBookDateTime)
     {
-        return DailyMobileAPI.getInstance(mContext).getGourmetHasCoupon(gourmetIndex, gourmetBookDateTime.getVisitDateTime("yyyy-MM-dd")).map(baseDto ->
-        {
-            boolean hasCoupon = false;
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/{restaurantIdx}/coupons/exist"//
+            : "NzEkNTUkMTAxJDc4JDExNyQ1MSQxOSQzNyQ0NiQyJDEzMCQxMDgkMzEkMTIwJDc5JDE5JA==$MTMExNTdFQkU1QjUxNUUQB0MzQ3QjkxRVTJEOEQ0TNzAzOUFDCNTg5NTlBBNUJZCODY0RjY0NkM1MTQNSwNzMxUNDI3MDU2MjE1NDcwRERCNDYTCxMkNBQzM3RCDY4OKDU4QjUxVNDQ2MkIz$";
 
-            if (baseDto != null)
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{restaurantIdx}", Integer.toString(gourmetIndex));
+
+        return mDailyMobileService.getGourmetHasCoupon(Crypto.getUrlDecoderEx(API, urlParams), gourmetBookDateTime.getVisitDateTime("yyyy-MM-dd"))//
+            .subscribeOn(Schedulers.io()).map(baseDto ->
             {
-                if (baseDto.msgCode == 100 && baseDto.data != null)
-                {
-                    hasCoupon = baseDto.data.existCoupons;
-                }
-            }
+                boolean hasCoupon = false;
 
-            return hasCoupon;
-        });
+                if (baseDto != null)
+                {
+                    if (baseDto.msgCode == 100 && baseDto.data != null)
+                    {
+                        hasCoupon = baseDto.data.existCoupons;
+                    }
+                }
+
+                return hasCoupon;
+            });
     }
 
     @Override
     public Observable<WishResult> addWish(int gourmetIndex)
     {
-        return DailyMobileAPI.getInstance(mContext).addGourmetWish(gourmetIndex).map(baseDto ->
-        {
-            WishResult wishResult = new WishResult();
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/wishes/gourmet/add/{restaurantIdx}"//
+            : "NyQxJDYxJDExMiQ4MyQxMDAkMjckNSQxMzUkMzgkMzUkMTA2JDQ5JDEwMSQxMzMkNDYk$NNTE1EN0UP2M0YzNjA5NjNCQUY1MOjk2RTRGFMkWJCMzgwCQUNGFMTNGRUNEMDlDRjALwRUU1NTQwQkNFNUQxNDU0NNkYyQTI5RjZCJQkJFMQEkE1REZGOTgxMODE4QkI4QkZFERERDNjBWE$";
 
-            if (baseDto != null)
-            {
-                wishResult.success = baseDto.msgCode == 100;
-                wishResult.message = baseDto.msg;
-            } else
-            {
-                throw new BaseException(-1, null);
-            }
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{restaurantIdx}", Integer.toString(gourmetIndex));
 
-            return wishResult;
-        });
+        return mDailyMobileService.addWish(Crypto.getUrlDecoderEx(API, urlParams))//
+            .subscribeOn(Schedulers.io()).map(baseDto ->
+            {
+                WishResult wishResult = new WishResult();
+
+                if (baseDto != null)
+                {
+                    wishResult.success = baseDto.msgCode == 100;
+                    wishResult.message = baseDto.msg;
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return wishResult;
+            });
     }
 
     @Override
     public Observable<WishResult> removeWish(int gourmetIndex)
     {
-        return DailyMobileAPI.getInstance(mContext).removeGourmetWish(gourmetIndex).map(baseDto ->
-        {
-            WishResult wishResult = new WishResult();
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/wishes/gourmet/remove/{restaurantIdx}"//
+            : "ODAkMTkkNTUkNDkkODMkNjckMTEkOTMkMTEkMTUkNzgkMyQ5OCQxMDIkNDIkMTAyJA==$MEYYwQTUzNzBSTENOjkyMEUQxNDhFNDRCMkJCMDc2QNjVFNDAyQ0MyXRTk3MDJk3QUM5REU2NQzEwMDcF0QTQyNkZEHDRDQ2RTRQkzCRNDcxRTJGQjlBQUZGREQyMUQzMjE1RTk0RDE1MUM4$";
 
-            if (baseDto != null)
-            {
-                wishResult.success = baseDto.msgCode == 100;
-                wishResult.message = baseDto.msg;
-            } else
-            {
-                throw new BaseException(-1, null);
-            }
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{restaurantIdx}", Integer.toString(gourmetIndex));
 
-            return wishResult;
-        });
+        return mDailyMobileService.removeWish(Crypto.getUrlDecoderEx(API, urlParams))//
+            .subscribeOn(Schedulers.io()).map(baseDto ->
+            {
+                WishResult wishResult = new WishResult();
+
+                if (baseDto != null)
+                {
+                    wishResult.success = baseDto.msgCode == 100;
+                    wishResult.message = baseDto.msg;
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return wishResult;
+            });
     }
 
     @Override
     public Observable<ReviewScores> getReviewScores(int gourmetIndex)
     {
-        return DailyMobileAPI.getInstance(mContext).getGourmetReviewScores(gourmetIndex).map(baseDto ->
-        {
-            ReviewScores reviewScores;
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/review/gourmet/{restaurantIdx}/statistic"//
+            : "NDQkMTI0JDY0JDY5JDExJDExNCQzNyQyOSQxNyQ2MiQ5OSQ3NyQxMjYkMjAkMTckMTYk$NTA0NEJBRTkAzN0ILzBLMjDgxMTgyNkI4UQUM5QkQxYMzY1OTQ2EN0NERDUxMDBFQYjM5REVQGMjEKyNJTUyQTEwMDYwOEMxOUI5MzgB0MDdCOEJEMDFFMDY4MEAY5NjhZGMjU5MUYJyMEFD$";
 
-            if (baseDto != null)
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{restaurantIdx}", Integer.toString(gourmetIndex));
+
+        return mDailyMobileService.getReviewScores(Crypto.getUrlDecoderEx(API, urlParams))//
+            .subscribeOn(Schedulers.io()).map(baseDto ->
             {
-                if (baseDto.msgCode == 100 && baseDto.data != null)
+                ReviewScores reviewScores;
+
+                if (baseDto != null)
                 {
-                    reviewScores = baseDto.data.getReviewScores();
+                    if (baseDto.msgCode == 100 && baseDto.data != null)
+                    {
+                        reviewScores = baseDto.data.getReviewScores();
+                    } else
+                    {
+                        reviewScores = new ReviewScores();
+                    }
                 } else
                 {
                     reviewScores = new ReviewScores();
                 }
-            } else
-            {
-                reviewScores = new ReviewScores();
-            }
 
-            return reviewScores;
-        });
+                return reviewScores;
+            });
     }
 
     @Override
     public Observable<TrueReviews> getTrueReviews(int gourmetIndex, int page, int limit)
     {
-        return DailyMobileAPI.getInstance(mContext).getGourmetTrueReviews(gourmetIndex, page, limit).map(baseDto ->
-        {
-            TrueReviews trueReviews;
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/review/gourmet/{restaurantIdx}"//
+            : "ODQkOTckMTE0JDQkMTMwJDQ0JDU2JDkyJDczJDcwJDEyOSQxMDUkNTAkMTQkODAkMTgk$NzcyXQkYxOERFRNkUzLOEVFN0JGRkMxMkJCNDhGQ0E2RTgWxRDYxUOTA5Q0QZBMkZENDU3NDYDwQkDMxMB0E5NkY0REE4JQjk1CM0RDN0VBZOXENEQTA0NUYwMzBEOREFBOTgyPRDVEMDXMz$";
 
-            if (baseDto != null)
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{restaurantIdx}", Integer.toString(gourmetIndex));
+
+        return mDailyMobileService.getTrueReviews(Crypto.getUrlDecoderEx(API, urlParams), page, limit, "createdAt", "DESC")//
+            .subscribeOn(Schedulers.io()).map(baseDto ->
             {
-                if (baseDto.msgCode == 100 && baseDto.data != null)
+                TrueReviews trueReviews;
+
+                if (baseDto != null)
                 {
-                    trueReviews = baseDto.data.getTrueReviews();
+                    if (baseDto.msgCode == 100 && baseDto.data != null)
+                    {
+                        trueReviews = baseDto.data.getTrueReviews();
+                    } else
+                    {
+                        throw new BaseException(baseDto.msgCode, baseDto.msg);
+                    }
                 } else
                 {
-                    throw new BaseException(baseDto.msgCode, baseDto.msg);
+                    throw new BaseException(-1, null);
                 }
-            } else
-            {
-                throw new BaseException(-1, null);
-            }
 
-            return trueReviews;
-        });
+                return trueReviews;
+            });
     }
 }

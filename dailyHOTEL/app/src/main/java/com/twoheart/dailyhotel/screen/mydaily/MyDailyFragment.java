@@ -175,10 +175,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
                     }
                 } else if (externalDeepLink.isRewardView() == true)
                 {
-                    if (DailyRemoteConfigPreference.getInstance(context).isKeyRemoteConfigRewardStickerEnabled() == true)
-                    {
-                        mOnEventListener.onRewardClick();
-                    }
+                    mOnEventListener.onRewardClick();
                 }
 
                 //            else if (DailyDeepLink.getInstance().isWishListHotelView() == true)

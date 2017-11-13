@@ -2,6 +2,7 @@ package com.daily.dailyhotel.screen.mydaily.reward;
 
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 
 import java.text.ParseException;
 
@@ -104,8 +106,6 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
 
         if (DailyHotel.isLogin() == false)
         {
-            setRefresh(false);
-
             if (DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerCampaignEnabled() == true)
             {
                 getViewInterface().setDescriptionMessage(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerNonMemberCampaignMessage());
@@ -246,9 +246,24 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
             @Override
             public void accept(RewardDetail rewardDetail) throws Exception
             {
-                setRewardDetail(rewardDetail);
+                if (rewardDetail.activeReward == false)
+                {
+                    getViewInterface().showSimpleDialog(null, getString(R.string.message_reward_system_maintenance), getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                    {
+                        @Override
+                        public void onDismiss(DialogInterface dialog)
+                        {
+                            startActivity(DailyInternalDeepLink.getHomeScreenLink(getActivity()));
+                        }
+                    }, false);
+                }
 
-                notifyRewardDetailChanged();
+                if (DailyHotel.isLogin() == true)
+                {
+                    setRewardDetail(rewardDetail);
+
+                    notifyRewardDetailChanged();
+                }
 
                 unLockAll();
             }
