@@ -3,17 +3,14 @@ package com.twoheart.dailyhotel.network;
 import android.content.Context;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.dailyhotel.repository.remote.model.CampaignTagData;
 import com.daily.dailyhotel.repository.remote.model.CardData;
 import com.daily.dailyhotel.repository.remote.model.CouponsData;
-import com.daily.dailyhotel.repository.remote.model.GourmetCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.GourmetPaymentData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
 import com.daily.dailyhotel.repository.remote.model.RecentlyPlacesData;
 import com.daily.dailyhotel.repository.remote.model.RewardDetailData;
 import com.daily.dailyhotel.repository.remote.model.RewardHistoryDetailData;
 import com.daily.dailyhotel.repository.remote.model.RewardInformationData;
-import com.daily.dailyhotel.repository.remote.model.StayCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.StayListData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundPaymentData;
@@ -1475,36 +1472,6 @@ public class DailyMobileAPI
         urlParams.put("{restaurantIdx}", Integer.toString(placeIndex));
 
         return mDailyMobileService.getGourmetUnavailableDates(Crypto.getUrlDecoderEx(URL, urlParams), dateRange, isReverse).subscribeOn(Schedulers.io());
-    }
-
-    public Observable<BaseListDto<CampaignTagData>> getCampaignTagList(String serviceType)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v5/campaign/hashtag" //
-            : "ODckMjIkODgkNTUkMzQkMyQzNyQyNyQ0JDY5JDcyJDAkNTMkODMkNTQkMjAk$QNEUTTxNjlCNDRCQTg1RHDBDRDCc0QW0Y5Qzg5NYDEJCM0ZCQkEwMTLKQ0NEM4MUYNGRTBDNTZVFZRjMzRkQ5JRDAyNEI1RDcwRA=JP=$";
-
-        return mDailyMobileService.getCampaignTagList(Crypto.getUrlDecoderEx(URL), serviceType).subscribeOn(Schedulers.io());
-    }
-
-    public Observable<BaseDto<StayCampaignTagsData>> getStayCampaignTags(int tagIndex, String checkInDate, int nights)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v5/campaign/hashtag" //
-            : "NTAkOCQ4MSQyNiQxNyQ4NSQ5JDczJDYkMTkkNzQkNTckODIkNTkkNTgkODAk$OUVCMjUFFWVNkZGN0JCHIMEQ4QTNCRJTQ5N0EzMUFGNkJDNjIwQjVCMERULREBNzM2RDNENTQzQjIL5GJNkYwVMkNGNDhGDXRUVBNg==$";
-
-        Map<String, String> urlParams = new HashMap<>();
-        urlParams.put("{idx}", Integer.toString(tagIndex));
-
-        return mDailyMobileService.getStayCampaignTags(Crypto.getUrlDecoderEx(URL, urlParams), checkInDate, nights).subscribeOn(Schedulers.io());
-    }
-
-    public Observable<BaseDto<GourmetCampaignTagsData>> getGourmetCampaignTags(int tagIndex, String visitDate)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v5/campaign/hashtag" //
-            : "NTAkOCQ4MSQyNiQxNyQ4NSQ5JDczJDYkMTkkNzQkNTckODIkNTkkNTgkODAk$OUVCMjUFFWVNkZGN0JCHIMEQ4QTNCRJTQ5N0EzMUFGNkJDNjIwQjVCMERULREBNzM2RDNENTQzQjIL5GJNkYwVMkNGNDhGDXRUVBNg==$";
-
-        Map<String, String> urlParams = new HashMap<>();
-        urlParams.put("{idx}", Integer.toString(tagIndex));
-
-        return mDailyMobileService.getGourmetCampaignTags(Crypto.getUrlDecoderEx(URL, urlParams), visitDate).subscribeOn(Schedulers.io());
     }
 
     public Observable<BaseListDto<StayKeyword>> getSuggestsByStayInbound(String date, int stays, String term)
