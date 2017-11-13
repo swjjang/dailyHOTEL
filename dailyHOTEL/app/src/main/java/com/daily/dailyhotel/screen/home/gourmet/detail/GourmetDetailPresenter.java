@@ -21,7 +21,6 @@ import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetCart;
-import com.daily.dailyhotel.entity.GourmetCartMenu;
 import com.daily.dailyhotel.entity.GourmetDetail;
 import com.daily.dailyhotel.entity.GourmetMenu;
 import com.daily.dailyhotel.entity.ReviewScores;
@@ -1319,13 +1318,17 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         }
 
         // 업장 시간과 티켓 시간을 만든다
+        // https://docs.google.com/spreadsheets/d/1AoHc40ayjQP8psgWvo6dyaVBkyLcKtIT2RKzN0-SFD8/edit#gid=793396576
         // 업장 시간
         try
         {
             String todayDate = DailyCalendar.convertDateFormatString(commonDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd");
 
+            ExLog.d("pinkred - todayDate : " + todayDate);
+
             int currentTime;
 
+            // 오늘인 경우
             if (todayDate.equalsIgnoreCase(gourmetBookDateTime.getVisitDateTime("yyyyMMdd")) == true)
             {
                 Calendar calendar = DailyCalendar.getInstance();
@@ -1348,50 +1351,115 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             }
 
             TreeSet<Integer> visitTimeSet = new TreeSet<>();
+            final int ONE_HOUR_MINUTES = 60;
 
             // 업장 영역 시간 알아내기
             for (GourmetMenu gourmetMenu : gourmetMenuList)
             {
-                int openTime = Integer.parseInt(gourmetMenu.openTime.replaceAll(":", "").substring(0, 4));
-                int endTime;
+                int readyTime = 0;
 
+                if (DailyTextUtils.isTextEmpty(gourmetMenu.readyTime) == false)
+                {
+                    readyTime = Integer.parseInt(gourmetMenu.readyTime.replaceAll(":", "").substring(0, 4));
+                }
+
+                int todayStartTime = 0;
+
+                if (currentTime > 0)
+                {
+                    todayStartTime = (currentTime / 100 + readyTime / 100) * 100 + currentTime % 100 + readyTime % 100;
+                }
+
+                int startTime, endTime;
+
+                // 입장 시작 시간이 있는 경우
+                if (DailyTextUtils.isTextEmpty(gourmetMenu.startEatingTime) == false)
+                {
+                    startTime = Integer.parseInt(gourmetMenu.startEatingTime.replaceAll(":", "").substring(0, 4));
+                } else
+                {
+                    startTime = Integer.parseInt(gourmetMenu.openTime.replaceAll(":", "").substring(0, 4));
+                }
+
+                // 입장 종료 시간이 있는 경우, 라스트 오더가 있는 경우
                 if (DailyTextUtils.isTextEmpty(gourmetMenu.lastOrderTime) == false)
                 {
                     endTime = Integer.parseInt(gourmetMenu.lastOrderTime.replaceAll(":", "").substring(0, 4));
                 } else
                 {
-                    endTime = Integer.parseInt(gourmetMenu.closeTime.replaceAll(":", "").substring(0, 4));
+                    if (DailyTextUtils.isTextEmpty(gourmetMenu.endEatingTime) == false)
+                    {
+                        endTime = Integer.parseInt(gourmetMenu.endEatingTime.replaceAll(":", "").substring(0, 4));
+                    } else
+                    {
+                        endTime = Integer.parseInt(gourmetMenu.closeTime.replaceAll(":", "").substring(0, 4));
+                    }
                 }
 
+                ExLog.d("pinkred - ticket1 - startTime : " + startTime + ", endTime : " + endTime);
+
+                // 마지막 업장 종료시간이 새벽 3시보다 작은경우
                 if (endTime < 300)
                 {
                     endTime += 2400;
                 }
 
-                int intervalTime = currentTime > openTime ? currentTime : openTime;
-                List<Integer> menuOperationTime = new ArrayList<>();
+                // 마지막 시간에서 준비 시간을 뺀다.
+                if (readyTime > 0)
+                {
+                    endTime -= readyTime / ONE_HOUR_MINUTES * 100;
+                    endTime -= readyTime % ONE_HOUR_MINUTES;
+                }
 
+                // 입장 시간이 업장 종료시간보다 큰 경우 메뉴에서 제거한다.
+                if (startTime >= endTime)
+                {
+                    continue;
+                }
+
+                // 업장 시간 만들어 내기.
+                List<Integer> menuOperationTime = new ArrayList<>();
                 StringBuilder logStringBuilder = new StringBuilder();
+
+                final int intervalTime = gourmetMenu.timeInterval / ONE_HOUR_MINUTES * 100 + gourmetMenu.timeInterval % ONE_HOUR_MINUTES;
+                int nextTime = startTime;
+
+                ExLog.d("pinkred - ticket2 - startTime : " + startTime + ", endTime : " + endTime + ", intervalTime : " + intervalTime + ", readyTime : " + readyTime);
 
                 do
                 {
-                    menuOperationTime.add(intervalTime);
-                    logStringBuilder.append(intervalTime);
+                    int nextHours = nextTime / 100 + intervalTime / 100;
+                    int nextMinutes = nextTime % 100 + intervalTime % 100;
+
+                    if (nextMinutes >= ONE_HOUR_MINUTES)
+                    {
+                        nextHours += nextMinutes / ONE_HOUR_MINUTES;
+                        nextMinutes = nextMinutes % ONE_HOUR_MINUTES;
+                    }
+
+                    nextTime = nextHours * 100 + nextMinutes;
+
+                    if (todayStartTime > nextTime)
+                    {
+                        continue;
+                    }
+
+                    if (nextTime > endTime)
+                    {
+                        break;
+                    }
+
+                    menuOperationTime.add(nextTime);
+                    logStringBuilder.append(nextTime);
                     logStringBuilder.append(", ");
 
-                    visitTimeSet.add(intervalTime);
+                    visitTimeSet.add(nextTime);
 
-                    intervalTime += 30;
-
-                    if (intervalTime % 100 == 60)
-                    {
-                        intervalTime += 40;
-                    }
-                } while (intervalTime <= endTime);
+                } while (nextTime <= endTime);
 
                 gourmetMenu.setOperationTimeList(menuOperationTime);
 
-                ExLog.d("pinkred - ticket - openTime : " + openTime + ", endTime : " + endTime + ", intervalTime : " + logStringBuilder.toString());
+                ExLog.d("pinkred - ticket - menu time : " + logStringBuilder.toString());
             }
 
             Iterator<Integer> integerIterator = visitTimeSet.iterator();
@@ -1563,6 +1631,12 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     {
         List<GourmetMenu> menuList = mGourmetDetail.getGourmetMenuList();
 
+        if (menuList == null)
+        {
+            getViewInterface().setMenus(null, SHOWN_MENU_COUNT);
+            return;
+        }
+
         if (mVisitTime == FULL_TIME)
         {
             for (GourmetMenu gourmetMenu : menuList)
@@ -1576,6 +1650,13 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             {
                 gourmetMenu.visible = false;
                 gourmetMenu.orderCount = 0;
+
+                List<Integer> operationTimeList = gourmetMenu.getOperationTimeList();
+
+                if (operationTimeList == null)
+                {
+                    continue;
+                }
 
                 for (int operationTime : gourmetMenu.getOperationTimeList())
                 {
