@@ -1328,21 +1328,12 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
             int currentTime;
 
-            // 오늘인 경우
+            // 오늘인 경우 현재 시간에 + 30분을 더해준다.
             if (todayDate.equalsIgnoreCase(gourmetBookDateTime.getVisitDateTime("yyyyMMdd")) == true)
             {
                 Calendar calendar = DailyCalendar.getInstance();
                 calendar.setTime(DailyCalendar.convertDate(commonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT));
-
-                if (calendar.get(Calendar.MINUTE) >= 30)
-                {
-                    calendar.set(Calendar.MINUTE, 30);
-                    calendar.add(Calendar.HOUR_OF_DAY, 1);
-                } else
-                {
-                    calendar.set(Calendar.MINUTE, 0);
-                    calendar.add(Calendar.HOUR_OF_DAY, 1);
-                }
+                calendar.add(Calendar.MINUTE, 30);
 
                 currentTime = Integer.parseInt(DailyCalendar.format(calendar.getTime(), "HHmm"));
             } else
@@ -1353,9 +1344,14 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             TreeSet<Integer> visitTimeSet = new TreeSet<>();
             final int ONE_HOUR_MINUTES = 60;
 
+            int size = gourmetMenuList.size();
+
             // 업장 영역 시간 알아내기
-            for (GourmetMenu gourmetMenu : gourmetMenuList)
+            for (int i = size - 1; i >= 0; i--)
             {
+                GourmetMenu gourmetMenu = gourmetMenuList.get(i);
+
+                // 준비 시간
                 int readyTime = 0;
 
                 if (DailyTextUtils.isTextEmpty(gourmetMenu.readyTime) == false)
@@ -1363,42 +1359,28 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                     readyTime = Integer.parseInt(gourmetMenu.readyTime.replaceAll(":", "").substring(0, 4));
                 }
 
+                // 오늘인 경우 오늘 시작 시간
                 int todayStartTime = 0;
 
                 if (currentTime > 0)
                 {
-                    todayStartTime = (currentTime / 100 + readyTime / 100) * 100 + currentTime % 100 + readyTime % 100;
-                }
+                    int minutes = currentTime % 100 + readyTime % 100;
 
-                int startTime, endTime;
-
-                // 입장 시작 시간이 있는 경우
-                if (DailyTextUtils.isTextEmpty(gourmetMenu.startEatingTime) == false)
-                {
-                    startTime = Integer.parseInt(gourmetMenu.startEatingTime.replaceAll(":", "").substring(0, 4));
-                } else
-                {
-                    startTime = Integer.parseInt(gourmetMenu.openTime.replaceAll(":", "").substring(0, 4));
-                }
-
-                // 입장 종료 시간이 있는 경우, 라스트 오더가 있는 경우
-                if (DailyTextUtils.isTextEmpty(gourmetMenu.lastOrderTime) == false)
-                {
-                    endTime = Integer.parseInt(gourmetMenu.lastOrderTime.replaceAll(":", "").substring(0, 4));
-                } else
-                {
-                    if (DailyTextUtils.isTextEmpty(gourmetMenu.endEatingTime) == false)
+                    if (minutes > ONE_HOUR_MINUTES)
                     {
-                        endTime = Integer.parseInt(gourmetMenu.endEatingTime.replaceAll(":", "").substring(0, 4));
-                    } else
-                    {
-                        endTime = Integer.parseInt(gourmetMenu.closeTime.replaceAll(":", "").substring(0, 4));
+                        minutes = minutes / ONE_HOUR_MINUTES * 100 + minutes % ONE_HOUR_MINUTES;
                     }
+
+                    todayStartTime = (currentTime / 100 + readyTime / 100) * 100 + minutes;
                 }
+
+                // 입장 시작 / 종료 시간
+                int startTime = Integer.parseInt(gourmetMenu.startEatingTime.replaceAll(":", "").substring(0, 4));
+                int endTime = Integer.parseInt(gourmetMenu.endEatingTime.replaceAll(":", "").substring(0, 4));
 
                 ExLog.d("pinkred - ticket1 - startTime : " + startTime + ", endTime : " + endTime);
 
-                // 마지막 업장 종료시간이 새벽 3시보다 작은경우
+                // 마지막 입장 종료시간이 새벽 3시보다 작은경우
                 if (endTime < 300)
                 {
                     endTime += 2400;
@@ -1407,13 +1389,22 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 // 마지막 시간에서 준비 시간을 뺀다.
                 if (readyTime > 0)
                 {
-                    endTime -= readyTime / ONE_HOUR_MINUTES * 100;
-                    endTime -= readyTime % ONE_HOUR_MINUTES;
+                    endTime -= readyTime / 100 * 100;
+
+                    if (endTime % 100 >= readyTime % 100)
+                    {
+                        endTime -= readyTime % 100;
+                    } else
+                    {
+                        endTime = (endTime / 100 - 1) * 100 + endTime % 100 + ONE_HOUR_MINUTES - readyTime % 100;
+                    }
                 }
 
                 // 입장 시간이 업장 종료시간보다 큰 경우 메뉴에서 제거한다.
                 if (startTime >= endTime)
                 {
+                    gourmetMenuList.remove(i);
+
                     continue;
                 }
 
@@ -1457,7 +1448,14 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
                 } while (nextTime <= endTime);
 
-                gourmetMenu.setOperationTimeList(menuOperationTime);
+                // 메뉴시간이 나오지 않는 것은 삭제시켜버린다.
+                if (menuOperationTime.size() == 0)
+                {
+                    gourmetMenuList.remove(i);
+                } else
+                {
+                    gourmetMenu.setOperationTimeList(menuOperationTime);
+                }
 
                 ExLog.d("pinkred - ticket - menu time : " + logStringBuilder.toString());
             }
