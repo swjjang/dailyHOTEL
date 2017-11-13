@@ -6,21 +6,16 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.repository.remote.model.CampaignTagData;
 import com.daily.dailyhotel.repository.remote.model.CardData;
 import com.daily.dailyhotel.repository.remote.model.CouponsData;
-import com.daily.dailyhotel.repository.remote.model.ExistCouponsData;
 import com.daily.dailyhotel.repository.remote.model.GourmetCampaignTagsData;
-import com.daily.dailyhotel.repository.remote.model.GourmetDetailData;
-import com.daily.dailyhotel.repository.remote.model.GourmetListData;
 import com.daily.dailyhotel.repository.remote.model.GourmetPaymentData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
 import com.daily.dailyhotel.repository.remote.model.RecentlyPlacesData;
-import com.daily.dailyhotel.repository.remote.model.ReviewScoresData;
 import com.daily.dailyhotel.repository.remote.model.RewardDetailData;
 import com.daily.dailyhotel.repository.remote.model.RewardHistoryDetailData;
 import com.daily.dailyhotel.repository.remote.model.RewardInformationData;
 import com.daily.dailyhotel.repository.remote.model.StayCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.StayListData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundDetailData;
-import com.daily.dailyhotel.repository.remote.model.StayOutboundEmailReceiptData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundPaymentData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundDetailData;
@@ -28,7 +23,6 @@ import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
 import com.daily.dailyhotel.repository.remote.model.StayPaymentData;
 import com.daily.dailyhotel.repository.remote.model.StayRefundPolicyData;
 import com.daily.dailyhotel.repository.remote.model.SuggestsData;
-import com.daily.dailyhotel.repository.remote.model.TrueReviewsData;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
@@ -1237,82 +1231,6 @@ public class DailyMobileAPI
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
-    // GourmetRemoteImpl
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public Observable<BaseDto<GourmetDetailData>> getGourmetDetail(int gourmetIndex, String visitDate)
-    {
-        final String API = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/{restaurantIdx}"//
-            : "MTckNjMkNTQkNyQ2NSQ1MyQyNSQyMiQ0JDk0JDYxJDM1JDgkNjckMzckMTAxJA==$QkJCSMjBPVENkQ3RTU4MTjkyDOTQVyODZBQjSZFBNTMwMDI3MDQ5N0RDMDYGxRFDFg4NZEI4NTDXM2OUNGRUQ0QTY4N0MyNjVEMRgJ==$";
-
-        Map<String, String> urlParams = new HashMap<>();
-        urlParams.put("{restaurantIdx}", Integer.toString(gourmetIndex));
-
-        return mDailyMobileService.getGourmetDetail(Crypto.getUrlDecoderEx(API, urlParams), visitDate)//
-            .subscribeOn(Schedulers.io());
-    }
-
-    public Observable<BaseDto<ExistCouponsData>> getGourmetHasCoupon(int gourmetIndex, String visitDate)
-    {
-        final String API = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/{restaurantIdx}/coupons/exist"//
-            : "NzEkNTUkMTAxJDc4JDExNyQ1MSQxOSQzNyQ0NiQyJDEzMCQxMDgkMzEkMTIwJDc5JDE5JA==$MTMExNTdFQkU1QjUxNUUQB0MzQ3QjkxRVTJEOEQ0TNzAzOUFDCNTg5NTlBBNUJZCODY0RjY0NkM1MTQNSwNzMxUNDI3MDU2MjE1NDcwRERCNDYTCxMkNBQzM3RCDY4OKDU4QjUxVNDQ2MkIz$";
-
-        Map<String, String> urlParams = new HashMap<>();
-        urlParams.put("{restaurantIdx}", Integer.toString(gourmetIndex));
-
-        return mDailyMobileService.getGourmetHasCoupon(Crypto.getUrlDecoderEx(API, urlParams), visitDate)//
-            .subscribeOn(Schedulers.io());
-    }
-
-    public Observable<BaseDto<String>> addGourmetWish(int gourmetIndex)
-    {
-        final String API = Constants.UNENCRYPTED_URL ? "api/v4/wishes/gourmet/add/{restaurantIdx}"//
-            : "NyQxJDYxJDExMiQ4MyQxMDAkMjckNSQxMzUkMzgkMzUkMTA2JDQ5JDEwMSQxMzMkNDYk$NNTE1EN0UP2M0YzNjA5NjNCQUY1MOjk2RTRGFMkWJCMzgwCQUNGFMTNGRUNEMDlDRjALwRUU1NTQwQkNFNUQxNDU0NNkYyQTI5RjZCJQkJFMQEkE1REZGOTgxMODE4QkI4QkZFERERDNjBWE$";
-
-        Map<String, String> urlParams = new HashMap<>();
-        urlParams.put("{restaurantIdx}", Integer.toString(gourmetIndex));
-
-        return mDailyMobileService.addWish(Crypto.getUrlDecoderEx(API, urlParams))//
-            .subscribeOn(Schedulers.io());
-    }
-
-    public Observable<BaseDto<String>> removeGourmetWish(int gourmetIndex)
-    {
-        final String API = Constants.UNENCRYPTED_URL ? "api/v4/wishes/gourmet/remove/{restaurantIdx}"//
-            : "ODAkMTkkNTUkNDkkODMkNjckMTEkOTMkMTEkMTUkNzgkMyQ5OCQxMDIkNDIkMTAyJA==$MEYYwQTUzNzBSTENOjkyMEUQxNDhFNDRCMkJCMDc2QNjVFNDAyQ0MyXRTk3MDJk3QUM5REU2NQzEwMDcF0QTQyNkZEHDRDQ2RTRQkzCRNDcxRTJGQjlBQUZGREQyMUQzMjE1RTk0RDE1MUM4$";
-
-        Map<String, String> urlParams = new HashMap<>();
-        urlParams.put("{restaurantIdx}", Integer.toString(gourmetIndex));
-
-        return mDailyMobileService.removeWish(Crypto.getUrlDecoderEx(API, urlParams))//
-            .subscribeOn(Schedulers.io());
-    }
-
-    public Observable<BaseDto<ReviewScoresData>> getGourmetReviewScores(int gourmetIndex)
-    {
-        final String API = Constants.UNENCRYPTED_URL ? "api/v4/review/gourmet/{restaurantIdx}/statistic"//
-            : "NDQkMTI0JDY0JDY5JDExJDExNCQzNyQyOSQxNyQ2MiQ5OSQ3NyQxMjYkMjAkMTckMTYk$NTA0NEJBRTkAzN0ILzBLMjDgxMTgyNkI4UQUM5QkQxYMzY1OTQ2EN0NERDUxMDBFQYjM5REVQGMjEKyNJTUyQTEwMDYwOEMxOUI5MzgB0MDdCOEJEMDFFMDY4MEAY5NjhZGMjU5MUYJyMEFD$";
-
-        Map<String, String> urlParams = new HashMap<>();
-        urlParams.put("{restaurantIdx}", Integer.toString(gourmetIndex));
-
-        return mDailyMobileService.getReviewScores(Crypto.getUrlDecoderEx(API, urlParams))//
-            .subscribeOn(Schedulers.io());
-    }
-
-    public Observable<BaseDto<TrueReviewsData>> getGourmetTrueReviews(int gourmetIndex, int page, int limit)
-    {
-        final String API = Constants.UNENCRYPTED_URL ? "api/v4/review/gourmet/{restaurantIdx}"//
-            : "ODQkOTckMTE0JDQkMTMwJDQ0JDU2JDkyJDczJDcwJDEyOSQxMDUkNTAkMTQkODAkMTgk$NzcyXQkYxOERFRNkUzLOEVFN0JGRkMxMkJCNDhGQ0E2RTgWxRDYxUOTA5Q0QZBMkZENDU3NDYDwQkDMxMB0E5NkY0REE4JQjk1CM0RDN0VBZOXENEQTA0NUYwMzBEOREFBOTgyPRDVEMDXMz$";
-
-        Map<String, String> urlParams = new HashMap<>();
-        urlParams.put("{restaurantIdx}", Integer.toString(gourmetIndex));
-
-        return mDailyMobileService.getTrueReviews(Crypto.getUrlDecoderEx(API, urlParams), page, limit, "createdAt", "DESC")//
-            .subscribeOn(Schedulers.io());
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////
     // PaymentRemoteImpl
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1514,7 +1432,6 @@ public class DailyMobileAPI
         return mDailyMobileService.getInboundRecentlyList(Crypto.getUrlDecoderEx(URL), jsonObject).subscribeOn(Schedulers.io());
     }
 
-
     /////////////////////////////////////////////////////////////////////////////////////////////////
     //
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1525,14 +1442,6 @@ public class DailyMobileAPI
             : "NzEkOSQ1MyQ1MiQ2OCQ3MyQ3MSQ4MCQ4MCQ4OSQ3MiQ3NiQyJDUwJDM1JDEwJA==$ODWg1NUYzOPWTg1ODczQzU2ODM0N0M5RDVDNDDRBNTNCMjAzOTVEQNDYUyPRDAxNjc2QkI4RPDBGQDNVPjkM1RJMUE0RTYzNNTdCQg==$";
 
         return mDailyMobileService.getStayInboundList(Crypto.getUrlDecoderEx(URL), queryMap, bedTypeList, luxuryList, abTestType).subscribeOn(Schedulers.io());
-    }
-
-    public Observable<BaseDto<GourmetListData>> getGourmetList(Map<String, Object> queryMap, List<String> categoryList, List<String> timeList, List<String> luxuryList)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/sales"//
-            : "NjYkNjMkMzEkNzYkMzckODEkODUkNCQ2NyQ5NiQ2MSQxMyQ0MSQ0MCQ5MSQ2MCQ=$N0M0VNTRCQUIxYMDIzRDdEQTJBODI3QjZFCOEE4NEQVTdBMUVDOUM3QzlDOTRg1MzLBERDYEOzRTKNBQzk2QYUFBIMDAMGwRjNBQw=U=$";
-
-        return mDailyMobileService.getGourmetList(Crypto.getUrlDecoderEx(URL), queryMap, categoryList, timeList, luxuryList).subscribeOn(Schedulers.io());
     }
 
     public Observable<BaseListDto<String>> getStayUnavailableCheckInDates(int placeIndex, int dateRange, boolean isReverse)
