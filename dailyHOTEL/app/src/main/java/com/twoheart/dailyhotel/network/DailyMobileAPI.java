@@ -3,15 +3,12 @@ package com.twoheart.dailyhotel.network;
 import android.content.Context;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.repository.remote.model.BookingCancelData;
 import com.daily.dailyhotel.repository.remote.model.BookingData;
 import com.daily.dailyhotel.repository.remote.model.BookingHiddenData;
 import com.daily.dailyhotel.repository.remote.model.BookingHideData;
 import com.daily.dailyhotel.repository.remote.model.CampaignTagData;
 import com.daily.dailyhotel.repository.remote.model.CardData;
-import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
-import com.daily.dailyhotel.repository.remote.model.ConfigurationsData;
 import com.daily.dailyhotel.repository.remote.model.CouponsData;
 import com.daily.dailyhotel.repository.remote.model.ExistCouponsData;
 import com.daily.dailyhotel.repository.remote.model.GourmetBookingDetailData;
@@ -19,15 +16,12 @@ import com.daily.dailyhotel.repository.remote.model.GourmetCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.GourmetDetailData;
 import com.daily.dailyhotel.repository.remote.model.GourmetListData;
 import com.daily.dailyhotel.repository.remote.model.GourmetPaymentData;
-import com.daily.dailyhotel.repository.remote.model.NotificationData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
 import com.daily.dailyhotel.repository.remote.model.RecentlyPlacesData;
-import com.daily.dailyhotel.repository.remote.model.ReviewData;
 import com.daily.dailyhotel.repository.remote.model.ReviewScoresData;
 import com.daily.dailyhotel.repository.remote.model.RewardDetailData;
 import com.daily.dailyhotel.repository.remote.model.RewardHistoryDetailData;
 import com.daily.dailyhotel.repository.remote.model.RewardInformationData;
-import com.daily.dailyhotel.repository.remote.model.ShortUrlData;
 import com.daily.dailyhotel.repository.remote.model.StayBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.StayListData;
@@ -1192,78 +1186,6 @@ public class DailyMobileAPI
     // RxJava2 API
     //
     /////////////////////////////////////////////////////////////////////////////////////////////////
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    // CommonRemoteImpl
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public Observable<BaseDto<CommonDateTimeData>> getCommonDateTime()
-    {
-        final String API = Constants.UNENCRYPTED_URL ? "api/v3/common/datetime"//
-            : "NzgkMTUkMjckNTUkNjEkNjckNjckNDUkMTAkMjYkMTckMTkkNjckNTQkNjgkNDYk$ODE1MDI0NzMZGREQAJ0IMDFBNkIzTNTLUwNDAzMzY3MzQ0IMzZXEMkUT0RTZEMNkZGRUDAJE4MTkDSxOTVEMjBBQjRFQzMVDN0VDOA==$";
-
-        return mDailyMobileService.getCommonDateTime(Crypto.getUrlDecoderEx(API))//
-            .subscribeOn(Schedulers.io());
-    }
-
-    public Observable<BaseDto<ReviewData>> getReview(String placeType, int reservationIndex)
-    {
-        final String API = Constants.UNENCRYPTED_URL ? "api/v4/review/{type}/{reserveIdx}/question"//
-            : "NjEkMTI2JDE2JDkyJDgzJDEyNyQ2MCQxMTQkNzMkOTkkMzEkMTkkMTEzJDY2JDI2JDgzJA==$OThEOEU5OTFDOUExRNTJA0NEYyJNkE4MkZMzQkRFRTcwNEQ3MEUyNTM4MjhFRkFOCNAXkYwMzM3OUGYxRDcGxQURDQSkZEMTA4OUXM4QQjRGOUUyMjc5MRDREMVENDMjQ1NEFFMTJCCRMkQx$";
-
-        Map<String, String> urlParams = new HashMap<>();
-        urlParams.put("{type}", placeType);
-        urlParams.put("{reserveIdx}", Integer.toString(reservationIndex));
-
-        return mDailyMobileService.getReview(Crypto.getUrlDecoderEx(API, urlParams))//
-            .subscribeOn(Schedulers.io());
-    }
-
-    public Observable<ShortUrlData> getShortUrl(String longUrl)
-    {
-        final String URL;
-
-        if (Constants.UNENCRYPTED_URL == true)
-        {
-            URL = Constants.DEBUG ? "https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyAYwC5Y-1h3inzttzRF7JN-aJhwR1fFCtU"//
-                : "https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyDjhmWw3dUuqYB9E9bbykjh53RFFdKiSuQ";
-        } else
-        {
-            URL = Constants.DEBUG ? "NDYkMTY1JDExJDUxJDg0JDE5OSQxOCQxOSQ4NCQyNjAkMjYkMTU3JDY4JDE3MSQyMCQzNyQ=$MDlEQkI0REQSwMTVBNLFEzlFRDVPCMTUxQTM5BRkE0OUMxMzlENzAFCRUjY1REQzQUJBMDKA3MjczOUFERDBDMDQD1RXTRDMkQzQkUzRjY2NEJFMkU0MzlDQzZBMzZFRTMwNDQ0MzdCN0U4QTE0MTIzMkZENTIyOXTkzRUMxOTY5QOzY3JNjU4RkZCMDRBMEMyQzU1RkFGRkYzNDNIzQzdDMDZGRkNERDAxQTQyQjNGRjBBQzU1NjlDQTgyMjVBOUFEMUVGODUK5NUJG$"//
-                : "NTEkMTE0JDI0OCQyNTAkMjM3JDE5NSQxNDckODgkODQkMTIyJDIyJDEyMyQxNTYkMjQ2JDEzMyQyNTAk$RDFFNjcwRDUyRENGREQ3QjNA4REE3M0M5QjBDQzQ2QTczQzUyRUEB3QThDM0VBNzA5NzE0NkZERDM5NTgwQUML4M0ZJCRjM0MTUyNjg1RjYwMTc2MkY1NG0VBMjYFJGMzI1ODQQwN0NERUY5RkYwRUFCNPkI1QQUE0RkQxMkZGMzY5NENBMDgwQkY1MjA2RDAzMDkxQjJDRYUFCOTYwOTc1QzkwMURCNzE0NjFGQzA0OUNGQTcxMTMWExQRkY2NTIzQ0FQJ2Q0RENkUy$";
-        }
-
-        JSONObject jsonObject = new JSONObject();
-
-        try
-        {
-            jsonObject.put("longUrl", longUrl);
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
-
-        return mDailyMobileService.getShortUrl(Crypto.getUrlDecoderEx(URL), jsonObject)//
-            .subscribeOn(Schedulers.io());
-    }
-
-    public Observable<BaseDto<NotificationData>> updateNotification(boolean agreed)
-    {
-        final String API = Constants.UNENCRYPTED_URL ? "api/v1/notice/benefit"//
-            : "ODckNDIkMzUkNzYkMzAkNjEkOTAkNTgkNTIkODEkNDckOSQ2MiQzMiQ3NyQ2OSQ=$NjdCRTNCQBTczOUY4RTJGMzY5RDA2NEWTRCMTkX5NDA3NEOE1HRDNBNVjc3NzMAA1NkAQRyNTgwNjBWDNEY3REIXM1NkRCREQ4MVQ=K=$";
-
-        return mDailyMobileService.updateNotification(Crypto.getUrlDecoderEx(API), agreed)//
-            .subscribeOn(Schedulers.io());
-    }
-
-    public Observable<BaseDto<ConfigurationsData>> getConfigurations()
-    {
-        final String API = Constants.UNENCRYPTED_URL ? "api/v4/common/configurations"//
-            : "NzYkMTMkNDIkODQkNjQkMCQ5MyQzMiQyNSQ0NyQ3MyQ4MCQ5OSQ2JDEwMSQ3OSQ=$FREQ3QETU4QTIzMHTVGMjE5NjUPzMUVBRTVUzQkY2MTlCMIDAY5NkQ3MDA5RDlEMTBDNDSM5Q0BQyMzUJGIRDY3VMDBGOIDNDOA=FQT=$";
-
-        return mDailyMobileService.getConfigurations(Crypto.getUrlDecoderEx(API))//
-            .subscribeOn(Schedulers.io());
-    }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // SuggestRemoteImpl

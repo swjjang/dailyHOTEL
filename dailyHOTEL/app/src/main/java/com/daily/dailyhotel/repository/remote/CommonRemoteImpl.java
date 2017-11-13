@@ -5,32 +5,41 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.CommonInterface;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.Configurations;
 import com.daily.dailyhotel.entity.Notification;
 import com.daily.dailyhotel.entity.Review;
 import com.daily.dailyhotel.repository.remote.model.NotificationData;
-import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
-public class CommonRemoteImpl implements CommonInterface
+public class CommonRemoteImpl extends BaseRemoteImpl implements CommonInterface
 {
-    private Context mContext;
-
     public CommonRemoteImpl(@NonNull Context context)
     {
-        mContext = context;
+        super(context);
     }
 
     @Override
     public Observable<CommonDateTime> getCommonDateTime()
     {
-        return DailyMobileAPI.getInstance(mContext).getCommonDateTime().map((commonDateTimeDataBaseDto) ->
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/common/datetime"//
+            : "NzgkMTUkMjckNTUkNjEkNjckNjckNDUkMTAkMjYkMTckMTkkNjckNTQkNjgkNDYk$ODE1MDI0NzMZGREQAJ0IMDFBNkIzTNTLUwNDAzMzY3MzQ0IMzZXEMkUT0RTZEMNkZGRUDAJE4MTkDSxOTVEMjBBQjRFQzMVDN0VDOA==$";
+
+        return mDailyMobileService.getCommonDateTime(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io()).map((commonDateTimeDataBaseDto) ->
         {
             CommonDateTime commonDateTime = null;
 
@@ -55,7 +64,14 @@ public class CommonRemoteImpl implements CommonInterface
     @Override
     public Observable<Review> getReview(String placeType, int reservationIndex)
     {
-        return DailyMobileAPI.getInstance(mContext).getReview(placeType, reservationIndex).map((reviewDataBaseDto) ->
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/review/{type}/{reserveIdx}/question"//
+            : "NjEkMTI2JDE2JDkyJDgzJDEyNyQ2MCQxMTQkNzMkOTkkMzEkMTkkMTEzJDY2JDI2JDgzJA==$OThEOEU5OTFDOUExRNTJA0NEYyJNkE4MkZMzQkRFRTcwNEQ3MEUyNTM4MjhFRkFOCNAXkYwMzM3OUGYxRDcGxQURDQSkZEMTA4OUXM4QQjRGOUUyMjc5MRDREMVENDMjQ1NEFFMTJCCRMkQx$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{type}", placeType);
+        urlParams.put("{reserveIdx}", Integer.toString(reservationIndex));
+
+        return mDailyMobileService.getReview(Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io()).map((reviewDataBaseDto) ->
         {
             Review review = null;
 
@@ -80,7 +96,29 @@ public class CommonRemoteImpl implements CommonInterface
     @Override
     public Observable<String> getShortUrl(String longUrl)
     {
-        return DailyMobileAPI.getInstance(mContext).getShortUrl(longUrl).map((shortUrlData) ->
+        final String URL;
+
+        if (Constants.UNENCRYPTED_URL == true)
+        {
+            URL = Constants.DEBUG ? "https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyAYwC5Y-1h3inzttzRF7JN-aJhwR1fFCtU"//
+                : "https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyDjhmWw3dUuqYB9E9bbykjh53RFFdKiSuQ";
+        } else
+        {
+            URL = Constants.DEBUG ? "NDYkMTY1JDExJDUxJDg0JDE5OSQxOCQxOSQ4NCQyNjAkMjYkMTU3JDY4JDE3MSQyMCQzNyQ=$MDlEQkI0REQSwMTVBNLFEzlFRDVPCMTUxQTM5BRkE0OUMxMzlENzAFCRUjY1REQzQUJBMDKA3MjczOUFERDBDMDQD1RXTRDMkQzQkUzRjY2NEJFMkU0MzlDQzZBMzZFRTMwNDQ0MzdCN0U4QTE0MTIzMkZENTIyOXTkzRUMxOTY5QOzY3JNjU4RkZCMDRBMEMyQzU1RkFGRkYzNDNIzQzdDMDZGRkNERDAxQTQyQjNGRjBBQzU1NjlDQTgyMjVBOUFEMUVGODUK5NUJG$"//
+                : "NTEkMTE0JDI0OCQyNTAkMjM3JDE5NSQxNDckODgkODQkMTIyJDIyJDEyMyQxNTYkMjQ2JDEzMyQyNTAk$RDFFNjcwRDUyRENGREQ3QjNA4REE3M0M5QjBDQzQ2QTczQzUyRUEB3QThDM0VBNzA5NzE0NkZERDM5NTgwQUML4M0ZJCRjM0MTUyNjg1RjYwMTc2MkY1NG0VBMjYFJGMzI1ODQQwN0NERUY5RkYwRUFCNPkI1QQUE0RkQxMkZGMzY5NENBMDgwQkY1MjA2RDAzMDkxQjJDRYUFCOTYwOTc1QzkwMURCNzE0NjFGQzA0OUNGQTcxMTMWExQRkY2NTIzQ0FQJ2Q0RENkUy$";
+        }
+
+        JSONObject jsonObject = new JSONObject();
+
+        try
+        {
+            jsonObject.put("longUrl", longUrl);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
+        return mDailyMobileService.getShortUrl(Crypto.getUrlDecoderEx(URL), jsonObject).subscribeOn(Schedulers.io()).map((shortUrlData) ->
         {
             String shortUrl = null;
 
@@ -99,7 +137,11 @@ public class CommonRemoteImpl implements CommonInterface
     @Override
     public Observable<Notification> updateNotification(boolean agreed)
     {
-        return DailyMobileAPI.getInstance(mContext).updateNotification(agreed).map((BaseDto<NotificationData> notificationDataBaseDto) ->
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/notice/benefit"//
+            : "ODckNDIkMzUkNzYkMzAkNjEkOTAkNTgkNTIkODEkNDckOSQ2MiQzMiQ3NyQ2OSQ=$NjdCRTNCQBTczOUY4RTJGMzY5RDA2NEWTRCMTkX5NDA3NEOE1HRDNBNVjc3NzMAA1NkAQRyNTgwNjBWDNEY3REIXM1NkRCREQ4MVQ=K=$";
+
+        return mDailyMobileService.updateNotification(Crypto.getUrlDecoderEx(API), agreed)//
+            .subscribeOn(Schedulers.io()).map((BaseDto<NotificationData> notificationDataBaseDto) ->
         {
             Notification notification = null;
 
@@ -125,7 +167,11 @@ public class CommonRemoteImpl implements CommonInterface
 
     public Observable<Configurations> getConfigurations()
     {
-        return DailyMobileAPI.getInstance(mContext).getConfigurations().map((configurationDataBaseDto) ->
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/common/configurations"//
+            : "NzYkMTMkNDIkODQkNjQkMCQ5MyQzMiQyNSQ0NyQ3MyQ4MCQ5OSQ2JDEwMSQ3OSQ=$FREQ3QETU4QTIzMHTVGMjE5NjUPzMUVBRTVUzQkY2MTlCMIDAY5NkQ3MDA5RDlEMTBDNDSM5Q0BQyMzUJGIRDY3VMDBGOIDNDOA=FQT=$";
+
+        return mDailyMobileService.getConfigurations(Crypto.getUrlDecoderEx(API))//
+            .subscribeOn(Schedulers.io()).map((configurationDataBaseDto) ->
         {
             Configurations configuration;
 
