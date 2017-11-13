@@ -46,6 +46,9 @@ public class UserData
     @JsonField(name = "agreedBenefit")
     public boolean agreedBenefit;
 
+    @JsonField(name = "dataRetentionInMonth")
+    public int dataRetentionInMonth;
+
     public UserData()
     {
 
@@ -67,6 +70,7 @@ public class UserData
         user.verified = verified;
         user.phoneVerified = phoneVerified;
         user.agreedBenefit = agreedBenefit;
+        user.dataRetentionInMonth = dataRetentionInMonth;
 
         return user;
     }

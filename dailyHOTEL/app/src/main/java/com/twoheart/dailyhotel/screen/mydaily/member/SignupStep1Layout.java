@@ -12,11 +12,13 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyAutoCompleteEditText;
 import com.daily.base.widget.DailyEditText;
@@ -48,10 +50,12 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
     private CheckBox mTermsOfPrivacyCheckBox;
     private CheckBox mBenefitCheckBox;
     ScrollView mScrollView;
+    private RadioGroup mValidDateRadioGroup;
 
     public interface OnEventListener extends OnBaseEventListener
     {
-        void onValidation(String email, String name, String password1, String confirmPassword, String recommender, String birthday, boolean isBenefit);
+        void onValidation(String email, String name, String password1, String confirmPassword //
+            , String recommender, String birthday, boolean isBenefit, int privacyValidMonth);
 
         void showTermOfService();
 
@@ -232,6 +236,8 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         View nextStepView = view.findViewById(R.id.nextStepView);
         nextStepView.setOnClickListener(this);
 
+        mValidDateRadioGroup = (RadioGroup) view.findViewById(R.id.privacyValidDateRadioGroup);
+
         mEmailView.requestFocus();
     }
 
@@ -351,7 +357,27 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
             }
         }
 
-        ((OnEventListener) mOnEventListener).onValidation(emailText, nameText, passwordText, confirmPasswordText, recommender, birthday, mBenefitCheckBox.isChecked());
+        int month;
+        switch (mValidDateRadioGroup.getCheckedRadioButtonId())
+        {
+            case R.id.yearRadioButton3:
+                month = 36;
+                break;
+
+            case R.id.yearRadioButton5:
+                month = 60;
+                break;
+
+            case R.id.yearRadioButton1:
+            default:
+                month = 12;
+                break;
+        }
+
+        ExLog.d("getCheckedRadioButtonId : " + mValidDateRadioGroup.getCheckedRadioButtonId() + " , month : " + month);
+
+        ((OnEventListener) mOnEventListener).onValidation(emailText, nameText, passwordText //
+            , confirmPasswordText, recommender, birthday, mBenefitCheckBox.isChecked(), month);
     }
 
     @Override

@@ -7,13 +7,13 @@ import com.daily.dailyhotel.entity.UserBenefit;
 @JsonObject
 public class UserBenefitData
 {
-    @JsonField(name = "userIdx")
+    @JsonField(name = "bonusAmount")
     public int bonusAmount;
 
-    @JsonField(name = "userIdx")
+    @JsonField(name = "couponTotalCount")
     public int couponTotalCount;
 
-    @JsonField(name = "userIdx")
+    @JsonField(name = "exceedLimitedBonus")
     public boolean exceedLimitedBonus;
 
     public UserBenefitData()

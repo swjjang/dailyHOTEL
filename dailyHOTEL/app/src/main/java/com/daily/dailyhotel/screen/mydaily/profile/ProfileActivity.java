@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Constants;
 
 /**
  * Created by sheldon
@@ -15,16 +17,19 @@ import com.twoheart.dailyhotel.R;
  */
 public class ProfileActivity extends BaseActivity<ProfilePresenter>
 {
-    public static Intent newInstance(Context context)
-    {
-        Intent intent = new Intent(context, ProfileActivity.class);
-        return intent;
-    }
+    public static final int REQUEST_CODE_EDIT_PROFILE = 10000;
+    public static final int REQUEST_CODE_EDIT_PROFILE_BIRTHDAY = 10001;
+    public static final int REQUEST_CODE_LOGIN = 10002;
 
     public static Intent newInstance(Context context, String deepLink)
     {
         Intent intent = new Intent(context, ProfileActivity.class);
-        intent.putExtra(INTENT_EXTRA_DATA_DEEPLINK, deepLink);
+
+        if (DailyTextUtils.isTextEmpty(deepLink) == false)
+        {
+            intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK, deepLink);
+        }
+
         return intent;
     }
 

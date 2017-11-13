@@ -534,6 +534,7 @@
     <string name="label_confirm_profile">비밀번호 설정 완료</string>
     <string name="label_dont_verification">(인증필요)</string>
     <string name="label_date_verification">"(%1$s 인증됨)"</string>
+    <string name="label_privacy_valid_date">개인정보 유효기간</string>
     <string name="message_edit_email_guide">이메일 주소를 입력하신 후 [이메일 설정 완료] 버튼을 눌 러주세요.</string>
     <string name="message_edit_phone_guide">휴대폰 번호를 입력하신 후 [인증번호 받기] 버튼을 눌러주세요.</string>
     <string name="message_edit_phone_social_guide">휴대폰 번호를 입력한 후 [휴대폰 번호 설정 완료] 버튼을 눌러주세요.</string>
@@ -545,6 +546,8 @@
     <string name="message_register_phonenumber">신속한 예약확인 및 안내를 위해 고객님의 휴대폰 번호를 입력한 후 인증처리해주세요.</string>
     <string name="message_invalid_verification">다른 기기에서 휴대폰 번호가 인증처리되었습니다.\n내정보에서 휴대폰 번호를 다시 확인해주세요.</string>
     <string name="message_error_facebook_login">페이스북 앱 연결시 오류가 발생했습니다.\n다시 로그인을 시도하거나 페이스북 앱이 최신 버전인지 확인해 주세요.</string>
+    <string name="message_change_privacy_valid_date">개인정보 유효기간이 변경되었습니다.</string>
+    <string name="message_change_privacy_valid_date_fail">일시적인 오류로 변경이 되지 않았으니 다시 시도해주세요.</string>
 
     <!-- Booking Activity -->
     <string name="act_toast_payment_success">결제가 정상적으로 이루어졌습니다.</string>
@@ -688,6 +691,11 @@
     <string name="label_phone_number_special_except">휴대폰 번호 (\'-\'제외)</string>
     <string name="label_certification_number_ndigit">인증번호</string>
     <string name="label_notification_on_option">혜택 알림 받기 (선택)</string>
+    <string name="label_privacy_valid_date_option">개인정보 유효기간 (선택)</string>
+    <string name="label_privacy_valid_date_1year">1년</string>
+    <string name="label_privacy_valid_date_3year">3년</string>
+    <string name="label_privacy_valid_date_5year">5년</string>
+    <string name="message_privacy_valid_date">미 선택 시에도 정보통신망법을 준수하여 개인정보를 보호합니다.</string>
 
     <string name="act_signup_btn_update">회원정보 수정</string>
     <string name="act_signup_terms">이용약관 동의 (필수)</string>

@@ -33,7 +33,6 @@ import com.twoheart.dailyhotel.screen.mydaily.bonus.InviteFriendsActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.CouponListActivity;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
-import com.twoheart.dailyhotel.screen.mydaily.member.ProfileActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.SignupStep1Activity;
 import com.twoheart.dailyhotel.screen.mydaily.recentplace.RecentPlacesTabActivity;
 import com.twoheart.dailyhotel.screen.mydaily.stamp.StampActivity;
@@ -389,9 +388,8 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
         lockUiComponent();
 
         BaseActivity baseActivity = (BaseActivity) getActivity();
-        startActivity(new Intent(ProfileActivity.newInstance(baseActivity//
+        startActivity(new Intent(com.daily.dailyhotel.screen.mydaily.profile.ProfileActivity.newInstance(baseActivity//
             , dailyDeepLink != null ? dailyDeepLink.getDeepLink() : null)));
-
         //                    AnalyticsManager.getInstance(baseActivity).recordEvent(Screen.INFORMATION, Action.CLICK, Label.PROFILE, 0L);
     }
 

@@ -1,7 +1,6 @@
 package com.daily.dailyhotel.screen.mydaily.profile;
 
 import android.app.Activity;
-import android.content.Context;
 
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -14,27 +13,27 @@ public class ProfileAnalyticsImpl implements ProfilePresenter.ProfileAnalyticsIn
     }
 
     @Override
-    public void onScreenLogOut(Activity activity)
+    public void onScreenLogout(Activity activity)
     {
         AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.MENU_LOGOUT_COMPLETE, null);
     }
 
     @Override
-    public void onClearUserInformation(Context context)
+    public void clearUserInformation(Activity activity)
     {
-        AnalyticsManager.getInstance(context).setUserInformation(AnalyticsManager.ValueType.EMPTY, AnalyticsManager.ValueType.EMPTY);
+        AnalyticsManager.getInstance(activity).setUserInformation(AnalyticsManager.ValueType.EMPTY, AnalyticsManager.ValueType.EMPTY);
     }
 
     @Override
-    public void onEventCopyReferralCode(Context context)
+    public void onEventCopyReferralCode(Activity activity)
     {
-        AnalyticsManager.getInstance(context).recordEvent(AnalyticsManager.Category.INVITE_FRIEND//
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.INVITE_FRIEND//
             , AnalyticsManager.Action.REFERRAL_CODE_COPIED, AnalyticsManager.Label.PROFILE_EDITED, null);
     }
 
     @Override
-    public void onExceedBonus(Context context, boolean isExceedBonus)
+    public void setExceedBonus(Activity activity, boolean isExceedBonus)
     {
-        AnalyticsManager.getInstance(context).setExceedBonus(isExceedBonus);
+        AnalyticsManager.getInstance(activity).setExceedBonus(isExceedBonus);
     }
 }

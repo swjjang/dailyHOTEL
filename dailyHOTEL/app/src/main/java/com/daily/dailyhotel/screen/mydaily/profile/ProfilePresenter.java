@@ -2,57 +2,69 @@ package com.daily.dailyhotel.screen.mydaily.profile;
 
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.widget.Toast;
 
-import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.entity.UserBenefit;
-import com.daily.dailyhotel.parcel.UserParcel;
 import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
-import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
-import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyUserPreference;
+import com.facebook.login.LoginManager;
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.screen.mydaily.member.EditProfileBirthdayActivity;
+import com.twoheart.dailyhotel.screen.mydaily.member.EditProfileEmailActivity;
+import com.twoheart.dailyhotel.screen.mydaily.member.EditProfileNameActivity;
+import com.twoheart.dailyhotel.screen.mydaily.member.EditProfilePasswordActivity;
+import com.twoheart.dailyhotel.screen.mydaily.member.EditProfilePhoneActivity;
+import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyDeepLink;
+import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 
-import io.reactivex.Observable;
+import java.util.Collections;
+import java.util.Map;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 
 /**
  * Created by sheldon
  * Clean Architecture
  */
-public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, ProfileViewInterface> implements ProfileView.OnEventListener
+public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, ProfileInterface> implements ProfileView.OnEventListener
 {
-    ProfileAnalyticsInterface mProfileAnalytics;
-
     private ProfileRemoteImpl mProfileRemoteImpl;
     private ConfigLocalImpl mConfigLocalImpl;
 
-    private User mUser;
+    private ProfileAnalyticsInterface mAnalytics;
+    private DailyDeepLink mDailyDeepLink;
 
     public interface ProfileAnalyticsInterface extends BaseAnalyticsInterface
     {
         void onScreen(Activity activity);
 
-        void onScreenLogOut(Activity activity);
+        void onScreenLogout(Activity activity);
 
-        void onClearUserInformation(Context context);
+        void clearUserInformation(Activity activity);
 
-        void onEventCopyReferralCode(Context context);
+        void onEventCopyReferralCode(Activity activity);
 
-        // 보너스 초과 여부
-        void onExceedBonus(Context context, boolean isExceedBonus);
+        void setExceedBonus(Activity activity, boolean isExceedBonus);
     }
 
     public ProfilePresenter(@NonNull ProfileActivity activity)
@@ -62,7 +74,7 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
 
     @NonNull
     @Override
-    protected ProfileViewInterface createInstanceViewInterface()
+    protected ProfileInterface createInstanceViewInterface()
     {
         return new ProfileView(getActivity(), this);
     }
@@ -74,14 +86,16 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
 
         setAnalytics(new ProfileAnalyticsImpl());
 
-        mProfileRemoteImpl = new ProfileRemoteImpl(activity);
         mConfigLocalImpl = new ConfigLocalImpl(activity);
+        mProfileRemoteImpl = new ProfileRemoteImpl(activity);
+
+        //        setRefresh(true);
     }
 
     @Override
     public void setAnalytics(BaseAnalyticsInterface analytics)
     {
-        mProfileAnalytics = (ProfileAnalyticsInterface) analytics;
+        mAnalytics = (ProfileAnalyticsInterface) analytics;
     }
 
     @Override
@@ -92,8 +106,40 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
             return true;
         }
 
-        if (intent.hasExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK) == true)
+        if (intent.hasExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK) == false)
         {
+            return true;
+        }
+
+        try
+        {
+            mDailyDeepLink = DailyDeepLink.getNewInstance(Uri.parse(intent.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK)));
+        } catch (Exception e)
+        {
+            mDailyDeepLink = null;
+            return false;
+        }
+
+        if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true)
+        {
+            if (mDailyDeepLink.isExternalDeepLink() == true)
+            {
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) mDailyDeepLink;
+
+                if (externalDeepLink.isProfileBirthdayView() == true)
+                {
+                    if (DailyHotel.isLogin() == true)
+                    {
+                        startEditBirthday(DailyUserPreference.getInstance(getActivity()).getBirthday());
+                    } else
+                    {
+                        startEditBirthday(null);
+                    }
+                }
+            }
+
+            mDailyDeepLink.clear();
+            mDailyDeepLink = null;
         }
 
         return true;
@@ -102,7 +148,6 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
     @Override
     public void onPostCreate()
     {
-
     }
 
     @Override
@@ -110,29 +155,21 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
     {
         super.onStart();
 
-        mProfileAnalytics.onScreen(getActivity());
-        //
-        //        if (DailyDeepLink.getInstance().isValidateLink() == true)
-        //        {
-        //            if (DailyDeepLink.getInstance().isProfileBirthdayView() == true)
-        //            {
-        //                if (DailyHotel.isLogin() == true)
-        //                {
-        //                    mOnEventListener.startEditBirthday(DailyUserPreference.getInstance(this).getBirthday());
-        //                } else
-        //                {
-        //                    mOnEventListener.startEditBirthday(null);
-        //                }
-        //            }
-        //
-        //            DailyDeepLink.getInstance().clear();
-        //        } else
-        //        {
-        //            if (DailyHotel.isLogin() == false)
-        //            {
-        //                showLoginDialog();
-        //            }
-        //        }
+        if (DailyHotel.isLogin() == false)
+        {
+            setRefresh(false);
+            showLoginDialog();
+        } else
+        {
+            setRefresh(true);
+        }
+
+        if (isRefresh() == true)
+        {
+            onRefresh(true);
+        }
+
+        mAnalytics.onScreen(getActivity());
     }
 
     @Override
@@ -140,28 +177,18 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
     {
         super.onResume();
 
-
-        //        Observable mergedObservable = Observable.merge(mConfigLocalImpl.isLogin()
-        //            , mProfileRemoteImpl.getProfile().doOnError(this::onHandleError).doOnNext(this::onUserProfile));
-        //
-        //
-        //        Observable.
-        //
-        //
-        //        addCompositeDisposable(mConfigLocalImpl.isLogin().subscribe(new Consumer<Boolean>()
-        //        {
-        //            @Override
-        //            public void accept(Boolean isLogin) throws Exception
-        //            {
-        //
-        //            }
-        //        });
-
-        if (DailyHotel.isLogin() == true)
+        if (DailyHotel.isLogin() == false)
         {
-            screenLock(true);
+            setRefresh(false);
+            showLoginDialog();
+        } else
+        {
+            setRefresh(true);
+        }
 
-            addCompositeDisposable(mProfileRemoteImpl.getProfile().doOnError(this::onHandleError).doOnNext(this::onUserProfile).subscribe());
+        if (isRefresh() == true)
+        {
+            onRefresh(true);
         }
     }
 
@@ -185,102 +212,102 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
     }
 
     @Override
-    public void onBackClick()
-    {
-        getActivity().onBackPressed();
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState)
     {
         super.onSaveInstanceState(outState);
-
-        outState.putParcelable("user", new UserParcel(mUser));
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState)
     {
         super.onRestoreInstanceState(savedInstanceState);
-
-        mUser = ((UserParcel) savedInstanceState.getParcelable("user")).getUser();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        unLockAll();
 
+        switch (requestCode)
+        {
+            case ProfileActivity.REQUEST_CODE_EDIT_PROFILE:
+            {
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    screenLock(true);
+                    setRefresh(true);
+                }
+                break;
+            }
+
+            case ProfileActivity.REQUEST_CODE_EDIT_PROFILE_BIRTHDAY:
+            {
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    screenLock(true);
+
+                    setRefresh(true);
+                } else
+                {
+                    finish();
+                }
+                break;
+            }
+
+            case ProfileActivity.REQUEST_CODE_LOGIN:
+            {
+                if (resultCode != Activity.RESULT_OK)
+                {
+                    finish();
+                }
+                break;
+            }
+        }
     }
 
     @Override
-    protected void onRefresh(boolean showProgress)
+    protected synchronized void onRefresh(boolean showProgress)
     {
-
-    }
-
-    private void onUserProfile(User user)
-    {
-        if (user == null)
+        if (getActivity().isFinishing() == true || isRefresh() == false)
         {
-            ExLog.d("user == null");
             return;
         }
 
-        mUser = user;
+        setRefresh(false);
+        screenLock(showProgress);
 
-        getViewInterface().setEmail(user.userType, user.email);
-
-        switch (user.userType)
+        addCompositeDisposable(mProfileRemoteImpl.getProfile().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<User>()
         {
-            case Constants.DAILY_USER:
-                getViewInterface().setPasswordVisible(true);
-                getViewInterface().setPhoneNumberVerifiedVisible(true);
-
-                String verifiedDate = null;
-
-                if (user.verified == true && user.phoneVerified == true)
-                {
-                    try
-                    {
-                        verifiedDate = DailyCalendar.convertDateFormatString(user.phoneVerifiedAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
-                    } catch (Exception e)
-                    {
-                        verifiedDate = null;
-                    }
-                }
-
-                getViewInterface().setPhoneNumberVerified(user.phoneVerified, verifiedDate);
-                break;
-
-            default:
-                getViewInterface().setPasswordVisible(false);
-                getViewInterface().setPhoneNumberVerifiedVisible(false);
-                break;
-        }
-
-        getViewInterface().setName(user.name);
-        getViewInterface().setPhoneNumber(user.phone);
-        getViewInterface().setBirthday(user.birthday);
-        getViewInterface().setReferralCode(user.referralCode);
-
-        if (user.verified == true)
-        {
-            if (user.phoneVerified == true)
+            @Override
+            public void accept(User user) throws Exception
             {
-                addCompositeDisposable(mConfigLocalImpl.setVerified(true).subscribe());
-            } else
-            {
-                Observable<Boolean> mergedObservable = Observable.merge(mConfigLocalImpl.setVerified(false), mConfigLocalImpl.isVerified());
+                getViewInterface().updateUserInformation(user);
 
-                addCompositeDisposable(mergedObservable.subscribe(new Consumer<Boolean>()
+                if (user.verified == true)
                 {
-                    @Override
-                    public void accept(Boolean verify) throws Exception
+                    if (user.phoneVerified == true)
                     {
-                        if (verify == true)
+                        DailyPreference.getInstance(getActivity()).setVerification(true);
+                    } else
+                    {
+                        // 인증 후 인증이 해지된 경우
+                        if (DailyPreference.getInstance(getActivity()).isVerification() == true)
                         {
                             getViewInterface().showSimpleDialog(null, getString(R.string.message_invalid_verification), getString(R.string.dialog_btn_text_confirm), null);
                         }
+
+                        DailyPreference.getInstance(getActivity()).setVerification(false);
+                    }
+                }
+
+                addCompositeDisposable(mProfileRemoteImpl.getBenefit().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<UserBenefit>()
+                {
+                    @Override
+                    public void accept(UserBenefit userBenefit) throws Exception
+                    {
+                        mAnalytics.setExceedBonus(getActivity(), userBenefit.exceedLimitedBonus);
+
+                        unLockAll();
                     }
                 }, new Consumer<Throwable>()
                 {
@@ -290,98 +317,237 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
                         onHandleError(throwable);
                     }
                 }));
-
-                //                // 인증 후 인증이 해지된 경우
-                //                addCompositeDisposable(mConfigLocalImpl.isVerified().subscribe(verify ->
-                //                {
-                //                    if (verify.booleanValue() == true)
-                //                    {
-                //                        getViewInterface().showSimpleDialog(null, getString(R.string.message_invalid_verification), getString(R.string.dialog_btn_text_confirm), null);
-                //                    }
-                //
-                //                    addCompositeDisposable(mConfigLocalImpl.setVerified(false).subscribe());
-                //                }));
             }
-        }
-
-        addCompositeDisposable(mProfileRemoteImpl.getBenefit().doOnError(this::onHandleError).doOnNext(this::onUserBenefit).subscribe());
-    }
-
-    private void onUserBenefit(UserBenefit userBenefit)
-    {
-        if (userBenefit == null)
+        }, new Consumer<Throwable>()
         {
-            ExLog.d("userBenefit == null");
-            return;
-        }
-
-        mProfileAnalytics.onExceedBonus(getActivity(), userBenefit.exceedLimitedBonus);
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                onHandleError(throwable);
+            }
+        }));
     }
 
     @Override
-    public void startEditEmail()
+    public void onBackClick()
     {
-
+        //        getActivity().onBackPressed();
+        finish();
     }
 
-    @Override
-    public void startEditName(String name)
-    {
-
-    }
-
-    @Override
-    public void startEditPhone(String phoneNumber)
-    {
-
-    }
-
-    @Override
-    public void startEditPassword()
-    {
-
-    }
-
-    @Override
-    public void startEditBirthday(String birthday)
-    {
-
-    }
-
-    @Override
-    public void onLogOutClick()
+    private void showLoginDialog()
     {
         if (lock() == true)
         {
             return;
         }
 
-        getViewInterface().showSimpleDialog(getString(R.string.act_profile_btn_logout), getString(R.string.dialog_msg_chk_wanna_login),//
-            getString(R.string.dialog_btn_text_logout), getString(R.string.dialog_btn_text_cancel)//
-            , new View.OnClickListener()
+        // 로그인 필요
+        View.OnClickListener positiveListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
             {
-                @Override
-                public void onClick(View v)
-                {
-                    mProfileAnalytics.onClearUserInformation(getActivity());
-                    mProfileAnalytics.onScreenLogOut(getActivity());
+                lock();
+                startLogin();
+            }
+        };
 
-                    new FacebookRemoteImpl().logOut();
-                    new KakaoRemoteImpl().logOut();
+        View.OnClickListener negativeListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        };
+
+        String title = getActivity().getResources().getString(R.string.dialog_notice2);
+        String message = getActivity().getResources().getString(R.string.dialog_message_profile_login);
+        String positive = getActivity().getResources().getString(R.string.dialog_btn_text_yes);
+        String negative = getActivity().getResources().getString(R.string.dialog_btn_text_no);
+
+        getViewInterface().showSimpleDialog(title, message, positive, negative, positiveListener, negativeListener, new DialogInterface.OnCancelListener()
+        {
+            @Override
+            public void onCancel(DialogInterface dialog)
+            {
+                finish();
+            }
+        }, null, true);
+    }
+
+    private void startLogin()
+    {
+        Intent intent = LoginActivity.newInstance(getActivity());
+        startActivityForResult(intent, ProfileActivity.REQUEST_CODE_LOGIN);
+    }
+
+    @Override
+    public void startEditEmail()
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        Intent intent = EditProfileEmailActivity.newInstance(getActivity());
+        startActivityForResult(intent, ProfileActivity.REQUEST_CODE_EDIT_PROFILE);
+    }
+
+    @Override
+    public void startEditName(String name)
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        Intent intent = EditProfileNameActivity.newInstance(getActivity(), name);
+        startActivityForResult(intent, ProfileActivity.REQUEST_CODE_EDIT_PROFILE);
+    }
+
+    @Override
+    public void startEditPhone(String phoneNumber)
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        Intent intent = EditProfilePhoneActivity.newInstance(getActivity(), EditProfilePhoneActivity.Type.EDIT_PROFILE, phoneNumber);
+        startActivityForResult(intent, ProfileActivity.REQUEST_CODE_EDIT_PROFILE);
+    }
+
+    @Override
+    public void startEditPassword(String email)
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        Intent intent = EditProfilePasswordActivity.newInstance(getActivity(), email);
+        startActivityForResult(intent, ProfileActivity.REQUEST_CODE_EDIT_PROFILE);
+    }
+
+    @Override
+    public void startEditBirthday(String birthday)
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        Intent intent = EditProfileBirthdayActivity.newInstance(getActivity(), birthday);
+        startActivityForResult(intent, ProfileActivity.REQUEST_CODE_EDIT_PROFILE_BIRTHDAY);
+    }
+
+    @Override
+    public void doLogout()
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        /**
+         * 로그 아웃시 내부 저장한 유저정보 초기화
+         */
+        View.OnClickListener posListener = new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                DailyPreference.getInstance(getActivity()).clear();
+                DailyUserPreference.getInstance(getActivity()).clear();
+
+                try
+                {
+                    LoginManager.getInstance().logOut();
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
                 }
-            }, null, null, new DialogInterface.OnDismissListener()
+
+                try
+                {
+                    UserManagement.requestLogout(new LogoutResponseCallback()
+                    {
+                        @Override
+                        public void onCompleteLogout()
+                        {
+
+                        }
+                    });
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
+
+                unLockAll();
+                DailyToast.showToast(getActivity(), R.string.toast_msg_logouted, Toast.LENGTH_SHORT);
+
+                // Adjust에서 로그아웃시 기존 정보를 보냄으로 이벤트 발생후 삭제 필요.
+                mAnalytics.onScreenLogout(getActivity());
+                mAnalytics.clearUserInformation(getActivity());
+
+                finish();
+            }
+        };
+
+        getViewInterface().showSimpleDialog(getString(R.string.act_profile_btn_logout), getString(R.string.dialog_msg_chk_wanna_login),//
+            getString(R.string.dialog_btn_text_logout), getString(R.string.dialog_btn_text_cancel), posListener, null, null, new DialogInterface.OnDismissListener()
             {
                 @Override
                 public void onDismiss(DialogInterface dialog)
                 {
-                    unLock();
+                    unLockAll();
                 }
             }, false);
     }
 
     @Override
-    public void onCodeCopyClick(String code)
+    public void doCodeCopy(String code)
     {
-        mProfileAnalytics.onEventCopyReferralCode(getActivity());
+        DailyTextUtils.clipText(getActivity(), code);
+
+        DailyToast.showToast(getActivity(), R.string.message_copy_recommender_code, Toast.LENGTH_SHORT);
+
+        mAnalytics.onEventCopyReferralCode(getActivity());
+    }
+
+    @Override
+    public void doValidMonthChange(int month)
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        Map<String, String> params = Collections.singletonMap("dataRetentionInMonth", Integer.toString(month));
+
+        addCompositeDisposable(mProfileRemoteImpl.updateUserInformation(params).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<User>()
+        {
+            @Override
+            public void accept(User user) throws Exception
+            {
+                getViewInterface().updateUserInformation(user);
+
+                DailyToast.showToast(getActivity(), R.string.message_change_privacy_valid_date, Toast.LENGTH_SHORT);
+
+                unLockAll();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                getViewInterface().resetPrivacyValidDate();
+                DailyToast.showToast(getActivity(), R.string.message_change_privacy_valid_date_fail, Toast.LENGTH_SHORT);
+
+                unLockAll();
+            }
+        }));
     }
 }

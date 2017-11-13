@@ -81,6 +81,9 @@ public class StayDetailParams extends PlaceDetailParams<StayProduct>
     @JsonIgnore
     private ArrayList<String> mBenefitInformation;
 
+    @JsonIgnore
+    public boolean provideRewardSticker;
+
     public StayDetailParams()
     {
 
@@ -226,6 +229,19 @@ public class StayDetailParams extends PlaceDetailParams<StayProduct>
                 if (contentsList != null)
                 {
                     mDetailList.add(new DetailInformation(key, contentsList));
+                }
+            }
+        }
+
+        // Reward
+        if (rooms != null)
+        {
+            for (StayProduct stayProduct : rooms)
+            {
+                if (stayProduct.provideRewardSticker == true)
+                {
+                    provideRewardSticker = true;
+                    break;
                 }
             }
         }

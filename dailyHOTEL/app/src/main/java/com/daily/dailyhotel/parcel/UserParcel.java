@@ -46,6 +46,7 @@ public class UserParcel implements Parcelable
         dest.writeInt(mUser.verified == true ? 1 : 0);
         dest.writeInt(mUser.phoneVerified == true ? 1 : 0);
         dest.writeInt(mUser.agreedBenefit == true ? 1 : 0);
+        dest.writeInt(mUser.dataRetentionInMonth);
     }
 
     private void readFromParcel(Parcel in)
@@ -65,6 +66,7 @@ public class UserParcel implements Parcelable
         mUser.verified = in.readInt() == 1;
         mUser.phoneVerified = in.readInt() == 1;
         mUser.agreedBenefit = in.readInt() == 1;
+        mUser.dataRetentionInMonth = in.readInt();
     }
 
     @Override

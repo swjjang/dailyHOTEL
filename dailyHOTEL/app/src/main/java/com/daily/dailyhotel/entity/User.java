@@ -15,4 +15,5 @@ public class User
     public boolean verified;
     public boolean phoneVerified;
     public boolean agreedBenefit;
+    public int dataRetentionInMonth;
 }
