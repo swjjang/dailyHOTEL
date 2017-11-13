@@ -11,28 +11,31 @@ import com.daily.dailyhotel.entity.UserSimpleInformation;
 import com.daily.dailyhotel.entity.UserTracking;
 import com.daily.dailyhotel.repository.remote.model.UserData;
 import com.daily.dailyhotel.repository.remote.model.UserTrackingData;
-import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Crypto;
 
 import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
-public class ProfileRemoteImpl implements ProfileInterface
+public class ProfileRemoteImpl extends BaseRemoteImpl implements ProfileInterface
 {
-    private Context mContext;
-
     public ProfileRemoteImpl(@NonNull Context context)
     {
-        mContext = context;
+        super(context);
     }
 
     @Override
     public Observable<User> getProfile()
     {
-        return DailyMobileAPI.getInstance(mContext).getUserProfile().map((userDataBaseDto) ->
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/users/profile"//
+            : "NzMkNTEkMzYkNTkkNzckNjQkMTQkMjkkNTIkNTkkODckOSQ5NyQ5JDg5JDEk$MRUY4NUFGMRYjU0MjNI0Q0YyNjYyMjdCKMEQ5M0U5MMEY5NDQyQjcwNFTEC5NTKRCQS0ZFNPEU3RjFCOEMwMWOURDQJHjBEQTI4NRQ==$";
+
+        return mDailyMobileService.getUserProfile(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io()).map((userDataBaseDto) ->
         {
             User user = null;
 
@@ -57,7 +60,10 @@ public class ProfileRemoteImpl implements ProfileInterface
     @Override
     public Observable<UserBenefit> getBenefit()
     {
-        return DailyMobileAPI.getInstance(mContext).getUserBenefit().map((userBenefitDataBaseDto) ->
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/users/profile/benefit"//
+            : "NDUkODAkMjkkMjEkMzMkMzMkMzEkODgkMzgkNzUkOTMkNzgkMjMkOTYkNTQkODck$N0M1N0ZCQzE4ODgxQ0Y2QWTTEzMjBCOCCTRBYDRTDE4RDhGMDkyMXzLY0NjcxNDM3NEVCMDE2QTc3RRjPdDREZFWODUT2RBjACG5Rg==$";
+
+        return mDailyMobileService.getUserBenefit(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io()).map((userBenefitDataBaseDto) ->
         {
             UserBenefit userBenefit = null;
 
@@ -82,7 +88,10 @@ public class ProfileRemoteImpl implements ProfileInterface
     @Override
     public Observable<UserSimpleInformation> getUserSimpleInformation()
     {
-        return DailyMobileAPI.getInstance(mContext).getUserSimpleInformation().map(userInformationDataBaseDto ->
+        final String API = Constants.UNENCRYPTED_URL ? "api/v5/users/profile/simple"//
+            : "MjkkMzQkNzMkNzAkNDEkNzMkMTIkNjMkNDUkOTAkMzYkODIkOTkkNDMkMTAkMTYk$MDE0NTQ0OTYZFVRkZM1OTMyQzgxRDY0MPTM1QSVjlCNDcRMzNAEVBM0Q5QjcyRjY0NUFJCNjRFQ0U0ONNTFVDEMUE1RUMwOLTBCNQ=Z=$";
+
+        return mDailyMobileService.getUserSimpleInformation(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io()).map(userInformationDataBaseDto ->
         {
             UserSimpleInformation userSimpleInformation = null;
 
@@ -107,7 +116,10 @@ public class ProfileRemoteImpl implements ProfileInterface
     @Override
     public Observable<UserTracking> getTracking()
     {
-        return DailyMobileAPI.getInstance(mContext).getUserTracking().map((BaseDto<UserTrackingData> userTrackingDataBaseDto) ->
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/users/tracking"//
+            : "MzkkMzEkNTIkNjUkNDckMzUkOTAkMTIkODEkNDEkNDEkNDckOTYkMTckNjEkMTAk$MjAxNkUyMTYk5QRDMzXQjk4RkYwOTRCMzMYwRkLRGMjHKlWBQPTdDMXDkxQkTNQBNzAzMDEyMjQgwMjg0M0VCMUNU2Qzk3OTNCOWQw==$";
+
+        return mDailyMobileService.getUserTracking(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io()).map((BaseDto<UserTrackingData> userTrackingDataBaseDto) ->
         {
             UserTracking userTracking = null;
 
@@ -132,7 +144,10 @@ public class ProfileRemoteImpl implements ProfileInterface
     @Override
     public Observable<User> updateUserInformation(Map<String, String> params)
     {
-        return DailyMobileAPI.getInstance(mContext).updateUserInformation(params).map(new Function<BaseDto<UserData>, User>()
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/users/profile"//
+            : "MzEkNTAkNzMkMzAkMzgkNDQkMTckMzIkNjMkOTIkNjAkNzMkOCQ1MiQ1JDM3JA==$RTZGMNDc1TMjhGQTA2QXzM3MTQ3MzY1OTTPVJMFNjJBXOUVGQXTY5NJjg2MUzg5NCDQ3WNDdGQUFFCRjdDOEVODODQ5MTk5MjcO0OA==$";
+
+        return mDailyMobileService.updateUserInformation(Crypto.getUrlDecoderEx(API), params).subscribeOn(Schedulers.io()).map(new Function<BaseDto<UserData>, User>()
         {
             @Override
             public User apply(BaseDto<UserData> userDataBaseDto) throws Exception

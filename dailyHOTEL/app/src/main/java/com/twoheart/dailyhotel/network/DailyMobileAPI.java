@@ -43,10 +43,6 @@ import com.daily.dailyhotel.repository.remote.model.StayPaymentData;
 import com.daily.dailyhotel.repository.remote.model.StayRefundPolicyData;
 import com.daily.dailyhotel.repository.remote.model.SuggestsData;
 import com.daily.dailyhotel.repository.remote.model.TrueReviewsData;
-import com.daily.dailyhotel.repository.remote.model.UserBenefitData;
-import com.daily.dailyhotel.repository.remote.model.UserData;
-import com.daily.dailyhotel.repository.remote.model.UserInformationData;
-import com.daily.dailyhotel.repository.remote.model.UserTrackingData;
 import com.daily.dailyhotel.repository.remote.model.WaitingDepositData;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.Setting;
@@ -1267,50 +1263,6 @@ public class DailyMobileAPI
 
         return mDailyMobileService.getConfigurations(Crypto.getUrlDecoderEx(API))//
             .subscribeOn(Schedulers.io());
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    // ProfileRemoteImpl
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public Observable<BaseDto<UserData>> getUserProfile()
-    {
-        final String API = Constants.UNENCRYPTED_URL ? "api/v3/users/profile"//
-            : "NzMkNTEkMzYkNTkkNzckNjQkMTQkMjkkNTIkNTkkODckOSQ5NyQ5JDg5JDEk$MRUY4NUFGMRYjU0MjNI0Q0YyNjYyMjdCKMEQ5M0U5MMEY5NDQyQjcwNFTEC5NTKRCQS0ZFNPEU3RjFCOEMwMWOURDQJHjBEQTI4NRQ==$";
-
-        return mDailyMobileService.getUserProfile(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
-    }
-
-    public Observable<BaseDto<UserBenefitData>> getUserBenefit()
-    {
-        final String API = Constants.UNENCRYPTED_URL ? "api/v3/users/profile/benefit"//
-            : "NDUkODAkMjkkMjEkMzMkMzMkMzEkODgkMzgkNzUkOTMkNzgkMjMkOTYkNTQkODck$N0M1N0ZCQzE4ODgxQ0Y2QWTTEzMjBCOCCTRBYDRTDE4RDhGMDkyMXzLY0NjcxNDM3NEVCMDE2QTc3RRjPdDREZFWODUT2RBjACG5Rg==$";
-
-        return mDailyMobileService.getUserBenefit(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
-    }
-
-    public Observable<BaseDto<UserInformationData>> getUserSimpleInformation()
-    {
-        final String API = Constants.UNENCRYPTED_URL ? "api/v5/users/profile/simple"//
-            : "MjkkMzQkNzMkNzAkNDEkNzMkMTIkNjMkNDUkOTAkMzYkODIkOTkkNDMkMTAkMTYk$MDE0NTQ0OTYZFVRkZM1OTMyQzgxRDY0MPTM1QSVjlCNDcRMzNAEVBM0Q5QjcyRjY0NUFJCNjRFQ0U0ONNTFVDEMUE1RUMwOLTBCNQ=Z=$";
-
-        return mDailyMobileService.getUserSimpleInformation(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
-    }
-
-    public Observable<BaseDto<UserTrackingData>> getUserTracking()
-    {
-        final String API = Constants.UNENCRYPTED_URL ? "api/v3/users/tracking"//
-            : "MzkkMzEkNTIkNjUkNDckMzUkOTAkMTIkODEkNDEkNDEkNDckOTYkMTckNjEkMTAk$MjAxNkUyMTYk5QRDMzXQjk4RkYwOTRCMzMYwRkLRGMjHKlWBQPTdDMXDkxQkTNQBNzAzMDEyMjQgwMjg0M0VCMUNU2Qzk3OTNCOWQw==$";
-
-        return mDailyMobileService.getUserTracking(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io());
-    }
-
-    public Observable<BaseDto<UserData>> updateUserInformation(Map<String, String> params)
-    {
-        final String API = Constants.UNENCRYPTED_URL ? "api/v4/users/profile"//
-            : "MzEkNTAkNzMkMzAkMzgkNDQkMTckMzIkNjMkOTIkNjAkNzMkOCQ1MiQ1JDM3JA==$RTZGMNDc1TMjhGQTA2QXzM3MTQ3MzY1OTTPVJMFNjJBXOUVGQXTY5NJjg2MUzg5NCDQ3WNDdGQUFFCRjdDOEVODODQ5MTk5MjcO0OA==$";
-
-        return mDailyMobileService.updateUserInformation(Crypto.getUrlDecoderEx(API), params).subscribeOn(Schedulers.io());
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
