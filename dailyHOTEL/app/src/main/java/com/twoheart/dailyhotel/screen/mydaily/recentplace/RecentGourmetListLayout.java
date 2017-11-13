@@ -33,12 +33,19 @@ public class RecentGourmetListLayout extends RecentPlacesListLayout
             return;
         }
 
-        RecentGourmetListAdapter.GourmetViewHolder gourmetViewHolder = (RecentGourmetListAdapter.GourmetViewHolder) mRecyclerView.findViewHolderForAdapterPosition(position);
-
-        if (gourmetViewHolder != null)
+        mRecyclerView.post(new Runnable()
         {
-            gourmetViewHolder.gourmetCardView.setWish(wish);
-        }
+            @Override
+            public void run()
+            {
+                RecentGourmetListAdapter.GourmetViewHolder gourmetViewHolder = (RecentGourmetListAdapter.GourmetViewHolder) mRecyclerView.findViewHolderForAdapterPosition(position);
+
+                if (gourmetViewHolder != null)
+                {
+                    gourmetViewHolder.gourmetCardView.setWish(wish);
+                }
+            }
+        });
     }
 
     @Override

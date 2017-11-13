@@ -12,27 +12,35 @@ import com.daily.dailyhotel.entity.TrueReviews;
 import com.daily.dailyhotel.entity.TrueVR;
 import com.daily.dailyhotel.entity.WishResult;
 import com.daily.dailyhotel.repository.remote.model.TrueVRData;
-import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Crypto;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 
-public class StayRemoteImpl implements StayInterface
+public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
 {
-    private Context mContext;
-
     public StayRemoteImpl(@NonNull Context context)
     {
-        mContext = context;
+        super(context);
     }
 
     @Override
     public Observable<StayDetail> getDetail(int stayIndex, StayBookDateTime stayBookDateTime)
     {
-        return DailyMobileAPI.getInstance(mContext).getStayDetail(stayIndex, stayBookDateTime.getCheckInDateTime("yyyy-MM-dd")//
-            , stayBookDateTime.getNights()).map(baseDto ->
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/hotel/{stayIndex}"//
+            : "MTYkMTEkODEkMzMkMTUkMjIkODMkMzEkNjMkNDkkNzgkODgkNDIkNTEkMjkkMjgk$QTY3QjIxODBGFNzIU2MMzFWENzRFQMCTcX3MkNJBRjZBHOEYzRjEMDzMUM2NzkxNzc1RHUQwREY0MTIwRjSAyQkI3ODPWkU0OEQ4QQ==$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{stayIndex}", Integer.toString(stayIndex));
+
+        return mDailyMobileService.getStayDetail(Crypto.getUrlDecoderEx(API, urlParams), stayBookDateTime.getCheckInDateTime("yyyy-MM-dd")//
+            , stayBookDateTime.getNights()).subscribeOn(Schedulers.io()).map(baseDto ->
         {
             StayDetail stayDetail;
 
@@ -73,8 +81,14 @@ public class StayRemoteImpl implements StayInterface
     @Override
     public Observable<Boolean> getHasCoupon(int stayIndex, StayBookDateTime stayBookDateTime)
     {
-        return DailyMobileAPI.getInstance(mContext).getStayHasCoupon(stayIndex, stayBookDateTime.getCheckInDateTime("yyyy-MM-dd")//
-            , stayBookDateTime.getNights()).map(baseDto ->
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/hotel/{stayIndex}/coupons/exist"//
+            : "OTgkMTI0JDExMyQ4NCQ4NCQyMSQxMjAkMTMxJDM0JDU1JDcwJDUyJDEzMiQxMTEkMzkkMTAwJA==$QTRFMkM0NkU2MjhBRjc1NTTIyODUxREQ3RFTIyMZjVENzA0Q0VCNDZk1QK0E2MEFEN0E4N0MW1MEMzNEE3QzJDQ0REXXQzM2NjYwYMzE5MkMVGN0NTBMERDMjFCOOEVQGMzlFMUGVLCXMDM4$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{stayIndex}", Integer.toString(stayIndex));
+
+        return mDailyMobileService.getStayHasCoupon(Crypto.getUrlDecoderEx(API, urlParams), stayBookDateTime.getCheckInDateTime("yyyy-MM-dd")//
+            , stayBookDateTime.getNights()).subscribeOn(Schedulers.io()).map(baseDto ->
         {
             boolean hasCoupon = false;
 
@@ -93,116 +107,151 @@ public class StayRemoteImpl implements StayInterface
     @Override
     public Observable<WishResult> addWish(int stayIndex)
     {
-        return DailyMobileAPI.getInstance(mContext).addStayWish(stayIndex).map(baseDto ->
-        {
-            WishResult wishResult = new WishResult();
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/wishes/hotel/add/{stayIndex}"//
+            : "NjkkNzkkNzkkOTAkNzckMTE4JDY1JDE3JDEzMyQxMDEkNDgkMTEkOTAkMTYkOTIkNDgk$OTM0RTg5QzkA0RkVBDOMDZFNzRFQkFGNzYxMTcwMjU5NzEzMCzAF3NjgyQzZGOUQxNTFCRAEMyNITQ1M0I3UNjGEE0QjHXI3RUFVFRDc0OEWQxQjlBNDNEQzc4NzI2RATYyRjM0MEE2RNDE4$";
 
-            if (baseDto != null)
-            {
-                wishResult.success = baseDto.msgCode == 100;
-                wishResult.message = baseDto.msg;
-            } else
-            {
-                throw new BaseException(-1, null);
-            }
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{stayIndex}", Integer.toString(stayIndex));
 
-            return wishResult;
-        });
+        return mDailyMobileService.addWish(Crypto.getUrlDecoderEx(API, urlParams))//
+            .subscribeOn(Schedulers.io()).map(baseDto ->
+            {
+                WishResult wishResult = new WishResult();
+
+                if (baseDto != null)
+                {
+                    wishResult.success = baseDto.msgCode == 100;
+                    wishResult.message = baseDto.msg;
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return wishResult;
+            });
     }
 
     @Override
     public Observable<WishResult> removeWish(int stayIndex)
     {
-        return DailyMobileAPI.getInstance(mContext).removeStayWish(stayIndex).map(baseDto ->
-        {
-            WishResult wishResult = new WishResult();
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/wishes/hotel/remove/{stayIndex}"//
+            : "MTA3JDgxJDk4JDY2JDQkODMkODMkMjQkNTUkNzUkMzUkMjckMTM4JDEwMSQxMzkkMTM1JA==$QjQzUN0UzODUyNkFBM0FBQkJECMZDlFMTNFMKUJDMTE2MzE0MDYyMTZGMBkQ1QkQ5NDU1NTUc3M0QTyOEVGNkI4NQKCTQ4Qjc1QzUGwMjYyMM0U3REY1QTgX2MkYwMkQyRTkxNENM4NzDMQ3$";
 
-            if (baseDto != null)
-            {
-                wishResult.success = baseDto.msgCode == 100;
-                wishResult.message = baseDto.msg;
-            } else
-            {
-                throw new BaseException(-1, null);
-            }
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{stayIndex}", Integer.toString(stayIndex));
 
-            return wishResult;
-        });
+        return mDailyMobileService.removeWish(Crypto.getUrlDecoderEx(API, urlParams))//
+            .subscribeOn(Schedulers.io()).map(baseDto ->
+            {
+                WishResult wishResult = new WishResult();
+
+                if (baseDto != null)
+                {
+                    wishResult.success = baseDto.msgCode == 100;
+                    wishResult.message = baseDto.msg;
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return wishResult;
+            });
     }
 
     @Override
     public Observable<ReviewScores> getReviewScores(int stayIndex)
     {
-        return DailyMobileAPI.getInstance(mContext).getStayReviewScores(stayIndex).map(baseDto ->
-        {
-            ReviewScores reviewScores;
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/review/hotel/{stayIndex}/statistic"//
+            : "NzckNTkkMTgkODgkMTA4JDExOSQyMyQ2JDE4JDI3JDI3JDEzJDE2JDEzMyQxMTckMTAwJA==$QzQ2OTOMxNUNBJNTBBDQNTDg2RUPFGYGMzZDNzMyNzQxMzA5MzdBM0EzNkI3NEVBNTkE1MjUyMjY5RjA4QUE4MYjMzQjgxQV0Y2NBjk2RjI4MEFCOTU4TOXERCRTI2MzYEwOERDRMzkxQkRC$";
 
-            if (baseDto != null)
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{stayIndex}", Integer.toString(stayIndex));
+
+        return mDailyMobileService.getReviewScores(Crypto.getUrlDecoderEx(API, urlParams))//
+            .subscribeOn(Schedulers.io()).map(baseDto ->
             {
-                if (baseDto.msgCode == 100 && baseDto.data != null)
+                ReviewScores reviewScores;
+
+                if (baseDto != null)
                 {
-                    reviewScores = baseDto.data.getReviewScores();
+                    if (baseDto.msgCode == 100 && baseDto.data != null)
+                    {
+                        reviewScores = baseDto.data.getReviewScores();
+                    } else
+                    {
+                        reviewScores = new ReviewScores();
+                    }
                 } else
                 {
                     reviewScores = new ReviewScores();
                 }
-            } else
-            {
-                reviewScores = new ReviewScores();
-            }
 
-            return reviewScores;
-        });
+                return reviewScores;
+            });
     }
 
     @Override
     public Observable<TrueReviews> getTrueReviews(int stayIndex, int page, int limit)
     {
-        return DailyMobileAPI.getInstance(mContext).getStayTrueReviews(stayIndex, page, limit).map(baseDto ->
-        {
-            TrueReviews trueReviews;
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/review/hotel/{stayIndex}"//
+            : "MjUkNjUkNjAkNjYkMzIkMzYkMjIkNzMkOTEkODkkNjMkNSQzOCQzNSQ1NyQ1NSQ=$ODhEOWTEyMTk0RDU1ODkxODSY0OOEVGQzVRDCRUXEM3MTY4QkNGNDc2UN0DU2NzRGODkGVzM0MwXAMzMM4QTg0MDJEODc0MZTVXCNg==$";
 
-            if (baseDto != null)
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{stayIndex}", Integer.toString(stayIndex));
+
+        return mDailyMobileService.getTrueReviews(Crypto.getUrlDecoderEx(API, urlParams), page, limit, "createdAt", "DESC")//
+            .subscribeOn(Schedulers.io()).map(baseDto ->
             {
-                if (baseDto.msgCode == 100 && baseDto.data != null)
+                TrueReviews trueReviews;
+
+                if (baseDto != null)
                 {
-                    trueReviews = baseDto.data.getTrueReviews();
+                    if (baseDto.msgCode == 100 && baseDto.data != null)
+                    {
+                        trueReviews = baseDto.data.getTrueReviews();
+                    } else
+                    {
+                        throw new BaseException(baseDto.msgCode, baseDto.msg);
+                    }
                 } else
                 {
-                    throw new BaseException(baseDto.msgCode, baseDto.msg);
+                    throw new BaseException(-1, null);
                 }
-            } else
-            {
-                throw new BaseException(-1, null);
-            }
 
-            return trueReviews;
-        });
+                return trueReviews;
+            });
     }
 
     @Override
     public Observable<List<TrueVR>> getTrueVR(int stayIndex)
     {
-        return DailyMobileAPI.getInstance(mContext).getStayTrueVRList(stayIndex).map(baseListDto ->
-        {
-            List<TrueVR> trueVR = new ArrayList<>();
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/hotel/{stayIndex}/vr-list"//
+            : "NzAkNDIkOCQ2JDg0JDQyJDY5JDU2JDExNSQxMzUkMTEyJDY0JDQxJDk1JDEzNCQxMTIk$NEM4MzEUzSMTg4MzU3NDA4RDQ0NjAxNzVBRkM2RDkN3ZQzJQ4QjAzOThFFREREQ0QAwRTgyRIDU5M0BExNjI4ODI4WMUI2NIjYzNUM3ODQxNEU2NLTFFHOTFWCNkY4RTJEMjA0MKzVFRERQ4$";
 
-            if (baseListDto != null)
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{stayIndex}", Integer.toString(stayIndex));
+
+        return mDailyMobileService.getTrueReviews(Crypto.getUrlDecoderEx(API, urlParams))//
+            .subscribeOn(Schedulers.io()).map(baseListDto ->
             {
-                if (baseListDto.msgCode == 100 && baseListDto.data != null)
+                List<TrueVR> trueVR = new ArrayList<>();
+
+                if (baseListDto != null)
                 {
-                    for (TrueVRData trueVRData : baseListDto.data)
+                    if (baseListDto.msgCode == 100 && baseListDto.data != null)
                     {
-                        trueVR.add(trueVRData.getTrueVR());
+                        for (TrueVRData trueVRData : baseListDto.data)
+                        {
+                            trueVR.add(trueVRData.getTrueVR());
+                        }
+                    } else
+                    {
                     }
                 } else
                 {
                 }
-            } else
-            {
-            }
 
-            return trueVR;
-        });
+                return trueVR;
+            });
     }
 }

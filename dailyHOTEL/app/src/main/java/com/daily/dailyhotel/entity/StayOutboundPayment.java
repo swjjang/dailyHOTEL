@@ -2,7 +2,7 @@ package com.daily.dailyhotel.entity;
 
 import java.util.List;
 
-public class StayOutboundPayment
+public class StayOutboundPayment extends Configurations
 {
     public int stayIndex;
     public int availableRooms;
@@ -20,7 +20,6 @@ public class StayOutboundPayment
     public int roomBedTypeId;
 
     // reward
-    public boolean activeReward;
     public boolean provideRewardSticker;
     public int rewardStickerCount;
     public int providableRewardStickerCount;

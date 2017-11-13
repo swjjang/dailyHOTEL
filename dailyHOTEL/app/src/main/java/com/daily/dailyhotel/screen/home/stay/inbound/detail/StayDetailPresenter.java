@@ -1522,7 +1522,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             {
                 boolean campaignEnabled = DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerCampaignEnabled();
 
-                getViewInterface().setRewardNonMember(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage()//
+                getViewInterface().setRewardNonMember(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerCardTitleMessage()//
                     , getString(R.string.label_reward_login)//
                     , campaignEnabled ? DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerNonMemberCampaignFreeNights() : 0//
                     , campaignEnabled ? DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerNonMemberCampaignMessage()//
@@ -1534,7 +1534,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 }
             } else
             {
-                getViewInterface().setRewardMember(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage()//
+                getViewInterface().setRewardMember(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerCardTitleMessage()//
                     , getString(R.string.label_reward_go_reward), mStayDetail.rewardStickerCount//
                     , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerMemberMessage(mStayDetail.rewardStickerCount));
 

@@ -111,19 +111,4 @@ public class StayPaymentData
 
         return stayPayment;
     }
-
-    @JsonObject
-    static class RewardCardData
-    {
-        @JsonField(name = "expiredAt")
-        public String expiredAt;
-
-        @JsonField(name = "rewardStickerCount")
-        public int rewardStickerCount;
-
-        public RewardCardData()
-        {
-
-        }
-    }
 }

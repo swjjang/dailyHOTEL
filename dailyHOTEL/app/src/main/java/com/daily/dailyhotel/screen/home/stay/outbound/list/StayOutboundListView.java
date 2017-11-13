@@ -348,6 +348,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         mStayOutboundListAdapter.setAll(objectItemList);
         mStayOutboundListAdapter.setDistanceEnabled(isSortByDistance);
         mStayOutboundListAdapter.setNightsEnabled(isNights);
+        mStayOutboundListAdapter.setRewardEnabled(rewardEnabled);
         mStayOutboundListAdapter.notifyDataSetChanged();
     }
 

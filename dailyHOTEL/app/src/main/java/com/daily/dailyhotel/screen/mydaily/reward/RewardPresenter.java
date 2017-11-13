@@ -100,7 +100,7 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
     {
         getViewInterface().setToolbarTitle(getString(R.string.label_daily_reward));
 
-        getViewInterface().setTitleMessage(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerTitleMessage());
+        getViewInterface().setTitleMessage(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerRewardTitleMessage());
 
         if (DailyHotel.isLogin() == false)
         {

@@ -63,12 +63,19 @@ public class GourmetListLayout extends PlaceListLayout
             return;
         }
 
-        GourmetListAdapter.GourmetViewHolder gourmetViewHolder = (GourmetListAdapter.GourmetViewHolder) mPlaceRecyclerView.findViewHolderForAdapterPosition(position);
-
-        if (gourmetViewHolder != null)
+        mPlaceRecyclerView.post(new Runnable()
         {
-            gourmetViewHolder.gourmetCardView.setWish(wish);
-        }
+            @Override
+            public void run()
+            {
+                GourmetListAdapter.GourmetViewHolder gourmetViewHolder = (GourmetListAdapter.GourmetViewHolder) mPlaceRecyclerView.findViewHolderForAdapterPosition(position);
+
+                if (gourmetViewHolder != null)
+                {
+                    gourmetViewHolder.gourmetCardView.setWish(wish);
+                }
+            }
+        });
     }
 
     @Override
