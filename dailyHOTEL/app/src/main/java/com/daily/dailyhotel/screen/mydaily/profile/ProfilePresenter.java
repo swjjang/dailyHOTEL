@@ -40,11 +40,8 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import java.util.Collections;
 import java.util.Map;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 
 /**
  * Created by sheldon
@@ -60,6 +57,15 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
 
     public interface ProfileAnalyticsInterface extends BaseAnalyticsInterface
     {
+        void onScreen(Activity activity);
+
+        void onScreenLogout(Activity activity);
+
+        void clearUserInformation(Activity activity);
+
+        void onEventCopyReferralCode(Activity activity);
+
+        void setExceedBonus(Activity activity, boolean isExceedBonus);
     }
 
     public ProfilePresenter(@NonNull ProfileActivity activity)
@@ -163,6 +169,8 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
         {
             onRefresh(true);
         }
+
+        mAnalytics.onScreen(getActivity());
     }
 
     @Override
@@ -298,7 +306,7 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
                     @Override
                     public void accept(UserBenefit userBenefit) throws Exception
                     {
-                        AnalyticsManager.getInstance(getActivity()).setExceedBonus(userBenefit.exceedLimitedBonus);
+                        mAnalytics.setExceedBonus(getActivity(), userBenefit.exceedLimitedBonus);
 
                         unLockAll();
                     }
@@ -482,8 +490,8 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
                 DailyToast.showToast(getActivity(), R.string.toast_msg_logouted, Toast.LENGTH_SHORT);
 
                 // Adjust에서 로그아웃시 기존 정보를 보냄으로 이벤트 발생후 삭제 필요.
-                AnalyticsManager.getInstance(getActivity()).recordScreen(getActivity(), AnalyticsManager.Screen.MENU_LOGOUT_COMPLETE, null);
-                AnalyticsManager.getInstance(getActivity()).setUserInformation(AnalyticsManager.ValueType.EMPTY, AnalyticsManager.ValueType.EMPTY);
+                mAnalytics.onScreenLogout(getActivity());
+                mAnalytics.clearUserInformation(getActivity());
 
                 finish();
             }
@@ -507,8 +515,7 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
 
         DailyToast.showToast(getActivity(), R.string.message_copy_recommender_code, Toast.LENGTH_SHORT);
 
-        AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.INVITE_FRIEND//
-            , AnalyticsManager.Action.REFERRAL_CODE_COPIED, AnalyticsManager.Label.PROFILE_EDITED, null);
+        mAnalytics.onEventCopyReferralCode(getActivity());
     }
 
     @Override

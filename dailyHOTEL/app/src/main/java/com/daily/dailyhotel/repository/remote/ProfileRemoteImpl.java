@@ -17,10 +17,8 @@ import com.twoheart.dailyhotel.network.dto.BaseDto;
 import java.util.Map;
 
 import io.reactivex.Observable;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
 
 public class ProfileRemoteImpl implements ProfileInterface
 {
@@ -157,6 +155,6 @@ public class ProfileRemoteImpl implements ProfileInterface
 
                 return user;
             }
-        }).subscribeOn(Schedulers.io());
+        });
     }
 }
