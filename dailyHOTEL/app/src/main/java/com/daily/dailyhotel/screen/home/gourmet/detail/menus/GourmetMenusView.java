@@ -79,6 +79,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         }
 
         viewDataBinding.operationTimeTextView.setOnClickListener(this);
+        viewDataBinding.operationTimesBackgroundView.setOnClickListener(this);
         viewDataBinding.closeImageView.setOnClickListener(this);
 
         viewDataBinding.recyclerView.setLayoutManager(new ZoomCenterLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -504,7 +505,6 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                     @Override
                     public void onAnimationStart(Animator animation)
                     {
-
                     }
 
                     @Override
