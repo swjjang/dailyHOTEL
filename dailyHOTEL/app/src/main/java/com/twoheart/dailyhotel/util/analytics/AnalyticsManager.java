@@ -1129,6 +1129,8 @@ public class AnalyticsManager
         public static final String MYDAILY_REWARD_HISTORY = "mydaily_reward_history";
         public static final String MYDAILY_REWARD_INFO = "mydaily_reward_info";
         public static final String REWARD_HISTORY_SEE_RESERVATION = "reward_history_see_reservation";
+
+        public static final String PRIVACY = "privacy";
     }
 
     public static class Category
@@ -1211,6 +1213,7 @@ public class AnalyticsManager
         public static final String DETAIL_PAGE_COUPON = "detail_page_coupon";
 
         public static final String REWARD = "reward";
+        public static final String REGISTRATION = "registration";
     }
 
     public static class Label
@@ -1450,6 +1453,8 @@ public class AnalyticsManager
         public static final String BOTH = "both";
 
         public static final String POPED_UP = "poped_up";
+
+        public static final String SUBFIX_PRIVACY_YEAR = "yrs";
     }
 
     public static class UserType

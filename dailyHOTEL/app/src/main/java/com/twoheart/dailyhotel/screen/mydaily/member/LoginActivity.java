@@ -836,6 +836,8 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                             AnalyticsManager.getInstance(LoginActivity.this).recordScreen(LoginActivity.this, Screen.MENU_REGISTRATION_CONFIRM, null);
                             AnalyticsManager.getInstance(LoginActivity.this).setUserName(mStoreParams.get("name"));
+                            AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.REGISTRATION //
+                                , AnalyticsManager.Action.PRIVACY, "1", null);
                             return;
                         }
                     }
@@ -964,7 +966,6 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                         {
                             mStoreParams.put("user_idx", userIndex);
                             mStoreParams.put("user_type", userType);
-                            mStoreParams.put("dataRetentionInMonth", "12"); // 기본 저장기간 1년으로 설정
                         } else
                         {
                             AnalyticsManager.getInstance(LoginActivity.this).recordScreen(LoginActivity.this, Screen.MENU_LOGIN_COMPLETE, null);
@@ -984,9 +985,11 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                         // 페이스북, 카카오톡 로그인 정보가 없는 경우 회원 가입으로 전환한다
                         if (Constants.FACEBOOK_USER.equalsIgnoreCase(userType) == true)
                         {
+                            mStoreParams.put("dataRetentionInMonth", "12"); // 기본 저장기간 1년으로 설정
                             DailyMobileAPI.getInstance(LoginActivity.this).requestFacebookUserSignup(mNetworkTag, mStoreParams, mSocialUserSignupCallback);
                         } else if (Constants.KAKAO_USER.equalsIgnoreCase(userType) == true)
                         {
+                            mStoreParams.put("dataRetentionInMonth", "12"); // 기본 저장기간 1년으로 설정
                             DailyMobileAPI.getInstance(LoginActivity.this).requestKakaoUserSignup(mNetworkTag, mStoreParams, mSocialUserSignupCallback);
                         }
                     }

@@ -61,9 +61,9 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
 
         void clearUserInformation(Activity activity);
 
-        void onEventCopyReferralCode(Activity activity);
-
         void setExceedBonus(Activity activity, boolean isExceedBonus);
+
+        void onEventPrivacyValidMonth(Activity activity, int month);
     }
 
     public ProfilePresenter(@NonNull ProfileActivity activity)

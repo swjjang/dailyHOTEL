@@ -253,6 +253,12 @@ public class SignupStep1Activity extends BaseActivity
 
             AnalyticsManager.getInstance(SignupStep1Activity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, //
                 AnalyticsManager.Action.NOTIFICATION_SETTING_CLICKED, isBenefit ? AnalyticsManager.Label.SIGNUP_ON : AnalyticsManager.Label.SIGNUP_OFF, null);
+
+            int year = privacyValidMonth / 12;
+            String label = year + AnalyticsManager.Label.SUBFIX_PRIVACY_YEAR;
+
+            AnalyticsManager.getInstance(SignupStep1Activity.this).recordEvent(AnalyticsManager.Category.REGISTRATION //
+                , AnalyticsManager.Action.PRIVACY, label, null);
         }
 
         @Override
