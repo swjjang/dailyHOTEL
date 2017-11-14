@@ -126,16 +126,24 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/cartMenusRecyclerView"
+            <!--원래는 cartMenusRecyclerView 만 넣었는데 내부적으로 높이를 수정해야하는 이슈가 있어 RecyclerView 내부의
+             폭이 제대로 반영되지 않는 경우가 발생하여 한번 감쌌더니 되더라 ㅜㅜ -->
+            <FrameLayout
+                android:id="@+id/cartMenusRecyclerViewLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:orientation="vertical"
-                app:layoutManager="android.support.v7.widget.LinearLayoutManager"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cartMenusVisitTimeTextView"/>
+                app:layout_constraintTop_toBottomOf="@+id/cartMenusVisitTimeTextView">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/cartMenusRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    app:layoutManager="android.support.v7.widget.LinearLayoutManager"/>
+            </FrameLayout>
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/cartMenusInformationLayout"
@@ -144,7 +152,7 @@
                 android:background="@color/default_background"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cartMenusRecyclerView">
+                app:layout_constraintTop_toBottomOf="@+id/cartMenusRecyclerViewLayout">
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/cartMenusCountTextView"
@@ -196,13 +204,14 @@
             android:id="@+id/cartMenusArrowImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="5dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:paddingTop="5dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="10dp"
+            android:layout_marginTop="18dp"
             android:rotation="180"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@+id/cartMenusTopBackgroundView"
+            app:layout_constraintTop_toTopOf="@+id/cartMenusTopBackgroundView"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:srcCompat="@drawable/navibar_m_burg_ic_v"/>

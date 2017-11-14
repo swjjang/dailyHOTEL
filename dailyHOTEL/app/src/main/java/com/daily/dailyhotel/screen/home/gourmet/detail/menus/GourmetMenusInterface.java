@@ -33,8 +33,6 @@ public interface GourmetMenusInterface extends BaseDialogViewInterface
 
     void setSummeryCart(int totalPrice, int totalCount, int menuCount);
 
-    void setGourmetCartMenus(List<GourmetCartMenu> gourmetCartMenuList);
-
     void setCartVisible(boolean visible);
 
     Observable<Boolean> openCartMenus(GourmetCart gourmetCart);
