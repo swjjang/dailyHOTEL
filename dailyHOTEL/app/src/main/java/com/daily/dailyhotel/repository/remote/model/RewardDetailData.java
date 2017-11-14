@@ -37,8 +37,12 @@ public class RewardDetailData
 
         rewardDetail.availableRewardCouponCount = availableRewardCouponCount;
         rewardDetail.hasRewardHistory = hasRewardHistory;
-        rewardDetail.expiredAt = rewardCard.expiredAt;
-        rewardDetail.rewardStickerCount = rewardCard.rewardStickerCount;
+
+        if (rewardCard != null)
+        {
+            rewardDetail.expiredAt = rewardCard.expiredAt;
+            rewardDetail.rewardStickerCount = rewardCard.rewardStickerCount;
+        }
 
         if (stickers != null && stickers.size() > 0)
         {
