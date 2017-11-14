@@ -576,9 +576,6 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         } else if (externalDeepLink.isCouponView() == true)
         {
             screenName = AnalyticsManager.Screen.MENU_COUPON_BOX;
-        } else if (externalDeepLink.isRecommendFriendView() == true)
-        {
-            screenName = AnalyticsManager.Screen.MENU_INVITE_FRIENDS;
         } else if (externalDeepLink.isRegisterCouponView() == true)
         {
             //            screenName = AnalyticsManager.Screen.

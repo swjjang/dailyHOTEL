@@ -1372,7 +1372,6 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                     } else if (externalDeepLink.isMyDailyView() == true //
                         || externalDeepLink.isBonusView() == true//
                         || externalDeepLink.isCouponView() == true //
-                        || externalDeepLink.isRecommendFriendView() == true //
                         || externalDeepLink.isRegisterCouponView() == true //
                         || externalDeepLink.isProfileView() == true//
                         || externalDeepLink.isProfileBirthdayView() == true//

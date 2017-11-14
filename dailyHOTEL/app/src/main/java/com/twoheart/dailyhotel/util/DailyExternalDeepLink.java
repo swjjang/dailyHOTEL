@@ -49,7 +49,6 @@ public class DailyExternalDeepLink extends DailyDeepLink
     private static final String COUPON_V5_LIST = "cl"; // 쿠폰 리스트
     private static final String EVENT_V5_DETAIL = "ed";
     private static final String INFORMATION_V5 = "m"; // 더보기 화면
-    private static final String RECOMMEND_FRIEND_V5 = "rf"; // 친구 추천하기 화면
 
     private static final String REGISTER_COUPON_V7 = "cr"; // 쿠폰 등록 화면
     private static final String BOOKING_DETAIL_V7 = "bd"; // 예약 상세화면
@@ -97,7 +96,6 @@ public class DailyExternalDeepLink extends DailyDeepLink
     private static final String PARAM_V3_REGION_ISOVERSEA = "ios"; // isOverSea
     private static final String PARAM_V3_CATEGORY_CODE = "cc"; // category Code
 
-    private static final String PARAM_V4_RECOMMENDER_CODE = "rc"; // 추천인 코드
     private static final String PARAM_V4_DATE_PLUS = "dp"; // 오늘 날짜에 더해줄 일
     private static final String PARAM_V4_SORTING = "s"; // lp (낮은 가격). hp (높은 가격), r (만족도)
 
@@ -602,11 +600,6 @@ public class DailyExternalDeepLink extends DailyDeepLink
         return equalsView(5, INFORMATION_V5);
     }
 
-    public boolean isRecommendFriendView()
-    {
-        return equalsView(5, RECOMMEND_FRIEND_V5);
-    }
-
     public boolean isShowCalendar()
     {
         return getIntValue(5, PARAM_V5_CALENDAR_FLAG) == 1;
@@ -619,11 +612,6 @@ public class DailyExternalDeepLink extends DailyDeepLink
     public boolean isSingUpView()
     {
         return equalsView(4, SINGUP_V4);
-    }
-
-    public String getRecommenderCode()
-    {
-        return getStringValue(4, PARAM_V4_RECOMMENDER_CODE);
     }
 
     public int getDatePlus()

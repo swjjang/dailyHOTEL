@@ -39,9 +39,9 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
     private static final int MAX_OF_RECOMMENDER = 45;
 
     private View mPhoneLayout, mEmailLayout, mNameLayout;
-    private View mEmailView, mNameView, mBirthdayView, mRecommenderView;
+    private View mEmailView, mNameView, mBirthdayView;
     private DailyAutoCompleteEditText mEmailEditText;
-    DailyEditText mNameEditText, mBirthdayEditText, mRecommenderEditText;
+    DailyEditText mNameEditText, mBirthdayEditText;
     private CheckBox mAllAgreementCheckBox;
     private CheckBox mFourteenCheckBox;
     private CheckBox mTermsOfServiceCheckBox;
@@ -169,11 +169,6 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         mBirthdayEditText.setKeyListener(null);
         mBirthdayEditText.setOnClickListener(this);
 
-        mRecommenderView = view.findViewById(R.id.recommenderView);
-        mRecommenderEditText = (DailyEditText) view.findViewById(R.id.recommenderEditText);
-        mRecommenderEditText.setDeleteButtonVisible(null);
-        mRecommenderEditText.setOnFocusChangeListener(this);
-
         // 회원 가입시 이름 필터 적용.
         StringFilter stringFilter = new StringFilter(mContext);
         InputFilter[] allowAlphanumericHangul = new InputFilter[2];
@@ -181,11 +176,6 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         allowAlphanumericHangul[1] = new InputFilter.LengthFilter(20);
 
         mNameEditText.setFilters(allowAlphanumericHangul);
-
-        // 추천인 코드 최대 길이
-        InputFilter[] fArray = new InputFilter[1];
-        fArray[0] = new InputFilter.LengthFilter(MAX_OF_RECOMMENDER);
-        mRecommenderEditText.setFilters(fArray);
     }
 
     private void initLayoutCheckBox(View view)
@@ -252,7 +242,6 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
                 String phoneNumber = null;
                 String email = null;
                 String name = null;
-                String recommender = mRecommenderEditText.getText().toString().trim();
                 String birthday = mBirthdayEditText.getText().toString().trim();
 
                 if (mPhoneLayout.getVisibility() == View.VISIBLE)
@@ -312,7 +301,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
                 }
 
                 ((OnEventListener) mOnEventListener).onUpdateUserInformation(phoneNumber, email, name //
-                    , recommender, birthday, mBenefitCheckBox.isChecked(), month);
+                    , null, birthday, mBenefitCheckBox.isChecked(), month);
                 break;
             }
 
@@ -419,10 +408,6 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
                         ((OnEventListener) mOnEventListener).showBirthdayDatePicker(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
                     }
                 }
-                break;
-
-            case R.id.recommenderEditText:
-                setFocusLabelView(mRecommenderView, mRecommenderEditText, hasFocus);
                 break;
         }
     }

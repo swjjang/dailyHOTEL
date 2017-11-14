@@ -29,7 +29,6 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
 import com.twoheart.dailyhotel.screen.mydaily.bonus.BonusActivity;
-import com.twoheart.dailyhotel.screen.mydaily.bonus.InviteFriendsActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.CouponListActivity;
 import com.twoheart.dailyhotel.screen.mydaily.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
@@ -127,7 +126,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
                     mOnEventListener.startBonusList();
                 } else if (externalDeepLink.isSingUpView() == true)
                 {
-                    startSignUp(externalDeepLink.getRecommenderCode());
+                    startSignUp();
                 } else if (externalDeepLink.isCouponView() == true)
                 {
                     CouponListActivity.SortType sortType;
@@ -149,9 +148,6 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
                     }
 
                     mOnEventListener.startCouponList(sortType);
-                } else if (externalDeepLink.isRecommendFriendView() == true)
-                {
-                    mOnEventListener.startInviteFriend();
                 } else if (externalDeepLink.isRegisterCouponView() == true)
                 {
                     onStartCouponList(CouponListActivity.SortType.ALL, externalDeepLink);
@@ -332,7 +328,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
         }
     }
 
-    void startSignUp(String recommenderCode)
+    void startSignUp()
     {
         if (isLockUiComponent() == true || mIsAttach == false)
         {
@@ -343,17 +339,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
 
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
-        Intent intent;
-
-        if (DailyTextUtils.isTextEmpty(recommenderCode) == true)
-        {
-            intent = SignupStep1Activity.newInstance(baseActivity, null);
-        } else
-        {
-            intent = SignupStep1Activity.newInstance(baseActivity, recommenderCode, null);
-        }
-
-        startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
+        startActivityForResult(SignupStep1Activity.newInstance(baseActivity, null), CODE_REQEUST_ACTIVITY_SIGNUP);
     }
 
     private void checkInformation()
@@ -435,7 +421,7 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
         @Override
         public void startSignUp()
         {
-            MyDailyFragment.this.startSignUp(null);
+            MyDailyFragment.this.startSignUp();
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
             AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION_,//
@@ -520,33 +506,6 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
 
             AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                 , Action.CARD_MANAGEMENT_CLICKED, AnalyticsManager.Label.CARD_MANAGEMENT_CLICKED, null);
-        }
-
-        @Override
-        public void startInviteFriend()
-        {
-            if (isLockUiComponent() == true || mIsAttach == false)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-
-            if (DailyHotel.isLogin() == false)
-            {
-                startActivity(InviteFriendsActivity.newInstance(baseActivity));
-            } else
-            {
-                String recommender = DailyUserPreference.getInstance(baseActivity).getRecommender();
-                String name = DailyUserPreference.getInstance(baseActivity).getName();
-
-                startActivity(InviteFriendsActivity.newInstance(baseActivity, recommender, name));
-            }
-
-            AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.NAVIGATION_, //
-                Action.INVITE_FRIEND_CLICKED, AnalyticsManager.Label.INVITE_FRIENDS, null);
         }
 
         @Override

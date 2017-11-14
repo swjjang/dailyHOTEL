@@ -152,21 +152,6 @@ public class BonusActivity extends BaseActivity
     private BonusLayout.OnEventListener mOnEventListener = new BonusLayout.OnEventListener()
     {
         @Override
-        public void onInviteFriends()
-        {
-            if (lockUiComponentAndIsLockUiComponent() == true)
-            {
-                return;
-            }
-
-            Intent intent = InviteFriendsActivity.newInstance(BonusActivity.this, mRecommendCode, mName);
-            startActivityForResult(intent, REQUEST_ACTIVITY_INVITE_FRIENDS);
-
-            AnalyticsManager.getInstance(BonusActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, //
-                AnalyticsManager.Action.INVITE_FRIEND_CLICKED, AnalyticsManager.Label.CREDIT_MANAGEMENT, null);
-        }
-
-        @Override
         public void onBonusGuide()
         {
             if (lockUiComponentAndIsLockUiComponent() == true)
@@ -192,7 +177,6 @@ public class BonusActivity extends BaseActivity
         {
             mName = name;
             mRecommendCode = recommendCode;
-            mBonusLayout.setBottomLayoutVisible(isExceedBonus == false);
         }
 
         @Override

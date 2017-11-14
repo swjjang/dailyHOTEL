@@ -18,20 +18,17 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BonusLayout extends BaseLayout implements View.OnClickListener
+public class BonusLayout extends BaseLayout
 {
     private TextView mBonusTextView;
     private View mListTopLine;
     private ListView mListView;
     private View mFooterView;
-    private View mBottomLayout;
 
     private BonusListAdapter mBonusListAdapter;
 
     public interface OnEventListener extends OnBaseEventListener
     {
-        void onInviteFriends();
-
         void onBonusGuide();
     }
 
@@ -44,9 +41,6 @@ public class BonusLayout extends BaseLayout implements View.OnClickListener
     protected void initLayout(View view)
     {
         initToolbar(view);
-
-        View inviteFriend = view.findViewById(R.id.inviteFriendsTextView);
-        inviteFriend.setOnClickListener(this);
 
         mBonusTextView = (TextView) view.findViewById(R.id.bonusTextView);
 
@@ -71,8 +65,6 @@ public class BonusLayout extends BaseLayout implements View.OnClickListener
 
         mFooterView = LayoutInflater.from(mContext).inflate(R.layout.list_row_bonus_footer, mListView, false);
         mListView.addFooterView(mFooterView);
-
-        mBottomLayout = view.findViewById(R.id.bottomLayout);
     }
 
     private void initToolbar(View view)
@@ -89,30 +81,9 @@ public class BonusLayout extends BaseLayout implements View.OnClickListener
         });
     }
 
-    @Override
-    public void onClick(View v)
-    {
-        switch (v.getId())
-        {
-            case R.id.inviteFriendsTextView:
-                ((OnEventListener) mOnEventListener).onInviteFriends();
-                break;
-        }
-    }
-
     public void setBonus(int bonus)
     {
         mBonusTextView.setText(DailyTextUtils.getPriceFormat(mContext, bonus, false));
-    }
-
-    public void setBottomLayoutVisible(boolean visible)
-    {
-        if (mBottomLayout == null)
-        {
-            return;
-        }
-
-        mBottomLayout.setVisibility(visible == true ? View.VISIBLE : View.GONE);
     }
 
     public void setData(List<Bonus> list)

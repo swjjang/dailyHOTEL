@@ -133,7 +133,6 @@
                         android:text="@string/frag_login_message"
                         android:textColor="@color/default_text_c929292"
                         android:textSize="12dp"/>
-
                 </RelativeLayout>
 
                 <View
@@ -297,22 +296,13 @@
 
                     </RelativeLayout>
                 </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_alignParentBottom="true"
-                    android:background="@color/default_line_cf0f0f0"/>
             </RelativeLayout>
 
             <View
+                android:id="@+id/stampTopDividerView"
                 android:layout_width="match_parent"
-                android:layout_height="10dp"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/default_line_cf0f0f0"/>
+                android:layout_height="12dp"
+                android:background="@drawable/layerlist_divider"/>
 
             <RelativeLayout
                 android:id="@+id/stampLayout"
@@ -358,55 +348,18 @@
                     android:text="@string/label_daily_reward"
                     android:textColor="@color/default_text_c323232"
                     android:textSize="15dp"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:background="@color/default_line_cdcdcdd"/>
             </RelativeLayout>
-
-            <LinearLayout
-                android:id="@+id/recommendLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:orientation="vertical">
-
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/dailyTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="41dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/frag_recommend_text"
-                    android:textColor="@color/information_title"
-                    android:textSize="15dp"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/default_line_cf0f0f0"/>
-            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="10dp"/>
+                android:layout_height="12dp"
+                android:background="@drawable/layerlist_divider"/>
 
             <RelativeLayout
                 android:id="@+id/wishListLayout"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:background="@color/white">
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_alignParentTop="true"
-                    android:background="@color/default_line_cf0f0f0"/>
 
                 <com.daily.base.widget.DailyTextView
                     android:layout_width="wrap_content"
@@ -448,7 +401,6 @@
                     android:layout_height="1dp"
                     android:layout_alignParentBottom="true"
                     android:background="@color/default_line_cf0f0f0"/>
-
             </RelativeLayout>
 
             <View

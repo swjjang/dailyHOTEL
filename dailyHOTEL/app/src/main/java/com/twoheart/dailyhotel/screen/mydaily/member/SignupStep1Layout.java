@@ -38,10 +38,10 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
 {
     private static final int MAX_OF_RECOMMENDER = 45;
 
-    private View mEmailView, mNameView, mBirthdayView, mPasswordView, mConfirmPasswordView, mRecommenderView;
+    private View mEmailView, mNameView, mBirthdayView, mPasswordView, mConfirmPasswordView;
     private DailyAutoCompleteEditText mEmailEditText;
     DailyEditText mNameEditText, mPasswordEditText;
-    private DailyEditText mBirthdayEditText, mConfirmPasswordEditText, mRecommenderEditText;
+    private DailyEditText mBirthdayEditText, mConfirmPasswordEditText;
     private TextView mSignupBalloonsTextView;
     private CheckBox mAllAgreementCheckBox;
     private CheckBox mFourteenCheckBox;
@@ -216,11 +216,6 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         mBirthdayEditText.setKeyListener(null);
         mBirthdayEditText.setOnClickListener(this);
 
-        mRecommenderView = view.findViewById(R.id.recommenderView);
-        mRecommenderEditText = (DailyEditText) view.findViewById(R.id.recommenderEditText);
-        mRecommenderEditText.setDeleteButtonVisible(null);
-        mRecommenderEditText.setOnFocusChangeListener(this);
-
         // 회원 가입시 이름 필터 적용.
         StringFilter stringFilter = new StringFilter(mContext);
         InputFilter[] allowAlphanumericHangul = new InputFilter[2];
@@ -228,11 +223,6 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         allowAlphanumericHangul[1] = new InputFilter.LengthFilter(20);
 
         mNameEditText.setFilters(allowAlphanumericHangul);
-
-        // 추천인 코드 최대 길이
-        InputFilter[] fArray = new InputFilter[1];
-        fArray[0] = new InputFilter.LengthFilter(MAX_OF_RECOMMENDER);
-        mRecommenderEditText.setFilters(fArray);
 
         View nextStepView = view.findViewById(R.id.nextStepView);
         nextStepView.setOnClickListener(this);
@@ -315,16 +305,6 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         mBirthdayEditText.setTag(calendar);
     }
 
-    public void setRecommenderText(String recommender)
-    {
-        if (mRecommenderEditText == null)
-        {
-            return;
-        }
-
-        mRecommenderEditText.setText(recommender);
-    }
-
     public void signUpBalloonsTextView(String text)
     {
         if (mSignupBalloonsTextView == null)
@@ -353,7 +333,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         // 패스워드는 trim하지 않는다.
         String passwordText = mPasswordEditText.getText().toString();
         String confirmPasswordText = mConfirmPasswordEditText.getText().toString();
-        String recommender = mRecommenderEditText.getText().toString().trim();
+
         // 생일
         String birthday = mBirthdayEditText.getText().toString().trim();
 
@@ -385,7 +365,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         ExLog.d("month : " + month);
 
         ((OnEventListener) mOnEventListener).onValidation(emailText, nameText, passwordText //
-            , confirmPasswordText, recommender, birthday, mBenefitCheckBox.isChecked(), month);
+            , confirmPasswordText, null, birthday, mBenefitCheckBox.isChecked(), month);
     }
 
     @Override
@@ -488,10 +468,6 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
                         ((OnEventListener) mOnEventListener).showBirthdayDatePicker(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
                     }
                 }
-                break;
-
-            case R.id.recommenderEditText:
-                setFocusLabelView(mRecommenderView, mRecommenderEditText, hasFocus);
                 break;
         }
     }
