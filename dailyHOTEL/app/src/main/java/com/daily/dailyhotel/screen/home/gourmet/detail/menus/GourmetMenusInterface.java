@@ -1,9 +1,8 @@
 package com.daily.dailyhotel.screen.home.gourmet.detail.menus;
 
-import android.animation.Animator;
-import android.app.Dialog;
-
 import com.daily.base.BaseDialogViewInterface;
+import com.daily.dailyhotel.entity.GourmetCart;
+import com.daily.dailyhotel.entity.GourmetCartMenu;
 import com.daily.dailyhotel.entity.GourmetMenu;
 
 import java.util.List;
@@ -24,11 +23,21 @@ public interface GourmetMenusInterface extends BaseDialogViewInterface
 
     void setVisitTime(int time);
 
-    Observable<Boolean> showOperationTimes(int selectedTimes);
+    Observable<Boolean> openOperationTimes(int selectedTimes);
 
-    Observable<Boolean> hideOperationTimes();
+    Observable<Boolean> closeOperationTimes();
 
     void setMenuOrderCount(int menuIndex, int orderCount);
 
     void showTimePickerDialog(List<Integer> operationTimeList, int menuIndex);
+
+    void setSummeryCart(int totalPrice, int totalCount, int menuCount);
+
+    void setGourmetCartMenus(List<GourmetCartMenu> gourmetCartMenuList);
+
+    void setCartVisible(boolean visible);
+
+    Observable<Boolean> openCartMenus(GourmetCart gourmetCart);
+
+    Observable<Boolean> closeCartMenus();
 }

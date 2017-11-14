@@ -90,14 +90,48 @@ public class GourmetCart
         mOrderMenuMap.clear();
     }
 
-    public int getCount()
+    public int getMenuCount()
     {
         return mOrderMenuMap.size();
+    }
+
+    public int getTotalCount()
+    {
+        if (mOrderMenuMap == null || mOrderMenuMap.size() == 0)
+        {
+            return 0;
+        }
+
+        int totalCount = 0;
+
+        for (GourmetCartMenu gourmetCartMenu : mOrderMenuMap.values())
+        {
+            totalCount += gourmetCartMenu.count;
+        }
+
+        return totalCount;
     }
 
     public int getCount(int menuIndex)
     {
         return (menuIndex > 0 && mOrderMenuMap.containsKey(menuIndex)) ? mOrderMenuMap.get(menuIndex).count : 0;
+    }
+
+    public int getTotalPrice()
+    {
+        if (mOrderMenuMap == null || mOrderMenuMap.size() == 0)
+        {
+            return 0;
+        }
+
+        int totalPrice = 0;
+
+        for (GourmetCartMenu gourmetCartMenu : mOrderMenuMap.values())
+        {
+            totalPrice += gourmetCartMenu.discountPrice * gourmetCartMenu.count;
+        }
+
+        return totalPrice;
     }
 
     public boolean equalsDay(String visitDay) throws Exception
@@ -118,6 +152,7 @@ public class GourmetCart
         gourmetCartMenu.price = gourmetMenu.price;
         gourmetCartMenu.discountPrice = gourmetMenu.discountPrice;
         gourmetCartMenu.name = gourmetMenu.name;
+        gourmetCartMenu.persons = gourmetMenu.persons;
 
         return gourmetCartMenu;
     }

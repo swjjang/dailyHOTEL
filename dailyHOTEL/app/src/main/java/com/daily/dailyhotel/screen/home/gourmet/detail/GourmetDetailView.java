@@ -1301,7 +1301,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             }
 
             DailyRadioButton timeTextView = new DailyRadioButton(getContext());
-            timeTextView.setText(String.format(Locale.KOREA, "%02d:%02d", time / 100, time % 100));
+            timeTextView.setText(DailyTextUtils.formatIntegerTimeToStringTime(time));
             timeTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
             timeTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c323232_cffffff));
             timeTextView.setBackgroundResource(R.drawable.shape_fillrect_selector_de8e8e9_sb70038_r2);

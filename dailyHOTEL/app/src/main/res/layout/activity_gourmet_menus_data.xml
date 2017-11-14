@@ -103,72 +103,54 @@
             app:srcCompat="@drawable/navibar_ic_x"/>
 
         <android.support.constraint.ConstraintLayout
-            android:id="@+id/orderMenusLayout"
+            android:id="@+id/cartMenusLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/cartBookingLayout"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent">
 
-            <View
-                android:id="@+id/orderMenusTopBackgroundView"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:background="@drawable/detail_multi_btn_dropdown"
-                app:layout_constraintBottom_toTopOf="@+id/visitTimeTextView"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"/>
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                app:layout_constraintBottom_toBottomOf="@+id/orderMenusTopBackgroundView"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:srcCompat="@drawable/navibar_m_burg_ic_v"/>
-
             <com.daily.base.widget.DailyTextView
-                android:id="@+id/visitTimeTextView"
+                android:id="@+id/cartMenusVisitTimeTextView"
                 android:layout_width="0dp"
                 android:layout_height="42dp"
-                android:layout_marginLeft="12dp"
+                android:background="@color/white"
                 android:drawablePadding="2dp"
                 android:gravity="center_vertical"
-                android:text="방문시간 12:00"
+                android:paddingLeft="12dp"
                 android:textColor="@color/default_text_c323232"
                 android:textSize="13dp"
-                app:drawableCompatLeft="@drawable/ic_detail_item_03_time"
-                app:layout_constraintBottom_toTopOf="@+id/orderMenusRecyclerView"
+                app:drawableCompatLeft="@drawable/vector_ic_detail_item_03_time_c454545"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"/>
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/orderMenusRecyclerView"
+                android:id="@+id/cartMenusRecyclerView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:maxHeight="220dp"
-                app:layout_constraintBottom_toTopOf="@+id/orderMenusInformationLayout"
+                android:background="@color/white"
+                android:orientation="vertical"
+                app:layoutManager="android.support.v7.widget.LinearLayoutManager"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"/>
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cartMenusVisitTimeTextView"/>
 
             <android.support.constraint.ConstraintLayout
-                android:id="@+id/orderMenusInformationLayout"
+                android:id="@+id/cartMenusInformationLayout"
                 android:layout_width="0dp"
                 android:layout_height="36dp"
-                android:layout_marginBottom="10dp"
                 android:background="@color/default_background"
-                app:layout_constraintBottom_toTopOf="@+id/bookingTextView"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent">
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cartMenusRecyclerView">
 
                 <com.daily.base.widget.DailyTextView
-                    android:id="@+id/orderMenusCountTextView"
+                    android:id="@+id/cartMenusCountTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
-                    android:text="1개 선택"
                     android:textColor="@color/default_text_c323232"
                     android:textSize="13dp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -179,57 +161,92 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="4dp"
-                    android:text="총 상품 금액"
+                    android:text="@string/label_gourmet_product_detail_total_cart_price"
                     android:textColor="@color/default_text_c323232"
                     android:textSize="13dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintRight_toLeftOf="@+id/orderMenusTotalPriceTextView"
+                    app:layout_constraintRight_toLeftOf="@+id/cartMenusTotalPriceTextView"
                     app:layout_constraintTop_toTopOf="parent"/>
 
                 <com.daily.base.widget.DailyTextView
-                    android:id="@+id/orderMenusTotalPriceTextView"
+                    android:id="@+id/cartMenusTotalPriceTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="15dp"
-                    android:text="56,000원"
                     android:textColor="@color/dh_theme_color"
-                    android:textSize="13dp"
+                    android:textSize="14dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     dailyFont:style="Bold"/>
             </android.support.constraint.ConstraintLayout>
+        </android.support.constraint.ConstraintLayout>
+
+        <View
+            android:id="@+id/cartMenusTopBackgroundView"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="@drawable/detail_multi_btn_dropdown"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/cartBookingLayout"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+        <ImageView
+            android:id="@+id/cartMenusArrowImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="5dp"
+            android:rotation="180"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/cartMenusTopBackgroundView"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:srcCompat="@drawable/navibar_m_burg_ic_v"/>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/cartBookingLayout"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:background="@color/white"
+            android:padding="10dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
 
             <com.daily.base.widget.DailyTextView
-                android:id="@+id/bookingTextView"
+                android:id="@+id/cartBookingTextView"
                 android:layout_width="0dp"
-                android:layout_height="44dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_height="0dp"
                 android:background="@color/dh_theme_color"
                 android:gravity="center"
-                android:text="총 56,000원 예약하기"
                 android:textColor="@color/white"
                 android:textSize="17dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 dailyFont:style="Medium"/>
 
             <com.daily.base.widget.DailyTextView
-                android:id="@+id/bookingOrderCountTextView"
-                android:layout_width="20dp"
+                android:id="@+id/cartBookingTotalCountTextView"
+                android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:layout_marginRight="12dp"
                 android:background="@drawable/shape_rect_cffffff_r2"
                 android:gravity="center"
-                android:text="1"
+                android:minWidth="20dp"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
                 android:textColor="@color/white"
                 android:textSize="12dp"
-                app:layout_constraintBottom_toBottomOf="@+id/bookingTextView"
-                app:layout_constraintRight_toRightOf="@+id/bookingTextView"
-                app:layout_constraintTop_toTopOf="@+id/bookingTextView"/>
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="@+id/cartBookingTextView"
+                app:layout_constraintTop_toTopOf="parent"/>
         </android.support.constraint.ConstraintLayout>
 
         <FrameLayout

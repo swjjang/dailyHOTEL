@@ -227,6 +227,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         mGourmetCart = new GourmetCart();
 
         getViewInterface().setOperationTimes(mOperationTimeList);
+        getViewInterface().setCartVisible(false);
 
         notifyOperationTimeChanged(mPosition);
 
@@ -352,7 +353,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         {
             mShowOperationTimeView = false;
 
-            addCompositeDisposable(getViewInterface().hideOperationTimes().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+            addCompositeDisposable(getViewInterface().closeOperationTimes().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
             {
                 @Override
                 public void accept(Boolean aBoolean) throws Exception
@@ -375,7 +376,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 
             setToolbarTitle(getString(R.string.label_gourmet_product_detail_view_operation_time_list));
 
-            addCompositeDisposable(getViewInterface().showOperationTimes(mVisitTime).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+            addCompositeDisposable(getViewInterface().openOperationTimes(mVisitTime).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
             {
                 @Override
                 public void accept(Boolean aBoolean) throws Exception
@@ -409,7 +410,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 
         mShowOperationTimeView = false;
 
-        addCompositeDisposable(getViewInterface().hideOperationTimes().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+        addCompositeDisposable(getViewInterface().closeOperationTimes().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
         {
             @Override
             public void accept(Boolean aBoolean) throws Exception
@@ -463,7 +464,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             return;
         }
 
-        addCompositeDisposable(getViewInterface().hideOperationTimes().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+        addCompositeDisposable(getViewInterface().closeOperationTimes().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
         {
             @Override
             public void accept(Boolean aBoolean) throws Exception
@@ -499,7 +500,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         }
 
         // 처음 메뉴 개수가 0인경우
-        if (mGourmetCart.getCount() == 0)
+        if (mGourmetCart.getMenuCount() == 0)
         {
             if (mVisitTime > 0)
             {
@@ -548,7 +549,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
     @Override
     public void onMenuOderCountMinusClick(int position)
     {
-        if (position < 0 || mGourmetCart == null || mGourmetCart.getCount() <= 0 || lock() == true)
+        if (position < 0 || mGourmetCart == null || mGourmetCart.getMenuCount() <= 0 || lock() == true)
         {
             return;
         }
@@ -563,12 +564,78 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 
         minusMenu(gourmetMenu.index);
 
-        if (mGourmetCart.getCount() == 0)
+        if (mGourmetCart.getMenuCount() == 0)
         {
             mGourmetCart.clear();
         }
 
         unLockAll();
+    }
+
+    @Override
+    public void onOpenCartMenusClick()
+    {
+        if (mGourmetCart == null || lock() == true)
+        {
+            return;
+        }
+
+        Observable<Boolean> observable = getViewInterface().openCartMenus(mGourmetCart);
+
+        if (observable == null)
+        {
+            unLockAll();
+            return;
+        }
+
+        addCompositeDisposable(observable.subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+        {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception
+            {
+                unLockAll();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                unLockAll();
+            }
+        }));
+    }
+
+    @Override
+    public void onCloseCartMenusClick()
+    {
+        if (mGourmetCart == null || lock() == true)
+        {
+            return;
+        }
+
+        Observable<Boolean> observable = getViewInterface().closeCartMenus();
+
+        if (observable == null)
+        {
+            unLockAll();
+            return;
+        }
+
+        addCompositeDisposable(observable.subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+        {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception
+            {
+                unLockAll();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                unLockAll();
+            }
+        }));
     }
 
     private void setToolbarTitle(String text)
@@ -639,6 +706,9 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 
         getViewInterface().setMenuOrderCount(menuIndex, mGourmetCart.getCount(menuIndex));
 
+        // Cart
+        getViewInterface().setSummeryCart(mGourmetCart.getTotalPrice(), mGourmetCart.getTotalCount(), mGourmetCart.getMenuCount());
+        getViewInterface().setCartVisible(true);
     }
 
     private void minusMenu(int menuIndex)
@@ -653,6 +723,13 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 
         getViewInterface().setMenuOrderCount(menuIndex, mGourmetCart.getCount(gourmetMenu.index));
 
+        if (mGourmetCart.getTotalCount() > 0)
+        {
+            getViewInterface().setSummeryCart(mGourmetCart.getTotalPrice(), mGourmetCart.getTotalCount(), mGourmetCart.getMenuCount());
+        } else
+        {
+            getViewInterface().setCartVisible(false);
+        }
     }
 
     private void setCartInformation(int time)

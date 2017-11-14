@@ -12,4 +12,5 @@ public class GourmetCartMenu
     public int price;
     public int discountPrice;
     public String name;
+    public int persons;
 }
