@@ -743,18 +743,7 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
                 @Override
                 public void onAnimationEnd(Animator animation)
                 {
-                    if (canceled == true)
-                    {
-                        if (mIssueCouponShakeAnimatorSet != null)
-                        {
-                            mIssueCouponShakeAnimatorSet.removeAllListeners();
-                            mIssueCouponShakeAnimatorSet = null;
-                        }
-
-                        getViewDataBinding().issueCouponLayout.setTranslationY(DP_192);
-                        getViewDataBinding().issueCouponArrowImageView.setTranslationY(DP_192);
-                        getViewDataBinding().issueCouponClickView.setTranslationY(DP_192);
-                    } else
+                    if (canceled == false)
                     {
                         mIssueCouponShakeAnimatorSet.start();
                     }
@@ -784,38 +773,21 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
             // 이상하게 Animator set을 2번 감싸니 cancel을 호출해도 멈추지 않는다.
             // 원인은 isStarted() 값이 false인데 이미 onAnimationStart에서 로그 볼때는 true인데
             // 여기서 찍으면 false로 나온다.
-            if (mIssueCouponShakeAnimatorSet.isStarted() == false)
-            {
-                mIssueCouponShakeAnimatorSet.cancel();
+            mIssueCouponShakeAnimatorSet.cancel();
+            mIssueCouponShakeAnimatorSet.removeAllListeners();
 
-                ArrayList<Animator.AnimatorListener> tmpListeners = mIssueCouponShakeAnimatorSet.getListeners();
-                if (tmpListeners != null)
-                {
-                    int size = tmpListeners.size();
-                    for (int i = 0; i < size; i++)
-                    {
-                        tmpListeners.get(i).onAnimationCancel(null);
-                    }
-                }
-                ArrayList<Animator> playingSet = new ArrayList<>(mIssueCouponShakeAnimatorSet.getChildAnimations());
-                int setSize = playingSet.size();
-                for (int i = 0; i < setSize; i++)
-                {
-                    playingSet.get(i).cancel();
-                }
-                if (tmpListeners != null)
-                {
-                    int size = tmpListeners.size();
-                    for (int i = 0; i < size; i++)
-                    {
-                        tmpListeners.get(i).onAnimationEnd(null);
-                    }
-                }
-                mIssueCouponShakeAnimatorSet = null;
-            } else
+            ArrayList<Animator> playingSet = new ArrayList<>(mIssueCouponShakeAnimatorSet.getChildAnimations());
+            int setSize = playingSet.size();
+            for (int i = 0; i < setSize; i++)
             {
-                mIssueCouponShakeAnimatorSet.cancel();
+                playingSet.get(i).cancel();
             }
+
+            getViewDataBinding().issueCouponLayout.setTranslationY(DP_192);
+            getViewDataBinding().issueCouponArrowImageView.setTranslationY(DP_192);
+            getViewDataBinding().issueCouponClickView.setTranslationY(DP_192);
+
+            mIssueCouponShakeAnimatorSet = null;
         }
     }
 

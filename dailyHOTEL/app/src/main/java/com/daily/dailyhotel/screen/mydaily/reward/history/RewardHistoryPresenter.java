@@ -279,6 +279,11 @@ public class RewardHistoryPresenter extends BaseExceptionPresenter<RewardHistory
 
     private void notifyStickerValidityChanged()
     {
+        if (DailyTextUtils.isTextEmpty(mStickerValidity) == true)
+        {
+            return;
+        }
+
         try
         {
             getViewInterface().setStickerValidityText(DailyCalendar.convertDateFormatString(mStickerValidity, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
