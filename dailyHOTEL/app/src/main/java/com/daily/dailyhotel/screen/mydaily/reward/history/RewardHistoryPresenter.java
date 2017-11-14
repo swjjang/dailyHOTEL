@@ -40,7 +40,7 @@ public class RewardHistoryPresenter extends BaseExceptionPresenter<RewardHistory
 
     public interface RewardHistoryAnalyticsInterface extends BaseAnalyticsInterface
     {
-        void onViewReservationClick(Activity activity, String aggregationId);
+        void onViewReservationClick(Activity activity, String aggregationId, int reservationIndex);
     }
 
     public RewardHistoryPresenter(@NonNull RewardHistoryActivity activity)
@@ -216,7 +216,7 @@ public class RewardHistoryPresenter extends BaseExceptionPresenter<RewardHistory
     @Override
     public void onViewReservationClick(RewardHistory rewardHistory)
     {
-        if (lock() == true || rewardHistory == null)
+        if (rewardHistory == null || rewardHistory.serviceType == null || lock() == true)
         {
             return;
         }
@@ -257,7 +257,7 @@ public class RewardHistoryPresenter extends BaseExceptionPresenter<RewardHistory
                 return;
         }
 
-        mAnalytics.onViewReservationClick(getActivity(), rewardHistory.aggregationId);
+        mAnalytics.onViewReservationClick(getActivity(), rewardHistory.aggregationId, rewardHistory.reservationIndex);
     }
 
     @Override
@@ -279,6 +279,11 @@ public class RewardHistoryPresenter extends BaseExceptionPresenter<RewardHistory
 
     private void notifyStickerValidityChanged()
     {
+        if (DailyTextUtils.isTextEmpty(mStickerValidity) == true)
+        {
+            return;
+        }
+
         try
         {
             getViewInterface().setStickerValidityText(DailyCalendar.convertDateFormatString(mStickerValidity, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
