@@ -551,6 +551,20 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         }
     }
 
+    public int getPrivacyYear()
+    {
+        if (mYearCheckBox5.isChecked() == true)
+        {
+            return 5;
+        } else if (mYearCheckBox3.isChecked() == true)
+        {
+            return 3;
+        } else
+        {
+            return 1;
+        }
+    }
+
     private void setYearCheckBoxUnChecked(int checkBoxId)
     {
         switch (checkBoxId)

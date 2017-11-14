@@ -25,15 +25,23 @@ public class ProfileAnalyticsImpl implements ProfilePresenter.ProfileAnalyticsIn
     }
 
     @Override
-    public void onEventCopyReferralCode(Activity activity)
-    {
-        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.INVITE_FRIEND//
-            , AnalyticsManager.Action.REFERRAL_CODE_COPIED, AnalyticsManager.Label.PROFILE_EDITED, null);
-    }
-
-    @Override
     public void setExceedBonus(Activity activity, boolean isExceedBonus)
     {
         AnalyticsManager.getInstance(activity).setExceedBonus(isExceedBonus);
+    }
+
+    @Override
+    public void onEventPrivacyValidMonth(Activity activity, int month)
+    {
+        if (month < 12)
+        {
+            month = 12;
+        }
+
+        int year = month / 12;
+        String label = year + AnalyticsManager.Label.SUBFIX_PRIVACY_YEAR;
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.REGISTRATION //
+            , AnalyticsManager.Action.PRIVACY, label, null);
     }
 }

@@ -61,9 +61,9 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
 
         void clearUserInformation(Activity activity);
 
-        void onEventCopyReferralCode(Activity activity);
-
         void setExceedBonus(Activity activity, boolean isExceedBonus);
+
+        void onEventPrivacyValidMonth(Activity activity, int month);
     }
 
     public ProfilePresenter(@NonNull ProfileActivity activity)
@@ -526,6 +526,8 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
                 DailyToast.showToast(getActivity(), R.string.message_change_privacy_valid_date, Toast.LENGTH_SHORT);
 
                 unLockAll();
+
+                mAnalytics.onEventPrivacyValidMonth(getActivity(), month);
             }
         }, new Consumer<Throwable>()
         {
