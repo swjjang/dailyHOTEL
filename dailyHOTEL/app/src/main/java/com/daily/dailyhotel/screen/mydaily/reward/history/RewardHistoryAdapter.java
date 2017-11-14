@@ -216,19 +216,25 @@ public class RewardHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
                         holder.dataBinding.descriptionTextView.setPadding(0, DP_4, 0, 0);
                         holder.dataBinding.descriptionTextView.setText(R.string.message_reward_issue_sticker);
 
-                        try
+                        if (DailyTextUtils.isTextEmpty(rewardHistory.date) == true)
                         {
-                            final String text = mContext.getString(R.string.label_reward_payment_deposit, DailyCalendar.convertDateFormatString(rewardHistory.date, DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT));
-                            int startIndex = text.indexOf("ㅣ");
-
-                            SpannableString spannableString = new SpannableString(text);
-                            spannableString.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.cb3b3b3)), //
-                                startIndex, startIndex + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                            holder.dataBinding.dateTextView.setText(spannableString);
-                        } catch (ParseException e)
+                            holder.dataBinding.dateTextView.setText(null);
+                        } else
                         {
-                            ExLog.d(e.toString());
+                            try
+                            {
+                                final String text = mContext.getString(R.string.label_reward_payment_deposit, DailyCalendar.convertDateFormatString(rewardHistory.date, DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT));
+                                int startIndex = text.indexOf("ㅣ");
+
+                                SpannableString spannableString = new SpannableString(text);
+                                spannableString.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.cb3b3b3)), //
+                                    startIndex, startIndex + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                                holder.dataBinding.dateTextView.setText(spannableString);
+                            } catch (ParseException e)
+                            {
+                                ExLog.d(e.toString());
+                            }
                         }
 
                         final String linkText = mContext.getString(R.string.label_reward_view_reservation);
@@ -250,12 +256,18 @@ public class RewardHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
                         holder.dataBinding.descriptionTextView.setPadding(0, 0, 0, 0);
                         holder.dataBinding.descriptionTextView.setText(R.string.message_reward_issue_sticker);
 
-                        try
+                        if (DailyTextUtils.isTextEmpty(rewardHistory.date) == true)
                         {
-                            holder.dataBinding.dateTextView.setText(mContext.getString(R.string.label_reward_sticker_issue_date, DailyCalendar.convertDateFormatString(rewardHistory.date, DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT)));
-                        } catch (ParseException e)
+                            holder.dataBinding.dateTextView.setText(null);
+                        } else
                         {
-
+                            try
+                            {
+                                holder.dataBinding.dateTextView.setText(mContext.getString(R.string.label_reward_sticker_issue_date, DailyCalendar.convertDateFormatString(rewardHistory.date, DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT)));
+                            } catch (ParseException e)
+                            {
+                                ExLog.d(e.toString());
+                            }
                         }
 
                         holder.dataBinding.reservationLinkTextView.setVisibility(View.GONE);
@@ -275,12 +287,18 @@ public class RewardHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
                 holder.dataBinding.descriptionTextView.setPadding(0, 0, 0, 0);
                 holder.dataBinding.descriptionTextView.setText(mContext.getString(R.string.message_reward_expire_sticker, rewardHistory.expiredStickerCount));
 
-                try
+                if (DailyTextUtils.isTextEmpty(rewardHistory.date) == true)
                 {
-                    holder.dataBinding.dateTextView.setText(mContext.getString(R.string.label_reward_sticker_expiration_date, DailyCalendar.convertDateFormatString(rewardHistory.date, DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT)));
-                } catch (ParseException e)
+                    holder.dataBinding.dateTextView.setText(null);
+                } else
                 {
-
+                    try
+                    {
+                        holder.dataBinding.dateTextView.setText(mContext.getString(R.string.label_reward_sticker_expiration_date, DailyCalendar.convertDateFormatString(rewardHistory.date, DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT)));
+                    } catch (ParseException e)
+                    {
+                        ExLog.d(e.toString());
+                    }
                 }
 
                 holder.dataBinding.reservationLinkTextView.setVisibility(View.GONE);
@@ -304,12 +322,18 @@ public class RewardHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
                 holder.dataBinding.descriptionTextView.setPadding(0, DP_4, 0, 0);
                 holder.dataBinding.descriptionTextView.setText(R.string.message_reward_issue_reward_coupon);
 
-                try
+                if (DailyTextUtils.isTextEmpty(rewardHistory.date) == true)
                 {
-                    holder.dataBinding.dateTextView.setText(mContext.getString(R.string.label_reward_coupon_issue_date, DailyCalendar.convertDateFormatString(rewardHistory.date, DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT)));
-                } catch (ParseException e)
+                    holder.dataBinding.dateTextView.setText(null);
+                } else
                 {
-
+                    try
+                    {
+                        holder.dataBinding.dateTextView.setText(mContext.getString(R.string.label_reward_coupon_issue_date, DailyCalendar.convertDateFormatString(rewardHistory.date, DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT)));
+                    } catch (ParseException e)
+                    {
+                        ExLog.d(e.toString());
+                    }
                 }
 
                 holder.dataBinding.reservationLinkTextView.setVisibility(View.GONE);
