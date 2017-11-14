@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.daily.base.BaseAnalyticsInterface;
-import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
@@ -505,16 +504,6 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
                     unLockAll();
                 }
             }, false);
-    }
-
-    @Override
-    public void doCodeCopy(String code)
-    {
-        DailyTextUtils.clipText(getActivity(), code);
-
-        DailyToast.showToast(getActivity(), R.string.message_copy_recommender_code, Toast.LENGTH_SHORT);
-
-        mAnalytics.onEventCopyReferralCode(getActivity());
     }
 
     @Override

@@ -31,8 +31,6 @@ public class ProfileView extends BaseDialogView<ProfileView.OnEventListener, Act
 
         void doLogout();
 
-        void doCodeCopy(String code);
-
         void doValidMonthChange(int month);
     }
 
@@ -129,21 +127,6 @@ public class ProfileView extends BaseDialogView<ProfileView.OnEventListener, Act
             public void onClick(View v)
             {
                 getEventListener().doLogout();
-            }
-        });
-
-        viewDataBinding.codeCopyView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (getViewDataBinding() == null)
-                {
-                    return;
-                }
-
-                String code = getViewDataBinding().referralTextView.getText().toString();
-                getEventListener().doCodeCopy(code);
             }
         });
 
@@ -265,8 +248,6 @@ public class ProfileView extends BaseDialogView<ProfileView.OnEventListener, Act
             }
         });
 
-        getViewDataBinding().referralTextView.setText(user.referralCode);
-
         setPrivacyValidMonth(user.dataRetentionInMonth);
     }
 
@@ -349,8 +330,6 @@ public class ProfileView extends BaseDialogView<ProfileView.OnEventListener, Act
         // 패스워드
         getViewDataBinding().passwordLayout.setVisibility(View.GONE);
         getViewDataBinding().passwordUnderLine.setVisibility(View.GONE);
-
-        getViewDataBinding().referralTextView.setText(user.referralCode);
 
         setPrivacyValidMonth(user.dataRetentionInMonth);
     }
