@@ -12,7 +12,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,8 +48,10 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
     private CheckBox mTermsOfServiceCheckBox;
     private CheckBox mTermsOfPrivacyCheckBox;
     private CheckBox mBenefitCheckBox;
+    private CheckBox mYearCheckBox1;
+    private CheckBox mYearCheckBox3;
+    private CheckBox mYearCheckBox5;
     ScrollView mScrollView;
-    private RadioGroup mValidDateRadioGroup;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -236,8 +237,6 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         View nextStepView = view.findViewById(R.id.nextStepView);
         nextStepView.setOnClickListener(this);
 
-        mValidDateRadioGroup = (RadioGroup) view.findViewById(R.id.privacyValidDateRadioGroup);
-
         mEmailView.requestFocus();
     }
 
@@ -249,6 +248,10 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         mTermsOfServiceCheckBox = (CheckBox) view.findViewById(R.id.termsCheckBox);
         mBenefitCheckBox = (CheckBox) view.findViewById(R.id.benefitCheckBox);
 
+        mYearCheckBox1 = (CheckBox) view.findViewById(R.id.yearCheckBox1);
+        mYearCheckBox3 = (CheckBox) view.findViewById(R.id.yearCheckBox3);
+        mYearCheckBox5 = (CheckBox) view.findViewById(R.id.yearCheckBox5);
+
         if (VersionUtils.isOverAPI21() == false)
         {
             mAllAgreementCheckBox.setBackgroundResource(0);
@@ -256,6 +259,10 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
             mTermsOfPrivacyCheckBox.setBackgroundResource(0);
             mTermsOfServiceCheckBox.setBackgroundResource(0);
             mBenefitCheckBox.setBackgroundResource(0);
+
+            mYearCheckBox1.setBackgroundResource(0);
+            mYearCheckBox3.setBackgroundResource(0);
+            mYearCheckBox5.setBackgroundResource(0);
         }
 
         mAllAgreementCheckBox.setOnClickListener(this);
@@ -263,6 +270,12 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         mTermsOfPrivacyCheckBox.setOnClickListener(this);
         mTermsOfServiceCheckBox.setOnClickListener(this);
         mBenefitCheckBox.setOnClickListener(this);
+
+        mYearCheckBox1.setVisibility(View.GONE);
+
+        mYearCheckBox1.setOnClickListener(this);
+        mYearCheckBox3.setOnClickListener(this);
+        mYearCheckBox5.setOnClickListener(this);
 
         TextView termsContentView = (TextView) view.findViewById(R.id.termsContentView);
         termsContentView.setPaintFlags(termsContentView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -358,23 +371,18 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         }
 
         int month;
-        switch (mValidDateRadioGroup.getCheckedRadioButtonId())
+        if (mYearCheckBox5.isChecked() == true)
         {
-            case R.id.yearRadioButton3:
-                month = 36;
-                break;
-
-            case R.id.yearRadioButton5:
-                month = 60;
-                break;
-
-            case R.id.yearRadioButton1:
-            default:
-                month = 12;
-                break;
+            month = 60;
+        } else if (mYearCheckBox3.isChecked() == true)
+        {
+            month = 36;
+        } else
+        {
+            month = 12;
         }
 
-        ExLog.d("getCheckedRadioButtonId : " + mValidDateRadioGroup.getCheckedRadioButtonId() + " , month : " + month);
+        ExLog.d("month : " + month);
 
         ((OnEventListener) mOnEventListener).onValidation(emailText, nameText, passwordText //
             , confirmPasswordText, recommender, birthday, mBenefitCheckBox.isChecked(), month);
@@ -433,6 +441,14 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
             case R.id.birthdayEditText:
                 onFocusChange(mBirthdayEditText, true);
                 break;
+
+            case R.id.yearCheckBox1:
+            case R.id.yearCheckBox3:
+            case R.id.yearCheckBox5:
+            {
+                setYearCheckBoxUnChecked(v.getId());
+                break;
+            }
         }
     }
 
@@ -494,6 +510,28 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
             }
 
             labelView.setSelected(false);
+        }
+    }
+
+    private void setYearCheckBoxUnChecked(int checkBoxId)
+    {
+        switch (checkBoxId)
+        {
+            case R.id.yearCheckBox5:
+                mYearCheckBox1.setChecked(false);
+                mYearCheckBox3.setChecked(false);
+                break;
+
+            case R.id.yearCheckBox3:
+                mYearCheckBox1.setChecked(false);
+                mYearCheckBox5.setChecked(false);
+                break;
+
+            case R.id.yearCheckBox1:
+            default:
+                mYearCheckBox3.setChecked(false);
+                mYearCheckBox5.setChecked(false);
+                break;
         }
     }
 }

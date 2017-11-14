@@ -35,7 +35,7 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
         DailyMobileAPI.getInstance(mContext).requestUserProfile(mNetworkTag, mUserProfileCallback);
     }
 
-    public void requestUpdateSocialUserInformation(String phoneNumber, String email, String name, String recommender, String birthday, boolean isBenefit)
+    public void requestUpdateSocialUserInformation(String phoneNumber, String email, String name, String recommender, String birthday, boolean isBenefit, int privacyValidMonth)
     {
         Map<String, String> params = new HashMap<>();
 
@@ -65,6 +65,13 @@ public class AddProfileSocialNetworkController extends BaseNetworkController
         }
 
         params.put("isAgreedBenefit", isBenefit == true ? "true" : "false");
+
+        if (privacyValidMonth < 12)
+        {
+            privacyValidMonth = 12;
+        }
+
+        params.put("dataRetentionInMonth", Integer.toString(privacyValidMonth));
 
         DailyMobileAPI.getInstance(mContext).requestUserUpdateInformationForSocial(mNetworkTag, params, mUserUpdateFacebookCallback);
     }
