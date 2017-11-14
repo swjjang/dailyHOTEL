@@ -1838,7 +1838,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                             customer.setEmail(user.email);
                             customer.setName(user.name);
                             customer.setPhone(user.phone);
-                            customer.setUserIdx(Integer.toString(user.index));
+//                            customer.setUserIdx(Integer.toString(user.index));
 
                             startActivityForResult(AddProfileSocialActivity.newInstance(getActivity()//
                                 , customer, user.birthday), StayDetailActivity.REQUEST_CODE_PROFILE_UPDATE);

@@ -70,8 +70,6 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
 
         void startCreditCardList();
 
-        void startInviteFriend();
-
         void startWishList(Constants.PlaceType placeType);
 
         void startRecentPlaces(Constants.PlaceType placeType);
@@ -114,7 +112,6 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
 
         View stampLayout = view.findViewById(R.id.stampLayout);
         View rewardLayout = view.findViewById(R.id.rewardLayout);
-        View recommendLayout = view.findViewById(R.id.recommendLayout);
         View wishListLayout = view.findViewById(R.id.wishListLayout);
         View recentPlacesLayout = view.findViewById(R.id.recentPlacesLayout);
 
@@ -135,9 +132,18 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
             rewardLayout.setVisibility(View.GONE);
         }
 
+        View stampTopDividerView = view.findViewById(R.id.stampTopDividerView);
+
+        if (stampLayout.getVisibility() == View.GONE && rewardLayout.getVisibility() == View.GONE)
+        {
+            stampTopDividerView.setVisibility(View.GONE);
+        } else
+        {
+            stampTopDividerView.setVisibility(View.VISIBLE);
+        }
+
         rewardLayout.setOnClickListener(this);
 
-        recommendLayout.setOnClickListener(this);
         recentPlacesLayout.setOnClickListener(this);
         wishListLayout.setOnClickListener(this);
 
@@ -305,6 +311,7 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
             signUpView.setVisibility(View.GONE);
             editProfileView.setVisibility(View.VISIBLE);
 
+            profileLayoutBottomLine.setVisibility(View.VISIBLE);
             profileLayoutBottomLine.setBackgroundColor(mContext.getResources().getColor(R.color.default_line_cdcdcdd));
             ViewGroup.LayoutParams layoutParams = profileLayoutBottomLine.getLayoutParams();
             layoutParams.height = 1;
@@ -322,11 +329,7 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
             loginView.setVisibility(View.VISIBLE);
             signUpView.setVisibility(View.VISIBLE);
             editProfileView.setVisibility(View.GONE);
-
-            profileLayoutBottomLine.setBackgroundColor(mContext.getResources().getColor(R.color.default_line_cf0f0f0));
-            ViewGroup.LayoutParams layoutParams = profileLayoutBottomLine.getLayoutParams();
-            layoutParams.height = ScreenUtils.dpToPx(mContext, 1);
-            profileLayoutBottomLine.setLayoutParams(layoutParams);
+            profileLayoutBottomLine.setVisibility(View.GONE);
 
             profileImageView.setImageResource(R.drawable.more_ic_mydaily_01_logout);
         }
@@ -474,10 +477,6 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
 
             case R.id.rewardLayout:
                 ((OnEventListener) mOnEventListener).onRewardClick();
-                break;
-
-            case R.id.recommendLayout:
-                ((OnEventListener) mOnEventListener).startInviteFriend();
                 break;
 
             case R.id.wishListLayout:

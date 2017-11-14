@@ -764,7 +764,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
         }
     }
 
-    void startSignUp(String recommenderCode)
+    void startSignUp()
     {
         if (isLockUiComponent() == true || mIsAttach == false)
         {
@@ -775,17 +775,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
-        Intent intent;
-
-        if (DailyTextUtils.isTextEmpty(recommenderCode) == true)
-        {
-            intent = SignupStep1Activity.newInstance(baseActivity, null);
-        } else
-        {
-            intent = SignupStep1Activity.newInstance(baseActivity, recommenderCode, null);
-        }
-
-        startActivityForResult(intent, CODE_REQEUST_ACTIVITY_SIGNUP);
+        startActivityForResult(SignupStep1Activity.newInstance(baseActivity, null), CODE_REQEUST_ACTIVITY_SIGNUP);
     }
 
     void startEventWebActivity(String url, String eventName)
@@ -1751,7 +1741,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
         public void onMessageTextAreaClick()
         {
             // 회원가입으로 이동!
-            startSignUp(null);
+            startSignUp();
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                 AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.MESSAGE_CLICK,//

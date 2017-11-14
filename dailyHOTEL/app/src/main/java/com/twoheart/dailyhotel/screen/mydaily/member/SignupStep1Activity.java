@@ -33,8 +33,6 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 
 import org.json.JSONObject;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,7 +43,6 @@ public class SignupStep1Activity extends BaseActivity
 {
     public static final int PASSWORD_MIN_COUNT = 8;
     private static final int REQUEST_CODE_ACTIVITY = 100;
-    private static final String INTENT_EXTRA_DATA_RECOMMENDER = "recommender";
 
     SignupStep1Layout mSignupStep1Layout;
     Map<String, String> mSignupParams;
@@ -62,23 +59,6 @@ public class SignupStep1Activity extends BaseActivity
         return intent;
     }
 
-    public static Intent newInstance(Context context, String recommender, String callByScreen)
-    {
-        Intent intent = new Intent(context, SignupStep1Activity.class);
-
-        if (DailyTextUtils.isTextEmpty(recommender) == false)
-        {
-            intent.putExtra(INTENT_EXTRA_DATA_RECOMMENDER, recommender);
-        }
-
-        if (DailyTextUtils.isTextEmpty(callByScreen) == false)
-        {
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
-        }
-
-        return intent;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -87,12 +67,6 @@ public class SignupStep1Activity extends BaseActivity
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
-        String recommender = null;
-
-        if (intent != null && intent.hasExtra(INTENT_EXTRA_DATA_RECOMMENDER) == true)
-        {
-            recommender = intent.getStringExtra(INTENT_EXTRA_DATA_RECOMMENDER);
-        }
 
         if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN) == true)
         {
@@ -102,11 +76,6 @@ public class SignupStep1Activity extends BaseActivity
         mSignupStep1Layout = new SignupStep1Layout(this, mOnEventListener);
 
         setContentView(mSignupStep1Layout.onCreateView(R.layout.activity_signup_step1));
-
-        if (DailyTextUtils.isTextEmpty(recommender) == false)
-        {
-            mSignupStep1Layout.setRecommenderText(recommender);
-        }
 
         String signUpText = DailyRemoteConfigPreference.getInstance(this).getRemoteConfigTextSignUpText01();
 
@@ -184,8 +153,7 @@ public class SignupStep1Activity extends BaseActivity
     {
         @Override
         public void onValidation(final String email, final String name, final String password //
-            , final String confirmPassword, final String recommender, final String birthday
-            , final boolean isBenefit, int privacyValidMonth)
+            , final String confirmPassword, final String recommender, final String birthday, final boolean isBenefit, int privacyValidMonth)
         {
             if (DailyTextUtils.isTextEmpty(email, name, password, confirmPassword) == true)
             {
@@ -274,6 +242,10 @@ public class SignupStep1Activity extends BaseActivity
             mSignupParams.put("market_type", Setting.getStore().getName());
             mSignupParams.put("isAgreedBenefit", isBenefit == true ? "true" : "false");
 
+            if (privacyValidMonth < 12)
+            {
+                privacyValidMonth = 12;
+            }
 
             mSignupParams.put("dataRetentionInMonth", Integer.toString(privacyValidMonth));
 

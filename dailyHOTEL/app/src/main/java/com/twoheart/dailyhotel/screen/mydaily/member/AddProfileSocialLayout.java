@@ -16,6 +16,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyAutoCompleteEditText;
 import com.daily.base.widget.DailyEditText;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
@@ -38,14 +39,17 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
     private static final int MAX_OF_RECOMMENDER = 45;
 
     private View mPhoneLayout, mEmailLayout, mNameLayout;
-    private View mEmailView, mNameView, mBirthdayView, mRecommenderView;
+    private View mEmailView, mNameView, mBirthdayView;
     private DailyAutoCompleteEditText mEmailEditText;
-    DailyEditText mNameEditText, mBirthdayEditText, mRecommenderEditText;
+    DailyEditText mNameEditText, mBirthdayEditText;
     private CheckBox mAllAgreementCheckBox;
     private CheckBox mFourteenCheckBox;
     private CheckBox mTermsOfServiceCheckBox;
     private CheckBox mTermsOfPrivacyCheckBox;
     private CheckBox mBenefitCheckBox;
+    private CheckBox mYearCheckBox1;
+    private CheckBox mYearCheckBox3;
+    private CheckBox mYearCheckBox5;
 
     private View mPhoneView;
     private DailyEditText mCountryEditText, mPhoneEditText;
@@ -61,7 +65,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
         void showBirthdayDatePicker(int year, int month, int day);
 
-        void onUpdateUserInformation(String phoneNumber, String email, String name, String recommender, String birthday, boolean isBenefit);
+        void onUpdateUserInformation(String phoneNumber, String email, String name, String recommender, String birthday, boolean isBenefit, int month);
     }
 
     public AddProfileSocialLayout(Context context, OnEventListener mOnEventListener)
@@ -165,11 +169,6 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         mBirthdayEditText.setKeyListener(null);
         mBirthdayEditText.setOnClickListener(this);
 
-        mRecommenderView = view.findViewById(R.id.recommenderView);
-        mRecommenderEditText = (DailyEditText) view.findViewById(R.id.recommenderEditText);
-        mRecommenderEditText.setDeleteButtonVisible(null);
-        mRecommenderEditText.setOnFocusChangeListener(this);
-
         // 회원 가입시 이름 필터 적용.
         StringFilter stringFilter = new StringFilter(mContext);
         InputFilter[] allowAlphanumericHangul = new InputFilter[2];
@@ -177,11 +176,6 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         allowAlphanumericHangul[1] = new InputFilter.LengthFilter(20);
 
         mNameEditText.setFilters(allowAlphanumericHangul);
-
-        // 추천인 코드 최대 길이
-        InputFilter[] fArray = new InputFilter[1];
-        fArray[0] = new InputFilter.LengthFilter(MAX_OF_RECOMMENDER);
-        mRecommenderEditText.setFilters(fArray);
     }
 
     private void initLayoutCheckBox(View view)
@@ -191,6 +185,23 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         mTermsOfPrivacyCheckBox = (CheckBox) view.findViewById(R.id.personalCheckBox);
         mTermsOfServiceCheckBox = (CheckBox) view.findViewById(R.id.termsCheckBox);
         mBenefitCheckBox = (CheckBox) view.findViewById(R.id.benefitCheckBox);
+
+        mYearCheckBox1 = (CheckBox) view.findViewById(R.id.yearCheckBox1);
+        mYearCheckBox3 = (CheckBox) view.findViewById(R.id.yearCheckBox3);
+        mYearCheckBox5 = (CheckBox) view.findViewById(R.id.yearCheckBox5);
+
+        if (VersionUtils.isOverAPI21() == false)
+        {
+            mAllAgreementCheckBox.setBackgroundResource(0);
+            mFourteenCheckBox.setBackgroundResource(0);
+            mTermsOfPrivacyCheckBox.setBackgroundResource(0);
+            mTermsOfServiceCheckBox.setBackgroundResource(0);
+            mBenefitCheckBox.setBackgroundResource(0);
+
+            mYearCheckBox1.setBackgroundResource(0);
+            mYearCheckBox3.setBackgroundResource(0);
+            mYearCheckBox5.setBackgroundResource(0);
+        }
 
         mAllAgreementCheckBox.setOnClickListener(this);
         mFourteenCheckBox.setOnClickListener(this);
@@ -205,6 +216,12 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         {
             mBenefitCheckBox.setVisibility(View.VISIBLE);
         }
+
+        mYearCheckBox1.setVisibility(View.GONE);
+
+        mYearCheckBox1.setOnClickListener(this);
+        mYearCheckBox3.setOnClickListener(this);
+        mYearCheckBox5.setOnClickListener(this);
 
         TextView termsContentView = (TextView) view.findViewById(R.id.termsContentView);
         termsContentView.setPaintFlags(termsContentView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -225,7 +242,6 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
                 String phoneNumber = null;
                 String email = null;
                 String name = null;
-                String recommender = mRecommenderEditText.getText().toString().trim();
                 String birthday = mBirthdayEditText.getText().toString().trim();
 
                 if (mPhoneLayout.getVisibility() == View.VISIBLE)
@@ -272,7 +288,20 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
                     }
                 }
 
-                ((OnEventListener) mOnEventListener).onUpdateUserInformation(phoneNumber, email, name, recommender, birthday, mBenefitCheckBox.isChecked());
+                int month;
+                if (mYearCheckBox5.isChecked() == true)
+                {
+                    month = 60;
+                } else if (mYearCheckBox3.isChecked() == true)
+                {
+                    month = 36;
+                } else
+                {
+                    month = 12;
+                }
+
+                ((OnEventListener) mOnEventListener).onUpdateUserInformation(phoneNumber, email, name //
+                    , null, birthday, mBenefitCheckBox.isChecked(), month);
                 break;
             }
 
@@ -336,6 +365,14 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
             case R.id.birthdayEditText:
                 onFocusChange(mBirthdayEditText, true);
                 break;
+
+            case R.id.yearCheckBox1:
+            case R.id.yearCheckBox3:
+            case R.id.yearCheckBox5:
+            {
+                setYearCheckBoxUnChecked(v.getId());
+                break;
+            }
         }
     }
 
@@ -371,10 +408,6 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
                         ((OnEventListener) mOnEventListener).showBirthdayDatePicker(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
                     }
                 }
-                break;
-
-            case R.id.recommenderEditText:
-                setFocusLabelView(mRecommenderView, mRecommenderEditText, hasFocus);
                 break;
         }
     }
@@ -515,6 +548,28 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
             }
 
             labelView.setSelected(false);
+        }
+    }
+
+    private void setYearCheckBoxUnChecked(int checkBoxId)
+    {
+        switch (checkBoxId)
+        {
+            case R.id.yearCheckBox5:
+                mYearCheckBox1.setChecked(false);
+                mYearCheckBox3.setChecked(false);
+                break;
+
+            case R.id.yearCheckBox3:
+                mYearCheckBox1.setChecked(false);
+                mYearCheckBox5.setChecked(false);
+                break;
+
+            case R.id.yearCheckBox1:
+            default:
+                mYearCheckBox3.setChecked(false);
+                mYearCheckBox5.setChecked(false);
+                break;
         }
     }
 }
