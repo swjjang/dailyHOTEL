@@ -216,7 +216,7 @@ public class RewardHistoryPresenter extends BaseExceptionPresenter<RewardHistory
     @Override
     public void onViewReservationClick(RewardHistory rewardHistory)
     {
-        if (lock() == true || rewardHistory == null)
+        if (rewardHistory == null || rewardHistory.serviceType == null || lock() == true)
         {
             return;
         }
