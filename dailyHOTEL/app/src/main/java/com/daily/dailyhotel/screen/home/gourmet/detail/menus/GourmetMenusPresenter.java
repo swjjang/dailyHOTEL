@@ -627,6 +627,8 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             public void accept(Boolean aBoolean) throws Exception
             {
                 unLockAll();
+
+                getViewInterface().notifyGourmetMenusChanged();
             }
         }, new Consumer<Throwable>()
         {
@@ -634,6 +636,8 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             public void accept(Throwable throwable) throws Exception
             {
                 unLockAll();
+
+                getViewInterface().notifyGourmetMenusChanged();
             }
         }));
     }
@@ -648,15 +652,16 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 
         mGourmetCart.remove(menuIndex);
 
+        getViewInterface().setMenuOrderCount(menuIndex, 0);
+
         if (mGourmetCart.getMenuCount() > 0)
         {
-            getViewInterface().setMenuOrderCount(menuIndex, mGourmetCart.getCount(menuIndex));
-
             // Cart
             getViewInterface().setSummeryCart(mGourmetCart.getTotalPrice(), mGourmetCart.getTotalCount(), mGourmetCart.getMenuCount());
             getViewInterface().setGourmetCart(mGourmetCart);
         } else
         {
+            getViewInterface().notifyGourmetMenusChanged();
             getViewInterface().setCartVisible(false);
         }
 

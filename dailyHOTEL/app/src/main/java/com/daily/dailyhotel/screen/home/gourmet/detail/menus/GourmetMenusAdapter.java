@@ -362,12 +362,17 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
 
     public void setMenuOrderCount(RecyclerView.ViewHolder viewHolder, int position, int menuOrderCount)
     {
-        if (viewHolder == null || position < 0)
+        if (position < 0)
         {
             return;
         }
 
         getItem(position).orderCount = menuOrderCount;
+
+        if (viewHolder == null)
+        {
+            return;
+        }
 
         GourmetMenuViewHolder gourmetMenuViewHolder = (GourmetMenuViewHolder) viewHolder;
 

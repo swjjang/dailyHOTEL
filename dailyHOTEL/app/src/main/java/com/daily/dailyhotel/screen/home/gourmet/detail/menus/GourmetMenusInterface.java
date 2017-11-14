@@ -42,4 +42,6 @@ public interface GourmetMenusInterface extends BaseDialogViewInterface
     Observable<Boolean> openCartMenus(GourmetCart gourmetCart);
 
     Observable<Boolean> closeCartMenus();
+
+    void notifyGourmetMenusChanged();
 }

@@ -707,7 +707,13 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
 
         int flag = visible ? View.VISIBLE : View.GONE;
 
-        getViewDataBinding().cartMenusLayout.setVisibility(visible ? View.INVISIBLE : View.GONE);
+        if (visible == false)
+        {
+            getViewDataBinding().cartMenusLayout.setVisibility(View.GONE);
+            getViewDataBinding().cartMenusLayout.setTranslationY(0.0f);
+            getViewDataBinding().cartMenusArrowImageView.setRotation(180.0f);
+        }
+
         getViewDataBinding().cartMenusTopBackgroundView.setVisibility(flag);
         getViewDataBinding().cartMenusArrowImageView.setVisibility(flag);
         getViewDataBinding().cartBookingLayout.setVisibility(flag);
@@ -821,6 +827,8 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         {
             height = ScreenUtils.dpToPx(getContext(), 42) + ITEM_HEIGHT * 2 + ITEM_HEIGHT / 2 + +ScreenUtils.dpToPx(getContext(), 36);
         }
+
+        getViewDataBinding().cartMenusLayout.setTranslationY(height);
 
         ObjectAnimator transObjectAnimator = ObjectAnimator.ofFloat(getViewDataBinding().cartMenusLayout//
             , View.TRANSLATION_Y, height, 0);
@@ -972,6 +980,17 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         return observable;
     }
 
+    @Override
+    public void notifyGourmetMenusChanged()
+    {
+        if (getViewDataBinding() == null || mGourmetMenusAdapter == null)
+        {
+            return;
+        }
+
+        mGourmetMenusAdapter.notifyDataSetChanged();
+    }
+
 
     @Override
     public void onClick(View v)
@@ -995,7 +1014,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                 break;
 
             case R.id.cartMenusArrowImageView:
-                if (v.getRotation() == 0.0f)
+                if (getViewDataBinding().cartMenusLayout.getVisibility() == View.VISIBLE)
                 {
                     getEventListener().onCloseCartMenusClick();
                 } else
