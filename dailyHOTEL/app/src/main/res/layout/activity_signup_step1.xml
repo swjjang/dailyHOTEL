@@ -277,7 +277,7 @@
                 android:gravity="center"
                 android:text="@string/label_signup_allagreement"
                 android:textColor="@color/information_title"
-                android:textSize="12dp"
+                android:textSize="13dp"
                 android:theme="@style/CheckBoxTheme"
                 dailyFont:style="Medium"/>
 

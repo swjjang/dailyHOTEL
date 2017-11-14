@@ -377,7 +377,8 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         } else if (mYearCheckBox3.isChecked() == true)
         {
             month = 36;
-        } else {
+        } else
+        {
             month = 12;
         }
 

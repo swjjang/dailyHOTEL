@@ -397,7 +397,8 @@ public class AddProfileSocialActivity extends BaseActivity
         }
 
         @Override
-        public void onUpdateUserInformation(String phoneNumber, String email, String name, String recommender, String birthday, boolean isBenefit)
+        public void onUpdateUserInformation(String phoneNumber, String email, String name //
+            , String recommender, String birthday, boolean isBenefit, int month)
         {
             // 전화번호가 없거나 잘못 된경우
             if (DailyTextUtils.isTextEmpty(mCustomer.getPhone()) == true || Util.isValidatePhoneNumber(mCustomer.getPhone()) == false)
@@ -468,7 +469,7 @@ public class AddProfileSocialActivity extends BaseActivity
                 return;
             }
 
-            mAddProfileSocialNetworkController.requestUpdateSocialUserInformation(phoneNumber, email, name, recommender, birthday, isBenefit);
+            mAddProfileSocialNetworkController.requestUpdateSocialUserInformation(phoneNumber, email, name, recommender, birthday, isBenefit, month);
         }
 
         @Override

@@ -33,8 +33,6 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 
 import org.json.JSONObject;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -184,8 +182,7 @@ public class SignupStep1Activity extends BaseActivity
     {
         @Override
         public void onValidation(final String email, final String name, final String password //
-            , final String confirmPassword, final String recommender, final String birthday
-            , final boolean isBenefit, int privacyValidMonth)
+            , final String confirmPassword, final String recommender, final String birthday, final boolean isBenefit, int privacyValidMonth)
         {
             if (DailyTextUtils.isTextEmpty(email, name, password, confirmPassword) == true)
             {
@@ -274,6 +271,10 @@ public class SignupStep1Activity extends BaseActivity
             mSignupParams.put("market_type", Setting.getStore().getName());
             mSignupParams.put("isAgreedBenefit", isBenefit == true ? "true" : "false");
 
+            if (privacyValidMonth < 12)
+            {
+                privacyValidMonth = 12;
+            }
 
             mSignupParams.put("dataRetentionInMonth", Integer.toString(privacyValidMonth));
 

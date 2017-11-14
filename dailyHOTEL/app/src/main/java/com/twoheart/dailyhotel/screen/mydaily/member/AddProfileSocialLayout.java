@@ -16,6 +16,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyAutoCompleteEditText;
 import com.daily.base.widget.DailyEditText;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
@@ -46,6 +47,9 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
     private CheckBox mTermsOfServiceCheckBox;
     private CheckBox mTermsOfPrivacyCheckBox;
     private CheckBox mBenefitCheckBox;
+    private CheckBox mYearCheckBox1;
+    private CheckBox mYearCheckBox3;
+    private CheckBox mYearCheckBox5;
 
     private View mPhoneView;
     private DailyEditText mCountryEditText, mPhoneEditText;
@@ -61,7 +65,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
         void showBirthdayDatePicker(int year, int month, int day);
 
-        void onUpdateUserInformation(String phoneNumber, String email, String name, String recommender, String birthday, boolean isBenefit);
+        void onUpdateUserInformation(String phoneNumber, String email, String name, String recommender, String birthday, boolean isBenefit, int month);
     }
 
     public AddProfileSocialLayout(Context context, OnEventListener mOnEventListener)
@@ -192,6 +196,23 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         mTermsOfServiceCheckBox = (CheckBox) view.findViewById(R.id.termsCheckBox);
         mBenefitCheckBox = (CheckBox) view.findViewById(R.id.benefitCheckBox);
 
+        mYearCheckBox1 = (CheckBox) view.findViewById(R.id.yearCheckBox1);
+        mYearCheckBox3 = (CheckBox) view.findViewById(R.id.yearCheckBox3);
+        mYearCheckBox5 = (CheckBox) view.findViewById(R.id.yearCheckBox5);
+
+        if (VersionUtils.isOverAPI21() == false)
+        {
+            mAllAgreementCheckBox.setBackgroundResource(0);
+            mFourteenCheckBox.setBackgroundResource(0);
+            mTermsOfPrivacyCheckBox.setBackgroundResource(0);
+            mTermsOfServiceCheckBox.setBackgroundResource(0);
+            mBenefitCheckBox.setBackgroundResource(0);
+
+            mYearCheckBox1.setBackgroundResource(0);
+            mYearCheckBox3.setBackgroundResource(0);
+            mYearCheckBox5.setBackgroundResource(0);
+        }
+
         mAllAgreementCheckBox.setOnClickListener(this);
         mFourteenCheckBox.setOnClickListener(this);
         mTermsOfPrivacyCheckBox.setOnClickListener(this);
@@ -205,6 +226,12 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         {
             mBenefitCheckBox.setVisibility(View.VISIBLE);
         }
+
+        mYearCheckBox1.setVisibility(View.GONE);
+
+        mYearCheckBox1.setOnClickListener(this);
+        mYearCheckBox3.setOnClickListener(this);
+        mYearCheckBox5.setOnClickListener(this);
 
         TextView termsContentView = (TextView) view.findViewById(R.id.termsContentView);
         termsContentView.setPaintFlags(termsContentView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -272,7 +299,20 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
                     }
                 }
 
-                ((OnEventListener) mOnEventListener).onUpdateUserInformation(phoneNumber, email, name, recommender, birthday, mBenefitCheckBox.isChecked());
+                int month;
+                if (mYearCheckBox5.isChecked() == true)
+                {
+                    month = 60;
+                } else if (mYearCheckBox3.isChecked() == true)
+                {
+                    month = 36;
+                } else
+                {
+                    month = 12;
+                }
+
+                ((OnEventListener) mOnEventListener).onUpdateUserInformation(phoneNumber, email, name //
+                    , recommender, birthday, mBenefitCheckBox.isChecked(), month);
                 break;
             }
 
@@ -336,6 +376,14 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
             case R.id.birthdayEditText:
                 onFocusChange(mBirthdayEditText, true);
                 break;
+
+            case R.id.yearCheckBox1:
+            case R.id.yearCheckBox3:
+            case R.id.yearCheckBox5:
+            {
+                setYearCheckBoxUnChecked(v.getId());
+                break;
+            }
         }
     }
 
@@ -515,6 +563,28 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
             }
 
             labelView.setSelected(false);
+        }
+    }
+
+    private void setYearCheckBoxUnChecked(int checkBoxId)
+    {
+        switch (checkBoxId)
+        {
+            case R.id.yearCheckBox5:
+                mYearCheckBox1.setChecked(false);
+                mYearCheckBox3.setChecked(false);
+                break;
+
+            case R.id.yearCheckBox3:
+                mYearCheckBox1.setChecked(false);
+                mYearCheckBox5.setChecked(false);
+                break;
+
+            case R.id.yearCheckBox1:
+            default:
+                mYearCheckBox3.setChecked(false);
+                mYearCheckBox5.setChecked(false);
+                break;
         }
     }
 }
