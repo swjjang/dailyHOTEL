@@ -40,7 +40,7 @@ public class RewardHistoryPresenter extends BaseExceptionPresenter<RewardHistory
 
     public interface RewardHistoryAnalyticsInterface extends BaseAnalyticsInterface
     {
-        void onViewReservationClick(Activity activity, String aggregationId);
+        void onViewReservationClick(Activity activity, String aggregationId, int reservationIndex);
     }
 
     public RewardHistoryPresenter(@NonNull RewardHistoryActivity activity)
@@ -257,7 +257,7 @@ public class RewardHistoryPresenter extends BaseExceptionPresenter<RewardHistory
                 return;
         }
 
-        mAnalytics.onViewReservationClick(getActivity(), rewardHistory.aggregationId);
+        mAnalytics.onViewReservationClick(getActivity(), rewardHistory.aggregationId, rewardHistory.reservationIndex);
     }
 
     @Override
