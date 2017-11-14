@@ -68,6 +68,16 @@ public class GourmetCart
         }
     }
 
+    public void remove(int menuIndex)
+    {
+        if (menuIndex < 0)
+        {
+            return;
+        }
+
+        mOrderMenuMap.remove(menuIndex);
+    }
+
     /**
      * @param gourmetName
      * @param visitDateTime 실제는 날짜 정보지만 ISO-8601 타입으로 받음

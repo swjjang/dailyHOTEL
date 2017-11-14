@@ -26,7 +26,6 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -580,6 +579,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             return;
         }
 
+        getViewInterface().setGourmetCart(mGourmetCart);
         Observable<Boolean> observable = getViewInterface().openCartMenus(mGourmetCart);
 
         if (observable == null)
@@ -638,6 +638,67 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         }));
     }
 
+    @Override
+    public void onDeleteCartMenuClick(int menuIndex)
+    {
+        if (mGourmetCart == null || lock() == true)
+        {
+            return;
+        }
+
+        mGourmetCart.remove(menuIndex);
+
+        if (mGourmetCart.getMenuCount() > 0)
+        {
+            getViewInterface().setMenuOrderCount(menuIndex, mGourmetCart.getCount(menuIndex));
+
+            // Cart
+            getViewInterface().setSummeryCart(mGourmetCart.getTotalPrice(), mGourmetCart.getTotalCount(), mGourmetCart.getMenuCount());
+            getViewInterface().setGourmetCart(mGourmetCart);
+        } else
+        {
+            getViewInterface().setCartVisible(false);
+        }
+
+        unLockAll();
+    }
+
+    @Override
+    public void onCartMenuMinusClick(int menuIndex)
+    {
+        if (mGourmetCart == null || lock() == true)
+        {
+            return;
+        }
+
+        minusMenu(menuIndex);
+
+        if (mGourmetCart.getCount(menuIndex) > 0)
+        {
+            getViewInterface().setGourmetCartMenu(menuIndex, mGourmetCart.getCount(menuIndex));
+        } else if (mGourmetCart.getMenuCount() > 0)
+        {
+            getViewInterface().setGourmetCart(mGourmetCart);
+        }
+
+        unLockAll();
+    }
+
+    @Override
+    public void onCartMenuPlusClick(int menuIndex)
+    {
+        if (mGourmetCart == null || lock() == true)
+        {
+            return;
+        }
+
+        plusMenu(menuIndex);
+
+        getViewInterface().setGourmetCartMenu(menuIndex, mGourmetCart.getCount(menuIndex));
+
+        unLockAll();
+    }
+
     private void setToolbarTitle(String text)
     {
         getViewInterface().setToolbarTitle(text);
@@ -650,7 +711,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             getViewInterface().setToolbarTitle(getString(R.string.label_gourmet_product_detail_operation_time_list));
         } else
         {
-            getViewInterface().setToolbarTitle(String.format(Locale.KOREA, "%02d:%02d ", visitTime / 100, visitTime % 100) + getString(R.string.label_menu));
+            getViewInterface().setToolbarTitle(DailyTextUtils.formatIntegerTimeToStringTime(visitTime) + " " + getString(R.string.label_menu));
         }
     }
 

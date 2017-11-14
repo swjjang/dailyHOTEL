@@ -26,11 +26,11 @@ public class GourmetCartMenusAdapter extends RecyclerView.Adapter<GourmetCartMen
 
     public interface OnEventListener extends OnBaseEventListener
     {
-        void onDeleteClick(int position);
+        void onDeleteClick(int menuIndex);
 
-        void onMenuCountPlusClick(int position);
+        void onMenuCountPlusClick(int menuIndex);
 
-        void onMenuCountMinusClick(int position);
+        void onMenuCountMinusClick(int menuIndex);
     }
 
     public GourmetCartMenusAdapter(Context context)
@@ -170,7 +170,7 @@ public class GourmetCartMenusAdapter extends RecyclerView.Adapter<GourmetCartMen
                 {
                     if (mOnEventListener != null)
                     {
-                        mOnEventListener.onMenuCountMinusClick(position);
+                        mOnEventListener.onMenuCountMinusClick(gourmetCartMenu.index);
                     }
                 }
             }
@@ -185,7 +185,7 @@ public class GourmetCartMenusAdapter extends RecyclerView.Adapter<GourmetCartMen
                 {
                     if (mOnEventListener != null)
                     {
-                        mOnEventListener.onMenuCountPlusClick(position);
+                        mOnEventListener.onMenuCountPlusClick(gourmetCartMenu.index);
                     }
                 }
             }
@@ -208,24 +208,24 @@ public class GourmetCartMenusAdapter extends RecyclerView.Adapter<GourmetCartMen
             {
                 if (mOnEventListener != null)
                 {
-                    mOnEventListener.onDeleteClick(position);
+                    mOnEventListener.onDeleteClick(gourmetCartMenu.index);
                 }
             }
         });
     }
 
-    public void setMenuOrderCount(RecyclerView.ViewHolder viewHolder, int position, int orderCount)
+    public void setMenuOrderCount(RecyclerView.ViewHolder viewHolder, int position, int menuOrderCount)
     {
         if (viewHolder == null || position < 0)
         {
             return;
         }
 
-        getItem(position).count = orderCount;
+        getItem(position).count = menuOrderCount;
 
         GourmetCartMenuViewHolder gourmetCartMenuViewHolder = (GourmetCartMenuViewHolder) viewHolder;
 
-        if (orderCount == 0)
+        if (menuOrderCount == 0)
         {
             gourmetCartMenuViewHolder.dataBinding.menuCountMinusView.setEnabled(false);
         } else
@@ -233,7 +233,7 @@ public class GourmetCartMenusAdapter extends RecyclerView.Adapter<GourmetCartMen
             gourmetCartMenuViewHolder.dataBinding.menuCountMinusView.setEnabled(true);
         }
 
-        if (orderCount == 99)
+        if (menuOrderCount == 99)
         {
             gourmetCartMenuViewHolder.dataBinding.menuCountPlusView.setEnabled(false);
         } else
@@ -241,7 +241,7 @@ public class GourmetCartMenusAdapter extends RecyclerView.Adapter<GourmetCartMen
             gourmetCartMenuViewHolder.dataBinding.menuCountPlusView.setEnabled(true);
         }
 
-        gourmetCartMenuViewHolder.dataBinding.menuCountTextView.setText(Integer.toString(orderCount));
+        gourmetCartMenuViewHolder.dataBinding.menuCountTextView.setText(Integer.toString(menuOrderCount));
     }
 
     static class GourmetCartMenuViewHolder extends RecyclerView.ViewHolder

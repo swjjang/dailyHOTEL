@@ -74,6 +74,12 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         void onOpenCartMenusClick();
 
         void onCloseCartMenusClick();
+
+        void onDeleteCartMenuClick(int menuIndex);
+
+        void onCartMenuMinusClick(int menuIndex);
+
+        void onCartMenuPlusClick(int menuIndex);
     }
 
     public GourmetMenusView(BaseActivity baseActivity, GourmetMenusView.OnEventListener listener)
@@ -556,7 +562,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
     }
 
     @Override
-    public void setMenuOrderCount(int menuIndex, int orderCount)
+    public void setMenuOrderCount(int menuIndex, int menuOrderCount)
     {
         if (getViewDataBinding() == null)
         {
@@ -565,7 +571,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
 
         int position = mGourmetMenusAdapter.getPosition(menuIndex);
 
-        getViewDataBinding().recyclerView.post(() -> mGourmetMenusAdapter.setMenuOrderCount(getViewDataBinding().recyclerView.findViewHolderForAdapterPosition(position), position, orderCount));
+        getViewDataBinding().recyclerView.post(() -> mGourmetMenusAdapter.setMenuOrderCount(getViewDataBinding().recyclerView.findViewHolderForAdapterPosition(position), position, menuOrderCount));
     }
 
     @Override
@@ -693,6 +699,12 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
             return;
         }
 
+        if ((visible == true && getViewDataBinding().cartBookingLayout.getVisibility() == View.VISIBLE) //
+            || (visible == false && getViewDataBinding().cartBookingLayout.getVisibility() == View.GONE))
+        {
+            return;
+        }
+
         int flag = visible ? View.VISIBLE : View.GONE;
 
         getViewDataBinding().cartMenusLayout.setVisibility(visible ? View.INVISIBLE : View.GONE);
@@ -702,11 +714,11 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
     }
 
     @Override
-    public Observable<Boolean> openCartMenus(GourmetCart gourmetCart)
+    public void setGourmetCart(GourmetCart gourmetCart)
     {
         if (getViewDataBinding() == null || gourmetCart == null || gourmetCart.getMenuCount() == 0)
         {
-            return null;
+            return;
         }
 
         // 방문시긴
@@ -730,21 +742,21 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         mGourmetCartMenusAdapter.setOnEventListener(new GourmetCartMenusAdapter.OnEventListener()
         {
             @Override
-            public void onDeleteClick(int position)
+            public void onDeleteClick(int menuIndex)
             {
-
+                getEventListener().onDeleteCartMenuClick(menuIndex);
             }
 
             @Override
-            public void onMenuCountPlusClick(int position)
+            public void onMenuCountPlusClick(int menuIndex)
             {
-
+                getEventListener().onCartMenuPlusClick(menuIndex);
             }
 
             @Override
-            public void onMenuCountMinusClick(int position)
+            public void onMenuCountMinusClick(int menuIndex)
             {
-
+                getEventListener().onCartMenuMinusClick(menuIndex);
             }
 
             @Override
@@ -761,24 +773,54 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         //
         final int ITEM_HEIGHT = ScreenUtils.dpToPx(getContext(), 88) + 1;
         final int VIEW_COUNT = 3;
-        final int height;
 
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) getViewDataBinding().cartMenusRecyclerViewLayout.getLayoutParams();
 
         if (gourmetCart.getMenuCount() < VIEW_COUNT)
         {
             layoutParams.height = ConstraintLayout.LayoutParams.WRAP_CONTENT;
-
-            height = ScreenUtils.dpToPx(getContext(), 42) + gourmetCart.getMenuCount() * ITEM_HEIGHT + ScreenUtils.dpToPx(getContext(), 36);
         } else
         {
             layoutParams.height = ITEM_HEIGHT * 2 + ITEM_HEIGHT / 2;
-
-            height = ScreenUtils.dpToPx(getContext(), 42) + ITEM_HEIGHT * 2 + ITEM_HEIGHT / 2 + +ScreenUtils.dpToPx(getContext(), 36);
         }
 
         getViewDataBinding().cartMenusRecyclerView.setAdapter(mGourmetCartMenusAdapter);
         getViewDataBinding().cartMenusRecyclerViewLayout.setLayoutParams(layoutParams);
+    }
+
+    @Override
+    public void setGourmetCartMenu(int menuIndex, int menuOrderCount)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        int position = mGourmetCartMenusAdapter.getPosition(menuIndex);
+
+        getViewDataBinding().recyclerView.post(() -> mGourmetCartMenusAdapter.setMenuOrderCount(getViewDataBinding().cartMenusRecyclerView.findViewHolderForAdapterPosition(position), position, menuOrderCount));
+    }
+
+    @Override
+    public Observable<Boolean> openCartMenus(GourmetCart gourmetCart)
+    {
+        if (getViewDataBinding() == null || gourmetCart == null || gourmetCart.getMenuCount() == 0)
+        {
+            return null;
+        }
+
+        //
+        final int ITEM_HEIGHT = ScreenUtils.dpToPx(getContext(), 88) + 1;
+        final int VIEW_COUNT = 3;
+        final int height;
+
+        if (gourmetCart.getMenuCount() < VIEW_COUNT)
+        {
+            height = ScreenUtils.dpToPx(getContext(), 42) + gourmetCart.getMenuCount() * ITEM_HEIGHT + ScreenUtils.dpToPx(getContext(), 36);
+        } else
+        {
+            height = ScreenUtils.dpToPx(getContext(), 42) + ITEM_HEIGHT * 2 + ITEM_HEIGHT / 2 + +ScreenUtils.dpToPx(getContext(), 36);
+        }
 
         ObjectAnimator transObjectAnimator = ObjectAnimator.ofFloat(getViewDataBinding().cartMenusLayout//
             , View.TRANSLATION_Y, height, 0);
@@ -799,8 +841,8 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                 float value = (float) animation.getAnimatedValue();
                 float vector = value - height;
 
-                getViewDataBinding().cartMenusTopBackgroundView.setTranslationY(vector);
-                getViewDataBinding().cartMenusArrowImageView.setTranslationY(vector);
+                getViewDataBinding().cartMenusTopBackgroundView.setTranslationY(value);
+                getViewDataBinding().cartMenusArrowImageView.setTranslationY(value);
             }
         });
 
@@ -876,8 +918,8 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                 float value = (float) animation.getAnimatedValue();
                 float vector = value - height;
 
-                getViewDataBinding().cartMenusTopBackgroundView.setTranslationY(vector);
-                getViewDataBinding().cartMenusArrowImageView.setTranslationY(vector);
+                getViewDataBinding().cartMenusTopBackgroundView.setTranslationY(value);
+                getViewDataBinding().cartMenusArrowImageView.setTranslationY(value);
             }
         });
 

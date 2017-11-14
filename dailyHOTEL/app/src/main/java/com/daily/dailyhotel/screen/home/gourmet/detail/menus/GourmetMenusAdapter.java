@@ -360,18 +360,18 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
         holder.dataBinding.getRoot().setTag(R.id.blurView, holder.dataBinding.blurView);
     }
 
-    public void setMenuOrderCount(RecyclerView.ViewHolder viewHolder, int position, int orderCount)
+    public void setMenuOrderCount(RecyclerView.ViewHolder viewHolder, int position, int menuOrderCount)
     {
         if (viewHolder == null || position < 0)
         {
             return;
         }
 
-        getItem(position).orderCount = orderCount;
+        getItem(position).orderCount = menuOrderCount;
 
         GourmetMenuViewHolder gourmetMenuViewHolder = (GourmetMenuViewHolder) viewHolder;
 
-        if (orderCount == 0)
+        if (menuOrderCount == 0)
         {
             gourmetMenuViewHolder.dataBinding.orderCountMinusView.setEnabled(false);
         } else
@@ -379,7 +379,7 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
             gourmetMenuViewHolder.dataBinding.orderCountMinusView.setEnabled(true);
         }
 
-        if (orderCount == 99)
+        if (menuOrderCount == 99)
         {
             gourmetMenuViewHolder.dataBinding.orderCountPlusView.setEnabled(false);
         } else
@@ -387,15 +387,15 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
             gourmetMenuViewHolder.dataBinding.orderCountPlusView.setEnabled(true);
         }
 
-        gourmetMenuViewHolder.dataBinding.orderCountTextView.setText(Integer.toString(orderCount));
+        gourmetMenuViewHolder.dataBinding.orderCountTextView.setText(Integer.toString(menuOrderCount));
 
-        if (orderCount == 0)
+        if (menuOrderCount == 0)
         {
             gourmetMenuViewHolder.dataBinding.menuCountTagTextView.setVisibility(View.GONE);
         } else
         {
             gourmetMenuViewHolder.dataBinding.menuCountTagTextView.setVisibility(View.VISIBLE);
-            gourmetMenuViewHolder.dataBinding.menuCountTagTextView.setText(mContext.getString(R.string.label_gourmet_product_detail_count_tag, orderCount));
+            gourmetMenuViewHolder.dataBinding.menuCountTagTextView.setText(mContext.getString(R.string.label_gourmet_product_detail_count_tag, menuOrderCount));
         }
     }
 

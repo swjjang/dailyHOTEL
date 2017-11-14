@@ -196,7 +196,7 @@
             android:layout_height="40dp"
             android:background="@drawable/detail_multi_btn_dropdown"
             android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/cartBookingLayout"
+            app:layout_constraintBottom_toTopOf="@+id/cartMenusLayout"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
 
