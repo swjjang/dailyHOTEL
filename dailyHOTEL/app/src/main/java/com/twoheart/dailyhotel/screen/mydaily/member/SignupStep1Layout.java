@@ -362,8 +362,6 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
             month = 12;
         }
 
-        ExLog.d("month : " + month);
-
         ((OnEventListener) mOnEventListener).onValidation(emailText, nameText, passwordText //
             , confirmPasswordText, null, birthday, mBenefitCheckBox.isChecked(), month);
     }
