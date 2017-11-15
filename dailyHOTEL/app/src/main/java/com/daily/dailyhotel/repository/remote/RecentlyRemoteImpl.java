@@ -9,8 +9,11 @@ import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.repository.remote.model.RecentlyPlacesData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
-import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Crypto;
 
 import org.json.JSONObject;
 
@@ -28,13 +31,11 @@ import io.reactivex.schedulers.Schedulers;
  * Created by android_sam on 2017. 6. 14..
  */
 
-public class RecentlyRemoteImpl implements RecentlyInterface
+public class RecentlyRemoteImpl extends BaseRemoteImpl implements RecentlyInterface
 {
-    Context mContext;
-
     public RecentlyRemoteImpl(@NonNull Context context)
     {
-        mContext = context;
+        super(context);
     }
 
     @Override
@@ -50,35 +51,43 @@ public class RecentlyRemoteImpl implements RecentlyInterface
             @Override
             public ObservableSource<StayOutbounds> call() throws Exception
             {
-                return DailyMobileAPI.getInstance(mContext).getStayOutboundRecentlyList(targetIndices, numberOfResults).map(new Function<BaseDto<StayOutboundsData>, StayOutbounds>()
-                {
-                    @Override
-                    public StayOutbounds apply(@NonNull BaseDto<StayOutboundsData> stayOutboundsDataBaseDto) throws Exception
+                final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+
+                final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/id-find-static-hotels"//
+                    : "MjMkMzAkODAkMTI4JDU1JDQ5JDEyJDEyNSQzNyQ3OCQ1NCQ1NyQzOCQ2NCQ3NyQxMzAk$MEJFNTFGNEY0RQTlCNTBGM0ZIGQUQ4MQjU1RjFCBCOERCQUFFODJTBNRUME0NHjdKBQjhBMTAwRjlPEQTFDFN0FDMzCNBREJFQkVGRDM4QTIxNzhDNzQ0RjFDOUYzMTlGMJDMBzOUUwMFDY1$";
+
+                return mDailyMobileService.getStayOutboundRecentlyList( //
+                    Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API) //
+                    , false, targetIndices, numberOfResults, "NO_SORT") //
+                    .subscribeOn(Schedulers.io()).map(new Function<BaseDto<StayOutboundsData>, StayOutbounds>()
                     {
-                        StayOutbounds stayOutbounds;
-
-                        if (stayOutboundsDataBaseDto != null)
+                        @Override
+                        public StayOutbounds apply(@NonNull BaseDto<StayOutboundsData> stayOutboundsDataBaseDto) throws Exception
                         {
-                            if (stayOutboundsDataBaseDto.msgCode == 100 && stayOutboundsDataBaseDto.data != null)
-                            {
-                                stayOutbounds = stayOutboundsDataBaseDto.data.getStayOutboundList();
+                            StayOutbounds stayOutbounds;
 
-                                if (stayOutbounds == null)
+                            if (stayOutboundsDataBaseDto != null)
+                            {
+                                if (stayOutboundsDataBaseDto.msgCode == 100 && stayOutboundsDataBaseDto.data != null)
                                 {
-                                    stayOutbounds = new StayOutbounds();
+                                    stayOutbounds = stayOutboundsDataBaseDto.data.getStayOutboundList();
+
+                                    if (stayOutbounds == null)
+                                    {
+                                        stayOutbounds = new StayOutbounds();
+                                    }
+                                } else
+                                {
+                                    throw new BaseException(stayOutboundsDataBaseDto.msgCode, stayOutboundsDataBaseDto.msg);
                                 }
                             } else
                             {
-                                throw new BaseException(stayOutboundsDataBaseDto.msgCode, stayOutboundsDataBaseDto.msg);
+                                throw new BaseException(-1, null);
                             }
-                        } else
-                        {
-                            throw new BaseException(-1, null);
-                        }
 
-                        return stayOutbounds;
-                    }
-                }).subscribeOn(Schedulers.io());
+                            return stayOutbounds;
+                        }
+                    }).subscribeOn(Schedulers.io());
             }
         }).subscribeOn(Schedulers.io());
     }
@@ -96,7 +105,11 @@ public class RecentlyRemoteImpl implements RecentlyInterface
                     return Observable.just(new ArrayList<RecentlyPlace>()).subscribeOn(Schedulers.io());
                 }
 
-                return DailyMobileAPI.getInstance(mContext).getInboundRecentlyList(recentJsonObject).map(new Function<BaseDto<RecentlyPlacesData>, ArrayList<RecentlyPlace>>()
+                final String URL = Constants.UNENCRYPTED_URL ? "api/v4/home/recent-view"//
+                    : "MTckMzUkNzgkNDUkNzQkNjEkNjkkMzkkMjEkNSQ0MiQzMCQyNiQxMDAkODAkNTEk$QjA2MO0U1NURCMUY2NXjBBJNDUNyRjIH5M0UxNkKIzNJBzM4N0MAIxMDEyOEFEMjc3MTOM3REQ5MTkRCNPDUW5NDBFBQTVBQTg5Rg=L=$";
+
+                return mDailyMobileService.getInboundRecentlyList(Crypto.getUrlDecoderEx(URL), recentJsonObject) //
+                    .subscribeOn(Schedulers.io()).map(new Function<BaseDto<RecentlyPlacesData>, ArrayList<RecentlyPlace>>()
                 {
                     @Override
                     public ArrayList<RecentlyPlace> apply(@NonNull BaseDto<RecentlyPlacesData> placesBaseDto) throws Exception
