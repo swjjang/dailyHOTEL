@@ -6,7 +6,6 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.repository.remote.model.RecentlyPlacesData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundDetailData;
-import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
@@ -1202,16 +1201,6 @@ public class DailyMobileAPI
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // RecentlyRemoteImpl
     /////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public Observable<BaseDto<StayOutboundsData>> getStayOutboundRecentlyList(String hotelIds, int numberOfResults)
-    {
-        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
-
-        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/id-find-static-hotels"//
-            : "MjMkMzAkODAkMTI4JDU1JDQ5JDEyJDEyNSQzNyQ3OCQ1NCQ1NyQzOCQ2NCQ3NyQxMzAk$MEJFNTFGNEY0RQTlCNTBGM0ZIGQUQ4MQjU1RjFCBCOERCQUFFODJTBNRUME0NHjdKBQjhBMTAwRjlPEQTFDFN0FDMzCNBREJFQkVGRDM4QTIxNzhDNzQ0RjFDOUYzMTlGMJDMBzOUUwMFDY1$";
-
-        return mDailyMobileService.getStayOutboundRecentlyList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API), false, hotelIds, numberOfResults, "NO_SORT").subscribeOn(Schedulers.io());
-    }
 
     public Observable<BaseDto<RecentlyPlacesData>> getInboundRecentlyList(JSONObject jsonObject)
     {
