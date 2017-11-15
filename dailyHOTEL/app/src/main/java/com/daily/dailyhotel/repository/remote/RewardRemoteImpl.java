@@ -10,29 +10,32 @@ import com.daily.dailyhotel.entity.RewardInformation;
 import com.daily.dailyhotel.repository.remote.model.RewardDetailData;
 import com.daily.dailyhotel.repository.remote.model.RewardHistoryDetailData;
 import com.daily.dailyhotel.repository.remote.model.RewardInformationData;
-import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Crypto;
 
 import io.reactivex.Observable;
 import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by android_sam on 2017. 9. 28..
  */
 
-public class RewardRemoteImpl implements RewardInterface
+public class RewardRemoteImpl extends BaseRemoteImpl implements RewardInterface
 {
-    private Context mContext;
-
     public RewardRemoteImpl(Context context)
     {
-        mContext = context;
+        super(context);
     }
 
     @Override
     public Observable<RewardInformation> getRewardStickerCount()
     {
-        return DailyMobileAPI.getInstance(mContext).getRewardStickerCount().map(new Function<BaseDto<RewardInformationData>, RewardInformation>()
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v5/reward"//
+            : "MjUkMzYkNiQzMSQ0MCQzMSQyOCQyMyQxMSQzNyQ0OCQ0NiQyNCQ0NCQyMiQ1JA==$NDI5NLEYFDRkHM5ODY1MDEyYQkBGE3RBjLREOKKDANCQjJKCEUGNkGIzNTE=$";
+
+        return mDailyMobileService.getRewardStickerCount(Crypto.getUrlDecoderEx(URL)).subscribeOn(Schedulers.io()).map(new Function<BaseDto<RewardInformationData>, RewardInformation>()
         {
             @Override
             public RewardInformation apply(@io.reactivex.annotations.NonNull BaseDto<RewardInformationData> rewardCountDataBaseDto) throws Exception
@@ -61,7 +64,10 @@ public class RewardRemoteImpl implements RewardInterface
     @Override
     public Observable<RewardDetail> getRewardDetail()
     {
-        return DailyMobileAPI.getInstance(mContext).getRewardDetail().map(new Function<BaseDto<RewardDetailData>, RewardDetail>()
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v5/reward/detail"//
+            : "MzMkNDkkMTMkODUkNzckMjckNjMkNDMkNDMkNTUkMzUkNjYkODgkOTEkMTIkMjkk$NDdBRDVBQUM3HQIzk1Q0FEMzY3ODPXM1RTU4RATEQ5NzJBOWRTZDOTVBSMYDUwQTFDNkMEUzRjNCMDE1NkM5MkFY2MVEYV5RTXE0Rg==$";
+
+        return mDailyMobileService.getRewardDetail(Crypto.getUrlDecoderEx(URL)).subscribeOn(Schedulers.io()).map(new Function<BaseDto<RewardDetailData>, RewardDetail>()
         {
             @Override
             public RewardDetail apply(@io.reactivex.annotations.NonNull BaseDto<RewardDetailData> rewardDetailDataBaseDto) throws Exception
@@ -90,7 +96,10 @@ public class RewardRemoteImpl implements RewardInterface
     @Override
     public Observable<RewardHistoryDetail> getRewardHistoryDetail()
     {
-        return DailyMobileAPI.getInstance(mContext).getRewardHistoryDetail().map(new Function<BaseDto<RewardHistoryDetailData>, RewardHistoryDetail>()
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v5/reward/history"//
+            : "NjYkNTgkNzUkNzIkMzckODkkNDAkNDQkNDQkOTQkODkkNzEkNzAkNzYkNDckNDUk$RkFEMDdCN0IyODA3Nzk4MTRDODA3QjVDRDU5RMTUI2OEPGYEP3NEYzNkM2NzUzRkHFGQTE4MWkYOFDJOTEYxMJDI0NDlDOKEJGGMZQ==$";
+
+        return mDailyMobileService.getRewardHistoryDetail(Crypto.getUrlDecoderEx(URL)).map(new Function<BaseDto<RewardHistoryDetailData>, RewardHistoryDetail>()
         {
             @Override
             public RewardHistoryDetail apply(@io.reactivex.annotations.NonNull BaseDto<RewardHistoryDetailData> rewardHistoryDataBaseDto) throws Exception

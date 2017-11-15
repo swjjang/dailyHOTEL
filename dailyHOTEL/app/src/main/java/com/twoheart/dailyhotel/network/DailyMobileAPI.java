@@ -5,9 +5,6 @@ import android.content.Context;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.repository.remote.model.CouponsData;
 import com.daily.dailyhotel.repository.remote.model.RecentlyPlacesData;
-import com.daily.dailyhotel.repository.remote.model.RewardDetailData;
-import com.daily.dailyhotel.repository.remote.model.RewardHistoryDetailData;
-import com.daily.dailyhotel.repository.remote.model.RewardInformationData;
 import com.daily.dailyhotel.repository.remote.model.StayListData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundData;
@@ -1327,33 +1324,5 @@ public class DailyMobileAPI
         //        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
 
         return mDailyMobileService.getCouponHistoryList(Crypto.getUrlDecoderEx(URL)).subscribeOn(Schedulers.io());
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    // RewardRemoteImpl
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public Observable<BaseDto<RewardInformationData>> getRewardStickerCount()
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v5/reward"//
-            : "MjUkMzYkNiQzMSQ0MCQzMSQyOCQyMyQxMSQzNyQ0OCQ0NiQyNCQ0NCQyMiQ1JA==$NDI5NLEYFDRkHM5ODY1MDEyYQkBGE3RBjLREOKKDANCQjJKCEUGNkGIzNTE=$";
-
-        return mDailyMobileService.getRewardStickerCount(Crypto.getUrlDecoderEx(URL)).subscribeOn(Schedulers.io());
-    }
-
-    public Observable<BaseDto<RewardDetailData>> getRewardDetail()
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v5/reward/detail"//
-            : "MzMkNDkkMTMkODUkNzckMjckNjMkNDMkNDMkNTUkMzUkNjYkODgkOTEkMTIkMjkk$NDdBRDVBQUM3HQIzk1Q0FEMzY3ODPXM1RTU4RATEQ5NzJBOWRTZDOTVBSMYDUwQTFDNkMEUzRjNCMDE1NkM5MkFY2MVEYV5RTXE0Rg==$";
-
-        return mDailyMobileService.getRewardDetail(Crypto.getUrlDecoderEx(URL)).subscribeOn(Schedulers.io());
-    }
-
-    public Observable<BaseDto<RewardHistoryDetailData>> getRewardHistoryDetail()
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v5/reward/history"//
-            : "NjYkNTgkNzUkNzIkMzckODkkNDAkNDQkNDQkOTQkODkkNzEkNzAkNzYkNDckNDUk$RkFEMDdCN0IyODA3Nzk4MTRDODA3QjVDRDU5RMTUI2OEPGYEP3NEYzNkM2NzUzRkHFGQTE4MWkYOFDJOTEYxMJDI0NDlDOKEJGGMZQ==$";
-
-        return mDailyMobileService.getRewardHistoryDetail(Crypto.getUrlDecoderEx(URL)).subscribeOn(Schedulers.io());
     }
 }
