@@ -52,33 +52,34 @@ public class BookingRemoteImpl extends BaseRemoteImpl implements BookingInterfac
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotel-reservations"//
             : "MTckMzAkNDUkNjMkMTAzJDExMSQ1JDAkNiQzJDEyJDEyMSQ5NiQxMzQkMzMkNTUk$ARUSFDMON0VCWNkYxMkZGQZkI0NDQ2N0QX2MYTNDMDQ0QUUxRDEDzMELRBNEEyMjY5NUI0XQjA1NEQ4RDQ3RTAzNjQ5QzJEOUUA5MzY5QUE2NkYA0Njg0NDZk5QjJgyNEE2NTAzNCkM0RjI5$";
 
-        return mDailyMobileService.getStayOutboundBookingList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io()).map(new Function<BaseListDto<BookingData>, List<Booking>>()
-        {
-            @Override
-            public List<Booking> apply(@io.reactivex.annotations.NonNull BaseListDto<BookingData> bookingDataBaseListDto) throws Exception
+        return mDailyMobileService.getStayOutboundBookingList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API)) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseListDto<BookingData>, List<Booking>>()
             {
-                List<Booking> bookingList = new ArrayList<>();
-
-                if (bookingDataBaseListDto != null)
+                @Override
+                public List<Booking> apply(@io.reactivex.annotations.NonNull BaseListDto<BookingData> bookingDataBaseListDto) throws Exception
                 {
-                    if (bookingDataBaseListDto.msgCode == 100 && bookingDataBaseListDto.data != null)
+                    List<Booking> bookingList = new ArrayList<>();
+
+                    if (bookingDataBaseListDto != null)
                     {
-                        for (BookingData bookingData : bookingDataBaseListDto.data)
+                        if (bookingDataBaseListDto.msgCode == 100 && bookingDataBaseListDto.data != null)
                         {
-                            bookingList.add(bookingData.getBooking());
+                            for (BookingData bookingData : bookingDataBaseListDto.data)
+                            {
+                                bookingList.add(bookingData.getBooking());
+                            }
+                        } else
+                        {
+                            throw new BaseException(bookingDataBaseListDto.msgCode, bookingDataBaseListDto.msg);
                         }
                     } else
                     {
-                        throw new BaseException(bookingDataBaseListDto.msgCode, bookingDataBaseListDto.msg);
+                        throw new BaseException(-1, null);
                     }
-                } else
-                {
-                    throw new BaseException(-1, null);
-                }
 
-                return bookingList;
-            }
-        }).observeOn(AndroidSchedulers.mainThread());
+                    return bookingList;
+                }
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -87,33 +88,34 @@ public class BookingRemoteImpl extends BaseRemoteImpl implements BookingInterfac
         final String API = Constants.UNENCRYPTED_URL ? "api/v5/reservations"//
             : "NzkkMzIkNTMkODUkNTkkNDUkMjckOTQkNzEkOTYkOTYkODQkNzIkNTMkODckNTMk$MTRDNDIwMTk1OEM1Mzg1OUMyQUNYEMzM3IOTNDNjE4Q0FFPMDQ3M0AUJEIOEM0QYTM1MEM2NETJQ5NDY3NEY5MDOEQWxNjJI4Nw=ZLO=$";
 
-        return mDailyMobileService.getBookingList(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io()).map(new Function<BaseListDto<BookingData>, List<Booking>>()
-        {
-            @Override
-            public List<Booking> apply(@io.reactivex.annotations.NonNull BaseListDto<BookingData> bookingDataBaseListDto) throws Exception
+        return mDailyMobileService.getBookingList(Crypto.getUrlDecoderEx(API)) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseListDto<BookingData>, List<Booking>>()
             {
-                List<Booking> bookingList = new ArrayList<>();
-
-                if (bookingDataBaseListDto != null)
+                @Override
+                public List<Booking> apply(@io.reactivex.annotations.NonNull BaseListDto<BookingData> bookingDataBaseListDto) throws Exception
                 {
-                    if (bookingDataBaseListDto.msgCode == 100 && bookingDataBaseListDto.data != null)
+                    List<Booking> bookingList = new ArrayList<>();
+
+                    if (bookingDataBaseListDto != null)
                     {
-                        for (BookingData bookingData : bookingDataBaseListDto.data)
+                        if (bookingDataBaseListDto.msgCode == 100 && bookingDataBaseListDto.data != null)
                         {
-                            bookingList.add(bookingData.getBooking());
+                            for (BookingData bookingData : bookingDataBaseListDto.data)
+                            {
+                                bookingList.add(bookingData.getBooking());
+                            }
+                        } else
+                        {
+                            throw new BaseException(bookingDataBaseListDto.msgCode, bookingDataBaseListDto.msg);
                         }
                     } else
                     {
-                        throw new BaseException(bookingDataBaseListDto.msgCode, bookingDataBaseListDto.msg);
+                        throw new BaseException(-1, null);
                     }
-                } else
-                {
-                    throw new BaseException(-1, null);
-                }
 
-                return bookingList;
-            }
-        }).observeOn(AndroidSchedulers.mainThread());
+                    return bookingList;
+                }
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -127,30 +129,31 @@ public class BookingRemoteImpl extends BaseRemoteImpl implements BookingInterfac
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{reservationIdx}", Integer.toString(bookingIndex));
 
-        return mDailyMobileService.getStayOutboundHideBooking(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io()).map(new Function<BaseDto<BookingHideData>, Boolean>()
-        {
-            @Override
-            public Boolean apply(@io.reactivex.annotations.NonNull BaseDto<BookingHideData> bookingHideDataBaseDto) throws Exception
+        return mDailyMobileService.getStayOutboundHideBooking(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<BookingHideData>, Boolean>()
             {
-                boolean result;
-
-                if (bookingHideDataBaseDto != null)
+                @Override
+                public Boolean apply(@io.reactivex.annotations.NonNull BaseDto<BookingHideData> bookingHideDataBaseDto) throws Exception
                 {
-                    if (bookingHideDataBaseDto.msgCode == 100 && bookingHideDataBaseDto.data != null)
+                    boolean result;
+
+                    if (bookingHideDataBaseDto != null)
                     {
-                        result = true;
+                        if (bookingHideDataBaseDto.msgCode == 100 && bookingHideDataBaseDto.data != null)
+                        {
+                            result = true;
+                        } else
+                        {
+                            throw new BaseException(bookingHideDataBaseDto.msgCode, bookingHideDataBaseDto.msg);
+                        }
                     } else
                     {
-                        throw new BaseException(bookingHideDataBaseDto.msgCode, bookingHideDataBaseDto.msg);
+                        throw new BaseException(-1, null);
                     }
-                } else
-                {
-                    throw new BaseException(-1, null);
-                }
 
-                return result;
-            }
-        }).observeOn(AndroidSchedulers.mainThread());
+                    return result;
+                }
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -200,30 +203,31 @@ public class BookingRemoteImpl extends BaseRemoteImpl implements BookingInterfac
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{aggregationId}", aggregationId);
 
-        return mDailyMobileService.getStayBookingDetail(Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io()).map(new Function<BaseDto<StayBookingDetailData>, StayBookingDetail>()
-        {
-            @Override
-            public StayBookingDetail apply(@io.reactivex.annotations.NonNull BaseDto<StayBookingDetailData> stayBookingDetailDataBaseDto) throws Exception
+        return mDailyMobileService.getStayBookingDetail(Crypto.getUrlDecoderEx(API, urlParams)) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<StayBookingDetailData>, StayBookingDetail>()
             {
-                StayBookingDetail stayBookingDetail;
-
-                if (stayBookingDetailDataBaseDto != null)
+                @Override
+                public StayBookingDetail apply(@io.reactivex.annotations.NonNull BaseDto<StayBookingDetailData> stayBookingDetailDataBaseDto) throws Exception
                 {
-                    if (stayBookingDetailDataBaseDto.msgCode == 100 && stayBookingDetailDataBaseDto.data != null)
+                    StayBookingDetail stayBookingDetail;
+
+                    if (stayBookingDetailDataBaseDto != null)
                     {
-                        stayBookingDetail = stayBookingDetailDataBaseDto.data.getStayBookingDetail();
+                        if (stayBookingDetailDataBaseDto.msgCode == 100 && stayBookingDetailDataBaseDto.data != null)
+                        {
+                            stayBookingDetail = stayBookingDetailDataBaseDto.data.getStayBookingDetail();
+                        } else
+                        {
+                            throw new BaseException(stayBookingDetailDataBaseDto.msgCode, stayBookingDetailDataBaseDto.msg);
+                        }
                     } else
                     {
-                        throw new BaseException(stayBookingDetailDataBaseDto.msgCode, stayBookingDetailDataBaseDto.msg);
+                        throw new BaseException(-1, null);
                     }
-                } else
-                {
-                    throw new BaseException(-1, null);
-                }
 
-                return stayBookingDetail;
-            }
-        }).subscribeOn(Schedulers.io());
+                    return stayBookingDetail;
+                }
+            }).subscribeOn(Schedulers.io());
     }
 
     @Override
@@ -235,30 +239,31 @@ public class BookingRemoteImpl extends BaseRemoteImpl implements BookingInterfac
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{hotelReservationIdx}", Integer.toString(reservationIndex));
 
-        return mDailyMobileService.getStayBookingDetail(Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io()).map(new Function<BaseDto<StayBookingDetailData>, StayBookingDetail>()
-        {
-            @Override
-            public StayBookingDetail apply(@io.reactivex.annotations.NonNull BaseDto<StayBookingDetailData> stayBookingDetailDataBaseDto) throws Exception
+        return mDailyMobileService.getStayBookingDetail(Crypto.getUrlDecoderEx(API, urlParams)) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<StayBookingDetailData>, StayBookingDetail>()
             {
-                StayBookingDetail stayBookingDetail;
-
-                if (stayBookingDetailDataBaseDto != null)
+                @Override
+                public StayBookingDetail apply(@io.reactivex.annotations.NonNull BaseDto<StayBookingDetailData> stayBookingDetailDataBaseDto) throws Exception
                 {
-                    if (stayBookingDetailDataBaseDto.msgCode == 100 && stayBookingDetailDataBaseDto.data != null)
+                    StayBookingDetail stayBookingDetail;
+
+                    if (stayBookingDetailDataBaseDto != null)
                     {
-                        stayBookingDetail = stayBookingDetailDataBaseDto.data.getStayBookingDetail();
+                        if (stayBookingDetailDataBaseDto.msgCode == 100 && stayBookingDetailDataBaseDto.data != null)
+                        {
+                            stayBookingDetail = stayBookingDetailDataBaseDto.data.getStayBookingDetail();
+                        } else
+                        {
+                            throw new BaseException(stayBookingDetailDataBaseDto.msgCode, stayBookingDetailDataBaseDto.msg);
+                        }
                     } else
                     {
-                        throw new BaseException(stayBookingDetailDataBaseDto.msgCode, stayBookingDetailDataBaseDto.msg);
+                        throw new BaseException(-1, null);
                     }
-                } else
-                {
-                    throw new BaseException(-1, null);
-                }
 
-                return stayBookingDetail;
-            }
-        }).subscribeOn(Schedulers.io());
+                    return stayBookingDetail;
+                }
+            }).subscribeOn(Schedulers.io());
     }
 
     @Override
@@ -267,31 +272,32 @@ public class BookingRemoteImpl extends BaseRemoteImpl implements BookingInterfac
         final String URL = Constants.UNENCRYPTED_URL ? "api/reserv/mine/hidden"//
             : "MSQ3NiQzJDQ5JDcwJDEzJDE2JDI0JDg4JDY3JDU2JDkyJDE4JDc4JDY3JDI3JA==$MBkWE0QTNGNjIFzRKTAE2RkE5TQBTEzNEJCNTA1QjVDNDY4NEZGRUQL1N0NNDM0RFN0UZ1RNUYzNEYM1YQ0RCMjBPFNDJGYRNjc4MA==$";
 
-        return mDailyMobileService.getStayHiddenBooking(Crypto.getUrlDecoderEx(URL), reservationIndex).subscribeOn(Schedulers.io()).map(new Function<BaseDto<BookingHiddenData>, Boolean>()
-        {
-            @Override
-            public Boolean apply(@io.reactivex.annotations.NonNull BaseDto<BookingHiddenData> bookingHiddenDataBaseDto) throws Exception
+        return mDailyMobileService.getStayHiddenBooking(Crypto.getUrlDecoderEx(URL), reservationIndex) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<BookingHiddenData>, Boolean>()
             {
-                BookingHidden bookingHidden;
-                if (bookingHiddenDataBaseDto != null)
+                @Override
+                public Boolean apply(@io.reactivex.annotations.NonNull BaseDto<BookingHiddenData> bookingHiddenDataBaseDto) throws Exception
                 {
-                    // 이 요청은 메세지 코드를 보지 않음
-                    //                    if (bookingHiddenDataBaseDto.msgCode == 100 && bookingHiddenDataBaseDto.data != null)
-                    if (bookingHiddenDataBaseDto.data != null)
+                    BookingHidden bookingHidden;
+                    if (bookingHiddenDataBaseDto != null)
                     {
-                        bookingHidden = bookingHiddenDataBaseDto.data.getBookingHidden();
+                        // 이 요청은 메세지 코드를 보지 않음
+                        //                    if (bookingHiddenDataBaseDto.msgCode == 100 && bookingHiddenDataBaseDto.data != null)
+                        if (bookingHiddenDataBaseDto.data != null)
+                        {
+                            bookingHidden = bookingHiddenDataBaseDto.data.getBookingHidden();
+                        } else
+                        {
+                            throw new BaseException(bookingHiddenDataBaseDto.msgCode, bookingHiddenDataBaseDto.msg);
+                        }
                     } else
                     {
-                        throw new BaseException(bookingHiddenDataBaseDto.msgCode, bookingHiddenDataBaseDto.msg);
+                        throw new BaseException(-1, null);
                     }
-                } else
-                {
-                    throw new BaseException(-1, null);
-                }
 
-                return bookingHidden.isSuccess;
-            }
-        }).subscribeOn(Schedulers.io());
+                    return bookingHidden.isSuccess;
+                }
+            }).subscribeOn(Schedulers.io());
     }
 
     @Override
@@ -303,30 +309,31 @@ public class BookingRemoteImpl extends BaseRemoteImpl implements BookingInterfac
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{aggregationId}", aggregationId);
 
-        return mDailyMobileService.getGourmetBookingDetail(Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io()).map(new Function<BaseDto<GourmetBookingDetailData>, GourmetBookingDetail>()
-        {
-            @Override
-            public GourmetBookingDetail apply(@io.reactivex.annotations.NonNull BaseDto<GourmetBookingDetailData> gourmetBookingDetailDataBaseDto) throws Exception
+        return mDailyMobileService.getGourmetBookingDetail(Crypto.getUrlDecoderEx(API, urlParams)) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<GourmetBookingDetailData>, GourmetBookingDetail>()
             {
-                GourmetBookingDetail gourmetBookingDetail;
-
-                if (gourmetBookingDetailDataBaseDto != null)
+                @Override
+                public GourmetBookingDetail apply(@io.reactivex.annotations.NonNull BaseDto<GourmetBookingDetailData> gourmetBookingDetailDataBaseDto) throws Exception
                 {
-                    if (gourmetBookingDetailDataBaseDto.msgCode == 100 && gourmetBookingDetailDataBaseDto.data != null)
+                    GourmetBookingDetail gourmetBookingDetail;
+
+                    if (gourmetBookingDetailDataBaseDto != null)
                     {
-                        gourmetBookingDetail = gourmetBookingDetailDataBaseDto.data.getGourmetBookingDetail();
+                        if (gourmetBookingDetailDataBaseDto.msgCode == 100 && gourmetBookingDetailDataBaseDto.data != null)
+                        {
+                            gourmetBookingDetail = gourmetBookingDetailDataBaseDto.data.getGourmetBookingDetail();
+                        } else
+                        {
+                            throw new BaseException(gourmetBookingDetailDataBaseDto.msgCode, gourmetBookingDetailDataBaseDto.msg);
+                        }
                     } else
                     {
-                        throw new BaseException(gourmetBookingDetailDataBaseDto.msgCode, gourmetBookingDetailDataBaseDto.msg);
+                        throw new BaseException(-1, null);
                     }
-                } else
-                {
-                    throw new BaseException(-1, null);
-                }
 
-                return gourmetBookingDetail;
-            }
-        }).observeOn(AndroidSchedulers.mainThread());
+                    return gourmetBookingDetail;
+                }
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -338,30 +345,31 @@ public class BookingRemoteImpl extends BaseRemoteImpl implements BookingInterfac
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{fnbReservationIdx}", Integer.toString(reservationIndex));
 
-        return mDailyMobileService.getGourmetBookingDetail(Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io()).map(new Function<BaseDto<GourmetBookingDetailData>, GourmetBookingDetail>()
-        {
-            @Override
-            public GourmetBookingDetail apply(@io.reactivex.annotations.NonNull BaseDto<GourmetBookingDetailData> gourmetBookingDetailDataBaseDto) throws Exception
+        return mDailyMobileService.getGourmetBookingDetail(Crypto.getUrlDecoderEx(API, urlParams)) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<GourmetBookingDetailData>, GourmetBookingDetail>()
             {
-                GourmetBookingDetail gourmetBookingDetail;
-
-                if (gourmetBookingDetailDataBaseDto != null)
+                @Override
+                public GourmetBookingDetail apply(@io.reactivex.annotations.NonNull BaseDto<GourmetBookingDetailData> gourmetBookingDetailDataBaseDto) throws Exception
                 {
-                    if (gourmetBookingDetailDataBaseDto.msgCode == 100 && gourmetBookingDetailDataBaseDto.data != null)
+                    GourmetBookingDetail gourmetBookingDetail;
+
+                    if (gourmetBookingDetailDataBaseDto != null)
                     {
-                        gourmetBookingDetail = gourmetBookingDetailDataBaseDto.data.getGourmetBookingDetail();
+                        if (gourmetBookingDetailDataBaseDto.msgCode == 100 && gourmetBookingDetailDataBaseDto.data != null)
+                        {
+                            gourmetBookingDetail = gourmetBookingDetailDataBaseDto.data.getGourmetBookingDetail();
+                        } else
+                        {
+                            throw new BaseException(gourmetBookingDetailDataBaseDto.msgCode, gourmetBookingDetailDataBaseDto.msg);
+                        }
                     } else
                     {
-                        throw new BaseException(gourmetBookingDetailDataBaseDto.msgCode, gourmetBookingDetailDataBaseDto.msg);
+                        throw new BaseException(-1, null);
                     }
-                } else
-                {
-                    throw new BaseException(-1, null);
-                }
 
-                return gourmetBookingDetail;
-            }
-        }).observeOn(AndroidSchedulers.mainThread());
+                    return gourmetBookingDetail;
+                }
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -370,31 +378,32 @@ public class BookingRemoteImpl extends BaseRemoteImpl implements BookingInterfac
         final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/reservation/session/hidden"//
             : "MTEzJDQ4JDM1JDEzJDI4JDY5JDkzJDcxJDEzMSQ5NiQxNSQxMzckMTIwJDUzJDU4JDk0JA==$N0U1RjY2MjIzQPzRkyOEVEQzQ0RkED4Mjg4RDEW5RTM3MzkwRTZGZQQTBEBMTczQzNDQUMwNFUJIxQkE1NkZGOUJGODY3QRzBFMNS0RCMkNFNDgxRERCNTZDQ0EX1NFEI3RjNBQzYE4QzOM2$";
 
-        return mDailyMobileService.getGourmetHiddenBooking(Crypto.getUrlDecoderEx(URL), reservationIndex).subscribeOn(Schedulers.io()).map(new Function<BaseDto<BookingHiddenData>, Boolean>()
-        {
-            @Override
-            public Boolean apply(@io.reactivex.annotations.NonNull BaseDto<BookingHiddenData> bookingHiddenDataBaseDto) throws Exception
+        return mDailyMobileService.getGourmetHiddenBooking(Crypto.getUrlDecoderEx(URL), reservationIndex) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<BookingHiddenData>, Boolean>()
             {
-                BookingHidden bookingHidden;
-                if (bookingHiddenDataBaseDto != null)
+                @Override
+                public Boolean apply(@io.reactivex.annotations.NonNull BaseDto<BookingHiddenData> bookingHiddenDataBaseDto) throws Exception
                 {
-                    // 이 요청은 메세지 코드를 보지 않음
-                    //                    if (bookingHiddenDataBaseDto.msgCode == 100 && bookingHiddenDataBaseDto.data != null)
-                    if (bookingHiddenDataBaseDto.data != null)
+                    BookingHidden bookingHidden;
+                    if (bookingHiddenDataBaseDto != null)
                     {
-                        bookingHidden = bookingHiddenDataBaseDto.data.getBookingHidden();
+                        // 이 요청은 메세지 코드를 보지 않음
+                        //                    if (bookingHiddenDataBaseDto.msgCode == 100 && bookingHiddenDataBaseDto.data != null)
+                        if (bookingHiddenDataBaseDto.data != null)
+                        {
+                            bookingHidden = bookingHiddenDataBaseDto.data.getBookingHidden();
+                        } else
+                        {
+                            throw new BaseException(bookingHiddenDataBaseDto.msgCode, bookingHiddenDataBaseDto.msg);
+                        }
                     } else
                     {
-                        throw new BaseException(bookingHiddenDataBaseDto.msgCode, bookingHiddenDataBaseDto.msg);
+                        throw new BaseException(-1, null);
                     }
-                } else
-                {
-                    throw new BaseException(-1, null);
-                }
 
-                return bookingHidden.isSuccess;
-            }
-        }).subscribeOn(Schedulers.io());
+                    return bookingHidden.isSuccess;
+                }
+            }).subscribeOn(Schedulers.io());
     }
 
     @Override
@@ -406,30 +415,31 @@ public class BookingRemoteImpl extends BaseRemoteImpl implements BookingInterfac
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{aggregationId}", aggregationId);
 
-        return mDailyMobileService.getWaitingDeposit(Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io()).map(new Function<BaseDto<WaitingDepositData>, WaitingDeposit>()
-        {
-            @Override
-            public WaitingDeposit apply(@io.reactivex.annotations.NonNull BaseDto<WaitingDepositData> waitingDepositDataBaseDto) throws Exception
+        return mDailyMobileService.getWaitingDeposit(Crypto.getUrlDecoderEx(API, urlParams)) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<WaitingDepositData>, WaitingDeposit>()
             {
-                WaitingDeposit waitingDeposit;
-
-                if (waitingDepositDataBaseDto != null)
+                @Override
+                public WaitingDeposit apply(@io.reactivex.annotations.NonNull BaseDto<WaitingDepositData> waitingDepositDataBaseDto) throws Exception
                 {
-                    if (waitingDepositDataBaseDto.msgCode == 100 && waitingDepositDataBaseDto.data != null)
+                    WaitingDeposit waitingDeposit;
+
+                    if (waitingDepositDataBaseDto != null)
                     {
-                        waitingDeposit = waitingDepositDataBaseDto.data.getWaitingDeposit();
+                        if (waitingDepositDataBaseDto.msgCode == 100 && waitingDepositDataBaseDto.data != null)
+                        {
+                            waitingDeposit = waitingDepositDataBaseDto.data.getWaitingDeposit();
+                        } else
+                        {
+                            throw new BaseException(waitingDepositDataBaseDto.msgCode, waitingDepositDataBaseDto.msg);
+                        }
                     } else
                     {
-                        throw new BaseException(waitingDepositDataBaseDto.msgCode, waitingDepositDataBaseDto.msg);
+                        throw new BaseException(-1, null);
                     }
-                } else
-                {
-                    throw new BaseException(-1, null);
-                }
 
-                return waitingDeposit;
-            }
-        }).observeOn(AndroidSchedulers.mainThread());
+                    return waitingDeposit;
+                }
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -438,33 +448,34 @@ public class BookingRemoteImpl extends BaseRemoteImpl implements BookingInterfac
         final String API = Constants.UNENCRYPTED_URL ? "api/v5/cancel-reservations"//
             : "MSQyMCQ0NCQyNCQxNCQ0MCQyJDkwJDU4JDEyJDcyJDE4JDQ3JDkzJDIzJDUwJA==$MGQzBBODhGRjWY1QOzEBDRkWICzQjRRBQjBGRTg3QjU0TNjcCzSMDYdFOTgyRTlQBRDAzQUU4RkET4MDVDRkVGNjVEODhDRJjcHyRQ==$";
 
-        return mDailyMobileService.getBookingCancelList(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io()).map(new Function<BaseListDto<BookingCancelData>, List<BookingCancel>>()
-        {
-            @Override
-            public List<BookingCancel> apply(@io.reactivex.annotations.NonNull BaseListDto<BookingCancelData> bookingCancelDataBaseListDto) throws Exception
+        return mDailyMobileService.getBookingCancelList(Crypto.getUrlDecoderEx(API)) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseListDto<BookingCancelData>, List<BookingCancel>>()
             {
-                List<BookingCancel> list = new ArrayList<>();
-
-                if (bookingCancelDataBaseListDto != null)
+                @Override
+                public List<BookingCancel> apply(@io.reactivex.annotations.NonNull BaseListDto<BookingCancelData> bookingCancelDataBaseListDto) throws Exception
                 {
-                    if (bookingCancelDataBaseListDto.msgCode == 100 && bookingCancelDataBaseListDto.data != null)
+                    List<BookingCancel> list = new ArrayList<>();
+
+                    if (bookingCancelDataBaseListDto != null)
                     {
-                        for (BookingCancelData cancelData : bookingCancelDataBaseListDto.data)
+                        if (bookingCancelDataBaseListDto.msgCode == 100 && bookingCancelDataBaseListDto.data != null)
                         {
-                            list.add(cancelData.getBookingCancel());
+                            for (BookingCancelData cancelData : bookingCancelDataBaseListDto.data)
+                            {
+                                list.add(cancelData.getBookingCancel());
+                            }
+                        } else
+                        {
+                            throw new BaseException(bookingCancelDataBaseListDto.msgCode, bookingCancelDataBaseListDto.msg);
                         }
                     } else
                     {
-                        throw new BaseException(bookingCancelDataBaseListDto.msgCode, bookingCancelDataBaseListDto.msg);
+                        throw new BaseException(-1, null);
                     }
-                } else
-                {
-                    throw new BaseException(-1, null);
-                }
 
-                return list;
-            }
-        }).subscribeOn(Schedulers.io());
+                    return list;
+                }
+            }).subscribeOn(Schedulers.io());
     }
 
     @Override
@@ -475,32 +486,33 @@ public class BookingRemoteImpl extends BaseRemoteImpl implements BookingInterfac
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/refunded-reservations"//
             : "MTEwJDgxJDU4JDI4JDIzJDExOCQ1MCQxMzQkOTckNDEkMzAkMyQ2MCQxMTUkNTUkMTA3JA==$MjFDEQjIyQTVCQjhGMERGNDhIDRkE4NHOTU3MThCQzhUGMzE0MkI1ZRKDE3MTKY1RkRRERTMxRjc2OEQzQTlDQjM4NUDlDQUYyQTg2HRDAxWQjMxNTdGND0QyQzYEwORDQ1NzBDNjkzQUUG5$";
 
-        return mDailyMobileService.getStayOutboundBookingCancelList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io()).map(new Function<BaseListDto<BookingCancelData>, List<BookingCancel>>()
-        {
-            @Override
-            public List<BookingCancel> apply(@io.reactivex.annotations.NonNull BaseListDto<BookingCancelData> bookingCancelDataBaseListDto) throws Exception
+        return mDailyMobileService.getStayOutboundBookingCancelList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API)) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseListDto<BookingCancelData>, List<BookingCancel>>()
             {
-                List<BookingCancel> list = new ArrayList<>();
-
-                if (bookingCancelDataBaseListDto != null)
+                @Override
+                public List<BookingCancel> apply(@io.reactivex.annotations.NonNull BaseListDto<BookingCancelData> bookingCancelDataBaseListDto) throws Exception
                 {
-                    if (bookingCancelDataBaseListDto.msgCode == 100 && bookingCancelDataBaseListDto.data != null)
+                    List<BookingCancel> list = new ArrayList<>();
+
+                    if (bookingCancelDataBaseListDto != null)
                     {
-                        for (BookingCancelData cancelData : bookingCancelDataBaseListDto.data)
+                        if (bookingCancelDataBaseListDto.msgCode == 100 && bookingCancelDataBaseListDto.data != null)
                         {
-                            list.add(cancelData.getBookingCancel());
+                            for (BookingCancelData cancelData : bookingCancelDataBaseListDto.data)
+                            {
+                                list.add(cancelData.getBookingCancel());
+                            }
+                        } else
+                        {
+                            throw new BaseException(bookingCancelDataBaseListDto.msgCode, bookingCancelDataBaseListDto.msg);
                         }
                     } else
                     {
-                        throw new BaseException(bookingCancelDataBaseListDto.msgCode, bookingCancelDataBaseListDto.msg);
+                        throw new BaseException(-1, null);
                     }
-                } else
-                {
-                    throw new BaseException(-1, null);
-                }
 
-                return list;
-            }
-        }).subscribeOn(Schedulers.io());
+                    return list;
+                }
+            }).subscribeOn(Schedulers.io());
     }
 }
