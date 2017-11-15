@@ -3,14 +3,9 @@ package com.twoheart.dailyhotel.network;
 import android.content.Context;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.dailyhotel.repository.remote.model.CouponsData;
 import com.daily.dailyhotel.repository.remote.model.RecentlyPlacesData;
-import com.daily.dailyhotel.repository.remote.model.StayListData;
-import com.daily.dailyhotel.repository.remote.model.StayOutboundDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundDetailData;
-import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
-import com.daily.dailyhotel.repository.remote.model.SuggestsData;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
@@ -18,7 +13,6 @@ import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.factory.TagCancellableCallAdapterFactory.ExecutorCallbackCall;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
-import com.twoheart.dailyhotel.network.model.GourmetKeyword;
 import com.twoheart.dailyhotel.network.model.GourmetWishItem;
 import com.twoheart.dailyhotel.network.model.Holiday;
 import com.twoheart.dailyhotel.network.model.PlaceReviewScores;
@@ -31,7 +25,6 @@ import com.twoheart.dailyhotel.network.model.RecommendationStay;
 import com.twoheart.dailyhotel.network.model.Stamp;
 import com.twoheart.dailyhotel.network.model.Status;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
-import com.twoheart.dailyhotel.network.model.StayKeyword;
 import com.twoheart.dailyhotel.network.model.StayWishItem;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.network.model.TrueVRParams;
@@ -1160,64 +1153,6 @@ public class DailyMobileAPI
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
-    // SuggestRemoteImpl
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public Observable<BaseDto<SuggestsData>> getSuggestsByStayOutbound(String keyword)
-    {
-        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
-
-        final String API = Constants.UNENCRYPTED_URL ? "api/v1/suggests"//
-            : "MTEkNDQkMzckNDQkMyQxMiQzOCQ0NCQ3JDQwJDEzJDUyJDIzJDQwJDQ4JDIxJA==$Q0ZUCMzDg1RjYULXwOTcyMMjTI4RkI3NUFEOUNGRjOgSN3BMkPZSFNzXTAQ=$";
-
-        return mDailyMobileService.getSuggestsByStayOutbound(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API), keyword)//
-            .subscribeOn(Schedulers.io());
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    // StayOutboundRemoteImpl
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public Observable<BaseDto<StayOutboundsData>> getStayOutboundList(JSONObject jsonObject)
-    {
-        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
-
-        final String API = Constants.UNENCRYPTED_URL ? "api/v2/outbound/geographicalid-find-hotels"//
-            : "MzAkNzgkNjAkMTgkMTE2JDEyNSQzNyQxMDckMTE5JDEzNCQ2MyQxMDkkNzMkMTE4JDQ1JDQwJA==$NDEzMDFFRTE4MEYzNkQE5QUQ2OEY4Q0GFBMzZNDMEDA3OTWE5MjVGOUMxMUJDRDQIO0MzFCRDAzUOEZFNjQwNA0FENzhGMTYzOUEyNEU4NTBFQkFGZCOTk1MRjMzGIOUNDQzEyPOUIxMJjNC$";
-
-        return mDailyMobileService.getStayOutboundList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API)//
-            , jsonObject).subscribeOn(Schedulers.io());
-    }
-
-    public Observable<BaseDto<StayOutboundDetailData>> getStayOutboundDetail(int stayIndex, JSONObject jsonObject)
-    {
-        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
-
-        final String API = Constants.UNENCRYPTED_URL ? "api/v2/outbound/hotels/{stayIndex}"//
-            : "NTEkMjMkMTEyJDEwMyQ3MSQxMDIkMTA1JDQwJDExMyQ1NCQ5MiQyJDI3JDEwJDEyMSQ0JA==$NkJFKFNjg0MGjBFNDRBRkYxMjFPGORTVBREYyNEM1N0ZZBQjVERUMxRTNGIBNTEyOTM0NjhDODZGRWEFEMTY0N0JFQTkwQ0UU3MjVDQzE5QzBZBMGYDJBODWkxNMkJNBOTNBRTNBMTZFMTAw$";
-
-        Map<String, String> urlParams = new HashMap<>();
-        urlParams.put("{stayIndex}", Integer.toString(stayIndex));
-
-        return mDailyMobileService.getStayOutboundDetail(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
-            , jsonObject).subscribeOn(Schedulers.io());
-    }
-
-    public Observable<BaseDto<StayOutboundsData>> getStayOutboundRecomendAroundList(int index, JSONObject jsonObject)
-    {
-        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
-
-        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotels/{hotelId}/recommend-around"//
-            : "MTcwJDExMCQ2JDEwNSQxMzAkMTgkMTI5JDEyMyQ1MyQ2OSQ2MiQ0MyQyNiQ1OCQ3MCQ5NyQ=$MzZFOUSI2NkIwNEQwOFDQyNjVDRRjNDRDU1MUQwQjY0RHURDNTQ3RUNHFNAzExOTYCxMDJIEMEXFBQzExNjcyRjdGRDlBNDRCHRDhGNkM1RjIyNDkwDMTdFMjSMwMEMzNTZGBNDc3QA0ZQGMUFCOUZCM0FDOTQ1NkI0NTA0NEJEQzgwRjlDOTRERENU=$";
-
-        Map<String, String> urlParams = new HashMap<>();
-        urlParams.put("{hotelId}", Integer.toString(index));
-
-        return mDailyMobileService.getStayOutboundRecommendAroundList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams) //
-            , jsonObject).subscribeOn(Schedulers.io());
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////
     // RefundRemoteImpl
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1267,62 +1202,11 @@ public class DailyMobileAPI
     // RecentlyRemoteImpl
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Observable<BaseDto<StayOutboundsData>> getStayOutboundRecentlyList(String hotelIds, int numberOfResults)
-    {
-        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
-
-        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/id-find-static-hotels"//
-            : "MjMkMzAkODAkMTI4JDU1JDQ5JDEyJDEyNSQzNyQ3OCQ1NCQ1NyQzOCQ2NCQ3NyQxMzAk$MEJFNTFGNEY0RQTlCNTBGM0ZIGQUQ4MQjU1RjFCBCOERCQUFFODJTBNRUME0NHjdKBQjhBMTAwRjlPEQTFDFN0FDMzCNBREJFQkVGRDM4QTIxNzhDNzQ0RjFDOUYzMTlGMJDMBzOUUwMFDY1$";
-
-        return mDailyMobileService.getStayOutboundRecentlyList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API), false, hotelIds, numberOfResults, "NO_SORT").subscribeOn(Schedulers.io());
-    }
-
     public Observable<BaseDto<RecentlyPlacesData>> getInboundRecentlyList(JSONObject jsonObject)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/home/recent-view"//
             : "MTckMzUkNzgkNDUkNzQkNjEkNjkkMzkkMjEkNSQ0MiQzMCQyNiQxMDAkODAkNTEk$QjA2MO0U1NURCMUY2NXjBBJNDUNyRjIH5M0UxNkKIzNJBzM4N0MAIxMDEyOEFEMjc3MTOM3REQ5MTkRCNPDUW5NDBFBQTVBQTg5Rg=L=$";
 
         return mDailyMobileService.getInboundRecentlyList(Crypto.getUrlDecoderEx(URL), jsonObject).subscribeOn(Schedulers.io());
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public Observable<BaseDto<StayListData>> getStayList(Map<String, Object> queryMap, List<String> bedTypeList, List<String> luxuryList, String abTestType)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales"//
-            : "NzEkOSQ1MyQ1MiQ2OCQ3MyQ3MSQ4MCQ4MCQ4OSQ3MiQ3NiQyJDUwJDM1JDEwJA==$ODWg1NUYzOPWTg1ODczQzU2ODM0N0M5RDVDNDDRBNTNCMjAzOTVEQNDYUyPRDAxNjc2QkI4RPDBGQDNVPjkM1RJMUE0RTYzNNTdCQg==$";
-
-        return mDailyMobileService.getStayInboundList(Crypto.getUrlDecoderEx(URL), queryMap, bedTypeList, luxuryList, abTestType).subscribeOn(Schedulers.io());
-    }
-
-    public Observable<BaseListDto<StayKeyword>> getSuggestsByStayInbound(String date, int stays, String term)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/hotels/sales/search/suggest"//
-            : "NDYkNDUkMjIkMTkkMTE3JDEzMCQxMiQ4MiQxMTMkMTA5JDEwOSQ0OSQ3MyQ4MiQyMSQzMSQ=$Nzc1NkI5NTdDHNzQzNUYLIzRkLE5NkUD0NjM4RjVCRTZCMzA3MLLTFNBRUM0RjE0MkVERUQyMDNSCOENENjYGzNM0VGREZDMjdFMkU4RUJEMzI0ODkJAxNzZCFNUU0NTUYxMEVDMDgwQDTlE$";
-
-
-        return mDailyMobileService.getSuggestsByStayInbound(Crypto.getUrlDecoderEx(URL), date, stays, term).subscribeOn(Schedulers.io());
-    }
-
-    public Observable<BaseListDto<GourmetKeyword>> getSuggestsByGourmet(String date, String term)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/gourmet/sales/search/suggest"//
-            : "NjMkNzkkMTE3JDQwJDQxJDUzJDk0JDc0JDU2JDE5JDQ0JDYzJDExJDM4JDQ3JDEyJA==$OUYzQkNBN0ZOVFMDc2QjAIzMEU4OTBBODhENkI3OQTc4GNMXKEZBNDQ5MUIA1MFzIwOGTZERTZWDRUIxMTTA3QkQyQUTZGOUYzRjhBROTJGNTc4OTNFOTUzNDQwN0M3OUQVzQkFFMTlBNUM2$";
-
-        return mDailyMobileService.getSuggestsByGourmet(Crypto.getUrlDecoderEx(URL), date, term).subscribeOn(Schedulers.io());
-    }
-
-    public Observable<BaseDto<CouponsData>> getCouponHistoryList()
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/coupons/history"//
-            : "NTgkMjgkMzMkNTYkNzEkNTYkNDQkODYkMzAkNTAkMjEkMTkkOSQzMCQyOSQyOCQ=$ODlCNTQ1OOTA3NjczNkJVEQCjRBQSjNFOEXOXDMyPMzM5ODE4RTOBEMEZFGRjA1RTFZg5MjXk2QTVGNUJCDMzMzMzI4ODJJCNzY0Mg==$";
-
-        //        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestCouponHistoryList(Crypto.getUrlDecoderEx(URL));
-        //        executorCallbackCall.setTag(tag);
-        //        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
-
-        return mDailyMobileService.getCouponHistoryList(Crypto.getUrlDecoderEx(URL)).subscribeOn(Schedulers.io());
     }
 }
