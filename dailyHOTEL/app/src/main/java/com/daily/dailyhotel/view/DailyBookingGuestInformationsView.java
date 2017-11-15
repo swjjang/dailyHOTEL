@@ -161,10 +161,10 @@ public class DailyBookingGuestInformationsView extends ConstraintLayout
             {
                 if (informationType == InformationType.MOBILE)
                 {
-                    return ((DailyViewLeftNameRightEditMobileDataBinding) pair.second).mobileEditText.getText().toString();
+                    return ((DailyViewLeftNameRightEditMobileDataBinding) pair.second).mobileEditText.getText().toString().trim();
                 } else
                 {
-                    return ((DailyViewLeftNameRightEditValueDataBinding) pair.second).valueEditText.getText().toString();
+                    return ((DailyViewLeftNameRightEditValueDataBinding) pair.second).valueEditText.getText().toString().trim();
                 }
             }
         }

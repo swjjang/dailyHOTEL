@@ -2,6 +2,7 @@ package com.daily.dailyhotel.repository.remote.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.UserSimpleInformation;
 
 @JsonObject
@@ -31,7 +32,12 @@ public class UserInformationData
     {
         UserSimpleInformation userSimpleInformation = new UserSimpleInformation();
         userSimpleInformation.index = userIdx;
-        userSimpleInformation.email = email;
+
+        if (DailyTextUtils.isTextEmpty(email) == false)
+        {
+            userSimpleInformation.email = email.trim();
+        }
+
         userSimpleInformation.name = name;
         userSimpleInformation.phone = phone;
         userSimpleInformation.bonus = bonus < 0 ? 0 : bonus;
