@@ -3,9 +3,7 @@ package com.twoheart.dailyhotel.network;
 import android.content.Context;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.dailyhotel.repository.remote.model.CouponsData;
 import com.daily.dailyhotel.repository.remote.model.RecentlyPlacesData;
-import com.daily.dailyhotel.repository.remote.model.StayListData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
@@ -1221,29 +1219,5 @@ public class DailyMobileAPI
             : "MTckMzUkNzgkNDUkNzQkNjEkNjkkMzkkMjEkNSQ0MiQzMCQyNiQxMDAkODAkNTEk$QjA2MO0U1NURCMUY2NXjBBJNDUNyRjIH5M0UxNkKIzNJBzM4N0MAIxMDEyOEFEMjc3MTOM3REQ5MTkRCNPDUW5NDBFBQTVBQTg5Rg=L=$";
 
         return mDailyMobileService.getInboundRecentlyList(Crypto.getUrlDecoderEx(URL), jsonObject).subscribeOn(Schedulers.io());
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public Observable<BaseDto<StayListData>> getStayList(Map<String, Object> queryMap, List<String> bedTypeList, List<String> luxuryList, String abTestType)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales"//
-            : "NzEkOSQ1MyQ1MiQ2OCQ3MyQ3MSQ4MCQ4MCQ4OSQ3MiQ3NiQyJDUwJDM1JDEwJA==$ODWg1NUYzOPWTg1ODczQzU2ODM0N0M5RDVDNDDRBNTNCMjAzOTVEQNDYUyPRDAxNjc2QkI4RPDBGQDNVPjkM1RJMUE0RTYzNNTdCQg==$";
-
-        return mDailyMobileService.getStayInboundList(Crypto.getUrlDecoderEx(URL), queryMap, bedTypeList, luxuryList, abTestType).subscribeOn(Schedulers.io());
-    }
-
-    public Observable<BaseDto<CouponsData>> getCouponHistoryList()
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/coupons/history"//
-            : "NTgkMjgkMzMkNTYkNzEkNTYkNDQkODYkMzAkNTAkMjEkMTkkOSQzMCQyOSQyOCQ=$ODlCNTQ1OOTA3NjczNkJVEQCjRBQSjNFOEXOXDMyPMzM5ODE4RTOBEMEZFGRjA1RTFZg5MjXk2QTVGNUJCDMzMzMzI4ODJJCNzY0Mg==$";
-
-        //        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestCouponHistoryList(Crypto.getUrlDecoderEx(URL));
-        //        executorCallbackCall.setTag(tag);
-        //        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
-
-        return mDailyMobileService.getCouponHistoryList(Crypto.getUrlDecoderEx(URL)).subscribeOn(Schedulers.io());
     }
 }
