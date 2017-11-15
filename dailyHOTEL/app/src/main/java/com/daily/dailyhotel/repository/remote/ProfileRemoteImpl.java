@@ -35,26 +35,27 @@ public class ProfileRemoteImpl extends BaseRemoteImpl implements ProfileInterfac
         final String API = Constants.UNENCRYPTED_URL ? "api/v3/users/profile"//
             : "NzMkNTEkMzYkNTkkNzckNjQkMTQkMjkkNTIkNTkkODckOSQ5NyQ5JDg5JDEk$MRUY4NUFGMRYjU0MjNI0Q0YyNjYyMjdCKMEQ5M0U5MMEY5NDQyQjcwNFTEC5NTKRCQS0ZFNPEU3RjFCOEMwMWOURDQJHjBEQTI4NRQ==$";
 
-        return mDailyMobileService.getUserProfile(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io()).map((userDataBaseDto) ->
-        {
-            User user = null;
-
-            if (userDataBaseDto != null)
+        return mDailyMobileService.getUserProfile(Crypto.getUrlDecoderEx(API)) //
+            .subscribeOn(Schedulers.io()).map((userDataBaseDto) ->
             {
-                if (userDataBaseDto.msgCode == 100 && userDataBaseDto.data != null)
+                User user = null;
+
+                if (userDataBaseDto != null)
                 {
-                    user = userDataBaseDto.data.getUser();
+                    if (userDataBaseDto.msgCode == 100 && userDataBaseDto.data != null)
+                    {
+                        user = userDataBaseDto.data.getUser();
+                    } else
+                    {
+                        throw new BaseException(userDataBaseDto.msgCode, userDataBaseDto.msg);
+                    }
                 } else
                 {
-                    throw new BaseException(userDataBaseDto.msgCode, userDataBaseDto.msg);
+                    throw new BaseException(-1, null);
                 }
-            } else
-            {
-                throw new BaseException(-1, null);
-            }
 
-            return user;
-        }).observeOn(AndroidSchedulers.mainThread());
+                return user;
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -91,26 +92,27 @@ public class ProfileRemoteImpl extends BaseRemoteImpl implements ProfileInterfac
         final String API = Constants.UNENCRYPTED_URL ? "api/v5/users/profile/simple"//
             : "MjkkMzQkNzMkNzAkNDEkNzMkMTIkNjMkNDUkOTAkMzYkODIkOTkkNDMkMTAkMTYk$MDE0NTQ0OTYZFVRkZM1OTMyQzgxRDY0MPTM1QSVjlCNDcRMzNAEVBM0Q5QjcyRjY0NUFJCNjRFQ0U0ONNTFVDEMUE1RUMwOLTBCNQ=Z=$";
 
-        return mDailyMobileService.getUserSimpleInformation(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io()).map(userInformationDataBaseDto ->
-        {
-            UserSimpleInformation userSimpleInformation = null;
-
-            if (userInformationDataBaseDto != null)
+        return mDailyMobileService.getUserSimpleInformation(Crypto.getUrlDecoderEx(API)) //
+            .subscribeOn(Schedulers.io()).map(userInformationDataBaseDto ->
             {
-                if (userInformationDataBaseDto.msgCode == 100 && userInformationDataBaseDto.data != null)
+                UserSimpleInformation userSimpleInformation = null;
+
+                if (userInformationDataBaseDto != null)
                 {
-                    userSimpleInformation = userInformationDataBaseDto.data.getUserInformation();
+                    if (userInformationDataBaseDto.msgCode == 100 && userInformationDataBaseDto.data != null)
+                    {
+                        userSimpleInformation = userInformationDataBaseDto.data.getUserInformation();
+                    } else
+                    {
+                        throw new BaseException(userInformationDataBaseDto.msgCode, userInformationDataBaseDto.msg);
+                    }
                 } else
                 {
-                    throw new BaseException(userInformationDataBaseDto.msgCode, userInformationDataBaseDto.msg);
+                    throw new BaseException(-1, null);
                 }
-            } else
-            {
-                throw new BaseException(-1, null);
-            }
 
-            return userSimpleInformation;
-        }).observeOn(AndroidSchedulers.mainThread());
+                return userSimpleInformation;
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -119,26 +121,27 @@ public class ProfileRemoteImpl extends BaseRemoteImpl implements ProfileInterfac
         final String API = Constants.UNENCRYPTED_URL ? "api/v3/users/tracking"//
             : "MzkkMzEkNTIkNjUkNDckMzUkOTAkMTIkODEkNDEkNDEkNDckOTYkMTckNjEkMTAk$MjAxNkUyMTYk5QRDMzXQjk4RkYwOTRCMzMYwRkLRGMjHKlWBQPTdDMXDkxQkTNQBNzAzMDEyMjQgwMjg0M0VCMUNU2Qzk3OTNCOWQw==$";
 
-        return mDailyMobileService.getUserTracking(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io()).map((BaseDto<UserTrackingData> userTrackingDataBaseDto) ->
-        {
-            UserTracking userTracking = null;
-
-            if (userTrackingDataBaseDto != null)
+        return mDailyMobileService.getUserTracking(Crypto.getUrlDecoderEx(API)) //
+            .subscribeOn(Schedulers.io()).map((BaseDto<UserTrackingData> userTrackingDataBaseDto) ->
             {
-                if (userTrackingDataBaseDto.msgCode == 100 && userTrackingDataBaseDto.data != null)
+                UserTracking userTracking = null;
+
+                if (userTrackingDataBaseDto != null)
                 {
-                    userTracking = userTrackingDataBaseDto.data.getUserTracking();
+                    if (userTrackingDataBaseDto.msgCode == 100 && userTrackingDataBaseDto.data != null)
+                    {
+                        userTracking = userTrackingDataBaseDto.data.getUserTracking();
+                    } else
+                    {
+                        throw new BaseException(userTrackingDataBaseDto.msgCode, userTrackingDataBaseDto.msg);
+                    }
                 } else
                 {
-                    throw new BaseException(userTrackingDataBaseDto.msgCode, userTrackingDataBaseDto.msg);
+                    throw new BaseException(-1, null);
                 }
-            } else
-            {
-                throw new BaseException(-1, null);
-            }
 
-            return userTracking;
-        }).observeOn(AndroidSchedulers.mainThread());
+                return userTracking;
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -147,29 +150,30 @@ public class ProfileRemoteImpl extends BaseRemoteImpl implements ProfileInterfac
         final String API = Constants.UNENCRYPTED_URL ? "api/v4/users/profile"//
             : "MzEkNTAkNzMkMzAkMzgkNDQkMTckMzIkNjMkOTIkNjAkNzMkOCQ1MiQ1JDM3JA==$RTZGMNDc1TMjhGQTA2QXzM3MTQ3MzY1OTTPVJMFNjJBXOUVGQXTY5NJjg2MUzg5NCDQ3WNDdGQUFFCRjdDOEVODODQ5MTk5MjcO0OA==$";
 
-        return mDailyMobileService.updateUserInformation(Crypto.getUrlDecoderEx(API), params).subscribeOn(Schedulers.io()).map(new Function<BaseDto<UserData>, User>()
-        {
-            @Override
-            public User apply(BaseDto<UserData> userDataBaseDto) throws Exception
+        return mDailyMobileService.updateUserInformation(Crypto.getUrlDecoderEx(API), params) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<UserData>, User>()
             {
-                User user = null;
-
-                if (userDataBaseDto != null)
+                @Override
+                public User apply(BaseDto<UserData> userDataBaseDto) throws Exception
                 {
-                    if (userDataBaseDto.msgCode == 100 && userDataBaseDto.data != null)
+                    User user = null;
+
+                    if (userDataBaseDto != null)
                     {
-                        user = userDataBaseDto.data.getUser();
+                        if (userDataBaseDto.msgCode == 100 && userDataBaseDto.data != null)
+                        {
+                            user = userDataBaseDto.data.getUser();
+                        } else
+                        {
+                            throw new BaseException(userDataBaseDto.msgCode, userDataBaseDto.msg);
+                        }
                     } else
                     {
-                        throw new BaseException(userDataBaseDto.msgCode, userDataBaseDto.msg);
+                        throw new BaseException(-1, null);
                     }
-                } else
-                {
-                    throw new BaseException(-1, null);
-                }
 
-                return user;
-            }
-        });
+                    return user;
+                }
+            });
     }
 }

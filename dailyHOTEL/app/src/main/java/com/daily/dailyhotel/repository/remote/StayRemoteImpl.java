@@ -39,43 +39,44 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{stayIndex}", Integer.toString(stayIndex));
 
-        return mDailyMobileService.getStayDetail(Crypto.getUrlDecoderEx(API, urlParams), stayBookDateTime.getCheckInDateTime("yyyy-MM-dd")//
-            , stayBookDateTime.getNights()).subscribeOn(Schedulers.io()).map(baseDto ->
-        {
-            StayDetail stayDetail;
-
-            if (baseDto != null)
+        return mDailyMobileService.getStayDetail(Crypto.getUrlDecoderEx(API, urlParams) //
+            , stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"), stayBookDateTime.getNights()) //
+            .subscribeOn(Schedulers.io()).map(baseDto ->
             {
-                if (baseDto.data != null)
+                StayDetail stayDetail;
+
+                if (baseDto != null)
                 {
-                    // 100	성공
-                    // 4	데이터가 없을시
-                    // 5	판매 마감시
-                    switch (baseDto.msgCode)
+                    if (baseDto.data != null)
                     {
-                        case 5:
-                            stayDetail = baseDto.data.getStayDetail();
-                            stayDetail.setRoomList(null);
-                            break;
+                        // 100	성공
+                        // 4	데이터가 없을시
+                        // 5	판매 마감시
+                        switch (baseDto.msgCode)
+                        {
+                            case 5:
+                                stayDetail = baseDto.data.getStayDetail();
+                                stayDetail.setRoomList(null);
+                                break;
 
-                        case 100:
-                            stayDetail = baseDto.data.getStayDetail();
-                            break;
+                            case 100:
+                                stayDetail = baseDto.data.getStayDetail();
+                                break;
 
-                        default:
-                            throw new BaseException(baseDto.msgCode, baseDto.msg);
+                            default:
+                                throw new BaseException(baseDto.msgCode, baseDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(baseDto.msgCode, baseDto.msg);
                     }
                 } else
                 {
-                    throw new BaseException(baseDto.msgCode, baseDto.msg);
+                    throw new BaseException(-1, null);
                 }
-            } else
-            {
-                throw new BaseException(-1, null);
-            }
 
-            return stayDetail;
-        });
+                return stayDetail;
+            });
     }
 
     @Override
@@ -87,21 +88,22 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{stayIndex}", Integer.toString(stayIndex));
 
-        return mDailyMobileService.getStayHasCoupon(Crypto.getUrlDecoderEx(API, urlParams), stayBookDateTime.getCheckInDateTime("yyyy-MM-dd")//
-            , stayBookDateTime.getNights()).subscribeOn(Schedulers.io()).map(baseDto ->
-        {
-            boolean hasCoupon = false;
-
-            if (baseDto != null)
+        return mDailyMobileService.getStayHasCoupon(Crypto.getUrlDecoderEx(API, urlParams) //
+            , stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"), stayBookDateTime.getNights()) //
+            .subscribeOn(Schedulers.io()).map(baseDto ->
             {
-                if (baseDto.msgCode == 100 && baseDto.data != null)
-                {
-                    hasCoupon = baseDto.data.existCoupons;
-                }
-            }
+                boolean hasCoupon = false;
 
-            return hasCoupon;
-        });
+                if (baseDto != null)
+                {
+                    if (baseDto.msgCode == 100 && baseDto.data != null)
+                    {
+                        hasCoupon = baseDto.data.existCoupons;
+                    }
+                }
+
+                return hasCoupon;
+            });
     }
 
     @Override

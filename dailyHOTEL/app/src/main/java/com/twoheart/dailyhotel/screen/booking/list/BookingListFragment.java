@@ -1014,7 +1014,8 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
             {
                 case STAY:
                 {
-                    addCompositeDisposable(mCommonRemoteImpl.getReview("hotel", booking.reservationIndex).subscribeOn(Schedulers.io()).map(new Function<Review, com.twoheart.dailyhotel.model.Review>()
+                    addCompositeDisposable(mCommonRemoteImpl.getReview("hotel", booking.reservationIndex) //
+                        .subscribeOn(Schedulers.io()).map(new Function<Review, com.twoheart.dailyhotel.model.Review>()
                     {
                         @Override
                         public com.twoheart.dailyhotel.model.Review apply(@NonNull Review review) throws Exception
@@ -1045,7 +1046,8 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
                 case GOURMET:
                 {
-                    addCompositeDisposable(mCommonRemoteImpl.getReview("gourmet", booking.reservationIndex).subscribeOn(Schedulers.io()).map(new Function<Review, com.twoheart.dailyhotel.model.Review>()
+                    addCompositeDisposable(mCommonRemoteImpl.getReview("gourmet", booking.reservationIndex) //
+                        .subscribeOn(Schedulers.io()).map(new Function<Review, com.twoheart.dailyhotel.model.Review>()
                     {
                         @Override
                         public com.twoheart.dailyhotel.model.Review apply(@NonNull Review review) throws Exception

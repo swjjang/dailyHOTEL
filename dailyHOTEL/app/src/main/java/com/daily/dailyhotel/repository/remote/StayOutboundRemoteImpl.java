@@ -94,31 +94,31 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
         final String API = Constants.UNENCRYPTED_URL ? "api/v2/outbound/geographicalid-find-hotels"//
             : "MzAkNzgkNjAkMTgkMTE2JDEyNSQzNyQxMDckMTE5JDEzNCQ2MyQxMDkkNzMkMTE4JDQ1JDQwJA==$NDEzMDFFRTE4MEYzNkQE5QUQ2OEY4Q0GFBMzZNDMEDA3OTWE5MjVGOUMxMUJDRDQIO0MzFCRDAzUOEZFNjQwNA0FENzhGMTYzOUEyNEU4NTBFQkFGZCOTk1MRjMzGIOUNDQzEyPOUIxMJjNC$";
 
-        return mDailyMobileService.getStayOutboundList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API)//
-            , jsonObject).subscribeOn(Schedulers.io()).map(new Function<BaseDto<StayOutboundsData>, StayOutbounds>()
-        {
-            @Override
-            public StayOutbounds apply(@io.reactivex.annotations.NonNull BaseDto<StayOutboundsData> stayOutboundDataBaseDto) throws Exception
+        return mDailyMobileService.getStayOutboundList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API), jsonObject) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<StayOutboundsData>, StayOutbounds>()
             {
-                StayOutbounds stayOutbounds;
-
-                if (stayOutboundDataBaseDto != null)
+                @Override
+                public StayOutbounds apply(@io.reactivex.annotations.NonNull BaseDto<StayOutboundsData> stayOutboundDataBaseDto) throws Exception
                 {
-                    if (stayOutboundDataBaseDto.msgCode == 100 && stayOutboundDataBaseDto.data != null)
+                    StayOutbounds stayOutbounds;
+
+                    if (stayOutboundDataBaseDto != null)
                     {
-                        stayOutbounds = stayOutboundDataBaseDto.data.getStayOutboundList();
+                        if (stayOutboundDataBaseDto.msgCode == 100 && stayOutboundDataBaseDto.data != null)
+                        {
+                            stayOutbounds = stayOutboundDataBaseDto.data.getStayOutboundList();
+                        } else
+                        {
+                            throw new BaseException(stayOutboundDataBaseDto.msgCode, stayOutboundDataBaseDto.msg);
+                        }
                     } else
                     {
-                        throw new BaseException(stayOutboundDataBaseDto.msgCode, stayOutboundDataBaseDto.msg);
+                        throw new BaseException(-1, null);
                     }
-                } else
-                {
-                    throw new BaseException(-1, null);
-                }
 
-                return stayOutbounds;
-            }
-        }).observeOn(AndroidSchedulers.mainThread());
+                    return stayOutbounds;
+                }
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -202,31 +202,31 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{hotelId}", Integer.toString(index));
 
-        return mDailyMobileService.getStayOutboundRecommendAroundList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams) //
-            , jsonObject).subscribeOn(Schedulers.io()).map(new Function<BaseDto<StayOutboundsData>, StayOutbounds>()
-        {
-            @Override
-            public StayOutbounds apply(@io.reactivex.annotations.NonNull BaseDto<StayOutboundsData> stayOutboundDataBaseDto) throws Exception
+        return mDailyMobileService.getStayOutboundRecommendAroundList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams), jsonObject) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<StayOutboundsData>, StayOutbounds>()
             {
-                StayOutbounds stayOutbounds;
-
-                if (stayOutboundDataBaseDto != null)
+                @Override
+                public StayOutbounds apply(@io.reactivex.annotations.NonNull BaseDto<StayOutboundsData> stayOutboundDataBaseDto) throws Exception
                 {
-                    if (stayOutboundDataBaseDto.msgCode == 100 && stayOutboundDataBaseDto.data != null)
+                    StayOutbounds stayOutbounds;
+
+                    if (stayOutboundDataBaseDto != null)
                     {
-                        stayOutbounds = stayOutboundDataBaseDto.data.getStayOutboundList();
+                        if (stayOutboundDataBaseDto.msgCode == 100 && stayOutboundDataBaseDto.data != null)
+                        {
+                            stayOutbounds = stayOutboundDataBaseDto.data.getStayOutboundList();
+                        } else
+                        {
+                            throw new BaseException(stayOutboundDataBaseDto.msgCode, stayOutboundDataBaseDto.msg);
+                        }
                     } else
                     {
-                        throw new BaseException(stayOutboundDataBaseDto.msgCode, stayOutboundDataBaseDto.msg);
+                        throw new BaseException(-1, null);
                     }
-                } else
-                {
-                    throw new BaseException(-1, null);
-                }
 
-                return stayOutbounds;
-            }
-        }).observeOn(AndroidSchedulers.mainThread());
+                    return stayOutbounds;
+                }
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 
     private JSONArray getRooms(People[] peoples)

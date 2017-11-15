@@ -40,30 +40,31 @@ public class StayOutboundReceiptRemoteImpl extends BaseRemoteImpl implements Sta
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{reservationIdx}", Integer.toString(bookingIndex));
 
-        return mDailyMobileService.getStayOutboundReceipt(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io()).map(new Function<BaseDto<StayOutboundReceiptData>, StayOutboundReceipt>()
-        {
-            @Override
-            public StayOutboundReceipt apply(@io.reactivex.annotations.NonNull BaseDto<StayOutboundReceiptData> stayOutboundReceiptDataBaseDto) throws Exception
+        return mDailyMobileService.getStayOutboundReceipt(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<StayOutboundReceiptData>, StayOutboundReceipt>()
             {
-                StayOutboundReceipt stayOutboundReceipt;
-
-                if (stayOutboundReceiptDataBaseDto != null)
+                @Override
+                public StayOutboundReceipt apply(@io.reactivex.annotations.NonNull BaseDto<StayOutboundReceiptData> stayOutboundReceiptDataBaseDto) throws Exception
                 {
-                    if (stayOutboundReceiptDataBaseDto.msgCode == 100 && stayOutboundReceiptDataBaseDto.data != null)
+                    StayOutboundReceipt stayOutboundReceipt;
+
+                    if (stayOutboundReceiptDataBaseDto != null)
                     {
-                        stayOutboundReceipt = stayOutboundReceiptDataBaseDto.data.getStayOutboundReceipt();
+                        if (stayOutboundReceiptDataBaseDto.msgCode == 100 && stayOutboundReceiptDataBaseDto.data != null)
+                        {
+                            stayOutboundReceipt = stayOutboundReceiptDataBaseDto.data.getStayOutboundReceipt();
+                        } else
+                        {
+                            throw new BaseException(stayOutboundReceiptDataBaseDto.msgCode, stayOutboundReceiptDataBaseDto.msg);
+                        }
                     } else
                     {
-                        throw new BaseException(stayOutboundReceiptDataBaseDto.msgCode, stayOutboundReceiptDataBaseDto.msg);
+                        throw new BaseException(-1, null);
                     }
-                } else
-                {
-                    throw new BaseException(-1, null);
-                }
 
-                return stayOutboundReceipt;
-            }
-        }).observeOn(AndroidSchedulers.mainThread());
+                    return stayOutboundReceipt;
+                }
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -77,29 +78,30 @@ public class StayOutboundReceiptRemoteImpl extends BaseRemoteImpl implements Sta
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{reservationIdx}", Integer.toString(bookingIndex));
 
-        return mDailyMobileService.getStayOutboundEmailReceipt(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams), email).subscribeOn(Schedulers.io()).map(new Function<BaseDto<StayOutboundEmailReceiptData>, String>()
-        {
-            @Override
-            public String apply(@io.reactivex.annotations.NonNull BaseDto<StayOutboundEmailReceiptData> stayOutboundEmailReceiptDataBaseDto) throws Exception
+        return mDailyMobileService.getStayOutboundEmailReceipt(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams), email) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<StayOutboundEmailReceiptData>, String>()
             {
-                String message;
-
-                if (stayOutboundEmailReceiptDataBaseDto != null)
+                @Override
+                public String apply(@io.reactivex.annotations.NonNull BaseDto<StayOutboundEmailReceiptData> stayOutboundEmailReceiptDataBaseDto) throws Exception
                 {
-                    if (stayOutboundEmailReceiptDataBaseDto.msgCode == 100 && stayOutboundEmailReceiptDataBaseDto.data != null)
+                    String message;
+
+                    if (stayOutboundEmailReceiptDataBaseDto != null)
                     {
-                        message = stayOutboundEmailReceiptDataBaseDto.data.message;
+                        if (stayOutboundEmailReceiptDataBaseDto.msgCode == 100 && stayOutboundEmailReceiptDataBaseDto.data != null)
+                        {
+                            message = stayOutboundEmailReceiptDataBaseDto.data.message;
+                        } else
+                        {
+                            throw new BaseException(stayOutboundEmailReceiptDataBaseDto.msgCode, stayOutboundEmailReceiptDataBaseDto.msg);
+                        }
                     } else
                     {
-                        throw new BaseException(stayOutboundEmailReceiptDataBaseDto.msgCode, stayOutboundEmailReceiptDataBaseDto.msg);
+                        throw new BaseException(-1, null);
                     }
-                } else
-                {
-                    throw new BaseException(-1, null);
-                }
 
-                return message;
-            }
-        }).observeOn(AndroidSchedulers.mainThread());
+                    return message;
+                }
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 }
