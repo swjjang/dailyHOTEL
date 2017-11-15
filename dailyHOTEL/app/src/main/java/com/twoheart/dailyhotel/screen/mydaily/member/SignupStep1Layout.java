@@ -17,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
 import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyAutoCompleteEditText;
 import com.daily.base.widget.DailyEditText;
@@ -26,12 +25,14 @@ import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.StringFilter;
 
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 public class SignupStep1Layout extends BaseLayout implements OnClickListener, View.OnFocusChangeListener
@@ -104,7 +105,19 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         mEmailEditText.setDeleteButtonVisible(null);
         mEmailEditText.setOnFocusChangeListener(this);
 
-        EmailCompleteAdapter emailCompleteAdapter = new EmailCompleteAdapter(mContext, Arrays.asList(mContext.getResources().getStringArray(R.array.company_email_postfix_array)));
+        EmailCompleteAdapter emailCompleteAdapter;
+
+        if (Constants.DEBUG == true)
+        {
+            List<String> emailList = Arrays.asList(mContext.getResources().getStringArray(R.array.company_email_postfix_array));
+            emailList.add("@dailyhotel.com");
+
+            emailCompleteAdapter = new EmailCompleteAdapter(mContext, emailList);
+        } else
+        {
+            emailCompleteAdapter = new EmailCompleteAdapter(mContext, Arrays.asList(mContext.getResources().getStringArray(R.array.company_email_postfix_array)));
+        }
+
         mEmailEditText.setAdapter(emailCompleteAdapter);
 
         mNameView = view.findViewById(R.id.nameView);

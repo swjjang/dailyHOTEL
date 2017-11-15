@@ -62,6 +62,7 @@ import org.json.JSONObject;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -198,7 +199,20 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             }
         });
 
-        EmailCompleteAdapter emailCompleteAdapter = new EmailCompleteAdapter(this, Arrays.asList(getResources().getStringArray(R.array.company_email_postfix_array)));
+        EmailCompleteAdapter emailCompleteAdapter;
+
+        if (Constants.DEBUG == true)
+        {
+            List<String> emailList = Arrays.asList(getResources().getStringArray(R.array.company_email_postfix_array));
+            emailList.add("@dailyhotel.com");
+            emailList.add("@dh.com");
+
+            emailCompleteAdapter = new EmailCompleteAdapter(this, emailList);
+        } else
+        {
+            emailCompleteAdapter = new EmailCompleteAdapter(this, Arrays.asList(getResources().getStringArray(R.array.company_email_postfix_array)));
+        }
+
         mEmailEditText.setAdapter(emailCompleteAdapter);
 
         mPasswordView = findViewById(R.id.passwordView);
