@@ -99,7 +99,7 @@ public class RewardRemoteImpl extends BaseRemoteImpl implements RewardInterface
         final String URL = Constants.UNENCRYPTED_URL ? "api/v5/reward/history"//
             : "NjYkNTgkNzUkNzIkMzckODkkNDAkNDQkNDQkOTQkODkkNzEkNzAkNzYkNDckNDUk$RkFEMDdCN0IyODA3Nzk4MTRDODA3QjVDRDU5RMTUI2OEPGYEP3NEYzNkM2NzUzRkHFGQTE4MWkYOFDJOTEYxMJDI0NDlDOKEJGGMZQ==$";
 
-        return mDailyMobileService.getRewardHistoryDetail(Crypto.getUrlDecoderEx(URL)).map(new Function<BaseDto<RewardHistoryDetailData>, RewardHistoryDetail>()
+        return mDailyMobileService.getRewardHistoryDetail(Crypto.getUrlDecoderEx(URL)).subscribeOn(Schedulers.io()).map(new Function<BaseDto<RewardHistoryDetailData>, RewardHistoryDetail>()
         {
             @Override
             public RewardHistoryDetail apply(@io.reactivex.annotations.NonNull BaseDto<RewardHistoryDetailData> rewardHistoryDataBaseDto) throws Exception
