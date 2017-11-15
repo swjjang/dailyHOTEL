@@ -7,8 +7,9 @@ import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.CouponInterface;
 import com.daily.dailyhotel.repository.remote.model.CouponsData;
 import com.twoheart.dailyhotel.model.Coupon;
-import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Crypto;
 
 import java.util.ArrayList;
 
@@ -20,19 +21,21 @@ import io.reactivex.schedulers.Schedulers;
  * Created by android_sam on 2017. 9. 28..
  */
 
-public class CouponRemoteImpl implements CouponInterface
+public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
 {
-    private Context mContext;
-
     public CouponRemoteImpl(Context context)
     {
-        mContext = context;
+        super(context);
     }
 
     @Override
     public Observable<ArrayList<Coupon>> getCouponHistoryList()
     {
-        return DailyMobileAPI.getInstance(mContext).getCouponHistoryList().map(new Function<BaseDto<CouponsData>, ArrayList<Coupon>>()
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/coupons/history"//
+            : "NTgkMjgkMzMkNTYkNzEkNTYkNDQkODYkMzAkNTAkMjEkMTkkOSQzMCQyOSQyOCQ=$ODlCNTQ1OOTA3NjczNkJVEQCjRBQSjNFOEXOXDMyPMzM5ODE4RTOBEMEZFGRjA1RTFZg5MjXk2QTVGNUJCDMzMzMzI4ODJJCNzY0Mg==$";
+
+        return mDailyMobileService.getCouponHistoryList(Crypto.getUrlDecoderEx(URL)) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<CouponsData>, ArrayList<Coupon>>()
         {
             @Override
             public ArrayList<Coupon> apply(@NonNull BaseDto<CouponsData> couponsDataBaseDto) throws Exception
