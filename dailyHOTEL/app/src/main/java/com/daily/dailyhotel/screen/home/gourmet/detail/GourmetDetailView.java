@@ -1153,6 +1153,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         {
             titleInformationView.setCouponVisible(true);
             titleInformationView.setCouponPriceText(getString(R.string.label_download_coupon_price, DailyTextUtils.getPriceFormat(getContext(), couponPrice, false)));
+            titleInformationView.setOnCouponClickListener(v -> getEventListener().onDownloadCouponClick());
         } else
         {
             titleInformationView.setCouponVisible(false);
