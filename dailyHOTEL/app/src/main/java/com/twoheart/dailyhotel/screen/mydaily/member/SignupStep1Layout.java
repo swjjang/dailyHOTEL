@@ -30,6 +30,7 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.StringFilter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
@@ -109,7 +110,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
 
         if (Constants.DEBUG == true)
         {
-            List<String> emailList = Arrays.asList(mContext.getResources().getStringArray(R.array.company_email_postfix_array));
+            List<String> emailList = new ArrayList(Arrays.asList(mContext.getResources().getStringArray(R.array.company_email_postfix_array)));
             emailList.add("@dailyhotel.com");
 
             emailCompleteAdapter = new EmailCompleteAdapter(mContext, emailList);

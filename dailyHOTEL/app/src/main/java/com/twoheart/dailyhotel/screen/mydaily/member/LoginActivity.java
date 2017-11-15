@@ -59,6 +59,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager.Screen;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -203,7 +204,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         if (Constants.DEBUG == true)
         {
-            List<String> emailList = Arrays.asList(getResources().getStringArray(R.array.company_email_postfix_array));
+            List<String> emailList = new ArrayList(Arrays.asList(getResources().getStringArray(R.array.company_email_postfix_array)));
             emailList.add("@dailyhotel.com");
             emailList.add("@dh.com");
 
