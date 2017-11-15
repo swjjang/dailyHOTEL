@@ -16,28 +16,32 @@ import com.daily.dailyhotel.entity.StayPayment;
 import com.daily.dailyhotel.entity.StayRefundPolicy;
 import com.daily.dailyhotel.repository.remote.model.CardData;
 import com.daily.dailyhotel.repository.remote.model.StayRefundPolicyData;
-import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
-public class PaymentRemoteImpl implements PaymentInterface
+public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterface
 {
-    private Context mContext;
-
     public PaymentRemoteImpl(@NonNull Context context)
     {
-        mContext = context;
+        super(context);
     }
 
     @Override
@@ -65,7 +69,16 @@ public class PaymentRemoteImpl implements PaymentInterface
             jsonObject = null;
         }
 
-        return DailyMobileAPI.getInstance(mContext).getStayOutboundPayment(index, jsonObject).map(stayOutboundPaymentDataBaseDto ->
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v2/outbound/hotels/{stayIndex}/room-reservation-saleinfos"//
+            : "MTcwJDI1JDk0JDEzNSQxNzMkMTYzJDcyJDEzOCQxNDgkNjYkMTA5JDEzNCQ3MiQxNjYkNjAkMTU2JA==$RjNCNjM2RjZFQjFBNUVEMkI1MFkVCRjA1NjZFNDBFOTI3MEM4RDUzN0NFQkZNDQTQ0RPkNDNTQRDBNUU3RDFCNzU1MUIyOUIxQYkQzQkY3ODRFMEjY4QkZGNTZBMDUxQkQzODg2NLUE5RTECRBN0YyM0EU2OHUVBMkE5QUJCVQjc4RREM2MTM1RUWPI=$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{stayIndex}", Integer.toString(index));
+
+        return mDailyMobileService.getStayOutboundPayment(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
+            , jsonObject).subscribeOn(Schedulers.io()).map(stayOutboundPaymentDataBaseDto ->
         {
             StayOutboundPayment stayOutboundPayment = null;
 
@@ -100,8 +113,11 @@ public class PaymentRemoteImpl implements PaymentInterface
             nights = 1;
         }
 
-        return DailyMobileAPI.getInstance(mContext).getStayPayment(index, stayBookDateTime.getCheckInDateTime("yyyy-MM-dd")//
-            , nights).map(stayPaymentDataBaseDto ->
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/hotel/payment/preview"//
+            : "MTIkNDQkNTUkNTMkMzYkODQkODQkODQkMTQkNjQkOTUkNjckNTAkMTAwJDE2JDg3JA==$QTBENDRBMzY5VNUDLBEQUExNjlBMTc3ODE4QUQU0N0VENDZXBODNE5NTEM1ML0RGNTYREGRTQ0NzMwNkI5NEQwMPzQYLGwQjEzQKg=A=$";
+
+        return mDailyMobileService.getStayPayment(Crypto.getUrlDecoderEx(API), index, stayBookDateTime.getCheckInDateTime("yyyy-MM-dd")//
+            , nights).subscribeOn(Schedulers.io()).map(stayPaymentDataBaseDto ->
         {
             StayPayment stayPayment = null;
 
@@ -153,7 +169,10 @@ public class PaymentRemoteImpl implements PaymentInterface
     @Override
     public Observable<GourmetPayment> getGourmetPayment(int menuIndex)
     {
-        return DailyMobileAPI.getInstance(mContext).getGourmetPayment(menuIndex).map(gourmetPaymentDataBaseDto ->
+        final String API = Constants.UNENCRYPTED_URL ? "api/fnb/sale/ticket/payment/info"//
+            : "MzkkOTYkOTIkMTI5JDEwOSQzNyQxMjgkMTA3JDQ3JDY0JDMxJDEzMyQxNiQwJDk0JDEzOCQ=$KMzM4MzgyRkFFOTFBINUZCRkQxRjA5MjIEyRkFEOODYDwMkMwMKjk1RjkxRjNDMDM1MJTc1QjZCMjJCREFEQzk3NDdGMkUCzMDgVzNDZEGRkE1QThWDNkQM1MzNBRjEyMjQwQUUYH1DNkIQw$";
+
+        return mDailyMobileService.getGourmetPayment(Crypto.getUrlDecoderEx(API), menuIndex).subscribeOn(Schedulers.io()).map(gourmetPaymentDataBaseDto ->
         {
             GourmetPayment gourmetPayment = null;
 
@@ -178,7 +197,10 @@ public class PaymentRemoteImpl implements PaymentInterface
     @Override
     public Observable<List<Card>> getEasyCardList()
     {
-        return DailyMobileAPI.getInstance(mContext).getEasyCardList().map(new Function<BaseListDto<CardData>, List<Card>>()
+        final String API = Constants.UNENCRYPTED_URL ? "api/user/session/billing/card/info"//
+            : "NDIkOCQ1NSQ4NyQ4NyQ4MCQxMzIkOTIkMTMwJDU2JDE2JDQyJDY4JDU5JDEzMCQ3MyQ=$QzdFNkE5NNjgzM0JIFMjZFRjlCQjY4OEQ3NkI5NDdDKRjUMxNDkzNTk1MTBWjkzQkE5NELNDNQ0RFOENGRDAwMGEE5MTE3UARDYFGQjEzMzMxRjVDMDA2MjVEQzBGMTgxREYJGNDMK3MTGI2$";
+
+        return mDailyMobileService.getEasyCardList(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io()).map(new Function<BaseListDto<CardData>, List<Card>>()
         {
             @Override
             public List<Card> apply(@io.reactivex.annotations.NonNull BaseListDto<CardData> cardDataBaseListDto) throws Exception
@@ -210,7 +232,16 @@ public class PaymentRemoteImpl implements PaymentInterface
     @Override
     public Observable<PaymentResult> getStayOutboundPaymentTypeEasy(int index, JSONObject jsonObject)
     {
-        return DailyMobileAPI.getInstance(mContext).getStayOutboundPaymentTypeEasy(index, jsonObject).map(paymentResultDataBaseDto ->
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotels/{hotelId}/room-reservation-payments/oneclick"//
+            : "MTU2JDEyNyQxNTAkMTYyJDQkMjIkMTc0JDE2NSQyNCQxNDMkMTkwJDU4JDQ2JDIyNCQyMyQxMDYk$OUM2KNjQyOEY1QzQxRTUzQQBzVczQTFEQjBGRjU1ODY2NDIQ0QjM0NTc4RjYR0NUYxNTU4MDIyMUMzRUQ2RDYyQzgyRkYzQTBDQ0Y3MzNGIRTA2RUNCRTlEQUNEODMxNzg2QkNSGMkFFMjIwRDMK1NUI1NTg5QOUI5RDExWODkHCzMTgwMDA2JRTY2QzQ5OUE3DOTY1MDE3RTkwREMzNDU2NDYwNTE3NTcXxRQ==$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{hotelId}", Integer.toString(index));
+
+        return mDailyMobileService.getStayOutboundPaymentTypeEasy(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
+            , jsonObject).subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->
         {
             PaymentResult paymentResult = null;
 
@@ -235,7 +266,16 @@ public class PaymentRemoteImpl implements PaymentInterface
     @Override
     public Observable<PaymentResult> getStayOutboundPaymentTypeBonus(int index, JSONObject jsonObject)
     {
-        return DailyMobileAPI.getInstance(mContext).getStayOutboundPaymentTypeBonus(index, jsonObject).map(paymentResultDataBaseDto ->
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotels/{hotelId}/room-reservation-payments/bonus"//
+            : "MTE5JDI0JDg1JDI1JDcyJDE5JDckNTUkNiQxOTckMTE3JDYyJDE0MiQ2MyQxNTIkODgk$OTdFMECFHDNDY2MkQ1NENQGQTNEYPQTg5RTczNjQwRjA4RjZCMjZBRkURzREI4DSOTREQ0M3Mjc4OEUYyNDFERjUX4ODg5OODI1NTlENUY0RDEwQTg2NzVENJzgyM0IwOTAC3NUUzNDM2NjVJGQzkxODkY5Q0E2NzEyOUQ0QzdBRTlEMDU2RUYzMDU0RUYyQTI5OTE2NDQ5FREVFOTk0QTM0QzQ2MjQxNTA0Ng==$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{hotelId}", Integer.toString(index));
+
+        return mDailyMobileService.getStayOutboundPaymentTypeBonus(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
+            , jsonObject).subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->
         {
             PaymentResult paymentResult = null;
 
@@ -260,7 +300,16 @@ public class PaymentRemoteImpl implements PaymentInterface
     @Override
     public Observable<String> getStayOutboundHasDuplicatePayment(int index, JSONObject jsonObject)
     {
-        return DailyMobileAPI.getInstance(mContext).getStayOutboundHasDuplicatePayment(index, jsonObject).map(new Function<BaseDto<String>, String>()
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v2/outbound/hotels/{stayIndex}/valid-reservations"//
+            : "ODckMTE0JDc0JDEyNCQ0NCQ5NSQxMjckMTEzJDExMCQ2NiQzNyQzMCQxMzIkNjckMyQ2MCQ=$MDcR4OTk3N0Q3ODg0N0YxNzdDMzIxMEUMyQzFGNIzQxQzk1VMkJDRDk4NTU5JNjE3MUMyXOBTQyMDg3RDLU3OEYzQ0RCODIM3QTZGWMUMxMENFOEY2RDJg2NK0VFQHjU5MzBBRRSZDhERDA4QTYyQUE1RkQzNDk5N0RDNDE4NTk4MDFCM0FDQjcxQTg=$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{stayIndex}", Integer.toString(index));
+
+        return mDailyMobileService.getStayOutboundHasDuplicatePayment(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
+            , jsonObject).subscribeOn(Schedulers.io()).map(new Function<BaseDto<String>, String>()
         {
             @Override
             public String apply(@io.reactivex.annotations.NonNull BaseDto<String> baseDto) throws Exception
@@ -289,7 +338,10 @@ public class PaymentRemoteImpl implements PaymentInterface
     @Override
     public Observable<PaymentResult> getStayPaymentTypeEasy(JSONObject jsonObject)
     {
-        return DailyMobileAPI.getInstance(mContext).getStayPaymentTypeEasy(jsonObject).map(paymentResultDataBaseDto ->
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/booking/hotel/oneclick"//
+            : "NDQkNzMkNDUkNjAkMzEkMzkkNyQxNSQ0OSQ4OSQxJDM0JDIyJDM2JDc5JDgxJA==$OADFGREUJ1NkUwMjXExMTYZyQjk0MzMzQTgXPO1Q0ZDNTBBGM0VBZQSM0RDRUQwMDAwNDWk0QUEzNUIO2JRjQ1YMjM3M0VEXQ0I3RA==$";
+
+        return mDailyMobileService.getPaymentTypeEasy(Crypto.getUrlDecoderEx(API), jsonObject).subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->
         {
             PaymentResult paymentResult = null;
 
@@ -314,7 +366,10 @@ public class PaymentRemoteImpl implements PaymentInterface
     @Override
     public Observable<PaymentResult> getStayPaymentTypeBonus(JSONObject jsonObject)
     {
-        return DailyMobileAPI.getInstance(mContext).getStayPaymentTypeBonus(jsonObject).map(paymentResultDataBaseDto ->
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/booking/hotel/daily/only"//
+            : "MzgkNDUkMyQyOSQ2MiQyNCQxNiQ0OSQ0OSQxNCQxMSQ3NyQ2MSQyMCQ0MSQxMyQ=$RTAU0NEFCRjFRQDQQzgAzIOTE0NjAJxMDAxSMEU3NTRU4RUIM0RkE0KXDNjRDMThEEOTQxNzPdBN0VGRkJVCNTgyMzMyN0ZGQzYzOA==$";
+
+        return mDailyMobileService.getPaymentTypeBonus(Crypto.getUrlDecoderEx(API), jsonObject).subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->
         {
             PaymentResult paymentResult = null;
 
@@ -339,78 +394,92 @@ public class PaymentRemoteImpl implements PaymentInterface
     @Override
     public Observable<StayRefundPolicy> getStayRefundPolicy(StayBookDateTime stayBookDateTime, int stayIndex, int roomIndex)
     {
-        return DailyMobileAPI.getInstance(mContext).getStayRefundPolicy(stayIndex, roomIndex, stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)).map(new Function<BaseDto<StayRefundPolicyData>, StayRefundPolicy>()
-        {
-            @Override
-            public StayRefundPolicy apply(@io.reactivex.annotations.NonNull BaseDto<StayRefundPolicyData> stayRefundPolicyDataBaseDto) throws Exception
-            {
-                StayRefundPolicy stayRefundPolicy;
+        final String API = Constants.UNENCRYPTED_URL ? "api/v2/payment/policy_refund"//
+            : "NjYkMzYkMzIkNTgkMjEkMjQkNDEkODgkNTQkNTgkNzckNDEkNTAkMzUkNzUkMzEk$RjFBOTM0MjJFODlCNkJFRTTlVCRTIxQBTE3RYMUZCCOGCUJDQTYwQNTdEMPkE4JRDUyRNkYyOTU1ZNUYYxNMjM2RTlBMDQxNOTI0Qg==$";
 
-                if (stayRefundPolicyDataBaseDto != null)
+        return mDailyMobileService.getStayRefundPolicy(Crypto.getUrlDecoderEx(API), stayIndex//
+            , roomIndex, stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT) //
+            , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)).subscribeOn(Schedulers.io()) //
+            .map(new Function<BaseDto<StayRefundPolicyData>, StayRefundPolicy>()
+            {
+                @Override
+                public StayRefundPolicy apply(@io.reactivex.annotations.NonNull BaseDto<StayRefundPolicyData> stayRefundPolicyDataBaseDto) throws Exception
                 {
-                    if (stayRefundPolicyDataBaseDto.msgCode == 100 && stayRefundPolicyDataBaseDto.data != null)
+                    StayRefundPolicy stayRefundPolicy;
+
+                    if (stayRefundPolicyDataBaseDto != null)
                     {
-                        stayRefundPolicy = stayRefundPolicyDataBaseDto.data.getStayRefundPolicy();
+                        if (stayRefundPolicyDataBaseDto.msgCode == 100 && stayRefundPolicyDataBaseDto.data != null)
+                        {
+                            stayRefundPolicy = stayRefundPolicyDataBaseDto.data.getStayRefundPolicy();
+                        } else
+                        {
+                            throw new BaseException(stayRefundPolicyDataBaseDto.msgCode, stayRefundPolicyDataBaseDto.msg);
+                        }
                     } else
                     {
-                        throw new BaseException(stayRefundPolicyDataBaseDto.msgCode, stayRefundPolicyDataBaseDto.msg);
+                        throw new BaseException(-1, null);
                     }
-                } else
-                {
-                    throw new BaseException(-1, null);
-                }
 
-                return stayRefundPolicy;
-            }
-        }).observeOn(AndroidSchedulers.mainThread());
+                    return stayRefundPolicy;
+                }
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
     public Observable<String> getStayHasDuplicatePayment(StayBookDateTime stayBookDateTime)
     {
-        return DailyMobileAPI.getInstance(mContext).getStayHasDuplicatePayment(stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"), stayBookDateTime.getNights()).map(new Function<BaseDto<String>, String>()
-        {
-            @Override
-            public String apply(@io.reactivex.annotations.NonNull BaseDto<String> baseDto) throws Exception
-            {
-                String message;
+        final String API = Constants.UNENCRYPTED_URL ? "api/v5/reservations/check/sameday"//
+            : "NTUkOTQkMTckMzAkNzIkMTI3JDgkOTUkMjckMTA2JDEyMyQ5OSQ3JDEzOCQ5MSQxMTkk$MzRBOTgR0YMkMwMEZFMCDNCNjRGRGUJDRXjdERTMwMkM4Njc2Qzc2NUFBMDQK1RTcwMkI0QkI1MUjA2OEY0M0MyNzFGAN0FDNjJJBMOGERDNDUgwMzE0MUJQBOEM4RTPE4NEIxQ0MM1NETI3$";
 
-                if (baseDto != null)
+        return mDailyMobileService.getStayHasDuplicatePayment(Crypto.getUrlDecoderEx(API) //
+            , stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"), stayBookDateTime.getNights())//
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<String>, String>()
+            {
+                @Override
+                public String apply(@io.reactivex.annotations.NonNull BaseDto<String> baseDto) throws Exception
                 {
-                    if (baseDto.msgCode == 100)
+                    String message;
+
+                    if (baseDto != null)
                     {
-                        message = "";
+                        if (baseDto.msgCode == 100)
+                        {
+                            message = "";
+                        } else
+                        {
+                            message = baseDto.msg;
+                        }
                     } else
                     {
-                        message = baseDto.msg;
+                        throw new BaseException(-1, null);
                     }
-                } else
-                {
-                    throw new BaseException(-1, null);
-                }
 
-                return message;
-            }
-        }).observeOn(AndroidSchedulers.mainThread());
+                    return message;
+                }
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 
     /**
-     * @param arrivalDateTime ISO-8601  "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
-     * @param menuIndex
-     * @param menuCount
-     * @param usedBonus
-     * @param bonus
-     * @param usedCoupon
-     * @param couponCode
-     * @param guest
-     * @param totalPrice
-     * @param billingKey
+     * @param jsonObject arrivalDateTime ISO-8601  "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
+     *                   menuIndex
+     *                   menuCount
+     *                   usedBonus
+     *                   bonus
+     *                   usedCoupon
+     *                   couponCode
+     *                   guest
+     *                   totalPrice
+     *                   billingKey
      * @return
      */
     @Override
     public Observable<PaymentResult> getGourmetPaymentTypeEasy(JSONObject jsonObject)
     {
-        return DailyMobileAPI.getInstance(mContext).getGourmetPaymentTypeEasy(jsonObject).map(paymentResultDataBaseDto ->
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/booking/gourmet/oneclick"//
+            : "MjMkODIkMzYkMTkkODkkODckMTMkNTQkMzYkMTckNTckNSQ3MiQ0OSQ3NyQzNSQ=$NzUxOUURCRjAzMIjdBKRDQQ0ODYB0NzZEODDhBMW0MX3MDYxMzCAzMEUwNDQQY5QzRBQTY0QTURyQzEVGQUMwM0NENzM2MY0IXzNMw==$";
+
+        return mDailyMobileService.getPaymentTypeEasy(Crypto.getUrlDecoderEx(API), jsonObject).subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->
         {
             PaymentResult paymentResult = null;
 
@@ -433,21 +502,24 @@ public class PaymentRemoteImpl implements PaymentInterface
     }
 
     /**
-     * @param arrivalDateTime ISO-8601  "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
-     * @param menuIndex
-     * @param menuCount
-     * @param usedBonus
-     * @param bonus
-     * @param usedCoupon
-     * @param couponCode
-     * @param guest
-     * @param totalPrice
+     * @param jsonObject arrivalDateTime ISO-8601  "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
+     *                   menuIndex
+     *                   menuCount
+     *                   usedBonus
+     *                   bonus
+     *                   usedCoupon
+     *                   couponCode
+     *                   guest
+     *                   totalPrice
      * @return
      */
     @Override
     public Observable<PaymentResult> getGourmetPaymentTypeBonus(JSONObject jsonObject)
     {
-        return DailyMobileAPI.getInstance(mContext).getGourmetPaymentTypeBonus(jsonObject).map(paymentResultDataBaseDto ->
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/booking/gourmet/daily/only"//
+            : "MTI0JDMkNDMkODUkNDMkNjYkMzQkOTAkNjIkMTIkMTckOTgkOTckMTIzJDE0MSQzNyQ=$Q0IY4NjM0OEMBwMTITxRjlCMzM4NzA3QTJBONNUIxRUFEQTFFQzN0I1NUEwRDhGRTIM1ODET2NURENzIwQjhDMDdCM0UJ3ZQTMX1OMzNENUIxOEMxQTU3MUU4RERIBMkQyMDA3MkM4BNEQZ1$";
+
+        return mDailyMobileService.getPaymentTypeBonus(Crypto.getUrlDecoderEx(API), jsonObject).subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->
         {
             PaymentResult paymentResult = null;
 

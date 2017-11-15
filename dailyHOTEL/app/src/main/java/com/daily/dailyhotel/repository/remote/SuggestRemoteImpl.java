@@ -7,11 +7,14 @@ import android.support.v4.util.Pair;
 import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.SuggestInterface;
 import com.daily.dailyhotel.entity.Suggest;
-import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.model.GourmetKeyword;
 import com.twoheart.dailyhotel.network.model.StayKeyword;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchLayout;
+import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Crypto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,20 +22,25 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
-public class SuggestRemoteImpl implements SuggestInterface
+public class SuggestRemoteImpl extends BaseRemoteImpl implements SuggestInterface
 {
-    private Context mContext;
-
     public SuggestRemoteImpl(@NonNull Context context)
     {
-        mContext = context;
+        super(context);
     }
 
     @Override
     public Observable<List<Suggest>> getSuggestsByStayOutbound(String keyword)
     {
-        return DailyMobileAPI.getInstance(mContext).getSuggestsByStayOutbound(keyword).map((suggestsDataBaseDto) ->
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/suggests"//
+            : "MTEkNDQkMzckNDQkMyQxMiQzOCQ0NCQ3JDQwJDEzJDUyJDIzJDQwJDQ4JDIxJA==$Q0ZUCMzDg1RjYULXwOTcyMMjTI4RkI3NUFEOUNGRjOgSN3BMkPZSFNzXTAQ=$";
+
+        return mDailyMobileService.getSuggestsByStayOutbound(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API), keyword)//
+            .subscribeOn(Schedulers.io()).map((suggestsDataBaseDto) ->
         {
             List<Suggest> list = null;
 
@@ -57,7 +65,10 @@ public class SuggestRemoteImpl implements SuggestInterface
     @Override
     public Observable<Pair<String, ArrayList<StayKeyword>>> getSuggestsByStayInbound(String checkInDate, int stays, final String keyword)
     {
-        return DailyMobileAPI.getInstance(mContext).getSuggestsByStayInbound(checkInDate, stays, keyword) //
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/hotels/sales/search/suggest"//
+            : "NDYkNDUkMjIkMTkkMTE3JDEzMCQxMiQ4MiQxMTMkMTA5JDEwOSQ0OSQ3MyQ4MiQyMSQzMSQ=$Nzc1NkI5NTdDHNzQzNUYLIzRkLE5NkUD0NjM4RjVCRTZCMzA3MLLTFNBRUM0RjE0MkVERUQyMDNSCOENENjYGzNM0VGREZDMjdFMkU4RUJEMzI0ODkJAxNzZCFNUU0NTUYxMEVDMDgwQDTlE$";
+
+        return mDailyMobileService.getSuggestsByStayInbound(Crypto.getUrlDecoderEx(URL), checkInDate, stays, keyword).subscribeOn(Schedulers.io()) //
             .map(new Function<BaseListDto<StayKeyword>, Pair<String, ArrayList<StayKeyword>>>()
             {
                 @Override
@@ -95,7 +106,10 @@ public class SuggestRemoteImpl implements SuggestInterface
     @Override
     public Observable<Pair<String, ArrayList<GourmetKeyword>>> getSuggestsByGourmet(String visitDate, final String keyword)
     {
-        return DailyMobileAPI.getInstance(mContext).getSuggestsByGourmet(visitDate, keyword) //
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/gourmet/sales/search/suggest"//
+            : "NjMkNzkkMTE3JDQwJDQxJDUzJDk0JDc0JDU2JDE5JDQ0JDYzJDExJDM4JDQ3JDEyJA==$OUYzQkNBN0ZOVFMDc2QjAIzMEU4OTBBODhENkI3OQTc4GNMXKEZBNDQ5MUIA1MFzIwOGTZERTZWDRUIxMTTA3QkQyQUTZGOUYzRjhBROTJGNTc4OTNFOTUzNDQwN0M3OUQVzQkFFMTlBNUM2$";
+
+        return mDailyMobileService.getSuggestsByGourmet(Crypto.getUrlDecoderEx(URL), visitDate, keyword).subscribeOn(Schedulers.io()) //
             .map(new Function<BaseListDto<GourmetKeyword>, Pair<String, ArrayList<GourmetKeyword>>>()
             {
                 @Override

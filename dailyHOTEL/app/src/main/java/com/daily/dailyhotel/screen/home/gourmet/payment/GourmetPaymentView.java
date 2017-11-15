@@ -548,7 +548,7 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
 
                 // 투숙자명, 연락처, 이메일
                 // 해당 인자들은 투숙자 정보가 달라서 체크한 경우에만 해당 값이 내려갑니다
-                if (getViewDataBinding().guestInformationView.getVisibility() == View.VISIBLE)
+                if (getViewDataBinding().guestCheckBox.isChecked() == true)
                 {
                     getEventListener().onPaymentClick(getViewDataBinding().guestInformationView.getInformationTypeValue(DailyBookingGuestInformationsView.InformationType.NAME)//
                         , getViewDataBinding().guestInformationView.getInformationTypeValue(DailyBookingGuestInformationsView.InformationType.MOBILE)//
