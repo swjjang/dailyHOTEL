@@ -39,8 +39,8 @@ public class CalendarImpl extends BaseRemoteImpl implements CalendarInterface
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{restaurantIdx}", Integer.toString(gourmetIndex));
 
-        return mDailyMobileService.getGourmetUnavailableDates(Crypto.getUrlDecoderEx(URL, urlParams), dateRange, reverse).subscribeOn(Schedulers.io())
-            .map(new Function<BaseListDto<String>, List<Integer>>()
+        return mDailyMobileService.getGourmetUnavailableDates(Crypto.getUrlDecoderEx(URL, urlParams), dateRange, reverse) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseListDto<String>, List<Integer>>()
             {
                 @Override
                 public List<Integer> apply(@NonNull BaseListDto<String> stringBaseListDto) throws Exception
@@ -78,8 +78,8 @@ public class CalendarImpl extends BaseRemoteImpl implements CalendarInterface
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{hotelIdx}", Integer.toString(placeIndex));
 
-        return mDailyMobileService.getStayUnavailableCheckInDates(Crypto.getUrlDecoderEx(URL, urlParams), dateRange, reverse).subscribeOn(Schedulers.io()) //
-            .map(new Function<BaseListDto<String>, List<String>>()
+        return mDailyMobileService.getStayUnavailableCheckInDates(Crypto.getUrlDecoderEx(URL, urlParams), dateRange, reverse) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseListDto<String>, List<String>>()
             {
                 @Override
                 public List<String> apply(@NonNull BaseListDto<String> stringBaseListDto) throws Exception
@@ -119,8 +119,8 @@ public class CalendarImpl extends BaseRemoteImpl implements CalendarInterface
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{hotelIdx}", Integer.toString(placeIndex));
 
-        return mDailyMobileService.getStayAvailableCheckOutDates(Crypto.getUrlDecoderEx(URL, urlParams), dateRange, checkInDate).subscribeOn(Schedulers.io()) //
-            .map(new Function<BaseListDto<String>, List<String>>()
+        return mDailyMobileService.getStayAvailableCheckOutDates(Crypto.getUrlDecoderEx(URL, urlParams), dateRange, checkInDate) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseListDto<String>, List<String>>()
             {
                 @Override
                 public List<String> apply(@NonNull BaseListDto<String> stringBaseListDto) throws Exception

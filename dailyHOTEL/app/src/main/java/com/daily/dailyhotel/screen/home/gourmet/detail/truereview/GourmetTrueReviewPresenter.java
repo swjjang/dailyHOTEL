@@ -224,7 +224,8 @@ public class GourmetTrueReviewPresenter extends BaseExceptionPresenter<GourmetTr
                 }));
         } else
         {
-            addCompositeDisposable(mGourmetRemoteImpl.getTrueReviews(mGourmetIndex, mLoadingPage, TRUE_REVIEW_MAX_COUNT).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<TrueReviews>()
+            addCompositeDisposable(mGourmetRemoteImpl.getTrueReviews(mGourmetIndex, mLoadingPage, TRUE_REVIEW_MAX_COUNT) //
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<TrueReviews>()
             {
                 @Override
                 public void accept(TrueReviews trueReviews) throws Exception

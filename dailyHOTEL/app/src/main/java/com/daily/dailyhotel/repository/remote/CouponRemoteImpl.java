@@ -36,33 +36,33 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
 
         return mDailyMobileService.getCouponHistoryList(Crypto.getUrlDecoderEx(URL)) //
             .subscribeOn(Schedulers.io()).map(new Function<BaseDto<CouponsData>, ArrayList<Coupon>>()
-        {
-            @Override
-            public ArrayList<Coupon> apply(@NonNull BaseDto<CouponsData> couponsDataBaseDto) throws Exception
             {
-                ArrayList<Coupon> couponHistoryList = new ArrayList<>();
-
-                if (couponsDataBaseDto != null)
+                @Override
+                public ArrayList<Coupon> apply(@NonNull BaseDto<CouponsData> couponsDataBaseDto) throws Exception
                 {
-                    if (couponsDataBaseDto.msgCode == 100 && couponsDataBaseDto.data != null)
-                    {
-                        CouponsData couponsData = couponsDataBaseDto.data;
+                    ArrayList<Coupon> couponHistoryList = new ArrayList<>();
 
-                        if (couponsData != null)
+                    if (couponsDataBaseDto != null)
+                    {
+                        if (couponsDataBaseDto.msgCode == 100 && couponsDataBaseDto.data != null)
                         {
-                            couponHistoryList = couponsData.getCouponList();
+                            CouponsData couponsData = couponsDataBaseDto.data;
+
+                            if (couponsData != null)
+                            {
+                                couponHistoryList = couponsData.getCouponList();
+                            }
+                        } else
+                        {
+                            throw new BaseException(couponsDataBaseDto.msgCode, couponsDataBaseDto.msg);
                         }
                     } else
                     {
-                        throw new BaseException(couponsDataBaseDto.msgCode, couponsDataBaseDto.msg);
+                        throw new BaseException(-1, null);
                     }
-                } else
-                {
-                    throw new BaseException(-1, null);
-                }
 
-                return couponHistoryList;
-            }
-        }).subscribeOn(Schedulers.io());
+                    return couponHistoryList;
+                }
+            }).subscribeOn(Schedulers.io());
     }
 }

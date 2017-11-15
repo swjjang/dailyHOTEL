@@ -149,8 +149,8 @@ public class CouponHistoryPresenter extends BaseExceptionPresenter<CouponHistory
         setRefresh(false);
         screenLock(showProgress);
 
-        addCompositeDisposable(mCouponRemoteImpl.getCouponHistoryList().observeOn(AndroidSchedulers.mainThread()) //
-            .subscribe(new Consumer<ArrayList<Coupon>>()
+        addCompositeDisposable(mCouponRemoteImpl.getCouponHistoryList() //
+            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<Coupon>>()
             {
                 @Override
                 public void accept(ArrayList<Coupon> coupons) throws Exception

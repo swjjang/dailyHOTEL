@@ -398,7 +398,8 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
 
         screenLock(true);
 
-        addCompositeDisposable(mCommonRemoteImpl.updateNotification(true).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Notification>()
+        addCompositeDisposable(mCommonRemoteImpl.updateNotification(true) //
+            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Notification>()
         {
             @Override
             public void accept(Notification notification) throws Exception

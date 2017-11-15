@@ -41,25 +41,25 @@ public class SuggestRemoteImpl extends BaseRemoteImpl implements SuggestInterfac
 
         return mDailyMobileService.getSuggestsByStayOutbound(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API), keyword)//
             .subscribeOn(Schedulers.io()).map((suggestsDataBaseDto) ->
-        {
-            List<Suggest> list = null;
-
-            if (suggestsDataBaseDto != null)
             {
-                if (suggestsDataBaseDto.msgCode == 100 && suggestsDataBaseDto.data != null)
+                List<Suggest> list = null;
+
+                if (suggestsDataBaseDto != null)
                 {
-                    list = suggestsDataBaseDto.data.getSuggestList(mContext);
+                    if (suggestsDataBaseDto.msgCode == 100 && suggestsDataBaseDto.data != null)
+                    {
+                        list = suggestsDataBaseDto.data.getSuggestList(mContext);
+                    } else
+                    {
+                        throw new BaseException(suggestsDataBaseDto.msgCode, suggestsDataBaseDto.msg);
+                    }
                 } else
                 {
-                    throw new BaseException(suggestsDataBaseDto.msgCode, suggestsDataBaseDto.msg);
+                    throw new BaseException(-1, null);
                 }
-            } else
-            {
-                throw new BaseException(-1, null);
-            }
 
-            return list;
-        }).observeOn(AndroidSchedulers.mainThread());
+                return list;
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -68,8 +68,8 @@ public class SuggestRemoteImpl extends BaseRemoteImpl implements SuggestInterfac
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/hotels/sales/search/suggest"//
             : "NDYkNDUkMjIkMTkkMTE3JDEzMCQxMiQ4MiQxMTMkMTA5JDEwOSQ0OSQ3MyQ4MiQyMSQzMSQ=$Nzc1NkI5NTdDHNzQzNUYLIzRkLE5NkUD0NjM4RjVCRTZCMzA3MLLTFNBRUM0RjE0MkVERUQyMDNSCOENENjYGzNM0VGREZDMjdFMkU4RUJEMzI0ODkJAxNzZCFNUU0NTUYxMEVDMDgwQDTlE$";
 
-        return mDailyMobileService.getSuggestsByStayInbound(Crypto.getUrlDecoderEx(URL), checkInDate, stays, keyword).subscribeOn(Schedulers.io()) //
-            .map(new Function<BaseListDto<StayKeyword>, Pair<String, ArrayList<StayKeyword>>>()
+        return mDailyMobileService.getSuggestsByStayInbound(Crypto.getUrlDecoderEx(URL), checkInDate, stays, keyword) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseListDto<StayKeyword>, Pair<String, ArrayList<StayKeyword>>>()
             {
                 @Override
                 public Pair<String, ArrayList<StayKeyword>> apply(@io.reactivex.annotations.NonNull BaseListDto<StayKeyword> stayKeywordBaseListDto) throws Exception
@@ -109,8 +109,8 @@ public class SuggestRemoteImpl extends BaseRemoteImpl implements SuggestInterfac
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/gourmet/sales/search/suggest"//
             : "NjMkNzkkMTE3JDQwJDQxJDUzJDk0JDc0JDU2JDE5JDQ0JDYzJDExJDM4JDQ3JDEyJA==$OUYzQkNBN0ZOVFMDc2QjAIzMEU4OTBBODhENkI3OQTc4GNMXKEZBNDQ5MUIA1MFzIwOGTZERTZWDRUIxMTTA3QkQyQUTZGOUYzRjhBROTJGNTc4OTNFOTUzNDQwN0M3OUQVzQkFFMTlBNUM2$";
 
-        return mDailyMobileService.getSuggestsByGourmet(Crypto.getUrlDecoderEx(URL), visitDate, keyword).subscribeOn(Schedulers.io()) //
-            .map(new Function<BaseListDto<GourmetKeyword>, Pair<String, ArrayList<GourmetKeyword>>>()
+        return mDailyMobileService.getSuggestsByGourmet(Crypto.getUrlDecoderEx(URL), visitDate, keyword) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseListDto<GourmetKeyword>, Pair<String, ArrayList<GourmetKeyword>>>()
             {
                 @Override
                 public Pair<String, ArrayList<GourmetKeyword>> apply(@io.reactivex.annotations.NonNull BaseListDto<GourmetKeyword> gourmetKeywordBaseListDto) throws Exception

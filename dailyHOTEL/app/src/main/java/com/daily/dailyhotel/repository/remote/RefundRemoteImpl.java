@@ -46,29 +46,29 @@ public class RefundRemoteImpl extends BaseRemoteImpl implements RefundInterface
         return mDailyMobileService.getStayOutboundRefundDetail( //
             Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)) //
             .subscribeOn(Schedulers.io()).map(new Function<BaseDto<StayOutboundRefundDetailData>, StayOutboundRefundDetail>()
-        {
-            @Override
-            public StayOutboundRefundDetail apply(@io.reactivex.annotations.NonNull BaseDto<StayOutboundRefundDetailData> stayOutboundRefundDetailDataBaseDto) throws Exception
             {
-                StayOutboundRefundDetail stayOutboundRefundDetail;
-
-                if (stayOutboundRefundDetailDataBaseDto != null)
+                @Override
+                public StayOutboundRefundDetail apply(@io.reactivex.annotations.NonNull BaseDto<StayOutboundRefundDetailData> stayOutboundRefundDetailDataBaseDto) throws Exception
                 {
-                    if (stayOutboundRefundDetailDataBaseDto.msgCode == 100 && stayOutboundRefundDetailDataBaseDto.data != null)
+                    StayOutboundRefundDetail stayOutboundRefundDetail;
+
+                    if (stayOutboundRefundDetailDataBaseDto != null)
                     {
-                        stayOutboundRefundDetail = stayOutboundRefundDetailDataBaseDto.data.getStayOutboundBookingDetail();
+                        if (stayOutboundRefundDetailDataBaseDto.msgCode == 100 && stayOutboundRefundDetailDataBaseDto.data != null)
+                        {
+                            stayOutboundRefundDetail = stayOutboundRefundDetailDataBaseDto.data.getStayOutboundBookingDetail();
+                        } else
+                        {
+                            throw new BaseException(stayOutboundRefundDetailDataBaseDto.msgCode, stayOutboundRefundDetailDataBaseDto.msg);
+                        }
                     } else
                     {
-                        throw new BaseException(stayOutboundRefundDetailDataBaseDto.msgCode, stayOutboundRefundDetailDataBaseDto.msg);
+                        throw new BaseException(-1, null);
                     }
-                } else
-                {
-                    throw new BaseException(-1, null);
-                }
 
-                return stayOutboundRefundDetail;
-            }
-        }).observeOn(AndroidSchedulers.mainThread());
+                    return stayOutboundRefundDetail;
+                }
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -85,29 +85,29 @@ public class RefundRemoteImpl extends BaseRemoteImpl implements RefundInterface
         return mDailyMobileService.getStayOutboundRefund( //
             Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams), refundType, cancelReasonType, reasons) //
             .subscribeOn(Schedulers.io()).map(new Function<BaseDto<StayOutboundRefundData>, String>()
-        {
-            @Override
-            public String apply(@io.reactivex.annotations.NonNull BaseDto<StayOutboundRefundData> stayOutboundRefundDataBaseDto) throws Exception
             {
-                String message;
-
-                if (stayOutboundRefundDataBaseDto != null)
+                @Override
+                public String apply(@io.reactivex.annotations.NonNull BaseDto<StayOutboundRefundData> stayOutboundRefundDataBaseDto) throws Exception
                 {
-                    if (stayOutboundRefundDataBaseDto.msgCode == 100 && stayOutboundRefundDataBaseDto.data != null)
+                    String message;
+
+                    if (stayOutboundRefundDataBaseDto != null)
                     {
-                        message = stayOutboundRefundDataBaseDto.data.message;
+                        if (stayOutboundRefundDataBaseDto.msgCode == 100 && stayOutboundRefundDataBaseDto.data != null)
+                        {
+                            message = stayOutboundRefundDataBaseDto.data.message;
+                        } else
+                        {
+                            throw new BaseException(stayOutboundRefundDataBaseDto.msgCode, stayOutboundRefundDataBaseDto.msg);
+                        }
                     } else
                     {
-                        throw new BaseException(stayOutboundRefundDataBaseDto.msgCode, stayOutboundRefundDataBaseDto.msg);
+                        throw new BaseException(-1, null);
                     }
-                } else
-                {
-                    throw new BaseException(-1, null);
-                }
 
-                return message;
-            }
-        }).observeOn(AndroidSchedulers.mainThread());
+                    return message;
+                }
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -131,29 +131,29 @@ public class RefundRemoteImpl extends BaseRemoteImpl implements RefundInterface
 
         return mDailyMobileService.getRefund(Crypto.getUrlDecoderEx(API), jsonObject) //
             .subscribeOn(Schedulers.io()).map(new Function<BaseDto<Object>, String>()
-        {
-            @Override
-            public String apply(@io.reactivex.annotations.NonNull BaseDto<Object> baseDto) throws Exception
             {
-                String message;
-
-                if (baseDto != null)
+                @Override
+                public String apply(@io.reactivex.annotations.NonNull BaseDto<Object> baseDto) throws Exception
                 {
-                    if (baseDto.msgCode == 100)
+                    String message;
+
+                    if (baseDto != null)
                     {
-                        message = baseDto.msg;
+                        if (baseDto.msgCode == 100)
+                        {
+                            message = baseDto.msg;
+                        } else
+                        {
+                            throw new BaseException(baseDto.msgCode, baseDto.msg);
+                        }
                     } else
                     {
-                        throw new BaseException(baseDto.msgCode, baseDto.msg);
+                        throw new BaseException(-1, null);
                     }
-                } else
-                {
-                    throw new BaseException(-1, null);
-                }
 
-                return message;
-            }
-        }).observeOn(AndroidSchedulers.mainThread());
+                    return message;
+                }
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -181,28 +181,28 @@ public class RefundRemoteImpl extends BaseRemoteImpl implements RefundInterface
 
         return mDailyMobileService.getRefund(Crypto.getUrlDecoderEx(API), jsonObject) //
             .subscribeOn(Schedulers.io()).map(new Function<BaseDto<Object>, String>()
-        {
-            @Override
-            public String apply(@io.reactivex.annotations.NonNull BaseDto<Object> baseDto) throws Exception
             {
-                String message;
-
-                if (baseDto != null)
+                @Override
+                public String apply(@io.reactivex.annotations.NonNull BaseDto<Object> baseDto) throws Exception
                 {
-                    if (baseDto.msgCode == 100)
+                    String message;
+
+                    if (baseDto != null)
                     {
-                        message = baseDto.msg;
+                        if (baseDto.msgCode == 100)
+                        {
+                            message = baseDto.msg;
+                        } else
+                        {
+                            throw new BaseException(baseDto.msgCode, baseDto.msg);
+                        }
                     } else
                     {
-                        throw new BaseException(baseDto.msgCode, baseDto.msg);
+                        throw new BaseException(-1, null);
                     }
-                } else
-                {
-                    throw new BaseException(-1, null);
-                }
 
-                return message;
-            }
-        }).observeOn(AndroidSchedulers.mainThread());
+                    return message;
+                }
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 }
