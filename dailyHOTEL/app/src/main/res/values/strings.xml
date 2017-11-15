@@ -33,6 +33,8 @@
     <string name="label_doshare">공유하기</string>
     <string name="label_share_kakao">카카오톡으로 보내기</string>
     <string name="label_share_sms">문자메시지로 보내기</string>
+    <string name="label_copy_link">링크 복사하기</string>
+    <string name="label_more_share">더보기</string>
     <string name="label_question">문의</string>
     <string name="label_sort">정렬</string>
     <string name="label_daily_kakaotalk">데일리 카카오톡 문의</string>
