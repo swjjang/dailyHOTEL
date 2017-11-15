@@ -35,8 +35,7 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseDial
         constructorInitialize(activity);
     }
 
-    protected abstract
-    @NonNull
+    protected abstract @NonNull
     T2 createInstanceViewInterface();
 
     public abstract void constructorInitialize(T1 activity);
@@ -73,8 +72,7 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseDial
         }
     }
 
-    public
-    @NonNull
+    public @NonNull
     T2 getViewInterface()
     {
         if (mOnViewInterface == null)
