@@ -1,7 +1,11 @@
 package com.daily.dailyhotel.entity;
 
 
+import com.daily.base.util.ExLog;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +17,6 @@ import java.util.Map;
 public class GourmetCart
 {
     public int visitTime; // 방문 시간
-
     public int gourmetIndex;
     public String gourmetName;
     public String visitDateTime; // ISO-8601, 방문 날짜
@@ -23,6 +26,44 @@ public class GourmetCart
     public Map<Integer, GourmetCartMenu> getMenus()
     {
         return mOrderMenuMap;
+    }
+
+    public GourmetCart()
+    {
+
+    }
+
+    public GourmetCart(JSONObject jsonObject)
+    {
+        if (jsonObject == null)
+        {
+            return;
+        }
+
+        try
+        {
+            visitTime = jsonObject.getInt("visitTime");
+            gourmetIndex = jsonObject.getInt("gourmetIndex");
+            gourmetName = jsonObject.getString("gourmetName");
+            visitDateTime = jsonObject.getString("visitDateTime");
+
+            JSONArray jsonArray = jsonObject.getJSONArray("menus");
+
+            if (jsonArray != null)
+            {
+                int length = jsonArray.length();
+
+                for (int i = 0; i < length; i++)
+                {
+                    GourmetCartMenu gourmetCartMenu = new GourmetCartMenu(jsonArray.getJSONObject(i));
+
+                    mOrderMenuMap.put(gourmetCartMenu.index, gourmetCartMenu);
+                }
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     public void plus(GourmetCartMenu gourmetCartMenu)
@@ -165,5 +206,35 @@ public class GourmetCart
         gourmetCartMenu.persons = gourmetMenu.persons;
 
         return gourmetCartMenu;
+    }
+
+    public JSONObject toJSONObject()
+    {
+        JSONObject jsonObject = new JSONObject();
+
+        try
+        {
+            jsonObject.put("visitTime", visitTime);
+            jsonObject.put("gourmetIndex", gourmetIndex);
+            jsonObject.put("gourmetName", gourmetName);
+            jsonObject.put("visitDateTime", visitDateTime);
+
+            int size = mOrderMenuMap.size();
+
+            JSONArray jsonArray = new JSONArray();
+
+            for (GourmetCartMenu gourmetCartMenu : mOrderMenuMap.values())
+            {
+                jsonArray.put(gourmetCartMenu.toJSONObject());
+            }
+
+            jsonObject.put("menus", jsonArray);
+
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
+        return jsonObject;
     }
 }

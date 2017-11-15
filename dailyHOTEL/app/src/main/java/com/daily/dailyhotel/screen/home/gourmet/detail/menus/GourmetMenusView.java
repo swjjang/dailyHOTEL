@@ -53,7 +53,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
 
         void onGuideClick();
 
-        void onReservationClick(int index);
+        void onBookingClick();
 
         void onScrolled(int position, boolean real);
 
@@ -98,6 +98,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         viewDataBinding.operationTimeTextView.setOnClickListener(this);
         viewDataBinding.operationTimesBackgroundView.setOnClickListener(this);
         viewDataBinding.closeImageView.setOnClickListener(this);
+        viewDataBinding.cartBookingLayout.setOnClickListener(this);
 
         viewDataBinding.recyclerView.setLayoutManager(new ZoomCenterLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.recyclerView, getColor(R.color.default_over_scroll_edge));
@@ -712,6 +713,8 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
             getViewDataBinding().cartMenusLayout.setVisibility(View.GONE);
             getViewDataBinding().cartMenusLayout.setTranslationY(0.0f);
             getViewDataBinding().cartMenusArrowImageView.setRotation(180.0f);
+            getViewDataBinding().cartMenusArrowImageView.setTranslationY(0.0f);
+            getViewDataBinding().cartMenusTopBackgroundView.setTranslationY(0.0f);
         }
 
         getViewDataBinding().cartMenusTopBackgroundView.setVisibility(flag);
@@ -1017,6 +1020,16 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                 if (getViewDataBinding().cartMenusLayout.getVisibility() == View.VISIBLE)
                 {
                     getEventListener().onCloseCartMenusClick();
+                } else
+                {
+                    getEventListener().onOpenCartMenusClick();
+                }
+                break;
+
+            case R.id.cartBookingLayout:
+                if (getViewDataBinding().cartMenusLayout.getVisibility() == View.VISIBLE)
+                {
+                    getEventListener().onBookingClick();
                 } else
                 {
                     getEventListener().onOpenCartMenusClick();

@@ -21,6 +21,7 @@ import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetCart;
+import com.daily.dailyhotel.entity.GourmetCartMenu;
 import com.daily.dailyhotel.entity.GourmetDetail;
 import com.daily.dailyhotel.entity.GourmetMenu;
 import com.daily.dailyhotel.entity.ReviewScores;
@@ -127,7 +128,6 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     private boolean mSoldOutFromList;
     private int mGradientType;
     private List<Integer> mSoldOutDateList;
-    private int mSelectedMenuIndex;
     boolean mShowCalendar;
     boolean mShowTrueVR;
 
@@ -143,7 +143,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     {
         void setAnalyticsParam(GourmetDetailAnalyticsParam analyticsParam);
 
-        GourmetPaymentAnalyticsParam getStayPaymentAnalyticsParam(GourmetDetail gourmetDetail, GourmetMenu gourmetMenu);
+        GourmetPaymentAnalyticsParam getStayPaymentAnalyticsParam(GourmetDetail gourmetDetail, GourmetCart gourmetCart);
 
         void onScreen(Activity activity, GourmetBookDateTime gourmetBookDateTime, GourmetDetail gourmetDetail, int priceFromList);
 
@@ -166,7 +166,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         void onEventCalendarClick(Activity activity);
 
         void onEventOrderClick(Activity activity, GourmetBookDateTime gourmetBookDateTime//
-            , int gourmetIndex, String gourmetName, String menuName, String category, int discountPrice);
+            , int gourmetIndex, String gourmetName, String category, GourmetCart gourmetCart);
 
         void onEventScrollTopMenuClick(Activity activity, String gourmetName);
 
@@ -522,7 +522,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             case GourmetDetailActivity.REQUEST_CODE_PROFILE_UPDATE:
                 if (resultCode == Activity.RESULT_OK)
                 {
-                    onOrderMenu(mSelectedMenuIndex);
+                    onBookingCartMenu(mGourmetCart);
 
                     setResult(BaseActivity.RESULT_CODE_REFRESH);
                 }
@@ -563,11 +563,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 switch (resultCode)
                 {
                     case Activity.RESULT_OK:
-                        // 결재하기 호출
-                        //                        if (data != null)
-                        //                        {
-                        //                            onOrderMenu(data.getIntExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_INDEX, -1));
-                        //                        }
+                        onBookingCartMenu(mGourmetCart);
                         break;
 
                     default:
@@ -1855,28 +1851,12 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         }));
     }
 
-    private void onOrderMenu(int index)
+    private void onBookingCartMenu(GourmetCart gourmetCart)
     {
-        if (mGourmetDetail == null || index < 0)
+        if (mGourmetDetail == null || gourmetCart == null || gourmetCart.getMenuCount() == 0 || lock() == true)
         {
             return;
         }
-
-        GourmetMenu gourmetMenu = mGourmetDetail.getGourmetMenuList().get(index);
-
-        if (gourmetMenu == null)
-        {
-            setResult(BaseActivity.RESULT_CODE_REFRESH);
-            onBackClick();
-            return;
-        }
-
-        if (lock() == true)
-        {
-            return;
-        }
-
-        mSelectedMenuIndex = index;
 
         if (DailyHotel.isLogin() == false)
         {
@@ -1903,7 +1883,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                                 , GourmetDetailActivity.REQUEST_CODE_PROFILE_UPDATE);
                         } else
                         {
-                            startPayment(mGourmetBookDateTime, mGourmetDetail, index);
+                            startPayment(mGourmetBookDateTime, mGourmetDetail, gourmetCart);
                         }
                     } else
                     {
@@ -1925,7 +1905,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                                 , GourmetDetailActivity.REQUEST_CODE_PROFILE_UPDATE);
                         } else
                         {
-                            startPayment(mGourmetBookDateTime, mGourmetDetail, index);
+                            startPayment(mGourmetBookDateTime, mGourmetDetail, gourmetCart);
                         }
                     }
                 }
@@ -1940,26 +1920,16 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         }
 
         mAnalytics.onEventOrderClick(getActivity(), mGourmetBookDateTime, mGourmetDetail.index, mGourmetDetail.name//
-            , gourmetMenu.name, mGourmetDetail.category, gourmetMenu.discountPrice);
+            , mGourmetDetail.category, gourmetCart);
     }
 
-    protected void startPayment(GourmetBookDateTime gourmetBookDateTime, GourmetDetail gourmetDetail, int menuIndex)
+    protected void startPayment(GourmetBookDateTime gourmetBookDateTime, GourmetDetail gourmetDetail, GourmetCart gourmetCart)
     {
-        if (gourmetBookDateTime == null || gourmetDetail == null || menuIndex < 0)
+        if (gourmetBookDateTime == null || gourmetDetail == null || gourmetCart == null || gourmetCart.getMenuCount() == 0)
         {
             return;
         }
 
-        List<GourmetMenu> menuList = gourmetDetail.getGourmetMenuList();
-
-        if (menuList == null || menuList.size() - 1 < menuIndex)
-        {
-            setResult(BaseActivity.RESULT_CODE_REFRESH);
-            onBackClick();
-            return;
-        }
-
-        GourmetMenu gourmetMenu = menuList.get(menuIndex);
         List<DetailImageInformation> imageInformationList = gourmetDetail.getImageInformationList();
         String imageUrl = null;
 
@@ -1969,9 +1939,9 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         }
 
         Intent intent = GourmetPaymentActivity.newInstance(getActivity(), gourmetDetail.index//
-            , gourmetDetail.name, imageUrl, gourmetMenu.saleIndex, gourmetMenu.discountPrice, gourmetMenu.name//
+            , gourmetDetail.name, imageUrl//
             , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), false, gourmetDetail.category//
-            , mAnalytics.getStayPaymentAnalyticsParam(gourmetDetail, gourmetMenu));
+            , mAnalytics.getStayPaymentAnalyticsParam(gourmetDetail, gourmetCart));
 
         startActivityForResult(intent, GourmetDetailActivity.REQUEST_CODE_PAYMENT);
     }

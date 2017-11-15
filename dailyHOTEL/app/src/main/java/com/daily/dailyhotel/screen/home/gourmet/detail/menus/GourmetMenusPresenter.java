@@ -282,17 +282,18 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
     }
 
     @Override
-    public void onReservationClick(int index)
+    public void onBookingClick()
     {
         if (lock() == true)
         {
             return;
         }
 
-        //        Intent intent = new Intent();
-        //        intent.putExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_INDEX, index);
-        //        setResult(Activity.RESULT_OK, intent);
-        //        finish();
+        // 카트를 저장하고 끝낸다.
+
+        Intent intent = new Intent();
+        setResult(Activity.RESULT_OK, intent);
+        finish();
     }
 
     @Override
@@ -452,6 +453,8 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 
         plusMenu(menuIndex);
 
+        getViewInterface().setCartVisible(true);
+
         unLockAll();
     }
 
@@ -506,6 +509,8 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
                 mGourmetCart.setGourmetInformation(mGourmetIndex, mGourmetName, mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), mVisitTime);
 
                 plusMenu(gourmetMenu.index);
+
+                getViewInterface().setCartVisible(true);
             } else
             {
                 onChangeTimeClick(gourmetMenu.index);
@@ -566,6 +571,8 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         if (mGourmetCart.getMenuCount() == 0)
         {
             mGourmetCart.clear();
+
+            getViewInterface().setCartVisible(false);
         }
 
         unLockAll();
@@ -629,6 +636,11 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
                 unLockAll();
 
                 getViewInterface().notifyGourmetMenusChanged();
+
+                if (mGourmetCart == null || mGourmetCart.getMenuCount() == 0)
+                {
+                    getViewInterface().setCartVisible(false);
+                }
             }
         }, new Consumer<Throwable>()
         {
@@ -638,6 +650,11 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
                 unLockAll();
 
                 getViewInterface().notifyGourmetMenusChanged();
+
+                if (mGourmetCart == null || mGourmetCart.getMenuCount() == 0)
+                {
+                    getViewInterface().setCartVisible(false);
+                }
             }
         }));
     }
@@ -661,8 +678,9 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             getViewInterface().setGourmetCart(mGourmetCart);
         } else
         {
-            getViewInterface().notifyGourmetMenusChanged();
-            getViewInterface().setCartVisible(false);
+            unLockAll();
+
+            onCloseCartMenusClick();
         }
 
         unLockAll();
@@ -676,14 +694,25 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             return;
         }
 
+        int menuCount = mGourmetCart.getMenuCount();
+
         minusMenu(menuIndex);
 
         if (mGourmetCart.getCount(menuIndex) > 0)
         {
             getViewInterface().setGourmetCartMenu(menuIndex, mGourmetCart.getCount(menuIndex));
-        } else if (mGourmetCart.getMenuCount() > 0)
+        }
+
+        if (mGourmetCart.getMenuCount() != menuCount)
         {
             getViewInterface().setGourmetCart(mGourmetCart);
+        }
+
+        if (mGourmetCart.getMenuCount() == 0)
+        {
+            unLockAll();
+
+            onCloseCartMenusClick();
         }
 
         unLockAll();
@@ -772,9 +801,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 
         getViewInterface().setMenuOrderCount(menuIndex, mGourmetCart.getCount(menuIndex));
 
-        // Cart
         getViewInterface().setSummeryCart(mGourmetCart.getTotalPrice(), mGourmetCart.getTotalCount(), mGourmetCart.getMenuCount());
-        getViewInterface().setCartVisible(true);
     }
 
     private void minusMenu(int menuIndex)
@@ -789,13 +816,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 
         getViewInterface().setMenuOrderCount(menuIndex, mGourmetCart.getCount(gourmetMenu.index));
 
-        if (mGourmetCart.getTotalCount() > 0)
-        {
-            getViewInterface().setSummeryCart(mGourmetCart.getTotalPrice(), mGourmetCart.getTotalCount(), mGourmetCart.getMenuCount());
-        } else
-        {
-            getViewInterface().setCartVisible(false);
-        }
+        getViewInterface().setSummeryCart(mGourmetCart.getTotalPrice(), mGourmetCart.getTotalCount(), mGourmetCart.getMenuCount());
     }
 
     private void setCartInformation(int time)
