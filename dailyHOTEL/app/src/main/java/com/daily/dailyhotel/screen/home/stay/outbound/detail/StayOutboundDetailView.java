@@ -890,7 +890,7 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
             }
         });
 
-        dataBinding.smsShareLayout.setOnClickListener(new View.OnClickListener()
+        dataBinding.copyLinkView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

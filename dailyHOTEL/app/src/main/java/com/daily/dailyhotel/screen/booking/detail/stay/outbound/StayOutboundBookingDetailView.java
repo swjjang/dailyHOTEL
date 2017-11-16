@@ -492,7 +492,7 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
             }
         });
 
-        dataBinding.smsShareLayout.setOnClickListener(new View.OnClickListener()
+        dataBinding.copyLinkView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

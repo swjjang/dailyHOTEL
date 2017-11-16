@@ -478,7 +478,7 @@ public class StayOutboundBookingCancelDetailView extends BaseDialogView<StayOutb
             }
         });
 
-        dataBinding.smsShareLayout.setOnClickListener(new View.OnClickListener()
+        dataBinding.copyLinkView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

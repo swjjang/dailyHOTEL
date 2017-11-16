@@ -865,7 +865,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     }
 
     @Override
-    public void onShareSmsClick()
+    public void onCopyLinkClick()
     {
         if (mStayDetail == null || mStayBookDateTime == null)
         {
@@ -919,6 +919,74 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             mAnalytics.onEventShareSmsClick(getActivity(), DailyHotel.isLogin()//
                 , DailyUserPreference.getInstance(getActivity()).getType()//
                 , DailyUserPreference.getInstance(getActivity()).isBenefitAlarm(), mStayDetail.index, mStayDetail.name, mStayDetail.overseas);
+        } catch (Exception e)
+        {
+            unLockAll();
+
+            ExLog.d(e.toString());
+        }
+    }
+
+    @Override
+    public void onMoreShareClick()
+    {
+        try
+        {
+            int nights = mStayBookDateTime.getNights();
+
+            String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d"//
+                , mStayDetail.index, mStayBookDateTime.getCheckInDateTime("yyyy-MM-dd"), nights);
+
+            String name = DailyUserPreference.getInstance(getActivity()).getName();
+
+            if (DailyTextUtils.isTextEmpty(name) == true)
+            {
+                name = getString(R.string.label_friend) + "가";
+            } else
+            {
+                name += "님이";
+            }
+
+            final String message = getString(R.string.message_detail_stay_share_sms//
+                , name, mStayDetail.name//
+                , mStayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)")//
+                , mStayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)")//
+                , nights, nights + 1 //
+                , mStayDetail.address);
+
+            addCompositeDisposable(mCommonRemoteImpl.getShortUrl(longUrl).subscribe(new Consumer<String>()
+            {
+                @Override
+                public void accept(@NonNull String shortUrl) throws Exception
+                {
+                    unLockAll();
+
+                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                    intent.setType("text/plain");
+                    intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.label_doshare));
+                    intent.putExtra(Intent.EXTRA_TEXT, message + shortUrl);
+                    Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
+                    startActivity(chooser);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@NonNull Throwable throwable) throws Exception
+                {
+                    unLockAll();
+
+                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                    intent.setType("text/plain");
+                    intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.label_doshare));
+                    intent.putExtra(Intent.EXTRA_TEXT, message + "https://mobile.dailyhotel.co.kr/stay/" + mStayDetail.index);
+                    Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
+                    startActivity(chooser);
+                }
+            }));
+
+            //            mAnalytics.onEventShareSmsClick(getActivity(), DailyHotel.isLogin()//
+            //                , DailyUserPreference.getInstance(getActivity()).getType()//
+            //                , DailyUserPreference.getInstance(getActivity()).isBenefitAlarm(), mStayDetail.index, mStayDetail.name, mStayDetail.overseas);
         } catch (Exception e)
         {
             unLockAll();
@@ -1841,7 +1909,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                             customer.setEmail(user.email);
                             customer.setName(user.name);
                             customer.setPhone(user.phone);
-//                            customer.setUserIdx(Integer.toString(user.index));
+                            //                            customer.setUserIdx(Integer.toString(user.index));
 
                             startActivityForResult(AddProfileSocialActivity.newInstance(getActivity()//
                                 , customer, user.birthday), StayDetailActivity.REQUEST_CODE_PROFILE_UPDATE);

@@ -540,7 +540,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             }
         });
 
-        dataBinding.smsShareLayout.setOnClickListener(new View.OnClickListener()
+        dataBinding.copyLinkView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
