@@ -107,7 +107,7 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseDial
 
         getViewInterface().hideSimpleDialog();
 
-        clearCompositeDisposable();
+        disposeCompositeDisposable();
     }
 
     @Override
@@ -243,5 +243,10 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseDial
     protected boolean equalsCallingActivity(Class className)
     {
         return mActivity.equalsCallingActivity(className);
+    }
+
+    private void disposeCompositeDisposable()
+    {
+        mCompositeDisposable.dispose();
     }
 }
