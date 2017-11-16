@@ -36,6 +36,7 @@ import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
@@ -522,6 +523,12 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
     {
         if (position < 0)
         {
+            return;
+        }
+
+        if (mCollectionBaseLayout == null)
+        {
+            Util.restartApp(this);
             return;
         }
 
