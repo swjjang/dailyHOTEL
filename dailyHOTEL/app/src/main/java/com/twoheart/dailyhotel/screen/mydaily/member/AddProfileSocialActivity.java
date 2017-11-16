@@ -18,6 +18,8 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.User;
+import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.R;
@@ -30,9 +32,11 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
-import retrofit2.Call;
-import retrofit2.Response;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 
 public class AddProfileSocialActivity extends BaseActivity
 {
@@ -43,7 +47,7 @@ public class AddProfileSocialActivity extends BaseActivity
 
     Customer mCustomer;
     AddProfileSocialLayout mAddProfileSocialLayout;
-    AddProfileSocialNetworkController mAddProfileSocialNetworkController;
+    ProfileRemoteImpl mProfileRemoteImpl;
 
     public static Intent newInstance(Context context, Customer customer, String birthday)
     {
@@ -63,7 +67,7 @@ public class AddProfileSocialActivity extends BaseActivity
         super.onCreate(savedInstanceState);
 
         mAddProfileSocialLayout = new AddProfileSocialLayout(this, mOnEventListener);
-        mAddProfileSocialNetworkController = new AddProfileSocialNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
+        mProfileRemoteImpl = new ProfileRemoteImpl(this);
 
         setContentView(mAddProfileSocialLayout.onCreateView(R.layout.activity_add_profile_social));
 
@@ -82,7 +86,29 @@ public class AddProfileSocialActivity extends BaseActivity
         if (mCustomer == null)
         {
             lockUI();
-            mAddProfileSocialNetworkController.requestProfile();
+
+            addCompositeDisposable(mProfileRemoteImpl.getProfile() //
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<User>()
+                {
+                    @Override
+                    public void accept(User user) throws Exception
+                    {
+                        Customer customer = new Customer();
+                        customer.setEmail(user.email);
+                        customer.setName(user.name);
+                        customer.setPhone(user.phone);
+                        customer.setUserIdx(Integer.toString(user.index));
+
+                        onUserProfile(customer, user.birthday);
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        onUserProfile(null, null);
+                    }
+                }));
             return;
         }
 
@@ -263,6 +289,54 @@ public class AddProfileSocialActivity extends BaseActivity
         }
     }
 
+    private void onUserProfile(Customer customer, String birthday)
+    {
+        unLockUI();
+
+        if (customer == null)
+        {
+            DailyToast.showToast(AddProfileSocialActivity.this, getResources().getString(R.string.act_base_network_connect), Toast.LENGTH_LONG);
+            finish();
+            return;
+        }
+
+        initUserInformation(customer, birthday);
+    }
+
+    private void onUpdateSocialUserInformation(boolean isSuccess, String agreedDate)
+    {
+        if (isSuccess == true)
+        {
+            boolean isBenefit = mAddProfileSocialLayout.isCheckedBenefit();
+
+            DailyUserPreference.getInstance(AddProfileSocialActivity.this).setBenefitAlarm(isBenefit);
+            AnalyticsManager.getInstance(AddProfileSocialActivity.this).setPushEnabled(isBenefit, AnalyticsManager.ValueType.OTHER);
+
+            AnalyticsManager.getInstance(AddProfileSocialActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.ACCOUNT_DETAIL, "Confirm", null);
+
+            showCompletedSignupDialog(isBenefit, agreedDate);
+        } else
+        {
+            DailyToast.showToast(this, getString(R.string.act_base_network_connect), DailyToast.LENGTH_LONG);
+        }
+
+        Calendar calendar = mAddProfileSocialLayout.getBirthday();
+
+        if (calendar != null)
+        {
+            AnalyticsManager.getInstance(AddProfileSocialActivity.this).setUserBirthday(DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT));
+        } else
+        {
+            AnalyticsManager.getInstance(AddProfileSocialActivity.this).setUserBirthday(null);
+        }
+
+        AnalyticsManager.getInstance(AddProfileSocialActivity.this).setUserName(mAddProfileSocialLayout.getName());
+
+        String label = mAddProfileSocialLayout.getPrivacyYear() + AnalyticsManager.Label.SUBFIX_PRIVACY_YEAR;
+        AnalyticsManager.getInstance(AddProfileSocialActivity.this).recordEvent(AnalyticsManager.Category.REGISTRATION //
+            , AnalyticsManager.Action.PRIVACY, label, null);
+    }
+
     final private AddProfileSocialLayout.OnEventListener mOnEventListener = new AddProfileSocialLayout.OnEventListener()
     {
         @Override
@@ -398,7 +472,7 @@ public class AddProfileSocialActivity extends BaseActivity
 
         @Override
         public void onUpdateUserInformation(String phoneNumber, String email, String name //
-            , String recommender, String birthday, boolean isBenefit, int month)
+            , String birthday, boolean isBenefit, int month)
         {
             // 전화번호가 없거나 잘못 된경우
             if (DailyTextUtils.isTextEmpty(mCustomer.getPhone()) == true || Util.isValidatePhoneNumber(mCustomer.getPhone()) == false)
@@ -469,7 +543,51 @@ public class AddProfileSocialActivity extends BaseActivity
                 return;
             }
 
-            mAddProfileSocialNetworkController.requestUpdateSocialUserInformation(phoneNumber, email, name, recommender, birthday, isBenefit, month);
+            Map<String, String> paramMap = new HashMap<>();
+            if (DailyTextUtils.isTextEmpty(email) == false)
+            {
+                paramMap.put("email", email.trim());
+            }
+
+            if (DailyTextUtils.isTextEmpty(name) == false)
+            {
+                paramMap.put("name", name);
+            }
+
+            if (DailyTextUtils.isTextEmpty(phoneNumber) == false)
+            {
+                paramMap.put("phone", phoneNumber.replaceAll("-", ""));
+            }
+
+            if (DailyTextUtils.isTextEmpty(birthday) == false)
+            {
+                paramMap.put("birthday", birthday);
+            }
+
+            if (month < 12)
+            {
+                month = 12;
+            }
+
+            paramMap.put("dataRetentionInMonth", Integer.toString(month));
+            paramMap.put("willReceiveBenefitNotifications", Boolean.toString(isBenefit));
+
+            addCompositeDisposable(mProfileRemoteImpl.updateUserInformation(paramMap) //
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<User>()
+                {
+                    @Override
+                    public void accept(User user) throws Exception
+                    {
+                        onUpdateSocialUserInformation(true, user.agreedAt);
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        onUpdateSocialUserInformation(false, null);
+                    }
+                }));
         }
 
         @Override
@@ -478,89 +596,6 @@ public class AddProfileSocialActivity extends BaseActivity
             AnalyticsManager.getInstance(AddProfileSocialActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.ACCOUNT_DETAIL, "BackButton", null);
 
             AddProfileSocialActivity.this.finish();
-        }
-    };
-
-    private AddProfileSocialNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new AddProfileSocialNetworkController.OnNetworkControllerListener()
-    {
-        @Override
-        public void onUpdateSocialUserInformation(String message, String agreedDate)
-        {
-            if (DailyTextUtils.isTextEmpty(message) == true)
-            {
-                boolean isBenefit = mAddProfileSocialLayout.isCheckedBenefit();
-
-                DailyUserPreference.getInstance(AddProfileSocialActivity.this).setBenefitAlarm(isBenefit);
-                AnalyticsManager.getInstance(AddProfileSocialActivity.this).setPushEnabled(isBenefit, AnalyticsManager.ValueType.OTHER);
-
-                AnalyticsManager.getInstance(AddProfileSocialActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.ACCOUNT_DETAIL, "Confirm", null);
-
-                showCompletedSignupDialog(isBenefit, agreedDate);
-            } else
-            {
-                DailyToast.showToast(AddProfileSocialActivity.this, message, Toast.LENGTH_SHORT);
-            }
-
-            Calendar calendar = mAddProfileSocialLayout.getBirthday();
-
-            if (calendar != null)
-            {
-                AnalyticsManager.getInstance(AddProfileSocialActivity.this).setUserBirthday(DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT));
-            } else
-            {
-                AnalyticsManager.getInstance(AddProfileSocialActivity.this).setUserBirthday(null);
-            }
-
-            AnalyticsManager.getInstance(AddProfileSocialActivity.this).setUserName(mAddProfileSocialLayout.getName());
-
-            String label = mAddProfileSocialLayout.getPrivacyYear() + AnalyticsManager.Label.SUBFIX_PRIVACY_YEAR;
-            AnalyticsManager.getInstance(AddProfileSocialActivity.this).recordEvent(AnalyticsManager.Category.REGISTRATION //
-                , AnalyticsManager.Action.PRIVACY, label, null);
-        }
-
-        @Override
-        public void onUserProfile(Customer customer, String birthday)
-        {
-            unLockUI();
-
-            if (customer == null)
-            {
-                DailyToast.showToast(AddProfileSocialActivity.this, getResources().getString(R.string.act_base_network_connect), Toast.LENGTH_LONG);
-                finish();
-                return;
-            }
-
-            initUserInformation(customer, birthday);
-        }
-
-        @Override
-        public void onError(Call call, Throwable e, boolean onlyReport)
-        {
-            AddProfileSocialActivity.this.onError(call, e, onlyReport);
-        }
-
-        @Override
-        public void onError(Throwable e)
-        {
-            AddProfileSocialActivity.this.onError(e);
-        }
-
-        @Override
-        public void onErrorPopupMessage(int msgCode, String message)
-        {
-            AddProfileSocialActivity.this.onErrorPopupMessage(msgCode, message);
-        }
-
-        @Override
-        public void onErrorToastMessage(String message)
-        {
-            AddProfileSocialActivity.this.onErrorToastMessage(message);
-        }
-
-        @Override
-        public void onErrorResponse(Call call, Response response)
-        {
-            AddProfileSocialActivity.this.onErrorResponse(call, response);
         }
     };
 }
