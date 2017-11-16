@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.daily.base.util.VersionUtils;
+import com.daily.dailyhotel.entity.GourmetCart;
+import com.daily.dailyhotel.repository.local.CartLocalImpl;
 
 /**
  * 앱 종료 후에 흔적을 남기지 히스토리 및 최근 실행 앱을 남기지 않기 위해서
@@ -25,6 +27,8 @@ public class ExitActivity extends Activity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        new CartLocalImpl(this).setGourmetCart(null).subscribe();
 
         if (VersionUtils.isOverAPI21() == true)
         {

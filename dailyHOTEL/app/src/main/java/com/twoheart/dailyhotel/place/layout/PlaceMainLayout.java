@@ -66,6 +66,8 @@ public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnC
         void onPageScroll();
 
         void onPageSelected(int changedPosition, int prevPosition);
+
+        void onCartMenusBookingClick();
     }
 
     protected abstract PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager//
@@ -139,6 +141,17 @@ public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnC
         });
 
         mToolbarView.clearMenuItem();
+
+        mToolbarView.addMenuItem(DailyToolbarView.MenuItem.ORDER_MENUS, null, 0, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+            }
+        });
+
+        mToolbarView.setMenuItemVisible(DailyToolbarView.MenuItem.ORDER_MENUS, false);
+
         mToolbarView.addMenuItem(DailyToolbarView.MenuItem.SEARCH, null, new View.OnClickListener()
         {
             @Override
@@ -218,6 +231,33 @@ public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnC
 
             mDateTextView.setText(spannableString);
         }
+    }
+
+    public void setToolbarCartMenusVisible(boolean visible)
+    {
+        if (mToolbarView == null)
+        {
+            return;
+        }
+
+        mToolbarView.setMenuItemVisible(DailyToolbarView.MenuItem.ORDER_MENUS, visible);
+    }
+
+    public void setToolbarCartMenusCount(int count)
+    {
+        if (mToolbarView == null)
+        {
+            return;
+        }
+
+        mToolbarView.updateMenuItem(DailyToolbarView.MenuItem.ORDER_MENUS, null, count, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).onCartMenusBookingClick();
+            }
+        });
     }
 
     public void setOptionViewTypeView(Constants.ViewType viewType)

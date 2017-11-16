@@ -273,6 +273,7 @@
     <string name="toast_msg_already_latest_version">이미 최신버전입니다.</string>
     <string name="toast_msg_thanks_to_your_opinion">소중한 의견 감사합니다.</string>
     <string name="toast_msg_backpressed">\'뒤로\' 버튼을 한 번 더 누르시면 앱이 종료됩니다.</string>
+    <string name="toast_msg_backpressed_has_cart">앱을 종료하시면 추가하신 메뉴가 모두 삭제됩니다. \'뒤로\' 버튼을 한 번 더 누르시면 앱이 종료됩니다.</string>
     <string name="toast_msg_input_error_alphanum">영문, 숫자만 입력할 수 있습니다.</string>
     <string name="toast_msg_input_error_alphanumeric_hangul">영문, 숫자, 한글만 입력할 수 있습니다.</string>
     <string name="toast_msg_input_error_alphanum_name">해외 스테이 예약시에는 영문 성함만 입력할 수 있습니다.</string>
@@ -1328,6 +1329,7 @@
     <string name="label_gourmet_product_detail_view_operation_time_list">해당시간 메뉴 보기</string>
     <string name="label_gourmet_product_detail_booking_total_price">총 %1$s 예약하기</string>
     <string name="label_gourmet_product_detail_total_cart_price">총 상품 금액</string>
+    <string name="label_gourmet_product_detail_check_the_menus">선택 메뉴 확인하기</string>
 
     <string name="message_gourmet_product_detail_time_picker_popup_message">방문시간은 하나만 선택할 수 있습니다.\n선택한 시간에 예약할 수 있는 메뉴만 노출됩니다.</string>
     <string name="message_gourmet_product_detail_add_menu_after_initialization">방문시간이 다른 메뉴를 선택하셨습니다.\n해당메뉴를 추가하시면\n기존에 선택한 메뉴가 모두 초기화됩니다.\n해당 메뉴를 새로 추가하시겠어요?</string>

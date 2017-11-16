@@ -1,28 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginLeft="10dp"
-        android:minWidth="30dp"
-        android:orientation="horizontal">
+        android:minWidth="40dp"
+        android:orientation="horizontal"
+        android:paddingRight="10dp">
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/daily_textView"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
+            android:layout_height="wrap_content"
             android:maxLines="1"
             android:singleLine="true"
             android:textColor="@color/default_text_c323232"
-            android:textSize="13dp"/>
+            android:textSize="13dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <com.daily.base.widget.DailyImageView
             android:id="@+id/daily_imageView"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:scaleType="center"/>
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:scaleType="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/daily_textView"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/daily_countTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="14dp"
+            android:layout_marginLeft="17dp"
+            android:background="@drawable/shape_circle_bdb2353"
+            android:gravity="center"
+            android:maxLines="1"
+            android:minWidth="14dp"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textSize="9dp"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="@+id/daily_imageView"
+            app:layout_constraintTop_toTopOf="@+id/daily_imageView"/>
+    </android.support.constraint.ConstraintLayout>
 </layout>

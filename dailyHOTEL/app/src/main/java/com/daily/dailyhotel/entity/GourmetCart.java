@@ -35,7 +35,7 @@ public class GourmetCart
 
     public GourmetCart(JSONObject jsonObject)
     {
-        if (jsonObject == null)
+        if (jsonObject == null || jsonObject.length() == 0)
         {
             return;
         }
@@ -212,6 +212,13 @@ public class GourmetCart
     {
         JSONObject jsonObject = new JSONObject();
 
+        int size = mOrderMenuMap.size();
+
+        if (size == 0)
+        {
+            return jsonObject;
+        }
+
         try
         {
             jsonObject.put("visitTime", visitTime);
@@ -219,7 +226,6 @@ public class GourmetCart
             jsonObject.put("gourmetName", gourmetName);
             jsonObject.put("visitDateTime", visitDateTime);
 
-            int size = mOrderMenuMap.size();
 
             JSONArray jsonArray = new JSONArray();
 

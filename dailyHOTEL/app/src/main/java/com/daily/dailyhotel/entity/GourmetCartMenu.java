@@ -25,7 +25,7 @@ public class GourmetCartMenu
 
     public GourmetCartMenu(JSONObject jsonObject)
     {
-        if (jsonObject == null)
+        if (jsonObject == null || jsonObject.length() == 0)
         {
             return;
         }

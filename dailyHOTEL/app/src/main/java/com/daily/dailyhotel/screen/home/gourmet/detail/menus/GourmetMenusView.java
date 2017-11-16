@@ -98,6 +98,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         viewDataBinding.operationTimeTextView.setOnClickListener(this);
         viewDataBinding.operationTimesBackgroundView.setOnClickListener(this);
         viewDataBinding.closeImageView.setOnClickListener(this);
+        viewDataBinding.cartMenusBackgroundView.setOnClickListener(this);
         viewDataBinding.cartBookingLayout.setOnClickListener(this);
 
         viewDataBinding.recyclerView.setLayoutManager(new ZoomCenterLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -681,14 +682,14 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
     }
 
     @Override
-    public void setSummeryCart(int totalPrice, int totalCount, int menuCount)
+    public void setSummeryCart(String text, int totalCount)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        getViewDataBinding().cartBookingTextView.setText(getString(R.string.label_gourmet_product_detail_booking_total_price, DailyTextUtils.getPriceFormat(getContext(), totalPrice, false)));
+        getViewDataBinding().cartBookingTextView.setText(text);
         getViewDataBinding().cartBookingTotalCountTextView.setText(Integer.toString(totalCount));
     }
 
@@ -832,6 +833,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         }
 
         getViewDataBinding().cartMenusLayout.setTranslationY(height);
+        getViewDataBinding().cartMenusBackgroundView.setAlpha(0.0f);
 
         ObjectAnimator transObjectAnimator = ObjectAnimator.ofFloat(getViewDataBinding().cartMenusLayout//
             , View.TRANSLATION_Y, height, 0);
@@ -854,6 +856,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
 
                 getViewDataBinding().cartMenusTopBackgroundView.setTranslationY(value);
                 getViewDataBinding().cartMenusArrowImageView.setTranslationY(value);
+                getViewDataBinding().cartMenusBackgroundView.setAlpha(Math.abs(vector) / height);
             }
         });
 
@@ -868,6 +871,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                     public void onAnimationStart(Animator animation)
                     {
                         getViewDataBinding().cartMenusLayout.setVisibility(View.VISIBLE);
+                        getViewDataBinding().cartMenusBackgroundView.setVisibility(View.VISIBLE);
                     }
 
                     @Override
@@ -931,6 +935,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
 
                 getViewDataBinding().cartMenusTopBackgroundView.setTranslationY(value);
                 getViewDataBinding().cartMenusArrowImageView.setTranslationY(value);
+                getViewDataBinding().cartMenusBackgroundView.setAlpha(Math.abs(vector) / height);
             }
         });
 
@@ -958,6 +963,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                         getViewDataBinding().cartMenusLayout.setVisibility(View.INVISIBLE);
                         getViewDataBinding().cartMenusLayout.setTranslationY(0.0f);
                         getViewDataBinding().cartMenusArrowImageView.setRotation(180.0f);
+                        getViewDataBinding().cartMenusBackgroundView.setVisibility(View.GONE);
 
                         observer.onNext(true);
                         observer.onComplete();
@@ -1024,6 +1030,10 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                 {
                     getEventListener().onOpenCartMenusClick();
                 }
+                break;
+
+            case R.id.cartMenusBackgroundView:
+                getEventListener().onCloseCartMenusClick();
                 break;
 
             case R.id.cartBookingLayout:

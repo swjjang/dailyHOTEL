@@ -53,4 +53,8 @@ public interface GourmetDetailViewInterface extends BaseDialogViewInterface
     Observable<Boolean> closeMoreMenuList();
 
     void setMenus(List<GourmetMenu> gourmetMenuList, int shownMenuCount);
+
+    void setToolbarCartMenusVisible(boolean visible);
+
+    void setToolbarCartMenusCount(int count);
 }

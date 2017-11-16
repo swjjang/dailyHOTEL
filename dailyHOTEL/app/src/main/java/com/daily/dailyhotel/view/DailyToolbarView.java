@@ -23,6 +23,7 @@ import com.twoheart.dailyhotel.databinding.DailyViewToolbarMenuItemDataBinding;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class DailyToolbarView extends ConstraintLayout
 {
@@ -49,7 +50,8 @@ public class DailyToolbarView extends ConstraintLayout
         WISH_OFF(R.drawable.vector_navibar_ic_heart_off_black, true),
         WISH_LINE_ON(R.drawable.vector_navibar_ic_heart_on_strokefill, false),
         WISH_FILL_ON(R.drawable.vector_navibar_ic_heart_on_fill, false),
-        SEARCH(R.drawable.navibar_ic_search, true);
+        SEARCH(R.drawable.navibar_ic_search, true),
+        ORDER_MENUS(R.drawable.vector_navibar_ic_menu, true);
 
         private int mResId;
         private boolean mSupportChangedColor;
@@ -281,6 +283,27 @@ public class DailyToolbarView extends ConstraintLayout
         }
     }
 
+    /**
+     * @param menuItem
+     * @param text
+     * @param count    0 보다 작으면 0, 100보다 크면 99+, 나머지는 표시
+     * @param listener
+     */
+    public void addMenuItem(MenuItem menuItem, String text, int count, OnClickListener listener)
+    {
+        if (mViewDataBinding == null || hasMenuItem(menuItem) == true)
+        {
+            return;
+        }
+
+        DailyViewToolbarMenuItemDataBinding viewDataBinding = addMenuItemView(menuItem, text, count, listener);
+
+        if (viewDataBinding != null)
+        {
+            mMenuItemList.add(new Pair(menuItem, viewDataBinding));
+        }
+    }
+
     public void updateMenuItem(MenuItem menuItem, String text, OnClickListener listener)
     {
         if (mViewDataBinding == null || hasMenuItem(menuItem) == false)
@@ -296,6 +319,23 @@ public class DailyToolbarView extends ConstraintLayout
         }
 
         updateMenuItemView(mMenuItemList.get(index).second, menuItem, text, listener);
+    }
+
+    public void updateMenuItem(MenuItem menuItem, String text, int count, OnClickListener listener)
+    {
+        if (mViewDataBinding == null || hasMenuItem(menuItem) == false)
+        {
+            return;
+        }
+
+        int index = getMenuItemIndex(menuItem);
+
+        if (index < 0)
+        {
+            return;
+        }
+
+        updateMenuItemView(mMenuItemList.get(index).second, menuItem, text, count, listener);
     }
 
     public void replaceMenuItem(MenuItem srcMenuItem, MenuItem menuItem, String text, OnClickListener listener)
@@ -456,6 +496,13 @@ public class DailyToolbarView extends ConstraintLayout
             @Override
             public void onAnimationEnd(Animator animation)
             {
+                if (mHideAnimator != null)
+                {
+                    mHideAnimator.removeAllUpdateListeners();
+                }
+
+                mHideAnimator = null;
+
                 setVisibility(GONE);
             }
 
@@ -514,6 +561,18 @@ public class DailyToolbarView extends ConstraintLayout
         }
 
         DailyViewToolbarMenuItemDataBinding viewDataBinding = getMenuItemView(mViewDataBinding.dailyMenuItemLayout, menuItem, text, listener);
+
+        return viewDataBinding;
+    }
+
+    private DailyViewToolbarMenuItemDataBinding addMenuItemView(MenuItem menuItem, String text, int count, OnClickListener listener)
+    {
+        if (mViewDataBinding == null || menuItem == null)
+        {
+            return null;
+        }
+
+        DailyViewToolbarMenuItemDataBinding viewDataBinding = getMenuItemView(mViewDataBinding.dailyMenuItemLayout, menuItem, text, count, listener);
 
         return viewDataBinding;
     }
@@ -588,47 +647,24 @@ public class DailyToolbarView extends ConstraintLayout
         return viewDataBinding;
     }
 
-    private void updateMenuItemView(DailyViewToolbarMenuItemDataBinding viewDataBinding, MenuItem menuItem, String text, OnClickListener listener)
+    private DailyViewToolbarMenuItemDataBinding getMenuItemView(ViewGroup viewGroup, MenuItem menuItem, String text, int count, OnClickListener listener)
     {
-        if (viewDataBinding == null || menuItem == null)
+        if (viewGroup == null || menuItem == null)
         {
-            return;
+            return null;
         }
 
-        viewDataBinding.dailyImageView.setVectorImageResource(menuItem.getResourceId());
+        DailyViewToolbarMenuItemDataBinding viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext())//
+            , R.layout.daily_view_toolbar_menu_item_data, viewGroup, true);
 
-        if (DailyTextUtils.isTextEmpty(text) == true)
-        {
-            viewDataBinding.dailyTextView.setVisibility(GONE);
-        } else
-        {
-            viewDataBinding.dailyTextView.setVisibility(VISIBLE);
-            viewDataBinding.dailyTextView.setText(text);
-        }
+        // Count를 넣는 아이콘은 오른쪽 패딩을 없앤다.
+        viewDataBinding.getRoot().setPadding(0, 0, 0, 0);
 
-        switch (mThemeColor)
-        {
-            case DEFAULT:
-                break;
+        updateMenuItemView(viewDataBinding, menuItem, text, count, listener);
 
-            case WHITE:
-                if (menuItem.supportChangedColor() == true)
-                {
-                    viewDataBinding.dailyImageView.setColorFilter(getResources().getColor(mThemeColor.getIconColorResourceId()));
-                } else
-                {
-                    viewDataBinding.dailyImageView.clearColorFilter();
-                }
-
-                if (viewDataBinding.dailyTextView.getVisibility() != GONE)
-                {
-                    viewDataBinding.dailyTextView.setTextColor(getResources().getColor(mThemeColor.getTextColorResourceId()));
-                }
-                break;
-        }
-
-        viewDataBinding.getRoot().setOnClickListener(listener);
+        return viewDataBinding;
     }
+
 
     private void updateMenuItemView(DailyViewToolbarMenuItemDataBinding viewDataBinding, MenuItem menuItem, OnClickListener listener)
     {
@@ -661,5 +697,47 @@ public class DailyToolbarView extends ConstraintLayout
         }
 
         viewDataBinding.getRoot().setOnClickListener(listener);
+    }
+
+    private void updateMenuItemView(DailyViewToolbarMenuItemDataBinding viewDataBinding, MenuItem menuItem, String text, OnClickListener listener)
+    {
+        if (viewDataBinding == null || menuItem == null)
+        {
+            return;
+        }
+
+        if (DailyTextUtils.isTextEmpty(text) == true)
+        {
+            viewDataBinding.dailyTextView.setVisibility(GONE);
+        } else
+        {
+            viewDataBinding.dailyTextView.setVisibility(VISIBLE);
+            viewDataBinding.dailyTextView.setText(text);
+        }
+
+        updateMenuItemView(viewDataBinding, menuItem, listener);
+    }
+
+    private void updateMenuItemView(DailyViewToolbarMenuItemDataBinding viewDataBinding, MenuItem menuItem, String text, int count, OnClickListener listener)
+    {
+        if (viewDataBinding == null || menuItem == null)
+        {
+            return;
+        }
+
+        viewDataBinding.dailyCountTextView.setVisibility(VISIBLE);
+
+        if (count < 0)
+        {
+            viewDataBinding.dailyCountTextView.setText(Integer.toString(0));
+        } else if (count < 100)
+        {
+            viewDataBinding.dailyCountTextView.setText(Integer.toString(count));
+        } else
+        {
+            viewDataBinding.dailyCountTextView.setText("99+");
+        }
+
+        updateMenuItemView(viewDataBinding, menuItem, text, listener);
     }
 }

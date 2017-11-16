@@ -129,6 +129,8 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         void onHideWishTooltipClick();
 
         void onVisitTimeClick(int visitTime);
+
+        void onBookingClick();
     }
 
     public GourmetDetailView(BaseActivity baseActivity, GourmetDetailView.OnEventListener listener)
@@ -916,7 +918,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                         if (mLayoutGourmetDetailMoreMenuDataBinding != null)
                         {
                             mLayoutGourmetDetailMoreMenuDataBinding.moreImageView.setRotation(0);
-                            mLayoutGourmetDetailMoreMenuDataBinding.moreTextView.setText((String)mLayoutGourmetDetailMoreMenuDataBinding.moreTextView.getTag());
+                            mLayoutGourmetDetailMoreMenuDataBinding.moreTextView.setText((String) mLayoutGourmetDetailMoreMenuDataBinding.moreTextView.getTag());
                         }
 
                         observer.onNext(true);
@@ -948,6 +950,45 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
     public void setMenus(List<GourmetMenu> gourmetMenuList, int shownMenuCount)
     {
         setMenuListLayout(gourmetMenuList, shownMenuCount);
+    }
+
+    @Override
+    public void setToolbarCartMenusVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().toolbarView.setMenuItemVisible(DailyToolbarView.MenuItem.ORDER_MENUS, visible);
+        getViewDataBinding().fakeToolbarView.setMenuItemVisible(DailyToolbarView.MenuItem.ORDER_MENUS, visible);
+    }
+
+    @Override
+    public void setToolbarCartMenusCount(int count)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().toolbarView.updateMenuItem(DailyToolbarView.MenuItem.ORDER_MENUS, null, count, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onBookingClick();
+            }
+        });
+
+        getViewDataBinding().fakeToolbarView.updateMenuItem(DailyToolbarView.MenuItem.ORDER_MENUS, null, count, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onBookingClick();
+            }
+        });
     }
 
     @Override
@@ -987,6 +1028,10 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             }
         });
 
+        viewDataBinding.toolbarView.addMenuItem(DailyToolbarView.MenuItem.ORDER_MENUS, null, 0, null);
+
+        viewDataBinding.toolbarView.setMenuItemVisible(DailyToolbarView.MenuItem.ORDER_MENUS, false);
+
         viewDataBinding.toolbarView.addMenuItem(DailyToolbarView.MenuItem.SHARE, null, new View.OnClickListener()
         {
             @Override
@@ -1016,6 +1061,10 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                 getEventListener().onWishClick();
             }
         });
+
+        viewDataBinding.fakeToolbarView.addMenuItem(DailyToolbarView.MenuItem.ORDER_MENUS, null, 0, null);
+
+        viewDataBinding.toolbarView.setMenuItemVisible(DailyToolbarView.MenuItem.ORDER_MENUS, false);
 
         viewDataBinding.fakeToolbarView.addMenuItem(DailyToolbarView.MenuItem.SHARE, null, new View.OnClickListener()
         {
