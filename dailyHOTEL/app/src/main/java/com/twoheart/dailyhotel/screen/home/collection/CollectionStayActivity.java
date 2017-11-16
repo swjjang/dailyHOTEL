@@ -35,6 +35,7 @@ import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
@@ -523,6 +524,12 @@ public class CollectionStayActivity extends CollectionBaseActivity
     {
         if (position < 0)
         {
+            return;
+        }
+
+        if (mCollectionBaseLayout == null)
+        {
+            Util.restartApp(this);
             return;
         }
 

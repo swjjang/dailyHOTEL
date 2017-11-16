@@ -39,26 +39,27 @@ public class CommonRemoteImpl extends BaseRemoteImpl implements CommonInterface
         final String API = Constants.UNENCRYPTED_URL ? "api/v3/common/datetime"//
             : "NzgkMTUkMjckNTUkNjEkNjckNjckNDUkMTAkMjYkMTckMTkkNjckNTQkNjgkNDYk$ODE1MDI0NzMZGREQAJ0IMDFBNkIzTNTLUwNDAzMzY3MzQ0IMzZXEMkUT0RTZEMNkZGRUDAJE4MTkDSxOTVEMjBBQjRFQzMVDN0VDOA==$";
 
-        return mDailyMobileService.getCommonDateTime(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io()).map((commonDateTimeDataBaseDto) ->
-        {
-            CommonDateTime commonDateTime = null;
-
-            if (commonDateTimeDataBaseDto != null)
+        return mDailyMobileService.getCommonDateTime(Crypto.getUrlDecoderEx(API)) //
+            .subscribeOn(Schedulers.io()).map((commonDateTimeDataBaseDto) ->
             {
-                if (commonDateTimeDataBaseDto.msgCode == 100 && commonDateTimeDataBaseDto.data != null)
+                CommonDateTime commonDateTime = null;
+
+                if (commonDateTimeDataBaseDto != null)
                 {
-                    commonDateTime = commonDateTimeDataBaseDto.data.getCommonDateTime();
+                    if (commonDateTimeDataBaseDto.msgCode == 100 && commonDateTimeDataBaseDto.data != null)
+                    {
+                        commonDateTime = commonDateTimeDataBaseDto.data.getCommonDateTime();
+                    } else
+                    {
+                        throw new BaseException(commonDateTimeDataBaseDto.msgCode, commonDateTimeDataBaseDto.msg);
+                    }
                 } else
                 {
-                    throw new BaseException(commonDateTimeDataBaseDto.msgCode, commonDateTimeDataBaseDto.msg);
+                    throw new BaseException(-1, null);
                 }
-            } else
-            {
-                throw new BaseException(-1, null);
-            }
 
-            return commonDateTime;
-        }).observeOn(AndroidSchedulers.mainThread());
+                return commonDateTime;
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -71,26 +72,27 @@ public class CommonRemoteImpl extends BaseRemoteImpl implements CommonInterface
         urlParams.put("{type}", placeType);
         urlParams.put("{reserveIdx}", Integer.toString(reservationIndex));
 
-        return mDailyMobileService.getReview(Crypto.getUrlDecoderEx(API, urlParams)).subscribeOn(Schedulers.io()).map((reviewDataBaseDto) ->
-        {
-            Review review = null;
-
-            if (reviewDataBaseDto != null)
+        return mDailyMobileService.getReview(Crypto.getUrlDecoderEx(API, urlParams)) //
+            .subscribeOn(Schedulers.io()).map((reviewDataBaseDto) ->
             {
-                if (reviewDataBaseDto.msgCode == 100 && reviewDataBaseDto.data != null)
+                Review review = null;
+
+                if (reviewDataBaseDto != null)
                 {
-                    review = reviewDataBaseDto.data.getReview();
+                    if (reviewDataBaseDto.msgCode == 100 && reviewDataBaseDto.data != null)
+                    {
+                        review = reviewDataBaseDto.data.getReview();
+                    } else
+                    {
+                        throw new BaseException(reviewDataBaseDto.msgCode, reviewDataBaseDto.msg);
+                    }
                 } else
                 {
-                    throw new BaseException(reviewDataBaseDto.msgCode, reviewDataBaseDto.msg);
+                    throw new BaseException(-1, null);
                 }
-            } else
-            {
-                throw new BaseException(-1, null);
-            }
 
-            return review;
-        }).observeOn(AndroidSchedulers.mainThread());
+                return review;
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -118,20 +120,21 @@ public class CommonRemoteImpl extends BaseRemoteImpl implements CommonInterface
             ExLog.e(e.toString());
         }
 
-        return mDailyMobileService.getShortUrl(Crypto.getUrlDecoderEx(URL), jsonObject).subscribeOn(Schedulers.io()).map((shortUrlData) ->
-        {
-            String shortUrl = null;
-
-            if (shortUrlData != null && DailyTextUtils.isTextEmpty(shortUrlData.id) == false)
+        return mDailyMobileService.getShortUrl(Crypto.getUrlDecoderEx(URL), jsonObject) //
+            .subscribeOn(Schedulers.io()).map((shortUrlData) ->
             {
-                shortUrl = shortUrlData.id;
-            } else
-            {
-                throw new BaseException(-1, null);
-            }
+                String shortUrl = null;
 
-            return shortUrl;
-        }).observeOn(AndroidSchedulers.mainThread());
+                if (shortUrlData != null && DailyTextUtils.isTextEmpty(shortUrlData.id) == false)
+                {
+                    shortUrl = shortUrlData.id;
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return shortUrl;
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -142,27 +145,27 @@ public class CommonRemoteImpl extends BaseRemoteImpl implements CommonInterface
 
         return mDailyMobileService.updateNotification(Crypto.getUrlDecoderEx(API), agreed)//
             .subscribeOn(Schedulers.io()).map((BaseDto<NotificationData> notificationDataBaseDto) ->
-        {
-            Notification notification = null;
-
-            if (notificationDataBaseDto != null)
             {
-                if (notificationDataBaseDto.msgCode == 100 && notificationDataBaseDto.data != null)
+                Notification notification = null;
+
+                if (notificationDataBaseDto != null)
                 {
-                    notification = new Notification();
-                    notification.serverDate = DailyCalendar.convertDateFormatString(notificationDataBaseDto.data.serverDate, DailyCalendar.ISO_8601_FORMAT, "yyyy년 MM월 dd일");
-                    notification.agreed = agreed;
+                    if (notificationDataBaseDto.msgCode == 100 && notificationDataBaseDto.data != null)
+                    {
+                        notification = new Notification();
+                        notification.serverDate = DailyCalendar.convertDateFormatString(notificationDataBaseDto.data.serverDate, DailyCalendar.ISO_8601_FORMAT, "yyyy년 MM월 dd일");
+                        notification.agreed = agreed;
+                    } else
+                    {
+                        throw new BaseException(notificationDataBaseDto.msgCode, notificationDataBaseDto.msg);
+                    }
                 } else
                 {
-                    throw new BaseException(notificationDataBaseDto.msgCode, notificationDataBaseDto.msg);
+                    throw new BaseException(-1, null);
                 }
-            } else
-            {
-                throw new BaseException(-1, null);
-            }
 
-            return notification;
-        });
+                return notification;
+            });
     }
 
     public Observable<Configurations> getConfigurations()
@@ -172,24 +175,24 @@ public class CommonRemoteImpl extends BaseRemoteImpl implements CommonInterface
 
         return mDailyMobileService.getConfigurations(Crypto.getUrlDecoderEx(API))//
             .subscribeOn(Schedulers.io()).map((configurationDataBaseDto) ->
-        {
-            Configurations configuration;
-
-            if (configurationDataBaseDto != null)
             {
-                if (configurationDataBaseDto.msgCode == 100 && configurationDataBaseDto.data != null)
+                Configurations configuration;
+
+                if (configurationDataBaseDto != null)
                 {
-                    configuration = configurationDataBaseDto.data.getConfigurations();
+                    if (configurationDataBaseDto.msgCode == 100 && configurationDataBaseDto.data != null)
+                    {
+                        configuration = configurationDataBaseDto.data.getConfigurations();
+                    } else
+                    {
+                        throw new BaseException(configurationDataBaseDto.msgCode, configurationDataBaseDto.msg);
+                    }
                 } else
                 {
-                    throw new BaseException(configurationDataBaseDto.msgCode, configurationDataBaseDto.msg);
+                    throw new BaseException(-1, null);
                 }
-            } else
-            {
-                throw new BaseException(-1, null);
-            }
 
-            return configuration;
-        });
+                return configuration;
+            });
     }
 }

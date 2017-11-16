@@ -77,27 +77,27 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{stayIndex}", Integer.toString(index));
 
-        return mDailyMobileService.getStayOutboundPayment(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
-            , jsonObject).subscribeOn(Schedulers.io()).map(stayOutboundPaymentDataBaseDto ->
-        {
-            StayOutboundPayment stayOutboundPayment = null;
-
-            if (stayOutboundPaymentDataBaseDto != null)
+        return mDailyMobileService.getStayOutboundPayment(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams), jsonObject) //
+            .subscribeOn(Schedulers.io()).map(stayOutboundPaymentDataBaseDto ->
             {
-                if (stayOutboundPaymentDataBaseDto.msgCode == 100 && stayOutboundPaymentDataBaseDto.data != null)
+                StayOutboundPayment stayOutboundPayment = null;
+
+                if (stayOutboundPaymentDataBaseDto != null)
                 {
-                    stayOutboundPayment = stayOutboundPaymentDataBaseDto.data.getStayOutboundPayment();
+                    if (stayOutboundPaymentDataBaseDto.msgCode == 100 && stayOutboundPaymentDataBaseDto.data != null)
+                    {
+                        stayOutboundPayment = stayOutboundPaymentDataBaseDto.data.getStayOutboundPayment();
+                    } else
+                    {
+                        throw new BaseException(stayOutboundPaymentDataBaseDto.msgCode, stayOutboundPaymentDataBaseDto.msg);
+                    }
                 } else
                 {
-                    throw new BaseException(stayOutboundPaymentDataBaseDto.msgCode, stayOutboundPaymentDataBaseDto.msg);
+                    throw new BaseException(-1, null);
                 }
-            } else
-            {
-                throw new BaseException(-1, null);
-            }
 
-            return stayOutboundPayment;
-        }).observeOn(AndroidSchedulers.mainThread());
+                return stayOutboundPayment;
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -116,54 +116,54 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
         final String API = Constants.UNENCRYPTED_URL ? "api/v3/hotel/payment/preview"//
             : "MTIkNDQkNTUkNTMkMzYkODQkODQkODQkMTQkNjQkOTUkNjckNTAkMTAwJDE2JDg3JA==$QTBENDRBMzY5VNUDLBEQUExNjlBMTc3ODE4QUQU0N0VENDZXBODNE5NTEM1ML0RGNTYREGRTQ0NzMwNkI5NEQwMPzQYLGwQjEzQKg=A=$";
 
-        return mDailyMobileService.getStayPayment(Crypto.getUrlDecoderEx(API), index, stayBookDateTime.getCheckInDateTime("yyyy-MM-dd")//
-            , nights).subscribeOn(Schedulers.io()).map(stayPaymentDataBaseDto ->
-        {
-            StayPayment stayPayment = null;
-
-            if (stayPaymentDataBaseDto != null)
+        return mDailyMobileService.getStayPayment(Crypto.getUrlDecoderEx(API), index, stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"), nights) //
+            .subscribeOn(Schedulers.io()).map(stayPaymentDataBaseDto ->
             {
-                // 0	성공
-                // 4	데이터가 없을시
-                // 5	판매 마감시
-                // 6	현재 시간부터 날짜 바뀌기 전시간(새벽 3시
-                // 7    3시부터 9시까지
-                switch (stayPaymentDataBaseDto.msgCode)
+                StayPayment stayPayment = null;
+
+                if (stayPaymentDataBaseDto != null)
                 {
-                    case 100:
-                        if (stayPaymentDataBaseDto.data != null)
-                        {
-                            stayPayment = stayPaymentDataBaseDto.data.getStayPayment();
-                        } else
-                        {
-                            throw new BaseException(stayPaymentDataBaseDto.msgCode, stayPaymentDataBaseDto.msg);
-                        }
-                        break;
+                    // 0	성공
+                    // 4	데이터가 없을시
+                    // 5	판매 마감시
+                    // 6	현재 시간부터 날짜 바뀌기 전시간(새벽 3시
+                    // 7    3시부터 9시까지
+                    switch (stayPaymentDataBaseDto.msgCode)
+                    {
+                        case 100:
+                            if (stayPaymentDataBaseDto.data != null)
+                            {
+                                stayPayment = stayPaymentDataBaseDto.data.getStayPayment();
+                            } else
+                            {
+                                throw new BaseException(stayPaymentDataBaseDto.msgCode, stayPaymentDataBaseDto.msg);
+                            }
+                            break;
 
-                    case 6:
-                    case 7:
-                        if (stayPaymentDataBaseDto.data != null)
-                        {
-                            stayPayment = stayPaymentDataBaseDto.data.getStayPayment();
-                            stayPayment.mWarningMessage = stayPaymentDataBaseDto.msg;
-                        } else
-                        {
-                            throw new BaseException(stayPaymentDataBaseDto.msgCode, stayPaymentDataBaseDto.msg);
-                        }
-                        break;
+                        case 6:
+                        case 7:
+                            if (stayPaymentDataBaseDto.data != null)
+                            {
+                                stayPayment = stayPaymentDataBaseDto.data.getStayPayment();
+                                stayPayment.mWarningMessage = stayPaymentDataBaseDto.msg;
+                            } else
+                            {
+                                throw new BaseException(stayPaymentDataBaseDto.msgCode, stayPaymentDataBaseDto.msg);
+                            }
+                            break;
 
-                    case 4:
-                    case 5:
-                    default:
-                        throw new BaseException(stayPaymentDataBaseDto.msgCode, stayPaymentDataBaseDto.msg);
+                        case 4:
+                        case 5:
+                        default:
+                            throw new BaseException(stayPaymentDataBaseDto.msgCode, stayPaymentDataBaseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
                 }
-            } else
-            {
-                throw new BaseException(-1, null);
-            }
 
-            return stayPayment;
-        }).observeOn(AndroidSchedulers.mainThread());
+                return stayPayment;
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -172,26 +172,27 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
         final String API = Constants.UNENCRYPTED_URL ? "api/fnb/sale/ticket/payment/info"//
             : "MzkkOTYkOTIkMTI5JDEwOSQzNyQxMjgkMTA3JDQ3JDY0JDMxJDEzMyQxNiQwJDk0JDEzOCQ=$KMzM4MzgyRkFFOTFBINUZCRkQxRjA5MjIEyRkFEOODYDwMkMwMKjk1RjkxRjNDMDM1MJTc1QjZCMjJCREFEQzk3NDdGMkUCzMDgVzNDZEGRkE1QThWDNkQM1MzNBRjEyMjQwQUUYH1DNkIQw$";
 
-        return mDailyMobileService.getGourmetPayment(Crypto.getUrlDecoderEx(API), menuIndex).subscribeOn(Schedulers.io()).map(gourmetPaymentDataBaseDto ->
-        {
-            GourmetPayment gourmetPayment = null;
-
-            if (gourmetPaymentDataBaseDto != null)
+        return mDailyMobileService.getGourmetPayment(Crypto.getUrlDecoderEx(API), menuIndex) //
+            .subscribeOn(Schedulers.io()).map(gourmetPaymentDataBaseDto ->
             {
-                if (gourmetPaymentDataBaseDto.msgCode == 0 && gourmetPaymentDataBaseDto.data != null)
+                GourmetPayment gourmetPayment = null;
+
+                if (gourmetPaymentDataBaseDto != null)
                 {
-                    gourmetPayment = gourmetPaymentDataBaseDto.data.getGourmetPayment();
+                    if (gourmetPaymentDataBaseDto.msgCode == 0 && gourmetPaymentDataBaseDto.data != null)
+                    {
+                        gourmetPayment = gourmetPaymentDataBaseDto.data.getGourmetPayment();
+                    } else
+                    {
+                        throw new BaseException(gourmetPaymentDataBaseDto.msgCode, gourmetPaymentDataBaseDto.msg);
+                    }
                 } else
                 {
-                    throw new BaseException(gourmetPaymentDataBaseDto.msgCode, gourmetPaymentDataBaseDto.msg);
+                    throw new BaseException(-1, null);
                 }
-            } else
-            {
-                throw new BaseException(-1, null);
-            }
 
-            return gourmetPayment;
-        }).observeOn(AndroidSchedulers.mainThread());
+                return gourmetPayment;
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -200,33 +201,34 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
         final String API = Constants.UNENCRYPTED_URL ? "api/user/session/billing/card/info"//
             : "NDIkOCQ1NSQ4NyQ4NyQ4MCQxMzIkOTIkMTMwJDU2JDE2JDQyJDY4JDU5JDEzMCQ3MyQ=$QzdFNkE5NNjgzM0JIFMjZFRjlCQjY4OEQ3NkI5NDdDKRjUMxNDkzNTk1MTBWjkzQkE5NELNDNQ0RFOENGRDAwMGEE5MTE3UARDYFGQjEzMzMxRjVDMDA2MjVEQzBGMTgxREYJGNDMK3MTGI2$";
 
-        return mDailyMobileService.getEasyCardList(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io()).map(new Function<BaseListDto<CardData>, List<Card>>()
-        {
-            @Override
-            public List<Card> apply(@io.reactivex.annotations.NonNull BaseListDto<CardData> cardDataBaseListDto) throws Exception
+        return mDailyMobileService.getEasyCardList(Crypto.getUrlDecoderEx(API)) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseListDto<CardData>, List<Card>>()
             {
-                List<Card> cardList = new ArrayList<>();
-
-                if (cardDataBaseListDto != null)
+                @Override
+                public List<Card> apply(@io.reactivex.annotations.NonNull BaseListDto<CardData> cardDataBaseListDto) throws Exception
                 {
-                    if (cardDataBaseListDto.msgCode == 0 && cardDataBaseListDto.data != null)
+                    List<Card> cardList = new ArrayList<>();
+
+                    if (cardDataBaseListDto != null)
                     {
-                        for (CardData cardData : cardDataBaseListDto.data)
+                        if (cardDataBaseListDto.msgCode == 0 && cardDataBaseListDto.data != null)
                         {
-                            cardList.add(cardData.getCard());
+                            for (CardData cardData : cardDataBaseListDto.data)
+                            {
+                                cardList.add(cardData.getCard());
+                            }
+                        } else
+                        {
+                            throw new BaseException(cardDataBaseListDto.msgCode, cardDataBaseListDto.msg);
                         }
                     } else
                     {
-                        throw new BaseException(cardDataBaseListDto.msgCode, cardDataBaseListDto.msg);
+                        throw new BaseException(-1, null);
                     }
-                } else
-                {
-                    throw new BaseException(-1, null);
-                }
 
-                return cardList;
-            }
-        }).observeOn(AndroidSchedulers.mainThread());
+                    return cardList;
+                }
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -240,27 +242,27 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{hotelId}", Integer.toString(index));
 
-        return mDailyMobileService.getStayOutboundPaymentTypeEasy(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
-            , jsonObject).subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->
-        {
-            PaymentResult paymentResult = null;
-
-            if (paymentResultDataBaseDto != null)
+        return mDailyMobileService.getStayOutboundPaymentTypeEasy(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams), jsonObject) //
+            .subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->
             {
-                if (paymentResultDataBaseDto.msgCode == 100 && paymentResultDataBaseDto.data != null)
+                PaymentResult paymentResult = null;
+
+                if (paymentResultDataBaseDto != null)
                 {
-                    paymentResult = paymentResultDataBaseDto.data.getPaymentResult();
+                    if (paymentResultDataBaseDto.msgCode == 100 && paymentResultDataBaseDto.data != null)
+                    {
+                        paymentResult = paymentResultDataBaseDto.data.getPaymentResult();
+                    } else
+                    {
+                        throw new BaseException(paymentResultDataBaseDto.msgCode, paymentResultDataBaseDto.msg);
+                    }
                 } else
                 {
-                    throw new BaseException(paymentResultDataBaseDto.msgCode, paymentResultDataBaseDto.msg);
+                    throw new BaseException(-1, null);
                 }
-            } else
-            {
-                throw new BaseException(-1, null);
-            }
 
-            return paymentResult;
-        }).observeOn(AndroidSchedulers.mainThread());
+                return paymentResult;
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -274,27 +276,27 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{hotelId}", Integer.toString(index));
 
-        return mDailyMobileService.getStayOutboundPaymentTypeBonus(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
-            , jsonObject).subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->
-        {
-            PaymentResult paymentResult = null;
-
-            if (paymentResultDataBaseDto != null)
+        return mDailyMobileService.getStayOutboundPaymentTypeBonus(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams), jsonObject) //
+            .subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->
             {
-                if (paymentResultDataBaseDto.msgCode == 100 && paymentResultDataBaseDto.data != null)
+                PaymentResult paymentResult = null;
+
+                if (paymentResultDataBaseDto != null)
                 {
-                    paymentResult = paymentResultDataBaseDto.data.getPaymentResult();
+                    if (paymentResultDataBaseDto.msgCode == 100 && paymentResultDataBaseDto.data != null)
+                    {
+                        paymentResult = paymentResultDataBaseDto.data.getPaymentResult();
+                    } else
+                    {
+                        throw new BaseException(paymentResultDataBaseDto.msgCode, paymentResultDataBaseDto.msg);
+                    }
                 } else
                 {
-                    throw new BaseException(paymentResultDataBaseDto.msgCode, paymentResultDataBaseDto.msg);
+                    throw new BaseException(-1, null);
                 }
-            } else
-            {
-                throw new BaseException(-1, null);
-            }
 
-            return paymentResult;
-        }).observeOn(AndroidSchedulers.mainThread());
+                return paymentResult;
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -308,31 +310,31 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{stayIndex}", Integer.toString(index));
 
-        return mDailyMobileService.getStayOutboundHasDuplicatePayment(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
-            , jsonObject).subscribeOn(Schedulers.io()).map(new Function<BaseDto<String>, String>()
-        {
-            @Override
-            public String apply(@io.reactivex.annotations.NonNull BaseDto<String> baseDto) throws Exception
+        return mDailyMobileService.getStayOutboundHasDuplicatePayment(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams), jsonObject) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<String>, String>()
             {
-                String message;
-
-                if (baseDto != null)
+                @Override
+                public String apply(@io.reactivex.annotations.NonNull BaseDto<String> baseDto) throws Exception
                 {
-                    if (baseDto.msgCode == 100)
+                    String message;
+
+                    if (baseDto != null)
                     {
-                        message = "";
+                        if (baseDto.msgCode == 100)
+                        {
+                            message = "";
+                        } else
+                        {
+                            message = baseDto.msg;
+                        }
                     } else
                     {
-                        message = baseDto.msg;
+                        throw new BaseException(-1, null);
                     }
-                } else
-                {
-                    throw new BaseException(-1, null);
-                }
 
-                return message;
-            }
-        }).observeOn(AndroidSchedulers.mainThread());
+                    return message;
+                }
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -341,26 +343,27 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
         final String API = Constants.UNENCRYPTED_URL ? "api/v4/booking/hotel/oneclick"//
             : "NDQkNzMkNDUkNjAkMzEkMzkkNyQxNSQ0OSQ4OSQxJDM0JDIyJDM2JDc5JDgxJA==$OADFGREUJ1NkUwMjXExMTYZyQjk0MzMzQTgXPO1Q0ZDNTBBGM0VBZQSM0RDRUQwMDAwNDWk0QUEzNUIO2JRjQ1YMjM3M0VEXQ0I3RA==$";
 
-        return mDailyMobileService.getPaymentTypeEasy(Crypto.getUrlDecoderEx(API), jsonObject).subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->
-        {
-            PaymentResult paymentResult = null;
-
-            if (paymentResultDataBaseDto != null)
+        return mDailyMobileService.getPaymentTypeEasy(Crypto.getUrlDecoderEx(API), jsonObject) //
+            .subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->
             {
-                if (paymentResultDataBaseDto.msgCode == 100 && paymentResultDataBaseDto.data != null)
+                PaymentResult paymentResult = null;
+
+                if (paymentResultDataBaseDto != null)
                 {
-                    paymentResult = paymentResultDataBaseDto.data.getPaymentResult();
+                    if (paymentResultDataBaseDto.msgCode == 100 && paymentResultDataBaseDto.data != null)
+                    {
+                        paymentResult = paymentResultDataBaseDto.data.getPaymentResult();
+                    } else
+                    {
+                        throw new BaseException(paymentResultDataBaseDto.msgCode, paymentResultDataBaseDto.msg);
+                    }
                 } else
                 {
-                    throw new BaseException(paymentResultDataBaseDto.msgCode, paymentResultDataBaseDto.msg);
+                    throw new BaseException(-1, null);
                 }
-            } else
-            {
-                throw new BaseException(-1, null);
-            }
 
-            return paymentResult;
-        }).observeOn(AndroidSchedulers.mainThread());
+                return paymentResult;
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -369,26 +372,27 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
         final String API = Constants.UNENCRYPTED_URL ? "api/v4/booking/hotel/daily/only"//
             : "MzgkNDUkMyQyOSQ2MiQyNCQxNiQ0OSQ0OSQxNCQxMSQ3NyQ2MSQyMCQ0MSQxMyQ=$RTAU0NEFCRjFRQDQQzgAzIOTE0NjAJxMDAxSMEU3NTRU4RUIM0RkE0KXDNjRDMThEEOTQxNzPdBN0VGRkJVCNTgyMzMyN0ZGQzYzOA==$";
 
-        return mDailyMobileService.getPaymentTypeBonus(Crypto.getUrlDecoderEx(API), jsonObject).subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->
-        {
-            PaymentResult paymentResult = null;
-
-            if (paymentResultDataBaseDto != null)
+        return mDailyMobileService.getPaymentTypeBonus(Crypto.getUrlDecoderEx(API), jsonObject) //
+            .subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->
             {
-                if (paymentResultDataBaseDto.msgCode == 100 && paymentResultDataBaseDto.data != null)
+                PaymentResult paymentResult = null;
+
+                if (paymentResultDataBaseDto != null)
                 {
-                    paymentResult = paymentResultDataBaseDto.data.getPaymentResult();
+                    if (paymentResultDataBaseDto.msgCode == 100 && paymentResultDataBaseDto.data != null)
+                    {
+                        paymentResult = paymentResultDataBaseDto.data.getPaymentResult();
+                    } else
+                    {
+                        throw new BaseException(paymentResultDataBaseDto.msgCode, paymentResultDataBaseDto.msg);
+                    }
                 } else
                 {
-                    throw new BaseException(paymentResultDataBaseDto.msgCode, paymentResultDataBaseDto.msg);
+                    throw new BaseException(-1, null);
                 }
-            } else
-            {
-                throw new BaseException(-1, null);
-            }
 
-            return paymentResult;
-        }).observeOn(AndroidSchedulers.mainThread());
+                return paymentResult;
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
@@ -399,8 +403,8 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
 
         return mDailyMobileService.getStayRefundPolicy(Crypto.getUrlDecoderEx(API), stayIndex//
             , roomIndex, stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT) //
-            , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)).subscribeOn(Schedulers.io()) //
-            .map(new Function<BaseDto<StayRefundPolicyData>, StayRefundPolicy>()
+            , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<StayRefundPolicyData>, StayRefundPolicy>()
             {
                 @Override
                 public StayRefundPolicy apply(@io.reactivex.annotations.NonNull BaseDto<StayRefundPolicyData> stayRefundPolicyDataBaseDto) throws Exception
@@ -479,26 +483,27 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
         final String API = Constants.UNENCRYPTED_URL ? "api/v4/booking/gourmet/oneclick"//
             : "MjMkODIkMzYkMTkkODkkODckMTMkNTQkMzYkMTckNTckNSQ3MiQ0OSQ3NyQzNSQ=$NzUxOUURCRjAzMIjdBKRDQQ0ODYB0NzZEODDhBMW0MX3MDYxMzCAzMEUwNDQQY5QzRBQTY0QTURyQzEVGQUMwM0NENzM2MY0IXzNMw==$";
 
-        return mDailyMobileService.getPaymentTypeEasy(Crypto.getUrlDecoderEx(API), jsonObject).subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->
-        {
-            PaymentResult paymentResult = null;
-
-            if (paymentResultDataBaseDto != null)
+        return mDailyMobileService.getPaymentTypeEasy(Crypto.getUrlDecoderEx(API), jsonObject) //
+            .subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->
             {
-                if (paymentResultDataBaseDto.msgCode == 100 && paymentResultDataBaseDto.data != null)
+                PaymentResult paymentResult = null;
+
+                if (paymentResultDataBaseDto != null)
                 {
-                    paymentResult = paymentResultDataBaseDto.data.getPaymentResult();
+                    if (paymentResultDataBaseDto.msgCode == 100 && paymentResultDataBaseDto.data != null)
+                    {
+                        paymentResult = paymentResultDataBaseDto.data.getPaymentResult();
+                    } else
+                    {
+                        throw new BaseException(paymentResultDataBaseDto.msgCode, paymentResultDataBaseDto.msg);
+                    }
                 } else
                 {
-                    throw new BaseException(paymentResultDataBaseDto.msgCode, paymentResultDataBaseDto.msg);
+                    throw new BaseException(-1, null);
                 }
-            } else
-            {
-                throw new BaseException(-1, null);
-            }
 
-            return paymentResult;
-        }).observeOn(AndroidSchedulers.mainThread());
+                return paymentResult;
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 
     /**
@@ -519,26 +524,27 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
         final String API = Constants.UNENCRYPTED_URL ? "api/v4/booking/gourmet/daily/only"//
             : "MTI0JDMkNDMkODUkNDMkNjYkMzQkOTAkNjIkMTIkMTckOTgkOTckMTIzJDE0MSQzNyQ=$Q0IY4NjM0OEMBwMTITxRjlCMzM4NzA3QTJBONNUIxRUFEQTFFQzN0I1NUEwRDhGRTIM1ODET2NURENzIwQjhDMDdCM0UJ3ZQTMX1OMzNENUIxOEMxQTU3MUU4RERIBMkQyMDA3MkM4BNEQZ1$";
 
-        return mDailyMobileService.getPaymentTypeBonus(Crypto.getUrlDecoderEx(API), jsonObject).subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->
-        {
-            PaymentResult paymentResult = null;
-
-            if (paymentResultDataBaseDto != null)
+        return mDailyMobileService.getPaymentTypeBonus(Crypto.getUrlDecoderEx(API), jsonObject) //
+            .subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->
             {
-                if (paymentResultDataBaseDto.msgCode == 100 && paymentResultDataBaseDto.data != null)
+                PaymentResult paymentResult = null;
+
+                if (paymentResultDataBaseDto != null)
                 {
-                    paymentResult = paymentResultDataBaseDto.data.getPaymentResult();
+                    if (paymentResultDataBaseDto.msgCode == 100 && paymentResultDataBaseDto.data != null)
+                    {
+                        paymentResult = paymentResultDataBaseDto.data.getPaymentResult();
+                    } else
+                    {
+                        throw new BaseException(paymentResultDataBaseDto.msgCode, paymentResultDataBaseDto.msg);
+                    }
                 } else
                 {
-                    throw new BaseException(paymentResultDataBaseDto.msgCode, paymentResultDataBaseDto.msg);
+                    throw new BaseException(-1, null);
                 }
-            } else
-            {
-                throw new BaseException(-1, null);
-            }
 
-            return paymentResult;
-        }).observeOn(AndroidSchedulers.mainThread());
+                return paymentResult;
+            }).observeOn(AndroidSchedulers.mainThread());
     }
 
     private JSONArray getRooms(People[] peoples, int[] roomBedTypeIds)

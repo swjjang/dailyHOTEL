@@ -65,7 +65,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
         void showBirthdayDatePicker(int year, int month, int day);
 
-        void onUpdateUserInformation(String phoneNumber, String email, String name, String recommender, String birthday, boolean isBenefit, int month);
+        void onUpdateUserInformation(String phoneNumber, String email, String name, String birthday, boolean isBenefit, int month);
     }
 
     public AddProfileSocialLayout(Context context, OnEventListener mOnEventListener)
@@ -301,7 +301,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
                 }
 
                 ((OnEventListener) mOnEventListener).onUpdateUserInformation(phoneNumber, email, name //
-                    , null, birthday, mBenefitCheckBox.isChecked(), month);
+                    , birthday, mBenefitCheckBox.isChecked(), month);
                 break;
             }
 

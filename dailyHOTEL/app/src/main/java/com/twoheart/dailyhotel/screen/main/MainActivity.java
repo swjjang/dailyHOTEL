@@ -1250,7 +1250,8 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
         {
             mDelayTimeHandler.removeMessages(0);
 
-            addCompositeDisposable(new CommonRemoteImpl(MainActivity.this).getConfigurations().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Configurations>()
+            addCompositeDisposable(new CommonRemoteImpl(MainActivity.this).getConfigurations() //
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Configurations>()
             {
                 @Override
                 public void accept(Configurations configurations) throws Exception

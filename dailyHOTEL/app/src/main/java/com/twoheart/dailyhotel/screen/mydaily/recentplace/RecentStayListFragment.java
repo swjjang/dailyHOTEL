@@ -652,6 +652,12 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             return;
         }
 
+        if (mListLayout == null)
+        {
+            Util.restartApp(getContext());
+            return;
+        }
+
         PlaceViewItem placeViewItem = mListLayout.getItem(position);
 
         if (placeViewItem == null)

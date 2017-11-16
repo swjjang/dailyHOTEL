@@ -983,14 +983,20 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         if (observable != null)
         {
-            screenLock(false);
+            if (animation == true)
+            {
+                screenLock(false);
+            }
 
             addCompositeDisposable(observable.subscribe(new Consumer<Boolean>()
             {
                 @Override
                 public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
                 {
-                    unLockAll();
+                    if (animation == true)
+                    {
+                        unLockAll();
+                    }
 
                     setStatus(STATUS_ROOM_LIST);
                 }
