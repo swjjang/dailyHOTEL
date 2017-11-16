@@ -192,6 +192,12 @@ public class StayListFragment extends PlaceListFragment
             return;
         }
 
+        if (mPlaceListLayout == null)
+        {
+            Util.restartApp(getContext());
+            return;
+        }
+
         PlaceViewItem placeViewItem = mPlaceListLayout.getItem(position);
 
         if (placeViewItem == null)
