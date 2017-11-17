@@ -185,6 +185,19 @@ public class GourmetCart
         return totalPrice;
     }
 
+    public int[] getMenuSaleIndexes()
+    {
+        int[] menuIndexes = new int[getMenuCount()];
+        int i = 0;
+
+        for (GourmetCartMenu gourmetCartMenu : mOrderMenuMap.values())
+        {
+            menuIndexes[i++] = gourmetCartMenu.saleIndex;
+        }
+
+        return menuIndexes;
+    }
+
     public boolean equalsDay(String visitDay) throws Exception
     {
         return DailyCalendar.compareDateDay(visitDateTime, visitDay) == 0;
@@ -200,6 +213,7 @@ public class GourmetCart
         GourmetCartMenu gourmetCartMenu = new GourmetCartMenu();
 
         gourmetCartMenu.index = gourmetMenu.index;
+        gourmetCartMenu.saleIndex = gourmetMenu.saleIndex;
         gourmetCartMenu.price = gourmetMenu.price;
         gourmetCartMenu.discountPrice = gourmetMenu.discountPrice;
         gourmetCartMenu.name = gourmetMenu.name;
@@ -225,7 +239,6 @@ public class GourmetCart
             jsonObject.put("gourmetIndex", gourmetIndex);
             jsonObject.put("gourmetName", gourmetName);
             jsonObject.put("visitDateTime", visitDateTime);
-
 
             JSONArray jsonArray = new JSONArray();
 

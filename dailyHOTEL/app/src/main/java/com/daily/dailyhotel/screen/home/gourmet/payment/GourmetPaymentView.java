@@ -25,6 +25,7 @@ import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyScrollView;
 import com.daily.dailyhotel.entity.Card;
+import com.daily.dailyhotel.entity.GourmetCart;
 import com.daily.dailyhotel.view.DailyBookingAgreementThirdPartyView;
 import com.daily.dailyhotel.view.DailyBookingGuestInformationsView;
 import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
@@ -48,12 +49,6 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
     {
         void onCallClick();
 
-        void onVisitTimeClick();
-
-        void onMenuCountPlusClick();
-
-        void onMenuCountMinusClick();
-
         void onBonusClick(boolean selected);
 
         void onCouponClick(boolean selected);
@@ -71,6 +66,10 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
         void onPhoneNumberClick(String phoneNumber);
 
         void onAgreedThirdPartyTermsClick(boolean checked);
+
+        void onPersonsPlusClick();
+
+        void onPersonsMinusClick();
     }
 
     public GourmetPaymentView(BaseActivity baseActivity, GourmetPaymentView.OnEventListener listener)
@@ -109,20 +108,20 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
     }
 
     @Override
-    public void setBooking(String visitDate, String gourmetName, String menuName)
+    public void setBooking(CharSequence visitDateTime, String gourmetName, GourmetCart gourmetCart)
     {
-        if (getViewDataBinding() == null)
+        if (getViewDataBinding() == null || gourmetCart == null)
         {
             return;
         }
 
-        getViewDataBinding().dateInformationView.setDate1Text(getString(R.string.label_visit_day), visitDate);
-        getViewDataBinding().dateInformationView.setCenterNightsVisible(false);
+        getViewDataBinding().date1TextView.setText(visitDateTime);
+
 
         getViewDataBinding().menuInformationView.setTitle(R.string.label_booking_ticket_info);
         getViewDataBinding().menuInformationView.removeAllInformation();
         getViewDataBinding().menuInformationView.addInformation(getString(R.string.label_booking_place_name), gourmetName);
-        getViewDataBinding().menuInformationView.addInformation(getString(R.string.label_booking_ticket_type), menuName);
+        //        getViewDataBinding().menuInformationView.addInformation(getString(R.string.label_booking_ticket_type), menuName);
 
         getViewDataBinding().guestCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
         {
@@ -132,37 +131,6 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
                 getEventListener().onChangedGuestClick(isChecked);
             }
         });
-    }
-
-    @Override
-    public void setVisitTime(String time)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        if (time == null)
-        {
-            getViewDataBinding().dateInformationView.setDate2Text(getString(R.string.label_booking_select_ticket_time), getString(R.string.message_booking_selected_time));
-        } else
-        {
-            getViewDataBinding().dateInformationView.setDate2Text(getString(R.string.label_booking_select_ticket_time), time);
-        }
-
-        getViewDataBinding().dateInformationView.setDate2DescriptionTextColor(getColor(R.color.default_text_cb70038));
-        getViewDataBinding().dateInformationView.setDate2DescriptionTextDrawable(0, 0, R.drawable.navibar_m_burg_ic_v, 0);
-    }
-
-    @Override
-    public void setMenuCount(int menuCount)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        getViewDataBinding().menuCountTextView.setText(getString(R.string.label_booking_count, menuCount));
     }
 
     public void setOverseas(boolean overseas)
@@ -189,28 +157,6 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
             getViewDataBinding().guestInformationView.setGuideTextVisible(false);
             getViewDataBinding().guestInformationView.setVisibility(View.GONE);
         }
-    }
-
-    @Override
-    public void setMenuMinusEnabled(boolean enabled)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        getViewDataBinding().menuCountMinus.setEnabled(enabled);
-    }
-
-    @Override
-    public void setMenuPlusEnabled(boolean enabled)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        getViewDataBinding().menuCountPlus.setEnabled(enabled);
     }
 
     @Override
@@ -294,15 +240,14 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
     }
 
     @Override
-    public void setGourmetPayment(int menuCount, int totalPrice, int discountPrice)
+    public void setGourmetPayment(int totalPrice, int discountPrice)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        getViewDataBinding().informationView.setReservationPrice(menuCount > 1 ? getString(R.string.label_booking_gourmet_count, menuCount) : null//
-            , totalPrice);
+        getViewDataBinding().informationView.setReservationPrice(null, totalPrice);
 
         getViewDataBinding().informationView.setDiscountPrice(discountPrice);
 
@@ -527,18 +472,21 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
     }
 
     @Override
+    public void setPersons(int count)
+    {
+        if (getViewDataBinding() == null || count < 0)
+        {
+            return;
+        }
+
+        getViewDataBinding().personsTextView.setText(getString(R.string.label_gourmet_payment_number_of_persons, count));
+    }
+
+    @Override
     public void onClick(View v)
     {
         switch (v.getId())
         {
-            case R.id.menuCountMinus:
-                getEventListener().onMenuCountMinusClick();
-                break;
-
-            case R.id.menuCountPlus:
-                getEventListener().onMenuCountPlusClick();
-                break;
-
             case R.id.doPaymentView:
             {
                 if (getViewDataBinding() == null)
@@ -596,17 +544,23 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
             return;
         }
 
-        getViewDataBinding().dateInformationView.setOnDateClickListener(null, new View.OnClickListener()
+        getViewDataBinding().personMinusImageView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                getEventListener().onVisitTimeClick();
+                getEventListener().onPersonsMinusClick();
             }
         });
 
-        getViewDataBinding().menuCountMinus.setOnClickListener(this);
-        getViewDataBinding().menuCountPlus.setOnClickListener(this);
+        getViewDataBinding().personPlusImageView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onPersonsPlusClick();
+            }
+        });
 
         getViewDataBinding().guestInformationView.setOnGuestInformationsClickListener(new DailyBookingGuestInformationsView.OnGuestInformationsClickListener()
         {

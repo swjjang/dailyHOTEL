@@ -42,6 +42,7 @@ import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivi
 import com.daily.dailyhotel.screen.common.images.ImageListActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.menus.GourmetMenusActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.truereview.GourmetTrueReviewActivity;
+import com.daily.dailyhotel.screen.home.gourmet.payment.GourmetPaymentActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
@@ -1314,7 +1315,23 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             return;
         }
 
-        unLockAll();
+        addCompositeDisposable(mCartLocalImpl.getGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetCart>()
+        {
+            @Override
+            public void accept(GourmetCart gourmetCart) throws Exception
+            {
+                unLockAll();
+
+                onBookingCartMenu(gourmetCart);
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                unLockAll();
+            }
+        }));
     }
 
     private void setStatus(int status)
@@ -1995,11 +2012,11 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             imageUrl = imageInformationList.get(0).getImageMap().bigUrl;
         }
 
-        //        Intent intent = GourmetPaymentActivity.newInstance(getActivity(), gourmetDetail.index//
-        //            , gourmetDetail.name, imageUrl//
-        //            , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), false, gourmetDetail.category//
-        //            , mAnalytics.getStayPaymentAnalyticsParam(gourmetDetail, gourmetCart));
-        //
-        //        startActivityForResult(intent, GourmetDetailActivity.REQUEST_CODE_PAYMENT);
+        Intent intent = GourmetPaymentActivity.newInstance(getActivity(), gourmetDetail.index//
+            , gourmetDetail.name, imageUrl, gourmetCart.toJSONObject().toString()//
+            , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), false, gourmetDetail.category//
+            , mAnalytics.getStayPaymentAnalyticsParam(gourmetDetail, gourmetCart));
+
+        startActivityForResult(intent, GourmetDetailActivity.REQUEST_CODE_PAYMENT);
     }
 }

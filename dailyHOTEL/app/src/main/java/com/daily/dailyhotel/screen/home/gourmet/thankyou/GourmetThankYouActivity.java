@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
+import com.daily.dailyhotel.entity.GourmetCart;
 import com.daily.dailyhotel.parcel.analytics.GourmetThankYouAnalyticsParam;
 import com.twoheart.dailyhotel.R;
 
@@ -22,6 +23,7 @@ public class GourmetThankYouActivity extends BaseActivity<GourmetThankYouPresent
     static final String INTENT_EXTRA_DATA_MENU_NAME = "menuName";
     static final String INTENT_EXTRA_DATA_MENU_COUNT = "menuCount";
     static final String INTENT_EXTRA_DATA_AGGREGATION_ID = "aggregationId";
+    static final String INTENT_EXTRA_DATA_GOURMET_CART_JSON_STRING = "gourmetCartJSONString";
 
     public static Intent newInstance(Context context, String gourmetName, String imageUrl//
         , String visitDateTime, String menuName, int menuCount, String aggregationId, GourmetThankYouAnalyticsParam analyticsParam)
@@ -38,6 +40,22 @@ public class GourmetThankYouActivity extends BaseActivity<GourmetThankYouPresent
 
         return intent;
     }
+
+    public static Intent newInstance(Context context, String gourmetName, String imageUrl//
+        , String visitDateTime, GourmetCart gourmetCart, String aggregationId, GourmetThankYouAnalyticsParam analyticsParam)
+    {
+        Intent intent = new Intent(context, GourmetThankYouActivity.class);
+
+        intent.putExtra(INTENT_EXTRA_DATA_GOURMET_NAME, gourmetName);
+        intent.putExtra(INTENT_EXTRA_DATA_IMAGE_URL, imageUrl);
+        intent.putExtra(INTENT_EXTRA_DATA_VISIT_DATE_TIME, visitDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_GOURMET_CART_JSON_STRING, gourmetCart.toJSONObject().toString());
+        intent.putExtra(INTENT_EXTRA_DATA_AGGREGATION_ID, aggregationId);
+        intent.putExtra(INTENT_EXTRA_DATA_ANALYTICS, analyticsParam);
+
+        return intent;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

@@ -5,17 +5,14 @@ import android.view.View;
 
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.dailyhotel.entity.Card;
+import com.daily.dailyhotel.entity.GourmetCart;
 import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 
 import java.util.List;
 
 public interface GourmetPaymentInterface extends BaseDialogViewInterface
 {
-    void setBooking(String visitDate, String gourmetName, String menuName);
-
-    void setVisitTime(String time);
-
-    void setMenuCount(int menuCount);
+    void setBooking(CharSequence visitDateTime, String gourmetName, GourmetCart gourmetCart);
 
     void setUserInformation(String name, String mobile, String email);
 
@@ -27,7 +24,7 @@ public interface GourmetPaymentInterface extends BaseDialogViewInterface
 
     void setCoupon(boolean selected, int couponPrice);
 
-    void setGourmetPayment(int menuCount, int totalPrice, int discountPrice);
+    void setGourmetPayment(int totalPrice, int discountPrice);
 
     void setEasyCard(Card card);
 
@@ -47,10 +44,6 @@ public interface GourmetPaymentInterface extends BaseDialogViewInterface
 
     void setOverseas(boolean overseas);
 
-    void setMenuMinusEnabled(boolean enabled);
-
-    void setMenuPlusEnabled(boolean enabled);
-
     void showAgreeTermDialog(DailyBookingPaymentTypeView.PaymentType paymentType, int[] messages//
         , View.OnClickListener onClickListener, DialogInterface.OnCancelListener cancelListener);
 
@@ -58,4 +51,10 @@ public interface GourmetPaymentInterface extends BaseDialogViewInterface
         , View.OnClickListener onClickListener, DialogInterface.OnDismissListener dismissListener);
 
     void scrollTop();
+
+    void setPersons(int count);
+
+    void setPersonsPlusEnabled(boolean enabled);
+
+    void setPersonsMinusEnabled(boolean enabled);
 }

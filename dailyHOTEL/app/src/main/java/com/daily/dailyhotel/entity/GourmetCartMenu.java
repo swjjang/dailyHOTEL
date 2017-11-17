@@ -12,6 +12,7 @@ import org.json.JSONObject;
 public class GourmetCartMenu
 {
     public int index;
+    public int saleIndex;
     public int count;
     public int price;
     public int discountPrice;
@@ -33,6 +34,7 @@ public class GourmetCartMenu
         try
         {
             index = jsonObject.getInt("index");
+            saleIndex = jsonObject.getInt("saleIndex");
             count = jsonObject.getInt("count");
             price = jsonObject.getInt("price");
             discountPrice = jsonObject.getInt("discountPrice");
@@ -51,6 +53,7 @@ public class GourmetCartMenu
         try
         {
             jsonObject.put("index", index);
+            jsonObject.put("saleIndex", saleIndex);
             jsonObject.put("count", count);
             jsonObject.put("price", price);
             jsonObject.put("discountPrice", discountPrice);
