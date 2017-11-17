@@ -34,6 +34,7 @@ public class StayDetailActivity extends BaseActivity<StayDetailPresenter>
     static final int REQUEST_CODE_TRUE_VR = 10015;
     static final int REQUEST_CODE_NAVIGATOR = 10016;
     static final int REQUEST_CODE_REWARD = 10017;
+//    static final int REQUEST_CODE_CHOOSER = 10018;
 
     static final String INTENT_EXTRA_DATA_STAY_INDEX = "stayIndex";
     static final String INTENT_EXTRA_DATA_STAY_NAME = "stayName";

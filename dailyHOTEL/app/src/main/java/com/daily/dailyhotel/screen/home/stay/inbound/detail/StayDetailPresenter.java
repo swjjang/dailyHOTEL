@@ -6,8 +6,10 @@ import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -598,6 +600,12 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 }
                 break;
 
+            //            case StayDetailActivity.REQUEST_CODE_CHOOSER:
+            //            {
+            ////                ExLog.d("sam : " + (data == null ? "data is null" : data.toString()));
+            //                break;
+            //            }
+
         }
     }
 
@@ -879,23 +887,6 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d"//
                 , mStayDetail.index, mStayBookDateTime.getCheckInDateTime("yyyy-MM-dd"), nights);
 
-            String name = DailyUserPreference.getInstance(getActivity()).getName();
-
-            if (DailyTextUtils.isTextEmpty(name) == true)
-            {
-                name = getString(R.string.label_friend) + "가";
-            } else
-            {
-                name += "님이";
-            }
-
-            final String message = getString(R.string.message_detail_stay_share_sms//
-                , name, mStayDetail.name//
-                , mStayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)")//
-                , mStayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)")//
-                , nights, nights + 1 //
-                , mStayDetail.address);
-
             addCompositeDisposable(mCommonRemoteImpl.getShortUrl(longUrl).subscribe(new Consumer<String>()
             {
                 @Override
@@ -903,7 +894,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 {
                     unLockAll();
 
-                    Util.sendSms(getActivity(), message + shortUrl);
+                    DailyTextUtils.clipText(getActivity(), shortUrl);
                 }
             }, new Consumer<Throwable>()
             {
@@ -912,13 +903,13 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 {
                     unLockAll();
 
-                    Util.sendSms(getActivity(), message + "https://mobile.dailyhotel.co.kr/stay/" + mStayDetail.index);
+                    DailyTextUtils.clipText(getActivity(), "https://mobile.dailyhotel.co.kr/stay/" + mStayDetail.index);
                 }
             }));
 
-            mAnalytics.onEventShareSmsClick(getActivity(), DailyHotel.isLogin()//
-                , DailyUserPreference.getInstance(getActivity()).getType()//
-                , DailyUserPreference.getInstance(getActivity()).isBenefitAlarm(), mStayDetail.index, mStayDetail.name, mStayDetail.overseas);
+            //            mAnalytics.onEventShareSmsClick(getActivity(), DailyHotel.isLogin()//
+            //                , DailyUserPreference.getInstance(getActivity()).getType()//
+            //                , DailyUserPreference.getInstance(getActivity()).isBenefitAlarm(), mStayDetail.index, mStayDetail.name, mStayDetail.overseas);
         } catch (Exception e)
         {
             unLockAll();
@@ -961,12 +952,496 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 {
                     unLockAll();
 
+                    List<Intent> shareIntentList = new ArrayList<>();
+
+                    List<String> packageNameList = new ArrayList<>();
+
+                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                    intent.setType("image/*");
+
+                    List<ResolveInfo> resInfo = getActivity().getPackageManager().queryIntentActivities(intent, 0);
+                    if (resInfo == null || resInfo.size() == 0)
+                    {
+                        DailyToast.showToast(getActivity(), "공유가능한 앱이 없습니다", DailyToast.LENGTH_SHORT);
+                        return;
+                    }
+
+                    for (ResolveInfo info : resInfo)
+                    {
+                        ExLog.d("sam : " + info.activityInfo.name + " , p : " + info.activityInfo.packageName);
+                        if (packageNameList.contains(info.activityInfo.packageName) == true)
+                        {
+                            continue;
+                        }
+
+                        if (info.activityInfo.packageName.toLowerCase().equalsIgnoreCase("com.kakao.talk") == true)
+                        {
+                            continue;
+                        }
+
+                        packageNameList.add(info.activityInfo.packageName);
+
+                        Intent shareIntent = (Intent) intent.clone();
+
+                        if (info.activityInfo.packageName.toLowerCase().equalsIgnoreCase("com.facebook.katana") == true)
+                        {
+                            shareIntent.setType("text/plain");
+                            shareIntent.putExtra(Intent.EXTRA_TEXT, shortUrl);
+                            shareIntent.setPackage(info.activityInfo.packageName);
+
+                            shareIntentList.add(shareIntent);
+                        } else
+                        {
+                            shareIntent.setType("text/plain");
+                            shareIntent.putExtra(Intent.EXTRA_SUBJECT, "");
+                            shareIntent.putExtra(Intent.EXTRA_TEXT, message + shortUrl);
+                            shareIntent.setPackage(info.activityInfo.packageName);
+
+                            shareIntentList.add(shareIntent);
+                        }
+                    }
+
+                    Intent chooser = Intent.createChooser(shareIntentList.remove(0), "type : image/* , 중복 package, 카카오톡 제거");
+                    //                    Intent chooser = Intent.createChooser(shareIntentList.remove(0), getString(R.string.label_doshare));
+                    chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, shareIntentList.toArray(new Parcelable[]{}));
+                    startActivity(chooser);
+
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@NonNull Throwable throwable) throws Exception
+                {
+                    unLockAll();
+
                     Intent intent = new Intent(android.content.Intent.ACTION_SEND);
                     intent.setType("text/plain");
                     intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.label_doshare));
-                    intent.putExtra(Intent.EXTRA_TEXT, message + shortUrl);
+                    intent.putExtra(Intent.EXTRA_TEXT, message + "https://mobile.dailyhotel.co.kr/stay/" + mStayDetail.index);
                     Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
                     startActivity(chooser);
+                }
+            }));
+
+            //            mAnalytics.onEventShareSmsClick(getActivity(), DailyHotel.isLogin()//
+            //                , DailyUserPreference.getInstance(getActivity()).getType()//
+            //                , DailyUserPreference.getInstance(getActivity()).isBenefitAlarm(), mStayDetail.index, mStayDetail.name, mStayDetail.overseas);
+        } catch (Exception e)
+        {
+            unLockAll();
+
+            ExLog.d(e.toString());
+        }
+    }
+
+    @Override
+    public void onMoreShareClick2()
+    {
+        try
+        {
+            int nights = mStayBookDateTime.getNights();
+
+            String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d"//
+                , mStayDetail.index, mStayBookDateTime.getCheckInDateTime("yyyy-MM-dd"), nights);
+
+            String name = DailyUserPreference.getInstance(getActivity()).getName();
+
+            if (DailyTextUtils.isTextEmpty(name) == true)
+            {
+                name = getString(R.string.label_friend) + "가";
+            } else
+            {
+                name += "님이";
+            }
+
+            final String message = getString(R.string.message_detail_stay_share_sms//
+                , name, mStayDetail.name//
+                , mStayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)")//
+                , mStayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)")//
+                , nights, nights + 1 //
+                , mStayDetail.address);
+
+            addCompositeDisposable(mCommonRemoteImpl.getShortUrl(longUrl).subscribe(new Consumer<String>()
+            {
+                @Override
+                public void accept(@NonNull String shortUrl) throws Exception
+                {
+                    unLockAll();
+
+                    List<Intent> shareIntentList = new ArrayList<>();
+
+                    List<String> packageNameList = new ArrayList<>();
+
+                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                    intent.setType("text/plain");
+
+                    List<ResolveInfo> resInfo = getActivity().getPackageManager().queryIntentActivities(intent, 0);
+                    if (resInfo == null || resInfo.size() == 0)
+                    {
+                        DailyToast.showToast(getActivity(), "공유가능한 앱이 없습니다", DailyToast.LENGTH_SHORT);
+                        return;
+                    }
+
+                    for (ResolveInfo info : resInfo)
+                    {
+                        ExLog.d("sam : " + info.activityInfo.name + " , p : " + info.activityInfo.packageName);
+                        if (packageNameList.contains(info.activityInfo.packageName) == true)
+                        {
+                            continue;
+                        }
+
+                        if (info.activityInfo.packageName.toLowerCase().equalsIgnoreCase("com.kakao.talk") == true)
+                        {
+                            continue;
+                        }
+
+                        packageNameList.add(info.activityInfo.packageName);
+
+                        Intent shareIntent = (Intent) intent.clone();
+
+                        if (info.activityInfo.packageName.toLowerCase().equalsIgnoreCase("com.facebook.katana") == true)
+                        {
+                            shareIntent.setType("text/plain");
+                            shareIntent.putExtra(Intent.EXTRA_TEXT, shortUrl);
+                            shareIntent.setPackage(info.activityInfo.packageName);
+
+                            shareIntentList.add(shareIntent);
+                        } else
+                        {
+                            shareIntent.setType("text/plain");
+                            shareIntent.putExtra(Intent.EXTRA_SUBJECT, "");
+                            shareIntent.putExtra(Intent.EXTRA_TEXT, message + shortUrl);
+                            shareIntent.setPackage(info.activityInfo.packageName);
+
+                            shareIntentList.add(shareIntent);
+                        }
+                    }
+
+                    Intent chooser = Intent.createChooser(shareIntentList.remove(0), "type : text/plain , 중복 package, 카카오톡 제거");
+                    //                    Intent chooser = Intent.createChooser(shareIntentList.remove(0), getString(R.string.label_doshare));
+                    chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, shareIntentList.toArray(new Parcelable[]{}));
+                    startActivity(chooser);
+
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@NonNull Throwable throwable) throws Exception
+                {
+                    unLockAll();
+
+                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                    intent.setType("text/plain");
+                    intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.label_doshare));
+                    intent.putExtra(Intent.EXTRA_TEXT, message + "https://mobile.dailyhotel.co.kr/stay/" + mStayDetail.index);
+                    Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
+                    startActivity(chooser);
+                }
+            }));
+
+            //            mAnalytics.onEventShareSmsClick(getActivity(), DailyHotel.isLogin()//
+            //                , DailyUserPreference.getInstance(getActivity()).getType()//
+            //                , DailyUserPreference.getInstance(getActivity()).isBenefitAlarm(), mStayDetail.index, mStayDetail.name, mStayDetail.overseas);
+        } catch (Exception e)
+        {
+            unLockAll();
+
+            ExLog.d(e.toString());
+        }
+    }
+
+    @Override
+    public void onMoreShareClick3()
+    {
+        try
+        {
+            int nights = mStayBookDateTime.getNights();
+
+            String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d"//
+                , mStayDetail.index, mStayBookDateTime.getCheckInDateTime("yyyy-MM-dd"), nights);
+
+            String name = DailyUserPreference.getInstance(getActivity()).getName();
+
+            if (DailyTextUtils.isTextEmpty(name) == true)
+            {
+                name = getString(R.string.label_friend) + "가";
+            } else
+            {
+                name += "님이";
+            }
+
+            final String message = getString(R.string.message_detail_stay_share_sms//
+                , name, mStayDetail.name//
+                , mStayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)")//
+                , mStayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)")//
+                , nights, nights + 1 //
+                , mStayDetail.address);
+
+            addCompositeDisposable(mCommonRemoteImpl.getShortUrl(longUrl).subscribe(new Consumer<String>()
+            {
+                @Override
+                public void accept(@NonNull String shortUrl) throws Exception
+                {
+                    unLockAll();
+
+                    List<Intent> shareIntentList = new ArrayList<>();
+
+                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                    intent.setType("image/*");
+
+                    List<ResolveInfo> resInfo = getActivity().getPackageManager().queryIntentActivities(intent, 0);
+                    if (resInfo == null || resInfo.size() == 0)
+                    {
+                        DailyToast.showToast(getActivity(), "공유가능한 앱이 없습니다", DailyToast.LENGTH_SHORT);
+                        return;
+                    }
+
+                    for (ResolveInfo info : resInfo)
+                    {
+                        ExLog.d("sam : " + info.activityInfo.name + " , p : " + info.activityInfo.packageName);
+
+                        Intent shareIntent = (Intent) intent.clone();
+
+                        shareIntent.setType("text/plain");
+                        shareIntent.putExtra(Intent.EXTRA_TEXT, shortUrl);
+                        shareIntent.setPackage(info.activityInfo.packageName);
+
+                        shareIntentList.add(shareIntent);
+                    }
+
+                    Intent chooser = Intent.createChooser(shareIntentList.remove(0), "type : image/* , 올 리스트");
+                    chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, shareIntentList.toArray(new Parcelable[]{}));
+                    startActivity(chooser);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@NonNull Throwable throwable) throws Exception
+                {
+                    unLockAll();
+
+                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                    intent.setType("text/plain");
+                    intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.label_doshare));
+                    intent.putExtra(Intent.EXTRA_TEXT, message + "https://mobile.dailyhotel.co.kr/stay/" + mStayDetail.index);
+                    Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
+                    startActivity(chooser);
+                }
+            }));
+
+            //            mAnalytics.onEventShareSmsClick(getActivity(), DailyHotel.isLogin()//
+            //                , DailyUserPreference.getInstance(getActivity()).getType()//
+            //                , DailyUserPreference.getInstance(getActivity()).isBenefitAlarm(), mStayDetail.index, mStayDetail.name, mStayDetail.overseas);
+        } catch (Exception e)
+        {
+            unLockAll();
+
+            ExLog.d(e.toString());
+        }
+    }
+
+    @Override
+    public void onMoreShareClick4()
+    {
+        try
+        {
+            int nights = mStayBookDateTime.getNights();
+
+            String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d"//
+                , mStayDetail.index, mStayBookDateTime.getCheckInDateTime("yyyy-MM-dd"), nights);
+
+            String name = DailyUserPreference.getInstance(getActivity()).getName();
+
+            if (DailyTextUtils.isTextEmpty(name) == true)
+            {
+                name = getString(R.string.label_friend) + "가";
+            } else
+            {
+                name += "님이";
+            }
+
+            final String message = getString(R.string.message_detail_stay_share_sms//
+                , name, mStayDetail.name//
+                , mStayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)")//
+                , mStayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)")//
+                , nights, nights + 1 //
+                , mStayDetail.address);
+
+            addCompositeDisposable(mCommonRemoteImpl.getShortUrl(longUrl).subscribe(new Consumer<String>()
+            {
+                @Override
+                public void accept(@NonNull String shortUrl) throws Exception
+                {
+                    unLockAll();
+
+                    List<Intent> shareIntentList = new ArrayList<>();
+
+                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                    intent.setType("text/plain");
+
+                    List<ResolveInfo> resInfo = getActivity().getPackageManager().queryIntentActivities(intent, 0);
+                    if (resInfo == null || resInfo.size() == 0)
+                    {
+                        DailyToast.showToast(getActivity(), "공유가능한 앱이 없습니다", DailyToast.LENGTH_SHORT);
+                        return;
+                    }
+
+                    for (ResolveInfo info : resInfo)
+                    {
+                        ExLog.d("sam : " + info.activityInfo.name + " , p : " + info.activityInfo.packageName);
+
+                        Intent shareIntent = (Intent) intent.clone();
+
+                        shareIntent.setType("text/plain");
+                        shareIntent.putExtra(Intent.EXTRA_TEXT, shortUrl);
+                        shareIntent.setPackage(info.activityInfo.packageName);
+
+                        shareIntentList.add(shareIntent);
+                    }
+
+                    Intent chooser = Intent.createChooser(shareIntentList.remove(0), "type : text/plain , 올 리스트");
+                    chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, shareIntentList.toArray(new Parcelable[]{}));
+                    startActivity(chooser);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@NonNull Throwable throwable) throws Exception
+                {
+                    unLockAll();
+
+                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                    intent.setType("text/plain");
+                    intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.label_doshare));
+                    intent.putExtra(Intent.EXTRA_TEXT, message + "https://mobile.dailyhotel.co.kr/stay/" + mStayDetail.index);
+                    Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
+                    startActivity(chooser);
+                }
+            }));
+
+            //            mAnalytics.onEventShareSmsClick(getActivity(), DailyHotel.isLogin()//
+            //                , DailyUserPreference.getInstance(getActivity()).getType()//
+            //                , DailyUserPreference.getInstance(getActivity()).isBenefitAlarm(), mStayDetail.index, mStayDetail.name, mStayDetail.overseas);
+        } catch (Exception e)
+        {
+            unLockAll();
+
+            ExLog.d(e.toString());
+        }
+    }
+
+    @Override
+    public void onMoreShareClick5()
+    {
+        try
+        {
+            int nights = mStayBookDateTime.getNights();
+
+            String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d"//
+                , mStayDetail.index, mStayBookDateTime.getCheckInDateTime("yyyy-MM-dd"), nights);
+
+            String name = DailyUserPreference.getInstance(getActivity()).getName();
+
+            if (DailyTextUtils.isTextEmpty(name) == true)
+            {
+                name = getString(R.string.label_friend) + "가";
+            } else
+            {
+                name += "님이";
+            }
+
+            final String message = getString(R.string.message_detail_stay_share_sms//
+                , name, mStayDetail.name//
+                , mStayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)")//
+                , mStayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)")//
+                , nights, nights + 1 //
+                , mStayDetail.address);
+
+            addCompositeDisposable(mCommonRemoteImpl.getShortUrl(longUrl).subscribe(new Consumer<String>()
+            {
+                @Override
+                public void accept(@NonNull String shortUrl) throws Exception
+                {
+                    unLockAll();
+
+                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                    intent.setType("image/*");
+
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "");
+                    intent.putExtra(Intent.EXTRA_TEXT, message + shortUrl);
+                    Intent chooser = Intent.createChooser(intent, "type : image/* , 기본 목록");
+                    startActivity(chooser);
+
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@NonNull Throwable throwable) throws Exception
+                {
+                    unLockAll();
+
+                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                    intent.setType("text/plain");
+                    intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.label_doshare));
+                    intent.putExtra(Intent.EXTRA_TEXT, message + "https://mobile.dailyhotel.co.kr/stay/" + mStayDetail.index);
+                    Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
+                    startActivity(chooser);
+                }
+            }));
+
+            //            mAnalytics.onEventShareSmsClick(getActivity(), DailyHotel.isLogin()//
+            //                , DailyUserPreference.getInstance(getActivity()).getType()//
+            //                , DailyUserPreference.getInstance(getActivity()).isBenefitAlarm(), mStayDetail.index, mStayDetail.name, mStayDetail.overseas);
+        } catch (Exception e)
+        {
+            unLockAll();
+
+            ExLog.d(e.toString());
+        }
+    }
+
+    @Override
+    public void onMoreShareClick6()
+    {
+        try
+        {
+            int nights = mStayBookDateTime.getNights();
+
+            String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d"//
+                , mStayDetail.index, mStayBookDateTime.getCheckInDateTime("yyyy-MM-dd"), nights);
+
+            String name = DailyUserPreference.getInstance(getActivity()).getName();
+
+            if (DailyTextUtils.isTextEmpty(name) == true)
+            {
+                name = getString(R.string.label_friend) + "가";
+            } else
+            {
+                name += "님이";
+            }
+
+            final String message = getString(R.string.message_detail_stay_share_sms//
+                , name, mStayDetail.name//
+                , mStayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)")//
+                , mStayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)")//
+                , nights, nights + 1 //
+                , mStayDetail.address);
+
+            addCompositeDisposable(mCommonRemoteImpl.getShortUrl(longUrl).subscribe(new Consumer<String>()
+            {
+                @Override
+                public void accept(@NonNull String shortUrl) throws Exception
+                {
+                    unLockAll();
+
+                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                    intent.setType("text/plain");
+
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "");
+                    intent.putExtra(Intent.EXTRA_TEXT, message + shortUrl);
+                    Intent chooser = Intent.createChooser(intent, "type : text/plain , 기본 목록");
+                    startActivity(chooser);
+
                 }
             }, new Consumer<Throwable>()
             {
