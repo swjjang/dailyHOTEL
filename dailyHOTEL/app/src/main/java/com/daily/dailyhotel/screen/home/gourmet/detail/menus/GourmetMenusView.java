@@ -65,8 +65,6 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
 
         void onVisitTimeClick(int time, int menuIndex);
 
-        void onHideOperationTimesClick();
-
         void onMenuOderCountPlusClick(int position);
 
         void onMenuOderCountMinusClick(int position);
@@ -98,6 +96,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         viewDataBinding.operationTimeTextView.setOnClickListener(this);
         viewDataBinding.operationTimesBackgroundView.setOnClickListener(this);
         viewDataBinding.closeImageView.setOnClickListener(this);
+        viewDataBinding.cartMenusLayout.setOnClickListener(this);
         viewDataBinding.cartMenusBackgroundView.setOnClickListener(this);
         viewDataBinding.cartBookingLayout.setOnClickListener(this);
 
@@ -430,9 +429,9 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
 
                 float value = (float) animation.getAnimatedValue();
                 float vector = 1.0f - (value / getViewDataBinding().operationTimesGridLayout.getHeight());
-//                float rotation = 180.0f * vector;
+                //                float rotation = 180.0f * vector;
 
-//                getViewDataBinding().arrowImageView.setRotation(rotation);
+                //                getViewDataBinding().arrowImageView.setRotation(rotation);
                 getViewDataBinding().operationTimesBackgroundView.setAlpha(vector);
             }
         });
@@ -458,7 +457,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                         transObjectAnimator.removeAllUpdateListeners();
                         transObjectAnimator.removeAllListeners();
 
-                        getViewDataBinding().arrowImageView.setRotation(0);
+                        getViewDataBinding().arrowImageView.setRotation(180);
                         getViewDataBinding().operationTimesGridLayout.setTranslationY(0.0f);
 
                         observer.onNext(true);
@@ -511,9 +510,9 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
 
                 float value = (float) animation.getAnimatedValue();
                 float vector = 1.0f - Math.abs(value / getViewDataBinding().operationTimesGridLayout.getHeight());
-//                float rotation = 180.0f * vector;
+                //                float rotation = 180.0f * vector;
 
-//                getViewDataBinding().arrowImageView.setRotation(rotation);
+                //                getViewDataBinding().arrowImageView.setRotation(rotation);
                 getViewDataBinding().operationTimesBackgroundView.setAlpha(vector);
             }
         });
@@ -536,7 +535,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                         transObjectAnimator.removeAllUpdateListeners();
                         transObjectAnimator.removeAllListeners();
 
-                        getViewDataBinding().arrowImageView.setRotation(180);
+                        getViewDataBinding().arrowImageView.setRotation(0);
                         getViewDataBinding().operationTimesGridLayout.setTranslationY(-getViewDataBinding().operationTimesGridLayout.getHeight());
                         getViewDataBinding().operationTimesGridLayout.setVisibility(View.INVISIBLE);
                         getViewDataBinding().operationTimesBackgroundView.setVisibility(View.GONE);
@@ -1009,11 +1008,8 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         switch (v.getId())
         {
             case R.id.operationTimeTextView:
-                getEventListener().onOperationTimeClick();
-                break;
-
             case R.id.operationTimesBackgroundView:
-                getEventListener().onHideOperationTimesClick();
+                getEventListener().onOperationTimeClick();
                 break;
 
             case R.id.closeImageView:
