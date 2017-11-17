@@ -599,6 +599,12 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 }
                 break;
 
+            //            case StayDetailActivity.REQUEST_CODE_CHOOSER:
+            //            {
+            ////                ExLog.d("sam : " + (data == null ? "data is null" : data.toString()));
+            //                break;
+            //            }
+
         }
     }
 
@@ -866,13 +872,58 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     }
 
     @Override
-    public void onShareSmsClick()
+    public void onCopyLinkClick()
     {
         if (mStayDetail == null || mStayBookDateTime == null)
         {
             return;
         }
 
+        try
+        {
+            int nights = mStayBookDateTime.getNights();
+
+            String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d"//
+                , mStayDetail.index, mStayBookDateTime.getCheckInDateTime("yyyy-MM-dd"), nights);
+
+            addCompositeDisposable(mCommonRemoteImpl.getShortUrl(longUrl).subscribe(new Consumer<String>()
+            {
+                @Override
+                public void accept(@NonNull String shortUrl) throws Exception
+                {
+                    unLockAll();
+
+                    DailyTextUtils.clipText(getActivity(), shortUrl);
+
+                    DailyToast.showToast(getActivity(), R.string.toast_msg_copy_link, DailyToast.LENGTH_LONG);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@NonNull Throwable throwable) throws Exception
+                {
+                    unLockAll();
+
+                    DailyTextUtils.clipText(getActivity(), "https://mobile.dailyhotel.co.kr/stay/" + mStayDetail.index);
+
+                    DailyToast.showToast(getActivity(), R.string.toast_msg_copy_link, DailyToast.LENGTH_LONG);
+                }
+            }));
+
+            //            mAnalytics.onEventShareSmsClick(getActivity(), DailyHotel.isLogin()//
+            //                , DailyUserPreference.getInstance(getActivity()).getType()//
+            //                , DailyUserPreference.getInstance(getActivity()).isBenefitAlarm(), mStayDetail.index, mStayDetail.name, mStayDetail.overseas);
+        } catch (Exception e)
+        {
+            unLockAll();
+
+            ExLog.d(e.toString());
+        }
+    }
+
+    @Override
+    public void onMoreShareClick()
+    {
         try
         {
             int nights = mStayBookDateTime.getNights();
@@ -904,7 +955,14 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 {
                     unLockAll();
 
-                    Util.sendSms(getActivity(), message + shortUrl);
+                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                    intent.setType("text/plain");
+
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "");
+                    intent.putExtra(Intent.EXTRA_TEXT, message + shortUrl);
+                    Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
+                    startActivity(chooser);
+
                 }
             }, new Consumer<Throwable>()
             {
@@ -913,13 +971,18 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 {
                     unLockAll();
 
-                    Util.sendSms(getActivity(), message + "https://mobile.dailyhotel.co.kr/stay/" + mStayDetail.index);
+                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                    intent.setType("text/plain");
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "");
+                    intent.putExtra(Intent.EXTRA_TEXT, message + "https://mobile.dailyhotel.co.kr/stay/" + mStayDetail.index);
+                    Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
+                    startActivity(chooser);
                 }
             }));
 
-            mAnalytics.onEventShareSmsClick(getActivity(), DailyHotel.isLogin()//
-                , DailyUserPreference.getInstance(getActivity()).getType()//
-                , DailyUserPreference.getInstance(getActivity()).isBenefitAlarm(), mStayDetail.index, mStayDetail.name, mStayDetail.overseas);
+            //            mAnalytics.onEventShareSmsClick(getActivity(), DailyHotel.isLogin()//
+            //                , DailyUserPreference.getInstance(getActivity()).getType()//
+            //                , DailyUserPreference.getInstance(getActivity()).isBenefitAlarm(), mStayDetail.index, mStayDetail.name, mStayDetail.overseas);
         } catch (Exception e)
         {
             unLockAll();

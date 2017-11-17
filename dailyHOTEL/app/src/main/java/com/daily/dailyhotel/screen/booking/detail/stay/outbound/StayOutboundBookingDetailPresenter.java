@@ -628,7 +628,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
     }
 
     @Override
-    public void onShareSmsClick()
+    public void onMoreShareClick()
     {
         if (mStayOutboundBookingDetail == null)
         {
@@ -648,14 +648,20 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
             //            int nights = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkOutDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
             //                , DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
 
-            String message = getString(R.string.message_booking_stay_share_sms, //
+            String message = getString(R.string.message_booking_stay_outbound_share_sms, //
                 userName, mStayOutboundBookingDetail.name, mStayOutboundBookingDetail.guestLastName + " " + mStayOutboundBookingDetail.guestFirstName,//
                 DailyTextUtils.getPriceFormat(getActivity(), mStayOutboundBookingDetail.paymentPrice, false), //
                 mStayOutboundBookingDetail.roomName, checkInDate + " " + checkInTime,//
                 checkOutDate + " " + checkOutTime, //
                 mStayOutboundBookingDetail.address);
 
-            Util.sendSms(getActivity(), message);
+            Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+            intent.setType("text/plain");
+
+            intent.putExtra(Intent.EXTRA_SUBJECT, "");
+            intent.putExtra(Intent.EXTRA_TEXT, message);
+            Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
+            startActivity(chooser);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

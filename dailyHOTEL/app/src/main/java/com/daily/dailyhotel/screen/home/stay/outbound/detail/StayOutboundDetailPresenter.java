@@ -786,7 +786,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     }
 
     @Override
-    public void onShareSmsClick()
+    public void onMoreShareClick()
     {
         if (mStayOutboundDetail == null || mStayBookDateTime == null)
         {
@@ -814,7 +814,13 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 , nights, nights + 1 //
                 , mStayOutboundDetail.address);
 
-            Util.sendSms(getActivity(), message);
+            Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+            intent.setType("text/plain");
+
+            intent.putExtra(Intent.EXTRA_SUBJECT, "");
+            intent.putExtra(Intent.EXTRA_TEXT, message);
+            Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
+            startActivity(chooser);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

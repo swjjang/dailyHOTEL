@@ -67,7 +67,7 @@ public class KakaoLinkManager implements Constants
             int nights = stayBookingDay.getNights();
             String schemeParams = String.format(Locale.KOREA, "vc=5&v=hd&i=%d&d=%s&n=%d", hotelIndex, checkInDay, nights);
 
-            messageBuilder.addAppButton(mContext.getString(R.string.kakao_btn_go_hotel), //
+            messageBuilder.addAppButton(mContext.getString(R.string.label_kakao_mobile_app), //
                 new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build())//
                     .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
 
@@ -83,7 +83,9 @@ public class KakaoLinkManager implements Constants
 
             messageBuilder.addText(text);
 
-            mKakaoLink.sendMessage(messageBuilder, mContext);
+            messageBuilder.addWebLink(mContext.getString(R.string.label_kakao_web_link), "https://mobile.dailyhotel.co.kr/stay/" + hotelIndex);
+
+           mKakaoLink.sendMessage(messageBuilder, mContext);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -100,7 +102,7 @@ public class KakaoLinkManager implements Constants
             int nights = stayBookDateTime.getNights();
             String schemeParams = String.format(Locale.KOREA, "vc=5&v=hd&i=%d&d=%s&n=%d", hotelIndex, checkInDay, nights);
 
-            messageBuilder.addAppButton(mContext.getString(R.string.kakao_btn_go_hotel), //
+            messageBuilder.addAppButton(mContext.getString(R.string.label_kakao_mobile_app), //
                 new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build())//
                     .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
 
@@ -115,6 +117,8 @@ public class KakaoLinkManager implements Constants
             }
 
             messageBuilder.addText(text);
+
+            messageBuilder.addWebLink(mContext.getString(R.string.label_kakao_web_link), "https://mobile.dailyhotel.co.kr/stay/" + hotelIndex);
 
             mKakaoLink.sendMessage(messageBuilder, mContext);
         } catch (Exception e)
@@ -169,7 +173,7 @@ public class KakaoLinkManager implements Constants
 
             String schemeParams = String.format(Locale.KOREA, "vc=5&v=hd&i=%d&d=%s&n=%d", stayIndex, checkInDate, nights);
 
-            messageBuilder.addAppButton(mContext.getString(R.string.label_kakao_reservation_stay), //
+            messageBuilder.addAppButton(mContext.getString(R.string.label_kakao_mobile_app), //
                 new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build())//
                     .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
 
@@ -181,6 +185,8 @@ public class KakaoLinkManager implements Constants
             }
 
             messageBuilder.addText(message);
+
+            messageBuilder.addWebLink(mContext.getString(R.string.label_kakao_web_link), "https://mobile.dailyhotel.co.kr/stay/" + stayIndex);
 
             mKakaoLink.sendMessage(messageBuilder, mContext);
         } catch (Exception e)
@@ -248,7 +254,7 @@ public class KakaoLinkManager implements Constants
             String date = gourmetBookingDay.getVisitDay("yyyyMMdd");
             String schemeParams = String.format(Locale.KOREA, "vc=5&v=gd&i=%d&d=%s", index, date);
 
-            messageBuilder.addAppButton(mContext.getString(R.string.kakao_btn_go_fnb)//
+            messageBuilder.addAppButton(mContext.getString(R.string.label_kakao_mobile_app)//
                 , new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder()//
                     .setExecuteParam(schemeParams).build())//
                     .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
@@ -264,6 +270,8 @@ public class KakaoLinkManager implements Constants
             }
 
             messageBuilder.addText(text);
+
+            messageBuilder.addWebLink(mContext.getString(R.string.label_kakao_web_link), "https://mobile.dailyhotel.co.kr/gourmet/" + index);
 
             mKakaoLink.sendMessage(messageBuilder, mContext);
         } catch (Exception e)
@@ -281,7 +289,7 @@ public class KakaoLinkManager implements Constants
             String date = gourmetBookDateTime.getVisitDateTime("yyyyMMdd");
             String schemeParams = String.format(Locale.KOREA, "vc=5&v=gd&i=%d&d=%s", index, date);
 
-            messageBuilder.addAppButton(mContext.getString(R.string.kakao_btn_go_fnb)//
+            messageBuilder.addAppButton(mContext.getString(R.string.label_kakao_mobile_app)//
                 , new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder()//
                     .setExecuteParam(schemeParams).build())//
                     .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
@@ -298,6 +306,8 @@ public class KakaoLinkManager implements Constants
 
             messageBuilder.addText(text);
 
+            messageBuilder.addWebLink(mContext.getString(R.string.label_kakao_web_link), "https://mobile.dailyhotel.co.kr/gourmet/" + index);
+
             mKakaoLink.sendMessage(messageBuilder, mContext);
         } catch (Exception e)
         {
@@ -313,7 +323,7 @@ public class KakaoLinkManager implements Constants
 
             String schemeParams = String.format(Locale.KOREA, "vc=5&v=gd&i=%d&d=%s", index, reservationDate);
 
-            messageBuilder.addAppButton(mContext.getString(R.string.label_kakao_reservation_gourmet)//
+            messageBuilder.addAppButton(mContext.getString(R.string.label_kakao_mobile_app)//
                 , new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder()//
                     .setExecuteParam(schemeParams).build())//
                     .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
@@ -326,6 +336,8 @@ public class KakaoLinkManager implements Constants
             }
 
             messageBuilder.addText(message);
+
+            messageBuilder.addWebLink(mContext.getString(R.string.label_kakao_web_link), "https://mobile.dailyhotel.co.kr/gourmet/" + index);
 
             mKakaoLink.sendMessage(messageBuilder, mContext);
         } catch (Exception e)
