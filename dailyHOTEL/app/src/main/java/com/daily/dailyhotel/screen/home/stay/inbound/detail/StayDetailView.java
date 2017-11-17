@@ -103,7 +103,9 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
 
         void onShareKakaoClick();
 
-        void onShareSmsClick();
+        void onCopyLinkClick();
+
+        void onMoreShareClick();
 
         void onImageClick(int position);
 
@@ -874,14 +876,25 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
             }
         });
 
-        dataBinding.smsShareLayout.setOnClickListener(new View.OnClickListener()
+        dataBinding.copyLinkView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                 hideSimpleDialog();
 
-                getEventListener().onShareSmsClick();
+                getEventListener().onCopyLinkClick();
+            }
+        });
+
+        dataBinding.moreShareView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                hideSimpleDialog();
+
+                getEventListener().onMoreShareClick();
             }
         });
 

@@ -886,7 +886,55 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     }
 
     @Override
-    public void onShareSmsClick()
+    public void onCopyLinkClick()
+    {
+        if (mGourmetDetail == null || mGourmetBookDateTime == null)
+        {
+            return;
+        }
+
+        try
+        {
+            String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/gourmet/%d?reserveDate=%s"//
+                , mGourmetDetail.index, mGourmetBookDateTime.getVisitDateTime("yyyy-MM-dd"));
+
+            addCompositeDisposable(mCommonRemoteImpl.getShortUrl(longUrl).subscribe(new Consumer<String>()
+            {
+                @Override
+                public void accept(@NonNull String shortUrl) throws Exception
+                {
+                    unLockAll();
+
+                    DailyTextUtils.clipText(getActivity(), shortUrl);
+
+                    DailyToast.showToast(getActivity(), R.string.toast_msg_copy_link, DailyToast.LENGTH_LONG);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@NonNull Throwable throwable) throws Exception
+                {
+                    unLockAll();
+
+                    DailyTextUtils.clipText(getActivity(), "https://mobile.dailyhotel.co.kr/gourmet/" + mGourmetDetail.index);
+
+                    DailyToast.showToast(getActivity(), R.string.toast_msg_copy_link, DailyToast.LENGTH_LONG);
+                }
+            }));
+
+//            mAnalytics.onEventShareSmsClick(getActivity(), DailyHotel.isLogin()//
+//                , DailyUserPreference.getInstance(getActivity()).getType()//
+//                , DailyUserPreference.getInstance(getActivity()).isBenefitAlarm(), mGourmetDetail.index, mGourmetDetail.name);
+        } catch (Exception e)
+        {
+            unLockAll();
+
+            ExLog.d(e.toString());
+        }
+    }
+
+    @Override
+    public void onMoreShareClick()
     {
         if (mGourmetDetail == null || mGourmetBookDateTime == null)
         {
@@ -920,7 +968,13 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 {
                     unLockAll();
 
-                    Util.sendSms(getActivity(), message + shortUrl);
+                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                    intent.setType("text/plain");
+
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "");
+                    intent.putExtra(Intent.EXTRA_TEXT, message + shortUrl);
+                    Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
+                    startActivity(chooser);
                 }
             }, new Consumer<Throwable>()
             {
@@ -929,7 +983,13 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 {
                     unLockAll();
 
-                    Util.sendSms(getActivity(), message + "https://mobile.dailyhotel.co.kr/gourmet/" + mGourmetDetail.index);
+                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                    intent.setType("text/plain");
+
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "");
+                    intent.putExtra(Intent.EXTRA_TEXT, message + "https://mobile.dailyhotel.co.kr/gourmet/" + mGourmetDetail.index);
+                    Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
+                    startActivity(chooser);
                 }
             }));
 

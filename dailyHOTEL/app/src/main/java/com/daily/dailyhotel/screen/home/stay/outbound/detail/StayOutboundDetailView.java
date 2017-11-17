@@ -95,7 +95,7 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
 
         void onShareKakaoClick();
 
-        void onShareSmsClick();
+        void onMoreShareClick();
 
         void onImageClick(int position);
 
@@ -890,14 +890,17 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
             }
         });
 
-        dataBinding.smsShareLayout.setOnClickListener(new View.OnClickListener()
+        // 예약 내역, 취소 내역 해외호텔은 안보여 주기로 함
+        dataBinding.copyLinkLayout.setVisibility(View.GONE);
+
+        dataBinding.moreShareView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                 hideSimpleDialog();
 
-                getEventListener().onShareSmsClick();
+                getEventListener().onMoreShareClick();
             }
         });
 

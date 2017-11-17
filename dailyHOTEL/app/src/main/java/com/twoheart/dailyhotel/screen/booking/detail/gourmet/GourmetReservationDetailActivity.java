@@ -314,12 +314,6 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
         shareDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         shareDialog.setCanceledOnTouchOutside(true);
 
-        if (Util.isTelephonyEnabled(this) == false)
-        {
-            View smsShareLayout = dialogView.findViewById(R.id.smsShareLayout);
-            smsShareLayout.setVisibility(View.GONE);
-        }
-
         // 버튼
         View kakaoShareView = dialogView.findViewById(R.id.kakaoShareView);
 
@@ -371,9 +365,67 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
             }
         });
 
-        View smsShareView = dialogView.findViewById(R.id.smsShareView);
+        View copyLinkView = dialogView.findViewById(R.id.copyLinkView);
 
-        smsShareView.setOnClickListener(new View.OnClickListener()
+        copyLinkView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (shareDialog.isShowing() == true)
+                {
+                    shareDialog.dismiss();
+                }
+
+                lockUI();
+
+                try
+                {
+                    GourmetBookingDetail gourmetBookingDetail = ((GourmetBookingDetail) mPlaceBookingDetail);
+
+                    String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/gourmet/%d?reserveDate=%s"//
+                        , gourmetBookingDetail.placeIndex, DailyCalendar.convertDateFormatString(gourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd"));
+
+                    CommonRemoteImpl commonRemote = new CommonRemoteImpl(GourmetReservationDetailActivity.this);
+
+                    addCompositeDisposable(commonRemote.getShortUrl(longUrl).subscribe(new Consumer<String>()
+                    {
+                        @Override
+                        public void accept(@NonNull String shortUrl) throws Exception
+                        {
+                            unLockUI();
+
+                            DailyTextUtils.clipText(GourmetReservationDetailActivity.this, shortUrl);
+
+                            DailyToast.showToast(GourmetReservationDetailActivity.this, R.string.toast_msg_copy_link, DailyToast.LENGTH_LONG);
+                        }
+                    }, new Consumer<Throwable>()
+                    {
+                        @Override
+                        public void accept(@NonNull Throwable throwable) throws Exception
+                        {
+                            unLockUI();
+
+                            DailyTextUtils.clipText(GourmetReservationDetailActivity.this, "https://mobile.dailyhotel.co.kr/gourmet/" + gourmetBookingDetail.placeIndex);
+
+                            DailyToast.showToast(GourmetReservationDetailActivity.this, R.string.toast_msg_copy_link, DailyToast.LENGTH_LONG);
+                        }
+                    }));
+                } catch (Exception e)
+                {
+                    unLockUI();
+
+                    ExLog.d(e.toString());
+                }
+
+//                AnalyticsManager.getInstance(GourmetReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
+//                    , AnalyticsManager.Action.GOURMET_BOOKING_SHARE, AnalyticsManager.ValueType.MESSAGE, null);
+            }
+        });
+
+        View moreShareView = dialogView.findViewById(R.id.moreShareView);
+
+        moreShareView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -409,7 +461,13 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
                         {
                             unLockUI();
 
-                            Util.sendSms(GourmetReservationDetailActivity.this, message + shortUrl);
+                            Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                            intent.setType("text/plain");
+
+                            intent.putExtra(Intent.EXTRA_SUBJECT, "");
+                            intent.putExtra(Intent.EXTRA_TEXT, message + shortUrl);
+                            Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
+                            startActivity(chooser);
                         }
                     }, new Consumer<Throwable>()
                     {
@@ -418,7 +476,13 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
                         {
                             unLockUI();
 
-                            Util.sendSms(GourmetReservationDetailActivity.this, message + "https://mobile.dailyhotel.co.kr/gourmet/" + gourmetBookingDetail.placeIndex);
+                            Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                            intent.setType("text/plain");
+
+                            intent.putExtra(Intent.EXTRA_SUBJECT, "");
+                            intent.putExtra(Intent.EXTRA_TEXT, message + "https://mobile.dailyhotel.co.kr/gourmet/" + gourmetBookingDetail.placeIndex);
+                            Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
+                            startActivity(chooser);
                         }
                     }));
                 } catch (Exception e)

@@ -555,7 +555,7 @@ public class StayOutboundBookingCancelDetailPresenter //
     }
 
     @Override
-    public void onShareSmsClick()
+    public void onMoreShareClick()
     {
         if (mStayOutboundBookingDetail == null)
         {
@@ -571,7 +571,13 @@ public class StayOutboundBookingCancelDetailPresenter //
                 , DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.cancelDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd") //
                 , mStayOutboundBookingDetail.address);
 
-            Util.sendSms(getActivity(), message);
+            Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+            intent.setType("text/plain");
+
+            intent.putExtra(Intent.EXTRA_SUBJECT, "");
+            intent.putExtra(Intent.EXTRA_TEXT, message);
+            Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
+            startActivity(chooser);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
