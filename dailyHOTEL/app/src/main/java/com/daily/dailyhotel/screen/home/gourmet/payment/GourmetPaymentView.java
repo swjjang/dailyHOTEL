@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.home.gourmet.payment;
 
 import android.content.DialogInterface;
+import android.databinding.DataBindingUtil;
 import android.support.v4.view.MotionEventCompat;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -26,12 +27,14 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyScrollView;
 import com.daily.dailyhotel.entity.Card;
 import com.daily.dailyhotel.entity.GourmetCart;
+import com.daily.dailyhotel.entity.GourmetCartMenu;
 import com.daily.dailyhotel.view.DailyBookingAgreementThirdPartyView;
 import com.daily.dailyhotel.view.DailyBookingGuestInformationsView;
 import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityGourmetPaymentDataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutGourmetPaymentMenuDataBinding;
 import com.twoheart.dailyhotel.screen.common.FinalCheckLayout;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
@@ -40,6 +43,7 @@ import com.twoheart.dailyhotel.widget.DailySignatureView;
 
 import net.simonvt.numberpicker.NumberPicker;
 
+import java.util.Collection;
 import java.util.List;
 
 public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEventListener, ActivityGourmetPaymentDataBinding>//
@@ -117,11 +121,12 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
 
         getViewDataBinding().date1TextView.setText(visitDateTime);
 
-
         getViewDataBinding().menuInformationView.setTitle(R.string.label_booking_ticket_info);
         getViewDataBinding().menuInformationView.removeAllInformation();
         getViewDataBinding().menuInformationView.addInformation(getString(R.string.label_booking_place_name), gourmetName);
-        //        getViewDataBinding().menuInformationView.addInformation(getString(R.string.label_booking_ticket_type), menuName);
+        getViewDataBinding().menuInformationView.addInformation(getString(R.string.label_booking_ticket_type), null);
+
+        setMenusLayout(gourmetCart.getMenus().values());
 
         getViewDataBinding().guestCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
         {
@@ -483,6 +488,28 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
     }
 
     @Override
+    public void setPersonsPlusEnabled(boolean enabled)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().personPlusImageView.setEnabled(enabled);
+    }
+
+    @Override
+    public void setPersonsMinusEnabled(boolean enabled)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().personMinusImageView.setEnabled(enabled);
+    }
+
+    @Override
     public void onClick(View v)
     {
         switch (v.getId())
@@ -561,6 +588,9 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
                 getEventListener().onPersonsPlusClick();
             }
         });
+
+        setPersonsMinusEnabled(false);
+        setPersonsPlusEnabled(true);
 
         getViewDataBinding().guestInformationView.setOnGuestInformationsClickListener(new DailyBookingGuestInformationsView.OnGuestInformationsClickListener()
         {
@@ -679,6 +709,39 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
         }
 
         getViewDataBinding().doPaymentView.setOnClickListener(this);
+    }
+
+    private void setMenusLayout(Collection<GourmetCartMenu> gourmetCartMenuList)
+    {
+        if (getViewDataBinding() == null || gourmetCartMenuList == null || gourmetCartMenuList.size() == 0)
+        {
+            return;
+        }
+
+        getViewDataBinding().menusLayout.removeAllViews();
+
+        int size = gourmetCartMenuList.size();
+        int i = 0;
+
+        for (GourmetCartMenu gourmetCartMenu : gourmetCartMenuList)
+        {
+            LayoutGourmetPaymentMenuDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.layout_gourmet_payment_menu_data, getViewDataBinding().menusLayout, true);
+
+            dataBinding.menuNameTextView.setText(gourmetCartMenu.name);
+            dataBinding.menuOrderCountTextView.setText(getString(R.string.label_booking_count, gourmetCartMenu.count));
+            dataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(getContext(), gourmetCartMenu.discountPrice * gourmetCartMenu.count, false));
+
+            if (gourmetCartMenu.persons > 0)
+            {
+                dataBinding.personsTextView.setVisibility(View.VISIBLE);
+                dataBinding.personsTextView.setText(getString(R.string.label_persons, gourmetCartMenu.persons));
+            } else
+            {
+                dataBinding.personsTextView.setVisibility(View.GONE);
+            }
+
+            dataBinding.bottomLineView.setVisibility(++i == size ? View.GONE : View.VISIBLE);
+        }
     }
 
     private void setBonusSelected(boolean selected)

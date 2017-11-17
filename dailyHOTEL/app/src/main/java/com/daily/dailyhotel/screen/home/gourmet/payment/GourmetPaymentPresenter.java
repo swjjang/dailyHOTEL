@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.view.View;
 
 import com.crashlytics.android.Crashlytics;
@@ -15,6 +17,7 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.base.util.FontManager;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Card;
@@ -56,6 +59,7 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
 import org.json.JSONObject;
 
@@ -1159,6 +1163,8 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             getViewInterface().setPersonsPlusEnabled(true);
         }
 
+        getViewInterface().setPersonsMinusEnabled(true);
+
         getViewInterface().setPersons(mPersons);
 
         unLockAll();
@@ -1181,6 +1187,8 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         {
             getViewInterface().setPersonsMinusEnabled(true);
         }
+
+        getViewInterface().setPersonsPlusEnabled(true);
 
         getViewInterface().setPersons(mPersons);
 
@@ -1438,13 +1446,18 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             return;
         }
 
-        final String DATE_FORMAT = "yyyy.MM.dd(EEE) HH:mm";
+        final String DATE_FORMAT = "yyyy.MM.dd(EEE)";
 
         try
         {
-            String visitDate = gourmetBookDateTime.getVisitDateTime(DATE_FORMAT);
+            String visitDay = gourmetBookDateTime.getVisitDateTime(DATE_FORMAT);
+            String visitDateTime = visitDay + " " + DailyTextUtils.formatIntegerTimeToStringTime(mGourmetCart.visitTime);
 
-            getViewInterface().setBooking(visitDate, mGourmetName, mGourmetCart);
+            SpannableString spannableString = new SpannableString(visitDateTime);
+            spannableString.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getMediumTypeface()),//
+                visitDay.length(), visitDateTime.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            getViewInterface().setBooking(spannableString, mGourmetName, mGourmetCart);
             getViewInterface().setVendorName(gourmetPayment.businessName);
         } catch (Exception e)
         {

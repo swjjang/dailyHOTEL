@@ -41,7 +41,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="15dp"
-        android:background="@drawable/shape_fillrect_le8e8e9_bfafafb"
+        android:background="@drawable/shape_fillrect_le8e8e9_bfafafb_r2"
         android:orientation="vertical"
         android:paddingLeft="10dp"
         android:paddingRight="10dp">
