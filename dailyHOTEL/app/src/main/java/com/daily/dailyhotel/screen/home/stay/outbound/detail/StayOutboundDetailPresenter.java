@@ -48,6 +48,7 @@ import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
 import com.daily.dailyhotel.screen.common.images.ImageListActivity;
+import com.daily.dailyhotel.screen.common.web.DailyWebActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.amenities.AmenityListActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.payment.StayOutboundPaymentActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
@@ -1310,7 +1311,13 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     @Override
     public void onRewardGuideClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
+        startActivityForResult(DailyWebActivity.newInstance(getActivity(), getString(R.string.label_reward_reward_guide)//
+            , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStaticUrlDailyReward()), StayOutboundDetailActivity.REQUEST_CODE_WEB);
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)

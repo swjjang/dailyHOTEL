@@ -342,6 +342,13 @@ public class CouponListActivity extends BaseActivity
         @Override
         public void onListItemDownLoadClick(Coupon coupon)
         {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            lockUI();
+
             // 리스트 아이템 쿠폰 다운로드
             mCouponListNetworkController.requestDownloadCoupon(coupon);
         }
@@ -366,7 +373,7 @@ public class CouponListActivity extends BaseActivity
             }
 
             mSortType = sortType;
-            mCouponListLayout.setData(makeSortCouponList(mCouponList, sortType), sortType);
+            mCouponListLayout.setData(makeSortCouponList(mCouponList, sortType), sortType, true);
         }
 
         @Override
@@ -398,7 +405,7 @@ public class CouponListActivity extends BaseActivity
             mCouponList = new ArrayList<>();
             mCouponList.addAll(list);
 
-            mCouponListLayout.setData(makeSortCouponList(mCouponList, mSortType), mSortType);
+            mCouponListLayout.setData(makeSortCouponList(mCouponList, mSortType), mSortType, false);
 
             unLockUI();
         }
