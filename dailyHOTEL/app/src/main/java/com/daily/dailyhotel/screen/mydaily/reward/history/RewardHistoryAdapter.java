@@ -356,7 +356,7 @@ public class RewardHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
             {
                 if (mOnEventListener != null)
                 {
-                    mOnEventListener.onClick(v);
+                    mOnEventListener.onClick(dataBinding.getRoot());
                 }
             });
         }
