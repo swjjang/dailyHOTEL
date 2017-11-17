@@ -455,7 +455,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
     @Override
     public void onVisitTimeClick(int time, int menuIndex)
     {
-        if (lock() == true)
+        if (time <= 0 || menuIndex < 0 || lock() == true)
         {
             return;
         }
@@ -616,31 +616,38 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 
                                 getViewInterface().setCartVisible(false);
 
-                                if (mVisitTime > 0)
+                                addCompositeDisposable(mCartLocalImpl.clearGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                                 {
-                                    mGourmetCart.setGourmetInformation(mGourmetIndex, mGourmetName, mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), mVisitTime);
-
-                                    plusMenu(false, gourmetMenu.index);
-
-                                    addCompositeDisposable(mCartLocalImpl.setGourmetCart(mGourmetCart).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                                    @Override
+                                    public void accept(Boolean aBoolean) throws Exception
                                     {
-                                        @Override
-                                        public void accept(Boolean aBoolean) throws Exception
+                                        if (mVisitTime > 0)
                                         {
-                                            unLockAll();
-                                        }
-                                    }, new Consumer<Throwable>()
-                                    {
-                                        @Override
-                                        public void accept(Throwable throwable) throws Exception
+                                            mGourmetCart.setGourmetInformation(mGourmetIndex, mGourmetName, mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), mVisitTime);
+
+                                            plusMenu(false, gourmetMenu.index);
+
+                                            addCompositeDisposable(mCartLocalImpl.setGourmetCart(mGourmetCart).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                                            {
+                                                @Override
+                                                public void accept(Boolean aBoolean) throws Exception
+                                                {
+                                                    unLockAll();
+                                                }
+                                            }, new Consumer<Throwable>()
+                                            {
+                                                @Override
+                                                public void accept(Throwable throwable) throws Exception
+                                                {
+                                                    unLockAll();
+                                                }
+                                            }));
+                                        } else
                                         {
-                                            unLockAll();
+                                            onChangeTimeClick(gourmetMenu.index);
                                         }
-                                    }));
-                                } else
-                                {
-                                    onChangeTimeClick(gourmetMenu.index);
-                                }
+                                    }
+                                }));
                             }
                         }, null);
 
@@ -860,6 +867,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             getViewInterface().setGourmetCartMenu(menuIndex, mGourmetCart.getMenuOrderCount(menuIndex));
         }
 
+        // 메뉴 갯수가 변경된 경우
         if (mGourmetCart.getMenuCount() != menuCount)
         {
             getViewInterface().setGourmetCart(mGourmetCart);
