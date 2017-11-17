@@ -1376,7 +1376,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         viewDataBinding.discountPriceTextView.setText(discountPrice);
 
         // 인원수
-        if (gourmetMenu.persons > 1)
+        if (gourmetMenu.persons > 0)
         {
             viewDataBinding.personsTextView.setVisibility(View.VISIBLE);
             viewDataBinding.personsTextView.setText(getString(R.string.label_persons, gourmetMenu.persons));

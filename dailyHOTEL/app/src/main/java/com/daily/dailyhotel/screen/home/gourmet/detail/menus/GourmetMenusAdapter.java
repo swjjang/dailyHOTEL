@@ -232,7 +232,7 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
         }
 
         // 이용인원
-        if (gourmetMenu.persons > 1)
+        if (gourmetMenu.persons > 0)
         {
             holder.dataBinding.personsLayout.setVisibility(View.VISIBLE);
             holder.dataBinding.personsTextView.setText(mContext.getString(R.string.label_persons, gourmetMenu.persons));

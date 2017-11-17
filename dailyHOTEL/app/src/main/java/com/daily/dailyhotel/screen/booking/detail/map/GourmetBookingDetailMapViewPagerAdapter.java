@@ -56,7 +56,7 @@ public class GourmetBookingDetailMapViewPagerAdapter extends PlaceBookingDetailM
         }
 
         // 인원
-        if (gourmet.persons > 1)
+        if (gourmet.persons > 0)
         {
             dataBinding.personsTextView.setVisibility(View.VISIBLE);
             dataBinding.personsTextView.setText(mContext.getString(R.string.label_persons, gourmet.persons));

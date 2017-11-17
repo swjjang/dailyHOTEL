@@ -78,7 +78,7 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
         }
 
         // 인원
-        if (gourmet.persons > 1)
+        if (gourmet.persons > 0)
         {
             persons.setVisibility(View.VISIBLE);
             persons.setText(mContext.getString(R.string.label_persons, gourmet.persons));
