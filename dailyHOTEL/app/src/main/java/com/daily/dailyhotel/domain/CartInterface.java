@@ -13,4 +13,6 @@ public interface CartInterface
     Observable<Boolean> hasGourmetCart();
 
     Observable<Integer> getGourmetCartTotalCount();
+
+    Observable<Boolean> clearGourmetCart();
 }

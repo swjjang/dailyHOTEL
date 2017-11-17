@@ -1324,7 +1324,7 @@
     <string name="label_gourmet_product_detail_count_tag">%1$d개 선택</string>
     <string name="label_gourmet_product_detail_choose_visit_time">방문시간 선택</string>
     <string name="label_gourmet_product_detail_cart_visit_time">방문시간 %1$s</string>
-    <string name="label_gourmet_product_detail_existing_menu">기존 메뉴 유지</string>
+    <string name="label_gourmet_product_detail_existing_menu">기존메뉴 유지</string>
     <string name="label_gourmet_product_detail_add_new_menu">삭제하고 새로추가</string>
     <string name="label_gourmet_product_detail_view_operation_time_list">해당시간 메뉴 보기</string>
     <string name="label_gourmet_product_detail_booking_total_price">총 %1$s 예약하기</string>
@@ -1332,7 +1332,9 @@
     <string name="label_gourmet_product_detail_check_the_menus">선택 메뉴 확인하기</string>
 
     <string name="message_gourmet_product_detail_time_picker_popup_message">방문시간은 하나만 선택할 수 있습니다.\n선택한 시간에 예약할 수 있는 메뉴만 노출됩니다.</string>
-    <string name="message_gourmet_product_detail_add_menu_after_initialization">방문시간이 다른 메뉴를 선택하셨습니다.\n해당메뉴를 추가하시면\n기존에 선택한 메뉴가 모두 초기화됩니다.\n해당 메뉴를 새로 추가하시겠어요?</string>
+    <string name="message_gourmet_product_detail_add_menu_after_initialization">방문시간이 다른 메뉴를 선택하셨습니다.\n해당메뉴를 추가하시면\n기존에 선택한 메뉴가 모두 삭제됩니다.\n삭제하고 새로 메뉴를 추가하시겠어요?</string>
+    <string name="message_gourmet_product_detail_change_cart_other_gourmet">같은 레스토랑 내에서만 메뉴를 추가하실 수 있습니다.\n먼저 추가한 메뉴를 삭제하고 새로 추가하시겠어요?</string>
+    <string name="message_gourmet_product_detail_change_cart_other_visit_day">다른 방문일을 선택하셨습니다.\n다른 방문일을 선택하시면\n기존에 선택한 메뉴가 모두 삭제됩니다.\n삭제하고 새로 메뉴를 추가하시겠어요?</string>
 
     <!-- Happy Talk -->
     <string name="label_select_category">선택</string>

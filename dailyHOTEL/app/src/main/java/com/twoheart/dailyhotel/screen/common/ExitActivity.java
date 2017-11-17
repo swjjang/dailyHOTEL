@@ -28,7 +28,7 @@ public class ExitActivity extends Activity
     {
         super.onCreate(savedInstanceState);
 
-        new CartLocalImpl(this).setGourmetCart(null).subscribe();
+        new CartLocalImpl(this).clearGourmetCart().subscribe();
 
         if (VersionUtils.isOverAPI21() == true)
         {

@@ -38,7 +38,7 @@ public class CartLocalImpl implements CartInterface
 
                 if (DailyTextUtils.isTextEmpty(jsonObjectString) == true || "{}".equalsIgnoreCase(jsonObjectString) == true)
                 {
-                    return null;
+                    return Observable.just(new GourmetCart());
                 }
 
                 GourmetCart gourmetCart = new GourmetCart(new JSONObject(jsonObjectString));
@@ -119,6 +119,21 @@ public class CartLocalImpl implements CartInterface
                 GourmetCart gourmetCart = new GourmetCart(new JSONObject(jsonObjectString));
 
                 return Observable.just(gourmetCart.getTotalCount());
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
+    @Override
+    public Observable<Boolean> clearGourmetCart()
+    {
+        return Observable.defer(new Callable<ObservableSource<Boolean>>()
+        {
+            @Override
+            public ObservableSource<Boolean> call() throws Exception
+            {
+                DailyCartPreference.getInstance(mContext).setGourmetCart(null);
+
+                return Observable.just(true);
             }
         }).subscribeOn(Schedulers.io());
     }

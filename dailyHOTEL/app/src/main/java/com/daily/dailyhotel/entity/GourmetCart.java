@@ -163,7 +163,7 @@ public class GourmetCart
         return totalCount;
     }
 
-    public int getCount(int menuIndex)
+    public int getMenuOrderCount(int menuIndex)
     {
         return (menuIndex > 0 && mOrderMenuMap.containsKey(menuIndex)) ? mOrderMenuMap.get(menuIndex).count : 0;
     }
