@@ -214,7 +214,7 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
                 holder.dataBinding.contentGradeView.setText(place.details.category);
             }
 
-            if (prices != null && place.details.persons > 1)
+            if (prices != null && place.details.persons > 0)
             {
                 holder.dataBinding.contentPersonView.setText(//
                     mContext.getString(R.string.label_home_person_format, place.details.persons));
@@ -497,7 +497,7 @@ public class DailyCarouselAdapter extends RecyclerView.Adapter<DailyCarouselAdap
                 holder.dataBinding.contentOriginPriceView.setVisibility(View.VISIBLE);
             }
 
-            if (gourmet.persons > 1)
+            if (gourmet.persons > 0)
             {
                 holder.dataBinding.contentPersonView.setText(//
                     mContext.getString(R.string.label_home_person_format, gourmet.persons));

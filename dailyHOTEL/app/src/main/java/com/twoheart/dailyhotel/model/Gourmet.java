@@ -297,7 +297,7 @@ public class Gourmet extends Place
 
             GourmetWishDetails gourmetWishDetails = gourmetWishItem.getDetails();
 
-            persons = gourmetWishDetails != null ? gourmetWishDetails.persons : 1;
+            persons = gourmetWishDetails != null ? gourmetWishDetails.persons : 0;
             category = gourmetWishDetails != null ? gourmetWishDetails.category : "";
             subCategory = gourmetWishDetails != null ? gourmetWishDetails.subCategory : "";
 
