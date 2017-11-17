@@ -202,7 +202,7 @@ public class CouponListLayout extends BaseLayout
         mSortSpinner.setSelection(position);
     }
 
-    public void setData(List<Coupon> list, CouponListActivity.SortType sortType)
+    public void setData(List<Coupon> list, CouponListActivity.SortType sortType, boolean scrollTop)
     {
         if (isEmpty(list) == false)
         {
@@ -234,6 +234,10 @@ public class CouponListLayout extends BaseLayout
         {
             mListAdapter.setData(list);
             mListAdapter.notifyDataSetChanged();
+        }
+
+        if (scrollTop == true)
+        {
             mRecyclerView.scrollToPosition(0);
         }
     }
