@@ -167,12 +167,12 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
     }
 
     @Override
-    public Observable<GourmetPayment> getGourmetPayment(int menuIndex)
+    public Observable<GourmetPayment> getGourmetPayment(int[] menuIndexes)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/fnb/sale/ticket/payment/info"//
             : "MzkkOTYkOTIkMTI5JDEwOSQzNyQxMjgkMTA3JDQ3JDY0JDMxJDEzMyQxNiQwJDk0JDEzOCQ=$KMzM4MzgyRkFFOTFBINUZCRkQxRjA5MjIEyRkFEOODYDwMkMwMKjk1RjkxRjNDMDM1MJTc1QjZCMjJCREFEQzk3NDdGMkUCzMDgVzNDZEGRkE1QThWDNkQM1MzNBRjEyMjQwQUUYH1DNkIQw$";
 
-        return mDailyMobileService.getGourmetPayment(Crypto.getUrlDecoderEx(API), menuIndex) //
+        return mDailyMobileService.getGourmetPayment(Crypto.getUrlDecoderEx(API), menuIndexes[0]) //
             .subscribeOn(Schedulers.io()).map(gourmetPaymentDataBaseDto ->
             {
                 GourmetPayment gourmetPayment = null;

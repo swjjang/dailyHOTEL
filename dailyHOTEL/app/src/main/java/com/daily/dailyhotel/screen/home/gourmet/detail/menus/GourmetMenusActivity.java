@@ -23,9 +23,15 @@ public class GourmetMenusActivity extends BaseActivity<GourmetMenusPresenter>
     static final int REQUEST_CODE_IMAGE_LIST = 10000;
 
     static final String INTENT_EXTRA_DATA_MENU_LIST = "menuList";
-    public static final String INTENT_EXTRA_DATA_INDEX = "index";
+    static final String INTENT_EXTRA_DATA_GOURMET_INDEX = "gourmetIndex";
+    static final String INTENT_EXTRA_DATA_GOURMET_NAME = "gourmetName";
+    static final String INTENT_EXTRA_DATA_POSITION = "position";
+    static final String INTENT_EXTRA_DATA_OPERATION_TIMES = "operationTimes";
+    static final String INTENT_EXTRA_DATA_VISIT_DATE_TIME = "visitDateTime";
+    static final String INTENT_EXTRA_DATA_VISIT_TIME = "visitTime";
 
-    public static Intent newInstance(Context context, List<GourmetMenu> gourmetMenuList, int index)
+    public static Intent newInstance(Context context, String visitDateTime, int gourmetIndex, String gourmetName//
+        , List<GourmetMenu> gourmetMenuList, int position, ArrayList<Integer> operationTimeList, int visitTime)
     {
         Intent intent = new Intent(context, GourmetMenusActivity.class);
 
@@ -39,8 +45,13 @@ public class GourmetMenusActivity extends BaseActivity<GourmetMenusPresenter>
             }
         }
 
+        intent.putExtra(INTENT_EXTRA_DATA_VISIT_DATE_TIME, visitDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_GOURMET_INDEX, gourmetIndex);
+        intent.putExtra(INTENT_EXTRA_DATA_GOURMET_NAME, gourmetName);
         intent.putExtra(INTENT_EXTRA_DATA_MENU_LIST, gourmetMenuParcelList);
-        intent.putExtra(INTENT_EXTRA_DATA_INDEX, index);
+        intent.putExtra(INTENT_EXTRA_DATA_POSITION, position);
+        intent.putExtra(INTENT_EXTRA_DATA_OPERATION_TIMES, operationTimeList);
+        intent.putExtra(INTENT_EXTRA_DATA_VISIT_TIME, visitTime);
 
         return intent;
     }

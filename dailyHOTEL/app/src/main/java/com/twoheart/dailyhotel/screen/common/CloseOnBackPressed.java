@@ -15,9 +15,15 @@ package com.twoheart.dailyhotel.screen.common;
 
 import android.widget.Toast;
 
+import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.repository.local.CartLocalImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
 
 public class CloseOnBackPressed
 {
@@ -31,18 +37,44 @@ public class CloseOnBackPressed
 
     }
 
-    public boolean onBackPressed()
+    //    public boolean onBackPressed()
+    //    {
+    //        if (System.currentTimeMillis() <= backPressedTime + 2000)
+    //        {
+    //            return true;
+    //        }
+    //
+    //        backPressedTime = System.currentTimeMillis();
+    //
+    //        DailyToast.showToast(mActivity, mActivity.getString(R.string.toast_msg_backpressed), Toast.LENGTH_SHORT);
+    //
+    //        return false;
+    //    }
+
+    public Observable<Boolean> onBackPressed()
     {
-
-        if (System.currentTimeMillis() <= backPressedTime + 2000)
+        return new CartLocalImpl(mActivity).hasGourmetCart().observeOn(AndroidSchedulers.mainThread()).map(new Function<Boolean, Boolean>()
         {
-            return true;
-        }
+            @Override
+            public Boolean apply(Boolean hasGourmetCart) throws Exception
+            {
+                if (hasGourmetCart == true)
+                {
+                    DailyToast.showToast(mActivity, mActivity.getString(R.string.toast_msg_backpressed_has_cart), Toast.LENGTH_LONG);
+                } else
+                {
+                    DailyToast.showToast(mActivity, mActivity.getString(R.string.toast_msg_backpressed), Toast.LENGTH_SHORT);
+                }
 
-        backPressedTime = System.currentTimeMillis();
+                if (System.currentTimeMillis() <= backPressedTime + 2000)
+                {
+                    return true;
+                }
 
-        DailyToast.showToast(mActivity, mActivity.getString(R.string.toast_msg_backpressed), Toast.LENGTH_SHORT);
+                backPressedTime = System.currentTimeMillis();
 
-        return false;
+                return false;
+            }
+        });
     }
 }

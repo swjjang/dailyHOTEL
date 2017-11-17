@@ -1,26 +1,36 @@
 package com.daily.dailyhotel.screen.home.gourmet.detail.menus;
 
 
-import android.animation.Animator;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.View;
 
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.DetailImageInformation;
+import com.daily.dailyhotel.entity.GourmetBookDateTime;
+import com.daily.dailyhotel.entity.GourmetCart;
 import com.daily.dailyhotel.entity.GourmetMenu;
 import com.daily.dailyhotel.parcel.GourmetMenuParcel;
 import com.daily.dailyhotel.parcel.analytics.ImageListAnalyticsParam;
+import com.daily.dailyhotel.repository.local.CartLocalImpl;
 import com.daily.dailyhotel.screen.common.images.ImageListActivity;
+import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailPresenter;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by sheldon
@@ -30,9 +40,21 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 {
     GourmetMenusAnalyticsInterface mAnalytics;
 
+    private CartLocalImpl mCartLocalImpl;
+
+    private GourmetBookDateTime mGourmetBookDateTime;
     private List<GourmetMenu> mGourmetMenuList;
-    private int mIndex;
+    private List<GourmetMenu> mGourmetMenuVisibleList;
+
+    private int mPosition;
     private int mCenterPosition = -1;
+
+    private int mGourmetIndex;
+    private String mGourmetName;
+    private List<Integer> mOperationTimeList;
+    private int mVisitTime;
+    private GourmetCart mGourmetCart;
+    private boolean mOpendOperationTime, mOpendCartMenus;
 
     public interface GourmetMenusAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -64,6 +86,8 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 
         setAnalytics(new GourmetMenusAnalyticsImpl());
 
+        mCartLocalImpl = new CartLocalImpl(activity);
+
         setRefresh(true);
     }
 
@@ -81,6 +105,10 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             return true;
         }
 
+        setGourmetBookDateTime(intent.getStringExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME));
+        mGourmetIndex = intent.getIntExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_GOURMET_INDEX, 0);
+        mGourmetName = intent.getStringExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_GOURMET_NAME);
+
         ArrayList<GourmetMenuParcel> gourmetMenuParcelList = intent.getParcelableArrayListExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_MENU_LIST);
 
         if (gourmetMenuParcelList == null || gourmetMenuParcelList.size() == 0)
@@ -89,13 +117,16 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         }
 
         mGourmetMenuList = new ArrayList<>();
+        mGourmetMenuVisibleList = new ArrayList<>();
 
         for (GourmetMenuParcel gourmetMenuParcel : gourmetMenuParcelList)
         {
             mGourmetMenuList.add(gourmetMenuParcel.getGourmetMenu());
         }
 
-        mIndex = intent.getIntExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_INDEX, 0);
+        mPosition = intent.getIntExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_POSITION, 0);
+        mOperationTimeList = intent.getIntegerArrayListExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_OPERATION_TIMES);
+        mVisitTime = intent.getIntExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_VISIT_TIME, GourmetDetailPresenter.FULL_TIME);
 
         return true;
     }
@@ -109,9 +140,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             getViewInterface().setGuideVisible(true);
         }
 
-        getViewInterface().setGourmetMenus(mGourmetMenuList, mIndex);
-
-        onScrolled(mIndex, false);
+        setToolbarTitle(mVisitTime);
     }
 
     @Override
@@ -152,6 +181,16 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
     {
         mAnalytics.onEventBackClick(getActivity());
 
+        if (mOpendOperationTime == true)
+        {
+            onOperationTimeClick();
+            return true;
+        } else if (mOpendCartMenus == true)
+        {
+            onCloseCartMenusClick();
+            return true;
+        }
+
         return super.onBackPressed();
     }
 
@@ -180,6 +219,42 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         {
             return;
         }
+
+        addCompositeDisposable(mCartLocalImpl.getGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetCart>()
+        {
+            @Override
+            public void accept(GourmetCart gourmetCart) throws Exception
+            {
+                mGourmetCart = gourmetCart;
+
+                getViewInterface().setOperationTimes(mOperationTimeList);
+                getViewInterface().setCartVisible(false);
+
+                notifyOperationTimeChanged(mPosition);
+
+                onScrolled(mPosition, false);
+
+                if (mGourmetCart.gourmetIndex == mGourmetIndex && mGourmetCart.getMenuCount() > 0)
+                {
+                    getViewInterface().setCartVisible(true);
+                    getViewInterface().setSummeryCart(getString(R.string.label_gourmet_product_detail_check_the_menus), mGourmetCart.getTotalCount());
+                }
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                mGourmetCart = new GourmetCart();
+
+                getViewInterface().setOperationTimes(mOperationTimeList);
+                getViewInterface().setCartVisible(false);
+
+                notifyOperationTimeChanged(mPosition);
+
+                onScrolled(mPosition, false);
+            }
+        }));
     }
 
     @Override
@@ -191,7 +266,13 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
     @Override
     public void onCloseClick()
     {
-        onBackClick();
+        if (mOpendOperationTime == true)
+        {
+            onOperationTimeClick();
+        } else
+        {
+            onBackClick();
+        }
     }
 
     @Override
@@ -202,44 +283,42 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             return;
         }
 
-        getViewInterface().hideGuideAnimation(new Animator.AnimatorListener()
+        Observable<Boolean> observable = getViewInterface().hideGuideAnimation();
+
+        if (observable == null)
+        {
+            unLockAll();
+            return;
+        }
+
+        addCompositeDisposable(observable.subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
         {
             @Override
-            public void onAnimationStart(Animator animation)
-            {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation)
+            public void accept(Boolean aBoolean) throws Exception
             {
                 unLockAll();
             }
-
+        }, new Consumer<Throwable>()
+        {
             @Override
-            public void onAnimationCancel(Animator animation)
+            public void accept(Throwable throwable) throws Exception
             {
-
+                unLockAll();
             }
-
-            @Override
-            public void onAnimationRepeat(Animator animation)
-            {
-
-            }
-        });
+        }));
     }
 
     @Override
-    public void onReservationClick(int index)
+    public void onBookingClick()
     {
         if (lock() == true)
         {
             return;
         }
 
+        // 카트를 저장하고 끝낸다.
+
         Intent intent = new Intent();
-        intent.putExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_INDEX, index);
         setResult(Activity.RESULT_OK, intent);
         finish();
     }
@@ -254,7 +333,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 
         mCenterPosition = position;
 
-        getViewInterface().setSubTitle(String.format(Locale.KOREA, "%d / %d", position + 1, mGourmetMenuList.size()));
+        getViewInterface().setMenuIndicator(position + 1, mGourmetMenuVisibleList.size());
 
         if (real == true)
         {
@@ -287,5 +366,779 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             , gourmetMenuImageList, 0, analyticsParam), GourmetMenusActivity.REQUEST_CODE_IMAGE_LIST);
 
         mAnalytics.onEventImageClick(getActivity(), Integer.toString(gourmetMenu.index));
+    }
+
+    @Override
+    public void onOperationTimeClick()
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        screenLock(false);
+
+        if (mOpendOperationTime == true)
+        {
+            addCompositeDisposable(getViewInterface().closeOperationTimes().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+            {
+                @Override
+                public void accept(Boolean aBoolean) throws Exception
+                {
+                    setToolbarTitle(mVisitTime);
+
+                    mOpendOperationTime = false;
+
+                    unLockAll();
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    mOpendOperationTime = false;
+
+                    unLockAll();
+                }
+            }));
+        } else
+        {
+            setToolbarTitle(getString(R.string.label_gourmet_product_detail_view_operation_time_list));
+
+            addCompositeDisposable(getViewInterface().openOperationTimes(mVisitTime).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+            {
+                @Override
+                public void accept(Boolean aBoolean) throws Exception
+                {
+                    mOpendOperationTime = true;
+
+                    unLockAll();
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    mOpendOperationTime = true;
+
+                    unLockAll();
+                }
+            }));
+        }
+    }
+
+    @Override
+    public void onVisitTimeClick(int time)
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        mVisitTime = time;
+
+        mPosition = 0;
+
+        notifyOperationTimeChanged(mPosition);
+
+        mOpendOperationTime = false;
+
+        addCompositeDisposable(getViewInterface().closeOperationTimes().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+        {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception
+            {
+                setToolbarTitle(mVisitTime);
+
+                unLockAll();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                unLockAll();
+            }
+        }));
+    }
+
+    /**
+     * 팝업(다이얼로그) 창에서 시간을 선택하는 경우
+     *
+     * @param time
+     * @param menuIndex
+     */
+    @Override
+    public void onVisitTimeClick(int time, int menuIndex)
+    {
+        if (time <= 0 || menuIndex < 0 || lock() == true)
+        {
+            return;
+        }
+
+        mVisitTime = time;
+
+        notifyOperationTimeChanged(menuIndex);
+
+        setToolbarTitle(mVisitTime);
+
+        mGourmetCart.setGourmetInformation(mGourmetIndex, mGourmetName, mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), mVisitTime);
+
+        plusMenu(false, menuIndex);
+
+        getViewInterface().setCartVisible(true);
+
+        addCompositeDisposable(mCartLocalImpl.setGourmetCart(mGourmetCart).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+        {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception
+            {
+                unLockAll();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                unLockAll();
+            }
+        }));
+    }
+
+    @Override
+    public void onMenuOderCountPlusClick(int position)
+    {
+        if (position < 0 || mGourmetCart == null || lock() == true)
+        {
+            return;
+        }
+
+        GourmetMenu gourmetMenu = mGourmetMenuVisibleList.get(position);
+
+        if (gourmetMenu == null)
+        {
+            unLockAll();
+            return;
+        }
+
+        // 처음 메뉴 개수가 0인경우
+        if (mGourmetCart.getMenuCount() == 0)
+        {
+            if (mVisitTime > 0)
+            {
+                mGourmetCart.setGourmetInformation(mGourmetIndex, mGourmetName, mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), mVisitTime);
+
+                plusMenu(false, gourmetMenu.index);
+
+                getViewInterface().setCartVisible(true);
+
+                addCompositeDisposable(mCartLocalImpl.setGourmetCart(mGourmetCart).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception
+                    {
+                        unLockAll();
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        unLockAll();
+                    }
+                }));
+            } else
+            {
+                onChangeTimeClick(gourmetMenu.index);
+
+                unLockAll();
+            }
+        } else
+        {
+            try
+            {
+                String message = null;
+
+                // 다른 매장으로 변경시 추가시
+                if (mGourmetCart.gourmetIndex != mGourmetIndex)
+                {
+                    message = getString(R.string.message_gourmet_product_detail_change_cart_other_gourmet);
+                } else if (mGourmetCart.equalsDay(mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)) != true)
+                {
+                    // 방문 일이 변경되는 경우
+                    message = getString(R.string.message_gourmet_product_detail_change_cart_other_visit_day);
+                } else if (mGourmetCart.visitTime != mVisitTime)
+                {
+                    // 방문 시간이 변경되는 경우
+                    message = getString(R.string.message_gourmet_product_detail_add_menu_after_initialization);
+                }
+
+                if (DailyTextUtils.isTextEmpty(message) == true)
+                {
+                    mGourmetCart.setGourmetInformation(mGourmetIndex, mGourmetName, mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), mVisitTime);
+
+                    plusMenu(false, gourmetMenu.index);
+
+                    getViewInterface().setCartVisible(true);
+
+                    addCompositeDisposable(mCartLocalImpl.setGourmetCart(mGourmetCart).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                    {
+                        @Override
+                        public void accept(Boolean aBoolean) throws Exception
+                        {
+                            unLockAll();
+                        }
+                    }, new Consumer<Throwable>()
+                    {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception
+                        {
+                            unLockAll();
+                        }
+                    }));
+                } else
+                {
+                    getViewInterface().showSimpleDialog(null, message//
+                        , getString(R.string.label_gourmet_product_detail_add_new_menu), getString(R.string.label_gourmet_product_detail_existing_menu), new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                // 장바구니 초기화 후 시간 변경 화면
+                                mGourmetCart.clear();
+
+                                getViewInterface().setCartVisible(false);
+
+                                addCompositeDisposable(mCartLocalImpl.clearGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                                {
+                                    @Override
+                                    public void accept(Boolean aBoolean) throws Exception
+                                    {
+                                        if (mVisitTime > 0)
+                                        {
+                                            mGourmetCart.setGourmetInformation(mGourmetIndex, mGourmetName, mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), mVisitTime);
+
+                                            plusMenu(false, gourmetMenu.index);
+
+                                            getViewInterface().setCartVisible(true);
+
+                                            addCompositeDisposable(mCartLocalImpl.setGourmetCart(mGourmetCart).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                                            {
+                                                @Override
+                                                public void accept(Boolean aBoolean) throws Exception
+                                                {
+                                                    unLockAll();
+                                                }
+                                            }, new Consumer<Throwable>()
+                                            {
+                                                @Override
+                                                public void accept(Throwable throwable) throws Exception
+                                                {
+                                                    unLockAll();
+                                                }
+                                            }));
+                                        } else
+                                        {
+                                            onChangeTimeClick(gourmetMenu.index);
+                                        }
+                                    }
+                                }));
+                            }
+                        }, null);
+
+                    unLockAll();
+                }
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
+        }
+    }
+
+    @Override
+    public void onMenuOderCountMinusClick(int position)
+    {
+        if (position < 0 || mGourmetCart == null || mGourmetCart.gourmetIndex != mGourmetIndex || mGourmetCart.getMenuCount() <= 0 || lock() == true)
+        {
+            return;
+        }
+
+        GourmetMenu gourmetMenu = mGourmetMenuVisibleList.get(position);
+
+        if (gourmetMenu == null)
+        {
+            unLockAll();
+            return;
+        }
+
+        minusMenu(false, gourmetMenu.index);
+
+        if (mGourmetCart.getMenuCount() == 0)
+        {
+            mGourmetCart.clear();
+
+            getViewInterface().setCartVisible(false);
+
+            addCompositeDisposable(mCartLocalImpl.clearGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+            {
+                @Override
+                public void accept(Boolean aBoolean) throws Exception
+                {
+                    unLockAll();
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    unLockAll();
+                }
+            }));
+        } else
+        {
+            addCompositeDisposable(mCartLocalImpl.setGourmetCart(mGourmetCart).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+            {
+                @Override
+                public void accept(Boolean aBoolean) throws Exception
+                {
+                    unLockAll();
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    unLockAll();
+                }
+            }));
+        }
+    }
+
+    @Override
+    public void onOpenCartMenusClick()
+    {
+        if (mGourmetCart == null || lock() == true)
+        {
+            return;
+        }
+
+        getViewInterface().setGourmetCart(mGourmetCart);
+        Observable<Boolean> observable = getViewInterface().openCartMenus(mGourmetCart);
+
+        if (observable == null)
+        {
+            unLockAll();
+            return;
+        }
+
+        addCompositeDisposable(observable.subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+        {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception
+            {
+                getViewInterface().setSummeryCart(getString(R.string.label_gourmet_product_detail_booking_total_price//
+                    , DailyTextUtils.getPriceFormat(getActivity(), mGourmetCart.getTotalPrice(), false))//
+                    , mGourmetCart.getTotalCount());
+
+                mOpendCartMenus = true;
+
+                unLockAll();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                unLockAll();
+            }
+        }));
+    }
+
+    @Override
+    public void onCloseCartMenusClick()
+    {
+        if (mGourmetCart == null || lock() == true)
+        {
+            return;
+        }
+
+        Observable<Boolean> observable = getViewInterface().closeCartMenus();
+
+        if (observable == null)
+        {
+            unLockAll();
+            return;
+        }
+
+        addCompositeDisposable(observable.subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+        {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception
+            {
+                getViewInterface().notifyGourmetMenusChanged();
+
+                if (mGourmetCart == null || mGourmetCart.getMenuCount() == 0)
+                {
+                    getViewInterface().setCartVisible(false);
+                } else
+                {
+                    getViewInterface().setSummeryCart(getString(R.string.label_gourmet_product_detail_check_the_menus), mGourmetCart.getTotalCount());
+                }
+
+                mOpendCartMenus = false;
+
+                unLockAll();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                getViewInterface().notifyGourmetMenusChanged();
+
+                if (mGourmetCart == null || mGourmetCart.getMenuCount() == 0)
+                {
+                    getViewInterface().setCartVisible(false);
+                }
+
+                unLockAll();
+            }
+        }));
+    }
+
+    @Override
+    public void onDeleteCartMenuClick(int menuIndex)
+    {
+        if (mGourmetCart == null || mGourmetCart.gourmetIndex != mGourmetIndex || lock() == true)
+        {
+            return;
+        }
+
+        mGourmetCart.remove(menuIndex);
+
+        getViewInterface().setMenuOrderCount(menuIndex, 0);
+
+        if (mGourmetCart.getMenuCount() > 0)
+        {
+            // Cart
+            getViewInterface().setSummeryCart(getString(R.string.label_gourmet_product_detail_booking_total_price//
+                , DailyTextUtils.getPriceFormat(getActivity(), mGourmetCart.getTotalPrice(), false))//
+                , mGourmetCart.getTotalCount());
+            getViewInterface().setGourmetCart(mGourmetCart);
+        } else
+        {
+            unLockAll();
+
+            onCloseCartMenusClick();
+        }
+
+        addCompositeDisposable(mCartLocalImpl.setGourmetCart(mGourmetCart).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+        {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception
+            {
+                unLockAll();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                unLockAll();
+            }
+        }));
+    }
+
+    @Override
+    public void onCartMenuMinusClick(int menuIndex)
+    {
+        if (mGourmetCart == null || mGourmetCart.gourmetIndex != mGourmetIndex || lock() == true)
+        {
+            return;
+        }
+
+        int menuCount = mGourmetCart.getMenuCount();
+
+        minusMenu(true, menuIndex);
+
+        if (mGourmetCart.getMenuOrderCount(menuIndex) > 0)
+        {
+            getViewInterface().setGourmetCartMenu(menuIndex, mGourmetCart.getMenuOrderCount(menuIndex));
+        }
+
+        // 메뉴 갯수가 변경된 경우
+        if (mGourmetCart.getMenuCount() != menuCount)
+        {
+            getViewInterface().setGourmetCart(mGourmetCart);
+        }
+
+        if (mGourmetCart.getMenuCount() == 0)
+        {
+            mGourmetCart.clear();
+
+            addCompositeDisposable(mCartLocalImpl.clearGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+            {
+                @Override
+                public void accept(Boolean aBoolean) throws Exception
+                {
+                    unLockAll();
+
+                    onCloseCartMenusClick();
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    unLockAll();
+
+                    onCloseCartMenusClick();
+                }
+            }));
+        } else
+        {
+            addCompositeDisposable(mCartLocalImpl.setGourmetCart(mGourmetCart).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+            {
+                @Override
+                public void accept(Boolean aBoolean) throws Exception
+                {
+                    unLockAll();
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    unLockAll();
+                }
+            }));
+        }
+    }
+
+    @Override
+    public void onCartMenuPlusClick(int menuIndex)
+    {
+        if (mGourmetCart == null || mGourmetCart.gourmetIndex != mGourmetIndex || lock() == true)
+        {
+            return;
+        }
+
+        plusMenu(true, menuIndex);
+
+        getViewInterface().setGourmetCartMenu(menuIndex, mGourmetCart.getMenuOrderCount(menuIndex));
+
+        addCompositeDisposable(mCartLocalImpl.setGourmetCart(mGourmetCart).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+        {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception
+            {
+                unLockAll();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                unLockAll();
+            }
+        }));
+    }
+
+    private void setToolbarTitle(String text)
+    {
+        getViewInterface().setToolbarTitle(text);
+    }
+
+    private void setToolbarTitle(int visitTime)
+    {
+        if (visitTime == GourmetDetailPresenter.FULL_TIME)
+        {
+            getViewInterface().setToolbarTitle(getString(R.string.label_gourmet_product_detail_operation_time_list));
+        } else
+        {
+            getViewInterface().setToolbarTitle(DailyTextUtils.formatIntegerTimeToStringTime(visitTime) + " " + getString(R.string.label_menu));
+        }
+    }
+
+    private void setGourmetBookDateTime(String visitDateTime)
+    {
+        if (DailyTextUtils.isTextEmpty(visitDateTime) == true)
+        {
+            return;
+        }
+
+        if (mGourmetBookDateTime == null)
+        {
+            mGourmetBookDateTime = new GourmetBookDateTime();
+        }
+
+        try
+        {
+            mGourmetBookDateTime.setVisitDateTime(visitDateTime);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
+    private void onChangeTimeClick(int menuIndex)
+    {
+        if (menuIndex < 0)
+        {
+            return;
+        }
+
+        GourmetMenu gourmetMenu = getGourmetMenu(menuIndex);
+
+        if (gourmetMenu == null)
+        {
+            return;
+        }
+
+        List<Integer> operationTimeList = gourmetMenu.getOperationTimeList();
+
+        getViewInterface().showTimePickerDialog(operationTimeList, menuIndex);
+    }
+
+    private void plusMenu(boolean openedCartMenus, int menuIndex)
+    {
+        if (menuIndex < 0 || mGourmetCart == null || mGourmetCart.gourmetIndex != mGourmetIndex//
+            || mGourmetMenuVisibleList == null || mGourmetMenuVisibleList.size() == 0)
+        {
+            return;
+        }
+
+        GourmetMenu gourmetMenu = getGourmetMenu(menuIndex);
+        mGourmetCart.plus(gourmetMenu);
+
+        getViewInterface().setMenuOrderCount(menuIndex, mGourmetCart.getMenuOrderCount(menuIndex));
+
+        getViewInterface().setSummeryCart(openedCartMenus ? getString(R.string.label_gourmet_product_detail_booking_total_price//
+            , DailyTextUtils.getPriceFormat(getActivity(), mGourmetCart.getTotalPrice(), false))//
+            : getString(R.string.label_gourmet_product_detail_check_the_menus), mGourmetCart.getTotalCount());
+    }
+
+    private void minusMenu(boolean openedCartMenus, int menuIndex)
+    {
+        if (menuIndex < 0 || mGourmetCart == null || mGourmetCart.gourmetIndex != mGourmetIndex//
+            || mGourmetMenuVisibleList == null || mGourmetMenuVisibleList.size() == 0)
+        {
+            return;
+        }
+
+        GourmetMenu gourmetMenu = getGourmetMenu(menuIndex);
+        mGourmetCart.minus(gourmetMenu.index);
+
+        getViewInterface().setMenuOrderCount(menuIndex, mGourmetCart.getMenuOrderCount(gourmetMenu.index));
+
+        getViewInterface().setSummeryCart(openedCartMenus ? getString(R.string.label_gourmet_product_detail_booking_total_price//
+            , DailyTextUtils.getPriceFormat(getActivity(), mGourmetCart.getTotalPrice(), false))//
+            : getString(R.string.label_gourmet_product_detail_check_the_menus), mGourmetCart.getTotalCount());
+    }
+
+    private GourmetMenu getGourmetMenu(int menuIndex)
+    {
+        if (menuIndex > 0)
+        {
+            for (GourmetMenu gourmetMenu : mGourmetMenuList)
+            {
+                if (gourmetMenu.index == menuIndex)
+                {
+                    return gourmetMenu;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private void notifyOperationTimeChanged()
+    {
+        if (mOperationTimeList == null)
+        {
+            return;
+        }
+
+        getViewInterface().setVisitTime(mVisitTime);
+
+        mGourmetMenuVisibleList.clear();
+        mGourmetMenuVisibleList.addAll(getGourmetMenuList(mVisitTime));
+
+        if (mPosition >= mGourmetMenuVisibleList.size())
+        {
+            mPosition = 0;
+        }
+
+        getViewInterface().setGourmetMenus(mGourmetMenuVisibleList, mPosition);
+        getViewInterface().setMenuIndicator(mPosition + 1, mGourmetMenuVisibleList.size());
+    }
+
+    private void notifyOperationTimeChanged(int menuIndex)
+    {
+        if (mOperationTimeList == null || menuIndex < 0)
+        {
+            return;
+        }
+
+        getViewInterface().setVisitTime(mVisitTime);
+
+        mGourmetMenuVisibleList.clear();
+        mGourmetMenuVisibleList.addAll(getGourmetMenuList(mVisitTime));
+
+        int size = mGourmetMenuVisibleList.size();
+
+        if (mPosition >= size)
+        {
+            mPosition = 0;
+        }
+
+        for (int i = 0; i < size; i++)
+        {
+            if (mGourmetMenuVisibleList.get(i).index == menuIndex)
+            {
+                mPosition = i;
+            }
+        }
+
+        getViewInterface().setGourmetMenus(mGourmetMenuVisibleList, mPosition);
+        getViewInterface().setMenuIndicator(mPosition + 1, mGourmetMenuVisibleList.size());
+    }
+
+    private List<GourmetMenu> getGourmetMenuList(int time)
+    {
+        List<GourmetMenu> gourmetMenuList = new ArrayList<>();
+
+        for (GourmetMenu gourmetMenu : mGourmetMenuList)
+        {
+            gourmetMenu.orderCount = 0;
+            gourmetMenu.visible = true;
+        }
+
+        if (time == GourmetDetailPresenter.FULL_TIME)
+        {
+            gourmetMenuList.addAll(mGourmetMenuList);
+        } else
+        {
+            for (GourmetMenu gourmetMenu : mGourmetMenuList)
+            {
+                for (int operationTime : gourmetMenu.getOperationTimeList())
+                {
+                    if (operationTime == time)
+                    {
+                        gourmetMenu.visible = true;
+
+                        gourmetMenuList.add(gourmetMenu);
+
+                        if (mGourmetCart != null && mGourmetCart.gourmetIndex == mGourmetIndex && mGourmetCart.visitTime == time)
+                        {
+                            gourmetMenu.orderCount = mGourmetCart.getMenuOrderCount(gourmetMenu.index);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        return gourmetMenuList;
     }
 }

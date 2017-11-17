@@ -84,7 +84,7 @@ public class DailyDetailTrueReviewView extends ConstraintLayout
             return;
         }
 
-        mViewDataBinding.goTrueReviewTextView.setText(getContext().getString(R.string.label_detail_view_review_go, DailyTextUtils.convertIntegerToString(trueReviewCount)));
+        mViewDataBinding.goTrueReviewTextView.setText(getContext().getString(R.string.label_detail_view_review_go, DailyTextUtils.formatIntegerToString(trueReviewCount)));
     }
 
     public void setTrueReviewCountVisible(boolean visible)

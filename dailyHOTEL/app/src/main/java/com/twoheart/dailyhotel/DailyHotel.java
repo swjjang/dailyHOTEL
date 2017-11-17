@@ -9,6 +9,8 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.VersionUtils;
+import com.daily.dailyhotel.entity.GourmetCart;
+import com.daily.dailyhotel.repository.local.CartLocalImpl;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.gourmet.payment.GourmetPaymentActivity;
 import com.daily.dailyhotel.screen.home.gourmet.thankyou.GourmetThankYouActivity;
@@ -127,6 +129,9 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         }
 
         FontManager.getInstance(getApplicationContext());
+
+        // 장바구니 초기화
+        new CartLocalImpl(getApplicationContext()).clearGourmetCart().subscribe();
 
         registerActivityLifecycleCallbacks(new DailyActivityLifecycleCallbacks());
     }
@@ -264,6 +269,8 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
                 if (backgroundTime != 0 && currentTime - backgroundTime > DELAY_TIME)
                 {
                     Util.restartApp(activity);
+
+                    new CartLocalImpl(activity).clearGourmetCart().subscribe();
                 }
             }
         }

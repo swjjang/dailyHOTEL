@@ -27,7 +27,7 @@ import java.util.Locale;
 
 public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapter.GourmetMenuViewHolder>
 {
-    public static final float MENU_WIDTH_RATIO = 0.87f;
+    public static final float MENU_WIDTH_RATIO = 0.86f;
     private Context mContext;
     private List<GourmetMenu> mList;
 
@@ -35,18 +35,18 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
 
     public interface OnEventListener extends OnBaseEventListener
     {
-        void onReservationClick(int index);
-
         void onMoreImageClick(int index);
+
+        void onOderCountPlusClick(int position);
+
+        void onOderCountMinusClick(int position);
     }
 
-    public GourmetMenusAdapter(Context context, List<GourmetMenu> gourmetMenuList)
+    public GourmetMenusAdapter(Context context)
     {
         mContext = context;
 
         mList = new ArrayList<>();
-
-        addAll(gourmetMenuList);
     }
 
     public void setOnEventListener(OnEventListener onEventListener)
@@ -108,6 +108,24 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
         return mList.get(position);
     }
 
+    public int getPosition(int menuIndex)
+    {
+        if (menuIndex > 0)
+        {
+            int size = getItemCount();
+
+            for (int i = 0; i < size; i++)
+            {
+                if (mList.get(i).index == menuIndex)
+                {
+                    return i;
+                }
+            }
+        }
+
+        return -1;
+    }
+
     @Override
     public int getItemCount()
     {
@@ -126,8 +144,6 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
 
         dataBinding.getRoot().setLayoutParams(new RecyclerView.LayoutParams((int) getMenuWidth(), ViewGroup.LayoutParams.MATCH_PARENT));
         GourmetMenuViewHolder gourmetMenuViewHolder = new GourmetMenuViewHolder(dataBinding);
-
-        dataBinding.roundedConstraintLayout.setRound(ScreenUtils.dpToPx(mContext, 5));
 
         return gourmetMenuViewHolder;
     }
@@ -200,6 +216,57 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
 
         // 메뉴 제목
         holder.dataBinding.productNameTextView.setText(gourmetMenu.name);
+
+        // 가격
+        holder.dataBinding.priceTextView.setPaintFlags(holder.dataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
+        String price = DailyTextUtils.getPriceFormat(mContext, gourmetMenu.price, false);
+        String discountPrice = DailyTextUtils.getPriceFormat(mContext, gourmetMenu.discountPrice, false);
+
+        if (gourmetMenu.price <= 0 || gourmetMenu.price <= gourmetMenu.discountPrice)
+        {
+            holder.dataBinding.priceTextView.setVisibility(View.GONE);
+            holder.dataBinding.priceTextView.setText(null);
+        } else
+        {
+            holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
+            holder.dataBinding.priceTextView.setText(price);
+        }
+
+        holder.dataBinding.discountPriceTextView.setText(discountPrice);
+
+        //
+        setMenuOrderCount(holder, position, gourmetMenu.orderCount);
+
+        holder.dataBinding.orderCountMinusView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                synchronized (this)
+                {
+                    if (mOnEventListener != null)
+                    {
+                        mOnEventListener.onOderCountMinusClick(position);
+                    }
+                }
+            }
+        });
+
+        holder.dataBinding.orderCountPlusView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                synchronized (this)
+                {
+                    if (mOnEventListener != null)
+                    {
+                        mOnEventListener.onOderCountPlusClick(position);
+                    }
+                }
+            }
+        });
 
         // 베네핏
         if (DailyTextUtils.isTextEmpty(gourmetMenu.menuBenefit) == true)
@@ -290,36 +357,51 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
             holder.dataBinding.menuTextView.setVisibility(View.VISIBLE);
         }
 
-        // bottom bar
-        holder.dataBinding.priceTextView.setPaintFlags(holder.dataBinding.priceTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        holder.dataBinding.getRoot().setTag(R.id.blurView, holder.dataBinding.blurView);
+    }
 
-        String price = DailyTextUtils.getPriceFormat(mContext, gourmetMenu.price, false);
-        String discountPrice = DailyTextUtils.getPriceFormat(mContext, gourmetMenu.discountPrice, false);
-
-        if (gourmetMenu.price <= 0 || gourmetMenu.price <= gourmetMenu.discountPrice)
+    public void setMenuOrderCount(RecyclerView.ViewHolder viewHolder, int position, int menuOrderCount)
+    {
+        if (position < 0)
         {
-            holder.dataBinding.priceTextView.setVisibility(View.GONE);
-            holder.dataBinding.priceTextView.setText(null);
-        } else
-        {
-            holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
-            holder.dataBinding.priceTextView.setText(price);
+            return;
         }
 
-        holder.dataBinding.discountPriceTextView.setText(discountPrice);
-        holder.dataBinding.reservationTextView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (mOnEventListener != null)
-                {
-                    mOnEventListener.onReservationClick(position);
-                }
-            }
-        });
+        getItem(position).orderCount = menuOrderCount;
 
-        holder.dataBinding.getRoot().setTag(R.id.blurView, holder.dataBinding.blurView);
+        if (viewHolder == null)
+        {
+            return;
+        }
+
+        GourmetMenuViewHolder gourmetMenuViewHolder = (GourmetMenuViewHolder) viewHolder;
+
+        if (menuOrderCount == 0)
+        {
+            gourmetMenuViewHolder.dataBinding.orderCountMinusView.setEnabled(false);
+        } else
+        {
+            gourmetMenuViewHolder.dataBinding.orderCountMinusView.setEnabled(true);
+        }
+
+        if (menuOrderCount == 99)
+        {
+            gourmetMenuViewHolder.dataBinding.orderCountPlusView.setEnabled(false);
+        } else
+        {
+            gourmetMenuViewHolder.dataBinding.orderCountPlusView.setEnabled(true);
+        }
+
+        gourmetMenuViewHolder.dataBinding.orderCountTextView.setText(Integer.toString(menuOrderCount));
+
+        if (menuOrderCount == 0)
+        {
+            gourmetMenuViewHolder.dataBinding.menuCountTagTextView.setVisibility(View.GONE);
+        } else
+        {
+            gourmetMenuViewHolder.dataBinding.menuCountTagTextView.setVisibility(View.VISIBLE);
+            gourmetMenuViewHolder.dataBinding.menuCountTagTextView.setText(mContext.getString(R.string.label_gourmet_product_detail_count_tag, menuOrderCount));
+        }
     }
 
     public float getMenuWidth()

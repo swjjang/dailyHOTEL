@@ -596,12 +596,26 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
 
         if (lastIndex == MainFragmentManager.INDEX_HOME_FRAGMENT)
         {
-            if (mBackButtonHandler.onBackPressed())
+            addCompositeDisposable(mBackButtonHandler.onBackPressed().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
             {
-                ExitActivity.exitApplication(this);
+                @Override
+                public void accept(Boolean aBoolean) throws Exception
+                {
+                    if (aBoolean == true)
+                    {
+                        ExitActivity.exitApplication(MainActivity.this);
 
-                super.onBackPressed();
-            }
+                        MainActivity.super.onBackPressed();
+                    }
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+
+                }
+            }));
         } else
         {
             unLockUI();
@@ -1252,53 +1266,53 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
 
             addCompositeDisposable(new CommonRemoteImpl(MainActivity.this).getConfigurations() //
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Configurations>()
-            {
-                @Override
-                public void accept(Configurations configurations) throws Exception
                 {
-                    unLockUI();
-
-                    DailyRemoteConfigPreference.getInstance(MainActivity.this).setKeyRemoteConfigRewardStickerEnabled(configurations.activeReward);
-
-                    if (DailyTextUtils.isTextEmpty(title, message) == true)
+                    @Override
+                    public void accept(Configurations configurations) throws Exception
                     {
-                        new DailyRemoteConfig(MainActivity.this).requestRemoteConfig(new DailyRemoteConfig.OnCompleteListener()
+                        unLockUI();
+
+                        DailyRemoteConfigPreference.getInstance(MainActivity.this).setKeyRemoteConfigRewardStickerEnabled(configurations.activeReward);
+
+                        if (DailyTextUtils.isTextEmpty(title, message) == true)
                         {
-                            @Override
-                            public void onComplete(String currentVersion, String forceVersion)
+                            new DailyRemoteConfig(MainActivity.this).requestRemoteConfig(new DailyRemoteConfig.OnCompleteListener()
                             {
-                                if (DailyTextUtils.isTextEmpty(currentVersion, forceVersion) == true)
+                                @Override
+                                public void onComplete(String currentVersion, String forceVersion)
                                 {
-                                    mNetworkController.requestVersion();
-                                } else
-                                {
-                                    checkAppVersion(currentVersion, forceVersion);
+                                    if (DailyTextUtils.isTextEmpty(currentVersion, forceVersion) == true)
+                                    {
+                                        mNetworkController.requestVersion();
+                                    } else
+                                    {
+                                        checkAppVersion(currentVersion, forceVersion);
+                                    }
+
+                                    analyticsRankABTest();
                                 }
-
-                                analyticsRankABTest();
-                            }
-                        });
-                    } else
-                    {
-                        showSimpleDialog(title, message, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
+                            });
+                        } else
                         {
-                            @Override
-                            public void onClick(View v)
+                            showSimpleDialog(title, message, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
                             {
-                                setResult(RESULT_CANCELED);
-                                finish();
-                            }
-                        }, null, false);
+                                @Override
+                                public void onClick(View v)
+                                {
+                                    setResult(RESULT_CANCELED);
+                                    finish();
+                                }
+                            }, null, false);
+                        }
                     }
-                }
-            }, new Consumer<Throwable>()
-            {
-                @Override
-                public void accept(Throwable throwable) throws Exception
+                }, new Consumer<Throwable>()
                 {
-                    onHandleError(throwable);
-                }
-            }));
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        onHandleError(throwable);
+                    }
+                }));
         }
 
         @Override

@@ -260,7 +260,7 @@ public class DailyTextUtils
      *
      * @return
      */
-    public static String convertIntegerToString(int number)
+    public static String formatIntegerToString(int number)
     {
         final int MIN_NUMBER = 10000;
 
@@ -281,5 +281,18 @@ public class DailyTextUtils
                 return String.format(Locale.KOREA, "%.1f만", roundCount / 100);
             }
         }
+    }
+
+    /**
+     * 1200 -> 12:00
+     * 2500 -> 25:00
+     * 900 -> 09:00
+     *
+     * @param time
+     * @return
+     */
+    public static String formatIntegerTimeToStringTime(int time)
+    {
+        return time < 0 ? "" : String.format(Locale.KOREA, "%02d:%02d", time / 100, time % 100);
     }
 }

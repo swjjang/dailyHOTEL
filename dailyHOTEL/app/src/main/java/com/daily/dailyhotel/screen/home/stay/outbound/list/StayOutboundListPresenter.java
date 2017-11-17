@@ -654,7 +654,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     @Override
     public void onCalendarClick()
     {
-        if (lock() == true || mStayBookDateTime == null)
+        if (mStayBookDateTime == null || lock() == true)
         {
             return;
         }

@@ -20,6 +20,7 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
+import com.daily.dailyhotel.entity.GourmetCart;
 import com.daily.dailyhotel.entity.GourmetDetail;
 import com.daily.dailyhotel.entity.GourmetMenu;
 import com.daily.dailyhotel.entity.ReviewScores;
@@ -30,6 +31,7 @@ import com.daily.dailyhotel.parcel.analytics.GourmetPaymentAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.ImageListAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.TrueReviewAnalyticsParam;
+import com.daily.dailyhotel.repository.local.CartLocalImpl;
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.remote.CalendarImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
@@ -67,10 +69,13 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -95,6 +100,8 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     public static final int STATUS_SOLD_OUT = 3;
     public static final int STATUS_FINISH = 4;
 
+    public static final int FULL_TIME = -1;
+
     static final int SHOWN_MENU_COUNT = 5;
 
     GourmetDetailAnalyticsInterface mAnalytics;
@@ -104,6 +111,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     private ProfileRemoteImpl mProfileRemoteImpl;
     private CalendarImpl mCalendarImpl;
     private RecentlyLocalImpl mRecentlyLocalImpl;
+    private CartLocalImpl mCartLocalImpl;
 
     int mGourmetIndex, mPriceFromList;
     private String mGourmetName, mCategory;
@@ -121,9 +129,12 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     private boolean mSoldOutFromList;
     private int mGradientType;
     private List<Integer> mSoldOutDateList;
-    private int mSelectedMenuIndex;
     boolean mShowCalendar;
     boolean mShowTrueVR;
+
+    // 멀티 구매
+    private int mVisitTime;
+    private List<Integer> mOperationTimeList;
 
     DailyDeepLink mDailyDeepLink;
     private AppResearch mAppResearch;
@@ -132,7 +143,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     {
         void setAnalyticsParam(GourmetDetailAnalyticsParam analyticsParam);
 
-        GourmetPaymentAnalyticsParam getStayPaymentAnalyticsParam(GourmetDetail gourmetDetail, GourmetMenu gourmetMenu);
+        GourmetPaymentAnalyticsParam getStayPaymentAnalyticsParam(GourmetDetail gourmetDetail, GourmetCart gourmetCart);
 
         void onScreen(Activity activity, GourmetBookDateTime gourmetBookDateTime, GourmetDetail gourmetDetail, int priceFromList);
 
@@ -155,7 +166,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         void onEventCalendarClick(Activity activity);
 
         void onEventOrderClick(Activity activity, GourmetBookDateTime gourmetBookDateTime//
-            , int gourmetIndex, String gourmetName, String menuName, String category, int discountPrice);
+            , int gourmetIndex, String gourmetName, String category, GourmetCart gourmetCart);
 
         void onEventScrollTopMenuClick(Activity activity, String gourmetName);
 
@@ -211,6 +222,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         mProfileRemoteImpl = new ProfileRemoteImpl(activity);
         mCalendarImpl = new CalendarImpl(activity);
         mRecentlyLocalImpl = new RecentlyLocalImpl(activity);
+        mCartLocalImpl = new CartLocalImpl(activity);
 
         setStatus(STATUS_NONE);
 
@@ -390,6 +402,29 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             onRefresh(true);
         }
 
+        addCompositeDisposable(mCartLocalImpl.getGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetCart>()
+        {
+            @Override
+            public void accept(GourmetCart gourmetCart) throws Exception
+            {
+                if (gourmetCart.gourmetIndex == mGourmetIndex && gourmetCart.getTotalCount() > 0)
+                {
+                    getViewInterface().setToolbarCartMenusVisible(true);
+                    getViewInterface().setToolbarCartMenusCount(gourmetCart.getTotalCount());
+                } else
+                {
+                    getViewInterface().setToolbarCartMenusVisible(false);
+                }
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                getViewInterface().setToolbarCartMenusVisible(false);
+            }
+        }));
+
         mAppResearch.onResume("고메", mGourmetIndex);
     }
 
@@ -511,7 +546,21 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             case GourmetDetailActivity.REQUEST_CODE_PROFILE_UPDATE:
                 if (resultCode == Activity.RESULT_OK)
                 {
-                    onOrderMenu(mSelectedMenuIndex);
+                    addCompositeDisposable(mCartLocalImpl.getGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetCart>()
+                    {
+                        @Override
+                        public void accept(GourmetCart gourmetCart) throws Exception
+                        {
+                            onBookingCartMenu(gourmetCart);
+                        }
+                    }, new Consumer<Throwable>()
+                    {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception
+                        {
+
+                        }
+                    }));
 
                     setResult(BaseActivity.RESULT_CODE_REFRESH);
                 }
@@ -552,11 +601,21 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 switch (resultCode)
                 {
                     case Activity.RESULT_OK:
-                        // 결재하기 호출
-                        if (data != null)
+                        addCompositeDisposable(mCartLocalImpl.getGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetCart>()
                         {
-                            onOrderMenu(data.getIntExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_INDEX, -1));
-                        }
+                            @Override
+                            public void accept(GourmetCart gourmetCart) throws Exception
+                            {
+                                onBookingCartMenu(gourmetCart);
+                            }
+                        }, new Consumer<Throwable>()
+                        {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception
+                            {
+
+                            }
+                        }));
                         break;
 
                     default:
@@ -1266,19 +1325,20 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     }
 
     @Override
-    public void onMenuClick(int index)
+    public void onMenuClick(int index, int position)
     {
         if (mGourmetDetail == null || lock() == true)
         {
             return;
         }
 
-        startActivityForResult(GourmetMenusActivity.newInstance(getActivity(), mGourmetDetail.getGourmetMenuList(), index)//
+        startActivityForResult(GourmetMenusActivity.newInstance(getActivity(), mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , mGourmetDetail.index, mGourmetDetail.name, mGourmetDetail.getGourmetMenuList(), position, (ArrayList) mOperationTimeList, mVisitTime)//
             , GourmetDetailActivity.REQUEST_CODE_MENU);
 
         try
         {
-            mAnalytics.onEventMenuClick(getActivity(), mGourmetDetail.getGourmetMenuList().get(index).index, index);
+            mAnalytics.onEventMenuClick(getActivity(), mGourmetDetail.getGourmetMenuList().get(index).index, position);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -1290,6 +1350,48 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     {
         DailyPreference.getInstance(getActivity()).setWishTooltip(false);
         getViewInterface().hideWishTooltip();
+    }
+
+    @Override
+    public void onVisitTimeClick(int visitTime)
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        setVisitTime(visitTime);
+
+        notifyOperationTimeChanged();
+
+        unLockAll();
+    }
+
+    @Override
+    public void onBookingClick()
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        addCompositeDisposable(mCartLocalImpl.getGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetCart>()
+        {
+            @Override
+            public void accept(GourmetCart gourmetCart) throws Exception
+            {
+                unLockAll();
+
+                onBookingCartMenu(gourmetCart);
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                unLockAll();
+            }
+        }));
     }
 
     private void setStatus(int status)
@@ -1326,6 +1428,193 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         mAnalytics.onScreen(getActivity(), mGourmetBookDateTime, gourmetDetail, mPriceFromList);
     }
 
+    private void setVisitTime(int time)
+    {
+        mVisitTime = time;
+    }
+
+    private void setOperationTimes(CommonDateTime commonDateTime, GourmetBookDateTime gourmetBookDateTime, List<GourmetMenu> gourmetMenuList)
+    {
+        if (commonDateTime == null || gourmetBookDateTime == null)
+        {
+            return;
+        }
+
+        if (mOperationTimeList == null)
+        {
+            mOperationTimeList = new ArrayList<>();
+        }
+
+        mOperationTimeList.clear();
+
+        if (gourmetMenuList == null || gourmetMenuList.size() == 0)
+        {
+            return;
+        }
+
+        // 업장 시간과 티켓 시간을 만든다
+        // https://docs.google.com/spreadsheets/d/1AoHc40ayjQP8psgWvo6dyaVBkyLcKtIT2RKzN0-SFD8/edit#gid=793396576
+        // 업장 시간
+        try
+        {
+            String todayDate = DailyCalendar.convertDateFormatString(commonDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd");
+
+            ExLog.d("pinkred - todayDate : " + todayDate);
+
+            int currentTime;
+
+            // 오늘인 경우 현재 시간에 + 30분을 더해준다.
+            if (todayDate.equalsIgnoreCase(gourmetBookDateTime.getVisitDateTime("yyyyMMdd")) == true)
+            {
+                Calendar calendar = DailyCalendar.getInstance();
+                calendar.setTime(DailyCalendar.convertDate(commonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT));
+                calendar.add(Calendar.MINUTE, 30);
+
+                currentTime = Integer.parseInt(DailyCalendar.format(calendar.getTime(), "HHmm"));
+            } else
+            {
+                currentTime = -1;
+            }
+
+            TreeSet<Integer> visitTimeSet = new TreeSet<>();
+            final int ONE_HOUR_MINUTES = 60;
+
+            int size = gourmetMenuList.size();
+
+            // 업장 영역 시간 알아내기
+            for (int i = size - 1; i >= 0; i--)
+            {
+                GourmetMenu gourmetMenu = gourmetMenuList.get(i);
+
+                // 준비 시간
+                int readyTime = 0;
+
+                if (DailyTextUtils.isTextEmpty(gourmetMenu.readyTime) == false)
+                {
+                    readyTime = Integer.parseInt(gourmetMenu.readyTime.replaceAll(":", "").substring(0, 4));
+                }
+
+                // 오늘인 경우 오늘 시작 시간
+                int todayStartTime = 0;
+
+                if (currentTime > 0)
+                {
+                    int minutes = currentTime % 100 + readyTime % 100;
+
+                    if (minutes > ONE_HOUR_MINUTES)
+                    {
+                        minutes = minutes / ONE_HOUR_MINUTES * 100 + minutes % ONE_HOUR_MINUTES;
+                    }
+
+                    todayStartTime = (currentTime / 100 + readyTime / 100) * 100 + minutes;
+                }
+
+                // 입장 시작 / 종료 시간
+                int startTime = Integer.parseInt(gourmetMenu.startEatingTime.replaceAll(":", "").substring(0, 4));
+                int endTime = Integer.parseInt(gourmetMenu.endEatingTime.replaceAll(":", "").substring(0, 4));
+
+                ExLog.d("pinkred - ticket1 - startTime : " + startTime + ", endTime : " + endTime);
+
+                // 마지막 입장 종료시간이 새벽 3시보다 작은경우
+                if (endTime < 300)
+                {
+                    endTime += 2400;
+                }
+
+                // 마지막 시간에서 준비 시간을 뺀다.
+                if (readyTime > 0)
+                {
+                    endTime -= readyTime / 100 * 100;
+
+                    if (endTime % 100 >= readyTime % 100)
+                    {
+                        endTime -= readyTime % 100;
+                    } else
+                    {
+                        endTime = (endTime / 100 - 1) * 100 + endTime % 100 + ONE_HOUR_MINUTES - readyTime % 100;
+                    }
+                }
+
+                // 입장 시간이 업장 종료시간보다 큰 경우 메뉴에서 제거한다.
+                if (startTime >= endTime)
+                {
+                    gourmetMenuList.remove(i);
+
+                    continue;
+                }
+
+                // 업장 시간 만들어 내기.
+                List<Integer> menuOperationTime = new ArrayList<>();
+                StringBuilder logStringBuilder = new StringBuilder();
+
+                final int intervalTime = gourmetMenu.timeInterval / ONE_HOUR_MINUTES * 100 + gourmetMenu.timeInterval % ONE_HOUR_MINUTES;
+                int nextTime = startTime;
+
+                ExLog.d("pinkred - ticket2 - startTime : " + startTime + ", endTime : " + endTime + ", intervalTime : " + intervalTime + ", readyTime : " + readyTime);
+
+                do
+                {
+                    int nextHours = nextTime / 100 + intervalTime / 100;
+                    int nextMinutes = nextTime % 100 + intervalTime % 100;
+
+                    if (nextMinutes >= ONE_HOUR_MINUTES)
+                    {
+                        nextHours += nextMinutes / ONE_HOUR_MINUTES;
+                        nextMinutes = nextMinutes % ONE_HOUR_MINUTES;
+                    }
+
+                    nextTime = nextHours * 100 + nextMinutes;
+
+                    if (todayStartTime > nextTime)
+                    {
+                        continue;
+                    }
+
+                    if (nextTime > endTime)
+                    {
+                        break;
+                    }
+
+                    menuOperationTime.add(nextTime);
+                    logStringBuilder.append(nextTime);
+                    logStringBuilder.append(", ");
+
+                    visitTimeSet.add(nextTime);
+
+                } while (nextTime <= endTime);
+
+                // 메뉴시간이 나오지 않는 것은 삭제시켜버린다.
+                if (menuOperationTime.size() == 0)
+                {
+                    gourmetMenuList.remove(i);
+                } else
+                {
+                    gourmetMenu.setOperationTimeList(menuOperationTime);
+                }
+
+                ExLog.d("pinkred - ticket - menu time : " + logStringBuilder.toString());
+            }
+
+            Iterator<Integer> integerIterator = visitTimeSet.iterator();
+
+            StringBuilder logStringBuilder = new StringBuilder();
+
+            while (integerIterator.hasNext())
+            {
+                int intervalTime = integerIterator.next();
+                mOperationTimeList.add(intervalTime);
+
+                logStringBuilder.append(intervalTime);
+                logStringBuilder.append(", ");
+            }
+
+            ExLog.d("pinkred - currentTime : " + currentTime + ", intervalTime : " + logStringBuilder.toString());
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
     void notifyGourmetDetailChanged()
     {
         if (mGourmetDetail == null)
@@ -1345,7 +1634,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             ExLog.e(e.toString());
         }
 
-        getViewInterface().setGourmetDetail(mGourmetBookDateTime, mGourmetDetail//
+        getViewInterface().setGourmetDetail(mGourmetBookDateTime, mGourmetDetail, mOperationTimeList//
             , mReviewScores != null ? mReviewScores.reviewScoreTotalCount : 0, SHOWN_MENU_COUNT);
 
         // 리스트 가격 변동은 진입시 한번 만 한다.
@@ -1469,6 +1758,51 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
         getViewInterface().setWishCount(wishCount);
         getViewInterface().setWishSelected(myWish);
+    }
+
+    private void notifyOperationTimeChanged()
+    {
+        List<GourmetMenu> menuList = mGourmetDetail.getGourmetMenuList();
+
+        if (menuList == null)
+        {
+            getViewInterface().setMenus(null, SHOWN_MENU_COUNT);
+            return;
+        }
+
+        if (mVisitTime == FULL_TIME)
+        {
+            for (GourmetMenu gourmetMenu : menuList)
+            {
+                gourmetMenu.visible = true;
+                gourmetMenu.orderCount = 0;
+            }
+        } else
+        {
+            for (GourmetMenu gourmetMenu : menuList)
+            {
+                gourmetMenu.visible = false;
+                gourmetMenu.orderCount = 0;
+
+                List<Integer> operationTimeList = gourmetMenu.getOperationTimeList();
+
+                if (operationTimeList == null)
+                {
+                    continue;
+                }
+
+                for (int operationTime : gourmetMenu.getOperationTimeList())
+                {
+                    if (operationTime == mVisitTime)
+                    {
+                        gourmetMenu.visible = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        getViewInterface().setMenus(menuList, SHOWN_MENU_COUNT);
     }
 
     private void showWishTooltip()
@@ -1600,6 +1934,8 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                     gourmetDetail.hasCoupon = hasCoupon;
 
                     setGourmetDetail(gourmetDetail);
+                    setOperationTimes(commonDateTime, mGourmetBookDateTime, gourmetDetail.getGourmetMenuList());
+                    setVisitTime(FULL_TIME);
 
                     return gourmetDetail;
                 }
@@ -1609,6 +1945,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             public void accept(@io.reactivex.annotations.NonNull GourmetDetail gourmetDetail) throws Exception
             {
                 notifyGourmetDetailChanged();
+                notifyOperationTimeChanged();
                 notifyWishChanged();
 
                 if (disposable != null)
@@ -1648,28 +1985,12 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         }));
     }
 
-    private void onOrderMenu(int index)
+    private void onBookingCartMenu(GourmetCart gourmetCart)
     {
-        if (mGourmetDetail == null || index < 0)
+        if (mGourmetDetail == null || gourmetCart == null || gourmetCart.getMenuCount() == 0 || lock() == true)
         {
             return;
         }
-
-        GourmetMenu gourmetMenu = mGourmetDetail.getGourmetMenuList().get(index);
-
-        if (gourmetMenu == null)
-        {
-            setResult(BaseActivity.RESULT_CODE_REFRESH);
-            onBackClick();
-            return;
-        }
-
-        if (lock() == true)
-        {
-            return;
-        }
-
-        mSelectedMenuIndex = index;
 
         if (DailyHotel.isLogin() == false)
         {
@@ -1696,7 +2017,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                                 , GourmetDetailActivity.REQUEST_CODE_PROFILE_UPDATE);
                         } else
                         {
-                            startPayment(mGourmetBookDateTime, mGourmetDetail, index);
+                            startPayment(mGourmetBookDateTime, mGourmetDetail, gourmetCart);
                         }
                     } else
                     {
@@ -1718,7 +2039,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                                 , GourmetDetailActivity.REQUEST_CODE_PROFILE_UPDATE);
                         } else
                         {
-                            startPayment(mGourmetBookDateTime, mGourmetDetail, index);
+                            startPayment(mGourmetBookDateTime, mGourmetDetail, gourmetCart);
                         }
                     }
                 }
@@ -1733,26 +2054,16 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         }
 
         mAnalytics.onEventOrderClick(getActivity(), mGourmetBookDateTime, mGourmetDetail.index, mGourmetDetail.name//
-            , gourmetMenu.name, mGourmetDetail.category, gourmetMenu.discountPrice);
+            , mGourmetDetail.category, gourmetCart);
     }
 
-    protected void startPayment(GourmetBookDateTime gourmetBookDateTime, GourmetDetail gourmetDetail, int menuIndex)
+    protected void startPayment(GourmetBookDateTime gourmetBookDateTime, GourmetDetail gourmetDetail, GourmetCart gourmetCart)
     {
-        if (gourmetBookDateTime == null || gourmetDetail == null || menuIndex < 0)
+        if (gourmetBookDateTime == null || gourmetDetail == null || gourmetCart == null || gourmetCart.getMenuCount() == 0)
         {
             return;
         }
 
-        List<GourmetMenu> menuList = gourmetDetail.getGourmetMenuList();
-
-        if (menuList == null || menuList.size() - 1 < menuIndex)
-        {
-            setResult(BaseActivity.RESULT_CODE_REFRESH);
-            onBackClick();
-            return;
-        }
-
-        GourmetMenu gourmetMenu = menuList.get(menuIndex);
         List<DetailImageInformation> imageInformationList = gourmetDetail.getImageInformationList();
         String imageUrl = null;
 
@@ -1762,9 +2073,9 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         }
 
         Intent intent = GourmetPaymentActivity.newInstance(getActivity(), gourmetDetail.index//
-            , gourmetDetail.name, imageUrl, gourmetMenu.saleIndex, gourmetMenu.discountPrice, gourmetMenu.name//
+            , gourmetDetail.name, imageUrl, gourmetCart.toJSONObject().toString()//
             , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), false, gourmetDetail.category//
-            , mAnalytics.getStayPaymentAnalyticsParam(gourmetDetail, gourmetMenu));
+            , mAnalytics.getStayPaymentAnalyticsParam(gourmetDetail, gourmetCart));
 
         startActivityForResult(intent, GourmetDetailActivity.REQUEST_CODE_PAYMENT);
     }

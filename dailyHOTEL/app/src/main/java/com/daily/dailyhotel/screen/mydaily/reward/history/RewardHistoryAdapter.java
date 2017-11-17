@@ -34,7 +34,7 @@ public class RewardHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
 {
     Context mContext;
     private List<ObjectItem> mList;
-    private OnEventListener mOnEventListener;
+    OnEventListener mOnEventListener;
 
     public interface OnEventListener
     {

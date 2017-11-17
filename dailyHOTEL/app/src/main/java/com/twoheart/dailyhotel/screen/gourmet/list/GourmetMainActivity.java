@@ -19,6 +19,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
+import com.daily.dailyhotel.repository.local.CartLocalImpl;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.view.DailyGourmetCardView;
@@ -67,6 +68,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -74,6 +77,8 @@ public class GourmetMainActivity extends PlaceMainActivity
 {
     GourmetCuration mGourmetCuration;
     DailyDeepLink mDailyDeepLink;
+
+    private CartLocalImpl mCartLocalImpl;
 
     public static Intent newInstance(Context context, String deepLink)
     {
@@ -94,6 +99,8 @@ public class GourmetMainActivity extends PlaceMainActivity
 
         mGourmetCuration = new GourmetCuration();
 
+        mCartLocalImpl = new CartLocalImpl(this);
+
         Intent intent = getIntent();
 
         initDeepLink(intent);
@@ -105,6 +112,40 @@ public class GourmetMainActivity extends PlaceMainActivity
         super.onNewIntent(intent);
 
         initDeepLink(intent);
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        addCompositeDisposable(mCartLocalImpl.getGourmetCartTotalCount().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Integer>()
+        {
+            @Override
+            public void accept(Integer count) throws Exception
+            {
+                if (mPlaceMainLayout == null)
+                {
+                    return;
+                }
+
+                if (count > 0)
+                {
+                    mPlaceMainLayout.setToolbarCartMenusVisible(true);
+                    mPlaceMainLayout.setToolbarCartMenusCount(count);
+                } else
+                {
+                    mPlaceMainLayout.setToolbarCartMenusVisible(false);
+                }
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                mPlaceMainLayout.setToolbarCartMenusVisible(false);
+            }
+        }));
     }
 
     private void initDeepLink(Intent intent)
@@ -614,6 +655,12 @@ public class GourmetMainActivity extends PlaceMainActivity
 
         @Override
         public void onPageSelected(int changedPosition, int prevPosition)
+        {
+
+        }
+
+        @Override
+        public void onCartMenusBookingClick()
         {
 
         }

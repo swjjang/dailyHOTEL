@@ -229,7 +229,7 @@ public class DailyGourmetCardView extends ConstraintLayout
 
         if (trueReviewCount > 0)
         {
-            trueReviewCountText = DailyTextUtils.convertIntegerToString(trueReviewCount);
+            trueReviewCountText = DailyTextUtils.formatIntegerToString(trueReviewCount);
         } else
         {
             trueReviewCountText = null;

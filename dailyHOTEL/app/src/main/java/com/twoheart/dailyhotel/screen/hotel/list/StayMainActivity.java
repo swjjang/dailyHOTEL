@@ -734,6 +734,12 @@ public class StayMainActivity extends PlaceMainActivity
         }
 
         @Override
+        public void onCartMenusBookingClick()
+        {
+
+        }
+
+        @Override
         public void finish()
         {
             StayMainActivity.this.finish();

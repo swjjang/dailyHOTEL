@@ -846,6 +846,12 @@ public class StayCategoryTabActivity extends PlaceMainActivity
         }
 
         @Override
+        public void onCartMenusBookingClick()
+        {
+
+        }
+
+        @Override
         public void finish()
         {
             StayCategoryTabActivity.this.finish();

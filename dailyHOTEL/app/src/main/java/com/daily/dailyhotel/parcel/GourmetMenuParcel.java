@@ -64,7 +64,7 @@ public class GourmetMenuParcel implements Parcelable
 
         dest.writeTypedList(detailImageInformationParcelList);
         dest.writeStringList(mGourmetMenu.getMenuDetailList());
-
+        dest.writeList(mGourmetMenu.getOperationTimeList());
     }
 
     private void readFromParcel(Parcel in)
@@ -95,6 +95,7 @@ public class GourmetMenuParcel implements Parcelable
 
         mGourmetMenu.setImageList(detailImageInformationList);
         mGourmetMenu.setMenuDetailList(in.createStringArrayList());
+        mGourmetMenu.setOperationTimeList(in.readArrayList(Integer.class.getClassLoader()));
     }
 
     @Override

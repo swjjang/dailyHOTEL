@@ -26,20 +26,20 @@ public class GourmetPaymentActivity extends BaseActivity<GourmetPaymentPresenter
     static final int REQUEST_CODE_PAYMENT_WEB_PHONE = 10007;
     static final int REQUEST_CODE_PAYMENT_WEB_VBANK = 10008;
     static final int REQUEST_CODE_COUPON_LIST = 10009;
+    static final int REQUEST_CODE_LOGIN_IN = 10010;
+    static final int REQUEST_CODE_PROFILE_UPDATE = 10011;
 
     static final String INTENT_EXTRA_DATA_GOURMET_INDEX = "gourmetIndex";
     static final String INTENT_EXTRA_DATA_GOURMET_NAME = "gourmetName";
     static final String INTENT_EXTRA_DATA_IMAGE_URL = "imageUrl";
-    static final String INTENT_EXTRA_DATA_MENU_PRICE = "menuPrice";
     static final String INTENT_EXTRA_DATA_VISIT_DATE = "visitDate";
-    static final String INTENT_EXTRA_DATA_MENU_INDEX = "menuIndex";
     static final String INTENT_EXTRA_DATA_OVERSEAS = "overseas";
     static final String INTENT_EXTRA_DATA_CATEGORY = "category";
-    static final String INTENT_EXTRA_DATA_MENU_NAME = "menuName";
+    static final String INTENT_EXTRA_DATA_GOURMET_CART_JSON_STRING = "gourmetCartJSONString";
 
 
     public static Intent newInstance(Context context, int gourmetIndex, String gourmetName, String imageUrl//
-        , int menuIndex, int menuPrice, String menuName, String visitDate, boolean overseas//
+        , String gourmetCartJSONString, String visitDate, boolean overseas//
         , String category, GourmetPaymentAnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, GourmetPaymentActivity.class);
@@ -47,9 +47,7 @@ public class GourmetPaymentActivity extends BaseActivity<GourmetPaymentPresenter
         intent.putExtra(INTENT_EXTRA_DATA_GOURMET_INDEX, gourmetIndex);
         intent.putExtra(INTENT_EXTRA_DATA_GOURMET_NAME, gourmetName);
         intent.putExtra(INTENT_EXTRA_DATA_IMAGE_URL, imageUrl);
-        intent.putExtra(INTENT_EXTRA_DATA_MENU_INDEX, menuIndex);
-        intent.putExtra(INTENT_EXTRA_DATA_MENU_PRICE, menuPrice);
-        intent.putExtra(INTENT_EXTRA_DATA_MENU_NAME, menuName);
+        intent.putExtra(INTENT_EXTRA_DATA_GOURMET_CART_JSON_STRING, gourmetCartJSONString);
         intent.putExtra(INTENT_EXTRA_DATA_VISIT_DATE, visitDate);
         intent.putExtra(INTENT_EXTRA_DATA_OVERSEAS, overseas);
         intent.putExtra(INTENT_EXTRA_DATA_CATEGORY, category);
