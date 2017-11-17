@@ -40,6 +40,7 @@ import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
 import com.daily.dailyhotel.screen.common.images.ImageListActivity;
+import com.daily.dailyhotel.screen.common.web.DailyWebActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.truereview.StayTrueReviewActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.payment.StayPaymentActivity;
 import com.daily.dailyhotel.screen.mydaily.reward.RewardActivity;
@@ -1352,7 +1353,13 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     @Override
     public void onRewardGuideClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
+        startActivityForResult(DailyWebActivity.newInstance(getActivity(), getString(R.string.label_reward_reward_guide)//
+            , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStaticUrlDailyReward()), StayDetailActivity.REQUEST_CODE_WEB);
     }
 
     @Override
@@ -1841,7 +1848,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                             customer.setEmail(user.email);
                             customer.setName(user.name);
                             customer.setPhone(user.phone);
-//                            customer.setUserIdx(Integer.toString(user.index));
+                            //                            customer.setUserIdx(Integer.toString(user.index));
 
                             startActivityForResult(AddProfileSocialActivity.newInstance(getActivity()//
                                 , customer, user.birthday), StayDetailActivity.REQUEST_CODE_PROFILE_UPDATE);
