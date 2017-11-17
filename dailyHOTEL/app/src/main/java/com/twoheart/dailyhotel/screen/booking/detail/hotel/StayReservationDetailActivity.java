@@ -407,12 +407,6 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         shareDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         shareDialog.setCanceledOnTouchOutside(true);
 
-        if (Util.isTelephonyEnabled(this) == false)
-        {
-            View smsShareLayout = dialogView.findViewById(R.id.smsShareLayout);
-            smsShareLayout.setVisibility(View.GONE);
-        }
-
         // 버튼
         View kakaoShareView = dialogView.findViewById(R.id.kakaoShareView);
 
@@ -471,9 +465,77 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
             }
         });
 
-        View smsShareView = dialogView.findViewById(R.id.smsShareView);
+        View copyLinkView = dialogView.findViewById(R.id.copyLinkView);
 
-        smsShareView.setOnClickListener(new View.OnClickListener()
+        copyLinkView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (shareDialog.isShowing() == true)
+                {
+                    shareDialog.dismiss();
+                }
+
+                lockUI();
+
+                try
+                {
+                    StayBookingDetail stayBookingDetail = (StayBookingDetail) mPlaceBookingDetail;
+
+                    String[] checkInDates = stayBookingDetail.checkInDate.split("T");
+                    String[] checkOutDates = stayBookingDetail.checkOutDate.split("T");
+
+                    Date checkInDate = DailyCalendar.convertDate(checkInDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
+                    Date checkOutDate = DailyCalendar.convertDate(checkOutDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
+
+                    int nights = (int) ((DailyCalendar.clearTField(checkOutDate.getTime()) - DailyCalendar.clearTField(checkInDate.getTime())) / DailyCalendar.DAY_MILLISECOND);
+
+                    String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d"//
+                        , mPlaceBookingDetail.placeIndex, DailyCalendar.convertDateFormatString(stayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd")//
+                        , nights);
+
+
+                    CommonRemoteImpl commonRemote = new CommonRemoteImpl(StayReservationDetailActivity.this);
+
+                    addCompositeDisposable(commonRemote.getShortUrl(longUrl).subscribe(new Consumer<String>()
+                    {
+                        @Override
+                        public void accept(@NonNull String shortUrl) throws Exception
+                        {
+                            unLockUI();
+
+                            DailyTextUtils.clipText(StayReservationDetailActivity.this, shortUrl);
+
+                            DailyToast.showToast(StayReservationDetailActivity.this, R.string.toast_msg_copy_link, DailyToast.LENGTH_LONG);
+                        }
+                    }, new Consumer<Throwable>()
+                    {
+                        @Override
+                        public void accept(@NonNull Throwable throwable) throws Exception
+                        {
+                            unLockUI();
+
+                            DailyTextUtils.clipText(StayReservationDetailActivity.this, "https://mobile.dailyhotel.co.kr/stay/" + stayBookingDetail.placeIndex);
+
+                            DailyToast.showToast(StayReservationDetailActivity.this, R.string.toast_msg_copy_link, DailyToast.LENGTH_LONG);
+                        }
+                    }));
+                } catch (Exception e)
+                {
+                    unLockUI();
+
+                    ExLog.d(e.toString());
+                }
+
+//                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
+//                    , AnalyticsManager.Action.STAY_BOOKING_SHARE, AnalyticsManager.ValueType.MESSAGE, null);
+            }
+        });
+
+        View moreShareView = dialogView.findViewById(R.id.moreShareView);
+
+        moreShareView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -517,7 +579,13 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                         {
                             unLockUI();
 
-                            Util.sendSms(StayReservationDetailActivity.this, message + shortUrl);
+                            Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                            intent.setType("text/plain");
+
+                            intent.putExtra(Intent.EXTRA_SUBJECT, "");
+                            intent.putExtra(Intent.EXTRA_TEXT, message + shortUrl);
+                            Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
+                            startActivity(chooser);
                         }
                     }, new Consumer<Throwable>()
                     {
@@ -526,7 +594,12 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                         {
                             unLockUI();
 
-                            Util.sendSms(StayReservationDetailActivity.this, message + "https://mobile.dailyhotel.co.kr/stay/" + stayBookingDetail.placeIndex);
+                            Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                            intent.setType("text/plain");
+                            intent.putExtra(Intent.EXTRA_SUBJECT, "");
+                            intent.putExtra(Intent.EXTRA_TEXT, message + "https://mobile.dailyhotel.co.kr/stay/" + stayBookingDetail.placeIndex);
+                            Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
+                            startActivity(chooser);
                         }
                     }));
                 } catch (Exception e)
@@ -536,8 +609,8 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                     ExLog.d(e.toString());
                 }
 
-                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
-                    , AnalyticsManager.Action.STAY_BOOKING_SHARE, AnalyticsManager.ValueType.MESSAGE, null);
+//                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
+//                    , AnalyticsManager.Action.STAY_BOOKING_SHARE, AnalyticsManager.ValueType.MESSAGE, null);
             }
         });
 

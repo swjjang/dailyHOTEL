@@ -36,9 +36,11 @@
         dailyFont:style="Medium"/>
 
     <LinearLayout
-        android:id="@+id/smsShareLayout"
+        android:id="@+id/copyLinkLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:orientation="vertical">
 
         <View
@@ -47,15 +49,41 @@
             android:background="@color/default_line_cf0f0f0"/>
 
         <com.daily.base.widget.DailyTextView
-            android:id="@+id/smsShareView"
+            android:id="@+id/copyLinkView"
             android:layout_width="match_parent"
             android:layout_height="62dp"
             android:drawablePadding="10dp"
             android:gravity="center_vertical"
-            android:text="@string/label_share_sms"
+            android:text="@string/label_copy_link"
             android:textColor="@color/default_text_kakao"
             android:textSize="14dp"
-            app:drawableCompatLeft="@drawable/ic_detail_share_sms"
+            app:drawableCompatLeft="@drawable/popup_ic_share_link"
+            dailyFont:style="Medium"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/moreShareLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/default_line_cf0f0f0"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/moreShareView"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
+            android:text="@string/label_more"
+            android:textColor="@color/default_text_kakao"
+            android:textSize="14dp"
+            app:drawableCompatLeft="@drawable/popup_ic_share_more"
             dailyFont:style="Medium"/>
     </LinearLayout>
 

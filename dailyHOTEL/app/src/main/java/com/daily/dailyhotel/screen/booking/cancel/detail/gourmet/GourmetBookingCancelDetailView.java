@@ -114,7 +114,7 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
 
         void onShareKakaoClick();
 
-        void onShareSmsClick();
+        void onMoreShareClick();
 
         void onHiddenReservationClick();
     }
@@ -500,14 +500,17 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
             }
         });
 
-        dataBinding.copyLinkView.setOnClickListener(new View.OnClickListener()
+        // 예약 내역, 취소 내역은 안보여 주기로 함
+        dataBinding.copyLinkLayout.setVisibility(View.GONE);
+
+        dataBinding.moreShareView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
                 hideSimpleDialog();
 
-                getEventListener().onShareSmsClick();
+                getEventListener().onMoreShareClick();
             }
         });
 

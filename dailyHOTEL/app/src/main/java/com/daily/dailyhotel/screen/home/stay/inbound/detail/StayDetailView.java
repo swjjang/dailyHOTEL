@@ -106,11 +106,6 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         void onCopyLinkClick();
 
         void onMoreShareClick();
-        void onMoreShareClick2();
-        void onMoreShareClick3();
-        void onMoreShareClick4();
-        void onMoreShareClick5();
-        void onMoreShareClick6();
 
         void onImageClick(int position);
 
@@ -900,61 +895,6 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
                 hideSimpleDialog();
 
                 getEventListener().onMoreShareClick();
-            }
-        });
-
-        dataBinding.moreShareView2.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                hideSimpleDialog();
-
-                getEventListener().onMoreShareClick2();
-            }
-        });
-
-        dataBinding.moreShareView3.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                hideSimpleDialog();
-
-                getEventListener().onMoreShareClick3();
-            }
-        });
-
-        dataBinding.moreShareView4.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                hideSimpleDialog();
-
-                getEventListener().onMoreShareClick4();
-            }
-        });
-
-        dataBinding.moreShareView5.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                hideSimpleDialog();
-
-                getEventListener().onMoreShareClick5();
-            }
-        });
-
-        dataBinding.moreShareView6.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                hideSimpleDialog();
-
-                getEventListener().onMoreShareClick6();
             }
         });
 
