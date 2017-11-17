@@ -400,31 +400,31 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
 
         addCompositeDisposable(mCommonRemoteImpl.updateNotification(true) //
             .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Notification>()
-        {
-            @Override
-            public void accept(Notification notification) throws Exception
             {
-                getViewInterface().setNotificationVisible(false);
+                @Override
+                public void accept(Notification notification) throws Exception
+                {
+                    getViewInterface().setNotificationVisible(false);
 
-                DailyUserPreference.getInstance(getActivity()).setBenefitAlarm(notification.agreed);
+                    DailyUserPreference.getInstance(getActivity()).setBenefitAlarm(notification.agreed);
 
-                // 혜택 알림 설정이 off --> on 일때
-                String title = getString(R.string.label_setting_alarm);
-                String message = getString(R.string.message_benefit_alarm_on_confirm_format, notification.serverDate);
-                String positive = getString(R.string.dialog_btn_text_confirm);
+                    // 혜택 알림 설정이 off --> on 일때
+                    String title = getString(R.string.label_setting_alarm);
+                    String message = getString(R.string.message_benefit_alarm_on_confirm_format, notification.serverDate);
+                    String positive = getString(R.string.dialog_btn_text_confirm);
 
-                getViewInterface().showSimpleDialog(title, message, positive, null);
+                    getViewInterface().showSimpleDialog(title, message, positive, null);
 
-                unLockAll();
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(Throwable throwable) throws Exception
+                    unLockAll();
+                }
+            }, new Consumer<Throwable>()
             {
-                onHandleError(throwable);
-            }
-        }));
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    onHandleError(throwable);
+                }
+            }));
     }
 
     @Override

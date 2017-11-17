@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.daily.base.util.VersionUtils;
-import com.daily.dailyhotel.entity.GourmetCart;
 import com.daily.dailyhotel.repository.local.CartLocalImpl;
 
 /**

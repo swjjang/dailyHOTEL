@@ -922,9 +922,9 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 }
             }));
 
-//            mAnalytics.onEventShareSmsClick(getActivity(), DailyHotel.isLogin()//
-//                , DailyUserPreference.getInstance(getActivity()).getType()//
-//                , DailyUserPreference.getInstance(getActivity()).isBenefitAlarm(), mGourmetDetail.index, mGourmetDetail.name);
+            //            mAnalytics.onEventShareSmsClick(getActivity(), DailyHotel.isLogin()//
+            //                , DailyUserPreference.getInstance(getActivity()).getType()//
+            //                , DailyUserPreference.getInstance(getActivity()).isBenefitAlarm(), mGourmetDetail.index, mGourmetDetail.name);
         } catch (Exception e)
         {
             unLockAll();

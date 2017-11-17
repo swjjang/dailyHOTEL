@@ -23,7 +23,6 @@ import com.twoheart.dailyhotel.databinding.DailyViewToolbarMenuItemDataBinding;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class DailyToolbarView extends ConstraintLayout
 {

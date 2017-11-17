@@ -85,7 +85,7 @@ public class KakaoLinkManager implements Constants
 
             messageBuilder.addWebLink(mContext.getString(R.string.label_kakao_web_link), "https://mobile.dailyhotel.co.kr/stay/" + hotelIndex);
 
-           mKakaoLink.sendMessage(messageBuilder, mContext);
+            mKakaoLink.sendMessage(messageBuilder, mContext);
         } catch (Exception e)
         {
             ExLog.e(e.toString());

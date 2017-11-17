@@ -15,7 +15,6 @@ package com.twoheart.dailyhotel.screen.common;
 
 import android.widget.Toast;
 
-import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.repository.local.CartLocalImpl;
 import com.twoheart.dailyhotel.R;

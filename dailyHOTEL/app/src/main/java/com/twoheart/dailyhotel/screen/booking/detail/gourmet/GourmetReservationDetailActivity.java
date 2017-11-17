@@ -418,8 +418,8 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
                     ExLog.d(e.toString());
                 }
 
-//                AnalyticsManager.getInstance(GourmetReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
-//                    , AnalyticsManager.Action.GOURMET_BOOKING_SHARE, AnalyticsManager.ValueType.MESSAGE, null);
+                //                AnalyticsManager.getInstance(GourmetReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
+                //                    , AnalyticsManager.Action.GOURMET_BOOKING_SHARE, AnalyticsManager.ValueType.MESSAGE, null);
             }
         });
 

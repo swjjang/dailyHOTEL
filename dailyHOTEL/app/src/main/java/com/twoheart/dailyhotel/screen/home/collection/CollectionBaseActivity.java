@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.transition.Transition;
 import android.transition.TransitionSet;
 import android.view.View;

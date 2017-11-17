@@ -414,7 +414,7 @@ public class GourmetListFragment extends PlaceListFragment
 
             if (DailyHotel.isLogin() == true)
             {
-               onChangedWish(position, !currentWish);
+                onChangedWish(position, !currentWish);
             }
 
             mBaseActivity.startActivityForResult(WishDialogActivity.newInstance(mBaseActivity, ServiceType.GOURMET//

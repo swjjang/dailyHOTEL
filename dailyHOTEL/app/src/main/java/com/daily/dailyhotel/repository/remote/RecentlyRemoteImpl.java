@@ -110,34 +110,34 @@ public class RecentlyRemoteImpl extends BaseRemoteImpl implements RecentlyInterf
 
                 return mDailyMobileService.getInboundRecentlyList(Crypto.getUrlDecoderEx(URL), recentJsonObject) //
                     .subscribeOn(Schedulers.io()).map(new Function<BaseDto<RecentlyPlacesData>, ArrayList<RecentlyPlace>>()
-                {
-                    @Override
-                    public ArrayList<RecentlyPlace> apply(@NonNull BaseDto<RecentlyPlacesData> placesBaseDto) throws Exception
                     {
-                        ArrayList<RecentlyPlace> recentlyPlaceList = new ArrayList<>();
-
-                        if (placesBaseDto != null)
+                        @Override
+                        public ArrayList<RecentlyPlace> apply(@NonNull BaseDto<RecentlyPlacesData> placesBaseDto) throws Exception
                         {
-                            if (placesBaseDto.msgCode == 100 && placesBaseDto.data != null)
-                            {
-                                List<RecentlyPlace> list = placesBaseDto.data.getRecentlyPlaceList();
+                            ArrayList<RecentlyPlace> recentlyPlaceList = new ArrayList<>();
 
-                                if (list != null && list.size() > 0)
+                            if (placesBaseDto != null)
+                            {
+                                if (placesBaseDto.msgCode == 100 && placesBaseDto.data != null)
                                 {
-                                    recentlyPlaceList.addAll(list);
+                                    List<RecentlyPlace> list = placesBaseDto.data.getRecentlyPlaceList();
+
+                                    if (list != null && list.size() > 0)
+                                    {
+                                        recentlyPlaceList.addAll(list);
+                                    }
+                                } else
+                                {
+                                    throw new BaseException(placesBaseDto.msgCode, placesBaseDto.msg);
                                 }
                             } else
                             {
-                                throw new BaseException(placesBaseDto.msgCode, placesBaseDto.msg);
+                                throw new BaseException(-1, null);
                             }
-                        } else
-                        {
-                            throw new BaseException(-1, null);
-                        }
 
-                        return recentlyPlaceList;
-                    }
-                }).subscribeOn(Schedulers.io());
+                            return recentlyPlaceList;
+                        }
+                    }).subscribeOn(Schedulers.io());
             }
         }).subscribeOn(Schedulers.io());
     }

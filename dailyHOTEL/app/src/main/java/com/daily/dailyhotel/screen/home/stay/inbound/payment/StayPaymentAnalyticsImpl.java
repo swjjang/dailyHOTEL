@@ -10,7 +10,6 @@ import com.daily.dailyhotel.entity.StayRefundPolicy;
 import com.daily.dailyhotel.entity.UserSimpleInformation;
 import com.daily.dailyhotel.parcel.analytics.StayPaymentAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayThankYouAnalyticsParam;
-import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.util.DailyCalendar;

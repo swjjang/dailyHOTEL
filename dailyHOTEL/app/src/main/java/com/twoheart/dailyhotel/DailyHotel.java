@@ -9,7 +9,6 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.VersionUtils;
-import com.daily.dailyhotel.entity.GourmetCart;
 import com.daily.dailyhotel.repository.local.CartLocalImpl;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.gourmet.payment.GourmetPaymentActivity;

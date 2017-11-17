@@ -84,7 +84,7 @@ public class StayWishListFragment extends PlaceWishListFragment
         switch (requestCode)
         {
             case CODE_REQUEST_ACTIVITY_PREVIEW:
-                switch(resultCode)
+                switch (resultCode)
                 {
                     case Activity.RESULT_OK:
                         Observable.create(new ObservableOnSubscribe<Object>()

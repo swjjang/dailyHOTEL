@@ -1016,28 +1016,28 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                 {
                     addCompositeDisposable(mCommonRemoteImpl.getReview("hotel", booking.reservationIndex) //
                         .subscribeOn(Schedulers.io()).map(new Function<Review, com.twoheart.dailyhotel.model.Review>()
-                    {
-                        @Override
-                        public com.twoheart.dailyhotel.model.Review apply(@NonNull Review review) throws Exception
                         {
-                            return reviewToReviewParcelable(review);
-                        }
-                    }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<com.twoheart.dailyhotel.model.Review>()
-                    {
-                        @Override
-                        public void accept(@NonNull com.twoheart.dailyhotel.model.Review review) throws Exception
+                            @Override
+                            public com.twoheart.dailyhotel.model.Review apply(@NonNull Review review) throws Exception
+                            {
+                                return reviewToReviewParcelable(review);
+                            }
+                        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<com.twoheart.dailyhotel.model.Review>()
                         {
-                            Intent intent = ReviewActivity.newInstance(getActivity(), review);
-                            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL);
-                        }
-                    }, new Consumer<Throwable>()
-                    {
-                        @Override
-                        public void accept(@NonNull Throwable throwable) throws Exception
+                            @Override
+                            public void accept(@NonNull com.twoheart.dailyhotel.model.Review review) throws Exception
+                            {
+                                Intent intent = ReviewActivity.newInstance(getActivity(), review);
+                                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL);
+                            }
+                        }, new Consumer<Throwable>()
                         {
-                            onHandleError(throwable);
-                        }
-                    }));
+                            @Override
+                            public void accept(@NonNull Throwable throwable) throws Exception
+                            {
+                                onHandleError(throwable);
+                            }
+                        }));
 
                     AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
                         , AnalyticsManager.Action.LEAVE_REVIEW, "stay_" + booking.placeIndex, null);
@@ -1048,28 +1048,28 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                 {
                     addCompositeDisposable(mCommonRemoteImpl.getReview("gourmet", booking.reservationIndex) //
                         .subscribeOn(Schedulers.io()).map(new Function<Review, com.twoheart.dailyhotel.model.Review>()
-                    {
-                        @Override
-                        public com.twoheart.dailyhotel.model.Review apply(@NonNull Review review) throws Exception
                         {
-                            return reviewToReviewParcelable(review);
-                        }
-                    }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<com.twoheart.dailyhotel.model.Review>()
-                    {
-                        @Override
-                        public void accept(@NonNull com.twoheart.dailyhotel.model.Review review) throws Exception
+                            @Override
+                            public com.twoheart.dailyhotel.model.Review apply(@NonNull Review review) throws Exception
+                            {
+                                return reviewToReviewParcelable(review);
+                            }
+                        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<com.twoheart.dailyhotel.model.Review>()
                         {
-                            Intent intent = ReviewActivity.newInstance(getActivity(), review);
-                            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET);
-                        }
-                    }, new Consumer<Throwable>()
-                    {
-                        @Override
-                        public void accept(@NonNull Throwable throwable) throws Exception
+                            @Override
+                            public void accept(@NonNull com.twoheart.dailyhotel.model.Review review) throws Exception
+                            {
+                                Intent intent = ReviewActivity.newInstance(getActivity(), review);
+                                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET);
+                            }
+                        }, new Consumer<Throwable>()
                         {
-                            onHandleError(throwable);
-                        }
-                    }));
+                            @Override
+                            public void accept(@NonNull Throwable throwable) throws Exception
+                            {
+                                onHandleError(throwable);
+                            }
+                        }));
 
                     AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
                         , AnalyticsManager.Action.LEAVE_REVIEW, "gourmet_" + booking.placeIndex, null);

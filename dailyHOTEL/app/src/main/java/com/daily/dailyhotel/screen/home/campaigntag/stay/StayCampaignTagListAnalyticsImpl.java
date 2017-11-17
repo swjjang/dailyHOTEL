@@ -4,7 +4,6 @@ import android.app.Activity;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.CampaignTag;
-import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 

@@ -2,7 +2,6 @@ package com.daily.dailyhotel.screen.home.gourmet.detail.menus;
 
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.dailyhotel.entity.GourmetCart;
-import com.daily.dailyhotel.entity.GourmetCartMenu;
 import com.daily.dailyhotel.entity.GourmetMenu;
 
 import java.util.List;

@@ -84,8 +84,7 @@ public class AppboyManager extends BaseAnalyticsManager
         //                ExLog.d(e.toString());
         //            }
         //        } else
-        if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screenName) == true
-            || AnalyticsManager.Screen.DAILYHOTEL_HOTELDETAILVIEW_OUTBOUND.equalsIgnoreCase(screenName) == true)
+        if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screenName) == true || AnalyticsManager.Screen.DAILYHOTEL_HOTELDETAILVIEW_OUTBOUND.equalsIgnoreCase(screenName) == true)
         {
             AppboyProperties appboyProperties = new AppboyProperties();
 
