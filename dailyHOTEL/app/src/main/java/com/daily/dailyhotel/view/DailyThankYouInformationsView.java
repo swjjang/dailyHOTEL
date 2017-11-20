@@ -6,6 +6,7 @@ import android.support.annotation.StringRes;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.DailyViewThankYouInformationDataBinding;
@@ -162,5 +163,35 @@ public class DailyThankYouInformationsView extends ConstraintLayout
         }
 
         mViewDataBinding.reservationInformationView.addInformation(title, description);
+    }
+
+    public void setProductVisible(boolean visible)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.productInformationView.setVisibility(visible == true ? View.VISIBLE : View.GONE);
+    }
+
+    public void addProductInformation(String title, int count, int persons, int price)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.productInformationView.addInformation(title, count, persons, price);
+    }
+
+    public void removeAllProductInformation()
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.productInformationView.removeAllInformation();
     }
 }

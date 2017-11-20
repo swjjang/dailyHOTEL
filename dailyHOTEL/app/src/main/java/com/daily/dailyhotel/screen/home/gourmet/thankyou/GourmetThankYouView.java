@@ -13,12 +13,12 @@ import com.daily.base.util.FontManager;
 import com.daily.dailyhotel.animation.ThankYouScreenAnimator;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.ActivityStayOutboundPaymentThankYouDataBinding;
+import com.twoheart.dailyhotel.databinding.ActivityGourmetPaymentThankYouDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
-public class GourmetThankYouView extends BaseDialogView<GourmetThankYouView.OnEventListener, ActivityStayOutboundPaymentThankYouDataBinding> implements GourmetThankYouInterface, View.OnClickListener
+public class GourmetThankYouView extends BaseDialogView<GourmetThankYouView.OnEventListener, ActivityGourmetPaymentThankYouDataBinding> implements GourmetThankYouInterface, View.OnClickListener
 {
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -31,7 +31,7 @@ public class GourmetThankYouView extends BaseDialogView<GourmetThankYouView.OnEv
     }
 
     @Override
-    protected void setContentView(final ActivityStayOutboundPaymentThankYouDataBinding viewDataBinding)
+    protected void setContentView(final ActivityGourmetPaymentThankYouDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -141,7 +141,7 @@ public class GourmetThankYouView extends BaseDialogView<GourmetThankYouView.OnEv
         }
     }
 
-    private void initToolbar(ActivityStayOutboundPaymentThankYouDataBinding viewDataBinding)
+    private void initToolbar(ActivityGourmetPaymentThankYouDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {

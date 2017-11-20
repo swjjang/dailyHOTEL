@@ -4,10 +4,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <merge
+    <!--<merge-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--tools:parentTag="android.support.constraint.ConstraintLayout">-->
+
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:parentTag="android.support.constraint.ConstraintLayout">
+        android:layout_height="wrap_content">
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/messageTextView"
@@ -88,9 +92,23 @@
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="10dp"
-            android:paddingBottom="30dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/dateBottomLineView"/>
-    </merge>
+            app:layout_constraintTop_toBottomOf="@+id/dateBottomLineView"
+            app:layout_goneMarginBottom="30dp"/>
+
+        <com.daily.dailyhotel.view.DailyBookingProductView
+            android:id="@+id/productInformationView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/reservationInformationView"/>
+
+    </android.support.constraint.ConstraintLayout>
+    <!--</merge>-->
 </layout>
