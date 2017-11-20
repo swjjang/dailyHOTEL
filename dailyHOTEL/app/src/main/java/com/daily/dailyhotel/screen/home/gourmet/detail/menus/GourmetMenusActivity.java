@@ -30,9 +30,11 @@ public class GourmetMenusActivity extends BaseActivity<GourmetMenusPresenter>
     static final String INTENT_EXTRA_DATA_OPERATION_TIMES = "operationTimes";
     static final String INTENT_EXTRA_DATA_VISIT_DATE_TIME = "visitDateTime";
     static final String INTENT_EXTRA_DATA_VISIT_TIME = "visitTime";
+    static final String INTENT_EXTRA_DATA_CATEGORY = "category";
+    static final String INTENT_EXTRA_DATA_IMAGE_URL = "imageUrl";
 
     public static Intent newInstance(Context context, String visitDateTime, int gourmetIndex, String gourmetName//
-        , List<GourmetMenu> gourmetMenuList, int position, ArrayList<Integer> operationTimeList, int visitTime)
+        , List<GourmetMenu> gourmetMenuList, int position, ArrayList<Integer> operationTimeList, int visitTime, String category, String imageUrl)
     {
         Intent intent = new Intent(context, GourmetMenusActivity.class);
 
@@ -53,6 +55,8 @@ public class GourmetMenusActivity extends BaseActivity<GourmetMenusPresenter>
         intent.putExtra(INTENT_EXTRA_DATA_POSITION, position);
         intent.putExtra(INTENT_EXTRA_DATA_OPERATION_TIMES, operationTimeList);
         intent.putExtra(INTENT_EXTRA_DATA_VISIT_TIME, visitTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CATEGORY, category);
+        intent.putExtra(INTENT_EXTRA_DATA_IMAGE_URL, imageUrl);
 
         return intent;
     }

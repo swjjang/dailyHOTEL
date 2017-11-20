@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface GourmetPaymentInterface extends BaseDialogViewInterface
 {
-    void setBooking(CharSequence visitDateTime, String gourmetName, GourmetCart gourmetCart);
+    void setBooking(CharSequence visitDateTime, GourmetCart gourmetCart);
 
     void setUserInformation(String name, String mobile, String email);
 

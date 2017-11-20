@@ -13,6 +13,7 @@ import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.net.Uri;
 import android.os.Build;
@@ -1342,9 +1343,9 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         fullTimeTextView.setText(R.string.label_gourmet_detail_full_time_menu);
         fullTimeTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
         fullTimeTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c323232_cffffff));
-        fullTimeTextView.setBackgroundResource(R.drawable.shape_fillrect_selector_de8e8e9_sb70038_r2);
+        fullTimeTextView.setBackgroundResource(R.drawable.selector_gourmet_time_background_drawable);
         fullTimeTextView.setTag(GourmetDetailPresenter.FULL_TIME);
-        fullTimeTextView.setButtonDrawable(null);
+        fullTimeTextView.setButtonDrawable(new StateListDrawable());
         fullTimeTextView.setGravity(Gravity.CENTER);
         fullTimeTextView.setOnClickListener(onClickListener);
 
@@ -1367,9 +1368,9 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             timeTextView.setText(DailyTextUtils.formatIntegerTimeToStringTime(time));
             timeTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
             timeTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c323232_cffffff));
-            timeTextView.setBackgroundResource(R.drawable.shape_fillrect_selector_de8e8e9_sb70038_r2);
+            timeTextView.setBackgroundResource(R.drawable.selector_gourmet_time_background_drawable);
             timeTextView.setTag(time);
-            timeTextView.setButtonDrawable(null);
+            timeTextView.setButtonDrawable(new StateListDrawable());
             timeTextView.setGravity(Gravity.CENTER);
             timeTextView.setOnClickListener(onClickListener);
 

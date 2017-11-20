@@ -112,7 +112,7 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
     }
 
     @Override
-    public void setBooking(CharSequence visitDateTime, String gourmetName, GourmetCart gourmetCart)
+    public void setBooking(CharSequence visitDateTime, GourmetCart gourmetCart)
     {
         if (getViewDataBinding() == null || gourmetCart == null)
         {
@@ -123,10 +123,10 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
 
         getViewDataBinding().menuInformationView.setTitle(R.string.label_booking_ticket_info);
         getViewDataBinding().menuInformationView.removeAllInformation();
-        getViewDataBinding().menuInformationView.addInformation(getString(R.string.label_booking_place_name), gourmetName);
+        getViewDataBinding().menuInformationView.addInformation(getString(R.string.label_booking_place_name), gourmetCart.gourmetName);
         getViewDataBinding().menuInformationView.addInformation(getString(R.string.label_booking_ticket_type), null);
 
-        setMenusLayout(gourmetCart.getMenus().values());
+        setMenusLayout(gourmetCart.getMenuList());
 
         getViewDataBinding().guestCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
         {

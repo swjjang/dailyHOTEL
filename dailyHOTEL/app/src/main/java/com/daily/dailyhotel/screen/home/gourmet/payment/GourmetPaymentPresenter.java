@@ -11,7 +11,6 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.view.View;
 
-import com.crashlytics.android.Crashlytics;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.exception.BaseException;
@@ -23,12 +22,12 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Card;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.DomesticGuest;
-import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetCart;
 import com.daily.dailyhotel.entity.GourmetPayment;
 import com.daily.dailyhotel.entity.PaymentResult;
 import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.entity.UserSimpleInformation;
+import com.daily.dailyhotel.parcel.GourmetCartParcel;
 import com.daily.dailyhotel.parcel.analytics.GourmetPaymentAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.GourmetThankYouAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
@@ -102,16 +101,12 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
     private ProfileRemoteImpl mProfileRemoteImpl;
     private CommonRemoteImpl mCommonRemoteImpl;
 
-    GourmetBookDateTime mGourmetBookDateTime;
-    int mGourmetIndex;
-    String mGourmetName, mImageUrl, mCategory;
     GourmetPayment mGourmetPayment;
     Card mSelectedCard;
     private DomesticGuest mGuest;
     private Coupon mSelectedCoupon;
-    String mVisitDateTime;
     private DailyBookingPaymentTypeView.PaymentType mPaymentType;
-    boolean mOverseas, mAgreedThirdPartyTerms;
+    boolean mAgreedThirdPartyTerms;
     private boolean mGuestInformationVisible;
     UserSimpleInformation mUserSimpleInformation;
     private int mSaleType;
@@ -130,11 +125,9 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
         GourmetPaymentAnalyticsParam getAnalyticsParam();
 
-        void onScreen(Activity activity, GourmetBookDateTime gourmetBookDateTime, int gourmetIndex, String gourmetName//
-            , GourmetCart gourmetCart, String category, GourmetPayment gourmetPayment, boolean registerEasyCard);
+        void onScreen(Activity activity, GourmetCart gourmetCart, GourmetPayment gourmetPayment, boolean registerEasyCard);
 
-        void onScreenAgreeTermDialog(Activity activity, String visitDateTime, int gourmetIndex//
-            , String gourmetName, GourmetCart gourmetCart, String category//
+        void onScreenAgreeTermDialog(Activity activity, GourmetCart gourmetCart//
             , GourmetPayment gourmetPayment, boolean registerEasyCard, int saleType//
             , Coupon coupon, DailyBookingPaymentTypeView.PaymentType paymentType, UserSimpleInformation userSimpleInformation);
 
@@ -160,7 +153,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
         void onEventStartPayment(Activity activity, DailyBookingPaymentTypeView.PaymentType paymentType);
 
-        void onEventAgreedTermClick(Activity activity, String gourmetName, GourmetCart gourmetCart);
+        void onEventAgreedTermClick(Activity activity, GourmetCart gourmetCart);
 
         GourmetThankYouAnalyticsParam getThankYouAnalyticsParam();
 
@@ -209,32 +202,12 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             return true;
         }
 
-        mGourmetIndex = intent.getIntExtra(GourmetPaymentActivity.INTENT_EXTRA_DATA_GOURMET_INDEX, -1);
+        mGourmetCart = intent.getParcelableExtra(GourmetPaymentActivity.INTENT_EXTRA_DATA_GOURMET_CART);
 
-        if (mGourmetIndex == -1)
+        if (mGourmetCart == null)
         {
             return false;
         }
-
-        try
-        {
-            mGourmetCart = new GourmetCart(new JSONObject(intent.getStringExtra(GourmetPaymentActivity.INTENT_EXTRA_DATA_GOURMET_CART_JSON_STRING)));
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-            Crashlytics.logException(e);
-            return false;
-        }
-
-        mGourmetName = intent.getStringExtra(GourmetPaymentActivity.INTENT_EXTRA_DATA_GOURMET_NAME);
-        mImageUrl = intent.getStringExtra(GourmetPaymentActivity.INTENT_EXTRA_DATA_IMAGE_URL);
-
-        String visitDate = intent.getStringExtra(GourmetPaymentActivity.INTENT_EXTRA_DATA_VISIT_DATE);
-
-        setGourmetBookDateTime(visitDate);
-
-        mOverseas = intent.getBooleanExtra(GourmetPaymentActivity.INTENT_EXTRA_DATA_OVERSEAS, false);
-        mCategory = intent.getStringExtra(GourmetPaymentActivity.INTENT_EXTRA_DATA_CATEGORY);
 
         mAnalytics.setAnalyticsParam(intent.getParcelableExtra(BaseActivity.INTENT_EXTRA_DATA_ANALYTICS));
 
@@ -252,7 +225,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         setSaleType(NONE);
         mSelectedCoupon = null;
 
-        getViewInterface().setOverseas(mOverseas);
+        getViewInterface().setOverseas(false);
         getViewInterface().setPersons(0);
 
         if (DailyHotel.isLogin() == false)
@@ -312,24 +285,13 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
     {
         super.onSaveInstanceState(outState);
 
-        outState.putInt("gourmetIndex", mGourmetIndex);
-        outState.putString("gourmetCart", mGourmetCart.toJSONObject().toString());
-        outState.putString("gourmetName", mGourmetName);
-        outState.putString("imageUrl", mImageUrl);
-        outState.putString("category", mCategory);
-        outState.putString("visitDateTime", mVisitDateTime);
-
-        if (mGourmetBookDateTime != null)
-        {
-            outState.putString("gourmetBookDateTime", mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
-        }
+        outState.putParcelable("gourmetCart", new GourmetCartParcel(mGourmetCart));
 
         if (mPaymentType != null)
         {
             outState.putString("paymentType", mPaymentType.name());
         }
 
-        outState.putBoolean("overseas", mOverseas);
         outState.putInt("saleType", mSaleType);
         outState.putBoolean("agreedThirdPartyTerms", mAgreedThirdPartyTerms);
         outState.putBoolean("guestInformationVisible", mGuestInformationVisible);
@@ -359,28 +321,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
     {
         super.onRestoreInstanceState(savedInstanceState);
 
-        mGourmetIndex = savedInstanceState.getInt("gourmetIndex");
-
-        try
-        {
-            mGourmetCart = new GourmetCart(new JSONObject(savedInstanceState.getString("gourmetCart")));
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-
-            Crashlytics.logException(e);
-
-            Util.restartApp(getActivity());
-
-            return;
-        }
-
-        mGourmetName = savedInstanceState.getString("gourmetName");
-        mImageUrl = savedInstanceState.getString("imageUrl");
-        mCategory = savedInstanceState.getString("category");
-        mVisitDateTime = savedInstanceState.getString("visitDateTime");
-
-        setGourmetBookDateTime(savedInstanceState.getString("gourmetBookDateTime"));
+        mGourmetCart = savedInstanceState.getParcelable("gourmetCart");
 
         try
         {
@@ -390,7 +331,6 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             mPaymentType = DailyBookingPaymentTypeView.PaymentType.CARD;
         }
 
-        mOverseas = savedInstanceState.getBoolean("overseas");
         mSaleType = savedInstanceState.getInt("saleType", NONE);
         mAgreedThirdPartyTerms = savedInstanceState.getBoolean("agreedThirdPartyTerms");
         mGuestInformationVisible = savedInstanceState.getBoolean("guestInformationVisible");
@@ -686,34 +626,28 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         addCompositeDisposable(Observable.zip(mPaymentRemoteImpl.getGourmetPayment(mGourmetCart.getMenuSaleIndexes())//
             , mPaymentRemoteImpl.getEasyCardList(), mProfileRemoteImpl.getUserSimpleInformation()//
             , mCommonRemoteImpl.getCommonDateTime()//
-            , new Function4<GourmetPayment, List<Card>, UserSimpleInformation, CommonDateTime, Boolean>()
+            , new Function4<GourmetPayment, List<Card>, UserSimpleInformation, CommonDateTime, CommonDateTime>()
             {
                 @Override
-                public Boolean apply(@io.reactivex.annotations.NonNull GourmetPayment gourmetPayment//
+                public CommonDateTime apply(@io.reactivex.annotations.NonNull GourmetPayment gourmetPayment//
                     , @io.reactivex.annotations.NonNull List<Card> cardList//
                     , @io.reactivex.annotations.NonNull UserSimpleInformation userSimpleInformation//
                     , @io.reactivex.annotations.NonNull CommonDateTime commonDateTime) throws Exception
                 {
                     setGourmetPayment(gourmetPayment);
-                    setGourmetBookDateTime(gourmetPayment.visitDate);
                     setSelectCard(getSelectedCard(cardList));
                     setUserInformation(userSimpleInformation);
 
-                    return true;
+                    return commonDateTime;
                 }
-            }).subscribe(new Consumer<Boolean>()
+            }).subscribe(new Consumer<CommonDateTime>()
         {
             @Override
-            public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
+            public void accept(@io.reactivex.annotations.NonNull CommonDateTime commonDateTime) throws Exception
             {
-                onBookingInformation(mGourmetPayment, mGourmetBookDateTime);
+                onBookingInformation(mGourmetPayment, mGourmetCart);
 
                 notifyUserInformationChanged();
-
-                if (mOverseas == true)
-                {
-                    notifyGuestInformationChanged(getOverseasGustInformation(mUserSimpleInformation));
-                }
 
                 notifyBonusEnabledChanged();
                 notifyPaymentTypeChanged();
@@ -728,7 +662,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
                     setResult(BaseActivity.RESULT_CODE_REFRESH);
 
-                    mAnalytics.onEventChangedPrice(getActivity(), mGourmetName);
+                    mAnalytics.onEventChangedPrice(getActivity(), mGourmetCart.gourmetName);
                 } else if (mGourmetPayment.soldOut == true) // 솔드 아웃인 경우
                 {
                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_gourmet_stop_onsale)//
@@ -742,11 +676,10 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                             }
                         });
 
-                    mAnalytics.onEventSoldOut(getActivity(), mGourmetName);
+                    mAnalytics.onEventSoldOut(getActivity(), mGourmetCart.gourmetName);
                 }
 
-                mAnalytics.onScreen(getActivity(), mGourmetBookDateTime//
-                    , mGourmetIndex, mGourmetName, mGourmetCart, mCategory//
+                mAnalytics.onScreen(getActivity(), mGourmetCart//
                     , mGourmetPayment, mSelectedCard != null);
 
                 unLockAll();
@@ -810,7 +743,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
     @Override
     public void onBonusClick(boolean selected)
     {
-        if (mGourmetBookDateTime == null || lock() == true)
+        if (lock() == true)
         {
             return;
         }
@@ -871,7 +804,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
     @Override
     public void onCouponClick(boolean selected)
     {
-        if (mGourmetBookDateTime == null || lock() == true)
+        if (lock() == true)
         {
             return;
         }
@@ -903,10 +836,16 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                     int menuIndex = mGourmetCart.getMenuSaleIndexes()[0];
                     int menuOrderCount = mGourmetCart.getMenuOrderCount(menuIndex);
 
-                    Intent intent = SelectGourmetCouponDialogActivity.newInstance(getActivity(), mGourmetIndex, //
-                        menuIndex, mGourmetBookDateTime.getVisitDateTime("yyyy.MM.dd (EEE)")//
-                        , mGourmetName, menuOrderCount);
-                    startActivityForResult(intent, GourmetPaymentActivity.REQUEST_CODE_COUPON_LIST);
+                    try
+                    {
+                        Intent intent = SelectGourmetCouponDialogActivity.newInstance(getActivity(), mGourmetCart.gourmetIndex, //
+                            menuIndex, DailyCalendar.convertDateFormatString(mGourmetCart.getVisitDateTime(), DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd (EEE)")//
+                            , mGourmetCart.gourmetName, menuOrderCount);
+                        startActivityForResult(intent, GourmetPaymentActivity.REQUEST_CODE_COUPON_LIST);
+                    } catch (Exception e)
+                    {
+                        ExLog.e(e.toString());
+                    }
 
                     mAnalytics.onEventCouponClick(getActivity(), true);
                 } else
@@ -1000,16 +939,6 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             mGuest.name = mUserSimpleInformation.name;
             mGuest.phone = mUserSimpleInformation.phone;
             mGuest.email = mUserSimpleInformation.email;
-        }
-
-        if (DailyTextUtils.isTextEmpty(mVisitDateTime) == true)
-        {
-            getViewInterface().scrollTop();
-
-            DailyToast.showToast(getActivity(), R.string.toast_msg_please_select_reservationtime, DailyToast.LENGTH_SHORT);
-
-            unLockAll();
-            return;
         }
 
         if (DailyTextUtils.isTextEmpty(mGuest.name) == true)
@@ -1119,7 +1048,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             }
         }
 
-        mAnalytics.onEventAgreedTermClick(getActivity(), mGourmetName, mGourmetCart);
+        mAnalytics.onEventAgreedTermClick(getActivity(), mGourmetCart);
     }
 
     @Override
@@ -1197,18 +1126,12 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
     synchronized void onAgreedPaymentClick()
     {
-        if (lock() == true)
+        if (mGourmetCart == null || lock() == true)
         {
             return;
         }
 
         screenLock(true);
-
-        // 입력된 내용을 저장한다.
-        if (mOverseas == true)
-        {
-            DailyUserPreference.getInstance(getActivity()).setOverseasInformation(mGuest.name, mGuest.phone, mGuest.email);
-        }
 
         String couponCode = mSelectedCoupon != null ? mSelectedCoupon.couponCode : null;
 
@@ -1221,7 +1144,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         if ((mSaleType == BONUS && totalPrice <= mUserSimpleInformation.bonus)//
             || (mSaleType == COUPON && totalPrice <= mSelectedCoupon.amount))
         {
-            JSONObject jsonObject = getPaymentJSONObject(mVisitDateTime, menuIndex, menuOrderCount//
+            JSONObject jsonObject = getPaymentJSONObject(mGourmetCart.getVisitDateTime(), menuIndex, menuOrderCount//
                 , mSaleType, mUserSimpleInformation.bonus, couponCode, mGuest, totalPrice, null);
 
             addCompositeDisposable(mPaymentRemoteImpl.getGourmetPaymentTypeBonus(jsonObject).subscribe(new Consumer<PaymentResult>()
@@ -1269,7 +1192,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                         return;
                     }
 
-                    JSONObject jsonObject = getPaymentJSONObject(mVisitDateTime, menuIndex, menuOrderCount//
+                    JSONObject jsonObject = getPaymentJSONObject(mGourmetCart.getVisitDateTime(), menuIndex, menuOrderCount//
                         , mSaleType, mUserSimpleInformation.bonus, couponCode, mGuest, totalPrice, mSelectedCard.billKey);
 
                     addCompositeDisposable(mPaymentRemoteImpl.getGourmetPaymentTypeEasy(jsonObject).subscribe(new Consumer<PaymentResult>()
@@ -1306,7 +1229,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                 {
                     final String PAYMENT_TYPE = "credit";
 
-                    JSONObject jsonObject = getPaymentJSONObject(mVisitDateTime, menuIndex, menuOrderCount//
+                    JSONObject jsonObject = getPaymentJSONObject(mGourmetCart.getVisitDateTime(), menuIndex, menuOrderCount//
                         , mSaleType, mUserSimpleInformation.bonus, couponCode, mGuest, totalPrice, null);
 
                     startActivityForResult(PaymentWebActivity.newInstance(getActivity()//
@@ -1319,7 +1242,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                 {
                     final String PAYMENT_TYPE = "mobile";
 
-                    JSONObject jsonObject = getPaymentJSONObject(mVisitDateTime, menuIndex, menuOrderCount//
+                    JSONObject jsonObject = getPaymentJSONObject(mGourmetCart.getVisitDateTime(), menuIndex, menuOrderCount//
                         , mSaleType, mUserSimpleInformation.bonus, couponCode, mGuest, totalPrice, null);
 
                     startActivityForResult(PaymentWebActivity.newInstance(getActivity()//
@@ -1332,7 +1255,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                 {
                     final String PAYMENT_TYPE = "vbank";
 
-                    JSONObject jsonObject = getPaymentJSONObject(mVisitDateTime, menuIndex, menuOrderCount//
+                    JSONObject jsonObject = getPaymentJSONObject(mGourmetCart.getVisitDateTime(), menuIndex, menuOrderCount//
                         , mSaleType, mUserSimpleInformation.bonus, couponCode, mGuest, totalPrice, null);
 
                     startActivityForResult(PaymentWebActivity.newInstance(getActivity()//
@@ -1343,8 +1266,8 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             }
         }
 
-        mAnalytics.onScreenAgreeTermDialog(getActivity(), mVisitDateTime, mGourmetIndex, mGourmetName, mGourmetCart//
-            , mCategory, mGourmetPayment, mSelectedCard != null, mSaleType, mSelectedCoupon//
+        mAnalytics.onScreenAgreeTermDialog(getActivity(), mGourmetCart//
+            , mGourmetPayment, mSelectedCard != null, mSaleType, mSelectedCoupon//
             , mPaymentType, mUserSimpleInformation);
     }
 
@@ -1361,8 +1284,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         // ThankYou 페이지를 홈탭에서 띄우기 위한 코드
         startActivity(DailyInternalDeepLink.getHomeScreenLink(getActivity()));
 
-        startActivityForResult(GourmetThankYouActivity.newInstance(getActivity(), mGourmetName, mImageUrl//
-            , mVisitDateTime, mGourmetCart, aggregationId//
+        startActivityForResult(GourmetThankYouActivity.newInstance(getActivity(), mGourmetCart, aggregationId//
             , mAnalytics.getThankYouAnalyticsParam())//
             , GourmetPaymentActivity.REQUEST_CODE_THANK_YOU);
     }
@@ -1439,9 +1361,9 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
     }
 
 
-    void onBookingInformation(GourmetPayment gourmetPayment, GourmetBookDateTime gourmetBookDateTime)
+    void onBookingInformation(GourmetPayment gourmetPayment, GourmetCart gourmetCart)
     {
-        if (gourmetPayment == null || gourmetBookDateTime == null)
+        if (gourmetPayment == null || gourmetCart == null)
         {
             return;
         }
@@ -1450,14 +1372,14 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
         try
         {
-            String visitDay = gourmetBookDateTime.getVisitDateTime(DATE_FORMAT);
+            String visitDay = DailyCalendar.convertDateFormatString(gourmetCart.getVisitDateTime(), DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT);
             String visitDateTime = visitDay + " " + DailyTextUtils.formatIntegerTimeToStringTime(mGourmetCart.visitTime);
 
             SpannableString spannableString = new SpannableString(visitDateTime);
             spannableString.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getMediumTypeface()),//
                 visitDay.length(), visitDateTime.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            getViewInterface().setBooking(spannableString, mGourmetName, mGourmetCart);
+            getViewInterface().setBooking(spannableString, mGourmetCart);
             getViewInterface().setVendorName(gourmetPayment.businessName);
         } catch (Exception e)
         {
@@ -1472,7 +1394,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
     void notifyGourmetPaymentChanged()
     {
-        if (mUserSimpleInformation == null || mGourmetPayment == null || mGourmetBookDateTime == null)
+        if (mUserSimpleInformation == null || mGourmetPayment == null)
         {
             return;
         }
@@ -1752,27 +1674,6 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         }
 
         return guest;
-    }
-
-    void setGourmetBookDateTime(String visitDateTime)
-    {
-        if (DailyTextUtils.isTextEmpty(visitDateTime) == true)
-        {
-            return;
-        }
-
-        if (mGourmetBookDateTime == null)
-        {
-            mGourmetBookDateTime = new GourmetBookDateTime();
-        }
-
-        try
-        {
-            mGourmetBookDateTime.setVisitDateTime(visitDateTime);
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
     }
 
     private void setPaymentType(DailyBookingPaymentTypeView.PaymentType paymentType)

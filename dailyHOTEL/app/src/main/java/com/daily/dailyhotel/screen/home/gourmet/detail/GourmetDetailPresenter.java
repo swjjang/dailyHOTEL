@@ -21,6 +21,7 @@ import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetCart;
+import com.daily.dailyhotel.entity.GourmetCartMenu;
 import com.daily.dailyhotel.entity.GourmetDetail;
 import com.daily.dailyhotel.entity.GourmetMenu;
 import com.daily.dailyhotel.entity.ReviewScores;
@@ -84,7 +85,7 @@ import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function6;
+import io.reactivex.functions.Function7;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -99,6 +100,10 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     public static final int STATUS_SELECT_MENU = 2;
     public static final int STATUS_SOLD_OUT = 3;
     public static final int STATUS_FINISH = 4;
+
+    private static final int VALID_GOURMET_CART_DEFAULT = 0;
+    private static final int INVALID_GOURMET_CART_VISIT_TIME = 1;
+    private static final int INVALID_GOURMET_CART_QUANTITY = 2;
 
     public static final int FULL_TIME = -1;
 
@@ -400,30 +405,31 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         if (isRefresh() == true)
         {
             onRefresh(true);
-        }
-
-        addCompositeDisposable(mCartLocalImpl.getGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetCart>()
+        } else
         {
-            @Override
-            public void accept(GourmetCart gourmetCart) throws Exception
+            addCompositeDisposable(mCartLocalImpl.getGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetCart>()
             {
-                if (gourmetCart.gourmetIndex == mGourmetIndex && gourmetCart.getTotalCount() > 0)
+                @Override
+                public void accept(GourmetCart gourmetCart) throws Exception
                 {
-                    getViewInterface().setToolbarCartMenusVisible(true);
-                    getViewInterface().setToolbarCartMenusCount(gourmetCart.getTotalCount());
-                } else
+                    if (gourmetCart.gourmetIndex == mGourmetIndex && gourmetCart.getTotalCount() > 0)
+                    {
+                        getViewInterface().setToolbarCartMenusVisible(true);
+                        getViewInterface().setToolbarCartMenusCount(gourmetCart.getTotalCount());
+                    } else
+                    {
+                        getViewInterface().setToolbarCartMenusVisible(false);
+                    }
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
                 {
                     getViewInterface().setToolbarCartMenusVisible(false);
                 }
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(Throwable throwable) throws Exception
-            {
-                getViewInterface().setToolbarCartMenusVisible(false);
-            }
-        }));
+            }));
+        }
 
         mAppResearch.onResume("고메", mGourmetIndex);
     }
@@ -1332,8 +1338,16 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             return;
         }
 
+        List<DetailImageInformation> imageInformationList = mGourmetDetail.getImageInformationList();
+        String imageUrl = null;
+
+        if (imageInformationList != null && imageInformationList.size() > 0)
+        {
+            imageUrl = imageInformationList.get(0).getImageMap().bigUrl;
+        }
+
         startActivityForResult(GourmetMenusActivity.newInstance(getActivity(), mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , mGourmetDetail.index, mGourmetDetail.name, mGourmetDetail.getGourmetMenuList(), position, (ArrayList) mOperationTimeList, mVisitTime)//
+            , mGourmetDetail.index, mGourmetDetail.name, mGourmetDetail.getGourmetMenuList(), position, (ArrayList) mOperationTimeList, mVisitTime, mGourmetDetail.category, imageUrl)//
             , GourmetDetailActivity.REQUEST_CODE_MENU);
 
         try
@@ -1511,7 +1525,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 int startTime = Integer.parseInt(gourmetMenu.startEatingTime.replaceAll(":", "").substring(0, 4));
                 int endTime = Integer.parseInt(gourmetMenu.endEatingTime.replaceAll(":", "").substring(0, 4));
 
-//                ExLog.d("pinkred - ticket1 - startTime : " + startTime + ", endTime : " + endTime);
+                //                ExLog.d("pinkred - ticket1 - startTime : " + startTime + ", endTime : " + endTime);
 
                 // 마지막 입장 종료시간이 새벽 3시보다 작은경우
                 if (endTime < 300)
@@ -1548,7 +1562,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 final int intervalTime = gourmetMenu.timeInterval / ONE_HOUR_MINUTES * 100 + gourmetMenu.timeInterval % ONE_HOUR_MINUTES;
                 int nextTime = startTime;
 
-//                ExLog.d("pinkred - ticket2 - startTime : " + startTime + ", endTime : " + endTime + ", intervalTime : " + intervalTime + ", readyTime : " + readyTime);
+                //                ExLog.d("pinkred - ticket2 - startTime : " + startTime + ", endTime : " + endTime + ", intervalTime : " + intervalTime + ", readyTime : " + readyTime);
 
                 do
                 {
@@ -1590,7 +1604,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                     gourmetMenu.setOperationTimeList(menuOperationTime);
                 }
 
-//                ExLog.d("pinkred - ticket - menu time : " + logStringBuilder.toString());
+                //                ExLog.d("pinkred - ticket - menu time : " + logStringBuilder.toString());
             }
 
             Iterator<Integer> integerIterator = visitTimeSet.iterator();
@@ -1606,7 +1620,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 logStringBuilder.append(", ");
             }
 
-//            ExLog.d("pinkred - currentTime : " + currentTime + ", intervalTime : " + logStringBuilder.toString());
+            //            ExLog.d("pinkred - currentTime : " + currentTime + ", intervalTime : " + logStringBuilder.toString());
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -1915,15 +1929,17 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             , mGourmetRemoteImpl.getReviewScores(mGourmetIndex)//
             , mGourmetRemoteImpl.getHasCoupon(mGourmetIndex, mGourmetBookDateTime)//
             , mCommonRemoteImpl.getCommonDateTime()//
-            , new Function6<Boolean, GourmetDetail, List<Integer>, ReviewScores, Boolean, CommonDateTime, GourmetDetail>()
+            , mCartLocalImpl.getGourmetCart()//
+            , new Function7<Boolean, GourmetDetail, List<Integer>, ReviewScores, Boolean, CommonDateTime, GourmetCart, GourmetCart>()
             {
                 @Override
-                public GourmetDetail apply(@io.reactivex.annotations.NonNull Boolean aBoolean//
+                public GourmetCart apply(@io.reactivex.annotations.NonNull Boolean aBoolean//
                     , @io.reactivex.annotations.NonNull GourmetDetail gourmetDetail//
                     , @io.reactivex.annotations.NonNull List<Integer> unavailableDates//
                     , @io.reactivex.annotations.NonNull ReviewScores reviewScores//
                     , @io.reactivex.annotations.NonNull Boolean hasCoupon//
-                    , @io.reactivex.annotations.NonNull CommonDateTime commonDateTime) throws Exception
+                    , @io.reactivex.annotations.NonNull CommonDateTime commonDateTime//
+                    , @io.reactivex.annotations.NonNull GourmetCart gourmetCart) throws Exception
                 {
                     setCommonDateTime(commonDateTime);
                     setReviewScores(reviewScores);
@@ -1935,12 +1951,12 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                     setOperationTimes(commonDateTime, mGourmetBookDateTime, gourmetDetail.getGourmetMenuList());
                     setVisitTime(FULL_TIME);
 
-                    return gourmetDetail;
+                    return gourmetCart;
                 }
-            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetDetail>()
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetCart>()
         {
             @Override
-            public void accept(@io.reactivex.annotations.NonNull GourmetDetail gourmetDetail) throws Exception
+            public void accept(@io.reactivex.annotations.NonNull GourmetCart gourmetCart) throws Exception
             {
                 notifyGourmetDetailChanged();
                 notifyOperationTimeChanged();
@@ -1951,21 +1967,70 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                     disposable.dispose();
                 }
 
-                if (DailyPreference.getInstance(getActivity()).isWishTooltip() == true)
+                switch (validGourmetCart(gourmetCart))
                 {
-                    showWishTooltip();
+                    case INVALID_GOURMET_CART_VISIT_TIME:
+                    {
+                        String message = getString(R.string.message_gourmet_product_detail_after_visit_day);
+
+                        addCompositeDisposable(mCartLocalImpl.clearGourmetCart().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                        {
+                            @Override
+                            public void accept(Boolean aBoolean) throws Exception
+                            {
+                                getViewInterface().showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
+                            }
+                        }, new Consumer<Throwable>()
+                        {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception
+                            {
+                                getViewInterface().showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
+                            }
+                        }));
+                        break;
+                    }
+
+                    case INVALID_GOURMET_CART_QUANTITY:
+                    {
+                        String message = getString(R.string.message_gourmet_product_detail_insufficient_quantity);
+
+                        addCompositeDisposable(mCartLocalImpl.clearGourmetCart().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                        {
+                            @Override
+                            public void accept(Boolean aBoolean) throws Exception
+                            {
+                                getViewInterface().showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
+                            }
+                        }, new Consumer<Throwable>()
+                        {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception
+                            {
+                                getViewInterface().showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
+                            }
+                        }));
+                        break;
+                    }
+
+                    default:
+                        if (DailyPreference.getInstance(getActivity()).isWishTooltip() == true)
+                        {
+                            showWishTooltip();
+                        }
+                        break;
                 }
 
                 unLockAll();
 
                 if (mReviewScores != null && mReviewScores.reviewScoreTotalCount > 0)
                 {
-                    mAnalytics.onEventShowTrueReview(getActivity(), gourmetDetail.index);
+                    mAnalytics.onEventShowTrueReview(getActivity(), mGourmetIndex);
                 }
 
-                if (gourmetDetail.couponPrice > 0)
+                if (mGourmetDetail.couponPrice > 0)
                 {
-                    mAnalytics.onEventShowCoupon(getActivity(), gourmetDetail.index);
+                    mAnalytics.onEventShowCoupon(getActivity(), mGourmetIndex);
                 }
             }
         }, new Consumer<Throwable>()
@@ -2015,7 +2080,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                                 , GourmetDetailActivity.REQUEST_CODE_PROFILE_UPDATE);
                         } else
                         {
-                            startPayment(mGourmetBookDateTime, mGourmetDetail, gourmetCart);
+                            startPayment(mGourmetDetail, gourmetCart);
                         }
                     } else
                     {
@@ -2037,7 +2102,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                                 , GourmetDetailActivity.REQUEST_CODE_PROFILE_UPDATE);
                         } else
                         {
-                            startPayment(mGourmetBookDateTime, mGourmetDetail, gourmetCart);
+                            startPayment(mGourmetDetail, gourmetCart);
                         }
                     }
                 }
@@ -2055,26 +2120,75 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             , mGourmetDetail.category, gourmetCart);
     }
 
-    protected void startPayment(GourmetBookDateTime gourmetBookDateTime, GourmetDetail gourmetDetail, GourmetCart gourmetCart)
+    /**
+     * @param gourmetCart
+     * @return
+     */
+    private int validGourmetCart(GourmetCart gourmetCart)
     {
-        if (gourmetBookDateTime == null || gourmetDetail == null || gourmetCart == null || gourmetCart.getMenuCount() == 0)
+        if (gourmetCart == null)
+        {
+            return VALID_GOURMET_CART_DEFAULT;
+        }
+
+        // 방문일이 다르면 비교하지 않는다.
+        try
+        {
+            if (gourmetCart.equalsDay(mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)) != true)
+            {
+                return VALID_GOURMET_CART_DEFAULT;
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+
+            return VALID_GOURMET_CART_DEFAULT;
+        }
+
+        // 방문 시간 체크, 첫번째 운영 시간 보다 작으면 안됨.
+        if (gourmetCart.visitTime < mOperationTimeList.get(0))
+        {
+            return INVALID_GOURMET_CART_VISIT_TIME;
+        } else
+        {
+            for (GourmetCartMenu gourmetCartMenu : gourmetCart.getMenuList())
+            {
+                boolean hasMenu = false;
+                boolean hasOrderQuantity = false;
+
+                for (GourmetMenu gourmetMenu : mGourmetDetail.getGourmetMenuList())
+                {
+                    if (gourmetCartMenu.index == gourmetMenu.index)
+                    {
+                        hasMenu = true;
+
+                        // 수량
+                        if (gourmetCartMenu.count <= gourmetMenu.saleOrderQuantity)
+                        {
+                            hasOrderQuantity = true;
+                        }
+                    }
+                }
+
+
+                if (hasMenu == false || hasOrderQuantity == false)
+                {
+                    return INVALID_GOURMET_CART_QUANTITY;
+                }
+            }
+        }
+
+        return VALID_GOURMET_CART_DEFAULT;
+    }
+
+    protected void startPayment(GourmetDetail gourmetDetail, GourmetCart gourmetCart)
+    {
+        if (gourmetDetail == null || gourmetCart == null || gourmetCart.getMenuCount() == 0)
         {
             return;
         }
 
-        List<DetailImageInformation> imageInformationList = gourmetDetail.getImageInformationList();
-        String imageUrl = null;
-
-        if (imageInformationList != null && imageInformationList.size() > 0)
-        {
-            imageUrl = imageInformationList.get(0).getImageMap().bigUrl;
-        }
-
-        Intent intent = GourmetPaymentActivity.newInstance(getActivity(), gourmetDetail.index//
-            , gourmetDetail.name, imageUrl, gourmetCart.toJSONObject().toString()//
-            , gourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), false, gourmetDetail.category//
-            , mAnalytics.getStayPaymentAnalyticsParam(gourmetDetail, gourmetCart));
-
-        startActivityForResult(intent, GourmetDetailActivity.REQUEST_CODE_PAYMENT);
+        startActivityForResult(GourmetPaymentActivity.newInstance(getActivity(), gourmetCart, mAnalytics.getStayPaymentAnalyticsParam(gourmetDetail, gourmetCart))//
+            , GourmetDetailActivity.REQUEST_CODE_PAYMENT);
     }
 }

@@ -18,9 +18,11 @@ import android.widget.Toast;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.GourmetCart;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.local.CartLocalImpl;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.daily.dailyhotel.screen.home.gourmet.payment.GourmetPaymentActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.view.DailyGourmetCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -547,6 +549,16 @@ public class GourmetMainActivity extends PlaceMainActivity
         }
     }
 
+    private void startPayment(GourmetCart gourmetCart)
+    {
+        if (gourmetCart == null || gourmetCart.getMenuCount() == 0)
+        {
+            return;
+        }
+
+        startActivity(GourmetPaymentActivity.newInstance(this, gourmetCart, null));
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // EventListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -662,7 +674,26 @@ public class GourmetMainActivity extends PlaceMainActivity
         @Override
         public void onCartMenusBookingClick()
         {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
 
+            addCompositeDisposable(mCartLocalImpl.getGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetCart>()
+            {
+                @Override
+                public void accept(GourmetCart gourmetCart) throws Exception
+                {
+                    unLockUI();
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    unLockUI();
+                }
+            }));
         }
 
         @Override

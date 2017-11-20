@@ -293,7 +293,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         fullTimeTextView.setText(R.string.label_all);
         fullTimeTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
         fullTimeTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c323232_cffffff));
-        fullTimeTextView.setBackgroundResource(R.drawable.shape_fillrect_selector_de8e8e9_sb70038_r2);
+        fullTimeTextView.setBackgroundResource(R.drawable.selector_gourmet_time_background_drawable);
         fullTimeTextView.setTag(GourmetDetailPresenter.FULL_TIME);
         fullTimeTextView.setGravity(Gravity.CENTER);
         fullTimeTextView.setOnClickListener(onClickListener);
@@ -320,7 +320,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
             dailyTextView.setText(DailyTextUtils.formatIntegerTimeToStringTime(time));
             dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
             dailyTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c323232_cffffff));
-            dailyTextView.setBackgroundResource(R.drawable.shape_fillrect_selector_de8e8e9_sb70038_r2);
+            dailyTextView.setBackgroundResource(R.drawable.selector_gourmet_time_background_drawable);
             dailyTextView.setTag(time);
             dailyTextView.setGravity(Gravity.CENTER);
             dailyTextView.setOnClickListener(onClickListener);
@@ -609,7 +609,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
             dailyTextView.setText(DailyTextUtils.formatIntegerTimeToStringTime(time));
             dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
             dailyTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c323232_cffffff));
-            dailyTextView.setBackgroundResource(R.drawable.shape_fillrect_selector_de8e8e9_sb70038_r2);
+            dailyTextView.setBackgroundResource(R.drawable.selector_gourmet_time_background_drawable);
             dailyTextView.setTag(time);
             dailyTextView.setGravity(Gravity.CENTER);
             dailyTextView.setOnClickListener(onClickListener);
@@ -748,7 +748,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         }
 
         mGourmetCartMenusAdapter.clear();
-        mGourmetCartMenusAdapter.addAll(gourmetCart.getMenus().values());
+        mGourmetCartMenusAdapter.addAll(gourmetCart.getMenuList());
 
         mGourmetCartMenusAdapter.setOnEventListener(new GourmetCartMenusAdapter.OnEventListener()
         {

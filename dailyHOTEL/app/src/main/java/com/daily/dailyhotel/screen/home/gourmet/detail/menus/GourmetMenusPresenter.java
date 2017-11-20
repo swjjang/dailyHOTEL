@@ -51,11 +51,11 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
     private int mCenterPosition = -1;
 
     private int mGourmetIndex;
-    private String mGourmetName;
+    private String mGourmetName, mCategory, mImageUrl;
     private List<Integer> mOperationTimeList;
     private int mVisitTime;
     private GourmetCart mGourmetCart;
-    private boolean mOpendOperationTime, mOpendCartMenus;
+    private boolean mOpenedOperationTime, mOpenedCartMenus;
 
     public interface GourmetMenusAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -130,6 +130,8 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         mPosition = intent.getIntExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_POSITION, 0);
         mOperationTimeList = intent.getIntegerArrayListExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_OPERATION_TIMES);
         mVisitTime = intent.getIntExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_VISIT_TIME, GourmetDetailPresenter.FULL_TIME);
+        mCategory = intent.getStringExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_CATEGORY);
+        mImageUrl = intent.getStringExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_IMAGE_URL);
 
         return true;
     }
@@ -184,11 +186,11 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
     {
         mAnalytics.onEventBackClick(getActivity());
 
-        if (mOpendOperationTime == true)
+        if (mOpenedOperationTime == true)
         {
             onOperationTimeClick();
             return true;
-        } else if (mOpendCartMenus == true)
+        } else if (mOpenedCartMenus == true)
         {
             onCloseCartMenusClick();
             return true;
@@ -237,7 +239,8 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 
                 onScrolled(mPosition, false);
 
-                if (mGourmetCart.gourmetIndex == mGourmetIndex && mGourmetCart.getMenuCount() > 0)
+                if ((gourmetCart.equalsDay(mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)) == true)//
+                    && mGourmetCart.gourmetIndex == mGourmetIndex && mGourmetCart.getMenuCount() > 0)
                 {
                     getViewInterface().setCartVisible(true);
                     getViewInterface().setSummeryCart(getString(R.string.label_gourmet_product_detail_check_the_menus), mGourmetCart.getTotalCount());
@@ -269,7 +272,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
     @Override
     public void onCloseClick()
     {
-        if (mOpendOperationTime == true)
+        if (mOpenedOperationTime == true)
         {
             onOperationTimeClick();
         } else
@@ -381,7 +384,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 
         screenLock(false);
 
-        if (mOpendOperationTime == true)
+        if (mOpenedOperationTime == true)
         {
             addCompositeDisposable(getViewInterface().closeOperationTimes().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
             {
@@ -390,7 +393,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
                 {
                     setToolbarTitle(mVisitTime);
 
-                    mOpendOperationTime = false;
+                    mOpenedOperationTime = false;
 
                     unLockAll();
                 }
@@ -399,7 +402,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
                 @Override
                 public void accept(Throwable throwable) throws Exception
                 {
-                    mOpendOperationTime = false;
+                    mOpenedOperationTime = false;
 
                     unLockAll();
                 }
@@ -413,7 +416,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
                 @Override
                 public void accept(Boolean aBoolean) throws Exception
                 {
-                    mOpendOperationTime = true;
+                    mOpenedOperationTime = true;
 
                     unLockAll();
                 }
@@ -422,7 +425,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
                 @Override
                 public void accept(Throwable throwable) throws Exception
                 {
-                    mOpendOperationTime = true;
+                    mOpenedOperationTime = true;
 
                     unLockAll();
                 }
@@ -444,7 +447,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 
         notifyOperationTimeChanged(mPosition);
 
-        mOpendOperationTime = false;
+        mOpenedOperationTime = false;
 
         addCompositeDisposable(getViewInterface().closeOperationTimes().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
         {
@@ -486,6 +489,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         setToolbarTitle(mVisitTime);
 
         mGourmetCart.setGourmetInformation(mGourmetIndex, mGourmetName, mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), mVisitTime);
+        mGourmetCart.setGourmetSubInformation(mCategory, mImageUrl);
 
         plusMenu(false, menuIndex);
 
@@ -530,6 +534,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             if (mVisitTime > 0)
             {
                 mGourmetCart.setGourmetInformation(mGourmetIndex, mGourmetName, mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), mVisitTime);
+                mGourmetCart.setGourmetSubInformation(mCategory, mImageUrl);
 
                 plusMenu(false, gourmetMenu.index);
 
@@ -579,6 +584,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
                 if (DailyTextUtils.isTextEmpty(message) == true)
                 {
                     mGourmetCart.setGourmetInformation(mGourmetIndex, mGourmetName, mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), mVisitTime);
+                    mGourmetCart.setGourmetSubInformation(mCategory, mImageUrl);
 
                     plusMenu(false, gourmetMenu.index);
 
@@ -620,6 +626,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
                                         if (mVisitTime > 0)
                                         {
                                             mGourmetCart.setGourmetInformation(mGourmetIndex, mGourmetName, mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), mVisitTime);
+                                            mGourmetCart.setGourmetSubInformation(mCategory, mImageUrl);
 
                                             plusMenu(false, gourmetMenu.index);
 
@@ -743,7 +750,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
                     , DailyTextUtils.getPriceFormat(getActivity(), mGourmetCart.getTotalPrice(), false))//
                     , mGourmetCart.getTotalCount());
 
-                mOpendCartMenus = true;
+                mOpenedCartMenus = true;
 
                 unLockAll();
             }
@@ -788,7 +795,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
                     getViewInterface().setSummeryCart(getString(R.string.label_gourmet_product_detail_check_the_menus), mGourmetCart.getTotalCount());
                 }
 
-                mOpendCartMenus = false;
+                mOpenedCartMenus = false;
 
                 unLockAll();
             }
@@ -1160,9 +1167,16 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 
                         gourmetMenuList.add(gourmetMenu);
 
-                        if (mGourmetCart != null && mGourmetCart.gourmetIndex == mGourmetIndex && mGourmetCart.visitTime == time)
+                        try
                         {
-                            gourmetMenu.orderCount = mGourmetCart.getMenuOrderCount(gourmetMenu.index);
+                            if (mGourmetCart != null && mGourmetCart.equalsDay(mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)) == true//
+                                && mGourmetCart.gourmetIndex == mGourmetIndex && mGourmetCart.visitTime == time)
+                            {
+                                gourmetMenu.orderCount = mGourmetCart.getMenuOrderCount(gourmetMenu.index);
+                            }
+                        } catch (Exception e)
+                        {
+                            ExLog.e(e.toString());
                         }
                         break;
                     }

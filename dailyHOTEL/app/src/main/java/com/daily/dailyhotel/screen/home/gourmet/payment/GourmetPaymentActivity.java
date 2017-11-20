@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
+import com.daily.dailyhotel.entity.GourmetCart;
+import com.daily.dailyhotel.parcel.GourmetCartParcel;
 import com.daily.dailyhotel.parcel.analytics.GourmetPaymentAnalyticsParam;
 import com.twoheart.dailyhotel.R;
 
@@ -29,28 +31,13 @@ public class GourmetPaymentActivity extends BaseActivity<GourmetPaymentPresenter
     static final int REQUEST_CODE_LOGIN_IN = 10010;
     static final int REQUEST_CODE_PROFILE_UPDATE = 10011;
 
-    static final String INTENT_EXTRA_DATA_GOURMET_INDEX = "gourmetIndex";
-    static final String INTENT_EXTRA_DATA_GOURMET_NAME = "gourmetName";
-    static final String INTENT_EXTRA_DATA_IMAGE_URL = "imageUrl";
-    static final String INTENT_EXTRA_DATA_VISIT_DATE = "visitDate";
-    static final String INTENT_EXTRA_DATA_OVERSEAS = "overseas";
-    static final String INTENT_EXTRA_DATA_CATEGORY = "category";
-    static final String INTENT_EXTRA_DATA_GOURMET_CART_JSON_STRING = "gourmetCartJSONString";
+    static final String INTENT_EXTRA_DATA_GOURMET_CART = "gourmetCart";
 
-
-    public static Intent newInstance(Context context, int gourmetIndex, String gourmetName, String imageUrl//
-        , String gourmetCartJSONString, String visitDate, boolean overseas//
-        , String category, GourmetPaymentAnalyticsParam analyticsParam)
+    public static Intent newInstance(Context context, GourmetCart gourmetCart, GourmetPaymentAnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, GourmetPaymentActivity.class);
 
-        intent.putExtra(INTENT_EXTRA_DATA_GOURMET_INDEX, gourmetIndex);
-        intent.putExtra(INTENT_EXTRA_DATA_GOURMET_NAME, gourmetName);
-        intent.putExtra(INTENT_EXTRA_DATA_IMAGE_URL, imageUrl);
-        intent.putExtra(INTENT_EXTRA_DATA_GOURMET_CART_JSON_STRING, gourmetCartJSONString);
-        intent.putExtra(INTENT_EXTRA_DATA_VISIT_DATE, visitDate);
-        intent.putExtra(INTENT_EXTRA_DATA_OVERSEAS, overseas);
-        intent.putExtra(INTENT_EXTRA_DATA_CATEGORY, category);
+        intent.putExtra(INTENT_EXTRA_DATA_GOURMET_CART, new GourmetCartParcel(gourmetCart));
         intent.putExtra(INTENT_EXTRA_DATA_ANALYTICS, analyticsParam);
 
         return intent;

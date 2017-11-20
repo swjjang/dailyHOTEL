@@ -142,13 +142,7 @@ public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnC
 
         mToolbarView.clearMenuItem();
 
-        mToolbarView.addMenuItem(DailyToolbarView.MenuItem.ORDER_MENUS, null, 0, new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-            }
-        });
+        mToolbarView.addMenuItem(DailyToolbarView.MenuItem.ORDER_MENUS, null, 0, null);
 
         mToolbarView.setMenuItemVisible(DailyToolbarView.MenuItem.ORDER_MENUS, false);
 

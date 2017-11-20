@@ -2,7 +2,6 @@ package com.daily.dailyhotel.screen.home.gourmet.payment;
 
 import android.app.Activity;
 
-import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetCart;
 import com.daily.dailyhotel.entity.GourmetPayment;
 import com.daily.dailyhotel.entity.UserSimpleInformation;
@@ -32,9 +31,7 @@ public class GourmetPaymentAnalyticsImpl implements GourmetPaymentPresenter.Gour
     }
 
     @Override
-    public void onScreen(Activity activity, GourmetBookDateTime gourmetBookDateTime, int gourmetIndex//
-        , String gourmetName, GourmetCart gourmetCart, String category//
-        , GourmetPayment gourmetPayment, boolean registerEasyCard)
+    public void onScreen(Activity activity, GourmetCart gourmetCart, GourmetPayment gourmetPayment, boolean registerEasyCard)
     {
         if (activity == null || mAnalyticsParam == null)
         {
@@ -71,8 +68,7 @@ public class GourmetPaymentAnalyticsImpl implements GourmetPaymentPresenter.Gour
     }
 
     @Override
-    public void onScreenAgreeTermDialog(Activity activity, String visitDateTime, int gourmetIndex//
-        , String gourmetName, GourmetCart gourmetCart, String category//
+    public void onScreenAgreeTermDialog(Activity activity, GourmetCart gourmetCart//
         , GourmetPayment gourmetPayment, boolean registerEasyCard, int saleType//
         , Coupon coupon, DailyBookingPaymentTypeView.PaymentType paymentType, UserSimpleInformation userSimpleInformation)
     {
@@ -311,7 +307,7 @@ public class GourmetPaymentAnalyticsImpl implements GourmetPaymentPresenter.Gour
     }
 
     @Override
-    public void onEventAgreedTermClick(Activity activity, String gourmetName, GourmetCart gourmetCart)
+    public void onEventAgreedTermClick(Activity activity, GourmetCart gourmetCart)
     {
         if (activity == null)
         {
