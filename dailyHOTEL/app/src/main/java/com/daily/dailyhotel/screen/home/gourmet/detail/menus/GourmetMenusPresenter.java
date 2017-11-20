@@ -66,6 +66,8 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         void onEventFlicking(Activity activity);
 
         void onEventImageClick(Activity activity, String label);
+
+        void onEventOpenCartMenuClick(Activity activity, int gourmetIndex, int menuCount);
     }
 
     public GourmetMenusPresenter(@NonNull GourmetMenusActivity activity)
@@ -753,6 +755,8 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
                 mOpenedCartMenus = true;
 
                 unLockAll();
+
+                mAnalytics.onEventOpenCartMenuClick(getActivity(), mGourmetIndex, mGourmetCart.getMenuCount());
             }
         }, new Consumer<Throwable>()
         {

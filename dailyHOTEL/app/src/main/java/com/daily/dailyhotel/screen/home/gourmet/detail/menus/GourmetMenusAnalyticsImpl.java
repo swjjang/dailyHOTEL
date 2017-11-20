@@ -52,4 +52,16 @@ public class GourmetMenusAnalyticsImpl implements GourmetMenusPresenter.GourmetM
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS,//
             AnalyticsManager.Action.GOURMET_MENU_IMG_CLICK, label, null);
     }
+
+    @Override
+    public void onEventOpenCartMenuClick(Activity activity, int gourmetIndex, int menuCount)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS,//
+            AnalyticsManager.Action.BOOKINGCLICKED_ + "1", (menuCount > 1 ? AnalyticsManager.Label.MULTI : AnalyticsManager.Label.SINGLE) + "_" + Integer.toString(gourmetIndex), null);
+    }
 }

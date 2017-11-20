@@ -200,6 +200,8 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         void onEventShowTrueReview(Activity activity, int gourmetIndex);
 
         void onEventShowCoupon(Activity activity, int gourmetIndex);
+
+        void onEventVisitTimeClick(Activity activity, String time);
     }
 
     public GourmetDetailPresenter(@NonNull GourmetDetailActivity activity)
@@ -1379,6 +1381,14 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         notifyOperationTimeChanged();
 
         unLockAll();
+
+        if (visitTime == FULL_TIME)
+        {
+            mAnalytics.onEventVisitTimeClick(getActivity(), AnalyticsManager.Label.FULL_TIME);
+        } else
+        {
+            mAnalytics.onEventVisitTimeClick(getActivity(), AnalyticsManager.Label.SELECT_TIME);
+        }
     }
 
     @Override
