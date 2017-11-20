@@ -1453,8 +1453,6 @@ public class AnalyticsManager
         public static final String BOTH = "both";
 
         public static final String POPED_UP = "poped_up";
-
-        public static final String SUBFIX_PRIVACY_YEAR = "yrs";
     }
 
     public static class UserType
