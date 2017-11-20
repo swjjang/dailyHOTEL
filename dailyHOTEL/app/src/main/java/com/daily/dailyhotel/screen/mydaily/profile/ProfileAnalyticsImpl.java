@@ -39,7 +39,7 @@ public class ProfileAnalyticsImpl implements ProfilePresenter.ProfileAnalyticsIn
         }
 
         int year = month / 12;
-        String label = year + AnalyticsManager.Label.SUBFIX_PRIVACY_YEAR;
+        String label = year > 1 ? year + "yrs" : year + "yr";
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.REGISTRATION //
             , AnalyticsManager.Action.PRIVACY, label, null);
