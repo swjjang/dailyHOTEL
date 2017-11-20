@@ -22,7 +22,6 @@ import retrofit2.Response;
 
 public class BonusActivity extends BaseActivity
 {
-    private static final int REQUEST_ACTIVITY_INVITE_FRIENDS = 10000;
     private static final int REQUEST_ACTIVITY_TERMS = 10001;
 
     String mRecommendCode;

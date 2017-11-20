@@ -39,8 +39,6 @@ public class RewardHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
     public interface OnEventListener
     {
         void onClick(View view);
-
-        void onHomeClick();
     }
 
     public RewardHistoryAdapter(Context context)
@@ -149,7 +147,7 @@ public class RewardHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
             {
                 LayoutRewardHistoryFooterDataBinding viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_reward_history_footer_data, parent, false);
 
-                return new FooterViewHolder(viewDataBinding);
+                return new BaseDataBindingViewHolder(viewDataBinding);
             }
         }
 
@@ -357,22 +355,6 @@ public class RewardHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
                 if (mOnEventListener != null)
                 {
                     mOnEventListener.onClick(dataBinding.getRoot());
-                }
-            });
-        }
-    }
-
-    private class FooterViewHolder extends RecyclerView.ViewHolder
-    {
-        public FooterViewHolder(LayoutRewardHistoryFooterDataBinding dataBinding)
-        {
-            super(dataBinding.getRoot());
-
-            dataBinding.homeImageView.setOnClickListener(v ->
-            {
-                if (mOnEventListener != null)
-                {
-                    mOnEventListener.onHomeClick();
                 }
             });
         }
