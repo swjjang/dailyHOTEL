@@ -344,11 +344,31 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
     }
 
     @Override
-    public void setRefundPolicyList(List<String> refundPolicyList)
+    public void setRefundPolicyList(List<String> refundPolicyList, boolean hasRewardCard)
     {
         if (getViewDataBinding() == null)
         {
             return;
+        }
+
+        if (refundPolicyList == null || refundPolicyList.size() == 0)
+        {
+            if (hasRewardCard == true)
+            {
+                getViewDataBinding().refundAgreementPolicyTextView.setText(R.string.label_booking_step5_empty_refund);
+            } else
+            {
+                getViewDataBinding().refundAgreementPolicyTextView.setText(R.string.label_booking_step4_empty_reward_empty_refund);
+            }
+        } else
+        {
+            if (hasRewardCard == true)
+            {
+                getViewDataBinding().refundAgreementPolicyTextView.setText(R.string.label_booking_step5);
+            } else
+            {
+                getViewDataBinding().refundAgreementPolicyTextView.setText(R.string.label_booking_step4_empty_reward);
+            }
         }
 
         getViewDataBinding().refundPolicyView.setRefundPolicyList(refundPolicyList);
