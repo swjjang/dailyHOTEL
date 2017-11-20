@@ -14,6 +14,7 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetCart;
+import com.daily.dailyhotel.entity.GourmetCartMenu;
 import com.daily.dailyhotel.entity.GourmetMenu;
 import com.daily.dailyhotel.parcel.GourmetMenuParcel;
 import com.daily.dailyhotel.parcel.analytics.ImageListAnalyticsParam;
@@ -122,6 +123,8 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         for (GourmetMenuParcel gourmetMenuParcel : gourmetMenuParcelList)
         {
             mGourmetMenuList.add(gourmetMenuParcel.getGourmetMenu());
+
+            ExLog.d("pinkred : " + gourmetMenuParcel.getGourmetMenu().minimumOrderQuantity + ", " + gourmetMenuParcel.getGourmetMenu().maximumOrderQuantity + ", " + gourmetMenuParcel.getGourmetMenu().saleOrderQuantity);
         }
 
         mPosition = intent.getIntExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_POSITION, 0);
@@ -816,7 +819,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 
         mGourmetCart.remove(menuIndex);
 
-        getViewInterface().setMenuOrderCount(menuIndex, 0);
+        getViewInterface().setMenuOrderCount(menuIndex, 0, 0, 0, 0);
 
         if (mGourmetCart.getMenuCount() > 0)
         {
@@ -861,9 +864,11 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 
         minusMenu(true, menuIndex);
 
+        GourmetCartMenu gourmetCartMenu = mGourmetCart.getGourmetCartMenu(menuIndex);
+
         if (mGourmetCart.getMenuOrderCount(menuIndex) > 0)
         {
-            getViewInterface().setGourmetCartMenu(menuIndex, mGourmetCart.getMenuOrderCount(menuIndex));
+            getViewInterface().setGourmetCartMenu(menuIndex, mGourmetCart.getMenuOrderCount(menuIndex), gourmetCartMenu.minimumOrderQuantity, gourmetCartMenu.maximumOrderQuantity, gourmetCartMenu.saleOrderQuantity);
         }
 
         // 메뉴 갯수가 변경된 경우
@@ -925,7 +930,9 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 
         plusMenu(true, menuIndex);
 
-        getViewInterface().setGourmetCartMenu(menuIndex, mGourmetCart.getMenuOrderCount(menuIndex));
+        GourmetCartMenu gourmetCartMenu = mGourmetCart.getGourmetCartMenu(menuIndex);
+
+        getViewInterface().setGourmetCartMenu(menuIndex, mGourmetCart.getMenuOrderCount(menuIndex), gourmetCartMenu.minimumOrderQuantity, gourmetCartMenu.maximumOrderQuantity, gourmetCartMenu.saleOrderQuantity);
 
         addCompositeDisposable(mCartLocalImpl.setGourmetCart(mGourmetCart).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
         {
@@ -1009,9 +1016,24 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         }
 
         GourmetMenu gourmetMenu = getGourmetMenu(menuIndex);
-        mGourmetCart.plus(gourmetMenu);
+        int currentMenuOrderCount = mGourmetCart.getMenuOrderCount(menuIndex);
 
-        getViewInterface().setMenuOrderCount(menuIndex, mGourmetCart.getMenuOrderCount(menuIndex));
+        // 처음 주문하는 경우 최소 수량 주문 필요.
+        if (currentMenuOrderCount == 0)
+        {
+            for (int i = 0; i < gourmetMenu.minimumOrderQuantity; i++)
+            {
+                mGourmetCart.plus(gourmetMenu);
+            }
+        } else if (currentMenuOrderCount >= gourmetMenu.maximumOrderQuantity || currentMenuOrderCount >= gourmetMenu.saleOrderQuantity)
+        {
+            // 주문 메뉴는 최대 개수 혹은 남은 개수를 초과하지 못한다.
+        } else
+        {
+            mGourmetCart.plus(gourmetMenu);
+        }
+
+        getViewInterface().setMenuOrderCount(menuIndex, mGourmetCart.getMenuOrderCount(menuIndex), gourmetMenu.minimumOrderQuantity, gourmetMenu.maximumOrderQuantity, gourmetMenu.saleOrderQuantity);
 
         getViewInterface().setSummeryCart(openedCartMenus ? getString(R.string.label_gourmet_product_detail_booking_total_price//
             , DailyTextUtils.getPriceFormat(getActivity(), mGourmetCart.getTotalPrice(), false))//
@@ -1027,9 +1049,18 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         }
 
         GourmetMenu gourmetMenu = getGourmetMenu(menuIndex);
-        mGourmetCart.minus(gourmetMenu.index);
+        int currentMenuOrderCount = mGourmetCart.getMenuOrderCount(menuIndex);
 
-        getViewInterface().setMenuOrderCount(menuIndex, mGourmetCart.getMenuOrderCount(gourmetMenu.index));
+        // 최소 수량 보다 작아지면 0으로
+        if (currentMenuOrderCount - gourmetMenu.minimumOrderQuantity <= 0)
+        {
+            mGourmetCart.remove(gourmetMenu.index);
+        } else
+        {
+            mGourmetCart.minus(gourmetMenu.index);
+        }
+
+        getViewInterface().setMenuOrderCount(menuIndex, mGourmetCart.getMenuOrderCount(gourmetMenu.index), gourmetMenu.minimumOrderQuantity, gourmetMenu.maximumOrderQuantity, gourmetMenu.saleOrderQuantity);
 
         getViewInterface().setSummeryCart(openedCartMenus ? getString(R.string.label_gourmet_product_detail_booking_total_price//
             , DailyTextUtils.getPriceFormat(getActivity(), mGourmetCart.getTotalPrice(), false))//

@@ -26,7 +26,7 @@ public interface GourmetMenusInterface extends BaseDialogViewInterface
 
     Observable<Boolean> closeOperationTimes();
 
-    void setMenuOrderCount(int menuIndex, int menuOrderCount);
+    void setMenuOrderCount(int menuIndex, int menuOrderCount, int minimumOrderQuantity, int maximumOrderQuantity, int saleOrderQuantity);
 
     void showTimePickerDialog(List<Integer> operationTimeList, int menuIndex);
 
@@ -36,7 +36,7 @@ public interface GourmetMenusInterface extends BaseDialogViewInterface
 
     void setGourmetCart(GourmetCart gourmetCart);
 
-    void setGourmetCartMenu(int menuIndex, int menuOrderCount);
+    void setGourmetCartMenu(int menuIndex, int menuOrderCount, int minimumOrderQuantity, int maximumOrderQuantity, int saleOrderQuantity);
 
     Observable<Boolean> openCartMenus(GourmetCart gourmetCart);
 

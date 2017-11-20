@@ -565,7 +565,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
     }
 
     @Override
-    public void setMenuOrderCount(int menuIndex, int menuOrderCount)
+    public void setMenuOrderCount(int menuIndex, int menuOrderCount, int minimumOrderQuantity, int maximumOrderQuantity, int saleOrderQuantity)
     {
         if (getViewDataBinding() == null)
         {
@@ -574,7 +574,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
 
         int position = mGourmetMenusAdapter.getPosition(menuIndex);
 
-        getViewDataBinding().recyclerView.post(() -> mGourmetMenusAdapter.setMenuOrderCount(getViewDataBinding().recyclerView.findViewHolderForAdapterPosition(position), position, menuOrderCount));
+        getViewDataBinding().recyclerView.post(() -> mGourmetMenusAdapter.setMenuOrderCount(getViewDataBinding().recyclerView.findViewHolderForAdapterPosition(position), position, menuOrderCount, minimumOrderQuantity, maximumOrderQuantity, saleOrderQuantity));
     }
 
     @Override
@@ -800,7 +800,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
     }
 
     @Override
-    public void setGourmetCartMenu(int menuIndex, int menuOrderCount)
+    public void setGourmetCartMenu(int menuIndex, int menuOrderCount, int minimumOrderQuantity, int maximumOrderQuantity, int saleOrderQuantity)
     {
         if (getViewDataBinding() == null)
         {
@@ -809,7 +809,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
 
         int position = mGourmetCartMenusAdapter.getPosition(menuIndex);
 
-        getViewDataBinding().recyclerView.post(() -> mGourmetCartMenusAdapter.setMenuOrderCount(getViewDataBinding().cartMenusRecyclerView.findViewHolderForAdapterPosition(position), position, menuOrderCount));
+        getViewDataBinding().recyclerView.post(() -> mGourmetCartMenusAdapter.setMenuOrderCount(getViewDataBinding().cartMenusRecyclerView.findViewHolderForAdapterPosition(position), position, menuOrderCount, minimumOrderQuantity, maximumOrderQuantity, saleOrderQuantity));
     }
 
     @Override

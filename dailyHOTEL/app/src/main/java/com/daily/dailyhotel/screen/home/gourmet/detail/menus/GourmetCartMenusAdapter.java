@@ -159,7 +159,7 @@ public class GourmetCartMenusAdapter extends RecyclerView.Adapter<GourmetCartMen
         holder.dataBinding.discountPriceTextView.setText(discountPrice);
 
         //
-        setMenuOrderCount(holder, position, gourmetCartMenu.count);
+        setMenuOrderCount(holder, position, gourmetCartMenu.count, gourmetCartMenu.minimumOrderQuantity, gourmetCartMenu.maximumOrderQuantity, gourmetCartMenu.saleOrderQuantity);
 
         holder.dataBinding.menuCountMinusView.setOnClickListener(new View.OnClickListener()
         {
@@ -214,7 +214,7 @@ public class GourmetCartMenusAdapter extends RecyclerView.Adapter<GourmetCartMen
         });
     }
 
-    public void setMenuOrderCount(RecyclerView.ViewHolder viewHolder, int position, int menuOrderCount)
+    public void setMenuOrderCount(RecyclerView.ViewHolder viewHolder, int position, int menuOrderCount, int minimumOrderQuantity, int maximumOrderQuantity, int saleOrderQuantity)
     {
         if (viewHolder == null || position < 0)
         {
@@ -225,7 +225,7 @@ public class GourmetCartMenusAdapter extends RecyclerView.Adapter<GourmetCartMen
 
         GourmetCartMenuViewHolder gourmetCartMenuViewHolder = (GourmetCartMenuViewHolder) viewHolder;
 
-        if (menuOrderCount == 0)
+        if (menuOrderCount < minimumOrderQuantity)
         {
             gourmetCartMenuViewHolder.dataBinding.menuCountMinusView.setEnabled(false);
         } else
@@ -233,7 +233,7 @@ public class GourmetCartMenusAdapter extends RecyclerView.Adapter<GourmetCartMen
             gourmetCartMenuViewHolder.dataBinding.menuCountMinusView.setEnabled(true);
         }
 
-        if (menuOrderCount == 99)
+        if (menuOrderCount >= maximumOrderQuantity || menuOrderCount >= saleOrderQuantity)
         {
             gourmetCartMenuViewHolder.dataBinding.menuCountPlusView.setEnabled(false);
         } else

@@ -1459,8 +1459,6 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         {
             String todayDate = DailyCalendar.convertDateFormatString(commonDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd");
 
-            ExLog.d("pinkred - todayDate : " + todayDate);
-
             int currentTime;
 
             // 오늘인 경우 현재 시간에 + 30분을 더해준다.
@@ -1513,7 +1511,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 int startTime = Integer.parseInt(gourmetMenu.startEatingTime.replaceAll(":", "").substring(0, 4));
                 int endTime = Integer.parseInt(gourmetMenu.endEatingTime.replaceAll(":", "").substring(0, 4));
 
-                ExLog.d("pinkred - ticket1 - startTime : " + startTime + ", endTime : " + endTime);
+//                ExLog.d("pinkred - ticket1 - startTime : " + startTime + ", endTime : " + endTime);
 
                 // 마지막 입장 종료시간이 새벽 3시보다 작은경우
                 if (endTime < 300)
@@ -1550,7 +1548,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 final int intervalTime = gourmetMenu.timeInterval / ONE_HOUR_MINUTES * 100 + gourmetMenu.timeInterval % ONE_HOUR_MINUTES;
                 int nextTime = startTime;
 
-                ExLog.d("pinkred - ticket2 - startTime : " + startTime + ", endTime : " + endTime + ", intervalTime : " + intervalTime + ", readyTime : " + readyTime);
+//                ExLog.d("pinkred - ticket2 - startTime : " + startTime + ", endTime : " + endTime + ", intervalTime : " + intervalTime + ", readyTime : " + readyTime);
 
                 do
                 {
@@ -1592,7 +1590,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                     gourmetMenu.setOperationTimeList(menuOperationTime);
                 }
 
-                ExLog.d("pinkred - ticket - menu time : " + logStringBuilder.toString());
+//                ExLog.d("pinkred - ticket - menu time : " + logStringBuilder.toString());
             }
 
             Iterator<Integer> integerIterator = visitTimeSet.iterator();
@@ -1608,7 +1606,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 logStringBuilder.append(", ");
             }
 
-            ExLog.d("pinkred - currentTime : " + currentTime + ", intervalTime : " + logStringBuilder.toString());
+//            ExLog.d("pinkred - currentTime : " + currentTime + ", intervalTime : " + logStringBuilder.toString());
         } catch (Exception e)
         {
             ExLog.e(e.toString());

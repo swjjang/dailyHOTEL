@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
+import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.GourmetMenu;
 import com.daily.dailyhotel.parcel.GourmetMenuParcel;
 import com.twoheart.dailyhotel.R;

@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.entity.GourmetMenu;
@@ -236,7 +237,7 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
         holder.dataBinding.discountPriceTextView.setText(discountPrice);
 
         //
-        setMenuOrderCount(holder, position, gourmetMenu.orderCount);
+        setMenuOrderCount(holder, position, gourmetMenu.orderCount, gourmetMenu.minimumOrderQuantity, gourmetMenu.maximumOrderQuantity, gourmetMenu.saleOrderQuantity);
 
         holder.dataBinding.orderCountMinusView.setOnClickListener(new View.OnClickListener()
         {
@@ -360,14 +361,16 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
         holder.dataBinding.getRoot().setTag(R.id.blurView, holder.dataBinding.blurView);
     }
 
-    public void setMenuOrderCount(RecyclerView.ViewHolder viewHolder, int position, int menuOrderCount)
+    public void setMenuOrderCount(RecyclerView.ViewHolder viewHolder, int position, int menuOrderCount//
+        , int minimumOrderQuantity, int maximumOrderQuantity, int saleOrderQuantity)
     {
         if (position < 0)
         {
             return;
         }
 
-        getItem(position).orderCount = menuOrderCount;
+        GourmetMenu gourmetMenu = getItem(position);
+        gourmetMenu.orderCount = menuOrderCount;
 
         if (viewHolder == null)
         {
@@ -376,7 +379,7 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
 
         GourmetMenuViewHolder gourmetMenuViewHolder = (GourmetMenuViewHolder) viewHolder;
 
-        if (menuOrderCount == 0)
+        if (menuOrderCount < minimumOrderQuantity)
         {
             gourmetMenuViewHolder.dataBinding.orderCountMinusView.setEnabled(false);
         } else
@@ -384,7 +387,7 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
             gourmetMenuViewHolder.dataBinding.orderCountMinusView.setEnabled(true);
         }
 
-        if (menuOrderCount == 99)
+        if (menuOrderCount >= maximumOrderQuantity || menuOrderCount >= saleOrderQuantity)
         {
             gourmetMenuViewHolder.dataBinding.orderCountPlusView.setEnabled(false);
         } else

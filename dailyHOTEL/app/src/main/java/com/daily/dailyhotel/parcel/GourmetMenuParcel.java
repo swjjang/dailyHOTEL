@@ -50,6 +50,14 @@ public class GourmetMenuParcel implements Parcelable
         dest.writeString(mGourmetMenu.lastOrderTime);
         dest.writeString(mGourmetMenu.menuSummary);
         dest.writeInt(mGourmetMenu.persons);
+        dest.writeInt(mGourmetMenu.minimumOrderQuantity);
+        dest.writeInt(mGourmetMenu.maximumOrderQuantity);
+        dest.writeInt(mGourmetMenu.saleOrderQuantity);
+        dest.writeString(mGourmetMenu.startEatingTime);
+        dest.writeString(mGourmetMenu.endEatingTime);
+        dest.writeString(mGourmetMenu.readyTime);
+        dest.writeString(mGourmetMenu.expiryTime);
+        dest.writeInt(mGourmetMenu.timeInterval);
 
         List<DetailImageInformation> detailImageInformationList = mGourmetMenu.getImageList();
         List<DetailImageInformationParcel> detailImageInformationParcelList = new ArrayList<>();
@@ -84,6 +92,14 @@ public class GourmetMenuParcel implements Parcelable
         mGourmetMenu.lastOrderTime = in.readString();
         mGourmetMenu.menuSummary = in.readString();
         mGourmetMenu.persons = in.readInt();
+        mGourmetMenu.minimumOrderQuantity = in.readInt();
+        mGourmetMenu.maximumOrderQuantity = in.readInt();
+        mGourmetMenu.saleOrderQuantity = in.readInt();
+        mGourmetMenu.startEatingTime = in.readString();
+        mGourmetMenu.endEatingTime = in.readString();
+        mGourmetMenu.readyTime = in.readString();
+        mGourmetMenu.expiryTime = in.readString();
+        mGourmetMenu.timeInterval = in.readInt();
 
         List<DetailImageInformationParcel> detailImageInformationParcelList = in.createTypedArrayList(DetailImageInformationParcel.CREATOR);
         List<DetailImageInformation> detailImageInformationList = new ArrayList<>();

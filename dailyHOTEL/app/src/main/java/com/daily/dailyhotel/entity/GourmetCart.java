@@ -203,6 +203,11 @@ public class GourmetCart
         return DailyCalendar.compareDateDay(visitDateTime, visitDay) == 0;
     }
 
+    public GourmetCartMenu getGourmetCartMenu(int menuIndex)
+    {
+        return mOrderMenuMap.get(menuIndex);
+    }
+
     private GourmetCartMenu getGourmetCartMenu(GourmetMenu gourmetMenu)
     {
         if (gourmetMenu == null)
@@ -218,6 +223,9 @@ public class GourmetCart
         gourmetCartMenu.discountPrice = gourmetMenu.discountPrice;
         gourmetCartMenu.name = gourmetMenu.name;
         gourmetCartMenu.persons = gourmetMenu.persons;
+        gourmetCartMenu.minimumOrderQuantity = gourmetMenu.minimumOrderQuantity;
+        gourmetCartMenu.maximumOrderQuantity = gourmetMenu.maximumOrderQuantity;
+        gourmetCartMenu.saleOrderQuantity = gourmetMenu.saleOrderQuantity;
 
         return gourmetCartMenu;
     }
