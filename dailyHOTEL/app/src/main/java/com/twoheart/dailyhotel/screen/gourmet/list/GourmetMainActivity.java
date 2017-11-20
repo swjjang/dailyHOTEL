@@ -684,6 +684,8 @@ public class GourmetMainActivity extends PlaceMainActivity
                 @Override
                 public void accept(GourmetCart gourmetCart) throws Exception
                 {
+                    startPayment(gourmetCart);
+
                     unLockUI();
                 }
             }, new Consumer<Throwable>()
