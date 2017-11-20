@@ -316,15 +316,7 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
             return;
         }
 
-        if (visible == true)
-        {
-            getViewDataBinding().depositStickerLayout.setVisibility(View.VISIBLE);
-            getViewDataBinding().refundAgreementPolicyTextView.setText(R.string.label_booking_step5);
-        } else
-        {
-            getViewDataBinding().depositStickerLayout.setVisibility(View.GONE);
-            getViewDataBinding().refundAgreementPolicyTextView.setText(R.string.label_booking_step4_empty_reward);
-        }
+        getViewDataBinding().depositStickerLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -393,7 +385,7 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
     }
 
     @Override
-    public void setRefundPolicy(String refundPolicy)
+    public void setRefundPolicy(String refundPolicy, boolean hasRewardCard)
     {
         if (getViewDataBinding() == null)
         {
@@ -406,9 +398,25 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
         {
             refundPolicyList = new ArrayList<>();
             refundPolicyList.add(refundPolicy);
+
+            if (hasRewardCard == true)
+            {
+                getViewDataBinding().refundAgreementPolicyTextView.setText(R.string.label_booking_step5);
+            } else
+            {
+                getViewDataBinding().refundAgreementPolicyTextView.setText(R.string.label_booking_step4_empty_reward);
+            }
         } else
         {
             refundPolicyList = null;
+
+            if (hasRewardCard == true)
+            {
+                getViewDataBinding().refundAgreementPolicyTextView.setText(R.string.label_booking_step5_empty_refund);
+            } else
+            {
+                getViewDataBinding().refundAgreementPolicyTextView.setText(R.string.label_booking_step4_empty_reward_empty_refund);
+            }
         }
 
         getViewDataBinding().refundPolicyView.setRefundPolicyList(refundPolicyList);

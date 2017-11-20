@@ -39,7 +39,7 @@ public interface StayOutboundPaymentInterface extends BaseDialogViewInterface
 
     void setEasyCard(Card card);
 
-    void setRefundPolicyList(List<String> refundPolicyList);
+    void setRefundPolicyList(List<String> refundPolicyList, boolean hasRewardCard);
 
     void setVendorName(String vendorName);
 
