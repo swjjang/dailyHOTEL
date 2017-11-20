@@ -160,6 +160,11 @@ public class GourmetCart
 
     public int getMenuCount()
     {
+        if (mOrderMenuMap == null)
+        {
+            return 0;
+        }
+
         return mOrderMenuMap.size();
     }
 
@@ -224,7 +229,7 @@ public class GourmetCart
     {
         try
         {
-            return String.format(Locale.KOREA, "%sT%s+09:00", mGourmetBookDateTime.getVisitDateTime("yyyy-MM-dd")//
+            return String.format(Locale.KOREA, "%sT%s:00+09:00", mGourmetBookDateTime.getVisitDateTime("yyyy-MM-dd")//
                 , DailyTextUtils.formatIntegerTimeToStringTime(visitTime));
         } catch (Exception e)
         {
