@@ -33,7 +33,6 @@ import com.daily.dailyhotel.parcel.analytics.GourmetThankYouAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.PaymentRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
-import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.payment.PaymentWebActivity;
 import com.daily.dailyhotel.screen.home.gourmet.thankyou.GourmetThankYouActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
@@ -202,9 +201,16 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             return true;
         }
 
-        mGourmetCart = intent.getParcelableExtra(GourmetPaymentActivity.INTENT_EXTRA_DATA_GOURMET_CART);
+        GourmetCartParcel gourmetCartParcel = intent.getParcelableExtra(GourmetPaymentActivity.INTENT_EXTRA_DATA_GOURMET_CART);
 
-        if (mGourmetCart == null)
+        if (gourmetCartParcel == null)
+        {
+            return false;
+        }
+
+        mGourmetCart = gourmetCartParcel.getGourmetCart();
+
+        if (mGourmetCart == null || mGourmetCart.getMenuCount() == 0)
         {
             return false;
         }
@@ -735,9 +741,12 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             return;
         }
 
-        startActivityForResult(CallDialogActivity.newInstance(getActivity()), GourmetPaymentActivity.REQUEST_CODE_CALL);
+        //        startActivityForResult(CallDialogActivity.newInstance(getActivity()), GourmetPaymentActivity.REQUEST_CODE_CALL);
+        //
+        //        mAnalytics.onEventCallClick(getActivity());
 
-        mAnalytics.onEventCallClick(getActivity());
+
+        startThankYou(null, false);
     }
 
     @Override
