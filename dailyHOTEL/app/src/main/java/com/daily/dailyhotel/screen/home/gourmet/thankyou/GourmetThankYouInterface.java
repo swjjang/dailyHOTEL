@@ -3,6 +3,7 @@ package com.daily.dailyhotel.screen.home.gourmet.thankyou;
 import android.animation.Animator;
 
 import com.daily.base.BaseDialogViewInterface;
+import com.daily.dailyhotel.entity.GourmetCart;
 
 public interface GourmetThankYouInterface extends BaseDialogViewInterface
 {
@@ -10,7 +11,7 @@ public interface GourmetThankYouInterface extends BaseDialogViewInterface
 
     void setImageUrl(String imageUrl);
 
-    void setBooking(String visitDate, String visitTime, String gourmetName, String productType, int productCount);
+    void setBooking(String visitDate, String visitTime, GourmetCart gourmetCart);
 
     void startAnimation(Animator.AnimatorListener listener);
 }

@@ -11,6 +11,7 @@ import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.FontManager;
 import com.daily.dailyhotel.animation.ThankYouScreenAnimator;
+import com.daily.dailyhotel.entity.GourmetCart;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityGourmetPaymentThankYouDataBinding;
@@ -94,9 +95,9 @@ public class GourmetThankYouView extends BaseDialogView<GourmetThankYouView.OnEv
     }
 
     @Override
-    public void setBooking(String visitDate, String visitTime, String gourmetName, String productType, int productCount)
+    public void setBooking(String visitDate, String visitTime, GourmetCart gourmetCart)
     {
-        if (getViewDataBinding() == null)
+        if (getViewDataBinding() == null || gourmetCart == null)
         {
             return;
         }
@@ -106,13 +107,13 @@ public class GourmetThankYouView extends BaseDialogView<GourmetThankYouView.OnEv
         getViewDataBinding().thankYouInformationView.setCenterNightsVisible(false);
 
         getViewDataBinding().thankYouInformationView.removeAllReservationInformation();
-        getViewDataBinding().thankYouInformationView.addReservationInformation(getString(R.string.label_booking_place_name), gourmetName);
-        getViewDataBinding().thankYouInformationView.addReservationInformation(getString(R.string.frag_booking_tab_ticket_type), productType);
+        getViewDataBinding().thankYouInformationView.addReservationInformation(getString(R.string.label_booking_place_name), gourmetCart.gourmetName);
+        getViewDataBinding().thankYouInformationView.addReservationInformation(getString(R.string.frag_booking_tab_ticket_type), null);
 
-        if (productCount > 0)
-        {
-            getViewDataBinding().thankYouInformationView.addReservationInformation(getString(R.string.label_product_count), getString(R.string.label_booking_count, productCount));
-        }
+//        if (productCount > 0)
+//        {
+//            getViewDataBinding().thankYouInformationView.addReservationInformation(getString(R.string.label_product_count), getString(R.string.label_booking_count, productCount));
+//        }
     }
 
     @Override

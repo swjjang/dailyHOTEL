@@ -13,7 +13,9 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
+import com.daily.dailyhotel.entity.GourmetCart;
 import com.daily.dailyhotel.entity.UserTracking;
+import com.daily.dailyhotel.parcel.GourmetCartParcel;
 import com.daily.dailyhotel.parcel.analytics.GourmetThankYouAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
@@ -33,11 +35,8 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
     private ProfileRemoteImpl mProfileRemoteImpl;
 
     private String mAggregationId;
-    private String mGourmetName;
-    private String mImageUrl;
     private GourmetBookDateTime mGourmetBookDateTime;
-    private String mMenuName;
-    private int mMenuCount;
+    private GourmetCart mGourmetCart;
 
     public interface GourmetThankYouAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -75,7 +74,7 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
     {
         lock();
 
-        setContentView(R.layout.activity_stay_outbound_payment_thank_you_data);
+        setContentView(R.layout.activity_gourmet_payment_thank_you_data);
 
         setAnalytics(new GourmetThankYouAnalyticsImpl());
 
@@ -98,16 +97,33 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
             return true;
         }
 
-        mGourmetName = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_GOURMET_NAME);
-        mImageUrl = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_IMAGE_URL);
+        GourmetCartParcel parcel = intent.getParcelableExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_GOURMET);
+        if (parcel == null)
+        {
+            mGourmetCart = null;
+        } else
+        {
+            mGourmetCart = parcel.getGourmetCart();
+        }
 
-        String visitDateTime = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME);
+        if (mGourmetCart == null)
+        {
+            return true;
+        }
 
-        setGourmetBookDateTime(visitDateTime);
+        setGourmetBookDateTime(mGourmetCart.getVisitDateTime());
 
-        mMenuName = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_MENU_NAME);
-        mMenuCount = intent.getIntExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_MENU_COUNT, 0);
+//        mGourmetName = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_GOURMET_NAME);
+//        mImageUrl = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_IMAGE_URL);
+//
+//        String visitDateTime = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME);
+//
+//        setGourmetBookDateTime(visitDateTime);
+//
+//        mMenuName = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_MENU_NAME);
+//        mMenuCount = intent.getIntExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_MENU_COUNT, 0);
         mAggregationId = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_AGGREGATION_ID);
+
 
         mAnalytics.setAnalyticsParam(intent.getParcelableExtra(BaseActivity.INTENT_EXTRA_DATA_ANALYTICS));
 
@@ -120,7 +136,7 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
     public void onPostCreate()
     {
         getViewInterface().setToolbarTitle(getString(R.string.label_completed_payment));
-        getViewInterface().setImageUrl(mImageUrl);
+        getViewInterface().setImageUrl(mGourmetCart.imageUrl);
 
         String name = DailyUserPreference.getInstance(getActivity()).getName();
         getViewInterface().setUserName(name);
@@ -133,7 +149,7 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
             String visitDate = mGourmetBookDateTime.getVisitDateTime(DATE_FORMAT);
             String visitTime = mGourmetBookDateTime.getVisitDateTime(TIME_FORMAT);
 
-            getViewInterface().setBooking(visitDate, visitTime, mGourmetName, mMenuName, mMenuCount);
+            getViewInterface().setBooking(visitDate, visitTime, mGourmetCart);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

@@ -18,29 +18,8 @@ import com.twoheart.dailyhotel.R;
  */
 public class GourmetThankYouActivity extends BaseActivity<GourmetThankYouPresenter>
 {
-    static final String INTENT_EXTRA_DATA_IMAGE_URL = "imageUrl";
-    static final String INTENT_EXTRA_DATA_GOURMET_NAME = "gourmetName";
-    static final String INTENT_EXTRA_DATA_VISIT_DATE_TIME = "visitDateTime";
-    static final String INTENT_EXTRA_DATA_MENU_NAME = "menuName";
-    static final String INTENT_EXTRA_DATA_MENU_COUNT = "menuCount";
     static final String INTENT_EXTRA_DATA_AGGREGATION_ID = "aggregationId";
     static final String INTENT_EXTRA_DATA_GOURMET = "gourmetCart";
-
-    public static Intent newInstance(Context context, String gourmetName, String imageUrl//
-        , String visitDateTime, String menuName, int menuCount, String aggregationId, GourmetThankYouAnalyticsParam analyticsParam)
-    {
-        Intent intent = new Intent(context, GourmetThankYouActivity.class);
-
-        intent.putExtra(INTENT_EXTRA_DATA_GOURMET_NAME, gourmetName);
-        intent.putExtra(INTENT_EXTRA_DATA_IMAGE_URL, imageUrl);
-        intent.putExtra(INTENT_EXTRA_DATA_VISIT_DATE_TIME, visitDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_MENU_NAME, menuName);
-        intent.putExtra(INTENT_EXTRA_DATA_MENU_COUNT, menuCount);
-        intent.putExtra(INTENT_EXTRA_DATA_AGGREGATION_ID, aggregationId);
-        intent.putExtra(INTENT_EXTRA_DATA_ANALYTICS, analyticsParam);
-
-        return intent;
-    }
 
     public static Intent newInstance(Context context, GourmetCart gourmetCart, String aggregationId, GourmetThankYouAnalyticsParam analyticsParam)
     {
