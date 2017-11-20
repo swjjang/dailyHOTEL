@@ -114,6 +114,8 @@ public class GourmetThankYouView extends BaseDialogView<GourmetThankYouView.OnEv
 //        {
 //            getViewDataBinding().thankYouInformationView.addReservationInformation(getString(R.string.label_product_count), getString(R.string.label_booking_count, productCount));
 //        }
+
+        getViewDataBinding().thankYouInformationView.setProductVisible(false);
     }
 
     @Override
