@@ -64,8 +64,6 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
 
         void startBonusList();
 
-        void startStamp();
-
         void onRewardClick();
 
         void startCreditCardList();
@@ -110,36 +108,19 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
         initProfileLayout(mContext, view);
         initAccountInfoLayout(mContext, view);
 
-        View stampLayout = view.findViewById(R.id.stampLayout);
         View rewardLayout = view.findViewById(R.id.rewardLayout);
         View wishListLayout = view.findViewById(R.id.wishListLayout);
         View recentPlacesLayout = view.findViewById(R.id.recentPlacesLayout);
-
-        if (DailyRemoteConfigPreference.getInstance(mContext).isRemoteConfigStampEnabled() == true)
-        {
-            stampLayout.setVisibility(View.VISIBLE);
-            stampLayout.setOnClickListener(this);
-        } else
-        {
-            stampLayout.setVisibility(View.GONE);
-        }
+        View rewardTopDividerView = view.findViewById(R.id.rewardTopDividerView);
 
         if (DailyRemoteConfigPreference.getInstance(mContext).isKeyRemoteConfigRewardStickerEnabled() == true)
         {
             rewardLayout.setVisibility(View.VISIBLE);
+            rewardTopDividerView.setVisibility(View.VISIBLE);
         } else
         {
             rewardLayout.setVisibility(View.GONE);
-        }
-
-        View stampTopDividerView = view.findViewById(R.id.stampTopDividerView);
-
-        if (stampLayout.getVisibility() == View.GONE && rewardLayout.getVisibility() == View.GONE)
-        {
-            stampTopDividerView.setVisibility(View.GONE);
-        } else
-        {
-            stampTopDividerView.setVisibility(View.VISIBLE);
+            rewardTopDividerView.setVisibility(View.GONE);
         }
 
         rewardLayout.setOnClickListener(this);
@@ -469,10 +450,6 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
 
             case R.id.bonusLayout:
                 ((OnEventListener) mOnEventListener).startBonusList();
-                break;
-
-            case R.id.stampLayout:
-                ((OnEventListener) mOnEventListener).startStamp();
                 break;
 
             case R.id.rewardLayout:

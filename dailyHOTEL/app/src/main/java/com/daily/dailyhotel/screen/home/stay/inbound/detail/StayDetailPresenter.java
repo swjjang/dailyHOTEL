@@ -186,8 +186,6 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
         void onEventHappyTalkClick(Activity activity);
 
-        void onEventStampClick(Activity activity);
-
         void onEventShowTrueReview(Activity activity, int stayIndex);
 
         void onEventShowCoupon(Activity activity, int stayIndex);
@@ -1363,26 +1361,6 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     }
 
     @Override
-    public void onStampClick()
-    {
-        if (lock() == true)
-        {
-            return;
-        }
-
-        getViewInterface().showStampDialog(new DialogInterface.OnDismissListener()
-        {
-            @Override
-            public void onDismiss(DialogInterface dialog)
-            {
-                unLockAll();
-            }
-        });
-
-        mAnalytics.onEventStampClick(getActivity());
-    }
-
-    @Override
     public void onHideWishTooltipClick()
     {
         DailyPreference.getInstance(getActivity()).setWishTooltip(false);
@@ -1519,10 +1497,8 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             Constants.ServiceType.HOTEL, mStayDetail.index, mStayDetail.name, null, mImageUrl, false) //
             .observeOn(Schedulers.io()).subscribe());
 
-        boolean showStamp = mStayDetail.overseas == false && DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStampEnabled() == true;
-
         getViewInterface().setStayDetail(mStayBookDateTime, mStayDetail//
-            , mReviewScores != null ? mReviewScores.reviewScoreTotalCount : 0, showStamp);
+            , mReviewScores != null ? mReviewScores.reviewScoreTotalCount : 0);
 
         // 리스트 가격 변동은 진입시 한번 만 한다.
         checkChangedPrice(mIsDeepLink, mStayDetail, mPriceFromList, mCheckChangedPrice == false);

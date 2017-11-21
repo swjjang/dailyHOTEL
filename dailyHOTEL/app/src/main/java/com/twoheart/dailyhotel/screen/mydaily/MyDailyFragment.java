@@ -34,7 +34,6 @@ import com.twoheart.dailyhotel.screen.mydaily.creditcard.CreditCardListActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.SignupStep1Activity;
 import com.twoheart.dailyhotel.screen.mydaily.recentplace.RecentPlacesTabActivity;
-import com.twoheart.dailyhotel.screen.mydaily.stamp.StampActivity;
 import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -163,12 +162,6 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
                 } else if (externalDeepLink.isProfileBirthdayView() == true)
                 {
                     onStartEditProfile(externalDeepLink);
-                } else if (externalDeepLink.isStampView() == true)
-                {
-                    if (DailyRemoteConfigPreference.getInstance(context).isRemoteConfigStampEnabled() == true)
-                    {
-                        mOnEventListener.startStamp();
-                    }
                 } else if (externalDeepLink.isRewardView() == true)
                 {
                     mOnEventListener.onRewardClick();
@@ -184,14 +177,6 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
             } else
             {
                 DailyInternalDeepLink internalDeepLink = (DailyInternalDeepLink) mDailyDeepLink;
-
-                if (internalDeepLink.isStampView() == true)
-                {
-                    if (DailyRemoteConfigPreference.getInstance(context).isRemoteConfigStampEnabled() == true)
-                    {
-                        mOnEventListener.startStamp();
-                    }
-                }
             }
 
             mDailyDeepLink.clear();
@@ -312,7 +297,6 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
                 break;
             }
 
-            case Constants.CODE_REQUEST_ACTIVITY_STAMP:
             case Constants.CODE_REQUEST_ACTIVITY_REWARD:
             {
                 mDontReload = false;
@@ -455,23 +439,6 @@ public class MyDailyFragment extends BaseMenuNavigationFragment implements Const
 
             AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
                 , Action.CREDIT_MANAGEMENT_CLICKED, AnalyticsManager.Label.CREDIT_MANAGEMENT_CLICKED, null);
-        }
-
-        @Override
-        public void startStamp()
-        {
-            if (isLockUiComponent() == true || mIsAttach == false)
-            {
-                return;
-            }
-
-            lockUiComponent();
-
-            BaseActivity baseActivity = (BaseActivity) getActivity();
-            baseActivity.startActivityForResult(StampActivity.newInstance(baseActivity, StampActivity.CallScreen.MYDAILY), Constants.CODE_REQUEST_ACTIVITY_STAMP);
-
-            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                , Action.STAMP_MENU_CLICK, AnalyticsManager.ValueType.EMPTY, null);
         }
 
         @Override

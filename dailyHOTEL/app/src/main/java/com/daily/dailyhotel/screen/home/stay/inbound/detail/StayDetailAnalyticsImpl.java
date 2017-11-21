@@ -571,18 +571,6 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
     }
 
     @Override
-    public void onEventStampClick(Activity activity)
-    {
-        if (activity == null)
-        {
-            return;
-        }
-
-        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION,//
-            AnalyticsManager.Action.STAMP_DETAIL_CLICK, AnalyticsManager.Label.STAY_DETAIL_VIEW, null);
-    }
-
-    @Override
     public void onEventShowTrueReview(Activity activity, int stayIndex)
     {
         if (activity == null)

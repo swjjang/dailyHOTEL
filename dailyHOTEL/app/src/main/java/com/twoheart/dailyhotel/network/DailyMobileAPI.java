@@ -18,7 +18,6 @@ import com.twoheart.dailyhotel.network.model.Recommendation;
 import com.twoheart.dailyhotel.network.model.RecommendationGourmet;
 import com.twoheart.dailyhotel.network.model.RecommendationPlaceList;
 import com.twoheart.dailyhotel.network.model.RecommendationStay;
-import com.twoheart.dailyhotel.network.model.Stamp;
 import com.twoheart.dailyhotel.network.model.Status;
 import com.twoheart.dailyhotel.network.model.StayDetailParams;
 import com.twoheart.dailyhotel.network.model.StayWishItem;
@@ -1052,26 +1051,6 @@ public class DailyMobileAPI
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestHomeWishList(Crypto.getUrlDecoderEx(URL));
         executorCallbackCall.setTag(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<RecentlyPlacesData>>) listener);
-    }
-
-    public void requestUserStamps(String tag, boolean details, Object listener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/users/stamps"//
-            : "NzkkMjUkMjMkMjkkNzgkNjUkNTAkNjMkODMkOTYkNSQzNiQ1MyQ2NyQzNSQyJA==$QTYM0NXTdCMTE2ODlCQkFDRTZGBMRTIX5NUQPyMNTIwRURERERERDgMV3RUVBOUIwNDVYYCQUHU2QjEyNEM4MUIBxNRDkT0RjFGMQ=N=$";
-
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestUserStamps(Crypto.getUrlDecoderEx(URL), details);
-        executorCallbackCall.setTag(tag);
-        executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<Stamp>>) listener);
-    }
-
-    public void requestIssuingCoupon(String tag, Object listener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v4/users/stamps/coupons"//
-            : "NjIkMjAkNjYkODAkNDckNTgkMTkkODYkMjMkMjgkNCQ5MSQxOCQyNSQ4MSQxMCQ=$RERGPNDFDNDTA5Qjg0MKTZECMMVI0JEMM0FERjYzMEE0NTFGOThENkPJDODI3NUE0MQzAzMDXE4SMUEyMDBVDMEE1NF0EF0QNTNENQ==$";
-
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestIssuingCoupon(Crypto.getUrlDecoderEx(URL));
-        executorCallbackCall.setTag(tag);
-        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
     public void requestPlaceReviews(String tag, String type, int itemIdx, int page, int limit, Object listener)

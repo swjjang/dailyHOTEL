@@ -340,7 +340,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
             case Constants.CODE_REQUEST_ACTIVITY_VIRTUAL_BOOKING_DETAIL:
             case Constants.CODE_REQUEST_ACTIVITY_COUPONLIST:
             case Constants.CODE_REQUEST_ACTIVITY_BONUS:
-            case Constants.CODE_REQUEST_ACTIVITY_STAMP:
             case Constants.CODE_REQUEST_ACTIVITY_STAY_OB_DETAIL:
                 if (resultCode == Constants.CODE_RESULT_ACTIVITY_GO_HOME)
                 {
@@ -561,12 +560,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
             } else if (externalDeepLink.isWishListGourmetView() == true)
             {
                 startWishList(PlaceType.FNB);
-            } else if (externalDeepLink.isStampView() == true)
-            {
-                if (DailyRemoteConfigPreference.getInstance(mBaseActivity).isRemoteConfigStampStayEndEventPopupEnabled() == true)
-                {
-                    mBaseActivity.showSimpleDialog(null, getString(R.string.message_stamp_finish_stamp), getString(R.string.dialog_btn_text_confirm), null);
-                }
             } else if (externalDeepLink.isShortcutView() == true)
             {
                 String categoryCode = externalDeepLink.getCategoryCode();
@@ -1482,12 +1475,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
             getCommonDateTime();
             requestRecentList();
 
-            if (DailyHotel.isLogin() == true && DailyRemoteConfigPreference.getInstance(mBaseActivity).isRemoteConfigStampEnabled() == true //
-                && DailyRemoteConfigPreference.getInstance(mBaseActivity).isRemoteConfigStampHomeEnabled() == true)
-            {
-                mNetworkController.requestUserStamps();
-            }
-
             // 리워드
             if (DailyHotel.isLogin() == true)
             {
@@ -2242,22 +2229,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
         }
 
         @Override
-        public void onStampEventClick()
-        {
-            if (lockUiComponentAndIsLockUiComponent() == true)
-            {
-                return;
-            }
-
-            startActivityForResult(EventWebActivity.newInstance(mBaseActivity, EventWebActivity.SourceType.STAMP//
-                , DailyRemoteConfigPreference.getInstance(mBaseActivity).getKeyRemoteConfigStaticUrlDailyStampHome()//
-                , mBaseActivity.getString(R.string.label_stamp_event_title)), Constants.CODE_REQUEST_ACTIVITY_STAMP);
-
-            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION,//
-                AnalyticsManager.Action.STAMP_DETAIL_CLICK, AnalyticsManager.Label.HOME, null);
-        }
-
-        @Override
         public void onRewardGuideClick()
         {
             if (lockUiComponentAndIsLockUiComponent() == true)
@@ -2338,15 +2309,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
             if (mHomeLayout != null)
             {
                 mHomeLayout.setRecommendationData(list, isError);
-            }
-        }
-
-        @Override
-        public void onStamps(int count, boolean isError)
-        {
-            if (mHomeLayout != null)
-            {
-                mHomeLayout.setStampCount(count, isError);
             }
         }
 

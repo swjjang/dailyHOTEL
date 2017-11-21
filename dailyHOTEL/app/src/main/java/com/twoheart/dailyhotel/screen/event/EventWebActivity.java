@@ -40,7 +40,6 @@ import com.twoheart.dailyhotel.screen.common.WebViewActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.CouponListActivity;
 import com.twoheart.dailyhotel.screen.mydaily.coupon.RegisterCouponActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
-import com.twoheart.dailyhotel.screen.mydaily.stamp.StampActivity;
 import com.twoheart.dailyhotel.screen.search.gourmet.result.GourmetSearchResultActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -82,7 +81,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
     {
         EVENT,
         HOME_EVENT,
-        STAMP,
     }
 
     Handler mHandler = new Handler();
@@ -323,7 +321,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
             }
 
             case CODE_REQUEST_ACTIVITY_COUPONLIST:
-            case CODE_REQUEST_ACTIVITY_STAMP:
                 if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
                 {
                     setResult(resultCode);
@@ -734,43 +731,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
         return true;
     }
 
-    boolean moveDeepLinkStamp(Context context, DailyDeepLink dailyDeepLink)
-    {
-        if (dailyDeepLink == null)
-        {
-            return false;
-        }
-
-        try
-        {
-            if (dailyDeepLink.isExternalDeepLink() == true)
-            {
-                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
-
-                if (mSourceType == SourceType.STAMP)
-                {
-                    finish();
-                } else
-                {
-                    Intent intent = StampActivity.newInstance(context, StampActivity.CallScreen.EVENT);
-                    startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAMP);
-                }
-            } else
-            {
-
-            }
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-            return false;
-        } finally
-        {
-            dailyDeepLink.clear();
-        }
-
-        return true;
-    }
-
     boolean moveDeepLinkReward(Context context, DailyDeepLink dailyDeepLink)
     {
         if (dailyDeepLink == null)
@@ -1090,12 +1050,6 @@ public class EventWebActivity extends WebViewActivity implements Constants
                             } else if (externalDeepLink.isRegisterCouponView() == true)
                             {
                                 if (moveDeepLinkRegisterCoupon(EventWebActivity.this, externalDeepLink) == true)
-                                {
-                                    return;
-                                }
-                            } else if (externalDeepLink.isStampView() == true)
-                            {
-                                if (moveDeepLinkStamp(EventWebActivity.this, externalDeepLink) == true)
                                 {
                                     return;
                                 }

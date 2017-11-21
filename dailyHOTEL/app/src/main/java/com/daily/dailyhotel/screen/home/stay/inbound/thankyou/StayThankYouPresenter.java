@@ -105,8 +105,6 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
 
         void onEventConfirmClick(Activity activity);
 
-        void onEventStampClick(Activity activity);
-
         void onEventBackClick(Activity activity);
 
         void onEventRecommendGourmetVisible(Activity activity, boolean hasData);
@@ -197,7 +195,6 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
         getViewInterface().setUserName(name);
 
         final String DATE_FORMAT = "yyyy.M.d (EEE) HH시";
-        //        final boolean stampEnable = isStampEnabled();
 
         try
         {
@@ -224,17 +221,6 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
             } else
             {
                 getViewInterface().setNoticeVisible(false);
-            }
-
-            // 스탬프를 보여주어야 하는 경우
-            if (isStampEnabled() == true)
-            {
-                getViewInterface().setStampMessages(DailyRemoteConfigPreference.getInstance(getActivity()).getRemoteConfigStampStayThankYouMessage1()//
-                    , DailyRemoteConfigPreference.getInstance(getActivity()).getRemoteConfigStampStayThankYouMessage2()//
-                    , DailyRemoteConfigPreference.getInstance(getActivity()).getRemoteConfigStampStayThankYouMessage3());
-            } else
-            {
-                getViewInterface().setStampVisible(false);
             }
         } catch (Exception e)
         {
@@ -482,21 +468,6 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
         mAnalytics.onEventConfirmClick(getActivity());
 
         startActivity(DailyInternalDeepLink.getStayBookingDetailScreenLink(getActivity(), mAggregationId));
-
-        finish();
-    }
-
-    @Override
-    public void onStampClick()
-    {
-        if (lock() == true)
-        {
-            return;
-        }
-
-        startActivity(DailyInternalDeepLink.getStampScreenLink(getActivity()));
-
-        mAnalytics.onEventStampClick(getActivity());
 
         finish();
     }
@@ -765,11 +736,6 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
         }
     }
 
-    private boolean isStampEnabled()
-    {
-        return DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStampEnabled() && mOverseas == false;
-    }
-
     private void setRewardInformation(RewardInformation rewardInformation)
     {
         mRewardInformation = rewardInformation;
@@ -826,7 +792,7 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
 
     void startInformationAnimation()
     {
-        getViewInterface().startRecommendNStampAnimation(new Animator.AnimatorListener()
+        getViewInterface().startRecommendAnimation(new Animator.AnimatorListener()
         {
             @Override
             public void onAnimationStart(Animator animation)
@@ -851,7 +817,7 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
             {
 
             }
-        }, isStampEnabled());
+        });
     }
 
     private void notifyRewardInformationChanged()

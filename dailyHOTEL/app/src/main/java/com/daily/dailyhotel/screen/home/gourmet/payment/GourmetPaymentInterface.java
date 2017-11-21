@@ -47,9 +47,6 @@ public interface GourmetPaymentInterface extends BaseDialogViewInterface
     void showAgreeTermDialog(DailyBookingPaymentTypeView.PaymentType paymentType, int[] messages//
         , View.OnClickListener onClickListener, DialogInterface.OnCancelListener cancelListener);
 
-    void showDatePickerDialog(String titleText, List<String> visitTimeList, String selectedVisitTime//
-        , View.OnClickListener onClickListener, DialogInterface.OnDismissListener dismissListener);
-
     void scrollTop();
 
     void setPersons(int count);

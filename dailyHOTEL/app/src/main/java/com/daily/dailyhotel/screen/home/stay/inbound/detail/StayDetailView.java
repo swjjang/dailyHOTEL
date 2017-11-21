@@ -61,13 +61,11 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayDetailDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogShareDataBinding;
-import com.twoheart.dailyhotel.databinding.DialogStampEventDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailAmenitiesDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailBenefitContentBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailBenefitDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailConciergeDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailMapDataBinding;
-import com.twoheart.dailyhotel.databinding.LayoutStayDetailStampDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayDetailWaitforbookingDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail05DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailInformationDataBinding;
@@ -138,8 +136,6 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         void onTrueVRClick();
 
         void onDownloadCouponClick();
-
-        void onStampClick();
 
         void onHideWishTooltipClick();
 
@@ -434,7 +430,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
     }
 
     @Override
-    public void setStayDetail(StayBookDateTime stayBookDateTime, StayDetail stayDetail, int trueReviewCount, boolean stampEnabled)
+    public void setStayDetail(StayBookDateTime stayBookDateTime, StayDetail stayDetail, int trueReviewCount)
     {
         if (getViewDataBinding() == null || stayBookDateTime == null || stayDetail == null)
         {
@@ -454,9 +450,6 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
 
         // 트루 리뷰
         setTrueReviewView(stayDetail.ratingShow, stayDetail.ratingValue, stayDetail.ratingPersons, trueReviewCount);
-
-        // 스템프
-        setStampView(stampEnabled);
 
         // 체크인/체크아웃
         setCheckDateView(stayBookDateTime);
@@ -1122,34 +1115,6 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
     }
 
     @Override
-    public void showStampDialog(Dialog.OnDismissListener listener)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        DialogStampEventDataBinding viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_stamp_event_data, null, false);
-
-        // 상단
-        viewDataBinding.titleTextView.setText(DailyRemoteConfigPreference.getInstance(getContext()).getRemoteConfigStampStayDetailPopupTitle());
-
-        // 메시지
-        viewDataBinding.messageTextView.setText(DailyRemoteConfigPreference.getInstance(getContext()).getRemoteConfigStampStayDetailPopupMessage());
-
-        viewDataBinding.confirmTextView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                hideSimpleDialog();
-            }
-        });
-
-        showSimpleDialog(viewDataBinding.getRoot(), null, listener, true);
-    }
-
-    @Override
     public void startCampaignStickerAnimation()
     {
         if (getViewDataBinding() == null || getViewDataBinding().rewardCardLayout.getVisibility() == View.GONE)
@@ -1395,49 +1360,6 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
             {
                 trueReviewView.setTrueReviewCountVisible(false);
             }
-        }
-    }
-
-    private void setStampView(boolean stampEnabled)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        LayoutStayDetailStampDataBinding viewDataBinding = getViewDataBinding().stampViewDataBinding;
-
-        if (stampEnabled)
-        {
-            // 테블릿 높이 수정 필요한지 확인
-            viewDataBinding.getRoot().setVisibility(View.VISIBLE);
-
-            String message1 = DailyRemoteConfigPreference.getInstance(getContext()).getRemoteConfigStampStayDetailMessage1();
-            String message2 = DailyRemoteConfigPreference.getInstance(getContext()).getRemoteConfigStampStayDetailMessage2();
-
-            boolean message3Enabled = DailyRemoteConfigPreference.getInstance(getContext()).isRemoteConfigStampStayDetailMessage3Enabled();
-
-            viewDataBinding.stampMessage1TextView.setText(message1);
-            viewDataBinding.stampMessage2TextView.setText(message2);
-
-            if (message3Enabled == true)
-            {
-                String message3 = DailyRemoteConfigPreference.getInstance(getContext()).getRemoteConfigStampStayDetailMessage3();
-
-                SpannableString spannableString3 = new SpannableString(message3);
-                spannableString3.setSpan(new UnderlineSpan(), 0, spannableString3.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                viewDataBinding.stampMessage3TextView.setVisibility(View.VISIBLE);
-                viewDataBinding.stampMessage3TextView.setText(spannableString3);
-                viewDataBinding.stampLayout.setOnClickListener(v -> getEventListener().onStampClick());
-            } else
-            {
-                viewDataBinding.stampMessage3TextView.setVisibility(View.GONE);
-                viewDataBinding.stampLayout.setOnClickListener(null);
-            }
-        } else
-        {
-            viewDataBinding.getRoot().setVisibility(View.GONE);
         }
     }
 
