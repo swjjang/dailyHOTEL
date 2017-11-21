@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.view.DailyBookingProductView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetBookingDetail;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
@@ -17,6 +18,7 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.Date;
+import java.util.Random;
 
 public class GourmetReservationDetailLayout extends PlaceReservationDetailLayout
 {
@@ -73,14 +75,20 @@ public class GourmetReservationDetailLayout extends PlaceReservationDetailLayout
         }
 
         TextView gourmetNameTextView = (TextView) view.findViewById(R.id.gourmetNameTextView);
-        TextView ticketTypeTextView = (TextView) view.findViewById(R.id.ticketTypeTextView);
-        TextView ticketCountTextView = (TextView) view.findViewById(R.id.ticketCountTextView);
         TextView addressTextView = (TextView) view.findViewById(R.id.addressTextView);
 
         gourmetNameTextView.setText(gourmetBookingDetail.placeName);
-        ticketTypeTextView.setText(gourmetBookingDetail.ticketName);
-        ticketCountTextView.setText(mContext.getString(R.string.label_booking_count, gourmetBookingDetail.ticketCount));
         addressTextView.setText(gourmetBookingDetail.address);
+
+        DailyBookingProductView productView = (DailyBookingProductView) view.findViewById(R.id.productInformationView);
+
+        // TODO : Test Code 서버 연결 작업 후 재 작업 필요.
+        int randPersons = new Random(5).nextInt() -1;
+        int tempPrice = gourmetBookingDetail.price;
+
+        productView.addInformation(gourmetBookingDetail.ticketName, gourmetBookingDetail.ticketCount, randPersons, tempPrice);
+        // TODO : 임시 두줄
+//        productView.addInformation(gourmetBookingDetail.ticketName +"\n" + gourmetBookingDetail.ticketName, gourmetBookingDetail.ticketCount, randPersons, tempPrice);
     }
 
     @Override
@@ -94,11 +102,11 @@ public class GourmetReservationDetailLayout extends PlaceReservationDetailLayout
         GourmetBookingDetail gourmetBookingDetail = (GourmetBookingDetail) placeBookingDetail;
 
         TextView ticketDateTextView = (TextView) view.findViewById(R.id.ticketDateTextView);
-        TextView ticketTimeTextView = (TextView) view.findViewById(R.id.ticketTimeTextView);
+        TextView visitPersonTextView = (TextView) view.findViewById(R.id.visitPersonTextView);
 
         try
         {
-            String ticketDateFormat = DailyCalendar.convertDateFormatString(gourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.M.d(EEE)");
+            String ticketDateFormat = DailyCalendar.convertDateFormatString(gourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.M.d(EEE) HH:mm");
             ticketDateTextView.setText(ticketDateFormat);
         } catch (Exception e)
         {
@@ -107,11 +115,12 @@ public class GourmetReservationDetailLayout extends PlaceReservationDetailLayout
 
         try
         {
-            String timeDateFormat = DailyCalendar.convertDateFormatString(gourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm");
-            ticketTimeTextView.setText(timeDateFormat);
+            // TODO : 임시 방문인원 - 서버 연결 시 추가 작업 예정
+            int persons = new Random(10).nextInt();
+            visitPersonTextView.setText(mContext.getString(R.string.label_booking_visit_persons_format, persons));
         } catch (Exception e)
         {
-            ticketTimeTextView.setText(null);
+            visitPersonTextView.setText(null);
         }
     }
 

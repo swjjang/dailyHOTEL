@@ -52,7 +52,15 @@ public class DailyBookingProductItemView extends ConstraintLayout
         mViewDataBinding.topLineView.setVisibility(isTopLineVisible == true ? View.VISIBLE : View.GONE);
         mViewDataBinding.titleTextView.setText(title);
         mViewDataBinding.countTextView.setText(getContext().getString(R.string.label_booking_count, count));
-        mViewDataBinding.personsTextView.setText(persons > 0 ? getContext().getString(R.string.label_persons, persons) : "");
+
+        if (persons > 0)
+        {
+            mViewDataBinding.personsTextView.setText(getContext().getString(R.string.label_persons, persons));
+            mViewDataBinding.personsTextView.setVisibility(View.VISIBLE);
+        } else {
+            mViewDataBinding.personsTextView.setText("");
+            mViewDataBinding.personsTextView.setVisibility(View.GONE);
+        }
 
         String priceString = DailyTextUtils.getPriceFormat(getContext(), price, false);
         mViewDataBinding.priceTextView.setText(priceString);

@@ -86,7 +86,7 @@
             android:background="@color/default_line_cdcdcdd"/>
 
         <LinearLayout
-            android:id="@+id/ticketTimeLayout"
+            android:id="@+id/visitPersonLayout"
             android:layout_width="0dp"
             android:layout_height="76dp"
             android:layout_weight="1"
@@ -96,12 +96,12 @@
             <com.daily.base.widget.DailyTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/label_booking_select_ticket_time"
+                android:text="@string/label_booking_visit_persons"
                 android:textColor="@color/default_text_c929292"
                 android:textSize="13dp"/>
 
             <com.daily.base.widget.DailyTextView
-                android:id="@+id/ticketTimeTextView"
+                android:id="@+id/visitPersonTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -154,65 +154,30 @@
             android:textSize="13dp"/>
     </LinearLayout>
 
-    <LinearLayout
+    <com.daily.base.widget.DailyTextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="36dp"
+        android:layout_height="36dp"
         android:paddingBottom="11dp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        android:paddingTop="11dp">
+        android:paddingTop="11dp"
+        android:gravity="left|center_vertical"
+        android:text="@string/frag_booking_tab_ticket_type"
+        android:textColor="@color/default_text_c929292"
+        android:textSize="13dp"/>
 
-        <com.daily.base.widget.DailyTextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.3"
-            android:text="@string/frag_booking_tab_ticket_type"
-            android:textColor="@color/default_text_c929292"
-            android:textSize="13dp"/>
-
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/ticketTypeTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.7"
-            android:gravity="right"
-            android:lineSpacingExtra="-2dp"
-            android:textColor="@color/default_text_c323232"
-            android:textSize="13dp"/>
-    </LinearLayout>
+    <com.daily.dailyhotel.view.DailyBookingProductView
+        android:id="@+id/productInformationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="36dp"
-        android:paddingBottom="11dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:paddingTop="11dp">
-
-        <com.daily.base.widget.DailyTextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.3"
-            android:text="@string/label_product_count"
-            android:textColor="@color/default_text_c929292"
-            android:textSize="13dp"/>
-
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/ticketCountTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.7"
-            android:gravity="right|center_vertical"
-            android:lineSpacingExtra="-2dp"
-            android:textColor="@color/default_text_c323232"
-            android:textSize="13dp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:minHeight="36dp"
         android:paddingBottom="11dp"
         android:paddingLeft="15dp"
