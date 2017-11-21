@@ -19,10 +19,16 @@
             app:layout_constraintTop_toTopOf="parent"
             dailyToolbar:underLineHeight="@dimen/gradient_1dp_line_height_under_21"/>
 
-        <com.daily.base.widget.DailyViewPager
-            android:id="@+id/viewPager"
+        <com.twoheart.dailyhotel.widget.DailyAnimatedExpandableListView
+            android:id="@+id/expandableListView"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:cacheColorHint="@android:color/transparent"
+            android:divider="@null"
+            android:fadingEdge="none"
+            android:groupIndicator="@android:color/transparent"
+            android:listSelector="@android:color/transparent"
+            android:smoothScrollbar="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
