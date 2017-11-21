@@ -41,6 +41,7 @@ import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.util.Random;
 import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
@@ -772,10 +773,12 @@ public class GourmetBookingCancelDetailPresenter //
 
         try
         {
-            String ticketDateFormat = DailyCalendar.convertDateFormatString(mGourmetBookingDetail.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.M.d(EEE)");
-            String timeDateFormat = DailyCalendar.convertDateFormatString(mGourmetBookingDetail.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm");
+            String ticketDateFormat = DailyCalendar.convertDateFormatString(mGourmetBookingDetail.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.M.d(EEE) HH:mm");
 
-            getViewInterface().setBookingDate(ticketDateFormat, timeDateFormat);
+            // TODO : 임시 방문인원 - 서버 연결 시 추가 작업 예정
+            int randPersons = new Random(10).nextInt();
+
+            getViewInterface().setBookingDateAndPersons(ticketDateFormat, randPersons);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

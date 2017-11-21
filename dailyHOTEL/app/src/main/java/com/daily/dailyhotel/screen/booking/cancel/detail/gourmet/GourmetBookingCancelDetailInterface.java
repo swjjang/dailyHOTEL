@@ -16,7 +16,7 @@ public interface GourmetBookingCancelDetailInterface extends BaseDialogViewInter
 
     Observable<Boolean> collapseMap();
 
-    void setBookingDate(String ticketDate, String ticketTime);
+    void setBookingDateAndPersons(String ticketDate, int persons);
 
     void showConciergeDialog(String restaurantPhone, Dialog.OnDismissListener listener);
 

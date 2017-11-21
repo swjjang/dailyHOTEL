@@ -58,6 +58,7 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.Locale;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -396,7 +397,7 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
     }
 
     @Override
-    public void setBookingDate(String ticketDate, String ticketTime)
+    public void setBookingDateAndPersons(String ticketDate, int persons)
     {
         if (getViewDataBinding() == null || mBookingCancelDetail01DataBinding == null)
         {
@@ -404,7 +405,7 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
         }
 
         mBookingCancelDetail01DataBinding.ticketDateTextView.setText(ticketDate);
-        mBookingCancelDetail01DataBinding.ticketTimeTextView.setText(ticketTime);
+        mBookingCancelDetail01DataBinding.visitPersonsTextView.setText(getString(R.string.label_booking_visit_persons_format, persons));
     }
 
     @Override
@@ -890,9 +891,15 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
         }
 
         dataBinding.gourmetNameTextView.setText(gourmetBookingDetail.gourmetName);
-        dataBinding.ticketTypeTextView.setText(gourmetBookingDetail.ticketName);
-        dataBinding.ticketCountTextView.setText(getContext().getString(R.string.label_booking_count, gourmetBookingDetail.ticketCount));
         dataBinding.addressTextView.setText(gourmetBookingDetail.gourmetAddress);
+
+        // TODO : Test Code 서버 연결 작업 후 재 작업 필요.
+        int randPersons = new Random(5).nextInt() - 1;
+        int tempPrice = gourmetBookingDetail.priceTotal;
+
+        dataBinding.productInformationView.addInformation(gourmetBookingDetail.ticketName, gourmetBookingDetail.ticketCount, randPersons, tempPrice);
+        // TODO : 임시 두줄
+//        dataBinding.productInformationView.addInformation(gourmetBookingDetail.ticketName + "\n" + gourmetBookingDetail.ticketName, gourmetBookingDetail.ticketCount, randPersons, tempPrice);
     }
 
     private void setGuestInformation(Context context, LayoutGourmetBookingCancelDetail01DataBinding dataBinding, GourmetBookingDetail gourmetBookingDetail)

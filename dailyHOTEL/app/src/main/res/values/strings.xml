@@ -601,7 +601,6 @@
     <string name="label_booking_ticket_type">상품 타입</string>
     <string name="label_booking_select_ticket_count">수량 선택</string>
     <string name="label_booking_checklist">확인사항 동의(필수)</string>
-    <string name="label_booking_select_ticket_time">방문시간</string>
     <string name="label_booking_visit_persons">방문 인원</string>
     <string name="label_booking_visit_persons_format">%1$d명</string>
     <string name="label_booking_user_info">예약자 정보</string>
