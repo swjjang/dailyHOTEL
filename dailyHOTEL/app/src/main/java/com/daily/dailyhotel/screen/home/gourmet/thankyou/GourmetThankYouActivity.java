@@ -20,18 +20,19 @@ public class GourmetThankYouActivity extends BaseActivity<GourmetThankYouPresent
 {
     static final String INTENT_EXTRA_DATA_AGGREGATION_ID = "aggregationId";
     static final String INTENT_EXTRA_DATA_GOURMET = "gourmetCart";
+    static final String INTENT_EXTRA_DATA_PERSONS = "persons";
 
-    public static Intent newInstance(Context context, GourmetCart gourmetCart, String aggregationId, GourmetThankYouAnalyticsParam analyticsParam)
+    public static Intent newInstance(Context context, GourmetCart gourmetCart, String aggregationId, int persons, GourmetThankYouAnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, GourmetThankYouActivity.class);
 
         intent.putExtra(INTENT_EXTRA_DATA_GOURMET, new GourmetCartParcel(gourmetCart));
         intent.putExtra(INTENT_EXTRA_DATA_AGGREGATION_ID, aggregationId);
+        intent.putExtra(INTENT_EXTRA_DATA_PERSONS, persons);
         intent.putExtra(INTENT_EXTRA_DATA_ANALYTICS, analyticsParam);
 
         return intent;
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

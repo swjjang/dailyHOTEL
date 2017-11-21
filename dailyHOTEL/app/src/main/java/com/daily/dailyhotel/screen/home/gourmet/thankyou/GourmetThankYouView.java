@@ -12,12 +12,15 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.FontManager;
 import com.daily.dailyhotel.animation.ThankYouScreenAnimator;
 import com.daily.dailyhotel.entity.GourmetCart;
+import com.daily.dailyhotel.entity.GourmetCartMenu;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityGourmetPaymentThankYouDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
+
+import java.util.Collection;
 
 public class GourmetThankYouView extends BaseDialogView<GourmetThankYouView.OnEventListener, ActivityGourmetPaymentThankYouDataBinding> implements GourmetThankYouInterface, View.OnClickListener
 {
@@ -95,7 +98,7 @@ public class GourmetThankYouView extends BaseDialogView<GourmetThankYouView.OnEv
     }
 
     @Override
-    public void setBooking(String visitDate, String visitTime, GourmetCart gourmetCart)
+    public void setBooking(String visitDate, int persons, GourmetCart gourmetCart)
     {
         if (getViewDataBinding() == null || gourmetCart == null)
         {
@@ -103,19 +106,31 @@ public class GourmetThankYouView extends BaseDialogView<GourmetThankYouView.OnEv
         }
 
         getViewDataBinding().thankYouInformationView.setDate1Text(getString(R.string.label_visit_day), visitDate);
-        getViewDataBinding().thankYouInformationView.setDate2Text(getString(R.string.label_booking_select_ticket_time), visitTime);
+
+        getViewDataBinding().thankYouInformationView.setDate2Text( //
+            getString(R.string.label_booking_visit_persons) //
+            , getString(R.string.label_booking_visit_persons_format, persons));
+
         getViewDataBinding().thankYouInformationView.setCenterNightsVisible(false);
 
         getViewDataBinding().thankYouInformationView.removeAllReservationInformation();
         getViewDataBinding().thankYouInformationView.addReservationInformation(getString(R.string.label_booking_place_name), gourmetCart.gourmetName);
-        getViewDataBinding().thankYouInformationView.addReservationInformation(getString(R.string.frag_booking_tab_ticket_type), null);
 
-//        if (productCount > 0)
-//        {
-//            getViewDataBinding().thankYouInformationView.addReservationInformation(getString(R.string.label_product_count), getString(R.string.label_booking_count, productCount));
-//        }
+        Collection<GourmetCartMenu> cartMenuList = gourmetCart.getMenuList();
 
-        getViewDataBinding().thankYouInformationView.setProductVisible(false);
+        if (cartMenuList == null || cartMenuList.size() == 0)
+        {
+            getViewDataBinding().thankYouInformationView.setProductVisible(false);
+        } else
+        {
+            getViewDataBinding().thankYouInformationView.addReservationInformation(getString(R.string.frag_booking_tab_ticket_type), null);
+            getViewDataBinding().thankYouInformationView.setProductVisible(true);
+
+            for (GourmetCartMenu menu : cartMenuList)
+            {
+                getViewDataBinding().thankYouInformationView.addProductInformation(menu.name, menu.count, menu.persons, menu.price);
+            }
+        }
     }
 
     @Override

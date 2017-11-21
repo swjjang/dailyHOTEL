@@ -37,6 +37,7 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
     private String mAggregationId;
     private GourmetBookDateTime mGourmetBookDateTime;
     private GourmetCart mGourmetCart;
+    private int mPersons;
 
     public interface GourmetThankYouAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -113,17 +114,9 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
 
         setGourmetBookDateTime(mGourmetCart.getVisitDateTime());
 
-//        mGourmetName = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_GOURMET_NAME);
-//        mImageUrl = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_IMAGE_URL);
-//
-//        String visitDateTime = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME);
-//
-//        setGourmetBookDateTime(visitDateTime);
-//
-//        mMenuName = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_MENU_NAME);
-//        mMenuCount = intent.getIntExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_MENU_COUNT, 0);
         mAggregationId = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_AGGREGATION_ID);
 
+        mPersons = intent.getIntExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_PERSONS, 0);
 
         mAnalytics.setAnalyticsParam(intent.getParcelableExtra(BaseActivity.INTENT_EXTRA_DATA_ANALYTICS));
 
@@ -141,15 +134,13 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
         String name = DailyUserPreference.getInstance(getActivity()).getName();
         getViewInterface().setUserName(name);
 
-        final String DATE_FORMAT = "yyyy.MM.dd(EEE)";
-        final String TIME_FORMAT = "HH:mm";
+        final String DATE_FORMAT = "yyyy.MM.dd(EEE) HH:mm";
 
         try
         {
             String visitDate = mGourmetBookDateTime.getVisitDateTime(DATE_FORMAT);
-            String visitTime = mGourmetBookDateTime.getVisitDateTime(TIME_FORMAT);
 
-            getViewInterface().setBooking(visitDate, visitTime, mGourmetCart);
+            getViewInterface().setBooking(visitDate, mPersons, mGourmetCart);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

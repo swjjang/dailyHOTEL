@@ -1294,7 +1294,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         startActivity(DailyInternalDeepLink.getHomeScreenLink(getActivity()));
 
         startActivityForResult(GourmetThankYouActivity.newInstance(getActivity(), mGourmetCart, aggregationId//
-            , mAnalytics.getThankYouAnalyticsParam())//
+            , mPersons, mAnalytics.getThankYouAnalyticsParam())//
             , GourmetPaymentActivity.REQUEST_CODE_THANK_YOU);
     }
 

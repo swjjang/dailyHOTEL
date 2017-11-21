@@ -11,7 +11,7 @@ public interface GourmetThankYouInterface extends BaseDialogViewInterface
 
     void setImageUrl(String imageUrl);
 
-    void setBooking(String visitDate, String visitTime, GourmetCart gourmetCart);
+    void setBooking(String visitDate, int persons, GourmetCart gourmetCart);
 
     void startAnimation(Animator.AnimatorListener listener);
 }

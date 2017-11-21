@@ -50,7 +50,7 @@ public class DailyBookingProductView extends LinearLayout
         setOrientation(LinearLayout.VERTICAL);
 
         int padding = ScreenUtils.dpToPx(context, 10d);
-        setPadding(padding, padding, padding, padding);
+        setPadding(padding, 0, padding, 0);
     }
 
     public int getItemCount()
@@ -60,7 +60,7 @@ public class DailyBookingProductView extends LinearLayout
 
     public void addInformation(String title, int count, int persons, int price)
     {
-        boolean isTopLineVisible = mItemCount == 0 ? true : false;
+        boolean isTopLineVisible = mItemCount == 0 ? false : true;
 
         mItemCount++;
 
