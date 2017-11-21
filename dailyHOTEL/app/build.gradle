@@ -234,6 +234,7 @@ dependencies {
     }
     compile 'com.facebook.android:facebook-core:4.+'
     compile 'com.facebook.android:facebook-login:4.+'
+    compile 'com.facebook.android:facebook-applinks:4.+'
 
     compile project(':AndroidMapsUtils')
     compile project(':androidnumberpicker')
