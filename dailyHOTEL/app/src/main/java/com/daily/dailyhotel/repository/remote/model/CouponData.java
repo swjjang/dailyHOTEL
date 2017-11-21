@@ -10,9 +10,6 @@ import com.twoheart.dailyhotel.model.Coupon;
 @JsonObject
 public class CouponData
 {
-    @JsonField(name = "userCouponCode")
-    public String userCouponCode; // (구 유저 쿠폰 코드 (이벤트 페이지의 쿠폰코드와 틀림),,
-
     @JsonField(name = "title")
     public String title; // 쿠폰명 ,,,
 
@@ -78,7 +75,6 @@ public class CouponData
     public Coupon getCoupon(String serverDate)
     {
         Coupon coupon = new Coupon();
-        coupon.userCouponCode = userCouponCode;
         coupon.title = title;
         coupon.description = description;
         coupon.couponCode = couponCode;

@@ -648,12 +648,12 @@ public class DailyMobileAPI
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    public void requestDownloadCoupon(String tag, String userCouponCode, Object listener)
+    public void requestDownloadCoupon(String tag, String couponCode, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/coupons/download"//
             : "MzMkNTYkMTgkODUkNTMkMzUkOTAkNTQkNyQyMyQxNiQyMCQ4MSQ2MiQ3NCQxMyQ=$QUE2NzVCFMUU5RNEFKCMjSQE3MOjUyRkFBOTVDMGCzlFN0M3QzkzM0VGMTAQO3QVzBMFMTJGMDhFDN0MxMUMHzNDc5RDY4NDLU5YNA==$";
 
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestDownloadCoupon(Crypto.getUrlDecoderEx(URL), userCouponCode);
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestDownloadCoupon(Crypto.getUrlDecoderEx(URL), couponCode);
         executorCallbackCall.setTag(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }

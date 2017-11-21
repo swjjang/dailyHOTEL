@@ -242,9 +242,9 @@ public class CouponListLayout extends BaseLayout
         }
     }
 
-    public Coupon getCoupon(String userCouponCode)
+    public Coupon getCoupon(String couponCode)
     {
-        return mListAdapter.getCoupon(userCouponCode);
+        return mListAdapter.getCoupon(couponCode);
     }
 
     CouponListAdapter.OnCouponItemListener mCouponItemListener = new CouponListAdapter.OnCouponItemListener()

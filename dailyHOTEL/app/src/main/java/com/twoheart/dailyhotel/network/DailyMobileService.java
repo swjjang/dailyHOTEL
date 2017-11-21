@@ -326,7 +326,7 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @PUT("{mobileAPI}")
-    Call<JSONObject> requestDownloadCoupon(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("userCouponCode") String userCouponCode);
+    Call<JSONObject> requestDownloadCoupon(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("couponCode") String couponCode);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @PUT("{mobileAPI}")

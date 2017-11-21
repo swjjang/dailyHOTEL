@@ -424,10 +424,10 @@ public interface IDailyNetwork
 
     /**
      * @param tag
-     * @param userCouponCode
+     * @param couponCode
      * @param listener
      */
-    void requestDownloadCoupon(String tag, String userCouponCode, Object listener);
+    void requestDownloadCoupon(String tag, String couponCode, Object listener);
 
     void requestHasCoupon(String tag, int placeIndex, String date, int nights, Object listener);
 

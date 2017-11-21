@@ -389,11 +389,11 @@ public class CouponListActivity extends BaseActivity
     private CouponListNetworkController.OnNetworkControllerListener mNetworkControllerListener = new CouponListNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onDownloadCoupon(String userCouponCode)
+        public void onDownloadCoupon(String couponCode)
         {
             lockUI();
 
-            Coupon coupon = mCouponListLayout.getCoupon(userCouponCode);
+            Coupon coupon = mCouponListLayout.getCoupon(couponCode);
             recordAnalytics(coupon);
 
             mCouponListNetworkController.requestCouponList();

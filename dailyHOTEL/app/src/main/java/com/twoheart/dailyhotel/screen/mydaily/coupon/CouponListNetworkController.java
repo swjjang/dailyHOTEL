@@ -30,9 +30,9 @@ public class CouponListNetworkController extends BaseNetworkController
         /**
          * 쿠폰 다운로드 결과
          *
-         * @param userCouponCode 사용자 쿠폰 고유코드
+         * @param couponCode 사용자 쿠폰 고유코드
          */
-        void onDownloadCoupon(String userCouponCode);
+        void onDownloadCoupon(String couponCode);
     }
 
     /**
@@ -51,7 +51,7 @@ public class CouponListNetworkController extends BaseNetworkController
             return;
         }
 
-        DailyMobileAPI.getInstance(mContext).requestDownloadCoupon(mNetworkTag, coupon.userCouponCode, mDownloadCouponCallback);
+        DailyMobileAPI.getInstance(mContext).requestDownloadCoupon(mNetworkTag, coupon.couponCode, mDownloadCouponCallback);
     }
 
     public CouponListNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -122,9 +122,9 @@ public class CouponListNetworkController extends BaseNetworkController
 
                     if (msgCode == 100)
                     {
-                        String userCouponCode = call.request().url().queryParameter("userCouponCode");
+                        String couponCode = call.request().url().queryParameter("couponCode");
 
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onDownloadCoupon(userCouponCode);
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onDownloadCoupon(couponCode);
                     } else
                     {
                         String message = responseJSONObject.getString("msg");
