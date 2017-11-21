@@ -93,7 +93,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mList = list;
     }
 
-    public Coupon getCoupon(String userCouponCode)
+    public Coupon getCoupon(String couponCode)
     {
         if (mList == null)
         {
@@ -102,7 +102,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         for (Coupon coupon : mList)
         {
-            if (coupon.userCouponCode.equalsIgnoreCase(userCouponCode) == true)
+            if (coupon.couponCode.equalsIgnoreCase(couponCode) == true)
             {
                 return coupon;
             }

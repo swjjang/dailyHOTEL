@@ -189,7 +189,7 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
         mIsSelectedMode = selected;
     }
 
-    public Coupon getCoupon(String userCouponCode)
+    public Coupon getCoupon(String couponCode)
     {
         if (mList == null)
         {
@@ -198,7 +198,7 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
 
         for (Coupon coupon : mList)
         {
-            if (coupon.userCouponCode.equalsIgnoreCase(userCouponCode) == true)
+            if (coupon.couponCode.equalsIgnoreCase(couponCode) == true)
             {
                 return coupon;
             }

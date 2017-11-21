@@ -3932,7 +3932,7 @@ public class DailyMobileAPITest
                     {
                         if (coupon.isDownloaded == false)
                         {
-                            requestDownloadCoupon(coupon.userCouponCode);
+                            requestDownloadCoupon(coupon.couponCode);
                             break;
                         }
                     }
@@ -4263,11 +4263,11 @@ public class DailyMobileAPITest
 
     // 다운로드 가능상태의 쿠폰이 없을 수도 있음으로 requestCouponList 이후에 진행하도록 함!
     @Ignore
-    public void requestDownloadCoupon(String userCouponCode) throws Exception
+    public void requestDownloadCoupon(String couponCode) throws Exception
     {
-        if (DailyTextUtils.isTextEmpty(userCouponCode) == true)
+        if (DailyTextUtils.isTextEmpty(couponCode) == true)
         {
-            assertThat("userCouponCode is null", false);
+            assertThat("couponCode is null", false);
             return;
         }
 
@@ -4307,7 +4307,7 @@ public class DailyMobileAPITest
             }
         };
 
-        DailyMobileAPI.getInstance(mContext).requestDownloadCoupon(mNetworkTag, userCouponCode, downloadCouponCallback);
+        DailyMobileAPI.getInstance(mContext).requestDownloadCoupon(mNetworkTag, couponCode, downloadCouponCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
