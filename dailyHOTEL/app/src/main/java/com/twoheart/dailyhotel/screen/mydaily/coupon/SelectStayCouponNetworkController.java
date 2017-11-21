@@ -29,9 +29,9 @@ public class SelectStayCouponNetworkController extends BaseNetworkController
         /**
          * 쿠폰 다운로드 결과
          *
-         * @param userCouponCode 사용자 고유 쿠폰코드
+         * @param couponCode 사용자 고유 쿠폰코드
          */
-        void onDownloadCoupon(String userCouponCode);
+        void onDownloadCoupon(String couponCode);
     }
 
     /**
@@ -67,7 +67,7 @@ public class SelectStayCouponNetworkController extends BaseNetworkController
             return;
         }
 
-        DailyMobileAPI.getInstance(mContext).requestDownloadCoupon(mNetworkTag, coupon.userCouponCode, mDownloadCallback);
+        DailyMobileAPI.getInstance(mContext).requestDownloadCoupon(mNetworkTag, coupon.couponCode, mDownloadCallback);
     }
 
     public SelectStayCouponNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
@@ -138,9 +138,9 @@ public class SelectStayCouponNetworkController extends BaseNetworkController
 
                     if (msgCode == 100)
                     {
-                        String userCouponCode = call.request().url().queryParameter("userCouponCode");
+                        String couponCode = call.request().url().queryParameter("couponCode");
 
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onDownloadCoupon(userCouponCode);
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onDownloadCoupon(couponCode);
                     } else
                     {
                         String message = responseJSONObject.getString("msg");
