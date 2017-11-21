@@ -232,7 +232,8 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
         transitive = true
     }
-    compile 'com.facebook.android:facebook-android-sdk:4.+'
+    compile 'com.facebook.android:facebook-core:4.+'
+    compile 'com.facebook.android:facebook-login:4.+'
 
     compile project(':AndroidMapsUtils')
     compile project(':androidnumberpicker')
