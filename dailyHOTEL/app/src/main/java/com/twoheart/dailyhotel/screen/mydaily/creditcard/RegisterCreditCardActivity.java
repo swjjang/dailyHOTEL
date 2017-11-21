@@ -19,7 +19,6 @@ import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.Setting;
-import com.twoheart.dailyhotel.network.IDailyNetwork;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
@@ -31,6 +30,9 @@ import java.util.Map;
 
 public class RegisterCreditCardActivity extends BaseActivity implements Constants
 {
+    private static final String URL_REGISTER_CREDIT_CARD = Constants.UNENCRYPTED_URL ? "api/user/session/billing/card/register" : "NTYkNjckNjkkMzQkOTMkNjQkMTI3JDgxJDkzJDExMCQxMTQkODgkMTIwJDgkNDQkNjUk$RjQ4MjE3LNTFBODVCQzVEQTExQTc2QTMwRDNMxRDYxOUOQyRTdCMjU4MkFGMOEZEOBDJBFNUNFYBMzM2RUY1DREU1NzGZGQUNOFMAjdBQkRDMUUyNDPY1MVjU0NWDhCNkFFQUM2OREY2QkU5$";
+
+
     public static Intent newInstance(Context context)
     {
         Intent intent = new Intent(context, RegisterCreditCardActivity.class);
@@ -83,10 +85,10 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
 
         if (Constants.DEBUG == true)
         {
-            url = DailyPreference.getInstance(this).getBaseUrl() + Crypto.getUrlDecoderEx(IDailyNetwork.URL_REGISTER_CREDIT_CARD);
+            url = DailyPreference.getInstance(this).getBaseUrl() + Crypto.getUrlDecoderEx(URL_REGISTER_CREDIT_CARD);
         } else
         {
-            url = Crypto.getUrlDecoderEx(Setting.getServerUrl()) + Crypto.getUrlDecoderEx(IDailyNetwork.URL_REGISTER_CREDIT_CARD);
+            url = Crypto.getUrlDecoderEx(Setting.getServerUrl()) + Crypto.getUrlDecoderEx(URL_REGISTER_CREDIT_CARD);
         }
 
         Map<String, String> headerMap = new HashMap<>();

@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ScrollView;
@@ -41,8 +40,6 @@ public class StayThankYouView extends BaseBlurView<StayThankYouView.OnEventListe
     {
         void onConfirmClick();
 
-        void onStampClick();
-
         void onRecommendGourmetViewAllClick();
 
         void onRecommendGourmetItemClick(View view);
@@ -70,7 +67,6 @@ public class StayThankYouView extends BaseBlurView<StayThankYouView.OnEventListe
 
         viewDataBinding.thankYouInformationView.setVisibility(View.INVISIBLE);
         viewDataBinding.checkImageView.setVisibility(View.INVISIBLE);
-        viewDataBinding.stampLayout.setVisibility(View.GONE);
         viewDataBinding.recommendGourmetLayout.setTitleText(R.string.label_booking_reservation_recommend_gourmet_title);
         viewDataBinding.recommendGourmetLayout.setVisibility(View.GONE);
         viewDataBinding.recommendGourmetLayout.setCarouselListener(new DailyCarouselLayout.OnCarouselListener()
@@ -207,7 +203,7 @@ public class StayThankYouView extends BaseBlurView<StayThankYouView.OnEventListe
     }
 
     @Override
-    public void startRecommendNStampAnimation(Animator.AnimatorListener listener, boolean stampEnable)
+    public void startRecommendAnimation(Animator.AnimatorListener listener)
     {
         if (getViewDataBinding() == null)
         {
@@ -215,7 +211,7 @@ public class StayThankYouView extends BaseBlurView<StayThankYouView.OnEventListe
         }
 
         boolean recommendGourmetEnable = getViewDataBinding().recommendGourmetLayout.hasData();
-        if (recommendGourmetEnable == false && stampEnable == false)
+        if (recommendGourmetEnable == false)
         {
             return;
         }
@@ -223,8 +219,7 @@ public class StayThankYouView extends BaseBlurView<StayThankYouView.OnEventListe
         ThankYouScaleAnimator animator;
 
         animator = new ThankYouScaleAnimator(getContext() //
-            , recommendGourmetEnable == true ? getViewDataBinding().recommendGourmetLayout : null //
-            , stampEnable == true ? getViewDataBinding().stampLayout : null);
+            , recommendGourmetEnable == true ? getViewDataBinding().recommendGourmetLayout : null);
 
         animator.setListener(listener);
         animator.start();
@@ -386,40 +381,6 @@ public class StayThankYouView extends BaseBlurView<StayThankYouView.OnEventListe
     }
 
     @Override
-    public void setStampVisible(boolean visible)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        getViewDataBinding().stampLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
-    }
-
-    @Override
-    public void setStampMessages(String message1, String message2, String message3)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        getViewDataBinding().message1TextView.setText(message1);
-        getViewDataBinding().message2TextView.setText(message2);
-
-        // SpannableString 자체가 null을 허용하지 않
-        if (DailyTextUtils.isTextEmpty(message3) == false)
-        {
-            SpannableString spannableString = new SpannableString(message3);
-            spannableString.setSpan(new UnderlineSpan(), 0, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            getViewDataBinding().message3TextView.setText(spannableString);
-        } else
-        {
-            getViewDataBinding().message3TextView.setText(null);
-        }
-    }
-
-    @Override
     public void setRecommendGourmetData(ArrayList<CarouselListItem> carouselListItemList)
     {
         if (getViewDataBinding() == null)
@@ -437,10 +398,6 @@ public class StayThankYouView extends BaseBlurView<StayThankYouView.OnEventListe
         {
             case R.id.confirmView:
                 getEventListener().onConfirmClick();
-                break;
-
-            case R.id.stampLayout:
-                getEventListener().onStampClick();
                 break;
         }
     }

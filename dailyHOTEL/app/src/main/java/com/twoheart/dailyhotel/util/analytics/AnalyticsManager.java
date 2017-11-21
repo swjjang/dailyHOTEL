@@ -721,10 +721,6 @@ public class AnalyticsManager
 
         public static final String GOURMET_MENU_DETAIL = "gourmet_menu_detail";
 
-        // Stamp
-        public static final String STAMP_DETAIL = "stamp_detail";
-        public static final String STAMP_HISTORY = "stamp_history";
-
         // TRUEREVIEW
         public static final String TRUE_REVIEW_LIST = "true_review_list";
 
@@ -1006,10 +1002,6 @@ public class AnalyticsManager
         public static final String GOURMET_TIME = "gourmet_time";
         public static final String GOURMET_AMENITIES = "gourmet_amenities";
         public static final String GOURMET_NO_RESULT = "gourmet_no_result";
-
-        public static final String STAMP_DETAIL_CLICK = "stamp_detail_click";
-        public static final String STAMP_MENU_CLICK = "stamp_menu_click";
-        public static final String STAMP_HISTORY_CLICK = "stamp_history_click";
 
         // AB Test
         public static final String HOME_MENU_BUTTON = "home_menu_button";
@@ -1414,7 +1406,6 @@ public class AnalyticsManager
 
         public static final String STAY_DETAIL_VIEW = "stay_detail_view";
         public static final String STAY_THANKYOU = "stay_thankyou";
-        public static final String STAMP_DETAIL = "stamp_detail";
 
         // AB Test
         public static final String CTA_VARIATION_A = "cta_variation_a";

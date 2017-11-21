@@ -120,10 +120,6 @@
                     android:layout_height="wrap_content"
                     android:visibility="gone"/>
 
-                <include
-                    android:id="@+id/stampViewDataBinding"
-                    layout="@layout/layout_stay_detail_stamp_data"/>
-
                 <View
                     android:id="@+id/dateInformationViewTopLineView"
                     android:layout_width="match_parent"

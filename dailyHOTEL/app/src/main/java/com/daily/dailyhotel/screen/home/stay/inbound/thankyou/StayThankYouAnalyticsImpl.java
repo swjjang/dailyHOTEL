@@ -127,18 +127,6 @@ public class StayThankYouAnalyticsImpl implements StayThankYouPresenter.StayThan
     }
 
     @Override
-    public void onEventStampClick(Activity activity)
-    {
-        if (activity == null)
-        {
-            return;
-        }
-
-        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION,//
-            AnalyticsManager.Action.STAMP_DETAIL_CLICK, AnalyticsManager.Label.STAY_THANKYOU, null);
-    }
-
-    @Override
     public void onEventBackClick(Activity activity)
     {
         if (activity == null)

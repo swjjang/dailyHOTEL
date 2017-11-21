@@ -33,7 +33,7 @@ public class DailyInternalDeepLink extends DailyDeepLink
 
     // 이동하는 딥링크 화면들
     private static final String VIEW_BOOKING_DETAIL = "bd"; // 예약 상세화면
-    private static final String VIEW_STAMP = "stamp"; // 스탬프.
+//    private static final String VIEW_STAMP = "stamp"; // 스탬프.
     private static final String VIEW_HOME = "home"; // 홈.
     private static final String VIEW_STAY_OUTBOUND_SEARCH_SUGGEST = "soss"; // stay outbound 검색어 입력 화면
 
@@ -103,11 +103,6 @@ public class DailyInternalDeepLink extends DailyDeepLink
     public boolean isBookingDetailView()
     {
         return VIEW_BOOKING_DETAIL.equalsIgnoreCase(getView());
-    }
-
-    public boolean isStampView()
-    {
-        return VIEW_STAMP.equalsIgnoreCase(getView());
     }
 
     public boolean isHomeView()
@@ -270,16 +265,6 @@ public class DailyInternalDeepLink extends DailyDeepLink
         stringBuilder.append("?" + PARAM_VIEW + "=" + VIEW_BOOKING_DETAIL);
         stringBuilder.append("&" + PARAM_PLACE_TYPE + "=" + GOURMET);
         stringBuilder.append("&" + PARAM_RESERVATION_INDEX + "=" + reservationIndex);
-
-        return getIntent(context, Uri.parse(stringBuilder.toString()));
-    }
-
-    public static Intent getStampScreenLink(Context context)
-    {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("dailyhotel://");
-        stringBuilder.append(HOST_INTERNAL_DAILYHOTEL);
-        stringBuilder.append("?" + PARAM_VIEW + "=" + VIEW_STAMP);
 
         return getIntent(context, Uri.parse(stringBuilder.toString()));
     }

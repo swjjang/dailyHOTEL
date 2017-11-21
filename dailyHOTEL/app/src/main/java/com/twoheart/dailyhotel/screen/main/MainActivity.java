@@ -541,7 +541,6 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
             case Constants.CODE_REQUEST_ACTIVITY_VIRTUAL_BOOKING_DETAIL:
             case Constants.CODE_REQUEST_ACTIVITY_COUPONLIST:
             case Constants.CODE_REQUEST_ACTIVITY_BONUS:
-            case Constants.CODE_REQUEST_ACTIVITY_STAMP:
             {
                 switch (resultCode)
                 {
@@ -1342,9 +1341,6 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                     } else if (internalDeepLink.isBookingDetailView() == true)
                     {
                         mMainFragmentManager.select(false, MainFragmentManager.INDEX_BOOKING_FRAGMENT, true, bundle);
-                    } else if (internalDeepLink.isStampView() == true)
-                    {
-                        mMainFragmentManager.select(false, MainFragmentManager.INDEX_MYDAILY_FRAGMENT, true, bundle);
                     } else if (internalDeepLink.isStayOutboundSearchSuggestView() == true)
                     {
                         mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, true, bundle);
@@ -1390,21 +1386,10 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                         || externalDeepLink.isRegisterCouponView() == true //
                         || externalDeepLink.isProfileView() == true//
                         || externalDeepLink.isProfileBirthdayView() == true//
-                        || externalDeepLink.isStampView() == true//
                         || externalDeepLink.isRewardView() == true//
                         )
                     {
-                        // 스탬프 이벤트가 종료되면 홈에서 팝업을 띄우고 종료시킨다.
-                        if (externalDeepLink.isStampView() == true)
-                        {
-                            if (DailyRemoteConfigPreference.getInstance(MainActivity.this).isRemoteConfigStampEnabled() == true)
-                            {
-                                mMainFragmentManager.select(false, MainFragmentManager.INDEX_MYDAILY_FRAGMENT, true, bundle);
-                            } else
-                            {
-                                mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, true, bundle);
-                            }
-                        } else if (externalDeepLink.isRewardView() == true)
+                       if (externalDeepLink.isRewardView() == true)
                         {
                             // 리워드 이벤트가 종료되면 리워드 화면에서 에러 처리
                             mMainFragmentManager.select(false, MainFragmentManager.INDEX_MYDAILY_FRAGMENT, true, bundle);

@@ -20,15 +20,11 @@ public interface StayThankYouInterface extends BaseBlurViewInterface
 
     void startReceiptAnimation(Animator.AnimatorListener listener);
 
-    void startRecommendNStampAnimation(Animator.AnimatorListener listener, boolean stampEnable);
+    void startRecommendAnimation(Animator.AnimatorListener listener);
 
     void setNoticeVisible(boolean visible);
 
     void setNoticeText(String notice);
-
-    void setStampVisible(boolean visible);
-
-    void setStampMessages(String message1, String message2, String message3);
 
     void setRecommendGourmetData(ArrayList<CarouselListItem> carouselListItemList);
 

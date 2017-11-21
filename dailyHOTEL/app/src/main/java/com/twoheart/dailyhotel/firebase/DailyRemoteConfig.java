@@ -106,7 +106,6 @@ public class DailyRemoteConfig
         String androidSplashImageUpdateTime = mFirebaseRemoteConfig.getString("androidSplashImageUpdateTime");
         String androidText = mFirebaseRemoteConfig.getString("androidText");
         String androidHomeEventDefaultLink = mFirebaseRemoteConfig.getString("androidHomeEventDefaultLink");
-        String androidStamp2 = mFirebaseRemoteConfig.getString("androidStamp2");
         String androidBoutiqueBM = mFirebaseRemoteConfig.getString("androidBoutiqueBM");
         String androidStaticUrl = mFirebaseRemoteConfig.getString("androidStaticUrl");
         String androidStayRankABTest = mFirebaseRemoteConfig.getString("androidStayRankABTest");
@@ -125,7 +124,6 @@ public class DailyRemoteConfig
                 ExLog.d("androidSplashImageUpdateTime : " + new JSONObject(androidSplashImageUpdateTime).toString());
                 ExLog.d("androidText : " + new JSONObject(androidText).toString());
                 ExLog.d("androidHomeEventDefaultLink : " + new JSONObject(androidHomeEventDefaultLink).toString());
-                ExLog.d("androidStamp2 : " + new JSONObject(androidStamp2).toString());
                 ExLog.d("androidBoutiqueBM : " + new JSONObject(androidBoutiqueBM).toString());
                 ExLog.d("androidStaticUrl : " + new JSONObject(androidStaticUrl).toString());
 
@@ -203,9 +201,6 @@ public class DailyRemoteConfig
 
         // default Event link
         writeHomeEventDefaultLink(mContext, androidHomeEventDefaultLink);
-
-        // Stamp
-        writeStamp(mContext, androidStamp2);
 
         // boutique BM - test BM
         writeBoutiqueBM(mContext, androidBoutiqueBM);
@@ -493,76 +488,6 @@ public class DailyRemoteConfig
         }
     }
 
-    void writeStamp(final Context context, String androidStamp)
-    {
-        if (context == null || DailyTextUtils.isTextEmpty(androidStamp) == true)
-        {
-            return;
-        }
-
-        try
-        {
-            JSONObject jsonObject = new JSONObject(androidStamp);
-
-            boolean enabled = jsonObject.getBoolean("enabled");
-
-            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigStampEnabled(enabled);
-
-            JSONObject stayDetailJSONObject = jsonObject.getJSONObject("stayDetail");
-
-            String stayDetailMessage1 = stayDetailJSONObject.getString("message1");
-            String stayDetailMessage2 = stayDetailJSONObject.getString("message2");
-
-            JSONObject stayDetailMessage3JSONObject = stayDetailJSONObject.getJSONObject("message3");
-            String stayDetailMessage3Text = stayDetailMessage3JSONObject.getString("text");
-            boolean stayDetailMessage3Enabled = stayDetailMessage3JSONObject.getBoolean("enabled");
-
-            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigStampStayDetailMessage(stayDetailMessage1, stayDetailMessage2, stayDetailMessage3Text, stayDetailMessage3Enabled);
-
-            JSONObject stayDetailPopupJSONObject = stayDetailJSONObject.getJSONObject("popup");
-
-            String stayDetailPopupTitle = stayDetailPopupJSONObject.getString("title");
-            String stayDetailPopupMessage = stayDetailPopupJSONObject.getString("message");
-
-            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigStampStayDetailPopup(stayDetailPopupTitle, stayDetailPopupMessage);
-
-            JSONObject stayThankYouJSONObject = jsonObject.getJSONObject("stayThankYou");
-
-            String stayThankYouMessage1 = stayThankYouJSONObject.getString("message1");
-            String stayThankYouMessage2 = stayThankYouJSONObject.getString("message2");
-            String stayThankYouMessage3 = stayThankYouJSONObject.getString("message3");
-
-            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigStampStayThankYouMessage(stayThankYouMessage1, stayThankYouMessage2, stayThankYouMessage3);
-
-            boolean endEventPopupEnabled = jsonObject.getBoolean("endEventPopupEnabled");
-
-            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigStampStayEndEventPopupEnabled(endEventPopupEnabled);
-
-            JSONArray stampDetailJSONArray = jsonObject.getJSONArray("stampDetail");
-
-            String date1 = stampDetailJSONArray.getString(0);
-
-            JSONArray stampHistoryJSONArray = jsonObject.getJSONArray("stampHistory");
-
-            String date2 = stampHistoryJSONArray.getString(0);
-            String date3 = stampHistoryJSONArray.getString(1);
-
-            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigStampDate(date1, date2, date3);
-
-            JSONObject homeJSONObject = jsonObject.getJSONObject("stampHome");
-
-            String homeMessage1 = homeJSONObject.getString("message1");
-            String homeMessage2 = homeJSONObject.getString("message2");
-            boolean homeEnabled = homeJSONObject.getBoolean("enabled");
-
-            DailyRemoteConfigPreference.getInstance(context).setRemoteConfigStampHomeMessage(homeMessage1, homeMessage2, homeEnabled);
-
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
-    }
-
     void writeBoutiqueBM(final Context context, String androidBoutiqueBM)
     {
         if (context == null || DailyTextUtils.isTextEmpty(androidBoutiqueBM) == true)
@@ -607,10 +532,8 @@ public class DailyRemoteConfig
             String devCouponNoteUrl = jsonObject.getString("devCouponNote");
             String faqUrl = jsonObject.getString("faq");
             String licenseUrl = jsonObject.getString("license");
-            String stampUrl = jsonObject.getString("stamp");
             String reviewUrl = jsonObject.getString("review");
             String lifeStyleProjectUrl = jsonObject.getString("lifeStyleProject");
-            String dailyStampHomeUrl = jsonObject.getString("dailyStampHome");
             String dailyReward = jsonObject.getString("dailyReward");
             String dailyRewardTerms = jsonObject.getString("dailyRewardTerms");
 
@@ -625,10 +548,8 @@ public class DailyRemoteConfig
             DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlDevCouponNote(devCouponNoteUrl);
             DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlFaq(faqUrl);
             DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlLicense(licenseUrl);
-            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlStamp(stampUrl);
             DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlReview(reviewUrl);
             DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlLifeStyleProject(lifeStyleProjectUrl);
-            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlDailyStampHome(dailyStampHomeUrl);
             DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlCollectPersonalInformation(collectPersonalInformation);
             DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlDailyReward(dailyReward);
             DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlDailyRewardTerms(dailyRewardTerms);

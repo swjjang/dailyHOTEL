@@ -60,23 +60,23 @@ public class DailyRemoteConfigPreference
     private static final String KEY_REMOTE_CONFIG_HOME_EVENT_INDEX = "317";
 
     // Stamp
-    private static final String KEY_REMOTE_CONFIG_STAMP_ENABLED = "318";
-    private static final String KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE1 = "319";
-    private static final String KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE2 = "320";
-    private static final String KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE3 = "321";
-    private static final String KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE3_ENABLED = "322";
-    private static final String KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_POPUP_TITLE = "323";
-    private static final String KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_POPUP_MESSAGE = "324";
-    private static final String KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_MESSAGE1 = "325";
-    private static final String KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_MESSAGE2 = "326";
-    private static final String KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_MESSAGE3 = "327";
-    private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_DATE1 = "328";
-    private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_DATE2 = "329";
-    private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_DATE3 = "330";
-    private static final String KEY_REMOTE_CONFIG_STAMP_END_EVENT_POPUP_ENABLED = "331";
-    private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_HOME_MESSAGE1 = "333";
-    private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_HOME_MESSAGE2 = "334";
-    private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_HOME_ENABLED = "335";
+    //    private static final String KEY_REMOTE_CONFIG_STAMP_ENABLED = "318";
+    //    private static final String KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE1 = "319";
+    //    private static final String KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE2 = "320";
+    //    private static final String KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE3 = "321";
+    //    private static final String KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE3_ENABLED = "322";
+    //    private static final String KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_POPUP_TITLE = "323";
+    //    private static final String KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_POPUP_MESSAGE = "324";
+    //    private static final String KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_MESSAGE1 = "325";
+    //    private static final String KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_MESSAGE2 = "326";
+    //    private static final String KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_MESSAGE3 = "327";
+    //    private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_DATE1 = "328";
+    //    private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_DATE2 = "329";
+    //    private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_DATE3 = "330";
+    //    private static final String KEY_REMOTE_CONFIG_STAMP_END_EVENT_POPUP_ENABLED = "331";
+    //    private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_HOME_MESSAGE1 = "333";
+    //    private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_HOME_MESSAGE2 = "334";
+    //    private static final String KEY_REMOTE_CONFIG_STAMP_STAMP_HOME_ENABLED = "335";
 
     // Home - Category
     private static final String KEY_REMOTE_CONFIG_HOME_CATEGORY_ENABLED = "332";
@@ -107,10 +107,10 @@ public class DailyRemoteConfigPreference
     private static final String KEY_REMOTE_CONFIG_STATIC_URL_DEVCOUPONNOTE = "378";
     private static final String KEY_REMOTE_CONFIG_STATIC_URL_FAQ = "379";
     private static final String KEY_REMOTE_CONFIG_STATIC_URL_LICENSE = "380";
-    private static final String KEY_REMOTE_CONFIG_STATIC_URL_STAMP = "381";
+    //    private static final String KEY_REMOTE_CONFIG_STATIC_URL_STAMP = "381";
     private static final String KEY_REMOTE_CONFIG_STATIC_URL_REVIEW = "382";
     private static final String KEY_REMOTE_CONFIG_STATIC_URL_LIFESTYLEPROJECT = "383";
-    private static final String KEY_REMOTE_CONFIG_STATIC_URL_DAILYSTAMPHOME = "384";
+//    private static final String KEY_REMOTE_CONFIG_STATIC_URL_DAILYSTAMPHOME = "384";
     private static final String KEY_REMOTE_CONFIG_STATIC_URL_COLLECTPERSONAL = "385";
     private static final String KEY_REMOTE_CONFIG_STATIC_URL_DAILYREWARD = "386";
     private static final String KEY_REMOTE_CONFIG_STATIC_URL_DAILYREWARD_TERMS = "387";
@@ -690,139 +690,9 @@ public class DailyRemoteConfigPreference
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_HOME_CATEGORY_ENABLED, false);
     }
 
-    public void setRemoteConfigStampEnabled(boolean enabled)
-    {
-        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_ENABLED, enabled);
-    }
-
-    public boolean isRemoteConfigStampEnabled()
-    {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_ENABLED, false);
-    }
-
-    public void setRemoteConfigStampStayDetailMessage(String message1, String message2, String message3, boolean message3Enabled)
-    {
-        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE1, message1);
-        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE2, message2);
-        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE3, message3);
-        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE3_ENABLED, message3Enabled);
-    }
-
-    public String getRemoteConfigStampStayDetailMessage1()
-    {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE1, null);
-    }
-
-    public String getRemoteConfigStampStayDetailMessage2()
-    {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE2, null);
-    }
-
-    public String getRemoteConfigStampStayDetailMessage3()
-    {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE3, null);
-    }
-
-    public boolean isRemoteConfigStampStayDetailMessage3Enabled()
-    {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_MESSAGE3_ENABLED, false);
-    }
-
-    public void setRemoteConfigStampStayDetailPopup(String title, String message)
-    {
-        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_POPUP_TITLE, title);
-        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_POPUP_MESSAGE, message);
-    }
-
-    public String getRemoteConfigStampStayDetailPopupTitle()
-    {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_POPUP_TITLE, null);
-    }
-
-    public String getRemoteConfigStampStayDetailPopupMessage()
-    {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAY_DETAIL_POPUP_MESSAGE, null);
-    }
-
-    public void setRemoteConfigStampStayThankYouMessage(String message1, String message2, String message3)
-    {
-        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_MESSAGE1, message1);
-        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_MESSAGE2, message2);
-        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_MESSAGE3, message3);
-    }
-
-    public String getRemoteConfigStampStayThankYouMessage1()
-    {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_MESSAGE1, null);
-    }
-
-    public String getRemoteConfigStampStayThankYouMessage2()
-    {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_MESSAGE2, null);
-    }
-
-    public String getRemoteConfigStampStayThankYouMessage3()
-    {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAY_THANKYOU_MESSAGE3, null);
-    }
-
-    public void setRemoteConfigStampStayEndEventPopupEnabled(boolean value)
-    {
-        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_END_EVENT_POPUP_ENABLED, value);
-    }
-
-    public boolean isRemoteConfigStampStayEndEventPopupEnabled()
-    {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_END_EVENT_POPUP_ENABLED, true);
-    }
-
-    public void setRemoteConfigStampDate(String date1, String date2, String date3)
-    {
-        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAMP_DATE1, date1);
-        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAMP_DATE2, date2);
-        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAMP_DATE3, date3);
-    }
-
-    public String getRemoteConfigStampDate1()
-    {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAMP_DATE1, null);
-    }
-
-    public String getRemoteConfigStampDate2()
-    {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAMP_DATE2, null);
-    }
-
-    public String getRemoteConfigStampDate3()
-    {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAMP_DATE3, null);
-    }
-
     public void setRemoteConfigUpdateOptional(String value)
     {
         setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_UPDATE_OPTIONAL, value);
-    }
-
-    public void setRemoteConfigStampHomeMessage(String message1, String message2, boolean enabled)
-    {
-        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAMP_HOME_MESSAGE1, message1);
-        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAMP_HOME_MESSAGE2, message2);
-        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STAMP_STAMP_HOME_ENABLED, enabled);
-    }
-
-    public String getRemoteConfigStampHomeMessage1()
-    {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAMP_HOME_MESSAGE1, null);
-    }
-
-    public String getRemoteConfigStampHomeMessage2()
-    {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAMP_HOME_MESSAGE2, null);
-    }
-
-    public boolean isRemoteConfigStampHomeEnabled()
-    {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STAMP_STAMP_HOME_ENABLED, false);
     }
 
     public String getRemoteConfigUpdateOptional()
@@ -1000,16 +870,6 @@ public class DailyRemoteConfigPreference
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_LICENSE, Crypto.getUrlDecoderEx(Constants.URL_WEB_LICNESE));
     }
 
-    public void setKeyRemoteConfigStaticUrlStamp(String value)
-    {
-        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STATIC_URL_STAMP, value);
-    }
-
-    public String getKeyRemoteConfigStaticUrlStamp()
-    {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_STAMP, Crypto.getUrlDecoderEx(Constants.URL_WEB_STAMP_TERMS));
-    }
-
     public void setKeyRemoteConfigStaticUrlReview(String value)
     {
         setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STATIC_URL_REVIEW, value);
@@ -1028,16 +888,6 @@ public class DailyRemoteConfigPreference
     public String getKeyRemoteConfigStaticUrlLifeStyleProject()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_LIFESTYLEPROJECT, Crypto.getUrlDecoderEx(Constants.URL_WEB_LIFESTYLE));
-    }
-
-    public void setKeyRemoteConfigStaticUrlDailyStampHome(String value)
-    {
-        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STATIC_URL_DAILYSTAMPHOME, value);
-    }
-
-    public String getKeyRemoteConfigStaticUrlDailyStampHome()
-    {
-        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_DAILYSTAMPHOME, Crypto.getUrlDecoderEx(Constants.URL_WEB_STAMP_EVENT));
     }
 
     public void setKeyRemoteConfigStaticUrlCollectPersonalInformation(String value)

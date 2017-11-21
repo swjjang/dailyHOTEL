@@ -16,7 +16,7 @@ public interface StayDetailViewInterface extends BaseDialogViewInterface
 
     Observable<Boolean> hideRoomList(boolean animation);
 
-    void setStayDetail(StayBookDateTime stayBookDateTime, StayDetail stayDetail, int trueReviewCount, boolean stampEnabled);
+    void setStayDetail(StayBookDateTime stayBookDateTime, StayDetail stayDetail, int trueReviewCount);
 
     void setRewardVisible(boolean visible);
 
@@ -57,8 +57,6 @@ public interface StayDetailViewInterface extends BaseDialogViewInterface
     void setTrueVRVisible(boolean visible);
 
     void showTrueVRDialog(CheckBox.OnCheckedChangeListener checkedChangeListener, View.OnClickListener positiveListener, Dialog.OnDismissListener onDismissListener);
-
-    void showStampDialog(Dialog.OnDismissListener listener);
 
     void startCampaignStickerAnimation();
 

@@ -14,7 +14,6 @@ import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.Recommendation;
-import com.twoheart.dailyhotel.network.model.Stamp;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 
@@ -41,8 +40,6 @@ public class HomeNetworkController extends BaseNetworkController
         void onWishList(ArrayList<CarouselListItem> list, boolean isError);
 
         void onRecommendationList(ArrayList<Recommendation> list, boolean isError);
-
-        void onStamps(int count, boolean isError);
     }
 
     public void requestEventList()
@@ -68,11 +65,6 @@ public class HomeNetworkController extends BaseNetworkController
     public void requestRecommendationList()
     {
         DailyMobileAPI.getInstance(mContext).requestRecommendationList(mNetworkTag, mRecommendationCallback);
-    }
-
-    public void requestUserStamps()
-    {
-        DailyMobileAPI.getInstance(mContext).requestUserStamps(mNetworkTag, false, mStampCallback);
     }
 
     private retrofit2.Callback mEventCallback = new retrofit2.Callback<BaseListDto<Event>>()
@@ -203,36 +195,6 @@ public class HomeNetworkController extends BaseNetworkController
         {
             mOnNetworkControllerListener.onError(call, t, true);
             ((HomeNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onWishList(null, true);
-        }
-    };
-
-    private retrofit2.Callback mStampCallback = new retrofit2.Callback<BaseDto<Stamp>>()
-    {
-        @Override
-        public void onResponse(Call<BaseDto<Stamp>> call, Response<BaseDto<Stamp>> response)
-        {
-            if (response != null && response.isSuccessful() && response.body() != null)
-            {
-                BaseDto<Stamp> baseDto = response.body();
-
-                if (baseDto.msgCode == 100)
-                {
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onStamps(baseDto.data.count, false);
-                } else
-                {
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onStamps(-1, false);
-                }
-            } else
-            {
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onStamps(-1, false);
-            }
-        }
-
-        @Override
-        public void onFailure(Call<BaseDto<Stamp>> call, Throwable t)
-        {
-            mOnNetworkControllerListener.onError(call, t, true);
-            ((OnNetworkControllerListener) mOnNetworkControllerListener).onStamps(-1, true);
         }
     };
 }

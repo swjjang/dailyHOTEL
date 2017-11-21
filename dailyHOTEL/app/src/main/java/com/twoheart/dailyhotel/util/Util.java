@@ -32,7 +32,6 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyToast;
@@ -56,8 +55,6 @@ import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Notice;
 import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-
-import net.simonvt.numberpicker.NumberPicker;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -562,102 +559,102 @@ public class Util implements Constants
         return null;
     }
 
-    public static Dialog showDatePickerDialog(BaseActivity baseActivity, String titleText, final String[] values, String selectValue, String positive //
-        , final View.OnClickListener positiveListener)
-    {
-        if (baseActivity == null || baseActivity.isFinishing() == true)
-        {
-            return null;
-        }
-
-        final Dialog dialog = new Dialog(baseActivity);
-
-        LayoutInflater layoutInflater = (LayoutInflater) baseActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View dialogView = layoutInflater.inflate(R.layout.view_pickerdialog_layout, null, false);
-
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        dialog.setCanceledOnTouchOutside(false);
-
-        // 상단
-        TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
-        titleTextView.setVisibility(View.VISIBLE);
-
-        if (DailyTextUtils.isTextEmpty(titleText) == true)
-        {
-            titleTextView.setText(baseActivity.getString(R.string.dialog_notice2));
-        } else
-        {
-            titleTextView.setText(titleText);
-        }
-
-        // 메시지
-        final NumberPicker numberPicker = (NumberPicker) dialogView.findViewById(R.id.numberPicker);
-        numberPicker.setMinValue(0);
-        numberPicker.setMaxValue(values.length - 1);
-        numberPicker.setFocusable(true);
-        numberPicker.setFocusableInTouchMode(true);
-        numberPicker.setDisplayedValues(values);
-        numberPicker.setTextTypeface(FontManager.getInstance(baseActivity).getRegularTypeface());
-
-        for (int i = 0; i < values.length; i++)
-        {
-            if (values[i].equalsIgnoreCase(selectValue) == true)
-            {
-                numberPicker.setValue(i);
-                break;
-            }
-        }
-
-        // 버튼
-        View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
-        View oneButtonLayout = buttonLayout.findViewById(R.id.oneButtonLayout);
-        oneButtonLayout.setVisibility(View.VISIBLE);
-
-        TextView confirmTextView = (TextView) oneButtonLayout.findViewById(R.id.confirmTextView);
-
-        confirmTextView.setText(positive);
-        confirmTextView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (dialog.isShowing() == true)
-                {
-                    dialog.dismiss();
-                }
-
-                if (positiveListener != null)
-                {
-                    v.setTag(numberPicker.getValue());
-                    positiveListener.onClick(v);
-                }
-            }
-        });
-
-        dialog.setContentView(dialogView);
-
-        if (baseActivity.isFinishing() == true)
-        {
-            return null;
-        }
-
-        try
-        {
-            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(baseActivity, dialog);
-
-            dialog.show();
-
-            dialog.getWindow().setAttributes(layoutParams);
-
-            return dialog;
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-
-        return null;
-    }
+    //    public static Dialog showDatePickerDialog(BaseActivity baseActivity, String titleText, final String[] values, String selectValue, String positive //
+    //        , final View.OnClickListener positiveListener)
+    //    {
+    //        if (baseActivity == null || baseActivity.isFinishing() == true)
+    //        {
+    //            return null;
+    //        }
+    //
+    //        final Dialog dialog = new Dialog(baseActivity);
+    //
+    //        LayoutInflater layoutInflater = (LayoutInflater) baseActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    //        View dialogView = layoutInflater.inflate(R.layout.view_pickerdialog_layout, null, false);
+    //
+    //        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    //        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+    //        dialog.setCanceledOnTouchOutside(false);
+    //
+    //        // 상단
+    //        TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
+    //        titleTextView.setVisibility(View.VISIBLE);
+    //
+    //        if (DailyTextUtils.isTextEmpty(titleText) == true)
+    //        {
+    //            titleTextView.setText(baseActivity.getString(R.string.dialog_notice2));
+    //        } else
+    //        {
+    //            titleTextView.setText(titleText);
+    //        }
+    //
+    //        // 메시지
+    //        final NumberPicker numberPicker = (NumberPicker) dialogView.findViewById(R.id.numberPicker);
+    //        numberPicker.setMinValue(0);
+    //        numberPicker.setMaxValue(values.length - 1);
+    //        numberPicker.setFocusable(true);
+    //        numberPicker.setFocusableInTouchMode(true);
+    //        numberPicker.setDisplayedValues(values);
+    //        numberPicker.setTextTypeface(FontManager.getInstance(baseActivity).getRegularTypeface());
+    //
+    //        for (int i = 0; i < values.length; i++)
+    //        {
+    //            if (values[i].equalsIgnoreCase(selectValue) == true)
+    //            {
+    //                numberPicker.setValue(i);
+    //                break;
+    //            }
+    //        }
+    //
+    //        // 버튼
+    //        View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
+    //        View oneButtonLayout = buttonLayout.findViewById(R.id.oneButtonLayout);
+    //        oneButtonLayout.setVisibility(View.VISIBLE);
+    //
+    //        TextView confirmTextView = (TextView) oneButtonLayout.findViewById(R.id.confirmTextView);
+    //
+    //        confirmTextView.setText(positive);
+    //        confirmTextView.setOnClickListener(new View.OnClickListener()
+    //        {
+    //            @Override
+    //            public void onClick(View v)
+    //            {
+    //                if (dialog.isShowing() == true)
+    //                {
+    //                    dialog.dismiss();
+    //                }
+    //
+    //                if (positiveListener != null)
+    //                {
+    //                    v.setTag(numberPicker.getValue());
+    //                    positiveListener.onClick(v);
+    //                }
+    //            }
+    //        });
+    //
+    //        dialog.setContentView(dialogView);
+    //
+    //        if (baseActivity.isFinishing() == true)
+    //        {
+    //            return null;
+    //        }
+    //
+    //        try
+    //        {
+    //            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(baseActivity, dialog);
+    //
+    //            dialog.show();
+    //
+    //            dialog.getWindow().setAttributes(layoutParams);
+    //
+    //            return dialog;
+    //        } catch (Exception e)
+    //        {
+    //            ExLog.d(e.toString());
+    //        }
+    //
+    //        return null;
+    //    }
 
     public static String addHyphenMobileNumber(Context context, String mobileNumber)
     {
@@ -1072,17 +1069,6 @@ public class Util implements Constants
 
         String[] versions = version.split("\\+");
         return "image" + "_" + versions[0].replaceAll(REMOVE_CHARACTER, "");
-    }
-
-    public static String makeStampStayThankYpuImageFileName(String version)
-    {
-        if (DailyTextUtils.isTextEmpty(version) == true)
-        {
-            return "daily_stamp_stay";
-        }
-
-        String[] versions = version.split("\\+");
-        return "stamp_stay_image" + "_" + versions[0].replaceAll(REMOVE_CHARACTER, "");
     }
 
     public static boolean isSktNetwork(Context context)

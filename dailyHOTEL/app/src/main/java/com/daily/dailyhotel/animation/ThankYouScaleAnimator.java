@@ -20,16 +20,14 @@ import java.util.Collection;
 public class ThankYouScaleAnimator
 {
     private Context mContext;
-    private View mStampView;
     private View mRecommendGourmetView;
 
     Animator.AnimatorListener mAnimatorListener;
 
-    public ThankYouScaleAnimator(Context context, View recommendGourmetView, View stampView)
+    public ThankYouScaleAnimator(Context context, View recommendGourmetView)
     {
         mContext = context;
         mRecommendGourmetView = recommendGourmetView;
-        mStampView = stampView;
     }
 
     public void setListener(Animator.AnimatorListener listener)
@@ -55,13 +53,6 @@ public class ThankYouScaleAnimator
         }
 
         Collection animatorList = new ArrayList<>();
-
-        if (mStampView != null)
-        {
-            ObjectAnimator stampAnimator = getScaleAnimation(mContext, mStampView);
-            stampAnimator.setDuration(animationDuration);
-            animatorList.add(stampAnimator);
-        }
 
         if (mRecommendGourmetView != null)
         {
