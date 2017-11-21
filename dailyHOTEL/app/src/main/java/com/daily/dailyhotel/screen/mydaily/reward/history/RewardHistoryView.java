@@ -40,6 +40,8 @@ public class RewardHistoryView extends BaseDialogView<RewardHistoryView.OnEventL
         initToolbar(viewDataBinding);
 
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.recyclerView, getColor(R.color.default_over_scroll_edge));
+
+        viewDataBinding.homeImageView.setOnClickListener(v -> getEventListener().onHomeClick());
     }
 
     @Override
@@ -93,12 +95,6 @@ public class RewardHistoryView extends BaseDialogView<RewardHistoryView.OnEventL
                     {
                         getEventListener().onViewReservationClick(objectItem.getItem());
                     }
-                }
-
-                @Override
-                public void onHomeClick()
-                {
-                    getEventListener().onHomeClick();
                 }
             });
         }

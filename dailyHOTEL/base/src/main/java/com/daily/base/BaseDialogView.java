@@ -16,6 +16,7 @@ import com.daily.base.databinding.DialogLayoutDataBinding;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
+import com.daily.base.widget.DailyToast;
 
 public abstract class BaseDialogView<T1 extends OnBaseEventListener, T2 extends ViewDataBinding> extends BaseView<T1, T2> implements BaseDialogViewInterface
 {
@@ -175,6 +176,18 @@ public abstract class BaseDialogView<T1 extends OnBaseEventListener, T2 extends 
         }
 
         showSimpleDialog(dataBinding.getRoot(), cancelListener, dismissListener, cancelable);
+    }
+
+    @Override
+    public void showToast(String message, int duration)
+    {
+        DailyToast.showToast(getContext(), message, duration);
+    }
+
+    @Override
+    public void showToast(int messageResId, int duration)
+    {
+        DailyToast.showToast(getContext(), messageResId, duration);
     }
 
     protected void showSimpleDialog(String titleText, String msg, String checkBoxText, String positive, String negative//

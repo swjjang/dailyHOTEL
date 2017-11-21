@@ -574,6 +574,9 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 notifyEasyCardChanged();
                 notifyStayOutboundPaymentChanged();
 
+                // 위의 리워드 스티커 여부와 정책 여부에 따라서 순서 및 단어가 바뀐다.
+                notifyRefundPolicyChanged();
+
                 // 가격이 변동된 경우
                 if (mRoomPrice != mStayOutboundPayment.totalPrice)
                 {
@@ -1342,7 +1345,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             {
                 getViewInterface().setCheeringMessage(true//
                     , getString(R.string.message_booking_reward_cheering_title01, stayOutboundPayment.providableRewardStickerCount)//
-                    , getString(R.string.message_booking_reward_cheering_warning02));
+                    , getString(R.string.message_booking_reward_cheering_warning));
 
                 getViewInterface().setDepositStickerVisible(true);
                 getViewInterface().setDepositStickerCardVisible(true);
@@ -1580,8 +1583,18 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         {
             ExLog.d(e.toString());
         }
+    }
 
-        getViewInterface().setRefundPolicyList(mStayOutboundPayment.getRefundPolicyList());
+    void notifyRefundPolicyChanged()
+    {
+        if (mStayOutboundPayment == null)
+        {
+            return;
+        }
+
+        boolean hasRewardCard = mStayOutboundPayment.activeReward == true && mStayOutboundPayment.provideRewardSticker == true && mStayOutboundPayment.totalPrice >= MIN_AMOUNT_FOR_REWARD_USAGE;
+
+        getViewInterface().setRefundPolicyList(mStayOutboundPayment.getRefundPolicyList(), hasRewardCard);
     }
 
     void setStayOutboundPayment(StayOutboundPayment stayOutboundPayment)

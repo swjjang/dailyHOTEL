@@ -626,7 +626,9 @@
     <string name="label_booking_step3">3. 결제수단</string>
     <string name="label_booking_step4">4. 스티커 적립</string>
     <string name="label_booking_step4_empty_reward">4. 취소 규정 및 동의사항</string>
+    <string name="label_booking_step4_empty_reward_empty_refund">4. 동의사항</string>
     <string name="label_booking_step5">5. 취소 규정 및 동의사항</string>
+    <string name="label_booking_step5_empty_refund">5. 동의사항</string>
     <string name="label_booking_required_fileds">(필수입력 사항)</string>
     <string name="label_booking_refund_policy">취소 및 환불 규정</string>
     <string name="label_gourmet_payment_number_of_persons">%1$d명</string>
@@ -785,8 +787,7 @@
 
     <string name="message_booking_reward_cheering_title01">예약을 완료하시면 스티커 %1$d개가 추가 적립됩니다.</string>
     <string name="message_booking_reward_cheering_title02">스티커 적립을 할수 없는 예약입니다.</string>
-    <string name="message_booking_reward_cheering_warning01">(적립금, 할인쿠폰, 휴대폰 결제 수단 선택 시 적립 불가)</string>
-    <string name="message_booking_reward_cheering_warning02">(적립금, 휴대폰 결제 수단 선택 시 적립 불가)</string>
+    <string name="message_booking_reward_cheering_warning">(적립금, 할인쿠폰, 휴대폰 결제 수단 선택 시 적립 불가)</string>
     <string name="message_booking_reward_warning01">(4만원 이상 결제, 적립금/할인쿠폰 미사용, 휴대폰 외 결제 수단 선택시 사용 가능)</string>
     <string name="message_booking_reward_warning02">(4만원 이상 결제, 적립금 미사용, 휴대폰 외 결제 수단 선택시 사용 가능)</string>
 
@@ -1155,6 +1156,9 @@
 
     <string name="message_detail_please_login">앱 로그인하고\n할인쿠폰 다운로드하세요.</string>
     <string name="message_detail_nrd">특가상품으로 변경, 취소, 환불이 불가합니다.</string>
+
+    <string name="message_gourmet_detail_max_quantity">한번에 구매가능한 최대수량은 %1$d개입니다.</string>
+    <string name="message_gourmet_detail_not_enough_quantity">남은 수량이 부족하여 구매하실 수 없습니다.</string>
 
     <string name="message_tmap_navi_failed">T맵 연결이 원활하지 않습니다.\n다른 길찾기 앱을 이용하시거나\n잠시 후 다시 시도해주세요.</string>
     <string name="message_stay_detail_nrd">특가상품으로 설정된 객실은 위 내용과 상관없이 예약의 변경, 취소, 환불이 불가합니다.</string>

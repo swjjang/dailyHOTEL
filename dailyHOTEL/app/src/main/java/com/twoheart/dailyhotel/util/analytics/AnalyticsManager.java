@@ -1131,6 +1131,9 @@ public class AnalyticsManager
         public static final String REWARD_HISTORY_SEE_RESERVATION = "reward_history_see_reservation";
 
         public static final String PRIVACY = "privacy";
+
+        // MULTI
+        public static final String BOOKINGCLICKED_ = "BookingClicked_";
     }
 
     public static class Category
@@ -1453,6 +1456,12 @@ public class AnalyticsManager
         public static final String BOTH = "both";
 
         public static final String POPED_UP = "poped_up";
+
+        public static final String AVAILABLE_TIME = "available_time";
+        public static final String MULTI = "Multi";
+        public static final String SINGLE = "Single";
+        public static final String FULL_TIME = "전체시간";
+        public static final String SELECT_TIME = "특정시간";
     }
 
     public static class UserType

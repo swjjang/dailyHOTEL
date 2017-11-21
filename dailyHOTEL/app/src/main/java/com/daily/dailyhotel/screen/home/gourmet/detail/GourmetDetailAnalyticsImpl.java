@@ -522,6 +522,18 @@ public class GourmetDetailAnalyticsImpl implements GourmetDetailPresenter.Gourme
     }
 
     @Override
+    public void onEventVisitTimeClick(Activity activity, String time)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS,//
+            AnalyticsManager.Label.AVAILABLE_TIME, time, null);
+    }
+
+    @Override
     public GourmetPaymentAnalyticsParam getStayPaymentAnalyticsParam(GourmetDetail gourmetDetail, GourmetCart gourmetCart)
     {
         GourmetPaymentAnalyticsParam analyticsParam = new GourmetPaymentAnalyticsParam();

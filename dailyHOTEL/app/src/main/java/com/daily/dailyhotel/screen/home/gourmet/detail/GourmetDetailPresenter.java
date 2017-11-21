@@ -200,6 +200,8 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         void onEventShowTrueReview(Activity activity, int gourmetIndex);
 
         void onEventShowCoupon(Activity activity, int gourmetIndex);
+
+        void onEventVisitTimeClick(Activity activity, String time);
     }
 
     public GourmetDetailPresenter(@NonNull GourmetDetailActivity activity)
@@ -1379,6 +1381,14 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         notifyOperationTimeChanged();
 
         unLockAll();
+
+        if (visitTime == FULL_TIME)
+        {
+            mAnalytics.onEventVisitTimeClick(getActivity(), AnalyticsManager.Label.FULL_TIME);
+        } else
+        {
+            mAnalytics.onEventVisitTimeClick(getActivity(), AnalyticsManager.Label.SELECT_TIME);
+        }
     }
 
     @Override
@@ -1973,7 +1983,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                     {
                         String message = getString(R.string.message_gourmet_product_detail_after_visit_day);
 
-                        addCompositeDisposable(mCartLocalImpl.clearGourmetCart().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                        addCompositeDisposable(mCartLocalImpl.clearGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                         {
                             @Override
                             public void accept(Boolean aBoolean) throws Exception
@@ -1995,7 +2005,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                     {
                         String message = getString(R.string.message_gourmet_product_detail_insufficient_quantity);
 
-                        addCompositeDisposable(mCartLocalImpl.clearGourmetCart().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                        addCompositeDisposable(mCartLocalImpl.clearGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                         {
                             @Override
                             public void accept(Boolean aBoolean) throws Exception
@@ -2126,7 +2136,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
      */
     private int validGourmetCart(GourmetCart gourmetCart)
     {
-        if (gourmetCart == null)
+        if (gourmetCart == null || gourmetCart.getMenuCount() == 0)
         {
             return VALID_GOURMET_CART_DEFAULT;
         }

@@ -2,7 +2,6 @@ package com.daily.base;
 
 import android.content.DialogInterface;
 import android.view.View;
-import android.view.ViewGroup;
 
 public interface BaseDialogViewInterface extends BaseViewInterface
 {
@@ -40,4 +39,8 @@ public interface BaseDialogViewInterface extends BaseViewInterface
         , DialogInterface.OnCancelListener cancelListener//
         , DialogInterface.OnDismissListener dismissListener//
         , boolean isCancelable);
+
+    void showToast(String message, int duration);
+
+    void showToast(int messageResId, int duration);
 }

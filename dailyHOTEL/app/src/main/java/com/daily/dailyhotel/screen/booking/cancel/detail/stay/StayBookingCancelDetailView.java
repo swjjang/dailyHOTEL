@@ -545,7 +545,7 @@ public class StayBookingCancelDetailView extends BaseDialogView<StayBookingCance
     @Override
     public Observable<Long> getLocationAnimation()
     {
-        return Observable.interval(1, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread()).subscribeOn(AndroidSchedulers.mainThread()).doOnNext(new Consumer<Long>()
+        return Observable.interval(1, TimeUnit.SECONDS).subscribeOn(AndroidSchedulers.mainThread()).observeOn(AndroidSchedulers.mainThread()).doOnNext(new Consumer<Long>()
         {
             @Override
             public void accept(@NonNull Long time) throws Exception
