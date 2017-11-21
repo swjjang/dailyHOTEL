@@ -33,7 +33,7 @@ public class DailyInternalDeepLink extends DailyDeepLink
 
     // 이동하는 딥링크 화면들
     private static final String VIEW_BOOKING_DETAIL = "bd"; // 예약 상세화면
-//    private static final String VIEW_STAMP = "stamp"; // 스탬프.
+    //    private static final String VIEW_STAMP = "stamp"; // 스탬프.
     private static final String VIEW_HOME = "home"; // 홈.
     private static final String VIEW_STAY_OUTBOUND_SEARCH_SUGGEST = "soss"; // stay outbound 검색어 입력 화면
 

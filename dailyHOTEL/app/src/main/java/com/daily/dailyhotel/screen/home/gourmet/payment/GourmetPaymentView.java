@@ -21,8 +21,6 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
-import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyScrollView;
 import com.daily.dailyhotel.entity.Card;
@@ -36,15 +34,11 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityGourmetPaymentDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetPaymentMenuDataBinding;
 import com.twoheart.dailyhotel.screen.common.FinalCheckLayout;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailySignatureView;
 
-import net.simonvt.numberpicker.NumberPicker;
-
 import java.util.Collection;
-import java.util.List;
 
 public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEventListener, ActivityGourmetPaymentDataBinding>//
     implements GourmetPaymentInterface, View.OnClickListener
@@ -547,6 +541,7 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
         }
 
         getViewDataBinding().informationView.setDiscountTypeVisible(false, true);
+        getViewDataBinding().informationView.setDepositStickerVisible(false);
 
         setBonusSelected(false);
         setCouponSelected(false);
@@ -592,6 +587,8 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
         {
             return;
         }
+
+        getViewDataBinding().refundPolicyView.setRefundPolicyList(null);
 
         getViewDataBinding().agreementThirdPartyView.setOnAgreementClickListener(new DailyBookingAgreementThirdPartyView.OnAgreementClickListener()
         {

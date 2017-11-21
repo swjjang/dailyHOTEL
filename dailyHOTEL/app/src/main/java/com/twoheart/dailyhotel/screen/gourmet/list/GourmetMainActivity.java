@@ -557,6 +557,9 @@ public class GourmetMainActivity extends PlaceMainActivity
         }
 
         startActivity(GourmetPaymentActivity.newInstance(this, gourmetCart, null));
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS,//
+            AnalyticsManager.Action.SHORTCUT_ORDER, Integer.toString(gourmetCart.gourmetIndex), null);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

@@ -69,7 +69,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
     private static final String HOME_V12_EVENT_DETAIL = "hed"; // 홈의 이벤트 상세화면
     private static final String HOME_V12_RECOMMENDATION_PLACE_LIST = "hrpl"; // 홈의 데일리 추천 -> 상세 리스트
 
-//    private static final String STAMP_V14 = "stamp"; // 스탬프.
+    //    private static final String STAMP_V14 = "stamp"; // 스탬프.
     private static final String STAY_V16_SHORTCUT_LIST = "scl"; // 스테이 숏컷 리스트
     private static final String STAY_OUTBOUND_V19_SEARCH_RESULT_LIST = "sosrl"; // 해외 호텔 검색 결과 목록
     private static final String CAMPAIGN_TAG_LIST = "ctl"; // 캠패인 태그
@@ -305,10 +305,10 @@ public class DailyExternalDeepLink extends DailyDeepLink
     // Version 14
     ///////////////////////////////////////////////////////////////////////////////////
 
-//    public boolean isStampView()
-//    {
-//        return equalsView(14, STAMP_V14);
-//    }
+    //    public boolean isStampView()
+    //    {
+    //        return equalsView(14, STAMP_V14);
+    //    }
 
     ///////////////////////////////////////////////////////////////////////////////////
     // Version 13
