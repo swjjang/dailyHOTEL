@@ -200,8 +200,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             return false;
         }
 
-        String checkInDateTime = intent.getStringExtra(StayOutboundPaymentActivity.INTENT_EXTRA_DATA_CHECK_IN);
-        String checkOutDateTime = intent.getStringExtra(StayOutboundPaymentActivity.INTENT_EXTRA_DATA_CHECK_OUT);
+        String checkInDateTime = intent.getStringExtra(StayOutboundPaymentActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME);
+        String checkOutDateTime = intent.getStringExtra(StayOutboundPaymentActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME);
 
         setStayBookDateTime(checkInDateTime, checkOutDateTime);
 

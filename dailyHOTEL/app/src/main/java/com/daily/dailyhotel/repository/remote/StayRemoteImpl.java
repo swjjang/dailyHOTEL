@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.StayInterface;
+import com.daily.dailyhotel.entity.Region;
 import com.daily.dailyhotel.entity.ReviewScores;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayDetail;
@@ -254,6 +255,35 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
                 }
 
                 return trueVR;
+            });
+    }
+
+    @Override
+    public Observable<Region> getRegion()
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/hotel/region"//
+            : "MjMkNjQkMjEkMCQ2MCQ1MiQ0NCQzMiQzMSQyMiQ3MSQ4NiQ2OCQxMyQ0NyQ2OCQ=$PRUM3NTRGQzA5RMEVBMjZFNPQEEN0MTgzYMVzcyQ0VERDUzOOJDQyRTQ1NYzkxNkM0MBNEUG1RUTFOGMDExRDVEMEMExRTEwMDExNw==$";
+
+        return mDailyMobileService.getStayRegion(Crypto.getUrlDecoderEx(API))//
+            .subscribeOn(Schedulers.io()).map(baseDto ->
+            {
+                Region region;
+
+                if (baseDto != null)
+                {
+                    if (baseDto.msgCode == 100 && baseDto.data != null)
+                    {
+                        region = baseDto.data.getRegion();
+                    } else
+                    {
+                        throw new BaseException(baseDto.msgCode, baseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return region;
             });
     }
 }

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 
 /**
@@ -15,9 +16,14 @@ import com.twoheart.dailyhotel.R;
  */
 public class StayListActivity extends BaseActivity<StayListPresenter>
 {
-    public static Intent newInstance(Context context)
+    public static Intent newInstance(Context context, String deepLink)
     {
         Intent intent = new Intent(context, StayListActivity.class);
+
+        if (DailyTextUtils.isTextEmpty(deepLink) == false)
+        {
+            intent.putExtra(INTENT_EXTRA_DATA_DEEPLINK, deepLink);
+        }
 
         return intent;
     }

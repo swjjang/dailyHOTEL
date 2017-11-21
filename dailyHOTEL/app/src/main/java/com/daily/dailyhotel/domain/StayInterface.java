@@ -1,5 +1,6 @@
 package com.daily.dailyhotel.domain;
 
+import com.daily.dailyhotel.entity.Region;
 import com.daily.dailyhotel.entity.ReviewScores;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayDetail;
@@ -26,4 +27,6 @@ public interface StayInterface
     Observable<TrueReviews> getTrueReviews(int stayIndex, int page, int limit);
 
     Observable<List<TrueVR>> getTrueVR(int stayIndex);
+
+    Observable<Region> getRegion();
 }
