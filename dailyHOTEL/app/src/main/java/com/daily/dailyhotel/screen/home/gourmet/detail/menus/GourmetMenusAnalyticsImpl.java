@@ -103,4 +103,15 @@ public class GourmetMenusAnalyticsImpl implements GourmetMenusPresenter.GourmetM
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS,//
             AnalyticsManager.Action.AVAILABLE_TIME_EXTRA, label, null);
     }
+
+    @Override
+    public void onEventChangeCart(Activity activity, String action, String label)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, action, label, null);
+    }
 }
