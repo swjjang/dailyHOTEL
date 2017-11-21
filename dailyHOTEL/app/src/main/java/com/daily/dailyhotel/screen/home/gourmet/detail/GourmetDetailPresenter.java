@@ -201,7 +201,9 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
         void onEventShowCoupon(Activity activity, int gourmetIndex);
 
-        void onEventVisitTimeClick(Activity activity, String time);
+        void onEventVisitTimeClick(Activity activity, int visitTime);
+
+        void onEventToolbarBookingClick(Activity activity, int gourmetIndex);
     }
 
     public GourmetDetailPresenter(@NonNull GourmetDetailActivity activity)
@@ -1381,14 +1383,6 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         notifyOperationTimeChanged();
 
         unLockAll();
-
-        if (visitTime == FULL_TIME)
-        {
-            mAnalytics.onEventVisitTimeClick(getActivity(), AnalyticsManager.Label.FULL_TIME);
-        } else
-        {
-            mAnalytics.onEventVisitTimeClick(getActivity(), AnalyticsManager.Label.SELECT_TIME);
-        }
     }
 
     @Override
@@ -1407,6 +1401,8 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 unLockAll();
 
                 onBookingCartMenu(gourmetCart);
+
+                mAnalytics.onEventToolbarBookingClick(getActivity(), gourmetCart.gourmetIndex);
             }
         }, new Consumer<Throwable>()
         {
@@ -1452,9 +1448,11 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         mAnalytics.onScreen(getActivity(), mGourmetBookDateTime, gourmetDetail, mPriceFromList);
     }
 
-    private void setVisitTime(int time)
+    private void setVisitTime(int visitTime)
     {
-        mVisitTime = time;
+        mVisitTime = visitTime;
+
+        mAnalytics.onEventVisitTimeClick(getActivity(), visitTime);
     }
 
     private void setOperationTimes(CommonDateTime commonDateTime, GourmetBookDateTime gourmetBookDateTime, List<GourmetMenu> gourmetMenuList)

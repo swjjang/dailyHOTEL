@@ -1126,6 +1126,12 @@ public class AnalyticsManager
 
         // MULTI
         public static final String BOOKINGCLICKED_ = "BookingClicked_";
+        public static final String AVAILABLE_TIME = "available_time";
+        public static final String SHORTCUT_ORDER = "shortcut_order";
+        public static final String AVAILABLE_TIME_EXTRA = "available_time_extra";
+        public static final String POPUP_DIFFERENT_SHOP = "popup_different_shop";
+        public static final String POPUP_DIFFERENT_TIME = "popup_different_time";
+        public static final String POPUP_DIFFERENT_DAY = "popup_different_day";
     }
 
     public static class Category
@@ -1448,11 +1454,14 @@ public class AnalyticsManager
 
         public static final String POPED_UP = "poped_up";
 
-        public static final String AVAILABLE_TIME = "available_time";
         public static final String MULTI = "Multi";
         public static final String SINGLE = "Single";
         public static final String FULL_TIME = "전체시간";
         public static final String SELECT_TIME = "특정시간";
+
+        public static final String CLICKED = "clicked";
+        public static final String KEEP_EXISTED = "keep_existed";
+        public static final String ADD_NEW = "add_new";
     }
 
     public static class UserType

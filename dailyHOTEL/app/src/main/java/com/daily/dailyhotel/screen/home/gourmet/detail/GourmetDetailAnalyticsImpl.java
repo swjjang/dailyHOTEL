@@ -522,7 +522,21 @@ public class GourmetDetailAnalyticsImpl implements GourmetDetailPresenter.Gourme
     }
 
     @Override
-    public void onEventVisitTimeClick(Activity activity, String time)
+    public void onEventVisitTimeClick(Activity activity, int visitTime)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        String label = visitTime == GourmetDetailPresenter.FULL_TIME ? AnalyticsManager.Label.FULL_TIME : AnalyticsManager.Label.SELECT_TIME;
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS,//
+            AnalyticsManager.Action.AVAILABLE_TIME, label, null);
+    }
+
+    @Override
+    public void onEventToolbarBookingClick(Activity activity, int gourmetIndex)
     {
         if (activity == null)
         {
@@ -530,7 +544,7 @@ public class GourmetDetailAnalyticsImpl implements GourmetDetailPresenter.Gourme
         }
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS,//
-            AnalyticsManager.Label.AVAILABLE_TIME, time, null);
+            AnalyticsManager.Action.SHORTCUT_ORDER, Integer.toString(gourmetIndex), null);
     }
 
     @Override

@@ -26,6 +26,7 @@ import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +70,14 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         void onEventImageClick(Activity activity, String label);
 
         void onEventOpenCartMenuClick(Activity activity, int gourmetIndex, int menuCount);
+
+        void onEventBookingClick(Activity activity, int gourmetIndex, int menuCount);
+
+        void onEventOpenOperationTimeClick(Activity activity);
+
+        void onEventOperationVisitTimeClick(Activity activity, int visitTime);
+
+        void onEventChangeCart(Activity activity, String action, String label);
     }
 
     public GourmetMenusPresenter(@NonNull GourmetMenusActivity activity)
@@ -325,7 +334,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             return;
         }
 
-        // 카트를 저장하고 끝낸다.
+        mAnalytics.onEventBookingClick(getActivity(), mGourmetIndex, mGourmetCart.getMenuCount());
 
         Intent intent = new Intent();
         setResult(Activity.RESULT_OK, intent);
@@ -433,6 +442,8 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
                     unLockAll();
                 }
             }));
+
+            mAnalytics.onEventOpenOperationTimeClick(getActivity());
         }
     }
 
@@ -469,6 +480,8 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
                 unLockAll();
             }
         }));
+
+        mAnalytics.onEventOperationVisitTimeClick(getActivity(), time);
     }
 
     /**
@@ -577,19 +590,26 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             try
             {
                 String message = null;
+                final String actionAnalytics; // ga를 위한 값이다
 
                 // 다른 매장으로 변경시 추가시
                 if (mGourmetCart.gourmetIndex != mGourmetIndex)
                 {
                     message = getString(R.string.message_gourmet_product_detail_change_cart_other_gourmet);
+                    actionAnalytics = AnalyticsManager.Action.POPUP_DIFFERENT_SHOP;
                 } else if (mGourmetCart.equalsDay(mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)) != true)
                 {
                     // 방문 일이 변경되는 경우
                     message = getString(R.string.message_gourmet_product_detail_change_cart_other_visit_day);
+                    actionAnalytics = AnalyticsManager.Action.POPUP_DIFFERENT_DAY;
                 } else if (mGourmetCart.visitTime != mVisitTime)
                 {
                     // 방문 시간이 변경되는 경우
                     message = getString(R.string.message_gourmet_product_detail_add_menu_after_initialization);
+                    actionAnalytics = AnalyticsManager.Action.POPUP_DIFFERENT_TIME;
+                } else
+                {
+                    actionAnalytics = null;
                 }
 
                 if (DailyTextUtils.isTextEmpty(message) == true)
@@ -672,8 +692,17 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
                                         }
                                     }
                                 }));
+
+                                mAnalytics.onEventChangeCart(getActivity(), actionAnalytics, AnalyticsManager.Label.ADD_NEW);
                             }
-                        }, null);
+                        }, new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                mAnalytics.onEventChangeCart(getActivity(), actionAnalytics, AnalyticsManager.Label.KEEP_EXISTED);
+                            }
+                        });
 
                     unLockAll();
                 }

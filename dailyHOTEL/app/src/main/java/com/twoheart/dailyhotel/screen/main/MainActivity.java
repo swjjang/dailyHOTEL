@@ -1389,7 +1389,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                         || externalDeepLink.isRewardView() == true//
                         )
                     {
-                       if (externalDeepLink.isRewardView() == true)
+                        if (externalDeepLink.isRewardView() == true)
                         {
                             // 리워드 이벤트가 종료되면 리워드 화면에서 에러 처리
                             mMainFragmentManager.select(false, MainFragmentManager.INDEX_MYDAILY_FRAGMENT, true, bundle);

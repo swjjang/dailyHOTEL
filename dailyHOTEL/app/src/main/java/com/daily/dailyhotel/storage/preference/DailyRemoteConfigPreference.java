@@ -110,7 +110,7 @@ public class DailyRemoteConfigPreference
     //    private static final String KEY_REMOTE_CONFIG_STATIC_URL_STAMP = "381";
     private static final String KEY_REMOTE_CONFIG_STATIC_URL_REVIEW = "382";
     private static final String KEY_REMOTE_CONFIG_STATIC_URL_LIFESTYLEPROJECT = "383";
-//    private static final String KEY_REMOTE_CONFIG_STATIC_URL_DAILYSTAMPHOME = "384";
+    //    private static final String KEY_REMOTE_CONFIG_STATIC_URL_DAILYSTAMPHOME = "384";
     private static final String KEY_REMOTE_CONFIG_STATIC_URL_COLLECTPERSONAL = "385";
     private static final String KEY_REMOTE_CONFIG_STATIC_URL_DAILYREWARD = "386";
     private static final String KEY_REMOTE_CONFIG_STATIC_URL_DAILYREWARD_TERMS = "387";
