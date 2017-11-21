@@ -641,6 +641,7 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
         }
 
         getViewDataBinding().informationView.setDiscountTypeVisible(false, true);
+        getViewDataBinding().informationView.setDepositStickerVisible(false);
 
         setBonusSelected(false);
         setCouponSelected(false);
@@ -686,6 +687,8 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
         {
             return;
         }
+
+        getViewDataBinding().refundPolicyView.setRefundPolicyList(null);
 
         getViewDataBinding().agreementThirdPartyView.setOnAgreementClickListener(new DailyBookingAgreementThirdPartyView.OnAgreementClickListener()
         {
