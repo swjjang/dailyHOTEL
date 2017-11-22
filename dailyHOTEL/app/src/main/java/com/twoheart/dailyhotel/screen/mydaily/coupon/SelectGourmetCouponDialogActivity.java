@@ -331,11 +331,11 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
         }
 
         @Override
-        public void onDownloadCoupon(String userCouponCode)
+        public void onDownloadCoupon(String couponCode)
         {
             lockUI();
 
-            Coupon coupon = mLayout.getCoupon(userCouponCode);
+            Coupon coupon = mLayout.getCoupon(couponCode);
             analyticsDownloadCoupon(coupon);
 
             switch (mCallByScreen)

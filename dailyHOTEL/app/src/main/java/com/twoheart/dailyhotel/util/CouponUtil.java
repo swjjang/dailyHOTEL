@@ -28,9 +28,6 @@ public class CouponUtil
         public static final String COUPON_LIST = "coupons";
 
         // coupon object type
-        public static final String USER_COUPON_CODE = "userCouponCode";
-
-        // coupon object type
         public static final String VALID_TO = "validTo";
 
         // coupon object type
@@ -153,7 +150,6 @@ public class CouponUtil
         String validFrom = jsonObject.getString(Type.VALID_FROM); // 쿠폰 시작 시간
         String validTo = jsonObject.getString(Type.VALID_TO); // 유효기간, 만료일, 쿠폰 만료시간
         String title = jsonObject.getString(Type.TITLE); // 쿠폰이름
-        String userCouponCode = jsonObject.getString(Type.USER_COUPON_CODE); // 쿠폰 별칭 코드
         String availableItem = jsonObject.getString(Type.AVAILABLE_ITEM); // 사용가능처
 
         // 쿠폰 주의사항용 쿠폰 코드
@@ -228,7 +224,7 @@ public class CouponUtil
         //            downloadedAt, availableInDomestic, availableInOverseas, //
         //            availableInHotel, availableInGourmet);
 
-        coupon = new Coupon(userCouponCode, amount, title, validFrom, //
+        coupon = new Coupon(amount, title, validFrom, //
             validTo, amountMinimum, isDownloaded, availableItem, //
             serverDate, couponCode, stayFrom, stayTo, //
             downloadedAt, null, availableInDomestic, availableInOverseas, //

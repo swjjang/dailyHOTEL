@@ -1901,6 +1901,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     JSONObject dataJSONObject = jsonObject.getJSONObject("data");
 
                     paymentResult.bookingIndex = dataJSONObject.getInt("reservationIdx");
+                    paymentResult.aggregationId = dataJSONObject.getString("aggregationId");
                     paymentResult.result = dataJSONObject.getString("result");
                 } else
                 {

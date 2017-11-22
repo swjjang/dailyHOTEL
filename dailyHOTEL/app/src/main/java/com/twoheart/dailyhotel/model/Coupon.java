@@ -16,7 +16,6 @@ public class Coupon implements Parcelable
         REWARD
     }
 
-    public String userCouponCode; // (구 유저 쿠폰 코드 (이벤트 페이지의 쿠폰코드와 틀림),,
     public int amount; // 쿠폰금액 ,,,
     public String title; // 쿠폰명 ,,,
     public String validFrom; // 쿠폰 사용가능한 시작 시각 ,,,
@@ -52,7 +51,7 @@ public class Coupon implements Parcelable
     }
 
     // Own Coupon && Own Coupon for Payment
-    public Coupon(String userCouponCode, int amount, String title, String validFrom, //
+    public Coupon(int amount, String title, String validFrom, //
                   String validTo, int amountMinimum, boolean isDownloaded, String availableItem, //
                   String serverDate, String couponCode, String stayFrom, String stayTo, //
                   //                  String downloadedAt, boolean availableInDomestic, boolean availableInOverseas, //
@@ -60,7 +59,6 @@ public class Coupon implements Parcelable
                   String downloadedAt, String disabledAt, boolean availableInDomestic, boolean availableInOverseas, //
                   boolean availableInStay, boolean availableInGourmet, boolean isRedeemed, boolean isExpired, Coupon.Type couponType)
     {
-        this.userCouponCode = userCouponCode;
         this.amount = amount;
         this.title = title;
         this.validFrom = validFrom;
@@ -86,7 +84,6 @@ public class Coupon implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        dest.writeString(userCouponCode);
         dest.writeInt(amount);
         dest.writeString(title);
         dest.writeString(validFrom);
@@ -115,7 +112,6 @@ public class Coupon implements Parcelable
 
     public void readFromParcel(Parcel in)
     {
-        userCouponCode = in.readString();
         amount = in.readInt();
         title = in.readString();
         validFrom = in.readString();
