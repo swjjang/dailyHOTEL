@@ -98,7 +98,7 @@ public class CouponListActivity extends BaseActivity
         initDeepLink(intent);
 
         DailyPreference.getInstance(this).setNewCoupon(false);
-        DailyPreference.getInstance(this).setViewedCouponTime(DailyPreference.getInstance(this).getLastestCouponTime());
+        DailyPreference.getInstance(this).setViewedCouponTime(DailyPreference.getInstance(this).getLatestCouponTime());
 
         setContentView(mCouponListLayout.onCreateView(R.layout.activity_coupon_list));
 

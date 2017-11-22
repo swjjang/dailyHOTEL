@@ -26,7 +26,7 @@ public class DailyPreference
     // "dailyHOTEL_v1" Preference
     /////////////////////////////////////////////////////////////////////////////////////////
 
-    private static final String KEY_OPENING_ALARM = "1"; // 알람
+//    private static final String KEY_OPENING_ALARM = "1"; // 알람
     //    private static final String KEY_LAST_MENU = "3"; // 마지막 메뉴 리스트가 무엇인지
     //    private static final String KEY_SHOW_GUIDE = "4"; // 가이드를 봤는지 여부
     //    private static final String KEY_ALLOW_PUSH = "5";
@@ -36,11 +36,11 @@ public class DailyPreference
     //    private static final String KEY_SOCIAL_SIGNUP = "11"; // 회원가입시 소셜 가입자인 경우
 
     // version - 2.0.4 로 강업 이후 삭제 필요 부분
-    @Deprecated
-    private static final String KEY_HOTEL_REGION_ISOVERSEA = "12"; // 현재 선택된 지역이 국내/해외
+//    @Deprecated
+//    private static final String KEY_HOTEL_REGION_ISOVERSEA = "12"; // 현재 선택된 지역이 국내/해외
     // version - 2.0.4 로 강업 이후 삭제 필요 부분
-    @Deprecated
-    private static final String KEY_GOURMET_REGION_ISOVERSEA = "13"; // 현재 선택된 지역이 국내/해외
+//    @Deprecated
+//    private static final String KEY_GOURMET_REGION_ISOVERSEA = "13"; // 현재 선택된 지역이 국내/해외
 
     private static final String KEY_NEW_EVENT = "14"; // 현재 이벤트 유무
     private static final String KEY_NEW_COUPON = "15"; // 현재 새로운 쿠폰 유무(로그인 사용자만 보임)
@@ -89,7 +89,7 @@ public class DailyPreference
     private static final String KEY_PREVIEW_GUIDE = "215";
     private static final String KEY_APP_PERMISSIONS_GUIDE = "216";
 
-    @Deprecated
+//    @Deprecated
     //    private static final String KEY_STAY_OUTBOUND_SEARCH_CALENDAR = "217"; // 최초에 1회 캘린더 띄우기
     private static final String KEY_GOURMET_PRODUCT_DETAIL_GUIDE = "220"; // 최초에 1회 고메 상세 가이드 띄우기
 
@@ -99,7 +99,7 @@ public class DailyPreference
     private static final String KEY_STAY_OUTBOUND_SEARCH_PEOPLE = "224"; // 아웃바운드 검색 숙박인원
 
     // ----> DailyPreference 로 이동
-    private static final String KEY_AUTHORIZATION = "1000";
+//    private static final String KEY_AUTHORIZATION = "1000";
     // <-----
 
     private static final String KEY_VERIFICATION = "1001";
@@ -124,24 +124,24 @@ public class DailyPreference
     /////////////////////////////////////////////////////////////////////////////////////////
 
     // Setting
-    private static final String KEY_SETTING_GCM_ID = "1002";
+//    private static final String KEY_SETTING_GCM_ID = "1002";
     private static final String KEY_SETTING_VERSION_SKIP_MAX_VERSION = "1004";
 
     // Setting - Region - Old 2017.04.07
     // version - 2.0.4 로 강업 이후 삭제 필요 부분
-    @Deprecated
-    private static final String KEY_SETTING_REGION_STAY_SELECT = "1110";
+//    @Deprecated
+//    private static final String KEY_SETTING_REGION_STAY_SELECT = "1110";
     //        private static final String KEY_SETTING_REGION_STAY_SETTING = "1111"; // home 이후 사용안하는 부분
     // version - 2.0.4 로 강업 이후 삭제 필요 부분
-    @Deprecated
-    private static final String KEY_SETTING_REGION_PROVINCE_STAY_SELECT = "1112"; // adjust
+//    @Deprecated
+//    private static final String KEY_SETTING_REGION_STAY_SETTINGN_PROVINCE_STAY_SELECT = "1112"; // adjust
     // version - 2.0.4 로 강업 이후 삭제 필요 부분
-    @Deprecated
-    private static final String KEY_SETTING_REGION_FNB_SELECT = "1120";
+//    @Deprecated
+//    private static final String KEY_SETTING_REGION_FNB_SELECT = "1120";
     //        private static final String KEY_SETTING_REGION_FNB_SETTING = "1121"; // home 이후 사용안하는 부분
     // version - 2.0.4 로 강업 이후 삭제 필요 부분
-    @Deprecated
-    private static final String KEY_SETTING_REGION_PROVINCE_FNB_SELECT = "1122"; // adjust
+//    @Deprecated
+//    private static final String KEY_SETTING_REGION_PROVINCE_FNB_SELECT = "1122"; // adjust
     // Setting - Region New 2017.04.07 - 스테이 호텔 구분 안하고 전체를 다 개별 카테고리로 봄
     private static final String KEY_SETTING_REGION_STAY_ALL = "1130";
     private static final String KEY_SETTING_REGION_GOURMET_ALL = "1131";
@@ -155,31 +155,31 @@ public class DailyPreference
 
     // User
     // -----> DailyUserPreference 로 이동
-    private static final String KEY_USER_EMAIL = "2001";
-    private static final String KEY_USER_TYPE = "2002";
-    private static final String KEY_USER_NAME = "2003";
-    private static final String KEY_USER_RECOMMENDER = "2004";
-    private static final String KEY_USER_BENEFIT_ALARM = "2005";
-    private static final String KEY_USER_IS_EXCEED_BONUS = "2006";
-    private static final String KEY_USER_BIRTHDAY = "2007";
-
-
-    private static final String KEY_PAYMENT_OVERSEAS_NAME = "4000";
-    private static final String KEY_PAYMENT_OVERSEAS_PHONE = "4001";
-    private static final String KEY_PAYMENT_OVERSEAS_EMAIL = "4002";
+//    private static final String KEY_USER_EMAIL = "2001";
+//    private static final String KEY_USER_TYPE = "2002";
+//    private static final String KEY_USER_NAME = "2003";
+//    private static final String KEY_USER_RECOMMENDER = "2004";
+//    private static final String KEY_USER_BENEFIT_ALARM = "2005";
+//    private static final String KEY_USER_IS_EXCEED_BONUS = "2006";
+//    private static final String KEY_USER_BIRTHDAY = "2007";
+//
+//
+//    private static final String KEY_PAYMENT_OVERSEAS_NAME = "4000";
+//    private static final String KEY_PAYMENT_OVERSEAS_PHONE = "4001";
+//    private static final String KEY_PAYMENT_OVERSEAS_EMAIL = "4002";
     // <------
 
     // Payment
-    private static final String KEY_PAYMENT_INFORMATION = "4003";
+//    private static final String KEY_PAYMENT_INFORMATION = "4003";
 
 
     // payment - Virtual Account
-    private static final String KEY_PAYMENT_ACCOUNT_READY_FLAG = "4100";
+//    private static final String KEY_PAYMENT_ACCOUNT_READY_FLAG = "4100";
 
     // Event
-    private static final String KEY_EVENT_LASTEST_EVENT_TIME = "6100";
-    private static final String KEY_EVENT_LASTEST_COUPON_TIME = "6101";
-    private static final String KEY_EVENT_LASTEST_NOTICE_TIME = "6102";
+    private static final String KEY_EVENT_LATEST_EVENT_TIME = "6100";
+    private static final String KEY_EVENT_LATEST_COUPON_TIME = "6101";
+    private static final String KEY_EVENT_LATEST_NOTICE_TIME = "6102";
     private static final String KEY_EVENT_VIEWED_EVENT_TIME = "6200";
     private static final String KEY_EVENT_VIEWED_COUPON_TIME = "6201";
     private static final String KEY_EVENT_VIEWED_NOTICE_TIME = "6202";
@@ -457,16 +457,6 @@ public class DailyPreference
     // "dailyHOTEL_v1" Preference
     /////////////////////////////////////////////////////////////////////////////////////////
 
-    public boolean getEnabledOpeningAlarm()
-    {
-        return getValue(mPreferences, KEY_OPENING_ALARM, false);
-    }
-
-    public void setEnabledOpeningAlarm(boolean value)
-    {
-        setValue(mEditor, KEY_OPENING_ALARM, value);
-    }
-
     public boolean hasNewEvent()
     {
         return getValue(mPreferences, KEY_NEW_EVENT, false);
@@ -495,77 +485,6 @@ public class DailyPreference
     public void setNewNotice(boolean value)
     {
         setValue(mEditor, KEY_NEW_NOTICE, value);
-    }
-
-    //    public String getLastMenu()
-    //    {
-    //        return getValue(mPreferences, KEY_LAST_MENU, null);
-    //    }
-
-    //    public void setLastMenu(String value)
-    //    {
-    //        setValue(mEditor, KEY_LAST_MENU, value);
-    //    }
-
-    //    public boolean isShowGuide()
-    //    {
-    //        return getValue(mPreferences, KEY_SHOW_GUIDE, false);
-    //    }
-    //
-    //    public void setShowGuide(boolean value)
-    //    {
-    //        setValue(mEditor, KEY_SHOW_GUIDE, value);
-    //    }
-
-    //    public String getStayLastViewDate()
-    //    {
-    //        return getValue(mPreferences, KEY_STAY_LAST_VIEW_DATE, null);
-    //    }
-    //
-    //    public void setStayLastViewDate(String value)
-    //    {
-    //        setValue(mEditor, KEY_STAY_LAST_VIEW_DATE, value);
-    //    }
-    //
-    //    public String getGourmetLastViewDate()
-    //    {
-    //        return getValue(mPreferences, KEY_GOURMET_LAST_VIEW_DATE, null);
-    //    }
-    //
-    //    public void setGourmetLastViewDate(String value)
-    //    {
-    //        setValue(mEditor, KEY_GOURMET_LAST_VIEW_DATE, value);
-    //    }
-
-    // version - 2.0.4 로 강업 이후 삭제 필요 부분
-    @Deprecated
-    public boolean isSelectedOverseaRegion(Constants.PlaceType placeType)
-    {
-        switch (placeType)
-        {
-            case FNB:
-                return getValue(mPreferences, KEY_GOURMET_REGION_ISOVERSEA, false);
-
-            case HOTEL:
-            default:
-                return getValue(mPreferences, KEY_HOTEL_REGION_ISOVERSEA, false);
-        }
-    }
-
-    // version - 2.0.4 로 강업 이후 삭제 필요 부분
-    @Deprecated
-    public void setSelectedOverseaRegion(Constants.PlaceType placeType, boolean value)
-    {
-        switch (placeType)
-        {
-            case HOTEL:
-                setValue(mEditor, KEY_HOTEL_REGION_ISOVERSEA, value);
-                break;
-
-            case FNB:
-                setValue(mEditor, KEY_GOURMET_REGION_ISOVERSEA, value);
-                break;
-        }
     }
 
     public boolean isVerification()
@@ -909,39 +828,34 @@ public class DailyPreference
     // new
     /////////////////////////////////////////////////////////////////////////////////////////
 
-    public String getGCMRegistrationId()
+    public String getLatestEventTime()
     {
-        return getValue(mPreferences, KEY_SETTING_GCM_ID, null);
+        return getValue(mPreferences, KEY_EVENT_LATEST_EVENT_TIME, null);
     }
 
-    public String getLastestEventTime()
+    public void setLatestEventTime(String value)
     {
-        return getValue(mPreferences, KEY_EVENT_LASTEST_EVENT_TIME, null);
+        setValue(mEditor, KEY_EVENT_LATEST_EVENT_TIME, value);
     }
 
-    public void setLastestEventTime(String value)
+    public String getLatestCouponTime()
     {
-        setValue(mEditor, KEY_EVENT_LASTEST_EVENT_TIME, value);
+        return getValue(mPreferences, KEY_EVENT_LATEST_COUPON_TIME, null);
     }
 
-    public String getLastestCouponTime()
+    public void setLatestCouponTime(String value)
     {
-        return getValue(mPreferences, KEY_EVENT_LASTEST_COUPON_TIME, null);
+        setValue(mEditor, KEY_EVENT_LATEST_COUPON_TIME, value);
     }
 
-    public void setLastestCouponTime(String value)
+    public String getLatestNoticeTime()
     {
-        setValue(mEditor, KEY_EVENT_LASTEST_COUPON_TIME, value);
+        return getValue(mPreferences, KEY_EVENT_LATEST_NOTICE_TIME, null);
     }
 
-    public String getLastestNoticeTime()
+    public void setLatestNoticeTime(String value)
     {
-        return getValue(mPreferences, KEY_EVENT_LASTEST_NOTICE_TIME, null);
-    }
-
-    public void setLastestNoticeTime(String value)
-    {
-        setValue(mEditor, KEY_EVENT_LASTEST_NOTICE_TIME, value);
+        setValue(mEditor, KEY_EVENT_LATEST_NOTICE_TIME, value);
     }
 
     public String getViewedEventTime()
@@ -1030,74 +944,6 @@ public class DailyPreference
         return getValue(mPreferences, KEY_HOME_SHORT_CUT_STAY_OUTBOUND_NEW_DATE, null);
     }
 
-    // version - 2.0.4 로 강업 이후 삭제 필요 부분
-    @Deprecated
-    public String getSelectedRegion(Constants.PlaceType placeType)
-    {
-        switch (placeType)
-        {
-            case FNB:
-                return getValue(mPreferences, KEY_SETTING_REGION_FNB_SELECT, null);
-
-            case HOTEL:
-            default:
-                return getValue(mPreferences, KEY_SETTING_REGION_STAY_SELECT, null);
-        }
-    }
-
-    // version - 2.0.4 로 강업 이후 삭제 필요 부분
-    @Deprecated
-    public void setSelectedRegion(Constants.PlaceType placeType, String value)
-    {
-        switch (placeType)
-        {
-            case HOTEL:
-                setValue(mEditor, KEY_SETTING_REGION_STAY_SELECT, value);
-                break;
-
-            case FNB:
-                setValue(mEditor, KEY_SETTING_REGION_FNB_SELECT, value);
-                break;
-        }
-    }
-
-    /**
-     * 선택된 대지역 저장값 - Adjust 용
-     * // version - 2.0.4 로 강업 이후 삭제 필요 부분
-     *
-     * @return
-     */
-    @Deprecated
-    public String getSelectedRegionTypeProvince(Constants.PlaceType placeType)
-    {
-        switch (placeType)
-        {
-            case FNB:
-                return getValue(mPreferences, KEY_SETTING_REGION_PROVINCE_FNB_SELECT, null);
-
-            case HOTEL:
-            default:
-                return getValue(mPreferences, KEY_SETTING_REGION_PROVINCE_STAY_SELECT, null);
-        }
-    }
-
-    // version - 2.0.4 로 강업 이후 삭제 필요 부분
-    @Deprecated
-    public void setSelectedRegionTypeProvince(Constants.PlaceType placeType, String value)
-    {
-        switch (placeType)
-        {
-            case FNB:
-                setValue(mEditor, KEY_SETTING_REGION_PROVINCE_FNB_SELECT, value);
-                break;
-
-            case HOTEL:
-            default:
-                setValue(mEditor, KEY_SETTING_REGION_PROVINCE_STAY_SELECT, value);
-                break;
-        }
-    }
-
     public JSONObject getDailyRegion(DailyCategoryType type)
     {
         String value = getValue(mPreferences, getDailyRegionKey(type), null);
@@ -1168,153 +1014,6 @@ public class DailyPreference
         }
     }
 
-    /**
-     * DailyUserPreference.getOverseasName()
-     *
-     * @return
-     */
-    @Deprecated
-    public String getOverseasName()
-    {
-        return getValue(mPreferences, KEY_PAYMENT_OVERSEAS_NAME, null);
-    }
-
-    /**
-     * DailyUserPreference.getOverseasPhone()
-     *
-     * @return
-     */
-    @Deprecated
-    public String getOverseasPhone()
-    {
-        return getValue(mPreferences, KEY_PAYMENT_OVERSEAS_PHONE, null);
-    }
-
-    /**
-     * DailyUserPreference.getOverseasEmail()
-     *
-     * @return
-     */
-    @Deprecated
-    public String getOverseasEmail()
-    {
-        return getValue(mPreferences, KEY_PAYMENT_OVERSEAS_EMAIL, null);
-    }
-
-    /**
-     * DailyUserPreference.getType()
-     *
-     * @return
-     */
-    @Deprecated
-    public String getUserType()
-    {
-        return getValue(mPreferences, KEY_USER_TYPE, null);
-    }
-
-    /**
-     * DailyUserPreference.getName()
-     *
-     * @return
-     */
-    @Deprecated
-    public String getUserName()
-    {
-        return getValue(mPreferences, KEY_USER_NAME, null);
-    }
-
-    /**
-     * DailyUserPreference.getEmail()
-     *
-     * @return
-     */
-    @Deprecated
-    public String getUserEmail()
-    {
-        return getValue(mPreferences, KEY_USER_EMAIL, null);
-    }
-
-    /**
-     * DailyUserPreference.getBirthday()
-     *
-     * @return
-     */
-    @Deprecated
-    public String getUserBirthday()
-    {
-        return getValue(mPreferences, KEY_USER_BIRTHDAY, null);
-    }
-
-    /**
-     * DailyUserPreference.getRecommender()
-     *
-     * @return
-     */
-    @Deprecated
-    public String getUserRecommender()
-    {
-        return getValue(mPreferences, KEY_USER_RECOMMENDER, null);
-    }
-
-    /**
-     * DailyUserPreference.isBenefitAlarm()
-     *
-     * @return
-     */
-    @Deprecated
-    public boolean isUserBenefitAlarm()
-    {
-        return getValue(mPreferences, KEY_USER_BENEFIT_ALARM, false);
-    }
-
-    /**
-     * DailyUserPreference.isExceedBonus()
-     *
-     * @return
-     */
-    @Deprecated
-    public boolean isUserExceedBonus()
-    {
-        return getValue(mPreferences, KEY_USER_IS_EXCEED_BONUS, false);
-    }
-
-    /**
-     * DailyUserPreference.getAuthorization()
-     *
-     * @return
-     */
-    @Deprecated
-    public String getAuthorization()
-    {
-        try
-        {
-            return Crypto.urlDecrypt(getValue(mPreferences, KEY_AUTHORIZATION, null));
-        } catch (Exception e)
-        {
-            return null;
-        }
-    }
-
-    public void clearUserInformation()
-    {
-        if (mEditor != null)
-        {
-            mEditor.remove(KEY_USER_EMAIL);
-            mEditor.remove(KEY_USER_TYPE);
-            mEditor.remove(KEY_USER_NAME);
-            mEditor.remove(KEY_USER_RECOMMENDER);
-            mEditor.remove(KEY_USER_BENEFIT_ALARM);
-            mEditor.remove(KEY_USER_IS_EXCEED_BONUS);
-            mEditor.remove(KEY_USER_BIRTHDAY);
-            mEditor.remove(KEY_PAYMENT_OVERSEAS_NAME);
-            mEditor.remove(KEY_PAYMENT_OVERSEAS_PHONE);
-            mEditor.remove(KEY_PAYMENT_OVERSEAS_EMAIL);
-            mEditor.remove(KEY_AUTHORIZATION);
-
-            mEditor.apply();
-        }
-    }
-
     public String getSkipVersion()
     {
         return getValue(mPreferences, KEY_SETTING_VERSION_SKIP_MAX_VERSION, "0");
@@ -1323,68 +1022,6 @@ public class DailyPreference
     public void setSkipVersion(String value)
     {
         setValue(mEditor, KEY_SETTING_VERSION_SKIP_MAX_VERSION, value);
-    }
-
-    public int getVirtualAccountReadyFlag()
-    {
-        return getValue(mPreferences, KEY_PAYMENT_ACCOUNT_READY_FLAG, -1);
-    }
-
-    public void setVirtualAccountReadyFlag(int value)
-    {
-        setValue(mEditor, KEY_PAYMENT_ACCOUNT_READY_FLAG, value);
-    }
-
-    private static final String PAYMENT_SEPARATOR = "±";
-
-    public String[] getPaymentInformation()
-    {
-        String value = getValue(mPreferences, KEY_PAYMENT_INFORMATION, null);
-
-        if (DailyTextUtils.isTextEmpty(value) == true)
-        {
-            return null;
-        } else
-        {
-            return value.split(PAYMENT_SEPARATOR);
-        }
-    }
-
-    public void setPaymentInformation(Constants.PlaceType placeType, String placeName, PlacePaymentInformation.PaymentType paymentType, String dateTime)
-    {
-        StringBuilder stringBuilder = new StringBuilder();
-
-        stringBuilder.append(placeType.name());
-        stringBuilder.append(PAYMENT_SEPARATOR);
-        stringBuilder.append(placeName);
-        stringBuilder.append(PAYMENT_SEPARATOR);
-        stringBuilder.append(paymentType.name());
-        stringBuilder.append(PAYMENT_SEPARATOR);
-        stringBuilder.append(dateTime);
-
-        setValue(mEditor, KEY_PAYMENT_INFORMATION, stringBuilder.toString());
-    }
-
-    public void setPaymentInformation(Constants.PlaceType placeType, String placeName, PlacePaymentInformation.PaymentType paymentType, String checkInDate, String checkOutDate)
-    {
-        StringBuilder stringBuilder = new StringBuilder();
-
-        stringBuilder.append(placeType.name());
-        stringBuilder.append(PAYMENT_SEPARATOR);
-        stringBuilder.append(placeName);
-        stringBuilder.append(PAYMENT_SEPARATOR);
-        stringBuilder.append(paymentType.name());
-        stringBuilder.append(PAYMENT_SEPARATOR);
-        stringBuilder.append(checkInDate);
-        stringBuilder.append(PAYMENT_SEPARATOR);
-        stringBuilder.append(checkOutDate);
-
-        setValue(mEditor, KEY_PAYMENT_INFORMATION, stringBuilder.toString());
-    }
-
-    public void clearPaymentInformation()
-    {
-        removeValue(mEditor, KEY_PAYMENT_INFORMATION);
     }
 
     public boolean isHomeTextMessageAreaEnabled()

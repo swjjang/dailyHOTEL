@@ -156,8 +156,6 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
         mIsInitialization = true;
         mNetworkController = new MainNetworkController(MainActivity.this, mNetworkTag, mOnNetworkControllerListener);
 
-        DailyPreference.getInstance(this).clearPaymentInformation();
-
         // 현재 앱버전을 Analytics로..
         String version = DailyPreference.getInstance(this).getAppVersion();
         String currentVersion = VersionUtils.getAppVersionCode(this);
@@ -1571,9 +1569,9 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
             String viewedCouponTime = DailyPreference.getInstance(MainActivity.this).getViewedCouponTime();
             String viewedNoticeTime = DailyPreference.getInstance(MainActivity.this).getViewedNoticeTime();
 
-            DailyPreference.getInstance(MainActivity.this).setLastestEventTime(todayDateTime.currentDateTime);
-            DailyPreference.getInstance(MainActivity.this).setLastestCouponTime(todayDateTime.currentDateTime);
-            DailyPreference.getInstance(MainActivity.this).setLastestNoticeTime(todayDateTime.currentDateTime);
+            DailyPreference.getInstance(MainActivity.this).setLatestEventTime(todayDateTime.currentDateTime);
+            DailyPreference.getInstance(MainActivity.this).setLatestCouponTime(todayDateTime.currentDateTime);
+            DailyPreference.getInstance(MainActivity.this).setLatestNoticeTime(todayDateTime.currentDateTime);
 
             if (DailyTextUtils.isTextEmpty(viewedEventTime) == true)
             {
