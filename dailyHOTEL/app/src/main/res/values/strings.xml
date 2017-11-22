@@ -445,7 +445,7 @@
     <string name="frag_app">앱</string>
     <string name="frag_version_info">앱 버전정보</string>
     <string name="frag_push_alert">혜택 알림 받기</string>
-    <string name="frag_push_alert_subtext">할인쿠폰, 이벤트 등의 특별한 혜택 및 상품 정보를 받아보실 수 있어요!\n수신 거부 시, 사용 가능 쿠폰 및 예약 알림 등의 알림도 발송되지 않습니다.</string>
+    <string name="frag_push_alert_subtext">할인쿠폰, 이벤트 등의 특별한 혜택 및 상품 정보를 받아보실 수 있어요!\n수신 여부와 상관없이, 사용 가능 쿠폰 및 예약 알림 등의 알림은 발송됩니다.</string>
     <string name="label_agree_sms">SMS 수신 동의</string>
     <string name="frag_account">계정</string>
     <string name="frag_profile">내정보</string>
