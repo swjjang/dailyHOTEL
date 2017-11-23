@@ -1322,7 +1322,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             return;
         }
 
-        startActivityForResult(DailyWebActivity.newInstance(getActivity(), getString(R.string.label_reward_reward_guide)//
+        startActivityForResult(DailyWebActivity.newInstance(getActivity(), getString(R.string.label_daily_reward)//
             , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStaticUrlDailyReward()), StayOutboundDetailActivity.REQUEST_CODE_WEB);
     }
 

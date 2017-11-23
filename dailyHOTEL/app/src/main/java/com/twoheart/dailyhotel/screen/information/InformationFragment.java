@@ -305,7 +305,7 @@ public class InformationFragment extends BaseMenuNavigationFragment implements C
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
-            baseActivity.startActivityForResult(DailyWebActivity.newInstance(baseActivity, getString(R.string.label_reward_reward_guide)//
+            baseActivity.startActivityForResult(DailyWebActivity.newInstance(baseActivity, getString(R.string.label_daily_reward)//
                 , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStaticUrlDailyReward()), Constants.CODE_REQUEST_ACTIVITY_DAILY_REWARD);
         }
 

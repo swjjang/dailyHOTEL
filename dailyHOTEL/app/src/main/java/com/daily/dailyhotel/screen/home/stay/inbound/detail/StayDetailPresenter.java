@@ -1399,7 +1399,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             return;
         }
 
-        startActivityForResult(DailyWebActivity.newInstance(getActivity(), getString(R.string.label_reward_reward_guide)//
+        startActivityForResult(DailyWebActivity.newInstance(getActivity(), getString(R.string.label_daily_reward)//
             , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStaticUrlDailyReward()), StayDetailActivity.REQUEST_CODE_WEB);
     }
 
