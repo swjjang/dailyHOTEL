@@ -3,9 +3,9 @@ package com.daily.dailyhotel.screen.booking.detail.stay;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
-import com.twoheart.dailyhotel.databinding.ActivityCopyDataBinding;
+import com.twoheart.dailyhotel.databinding.ActivityStayBookingDetailDataBinding;
 
-public class StayBookingDetailView extends BaseDialogView<StayBookingDetailView.OnEventListener, ActivityCopyDataBinding> implements StayBookingDetailInterface
+public class StayBookingDetailView extends BaseDialogView<StayBookingDetailView.OnEventListener, ActivityStayBookingDetailDataBinding> implements StayBookingDetailInterface
 {
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -17,7 +17,7 @@ public class StayBookingDetailView extends BaseDialogView<StayBookingDetailView.
     }
 
     @Override
-    protected void setContentView(final ActivityCopyDataBinding viewDataBinding)
+    protected void setContentView(final ActivityStayBookingDetailDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -32,7 +32,7 @@ public class StayBookingDetailView extends BaseDialogView<StayBookingDetailView.
     {
     }
 
-    private void initToolbar(ActivityCopyDataBinding viewDataBinding)
+    private void initToolbar(ActivityStayBookingDetailDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {

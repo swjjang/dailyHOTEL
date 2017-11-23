@@ -36,7 +36,7 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
     @Override
     public void constructorInitialize(GourmetBookingDetailActivity activity)
     {
-        setContentView(R.layout.activity_copy_data);
+        setContentView(R.layout.activity_gourmet_booking_detail_data);
 
         setAnalytics(new GourmetBookingDetailAnalyticsImpl());
 

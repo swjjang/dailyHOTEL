@@ -36,7 +36,7 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
     @Override
     public void constructorInitialize(StayBookingDetailActivity activity)
     {
-        setContentView(R.layout.activity_copy_data);
+        setContentView(R.layout.activity_stay_booking_detail_data);
 
         setAnalytics(new StayBookingDetailAnalyticsImpl());
 

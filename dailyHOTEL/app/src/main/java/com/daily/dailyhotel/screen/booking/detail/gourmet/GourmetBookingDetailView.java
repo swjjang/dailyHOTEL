@@ -3,9 +3,9 @@ package com.daily.dailyhotel.screen.booking.detail.gourmet;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
-import com.twoheart.dailyhotel.databinding.ActivityCopyDataBinding;
+import com.twoheart.dailyhotel.databinding.ActivityGourmetBookingDetailDataBinding;
 
-public class GourmetBookingDetailView extends BaseDialogView<GourmetBookingDetailView.OnEventListener, ActivityCopyDataBinding> implements GourmetBookingDetailInterface
+public class GourmetBookingDetailView extends BaseDialogView<GourmetBookingDetailView.OnEventListener, ActivityGourmetBookingDetailDataBinding> implements GourmetBookingDetailInterface
 {
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -17,7 +17,7 @@ public class GourmetBookingDetailView extends BaseDialogView<GourmetBookingDetai
     }
 
     @Override
-    protected void setContentView(final ActivityCopyDataBinding viewDataBinding)
+    protected void setContentView(final ActivityGourmetBookingDetailDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -32,7 +32,7 @@ public class GourmetBookingDetailView extends BaseDialogView<GourmetBookingDetai
     {
     }
 
-    private void initToolbar(ActivityCopyDataBinding viewDataBinding)
+    private void initToolbar(ActivityGourmetBookingDetailDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
