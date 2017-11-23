@@ -56,13 +56,6 @@ public class LauncherActivity extends Activity
             DailyPreference.getInstance(this).setTrueVRSupport(support ? 1 : -1);
         }
 
-        // 개인 정보 방침에 따른 개인 정보 암호화.
-        if (DailyTextUtils.isTextEmpty(DailyPreference.getInstance(this).getUserType()) == false)
-        {
-            DailyUserPreference.getInstance(this).requestMigration(this);
-            DailyPreference.getInstance(this).clearUserInformation();
-        }
-
         // 리뷰 초기화
         DailyPreference.getInstance(this).setIsRequestReview(false);
 

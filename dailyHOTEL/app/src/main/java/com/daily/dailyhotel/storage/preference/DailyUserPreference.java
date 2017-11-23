@@ -314,27 +314,4 @@ public class DailyUserPreference
 
         setValueEncrypt(mEditor, KEY_AUTHORIZATION, value);
     }
-
-    public void requestMigration(Context context)
-    {
-        String email = DailyPreference.getInstance(context).getUserEmail();
-        String type = DailyPreference.getInstance(context).getUserType();
-        String name = DailyPreference.getInstance(context).getUserName();
-        String birthday = DailyPreference.getInstance(context).getUserBirthday();
-        String recommender = DailyPreference.getInstance(context).getUserRecommender();
-
-        boolean isBenefitAlarm = DailyPreference.getInstance(context).isUserBenefitAlarm();
-        boolean isExceedBonus = DailyPreference.getInstance(context).isUserExceedBonus();
-
-        String authorization = DailyPreference.getInstance(context).getAuthorization();
-
-        String overseasPhone = DailyPreference.getInstance(context).getOverseasPhone();
-        String overseasEmail = DailyPreference.getInstance(context).getOverseasEmail();
-
-        setInformation(type, email, name, birthday, recommender);
-        setBenefitAlarm(isBenefitAlarm);
-        setExceedBonus(isExceedBonus);
-        setAuthorization(authorization);
-        setOverseasInformation(null, null, overseasPhone, overseasEmail);
-    }
 }

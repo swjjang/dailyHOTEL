@@ -817,7 +817,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                             DailyUserPreference.getInstance(LoginActivity.this).setBenefitAlarm(false);
                             DailyPreference.getInstance(LoginActivity.this).setShowBenefitAlarm(false);
                             DailyPreference.getInstance(LoginActivity.this).setShowBenefitAlarmFirstBuyer(false);
-                            DailyPreference.getInstance(LoginActivity.this).setLastestCouponTime("");
+                            DailyPreference.getInstance(LoginActivity.this).setLatestCouponTime("");
                             AnalyticsManager.getInstance(LoginActivity.this).setPushEnabled(false, null);
 
                             HashMap<String, String> analyticsParams = new HashMap<>();
@@ -909,7 +909,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                         if (isSignin == true)
                         {
-                            DailyPreference.getInstance(LoginActivity.this).setLastestCouponTime("");
+                            DailyPreference.getInstance(LoginActivity.this).setLatestCouponTime("");
 
                             storeLoginInformation(responseJSONObject);
 
@@ -970,7 +970,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
                     if (isSignin == true)
                     {
-                        DailyPreference.getInstance(LoginActivity.this).setLastestCouponTime("");
+                        DailyPreference.getInstance(LoginActivity.this).setLatestCouponTime("");
 
                         String userIndex = storeLoginInformation(responseJSONObject);
 

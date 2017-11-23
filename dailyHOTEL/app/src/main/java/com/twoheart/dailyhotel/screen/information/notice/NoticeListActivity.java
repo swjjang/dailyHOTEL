@@ -64,7 +64,7 @@ public class NoticeListActivity extends BaseActivity implements AdapterView.OnIt
 
         setContentView(R.layout.activity_notice);
 
-        DailyPreference.getInstance(this).setViewedNoticeTime(DailyPreference.getInstance(this).getLastestNoticeTime());
+        DailyPreference.getInstance(this).setViewedNoticeTime(DailyPreference.getInstance(this).getLatestNoticeTime());
 
         initToolbar();
         initLayout();

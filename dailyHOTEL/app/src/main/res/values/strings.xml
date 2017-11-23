@@ -445,7 +445,7 @@
     <string name="frag_app">앱</string>
     <string name="frag_version_info">앱 버전정보</string>
     <string name="frag_push_alert">혜택 알림 받기</string>
-    <string name="frag_push_alert_subtext">할인쿠폰, 이벤트 등의 특별한 혜택 및 상품 정보를 받아보실 수 있어요!\n수신 거부 시, 사용 가능 쿠폰 및 예약 알림 등의 알림도 발송되지 않습니다.</string>
+    <string name="frag_push_alert_subtext">할인쿠폰, 이벤트 등의 특별한 혜택 및 상품 정보를 받아보실 수 있어요!\n수신 여부와 상관없이, 사용 가능 쿠폰 및 예약 알림 등의 알림은 발송됩니다.</string>
     <string name="label_agree_sms">SMS 수신 동의</string>
     <string name="frag_account">계정</string>
     <string name="frag_profile">내정보</string>
@@ -722,7 +722,7 @@
     <string name="message_signup_step2_guide">신속한 예약확인 및 안내를 위해 고객님의 휴대폰 번호를 입력한 후 인증처리해주세요.</string>
     <string name="message_signup_step2_already_verification">다른 계정에 등록되어 있는 휴대폰 번호입니다.\n계속 진행할까요?</string>
     <string name="message_signup_step2_check_your_phonenumber">짧은 시간 내 인증번호를\n여러번 요청할 수 없습니다.\n입력하신 전화번호(%1$s)가\n맞는지 확인해주시거나\nSMS 수신이 시간이 걸릴 수 있으니\n잠시만 기다려주세요.</string>
-    <string name="message_signup_completed_alarm_on_format">데일리호텔이 드리는\n특별 할인쿠폰, 다양한 상품 정보, 예약 알림 등\n혜택 알림 수신에 동의하였습니다.\n%s</string>
+    <string name="message_signup_completed_alarm_on_format">데일리가 드리는\n특별 할인쿠폰, 다양한 상품 정보, 이벤트 등\n혜택 알림 수신동의 처리가 완료되었습니다.\n\n수신동의 일자 : %1$s\n\n(데일리 혜택 알림은\n마이데일리 > 혜택 알림 받기에서 변경가능)</string>
     <string name="message_signup_step1_password_guide">추측이 너무 쉬운 문자열은 비밀번호로 사용하실 수 없습니다.\n(연속/반복되는 문자열, 이메일주소와 동일한 문자열 등)</string>
 
     <!-- BookingTab/HotelTabBooking Fragment -->
@@ -1087,12 +1087,12 @@
     <string name="register_coupon_policy_4">기타 상세 내용은 할인쿠폰 상세 정보에서 확인부탁드립니다.</string>
 
     <!-- Benefit Alarm -->
-    <string name="label_setting_alarm">알림 설정</string>
+    <string name="label_setting_alarm">혜택 알림 설정</string>
     <string name="label_after_setting_alarm">나중에 설정</string>
     <string name="label_now_setting_alarm">알림 설정하고 혜택받기</string>
-    <string name="message_benefit_alarm_off">수신 거부 시\n특별 할인쿠폰, 다양한 상품 정보 등의\n주요 혜택 알림 메시지를 받을 수 없습니다.\n그래도 알림을 끄시겠어요?</string>
-    <string name="message_benefit_alarm_off_confirm_format">데일리호텔이 드리는\n특별 할인쿠폰, 다양한 상품 정보 등\n혜택 알림 수신에 동의하지 않으셨습니다.\n\n%s</string>
-    <string name="message_benefit_alarm_on_confirm_format">데일리호텔이 드리는\n특별 할인쿠폰, 다양한 상품 정보 등\n혜택 알림 수신에 동의했습니다.\n\n%s</string>
+    <string name="message_benefit_alarm_off">수신 거부시\n할인쿠폰, 이벤트 등의 특별한 혜택을 받을 수 없습니다.\n그래도 알림을 끄시겠어요?</string>
+    <string name="message_benefit_alarm_off_confirm_format">데일리호텔이 드리는 할인쿠폰, 이벤트 등의\n혜택 알림 수신에 동의하지 않으셨습니다.\n\n%1$s</string>
+    <string name="message_benefit_alarm_on_confirm_format">데일리호텔이 드리는 할인쿠폰, 이벤트 등의\n혜택 알림 수신에 동의하였습니다.\n\n%s</string>
 
     <!-- Event Web -->
     <string name="label_eventweb_now_used">지금 사용하기</string>
