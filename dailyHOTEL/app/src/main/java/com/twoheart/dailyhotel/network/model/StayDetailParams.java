@@ -8,6 +8,7 @@ import com.bluelinelabs.logansquare.annotation.JsonIgnore;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.repository.remote.model.ConfigurationsData;
 import com.twoheart.dailyhotel.model.DetailInformation;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayDetail;
@@ -74,6 +75,9 @@ public class StayDetailParams extends PlaceDetailParams<StayProduct>
 
     @JsonField(name = "waitingForBooking")
     public boolean waitingForBooking; // 예약 대기
+
+    @JsonField(name = "configurations")
+    public ConfigurationsData configurations;
 
     @JsonIgnore
     private ArrayList<StayDetail.Pictogram> mPictogramList;
@@ -234,14 +238,17 @@ public class StayDetailParams extends PlaceDetailParams<StayProduct>
         }
 
         // Reward
-        if (rooms != null)
+        if (configurations != null && configurations.activeReward == true)
         {
-            for (StayProduct stayProduct : rooms)
+            if (rooms != null)
             {
-                if (stayProduct.provideRewardSticker == true)
+                for (StayProduct stayProduct : rooms)
                 {
-                    provideRewardSticker = true;
-                    break;
+                    if (stayProduct.provideRewardSticker == true)
+                    {
+                        provideRewardSticker = true;
+                        break;
+                    }
                 }
             }
         }
