@@ -384,7 +384,7 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
             return;
         }
 
-        startActivityForResult(DailyWebActivity.newInstance(getActivity(), getString(R.string.label_reward_reward_guide)//
+        startActivityForResult(DailyWebActivity.newInstance(getActivity(), getString(R.string.label_daily_reward)//
             , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStaticUrlDailyReward()), RewardActivity.REQUEST_CODE_WEB);
     }
 
