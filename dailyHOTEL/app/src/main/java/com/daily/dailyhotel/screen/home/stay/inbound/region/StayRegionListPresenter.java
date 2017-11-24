@@ -19,6 +19,7 @@ import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.R;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -227,9 +228,11 @@ public class StayRegionListPresenter extends BaseExceptionPresenter<StayRegionLi
         if (mRegionList.get(groupPosition).getAreaCount() == 0)
         {
             onRegionClick(mRegionList.get(groupPosition).getProvince());
+
+            unLockAll();
         } else
         {
-            Observable<Boolean> collapseObservable = getViewInterface().collapseGroupWithAnimation(mProvincePosition);
+            Observable<Boolean> collapseObservable = getViewInterface().collapseGroupWithAnimation(mProvincePosition, mProvincePosition == groupPosition);
 
             if (collapseObservable == null)
             {
@@ -238,7 +241,7 @@ public class StayRegionListPresenter extends BaseExceptionPresenter<StayRegionLi
 
             if (mProvincePosition == groupPosition)
             {
-                addCompositeDisposable(collapseObservable.subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                addCompositeDisposable(collapseObservable.subscribeOn(AndroidSchedulers.mainThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                 {
                     @Override
                     public void accept(Boolean aBoolean) throws Exception
@@ -252,8 +255,6 @@ public class StayRegionListPresenter extends BaseExceptionPresenter<StayRegionLi
                     @Override
                     public void accept(Throwable throwable) throws Exception
                     {
-                        mProvincePosition = -1;
-
                         unLockAll();
                     }
                 }));
@@ -264,9 +265,9 @@ public class StayRegionListPresenter extends BaseExceptionPresenter<StayRegionLi
                     @Override
                     public ObservableSource<Boolean> apply(Boolean aBoolean) throws Exception
                     {
-                        Observable<Boolean> expandObservable = getViewInterface().expandGroupWidthAnimation(groupPosition);
+                        Observable<Boolean> expandObservable = getViewInterface().expandGroupWidthAnimation(groupPosition, true);
 
-                        return expandObservable == null ? Observable.just(true) : expandObservable;
+                        return expandObservable == null ? Observable.just(true) : expandObservable.subscribeOn(AndroidSchedulers.mainThread());
                     }
                 }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                 {

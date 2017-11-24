@@ -2,13 +2,11 @@ package com.daily.dailyhotel.screen.home.stay.inbound.region;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.Area;
 import com.daily.dailyhotel.entity.Province;
@@ -79,41 +77,6 @@ public class StayRegionListAdapter extends AnimatedExpandableListAdapter
         mTablet = tablet;
     }
 
-    /**
-     * AreaName 이 멀티라인으로 나올때 단말자체에서 우측에 여백을 발생시켜
-     * areaName 과 areaCount 의 사이가 넓게 띄어져 보이는 이슈로인한 처리
-     * 여백이 발생하는 위치(즉 1줄의 끝부분)에 \n 을 삽입해 강제로 2줄로 만드는 방법 사용
-     *
-     * @param textView
-     * @param areaName
-     */
-    private void setAreaNameText(TextView textView, String areaName)
-    {
-        textView.setText(areaName+"/"+areaName);
-//
-//        int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-//        int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-//        textView.measure(widthMeasureSpec, heightMeasureSpec);
-//
-//        Layout layout = textView.getLayout();
-//        if (layout == null)
-//        {
-//            ExLog.w("layout is null");
-//            return;
-//        }
-//
-//        int lineCount = layout.getLineCount();
-//        if (lineCount > 1)
-//        {
-//            int firstLineEndIndex = layout.getLineEnd(0);
-//
-//            StringBuilder builder = new StringBuilder(areaName);
-//            builder.insert(firstLineEndIndex, "\n");
-//
-//            textView.setText(builder.toString());
-//        }
-    }
-
     private void setRealChildView(TextView textView, int groupPosition, Area area)
     {
         if (textView == null)
@@ -132,10 +95,10 @@ public class StayRegionListAdapter extends AnimatedExpandableListAdapter
 
             if (area.index == -1)
             {
-                setAreaNameText(textView, area.name + " " + mContext.getString(R.string.label_all));
+                textView.setText(area.name + " " + mContext.getString(R.string.label_all));
             } else
             {
-                setAreaNameText(textView, area.name);
+                textView.setText(area.name);
             }
         } else
         {
@@ -193,8 +156,6 @@ public class StayRegionListAdapter extends AnimatedExpandableListAdapter
 
         setRealChildView(viewDataBinding.areaNameLeftTextView, groupPosition, leftArea);
         setRealChildView(viewDataBinding.areaNameRightTextView, groupPosition, rightArea);
-
-        viewDataBinding.underLineView.setVisibility(isLastChild ? View.GONE : View.VISIBLE);
 
         return convertView;
     }
@@ -266,20 +227,14 @@ public class StayRegionListAdapter extends AnimatedExpandableListAdapter
         // 우측 위아래 화살펴 표시 여부.
         viewDataBinding.arrowImageView.setVisibility(hasChildren ? View.VISIBLE : View.GONE);
 
-        boolean isExpandGroup = false;
-
         if (hasChildren == true)
         {
-            isExpandGroup = getRegion(groupPosition).expandGroup;
-
-            if (isExpandGroup == true)
+            if (getRegion(groupPosition).expandGroup == true)
             {
                 viewDataBinding.arrowImageView.setImageResource(R.drawable.ic_region_ic_sub_v_top);
-                viewDataBinding.underLineView.setVisibility(View.VISIBLE);
             } else
             {
                 viewDataBinding.arrowImageView.setImageResource(R.drawable.ic_region_ic_sub_v);
-                viewDataBinding.underLineView.setVisibility(View.GONE);
             }
         }
 

@@ -14,6 +14,7 @@ import android.widget.ListView;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
+import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.Area;
 import com.daily.dailyhotel.entity.Region;
 import com.daily.dailyhotel.view.DailyToolbarView;
@@ -27,6 +28,7 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Function;
 
 public class StayRegionListView extends BaseDialogView<StayRegionListView.OnEventListener, ActivityStayRegionListDataBinding> implements StayRegionListInterface
 {
@@ -57,7 +59,7 @@ public class StayRegionListView extends BaseDialogView<StayRegionListView.OnEven
         }
 
         initToolbar(viewDataBinding);
-        initLocationTermLayout(viewDataBinding.expandableListView);
+        initHeaderNFooterLayout(viewDataBinding.expandableListView);
 
         viewDataBinding.expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener()
         {
@@ -149,7 +151,7 @@ public class StayRegionListView extends BaseDialogView<StayRegionListView.OnEven
     }
 
     @Override
-    public Observable<Boolean> collapseGroupWithAnimation(int groupPosition)
+    public Observable<Boolean> collapseGroupWithAnimation(int groupPosition, boolean animation)
     {
         if (getViewDataBinding() == null || groupPosition < 0)
         {
@@ -168,31 +170,56 @@ public class StayRegionListView extends BaseDialogView<StayRegionListView.OnEven
             @Override
             protected void subscribeActual(Observer<? super Boolean> observer)
             {
-                getViewDataBinding().expandableListView.collapseGroupWithAnimation(groupPosition, new DailyAnimatedExpandableListView.OnAnimationListener()
+                if (animation == true)
                 {
-                    @Override
-                    public void onAnimationEnd()
+                    getViewDataBinding().expandableListView.collapseGroupWithAnimation(groupPosition, new DailyAnimatedExpandableListView.OnAnimationListener()
                     {
-                        observer.onNext(true);
-                        observer.onComplete();
-                    }
-                });
+                        @Override
+                        public void onAnimationEnd()
+                        {
+                            observer.onNext(true);
+                            observer.onComplete();
+                        }
+                    });
+                } else
+                {
+                    getViewDataBinding().expandableListView.collapseGroup(groupPosition);
+
+                    observer.onNext(true);
+                    observer.onComplete();
+                }
             }
         };
 
-        return Observable.zip(observable, collapseArrowAnimation(getGroupView(groupPosition)), new BiFunction<Boolean, Boolean, Boolean>()
+        Observable<Boolean> collapseObservable = collapseArrowAnimation(getGroupView(groupPosition));
+
+        if (collapseObservable == null)
         {
-            @Override
-            public Boolean apply(Boolean aBoolean, Boolean aBoolean2) throws Exception
+            return observable.map(new Function<Boolean, Boolean>()
             {
-                region.expandGroup = false;
-                return true;
-            }
-        });
+                @Override
+                public Boolean apply(Boolean aBoolean) throws Exception
+                {
+                    region.expandGroup = false;
+                    return true;
+                }
+            });
+        } else
+        {
+            return Observable.zip(observable, collapseObservable, new BiFunction<Boolean, Boolean, Boolean>()
+            {
+                @Override
+                public Boolean apply(Boolean aBoolean, Boolean aBoolean2) throws Exception
+                {
+                    region.expandGroup = false;
+                    return true;
+                }
+            });
+        }
     }
 
     @Override
-    public Observable<Boolean> expandGroupWidthAnimation(int groupPosition)
+    public Observable<Boolean> expandGroupWidthAnimation(int groupPosition, boolean animation)
     {
         if (getViewDataBinding() == null || groupPosition < 0)
         {
@@ -211,15 +238,47 @@ public class StayRegionListView extends BaseDialogView<StayRegionListView.OnEven
             @Override
             protected void subscribeActual(Observer<? super Boolean> observer)
             {
-                getViewDataBinding().expandableListView.expandGroupWithAnimation(groupPosition, new DailyAnimatedExpandableListView.OnAnimationListener()
+                if (animation == true)
                 {
-                    @Override
-                    public void onAnimationEnd()
+                    getViewDataBinding().expandableListView.expandGroupWithAnimation(groupPosition, new DailyAnimatedExpandableListView.OnAnimationListener()
                     {
-                        observer.onNext(true);
-                        observer.onComplete();
+                        @Override
+                        public void onAnimationEnd()
+                        {
+                            observer.onNext(true);
+                            observer.onComplete();
+                        }
+                    });
+
+                    // 마지막 리스트 목록은 애니메이션으로 안잡힌다.
+                    if (groupPosition == mStayRegionListAdapter.getGroupCount() - 1)
+                    {
+                        getViewDataBinding().expandableListView.setOnScrollListener(new AbsListView.OnScrollListener()
+                        {
+                            @Override
+                            public void onScrollStateChanged(AbsListView absListView, int scrollState)
+                            {
+                                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE)
+                                {
+                                    observer.onNext(true);
+                                    observer.onComplete();
+                                }
+                            }
+
+                            @Override
+                            public void onScroll(AbsListView absListView, int i, int i1, int i2)
+                            {
+
+                            }
+                        });
                     }
-                });
+                } else
+                {
+                    getViewDataBinding().expandableListView.expandGroup(groupPosition);
+
+                    observer.onNext(true);
+                    observer.onComplete();
+                }
             }
         };
 
@@ -247,17 +306,26 @@ public class StayRegionListView extends BaseDialogView<StayRegionListView.OnEven
         viewDataBinding.toolbarView.addMenuItem(DailyToolbarView.MenuItem.SEARCH, null, v -> getEventListener().onSearchClick());
     }
 
-    private void initLocationTermLayout(ListView listView)
+    private void initHeaderNFooterLayout(ListView listView)
     {
-        if (listView == null || listView.getHeaderViewsCount() > 0)
+        if (listView == null || listView.getHeaderViewsCount() > 0 || listView.getFooterViewsCount() > 0)
         {
             return;
         }
 
+        // 헤더
         mLayoutRegionListLocationDataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.layout_region_list_location_data, listView, false);
         listView.addHeaderView(mLayoutRegionListLocationDataBinding.getRoot());
 
         mLayoutRegionListLocationDataBinding.myLocationTextView.setText(R.string.label_region_around_stay);
+
+        // 푸터
+        View footerView = new View(getContext());
+        footerView.setBackgroundResource(R.drawable.layerlist_divider);
+        AbsListView.LayoutParams footerLayoutParams = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(getContext(), 12));
+        footerView.setLayoutParams(footerLayoutParams);
+
+        listView.addFooterView(footerView);
     }
 
     //    void postExpandGroupWithAnimation(final int groupPosition)
@@ -302,40 +370,40 @@ public class StayRegionListView extends BaseDialogView<StayRegionListView.OnEven
     //        }, 100);
     //    }
     //
-//        private void selectedPreviousArea(Province province, List<RegionViewItem> arrayList)
-//        {
-//            if (province == null || arrayList == null)
-//            {
-//                return;
-//            }
-//
-//            int size = arrayList.size();
-//
-//            for (int i = 0; i < size; i++)
-//            {
-//                RegionViewItem regionViewItem = arrayList.get(i);
-//
-//                if (province.getProvinceIndex() == regionViewItem.getProvince().getProvinceIndex())
-//                {
-//                    if (regionViewItem.getAreaList().size() == 0)
-//                    {
-//                        // 상세 지역이 없는 경우.
-//                        mListView.setSelection(i);
-//                        mListView.setSelectedGroup(i);
-//
-//                        regionViewItem.isExpandGroup = false;
-//                    } else
-//                    {
-//                        mListView.setSelection(i);
-//                        mListView.expandGroup(i);
-//                        mListView.setTag(i);
-//
-//                        regionViewItem.isExpandGroup = true;
-//                    }
-//                    break;
-//                }
-//            }
-//        }
+    //        private void selectedPreviousArea(Province province, List<RegionViewItem> arrayList)
+    //        {
+    //            if (province == null || arrayList == null)
+    //            {
+    //                return;
+    //            }
+    //
+    //            int size = arrayList.size();
+    //
+    //            for (int i = 0; i < size; i++)
+    //            {
+    //                RegionViewItem regionViewItem = arrayList.get(i);
+    //
+    //                if (province.getProvinceIndex() == regionViewItem.getProvince().getProvinceIndex())
+    //                {
+    //                    if (regionViewItem.getAreaList().size() == 0)
+    //                    {
+    //                        // 상세 지역이 없는 경우.
+    //                        mListView.setSelection(i);
+    //                        mListView.setSelectedGroup(i);
+    //
+    //                        regionViewItem.isExpandGroup = false;
+    //                    } else
+    //                    {
+    //                        mListView.setSelection(i);
+    //                        mListView.expandGroup(i);
+    //                        mListView.setTag(i);
+    //
+    //                        regionViewItem.isExpandGroup = true;
+    //                    }
+    //                    break;
+    //                }
+    //            }
+    //        }
 
     private Observable<Boolean> expandArrowAnimation(View view)
     {
@@ -346,7 +414,7 @@ public class StayRegionListView extends BaseDialogView<StayRegionListView.OnEven
 
         final ImageView imageView = view.findViewById(R.id.arrowImageView);
 
-        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(imageView, View.ROTATION, 0f, 180f);
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(imageView, View.ROTATION, 0f, -180f);
         objectAnimator.setDuration(250);
 
         Observable<Boolean> observable = new Observable<Boolean>()
@@ -365,6 +433,7 @@ public class StayRegionListView extends BaseDialogView<StayRegionListView.OnEven
                     @Override
                     public void onAnimationEnd(Animator animator)
                     {
+                        imageView.setRotation(0f);
                         imageView.setImageResource(R.drawable.ic_region_ic_sub_v_top);
 
                         observer.onNext(true);
@@ -398,9 +467,9 @@ public class StayRegionListView extends BaseDialogView<StayRegionListView.OnEven
             return null;
         }
 
-        final ImageView imageView = (ImageView) view.findViewById(R.id.arrowImageView);
+        final ImageView imageView = view.findViewById(R.id.arrowImageView);
 
-        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(imageView, View.ROTATION, 180f, 0f);
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(imageView, View.ROTATION, 0, 180f);
         objectAnimator.setDuration(250);
 
         Observable<Boolean> observable = new Observable<Boolean>()
@@ -419,6 +488,7 @@ public class StayRegionListView extends BaseDialogView<StayRegionListView.OnEven
                     @Override
                     public void onAnimationEnd(Animator animator)
                     {
+                        imageView.setRotation(0f);
                         imageView.setImageResource(R.drawable.ic_region_ic_sub_v);
 
                         observer.onNext(true);

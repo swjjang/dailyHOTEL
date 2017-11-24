@@ -13,7 +13,7 @@ public interface StayRegionListInterface extends BaseDialogViewInterface
 
     void setLocationTermVisible(boolean visible);
 
-    Observable<Boolean> collapseGroupWithAnimation(int groupPosition);
+    Observable<Boolean> collapseGroupWithAnimation(int groupPosition, boolean animation);
 
-    Observable<Boolean> expandGroupWidthAnimation(int groupPosition);
+    Observable<Boolean> expandGroupWidthAnimation(int groupPosition, boolean animation);
 }
