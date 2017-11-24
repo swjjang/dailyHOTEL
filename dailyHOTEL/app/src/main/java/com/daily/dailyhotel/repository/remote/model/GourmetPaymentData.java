@@ -3,32 +3,25 @@ package com.daily.dailyhotel.repository.remote.model;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.daily.dailyhotel.entity.GourmetPayment;
-import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.daily.dailyhotel.entity.GourmetPaymentMenu;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimeZone;
 
 @JsonObject
 public class GourmetPaymentData
 {
-    @JsonField(name = "business_name")
-    public String business_name;
+    @JsonField(name = "restaurantName")
+    public String restaurantName;
 
-    @JsonField(name = "discount")
-    public int discount;
+    @JsonField(name = "businessName")
+    public String businessName;
 
-    @JsonField(name = "sday")
-    public long sday;
+    @JsonField(name = "totalPrice")
+    public int totalPrice;
 
-    @JsonField(name = "minimum_order_quantity")
-    public int minimum_order_quantity;
-
-    @JsonField(name = "max_sale_count")
-    public int max_sale_count;
-
-    @JsonField(name = "eating_time_list")
-    public List<Long> eating_time_list;
+    @JsonField(name = "items")
+    public List<MenuData> items;
 
     public GourmetPaymentData()
     {
@@ -39,21 +32,54 @@ public class GourmetPaymentData
     {
         GourmetPayment gourmetPayment = new GourmetPayment();
 
-        gourmetPayment.visitDate = DailyCalendar.format(sday - DailyCalendar.NINE_HOUR_MILLISECOND, DailyCalendar.ISO_8601_FORMAT, TimeZone.getTimeZone("GMT+09:00"));
-        gourmetPayment.totalPrice = discount;
-        gourmetPayment.businessName = business_name;
-        gourmetPayment.minMenuCount = minimum_order_quantity;
-        gourmetPayment.maxMenuCount = max_sale_count;
+        gourmetPayment.restaurantName = restaurantName;
+        gourmetPayment.businessName = businessName;
+        gourmetPayment.totalPrice = totalPrice;
 
-        List<String> timeList = new ArrayList<>();
-
-        for (long time : eating_time_list)
+        if (items != null)
         {
-            timeList.add(DailyCalendar.format(time - DailyCalendar.NINE_HOUR_MILLISECOND, DailyCalendar.ISO_8601_FORMAT, TimeZone.getTimeZone("GMT+09:00")));
+            List<GourmetPaymentMenu> gourmetPaymentMenuList = new ArrayList<>();
+
+            for (MenuData menuData : items)
+            {
+                gourmetPaymentMenuList.add(menuData.getMenu());
+            }
+
+            gourmetPayment.setGourmetPaymentMenuList(gourmetPaymentMenuList);
         }
 
-        gourmetPayment.setVisitTimeList(timeList);
-
         return gourmetPayment;
+    }
+
+    @JsonObject
+    static class MenuData
+    {
+        @JsonField(name = "saleRecoIdx")
+        public int saleIndex;
+
+        @JsonField(name = "ticketName")
+        public String ticketName;
+
+        @JsonField(name = "price")
+        public int price;
+
+        @JsonField(name = "count")
+        public int count;
+
+        @JsonField(name = "subTotalPrice")
+        public int subTotalPrice;
+
+        public GourmetPaymentMenu getMenu()
+        {
+            GourmetPaymentMenu gourmetPaymentMenu = new GourmetPaymentMenu();
+
+            gourmetPaymentMenu.saleIndex = saleIndex;
+            gourmetPaymentMenu.ticketName = ticketName;
+            gourmetPaymentMenu.price = price;
+            gourmetPaymentMenu.count = count;
+            gourmetPaymentMenu.subTotalPrice = subTotalPrice;
+
+            return gourmetPaymentMenu;
+        }
     }
 }

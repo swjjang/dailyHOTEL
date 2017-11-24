@@ -683,7 +683,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
     }
 
     @Override
-    public void setSummeryCart(String text, int totalCount)
+    public void setSummeryCart(String text, int totalCount, int totalPrice)
     {
         if (getViewDataBinding() == null)
         {
@@ -692,6 +692,10 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
 
         getViewDataBinding().cartBookingTextView.setText(text);
         getViewDataBinding().cartBookingTotalCountTextView.setText(Integer.toString(totalCount));
+
+        // 하단 종합 내용
+        getViewDataBinding().cartMenusCountTextView.setText(getString(R.string.label_gourmet_product_detail_count_tag, totalCount));
+        getViewDataBinding().cartMenusTotalPriceTextView.setText(DailyTextUtils.getPriceFormat(getContext(), totalPrice, false));
     }
 
     @Override

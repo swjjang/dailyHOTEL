@@ -7,6 +7,8 @@ import com.daily.base.exception.BaseException;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.PaymentInterface;
 import com.daily.dailyhotel.entity.Card;
+import com.daily.dailyhotel.entity.GourmetCart;
+import com.daily.dailyhotel.entity.GourmetCartMenu;
 import com.daily.dailyhotel.entity.GourmetPayment;
 import com.daily.dailyhotel.entity.PaymentResult;
 import com.daily.dailyhotel.entity.People;
@@ -167,12 +169,34 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
     }
 
     @Override
-    public Observable<GourmetPayment> getGourmetPayment(int[] saleIndexes)
+    public Observable<GourmetPayment> getGourmetPayment(GourmetCart gourmetCart)
     {
-        final String API = Constants.UNENCRYPTED_URL ? "api/fnb/sale/ticket/payment/info"//
-            : "MzkkOTYkOTIkMTI5JDEwOSQzNyQxMjgkMTA3JDQ3JDY0JDMxJDEzMyQxNiQwJDk0JDEzOCQ=$KMzM4MzgyRkFFOTFBINUZCRkQxRjA5MjIEyRkFEOODYDwMkMwMKjk1RjkxRjNDMDM1MJTc1QjZCMjJCREFEQzk3NDdGMkUCzMDgVzNDZEGRkE1QThWDNkQM1MzNBRjEyMjQwQUUYH1DNkIQw$";
+        final String API = Constants.UNENCRYPTED_URL ? "api/v5/prebooking/gourmet/item/info"//
+            : "MzkkNjUkNjYkMjgkNiQ5MyQxMjYkOCQ0JDkkMyQxJDMzJDc2JDc4JDE1JA==$RVDkG5FMjUMPM2NLDBGNEJGMUZBRkQ5RjUL4VN0I2NjE3NTdXGMTI3QTI2QjZBN0IzODY0RjJEIGNXUII4MkUzMjRDQkVEODA3QzFFARUIwMzdEQzk1RDkwMzlCNEI3MjdDODBDCRTdDMzQ1$";
 
-        return mDailyMobileService.getGourmetPayment(Crypto.getUrlDecoderEx(API), saleIndexes[0]) //
+        JSONObject jsonObject = new JSONObject();
+
+        try
+        {
+            jsonObject.put("arrivalDateTime", gourmetCart.getVisitDateTime());
+
+            JSONArray menuJsonArray = new JSONArray();
+            for(GourmetCartMenu gourmetCartMenu : gourmetCart.getMenuList())
+            {
+                JSONObject menuJSONObject = new JSONObject();
+                menuJSONObject.put("saleRecoIdx", gourmetCartMenu.saleIndex);
+                menuJSONObject.put("count", gourmetCartMenu.count);
+
+                menuJsonArray.put(menuJSONObject);
+            }
+
+            jsonObject.put("bookingItems", menuJsonArray);
+        }catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
+        return mDailyMobileService.getGourmetPayment(Crypto.getUrlDecoderEx(API), jsonObject) //
             .subscribeOn(Schedulers.io()).map(gourmetPaymentDataBaseDto ->
             {
                 GourmetPayment gourmetPayment = null;

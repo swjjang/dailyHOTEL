@@ -790,9 +790,9 @@ public interface DailyMobileService
         , @Query("stays") int nights);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("{mobileAPI}")
+    @POST("{mobileAPI}")
     Observable<Base_Dto<GourmetPaymentData>> getGourmetPayment(@Path(value = "mobileAPI", encoded = true) String mobileAPI//
-        , @Query("sale_reco_idx") int index);
+        , @Body JSONObject jsonObject);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @POST("{mobileAPI}")
