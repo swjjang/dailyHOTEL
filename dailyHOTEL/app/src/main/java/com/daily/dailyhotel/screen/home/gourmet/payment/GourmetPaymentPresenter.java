@@ -664,9 +664,15 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                 if (mGourmetCart.getTotalPrice() != mGourmetPayment.totalPrice)
                 {
                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_payment_changed_price)//
-                        , getString(R.string.dialog_btn_text_confirm), null);
-
-                    setResult(BaseActivity.RESULT_CODE_REFRESH);
+                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialogInterface)
+                            {
+                                setResult(BaseActivity.RESULT_CODE_REFRESH);
+                                onBackClick();
+                            }
+                        });
 
                     mAnalytics.onEventChangedPrice(getActivity(), mGourmetCart.gourmetName);
                 } else if (mGourmetPayment.soldOut == true) // 솔드 아웃인 경우

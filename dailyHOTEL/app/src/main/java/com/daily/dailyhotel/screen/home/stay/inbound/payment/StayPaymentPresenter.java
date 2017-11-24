@@ -651,9 +651,15 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 {
                     // 가격이 변동된 경우
                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_payment_changed_price)//
-                        , getString(R.string.dialog_btn_text_confirm), null);
-
-                    setResult(BaseActivity.RESULT_CODE_REFRESH);
+                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialogInterface)
+                            {
+                                setResult(BaseActivity.RESULT_CODE_REFRESH);
+                                onBackClick();
+                            }
+                        });
 
                     mAnalytics.onEventChangedPrice(getActivity(), mStayName);
                 } else if (mStayPayment.soldOut == true) // 솔드 아웃인 경우
@@ -664,8 +670,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                             @Override
                             public void onDismiss(DialogInterface dialog)
                             {
-                                setResult(BaseActivity.RESULT_CODE_REFRESH);
-                                onBackClick();
+
                             }
                         });
 
