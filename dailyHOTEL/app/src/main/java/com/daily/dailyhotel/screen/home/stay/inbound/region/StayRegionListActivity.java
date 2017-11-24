@@ -15,6 +15,10 @@ import com.twoheart.dailyhotel.R;
  */
 public class StayRegionListActivity extends BaseActivity<StayRegionListPresenter>
 {
+    static final int REQUEST_CODE_SETTING_LOCATION = 10000;
+    static final int REQUEST_CODE_PERMISSION_MANAGER = 10001;
+    static final int REQUEST_CODE_SEARCH = 10002;
+
     static final String INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME = "checkInDateTime";
     static final String INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME = "checkOutDateTime";
     static final String INTENT_EXTRA_DATA_PROVINCE_INDEX = "provinceIndex";

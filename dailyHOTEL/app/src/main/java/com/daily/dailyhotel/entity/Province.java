@@ -8,7 +8,6 @@ public class Province
     public String name;
     public String nameEng;
     public int sequence;
-    public boolean overseas;
 
     private List<Category> mCategoryList;
 

@@ -32,41 +32,59 @@ public class RegionData
     {
     }
 
-    public Region getRegion()
+    public List<Region> getRegionList()
     {
-        Region region = new Region();
+        List<Region> regionList = new ArrayList<>();
 
         if (regionProvince != null && regionProvince.size() > 0)
         {
-            List<Province> provinceList = new ArrayList<>();
+            Region region;
 
             for (ProvinceData provinceData : regionProvince)
             {
-                provinceList.add(provinceData.getProvince());
-            }
-
-            region.setProvinceList(provinceList);
-        }
-
-        if (regionProvince != null && regionProvince.size() > 0 && regionArea != null && regionArea.size() > 0)
-        {
-            List<Area> areaList = new ArrayList<>();
-            Area area;
-
-            for (AreaData areaData : regionArea)
-            {
-                area = areaData.getArea(region.getProvinceList());
-
-                if (area != null)
+                // 해외 지역은 보여주지 않는다.
+                if (provinceData.overseas == true)
                 {
-                    areaList.add(area);
+                    continue;
                 }
-            }
 
-            region.setAreaList(areaList);
+                region = new Region();
+
+                Province province = provinceData.getProvince();
+                region.setProvince(province);
+
+                if (regionArea != null && regionArea.size() > 0)
+                {
+                    List<Area> areaList = new ArrayList<>();
+
+                    for (AreaData areaData : regionArea)
+                    {
+                        if (areaData.provinceIndex == provinceData.index)
+                        {
+                            areaList.add(areaData.getArea());
+                        }
+                    }
+
+                    // 개수가 0보다 크면 전체 지역을 넣는다.
+                    if (areaList.size() > 0)
+                    {
+                        Area totalArea = new Area();
+
+                        totalArea.index = -1;
+                        totalArea.name = province.name;
+                        totalArea.sequence = -1;
+
+                        areaList.add(0, totalArea);
+                    }
+
+                    region.setAreaList(areaList);
+                }
+
+                regionList.add(region);
+            }
         }
 
-        return region;
+        return regionList;
     }
 
     @JsonObject
@@ -149,28 +167,9 @@ public class RegionData
 
         }
 
-        public Area getArea(List<Province> provinceList)
+        public Area getArea()
         {
-            if (provinceList == null || provinceList.size() == 0)
-            {
-                return null;
-            }
-
             Area area = new Area();
-
-            for (Province province : provinceList)
-            {
-                if (provinceIndex == province.index)
-                {
-                    area.setProvince(province);
-                    break;
-                }
-            }
-
-            if (area.getProvince() == null)
-            {
-                return null;
-            }
 
             area.index = index;
             area.name = name;

@@ -259,7 +259,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
     }
 
     @Override
-    public Observable<Region> getRegion()
+    public Observable<List<Region>> getRegionList()
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v3/hotel/region"//
             : "MjMkNjQkMjEkMCQ2MCQ1MiQ0NCQzMiQzMSQyMiQ3MSQ4NiQ2OCQxMyQ0NyQ2OCQ=$PRUM3NTRGQzA5RMEVBMjZFNPQEEN0MTgzYMVzcyQ0VERDUzOOJDQyRTQ1NYzkxNkM0MBNEUG1RUTFOGMDExRDVEMEMExRTEwMDExNw==$";
@@ -267,13 +267,13 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
         return mDailyMobileService.getStayRegion(Crypto.getUrlDecoderEx(API))//
             .subscribeOn(Schedulers.io()).map(baseDto ->
             {
-                Region region;
+                List<Region> regionList;
 
                 if (baseDto != null)
                 {
                     if (baseDto.msgCode == 100 && baseDto.data != null)
                     {
-                        region = baseDto.data.getRegion();
+                        regionList = baseDto.data.getRegionList();
                     } else
                     {
                         throw new BaseException(baseDto.msgCode, baseDto.msg);
@@ -283,7 +283,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
                     throw new BaseException(-1, null);
                 }
 
-                return region;
+                return regionList;
             });
     }
 }

@@ -28,5 +28,5 @@ public interface StayInterface
 
     Observable<List<TrueVR>> getTrueVR(int stayIndex);
 
-    Observable<Region> getRegion();
+    Observable<List<Region>> getRegionList();
 }

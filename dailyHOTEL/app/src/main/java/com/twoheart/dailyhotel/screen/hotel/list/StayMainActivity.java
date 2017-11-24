@@ -49,7 +49,6 @@ import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkControlle
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
-import com.twoheart.dailyhotel.screen.hotel.region.StayRegionListActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -566,8 +565,16 @@ public class StayMainActivity extends PlaceMainActivity
             return;
         }
 
-        Intent intent = StayRegionListActivity.newInstance(StayMainActivity.this, //
-            mStayCuration.getProvince(), mStayCuration.getStayBookingDay(), mStayCuration.getCategory().code);
+        //        Intent intent = StayRegionListActivity.newInstance(StayMainActivity.this, //
+        //            mStayCuration.getProvince(), mStayCuration.getStayBookingDay(), mStayCuration.getCategory().code);
+
+        String checkInDateTime = mStayCuration.getStayBookingDay().getCheckInDay(DailyCalendar.ISO_8601_FORMAT);
+        String checkOutDateTime = mStayCuration.getStayBookingDay().getCheckOutDay(DailyCalendar.ISO_8601_FORMAT);
+
+        Intent intent = com.daily.dailyhotel.screen.home.stay.inbound.region.StayRegionListActivity.newInstance(StayMainActivity.this//
+            , checkInDateTime, checkOutDateTime, mStayCuration.getProvince().getProvinceIndex(), mStayCuration.getProvince().index, mStayCuration.getCategory().code);
+
+
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
 
         switch (mViewType)

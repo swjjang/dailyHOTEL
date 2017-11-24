@@ -4,8 +4,10 @@ import java.util.List;
 
 public class Region
 {
-    private List<Province> mProvinceList;
+    private Province mProvince;
     private List<Area> mAreaList;
+
+    public boolean expandGroup;
 
     public List<Area> getAreaList()
     {
@@ -17,13 +19,18 @@ public class Region
         mAreaList = areaList;
     }
 
-    public List<Province> getProvinceList()
+    public Province getProvince()
     {
-        return mProvinceList;
+        return mProvince;
     }
 
-    public void setProvinceList(List<Province> provinceList)
+    public void setProvince(Province province)
     {
-        mProvinceList = provinceList;
+        mProvince = province;
+    }
+
+    public int getAreaCount()
+    {
+        return mAreaList == null ? 0 : mAreaList.size();
     }
 }
