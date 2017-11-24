@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.domain;
 
 import com.daily.dailyhotel.entity.Card;
+import com.daily.dailyhotel.entity.GourmetCart;
 import com.daily.dailyhotel.entity.GourmetPayment;
 import com.daily.dailyhotel.entity.PaymentResult;
 import com.daily.dailyhotel.entity.People;
@@ -23,7 +24,7 @@ public interface PaymentInterface
 
     Observable<StayPayment> getStayPayment(StayBookDateTime stayBookDateTime, int roomIndex);
 
-    Observable<GourmetPayment> getGourmetPayment(int[] menuIndex);
+    Observable<GourmetPayment> getGourmetPayment(GourmetCart gourmetCart);
 
     // 간편 결제 카드 리스트를 얻어온다.
     Observable<List<Card>> getEasyCardList();

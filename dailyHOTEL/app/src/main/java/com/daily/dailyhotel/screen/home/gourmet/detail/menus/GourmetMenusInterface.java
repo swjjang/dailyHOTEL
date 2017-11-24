@@ -30,7 +30,7 @@ public interface GourmetMenusInterface extends BaseDialogViewInterface
 
     void showTimePickerDialog(List<Integer> operationTimeList, int menuIndex);
 
-    void setSummeryCart(String text, int totalCount);
+    void setSummeryCart(String text, int totalCount, int totalPrice);
 
     void setCartVisible(boolean visible);
 

@@ -255,7 +255,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
                     && mGourmetCart.gourmetIndex == mGourmetIndex && mGourmetCart.getMenuCount() > 0)
                 {
                     getViewInterface().setCartVisible(true);
-                    getViewInterface().setSummeryCart(getString(R.string.label_gourmet_product_detail_check_the_menus), mGourmetCart.getTotalCount());
+                    getViewInterface().setSummeryCart(getString(R.string.label_gourmet_product_detail_check_the_menus), mGourmetCart.getTotalCount(), mGourmetCart.getTotalPrice());
                 }
             }
         }, new Consumer<Throwable>()
@@ -796,7 +796,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             {
                 getViewInterface().setSummeryCart(getString(R.string.label_gourmet_product_detail_booking_total_price//
                     , DailyTextUtils.getPriceFormat(getActivity(), mGourmetCart.getTotalPrice(), false))//
-                    , mGourmetCart.getTotalCount());
+                    , mGourmetCart.getTotalCount(), mGourmetCart.getTotalPrice());
 
                 mOpenedCartMenus = true;
 
@@ -842,7 +842,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
                     getViewInterface().setCartVisible(false);
                 } else
                 {
-                    getViewInterface().setSummeryCart(getString(R.string.label_gourmet_product_detail_check_the_menus), mGourmetCart.getTotalCount());
+                    getViewInterface().setSummeryCart(getString(R.string.label_gourmet_product_detail_check_the_menus), mGourmetCart.getTotalCount(), mGourmetCart.getTotalPrice());
                 }
 
                 mOpenedCartMenus = false;
@@ -883,7 +883,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             // Cart
             getViewInterface().setSummeryCart(getString(R.string.label_gourmet_product_detail_booking_total_price//
                 , DailyTextUtils.getPriceFormat(getActivity(), mGourmetCart.getTotalPrice(), false))//
-                , mGourmetCart.getTotalCount());
+                , mGourmetCart.getTotalCount(), mGourmetCart.getTotalPrice());
             getViewInterface().setGourmetCart(mGourmetCart);
         } else
         {
@@ -1109,7 +1109,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 
         getViewInterface().setSummeryCart(openedCartMenus ? getString(R.string.label_gourmet_product_detail_booking_total_price//
             , DailyTextUtils.getPriceFormat(getActivity(), mGourmetCart.getTotalPrice(), false))//
-            : getString(R.string.label_gourmet_product_detail_check_the_menus), mGourmetCart.getTotalCount());
+            : getString(R.string.label_gourmet_product_detail_check_the_menus), mGourmetCart.getTotalCount(), mGourmetCart.getTotalPrice());
 
         return true;
     }
@@ -1144,7 +1144,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 
         getViewInterface().setSummeryCart(openedCartMenus ? getString(R.string.label_gourmet_product_detail_booking_total_price//
             , DailyTextUtils.getPriceFormat(getActivity(), mGourmetCart.getTotalPrice(), false))//
-            : getString(R.string.label_gourmet_product_detail_check_the_menus), mGourmetCart.getTotalCount());
+            : getString(R.string.label_gourmet_product_detail_check_the_menus), mGourmetCart.getTotalCount(), mGourmetCart.getTotalPrice());
 
         return true;
     }
