@@ -9,15 +9,15 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import android.widget.TextView;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
@@ -26,9 +26,10 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyScrollView;
-import com.daily.base.widget.DailyTextView;
+import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.GourmetBookingDetail;
-import com.daily.dailyhotel.view.DailyBookingProductView;
+import com.daily.dailyhotel.view.DailyToolbarView;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -37,18 +38,16 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityGourmetBookingDetailDataBinding;
-import com.twoheart.dailyhotel.databinding.LayoutGourmetBookingCancelDetail01DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetBookingDetail01DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetBookingDetail02DataBinding;
-import com.twoheart.dailyhotel.databinding.LayoutPlaceBookingCancelDetailDataBinding;
+import com.twoheart.dailyhotel.model.MyLocationMarker;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
-import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.adapter.PlaceNameInfoWindowAdapter;
-import com.twoheart.dailyhotel.place.layout.PlaceReservationDetailLayout;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -81,31 +80,41 @@ public class GourmetBookingDetailView extends BaseDialogView<GourmetBookingDetai
     {
         void onIssuingReceiptClick();
 
-        void onMapClick(boolean isGoogleMap);
+        void onShareClick();
+
+        void onMapLoading();
+
+        void onMapClick();
+
+        void onExpandMapClick();
+
+        void onCollapseMapClick();
 
         void onViewDetailClick();
 
-        void onViewMapClick();
-
-        void onRefundClick();
-
-        void onReviewClick(String reviewStatus);
-
-        void showCallDialog();
-
-        void showShareDialog();
-
-        void onMyLocationClick();
+        void onNavigatorClick();
 
         void onClipAddressClick();
 
-        void onSearchMapClick();
+        void onMyLocationClick();
 
-        void onReleaseUiComponent();
+        void onConciergeClick();
 
-        void onLoadingMap();
+        void onConciergeFaqClick();
 
-        void onDeleteReservationClick();
+        void onRestaurantCallClick(String restaurantPhone);
+
+        void onConciergeHappyTalkClick();
+
+        void onConciergeCallClick();
+
+        void onShareKakaoClick();
+
+        void onMoreShareClick();
+
+        void onHiddenReservationClick();
+
+        void onReviewClick(String reviewStatus);
     }
 
     public GourmetBookingDetailView(BaseActivity baseActivity, GourmetBookingDetailView.OnEventListener listener)
@@ -171,16 +180,73 @@ public class GourmetBookingDetailView extends BaseDialogView<GourmetBookingDetai
         getViewDataBinding().toolbarView.setTitleText(title);
     }
 
+    private void initToolbar(ActivityGourmetBookingDetailDataBinding viewDataBinding)
+    {
+        setBookingDetailToolbar();
+    }
+
+    @Override
+    public void setBookingDetailToolbar()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().toolbarView.setTitleText(getString(R.string.actionbar_title_booking_list_frag));
+        getViewDataBinding().toolbarView.setOnBackClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onBackClick();
+            }
+        });
+
+        getViewDataBinding().toolbarView.clearMenuItem();
+        getViewDataBinding().toolbarView.addMenuItem(DailyToolbarView.MenuItem.SHARE, null, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onShareClick();
+            }
+        });
+
+        getViewDataBinding().toolbarView.addMenuItem(DailyToolbarView.MenuItem.HELP, null, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onConciergeCallClick();
+            }
+        });
+    }
+
+    @Override
+    public void setBookingDetailMapToolbar()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().toolbarView.setTitleText(getString(R.string.frag_tab_map_title));
+        getViewDataBinding().toolbarView.setOnBackClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onCollapseMapClick();
+            }
+        });
+
+        getViewDataBinding().toolbarView.clearMenuItem();
+    }
+
     @Override
     public void setBookingDetail(GourmetBookingDetail gourmetBookingDetail)
     {
-//        initHeaderInformationLayout(mContext, mScrollLayout, placeBookingDetail);
-//        initPlaceInformationLayout(mContext, mScrollLayout, todayDateTime, placeBookingDetail);
-//        initTimeInformationLayout(mContext, mScrollLayout, placeBookingDetail);
-//        initGuestInformationLayout(mContext, mScrollLayout, placeBookingDetail);
-//        initPaymentInformationLayout(mContext, mScrollLayout, placeBookingDetail);
-//        initRefundPolicyLayout(mContext, mScrollLayout, placeBookingDetail);
-
         setHeaderLayout(getContext(), gourmetBookingDetail);
 
         setBookingInformation(getContext(), mBookingDetail01DataBinding, gourmetBookingDetail);
@@ -188,9 +254,116 @@ public class GourmetBookingDetailView extends BaseDialogView<GourmetBookingDetai
         setPaymentInformation(getContext(), mBookingDetail02DataBinding, gourmetBookingDetail);
     }
 
-    private void initToolbar(ActivityGourmetBookingDetailDataBinding viewDataBinding)
+    @Override
+    public void setRemindDate(String currentDateTime, String bookingDateTime)
     {
-        setBookingDetailToolbar();
+        if (mBookingDetail01DataBinding == null)
+        {
+            return;
+        }
+
+        if (DailyTextUtils.isTextEmpty(currentDateTime, bookingDateTime) == true)
+        {
+            mBookingDetail01DataBinding.remainedDayLayout.setVisibility(View.GONE);
+        }
+
+        // 3일전 부터 몇일 남음 필요.
+        String remainedDayText;
+
+        try
+        {
+            Date checkInDate = DailyCalendar.convertStringToDate(bookingDateTime);
+            Date currentDate = DailyCalendar.convertStringToDate(currentDateTime);
+
+            int dayOfDays = (int) ((DailyCalendar.clearTField(checkInDate.getTime()) - DailyCalendar.clearTField(currentDate.getTime())) / DailyCalendar.DAY_MILLISECOND);
+            if (dayOfDays < 0 || dayOfDays > 3)
+            {
+                remainedDayText = null;
+            } else if (dayOfDays > 0)
+            {
+                // 하루이상 남음
+                remainedDayText = getString(R.string.frag_booking_duedate_formet_gourmet, dayOfDays);
+            } else
+            {
+                // 당일
+                remainedDayText = getString(R.string.frag_booking_today_type_gourmet);
+            }
+
+            if (DailyTextUtils.isTextEmpty(remainedDayText) == true)
+            {
+                mBookingDetail01DataBinding.remainedDayLayout.setVisibility(View.GONE);
+            } else
+            {
+                mBookingDetail01DataBinding.remainedDayLayout.setVisibility(View.VISIBLE);
+                mBookingDetail01DataBinding.remainedDayTextView.setText(remainedDayText);
+            }
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
+    @Override
+    public void setBookingDateAndPersons(String ticketDate, int persons)
+    {
+        if (getViewDataBinding() == null || mBookingDetail01DataBinding == null)
+        {
+            return;
+        }
+
+        mBookingDetail01DataBinding.ticketDateTextView.setText(ticketDate);
+        mBookingDetail01DataBinding.visitPersonsTextView.setText(getString(R.string.label_booking_visit_persons_format, persons));
+    }
+
+    @Override
+    public void setHiddenBookingVisible(int bookingState)
+    {
+        if (getContext() == null || getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (Booking.BOOKING_STATE_CANCEL == bookingState)
+        {
+            getViewDataBinding().deleteReservationTextView.setText(R.string.label_booking_cancel_detail_delete_reservation);
+        } else
+        {
+            getViewDataBinding().deleteReservationTextView.setText(R.string.label_booking_detail_delete_reservation);
+        }
+
+        if (Booking.BOOKING_STATE_AFTER_USE == bookingState || Booking.BOOKING_STATE_CANCEL == bookingState)
+        {
+            getViewDataBinding().deleteReservationTextView.setVisibility(View.VISIBLE);
+            getViewDataBinding().deleteReservationTextView.setOnClickListener(this);
+
+            LinearLayout.LayoutParams layoutParams = ((LinearLayout.LayoutParams) getViewDataBinding().deleteReservationTextView.getLayoutParams());
+
+            if (layoutParams.height != LinearLayout.LayoutParams.WRAP_CONTENT)
+            {
+                layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+
+                final int DP_37 = ScreenUtils.dpToPx(getContext(), 37);
+
+                layoutParams.setMargins(0, DP_37, 0, 0);
+                getViewDataBinding().deleteReservationTextView.setPadding(0, 0, 0, DP_37);
+                getViewDataBinding().deleteReservationTextView.requestLayout();
+            }
+        } else
+        {
+            getViewDataBinding().deleteReservationTextView.setVisibility(View.INVISIBLE);
+            getViewDataBinding().deleteReservationTextView.setOnClickListener(null);
+
+            LinearLayout.LayoutParams layoutParams = ((LinearLayout.LayoutParams) getViewDataBinding().deleteReservationTextView.getLayoutParams());
+
+            final int DP_24 = ScreenUtils.dpToPx(getContext(), 24);
+            if (layoutParams.height != DP_24)
+            {
+                layoutParams.setMargins(0, 0, 0, 0);
+                layoutParams.height = DP_24;
+                getViewDataBinding().deleteReservationTextView.setPadding(0, 0, 0, 0);
+                getViewDataBinding().deleteReservationTextView.requestLayout();
+            }
+        }
     }
 
     private void setHeaderLayout(Context context, GourmetBookingDetail gourmetBookingDetail)
@@ -273,7 +446,7 @@ public class GourmetBookingDetailView extends BaseDialogView<GourmetBookingDetai
             @Override
             public void onClick(View v)
             {
-                getEventListener().onSearchMapClick();
+                getEventListener().onNavigatorClick();
             }
         });
 
@@ -381,49 +554,11 @@ public class GourmetBookingDetailView extends BaseDialogView<GourmetBookingDetai
             return;
         }
 
-        // TODO : 리마인드 날짜 계산 부분 확인 필요.
-//        // 3일전 부터 몇일 남음 필요.
-//        View remainedDayLayout = view.findViewById(R.id.remainedDayLayout);
-//        TextView remainedDayTextView = (TextView) view.findViewById(R.id.remainedDayTextView);
-//        String remainedDayText;
-//
-//        try
-//        {
-//            Date checkInDate = DailyCalendar.convertStringToDate(gourmetBookingDetail.reservationTime);
-//            Date currentDate = DailyCalendar.convertStringToDate(todayDateTime.currentDateTime);
-//
-//            int dayOfDays = (int) ((DailyCalendar.clearTField(checkInDate.getTime()) - DailyCalendar.clearTField(currentDate.getTime())) / DailyCalendar.DAY_MILLISECOND);
-//            if (dayOfDays < 0 || dayOfDays > 3)
-//            {
-//                remainedDayText = null;
-//            } else if (dayOfDays > 0)
-//            {
-//                // 하루이상 남음
-//                remainedDayText = context.getString(R.string.frag_booking_duedate_formet_gourmet, dayOfDays);
-//            } else
-//            {
-//                // 당일
-//                remainedDayText = context.getString(R.string.frag_booking_today_type_gourmet);
-//            }
-//
-//            if (DailyTextUtils.isTextEmpty(remainedDayText) == true)
-//            {
-//                remainedDayLayout.setVisibility(View.GONE);
-//            } else
-//            {
-//                remainedDayLayout.setVisibility(View.VISIBLE);
-//                remainedDayTextView.setText(remainedDayText);
-//            }
-//        } catch (Exception e)
-//        {
-//            ExLog.d(e.toString());
-//        }
-
         dataBinding.gourmetNameTextView.setText(gourmetBookingDetail.gourmetName);
         dataBinding.addressTextView.setText(gourmetBookingDetail.gourmetAddress);
 
         // TODO : Test Code 서버 연결 작업 후 재 작업 필요.
-        int randPersons = new Random(5).nextInt() -1;
+        int randPersons = new Random(5).nextInt() - 1;
         int tempPrice = gourmetBookingDetail.priceTotal;
 
         dataBinding.productInformationView.addInformation(gourmetBookingDetail.ticketName, gourmetBookingDetail.ticketCount, randPersons, tempPrice);
@@ -483,6 +618,37 @@ public class GourmetBookingDetailView extends BaseDialogView<GourmetBookingDetai
                 getEventListener().onIssuingReceiptClick();
             }
         });
+    }
+
+    @Override
+    public void setMyLocation(Location location)
+    {
+        if (mGoogleMap == null || location == null || getContext() == null)
+        {
+            return;
+        }
+
+        if (mMyLocationMarkerOptions == null)
+        {
+            mMyLocationMarkerOptions = new MarkerOptions();
+            mMyLocationMarkerOptions.icon(new MyLocationMarker(getContext()).makeIcon());
+            mMyLocationMarkerOptions.anchor(0.5f, 0.5f);
+        }
+
+        if (mMyLocationMarker != null)
+        {
+            mMyLocationMarker.remove();
+        }
+
+        mMyLocationMarkerOptions.position(new LatLng(location.getLatitude(), location.getLongitude()));
+        mMyLocationMarker = mGoogleMap.addMarker(mMyLocationMarkerOptions);
+
+        LatLngBounds.Builder latLngBounds = new LatLngBounds.Builder();
+        latLngBounds.include(mPlaceLocationMarker.getPosition());
+        latLngBounds.include(mMyLocationMarker.getPosition());
+
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), ScreenUtils.dpToPx(getContext(), 50));
+        mGoogleMap.animateCamera(cameraUpdate);
     }
 
     @SuppressWarnings("ResourceType")
@@ -569,14 +735,15 @@ public class GourmetBookingDetailView extends BaseDialogView<GourmetBookingDetai
                 {
                     if (mMapLoaded == true)
                     {
-                       getEventListener().onMapClick(true);
+                        getEventListener().onExpandMapClick();
                     } else
                     {
-                        getEventListener().onLoadingMap();
+                        getEventListener().onMapLoading();
+
                     }
                 } else
                 {
-                    getEventListener().onMapClick(false);
+                    getEventListener().onMapClick();
                 }
                 break;
             }
@@ -589,13 +756,7 @@ public class GourmetBookingDetailView extends BaseDialogView<GourmetBookingDetai
 
             case R.id.viewMapView:
             {
-                getEventListener().onViewMapClick();
-                break;
-            }
-
-            case R.id.refundButtonLayout:
-            {
-                getEventListener().onRefundClick();
+                getEventListener().onNavigatorClick();
                 break;
             }
 
@@ -618,7 +779,7 @@ public class GourmetBookingDetailView extends BaseDialogView<GourmetBookingDetai
             }
 
             case R.id.deleteReservationTextView:
-                getEventListener().onDeleteReservationClick();
+                getEventListener().onHiddenReservationClick();
                 break;
         }
     }
