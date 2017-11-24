@@ -191,7 +191,7 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseDial
 
     protected void clearCompositeDisposable()
     {
-        mCompositeDisposable.dispose();
+        mCompositeDisposable.clear();
     }
 
     protected boolean isLock()
