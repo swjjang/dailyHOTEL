@@ -155,7 +155,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         StayOutboundDetailAnalyticsParam getAnalyticsParam(StayOutbound stayOutbound, String grade);
 
-        void onScreen(Activity activity, String checkInDate, int nights);
+        void onScreen(Activity activity, StayBookDateTime stayBookDateTime, StayOutboundDetail stayOutboundDetail, int priceFromList);
 
         void onScreenRoomList(Activity activity, int stayIndex, boolean provideRewardSticker);
 
@@ -384,10 +384,10 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     {
         super.onStart();
 
-        String checkInDate = mStayBookDateTime == null ? "" : mStayBookDateTime.getCheckInDateTime("yyyyMMdd");
-        int nights = mStayBookDateTime == null ? 1 : mStayBookDateTime.getNights();
-
-        mAnalytics.onScreen(getActivity(), checkInDate, nights);
+//        String checkInDate = mStayBookDateTime == null ? "" : mStayBookDateTime.getCheckInDateTime("yyyyMMdd");
+//        int nights = mStayBookDateTime == null ? 1 : mStayBookDateTime.getNights();
+//
+//        mAnalytics.onScreen(getActivity(), checkInDate, nights);
 
         if (isRefresh() == true)
         {
@@ -1713,6 +1713,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
                 try
                 {
+                    mAnalytics.onScreen(getActivity(), mStayBookDateTime, mStayOutboundDetail, mListTotalPrice);
+
                     boolean hasRecommendList = mRecommendAroundList == null || mRecommendAroundList.size() == 0 ? false : true;
 
                     mAnalytics.onEventHasRecommendList(getActivity(), hasRecommendList);
