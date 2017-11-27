@@ -201,7 +201,7 @@ public class StayMainActivity extends PlaceMainActivity
                 mPlaceMainLayout.setCategoryTabLayout(getSupportFragmentManager(), province.getCategoryList(), //
                     mStayCuration.getCategory(), mStayListFragmentListener);
             }
-        } else if (resultCode == RESULT_CHANGED_DATE && data != null)
+        } else if (resultCode == com.daily.base.BaseActivity.RESULT_CODE_START_CALENDAR && data != null)
         {
             // 날짜 선택 화면으로 이동한다.
             if (data.hasExtra(NAME_INTENT_EXTRA_DATA_PROVINCE) == true)
@@ -243,7 +243,7 @@ public class StayMainActivity extends PlaceMainActivity
                 mPlaceMainLayout.setCategoryTabLayout(getSupportFragmentManager(), province.getCategoryList(), //
                     mStayCuration.getCategory(), mStayListFragmentListener);
             }
-        } else if (resultCode == RESULT_ARROUND_SEARCH_LIST && data != null)
+        } else if (resultCode == com.daily.base.BaseActivity.RESULT_CODE_START_AROUND_SEARCH && data != null)
         {
             // 검색 결과 화면으로 이동한다.
             String region = data.getStringExtra(NAME_INTENT_EXTRA_DATA_RESULT);
@@ -574,7 +574,6 @@ public class StayMainActivity extends PlaceMainActivity
 
         Intent intent = StayRegionListActivity.newInstance(StayMainActivity.this//
             , checkInDateTime, checkOutDateTime, DailyCategoryType.STAY_ALL, mStayCuration.getCategory().code);
-
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
 

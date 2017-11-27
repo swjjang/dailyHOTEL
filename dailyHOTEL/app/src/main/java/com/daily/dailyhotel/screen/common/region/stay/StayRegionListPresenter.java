@@ -426,7 +426,7 @@ public class StayRegionListPresenter extends BaseExceptionPresenter<StayRegionLi
                     mAnalytics.onEventChangedDateClick(getActivity());
 
                     // 날짜 선택 화면으로 이동한다.
-                    setResult(BaseActivity.RESULT_CODE_CHANGE_DATE, mDailyCategoryType, provinceName, area.name);
+                    setResult(BaseActivity.RESULT_CODE_START_CALENDAR, mDailyCategoryType, provinceName, area.name);
                     finish();
                 }
             }, new DialogInterface.OnCancelListener()
