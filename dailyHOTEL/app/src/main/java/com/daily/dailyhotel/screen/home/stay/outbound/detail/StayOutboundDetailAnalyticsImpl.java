@@ -176,7 +176,7 @@ public class StayOutboundDetailAnalyticsImpl implements StayOutboundDetailPresen
     public void onEventBookingClick(Activity activity, int stayIndex, String stayName, String roomName //
         , int discountPrice, boolean provideRewardSticker, String checkInDate, int nights)
     {
-        if (activity == null || mAnalyticsParam == null || DailyTextUtils.isTextEmpty(checkInDate) == true)
+        if (activity == null || DailyTextUtils.isTextEmpty(checkInDate) == true)
         {
             return;
         }
@@ -184,9 +184,9 @@ public class StayOutboundDetailAnalyticsImpl implements StayOutboundDetailPresen
         String label = String.format(Locale.KOREA, "%s-%s", stayName, roomName);
 
         Map<String, String> params = new HashMap<>();
-        params.put(AnalyticsManager.KeyType.NAME, mAnalyticsParam.name);
+        params.put(AnalyticsManager.KeyType.NAME, stayName);
         params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(nights));
-        params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(mAnalyticsParam.index));
+        params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayIndex));
 
         params.put(AnalyticsManager.KeyType.PRICE_OF_SELECTED_ROOM, Integer.toString(discountPrice));
         params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, checkInDate);
