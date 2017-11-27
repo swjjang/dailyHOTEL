@@ -2,12 +2,12 @@ package com.daily.dailyhotel.screen.booking.detail.gourmet;
 
 import android.location.Location;
 
-import com.daily.base.BaseDialogViewInterface;
+import com.daily.dailyhotel.base.BaseBlurViewInterface;
 import com.daily.dailyhotel.entity.GourmetBookingDetail;
 
 import io.reactivex.Observable;
 
-public interface GourmetBookingDetailInterface extends BaseDialogViewInterface
+public interface GourmetBookingDetailInterface extends BaseBlurViewInterface
 {
     void setBookingDetailToolbar();
 

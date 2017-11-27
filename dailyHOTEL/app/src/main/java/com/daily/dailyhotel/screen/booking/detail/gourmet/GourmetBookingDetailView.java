@@ -20,12 +20,12 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
 import com.daily.base.BaseActivity;
-import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyScrollView;
+import com.daily.dailyhotel.base.BaseBlurView;
 import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.GourmetBookingDetail;
 import com.daily.dailyhotel.view.DailyToolbarView;
@@ -61,7 +61,7 @@ import java.util.Random;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 
-public class GourmetBookingDetailView extends BaseDialogView<GourmetBookingDetailView.OnEventListener, ActivityGourmetBookingDetailDataBinding> //
+public class GourmetBookingDetailView extends BaseBlurView<GourmetBookingDetailView.OnEventListener, ActivityGourmetBookingDetailDataBinding> //
     implements GourmetBookingDetailInterface, View.OnClickListener
 {
     ImageView mMyLocationView;
