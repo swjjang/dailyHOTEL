@@ -20,6 +20,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
+import com.daily.dailyhotel.screen.common.region.stay.StayRegionListActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
@@ -571,8 +572,8 @@ public class StayMainActivity extends PlaceMainActivity
         String checkInDateTime = mStayCuration.getStayBookingDay().getCheckInDay(DailyCalendar.ISO_8601_FORMAT);
         String checkOutDateTime = mStayCuration.getStayBookingDay().getCheckOutDay(DailyCalendar.ISO_8601_FORMAT);
 
-        Intent intent = com.daily.dailyhotel.screen.home.stay.inbound.region.StayRegionListActivity.newInstance(StayMainActivity.this//
-            , checkInDateTime, checkOutDateTime, mStayCuration.getProvince().getProvinceIndex(), mStayCuration.getProvince().index, mStayCuration.getCategory().code);
+        Intent intent = StayRegionListActivity.newInstance(StayMainActivity.this//
+            , checkInDateTime, checkOutDateTime, DailyCategoryType.STAY_ALL, mStayCuration.getCategory().code);
 
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);

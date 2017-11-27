@@ -23,6 +23,7 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
 
     public static final int RESULT_CODE_REFRESH = -10000; // 종료시에 화면 리플래쉬를 요청한다.
     public static final int RESULT_CODE_ERROR = -10001; // 종료시에 에러를 알려준다
+    public static final int RESULT_CODE_CHANGE_DATE = -10002; // 종료시 캘린더를 요청한다.
 
     private BasePresenter mPresenter;
 

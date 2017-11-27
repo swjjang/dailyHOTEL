@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.inbound.region;
+package com.daily.dailyhotel.screen.common.region.stay;
 
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.dailyhotel.entity.Region;
@@ -15,5 +15,5 @@ public interface StayRegionListInterface extends BaseDialogViewInterface
 
     Observable<Boolean> collapseGroupWithAnimation(int groupPosition, boolean animation);
 
-    Observable<Boolean> expandGroupWidthAnimation(int groupPosition, boolean animation);
+    Observable<Boolean> expandGroupWithAnimation(int groupPosition, boolean animation);
 }

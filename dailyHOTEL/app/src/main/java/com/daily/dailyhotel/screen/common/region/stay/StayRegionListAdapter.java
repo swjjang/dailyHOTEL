@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.inbound.region;
+package com.daily.dailyhotel.screen.common.region.stay;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;

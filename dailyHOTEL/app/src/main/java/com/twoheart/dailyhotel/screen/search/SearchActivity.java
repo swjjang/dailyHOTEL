@@ -36,6 +36,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private static final int SEARCH_TAB_COUNT = 2;
     private static final String INTENT_EXTRA_DATA_WORD = "word";
     private static final String INTENT_EXTRA_DATA_INDEX = "index";
+    static final String INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME = "checkInDateTime";
+    static final String INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME = "checkOutDateTime";
 
     private SearchFragmentPagerAdapter mSearchFragmentPagerAdapter;
     DailyViewPager mViewPager;
@@ -72,6 +74,16 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         {
             intent.putExtra(INTENT_EXTRA_DATA_WORD, word);
         }
+        return intent;
+    }
+
+    public static Intent newInstance(Context context, PlaceType placeType, String checkInDateTime, String checkOutDateTime)
+    {
+        Intent intent = new Intent(context, SearchActivity.class);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
+
         return intent;
     }
 
