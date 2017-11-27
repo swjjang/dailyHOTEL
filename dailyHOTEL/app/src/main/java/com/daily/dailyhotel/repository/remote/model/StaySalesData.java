@@ -151,7 +151,7 @@ public class StaySalesData
         stay.availableRooms = availableRooms;
 
         stay.reviewCount = reviewCount;
-        stay.discountRate = stay.discountRate;
+        stay.discountRate = discountRate;
         stay.newItem = newItem;
         stay.myWish = myWish;
         stay.couponDiscountText = couponDiscountText;
