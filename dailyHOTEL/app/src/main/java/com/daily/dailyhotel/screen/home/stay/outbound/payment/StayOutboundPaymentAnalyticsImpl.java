@@ -8,7 +8,6 @@ import com.daily.dailyhotel.entity.StayOutboundPayment;
 import com.daily.dailyhotel.entity.UserSimpleInformation;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundPaymentAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundThankYouAnalyticsParam;
-import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -132,6 +131,7 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
             params.put(AnalyticsManager.KeyType.CHECK_IN, stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
             params.put(AnalyticsManager.KeyType.CHECK_OUT, stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd"));
             params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(stayBookDateTime.getNights()));
+            params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(stayBookDateTime.getNights()));
             params.put(AnalyticsManager.KeyType.NRD, mAnalyticsParam.nrd ? "y" : "n");
             params.put(AnalyticsManager.KeyType.RATING, mAnalyticsParam.rating);
             params.put(AnalyticsManager.KeyType.DAILYCHOICE, "n");
