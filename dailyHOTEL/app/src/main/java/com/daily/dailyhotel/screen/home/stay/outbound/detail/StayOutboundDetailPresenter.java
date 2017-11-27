@@ -155,7 +155,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         StayOutboundDetailAnalyticsParam getAnalyticsParam(StayOutbound stayOutbound, String grade);
 
-        void onScreen(Activity activity, String checkInDate, int nights);
+        void onScreen(Activity activity, StayBookDateTime stayBookDateTime, StayOutboundDetail stayOutboundDetail, int priceFromList);
 
         void onScreenRoomList(Activity activity, int stayIndex, boolean provideRewardSticker);
 
@@ -384,10 +384,10 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     {
         super.onStart();
 
-        String checkInDate = mStayBookDateTime == null ? "" : mStayBookDateTime.getCheckInDateTime("yyyyMMdd");
-        int nights = mStayBookDateTime == null ? 1 : mStayBookDateTime.getNights();
-
-        mAnalytics.onScreen(getActivity(), checkInDate, nights);
+//        String checkInDate = mStayBookDateTime == null ? "" : mStayBookDateTime.getCheckInDateTime("yyyyMMdd");
+//        int nights = mStayBookDateTime == null ? 1 : mStayBookDateTime.getNights();
+//
+//        mAnalytics.onScreen(getActivity(), checkInDate, nights);
 
         if (isRefresh() == true)
         {
@@ -1386,7 +1386,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 //                    , android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)) //
                 //                    , android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
 
-                getActivity().startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
+                startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
                     , stayOutbound.name, stayOutbound.nameEng, imageUrl, stayOutbound.total//
                     , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                     , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
@@ -1719,6 +1719,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
                 try
                 {
+                    mAnalytics.onScreen(getActivity(), mStayBookDateTime, mStayOutboundDetail, mListTotalPrice);
+
                     boolean hasRecommendList = mRecommendAroundList == null || mRecommendAroundList.size() == 0 ? false : true;
 
                     mAnalytics.onEventHasRecommendList(getActivity(), hasRecommendList);

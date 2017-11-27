@@ -95,7 +95,6 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
     }
 
     private static final int MIN_AMOUNT_FOR_BONUS_USAGE = 20000; // 보너스를 사용하기 위한 최소 주문 가격
-    private static final int MIN_AMOUNT_FOR_REWARD_USAGE = 40000; // 리워드 스티커 발급 최소 주문 가격
 
     // 1000원 미만 결제시에 간편/일반 결제 불가 - 쿠폰 또는 적립금 전체 사용이 아닌경우 조건 추가
     private static final int CARD_MIN_PRICE = 1000;
@@ -652,9 +651,15 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 {
                     // 가격이 변동된 경우
                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_payment_changed_price)//
-                        , getString(R.string.dialog_btn_text_confirm), null);
-
-                    setResult(BaseActivity.RESULT_CODE_REFRESH);
+                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialogInterface)
+                            {
+                                setResult(BaseActivity.RESULT_CODE_REFRESH);
+                                onBackClick();
+                            }
+                        });
 
                     mAnalytics.onEventChangedPrice(getActivity(), mStayName);
                 } else if (mStayPayment.soldOut == true) // 솔드 아웃인 경우
@@ -665,8 +670,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                             @Override
                             public void onDismiss(DialogInterface dialog)
                             {
-                                setResult(BaseActivity.RESULT_CODE_REFRESH);
-                                onBackClick();
+
                             }
                         });
 
@@ -1591,7 +1595,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         {
             getViewInterface().setCheeringMessageVisible(true);
 
-            if (stayPayment.provideRewardSticker == true && stayPayment.totalPrice >= MIN_AMOUNT_FOR_REWARD_USAGE)
+            if (stayPayment.provideRewardSticker == true)
             {
                 getViewInterface().setCheeringMessage(true//
                     , getString(R.string.message_booking_reward_cheering_title01, stayPayment.providableRewardStickerCount)//
@@ -2139,14 +2143,12 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             return;
         }
 
-        boolean hasRewardCard = mStayPayment.activeReward == true && mStayPayment.provideRewardSticker == true && mStayPayment.totalPrice >= MIN_AMOUNT_FOR_REWARD_USAGE;
-
         if (StayRefundPolicy.STATUS_NONE.equalsIgnoreCase(mStayRefundPolicy.refundPolicy) == true)
         {
-            getViewInterface().setRefundPolicy(null, hasRewardCard);
+            getViewInterface().setRefundPolicy(null, hasDepositSticker());
         } else
         {
-            getViewInterface().setRefundPolicy(mStayRefundPolicy.comment, hasRewardCard);
+            getViewInterface().setRefundPolicy(mStayRefundPolicy.comment, hasDepositSticker());
         }
     }
 
@@ -2459,8 +2461,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
     private boolean hasDepositSticker()
     {
-        return mStayPayment != null && mStayPayment.activeReward == true //
-            && mStayPayment.provideRewardSticker && mStayPayment.totalPrice >= MIN_AMOUNT_FOR_REWARD_USAGE;
+        return mStayPayment != null && mStayPayment.activeReward == true && mStayPayment.provideRewardSticker == true;
     }
 
     private void onPaymentWebResult(DailyBookingPaymentTypeView.PaymentType paymentType, int resultCode, String result)

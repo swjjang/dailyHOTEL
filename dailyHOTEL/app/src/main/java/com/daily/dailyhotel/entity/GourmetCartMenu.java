@@ -54,6 +54,11 @@ public class GourmetCartMenu
         }
     }
 
+    public int getTotalPrice()
+    {
+        return discountPrice * count;
+    }
+
     public JSONObject toJSONObject()
     {
         JSONObject jsonObject = new JSONObject();

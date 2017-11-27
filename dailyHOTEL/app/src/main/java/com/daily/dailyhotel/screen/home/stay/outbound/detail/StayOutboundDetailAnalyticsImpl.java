@@ -3,7 +3,10 @@ package com.daily.dailyhotel.screen.home.stay.outbound.detail;
 import android.app.Activity;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbound;
+import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundPaymentAnalyticsParam;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
@@ -51,30 +54,65 @@ public class StayOutboundDetailAnalyticsImpl implements StayOutboundDetailPresen
         return analyticsParam;
     }
 
+
     @Override
-    public void onScreen(Activity activity, String checkInDate, int nights)
+    public void onScreen(Activity activity, StayBookDateTime stayBookDateTime, StayOutboundDetail stayOutboundDetail, int priceFromList)
     {
-        if (activity == null || mAnalyticsParam == null)
+        if (activity == null || stayOutboundDetail == null|| mAnalyticsParam == null)
         {
             return;
         }
 
-        Map<String, String> params = new HashMap<>();
+        try
+        {
+            Map<String, String> params = new HashMap<>();
+            params.put(AnalyticsManager.KeyType.NAME, stayOutboundDetail.name);
+            params.put(AnalyticsManager.KeyType.GRADE, mAnalyticsParam.grade); // 14
+            params.put(AnalyticsManager.KeyType.DBENEFIT, mAnalyticsParam.benefit ? "yes" : "no"); // 3
+            params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
 
-        params.put(AnalyticsManager.KeyType.DBENEFIT, mAnalyticsParam.benefit ? "yes" : "no");
-        params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
-        params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.OVERSEAS);
-        params.put(AnalyticsManager.KeyType.GRADE, mAnalyticsParam.grade);
-        params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(mAnalyticsParam.index));
-        params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(mAnalyticsParam.rankingPosition));
-        params.put(AnalyticsManager.KeyType.RATING, DailyTextUtils.isTextEmpty(mAnalyticsParam.rating) == true ? AnalyticsManager.ValueType.EMPTY : mAnalyticsParam.rating);
-        params.put(AnalyticsManager.KeyType.PLACE_COUNT, mAnalyticsParam.listSize < 0 ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mAnalyticsParam.listSize));
-        params.put(AnalyticsManager.KeyType.NAME, mAnalyticsParam.name);
-        params.put(AnalyticsManager.KeyType.UNIT_PRICE, Integer.toString(mAnalyticsParam.nightlyRate));
-        params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, checkInDate);
-        params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(nights));
+            if (stayOutboundDetail.getRoomList() == null || stayOutboundDetail.getRoomList().size() == 0)
+            {
+                params.put(AnalyticsManager.KeyType.PRICE, "0");
+            } else
+            {
+                params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(stayOutboundDetail.getRoomList().get(0).nightly));
+            }
 
-        AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_HOTELDETAILVIEW_OUTBOUND, null, params);
+            int nights = stayBookDateTime.getNights();
+
+            params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(nights));
+            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayOutboundDetail.index)); // 15
+
+            params.put(AnalyticsManager.KeyType.CHECK_IN, stayBookDateTime.getCheckInDateTime("yyyy-MM-dd")); // 1
+            params.put(AnalyticsManager.KeyType.CHECK_OUT, stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd")); // 2
+
+            params.put(AnalyticsManager.KeyType.ADDRESS, stayOutboundDetail.address);
+
+            params.put(AnalyticsManager.KeyType.CATEGORY, AnalyticsManager.ValueType.EMPTY);
+
+            params.put(AnalyticsManager.KeyType.PROVINCE, AnalyticsManager.ValueType.EMPTY);
+            params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.EMPTY);
+
+            params.put(AnalyticsManager.KeyType.UNIT_PRICE, Integer.toString(priceFromList));
+            params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, stayBookDateTime.getCheckInDateTime("yyyyMMdd"));
+
+            String listIndex = mAnalyticsParam.rankingPosition == -1 //
+                ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mAnalyticsParam.rankingPosition);
+            params.put(AnalyticsManager.KeyType.LIST_INDEX, listIndex);
+
+            String placeCount = mAnalyticsParam.listSize < 0 ? AnalyticsManager.ValueType.EMPTY : Integer.toString(mAnalyticsParam.listSize);
+            params.put(AnalyticsManager.KeyType.PLACE_COUNT, placeCount);
+
+            params.put(AnalyticsManager.KeyType.RATING, DailyTextUtils.isTextEmpty(mAnalyticsParam.rating) == true ? AnalyticsManager.ValueType.EMPTY : mAnalyticsParam.rating);
+            params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(nights));
+            params.put(AnalyticsManager.KeyType.COUNTRY,  AnalyticsManager.ValueType.OVERSEAS);
+
+            AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_HOTELDETAILVIEW_OUTBOUND, null, params);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
     @Override
@@ -138,7 +176,7 @@ public class StayOutboundDetailAnalyticsImpl implements StayOutboundDetailPresen
     public void onEventBookingClick(Activity activity, int stayIndex, String stayName, String roomName //
         , int discountPrice, boolean provideRewardSticker, String checkInDate, int nights)
     {
-        if (activity == null || mAnalyticsParam == null || DailyTextUtils.isTextEmpty(checkInDate) == true)
+        if (activity == null || DailyTextUtils.isTextEmpty(checkInDate) == true)
         {
             return;
         }
@@ -146,9 +184,9 @@ public class StayOutboundDetailAnalyticsImpl implements StayOutboundDetailPresen
         String label = String.format(Locale.KOREA, "%s-%s", stayName, roomName);
 
         Map<String, String> params = new HashMap<>();
-        params.put(AnalyticsManager.KeyType.NAME, mAnalyticsParam.name);
+        params.put(AnalyticsManager.KeyType.NAME, stayName);
         params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(nights));
-        params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(mAnalyticsParam.index));
+        params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(stayIndex));
 
         params.put(AnalyticsManager.KeyType.PRICE_OF_SELECTED_ROOM, Integer.toString(discountPrice));
         params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, checkInDate);

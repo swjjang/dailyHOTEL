@@ -8,6 +8,7 @@ import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Rect;
+import android.support.annotation.Keep;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewConfigurationCompat;
@@ -56,6 +57,7 @@ public class DailyOverScrollViewPager extends ViewPager
         /**
          * @param distance [0..1] 1 보다 크면 OverScroll
          */
+        @Keep
         public void setPull(final float distance)
         {
             mOverScroll = distance;

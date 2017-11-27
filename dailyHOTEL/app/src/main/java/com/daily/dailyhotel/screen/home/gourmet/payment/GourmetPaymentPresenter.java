@@ -23,7 +23,9 @@ import com.daily.dailyhotel.entity.Card;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.DomesticGuest;
 import com.daily.dailyhotel.entity.GourmetCart;
+import com.daily.dailyhotel.entity.GourmetCartMenu;
 import com.daily.dailyhotel.entity.GourmetPayment;
+import com.daily.dailyhotel.entity.GourmetPaymentMenu;
 import com.daily.dailyhotel.entity.PaymentResult;
 import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.entity.UserSimpleInformation;
@@ -629,7 +631,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         setRefresh(false);
         screenLock(showProgress);
 
-        addCompositeDisposable(Observable.zip(mPaymentRemoteImpl.getGourmetPayment(mGourmetCart.getMenuSaleIndexes())//
+        addCompositeDisposable(Observable.zip(mPaymentRemoteImpl.getGourmetPayment(mGourmetCart)//
             , mPaymentRemoteImpl.getEasyCardList(), mProfileRemoteImpl.getUserSimpleInformation()//
             , mCommonRemoteImpl.getCommonDateTime()//
             , new Function4<GourmetPayment, List<Card>, UserSimpleInformation, CommonDateTime, CommonDateTime>()
@@ -661,32 +663,25 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                 notifyGourmetPaymentChanged();
 
                 // 가격이 변동된 경우
-                if (mGourmetCart.getTotalPrice() != mGourmetPayment.totalPrice)
+                if (checkChangedPrice(mGourmetPayment, mGourmetCart) == true)
                 {
                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_payment_changed_price)//
-                        , getString(R.string.dialog_btn_text_confirm), null);
-
-                    setResult(BaseActivity.RESULT_CODE_REFRESH);
-
-                    mAnalytics.onEventChangedPrice(getActivity(), mGourmetCart.gourmetName);
-                } else if (mGourmetPayment.soldOut == true) // 솔드 아웃인 경우
-                {
-                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_gourmet_stop_onsale)//
                         , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
                         {
                             @Override
-                            public void onDismiss(DialogInterface dialog)
+                            public void onDismiss(DialogInterface dialogInterface)
                             {
                                 setResult(BaseActivity.RESULT_CODE_REFRESH);
                                 onBackClick();
                             }
                         });
 
-                    mAnalytics.onEventSoldOut(getActivity(), mGourmetCart.gourmetName);
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
+
+                    mAnalytics.onEventChangedPrice(getActivity(), mGourmetCart.gourmetName);
                 }
 
-                mAnalytics.onScreen(getActivity(), mGourmetCart//
-                    , mGourmetPayment, mSelectedCard != null);
+                mAnalytics.onScreen(getActivity(), mGourmetCart, mGourmetPayment, mSelectedCard != null);
 
                 unLockAll();
             }
@@ -2186,5 +2181,26 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
         Intent intent = LoginActivity.newInstance(getActivity(), AnalyticsManager.Screen.DAILYGOURMET_DETAIL);
         startActivityForResult(intent, GourmetPaymentActivity.REQUEST_CODE_LOGIN_IN);
+    }
+
+    private boolean checkChangedPrice(GourmetPayment gourmetPayment, GourmetCart gourmetCart)
+    {
+        if (gourmetPayment == null || gourmetCart == null)
+        {
+            return true;
+        }
+
+        for (GourmetCartMenu gourmetCartMenu : mGourmetCart.getMenuList())
+        {
+            for (GourmetPaymentMenu gourmetPaymentMenu : mGourmetPayment.getGourmetPaymentMenuList())
+            {
+                if (gourmetCartMenu.saleIndex == gourmetPaymentMenu.saleIndex && gourmetCartMenu.getTotalPrice() != gourmetPaymentMenu.subTotalPrice)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

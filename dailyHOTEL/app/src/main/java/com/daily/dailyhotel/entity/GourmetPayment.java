@@ -4,46 +4,23 @@ import java.util.List;
 
 public class GourmetPayment
 {
-    public boolean soldOut;
-    public String visitDate;
-    public int totalPrice; // 결재할 총금액
+    public String restaurantName;
     public String businessName;
-    public int minMenuCount;
-    public int maxMenuCount;
-    private List<String> mVisitDateTimeList;
+    public int totalPrice;
+    private List<GourmetPaymentMenu> mGourmetPaymentMenuList;
 
     public GourmetPayment()
     {
 
     }
 
-    public void setVisitTimeList(List<String> dateTimeList)
+    public List<GourmetPaymentMenu> getGourmetPaymentMenuList()
     {
-        mVisitDateTimeList = dateTimeList;
+        return mGourmetPaymentMenuList;
     }
 
-    public List<String> getVisitDateTimeList()
+    public void setGourmetPaymentMenuList(List<GourmetPaymentMenu> gourmetPaymentMenuList)
     {
-        return mVisitDateTimeList;
-    }
-
-    public int getVisitTimeListSize()
-    {
-        if (mVisitDateTimeList == null)
-        {
-            return 0;
-        }
-
-        return mVisitDateTimeList.size();
-    }
-
-    public String getVisitDateTime(int index)
-    {
-        if (mVisitDateTimeList == null || mVisitDateTimeList.size() <= index)
-        {
-            return null;
-        }
-
-        return mVisitDateTimeList.get(index);
+        mGourmetPaymentMenuList = gourmetPaymentMenuList;
     }
 }
