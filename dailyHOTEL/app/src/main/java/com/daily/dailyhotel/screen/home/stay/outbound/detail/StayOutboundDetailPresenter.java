@@ -1386,7 +1386,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 //                    , android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)) //
                 //                    , android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
 
-                getActivity().startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
+                startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
                     , stayOutbound.name, stayOutbound.nameEng, imageUrl, stayOutbound.total//
                     , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                     , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
