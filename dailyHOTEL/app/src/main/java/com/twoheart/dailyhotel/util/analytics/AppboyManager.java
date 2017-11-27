@@ -84,7 +84,7 @@ public class AppboyManager extends BaseAnalyticsManager
         //                ExLog.d(e.toString());
         //            }
         //        } else
-        if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screenName) == true
+        if (AnalyticsManager.Screen.DAILYHOTEL_DETAIL.equalsIgnoreCase(screenName) == true //
             || AnalyticsManager.Screen.DAILYHOTEL_HOTELDETAILVIEW_OUTBOUND.equalsIgnoreCase(screenName) == true)
         {
             AppboyProperties appboyProperties = new AppboyProperties();
@@ -360,35 +360,38 @@ public class AppboyManager extends BaseAnalyticsManager
                     ExLog.d(TAG + " : " + EventName.HOME_RECOMMEND_CLICKED + ", " + appboyProperties.forJsonPut().toString());
                 }
             }
-        } else if (AnalyticsManager.Category.HOTEL_BOOKINGS.equalsIgnoreCase(category) == true//
-            && AnalyticsManager.Action.BOOKING_CLICKED.equalsIgnoreCase(action) == true)
+        } else if (AnalyticsManager.Category.HOTEL_BOOKINGS.equalsIgnoreCase(category) == true)
         {
-            AppboyProperties appboyProperties = new AppboyProperties();
-
-            appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
-            appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_CATEGORY, params.get(AnalyticsManager.KeyType.CATEGORY));
-            appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_NAME, params.get(AnalyticsManager.KeyType.NAME));
-            appboyProperties.addProperty(AnalyticsManager.KeyType.PROVINCE, params.get(AnalyticsManager.KeyType.PROVINCE));
-            appboyProperties.addProperty(AnalyticsManager.KeyType.DISTRICT, params.get(AnalyticsManager.KeyType.DISTRICT));
-            appboyProperties.addProperty(AnalyticsManager.KeyType.AREA, params.get(AnalyticsManager.KeyType.AREA));
-            appboyProperties.addProperty(AnalyticsManager.KeyType.BOOKING_INITIALISED_DATE, new Date());
-            appboyProperties.addProperty(AnalyticsManager.KeyType.COUNTRY, params.get(AnalyticsManager.KeyType.COUNTRY));
-
-            try
+            if (AnalyticsManager.Action.BOOKING_CLICKED.equalsIgnoreCase(action) == true //
+                || AnalyticsManager.Action.BOOKING_CLICKED_OUTBOUND.equalsIgnoreCase(action) == true)
             {
-                appboyProperties.addProperty(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.parseInt(params.get(AnalyticsManager.KeyType.QUANTITY)));
-                appboyProperties.addProperty(AnalyticsManager.KeyType.PRICE_OF_SELECTED_ROOM, Integer.parseInt(params.get(AnalyticsManager.KeyType.PRICE_OF_SELECTED_ROOM)));
-                appboyProperties.addProperty(AnalyticsManager.KeyType.CHECK_IN_DATE, params.get(AnalyticsManager.KeyType.CHECK_IN_DATE));
+                AppboyProperties appboyProperties = new AppboyProperties();
 
-                mAppboy.logCustomEvent(EventName.STAY_BOOKING_INITIALISED, appboyProperties);
+                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+                appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_CATEGORY, params.get(AnalyticsManager.KeyType.CATEGORY));
+                appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_NAME, params.get(AnalyticsManager.KeyType.NAME));
+                appboyProperties.addProperty(AnalyticsManager.KeyType.PROVINCE, params.get(AnalyticsManager.KeyType.PROVINCE));
+                appboyProperties.addProperty(AnalyticsManager.KeyType.DISTRICT, params.get(AnalyticsManager.KeyType.DISTRICT));
+                appboyProperties.addProperty(AnalyticsManager.KeyType.AREA, params.get(AnalyticsManager.KeyType.AREA));
+                appboyProperties.addProperty(AnalyticsManager.KeyType.BOOKING_INITIALISED_DATE, new Date());
+                appboyProperties.addProperty(AnalyticsManager.KeyType.COUNTRY, params.get(AnalyticsManager.KeyType.COUNTRY));
 
-                if (DEBUG == true)
+                try
                 {
-                    ExLog.d(TAG + " : " + EventName.STAY_BOOKING_INITIALISED + ", " + appboyProperties.forJsonPut().toString());
+                    appboyProperties.addProperty(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.parseInt(params.get(AnalyticsManager.KeyType.QUANTITY)));
+                    appboyProperties.addProperty(AnalyticsManager.KeyType.PRICE_OF_SELECTED_ROOM, Integer.parseInt(params.get(AnalyticsManager.KeyType.PRICE_OF_SELECTED_ROOM)));
+                    appboyProperties.addProperty(AnalyticsManager.KeyType.CHECK_IN_DATE, params.get(AnalyticsManager.KeyType.CHECK_IN_DATE));
+
+                    mAppboy.logCustomEvent(EventName.STAY_BOOKING_INITIALISED, appboyProperties);
+
+                    if (DEBUG == true)
+                    {
+                        ExLog.d(TAG + " : " + EventName.STAY_BOOKING_INITIALISED + ", " + appboyProperties.forJsonPut().toString());
+                    }
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
                 }
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
             }
         } else if (AnalyticsManager.Category.GOURMET_BOOKINGS.equalsIgnoreCase(category) == true//
             && AnalyticsManager.Action.BOOKING_CLICKED.equalsIgnoreCase(action) == true)
@@ -936,6 +939,7 @@ public class AppboyManager extends BaseAnalyticsManager
         appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
         appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_CATEGORY, params.get(AnalyticsManager.KeyType.CATEGORY));
         appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_NAME, placeName);
+        appboyProperties.addProperty(AnalyticsManager.KeyType.COUNTRY, params.get(AnalyticsManager.KeyType.COUNTRY));
         appboyProperties.addProperty(AnalyticsManager.KeyType.PROVINCE, params.get(AnalyticsManager.KeyType.PROVINCE));
         appboyProperties.addProperty(AnalyticsManager.KeyType.DISTRICT, params.get(AnalyticsManager.KeyType.DISTRICT));
         appboyProperties.addProperty(AnalyticsManager.KeyType.AREA, params.get(AnalyticsManager.KeyType.AREA));
@@ -989,7 +993,44 @@ public class AppboyManager extends BaseAnalyticsManager
     @Override
     void purchaseCompleteStayOutbound(String aggregationId, Map<String, String> params)
     {
+        AppboyProperties appboyProperties = new AppboyProperties();
 
+        String placeName = params.get(AnalyticsManager.KeyType.NAME);
+
+        appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+        appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_CATEGORY, params.get(AnalyticsManager.KeyType.CATEGORY));
+        appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_NAME, placeName);
+        appboyProperties.addProperty(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.OVERSEAS);
+        appboyProperties.addProperty(AnalyticsManager.KeyType.PROVINCE, params.get(AnalyticsManager.KeyType.PROVINCE));
+        appboyProperties.addProperty(AnalyticsManager.KeyType.DISTRICT, params.get(AnalyticsManager.KeyType.DISTRICT));
+        appboyProperties.addProperty(AnalyticsManager.KeyType.AREA, params.get(AnalyticsManager.KeyType.AREA));
+        appboyProperties.addProperty(AnalyticsManager.KeyType.PURCHASED_DATE, new Date());
+
+        boolean couponRedeem = false;
+
+        try
+        {
+            couponRedeem = Boolean.parseBoolean(params.get(AnalyticsManager.KeyType.COUPON_REDEEM));
+
+            appboyProperties.addProperty(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.parseInt(params.get(AnalyticsManager.KeyType.QUANTITY)));
+            appboyProperties.addProperty(AnalyticsManager.KeyType.PRICE_OF_SELECTED_ROOM, Integer.parseInt(params.get(AnalyticsManager.KeyType.PRICE)));
+            appboyProperties.addProperty(AnalyticsManager.KeyType.REVENUE, Integer.parseInt(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE)));
+            appboyProperties.addProperty(AnalyticsManager.KeyType.CHECK_IN_DATE, params.get(AnalyticsManager.KeyType.CHECK_IN_DATE));
+            appboyProperties.addProperty(AnalyticsManager.KeyType.CHECK_OUT_DATE, params.get(AnalyticsManager.KeyType.CHECK_OUT_DATE));
+            appboyProperties.addProperty(AnalyticsManager.KeyType.USED_CREDITS, Integer.parseInt(params.get(AnalyticsManager.KeyType.USED_BOUNS)));
+            appboyProperties.addProperty(AnalyticsManager.KeyType.COUPON_REDEEM, couponRedeem);
+
+            mAppboy.logPurchase("stay-" + placeName, "KRW", new BigDecimal(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE)), 1, appboyProperties);
+            mAppboy.logCustomEvent(EventName.STAY_PURCHASE_COMPLETED, appboyProperties);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + " : " + placeName + ", " + appboyProperties.forJsonPut().toString());
+            }
+        } catch (Exception e)
+        {
+
+        }
     }
 
     @Override
