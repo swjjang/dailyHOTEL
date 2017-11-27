@@ -131,6 +131,7 @@ public class StayOutboundPaymentAnalyticsImpl implements StayOutboundPaymentPres
             params.put(AnalyticsManager.KeyType.CHECK_IN, stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
             params.put(AnalyticsManager.KeyType.CHECK_OUT, stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd"));
             params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(stayBookDateTime.getNights()));
+            params.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(stayBookDateTime.getNights()));
             params.put(AnalyticsManager.KeyType.NRD, mAnalyticsParam.nrd ? "y" : "n");
             params.put(AnalyticsManager.KeyType.RATING, mAnalyticsParam.rating);
             params.put(AnalyticsManager.KeyType.DAILYCHOICE, "n");
