@@ -58,4 +58,185 @@ public class GourmetBookingDetailAnalyticsImpl implements GourmetBookingDetailPr
             ExLog.d(e.toString());
         }
     }
+
+    @Override
+    public void onEventShareClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SHARE//
+            , AnalyticsManager.Action.BOOKING_SHARE, AnalyticsManager.Label.GOURMET, null);
+    }
+
+    @Override
+    public void onEventShareKakaoClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SHARE//
+            , AnalyticsManager.Action.GOURMET_BOOKING_SHARE, AnalyticsManager.ValueType.KAKAO, null);
+    }
+
+    @Override
+    public void onEventMoreShareClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SHARE//
+            , AnalyticsManager.Action.GOURMET_BOOKING_SHARE, AnalyticsManager.ValueType.MESSAGE, null);
+    }
+
+    @Override
+    public void onEventConciergeClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            , AnalyticsManager.Action.CONTACT_DAILY_CONCIERGE, AnalyticsManager.Label.GOURMET_BOOKING_DETAIL, null);
+    }
+
+    @Override
+    public void onEventConciergeFaqClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+            , AnalyticsManager.Action.FNQ_CLICK, AnalyticsManager.Label.GOURMET_BOOKING_DETAIL, null);
+    }
+
+    @Override
+    public void onEventRestaurantCallClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
+            AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.DIRECT_CALL, null);
+    }
+
+    @Override
+    public void onEventHappyTalkClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+            , AnalyticsManager.Action.HAPPYTALK_CLICK, AnalyticsManager.Label.GOURMET_BOOKING_DETAIL, null);
+    }
+
+    @Override
+    public void onEventHappyTalkClick2(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.CALL_BUTTON_CLICKED,//
+            AnalyticsManager.Action.BOOKING_DETAIL, AnalyticsManager.Label.KAKAO, null);
+    }
+
+    @Override
+    public void onEventConciergeCallClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.CONTACT_DAILY_CONCIERGE//
+            , AnalyticsManager.Action.CALL_CLICK, AnalyticsManager.Label.GOURMET_BOOKING_DETAIL, null);
+    }
+
+    @Override
+    public void onEventStartConciergeCall(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(//
+            AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.BOOKING_DETAIL,//
+            AnalyticsManager.Label.CUSTOMER_CENTER_CALL, null);
+    }
+
+    @Override
+    public void onEventMapClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+            , AnalyticsManager.Action.MAP_CLICK, AnalyticsManager.ValueType.EMPTY, null);
+    }
+
+    @Override
+    public void onEventViewDetailClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+            , AnalyticsManager.Action.BOOKING_ITEM_DETAIL_CLICK, AnalyticsManager.ValueType.EMPTY, null);
+    }
+
+    @Override
+    public void onEventReviewClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+            , AnalyticsManager.Action.WRITE_REVIEW, AnalyticsManager.ValueType.EMPTY, null);
+    }
+
+    @Override
+    public void onEventHideBookingClick(Activity activity, int gourmetIndex)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+            , AnalyticsManager.Action.BOOKING_HISTORY_DELETE_TRY, "gourmet_" + gourmetIndex, null);
+    }
+
+    @Override
+    public void onEventHideBookingSuccess(Activity activity, int gourmetIndex)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
+            , AnalyticsManager.Action.BOOKING_HISTORY_DELETE, "gourmet_" + gourmetIndex, null);
+    }
 }

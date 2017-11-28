@@ -3,14 +3,17 @@ package com.daily.dailyhotel.screen.booking.detail.gourmet;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -43,6 +46,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityGourmetBookingDetailDataBinding;
+import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding;
+import com.twoheart.dailyhotel.databinding.DialogShareDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetBookingDetail01DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetBookingDetail02DataBinding;
 import com.twoheart.dailyhotel.model.MyLocationMarker;
@@ -57,9 +62,14 @@ import com.twoheart.dailyhotel.util.Util;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
 
 public class GourmetBookingDetailView extends BaseBlurView<GourmetBookingDetailView.OnEventListener, ActivityGourmetBookingDetailDataBinding> //
     implements GourmetBookingDetailInterface, View.OnClickListener
@@ -218,7 +228,7 @@ public class GourmetBookingDetailView extends BaseBlurView<GourmetBookingDetailV
             @Override
             public void onClick(View v)
             {
-                getEventListener().onConciergeCallClick();
+                getEventListener().onConciergeClick();
             }
         });
     }
@@ -621,6 +631,43 @@ public class GourmetBookingDetailView extends BaseBlurView<GourmetBookingDetailV
     }
 
     @Override
+    public Observable<Long> getLocationAnimation()
+    {
+        return Observable.interval(1, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread()).subscribeOn(AndroidSchedulers.mainThread()).doOnNext(new Consumer<Long>()
+        {
+            @Override
+            public void accept(@NonNull Long time) throws Exception
+            {
+                Drawable wrapDrawable = DrawableCompat.wrap(mMyLocationDrawable);
+
+                if (time % 2 == 0)
+                {
+                    wrapDrawable.setColorFilter(mMyLocationView.getContext().getResources().getColor(R.color.dh_theme_color), PorterDuff.Mode.MULTIPLY);
+                } else
+                {
+                    DrawableCompat.clearColorFilter(wrapDrawable);
+                }
+            }
+        }).doOnDispose(new Action()
+        {
+            @Override
+            public void run() throws Exception
+            {
+                Drawable wrapDrawable = DrawableCompat.wrap(mMyLocationDrawable);
+                wrapDrawable.clearColorFilter();
+            }
+        }).doOnComplete(new Action()
+        {
+            @Override
+            public void run() throws Exception
+            {
+                Drawable wrapDrawable = DrawableCompat.wrap(mMyLocationDrawable);
+                wrapDrawable.clearColorFilter();
+            }
+        });
+    }
+
+    @Override
     public void setMyLocation(Location location)
     {
         if (mGoogleMap == null || location == null || getContext() == null)
@@ -996,5 +1043,122 @@ public class GourmetBookingDetailView extends BaseBlurView<GourmetBookingDetailV
         return observable;
     }
 
+    @Override
+    public void showConciergeDialog(String restaurantPhone, Dialog.OnDismissListener listener)
+    {
+        DialogConciergeDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_concierge_data, null, false);
 
+        // 버튼
+        //        dataBinding.contactUs02Layout.setVisibility(View.GONE);
+
+        dataBinding.contactUs01TextView.setText(R.string.frag_faqs);
+        dataBinding.contactUs01TextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_ops_05_faq, 0, 0, 0);
+
+        dataBinding.contactUs01Layout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                hideSimpleDialog();
+
+                getEventListener().onConciergeFaqClick();
+            }
+        });
+
+        if (DailyTextUtils.isTextEmpty(restaurantPhone) == true)
+        {
+            dataBinding.contactUs02Layout.setVisibility(View.GONE);
+        } else
+        {
+            dataBinding.contactUs02TextView.setText(R.string.label_restaurant_direct_phone);
+            dataBinding.contactUs02TextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_ops_02_restaurant_call, 0, 0, 0);
+
+            dataBinding.contactUs02Layout.setVisibility(View.VISIBLE);
+            dataBinding.contactUs02Layout.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    hideSimpleDialog();
+
+                    getEventListener().onRestaurantCallClick(restaurantPhone);
+                }
+            });
+        }
+
+        dataBinding.kakaoDailyView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                hideSimpleDialog();
+
+                getEventListener().onConciergeHappyTalkClick();
+            }
+        });
+
+        dataBinding.callDailyView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                hideSimpleDialog();
+
+                getEventListener().onConciergeCallClick();
+            }
+        });
+
+        dataBinding.closeView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                hideSimpleDialog();
+            }
+        });
+
+        showSimpleDialog(dataBinding.getRoot(), null, listener, true);
+    }
+
+    @Override
+    public void showShareDialog(Dialog.OnDismissListener listener)
+    {
+        DialogShareDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_share_data, null, false);
+
+        dataBinding.kakaoShareView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                hideSimpleDialog();
+
+                getEventListener().onShareKakaoClick();
+            }
+        });
+
+        // 예약 내역, 취소 내역은 안보여 주기로 함
+        dataBinding.copyLinkLayout.setVisibility(View.GONE);
+
+        dataBinding.moreShareView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                hideSimpleDialog();
+
+                getEventListener().onMoreShareClick();
+            }
+        });
+
+        dataBinding.closeTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                hideSimpleDialog();
+            }
+        });
+
+        showSimpleDialog(dataBinding.getRoot(), null, listener, true);
+    }
 }

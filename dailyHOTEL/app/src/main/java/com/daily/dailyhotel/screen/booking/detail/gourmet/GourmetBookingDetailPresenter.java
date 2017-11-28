@@ -4,38 +4,72 @@ package com.daily.dailyhotel.screen.booking.detail.gourmet;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.exception.DuplicateRunException;
+import com.daily.base.exception.PermissionException;
+import com.daily.base.exception.ProviderException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetBookingDetail;
-import com.daily.dailyhotel.entity.User;
+import com.daily.dailyhotel.entity.Review;
+import com.daily.dailyhotel.entity.ReviewAnswerValue;
+import com.daily.dailyhotel.entity.ReviewItem;
+import com.daily.dailyhotel.entity.ReviewQuestionItem;
+import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
+import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
+import com.daily.dailyhotel.screen.common.dialog.call.restaurant.RestaurantCallDialogActivity;
+import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
+import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
+import com.twoheart.dailyhotel.model.ReviewPickQuestion;
+import com.twoheart.dailyhotel.model.ReviewScoreQuestion;
+import com.twoheart.dailyhotel.screen.booking.detail.gourmet.GourmetReceiptActivity;
+import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
+import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
+import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
+import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
+import com.twoheart.dailyhotel.screen.review.ReviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function3;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by sheldon
@@ -55,7 +89,6 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
     private boolean mIsDeepLink;
     private int mBookingState;
     private CommonDateTime mCommonDateTime;
-    private User mUser;
     private GourmetBookingDetail mGourmetBookingDetail;
 
     private DailyLocationExFactory mDailyLocationExFactory;
@@ -65,6 +98,36 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
         void onScreen(Activity activity);
 
         void onEventPaymentState(Activity activity, int gourmetIndex, int bookingState);
+
+        void onEventShareClick(Activity activity);
+
+        void onEventShareKakaoClick(Activity activity);
+
+        void onEventMoreShareClick(Activity activity);
+
+        void onEventConciergeClick(Activity activity);
+
+        void onEventConciergeFaqClick(Activity activity);
+
+        void onEventRestaurantCallClick(Activity activity);
+
+        void onEventHappyTalkClick(Activity activity);
+
+        void onEventHappyTalkClick2(Activity activity);
+
+        void onEventConciergeCallClick(Activity activity);
+
+        void onEventStartConciergeCall(Activity activity);
+
+        void onEventMapClick(Activity activity);
+
+        void onEventViewDetailClick(Activity activity);
+
+        void onEventReviewClick(Activity activity);
+
+        void onEventHideBookingClick(Activity activity, int gourmetIndex);
+
+        void onEventHideBookingSuccess(Activity activity, int gourmetIndex);
     }
 
     public GourmetBookingDetailPresenter(@NonNull GourmetBookingDetailActivity activity)
@@ -85,6 +148,10 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
         setContentView(R.layout.activity_gourmet_booking_detail_data);
 
         setAnalytics(new GourmetBookingDetailAnalyticsImpl());
+
+        mCommonRemoteImpl = new CommonRemoteImpl(activity);
+        mProfileRemoteImpl = new ProfileRemoteImpl(activity);
+        mBookingRemoteImpl = new BookingRemoteImpl(activity);
 
         setRefresh(true);
     }
@@ -194,7 +261,7 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
     @Override
     public boolean onBackPressed()
     {
-        if (mGourmetBookingDetail != null && getViewInterface().isExpandedMap() == true)
+        if (mGourmetBookingDetail != null && getViewInterface() != null && getViewInterface().isExpandedMap() == true)
         {
             onCollapseMapClick();
             return true;
@@ -293,6 +360,42 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
                     finish();
                 }
                 break;
+
+            case GourmetBookingDetailActivity.REQUEST_CODE_REFUND:
+            {
+                switch (resultCode)
+                {
+                    case Constants.CODE_RESULT_ACTIVITY_REFRESH:
+                    {
+                        setRefresh(true);
+
+                        setResult(resultCode);
+                        break;
+                    }
+
+                    case Activity.RESULT_OK:
+                    {
+                        setResult(Constants.CODE_RESULT_ACTIVITY_REFRESH);
+                        finish();
+                        break;
+                    }
+                }
+                break;
+            }
+
+            case GourmetBookingDetailActivity.REQUEST_CODE_RESTAURANT_CALL:
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    mAnalytics.onEventRestaurantCallClick(getActivity());
+                }
+                break;
+
+            case GourmetBookingDetailActivity.REQUEST_CODE_CALL:
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    mAnalytics.onEventStartConciergeCall(getActivity());
+                }
+                break;
         }
     }
 
@@ -322,16 +425,15 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
         });
 
         addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime() //
-            , mProfileRemoteImpl.getProfile(), detailObservable //
-            , new Function3<CommonDateTime, User, GourmetBookingDetail, GourmetBookingDetail>()
+            , detailObservable //
+            , new BiFunction<CommonDateTime, GourmetBookingDetail, GourmetBookingDetail>()
             {
                 @Override
-                public GourmetBookingDetail apply(CommonDateTime commonDateTime, User user, GourmetBookingDetail gourmetBookingDetail) throws Exception
+                public GourmetBookingDetail apply(CommonDateTime commonDateTime, GourmetBookingDetail gourmetBookingDetail) throws Exception
                 {
                     setCommonDateTime(commonDateTime);
-                    setUser(user);
                     setGourmetBookingDetail(gourmetBookingDetail);
-                    return null;
+                    return gourmetBookingDetail;
                 }
             }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetBookingDetail>()
         {
@@ -359,11 +461,6 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
         }
 
         mCommonDateTime = commonDateTime;
-    }
-
-    private void setUser(User user)
-    {
-        mUser = user;
     }
 
     private void setGourmetBookingDetail(GourmetBookingDetail gourmetBookingDetail)
@@ -397,7 +494,7 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
             return;
         }
 
-       mAnalytics.onEventPaymentState(getActivity(), mGourmetBookingDetail.gourmetIndex, mBookingState);
+        mAnalytics.onEventPaymentState(getActivity(), mGourmetBookingDetail.gourmetIndex, mBookingState);
     }
 
     @Override
@@ -427,13 +524,198 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
             });
     }
 
+    private Observable<Location> searchMyLocation(Observable locationAnimationObservable)
+    {
+        if (mDailyLocationExFactory == null)
+        {
+            mDailyLocationExFactory = new DailyLocationExFactory(getActivity());
+        }
 
+        if (mDailyLocationExFactory.measuringLocation() == true)
+        {
+            return null;
+        }
+
+        Disposable locationAnimationDisposable;
+
+        if (locationAnimationObservable != null)
+        {
+            locationAnimationDisposable = locationAnimationObservable.subscribe();
+        } else
+        {
+            locationAnimationDisposable = null;
+        }
+
+        return new Observable<Location>()
+        {
+            @Override
+            protected void subscribeActual(Observer<? super Location> observer)
+            {
+                mDailyLocationExFactory.checkLocationMeasure(new DailyLocationExFactory.OnCheckLocationListener()
+                {
+                    @Override
+                    public void onRequirePermission()
+                    {
+                        if (locationAnimationDisposable != null)
+                        {
+                            locationAnimationDisposable.dispose();
+                        }
+
+                        observer.onError(new PermissionException());
+                    }
+
+                    @Override
+                    public void onFailed()
+                    {
+                        if (locationAnimationDisposable != null)
+                        {
+                            locationAnimationDisposable.dispose();
+                        }
+
+                        observer.onError(new Exception());
+                    }
+
+                    @Override
+                    public void onProviderEnabled()
+                    {
+                        mDailyLocationExFactory.startLocationMeasure(new DailyLocationExFactory.OnLocationListener()
+                        {
+                            @Override
+                            public void onFailed()
+                            {
+                                if (locationAnimationDisposable != null)
+                                {
+                                    locationAnimationDisposable.dispose();
+                                }
+
+                                observer.onError(new Exception());
+                            }
+
+                            @Override
+                            public void onAlreadyRun()
+                            {
+                                if (locationAnimationDisposable != null)
+                                {
+                                    locationAnimationDisposable.dispose();
+                                }
+
+                                observer.onError(new DuplicateRunException());
+                            }
+
+                            @Override
+                            public void onLocationChanged(Location location)
+                            {
+                                if (locationAnimationDisposable != null)
+                                {
+                                    locationAnimationDisposable.dispose();
+                                }
+
+                                unLockAll();
+
+                                mDailyLocationExFactory.stopLocationMeasure();
+
+                                if (location == null)
+                                {
+                                    observer.onError(new NullPointerException());
+                                } else
+                                {
+                                    observer.onNext(location);
+                                    observer.onComplete();
+                                }
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onProviderDisabled()
+                    {
+                        if (locationAnimationDisposable != null)
+                        {
+                            locationAnimationDisposable.dispose();
+                        }
+
+                        observer.onError(new ProviderException());
+                    }
+                });
+            }
+        }.doOnComplete(() ->
+        {
+            if (locationAnimationDisposable != null)
+            {
+                locationAnimationDisposable.dispose();
+            }
+        }).doOnDispose(() ->
+        {
+            if (locationAnimationDisposable != null)
+            {
+                locationAnimationDisposable.dispose();
+            }
+        }).doOnError(throwable ->
+        {
+            unLockAll();
+
+            if (throwable instanceof PermissionException)
+            {
+                Intent intent = PermissionManagerActivity.newInstance(getActivity(), PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+                startActivityForResult(intent, GourmetBookingDetailActivity.REQUEST_CODE_PERMISSION_MANAGER);
+            } else if (throwable instanceof ProviderException)
+            {
+                // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
+                View.OnClickListener positiveListener = new View.OnClickListener()//
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivityForResult(intent, GourmetBookingDetailActivity.REQUEST_CODE_SETTING_LOCATION);
+                    }
+                };
+
+                View.OnClickListener negativeListener = new View.OnClickListener()//
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
+                    }
+                };
+
+                DialogInterface.OnCancelListener cancelListener = new DialogInterface.OnCancelListener()
+                {
+                    @Override
+                    public void onCancel(DialogInterface dialog)
+                    {
+                        DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
+                    }
+                };
+
+                getViewInterface().showSimpleDialog(//
+                    getString(R.string.dialog_title_used_gps), getString(R.string.dialog_msg_used_gps), //
+                    getString(R.string.dialog_btn_text_dosetting), //
+                    getString(R.string.dialog_btn_text_cancel), //
+                    positiveListener, negativeListener, cancelListener, null, true);
+            } else if (throwable instanceof DuplicateRunException)
+            {
+
+            } else
+            {
+                DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
+            }
+        });
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     @Override
     public void onIssuingReceiptClick()
     {
+        if (getActivity() == null || lock() == true)
+        {
+            return;
+        }
 
+        Intent intent = new Intent(getActivity(), GourmetReceiptActivity.class);
+        intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_BOOKINGIDX, mReservationIndex);
+        startActivityForResult(intent, GourmetBookingDetailActivity.REQUEST_CODE_ISSUING_RECEIPT);
     }
 
     @Override
@@ -459,102 +741,596 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
     @Override
     public void onMapLoading()
     {
-
+        DailyToast.showToast(getActivity(), R.string.message_loading_map, DailyToast.LENGTH_SHORT);
     }
 
     @Override
     public void onMapClick()
     {
+        if (getActivity() == null || mGourmetBookingDetail == null || lock() == true)
+        {
+            return;
+        }
 
+        Intent intent = ZoomMapActivity.newInstance(getActivity()//
+            , ZoomMapActivity.SourceType.GOURMET_BOOKING, mGourmetBookingDetail.gourmetName, mGourmetBookingDetail.gourmetAddress//
+            , mGourmetBookingDetail.latitude, mGourmetBookingDetail.longitude, mGourmetBookingDetail.overseas);
+
+        startActivityForResult(intent, GourmetBookingDetailActivity.REQUEST_CODE_ZOOMMAP);
+
+        mAnalytics.onEventMapClick(getActivity());
     }
 
     @Override
     public void onExpandMapClick()
     {
+        if (mGourmetBookingDetail == null || lock() == true)
+        {
+            return;
+        }
 
+        getViewInterface().setBookingDetailMapToolbar();
+
+        addCompositeDisposable(getViewInterface().expandMap(mGourmetBookingDetail.latitude, mGourmetBookingDetail.longitude)//
+            .subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
+                {
+                    unLockAll();
+                }
+            }));
+
+        mAnalytics.onEventMapClick(getActivity());
     }
 
     @Override
     public void onCollapseMapClick()
     {
+        if (mGourmetBookingDetail == null || lock() == true)
+        {
+            return;
+        }
 
+        clearCompositeDisposable();
+
+        getViewInterface().setBookingDetailToolbar();
+
+        addCompositeDisposable(getViewInterface().collapseMap()//
+            .subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
+                {
+                    unLockAll();
+                }
+            }));
     }
 
     @Override
     public void onViewDetailClick()
     {
+        if (getActivity() == null || mGourmetBookingDetail == null || lock() == true)
+        {
+            return;
+        }
 
+        try
+        {
+            Intent intent = GourmetDetailActivity.newInstance(getActivity() //
+                , mGourmetBookingDetail.gourmetIndex, mGourmetBookingDetail.gourmetName, null, GourmetDetailActivity.NONE_PRICE//
+                , mCommonDateTime.dailyDateTime//
+                , null, false, false, false, false//
+                , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
+                , new GourmetDetailAnalyticsParam());
+
+            startActivityForResult(intent, GourmetBookingDetailActivity.REQUEST_CODE_DETAIL);
+
+            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
+            mAnalytics.onEventViewDetailClick(getActivity());
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     @Override
     public void onNavigatorClick()
     {
+        if (mGourmetBookingDetail == null || lock() == true)
+        {
+            return;
+        }
 
+        NavigatorAnalyticsParam analyticsParam = new NavigatorAnalyticsParam();
+        analyticsParam.category = AnalyticsManager.Category.GOURMET_BOOKINGS;
+        analyticsParam.action = AnalyticsManager.Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED;
+
+        startActivityForResult(NavigatorDialogActivity.newInstance(getActivity(), mGourmetBookingDetail.gourmetName//
+            , mGourmetBookingDetail.latitude, mGourmetBookingDetail.longitude, false, analyticsParam), GourmetBookingDetailActivity.REQUEST_CODE_NAVIGATOR);
     }
 
     @Override
     public void onClipAddressClick()
     {
+        if (getActivity() == null || mGourmetBookingDetail == null)
+        {
+            return;
+        }
 
+        DailyTextUtils.clipText(getActivity(), mGourmetBookingDetail.gourmetAddress);
+
+        DailyToast.showToast(getActivity(), R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
     }
 
     @Override
     public void onMyLocationClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
+        Observable<Long> locationAnimationObservable = getViewInterface().getLocationAnimation();
+        Observable observable = searchMyLocation(locationAnimationObservable);
+
+        if (observable != null)
+        {
+            addCompositeDisposable(observable.subscribe(new Consumer<Location>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull Location location) throws Exception
+                {
+                    unLockAll();
+                    getViewInterface().setMyLocation(location);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                {
+                    unLockAll();
+                }
+            }));
+        } else
+        {
+            unLockAll();
+        }
     }
 
     @Override
     public void onConciergeClick()
     {
+        final String restaurantPhone;
+        if (mGourmetBookingDetail == null)
+        {
+            restaurantPhone = null;
+        } else if (DailyTextUtils.isTextEmpty(mGourmetBookingDetail.phone2) == false)
+        {
+            restaurantPhone = mGourmetBookingDetail.phone2;
+        } else if (DailyTextUtils.isTextEmpty(mGourmetBookingDetail.phone1) == false)
+        {
+            restaurantPhone = mGourmetBookingDetail.phone1;
+        } else if (DailyTextUtils.isTextEmpty(mGourmetBookingDetail.phone3) == false)
+        {
+            restaurantPhone = mGourmetBookingDetail.phone3;
+        } else
+        {
+            restaurantPhone = null;
+        }
 
+        getViewInterface().showConciergeDialog(restaurantPhone, new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                unLockAll();
+            }
+        });
+
+        mAnalytics.onEventConciergeClick(getActivity());
     }
 
     @Override
     public void onConciergeFaqClick()
     {
+        startActivity(FAQActivity.newInstance(getActivity()));
 
+        mAnalytics.onEventConciergeFaqClick(getActivity());
     }
 
     @Override
     public void onRestaurantCallClick(String restaurantPhone)
     {
+        if (DailyTextUtils.isTextEmpty(restaurantPhone) == true)
+        {
+            return;
+        }
 
+        startActivityForResult(RestaurantCallDialogActivity.newInstance(getActivity(), restaurantPhone) //
+            , GourmetBookingDetailActivity.REQUEST_CODE_RESTAURANT_CALL);
     }
 
     @Override
     public void onConciergeHappyTalkClick()
     {
+        if (getActivity() == null || mGourmetBookingDetail == null)
+        {
+            return;
+        }
 
+        try
+        {
+            // 카카오톡 패키지 설치 여부
+            getActivity().getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
+
+            startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity()//
+                , HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_BOOKING//
+                , mGourmetBookingDetail.gourmetIndex, mReservationIndex, mGourmetBookingDetail.gourmetName), GourmetBookingDetailActivity.REQUEST_CODE_HAPPYTALK);
+
+            mAnalytics.onEventHappyTalkClick2(getActivity());
+        } catch (Exception e)
+        {
+            getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
+                , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
+                , new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Util.installPackage(getActivity(), "com.kakao.talk");
+                    }
+                }, null);
+        }
+
+        mAnalytics.onEventHappyTalkClick(getActivity());
     }
 
     @Override
     public void onConciergeCallClick()
     {
+        startActivityForResult(CallDialogActivity.newInstance(getActivity()), GourmetBookingDetailActivity.REQUEST_CODE_CALL);
 
+        mAnalytics.onEventConciergeCallClick(getActivity());
     }
 
     @Override
     public void onShareKakaoClick()
     {
+        if (mGourmetBookingDetail == null || getActivity() == null)
+        {
+            return;
+        }
 
+        try
+        {
+            // 카카오톡 패키지 설치 여부
+            getActivity().getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
+
+            String userName = DailyUserPreference.getInstance(getActivity()).getName();
+
+            String message = getString(R.string.message_booking_gourmet_share_kakao, //
+                userName, mGourmetBookingDetail.gourmetName, mGourmetBookingDetail.guestName,//
+                DailyTextUtils.getPriceFormat(getActivity(), mGourmetBookingDetail.priceTotal, false), //
+                DailyCalendar.convertDateFormatString(mGourmetBookingDetail.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"),//
+                DailyCalendar.convertDateFormatString(mGourmetBookingDetail.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm"), //
+                mGourmetBookingDetail.ticketName, getString(R.string.label_booking_count, mGourmetBookingDetail.ticketCount), //
+                mGourmetBookingDetail.gourmetAddress);
+
+            KakaoLinkManager.newInstance(getActivity()).shareBookingGourmet(message, mGourmetBookingDetail.gourmetIndex,//
+                mImageUrl, DailyCalendar.convertDateFormatString(mGourmetBookingDetail.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
+
+            mAnalytics.onEventShareKakaoClick(getActivity());
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+
+            getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
+                , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
+                , new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Util.installPackage(getActivity(), "com.kakao.talk");
+                    }
+                }, null);
+        }
     }
 
     @Override
     public void onMoreShareClick()
     {
+        if (mGourmetBookingDetail == null || getActivity() == null)
+        {
+            return;
+        }
 
+        try
+        {
+            String userName = DailyUserPreference.getInstance(getActivity()).getName();
+
+            String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/gourmet/%d?reserveDate=%s"//
+                , mGourmetBookingDetail.gourmetIndex, DailyCalendar.convertDateFormatString(mGourmetBookingDetail.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd"));
+
+            final String message = getString(R.string.message_booking_gourmet_share_sms, //
+                userName, mGourmetBookingDetail.gourmetName, mGourmetBookingDetail.guestName,//
+                DailyTextUtils.getPriceFormat(getActivity(), mGourmetBookingDetail.priceTotal, false), //
+                DailyCalendar.convertDateFormatString(mGourmetBookingDetail.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"),//
+                DailyCalendar.convertDateFormatString(mGourmetBookingDetail.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm"), //
+                mGourmetBookingDetail.ticketName, getString(R.string.label_booking_count, mGourmetBookingDetail.ticketCount), //
+                mGourmetBookingDetail.gourmetAddress);
+
+            CommonRemoteImpl commonRemote = new CommonRemoteImpl(getActivity());
+
+            addCompositeDisposable(commonRemote.getShortUrl(longUrl).subscribe(new Consumer<String>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull String shortUrl) throws Exception
+                {
+                    unLockAll();
+
+                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                    intent.setType("text/plain");
+
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "");
+                    intent.putExtra(Intent.EXTRA_TEXT, message + shortUrl);
+                    Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
+                    startActivity(chooser);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                {
+                    unLockAll();
+
+                    Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                    intent.setType("text/plain");
+
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "");
+                    intent.putExtra(Intent.EXTRA_TEXT, message + "https://mobile.dailyhotel.co.kr/gourmet/" + mGourmetBookingDetail.gourmetIndex);
+                    Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
+                    startActivity(chooser);
+                }
+            }));
+        } catch (Exception e)
+        {
+            unLockAll();
+
+            ExLog.d(e.toString());
+        }
+
+        mAnalytics.onEventMoreShareClick(getActivity());
     }
 
     @Override
     public void onHiddenReservationClick()
     {
+        if (mGourmetBookingDetail == null || lock() == true)
+        {
+            return;
+        }
 
+        getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_booking)//
+            , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    screenLock(true);
+
+                    addCompositeDisposable(mBookingRemoteImpl.getGourmetHiddenBooking(mReservationIndex) //
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                        {
+                            @Override
+                            public void accept(@NonNull Boolean result) throws Exception
+                            {
+                                unLockAll();
+
+                                if (result == true)
+                                {
+                                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2)//
+                                        , getString(R.string.message_booking_delete_booking)//
+                                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                                        {
+                                            @Override
+                                            public void onDismiss(DialogInterface dialog)
+                                            {
+                                                setResult(Constants.CODE_RESULT_ACTIVITY_REFRESH);
+                                                finish();
+                                            }
+                                        });
+
+                                    mAnalytics.onEventHideBookingSuccess(getActivity(), mGourmetBookingDetail.gourmetIndex);
+                                } else
+                                {
+                                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2)//
+                                        , getString(R.string.message_booking_failed_delete_booking)//
+                                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                                        {
+                                            @Override
+                                            public void onDismiss(DialogInterface dialog)
+                                            {
+                                            }
+                                        });
+                                }
+                            }
+                        }, new Consumer<Throwable>()
+                        {
+                            @Override
+                            public void accept(@NonNull Throwable throwable) throws Exception
+                            {
+                                unLockAll();
+
+                                getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2)//
+                                    , getString(R.string.message_booking_failed_delete_booking)//
+                                    , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                                    {
+                                        @Override
+                                        public void onDismiss(DialogInterface dialog)
+                                        {
+                                        }
+                                    });
+                            }
+                        }));
+                }
+            }, null, null, new DialogInterface.OnDismissListener()
+            {
+                @Override
+                public void onDismiss(DialogInterface dialog)
+                {
+                    unLock();
+                }
+            }, true);
+
+        mAnalytics.onEventHideBookingClick(getActivity(), mGourmetBookingDetail.gourmetIndex);
     }
 
     @Override
     public void onReviewClick(String reviewStatus)
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
+        if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true)
+        {
+            addCompositeDisposable(mCommonRemoteImpl.getReview("gourmet", mReservationIndex) //
+                .subscribeOn(Schedulers.io()).map(new Function<Review, com.twoheart.dailyhotel.model.Review>()
+                {
+                    @Override
+                    public com.twoheart.dailyhotel.model.Review apply(@io.reactivex.annotations.NonNull Review review) throws Exception
+                    {
+                        return reviewToReviewParcelable(review);
+                    }
+                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<com.twoheart.dailyhotel.model.Review>()
+                {
+                    @Override
+                    public void accept(@io.reactivex.annotations.NonNull com.twoheart.dailyhotel.model.Review review) throws Exception
+                    {
+                        Intent intent = ReviewActivity.newInstance(getActivity(), review);
+                        startActivityForResult(intent, GourmetBookingDetailActivity.REQUEST_CODE_REVIEW);
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                    {
+                        onHandleError(throwable);
+                    }
+                }));
+
+            mAnalytics.onEventReviewClick(getActivity());
+        }
+    }
+
+    private com.twoheart.dailyhotel.model.Review reviewToReviewParcelable(Review review)
+    {
+        com.twoheart.dailyhotel.model.Review reviewParcelable = new com.twoheart.dailyhotel.model.Review();
+
+        if (review == null)
+        {
+            return reviewParcelable;
+        }
+
+        reviewParcelable.requiredCommentReview = review.requiredCommentReview;
+        reviewParcelable.reserveIdx = review.reserveIdx;
+
+        com.twoheart.dailyhotel.model.ReviewItem reviewItemParcelable = new com.twoheart.dailyhotel.model.ReviewItem();
+
+        ReviewItem reviewItem = review.getReviewItem();
+
+        if (reviewItem != null)
+        {
+            reviewItemParcelable.itemIdx = reviewItem.itemIdx;
+            reviewItemParcelable.itemName = reviewItem.itemName;
+            reviewItemParcelable.imageUrl = reviewItem.imageUrl;
+
+            if ("HOTEL".equalsIgnoreCase(reviewItem.serviceType) == true)
+            {
+                reviewItemParcelable.placeType = Constants.PlaceType.HOTEL;
+            } else if ("GOURMET".equalsIgnoreCase(reviewItem.serviceType) == true)
+            {
+                reviewItemParcelable.placeType = Constants.PlaceType.FNB;
+            } else
+            {
+                ExLog.d("unKnown service type");
+            }
+
+            reviewItemParcelable.useEndDate = reviewItem.useEndDate;
+            reviewItemParcelable.useStartDate = reviewItem.useStartDate;
+        }
+
+        reviewParcelable.setReviewItem(reviewItemParcelable);
+
+        //
+        ArrayList<ReviewPickQuestion> reviewPickQuestionListParcelable = new ArrayList<>();
+
+        List<ReviewQuestionItem> reviewPickQuestionList = review.getReviewPickQuestionList();
+
+        if (reviewPickQuestionList != null && reviewPickQuestionList.size() > 0)
+        {
+            for (ReviewQuestionItem reviewQuestionItem : reviewPickQuestionList)
+            {
+                ReviewPickQuestion reviewPickQuestion = new ReviewPickQuestion();
+                reviewPickQuestion.title = reviewQuestionItem.title;
+                reviewPickQuestion.description = reviewQuestionItem.description;
+                reviewPickQuestion.answerCode = reviewQuestionItem.answerCode;
+
+                //
+                ArrayList<com.twoheart.dailyhotel.model.ReviewAnswerValue> reviewAnswerValueListParcelable = new ArrayList<>();
+
+                List<ReviewAnswerValue> reviewAnswerValueList = reviewQuestionItem.getAnswerValueList();
+
+                if (reviewAnswerValueList != null && reviewAnswerValueList.size() > 0)
+                {
+                    for (ReviewAnswerValue reviewAnswerValue : reviewAnswerValueList)
+                    {
+                        com.twoheart.dailyhotel.model.ReviewAnswerValue reviewAnswerValueParcelable = new com.twoheart.dailyhotel.model.ReviewAnswerValue();
+
+                        reviewAnswerValueParcelable.code = reviewAnswerValue.code;
+                        reviewAnswerValueParcelable.description = reviewAnswerValue.description;
+
+                        reviewAnswerValueListParcelable.add(reviewAnswerValueParcelable);
+                    }
+
+                    // 짝수개로 맞춘다.
+                    if (reviewAnswerValueListParcelable.size() % 2 == 1)
+                    {
+                        reviewAnswerValueListParcelable.add(new com.twoheart.dailyhotel.model.ReviewAnswerValue());
+                    }
+                }
+
+                reviewPickQuestion.setAnswerValueList(reviewAnswerValueListParcelable);
+                reviewPickQuestionListParcelable.add(reviewPickQuestion);
+            }
+        }
+
+        reviewParcelable.setReviewPickQuestionList(reviewPickQuestionListParcelable);
+
+        //
+        ArrayList<ReviewScoreQuestion> reviewScoreQuestionListParcelable = new ArrayList<ReviewScoreQuestion>();
+
+        List<ReviewQuestionItem> reviewScoreQuestionList = review.getReviewScoreQuestionList();
+
+        if (reviewScoreQuestionList != null && reviewScoreQuestionList.size() > 0)
+        {
+            for (ReviewQuestionItem reviewQuestionItem : reviewScoreQuestionList)
+            {
+                ReviewScoreQuestion reviewScoreQuestion = new ReviewScoreQuestion();
+                reviewScoreQuestion.title = reviewQuestionItem.title;
+                reviewScoreQuestion.description = reviewQuestionItem.description;
+                reviewScoreQuestion.answerCode = reviewQuestionItem.answerCode;
+
+                reviewScoreQuestionListParcelable.add(reviewScoreQuestion);
+            }
+        }
+
+        reviewParcelable.setReviewScoreQuestionList(reviewScoreQuestionListParcelable);
+
+        return reviewParcelable;
     }
 }

@@ -1,5 +1,6 @@
 package com.daily.dailyhotel.screen.booking.detail.gourmet;
 
+import android.app.Dialog;
 import android.location.Location;
 
 import com.daily.dailyhotel.base.BaseBlurViewInterface;
@@ -29,5 +30,11 @@ public interface GourmetBookingDetailInterface extends BaseBlurViewInterface
 
     Observable<Boolean> collapseMap();
 
+    Observable<Long> getLocationAnimation();
+
     void setMyLocation(Location location);
+
+    void showConciergeDialog(String restaurantPhone, Dialog.OnDismissListener listener);
+
+    void showShareDialog(Dialog.OnDismissListener listener);
 }
