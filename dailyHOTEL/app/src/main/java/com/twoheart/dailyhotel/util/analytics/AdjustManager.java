@@ -1035,9 +1035,7 @@ public class AdjustManager extends BaseAnalyticsManager
         if (EventToken.STAY_FIRST_PURCHASE.equalsIgnoreCase(eventToken) == true //
             || EventToken.GOURMET_FIRST_PURCHASE.equalsIgnoreCase(eventToken) == true)
         {
-            int paymentPrice = Integer.parseInt(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
-            DecimalFormat decimalFormat = new DecimalFormat("###,##0");
-            event.addPartnerParameter(Key.EVENT_REVENUE, decimalFormat.format(paymentPrice));
+            event.addPartnerParameter(Key.EVENT_REVENUE, params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
         }
 
         return event;

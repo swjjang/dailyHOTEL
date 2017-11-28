@@ -365,63 +365,9 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
             }
         });
 
+        // 예약 내역의 경우 상세 링크로 인하여 혼선이 있을 것으로 보여 삭제하기로 함
         View copyLinkView = dialogView.findViewById(R.id.copyLinkView);
-
-        copyLinkView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (shareDialog.isShowing() == true)
-                {
-                    shareDialog.dismiss();
-                }
-
-                lockUI();
-
-                try
-                {
-                    GourmetBookingDetail gourmetBookingDetail = ((GourmetBookingDetail) mPlaceBookingDetail);
-
-                    String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/gourmet/%d?reserveDate=%s"//
-                        , gourmetBookingDetail.placeIndex, DailyCalendar.convertDateFormatString(gourmetBookingDetail.reservationTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd"));
-
-                    CommonRemoteImpl commonRemote = new CommonRemoteImpl(GourmetReservationDetailActivity.this);
-
-                    addCompositeDisposable(commonRemote.getShortUrl(longUrl).subscribe(new Consumer<String>()
-                    {
-                        @Override
-                        public void accept(@NonNull String shortUrl) throws Exception
-                        {
-                            unLockUI();
-
-                            DailyTextUtils.clipText(GourmetReservationDetailActivity.this, shortUrl);
-
-                            DailyToast.showToast(GourmetReservationDetailActivity.this, R.string.toast_msg_copy_link, DailyToast.LENGTH_LONG);
-                        }
-                    }, new Consumer<Throwable>()
-                    {
-                        @Override
-                        public void accept(@NonNull Throwable throwable) throws Exception
-                        {
-                            unLockUI();
-
-                            DailyTextUtils.clipText(GourmetReservationDetailActivity.this, "https://mobile.dailyhotel.co.kr/gourmet/" + gourmetBookingDetail.placeIndex);
-
-                            DailyToast.showToast(GourmetReservationDetailActivity.this, R.string.toast_msg_copy_link, DailyToast.LENGTH_LONG);
-                        }
-                    }));
-                } catch (Exception e)
-                {
-                    unLockUI();
-
-                    ExLog.d(e.toString());
-                }
-
-                //                AnalyticsManager.getInstance(GourmetReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
-                //                    , AnalyticsManager.Action.GOURMET_BOOKING_SHARE, AnalyticsManager.ValueType.MESSAGE, null);
-            }
-        });
+        copyLinkView.setVisibility(View.GONE);
 
         View moreShareView = dialogView.findViewById(R.id.moreShareView);
 
