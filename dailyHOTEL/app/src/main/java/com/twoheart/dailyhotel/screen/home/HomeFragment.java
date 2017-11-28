@@ -898,7 +898,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     }
 
                     analyticsParam.setShowOriginalPriceYn(analyticsParam.price, analyticsParam.discountPrice);
-                    analyticsParam.setProvince(null);
+                    analyticsParam.setTown(null);
                     analyticsParam.entryPosition = -1;
                     analyticsParam.totalListCount = -1;
                     analyticsParam.isDailyChoice = false;

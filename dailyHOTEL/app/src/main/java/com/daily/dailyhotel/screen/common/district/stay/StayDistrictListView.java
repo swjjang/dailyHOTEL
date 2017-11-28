@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.common.region.stay;
+package com.daily.dailyhotel.screen.common.district.stay;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
@@ -15,8 +15,8 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.ScreenUtils;
-import com.daily.dailyhotel.entity.Area;
-import com.daily.dailyhotel.entity.Region;
+import com.daily.dailyhotel.entity.StayDistrict;
+import com.daily.dailyhotel.entity.StayTown;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayRegionListDataBinding;
@@ -30,9 +30,9 @@ import io.reactivex.Observer;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 
-public class StayRegionListView extends BaseDialogView<StayRegionListView.OnEventListener, ActivityStayRegionListDataBinding> implements StayRegionListInterface
+public class StayDistrictListView extends BaseDialogView<StayDistrictListView.OnEventListener, ActivityStayRegionListDataBinding> implements StayDistrictListInterface
 {
-    private StayRegionListAdapter mStayRegionListAdapter;
+    private StayDistrictListAdapter mStayDistrictListAdapter;
 
     private LayoutRegionListLocationDataBinding mLayoutRegionListLocationDataBinding;
 
@@ -40,14 +40,14 @@ public class StayRegionListView extends BaseDialogView<StayRegionListView.OnEven
     {
         void onSearchClick();
 
-        void onProvinceClick(int groupPosition);
+        void onDistrictClick(int groupPosition);
 
-        void onAreaClick(int groupPosition, Area area);
+        void onTownClick(int groupPosition, StayTown stayTown);
 
         void onAroundSearchClick();
     }
 
-    public StayRegionListView(BaseActivity baseActivity, StayRegionListView.OnEventListener listener)
+    public StayDistrictListView(BaseActivity baseActivity, StayDistrictListView.OnEventListener listener)
     {
         super(baseActivity, listener);
     }
@@ -68,7 +68,7 @@ public class StayRegionListView extends BaseDialogView<StayRegionListView.OnEven
             @Override
             public boolean onGroupClick(ExpandableListView expandableListView, View view, int groupPosition, long id)
             {
-                getEventListener().onProvinceClick(groupPosition);
+                getEventListener().onDistrictClick(groupPosition);
                 return true;
             }
         });
@@ -86,19 +86,19 @@ public class StayRegionListView extends BaseDialogView<StayRegionListView.OnEven
     }
 
     @Override
-    public void setRegionList(List<Region> regionList)
+    public void setDistrictList(List<StayDistrict> stayDistrictList)
     {
-        if (getViewDataBinding() == null || regionList == null || regionList.size() == 0)
+        if (getViewDataBinding() == null || stayDistrictList == null || stayDistrictList.size() == 0)
         {
             return;
         }
 
-        if (mStayRegionListAdapter == null)
+        if (mStayDistrictListAdapter == null)
         {
-            mStayRegionListAdapter = new StayRegionListAdapter(getContext());
+            mStayDistrictListAdapter = new StayDistrictListAdapter(getContext());
 
-            mStayRegionListAdapter.setTablet(isTabletDevice());
-            mStayRegionListAdapter.setOnChildClickListener(new View.OnClickListener()
+            mStayDistrictListAdapter.setTablet(isTabletDevice());
+            mStayDistrictListAdapter.setOnChildClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View view)
@@ -110,12 +110,12 @@ public class StayRegionListView extends BaseDialogView<StayRegionListView.OnEven
                         return;
                     }
 
-                    if (tag instanceof Area == false)
+                    if (tag instanceof StayTown == false)
                     {
                         return;
                     }
 
-                    Area area = (Area) tag;
+                    StayTown stayTown = (StayTown) tag;
                     Integer groupPosition = (Integer) view.getTag(view.getId());
 
                     if (groupPosition == null)
@@ -123,20 +123,20 @@ public class StayRegionListView extends BaseDialogView<StayRegionListView.OnEven
                         return;
                     }
 
-                    if (area.index == -1)
+                    if (stayTown.index == StayTown.ALL)
                     {
-                        getEventListener().onProvinceClick(groupPosition);
+                        getEventListener().onDistrictClick(groupPosition);
                     } else
                     {
 
-                        getEventListener().onAreaClick(groupPosition, area);
+                        getEventListener().onTownClick(groupPosition, stayTown);
                     }
                 }
             });
         }
 
-        mStayRegionListAdapter.setData(regionList);
-        getViewDataBinding().expandableListView.setAdapter(mStayRegionListAdapter);
+        mStayDistrictListAdapter.setData(stayDistrictList);
+        getViewDataBinding().expandableListView.setAdapter(mStayDistrictListAdapter);
     }
 
     @Override
@@ -158,9 +158,9 @@ public class StayRegionListView extends BaseDialogView<StayRegionListView.OnEven
             return null;
         }
 
-        Region region = mStayRegionListAdapter.getRegion(groupPosition);
+        StayDistrict stayDistrict = mStayDistrictListAdapter.getDistrict(groupPosition);
 
-        if (region == null)
+        if (stayDistrict == null)
         {
             return null;
         }
@@ -200,7 +200,7 @@ public class StayRegionListView extends BaseDialogView<StayRegionListView.OnEven
                 @Override
                 public Boolean apply(Boolean aBoolean) throws Exception
                 {
-                    region.expandGroup = false;
+                    mStayDistrictListAdapter.setDistrictPosition(-1);
                     return true;
                 }
             });
@@ -211,7 +211,7 @@ public class StayRegionListView extends BaseDialogView<StayRegionListView.OnEven
                 @Override
                 public Boolean apply(Boolean aBoolean, Boolean aBoolean2) throws Exception
                 {
-                    region.expandGroup = false;
+                    mStayDistrictListAdapter.setDistrictPosition(-1);
                     return true;
                 }
             });
@@ -226,9 +226,9 @@ public class StayRegionListView extends BaseDialogView<StayRegionListView.OnEven
             return null;
         }
 
-        Region region = mStayRegionListAdapter.getRegion(groupPosition);
+        StayDistrict stayDistrict = mStayDistrictListAdapter.getDistrict(groupPosition);
 
-        if (region == null)
+        if (stayDistrict == null)
         {
             return null;
         }
@@ -251,7 +251,7 @@ public class StayRegionListView extends BaseDialogView<StayRegionListView.OnEven
                     });
 
                     // 마지막 리스트 목록은 애니메이션으로 안잡힌다.
-                    if (groupPosition == mStayRegionListAdapter.getGroupCount() - 1)
+                    if (groupPosition == mStayDistrictListAdapter.getGroupCount() - 1)
                     {
                         getViewDataBinding().expandableListView.setOnScrollListener(new AbsListView.OnScrollListener()
                         {
@@ -294,7 +294,7 @@ public class StayRegionListView extends BaseDialogView<StayRegionListView.OnEven
             @Override
             public Boolean apply(Boolean aBoolean, Boolean aBoolean2) throws Exception
             {
-                region.expandGroup = true;
+                mStayDistrictListAdapter.setDistrictPosition(groupPosition);
 
                 return true;
             }
@@ -335,41 +335,6 @@ public class StayRegionListView extends BaseDialogView<StayRegionListView.OnEven
 
         listView.addFooterView(footerView);
     }
-
-    //    public void setArea(Province province, List<RegionViewItem> arrayList)
-    //    {
-    //        if (province == null || arrayList == null)
-    //        {
-    //            return;
-    //        }
-    //
-    //        int size = arrayList.size();
-    //
-    //        for (int i = 0; i < size; i++)
-    //        {
-    //            RegionViewItem regionViewItem = arrayList.get(i);
-    //
-    //            if (province.getProvinceIndex() == regionViewItem.getProvince().getProvinceIndex())
-    //            {
-    //                if (regionViewItem.getAreaList().size() == 0)
-    //                {
-    //                    // 상세 지역이 없는 경우.
-    //                    mListView.setSelection(i);
-    //                    mListView.setSelectedGroup(i);
-    //
-    //                    regionViewItem.isExpandGroup = false;
-    //                } else
-    //                {
-    //                    mListView.setSelection(i);
-    //                    mListView.expandGroup(i);
-    //                    mListView.setTag(i);
-    //
-    //                    regionViewItem.isExpandGroup = true;
-    //                }
-    //                break;
-    //            }
-    //        }
-    //    }
 
     private Observable<Boolean> expandArrowAnimation(View view)
     {

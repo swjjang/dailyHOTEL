@@ -12,6 +12,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Toast;
 
@@ -19,8 +20,12 @@ import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.StayDistrict;
+import com.daily.dailyhotel.entity.StayTown;
+import com.daily.dailyhotel.parcel.StayTownParcel;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
-import com.daily.dailyhotel.screen.common.region.stay.StayRegionListActivity;
+import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
+import com.daily.dailyhotel.screen.common.district.stay.StayDistrictListActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
@@ -41,7 +46,6 @@ import com.twoheart.dailyhotel.model.StayCuration;
 import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
-import com.twoheart.dailyhotel.place.activity.PlaceRegionListActivity;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.fragment.PlaceMainActivity;
@@ -69,6 +73,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -76,6 +82,8 @@ public class StayMainActivity extends PlaceMainActivity
 {
     StayCuration mStayCuration;
     DailyDeepLink mDailyDeepLink;
+
+    StayRemoteImpl mStayRemoteImpl;
 
     public static Intent newInstance(Context context, String deepLink)
     {
@@ -95,6 +103,8 @@ public class StayMainActivity extends PlaceMainActivity
         super.onCreate(savedInstanceState);
 
         mStayCuration = new StayCuration();
+
+        mStayRemoteImpl = new StayRemoteImpl(this);
 
         Intent intent = getIntent();
 
@@ -167,101 +177,60 @@ public class StayMainActivity extends PlaceMainActivity
     @Override
     protected void onRegionActivityResult(int resultCode, Intent data)
     {
-        // 지역 선택하고 돌아온 경우
-        if (resultCode == Activity.RESULT_OK && data != null)
+        switch (resultCode)
         {
-            if (data.hasExtra(NAME_INTENT_EXTRA_DATA_PROVINCE) == true)
-            {
-                StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
-                stayCurationOption.clear();
-
-                Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
-                mStayCuration.setProvince(province);
-                mStayCuration.setCategory(this, Category.ALL);
-
-                mPlaceMainLayout.setToolbarRegionText(province.name);
-                mPlaceMainLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
-
-                // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
-                //                String savedRegion = DailyPreference.getInstance(this).getSelectedRegion(PlaceType.HOTEL);
-
-                JSONObject jsonObject = DailyPreference.getInstance(StayMainActivity.this).getDailyRegion(DailyCategoryType.STAY_ALL);
-                boolean isSameProvince = Util.isSameProvinceName(province, jsonObject);
-                if (isSameProvince == false)
+            case Activity.RESULT_OK:
+            case com.daily.base.BaseActivity.RESULT_CODE_START_CALENDAR:
+                if (data != null && data.hasExtra(StayDistrictListActivity.INTENT_EXTRA_DATA_STAY_TOWN) == true)
                 {
-                    //                    DailyPreference.getInstance(this).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
-                    //                    DailyPreference.getInstance(this).setSelectedRegion(PlaceType.HOTEL, province.name);
-                    DailyPreference.getInstance(StayMainActivity.this).setDailyRegion(DailyCategoryType.STAY_ALL, Util.getDailyRegionJSONObject(province));
+                    StayTownParcel stayTownParcel = data.getParcelableExtra(StayDistrictListActivity.INTENT_EXTRA_DATA_STAY_TOWN);
 
-                    String country = province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
-                    String realProvinceName = Util.getRealProvinceName(province);
-                    AnalyticsManager.getInstance(this).onRegionChanged(country, realProvinceName);
+                    if (stayTownParcel == null)
+                    {
+                        return;
+                    }
+
+                    StayTown stayTown = stayTownParcel.getStayTown();
+
+                    if (stayTown == null || stayTown.getDistrict() == null)
+                    {
+                        return;
+                    }
+
+                    StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
+                    stayCurationOption.clear();
+
+                    mStayCuration.setTown(stayTown);
+                    mStayCuration.setCategory(this, Category.ALL);
+
+                    mPlaceMainLayout.setToolbarRegionText(stayTown.name);
+                    mPlaceMainLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
+
+                    boolean changedDistrict = data.getBooleanExtra(StayDistrictListActivity.INTENT_EXTRA_DATA_CHANGED_DISTRICT, false);
+
+                    if (changedDistrict == true)
+                    {
+                        AnalyticsManager.getInstance(this).onRegionChanged(AnalyticsManager.ValueType.DOMESTIC, stayTown.getDistrict().name);
+                    }
+
+                    mPlaceMainLayout.setCategoryTabLayout(getSupportFragmentManager(), stayTown.getCategoryList(), //
+                        mStayCuration.getCategory(), mStayListFragmentListener);
                 }
 
-                mPlaceMainLayout.setCategoryTabLayout(getSupportFragmentManager(), province.getCategoryList(), //
-                    mStayCuration.getCategory(), mStayListFragmentListener);
-            }
-        } else if (resultCode == com.daily.base.BaseActivity.RESULT_CODE_START_CALENDAR && data != null)
-        {
-            // 날짜 선택 화면으로 이동한다.
-            if (data.hasExtra(NAME_INTENT_EXTRA_DATA_PROVINCE) == true)
-            {
-                StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
-                stayCurationOption.clear();
-
-                Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
-                StayBookingDay stayBookingDay = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY);
-
-                mStayCuration.setProvince(province);
-                mStayCuration.setCategory(this, Category.ALL);
-
-                mPlaceMainLayout.setToolbarRegionText(province.name);
-                mPlaceMainLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
-
-                // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
-                //                String savedRegion = DailyPreference.getInstance(this).getSelectedRegion(PlaceType.HOTEL);
-
-                JSONObject jsonObject = DailyPreference.getInstance(StayMainActivity.this).getDailyRegion(DailyCategoryType.STAY_ALL);
-                boolean isSameProvince = Util.isSameProvinceName(province, jsonObject);
-                if (isSameProvince == false)
+                if (resultCode == com.daily.base.BaseActivity.RESULT_CODE_START_CALENDAR)
                 {
-                    //                    DailyPreference.getInstance(this).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
-                    //                    DailyPreference.getInstance(this).setSelectedRegion(PlaceType.HOTEL, province.name);
-                    DailyPreference.getInstance(StayMainActivity.this).setDailyRegion(DailyCategoryType.STAY_ALL, Util.getDailyRegionJSONObject(province));
-
-                    String country = province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
-                    String realProvinceName = Util.getRealProvinceName(province);
-                    AnalyticsManager.getInstance(this).onRegionChanged(country, realProvinceName);
+                    startCalendar(AnalyticsManager.Label.CHANGE_LOCATION, mTodayDateTime);
                 }
+                break;
 
-                mStayCuration.setStayBookingDay(stayBookingDay);
 
-                ((StayMainLayout) mPlaceMainLayout).setToolbarDateText(stayBookingDay);
-
-                startCalendar(AnalyticsManager.Label.CHANGE_LOCATION, mTodayDateTime);
-
-                mPlaceMainLayout.setCategoryTabLayout(getSupportFragmentManager(), province.getCategoryList(), //
-                    mStayCuration.getCategory(), mStayListFragmentListener);
-            }
-        } else if (resultCode == com.daily.base.BaseActivity.RESULT_CODE_START_AROUND_SEARCH && data != null)
-        {
-            // 검색 결과 화면으로 이동한다.
-            String region = data.getStringExtra(NAME_INTENT_EXTRA_DATA_RESULT);
-            String callByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC;
-
-            if (PlaceRegionListActivity.Region.DOMESTIC.name().equalsIgnoreCase(region) == true)
+            case com.daily.base.BaseActivity.RESULT_CODE_START_AROUND_SEARCH:
             {
-                callByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC;
-            } else if (PlaceRegionListActivity.Region.GLOBAL.name().equalsIgnoreCase(region) == true)
-            {
-                callByScreen = AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL;
+                // 검색 결과 화면으로 이동한다.
+                startAroundSearchResult(this, mTodayDateTime, mStayCuration.getStayBookingDay()//
+                    , null, AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC);
+                break;
             }
-
-            startAroundSearchResult(this, mTodayDateTime, mStayCuration.getStayBookingDay(), null, callByScreen);
-        } else if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
-        {
-            setResult(resultCode);
-            finish();
         }
     }
 
@@ -459,26 +428,17 @@ public class StayMainActivity extends PlaceMainActivity
             params.put(AnalyticsManager.KeyType.CATEGORY, mStayCuration.getCategory().code);
             params.put(AnalyticsManager.KeyType.FILTER, mStayCuration.getCurationOption().toAdjustString());
 
-            Province province = mStayCuration.getProvince();
+            StayTown stayTown = mStayCuration.getTown();
 
-            if (province == null)
+            if (stayTown == null)
             {
                 Util.restartApp(this);
                 return;
             }
 
-            if (province instanceof Area)
-            {
-                Area area = (Area) province;
-                params.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
-                params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-                params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-            } else
-            {
-                params.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
-                params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-                params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
-            }
+            params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
+            params.put(AnalyticsManager.KeyType.PROVINCE, stayTown.getDistrict().name);
+            params.put(AnalyticsManager.KeyType.DISTRICT, stayTown.index == StayTown.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : stayTown.name);
 
             AnalyticsManager.getInstance(this).recordScreen(this, screen, null, params);
         } catch (Exception e)
@@ -572,7 +532,7 @@ public class StayMainActivity extends PlaceMainActivity
         String checkInDateTime = mStayCuration.getStayBookingDay().getCheckInDay(DailyCalendar.ISO_8601_FORMAT);
         String checkOutDateTime = mStayCuration.getStayBookingDay().getCheckOutDay(DailyCalendar.ISO_8601_FORMAT);
 
-        Intent intent = StayRegionListActivity.newInstance(StayMainActivity.this//
+        Intent intent = StayDistrictListActivity.newInstance(StayMainActivity.this//
             , checkInDateTime, checkOutDateTime, DailyCategoryType.STAY_ALL, mStayCuration.getCategory().code);
 
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
@@ -587,6 +547,92 @@ public class StayMainActivity extends PlaceMainActivity
                 AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label._HOTEL_MAP, null);
                 break;
         }
+    }
+
+    Pair<String, String> getDistrictNTownNameByCategory(DailyCategoryType dailyCategoryType)
+    {
+        if (dailyCategoryType == null)
+        {
+            return null;
+        }
+
+        JSONObject jsonObject = DailyPreference.getInstance(this).getDailyRegion(dailyCategoryType);
+
+        if (jsonObject == null)
+        {
+            return null;
+        }
+
+        try
+        {
+            return new Pair<>(jsonObject.getString(Constants.JSON_KEY_PROVINCE_NAME), jsonObject.getString(Constants.JSON_KEY_AREA_NAME));
+
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
+        return null;
+    }
+
+    StayTown searchTown(List<StayDistrict> stayDistrictList, Pair<String, String> namePair)
+    {
+        if (stayDistrictList == null || namePair == null)
+        {
+            return null;
+        }
+
+        for (StayDistrict stayDistrict : stayDistrictList)
+        {
+            if (stayDistrict.name.equalsIgnoreCase(namePair.first) == true)
+            {
+                if (stayDistrict.getTownCount() > 0)
+                {
+                    for (StayTown stayTown : stayDistrict.getTownList())
+                    {
+                        if (stayTown.name.equalsIgnoreCase(namePair.second) == true)
+                        {
+                            return stayTown;
+                        }
+                    }
+                } else
+                {
+                    return new StayTown(stayDistrict);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    StayTown searchTown(List<StayDistrict> stayDistrictList, int districtIndex, int townIndex)
+    {
+        if (stayDistrictList == null || districtIndex < 0)
+        {
+            return null;
+        }
+
+        for (StayDistrict stayDistrict : stayDistrictList)
+        {
+            if (stayDistrict.index == districtIndex)
+            {
+                if (townIndex >= 0 && stayDistrict.getTownCount() > 0)
+                {
+                    for (StayTown stayTown : stayDistrict.getTownList())
+                    {
+                        if (stayTown.index == townIndex)
+                        {
+                            return stayTown;
+                        }
+                    }
+                } else
+                {
+                    return new StayTown(stayDistrict);
+                }
+            }
+        }
+
+        return null;
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -666,9 +712,9 @@ public class StayMainActivity extends PlaceMainActivity
                 return;
             }
 
-            Province province = mStayCuration.getProvince();
+            StayTown stayTown = mStayCuration.getTown();
 
-            if (province == null)
+            if (stayTown == null)
             {
                 releaseUiComponent();
                 return;
@@ -811,7 +857,44 @@ public class StayMainActivity extends PlaceMainActivity
                 {
                     ((StayMainLayout) mPlaceMainLayout).setToolbarDateText(mStayCuration.getStayBookingDay());
 
-                    mPlaceMainNetworkController.requestRegionList();
+                    addCompositeDisposable(mStayRemoteImpl.getDistrictList(DailyCategoryType.STAY_ALL).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<StayDistrict>>()
+                    {
+                        @Override
+                        public void accept(List<StayDistrict> stayDistrictList) throws Exception
+                        {
+                            if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true//
+                                && processDeepLinkByRegionList(StayMainActivity.this, stayDistrictList, mTodayDateTime, mDailyDeepLink) == true)
+                            {
+
+                            } else
+                            {
+                                StayTown stayTown = mStayCuration.getTown();
+
+                                if (stayTown == null)
+                                {
+                                    stayTown = searchTown(stayDistrictList, getDistrictNTownNameByCategory(DailyCategoryType.STAY_ALL));
+                                }
+
+                                if (stayTown == null)
+                                {
+                                    stayTown = new StayTown(stayDistrictList.get(0));
+                                }
+
+                                mStayCuration.setTown(stayTown);
+
+                                mPlaceMainLayout.setToolbarRegionText(stayTown.name);
+                                mPlaceMainLayout.setCategoryTabLayout(getSupportFragmentManager(), stayTown.getCategoryList(), //
+                                    mStayCuration.getCategory(), mStayListFragmentListener);
+                            }
+                        }
+                    }, new Consumer<Throwable>()
+                    {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception
+                        {
+
+                        }
+                    }));
                 }
             } catch (Exception e)
             {
@@ -823,61 +906,6 @@ public class StayMainActivity extends PlaceMainActivity
         @Override
         public void onRegionList(List<Province> provinceList, List<Area> areaList)
         {
-            if (isFinishing() == true || provinceList == null || areaList == null)
-            {
-                return;
-            }
-
-            Province selectedProvince = mStayCuration.getProvince();
-
-            if (selectedProvince == null)
-            {
-                selectedProvince = searchLastRegion(StayMainActivity.this, provinceList, areaList);
-            }
-
-            // 여러가지 방식으로 지역을 검색했지만 찾지 못하는 경우.
-            if (selectedProvince == null)
-            {
-                selectedProvince = provinceList.get(0);
-            }
-
-            // 마지막으로 지역이 Area로 되어있으면 Province로 바꾸어 준다.
-            if (selectedProvince instanceof Area)
-            {
-                int provinceIndex = selectedProvince.getProvinceIndex();
-
-                for (Province province : provinceList)
-                {
-                    if (province.getProvinceIndex() == provinceIndex)
-                    {
-                        //                        DailyPreference.getInstance(StayMainActivity.this).setSelectedOverseaRegion(PlaceType.HOTEL, province.isOverseas);
-                        //                        DailyPreference.getInstance(StayMainActivity.this).setSelectedRegion(PlaceType.HOTEL, selectedProvince.name);
-                        DailyPreference.getInstance(StayMainActivity.this).setDailyRegion(DailyCategoryType.STAY_ALL, Util.getDailyRegionJSONObject(province));
-
-                        String country = province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
-                        String realProvinceName = Util.getRealProvinceName(province);
-                        AnalyticsManager.getInstance(StayMainActivity.this).onRegionChanged(country, realProvinceName);
-                        break;
-                    }
-                }
-            } else
-            {
-                String country = selectedProvince.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
-                AnalyticsManager.getInstance(StayMainActivity.this).onRegionChanged(country, selectedProvince.name);
-            }
-
-            mStayCuration.setProvince(selectedProvince);
-
-            if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true//
-                && processDeepLinkByRegionList(StayMainActivity.this, provinceList, areaList, mTodayDateTime, mDailyDeepLink) == true)
-            {
-
-            } else
-            {
-                mPlaceMainLayout.setToolbarRegionText(selectedProvince.name);
-                mPlaceMainLayout.setCategoryTabLayout(getSupportFragmentManager(), selectedProvince.getCategoryList(), //
-                    mStayCuration.getCategory(), mStayListFragmentListener);
-            }
         }
 
         @Override
@@ -955,7 +983,7 @@ public class StayMainActivity extends PlaceMainActivity
         }
 
         private boolean processDeepLinkByRegionList(BaseActivity baseActivity//
-            , List<Province> provinceList, List<Area> areaList, TodayDateTime todayDateTime//
+            , List<StayDistrict> stayDistrictList, TodayDateTime todayDateTime//
             , DailyDeepLink dailyDeepLink)
         {
             if (dailyDeepLink == null)
@@ -971,7 +999,7 @@ public class StayMainActivity extends PlaceMainActivity
                 {
                     unLockUI();
 
-                    return moveDeepLinkStayList(provinceList, areaList, todayDateTime, externalDeepLink);
+                    return moveDeepLinkStayList(stayDistrictList, todayDateTime, externalDeepLink);
                 } else
                 {
                     externalDeepLink.clear();
@@ -982,70 +1010,6 @@ public class StayMainActivity extends PlaceMainActivity
             }
 
             return false;
-        }
-
-        private Province searchLastRegion(BaseActivity baseActivity, //
-                                          List<Province> provinceList, //
-                                          List<Area> areaList)
-        {
-            Province selectedProvince = null;
-
-            String provinceName = null;
-            String areaName = null;
-            String regionName;
-
-            // 마지막으로 선택한 지역을 가져온다. - old and new 추후 2.0.4로 강업 이후 Old 부분 삭제 필요
-            JSONObject saveRegionJsonObject = DailyPreference.getInstance(baseActivity).getDailyRegion(DailyCategoryType.STAY_ALL);
-            if (saveRegionJsonObject != null)
-            {
-                // new version preference value 사용
-                areaName = Util.getDailyAreaString(saveRegionJsonObject);
-                provinceName = Util.getDailyProvinceString(saveRegionJsonObject);
-            }
-
-            // Api 구조상 province 내에 area가 존재하지 않고 독립적이기때문에 작은단위로 찾아야 함
-            regionName = DailyTextUtils.isTextEmpty(areaName) == true ? provinceName : areaName;
-
-            if (DailyTextUtils.isTextEmpty(regionName) == true)
-            {
-                selectedProvince = provinceList.get(0);
-            }
-
-            if (selectedProvince == null)
-            {
-                for (Province province : provinceList)
-                {
-                    if (province.name.equals(regionName) == true)
-                    {
-                        selectedProvince = province;
-                        break;
-                    }
-                }
-
-                if (selectedProvince == null)
-                {
-                    for (Area area : areaList)
-                    {
-                        if (area.name.equals(regionName) == true)
-                        {
-                            for (Province province : provinceList)
-                            {
-                                if (area.getProvinceIndex() == province.index)
-                                {
-                                    area.isOverseas = province.isOverseas;
-                                    area.setProvince(province);
-                                    break;
-                                }
-                            }
-
-                            selectedProvince = area;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            return selectedProvince;
         }
     };
 
@@ -1065,26 +1029,14 @@ public class StayMainActivity extends PlaceMainActivity
                 case PlaceViewItem.TYPE_ENTRY:
                 {
                     Stay stay = placeViewItem.getItem();
-                    Province province = mStayCuration.getProvince();
-
-                    // 기존에 설정된 지역과 다른 지역을 선택하면 해당 지역을 저장한다.
-                    JSONObject jsonObject = DailyPreference.getInstance(StayMainActivity.this).getDailyRegion(DailyCategoryType.STAY_ALL);
-                    boolean isSameProvince = Util.isSameProvinceName(province, jsonObject);
-                    if (isSameProvince == false)
-                    {
-                        DailyPreference.getInstance(StayMainActivity.this).setDailyRegion(DailyCategoryType.STAY_ALL, Util.getDailyRegionJSONObject(province));
-
-                        String country = province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC;
-                        String realProvinceName = Util.getRealProvinceName(province);
-                        AnalyticsManager.getInstance(StayMainActivity.this).onRegionChanged(country, realProvinceName);
-                    }
+                    StayTown stayTown = mStayCuration.getTown();
 
                     StayDetailAnalyticsParam analyticsParam = new StayDetailAnalyticsParam();
                     analyticsParam.setAddressAreaName(stay.addressSummary);
                     analyticsParam.discountPrice = stay.discountPrice;
                     analyticsParam.price = stay.price;
                     analyticsParam.setShowOriginalPriceYn(analyticsParam.price, analyticsParam.discountPrice);
-                    analyticsParam.setProvince(province);
+                    analyticsParam.setTown(stayTown);
                     analyticsParam.entryPosition = stay.entryPosition;
                     analyticsParam.totalListCount = listCount;
                     analyticsParam.isDailyChoice = stay.isDailyChoice;
@@ -1732,8 +1684,7 @@ public class StayMainActivity extends PlaceMainActivity
         return true;
     }
 
-    boolean moveDeepLinkStayList(List<Province> provinceList, List<Area> areaList//
-        , TodayDateTime todayDateTime, DailyDeepLink dailyDeepLink)
+    boolean moveDeepLinkStayList(List<StayDistrict> stayDistrictList, TodayDateTime todayDateTime, DailyDeepLink dailyDeepLink)
     {
         if (dailyDeepLink == null)
         {
@@ -1792,21 +1743,21 @@ public class StayMainActivity extends PlaceMainActivity
                 boolean isOverseas = externalDeepLink.getIsOverseas();
 
                 // 지역이 있는 경우 지역을 디폴트로 잡아주어야 한다
-                Province selectedProvince = searchDeeLinkRegion(provinceIndex, areaIndex, isOverseas, provinceList, areaList);
+                StayTown stayTown = searchTown(stayDistrictList, provinceIndex, areaIndex);
 
-                if (selectedProvince == null)
+                if (stayTown == null)
                 {
-                    selectedProvince = mStayCuration.getProvince();
+                    return false;
                 }
 
-                mStayCuration.setProvince(selectedProvince);
+                mStayCuration.setTown(stayTown);
 
-                mPlaceMainLayout.setToolbarRegionText(selectedProvince.name);
+                mPlaceMainLayout.setToolbarRegionText(stayTown.name);
 
                 // 카테고리가 있는 경우 카테고리를 디폴트로 잡아주어야 한다
-                if (DailyTextUtils.isTextEmpty(categoryCode) == false)
+                if (DailyTextUtils.isTextEmpty(categoryCode) == false && stayTown.getCategoryCount() > 0)
                 {
-                    for (Category category : selectedProvince.getCategoryList())
+                    for (Category category : stayTown.getCategoryList())
                     {
                         if (category.code.equalsIgnoreCase(categoryCode) == true)
                         {
@@ -1836,7 +1787,9 @@ public class StayMainActivity extends PlaceMainActivity
 
                 ((StayMainLayout) mPlaceMainLayout).setToolbarDateText(stayBookingDay);
 
-                mPlaceMainNetworkController.requestRegionList();
+                mPlaceMainLayout.setToolbarRegionText(stayTown.name);
+                mPlaceMainLayout.setCategoryTabLayout(getSupportFragmentManager(), stayTown.getCategoryList(), //
+                    mStayCuration.getCategory(), mStayListFragmentListener);
             } else
             {
 

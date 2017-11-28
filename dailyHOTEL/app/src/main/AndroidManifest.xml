@@ -600,7 +600,7 @@
 
         <!--  com.daily.dailyhotel.... -->
         <activity
-            android:name="com.daily.dailyhotel.screen.common.region.stay.StayRegionListActivity"
+            android:name="com.daily.dailyhotel.screen.common.district.stay.StayDistrictListActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>

@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.common.region.stay;
+package com.daily.dailyhotel.screen.common.district.stay;
 
 
 import android.content.Context;
@@ -14,14 +14,14 @@ import com.twoheart.dailyhotel.model.DailyCategoryType;
  * Created by sheldon
  * Clean Architecture
  */
-public class StayRegionListActivity extends BaseActivity<StayRegionListPresenter>
+public class StayDistrictListActivity extends BaseActivity<StayDistrictListPresenter>
 {
     static final int REQUEST_CODE_SETTING_LOCATION = 10000;
     static final int REQUEST_CODE_PERMISSION_MANAGER = 10001;
     static final int REQUEST_CODE_SEARCH = 10002;
 
-    public static final String INTENT_EXTRA_DATA_PROVINCE_NAME = "provinceName";
-    public static final String INTENT_EXTRA_DATA_AREA_NAME = "areaName";
+    public static final String INTENT_EXTRA_DATA_STAY_TOWN = "stayTown";
+    public static final String INTENT_EXTRA_DATA_CHANGED_DISTRICT = "changedDistrict";
 
     static final String INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME = "checkInDateTime";
     static final String INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME = "checkOutDateTime";
@@ -31,7 +31,7 @@ public class StayRegionListActivity extends BaseActivity<StayRegionListPresenter
     public static Intent newInstance(Context context, String checkInDateTime, String checkOutDateTime
         , DailyCategoryType dailyCategoryType, String categoryCode)
     {
-        Intent intent = new Intent(context, StayRegionListActivity.class);
+        Intent intent = new Intent(context, StayDistrictListActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_STAY_CATEGORY, dailyCategoryType.name());
@@ -50,9 +50,9 @@ public class StayRegionListActivity extends BaseActivity<StayRegionListPresenter
 
     @NonNull
     @Override
-    protected StayRegionListPresenter createInstancePresenter()
+    protected StayDistrictListPresenter createInstancePresenter()
     {
-        return new StayRegionListPresenter(this);
+        return new StayDistrictListPresenter(this);
     }
 
     @Override

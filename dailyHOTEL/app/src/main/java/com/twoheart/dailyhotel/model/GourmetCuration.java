@@ -9,6 +9,7 @@ import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 public class GourmetCuration extends PlaceCuration
 {
     private GourmetBookingDay mGourmetBookingDay;
+    private Province mProvince;
 
     protected GourmetCurationOption mGourmetCurationOption;
 
@@ -67,11 +68,22 @@ public class GourmetCuration extends PlaceCuration
 
     public void clear()
     {
+        super.clear();
+
         mGourmetCurationOption.clear();
 
         mGourmetBookingDay = null;
         mProvince = null;
-        mLocation = null;
+    }
+
+    public Province getProvince()
+    {
+        return mProvince;
+    }
+
+    public void setProvince(Province province)
+    {
+        mProvince = province;
     }
 
     @Override

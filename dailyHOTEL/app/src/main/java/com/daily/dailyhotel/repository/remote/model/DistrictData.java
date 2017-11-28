@@ -2,10 +2,9 @@ package com.daily.dailyhotel.repository.remote.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.daily.dailyhotel.entity.Area;
 import com.daily.dailyhotel.entity.Category;
-import com.daily.dailyhotel.entity.Province;
-import com.daily.dailyhotel.entity.Region;
+import com.daily.dailyhotel.entity.StayDistrict;
+import com.daily.dailyhotel.entity.StayTown;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,7 +16,7 @@ import java.util.Map;
  * Created by android_sam on 2017. 2. 15..
  */
 @JsonObject
-public class RegionData
+public class DistrictData
 {
     @JsonField(name = "imgUrl")
     public String imgUrl;
@@ -28,17 +27,17 @@ public class RegionData
     @JsonField(name = "regionArea")
     public List<AreaData> regionArea;
 
-    public RegionData()
+    public DistrictData()
     {
     }
 
-    public List<Region> getRegionList()
+    public List<StayDistrict> getDistrictList()
     {
-        List<Region> regionList = new ArrayList<>();
+        List<StayDistrict> stayDistrictList = new ArrayList<>();
 
         if (regionProvince != null && regionProvince.size() > 0)
         {
-            Region region;
+            StayDistrict stayDistrict;
 
             for (ProvinceData provinceData : regionProvince)
             {
@@ -48,43 +47,34 @@ public class RegionData
                     continue;
                 }
 
-                region = new Region();
-
-                Province province = provinceData.getProvince();
-                region.setProvince(province);
+                stayDistrict = provinceData.getDistrict();
 
                 if (regionArea != null && regionArea.size() > 0)
                 {
-                    List<Area> areaList = new ArrayList<>();
+                    List<StayTown> stayTownList = new ArrayList<>();
 
                     for (AreaData areaData : regionArea)
                     {
                         if (areaData.provinceIndex == provinceData.index)
                         {
-                            areaList.add(areaData.getArea());
+                            stayTownList.add(areaData.getTown(stayDistrict));
                         }
                     }
 
                     // 개수가 0보다 크면 전체 지역을 넣는다.
-                    if (areaList.size() > 0)
+                    if (stayTownList.size() > 0)
                     {
-                        Area totalArea = new Area();
-
-                        totalArea.index = -1;
-                        totalArea.name = province.name;
-                        totalArea.sequence = -1;
-
-                        areaList.add(0, totalArea);
+                        stayTownList.add(0, new StayTown(stayDistrict));
                     }
 
-                    region.setAreaList(areaList);
+                    stayDistrict.setTownList(stayTownList);
                 }
 
-                regionList.add(region);
+                stayDistrictList.add(stayDistrict);
             }
         }
 
-        return regionList;
+        return stayDistrictList;
     }
 
     @JsonObject
@@ -106,7 +96,7 @@ public class RegionData
         public String imagePath;
 
         @JsonField(name = "categories")
-        public LinkedHashMap<String, String> categories;
+        public List<LinkedHashMap<String, String>> categories;
 
         @JsonField(name = "overseas")
         public boolean overseas;
@@ -116,31 +106,32 @@ public class RegionData
 
         }
 
-        public Province getProvince()
+        public StayDistrict getDistrict()
         {
-            Province province = new Province();
-            province.index = index;
-            province.name = name;
-            province.nameEng = nameEng;
-            province.sequence = sequence;
+            StayDistrict stayDistrict = new StayDistrict();
+            stayDistrict.index = index;
+            stayDistrict.name = name;
 
             if (categories != null && categories.size() > 0)
             {
                 List<Category> categoryList = new ArrayList<>();
 
-                Iterator<Map.Entry<String, String>> iterator = categories.entrySet().iterator();
-
-                while (iterator.hasNext())
+                for(LinkedHashMap<String, String> linkedHashMap : categories)
                 {
-                    Map.Entry<String, String> entry = iterator.next();
+                    Iterator<Map.Entry<String, String>> iterator = linkedHashMap.entrySet().iterator();
 
-                    categoryList.add(new Category(entry.getKey(), entry.getValue()));
+                    while (iterator.hasNext())
+                    {
+                        Map.Entry<String, String> entry = iterator.next();
+
+                        categoryList.add(new Category(entry.getKey(), entry.getValue()));
+                    }
                 }
 
-                province.setCategoryList(categoryList);
+                stayDistrict.setCategoryList(categoryList);
             }
 
-            return province;
+            return stayDistrict;
         }
     }
 
@@ -160,38 +151,41 @@ public class RegionData
         public int provinceIndex;
 
         @JsonField(name = "categories")
-        public LinkedHashMap<String, String> categories;
+        public List<LinkedHashMap<String, String>> categories;
 
         public AreaData()
         {
 
         }
 
-        public Area getArea()
+        public StayTown getTown(StayDistrict stayDistrict)
         {
-            Area area = new Area();
+            StayTown stayTown = new StayTown();
 
-            area.index = index;
-            area.name = name;
-            area.sequence = sequence;
+            stayTown.index = index;
+            stayTown.name = name;
+            stayTown.setDistrict(stayDistrict);
 
             if (categories != null && categories.size() > 0)
             {
                 List<Category> categoryList = new ArrayList<>();
 
-                Iterator<Map.Entry<String, String>> iterator = categories.entrySet().iterator();
-
-                while (iterator.hasNext())
+                for(LinkedHashMap<String, String> linkedHashMap : categories)
                 {
-                    Map.Entry<String, String> entry = iterator.next();
+                    Iterator<Map.Entry<String, String>> iterator = linkedHashMap.entrySet().iterator();
 
-                    categoryList.add(new Category(entry.getKey(), entry.getValue()));
+                    while (iterator.hasNext())
+                    {
+                        Map.Entry<String, String> entry = iterator.next();
+
+                        categoryList.add(new Category(entry.getKey(), entry.getValue()));
+                    }
                 }
 
-                area.setCategoryList(categoryList);
+                stayTown.setCategoryList(categoryList);
             }
 
-            return area;
+            return stayTown;
         }
     }
 }

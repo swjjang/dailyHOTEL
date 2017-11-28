@@ -755,7 +755,7 @@ public class GourmetMainActivity extends PlaceMainActivity
                 {
                     ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(mGourmetCuration.getGourmetBookingDay());
 
-                    mPlaceMainNetworkController.requestRegionList();
+                    ((GourmetMainNetworkController) mPlaceMainNetworkController).requestRegionList();
                 }
             } catch (Exception e)
             {
@@ -1683,7 +1683,7 @@ public class GourmetMainActivity extends PlaceMainActivity
 
                 ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(gourmetBookingDay);
 
-                mPlaceMainNetworkController.requestRegionList();
+                ((GourmetMainNetworkController) mPlaceMainNetworkController).requestRegionList();
             } else
             {
 

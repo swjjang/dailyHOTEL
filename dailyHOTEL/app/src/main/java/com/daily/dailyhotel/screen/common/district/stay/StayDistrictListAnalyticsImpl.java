@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.common.region.stay;
+package com.daily.dailyhotel.screen.common.district.stay;
 
 import android.app.Activity;
 
@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class StayRegionListAnalyticsImpl implements StayRegionListPresenter.StayRegionListAnalyticsInterface
+public class StayDistrictListAnalyticsImpl implements StayDistrictListPresenter.StayDistrictListAnalyticsInterface
 {
     @Override
     public void onScreen(Activity activity, String categoryCode)
@@ -78,15 +78,16 @@ public class StayRegionListAnalyticsImpl implements StayRegionListPresenter.Stay
     }
 
     @Override
-    public void onEventChangedProvinceClick(Activity activity, String previousProvinceName, String previousAreaName, String changedProvinceName, String changedAreaName, StayBookDateTime stayBookDateTime)
+    public void onEventChangedDistrictClick(Activity activity, String previousDistrictName, String previousTownName//
+        , String changedDistrictName, String changedTownName, StayBookDateTime stayBookDateTime)
     {
         if (activity == null)
         {
             return;
         }
 
-        String previousLabel = getAnalyticsRegionLabel(activity.getString(R.string.label_domestic), previousProvinceName, previousAreaName);
-        String changedLabel = getAnalyticsRegionLabel(activity.getString(R.string.label_domestic), changedProvinceName, changedAreaName);
+        String previousLabel = getAnalyticsRegionLabel(activity.getString(R.string.label_domestic), previousDistrictName, previousTownName);
+        String changedLabel = getAnalyticsRegionLabel(activity.getString(R.string.label_domestic), changedDistrictName, changedTownName);
 
         String checkInDate = stayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)");
         String checkOutDate = stayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)");
@@ -110,7 +111,7 @@ public class StayRegionListAnalyticsImpl implements StayRegionListPresenter.Stay
     }
 
     @Override
-    public void onEventChangedRegionClick(Activity activity, String provinceName, String areaName)
+    public void onEventTownClick(Activity activity, String districtName, String townName)
     {
         if (activity == null)
         {
@@ -118,7 +119,7 @@ public class StayRegionListAnalyticsImpl implements StayRegionListPresenter.Stay
         }
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-            , AnalyticsManager.Action.HOTEL_LOCATIONS_CLICKED, getAnalyticsRegionLabel(activity.getString(R.string.label_domestic), provinceName, areaName), null);
+            , AnalyticsManager.Action.HOTEL_LOCATIONS_CLICKED, getAnalyticsRegionLabel(activity.getString(R.string.label_domestic), districtName, townName), null);
     }
 
     @Override
@@ -168,18 +169,18 @@ public class StayRegionListAnalyticsImpl implements StayRegionListPresenter.Stay
             AnalyticsManager.Action.STAY_NEARBY_SEARCH, label, null);
     }
 
-    private String getAnalyticsRegionLabel(String overseasName, String provinceName, String areaName)
+    private String getAnalyticsRegionLabel(String overseasName, String districtName, String townName)
     {
-        if (DailyTextUtils.isTextEmpty(provinceName) == true)
+        if (DailyTextUtils.isTextEmpty(districtName) == true)
         {
-            provinceName = "None";
+            districtName = "None";
         }
 
-        if (DailyTextUtils.isTextEmpty(areaName) == true)
+        if (DailyTextUtils.isTextEmpty(townName) == true)
         {
-            areaName = "None";
+            townName = "None";
         }
 
-        return String.format(Locale.KOREA, "%s-%s-%s", overseasName, provinceName, areaName);
+        return String.format(Locale.KOREA, "%s-%s-%s", overseasName, districtName, townName);
     }
 }

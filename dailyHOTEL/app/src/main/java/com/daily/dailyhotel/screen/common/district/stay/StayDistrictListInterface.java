@@ -1,15 +1,16 @@
-package com.daily.dailyhotel.screen.common.region.stay;
+package com.daily.dailyhotel.screen.common.district.stay;
 
 import com.daily.base.BaseDialogViewInterface;
-import com.daily.dailyhotel.entity.Region;
+import com.daily.dailyhotel.entity.District;
+import com.daily.dailyhotel.entity.StayDistrict;
 
 import java.util.List;
 
 import io.reactivex.Observable;
 
-public interface StayRegionListInterface extends BaseDialogViewInterface
+public interface StayDistrictListInterface extends BaseDialogViewInterface
 {
-    void setRegionList(List<Region> regionList);
+    void setDistrictList(List<StayDistrict> districtList);
 
     void setLocationTermVisible(boolean visible);
 

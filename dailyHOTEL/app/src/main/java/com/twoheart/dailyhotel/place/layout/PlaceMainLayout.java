@@ -270,7 +270,7 @@ public abstract class PlaceMainLayout extends BaseBlurLayout
         }
     }
 
-    public void setCategoryTabLayout(FragmentManager fragmentManager, List<Category> categoryList//
+    public void setCategoryTabLayout(FragmentManager fragmentManager, List<? extends Category> categoryList//
         , Category selectedCategory, PlaceListFragment.OnPlaceListFragmentListener listener)
     {
         mCategoryTabLayout.setOnTabSelectedListener(null);

@@ -610,7 +610,7 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
             analyticsParam.rankingPosition = mAnalyticsParam.entryPosition;
             analyticsParam.totalListCount = mAnalyticsParam.totalListCount;
             analyticsParam.dailyChoice = mAnalyticsParam.isDailyChoice;
-            analyticsParam.province = mAnalyticsParam.getProvince();
+            analyticsParam.setTown(mAnalyticsParam.getTown());
             analyticsParam.addressAreaName = mAnalyticsParam.getAddressAreaName();
         }
 
