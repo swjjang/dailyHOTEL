@@ -465,73 +465,9 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
             }
         });
 
+        // 예약 내역의 경우 상세 링크로 인하여 혼선이 있을 것으로 보여 삭제하기로 함
         View copyLinkView = dialogView.findViewById(R.id.copyLinkView);
-
-        copyLinkView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (shareDialog.isShowing() == true)
-                {
-                    shareDialog.dismiss();
-                }
-
-                lockUI();
-
-                try
-                {
-                    StayBookingDetail stayBookingDetail = (StayBookingDetail) mPlaceBookingDetail;
-
-                    String[] checkInDates = stayBookingDetail.checkInDate.split("T");
-                    String[] checkOutDates = stayBookingDetail.checkOutDate.split("T");
-
-                    Date checkInDate = DailyCalendar.convertDate(checkInDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
-                    Date checkOutDate = DailyCalendar.convertDate(checkOutDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
-
-                    int nights = (int) ((DailyCalendar.clearTField(checkOutDate.getTime()) - DailyCalendar.clearTField(checkInDate.getTime())) / DailyCalendar.DAY_MILLISECOND);
-
-                    String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d"//
-                        , mPlaceBookingDetail.placeIndex, DailyCalendar.convertDateFormatString(stayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd")//
-                        , nights);
-
-
-                    CommonRemoteImpl commonRemote = new CommonRemoteImpl(StayReservationDetailActivity.this);
-
-                    addCompositeDisposable(commonRemote.getShortUrl(longUrl).subscribe(new Consumer<String>()
-                    {
-                        @Override
-                        public void accept(@NonNull String shortUrl) throws Exception
-                        {
-                            unLockUI();
-
-                            DailyTextUtils.clipText(StayReservationDetailActivity.this, shortUrl);
-
-                            DailyToast.showToast(StayReservationDetailActivity.this, R.string.toast_msg_copy_link, DailyToast.LENGTH_LONG);
-                        }
-                    }, new Consumer<Throwable>()
-                    {
-                        @Override
-                        public void accept(@NonNull Throwable throwable) throws Exception
-                        {
-                            unLockUI();
-
-                            DailyTextUtils.clipText(StayReservationDetailActivity.this, "https://mobile.dailyhotel.co.kr/stay/" + stayBookingDetail.placeIndex);
-
-                            DailyToast.showToast(StayReservationDetailActivity.this, R.string.toast_msg_copy_link, DailyToast.LENGTH_LONG);
-                        }
-                    }));
-                } catch (Exception e)
-                {
-                    unLockUI();
-
-                    ExLog.d(e.toString());
-                }
-
-                //                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
-                //                    , AnalyticsManager.Action.STAY_BOOKING_SHARE, AnalyticsManager.ValueType.MESSAGE, null);
-            }
-        });
+        copyLinkView.setVisibility(View.GONE);
 
         View moreShareView = dialogView.findViewById(R.id.moreShareView);
 
