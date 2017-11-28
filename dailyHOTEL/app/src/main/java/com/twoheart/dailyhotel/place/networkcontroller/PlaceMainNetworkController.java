@@ -24,10 +24,6 @@ public abstract class PlaceMainNetworkController extends BaseNetworkController
         void onRegionList(List<Province> provinceList, List<Area> areaList);
     }
 
-    public abstract void requestRegionList();
-
-    public abstract void requestRegionList(String categoryCode);
-
     public PlaceMainNetworkController(Context context, String networkTag, OnBaseNetworkControllerListener listener)
     {
         super(context, networkTag, listener);

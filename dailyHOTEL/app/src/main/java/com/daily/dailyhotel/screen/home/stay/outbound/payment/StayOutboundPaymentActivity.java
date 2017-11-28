@@ -31,8 +31,8 @@ public class StayOutboundPaymentActivity extends BaseActivity<StayOutboundPaymen
     static final String INTENT_EXTRA_DATA_STAY_NAME = "stayName";
     static final String INTENT_EXTRA_DATA_IMAGE_URL = "imageUrl";
     static final String INTENT_EXTRA_DATA_ROOM_PRICE = "roomPrice";
-    static final String INTENT_EXTRA_DATA_CHECK_IN = "checkIn";
-    static final String INTENT_EXTRA_DATA_CHECK_OUT = "checkOut";
+    static final String INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME = "checkInDateTime";
+    static final String INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME = "checkOutDateTime";
     static final String INTENT_EXTRA_DATA_NUMBER_OF_ADULTS = "numberOfAdults";
     static final String INTENT_EXTRA_DATA_CHILD_LIST = "childList";
     static final String INTENT_EXTRA_DATA_ROOM_TYPE = "roomType";
@@ -55,8 +55,8 @@ public class StayOutboundPaymentActivity extends BaseActivity<StayOutboundPaymen
         intent.putExtra(INTENT_EXTRA_DATA_STAY_NAME, stayName);
         intent.putExtra(INTENT_EXTRA_DATA_IMAGE_URL, imageUrl);
         intent.putExtra(INTENT_EXTRA_DATA_ROOM_PRICE, roomPrice);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN, checkInDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT, checkOutDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, numberOfAdults);
         intent.putExtra(INTENT_EXTRA_DATA_CHILD_LIST, childAgeList);
         intent.putExtra(INTENT_EXTRA_DATA_ROOM_TYPE, roomType);

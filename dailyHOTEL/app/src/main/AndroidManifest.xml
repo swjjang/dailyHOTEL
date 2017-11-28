@@ -405,11 +405,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.home.category.region.HomeCategoryRegionListActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".screen.home.category.list.StayCategoryTabActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
@@ -599,6 +594,11 @@
             android:screenOrientation="portrait"/>
 
         <!--  com.daily.dailyhotel.... -->
+        <activity
+            android:name="com.daily.dailyhotel.screen.common.district.stay.StayDistrictListActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name="com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity"

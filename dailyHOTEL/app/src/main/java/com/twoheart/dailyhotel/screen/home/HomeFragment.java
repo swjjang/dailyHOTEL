@@ -27,6 +27,8 @@ import com.daily.dailyhotel.entity.RewardInformation;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutbounds;
+import com.daily.dailyhotel.entity.StayTown;
+import com.daily.dailyhotel.parcel.StayTownParcel;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
@@ -34,6 +36,7 @@ import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RewardRemoteImpl;
+import com.daily.dailyhotel.screen.common.district.stay.StayDistrictListActivity;
 import com.daily.dailyhotel.screen.common.web.DailyWebActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
@@ -62,7 +65,6 @@ import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.screen.home.category.list.StayCategoryTabActivity;
 import com.twoheart.dailyhotel.screen.home.category.nearby.StayCategoryNearByActivity;
-import com.twoheart.dailyhotel.screen.home.category.region.HomeCategoryRegionListActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionGourmetActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionStayActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
@@ -362,6 +364,73 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
             case Constants.CODE_REQUEST_ACTIVITY_REGIONLIST:
             {
+
+                switch (resultCode)
+                {
+                    case Activity.RESULT_OK:
+                    case com.daily.base.BaseActivity.RESULT_CODE_START_CALENDAR:
+                    {
+                        if (data != null && (data.hasExtra(StayDistrictListActivity.INTENT_EXTRA_DATA_STAY_TOWN) == false//
+                            || data.hasExtra(StayDistrictListActivity.INTENT_EXTRA_DATA_STAY_CATEGORY) == false))
+                        {
+                            return;
+                        }
+
+                        StayTownParcel stayTownParcel = data.getParcelableExtra(StayDistrictListActivity.INTENT_EXTRA_DATA_STAY_TOWN);
+
+                        if (stayTownParcel == null)
+                        {
+                            return;
+                        }
+
+                        StayTown stayTown = stayTownParcel.getStayTown();
+
+                        if (stayTown == null || stayTown.getDistrict() == null)
+                        {
+                            return;
+                        }
+
+                        DailyCategoryType dailyCategoryType = DailyCategoryType.valueOf(data.getStringExtra(StayDistrictListActivity.INTENT_EXTRA_DATA_STAY_CATEGORY));
+
+                        try
+                        {
+                            Intent intent = StayCategoryTabActivity.newInstance(mBaseActivity, dailyCategoryType, null);
+                            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY);
+                        } catch (Exception e)
+                        {
+                            ExLog.e(e.toString());
+                        }
+                        break;
+                    }
+
+                    case com.daily.base.BaseActivity.RESULT_CODE_START_AROUND_SEARCH:
+                    {
+                        if (data.hasExtra(StayDistrictListActivity.INTENT_EXTRA_DATA_STAY_CATEGORY) == false)
+                        {
+                            return;
+                        }
+
+                        // 검색 결과 화면으로 이동한다.
+                        DailyCategoryType dailyCategoryType = DailyCategoryType.valueOf(data.getStringExtra(StayDistrictListActivity.INTENT_EXTRA_DATA_STAY_CATEGORY));
+
+                        try
+                        {
+                            StayBookingDay stayBookingDay = new StayBookingDay();
+                            stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
+                            stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
+
+                            Intent intent = StayCategoryNearByActivity.newInstance(mBaseActivity //
+                                , mTodayDateTime, stayBookingDay, null, dailyCategoryType, AnalyticsManager.Screen.HOME);
+                            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
+                        } catch (Exception e)
+                        {
+                            ExLog.e(e.toString());
+                        }
+                    }
+                    break;
+                }
+
+
                 if (resultCode == Activity.RESULT_OK)
                 {
                     if (data != null && data.hasExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE) == true)
@@ -898,7 +967,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     }
 
                     analyticsParam.setShowOriginalPriceYn(analyticsParam.price, analyticsParam.discountPrice);
-                    analyticsParam.setProvince(null);
+                    analyticsParam.setTown(null);
                     analyticsParam.entryPosition = -1;
                     analyticsParam.totalListCount = -1;
                     analyticsParam.isDailyChoice = false;
@@ -2198,9 +2267,15 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 stayBookingDay.setCheckInDay(checkInDay);
                 stayBookingDay.setCheckOutDay(checkInDay, nights);
 
-                mBaseActivity.startActivityForResult( //
-                    HomeCategoryRegionListActivity.newInstance(mBaseActivity, categoryType, stayBookingDay) //
-                    , Constants.CODE_REQUEST_ACTIVITY_REGIONLIST);
+                //                mBaseActivity.startActivityForResult( //
+                //                    HomeCategoryRegionListActivity.newInstance(mBaseActivity, categoryType, stayBookingDay) //
+                //                    , Constants.CODE_REQUEST_ACTIVITY_REGIONLIST);
+
+                String checkInDateTime = stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT);
+                String checkOutDateTime = stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT);
+
+                startActivityForResult(StayDistrictListActivity.newInstance(mBaseActivity//
+                    , checkInDateTime, checkOutDateTime, categoryType, categoryType.getCodeString(mBaseActivity)), Constants.CODE_REQUEST_ACTIVITY_REGIONLIST);
 
                 String label = "";
                 switch (categoryType)

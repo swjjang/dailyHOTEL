@@ -163,8 +163,8 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
         mStayName = intent.getStringExtra(StayThankYouActivity.INTENT_EXTRA_DATA_STAY_NAME);
         mImageUrl = intent.getStringExtra(StayThankYouActivity.INTENT_EXTRA_DATA_IMAGE_URL);
 
-        String checkInDateTime = intent.getStringExtra(StayThankYouActivity.INTENT_EXTRA_DATA_CHECK_IN);
-        String checkOutDateTime = intent.getStringExtra(StayThankYouActivity.INTENT_EXTRA_DATA_CHECK_OUT);
+        String checkInDateTime = intent.getStringExtra(StayThankYouActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME);
+        String checkOutDateTime = intent.getStringExtra(StayThankYouActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME);
 
         setStayBookDateTime(checkInDateTime, checkOutDateTime);
 

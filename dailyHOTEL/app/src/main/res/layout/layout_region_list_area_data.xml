@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/topLineView"
+            android:layout_width="0dp"
+            android:layout_height="1px"
+            android:background="@color/default_line_cdcdcdd"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/areaNameLeftTextView"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:background="@drawable/selector_background_area"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="2"
+            android:paddingLeft="15dp"
+            android:paddingRight="10dp"
+            android:textColor="@drawable/selector_selectarea_titlecolor"
+            android:textSize="13dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/verticalLineView"
+            app:layout_constraintTop_toBottomOf="@+id/topLineView"/>
+
+        <View
+            android:id="@+id/verticalLineView"
+            android:layout_width="1px"
+            android:layout_height="44dp"
+            android:background="@color/default_line_cdcdcdd"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/areaNameLeftTextView"
+            app:layout_constraintRight_toLeftOf="@+id/areaNameRightTextView"
+            app:layout_constraintTop_toBottomOf="@+id/topLineView"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/areaNameRightTextView"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:background="@drawable/selector_background_area"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="2"
+            android:paddingLeft="15dp"
+            android:paddingRight="10dp"
+            android:textColor="@drawable/selector_selectarea_titlecolor"
+            android:textSize="13dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintLeft_toRightOf="@+id/verticalLineView"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/topLineView"/>
+    </android.support.constraint.ConstraintLayout>
+</layout>

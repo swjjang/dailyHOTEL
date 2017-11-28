@@ -1,9 +1,12 @@
 package com.twoheart.dailyhotel.model;
 
 import android.content.Context;
+import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.daily.dailyhotel.entity.StayTown;
+import com.daily.dailyhotel.parcel.StayTownParcel;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 
@@ -12,6 +15,8 @@ public class StayCuration extends PlaceCuration
     protected StayBookingDay mStayBookingDay;
     protected Category mCategory;
     protected StayCurationOption mStayCurationOption;
+
+    protected StayTown mTown;
 
     public StayCuration()
     {
@@ -96,16 +101,27 @@ public class StayCuration extends PlaceCuration
         }
     }
 
+    public void setTown(StayTown stayTown)
+    {
+        mTown = stayTown;
+    }
+
+    public StayTown getTown()
+    {
+        return mTown;
+    }
+
     @Override
     public void clear()
     {
+        super.clear();
+
         mCategory = Category.ALL;
 
         mStayCurationOption.clear();
 
         mStayBookingDay = null;
-        mProvince = null;
-        mLocation = null;
+        mTown = null;
     }
 
 
@@ -118,20 +134,24 @@ public class StayCuration extends PlaceCuration
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        super.writeToParcel(dest, flags);
+        dest.writeParcelable(mLocation, flags);
 
         dest.writeParcelable(mStayBookingDay, flags);
         dest.writeParcelable(mCategory, flags);
         dest.writeParcelable(mStayCurationOption, flags);
+        dest.writeParcelable(new StayTownParcel(mTown), flags);
     }
 
     protected void readFromParcel(Parcel in)
     {
-        super.readFromParcel(in);
+        mLocation = in.readParcelable(Location.class.getClassLoader());
 
         mStayBookingDay = in.readParcelable(StayBookingDay.class.getClassLoader());
         mCategory = in.readParcelable(Category.class.getClassLoader());
         mStayCurationOption = in.readParcelable(StayCurationOption.class.getClassLoader());
+
+        StayTownParcel stayTownParcel = in.readParcelable(StayTownParcel.class.getClassLoader());
+        mTown = stayTownParcel.getStayTown();
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()
