@@ -87,7 +87,7 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
 
     protected abstract void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt);
 
-    public interface OnEventListener extends OnBaseEventListener
+    public interface OnEventListener extends OnBaseEventListener // m
     {
         void onIssuingReceiptClick();
 
