@@ -405,11 +405,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.home.category.region.HomeCategoryRegionListActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".screen.home.category.list.StayCategoryTabActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"

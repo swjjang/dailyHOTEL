@@ -87,6 +87,8 @@ public class StayTownParcel implements Parcelable
             {
                 categoryList.add(new Category(in.readString(), in.readString()));
             }
+
+            mStayTown.setCategoryList(categoryList);
         }
 
         District district = new District();

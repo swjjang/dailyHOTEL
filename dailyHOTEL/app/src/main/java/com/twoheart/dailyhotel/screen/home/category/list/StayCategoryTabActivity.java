@@ -232,13 +232,6 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
                     mStayCategoryCuration.setTown(stayTown);
 
-                    String categoryName = getString(mDailyCategoryType.getNameResId());
-                    String categoryCode = getString(mDailyCategoryType.getCodeResId());
-
-                    Category category = new Category(categoryName, categoryCode);
-                    // subCategory 의 경우 category 를 preference에 저장 안함
-                    mStayCategoryCuration.setCategory(category);
-
                     mPlaceMainLayout.setToolbarRegionText(stayTown.name);
                     mPlaceMainLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
 
@@ -249,16 +242,16 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                         AnalyticsManager.getInstance(this).onRegionChanged(AnalyticsManager.ValueType.DOMESTIC, stayTown.getDistrict().name);
                     }
 
-                    StayBookingDay stayBookingDay = mStayCategoryCuration.getStayBookingDay();
-                    if (stayBookingDay == null)
-                    {
-                        Crashlytics.log("StayCategoryTabActivity :: onRegionActivityResult : stayBookingDay is null , resultCode=" //
-                            + resultCode + " , stayTown index=" + stayTown.index + " , category code=" + categoryCode);
-                    } else if (DailyTextUtils.isTextEmpty(stayBookingDay.getCheckInDay("yyyy-MM-dd")) == true)
-                    {
-                        Crashlytics.log("StayCategoryTabActivity :: onRegionActivityResult : stayBookingDay.getCheckInDay(\"yyyy-MM-dd\") is empty , resultCode=" //
-                            + resultCode + " , stayTown index=" + stayTown.index + " , category code=" + categoryCode);
-                    }
+//                    StayBookingDay stayBookingDay = mStayCategoryCuration.getStayBookingDay();
+//                    if (stayBookingDay == null)
+//                    {
+//                        Crashlytics.log("StayCategoryTabActivity :: onRegionActivityResult : stayBookingDay is null , resultCode=" //
+//                            + resultCode + " , stayTown index=" + stayTown.index + " , category code=" + categoryCode);
+//                    } else if (DailyTextUtils.isTextEmpty(stayBookingDay.getCheckInDay("yyyy-MM-dd")) == true)
+//                    {
+//                        Crashlytics.log("StayCategoryTabActivity :: onRegionActivityResult : stayBookingDay.getCheckInDay(\"yyyy-MM-dd\") is empty , resultCode=" //
+//                            + resultCode + " , stayTown index=" + stayTown.index + " , category code=" + categoryCode);
+//                    }
 
                     ArrayList<Category> categoryList = new ArrayList<>();
                     categoryList.add(mStayCategoryCuration.getCategory());
@@ -397,7 +390,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
     void startCalendar(String callByScreen, TodayDateTime todayDateTime)
     {
-        if (todayDateTime == null || isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
+        if (todayDateTime == null || isFinishing() == true)
         {
             return;
         }
@@ -631,9 +624,15 @@ public class StayCategoryTabActivity extends PlaceMainActivity
             return;
         }
 
-        startActivityForResult(HomeCategoryRegionListActivity.newInstance( //
-            StayCategoryTabActivity.this, mDailyCategoryType, mStayCategoryCuration.getStayBookingDay()) //
-            , Constants.CODE_REQUEST_ACTIVITY_REGIONLIST);
+//        startActivityForResult(HomeCategoryRegionListActivity.newInstance( //
+//            StayCategoryTabActivity.this, mDailyCategoryType, mStayCategoryCuration.getStayBookingDay()) //
+//            , Constants.CODE_REQUEST_ACTIVITY_REGIONLIST);
+
+        String checkInDateTime = mStayCategoryCuration.getStayBookingDay().getCheckInDay(DailyCalendar.ISO_8601_FORMAT);
+        String checkOutDateTime = mStayCategoryCuration.getStayBookingDay().getCheckOutDay(DailyCalendar.ISO_8601_FORMAT);
+
+        startActivityForResult(StayDistrictListActivity.newInstance(this//
+            , checkInDateTime, checkOutDateTime, mDailyCategoryType, mStayCategoryCuration.getCategory().code), Constants.CODE_REQUEST_ACTIVITY_REGIONLIST);
 
         switch (mViewType)
         {
@@ -824,6 +823,11 @@ public class StayCategoryTabActivity extends PlaceMainActivity
         @Override
         public void onDateClick()
         {
+            if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
             startCalendar(AnalyticsManager.ValueType.LIST, mTodayDateTime);
         }
 
@@ -981,8 +985,11 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
                             mStayCategoryCuration.setTown(stayTown);
 
+                            List<Category> categoryList = new ArrayList<>();
+                            categoryList.add(mStayCategoryCuration.getCategory());
+
                             mPlaceMainLayout.setToolbarRegionText(stayTown.name);
-                            mPlaceMainLayout.setCategoryTabLayout(getSupportFragmentManager(), stayTown.getCategoryList(), //
+                            mPlaceMainLayout.setCategoryTabLayout(getSupportFragmentManager(), categoryList, //
                                 mStayCategoryCuration.getCategory(), mStayCategoryListFragmentListener);
                         }
                     }
@@ -1609,18 +1616,18 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
                 mPlaceMainLayout.setToolbarRegionText(stayTown.name);
 
-                // 카테고리가 있는 경우 카테고리를 디폴트로 잡아주어야 한다
-                if (DailyTextUtils.isTextEmpty(categoryCode) == false && stayTown.getCategoryCount() > 0)
-                {
-                    for (Category category : stayTown.getCategoryList())
-                    {
-                        if (category.code.equalsIgnoreCase(categoryCode) == true)
-                        {
-                            mStayCategoryCuration.setCategory(StayCategoryTabActivity.this, category);
-                            break;
-                        }
-                    }
-                }
+//                // 카테고리가 있는 경우 카테고리를 디폴트로 잡아주어야 한다
+//                if (DailyTextUtils.isTextEmpty(categoryCode) == false && stayTown.getCategoryCount() > 0)
+//                {
+//                    for (Category category : stayTown.getCategoryList())
+//                    {
+//                        if (category.code.equalsIgnoreCase(categoryCode) == true)
+//                        {
+//                            mStayCategoryCuration.setCategory(StayCategoryTabActivity.this, category);
+//                            break;
+//                        }
+//                    }
+//                }
 
                 StayBookingDay stayBookingDay = new StayBookingDay();
 

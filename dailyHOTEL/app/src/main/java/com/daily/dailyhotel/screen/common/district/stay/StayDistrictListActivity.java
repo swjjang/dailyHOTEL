@@ -20,13 +20,12 @@ public class StayDistrictListActivity extends BaseActivity<StayDistrictListPrese
     static final int REQUEST_CODE_PERMISSION_MANAGER = 10001;
     static final int REQUEST_CODE_SEARCH = 10002;
 
-    public static final String INTENT_EXTRA_DATA_STAY_TOWN = "stayTown";
-    public static final String INTENT_EXTRA_DATA_CHANGED_DISTRICT = "changedDistrict";
-
     static final String INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME = "checkInDateTime";
     static final String INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME = "checkOutDateTime";
-    static final String INTENT_EXTRA_DATA_STAY_CATEGORY = "stayCategory";
+    public static final String INTENT_EXTRA_DATA_STAY_CATEGORY = "stayCategory";
     static final String INTENT_EXTRA_DATA_CATEGORY_CODE = "categoryCode";
+    public static final String INTENT_EXTRA_DATA_STAY_TOWN = "stayTown";
+    public static final String INTENT_EXTRA_DATA_CHANGED_DISTRICT = "changedDistrict";
 
     public static Intent newInstance(Context context, String checkInDateTime, String checkOutDateTime
         , DailyCategoryType dailyCategoryType, String categoryCode)

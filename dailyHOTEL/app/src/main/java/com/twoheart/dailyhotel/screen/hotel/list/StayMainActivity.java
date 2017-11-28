@@ -359,7 +359,7 @@ public class StayMainActivity extends PlaceMainActivity
 
     void startCalendar(String callByScreen, TodayDateTime todayDateTime)
     {
-        if (todayDateTime == null || isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
+        if (todayDateTime == null || isFinishing() == true)
         {
             return;
         }
@@ -532,10 +532,8 @@ public class StayMainActivity extends PlaceMainActivity
         String checkInDateTime = mStayCuration.getStayBookingDay().getCheckInDay(DailyCalendar.ISO_8601_FORMAT);
         String checkOutDateTime = mStayCuration.getStayBookingDay().getCheckOutDay(DailyCalendar.ISO_8601_FORMAT);
 
-        Intent intent = StayDistrictListActivity.newInstance(StayMainActivity.this//
-            , checkInDateTime, checkOutDateTime, DailyCategoryType.STAY_ALL, mStayCuration.getCategory().code);
-
-        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_REGIONLIST);
+        startActivityForResult(StayDistrictListActivity.newInstance(StayMainActivity.this//
+            , checkInDateTime, checkOutDateTime, DailyCategoryType.STAY_ALL, mStayCuration.getCategory().code), Constants.CODE_REQUEST_ACTIVITY_REGIONLIST);
 
         switch (mViewType)
         {
@@ -687,6 +685,11 @@ public class StayMainActivity extends PlaceMainActivity
         @Override
         public void onDateClick()
         {
+            if (isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
             startCalendar(AnalyticsManager.ValueType.LIST, mTodayDateTime);
         }
 

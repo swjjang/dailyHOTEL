@@ -401,7 +401,7 @@ public class StayDistrictListPresenter extends BaseExceptionPresenter<StayDistri
         final String townName = stayTown.name;
 
         // 지역이 변경된 경우 팝업을 뛰어서 날짜 변경을 할것인지 물어본다.
-        if (equalsDistrictName(mSavedTown, districtName) == true)
+        if (mDailyCategoryType != DailyCategoryType.STAY_ALL || equalsDistrictName(mSavedTown, districtName) == true)
         {
             setResult(Activity.RESULT_OK, mDailyCategoryType, stayTown);
             finish();
@@ -503,7 +503,7 @@ public class StayDistrictListPresenter extends BaseExceptionPresenter<StayDistri
             {
                 unLockAll();
 
-                setResult(Constants.RESULT_ARROUND_SEARCH_LIST);
+                setResult(BaseActivity.RESULT_CODE_START_AROUND_SEARCH, mDailyCategoryType, null);
                 finish();
             }
 
@@ -626,15 +626,21 @@ public class StayDistrictListPresenter extends BaseExceptionPresenter<StayDistri
 
     private void setResult(int resultCode, DailyCategoryType categoryType, StayTown stayTown)
     {
-        if (categoryType == null || stayTown == null || stayTown.getDistrict() == null)
+        if (categoryType == null)
         {
             return;
         }
 
-        setCategoryRegion(categoryType, stayTown.getDistrict().name, stayTown.name);
-
         Intent intent = new Intent();
-        intent.putExtra(StayDistrictListActivity.INTENT_EXTRA_DATA_STAY_TOWN, new StayTownParcel(stayTown));
+
+        if (stayTown != null && stayTown.getDistrict() != null)
+        {
+            setCategoryRegion(categoryType, stayTown.getDistrict().name, stayTown.name);
+
+            intent.putExtra(StayDistrictListActivity.INTENT_EXTRA_DATA_STAY_TOWN, new StayTownParcel(stayTown));
+        }
+
+        intent.putExtra(StayDistrictListActivity.INTENT_EXTRA_DATA_STAY_CATEGORY, categoryType.name());
 
         if (mSavedTown != null && mSavedTown.getDistrict() != null && mSavedTown.getDistrict().name.equalsIgnoreCase(stayTown.getDistrict().name) == true)
         {

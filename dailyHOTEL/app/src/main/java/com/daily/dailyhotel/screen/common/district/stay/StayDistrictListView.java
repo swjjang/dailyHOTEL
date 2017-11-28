@@ -123,14 +123,7 @@ public class StayDistrictListView extends BaseDialogView<StayDistrictListView.On
                         return;
                     }
 
-                    if (stayTown.index == StayTown.ALL)
-                    {
-                        getEventListener().onDistrictClick(groupPosition);
-                    } else
-                    {
-
-                        getEventListener().onTownClick(groupPosition, stayTown);
-                    }
+                    getEventListener().onTownClick(groupPosition, stayTown);
                 }
             });
         }
