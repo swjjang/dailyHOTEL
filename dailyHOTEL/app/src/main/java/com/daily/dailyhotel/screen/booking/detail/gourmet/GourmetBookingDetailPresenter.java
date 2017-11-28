@@ -30,7 +30,6 @@ import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
-import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.call.restaurant.RestaurantCallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
@@ -81,12 +80,11 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
 
     private CommonRemoteImpl mCommonRemoteImpl;
     private BookingRemoteImpl mBookingRemoteImpl;
-    private ProfileRemoteImpl mProfileRemoteImpl;
 
     private int mReservationIndex;
     private String mAggregationId;
     private String mImageUrl;
-    private boolean mIsDeepLink;
+    private boolean mIsDeepLink; // 딱히 쓰지는 않음
     private int mBookingState;
     private CommonDateTime mCommonDateTime;
     private GourmetBookingDetail mGourmetBookingDetail;
@@ -150,7 +148,6 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
         setAnalytics(new GourmetBookingDetailAnalyticsImpl());
 
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
-        mProfileRemoteImpl = new ProfileRemoteImpl(activity);
         mBookingRemoteImpl = new BookingRemoteImpl(activity);
 
         setRefresh(true);
@@ -222,9 +219,6 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
     public void onResume()
     {
         super.onResume();
-
-        // TODO : 매번 리로딩 해야 하는 지 확인 필요.
-        //        setRefresh(true);
 
         if (isRefresh() == true)
         {
