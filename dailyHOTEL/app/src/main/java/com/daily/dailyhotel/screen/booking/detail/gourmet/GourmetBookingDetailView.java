@@ -784,6 +784,7 @@ public class GourmetBookingDetailView extends BaseBlurView<GourmetBookingDetailV
         }
     }
 
+    @Override
     public boolean isExpandedMap()
     {
         if (getViewDataBinding() == null)
@@ -994,4 +995,6 @@ public class GourmetBookingDetailView extends BaseBlurView<GourmetBookingDetailV
 
         return observable;
     }
+
+
 }

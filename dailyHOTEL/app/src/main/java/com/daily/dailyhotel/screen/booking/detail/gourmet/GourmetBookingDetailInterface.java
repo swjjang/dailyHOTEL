@@ -23,6 +23,8 @@ public interface GourmetBookingDetailInterface extends BaseBlurViewInterface
 
     void setReviewButtonLayout(String reviewStatus);
 
+    boolean isExpandedMap();
+
     Observable<Boolean> expandMap(double latitude, double longitude);
 
     Observable<Boolean> collapseMap();

@@ -32,6 +32,8 @@ public class GourmetBookingDetailActivity extends BaseActivity<GourmetBookingDet
     static final int REQUEST_CODE_NAVIGATOR = 10008;
     static final int REQUEST_CODE_RESTAURANT_CALL = 10009;
     static final int REQUEST_CODE_LOGIN = 10010;
+    static final int REQUEST_CODE_REVIEW = 10011;
+    static final int REQUEST_CODE_FAQ = 10012;
 
     public static Intent newInstance(Context context, int reservationIndex, String aggregationId, String imageUrl, boolean isDeepLink, int bookingState)
     {
