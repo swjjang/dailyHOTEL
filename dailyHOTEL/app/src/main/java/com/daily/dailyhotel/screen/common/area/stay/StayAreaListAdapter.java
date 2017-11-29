@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.common.district.stay;
+package com.daily.dailyhotel.screen.common.area.stay;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.daily.base.util.ScreenUtils;
-import com.daily.dailyhotel.entity.StayDistrict;
-import com.daily.dailyhotel.entity.StayTown;
+import com.daily.dailyhotel.entity.StayAreaGroup;
+import com.daily.dailyhotel.entity.StayArea;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.LayoutRegionListAreaDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutRegionListProvinceDataBinding;
@@ -18,15 +18,15 @@ import com.twoheart.dailyhotel.widget.DailyAnimatedExpandableListView.AnimatedEx
 import java.util.ArrayList;
 import java.util.List;
 
-public class StayDistrictListAdapter extends AnimatedExpandableListAdapter
+public class StayAreaListAdapter extends AnimatedExpandableListAdapter
 {
     private Context mContext;
-    private List<StayDistrict> mStayDistrictList;
+    private List<StayAreaGroup> mStayDistrictList;
     private View.OnClickListener mOnItemClickListener;
     private boolean mTablet;
     private int mSelectedGroupPosition;
 
-    public StayDistrictListAdapter(Context context)
+    public StayAreaListAdapter(Context context)
     {
         mContext = context;
         mStayDistrictList = new ArrayList<>();
@@ -34,7 +34,7 @@ public class StayDistrictListAdapter extends AnimatedExpandableListAdapter
         setDistrictPosition(-1);
     }
 
-    public void setData(List<StayDistrict> districtList)
+    public void setData(List<StayAreaGroup> districtList)
     {
         mStayDistrictList.clear();
         mStayDistrictList.addAll(districtList);
@@ -45,28 +45,28 @@ public class StayDistrictListAdapter extends AnimatedExpandableListAdapter
         mOnItemClickListener = listener;
     }
 
-    public List<StayTown> getChildren(int groupPosition)
+    public List<StayArea> getChildren(int groupPosition)
     {
         if (mStayDistrictList == null || mStayDistrictList.size() == 0)
         {
             return null;
         }
 
-        return mStayDistrictList.get(groupPosition).getTownList();
+        return mStayDistrictList.get(groupPosition).getAreaList();
     }
 
     @Override
-    public StayTown getChild(int groupPosition, int childPosition)
+    public StayArea getChild(int groupPosition, int childPosition)
     {
         if (mStayDistrictList == null || mStayDistrictList.size() == 0)
         {
             return null;
         }
 
-        return mStayDistrictList.get(groupPosition).getTownList().get(childPosition);
+        return mStayDistrictList.get(groupPosition).getAreaList().get(childPosition);
     }
 
-    public StayDistrict getDistrict(int groupPosition)
+    public StayAreaGroup getDistrict(int groupPosition)
     {
         return mStayDistrictList.get(groupPosition);
     }
@@ -81,7 +81,7 @@ public class StayDistrictListAdapter extends AnimatedExpandableListAdapter
         mSelectedGroupPosition = position;
     }
 
-    private void setRealChildView(TextView textView, int groupPosition, StayTown stayTown)
+    private void setRealChildView(TextView textView, int groupPosition, StayArea stayTown)
     {
         if (textView == null)
         {
@@ -97,7 +97,7 @@ public class StayDistrictListAdapter extends AnimatedExpandableListAdapter
             textView.setEnabled(true);
             textView.setText(null);
 
-            if (stayTown.index == StayTown.ALL)
+            if (stayTown.index == StayArea.ALL)
             {
                 textView.setText(stayTown.name + " " + mContext.getString(R.string.label_all));
             } else
@@ -125,10 +125,10 @@ public class StayDistrictListAdapter extends AnimatedExpandableListAdapter
     {
         final int COLUMN_COUNT = 2;
 
-        StayTown leftTown = getChild(groupPosition, childPosition * COLUMN_COUNT);
-        StayTown rightTown;
+        StayArea leftTown = getChild(groupPosition, childPosition * COLUMN_COUNT);
+        StayArea rightTown;
 
-        if (childPosition * COLUMN_COUNT + 1 < mStayDistrictList.get(groupPosition).getTownList().size())
+        if (childPosition * COLUMN_COUNT + 1 < mStayDistrictList.get(groupPosition).getAreaCount())
         {
             rightTown = getChild(groupPosition, childPosition * COLUMN_COUNT + 1);
         } else
@@ -167,13 +167,13 @@ public class StayDistrictListAdapter extends AnimatedExpandableListAdapter
     @Override
     public int getRealChildrenCount(int groupPosition)
     {
-        int size = mStayDistrictList.get(groupPosition).getTownList().size();
+        int size = mStayDistrictList.get(groupPosition).getAreaCount();
 
         return size / 2 + size % 2;
     }
 
     @Override
-    public StayDistrict getGroup(int groupPosition)
+    public StayAreaGroup getGroup(int groupPosition)
     {
         return mStayDistrictList.get(groupPosition);
     }
@@ -193,7 +193,7 @@ public class StayDistrictListAdapter extends AnimatedExpandableListAdapter
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent)
     {
-        StayDistrict stayDistrict = getGroup(groupPosition);
+        StayAreaGroup stayDistrict = getGroup(groupPosition);
 
         LayoutRegionListProvinceDataBinding viewDataBinding;
 

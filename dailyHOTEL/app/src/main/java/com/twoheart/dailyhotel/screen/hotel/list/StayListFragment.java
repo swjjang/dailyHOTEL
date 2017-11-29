@@ -7,7 +7,8 @@ import android.view.View;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.util.DailyTextUtils;
-import com.daily.dailyhotel.entity.StayTown;
+import com.daily.dailyhotel.entity.StayArea;
+import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
@@ -19,7 +20,6 @@ import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceCurationOption;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StayCuration;
 import com.twoheart.dailyhotel.model.StayParams;
@@ -161,9 +161,9 @@ public class StayListFragment extends PlaceListFragment
         }
 
         StayBookingDay stayBookingDay = mStayCuration.getStayBookingDay();
-        StayTown stayTown = mStayCuration.getTown();
+        StayRegion region = mStayCuration.getRegion();
 
-        if (stayTown == null || stayBookingDay == null)
+        if (region == null || stayBookingDay == null)
         {
             unLockUI();
             Util.restartApp(mBaseActivity);

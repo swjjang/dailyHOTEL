@@ -2,30 +2,29 @@ package com.daily.dailyhotel.entity;
 
 import java.util.List;
 
-public class StayTown extends Town
+public class StayArea extends Area
 {
     public static final int ALL = -1;
 
-    public StayTown()
+    private List<Category> mCategoryList; // 스테이의 카테고리 목록
+
+    public StayArea()
     {
 
     }
 
     /**
-     * Town 과 District 가 같은 경우
+     * 전체 인경우
      *
-     * @param stayDistrict
+     * @param stayArea
      */
-    public StayTown(StayDistrict stayDistrict)
+    public StayArea(StayArea stayArea)
     {
-        name = stayDistrict.name;
-        index = StayTown.ALL;
-        setDistrict(stayDistrict);
+        name = stayArea.name;
+        index = StayArea.ALL;
 
-        setCategoryList(stayDistrict.getCategoryList());
+        setCategoryList(stayArea.getCategoryList());
     }
-
-    private List<Category> mCategoryList; // 스테이의 카테고리 목록
 
     public List<Category> getCategoryList()
     {

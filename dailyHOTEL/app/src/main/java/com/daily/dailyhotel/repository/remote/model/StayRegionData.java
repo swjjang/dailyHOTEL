@@ -2,21 +2,17 @@ package com.daily.dailyhotel.repository.remote.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.daily.dailyhotel.entity.Category;
-import com.daily.dailyhotel.entity.StayDistrict;
-import com.daily.dailyhotel.entity.StayTown;
+import com.daily.dailyhotel.entity.StayArea;
+import com.daily.dailyhotel.entity.StayAreaGroup;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by android_sam on 2017. 2. 15..
  */
 @JsonObject
-public class StayDistrictData
+public class StayRegionData
 {
     @JsonField(name = "imgUrl")
     public String imgUrl;
@@ -27,48 +23,48 @@ public class StayDistrictData
     @JsonField(name = "areaList")
     public List<AreaData> areaList;
 
-    public StayDistrictData()
+    public StayRegionData()
     {
     }
 
-    public List<StayDistrict> getDistrictList()
+    public List<StayAreaGroup> getAreaGroupList()
     {
-        List<StayDistrict> stayDistrictList = new ArrayList<>();
+        List<StayAreaGroup> areaGroupList = new ArrayList<>();
 
         if (provinceList != null && provinceList.size() > 0)
         {
-            StayDistrict stayDistrict;
+            StayAreaGroup stayAreaGroup;
 
             for (ProvinceData provinceData : provinceList)
             {
-                stayDistrict = provinceData.getDistrict();
+                stayAreaGroup = provinceData.getAreaGroup();
 
                 if (areaList != null && areaList.size() > 0)
                 {
-                    List<StayTown> stayTownList = new ArrayList<>();
+                    List<StayArea> areaList = new ArrayList<>();
 
-                    for (AreaData areaData : areaList)
+                    for (AreaData areaData : this.areaList)
                     {
                         if (areaData.provinceIndex == provinceData.index)
                         {
-                            stayTownList.add(areaData.getTown(stayDistrict));
+                            areaList.add(areaData.getArea());
                         }
                     }
 
                     // 개수가 0보다 크면 전체 지역을 넣는다.
-                    if (stayTownList.size() > 0)
+                    if (areaList.size() > 0)
                     {
-                        stayTownList.add(0, new StayTown(stayDistrict));
+                        areaList.add(0, new StayArea(stayAreaGroup));
                     }
 
-                    stayDistrict.setTownList(stayTownList);
+                    stayAreaGroup.setAreaList(areaList);
                 }
 
-                stayDistrictList.add(stayDistrict);
+                areaGroupList.add(stayAreaGroup);
             }
         }
 
-        return stayDistrictList;
+        return areaGroupList;
     }
 
     @JsonObject
@@ -94,13 +90,13 @@ public class StayDistrictData
 
         }
 
-        public StayDistrict getDistrict()
+        public StayAreaGroup getAreaGroup()
         {
-            StayDistrict stayDistrict = new StayDistrict();
-            stayDistrict.index = index;
-            stayDistrict.name = name;
+            StayAreaGroup stayAreaGroup = new StayAreaGroup();
+            stayAreaGroup.index = index;
+            stayAreaGroup.name = name;
 
-            return stayDistrict;
+            return stayAreaGroup;
         }
     }
 
@@ -124,15 +120,14 @@ public class StayDistrictData
 
         }
 
-        public StayTown getTown(StayDistrict stayDistrict)
+        public StayArea getArea()
         {
-            StayTown stayTown = new StayTown();
+            StayArea stayArea = new StayArea();
 
-            stayTown.index = index;
-            stayTown.name = name;
-            stayTown.setDistrict(stayDistrict);
+            stayArea.index = index;
+            stayArea.name = name;
 
-            return stayTown;
+            return stayArea;
         }
     }
 }

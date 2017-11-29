@@ -354,7 +354,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
             }
         } else
         {
-            mNetworkController.requestCheckServer();
+            mNetworkController.requestCommonDatetime();
         }
     }
 

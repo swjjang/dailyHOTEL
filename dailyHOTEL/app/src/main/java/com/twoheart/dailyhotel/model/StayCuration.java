@@ -5,8 +5,8 @@ import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.daily.dailyhotel.entity.StayTown;
-import com.daily.dailyhotel.parcel.StayTownParcel;
+import com.daily.dailyhotel.entity.StayRegion;
+import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 
@@ -16,7 +16,7 @@ public class StayCuration extends PlaceCuration
     protected Category mCategory;
     protected StayCurationOption mStayCurationOption;
 
-    protected StayTown mTown;
+    protected StayRegion mRegion;
 
     public StayCuration()
     {
@@ -101,14 +101,14 @@ public class StayCuration extends PlaceCuration
         }
     }
 
-    public void setTown(StayTown stayTown)
+    public void setRegion(StayRegion region)
     {
-        mTown = stayTown;
+        mRegion = region;
     }
 
-    public StayTown getTown()
+    public StayRegion getRegion()
     {
-        return mTown;
+        return mRegion;
     }
 
     @Override
@@ -121,7 +121,7 @@ public class StayCuration extends PlaceCuration
         mStayCurationOption.clear();
 
         mStayBookingDay = null;
-        mTown = null;
+        mRegion = null;
     }
 
 
@@ -140,12 +140,12 @@ public class StayCuration extends PlaceCuration
         dest.writeParcelable(mCategory, flags);
         dest.writeParcelable(mStayCurationOption, flags);
 
-        if (mTown == null)
+        if (mRegion == null)
         {
             dest.writeParcelable(null, flags);
         } else
         {
-            dest.writeParcelable(new StayTownParcel(mTown), flags);
+            dest.writeParcelable(new StayRegionParcel(mRegion), flags);
         }
     }
 
@@ -157,11 +157,11 @@ public class StayCuration extends PlaceCuration
         mCategory = in.readParcelable(Category.class.getClassLoader());
         mStayCurationOption = in.readParcelable(StayCurationOption.class.getClassLoader());
 
-        StayTownParcel stayTownParcel = in.readParcelable(StayTownParcel.class.getClassLoader());
+        StayRegionParcel stayRegionParcel = in.readParcelable(StayRegionParcel.class.getClassLoader());
 
-        if (stayTownParcel != null)
+        if (stayRegionParcel != null)
         {
-            mTown = stayTownParcel.getStayTown();
+            mRegion = stayRegionParcel.getRegion();
         }
     }
 

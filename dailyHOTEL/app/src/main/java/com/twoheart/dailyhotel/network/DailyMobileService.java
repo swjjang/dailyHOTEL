@@ -9,7 +9,7 @@ import com.daily.dailyhotel.repository.remote.model.CardData;
 import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
 import com.daily.dailyhotel.repository.remote.model.ConfigurationsData;
 import com.daily.dailyhotel.repository.remote.model.CouponsData;
-import com.daily.dailyhotel.repository.remote.model.DistrictData;
+import com.daily.dailyhotel.repository.remote.model.RegionData;
 import com.daily.dailyhotel.repository.remote.model.ExistCouponsData;
 import com.daily.dailyhotel.repository.remote.model.GourmetBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.GourmetCampaignTagsData;
@@ -28,7 +28,7 @@ import com.daily.dailyhotel.repository.remote.model.ShortUrlData;
 import com.daily.dailyhotel.repository.remote.model.StayBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.StayDetailData;
-import com.daily.dailyhotel.repository.remote.model.StayDistrictData;
+import com.daily.dailyhotel.repository.remote.model.StayRegionData;
 import com.daily.dailyhotel.repository.remote.model.StayListData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundDetailData;
@@ -707,11 +707,11 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Observable<BaseDto<DistrictData>> getStayDistrict(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+    Observable<BaseDto<RegionData>> getStayRegionList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Observable<BaseDto<StayDistrictData>> getStayCategoryDistrict(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+    Observable<BaseDto<StayRegionData>> getStayCategoryRegionList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // BookingRemoteImpl

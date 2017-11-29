@@ -374,7 +374,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         }
 
         analyticsParam.setShowOriginalPriceYn(analyticsParam.price, analyticsParam.discountPrice);
-        analyticsParam.setTown(null);
+        analyticsParam.setRegion(null);
         analyticsParam.entryPosition = -1;
         analyticsParam.totalListCount = -1;
         analyticsParam.isDailyChoice = false;

@@ -571,7 +571,7 @@ public class CollectionStayActivity extends CollectionBaseActivity
             analyticsParam.discountPrice = recommendationStay.discount;
             analyticsParam.price = recommendationStay.price;
             analyticsParam.setShowOriginalPriceYn(analyticsParam.price, analyticsParam.discountPrice);
-            analyticsParam.setTown(null);
+            analyticsParam.setRegion(null);
             analyticsParam.entryPosition = recommendationStay.entryPosition;
             analyticsParam.totalListCount = count;
             analyticsParam.isDailyChoice = recommendationStay.isDailyChoice;

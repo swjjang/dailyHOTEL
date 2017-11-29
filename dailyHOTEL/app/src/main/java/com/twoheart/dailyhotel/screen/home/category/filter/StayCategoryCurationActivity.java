@@ -18,7 +18,8 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.base.widget.DailyToast;
-import com.daily.dailyhotel.entity.StayTown;
+import com.daily.dailyhotel.entity.StayArea;
+import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceCuration;
@@ -618,17 +619,19 @@ public class StayCategoryCurationActivity extends PlaceCurationActivity implemen
         setResult(RESULT_OK, intent);
         finish();
 
-        StayTown stayTown = mStayCategoryCuration.getTown();
+        StayRegion region = mStayCategoryCuration.getRegion();
         Map<String, String> eventParams = new HashMap<>();
 
         eventParams.put(AnalyticsManager.KeyType.SORTING, stayCurationOption.getSortType().name());
         eventParams.put(AnalyticsManager.KeyType.SEARCH_COUNT, String.valueOf(getConfirmCount()));
 
-        if (stayTown != null)
+        if (region != null)
         {
             eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
-            eventParams.put(AnalyticsManager.KeyType.PROVINCE, stayTown.getDistrict().name);
-            eventParams.put(AnalyticsManager.KeyType.DISTRICT, stayTown.index == StayTown.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : stayTown.name);
+            eventParams.put(AnalyticsManager.KeyType.PROVINCE, region.getAreaGroupName());
+
+            StayArea area = region.getArea();
+            eventParams.put(AnalyticsManager.KeyType.DISTRICT, area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name);
         }
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//

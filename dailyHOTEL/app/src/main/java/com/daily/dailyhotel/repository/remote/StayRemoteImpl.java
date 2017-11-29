@@ -8,7 +8,7 @@ import com.daily.dailyhotel.domain.StayInterface;
 import com.daily.dailyhotel.entity.ReviewScores;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayDetail;
-import com.daily.dailyhotel.entity.StayDistrict;
+import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.entity.TrueReviews;
 import com.daily.dailyhotel.entity.TrueVR;
 import com.daily.dailyhotel.entity.WishResult;
@@ -260,7 +260,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
     }
 
     @Override
-    public Observable<List<StayDistrict>> getDistrictList(DailyCategoryType categoryType)
+    public Observable<List<StayAreaGroup>> getRegionList(DailyCategoryType categoryType)
     {
         final String API;
 
@@ -269,16 +269,16 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
             API = Constants.UNENCRYPTED_URL ? "api/v3/hotel/region"//
                 : "MjMkNjQkMjEkMCQ2MCQ1MiQ0NCQzMiQzMSQyMiQ3MSQ4NiQ2OCQxMyQ0NyQ2OCQ=$PRUM3NTRGQzA5RMEVBMjZFNPQEEN0MTgzYMVzcyQ0VERDUzOOJDQyRTQ1NYzkxNkM0MBNEUG1RUTFOGMDExRDVEMEMExRTEwMDExNw==$";
 
-            return mDailyMobileService.getStayDistrict(Crypto.getUrlDecoderEx(API))//
+            return mDailyMobileService.getStayRegionList(Crypto.getUrlDecoderEx(API))//
                 .subscribeOn(Schedulers.io()).map(baseDto ->
                 {
-                    List<StayDistrict> regionList;
+                    List<StayAreaGroup> areaGroupList;
 
                     if (baseDto != null)
                     {
                         if (baseDto.msgCode == 100 && baseDto.data != null)
                         {
-                            regionList = baseDto.data.getDistrictList();
+                            areaGroupList = baseDto.data.getAreaGroupList();
                         } else
                         {
                             throw new BaseException(baseDto.msgCode, baseDto.msg);
@@ -288,7 +288,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
                         throw new BaseException(-1, null);
                     }
 
-                    return regionList;
+                    return areaGroupList;
                 });
         } else
         {
@@ -298,16 +298,16 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
             Map<String, String> urlParams = new HashMap<>();
             urlParams.put("{category}", categoryType.getCodeString(mContext));
 
-            return mDailyMobileService.getStayCategoryDistrict(Crypto.getUrlDecoderEx(API, urlParams))//
+            return mDailyMobileService.getStayCategoryRegionList(Crypto.getUrlDecoderEx(API, urlParams))//
                 .subscribeOn(Schedulers.io()).map(baseDto ->
                 {
-                    List<StayDistrict> regionList;
+                    List<StayAreaGroup> areaGroupList;
 
                     if (baseDto != null)
                     {
                         if (baseDto.msgCode == 100 && baseDto.data != null)
                         {
-                            regionList = baseDto.data.getDistrictList();
+                            areaGroupList = baseDto.data.getAreaGroupList();
                         } else
                         {
                             throw new BaseException(baseDto.msgCode, baseDto.msg);
@@ -317,7 +317,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
                         throw new BaseException(-1, null);
                     }
 
-                    return regionList;
+                    return areaGroupList;
                 });
         }
     }
