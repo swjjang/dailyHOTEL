@@ -1298,7 +1298,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             });
         } else
         {
-            startActivityForResult(TrueVRActivity.newInstance(getActivity(), mStayDetail.index, (ArrayList) mTrueVRList//
+            startActivityForResult(TrueVRActivity.newInstance(getActivity(), mStayDetail.index, mTrueVRList//
                 , Constants.PlaceType.HOTEL, mStayDetail.category), StayDetailActivity.REQUEST_CODE_TRUE_VR);
         }
 
