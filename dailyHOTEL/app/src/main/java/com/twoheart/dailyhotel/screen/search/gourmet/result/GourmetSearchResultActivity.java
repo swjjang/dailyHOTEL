@@ -574,7 +574,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         for (PlaceListFragment placeListFragment : mPlaceSearchResultLayout.getPlaceListFragment())
         {
             boolean isCurrentFragment = (placeListFragment == currentFragment);
-            placeListFragment.setVisibility(mViewType, isCurrentFragment);
+            placeListFragment.setVisibility(mViewType, Constants.EmptyStatus.NONE, isCurrentFragment);
 
             ((GourmetSearchResultListFragment) placeListFragment).setIsDeepLink(mIsDeepLink);
         }
@@ -741,6 +741,18 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
                 mPlaceSearchResultLayout.setCategoryTabLayout(getSupportFragmentManager(), new ArrayList<Category>(), null, mOnGourmetListFragmentListener);
             }
+        }
+
+        @Override
+        public void onPageScroll()
+        {
+
+        }
+
+        @Override
+        public void onPageSelected(int changedPosition, int prevPosition)
+        {
+
         }
     };
 
@@ -1053,13 +1065,13 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
             if (currentPlaceListFragment == placeListFragment)
             {
-                currentPlaceListFragment.setVisibility(mViewType, true);
+                currentPlaceListFragment.setVisibility(mViewType, Constants.EmptyStatus.NOT_EMPTY, true);
                 currentPlaceListFragment.setPlaceCuration(mGourmetSearchCuration);
                 ((GourmetSearchResultListFragment) currentPlaceListFragment).setSearchType(mSearchType);
                 currentPlaceListFragment.refreshList(true);
             } else
             {
-                placeListFragment.setVisibility(mViewType, false);
+                placeListFragment.setVisibility(mViewType, Constants.EmptyStatus.NOT_EMPTY, false);
             }
         }
 

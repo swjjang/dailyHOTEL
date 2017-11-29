@@ -136,73 +136,90 @@ public class StayListLayout extends PlaceListLayout
     }
 
     @Override
-    public void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, boolean isCurrentPage)
+    public void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, Constants.EmptyStatus emptyStatus, boolean isCurrentPage)
     {
-        switch (viewType)
+        if (emptyStatus == Constants.EmptyStatus.EMPTY)
         {
-            case LIST:
-                setScreenVisible(ScreenType.LIST);
+            StayCurationOption stayCurationOption = mStayCuration == null //
+                ? new StayCurationOption() //
+                : (StayCurationOption) mStayCuration.getCurationOption();
 
-                if (mPlaceListMapFragment != null)
-                {
-                    mPlaceListMapFragment.resetMenuBarLayoutTranslation();
-                    fragmentManager.beginTransaction().remove(mPlaceListMapFragment).commitAllowingStateLoss();
-                    mMapLayout.removeAllViews();
-                    mPlaceListMapFragment = null;
-                }
-
+            if (stayCurationOption.isDefaultFilter() == true)
+            {
+                setScreenVisible(ScreenType.EMPTY);
+                ((StayListLayout.OnEventListener) mOnEventListener).onBottomOptionVisible(false);
+            } else
+            {
+                setScreenVisible(ScreenType.FILTER_EMPTY);
                 ((StayListLayout.OnEventListener) mOnEventListener).onBottomOptionVisible(true);
                 ((StayListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
-                ((StayListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
-                break;
 
-            case MAP:
-                setScreenVisible(ScreenType.MAP);
-
-                if (isCurrentPage == true && mPlaceListMapFragment == null)
+                if (viewType == Constants.ViewType.LIST)
                 {
-                    try
-                    {
-                        mPlaceListMapFragment = new StayListMapFragment();
-                        mPlaceListMapFragment.setBottomOptionLayout(mBottomOptionLayout);
-                        fragmentManager.beginTransaction().add(mMapLayout.getId(), mPlaceListMapFragment).commitAllowingStateLoss();
-                    } catch (IllegalStateException e)
-                    {
-                        Crashlytics.log("StayListLayout");
-                        Crashlytics.logException(e);
-                    }
-                }
-
-                ((StayListLayout.OnEventListener) mOnEventListener).onBottomOptionVisible(true);
-                ((StayListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
-                ((StayListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
-                break;
-
-            case GONE:
-                StayCurationOption stayCurationOption = mStayCuration == null //
-                    ? new StayCurationOption() //
-                    : (StayCurationOption) mStayCuration.getCurationOption();
-
-                if (stayCurationOption.isDefaultFilter() == true)
-                {
-                    setScreenVisible(ScreenType.EMPTY);
-                    ((StayListLayout.OnEventListener) mOnEventListener).onBottomOptionVisible(false);
+                    ((StayListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(false);
                 } else
                 {
-                    setScreenVisible(ScreenType.FILTER_EMPTY);
+                    ((StayListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
+                }
+            }
+
+            if (mContext instanceof Activity)
+            {
+                AnalyticsManager.getInstance(mContext).recordScreen((Activity) mContext, AnalyticsManager.Screen.DAILYHOTEL_LIST_EMPTY, null);
+            } else
+            {
+                AnalyticsManager.getInstance(mContext).recordScreen(null, AnalyticsManager.Screen.DAILYHOTEL_LIST_EMPTY, null);
+            }
+        } else
+        {
+            switch (viewType)
+            {
+                case LIST:
+                    setScreenVisible(ScreenType.LIST);
+
+                    if (mPlaceListMapFragment != null)
+                    {
+                        mPlaceListMapFragment.resetMenuBarLayoutTranslation();
+                        fragmentManager.beginTransaction().remove(mPlaceListMapFragment).commitAllowingStateLoss();
+                        mMapLayout.removeAllViews();
+                        mPlaceListMapFragment = null;
+                    }
+
                     ((StayListLayout.OnEventListener) mOnEventListener).onBottomOptionVisible(true);
                     ((StayListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
-                    ((StayListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(false);
-                }
 
-                if (mContext instanceof Activity)
-                {
-                    AnalyticsManager.getInstance(mContext).recordScreen((Activity) mContext, AnalyticsManager.Screen.DAILYHOTEL_LIST_EMPTY, null);
-                } else
-                {
-                    AnalyticsManager.getInstance(mContext).recordScreen(null, AnalyticsManager.Screen.DAILYHOTEL_LIST_EMPTY, null);
-                }
-                break;
+                    if (emptyStatus != Constants.EmptyStatus.NONE)
+                    {
+                        ((StayListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
+                    }
+                    break;
+
+                case MAP:
+                    setScreenVisible(ScreenType.MAP);
+
+                    if (isCurrentPage == true && mPlaceListMapFragment == null)
+                    {
+                        try
+                        {
+                            mPlaceListMapFragment = new StayListMapFragment();
+                            mPlaceListMapFragment.setBottomOptionLayout(mBottomOptionLayout);
+                            fragmentManager.beginTransaction().add(mMapLayout.getId(), mPlaceListMapFragment).commitAllowingStateLoss();
+                        } catch (IllegalStateException e)
+                        {
+                            Crashlytics.log("StayListLayout");
+                            Crashlytics.logException(e);
+                        }
+                    }
+
+                    ((StayListLayout.OnEventListener) mOnEventListener).onBottomOptionVisible(true);
+                    ((StayListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
+
+                    if (emptyStatus != Constants.EmptyStatus.NONE)
+                    {
+                        ((StayListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
+                    }
+                    break;
+            }
         }
     }
 

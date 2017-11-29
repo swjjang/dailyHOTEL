@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.daily.dailyhotel.entity.StayTown;
-import com.daily.dailyhotel.entity.Town;
 import com.daily.dailyhotel.parcel.StayTownParcel;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -81,6 +80,15 @@ public class StayPaymentAnalyticsParam implements Parcelable
         dest.writeInt(averageDiscount);
         dest.writeString(address);
         dest.writeInt(dailyChoice ? 1 : 0);
+
+        if (mTown == null)
+        {
+            dest.writeParcelable(null, flags);
+        } else
+        {
+            dest.writeParcelable(new StayTownParcel(mTown), flags);
+        }
+
         dest.writeParcelable(new StayTownParcel(mTown), flags);
         dest.writeString(addressAreaName);
         dest.writeString(grade.name());
@@ -98,8 +106,14 @@ public class StayPaymentAnalyticsParam implements Parcelable
         averageDiscount = in.readInt();
         address = in.readString();
         dailyChoice = in.readInt() == 1 ? true : false;
+
         StayTownParcel stayTownParcel = in.readParcelable(StayTownParcel.class.getClassLoader());
-        mTown = stayTownParcel.getStayTown();
+
+        if (stayTownParcel != null)
+        {
+            mTown = stayTownParcel.getStayTown();
+        }
+
         addressAreaName = in.readString();
 
         try

@@ -499,7 +499,7 @@ public class StayMainActivity extends PlaceMainActivity
         for (PlaceListFragment placeListFragment : mPlaceMainLayout.getPlaceListFragment())
         {
             boolean isCurrentFragment = placeListFragment == currentFragment;
-            placeListFragment.setVisibility(mViewType, isCurrentFragment);
+            placeListFragment.setVisibility(mViewType, Constants.EmptyStatus.NONE, isCurrentFragment);
         }
 
         refreshCurrentFragment(false);
@@ -776,7 +776,8 @@ public class StayMainActivity extends PlaceMainActivity
                 {
                     PlaceListFragment placeListFragment = mPlaceMainLayout.getPlaceListFragment().get(prevPosition);
 
-                    if (placeListFragment.getPlaceListLayout().getListMapFragment().isShowPlaceInformation() == true)
+                    if (placeListFragment.getPlaceListLayout().getListMapFragment() != null//
+                        && placeListFragment.getPlaceListLayout().getListMapFragment().isShowPlaceInformation() == true)
                     {
                         placeListFragment.getPlaceListLayout().getListMapFragment().clickMap();
                     }
@@ -952,12 +953,6 @@ public class StayMainActivity extends PlaceMainActivity
             {
                 DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
 
-                //                if (externalDeepLink.isHotelDetailView() == true)
-                //                {
-                //                    unLockUI();
-                //
-                //                    return moveDeepLinkDetail(baseActivity, todayDateTime, dailyDeepLink);
-                //                } else
                 if (externalDeepLink.isHotelSearchView() == true //
                     || externalDeepLink.isCampaignTagListView() == true)
                 {
@@ -1212,12 +1207,12 @@ public class StayMainActivity extends PlaceMainActivity
 
             if (currentPlaceListFragment == placeListFragment)
             {
-                currentPlaceListFragment.setVisibility(mViewType, true);
+                currentPlaceListFragment.setVisibility(mViewType, Constants.EmptyStatus.NOT_EMPTY, true);
                 currentPlaceListFragment.setPlaceCuration(mStayCuration);
                 currentPlaceListFragment.refreshList(true);
             } else
             {
-                placeListFragment.setVisibility(mViewType, false);
+                placeListFragment.setVisibility(mViewType, Constants.EmptyStatus.NOT_EMPTY, false);
             }
         }
 
@@ -1370,53 +1365,6 @@ public class StayMainActivity extends PlaceMainActivity
         {
             if (dailyDeepLink.isExternalDeepLink() == true)
             {
-                //                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
-                //
-                //                // 신규 타입의 화면이동
-                //                int hotelIndex = Integer.parseInt(externalDeepLink.getIndex());
-                //                int nights = 1;
-                //
-                //                try
-                //                {
-                //                    nights = Integer.parseInt(externalDeepLink.getNights());
-                //                } catch (Exception e)
-                //                {
-                //                    ExLog.d(e.toString());
-                //                } finally
-                //                {
-                //                    if (nights <= 0)
-                //                    {
-                //                        nights = 1;
-                //                    }
-                //                }
-                //
-                //                String date = externalDeepLink.getDate();
-                //                int datePlus = externalDeepLink.getDatePlus();
-                //                boolean isShowCalendar = externalDeepLink.isShowCalendar();
-                //                boolean isShowVR = externalDeepLink.isShowVR();
-                //                int ticketIndex = externalDeepLink.getOpenTicketIndex();
-                //                boolean overseas = externalDeepLink.getIsOverseas();
-                //
-                //                StayBookingDay stayBookingDay = new StayBookingDay();
-                //
-                //                if (DailyTextUtils.isTextEmpty(date) == false)
-                //                {
-                //                    Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
-                //                    stayBookingDay.setCheckInDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
-                //                } else if (datePlus >= 0)
-                //                {
-                //                    stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime, datePlus);
-                //                } else
-                //                {
-                //                    stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime);
-                //                }
-                //
-                //                stayBookingDay.setCheckOutDay(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), nights);
-                //
-                //                mStayCuration.setStayBookingDay(stayBookingDay);
-                //
-                //                Intent intent = StayDetailActivity.newInstance(baseActivity, stayBookingDay, overseas, hotelIndex, ticketIndex, isShowCalendar, isShowVR, false);
-
                 Intent intent = StayDetailActivity.newInstance(this, dailyDeepLink.getDeepLink());
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 

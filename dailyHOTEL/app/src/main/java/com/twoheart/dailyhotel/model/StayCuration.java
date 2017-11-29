@@ -139,7 +139,14 @@ public class StayCuration extends PlaceCuration
         dest.writeParcelable(mStayBookingDay, flags);
         dest.writeParcelable(mCategory, flags);
         dest.writeParcelable(mStayCurationOption, flags);
-        dest.writeParcelable(new StayTownParcel(mTown), flags);
+
+        if (mTown == null)
+        {
+            dest.writeParcelable(null, flags);
+        } else
+        {
+            dest.writeParcelable(new StayTownParcel(mTown), flags);
+        }
     }
 
     protected void readFromParcel(Parcel in)
@@ -151,7 +158,11 @@ public class StayCuration extends PlaceCuration
         mStayCurationOption = in.readParcelable(StayCurationOption.class.getClassLoader());
 
         StayTownParcel stayTownParcel = in.readParcelable(StayTownParcel.class.getClassLoader());
-        mTown = stayTownParcel.getStayTown();
+
+        if (stayTownParcel != null)
+        {
+            mTown = stayTownParcel.getStayTown();
+        }
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator()

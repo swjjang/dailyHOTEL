@@ -978,7 +978,7 @@ public class StayCategoryNearByActivity extends BaseActivity
             for (PlaceListFragment placeListFragment : mStayCategoryNearByLayout.getPlaceListFragment())
             {
                 boolean isCurrentFragment = (placeListFragment == currentFragment);
-                placeListFragment.setVisibility(mViewType, isCurrentFragment);
+                placeListFragment.setVisibility(mViewType, Constants.EmptyStatus.NONE, isCurrentFragment);
             }
 
             refreshCurrentFragment(false);
@@ -1382,12 +1382,12 @@ public class StayCategoryNearByActivity extends BaseActivity
             PlaceListFragment currentPlaceListFragment = mStayCategoryNearByLayout.getCurrentPlaceListFragment();
             if (currentPlaceListFragment == placeListFragment)
             {
-                currentPlaceListFragment.setVisibility(mViewType, true);
+                currentPlaceListFragment.setVisibility(mViewType, Constants.EmptyStatus.NOT_EMPTY,true);
                 currentPlaceListFragment.setPlaceCuration(mStayCategoryNearByCuration);
                 currentPlaceListFragment.refreshList(true);
             } else
             {
-                placeListFragment.setVisibility(mViewType, false);
+                placeListFragment.setVisibility(mViewType, Constants.EmptyStatus.NOT_EMPTY,false);
             }
         }
 

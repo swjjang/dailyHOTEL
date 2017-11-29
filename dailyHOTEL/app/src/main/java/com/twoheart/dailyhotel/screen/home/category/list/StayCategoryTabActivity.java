@@ -597,7 +597,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
         for (PlaceListFragment placeListFragment : mPlaceMainLayout.getPlaceListFragment())
         {
             boolean isCurrentFragment = placeListFragment == currentFragment;
-            placeListFragment.setVisibility(mViewType, isCurrentFragment);
+            placeListFragment.setVisibility(mViewType, Constants.EmptyStatus.NONE, isCurrentFragment);
         }
 
         refreshCurrentFragment(false);
@@ -1276,12 +1276,12 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
             if (currentPlaceListFragment == placeListFragment)
             {
-                currentPlaceListFragment.setVisibility(mViewType, true);
+                currentPlaceListFragment.setVisibility(mViewType, Constants.EmptyStatus.NOT_EMPTY,  true);
                 currentPlaceListFragment.setPlaceCuration(mStayCategoryCuration);
                 currentPlaceListFragment.refreshList(true);
             } else
             {
-                placeListFragment.setVisibility(mViewType, false);
+                placeListFragment.setVisibility(mViewType, Constants.EmptyStatus.NOT_EMPTY, false);
             }
         }
 

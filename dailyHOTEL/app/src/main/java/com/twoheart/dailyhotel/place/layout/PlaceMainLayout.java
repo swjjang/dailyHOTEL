@@ -236,9 +236,6 @@ public abstract class PlaceMainLayout extends BaseBlurLayout
             case MAP:
                 mFloatingActionView.setViewOptionListSelected();
                 break;
-
-            case GONE:
-                break;
         }
     }
 
@@ -381,7 +378,7 @@ public abstract class PlaceMainLayout extends BaseBlurLayout
 
                     PlaceListFragment placeListFragment = getPlaceListFragment().get(position);
 
-                    if (placeListFragment.getViewType() == Constants.ViewType.GONE)
+                    if (placeListFragment.getPlaceCount() == 0)
                     {
                         if (placeListFragment.isDefaultFilter() == true)
                         {

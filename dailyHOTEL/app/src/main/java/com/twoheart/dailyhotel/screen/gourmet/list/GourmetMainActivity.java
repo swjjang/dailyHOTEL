@@ -505,7 +505,7 @@ public class GourmetMainActivity extends PlaceMainActivity
         for (PlaceListFragment placeListFragment : mPlaceMainLayout.getPlaceListFragment())
         {
             boolean isCurrentFragment = placeListFragment == gourmetListFragment;
-            placeListFragment.setVisibility(mViewType, isCurrentFragment);
+            placeListFragment.setVisibility(mViewType, Constants.EmptyStatus.NONE, isCurrentFragment);
         }
 
         refreshCurrentFragment(false);
@@ -866,12 +866,6 @@ public class GourmetMainActivity extends PlaceMainActivity
             {
                 DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
 
-                //                if (externalDeepLink.isGourmetDetailView() == true)
-                //                {
-                //                    unLockUI();
-                //
-                //                    return moveDeepLinkDetail(baseActivity, todayDateTime, externalDeepLink);
-                //                } else
                 if (externalDeepLink.isGourmetSearchView() == true //
                     || externalDeepLink.isCampaignTagListView() == true)
                 {
@@ -1200,12 +1194,12 @@ public class GourmetMainActivity extends PlaceMainActivity
 
             if (currentPlaceListFragment == placeListFragment)
             {
-                currentPlaceListFragment.setVisibility(mViewType, true);
+                currentPlaceListFragment.setVisibility(mViewType, Constants.EmptyStatus.NOT_EMPTY, true);
                 currentPlaceListFragment.setPlaceCuration(mGourmetCuration);
                 currentPlaceListFragment.refreshList(true);
             } else
             {
-                placeListFragment.setVisibility(mViewType, false);
+                placeListFragment.setVisibility(mViewType, Constants.EmptyStatus.NOT_EMPTY, false);
             }
         }
 
@@ -1356,36 +1350,6 @@ public class GourmetMainActivity extends PlaceMainActivity
 
         try
         {
-            //            if (dailyDeepLink.isExternalDeepLink() == true)
-            //            {
-            //                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
-            //
-            //                int gourmetIndex = Integer.parseInt(externalDeepLink.getIndex());
-            //
-            //                String date = externalDeepLink.getDate();
-            //                int datePlus = externalDeepLink.getDatePlus();
-            //                boolean isShowCalendar = externalDeepLink.isShowCalendar();
-            //                boolean isShowVR = externalDeepLink.isShowVR();
-            //
-            //                GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
-            //
-            //                if (DailyTextUtils.isTextEmpty(date) == false)
-            //                {
-            //                    Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
-            //                    gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
-            //                } else if (datePlus >= 0)
-            //                {
-            //                    gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime, datePlus);
-            //                } else
-            //                {
-            //                    gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime);
-            //                }
-            //
-            //                mGourmetCuration.setGourmetBookingDay(gourmetBookingDay);
-            //
-            //                Intent intent = GourmetDetailActivity.newInstance(baseActivity, gourmetBookingDay, gourmetIndex, isShowCalendar, isShowVR, false);
-            //                baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
-
             Intent intent = GourmetDetailActivity.newInstance(this, dailyDeepLink.getDeepLink());
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 

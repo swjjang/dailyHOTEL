@@ -84,6 +84,10 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         void onShowCallDialog();
 
         void onItemSelectedSpinner(double radius);
+
+        void onPageScroll();
+
+        void onPageSelected(int changedPosition, int prevPosition);
     }
 
     protected abstract int getEmptyIconResourceId();
@@ -303,9 +307,6 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
             case MAP:
                 mFloatingActionView.setViewOptionListSelected();
                 break;
-
-            case GONE:
-                break;
         }
     }
 
@@ -432,22 +433,45 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
                     isScrolling = false;
                 }
 
+                ((OnEventListener) mOnEventListener).onPageSelected(position, prevPosition);
+
                 prevPosition = position;
 
                 PlaceListFragment placeListFragment = getPlaceListFragment().get(position);
 
-                boolean isViewTypeEnabled = placeListFragment.getViewType() != Constants.ViewType.GONE;
-
-                setOptionViewTypeEnabled(isViewTypeEnabled);
-                setOptionFilterEnabled(isViewTypeEnabled || placeListFragment.isDefaultFilter() == false);
+                if (placeListFragment.getPlaceCount() == 0)
+                {
+                    if (placeListFragment.isDefaultFilter() == true)
+                    {
+                        setBottomOptionVisible(false);
+                    } else
+                    {
+                        setBottomOptionVisible(true);
+                        setOptionViewTypeEnabled(false);
+                        setOptionFilterEnabled(true);
+                    }
+                } else
+                {
+                    setBottomOptionVisible(true);
+                    setOptionViewTypeEnabled(true);
+                    setOptionFilterEnabled(true);
+                }
             }
 
             @Override
             public void onPageScrollStateChanged(int state)
             {
-                if (state == ViewPager.SCROLL_STATE_DRAGGING)
+                switch (state)
                 {
-                    isScrolling = true;
+                    case ViewPager.SCROLL_STATE_DRAGGING:
+                        isScrolling = true;
+
+                        ((OnEventListener) mOnEventListener).onPageScroll();
+                        break;
+
+                    case ViewPager.SCROLL_STATE_IDLE:
+                        showBottomLayout();
+                        break;
                 }
             }
         });
@@ -751,13 +775,13 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
 
     public synchronized void showBottomLayout()
     {
-        setOptionViewTypeEnabled(true);
-        setOptionFilterEnabled(true);
-
-        if (mFloatingActionView != null)
+        if (mFloatingActionView == null)
         {
-            mFloatingActionView.setTranslationY(0);
+            return;
         }
+
+        setBottomOptionVisible(true);
+        mFloatingActionView.setTranslationY(0);
     }
 
     public void hideBottomLayout()

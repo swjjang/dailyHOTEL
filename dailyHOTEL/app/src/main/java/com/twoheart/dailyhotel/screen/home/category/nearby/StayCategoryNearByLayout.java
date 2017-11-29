@@ -313,9 +313,6 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
             case MAP:
                 mFloatingActionView.setViewOptionListSelected();
                 break;
-
-            case GONE:
-                break;
         }
     }
 

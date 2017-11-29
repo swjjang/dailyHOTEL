@@ -5,7 +5,6 @@ import android.os.Parcelable;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.StayTown;
-import com.daily.dailyhotel.entity.Town;
 import com.daily.dailyhotel.parcel.StayTownParcel;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -108,7 +107,14 @@ public class StayDetailAnalyticsParam implements Parcelable
         dest.writeInt(entryPosition);
         dest.writeInt(totalListCount);
         dest.writeInt(isDailyChoice == true ? 1 : 0);
-        dest.writeParcelable(new StayTownParcel(mTown), flags);
+
+        if (mTown == null)
+        {
+            dest.writeParcelable(null, flags);
+        } else
+        {
+            dest.writeParcelable(new StayTownParcel(mTown), flags);
+        }
     }
 
     protected void readFromParcel(Parcel in)
@@ -120,8 +126,13 @@ public class StayDetailAnalyticsParam implements Parcelable
         entryPosition = in.readInt();
         totalListCount = in.readInt();
         isDailyChoice = in.readInt() == 1 ? true : false;
+
         StayTownParcel stayTownParcel = in.readParcelable(StayTownParcel.class.getClassLoader());
-        mTown = stayTownParcel.getStayTown();
+
+        if (stayTownParcel != null)
+        {
+            mTown = stayTownParcel.getStayTown();
+        }
     }
 
     public static final Creator CREATOR = new Creator()

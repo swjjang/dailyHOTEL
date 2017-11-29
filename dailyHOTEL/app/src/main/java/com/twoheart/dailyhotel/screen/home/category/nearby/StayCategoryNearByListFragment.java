@@ -134,7 +134,7 @@ public class StayCategoryNearByListFragment extends StayListFragment
                 int size = mPlaceListLayout.getItemCount();
                 if (size == 0)
                 {
-                    setVisibility(ViewType.GONE, true);
+                    setVisibility(mViewType, EmptyStatus.EMPTY, true);
                 }
 
                 mEventListener.onShowActivityEmptyView(size == 0);
@@ -149,7 +149,7 @@ public class StayCategoryNearByListFragment extends StayListFragment
                 int mapSize = mPlaceListLayout.getMapItemSize();
                 if (mapSize == 0)
                 {
-                    setVisibility(ViewType.GONE, true);
+                    setVisibility(mViewType, EmptyStatus.EMPTY, true);
                 }
 
                 mEventListener.onShowActivityEmptyView(mapSize == 0);

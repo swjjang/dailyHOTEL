@@ -634,7 +634,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         for (PlaceListFragment placeListFragment : mPlaceSearchResultLayout.getPlaceListFragment())
         {
             boolean isCurrentFragment = (placeListFragment == currentFragment);
-            placeListFragment.setVisibility(mViewType, isCurrentFragment);
+            placeListFragment.setVisibility(mViewType, Constants.EmptyStatus.NONE, isCurrentFragment);
 
             ((StaySearchResultListFragment) placeListFragment).setIsDeepLink(mIsDeepLink);
         }
@@ -663,7 +663,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             mStaySearchCuration.setCategory(category);
 
             mPlaceSearchResultLayout.setCurrentItem(tab.getPosition());
-            mPlaceSearchResultLayout.showBottomLayout();
 
             refreshCurrentFragment(false);
         }
@@ -824,6 +823,53 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
                 // 기본적으로 시작시에 전체 카테고리를 넣는다.
                 mPlaceSearchResultLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
+            }
+        }
+
+        @Override
+        public void onPageScroll()
+        {
+            // 목록을 맵으로 보고 있는 경우 페이지 스크롤 중에 하단 옵션 레이아웃의 위치가 초기화 되는 이슈 수정
+            if (mViewType == ViewType.MAP)
+            {
+                try
+                {
+                    PlaceListFragment placeListFragment = mPlaceSearchResultLayout.getCurrentPlaceListFragment();
+
+                    if (placeListFragment.getPlaceListLayout().getListMapFragment().isShowPlaceInformation() == true)
+                    {
+                        placeListFragment.getPlaceListLayout().getListMapFragment().clickMap();
+                    }
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+
+                    changeViewType();
+                }
+            }
+        }
+
+        @Override
+        public void onPageSelected(int changedPosition, int prevPosition)
+        {
+            // 목록을 맵으로 보고 있는 경우 페이지 스크롤 중에 하단 옵션 레이아웃의 위치가 초기화 되는 이슈 수정
+            if (mViewType == ViewType.MAP)
+            {
+                try
+                {
+                    PlaceListFragment placeListFragment = mPlaceSearchResultLayout.getPlaceListFragment().get(prevPosition);
+
+                    if (placeListFragment.getPlaceListLayout().getListMapFragment() != null//
+                        && placeListFragment.getPlaceListLayout().getListMapFragment().isShowPlaceInformation() == true)
+                    {
+                        placeListFragment.getPlaceListLayout().getListMapFragment().clickMap();
+                    }
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+
+                    changeViewType();
+                }
             }
         }
     };
@@ -1151,13 +1197,13 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             PlaceListFragment currentPlaceListFragment = mPlaceSearchResultLayout.getCurrentPlaceListFragment();
             if (currentPlaceListFragment == placeListFragment)
             {
-                currentPlaceListFragment.setVisibility(mViewType, true);
+                currentPlaceListFragment.setVisibility(mViewType, Constants.EmptyStatus.NOT_EMPTY, true);
                 currentPlaceListFragment.setPlaceCuration(mStaySearchCuration);
                 ((StaySearchResultListFragment) currentPlaceListFragment).setSearchType(mSearchType);
                 currentPlaceListFragment.refreshList(true);
             } else
             {
-                placeListFragment.setVisibility(mViewType, false);
+                placeListFragment.setVisibility(mViewType, Constants.EmptyStatus.NOT_EMPTY, false);
             }
         }
 

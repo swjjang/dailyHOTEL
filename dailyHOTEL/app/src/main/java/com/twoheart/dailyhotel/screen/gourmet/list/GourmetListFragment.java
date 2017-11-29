@@ -249,7 +249,7 @@ public class GourmetListFragment extends PlaceListFragment
 
                 if (size == 0)
                 {
-                    setVisibility(ViewType.GONE, true);
+                    setVisibility(mViewType, Constants.EmptyStatus.EMPTY, true);
                 }
 
                 mEventListener.onShowActivityEmptyView(size == 0);
@@ -264,7 +264,7 @@ public class GourmetListFragment extends PlaceListFragment
                 int mapSize = mPlaceListLayout.getMapItemSize();
                 if (mapSize == 0)
                 {
-                    setVisibility(ViewType.GONE, true);
+                    setVisibility(mViewType, Constants.EmptyStatus.EMPTY, true);
                 }
 
                 mEventListener.onShowActivityEmptyView(mapSize == 0);

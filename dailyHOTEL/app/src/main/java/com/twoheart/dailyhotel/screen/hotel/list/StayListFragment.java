@@ -252,7 +252,7 @@ public class StayListFragment extends PlaceListFragment
                 int size = mPlaceListLayout.getItemCount();
                 if (size == 0)
                 {
-                    setVisibility(ViewType.GONE, true);
+                    setVisibility(mViewType, EmptyStatus.EMPTY,true);
                 }
 
                 Category category = mStayCuration.getCategory();
@@ -271,7 +271,7 @@ public class StayListFragment extends PlaceListFragment
                 int mapSize = mPlaceListLayout.getMapItemSize();
                 if (mapSize == 0)
                 {
-                    setVisibility(ViewType.GONE, true);
+                    setVisibility(mViewType, EmptyStatus.EMPTY, true);
                 }
 
                 Category category = mStayCuration.getCategory();

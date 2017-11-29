@@ -99,7 +99,7 @@ public abstract class PlaceListLayout extends BaseLayout
 
     public abstract void notifyWishChanged(int position, boolean wish);
 
-    public abstract void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, boolean isCurrentPage);
+    public abstract void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, Constants.EmptyStatus emptyStatus, boolean isCurrentPage);
 
     //    protected abstract EventBanner getEventBanner(int index);
     //
@@ -333,7 +333,7 @@ public abstract class PlaceListLayout extends BaseLayout
 
         if (viewType == Constants.ViewType.LIST)
         {
-            setVisibility(fragmentManager, viewType, true);
+            setVisibility(fragmentManager, viewType, Constants.EmptyStatus.NOT_EMPTY, true);
 
             // 리스트의 경우 Pagination 상황 고려
             List<PlaceViewItem> oldList = getList();
@@ -421,7 +421,7 @@ public abstract class PlaceListLayout extends BaseLayout
             if (size == 0)
             {
                 mPlaceListAdapter.notifyDataSetChanged();
-                setVisibility(fragmentManager, Constants.ViewType.GONE, true);
+                setVisibility(fragmentManager, viewType, Constants.EmptyStatus.EMPTY, true);
             } else
             {
                 // 배너의 경우 리스트 타입이면서, 기존 데이터가 0일때 즉 첫 페이지일때, sortType은 default type 이면서 배너가 있을때만 최상단에 위치한다.
@@ -494,11 +494,11 @@ public abstract class PlaceListLayout extends BaseLayout
             if (list == null || list.size() == 0)
             {
                 mPlaceListAdapter.notifyDataSetChanged();
-                setVisibility(fragmentManager, Constants.ViewType.GONE, true);
+                setVisibility(fragmentManager, viewType, Constants.EmptyStatus.EMPTY, true);
 
             } else
             {
-                setVisibility(fragmentManager, viewType, true);
+                setVisibility(fragmentManager, viewType, Constants.EmptyStatus.NOT_EMPTY, true);
 
                 mPlaceListMapFragment.setOnPlaceListMapFragment(new PlaceListMapFragment.OnPlaceListMapFragmentListener()
                 {
