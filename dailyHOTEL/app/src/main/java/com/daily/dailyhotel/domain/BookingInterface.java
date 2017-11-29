@@ -40,6 +40,12 @@ public interface BookingInterface
     // 고메 예약 상세
     Observable<GourmetBookingDetail> getGourmetBookingDetail(int reservationIndex);
 
+    // 고메 예약 상세
+    Observable<GourmetBookingDetail> getGourmetBookingDetailMulti(String aggregationId);
+
+    // 고메 예약 상세
+    Observable<GourmetBookingDetail> getGourmetBookingDetailMulti(int reservationIndex);
+
     // 고메 숨기기
     Observable<Boolean> getGourmetHiddenBooking(int reservationIndex);
 

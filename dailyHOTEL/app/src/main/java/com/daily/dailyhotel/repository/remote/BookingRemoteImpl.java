@@ -373,6 +373,24 @@ public class BookingRemoteImpl extends BaseRemoteImpl implements BookingInterfac
     }
 
     @Override
+    public Observable<GourmetBookingDetail> getGourmetBookingDetailMulti(String aggregationId)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v6/reservation/detail/gourmet/{aggregationId}"//
+            : "MTMkMTIxJDEwNiQxNTAkOTYkMjIkNzAkMTQkNjgkODUkMCQ3MCQxNTYkNDgkMTc1JDEwNiQ=$ZRDI0NkZDRTk2NYOUZGNENEOXTBFMTNBNDZBQTU2MEE1RDY5LNUJCOEFCRkVGRUQ5OUM4NCXTU5QOTk0MzU0RTQzHNDUxMEIzNkNEQzYPwWODM5MDU1OSUQ2NzU4NjdBMTVDPODJFNzc0RTdFQkJCRDE4NTcwMT0ML5ODAzNzlBNUNENDUIyNzhFQTk=$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{aggregationId}", aggregationId);
+
+        return null;
+    }
+
+    @Override
+    public Observable<GourmetBookingDetail> getGourmetBookingDetailMulti(int reservationIndex)
+    {
+        return null;
+    }
+
+    @Override
     public Observable<Boolean> getGourmetHiddenBooking(int reservationIndex)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/reservation/session/hidden"//
