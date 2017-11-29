@@ -27,8 +27,7 @@ public class StayAreaListActivity extends BaseActivity<StayAreaListPresenter>
     public static final String INTENT_EXTRA_DATA_REGION = "area";
     public static final String INTENT_EXTRA_DATA_CHANGED_AREA_GROUP = "areaGroup";
 
-    public static Intent newInstance(Context context, String checkInDateTime, String checkOutDateTime
-        , DailyCategoryType dailyCategoryType, String categoryCode)
+    public static Intent newInstance(Context context, String checkInDateTime, String checkOutDateTime, DailyCategoryType dailyCategoryType, String categoryCode)
     {
         Intent intent = new Intent(context, StayAreaListActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);

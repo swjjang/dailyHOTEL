@@ -7,7 +7,6 @@ import android.view.View;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.util.DailyTextUtils;
-import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
@@ -252,7 +251,7 @@ public class StayListFragment extends PlaceListFragment
                 int size = mPlaceListLayout.getItemCount();
                 if (size == 0)
                 {
-                    setVisibility(mViewType, EmptyStatus.EMPTY,true);
+                    setVisibility(mViewType, EmptyStatus.EMPTY, true);
                 }
 
                 Category category = mStayCuration.getCategory();

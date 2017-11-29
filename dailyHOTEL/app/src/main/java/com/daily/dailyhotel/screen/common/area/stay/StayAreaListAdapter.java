@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.daily.base.util.ScreenUtils;
-import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.entity.StayArea;
+import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.LayoutRegionListAreaDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutRegionListProvinceDataBinding;

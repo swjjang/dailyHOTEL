@@ -181,7 +181,7 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
             jsonObject.put("arrivalDateTime", gourmetCart.getVisitDateTime());
 
             JSONArray menuJsonArray = new JSONArray();
-            for(GourmetCartMenu gourmetCartMenu : gourmetCart.getMenuList())
+            for (GourmetCartMenu gourmetCartMenu : gourmetCart.getMenuList())
             {
                 JSONObject menuJSONObject = new JSONObject();
                 menuJSONObject.put("saleRecoIdx", gourmetCartMenu.saleIndex);
@@ -191,7 +191,7 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
             }
 
             jsonObject.put("bookingItems", menuJsonArray);
-        }catch (Exception e)
+        } catch (Exception e)
         {
             ExLog.e(e.toString());
         }

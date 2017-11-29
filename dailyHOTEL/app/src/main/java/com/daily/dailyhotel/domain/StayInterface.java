@@ -1,9 +1,9 @@
 package com.daily.dailyhotel.domain;
 
 import com.daily.dailyhotel.entity.ReviewScores;
+import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayDetail;
-import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.entity.TrueReviews;
 import com.daily.dailyhotel.entity.TrueVR;
 import com.daily.dailyhotel.entity.WishResult;

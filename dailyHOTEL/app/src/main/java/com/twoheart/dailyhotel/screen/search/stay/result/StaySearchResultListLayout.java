@@ -99,7 +99,7 @@ public class StaySearchResultListLayout extends StayListLayout
 
                     ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
 
-                    if(emptyStatus != Constants.EmptyStatus.NONE)
+                    if (emptyStatus != Constants.EmptyStatus.NONE)
                     {
                         ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
                     }
@@ -129,7 +129,7 @@ public class StaySearchResultListLayout extends StayListLayout
 
                     ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
 
-                    if(emptyStatus != Constants.EmptyStatus.NONE)
+                    if (emptyStatus != Constants.EmptyStatus.NONE)
                     {
                         ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
                     }

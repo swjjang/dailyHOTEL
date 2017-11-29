@@ -58,7 +58,7 @@ public class StayOutboundDetailAnalyticsImpl implements StayOutboundDetailPresen
     @Override
     public void onScreen(Activity activity, StayBookDateTime stayBookDateTime, StayOutboundDetail stayOutboundDetail, int priceFromList)
     {
-        if (activity == null || stayOutboundDetail == null|| mAnalyticsParam == null)
+        if (activity == null || stayOutboundDetail == null || mAnalyticsParam == null)
         {
             return;
         }
@@ -106,7 +106,7 @@ public class StayOutboundDetailAnalyticsImpl implements StayOutboundDetailPresen
 
             params.put(AnalyticsManager.KeyType.RATING, DailyTextUtils.isTextEmpty(mAnalyticsParam.rating) == true ? AnalyticsManager.ValueType.EMPTY : mAnalyticsParam.rating);
             params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(nights));
-            params.put(AnalyticsManager.KeyType.COUNTRY,  AnalyticsManager.ValueType.OVERSEAS);
+            params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.OVERSEAS);
 
             AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_HOTELDETAILVIEW_OUTBOUND, null, params);
         } catch (Exception e)
