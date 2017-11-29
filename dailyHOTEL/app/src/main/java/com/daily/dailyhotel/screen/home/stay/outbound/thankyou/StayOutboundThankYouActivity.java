@@ -18,8 +18,8 @@ public class StayOutboundThankYouActivity extends BaseActivity<StayOutboundThank
 {
     static final String INTENT_EXTRA_DATA_IMAGE_URL = "imageUrl";
     static final String INTENT_EXTRA_DATA_STAY_NAME = "stayName";
-    static final String INTENT_EXTRA_DATA_CHECK_IN = "checkIn";
-    static final String INTENT_EXTRA_DATA_CHECK_OUT = "checkOut";
+    static final String INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME = "checkInDateTime";
+    static final String INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME = "checkOutDateTime";
     static final String INTENT_EXTRA_DATA_CHECK_IN_TIME = "checkInTime";
     static final String INTENT_EXTRA_DATA_CHECK_OUT_TIME = "checkOutTime";
     static final String INTENT_EXTRA_DATA_ROOM_TYPE = "roomType";
@@ -36,8 +36,8 @@ public class StayOutboundThankYouActivity extends BaseActivity<StayOutboundThank
 
         intent.putExtra(INTENT_EXTRA_DATA_STAY_NAME, stayName);
         intent.putExtra(INTENT_EXTRA_DATA_IMAGE_URL, imageUrl);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN, checkInDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT, checkOutDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_TIME, checkInTime);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_TIME, checkOutTime);
         intent.putExtra(INTENT_EXTRA_DATA_ROOM_TYPE, roomType);

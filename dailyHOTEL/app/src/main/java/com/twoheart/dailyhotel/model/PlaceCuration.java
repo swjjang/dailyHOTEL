@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.model;
 
 import android.location.Location;
-import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
@@ -9,7 +8,6 @@ import android.os.Parcelable;
  */
 public abstract class PlaceCuration implements Parcelable
 {
-    protected Province mProvince;
     protected Location mLocation;
 
     public PlaceCuration()
@@ -24,18 +22,7 @@ public abstract class PlaceCuration implements Parcelable
 
     public void clear()
     {
-        mProvince = null;
         mLocation = null;
-    }
-
-    public Province getProvince()
-    {
-        return mProvince;
-    }
-
-    public void setProvince(Province province)
-    {
-        mProvince = province;
     }
 
     public Location getLocation()
@@ -46,29 +33,5 @@ public abstract class PlaceCuration implements Parcelable
     public void setLocation(Location location)
     {
         mLocation = location;
-    }
-
-    public PlaceCuration(Parcel in)
-    {
-        readFromParcel(in);
-    }
-
-    @Override
-    public int describeContents()
-    {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags)
-    {
-        dest.writeParcelable(mProvince, flags);
-        dest.writeParcelable(mLocation, flags);
-    }
-
-    protected void readFromParcel(Parcel in)
-    {
-        mProvince = in.readParcelable(Province.class.getClassLoader());
-        mLocation = in.readParcelable(Location.class.getClassLoader());
     }
 }

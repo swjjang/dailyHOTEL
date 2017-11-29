@@ -18,11 +18,10 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.StayTown;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.PlaceCuration;
-import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.StayAmenities;
 import com.twoheart.dailyhotel.model.StayCuration;
 import com.twoheart.dailyhotel.model.StayCurationOption;
@@ -112,31 +111,33 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
         contentLayout.addView(sortLayout);
 
-        if (mStayCuration.getProvince().isOverseas == false)
-        {
-            View filterLayout = LayoutInflater.from(this).inflate(R.layout.layout_hotel_filter, null);
-            initFilterLayout(filterLayout, stayCurationOption);
+        // 해외 지역 삭제
+        //        if (mStayCuration.getProvince().isOverseas == false)
+        //        {
+        View filterLayout = LayoutInflater.from(this).inflate(R.layout.layout_hotel_filter, null);
+        initFilterLayout(filterLayout, stayCurationOption);
 
-            initAmenitiesLayout(filterLayout, stayCurationOption);
+        initAmenitiesLayout(filterLayout, stayCurationOption);
 
-            initInRoomAmenitiesLayout(filterLayout, stayCurationOption);
+        initInRoomAmenitiesLayout(filterLayout, stayCurationOption);
 
-            contentLayout.addView(filterLayout);
-        } else
-        {
-            requestUpdateResult();
-        }
+        contentLayout.addView(filterLayout);
+        //        } else
+        //        {
+        //            requestUpdateResult();
+        //        }
     }
 
     protected void initSortLayout(View view, ViewType viewType, StayCurationOption stayCurationOption)
     {
         mSortRadioGroup = (RadioGroup) view.findViewById(R.id.sortLayout);
 
-        if (mStayCuration.getProvince().isOverseas == true)
-        {
-            View satisfactionCheckView = view.findViewById(R.id.satisfactionCheckView);
-            satisfactionCheckView.setVisibility(View.INVISIBLE);
-        }
+        // 해외 지역 삭제
+        //        if (mStayCuration.getProvince().isOverseas == true)
+        //        {
+        //            View satisfactionCheckView = view.findViewById(R.id.satisfactionCheckView);
+        //            satisfactionCheckView.setVisibility(View.INVISIBLE);
+        //        }
 
         if (viewType == ViewType.MAP)
         {
@@ -379,14 +380,15 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
             mSortRadioGroup.setOnCheckedChangeListener(this);
         }
 
-        if (mStayCuration.getProvince().isOverseas == false)
-        {
-            updatePersonFilter(StayFilter.DEFAULT_PERSON);
+        // 해외 지역 삭제
+        //        if (mStayCuration.getProvince().isOverseas == false)
+        //        {
+        updatePersonFilter(StayFilter.DEFAULT_PERSON);
 
-            resetLayout(mBedTypeLayout);
-            resetLayout(mAmenitiesGridLayout);
-            resetLayout(mInRoomAmenitiesGridLayout);
-        }
+        resetLayout(mBedTypeLayout);
+        resetLayout(mAmenitiesGridLayout);
+        //            resetLayout(mInRoomAmenitiesGridLayout);
+        //        }
 
         requestUpdateResultDelayed();
     }
@@ -624,26 +626,17 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
         try
         {
-            Province province = mStayCuration.getProvince();
+            StayTown stayTown = mStayCuration.getTown();
             Map<String, String> eventParams = new HashMap<>();
 
             eventParams.put(AnalyticsManager.KeyType.SORTING, stayCurationOption.getSortType().name());
             eventParams.put(AnalyticsManager.KeyType.SEARCH_COUNT, String.valueOf(getConfirmCount()));
 
-            if (province != null)
+            if (stayTown != null)
             {
-                if (province instanceof Area)
-                {
-                    Area area = (Area) province;
-                    eventParams.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
-                    eventParams.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-                    eventParams.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-                } else
-                {
-                    eventParams.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
-                    eventParams.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-                    eventParams.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
-                }
+                eventParams.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
+                eventParams.put(AnalyticsManager.KeyType.PROVINCE, stayTown.getDistrict().name);
+                eventParams.put(AnalyticsManager.KeyType.DISTRICT, stayTown.index == StayTown.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : stayTown.name);
             }
 
             AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//

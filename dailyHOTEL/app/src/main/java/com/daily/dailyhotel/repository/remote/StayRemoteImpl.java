@@ -8,10 +8,12 @@ import com.daily.dailyhotel.domain.StayInterface;
 import com.daily.dailyhotel.entity.ReviewScores;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayDetail;
+import com.daily.dailyhotel.entity.StayDistrict;
 import com.daily.dailyhotel.entity.TrueReviews;
 import com.daily.dailyhotel.entity.TrueVR;
 import com.daily.dailyhotel.entity.WishResult;
 import com.daily.dailyhotel.repository.remote.model.TrueVRData;
+import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 
@@ -255,5 +257,68 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
 
                 return trueVR;
             });
+    }
+
+    @Override
+    public Observable<List<StayDistrict>> getDistrictList(DailyCategoryType categoryType)
+    {
+        final String API;
+
+        if (categoryType == null || categoryType == DailyCategoryType.STAY_ALL)
+        {
+            API = Constants.UNENCRYPTED_URL ? "api/v3/hotel/region"//
+                : "MjMkNjQkMjEkMCQ2MCQ1MiQ0NCQzMiQzMSQyMiQ3MSQ4NiQ2OCQxMyQ0NyQ2OCQ=$PRUM3NTRGQzA5RMEVBMjZFNPQEEN0MTgzYMVzcyQ0VERDUzOOJDQyRTQ1NYzkxNkM0MBNEUG1RUTFOGMDExRDVEMEMExRTEwMDExNw==$";
+
+            return mDailyMobileService.getStayDistrict(Crypto.getUrlDecoderEx(API))//
+                .subscribeOn(Schedulers.io()).map(baseDto ->
+                {
+                    List<StayDistrict> regionList;
+
+                    if (baseDto != null)
+                    {
+                        if (baseDto.msgCode == 100 && baseDto.data != null)
+                        {
+                            regionList = baseDto.data.getDistrictList();
+                        } else
+                        {
+                            throw new BaseException(baseDto.msgCode, baseDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(-1, null);
+                    }
+
+                    return regionList;
+                });
+        } else
+        {
+            API = Constants.UNENCRYPTED_URL ? "api/v4/hotels/category/{category}/regions"//
+                : "OTkkNTIkMTIyJDEzJDI3JDE0JDg2JDcwJDUyJDM5JDI3JDExOSQxMjUkODkkMTIwJDExMSQ=$QjAyMTQ1MUIzQKLkE0OTAzNUQ3MXjIhENTQwQjY1KQjZFQTIyMDFFRWDk0PQUZGNEUyMUZBODVI5QjcxMDg4ODU1OLEVZGRUU3MThGNTQ4OUJCGPMTQ4REVDMLEUJCMDENCQ0ZCWRDZFQUM4$";
+
+            Map<String, String> urlParams = new HashMap<>();
+            urlParams.put("{category}", categoryType.getCodeString(mContext));
+
+            return mDailyMobileService.getStayCategoryDistrict(Crypto.getUrlDecoderEx(API, urlParams))//
+                .subscribeOn(Schedulers.io()).map(baseDto ->
+                {
+                    List<StayDistrict> regionList;
+
+                    if (baseDto != null)
+                    {
+                        if (baseDto.msgCode == 100 && baseDto.data != null)
+                        {
+                            regionList = baseDto.data.getDistrictList();
+                        } else
+                        {
+                            throw new BaseException(baseDto.msgCode, baseDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(-1, null);
+                    }
+
+                    return regionList;
+                });
+        }
     }
 }

@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.entity.StayTown;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
@@ -160,9 +161,9 @@ public class StayListFragment extends PlaceListFragment
         }
 
         StayBookingDay stayBookingDay = mStayCuration.getStayBookingDay();
-        Province province = mStayCuration.getProvince();
+        StayTown stayTown = mStayCuration.getTown();
 
-        if (province == null || stayBookingDay == null)
+        if (stayTown == null || stayBookingDay == null)
         {
             unLockUI();
             Util.restartApp(mBaseActivity);
@@ -251,7 +252,7 @@ public class StayListFragment extends PlaceListFragment
                 int size = mPlaceListLayout.getItemCount();
                 if (size == 0)
                 {
-                    setVisibility(ViewType.GONE, true);
+                    setVisibility(mViewType, EmptyStatus.EMPTY,true);
                 }
 
                 Category category = mStayCuration.getCategory();
@@ -270,7 +271,7 @@ public class StayListFragment extends PlaceListFragment
                 int mapSize = mPlaceListLayout.getMapItemSize();
                 if (mapSize == 0)
                 {
-                    setVisibility(ViewType.GONE, true);
+                    setVisibility(mViewType, EmptyStatus.EMPTY, true);
                 }
 
                 Category category = mStayCuration.getCategory();

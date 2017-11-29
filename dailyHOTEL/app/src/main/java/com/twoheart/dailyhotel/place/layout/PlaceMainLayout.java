@@ -1,23 +1,18 @@
 package com.twoheart.dailyhotel.place.layout;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.ScaleXSpan;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.view.DailyFloatingActionView;
+import com.daily.dailyhotel.view.DailyStayListNavigationBarView;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
@@ -31,10 +26,9 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnClickListener
+public abstract class PlaceMainLayout extends BaseBlurLayout
 {
-    private TextView mRegionTextView;
-    private TextView mDateTextView;
+    private DailyStayListNavigationBarView mNavigationBarView;
 
     protected AppBarLayout mAppBarLayout;
     protected DailyToolbarView mToolbarView;
@@ -157,14 +151,9 @@ public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnC
 
         // 지역 이름
         // 날짜
-        View regionTextLayout = view.findViewById(R.id.regionTextLayout);
-        mRegionTextView = (TextView) view.findViewById(R.id.regionTextView);
-
-        View dateTextLayout = view.findViewById(R.id.dateTextLayout);
-        mDateTextView = (TextView) view.findViewById(R.id.dateTextView);
-
-        regionTextLayout.setOnClickListener(this);
-        dateTextLayout.setOnClickListener(this);
+        mNavigationBarView = view.findViewById(R.id.navigationBarView);
+        mNavigationBarView.setOnDateClickListener(v -> ((PlaceMainLayout.OnEventListener) mOnEventListener).onDateClick());
+        mNavigationBarView.setOnRegionClickListener(v -> ((PlaceMainLayout.OnEventListener) mOnEventListener).onRegionClick());
     }
 
     private void initOptionLayout(View view)
@@ -191,40 +180,22 @@ public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnC
 
     public void setToolbarRegionText(String region)
     {
-        mRegionTextView.setText(region);
+        if (mNavigationBarView == null)
+        {
+            return;
+        }
+
+        mNavigationBarView.setRegionText(region);
     }
 
     public void setToolbarDateText(String text)
     {
-        int viewWidth = mDateTextView.getWidth() - (mDateTextView.getCompoundDrawablePadding() * 2) - mDateTextView.getCompoundDrawables()[0].getIntrinsicWidth() - mDateTextView.getCompoundDrawables()[2].getIntrinsicWidth();
-
-        final Typeface typeface = FontManager.getInstance(mContext).getRegularTypeface();
-        final float width = DailyTextUtils.getTextWidth(mContext, text, 12d, typeface);
-
-        if (viewWidth > width)
+        if (mNavigationBarView == null)
         {
-            mDateTextView.setText(text);
-        } else
-        {
-            float scaleX = 1f;
-            float scaleWidth;
-
-            for (int i = 99; i >= 60; i--)
-            {
-                scaleX = (float) i / 100;
-                scaleWidth = DailyTextUtils.getScaleTextWidth(mContext, text, 12d, scaleX, typeface);
-
-                if (viewWidth > scaleWidth)
-                {
-                    break;
-                }
-            }
-
-            SpannableString spannableString = new SpannableString(text);
-            spannableString.setSpan(new ScaleXSpan(scaleX), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-            mDateTextView.setText(spannableString);
+            return;
         }
+
+        mNavigationBarView.setDateText(text);
     }
 
     public void setToolbarCartMenusVisible(boolean visible)
@@ -265,9 +236,6 @@ public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnC
             case MAP:
                 mFloatingActionView.setViewOptionListSelected();
                 break;
-
-            case GONE:
-                break;
         }
     }
 
@@ -299,7 +267,7 @@ public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnC
         }
     }
 
-    public void setCategoryTabLayout(FragmentManager fragmentManager, List<Category> categoryList//
+    public void setCategoryTabLayout(FragmentManager fragmentManager, List<? extends Category> categoryList//
         , Category selectedCategory, PlaceListFragment.OnPlaceListFragmentListener listener)
     {
         mCategoryTabLayout.setOnTabSelectedListener(null);
@@ -410,7 +378,7 @@ public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnC
 
                     PlaceListFragment placeListFragment = getPlaceListFragment().get(position);
 
-                    if (placeListFragment.getViewType() == Constants.ViewType.GONE)
+                    if (placeListFragment.getPlaceCount() == 0)
                     {
                         if (placeListFragment.isDefaultFilter() == true)
                         {
@@ -472,21 +440,6 @@ public abstract class PlaceMainLayout extends BaseBlurLayout implements View.OnC
         }
 
         return mFragmentPagerAdapter.getFragmentList();
-    }
-
-    @Override
-    public void onClick(View v)
-    {
-        switch (v.getId())
-        {
-            case R.id.regionTextLayout:
-                ((PlaceMainLayout.OnEventListener) mOnEventListener).onRegionClick();
-                break;
-
-            case R.id.dateTextLayout:
-                ((PlaceMainLayout.OnEventListener) mOnEventListener).onDateClick();
-                break;
-        }
     }
 
     public void setOptionViewTypeEnabled(boolean enabled)

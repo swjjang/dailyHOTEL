@@ -29,7 +29,7 @@ public interface Constants
     {
         LIST,
         MAP,
-        GONE // 목록이 비어있는 경우.
+//        GONE // 목록이 비어있는 경우.
     }
 
     enum UserInformationType
@@ -52,6 +52,13 @@ public interface Constants
         HIDE,
         SHOW_END,
         HIDE_END
+    }
+
+    enum EmptyStatus
+    {
+        NONE,
+        EMPTY,
+        NOT_EMPTY
     }
 
     enum SearchType

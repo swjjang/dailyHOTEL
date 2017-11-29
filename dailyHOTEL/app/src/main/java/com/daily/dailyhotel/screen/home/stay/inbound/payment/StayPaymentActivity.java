@@ -31,8 +31,8 @@ public class StayPaymentActivity extends BaseActivity<StayPaymentPresenter>
     static final String INTENT_EXTRA_DATA_STAY_NAME = "stayName";
     static final String INTENT_EXTRA_DATA_IMAGE_URL = "imageUrl";
     static final String INTENT_EXTRA_DATA_ROOM_PRICE = "roomPrice";
-    static final String INTENT_EXTRA_DATA_CHECK_IN = "checkIn";
-    static final String INTENT_EXTRA_DATA_CHECK_OUT = "checkOut";
+    static final String INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME = "checkInDateTime";
+    static final String INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME = "checkOutDateTime";
     static final String INTENT_EXTRA_DATA_ROOM_INDEX = "roomIndex";
     static final String INTENT_EXTRA_DATA_OVERSEAS = "overseas";
     static final String INTENT_EXTRA_DATA_CATEGORY = "category";
@@ -52,8 +52,8 @@ public class StayPaymentActivity extends BaseActivity<StayPaymentPresenter>
         intent.putExtra(INTENT_EXTRA_DATA_IMAGE_URL, imageUrl);
         intent.putExtra(INTENT_EXTRA_DATA_ROOM_INDEX, roomIndex);
         intent.putExtra(INTENT_EXTRA_DATA_ROOM_PRICE, roomPrice);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN, checkInDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT, checkOutDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_OVERSEAS, overseas);
         intent.putExtra(INTENT_EXTRA_DATA_CATEGORY, category);
         intent.putExtra(INTENT_EXTRA_DATA_ROOM_NAME, roomName);

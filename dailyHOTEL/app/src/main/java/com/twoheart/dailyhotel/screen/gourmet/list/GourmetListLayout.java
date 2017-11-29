@@ -137,72 +137,88 @@ public class GourmetListLayout extends PlaceListLayout
     }
 
     @Override
-    public void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, boolean isCurrentPage)
+    public void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, Constants.EmptyStatus emptyStatus, boolean isCurrentPage)
     {
-        switch (viewType)
+        if (emptyStatus == Constants.EmptyStatus.EMPTY)
         {
-            case LIST:
-                setScreenVisible(ScreenType.LIST);
+            GourmetCurationOption gourmetCurationOption = mGourmetCuration == null //
+                ? new GourmetCurationOption() //
+                : (GourmetCurationOption) mGourmetCuration.getCurationOption();
 
-                if (mPlaceListMapFragment != null)
-                {
-                    mPlaceListMapFragment.resetMenuBarLayoutTranslation();
-                    fragmentManager.beginTransaction().remove(mPlaceListMapFragment).commitAllowingStateLoss();
-                    mMapLayout.removeAllViews();
-                    mPlaceListMapFragment = null;
-                }
-
+            if (gourmetCurationOption.isDefaultFilter() == true)
+            {
+                setScreenVisible(ScreenType.EMPTY);
+                ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(false);
+            } else
+            {
+                setScreenVisible(ScreenType.FILTER_EMPTY);
+                mFilterEmptyView.setVisibility(View.VISIBLE);
                 ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
-                ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
-                break;
+            }
 
-            case MAP:
-                setScreenVisible(ScreenType.MAP);
-
-                if (isCurrentPage == true && mPlaceListMapFragment == null)
-                {
-                    try
-                    {
-                        mPlaceListMapFragment = new GourmetListMapFragment();
-                        mPlaceListMapFragment.setBottomOptionLayout(mBottomOptionLayout);
-                        fragmentManager.beginTransaction().add(mMapLayout.getId(), mPlaceListMapFragment).commitAllowingStateLoss();
-                    } catch (IllegalStateException e)
-                    {
-                        Crashlytics.log("GourmetListLayout");
-                        Crashlytics.logException(e);
-                    }
-                }
-
-                ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
-                ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
-                break;
-
-            case GONE:
-                GourmetCurationOption gourmetCurationOption = mGourmetCuration == null //
-                    ? new GourmetCurationOption() //
-                    : (GourmetCurationOption) mGourmetCuration.getCurationOption();
-
-                if (gourmetCurationOption.isDefaultFilter() == true)
-                {
-                    setScreenVisible(ScreenType.EMPTY);
-                    ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(false);
-                } else
-                {
-                    setScreenVisible(ScreenType.FILTER_EMPTY);
-                    mFilterEmptyView.setVisibility(View.VISIBLE);
-                    ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
-                }
-
+            if (viewType == Constants.ViewType.LIST)
+            {
                 ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(false);
+            } else
+            {
+                ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
+            }
 
-                if (mContext instanceof Activity)
-                {
-                    AnalyticsManager.getInstance(mContext).recordScreen((Activity) mContext, Screen.DAILYGOURMET_LIST_EMPTY, null);
-                } else
-                {
-                    AnalyticsManager.getInstance(mContext).recordScreen(null, Screen.DAILYGOURMET_LIST_EMPTY, null);
-                }
-                break;
+            if (mContext instanceof Activity)
+            {
+                AnalyticsManager.getInstance(mContext).recordScreen((Activity) mContext, Screen.DAILYGOURMET_LIST_EMPTY, null);
+            } else
+            {
+                AnalyticsManager.getInstance(mContext).recordScreen(null, Screen.DAILYGOURMET_LIST_EMPTY, null);
+            }
+        } else
+        {
+            switch (viewType)
+            {
+                case LIST:
+                    setScreenVisible(ScreenType.LIST);
+
+                    if (mPlaceListMapFragment != null)
+                    {
+                        mPlaceListMapFragment.resetMenuBarLayoutTranslation();
+                        fragmentManager.beginTransaction().remove(mPlaceListMapFragment).commitAllowingStateLoss();
+                        mMapLayout.removeAllViews();
+                        mPlaceListMapFragment = null;
+                    }
+
+                    ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
+
+                    if(emptyStatus != Constants.EmptyStatus.NONE)
+                    {
+                        ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
+                    }
+                    break;
+
+                case MAP:
+                    setScreenVisible(ScreenType.MAP);
+
+                    if (isCurrentPage == true && mPlaceListMapFragment == null)
+                    {
+                        try
+                        {
+                            mPlaceListMapFragment = new GourmetListMapFragment();
+                            mPlaceListMapFragment.setBottomOptionLayout(mBottomOptionLayout);
+                            fragmentManager.beginTransaction().add(mMapLayout.getId(), mPlaceListMapFragment).commitAllowingStateLoss();
+                        } catch (IllegalStateException e)
+                        {
+                            Crashlytics.log("GourmetListLayout");
+                            Crashlytics.logException(e);
+                        }
+                    }
+
+                    ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
+
+                    if(emptyStatus != Constants.EmptyStatus.NONE)
+                    {
+                        ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
+                    }
+                    break;
+            }
         }
     }
 

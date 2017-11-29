@@ -301,7 +301,7 @@ public class StayWishListFragment extends PlaceWishListFragment
             analyticsParam.discountPrice = stay.discountPrice;
             analyticsParam.price = stay.price;
             analyticsParam.setShowOriginalPriceYn(analyticsParam.price, analyticsParam.discountPrice);
-            analyticsParam.setProvince(null);
+            analyticsParam.setTown(null);
             analyticsParam.entryPosition = stay.entryPosition;
             analyticsParam.totalListCount = -1;
             analyticsParam.isDailyChoice = stay.isDailyChoice;

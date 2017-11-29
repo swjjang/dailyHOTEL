@@ -45,80 +45,96 @@ public class StaySearchResultListLayout extends StayListLayout
     }
 
     @Override
-    public void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, boolean isCurrentPage)
+    public void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, Constants.EmptyStatus emptyStatus, boolean isCurrentPage)
     {
-        switch (viewType)
+        if (emptyStatus == Constants.EmptyStatus.EMPTY)
         {
-            case LIST:
-                mEmptyView.setVisibility(View.GONE);
-                mMapLayout.setVisibility(View.GONE);
+            StayCurationOption stayCurationOption = mStayCuration == null //
+                ? new StayCurationOption() //
+                : (StayCurationOption) mStayCuration.getCurationOption();
+
+            if (stayCurationOption.isDefaultFilter() == true)
+            {
+                mEmptyView.setVisibility(View.VISIBLE);
                 mFilterEmptyView.setVisibility(View.GONE);
-                mResultTextView.setVisibility(View.VISIBLE);
-
-                if (mPlaceListMapFragment != null)
-                {
-                    mPlaceListMapFragment.resetMenuBarLayoutTranslation();
-                    fragmentManager.beginTransaction().remove(mPlaceListMapFragment).commitAllowingStateLoss();
-                    mMapLayout.removeAllViews();
-                    mPlaceListMapFragment = null;
-                }
-
-                mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-
-                ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
-                ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
-                break;
-
-            case MAP:
-                mResultTextView.setVisibility(View.GONE);
+                ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(false);
+            } else
+            {
                 mEmptyView.setVisibility(View.GONE);
-                mMapLayout.setVisibility(View.VISIBLE);
-                mFilterEmptyView.setVisibility(View.GONE);
-
-                if (isCurrentPage == true && mPlaceListMapFragment == null)
-                {
-                    try
-                    {
-                        mPlaceListMapFragment = new StayListMapFragment();
-                        mPlaceListMapFragment.setBottomOptionLayout(mBottomOptionLayout);
-                        fragmentManager.beginTransaction().add(mMapLayout.getId(), mPlaceListMapFragment).commitAllowingStateLoss();
-                    } catch (IllegalStateException e)
-                    {
-                        Crashlytics.log("StaySearchResultListLayout");
-                        Crashlytics.logException(e);
-                    }
-                }
-
-                mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
-
+                mFilterEmptyView.setVisibility(View.VISIBLE);
                 ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
-                ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
-                break;
+            }
 
-            case GONE:
-                StayCurationOption stayCurationOption = mStayCuration == null //
-                    ? new StayCurationOption() //
-                    : (StayCurationOption) mStayCuration.getCurationOption();
+            mMapLayout.setVisibility(View.GONE);
+            mResultTextView.setVisibility(View.GONE);
 
-                if (stayCurationOption.isDefaultFilter() == true)
-                {
-                    mEmptyView.setVisibility(View.VISIBLE);
-                    mFilterEmptyView.setVisibility(View.GONE);
-                    ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(false);
-                } else
-                {
-                    mEmptyView.setVisibility(View.GONE);
-                    mFilterEmptyView.setVisibility(View.VISIBLE);
-                    ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
-                }
+            mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
 
-                mMapLayout.setVisibility(View.GONE);
-                mResultTextView.setVisibility(View.GONE);
-
-                mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
-
+            if (viewType == Constants.ViewType.LIST)
+            {
                 ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(false);
-                break;
+            } else
+            {
+                ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
+            }
+        } else
+        {
+            switch (viewType)
+            {
+                case LIST:
+                    mEmptyView.setVisibility(View.GONE);
+                    mMapLayout.setVisibility(View.GONE);
+                    mFilterEmptyView.setVisibility(View.GONE);
+                    mResultTextView.setVisibility(View.VISIBLE);
+
+                    if (mPlaceListMapFragment != null)
+                    {
+                        mPlaceListMapFragment.resetMenuBarLayoutTranslation();
+                        fragmentManager.beginTransaction().remove(mPlaceListMapFragment).commitAllowingStateLoss();
+                        mMapLayout.removeAllViews();
+                        mPlaceListMapFragment = null;
+                    }
+
+                    mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+
+                    ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
+
+                    if(emptyStatus != Constants.EmptyStatus.NONE)
+                    {
+                        ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
+                    }
+                    break;
+
+                case MAP:
+                    mResultTextView.setVisibility(View.GONE);
+                    mEmptyView.setVisibility(View.GONE);
+                    mMapLayout.setVisibility(View.VISIBLE);
+                    mFilterEmptyView.setVisibility(View.GONE);
+
+                    if (isCurrentPage == true && mPlaceListMapFragment == null)
+                    {
+                        try
+                        {
+                            mPlaceListMapFragment = new StayListMapFragment();
+                            mPlaceListMapFragment.setBottomOptionLayout(mBottomOptionLayout);
+                            fragmentManager.beginTransaction().add(mMapLayout.getId(), mPlaceListMapFragment).commitAllowingStateLoss();
+                        } catch (IllegalStateException e)
+                        {
+                            Crashlytics.log("StaySearchResultListLayout");
+                            Crashlytics.logException(e);
+                        }
+                    }
+
+                    mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
+
+                    ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
+
+                    if(emptyStatus != Constants.EmptyStatus.NONE)
+                    {
+                        ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
+                    }
+                    break;
+            }
         }
     }
 

@@ -4,8 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.daily.base.util.DailyTextUtils;
-import com.twoheart.dailyhotel.model.Area;
-import com.twoheart.dailyhotel.model.Province;
+import com.daily.dailyhotel.entity.StayTown;
+import com.daily.dailyhotel.parcel.StayTownParcel;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 /**
@@ -22,7 +22,7 @@ public class StayDetailAnalyticsParam implements Parcelable
     public String gradeName;
 
     private String mAddressAreaName; // addressSummary 의 split 이름 stay.addressSummary.split("\\||l|ㅣ|I")  index : 0;
-    private Province mProvince;
+    private StayTown mTown;
     private String mShowOriginalPriceYn = "N"; // stay.price <= 0 || stay.price <= stay.discountPrice ? "N" : "Y"
 
     public StayDetailAnalyticsParam()
@@ -35,47 +35,34 @@ public class StayDetailAnalyticsParam implements Parcelable
         readFromParcel(in);
     }
 
-    public void setProvince(Province province)
+    public void setTown(StayTown town)
     {
-        mProvince = province;
+        mTown = town;
     }
 
-    public Province getProvince()
+    public StayTown getTown()
     {
-        return mProvince;
+        return mTown;
     }
 
     public String getProvinceName()
     {
-        if (mProvince == null)
+        if (mTown == null)
         {
             return AnalyticsManager.ValueType.EMPTY;
         }
 
-        if (mProvince instanceof Area)
-        {
-            Area area = (Area) mProvince;
-            return area.getProvince().name;
-        }
-
-        return mProvince.name;
+        return mTown.name;
     }
 
     public String getDistrictName()
     {
-        if (mProvince == null)
+        if (mTown == null)
         {
             return AnalyticsManager.ValueType.EMPTY;
         }
 
-        if (mProvince instanceof Area)
-        {
-            Area area = (Area) mProvince;
-            String provinceName = area.getProvince().name;
-            return DailyTextUtils.isTextEmpty(provinceName) == false ? area.name : AnalyticsManager.ValueType.EMPTY;
-        }
-
-        return AnalyticsManager.ValueType.ALL_LOCALE_KR;
+        return mTown.index != StayTown.ALL ? mTown.name : AnalyticsManager.ValueType.ALL_LOCALE_KR;
     }
 
     public String getAddressAreaName()
@@ -120,7 +107,14 @@ public class StayDetailAnalyticsParam implements Parcelable
         dest.writeInt(entryPosition);
         dest.writeInt(totalListCount);
         dest.writeInt(isDailyChoice == true ? 1 : 0);
-        dest.writeParcelable(mProvince, flags);
+
+        if (mTown == null)
+        {
+            dest.writeParcelable(null, flags);
+        } else
+        {
+            dest.writeParcelable(new StayTownParcel(mTown), flags);
+        }
     }
 
     protected void readFromParcel(Parcel in)
@@ -132,7 +126,13 @@ public class StayDetailAnalyticsParam implements Parcelable
         entryPosition = in.readInt();
         totalListCount = in.readInt();
         isDailyChoice = in.readInt() == 1 ? true : false;
-        mProvince = in.readParcelable(Province.class.getClassLoader());
+
+        StayTownParcel stayTownParcel = in.readParcelable(StayTownParcel.class.getClassLoader());
+
+        if (stayTownParcel != null)
+        {
+            mTown = stayTownParcel.getStayTown();
+        }
     }
 
     public static final Creator CREATOR = new Creator()

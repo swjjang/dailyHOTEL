@@ -11,6 +11,7 @@ import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
@@ -170,7 +171,7 @@ public class StayCategoryListFragment extends StayListFragment
                 int size = mPlaceListLayout.getItemCount();
                 if (size == 0)
                 {
-                    setVisibility(ViewType.GONE, true);
+                    setVisibility(mViewType, Constants.EmptyStatus.EMPTY, true);
                 }
 
                 mEventListener.onShowActivityEmptyView(size == 0);
@@ -185,7 +186,7 @@ public class StayCategoryListFragment extends StayListFragment
                 int mapSize = mPlaceListLayout.getMapItemSize();
                 if (mapSize == 0)
                 {
-                    setVisibility(ViewType.GONE, true);
+                    setVisibility(mViewType, Constants.EmptyStatus.EMPTY, true);
                 }
 
                 mEventListener.onShowActivityEmptyView(mapSize == 0);

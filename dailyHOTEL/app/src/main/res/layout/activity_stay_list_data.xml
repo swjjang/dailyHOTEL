@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+    xmlns:dailyToolbar="http://schemas.android.com/apk/res-auto">
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"
+            app:elevation="0dp">
+
+            <com.daily.dailyhotel.view.DailyToolbarView
+                android:id="@+id/toolbarView"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/toolbar_height"
+                app:layout_scrollFlags="scroll|snap|enterAlways"
+                dailyToolbar:underLineHeight="1px"/>
+
+            <com.daily.dailyhotel.view.DailyStayListNavigationBarView
+                android:id="@+id/navigationBarView"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"/>
+
+            <View
+                android:id="@+id/navigationBarUnderlineView"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/default_line_ce7e7e7"/>
+
+            <FrameLayout
+                android:id="@+id/categoryLayout"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/layerlist_fillrect_ule7e7e7_bffffff"
+                android:visibility="gone">
+
+                <android.support.design.widget.TabLayout
+                    android:id="@+id/categoryTabLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="8dp"
+                    app:tabIndicatorHeight="2dp"
+                    app:tabMinWidth="0dp"
+                    app:tabMode="scrollable"
+                    app:tabPadding="0dp"
+                    app:tabSelectedTextColor="@color/default_text_cb70038"
+                    app:tabTextAppearance="@style/CategoryTabLayoutTextAppearance"
+                    app:tabTextColor="@color/default_text_c929292"/>
+            </FrameLayout>
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/appBarLayout"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+        <com.daily.dailyhotel.view.DailyFloatingActionView
+            android:id="@+id/floatingActionView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="12dp"/>
+
+        <FrameLayout
+            android:id="@+id/tooltipLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:paddingLeft="130dp"
+            android:visibility="gone">
+
+            <com.daily.base.widget.DailyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="83dp"
+                android:background="@drawable/tooltip_top_date"
+                android:gravity="center"
+                android:text="@string/label_home_category_tooltip"
+                android:textColor="@color/default_text_c323232"
+                android:textSize="13dp"
+                dailyFont:style="Medium"/>
+        </FrameLayout>
+    </android.support.design.widget.CoordinatorLayout>
+</layout>

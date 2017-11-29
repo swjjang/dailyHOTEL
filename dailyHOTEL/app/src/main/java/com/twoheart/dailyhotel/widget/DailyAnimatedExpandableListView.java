@@ -153,8 +153,10 @@ public class DailyAnimatedExpandableListView extends ExpandableListView
      * @return Returns true if the group was collapsed. False if the group was
      * already collapsed.
      */
-    public boolean collapseGroupWithAnimation(int groupPos)
+    public boolean collapseGroupWithAnimation(int groupPos, OnAnimationListener onAnimationListener)
     {
+        mOnAnimationListener = onAnimationListener;
+
         int groupFlatPos = getFlatListPosition(getPackedPositionForGroup(groupPos));
         if (groupFlatPos != -1)
         {
@@ -491,6 +493,11 @@ public class DailyAnimatedExpandableListView extends ExpandableListView
                             notifyDataSetChanged();
                             info.dummyHeight = -1;
                             dummyView.setTag(STATE_IDLE);
+
+                            if (mOnAnimationListener != null)
+                            {
+                                mOnAnimationListener.onAnimationEnd();
+                            }
                         }
 
                         @Override

@@ -388,7 +388,7 @@ public class HomeCategoryRegionListLayout extends BaseLayout
                 {
                     RegionViewItem regionViewItem = mAdapter.getAreaItem(groupPosition);
 
-                    mListView.collapseGroupWithAnimation(groupPosition);
+                    mListView.collapseGroupWithAnimation(groupPosition, null);
 
                     View groupView = getGroupView(groupPosition);
 
@@ -452,7 +452,7 @@ public class HomeCategoryRegionListLayout extends BaseLayout
                 {
                     if (previousGroupPosition == groupPosition)
                     {
-                        mListView.collapseGroupWithAnimation(previousGroupPosition);
+                        mListView.collapseGroupWithAnimation(previousGroupPosition, null);
 
                         View preGroupView = getGroupView(previousGroupPosition);
 

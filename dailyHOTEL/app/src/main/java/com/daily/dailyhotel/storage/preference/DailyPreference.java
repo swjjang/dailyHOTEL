@@ -9,8 +9,6 @@ import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
-import com.twoheart.dailyhotel.model.PlacePaymentInformation;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -26,7 +24,7 @@ public class DailyPreference
     // "dailyHOTEL_v1" Preference
     /////////////////////////////////////////////////////////////////////////////////////////
 
-//    private static final String KEY_OPENING_ALARM = "1"; // 알람
+    //    private static final String KEY_OPENING_ALARM = "1"; // 알람
     //    private static final String KEY_LAST_MENU = "3"; // 마지막 메뉴 리스트가 무엇인지
     //    private static final String KEY_SHOW_GUIDE = "4"; // 가이드를 봤는지 여부
     //    private static final String KEY_ALLOW_PUSH = "5";
@@ -36,11 +34,11 @@ public class DailyPreference
     //    private static final String KEY_SOCIAL_SIGNUP = "11"; // 회원가입시 소셜 가입자인 경우
 
     // version - 2.0.4 로 강업 이후 삭제 필요 부분
-//    @Deprecated
-//    private static final String KEY_HOTEL_REGION_ISOVERSEA = "12"; // 현재 선택된 지역이 국내/해외
+    //    @Deprecated
+    //    private static final String KEY_HOTEL_REGION_ISOVERSEA = "12"; // 현재 선택된 지역이 국내/해외
     // version - 2.0.4 로 강업 이후 삭제 필요 부분
-//    @Deprecated
-//    private static final String KEY_GOURMET_REGION_ISOVERSEA = "13"; // 현재 선택된 지역이 국내/해외
+    //    @Deprecated
+    //    private static final String KEY_GOURMET_REGION_ISOVERSEA = "13"; // 현재 선택된 지역이 국내/해외
 
     private static final String KEY_NEW_EVENT = "14"; // 현재 이벤트 유무
     private static final String KEY_NEW_COUPON = "15"; // 현재 새로운 쿠폰 유무(로그인 사용자만 보임)
@@ -89,7 +87,7 @@ public class DailyPreference
     private static final String KEY_PREVIEW_GUIDE = "215";
     private static final String KEY_APP_PERMISSIONS_GUIDE = "216";
 
-//    @Deprecated
+    //    @Deprecated
     //    private static final String KEY_STAY_OUTBOUND_SEARCH_CALENDAR = "217"; // 최초에 1회 캘린더 띄우기
     private static final String KEY_GOURMET_PRODUCT_DETAIL_GUIDE = "220"; // 최초에 1회 고메 상세 가이드 띄우기
 
@@ -99,7 +97,7 @@ public class DailyPreference
     private static final String KEY_STAY_OUTBOUND_SEARCH_PEOPLE = "224"; // 아웃바운드 검색 숙박인원
 
     // ----> DailyPreference 로 이동
-//    private static final String KEY_AUTHORIZATION = "1000";
+    //    private static final String KEY_AUTHORIZATION = "1000";
     // <-----
 
     private static final String KEY_VERIFICATION = "1001";
@@ -124,24 +122,24 @@ public class DailyPreference
     /////////////////////////////////////////////////////////////////////////////////////////
 
     // Setting
-//    private static final String KEY_SETTING_GCM_ID = "1002";
+    //    private static final String KEY_SETTING_GCM_ID = "1002";
     private static final String KEY_SETTING_VERSION_SKIP_MAX_VERSION = "1004";
 
     // Setting - Region - Old 2017.04.07
     // version - 2.0.4 로 강업 이후 삭제 필요 부분
-//    @Deprecated
-//    private static final String KEY_SETTING_REGION_STAY_SELECT = "1110";
+    //    @Deprecated
+    //    private static final String KEY_SETTING_REGION_STAY_SELECT = "1110";
     //        private static final String KEY_SETTING_REGION_STAY_SETTING = "1111"; // home 이후 사용안하는 부분
     // version - 2.0.4 로 강업 이후 삭제 필요 부분
-//    @Deprecated
-//    private static final String KEY_SETTING_REGION_STAY_SETTINGN_PROVINCE_STAY_SELECT = "1112"; // adjust
+    //    @Deprecated
+    //    private static final String KEY_SETTING_REGION_STAY_SETTINGN_PROVINCE_STAY_SELECT = "1112"; // adjust
     // version - 2.0.4 로 강업 이후 삭제 필요 부분
-//    @Deprecated
-//    private static final String KEY_SETTING_REGION_FNB_SELECT = "1120";
+    //    @Deprecated
+    //    private static final String KEY_SETTING_REGION_FNB_SELECT = "1120";
     //        private static final String KEY_SETTING_REGION_FNB_SETTING = "1121"; // home 이후 사용안하는 부분
     // version - 2.0.4 로 강업 이후 삭제 필요 부분
-//    @Deprecated
-//    private static final String KEY_SETTING_REGION_PROVINCE_FNB_SELECT = "1122"; // adjust
+    //    @Deprecated
+    //    private static final String KEY_SETTING_REGION_PROVINCE_FNB_SELECT = "1122"; // adjust
     // Setting - Region New 2017.04.07 - 스테이 호텔 구분 안하고 전체를 다 개별 카테고리로 봄
     private static final String KEY_SETTING_REGION_STAY_ALL = "1130";
     private static final String KEY_SETTING_REGION_GOURMET_ALL = "1131";
@@ -155,26 +153,26 @@ public class DailyPreference
 
     // User
     // -----> DailyUserPreference 로 이동
-//    private static final String KEY_USER_EMAIL = "2001";
-//    private static final String KEY_USER_TYPE = "2002";
-//    private static final String KEY_USER_NAME = "2003";
-//    private static final String KEY_USER_RECOMMENDER = "2004";
-//    private static final String KEY_USER_BENEFIT_ALARM = "2005";
-//    private static final String KEY_USER_IS_EXCEED_BONUS = "2006";
-//    private static final String KEY_USER_BIRTHDAY = "2007";
-//
-//
-//    private static final String KEY_PAYMENT_OVERSEAS_NAME = "4000";
-//    private static final String KEY_PAYMENT_OVERSEAS_PHONE = "4001";
-//    private static final String KEY_PAYMENT_OVERSEAS_EMAIL = "4002";
+    //    private static final String KEY_USER_EMAIL = "2001";
+    //    private static final String KEY_USER_TYPE = "2002";
+    //    private static final String KEY_USER_NAME = "2003";
+    //    private static final String KEY_USER_RECOMMENDER = "2004";
+    //    private static final String KEY_USER_BENEFIT_ALARM = "2005";
+    //    private static final String KEY_USER_IS_EXCEED_BONUS = "2006";
+    //    private static final String KEY_USER_BIRTHDAY = "2007";
+    //
+    //
+    //    private static final String KEY_PAYMENT_OVERSEAS_NAME = "4000";
+    //    private static final String KEY_PAYMENT_OVERSEAS_PHONE = "4001";
+    //    private static final String KEY_PAYMENT_OVERSEAS_EMAIL = "4002";
     // <------
 
     // Payment
-//    private static final String KEY_PAYMENT_INFORMATION = "4003";
+    //    private static final String KEY_PAYMENT_INFORMATION = "4003";
 
 
     // payment - Virtual Account
-//    private static final String KEY_PAYMENT_ACCOUNT_READY_FLAG = "4100";
+    //    private static final String KEY_PAYMENT_ACCOUNT_READY_FLAG = "4100";
 
     // Event
     private static final String KEY_EVENT_LATEST_EVENT_TIME = "6100";

@@ -693,7 +693,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         analyticsParam.discountPrice = stay.discountPrice;
         analyticsParam.price = stay.price;
         analyticsParam.setShowOriginalPriceYn(analyticsParam.price, analyticsParam.discountPrice);
-        analyticsParam.setProvince(null);
+        analyticsParam.setTown(null);
         analyticsParam.entryPosition = stay.entryPosition;
         analyticsParam.totalListCount = count;
         analyticsParam.isDailyChoice = stay.isDailyChoice;

@@ -45,70 +45,72 @@ public class GourmetSearchResultListLayout extends GourmetListLayout
     }
 
     @Override
-    public void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, boolean isCurrentPage)
+    public void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, Constants.EmptyStatus emptyStatus, boolean isCurrentPage)
     {
-        switch (viewType)
+        if (emptyStatus == Constants.EmptyStatus.EMPTY)
         {
-            case LIST:
-                mEmptyView.setVisibility(View.GONE);
-                mMapLayout.setVisibility(View.GONE);
+            GourmetCurationOption GourmetCurationOption = mGourmetCuration == null //
+                ? new GourmetCurationOption() //
+                : (GourmetCurationOption) mGourmetCuration.getCurationOption();
+
+            if (GourmetCurationOption.isDefaultFilter() == true)
+            {
+                mEmptyView.setVisibility(View.VISIBLE);
                 mFilterEmptyView.setVisibility(View.GONE);
-                mResultTextView.setVisibility(View.VISIBLE);
-
-                if (mPlaceListMapFragment != null)
-                {
-                    mPlaceListMapFragment.resetMenuBarLayoutTranslation();
-                    fragmentManager.beginTransaction().remove(mPlaceListMapFragment).commitAllowingStateLoss();
-                    mMapLayout.removeAllViews();
-                    mPlaceListMapFragment = null;
-                }
-
-                mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-                break;
-
-            case MAP:
-                mResultTextView.setVisibility(View.GONE);
+            } else
+            {
                 mEmptyView.setVisibility(View.GONE);
-                mMapLayout.setVisibility(View.VISIBLE);
-                mFilterEmptyView.setVisibility(View.GONE);
+                mFilterEmptyView.setVisibility(View.VISIBLE);
+            }
 
-                if (isCurrentPage == true && mPlaceListMapFragment == null)
-                {
-                    try
-                    {
-                        mPlaceListMapFragment = new GourmetListMapFragment();
-                        mPlaceListMapFragment.setBottomOptionLayout(mBottomOptionLayout);
-                        fragmentManager.beginTransaction().add(mMapLayout.getId(), mPlaceListMapFragment).commitAllowingStateLoss();
-                    } catch (IllegalStateException e)
-                    {
-                        Crashlytics.log("GourmetSearchResultListLayout");
-                        Crashlytics.logException(e);
-                    }
-                }
+            mMapLayout.setVisibility(View.GONE);
+            mResultTextView.setVisibility(View.GONE);
 
-                mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
-                break;
-
-            case GONE:
-                GourmetCurationOption GourmetCurationOption = mGourmetCuration == null //
-                    ? new GourmetCurationOption() //
-                    : (GourmetCurationOption) mGourmetCuration.getCurationOption();
-
-                if (GourmetCurationOption.isDefaultFilter() == true)
-                {
-                    mEmptyView.setVisibility(View.VISIBLE);
-                    mFilterEmptyView.setVisibility(View.GONE);
-                } else
-                {
+            mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
+        } else
+        {
+            switch (viewType)
+            {
+                case LIST:
                     mEmptyView.setVisibility(View.GONE);
-                    mFilterEmptyView.setVisibility(View.VISIBLE);
-                }
+                    mMapLayout.setVisibility(View.GONE);
+                    mFilterEmptyView.setVisibility(View.GONE);
+                    mResultTextView.setVisibility(View.VISIBLE);
 
-                mMapLayout.setVisibility(View.GONE);
-                mResultTextView.setVisibility(View.GONE);
+                    if (mPlaceListMapFragment != null)
+                    {
+                        mPlaceListMapFragment.resetMenuBarLayoutTranslation();
+                        fragmentManager.beginTransaction().remove(mPlaceListMapFragment).commitAllowingStateLoss();
+                        mMapLayout.removeAllViews();
+                        mPlaceListMapFragment = null;
+                    }
 
-                mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
-                break;
+                    mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+                    break;
+
+                case MAP:
+                    mResultTextView.setVisibility(View.GONE);
+                    mEmptyView.setVisibility(View.GONE);
+                    mMapLayout.setVisibility(View.VISIBLE);
+                    mFilterEmptyView.setVisibility(View.GONE);
+
+                    if (isCurrentPage == true && mPlaceListMapFragment == null)
+                    {
+                        try
+                        {
+                            mPlaceListMapFragment = new GourmetListMapFragment();
+                            mPlaceListMapFragment.setBottomOptionLayout(mBottomOptionLayout);
+                            fragmentManager.beginTransaction().add(mMapLayout.getId(), mPlaceListMapFragment).commitAllowingStateLoss();
+                        } catch (IllegalStateException e)
+                        {
+                            Crashlytics.log("GourmetSearchResultListLayout");
+                            Crashlytics.logException(e);
+                        }
+                    }
+
+                    mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
+                    break;
+            }
         }
     }
 

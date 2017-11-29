@@ -3,9 +3,8 @@ package com.daily.dailyhotel.parcel.analytics;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.daily.base.util.DailyTextUtils;
-import com.twoheart.dailyhotel.model.Area;
-import com.twoheart.dailyhotel.model.Province;
+import com.daily.dailyhotel.entity.StayTown;
+import com.daily.dailyhotel.parcel.StayTownParcel;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -20,7 +19,7 @@ public class StayPaymentAnalyticsParam implements Parcelable
     public int averageDiscount; // 평균 가격
     public String address;
     public boolean dailyChoice;
-    public Province province;
+    private StayTown mTown;
     public String addressAreaName;
     public Stay.Grade grade;
     public boolean provideRewardSticker;
@@ -34,37 +33,34 @@ public class StayPaymentAnalyticsParam implements Parcelable
         readFromParcel(in);
     }
 
+    public void setTown(StayTown town)
+    {
+        mTown = town;
+    }
+
+    public StayTown getTown()
+    {
+        return mTown;
+    }
+
     public String getAnalyticsProvinceName()
     {
-        if (this.province == null)
+        if (mTown == null)
         {
             return AnalyticsManager.ValueType.EMPTY;
         }
 
-        if (this.province instanceof Area)
-        {
-            Area area = (Area) this.province;
-            return area.getProvince().name;
-        }
-
-        return this.province.name;
+        return mTown.getDistrict().name;
     }
 
     public String getAnalyticsDistrictName()
     {
-        if (this.province == null)
+        if (mTown == null)
         {
             return AnalyticsManager.ValueType.EMPTY;
         }
 
-        if (this.province instanceof Area)
-        {
-            Area area = (Area) this.province;
-            String provinceName = area.getProvince().name;
-            return DailyTextUtils.isTextEmpty(provinceName) == false ? area.name : AnalyticsManager.ValueType.EMPTY;
-        }
-
-        return AnalyticsManager.ValueType.ALL_LOCALE_KR;
+        return mTown.index == StayTown.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : mTown.name;
     }
 
     public String getAnalyticsAddressAreaName()
@@ -84,7 +80,16 @@ public class StayPaymentAnalyticsParam implements Parcelable
         dest.writeInt(averageDiscount);
         dest.writeString(address);
         dest.writeInt(dailyChoice ? 1 : 0);
-        dest.writeParcelable(province, flags);
+
+        if (mTown == null)
+        {
+            dest.writeParcelable(null, flags);
+        } else
+        {
+            dest.writeParcelable(new StayTownParcel(mTown), flags);
+        }
+
+        dest.writeParcelable(new StayTownParcel(mTown), flags);
         dest.writeString(addressAreaName);
         dest.writeString(grade.name());
         dest.writeInt(provideRewardSticker ? 1 : 0);
@@ -101,7 +106,14 @@ public class StayPaymentAnalyticsParam implements Parcelable
         averageDiscount = in.readInt();
         address = in.readString();
         dailyChoice = in.readInt() == 1 ? true : false;
-        province = in.readParcelable(Province.class.getClassLoader());
+
+        StayTownParcel stayTownParcel = in.readParcelable(StayTownParcel.class.getClassLoader());
+
+        if (stayTownParcel != null)
+        {
+            mTown = stayTownParcel.getStayTown();
+        }
+
         addressAreaName = in.readString();
 
         try

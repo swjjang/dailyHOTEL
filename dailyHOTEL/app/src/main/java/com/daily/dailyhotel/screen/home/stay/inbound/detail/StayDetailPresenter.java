@@ -345,8 +345,8 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             mImageUrl = intent.getStringExtra(StayDetailActivity.INTENT_EXTRA_DATA_IMAGE_URL);
             mPriceFromList = intent.getIntExtra(StayDetailActivity.INTENT_EXTRA_DATA_LIST_PRICE, StayDetailActivity.NONE_PRICE);
 
-            String checkInDateTime = intent.getStringExtra(StayDetailActivity.INTENT_EXTRA_DATA_CHECK_IN);
-            String checkOutDateTime = intent.getStringExtra(StayDetailActivity.INTENT_EXTRA_DATA_CHECK_OUT);
+            String checkInDateTime = intent.getStringExtra(StayDetailActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME);
+            String checkOutDateTime = intent.getStringExtra(StayDetailActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME);
 
             setStayBookDateTime(checkInDateTime, checkOutDateTime);
 
@@ -1298,7 +1298,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             });
         } else
         {
-            startActivityForResult(TrueVRActivity.newInstance(getActivity(), mStayDetail.index, (ArrayList) mTrueVRList//
+            startActivityForResult(TrueVRActivity.newInstance(getActivity(), mStayDetail.index, mTrueVRList//
                 , Constants.PlaceType.HOTEL, mStayDetail.category), StayDetailActivity.REQUEST_CODE_TRUE_VR);
         }
 

@@ -1311,6 +1311,7 @@
     <string name="label_home_category_guest_house">게스트하우스</string>
     <string name="label_home_category_stay_nearby">내주변</string>
 
+    <string name="code_home_category_all">all</string>
     <string name="code_home_category_hotel">hotel</string>
     <string name="code_home_category_boutique">boutique</string>
     <string name="code_home_category_pension">pension</string>

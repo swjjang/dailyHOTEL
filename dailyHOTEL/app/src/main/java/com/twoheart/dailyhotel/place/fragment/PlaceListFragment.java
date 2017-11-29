@@ -162,10 +162,10 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
         }
     }
 
-    public void setVisibility(ViewType viewType, boolean isCurrentPage)
+    public void setVisibility(ViewType viewType, Constants.EmptyStatus emptyStatus, boolean isCurrentPage)
     {
         mViewType = viewType;
-        mPlaceListLayout.setVisibility(getChildFragmentManager(), viewType, isCurrentPage);
+        mPlaceListLayout.setVisibility(getChildFragmentManager(), viewType, emptyStatus, isCurrentPage);
 
         mOnPlaceListFragmentListener.onShowMenuBar();
     }

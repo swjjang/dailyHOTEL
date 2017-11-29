@@ -31,8 +31,8 @@ public class StayOutboundListActivity extends BaseActivity<StayOutboundListPrese
     static final int REQUEST_CODE_PREVIEW = 10007;
 
     static final String INTENT_EXTRA_DATA_SUGGEST = "suggest";
-    static final String INTENT_EXTRA_DATA_CHECK_IN = "checkIn";
-    static final String INTENT_EXTRA_DATA_CHECK_OUT = "checkOut";
+    static final String INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME = "checkInDateTime";
+    static final String INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME = "checkOutDateTime";
     static final String INTENT_EXTRA_DATA_KEYWORD = "keyword";
     static final String INTENT_EXTRA_DATA_NUMBER_OF_ADULTS = "numberOfAdults";
     static final String INTENT_EXTRA_DATA_CHILD_LIST = "childList";
@@ -53,8 +53,8 @@ public class StayOutboundListActivity extends BaseActivity<StayOutboundListPrese
     {
         Intent intent = new Intent(context, StayOutboundListActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new SuggestParcel(suggest));
-        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN, checkInDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT, checkOutDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, numberOfAdults);
         intent.putExtra(INTENT_EXTRA_DATA_CHILD_LIST, childAgeList);
         intent.putExtra(INTENT_EXTRA_DATA_ANALYTICS, analyticsParam);
@@ -65,8 +65,8 @@ public class StayOutboundListActivity extends BaseActivity<StayOutboundListPrese
     //    {
     //        Intent intent = new Intent(context, StayOutboundListActivity.class);
     //        intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, keyword);
-    //        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN, checkInDateTime);
-    //        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT, checkOutDateTime);
+    //        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
+    //        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
     //        intent.putExtra(INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, numberOfAdults);
     //        intent.putExtra(INTENT_EXTRA_DATA_CHILD_LIST, childAgeList);
     //        return intent;

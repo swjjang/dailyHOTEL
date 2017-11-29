@@ -230,7 +230,7 @@ public abstract class PlaceRegionListFragment extends BaseFragment
                 {
                     RegionViewItem regionViewItem = mAdapter.getAreaItem(groupPosition);
 
-                    mListView.collapseGroupWithAnimation(groupPosition);
+                    mListView.collapseGroupWithAnimation(groupPosition, null);
 
                     View groupView = getGroupView(groupPosition);
 
@@ -454,7 +454,7 @@ public abstract class PlaceRegionListFragment extends BaseFragment
                 {
                     if (previousGroupPosition == groupPosition)
                     {
-                        mListView.collapseGroupWithAnimation(previousGroupPosition);
+                        mListView.collapseGroupWithAnimation(previousGroupPosition, null);
 
                         View preGroupView = getGroupView(previousGroupPosition);
 

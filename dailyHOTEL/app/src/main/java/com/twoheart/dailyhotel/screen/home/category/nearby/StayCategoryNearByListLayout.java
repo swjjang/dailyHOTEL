@@ -39,69 +39,86 @@ public class StayCategoryNearByListLayout extends StayListLayout
     }
 
     @Override
-    public void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, boolean isCurrentPage)
+    public void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, Constants.EmptyStatus emptyStatus, boolean isCurrentPage)
     {
-        switch (viewType)
+        if (emptyStatus == Constants.EmptyStatus.EMPTY)
         {
-            case LIST:
-                setScreenVisible(ScreenType.LIST);
-                mResultTextView.setVisibility(View.VISIBLE);
+            StayCurationOption stayCurationOption = mStayCuration == null //
+                ? new StayCurationOption() //
+                : (StayCurationOption) mStayCuration.getCurationOption();
 
-                if (mPlaceListMapFragment != null)
-                {
-                    mPlaceListMapFragment.resetMenuBarLayoutTranslation();
-                    fragmentManager.beginTransaction().remove(mPlaceListMapFragment).commitAllowingStateLoss();
-                    mMapLayout.removeAllViews();
-                    mPlaceListMapFragment = null;
-                }
-
+            if (stayCurationOption.isDefaultFilter() == true)
+            {
+                setScreenVisible(ScreenType.EMPTY);
+                mFilterEmptyView.setVisibility(View.GONE);
+                ((StayCategoryNearByListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(false);
+            } else
+            {
+                setScreenVisible(ScreenType.FILTER_EMPTY);
                 ((StayCategoryNearByListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
-                ((StayCategoryNearByListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
-                break;
+            }
 
-            case MAP:
-                setScreenVisible(ScreenType.MAP);
-                mResultTextView.setVisibility(View.GONE);
+            mResultTextView.setVisibility(View.GONE);
 
-                if (isCurrentPage == true && mPlaceListMapFragment == null)
-                {
-                    try
-                    {
-                        mPlaceListMapFragment = new StayListMapFragment();
-                        mPlaceListMapFragment.setBottomOptionLayout(mBottomOptionLayout);
-                        fragmentManager.beginTransaction().add(mMapLayout.getId(), mPlaceListMapFragment).commitAllowingStateLoss();
-                    } catch (IllegalStateException e)
-                    {
-                        Crashlytics.log("StayCategoryNearByListLayout");
-                        Crashlytics.logException(e);
-                    }
-                }
-
-                mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
-
-                ((StayCategoryNearByListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
-                ((StayCategoryNearByListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
-                break;
-
-            case GONE:
-                StayCurationOption stayCurationOption = mStayCuration == null //
-                    ? new StayCurationOption() //
-                    : (StayCurationOption) mStayCuration.getCurationOption();
-
-                if (stayCurationOption.isDefaultFilter() == true)
-                {
-                    setScreenVisible(ScreenType.EMPTY);
-                    mFilterEmptyView.setVisibility(View.GONE);
-                    ((StayCategoryNearByListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(false);
-                } else
-                {
-                    setScreenVisible(ScreenType.FILTER_EMPTY);
-                    ((StayCategoryNearByListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
-                }
-
-                mResultTextView.setVisibility(View.GONE);
+            if (viewType == Constants.ViewType.LIST)
+            {
                 ((StayCategoryNearByListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(false);
-                break;
+            } else
+            {
+                ((StayCategoryNearByListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
+            }
+        } else
+        {
+            switch (viewType)
+            {
+                case LIST:
+                    setScreenVisible(ScreenType.LIST);
+                    mResultTextView.setVisibility(View.VISIBLE);
+
+                    if (mPlaceListMapFragment != null)
+                    {
+                        mPlaceListMapFragment.resetMenuBarLayoutTranslation();
+                        fragmentManager.beginTransaction().remove(mPlaceListMapFragment).commitAllowingStateLoss();
+                        mMapLayout.removeAllViews();
+                        mPlaceListMapFragment = null;
+                    }
+
+                    ((StayCategoryNearByListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
+
+                    if (emptyStatus != Constants.EmptyStatus.NONE)
+                    {
+                        ((StayCategoryNearByListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
+                    }
+                    break;
+
+                case MAP:
+                    setScreenVisible(ScreenType.MAP);
+                    mResultTextView.setVisibility(View.GONE);
+
+                    if (isCurrentPage == true && mPlaceListMapFragment == null)
+                    {
+                        try
+                        {
+                            mPlaceListMapFragment = new StayListMapFragment();
+                            mPlaceListMapFragment.setBottomOptionLayout(mBottomOptionLayout);
+                            fragmentManager.beginTransaction().add(mMapLayout.getId(), mPlaceListMapFragment).commitAllowingStateLoss();
+                        } catch (IllegalStateException e)
+                        {
+                            Crashlytics.log("StayCategoryNearByListLayout");
+                            Crashlytics.logException(e);
+                        }
+                    }
+
+                    mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
+
+                    ((StayCategoryNearByListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
+
+                    if (emptyStatus != Constants.EmptyStatus.NONE)
+                    {
+                        ((StayCategoryNearByListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
+                    }
+                    break;
+            }
         }
     }
 
