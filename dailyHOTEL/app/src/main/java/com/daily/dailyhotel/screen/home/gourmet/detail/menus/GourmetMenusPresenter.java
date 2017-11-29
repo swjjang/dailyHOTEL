@@ -136,7 +136,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         {
             mGourmetMenuList.add(gourmetMenuParcel.getGourmetMenu());
 
-            ExLog.d("pinkred : " + gourmetMenuParcel.getGourmetMenu().minimumOrderQuantity + ", " + gourmetMenuParcel.getGourmetMenu().maximumOrderQuantity + ", " + gourmetMenuParcel.getGourmetMenu().saleOrderQuantity);
+            ExLog.d("pinkred : " + gourmetMenuParcel.getGourmetMenu().minimumOrderQuantity + ", " + gourmetMenuParcel.getGourmetMenu().maximumOrderQuantity + ", " + gourmetMenuParcel.getGourmetMenu().availableTicketNumbers);
         }
 
         mPosition = intent.getIntExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_POSITION, 0);
@@ -1079,7 +1079,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         GourmetMenu gourmetMenu = getGourmetMenu(menuIndex);
         int currentMenuOrderCount = mGourmetCart.getMenuOrderCount(menuIndex);
 
-        if (gourmetMenu.minimumOrderQuantity <= gourmetMenu.saleOrderQuantity)
+        if (gourmetMenu.minimumOrderQuantity <= gourmetMenu.availableTicketNumbers)
         {
             // 처음 주문하는 경우 최소 수량 주문 필요.
             if (currentMenuOrderCount == 0)
@@ -1093,7 +1093,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
                 // 주문 메뉴는 최대 개수 혹은 남은 개수를 초과하지 못한다.
                 getViewInterface().showSimpleDialog(null, getString(R.string.message_gourmet_detail_max_quantity, gourmetMenu.maximumOrderQuantity), getString(R.string.dialog_btn_text_confirm), null);
                 return false;
-            } else if (currentMenuOrderCount >= gourmetMenu.saleOrderQuantity)
+            } else if (currentMenuOrderCount >= gourmetMenu.availableTicketNumbers)
             {
                 getViewInterface().showToast(R.string.message_gourmet_detail_not_enough_quantity, DailyToast.LENGTH_LONG);
             } else
@@ -1105,7 +1105,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             return false;
         }
 
-        getViewInterface().setMenuOrderCount(menuIndex, mGourmetCart.getMenuOrderCount(menuIndex), gourmetMenu.minimumOrderQuantity, gourmetMenu.maximumOrderQuantity, gourmetMenu.saleOrderQuantity);
+        getViewInterface().setMenuOrderCount(menuIndex, mGourmetCart.getMenuOrderCount(menuIndex), gourmetMenu.minimumOrderQuantity, gourmetMenu.maximumOrderQuantity, gourmetMenu.availableTicketNumbers);
 
         getViewInterface().setSummeryCart(openedCartMenus ? getString(R.string.label_gourmet_product_detail_booking_total_price//
             , DailyTextUtils.getPriceFormat(getActivity(), mGourmetCart.getTotalPrice(), false))//
@@ -1140,7 +1140,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             return false;
         }
 
-        getViewInterface().setMenuOrderCount(menuIndex, mGourmetCart.getMenuOrderCount(gourmetMenu.index), gourmetMenu.minimumOrderQuantity, gourmetMenu.maximumOrderQuantity, gourmetMenu.saleOrderQuantity);
+        getViewInterface().setMenuOrderCount(menuIndex, mGourmetCart.getMenuOrderCount(gourmetMenu.index), gourmetMenu.minimumOrderQuantity, gourmetMenu.maximumOrderQuantity, gourmetMenu.availableTicketNumbers);
 
         getViewInterface().setSummeryCart(openedCartMenus ? getString(R.string.label_gourmet_product_detail_booking_total_price//
             , DailyTextUtils.getPriceFormat(getActivity(), mGourmetCart.getTotalPrice(), false))//

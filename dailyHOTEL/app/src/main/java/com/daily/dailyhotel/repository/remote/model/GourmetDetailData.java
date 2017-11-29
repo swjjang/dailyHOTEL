@@ -229,7 +229,6 @@ public class GourmetDetailData
         {
 
         }
-
     }
 
     @JsonObject
@@ -259,8 +258,8 @@ public class GourmetDetailData
         @JsonField(name = "maximumOrderQuantity")
         public int maximumOrderQuantity;
 
-        @JsonField(name = "saleOrderQuantity")
-        public int saleOrderQuantity;
+        @JsonField(name = "availableTicketNumbers")
+        public int availableTicketNumbers;
 
         @JsonField(name = "startEatingTime")
         public String startEatingTime;
@@ -341,7 +340,7 @@ public class GourmetDetailData
             gourmetMenu.persons = persons;
             gourmetMenu.minimumOrderQuantity = minimumOrderQuantity;
             gourmetMenu.maximumOrderQuantity = maximumOrderQuantity;
-            gourmetMenu.saleOrderQuantity = saleOrderQuantity = 99;
+            gourmetMenu.availableTicketNumbers = availableTicketNumbers;
 
             if (DailyTextUtils.isTextEmpty(startEatingTime) == false)
             {

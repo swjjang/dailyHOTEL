@@ -2173,7 +2173,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                         hasMenu = true;
 
                         // 수량
-                        if (gourmetCartMenu.count <= gourmetMenu.saleOrderQuantity)
+                        if (gourmetCartMenu.count <= gourmetMenu.availableTicketNumbers)
                         {
                             hasOrderQuantity = true;
                         }

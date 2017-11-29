@@ -52,7 +52,7 @@ public class GourmetMenuParcel implements Parcelable
         dest.writeInt(mGourmetMenu.persons);
         dest.writeInt(mGourmetMenu.minimumOrderQuantity);
         dest.writeInt(mGourmetMenu.maximumOrderQuantity);
-        dest.writeInt(mGourmetMenu.saleOrderQuantity);
+        dest.writeInt(mGourmetMenu.availableTicketNumbers);
         dest.writeString(mGourmetMenu.startEatingTime);
         dest.writeString(mGourmetMenu.endEatingTime);
         dest.writeString(mGourmetMenu.readyTime);
@@ -94,7 +94,7 @@ public class GourmetMenuParcel implements Parcelable
         mGourmetMenu.persons = in.readInt();
         mGourmetMenu.minimumOrderQuantity = in.readInt();
         mGourmetMenu.maximumOrderQuantity = in.readInt();
-        mGourmetMenu.saleOrderQuantity = in.readInt();
+        mGourmetMenu.availableTicketNumbers = in.readInt();
         mGourmetMenu.startEatingTime = in.readString();
         mGourmetMenu.endEatingTime = in.readString();
         mGourmetMenu.readyTime = in.readString();

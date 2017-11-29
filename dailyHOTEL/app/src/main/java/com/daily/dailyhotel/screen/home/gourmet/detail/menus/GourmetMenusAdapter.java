@@ -236,7 +236,7 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
         holder.dataBinding.discountPriceTextView.setText(discountPrice);
 
         //
-        setMenuOrderCount(holder, position, gourmetMenu.orderCount, gourmetMenu.minimumOrderQuantity, gourmetMenu.maximumOrderQuantity, gourmetMenu.saleOrderQuantity);
+        setMenuOrderCount(holder, position, gourmetMenu.orderCount, gourmetMenu.minimumOrderQuantity, gourmetMenu.maximumOrderQuantity, gourmetMenu.availableTicketNumbers);
 
         holder.dataBinding.orderCountMinusView.setOnClickListener(new View.OnClickListener()
         {

@@ -302,7 +302,7 @@ public class GourmetCart
         gourmetCartMenu.persons = gourmetMenu.persons;
         gourmetCartMenu.minimumOrderQuantity = gourmetMenu.minimumOrderQuantity;
         gourmetCartMenu.maximumOrderQuantity = gourmetMenu.maximumOrderQuantity;
-        gourmetCartMenu.saleOrderQuantity = gourmetMenu.saleOrderQuantity;
+        gourmetCartMenu.saleOrderQuantity = gourmetMenu.availableTicketNumbers;
 
         return gourmetCartMenu;
     }
