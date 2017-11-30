@@ -45,8 +45,6 @@ public class Gourmet extends Place
     public String needToKnow;
     public String openTime;
     public int pricePerPerson;
-    public String primaryTicketImageDescription;
-    public String primaryTicketImageUrl;
     public String startEatingTime;
     public int ticketIdx;
 
@@ -102,8 +100,6 @@ public class Gourmet extends Place
         dest.writeString(needToKnow);
         dest.writeString(openTime);
         dest.writeInt(pricePerPerson);
-        dest.writeString(primaryTicketImageDescription);
-        dest.writeString(primaryTicketImageUrl);
         dest.writeString(startEatingTime);
         dest.writeInt(ticketIdx);
     }
@@ -133,8 +129,6 @@ public class Gourmet extends Place
         needToKnow = in.readString();
         openTime = in.readString();
         pricePerPerson = in.readInt();
-        primaryTicketImageDescription = in.readString();
-        primaryTicketImageUrl = in.readString();
         startEatingTime = in.readString();
         ticketIdx = in.readInt();
     }

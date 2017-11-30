@@ -53,6 +53,9 @@ public abstract class PlaceWishItem<T>
     @JsonField(name = "myWish")
     public boolean myWish;
 
+    @JsonField(name = "createAt")
+    public String createAt;
+
     @JsonIgnore
     public String imageUrl;
 

@@ -63,6 +63,12 @@ public class StayOutboundData
     @JsonField(name = "provideRewardSticker")
     public boolean provideRewardSticker;
 
+    @JsonField(name = "myWish")
+    public boolean myWish;
+
+    @JsonField(name = "createAt")
+    public String createAt;
+
     public StayOutboundData()
     {
 
@@ -96,6 +102,8 @@ public class StayOutboundData
         }
 
         stayOutbound.provideRewardSticker = provideRewardSticker;
+        stayOutbound.myWish = myWish;
+        stayOutbound.createAt = createAt;
 
         return stayOutbound;
     }

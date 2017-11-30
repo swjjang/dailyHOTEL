@@ -35,14 +35,7 @@ public class StayWishListNetworkController extends BaseNetworkController
 
     public interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onStayWishList(ArrayList<Stay> list);
-
         void onRemoveStayWishListItem(boolean isSuccess, String message, int placeIndex);
-    }
-
-    public void requestStayWishList()
-    {
-        DailyMobileAPI.getInstance(mContext).requestStayWishList(mNetworkTag, mWishListCallback);
     }
 
     public void requestRemoveStayWishListItem(int placeIndex)
@@ -50,100 +43,6 @@ public class StayWishListNetworkController extends BaseNetworkController
         DailyMobileAPI.getInstance(mContext).requestRemoveWishList(mNetworkTag, //
             "hotel", placeIndex, mRemoveWishListCallback);
     }
-
-
-    private retrofit2.Callback mWishListCallback = new retrofit2.Callback<BaseDto<PlaceWishItems<StayWishItem>>>()
-    {
-        @Override
-        public void onResponse(Call<BaseDto<PlaceWishItems<StayWishItem>>> call, Response<BaseDto<PlaceWishItems<StayWishItem>>> response)
-        {
-            if (response != null && response.isSuccessful() && response.body() != null)
-            {
-                try
-                {
-                    BaseDto<PlaceWishItems<StayWishItem>> baseDto = response.body();
-
-                    int msgCode = baseDto.msgCode;
-                    if (msgCode == 100)
-                    {
-                        PlaceWishItems<StayWishItem> placeWishItems = baseDto.data;
-                        if (placeWishItems == null)
-                        {
-                            if (DailyTextUtils.isTextEmpty(baseDto.msg) == false)
-                            {
-                                mOnNetworkControllerListener.onErrorToastMessage(baseDto.msg);
-                            } else
-                            {
-                                throw new NullPointerException("response == null");
-                            }
-                            return;
-                        }
-
-                        String imageUrl = placeWishItems.imgUrl;
-
-                        List<StayWishItem> stayWishItemList = placeWishItems.items;
-
-                        ArrayList<Stay> stayList;
-
-                        if (stayWishItemList != null)
-                        {
-                            stayList = makeStayList(stayWishItemList, imageUrl);
-                        } else
-                        {
-                            stayList = new ArrayList<>();
-                        }
-
-                        ((StayWishListNetworkController.OnNetworkControllerListener) mOnNetworkControllerListener).onStayWishList(stayList);
-                    } else
-                    {
-                        String message = baseDto.msg;
-
-                        Crashlytics.log(call.request().url().toString());
-                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, message);
-                    }
-                } catch (Exception e)
-                {
-                    mOnNetworkControllerListener.onError(e);
-                }
-            } else
-            {
-                mOnNetworkControllerListener.onErrorResponse(call, response);
-            }
-        }
-
-        @Override
-        public void onFailure(Call<BaseDto<PlaceWishItems<StayWishItem>>> call, Throwable t)
-        {
-            mOnNetworkControllerListener.onError(call, t, false);
-        }
-
-        private ArrayList<Stay> makeStayList(List<StayWishItem> stayWishItemList, String imageUrl) throws JSONException
-        {
-            if (stayWishItemList == null || stayWishItemList.size() == 0)
-            {
-                return new ArrayList<>();
-            }
-
-            int length = stayWishItemList.size();
-            ArrayList<Stay> stayList = new ArrayList<>(length);
-            StayWishItem stayWishItem;
-            Stay stay;
-
-            for (int i = 0; i < length; i++)
-            {
-                stayWishItem = stayWishItemList.get(i);
-
-                stay = new Stay();
-
-                if (stay.setStay(stayWishItem, imageUrl) == true)
-                {
-                    stayList.add(stay); // 추가.
-                }
-            }
-
-            return stayList;
-        }
-    };
 
     private retrofit2.Callback mRemoveWishListCallback = new retrofit2.Callback<JSONObject>()
     {

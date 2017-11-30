@@ -13,9 +13,18 @@ import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.entity.People;
+import com.daily.dailyhotel.entity.StayOutbound;
+import com.daily.dailyhotel.entity.StayWish;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
+import com.daily.dailyhotel.repository.remote.WishRemoteImpl;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
+import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
+import com.daily.dailyhotel.screen.home.stay.outbound.preview.StayOutboundPreviewActivity;
 import com.daily.dailyhotel.view.DailyStayCardView;
+import com.daily.dailyhotel.view.DailyStayOutboundCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
@@ -32,6 +41,8 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +51,8 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -49,9 +62,15 @@ import retrofit2.Response;
 
 public class StayWishListFragment extends PlaceWishListFragment
 {
+    WishRemoteImpl mWishRemoteImpl;
+
+    List<PlaceViewItem> mWishList;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
+        mWishRemoteImpl = new WishRemoteImpl(getContext());
+
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -128,7 +147,95 @@ public class StayWishListFragment extends PlaceWishListFragment
     {
         lockUI();
 
-        ((StayWishListNetworkController) mNetworkController).requestStayWishList();
+        addCompositeDisposable(Observable.zip(mWishRemoteImpl.getStayWishList(), mWishRemoteImpl.getStayOutboundWishList()//
+            , new BiFunction<List<StayWish>, List<StayOutbound>, List<PlaceViewItem>>()
+            {
+                @Override
+                public List<PlaceViewItem> apply(List<StayWish> stayList, List<StayOutbound> stayOutboundList) throws Exception
+                {
+                    List<PlaceViewItem> placeViewItemList = new ArrayList<>();
+
+                    for (StayWish stay : stayList)
+                    {
+                        placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, stay));
+                    }
+
+                    for (StayOutbound stayOutbound : stayOutboundList)
+                    {
+                        placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_OB_ENTRY, stayOutbound));
+                    }
+
+                    Comparator<PlaceViewItem> comparator = new Comparator<PlaceViewItem>()
+                    {
+                        public int compare(PlaceViewItem placeViewItem1, PlaceViewItem placeViewItem2)
+                        {
+                            String dateTime1 = getDateTime(placeViewItem1);
+                            String dateTime2 = getDateTime(placeViewItem2);
+
+                            if (dateTime1.equalsIgnoreCase(dateTime2) == true)
+                            {
+                                return getIndex(placeViewItem1) - getIndex(placeViewItem2);
+                            } else
+                            {
+                                return dateTime1.compareToIgnoreCase(dateTime2);
+                            }
+                        }
+
+                        private String getDateTime(PlaceViewItem placeViewItem)
+                        {
+                            switch (placeViewItem.mType)
+                            {
+                                case PlaceViewItem.TYPE_ENTRY:
+                                    return ((StayWish) placeViewItem.getItem()).createAt;
+
+                                case PlaceViewItem.TYPE_OB_ENTRY:
+                                    return ((StayOutbound) placeViewItem.getItem()).createAt;
+                            }
+
+                            // null은 나올수 없다.
+                            return null;
+                        }
+
+                        private int getIndex(PlaceViewItem placeViewItem)
+                        {
+                            switch (placeViewItem.mType)
+                            {
+                                case PlaceViewItem.TYPE_ENTRY:
+                                    return ((StayWish) placeViewItem.getItem()).index;
+
+                                case PlaceViewItem.TYPE_OB_ENTRY:
+                                    return ((StayOutbound) placeViewItem.getItem()).index;
+                            }
+
+                            return 0;
+                        }
+                    };
+
+                    Collections.sort(placeViewItemList, comparator);
+
+                    return placeViewItemList;
+                }
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<PlaceViewItem>>()
+        {
+            @Override
+            public void accept(List<PlaceViewItem> placeViewItemList) throws Exception
+            {
+                mWishList = placeViewItemList;
+
+                mWishList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
+
+                mListLayout.setData(mWishList, false);
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                onHandleError(throwable);
+            }
+        }));
+
+        //        ((StayWishListNetworkController) mNetworkController).requestStayWishList();
     }
 
     @Override
@@ -139,25 +246,265 @@ public class StayWishListFragment extends PlaceWishListFragment
         ((StayWishListNetworkController) mNetworkController).requestRemoveStayWishListItem(placeIndex);
     }
 
+    private void startStayPreview(View view, int position, Stay stay)
+    {
+        if (stay == null)
+        {
+            return;
+        }
+
+        mListLayout.setBlurVisibility(mBaseActivity, true);
+
+        mViewByLongPress = view;
+        mPositionByLongPress = position;
+
+        Intent intent = StayPreviewActivity.newInstance(mBaseActivity, (StayBookingDay) mPlaceBookingDay, stay);
+
+        mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
+    }
+
+    private void startStayOutboundPreview(View view, int position, StayOutbound stayOutbound)
+    {
+        if (stayOutbound == null)
+        {
+            return;
+        }
+
+        mListLayout.setBlurVisibility(mBaseActivity, true);
+
+        mViewByLongPress = view;
+        mPositionByLongPress = position;
+
+        StayBookingDay stayBookingDay = (StayBookingDay) mPlaceBookingDay;
+
+        String checkInDateTime = stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT);
+        String checkOutDateTime = stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT);
+
+        mBaseActivity.startActivityForResult(StayOutboundPreviewActivity.newInstance(getActivity(), stayOutbound.index//
+            , stayOutbound.name, checkInDateTime, checkOutDateTime, People.DEFAULT_ADULTS, null), CODE_REQUEST_ACTIVITY_PREVIEW);
+    }
+
+    private void startStayDetail(View view, Stay stay)
+    {
+        if (stay == null)
+        {
+            return;
+        }
+
+        int rankingPosition = 0;
+        for (PlaceViewItem placeViewItem : mWishList)
+        {
+            if (placeViewItem.mType == PlaceViewItem.TYPE_ENTRY//
+                && ((Stay) placeViewItem.getItem()).index == stay.index)
+            {
+                break;
+            }
+
+            rankingPosition++;
+        }
+
+        StayDetailAnalyticsParam analyticsParam = new StayDetailAnalyticsParam();
+        analyticsParam.setAddressAreaName(stay.addressSummary);
+        analyticsParam.discountPrice = stay.discountPrice;
+        analyticsParam.price = stay.price;
+        analyticsParam.setShowOriginalPriceYn(analyticsParam.price, analyticsParam.discountPrice);
+        analyticsParam.setRegion(null);
+        analyticsParam.entryPosition = rankingPosition;
+        analyticsParam.totalListCount = -1;
+        analyticsParam.isDailyChoice = stay.isDailyChoice;
+        analyticsParam.gradeName = stay.getGrade().getName(getActivity());
+
+        StayBookingDay stayBookingDay = (StayBookingDay) mPlaceBookingDay;
+
+        if (Util.isUsedMultiTransition() == true)
+        {
+            mBaseActivity.setExitSharedElementCallback(new SharedElementCallback()
+            {
+                @Override
+                public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots)
+                {
+                    super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
+
+                    for (View view : sharedElements)
+                    {
+                        if (view instanceof SimpleDraweeView)
+                        {
+                            view.setVisibility(View.VISIBLE);
+                            break;
+                        }
+                    }
+                }
+            });
+
+            ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), ((DailyStayCardView) view).getOptionsCompat());
+
+            Intent intent = StayDetailActivity.newInstance(getActivity() //
+                , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
+                , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+                , true, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST, analyticsParam);
+
+            mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, optionsCompat.toBundle());
+        } else
+        {
+            Intent intent = StayDetailActivity.newInstance(getActivity() //
+                , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
+                , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+                , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam);
+
+            mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+
+            mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+        }
+
+        AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+            AnalyticsManager.Category.NAVIGATION_, //
+            AnalyticsManager.Action.WISHLIST_CLICKED, //
+            stay.name, null);
+
+        // 할인 쿠폰이 보이는 경우
+        if (DailyTextUtils.isTextEmpty(stay.couponDiscountText) == false)
+        {
+            AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                , AnalyticsManager.Action.COUPON_STAY, Integer.toString(stay.index), null);
+        }
+
+        if (stay.reviewCount > 0)
+        {
+            AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                , AnalyticsManager.Action.TRUE_REVIEW_STAY, Integer.toString(stay.index), null);
+        }
+
+        if (stay.truevr == true)
+        {
+            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
+                , AnalyticsManager.Action.STAY_ITEM_CLICK_TRUE_VR, Integer.toString(stay.index), null);
+        }
+    }
+
+    private void startStayOutboundDetail(View view, StayOutbound stayOutbound)
+    {
+        if (stayOutbound == null)
+        {
+            return;
+        }
+
+        String imageUrl;
+        if (ScreenUtils.getScreenWidth(getActivity()) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
+        {
+            if (DailyTextUtils.isTextEmpty(stayOutbound.getImageMap().bigUrl) == false)
+            {
+                imageUrl = stayOutbound.getImageMap().bigUrl;
+            } else
+            {
+                imageUrl = stayOutbound.getImageMap().smallUrl;
+            }
+        } else
+        {
+            if (DailyTextUtils.isTextEmpty(stayOutbound.getImageMap().mediumUrl) == false)
+            {
+                imageUrl = stayOutbound.getImageMap().mediumUrl;
+            } else
+            {
+                imageUrl = stayOutbound.getImageMap().smallUrl;
+            }
+        }
+
+        int rankingPosition = 0;
+        for (PlaceViewItem placeViewItem : mWishList)
+        {
+            if (placeViewItem.mType == PlaceViewItem.TYPE_OB_ENTRY//
+                && ((StayOutbound) placeViewItem.getItem()).index == stayOutbound.index)
+            {
+                break;
+            }
+
+            rankingPosition++;
+        }
+
+        StayOutboundDetailAnalyticsParam analyticsParam = new StayOutboundDetailAnalyticsParam();
+
+        if (stayOutbound != null)
+        {
+            analyticsParam.index = stayOutbound.index;
+            analyticsParam.benefit = false;
+            analyticsParam.rating = stayOutbound.tripAdvisorRating == 0.0f ? null : Float.toString(stayOutbound.tripAdvisorRating);
+        }
+
+        analyticsParam.grade = getString(R.string.label_stay_outbound_filter_x_star_rate, (int) stayOutbound.rating);
+        analyticsParam.rankingPosition = rankingPosition;
+        analyticsParam.listSize = mWishList.size();
+
+        StayBookingDay stayBookingDay = (StayBookingDay) mPlaceBookingDay;
+
+        String checkInDateTime = stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT);
+        String checkOutDateTime = stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT);
+
+        if (Util.isUsedMultiTransition() == true)
+        {
+            getActivity().setExitSharedElementCallback(new SharedElementCallback()
+            {
+                @Override
+                public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots)
+                {
+                    super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
+
+                    for (View view : sharedElements)
+                    {
+                        if (view instanceof SimpleDraweeView)
+                        {
+                            view.setVisibility(View.VISIBLE);
+                            break;
+                        }
+                    }
+                }
+            });
+
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), ((DailyStayOutboundCardView) view).getOptionsCompat());
+
+            startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
+                , stayOutbound.name, stayOutbound.nameEng, imageUrl, stayOutbound.total//
+                , checkInDateTime, checkOutDateTime, People.DEFAULT_ADULTS, null, true//
+                , StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST//
+                , analyticsParam)//
+                , CODE_REQUEST_ACTIVITY_STAY_DETAIL, options.toBundle());
+        } else
+        {
+            startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
+                , stayOutbound.name, stayOutbound.nameEng, imageUrl, stayOutbound.total//
+                , checkInDateTime, checkOutDateTime, People.DEFAULT_ADULTS, null, false//
+                , StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam)//
+                , CODE_REQUEST_ACTIVITY_STAY_DETAIL);
+
+            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+        }
+
+        AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+            AnalyticsManager.Category.NAVIGATION_, //
+            AnalyticsManager.Action.WISHLIST_CLICKED, //
+            stayOutbound.name, null);
+    }
+
     private StayWishListNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new StayWishListNetworkController.OnNetworkControllerListener()
     {
-        @Override
-        public void onStayWishList(ArrayList<Stay> list)
-        {
-            unLockUI();
-
-            if (isFinishing() == true)
-            {
-                return;
-            }
-
-            if (mListLayout == null)
-            {
-                return;
-            }
-
-            mListLayout.setData(list, false);
-        }
+//        @Override
+//        public void onStayWishList(ArrayList<Stay> list)
+//        {
+//            unLockUI();
+//
+//            if (isFinishing() == true)
+//            {
+//                return;
+//            }
+//
+//            if (mListLayout == null)
+//            {
+//                return;
+//            }
+//
+//            mListLayout.setData(list, false);
+//        }
 
         @Override
         public void onRemoveStayWishListItem(boolean isSuccess, String message, int placeIndex)
@@ -290,89 +637,16 @@ public class StayWishListFragment extends PlaceWishListFragment
             }
 
             PlaceViewItem placeViewItem = mListLayout.getItem(position);
-            Stay stay = placeViewItem.getItem();
-            if (stay == null)
+
+            switch (placeViewItem.mType)
             {
-                return;
-            }
+                case PlaceViewItem.TYPE_ENTRY:
+                    startStayDetail(view, placeViewItem.getItem());
+                    break;
 
-            StayDetailAnalyticsParam analyticsParam = new StayDetailAnalyticsParam();
-            analyticsParam.setAddressAreaName(stay.addressSummary);
-            analyticsParam.discountPrice = stay.discountPrice;
-            analyticsParam.price = stay.price;
-            analyticsParam.setShowOriginalPriceYn(analyticsParam.price, analyticsParam.discountPrice);
-            analyticsParam.setRegion(null);
-            analyticsParam.entryPosition = stay.entryPosition;
-            analyticsParam.totalListCount = -1;
-            analyticsParam.isDailyChoice = stay.isDailyChoice;
-            analyticsParam.gradeName = stay.getGrade().getName(getActivity());
-
-            StayBookingDay stayBookingDay = (StayBookingDay) mPlaceBookingDay;
-
-            if (Util.isUsedMultiTransition() == true)
-            {
-                mBaseActivity.setExitSharedElementCallback(new SharedElementCallback()
-                {
-                    @Override
-                    public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots)
-                    {
-                        super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
-
-                        for (View view : sharedElements)
-                        {
-                            if (view instanceof SimpleDraweeView)
-                            {
-                                view.setVisibility(View.VISIBLE);
-                                break;
-                            }
-                        }
-                    }
-                });
-
-                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), ((DailyStayCardView) view).getOptionsCompat());
-
-                Intent intent = StayDetailActivity.newInstance(getActivity() //
-                    , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
-                    , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
-                    , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
-                    , true, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST, analyticsParam);
-
-                mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, optionsCompat.toBundle());
-            } else
-            {
-                Intent intent = StayDetailActivity.newInstance(getActivity() //
-                    , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
-                    , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
-                    , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
-                    , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam);
-
-                mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
-
-                mBaseActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-            }
-
-            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-                AnalyticsManager.Category.NAVIGATION_, //
-                AnalyticsManager.Action.WISHLIST_CLICKED, //
-                stay.name, null);
-
-            // 할인 쿠폰이 보이는 경우
-            if (DailyTextUtils.isTextEmpty(stay.couponDiscountText) == false)
-            {
-                AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
-                    , AnalyticsManager.Action.COUPON_STAY, Integer.toString(stay.index), null);
-            }
-
-            if (stay.reviewCount > 0)
-            {
-                AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
-                    , AnalyticsManager.Action.TRUE_REVIEW_STAY, Integer.toString(stay.index), null);
-            }
-
-            if (stay.truevr == true)
-            {
-                AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                    , AnalyticsManager.Action.STAY_ITEM_CLICK_TRUE_VR, Integer.toString(stay.index), null);
+                case PlaceViewItem.TYPE_OB_ENTRY:
+                    startStayOutboundDetail(view, placeViewItem.getItem());
+                    break;
             }
         }
 
@@ -390,21 +664,17 @@ public class StayWishListFragment extends PlaceWishListFragment
             }
 
             PlaceViewItem placeViewItem = mListLayout.getItem(position);
-            Stay stay = placeViewItem.getItem();
 
-            if (stay == null)
+            switch (placeViewItem.mType)
             {
-                return;
+                case PlaceViewItem.TYPE_ENTRY:
+                    startStayPreview(view, position, placeViewItem.getItem());
+                    break;
+
+                case PlaceViewItem.TYPE_OB_ENTRY:
+                    startStayOutboundPreview(view, position, placeViewItem.getItem());
+                    break;
             }
-
-            mListLayout.setBlurVisibility(mBaseActivity, true);
-
-            mViewByLongPress = view;
-            mPositionByLongPress = position;
-
-            Intent intent = StayPreviewActivity.newInstance(mBaseActivity, (StayBookingDay) mPlaceBookingDay, stay);
-
-            mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
         }
 
         @Override
@@ -444,7 +714,7 @@ public class StayWishListFragment extends PlaceWishListFragment
         }
 
         @Override
-        public void onRecordAnalyticsList(ArrayList<? extends Place> list)
+        public void onRecordAnalyticsList(List<PlaceViewItem> list)
         {
             if (list == null || list.isEmpty() == true || mPlaceBookingDay == null)
             {
@@ -463,7 +733,17 @@ public class StayWishListFragment extends PlaceWishListFragment
                 {
                     stringBuilder.append(",");
                 }
-                stringBuilder.append(list.get(i).index);
+
+                switch (list.get(i).mType)
+                {
+                    case PlaceViewItem.TYPE_ENTRY:
+                        stringBuilder.append(((Stay) list.get(i).getItem()).index);
+                        break;
+
+                    case PlaceViewItem.TYPE_OB_ENTRY:
+                        stringBuilder.append(((StayOutbound) list.get(i).getItem()).index);
+                        break;
+                }
             }
 
             stringBuilder.append("]");

@@ -94,6 +94,8 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         void onResearchClick();
 
         void onCallClick();
+
+        void onWishClick(int position, StayOutbound stayOutbound);
     }
 
     public StayOutboundListView(BaseActivity baseActivity, StayOutboundListView.OnEventListener listener)
@@ -339,6 +341,31 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
                     }
 
                     return true;
+                }
+            });
+
+            mStayOutboundListAdapter.setOnWishClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    if (getViewDataBinding() == null)
+                    {
+                        return;
+                    }
+
+                    int position = getViewDataBinding().recyclerView.getChildAdapterPosition(view);
+                    if (position < 0)
+                    {
+                        return;
+                    }
+
+                    ObjectItem objectItem = mStayOutboundListAdapter.getItem(position);
+
+                    if (objectItem.mType == ObjectItem.TYPE_ENTRY)
+                    {
+                        getEventListener().onWishClick(position, objectItem.getItem());
+                    }
                 }
             });
         }
@@ -815,6 +842,29 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         });
 
         showSimpleDialog(dialogView, null, null, false);
+    }
+
+    @Override
+    public void setWish(int position, boolean wish)
+    {
+        if (getViewDataBinding() == null || mStayOutboundListAdapter == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().recyclerView.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                StayOutboundListAdapter.StayViewHolder stayViewHolder = (StayOutboundListAdapter.StayViewHolder) getViewDataBinding().recyclerView.findViewHolderForAdapterPosition(position);
+
+                if (stayViewHolder != null)
+                {
+                    stayViewHolder.stayOutboundCardView.setWish(wish);
+                }
+            }
+        });
     }
 
     private void showViewPagerAnimation()

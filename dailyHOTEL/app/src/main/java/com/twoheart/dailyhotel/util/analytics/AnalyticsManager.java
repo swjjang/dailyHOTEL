@@ -1097,6 +1097,7 @@ public class AnalyticsManager
         public static final String TRUE_REVIEW_GOURMET = "true_review_gourmet";
         public static final String WISH_STAY = "wish_stay";
         public static final String WISH_GOURMET = "wish_gourmet";
+        public static final String WISH_OUTBOUND = "wish_outbound";
 
         public static final String CANCEL_HISTORY = "cancel_history";
         public static final String BACK = "back";

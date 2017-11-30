@@ -203,6 +203,17 @@ public class StayOutboundDetailAnalyticsImpl implements StayOutboundDetailPresen
     }
 
     @Override
+    public void onEventWishClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+
+    }
+
+    @Override
     public StayOutboundPaymentAnalyticsParam getPaymentAnalyticsParam(String grade, boolean nrd, boolean showOriginalPrice)
     {
         StayOutboundPaymentAnalyticsParam analyticsParam = new StayOutboundPaymentAnalyticsParam();

@@ -70,4 +70,6 @@ public interface StayOutboundListViewInterface extends BaseBlurViewInterface
     Observable<Long> getLocationAnimation();
 
     void showPreviewGuide();
+
+    void setWish(int position, boolean wish);
 }

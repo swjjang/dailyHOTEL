@@ -1150,6 +1150,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         });
 
         viewDataBinding.toolbarView.clearMenuItem();
+
         viewDataBinding.toolbarView.addMenuItem(DailyToolbarView.MenuItem.WISH_OFF, null, new View.OnClickListener()
         {
             @Override
@@ -1180,6 +1181,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         });
 
         viewDataBinding.fakeToolbarView.clearMenuItem();
+
         viewDataBinding.fakeToolbarView.addMenuItem(DailyToolbarView.MenuItem.WISH_OFF, null, new View.OnClickListener()
         {
             @Override

@@ -140,7 +140,8 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
 
         holder.stayOutboundCardView.setStickerVisible(false);
         holder.stayOutboundCardView.setDeleteVisible(true);
-        holder.stayOutboundCardView.setWishVisible(false);
+        holder.stayOutboundCardView.setWishVisible(true);
+        holder.stayOutboundCardView.setWish(stayOutbound.myWish);
 
         holder.stayOutboundCardView.setImage(stayOutbound.getImageMap());
 
@@ -233,7 +234,7 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
         }
     }
 
-    private class StayOutboundViewHolder extends RecyclerView.ViewHolder
+    class StayOutboundViewHolder extends RecyclerView.ViewHolder
     {
         DailyStayOutboundCardView stayOutboundCardView;
 
@@ -287,6 +288,14 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
                     {
                         mListener.onDeleteClick(stayOutboundCardView);
                     }
+                }
+            });
+
+            stayOutboundCardView.setOnWishClickListener(v ->
+            {
+                if (mListener != null)
+                {
+                    mListener.onWishClick(stayOutboundCardView);
                 }
             });
         }

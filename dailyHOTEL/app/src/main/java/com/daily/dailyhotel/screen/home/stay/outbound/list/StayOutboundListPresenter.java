@@ -38,6 +38,7 @@ import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
+import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.filter.StayOutboundFilterActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
@@ -46,8 +47,10 @@ import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -99,6 +102,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
     private ViewState mViewState = ViewState.LIST;
     private boolean mFirstRequest;
+    protected int mWishPosition;
 
     StayOutbound mStayOutboundByLongPress;
     android.support.v4.util.Pair[] mPairsByLongPress;
@@ -131,6 +135,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         void onEventDestroy(Activity activity);
 
         void onEventList(Activity activity, String suggest, int size);
+
+        void onEventWishClick(Activity activity, boolean wish);
 
         StayOutboundDetailAnalyticsParam getDetailAnalyticsParam(StayOutbound stayOutbound, String grade, int rankingPosition, int listSize);
     }
@@ -581,6 +587,23 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                                 onStayClick(mPairsByLongPress, mStayOutboundByLongPress);
                             }
                         }).subscribeOn(AndroidSchedulers.mainThread()).subscribe());
+                        break;
+                }
+                break;
+
+            case StayOutboundListActivity.REQUEST_CODE_WISH_DIALOG:
+                switch (resultCode)
+                {
+                    case Activity.RESULT_OK:
+                    case BaseActivity.RESULT_CODE_ERROR:
+                        if (data != null)
+                        {
+                            onChangedWish(mWishPosition, data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false));
+                        }
+                        break;
+
+                    case com.daily.base.BaseActivity.RESULT_CODE_REFRESH:
+                        setRefresh(true);
                         break;
                 }
                 break;
@@ -1056,6 +1079,29 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         startActivityForResult(CallDialogActivity.newInstance(getActivity()), StayOutboundListActivity.REQUEST_CODE_CALL);
     }
 
+    @Override
+    public void onWishClick(int position, StayOutbound stayOutbound)
+    {
+        if (stayOutbound == null || lock() == true)
+        {
+            return;
+        }
+
+        mWishPosition = position;
+
+        boolean currentWish = stayOutbound.myWish;
+
+        if (DailyHotel.isLogin() == true)
+        {
+            onChangedWish(position, !currentWish);
+        }
+
+        startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.OB_STAY//
+            , stayOutbound.index, !currentWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);
+
+        mAnalytics.onEventWishClick(getActivity(), !currentWish);
+    }
+
     private void setPeople(int numberOfAdults, ArrayList<Integer> childAgeList)
     {
         if (mPeople == null)
@@ -1151,6 +1197,16 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             mStayOutboundFilters.latitude = 0;
             mStayOutboundFilters.longitude = 0;
         }
+    }
+
+    protected void onChangedWish(int position, boolean wish)
+    {
+        if (position < 0)
+        {
+            return;
+        }
+
+        getViewInterface().setWish(position, wish);
     }
 
     private void onStayOutbounds(StayOutbounds stayOutbounds)

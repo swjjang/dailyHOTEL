@@ -5,6 +5,7 @@ import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.entity.StayOutboundFilters;
 import com.daily.dailyhotel.entity.StayOutbounds;
+import com.daily.dailyhotel.entity.WishResult;
 
 import io.reactivex.Observable;
 
@@ -16,4 +17,8 @@ public interface StayOutboundInterface
     Observable<StayOutboundDetail> getDetail(int index, StayBookDateTime stayBookDateTime, People people);
 
     Observable<StayOutbounds> getRecommendAroundList(int index, StayBookDateTime stayBookDateTime, People people);
+
+    Observable<WishResult> addWish(int stayIndex);
+
+    Observable<WishResult> removeWish(int stayIndex);
 }

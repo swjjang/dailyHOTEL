@@ -10,6 +10,7 @@ import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by android_sam on 2016. 11. 1..
@@ -19,7 +20,7 @@ public abstract class PlaceWishListAdapter extends RecyclerView.Adapter<Recycler
 {
     protected Context mContext;
     protected LayoutInflater mInflater;
-    protected ArrayList<PlaceViewItem> mList;
+    protected List<PlaceViewItem> mList;
     protected OnPlaceWishListItemListener mListener;
 
     private Constants.SortType mSortType; // TODO : 추후 제거 필요!
@@ -36,9 +37,7 @@ public abstract class PlaceWishListAdapter extends RecyclerView.Adapter<Recycler
         void onItemRemoveClick(View view);
     }
 
-    public abstract void setPlaceBookingDay(PlaceBookingDay placeBookingDay);
-
-    public PlaceWishListAdapter(Context context, ArrayList<PlaceViewItem> list, OnPlaceWishListItemListener listener)
+    public PlaceWishListAdapter(Context context, List<PlaceViewItem> list, OnPlaceWishListItemListener listener)
     {
         mContext = context;
 
@@ -58,12 +57,12 @@ public abstract class PlaceWishListAdapter extends RecyclerView.Adapter<Recycler
         mRewardEnabled = enabled;
     }
 
-    public ArrayList<PlaceViewItem> getList()
+    public List<PlaceViewItem> getList()
     {
         return mList != null ? mList : null;
     }
 
-    public void setData(ArrayList<PlaceViewItem> list)
+    public void setData(List<PlaceViewItem> list)
     {
         mList = list;
     }

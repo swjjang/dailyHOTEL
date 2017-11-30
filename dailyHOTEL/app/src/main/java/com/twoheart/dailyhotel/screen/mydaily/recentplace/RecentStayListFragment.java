@@ -679,6 +679,11 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             RecentlyPlace recentlyPlace = (RecentlyPlace) object;
             recentlyPlace.myWish = wish;
             mListLayout.notifyWishChanged(position, wish);
+        } else if (object instanceof StayOutbound)
+        {
+            StayOutbound stayOutbound = (StayOutbound) object;
+            stayOutbound.myWish = wish;
+            mListLayout.notifyWishChanged(position, wish);
         }
     }
 
@@ -867,6 +872,21 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                     , AnalyticsManager.Action.WISH_STAY, !currentWish ? AnalyticsManager.Label.ON.toLowerCase() : AnalyticsManager.Label.OFF.toLowerCase(), null);
             } else if (object instanceof StayOutbound)
             {
+                StayOutbound stayOutbound = (StayOutbound) object;
+
+                boolean currentWish = stayOutbound.myWish;
+
+                if (DailyHotel.isLogin() == true)
+                {
+                    onChangedWish(position, !currentWish);
+                }
+
+                mBaseActivity.startActivityForResult(WishDialogActivity.newInstance(mBaseActivity, ServiceType.OB_STAY//
+                    , stayOutbound.index, !currentWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);
+
+                AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                    , AnalyticsManager.Action.WISH_STAY, !currentWish ? AnalyticsManager.Label.ON.toLowerCase() : AnalyticsManager.Label.OFF.toLowerCase(), null);
+
             }
         }
 

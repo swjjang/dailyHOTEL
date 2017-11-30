@@ -93,12 +93,6 @@ public class GourmetSalesData
     @JsonField(name = "pricePerPerson")
     public int pricePerPerson;
 
-    @JsonField(name = "primaryTicketImageDescription")
-    public String primaryTicketImageDescription;
-
-    @JsonField(name = "primaryTicketImageUrl")
-    public String primaryTicketImageUrl;
-
     @JsonField(name = "rating")
     public int rating;
 
@@ -200,8 +194,6 @@ public class GourmetSalesData
         gourmet.needToKnow = needToKnow;
         gourmet.openTime = openTime;
         gourmet.pricePerPerson = pricePerPerson;
-        gourmet.primaryTicketImageDescription = primaryTicketImageDescription;
-        gourmet.primaryTicketImageUrl = primaryTicketImageUrl;
         gourmet.startEatingTime = startEatingTime;
         gourmet.ticketIdx = ticketIdx;
 

@@ -36,6 +36,8 @@ public class StayOutboundDetailActivity extends BaseActivity<StayOutboundDetailP
     static final int REQUEST_CODE_REWARD = 10013;
     static final int REQUEST_CODE_LOGIN_IN_BY_BOOKING = 10014;
     static final int REQUEST_CODE_WEB = 10015;
+    static final int REQUEST_CODE_LOGIN_IN_BY_WISH = 10016;
+    static final int REQUEST_CODE_WISH_DIALOG = 10017;
 
     static final String INTENT_EXTRA_DATA_STAY_INDEX = "stayIndex";
     static final String INTENT_EXTRA_DATA_STAY_NAME = "stayName";

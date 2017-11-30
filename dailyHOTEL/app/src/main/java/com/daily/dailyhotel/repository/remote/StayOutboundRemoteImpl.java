@@ -12,6 +12,7 @@ import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.entity.StayOutboundFilters;
 import com.daily.dailyhotel.entity.StayOutbounds;
+import com.daily.dailyhotel.entity.WishResult;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.Setting;
@@ -227,6 +228,64 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
                     return stayOutbounds;
                 }
             }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<WishResult> addWish(int wishIndex)
+    {
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/wishitems/{stayIndex}/add"//
+            : "OTUkMTIyJDY3JDExOSQ3MSQxMyQ2NCQxMzQkOTQkNTMkNDYkODgkMTExJDYwJDgxJDUk$REEzNQzg2RDJERXkRFMkQ0MzJGNDk5RjQzQjBBNTdDOUYzMGDdGQ0U4DQUMzMFDYwNzQJwNjVXBMUDE4MDAk2NjREOTWExMEEyNEZFFNkRSGNzQ0RDBRFODhCNkQ5NEZCMKDNGNZTEzNTUD1$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{stayIndex}", Integer.toString(wishIndex));
+
+        return mDailyMobileService.addStayOutboundWish(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams))//
+            .subscribeOn(Schedulers.io()).map(baseDto ->
+            {
+                WishResult wishResult = new WishResult();
+
+                if (baseDto != null)
+                {
+                    wishResult.success = baseDto.msgCode == 100;
+                    wishResult.message = baseDto.msg;
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return wishResult;
+            });
+    }
+
+    @Override
+    public Observable<WishResult> removeWish(int wishIndex)
+    {
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/wishitems/{stayIndex}/remove"//
+            : "MiQ5NyQ2NSQ5MyQxMzEkOTMkNjgkMTAyJDEyNyQ2NyQxJDEzNyQxMTIkODIkMTQxJDY0JA==$MYzZk4MUZENzU0MDg0NjkwMTk2QzNERUNCRDRCMkY1QkNCMEJFNDEyOTE2MTcwNkCI3BRWUMY0RDk5M0ZCQAUVFREZCQ0Y0MEEHE4Q0E1EMREM2Q0RNDMzNBMkU0N0M2QjkyVQjNFODZIBCD$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{stayIndex}", Integer.toString(wishIndex));
+
+        return mDailyMobileService.removeStayOutboundWish(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams))//
+            .subscribeOn(Schedulers.io()).map(baseDto ->
+            {
+                WishResult wishResult = new WishResult();
+
+                if (baseDto != null)
+                {
+                    wishResult.success = baseDto.msgCode == 100;
+                    wishResult.message = baseDto.msg;
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return wishResult;
+            });
     }
 
     private JSONArray getRooms(People[] peoples)

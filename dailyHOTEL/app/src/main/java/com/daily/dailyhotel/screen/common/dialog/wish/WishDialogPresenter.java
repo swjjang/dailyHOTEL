@@ -13,6 +13,7 @@ import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.WishResult;
 import com.daily.dailyhotel.repository.remote.GourmetRemoteImpl;
+import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
@@ -33,9 +34,10 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
 
     private StayRemoteImpl mStayRemoteImpl;
     private GourmetRemoteImpl mGourmetRemoteImpl;
+    private StayOutboundRemoteImpl mStayOutboundRemoteImpl;
 
     private Constants.ServiceType mServiceType;
-    private int mPlaceIndex;
+    private int mWishIndex;
     private boolean mWish;
     private String mCallByScreen;
 
@@ -64,6 +66,7 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
 
         mStayRemoteImpl = new StayRemoteImpl(activity);
         mGourmetRemoteImpl = new GourmetRemoteImpl(activity);
+        mStayOutboundRemoteImpl = new StayOutboundRemoteImpl(activity);
 
         setRefresh(true);
     }
@@ -83,7 +86,7 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
         }
 
         mServiceType = Constants.ServiceType.valueOf(intent.getStringExtra(WishDialogActivity.INTENT_EXTRA_DATA_SERVICE_TYPE));
-        mPlaceIndex = intent.getIntExtra(WishDialogActivity.INTENT_EXTRA_DATA_PLACE_INDEX, 0);
+        mWishIndex = intent.getIntExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH_INDEX, 0);
         mWish = intent.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_MY_WISH, false);
         mCallByScreen = intent.getStringExtra(WishDialogActivity.INTENT_EXTRA_DATA_CALL_SCREEN);
 
@@ -194,14 +197,15 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
         switch (mServiceType)
         {
             case HOTEL:
-                wishResultObservable = mWish ? mStayRemoteImpl.addWish(mPlaceIndex) : mStayRemoteImpl.removeWish(mPlaceIndex);
+                wishResultObservable = mWish ? mStayRemoteImpl.addWish(mWishIndex) : mStayRemoteImpl.removeWish(mWishIndex);
                 break;
 
             case GOURMET:
-                wishResultObservable = mWish ? mGourmetRemoteImpl.addWish(mPlaceIndex) : mGourmetRemoteImpl.removeWish(mPlaceIndex);
+                wishResultObservable = mWish ? mGourmetRemoteImpl.addWish(mWishIndex) : mGourmetRemoteImpl.removeWish(mWishIndex);
                 break;
 
             case OB_STAY:
+                wishResultObservable = mWish ? mStayOutboundRemoteImpl.addWish(mWishIndex) : mStayOutboundRemoteImpl.removeWish(mWishIndex);
                 break;
         }
 

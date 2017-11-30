@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.network;
 
+import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.repository.remote.model.BookingCancelData;
 import com.daily.dailyhotel.repository.remote.model.BookingData;
 import com.daily.dailyhotel.repository.remote.model.BookingHiddenData;
@@ -30,6 +31,7 @@ import com.daily.dailyhotel.repository.remote.model.StayCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.StayDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayListData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundBookingDetailData;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundEmailReceiptData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundPaymentData;
@@ -712,6 +714,26 @@ public interface DailyMobileService
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
     Observable<BaseDto<StayRegionData>> getStayCategoryRegionList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    // WishRemoteImpl
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<PlaceWishItems<StayWishItem>>> getStayWishList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST()
+    Observable<BaseListDto<StayOutboundData>> getStayOutboundWishList(@Url String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST()
+    Observable<BaseDto<String>> addStayOutboundWish(@Url String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST()
+    Observable<BaseDto<String>> removeStayOutboundWish(@Url String mobileAPI);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // BookingRemoteImpl

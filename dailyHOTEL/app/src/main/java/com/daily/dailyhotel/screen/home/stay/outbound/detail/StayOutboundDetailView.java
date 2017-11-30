@@ -70,6 +70,7 @@ import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailInformationDa
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.AlphaTransition;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -92,6 +93,8 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
     public interface OnEventListener extends OnBaseEventListener
     {
         void onShareClick();
+
+        void onWishClick();
 
         void onShareKakaoClick();
 
@@ -929,6 +932,164 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
     }
 
     @Override
+    public void setWishCount(int count)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        String wishCountText;
+
+        if (count <= 0)
+        {
+            wishCountText = null;
+        } else if (count > 9999)
+        {
+            int wishCount = count / 1000;
+
+            if (wishCount % 10 == 0)
+            {
+                wishCountText = getString(R.string.wishlist_count_over_10_thousand, Integer.toString(wishCount / 10));
+            } else
+            {
+                wishCountText = getString(R.string.wishlist_count_over_10_thousand, Float.toString((float) wishCount / 10.0f));
+            }
+        } else
+        {
+            DecimalFormat decimalFormat = new DecimalFormat("###,##0");
+            wishCountText = decimalFormat.format(count);
+        }
+
+        if (getViewDataBinding().toolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_OFF) == true)
+        {
+            getViewDataBinding().toolbarView.updateMenuItem(DailyToolbarView.MenuItem.WISH_OFF, wishCountText, new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    getEventListener().onWishClick();
+                }
+            });
+        } else if (getViewDataBinding().toolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_FILL_ON) == true)
+        {
+            getViewDataBinding().toolbarView.updateMenuItem(DailyToolbarView.MenuItem.WISH_FILL_ON, wishCountText, new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    getEventListener().onWishClick();
+                }
+            });
+        }
+
+        if (getViewDataBinding().fakeToolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_OFF) == true)
+        {
+            getViewDataBinding().fakeToolbarView.updateMenuItem(DailyToolbarView.MenuItem.WISH_OFF, wishCountText, new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    getEventListener().onWishClick();
+                }
+            });
+        } else if (getViewDataBinding().fakeToolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_LINE_ON) == true)
+        {
+            getViewDataBinding().fakeToolbarView.updateMenuItem(DailyToolbarView.MenuItem.WISH_LINE_ON, wishCountText, new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    getEventListener().onWishClick();
+                }
+            });
+        }
+    }
+
+    @Override
+    public void setWishSelected(boolean selected)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (selected == true)
+        {
+            if (getViewDataBinding().toolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_OFF) == true)
+            {
+                getViewDataBinding().toolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_OFF, DailyToolbarView.MenuItem.WISH_FILL_ON, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        getEventListener().onWishClick();
+                    }
+                });
+            }
+
+            if (getViewDataBinding().fakeToolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_OFF) == true)
+            {
+                getViewDataBinding().fakeToolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_OFF, DailyToolbarView.MenuItem.WISH_LINE_ON, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        getEventListener().onWishClick();
+                    }
+                });
+            }
+        } else
+        {
+            if (getViewDataBinding().toolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_FILL_ON) == true)
+            {
+                getViewDataBinding().toolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_FILL_ON, DailyToolbarView.MenuItem.WISH_OFF, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        getEventListener().onWishClick();
+                    }
+                });
+            }
+
+            if (getViewDataBinding().toolbarView.hasMenuItem(DailyToolbarView.MenuItem.WISH_OFF) == true)
+            {
+                getViewDataBinding().toolbarView.replaceMenuItem(DailyToolbarView.MenuItem.WISH_LINE_ON, DailyToolbarView.MenuItem.WISH_OFF, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        getEventListener().onWishClick();
+                    }
+                });
+            }
+        }
+    }
+
+    @Override
+    public void showWishTooltip()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().wishTooltipLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideWishTooltip()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().wishTooltipLayout.setVisibility(View.GONE);
+    }
+
+    @Override
     public void setRecommendAroundVisible(boolean visible)
     {
         if (getViewDataBinding() == null)
@@ -1004,6 +1165,16 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
         });
 
         viewDataBinding.toolbarView.clearMenuItem();
+
+        viewDataBinding.toolbarView.addMenuItem(DailyToolbarView.MenuItem.WISH_OFF, null, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onWishClick();
+            }
+        });
+
         viewDataBinding.toolbarView.addMenuItem(DailyToolbarView.MenuItem.SHARE, null, new View.OnClickListener()
         {
             @Override
@@ -1025,6 +1196,16 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
         });
 
         viewDataBinding.fakeToolbarView.clearMenuItem();
+
+        viewDataBinding.fakeToolbarView.addMenuItem(DailyToolbarView.MenuItem.WISH_OFF, null, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onWishClick();
+            }
+        });
+
         viewDataBinding.fakeToolbarView.addMenuItem(DailyToolbarView.MenuItem.SHARE, null, new View.OnClickListener()
         {
             @Override

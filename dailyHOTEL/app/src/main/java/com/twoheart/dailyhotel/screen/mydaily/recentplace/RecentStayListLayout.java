@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.mydaily.recentplace;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
@@ -38,11 +39,17 @@ public class RecentStayListLayout extends RecentPlacesListLayout
             @Override
             public void run()
             {
-                RecentStayListAdapter.StayInboundViewHolder stayViewHolder = (RecentStayListAdapter.StayInboundViewHolder) mRecyclerView.findViewHolderForAdapterPosition(position);
 
-                if (stayViewHolder != null)
+                RecyclerView.ViewHolder viewHolder = mRecyclerView.findViewHolderForAdapterPosition(position);
+
+                if (viewHolder instanceof RecentStayListAdapter.StayInboundViewHolder)
                 {
+                    RecentStayListAdapter.StayInboundViewHolder stayViewHolder = (RecentStayListAdapter.StayInboundViewHolder) viewHolder;
                     stayViewHolder.stayCardView.setWish(wish);
+                } else if (viewHolder instanceof RecentStayListAdapter.StayOutboundViewHolder)
+                {
+                    RecentStayListAdapter.StayOutboundViewHolder stayViewHolder = (RecentStayListAdapter.StayOutboundViewHolder) viewHolder;
+                    stayViewHolder.stayOutboundCardView.setWish(wish);
                 }
             }
         });

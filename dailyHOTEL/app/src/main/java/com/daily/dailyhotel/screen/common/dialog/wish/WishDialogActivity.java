@@ -19,17 +19,17 @@ public class WishDialogActivity extends BaseActivity<WishDialogPresenter>
     static final int REQUEST_CODE_LOGIN = 10000;
 
     static final String INTENT_EXTRA_DATA_SERVICE_TYPE = "serviceType";
-    static final String INTENT_EXTRA_DATA_PLACE_INDEX = "placeIndex";
+    static final String INTENT_EXTRA_DATA_WISH_INDEX = "wishIndex";
     static final String INTENT_EXTRA_DATA_MY_WISH = "myWish";
     static final String INTENT_EXTRA_DATA_CALL_SCREEN = "callByScreen";
 
     public static final String INTENT_EXTRA_DATA_WISH = "wish";
 
-    public static Intent newInstance(Context context, Constants.ServiceType serviceType, int placeIndex, boolean myWish, int positionByList, String callByScreen)
+    public static Intent newInstance(Context context, Constants.ServiceType serviceType, int wishIndex, boolean myWish, int positionByList, String callByScreen)
     {
         Intent intent = new Intent(context, WishDialogActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_SERVICE_TYPE, serviceType.name());
-        intent.putExtra(INTENT_EXTRA_DATA_PLACE_INDEX, placeIndex);
+        intent.putExtra(INTENT_EXTRA_DATA_WISH_INDEX, wishIndex);
         intent.putExtra(INTENT_EXTRA_DATA_MY_WISH, myWish);
         intent.putExtra(INTENT_EXTRA_DATA_CALL_SCREEN, callByScreen);
 

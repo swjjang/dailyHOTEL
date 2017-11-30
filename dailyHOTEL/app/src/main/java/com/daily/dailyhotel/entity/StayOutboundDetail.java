@@ -21,6 +21,8 @@ public class StayOutboundDetail extends Configurations
     public int couponPrice;
     public boolean provideRewardSticker;
     public int rewardStickerCount;
+    public boolean myWish;
+    public int wishCount;
 
     LinkedHashMap<String, List<String>> mInformationMap;
     List<DetailImageInformation> mImageList;
