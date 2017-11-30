@@ -915,9 +915,18 @@ public interface DailyMobileService
                                                                  @Query("reservationDate") String date, //
                                                                  @Query("term") String term);
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    // CouponRemoteImpl
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
     Observable<BaseDto<CouponsData>> getCouponHistoryList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<CouponsData>> getGourmetCouponListByPayment(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // RewardRemoteImpl
