@@ -51,7 +51,6 @@ import com.daily.dailyhotel.repository.remote.model.UserTrackingData;
 import com.daily.dailyhotel.repository.remote.model.WaitingDepositData;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
-import com.twoheart.dailyhotel.network.dto.Base_Dto;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.GourmetKeyword;
@@ -71,6 +70,7 @@ import com.twoheart.dailyhotel.network.model.StayWishItem;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.network.model.TrueVRParams;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -801,8 +801,7 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @POST("{mobileAPI}")
-    Observable<Base_Dto<GourmetPaymentData>> getGourmetPayment(@Path(value = "mobileAPI", encoded = true) String mobileAPI//
-        , @Body JSONObject jsonObject);
+    Observable<BaseDto<GourmetPaymentData>> getGourmetPayment(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Body JSONObject jsonObject);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @POST("{mobileAPI}")
@@ -929,8 +928,8 @@ public interface DailyMobileService
     Observable<BaseDto<CouponsData>> getCouponHistoryList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("{mobileAPI}")
-    Observable<BaseDto<CouponsData>> getGourmetCouponListByPayment(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+    @POST("{mobileAPI}")
+    Observable<BaseDto<CouponsData>> getGourmetCouponListByPayment(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Body JSONArray jsonArray);
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////

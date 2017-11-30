@@ -172,7 +172,7 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
     public Observable<GourmetPayment> getGourmetPayment(GourmetCart gourmetCart)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v5/prebooking/gourmet/item/info"//
-            : "MzkkNjUkNjYkMjgkNiQ5MyQxMjYkOCQ0JDkkMyQxJDMzJDc2JDc4JDE1JA==$RVDkG5FMjUMPM2NLDBGNEJGMUZBRkQ5RjUL4VN0I2NjE3NTdXGMTI3QTI2QjZBN0IzODY0RjJEIGNXUII4MkUzMjRDQkVEODA3QzFFARUIwMzdEQzk1RDkwMzlCNEI3MjdDODBDCRTdDMzQ1$";
+            : "MjEkNzQkMiQ4MCQyNiQxMjEkMTExJDI1JDgxJDgzJDQ4JDIyJDE0JDkkODgkMTM1JA==$M0JI3NDQ5LODc5NSkYyN0Y3MGPDEN2YRUYzMDZCMzlGNjU4NzBENQTdDNzU0OUY0QTYzMDU3MkVGQkJGRHjg5JMDBKDkxNEMyRDg1NDVBQ0U4NjIwODEzMjQk0NEI0QzNEKNjE0ERjAzM0FG$";
 
         JSONObject jsonObject = new JSONObject();
 
@@ -203,7 +203,7 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
 
                 if (gourmetPaymentDataBaseDto != null)
                 {
-                    if (gourmetPaymentDataBaseDto.msgCode == 0 && gourmetPaymentDataBaseDto.data != null)
+                    if (gourmetPaymentDataBaseDto.msgCode == 100 && gourmetPaymentDataBaseDto.data != null)
                     {
                         gourmetPayment = gourmetPaymentDataBaseDto.data.getGourmetPayment();
                     } else
@@ -504,8 +504,8 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
     @Override
     public Observable<PaymentResult> getGourmetPaymentTypeEasy(JSONObject jsonObject)
     {
-        final String API = Constants.UNENCRYPTED_URL ? "api/v4/booking/gourmet/oneclick"//
-            : "MjMkODIkMzYkMTkkODkkODckMTMkNTQkMzYkMTckNTckNSQ3MiQ0OSQ3NyQzNSQ=$NzUxOUURCRjAzMIjdBKRDQQ0ODYB0NzZEODDhBMW0MX3MDYxMzCAzMEUwNDQQY5QzRBQTY0QTURyQzEVGQUMwM0NENzM2MY0IXzNMw==$";
+        final String API = Constants.UNENCRYPTED_URL ? "api/v5/booking/gourmet/oneclick"//
+            : "MjAkMTgkMjAkNTMkNDAkMjUkODAkNjgkNTUkMCQzMyQ2NiQ3NCQ4JDU2JDgwJA==$NQzhCRDRIBNjhDMDFFOEEIFxHNkQNGOTA5OMTY2QjJBMNkMwMkU4M0FESQTKKAzNDI5MUjY2QTINPEQ0QJFQzUyQkAE2RUZBMzI5MA==$";
 
         return mDailyMobileService.getPaymentTypeEasy(Crypto.getUrlDecoderEx(API), jsonObject) //
             .subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->
@@ -545,8 +545,8 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
     @Override
     public Observable<PaymentResult> getGourmetPaymentTypeBonus(JSONObject jsonObject)
     {
-        final String API = Constants.UNENCRYPTED_URL ? "api/v4/booking/gourmet/daily/only"//
-            : "MTI0JDMkNDMkODUkNDMkNjYkMzQkOTAkNjIkMTIkMTckOTgkOTckMTIzJDE0MSQzNyQ=$Q0IY4NjM0OEMBwMTITxRjlCMzM4NzA3QTJBONNUIxRUFEQTFFQzN0I1NUEwRDhGRTIM1ODET2NURENzIwQjhDMDdCM0UJ3ZQTMX1OMzNENUIxOEMxQTU3MUU4RERIBMkQyMDA3MkM4BNEQZ1$";
+        final String API = Constants.UNENCRYPTED_URL ? "api/v5/booking/gourmet/daily/only"//
+            : "NTgkNDYkOTckNzIkMTI2JDQ4JDExOCQ3JDQxJDExNiQ0OSQxMDEkODAkNjgkMzEkMTA2JA==$QkJCQ0IG5QUM1QjQzQkM5MTg5RjVFQTJQ2NzkyNkE4RQkE2RkLRIUwNjhCNjM1NTGQ4RDYVFMjdDMkJU0NEzRDNjVCODQ4OUZBNjdEMDOcJN1MTA4MThCQjgwNWjdBMAEE1NjNCNkNI3ODBD$";
 
         return mDailyMobileService.getPaymentTypeBonus(Crypto.getUrlDecoderEx(API), jsonObject) //
             .subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->

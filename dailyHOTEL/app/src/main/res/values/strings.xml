@@ -644,6 +644,7 @@
     <string name="message_guide_name_hint">여권 기재 영문명을 입력해주세요</string>
     <string name="message_discount_memo">할인 수단은 중복 사용 할 수 없습니다.</string>
     <string name="message_booking_memo">예약시 요청사항이 있으면 남겨주세요.\n(※요청 내용은 업체 사정에 따라 반영되지 않을 수도 있습니다.)</string>
+    <string name="message_gourmet_booking_please_input_visit_persons">방문 인원수를 선택해주세요.</string>
     <string name="message_gourmet_please_input_guest">방문자명을 입력해주세요. 예약 확인시 필요한 정보입니다.</string>
     <string name="message_booking_cancel_coupon">쿠폰 적용을 취소할까요?</string>
     <string name="message_booking_cancel_deposit_sticker">스티커 적립 적용을 취소할까요?</string>
