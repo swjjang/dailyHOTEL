@@ -41,7 +41,6 @@ public interface PaymentInterface
 
     Observable<StayRefundPolicy> getStayRefundPolicy(StayBookDateTime stayBookDateTime, int stayIndex, int roomIndex);
 
-
     Observable<String> getStayHasDuplicatePayment(StayBookDateTime stayBookDateTime);
 
     Observable<PaymentResult> getGourmetPaymentTypeEasy(JSONObject jsonObject);

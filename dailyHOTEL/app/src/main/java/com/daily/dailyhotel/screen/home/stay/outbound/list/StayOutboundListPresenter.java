@@ -77,7 +77,7 @@ import io.reactivex.schedulers.Schedulers;
 public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutboundListActivity, StayOutboundListViewInterface> //
     implements StayOutboundListView.OnEventListener
 {
-    private static final int DAYS_OF_MAXCOUNT = 90;
+    private static final int DAYS_OF_MAXCOUNT = 180;
     private static final int NIGHTS_OF_MAXCOUNT = 28;
 
     private StayOutboundListAnalyticsInterface mAnalytics;

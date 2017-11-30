@@ -549,8 +549,6 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 if (resultCode == BaseActivity.RESULT_CODE_REFRESH)
                 {
                     setRefresh(true);
-
-
                 }
                 break;
 

@@ -9,6 +9,7 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import java.util.ArrayList;
@@ -21,6 +22,8 @@ import java.util.Date;
  */
 public abstract class PlaceCalendarPresenter<T1 extends BaseActivity, T2 extends BaseDialogViewInterface> extends BaseExceptionPresenter<T1, T2>
 {
+    final int MONTH_OF_YEAR = 12;
+
     public PlaceCalendarPresenter(@NonNull T1 activity)
     {
         super(activity);
@@ -151,15 +154,17 @@ public abstract class PlaceCalendarPresenter<T1 extends BaseActivity, T2 extends
         Calendar calendar = DailyCalendar.getInstance();
         calendar.setTime(startDate);
 
+        int startYear = calendar.get(Calendar.YEAR);
         int startMonth = calendar.get(Calendar.MONTH);
 
         calendar.setTime(endDate);
 
-        int endMonth = calendar.get(Calendar.MONTH);
+        int endYear = calendar.get(Calendar.YEAR);
+        int endMonth = calendar.get(Calendar.MONTH) + MONTH_OF_YEAR * (endYear - startYear);
 
         if (startMonth > endMonth)
         {
-            return 12 - startMonth + endMonth;
+            return MONTH_OF_YEAR - startMonth + endMonth;
         } else
         {
             return endMonth - startMonth;
