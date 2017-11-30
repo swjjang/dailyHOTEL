@@ -5,12 +5,13 @@ import android.location.Location;
 
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.dailyhotel.entity.GourmetBookingDetail;
+import com.daily.dailyhotel.entity.GourmetMultiBookingDetail;
 
 import io.reactivex.Observable;
 
 public interface GourmetBookingCancelDetailInterface extends BaseDialogViewInterface
 {
-    void setBookingDetail(GourmetBookingDetail gourmetBookingDetail);
+    void setBookingDetail(GourmetMultiBookingDetail gourmetBookingDetail);
 
     Observable<Boolean> expandMap(double latitude, double longitude);
 

@@ -2,7 +2,7 @@ package com.daily.dailyhotel.screen.booking.cancel.detail.gourmet;
 
 import android.app.Activity;
 
-import com.daily.dailyhotel.entity.GourmetBookingDetail;
+import com.daily.dailyhotel.entity.GourmetMultiBookingDetail;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -75,7 +75,7 @@ public class GourmetBookingCancelDetailCancelAnalyticsImpl implements GourmetBoo
     }
 
     @Override
-    public GourmetDetailAnalyticsParam getDetailAnalyticsParam(GourmetBookingDetail gourmetBookingDetail)
+    public GourmetDetailAnalyticsParam getDetailAnalyticsParam(GourmetMultiBookingDetail gourmetBookingDetail)
     {
         GourmetDetailAnalyticsParam analyticsParam = new GourmetDetailAnalyticsParam();
 

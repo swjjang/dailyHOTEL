@@ -19,8 +19,10 @@ import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CommonDateTime;
-import com.daily.dailyhotel.entity.GourmetBookingDetail;
 import com.daily.dailyhotel.entity.GourmetMultiBookingDetail;
+import com.daily.dailyhotel.entity.GuestInfo;
+import com.daily.dailyhotel.entity.RestaurantInfo;
+import com.daily.dailyhotel.entity.TicketInfo;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
@@ -71,7 +73,7 @@ public class GourmetBookingCancelDetailPresenter //
     private String mImageUrl;
 
     private CommonDateTime mCommonDateTime;
-    private GourmetMultiBookingDetail mGourmetMultiBookingDetail;
+    private GourmetMultiBookingDetail mGourmetBookingDetail;
 
     DailyLocationExFactory mDailyLocationExFactory;
 
@@ -194,7 +196,7 @@ public class GourmetBookingCancelDetailPresenter //
     @Override
     public boolean onBackPressed()
     {
-        if (mGourmetMultiBookingDetail != null && getViewInterface().isExpandedMap() == true)
+        if (mGourmetBookingDetail != null && getViewInterface().isExpandedMap() == true)
         {
             onCollapseMapClick();
             return true;
@@ -300,7 +302,7 @@ public class GourmetBookingCancelDetailPresenter //
                 notifyGourmetBookingDetailChanged();
                 unLockAll();
 
-                //                mAnalytics.onScreen(getActivity(), Booking.BOOKING_STATE_CANCEL, mGourmetMultiBookingDetail.stayIndex, mGourmetMultiBookingDetail.refundStatus);
+                //                mAnalytics.onScreen(getActivity(), Booking.BOOKING_STATE_CANCEL, mGourmetBookingDetail.stayIndex, mGourmetBookingDetail.refundStatus);
             }
         }, new Consumer<Throwable>()
         {
@@ -347,14 +349,16 @@ public class GourmetBookingCancelDetailPresenter //
     @Override
     public void onMapClick()
     {
-        if (mGourmetMultiBookingDetail == null || lock() == true)
+        if (mGourmetBookingDetail == null || mGourmetBookingDetail.restaurantInfo == null || lock() == true)
         {
             return;
         }
 
+        RestaurantInfo restaurantInfo = mGourmetBookingDetail.restaurantInfo;
+
         Intent intent = ZoomMapActivity.newInstance(getActivity()//
-            , ZoomMapActivity.SourceType.GOURMET_BOOKING, mGourmetMultiBookingDetail.gourmetName, mGourmetMultiBookingDetail.gourmetAddress//
-            , mGourmetMultiBookingDetail.latitude, mGourmetMultiBookingDetail.longitude, true);
+            , ZoomMapActivity.SourceType.GOURMET_BOOKING, restaurantInfo.name, restaurantInfo.address//
+            , restaurantInfo.latitude, restaurantInfo.longitude, true);
 
         startActivityForResult(intent, GourmetBookingCancelDetailActivity.REQUEST_CODE_ZOOMMAP);
         //
@@ -365,14 +369,16 @@ public class GourmetBookingCancelDetailPresenter //
     @Override
     public void onExpandMapClick()
     {
-        if (mGourmetMultiBookingDetail == null || lock() == true)
+        if (mGourmetBookingDetail == null || mGourmetBookingDetail.restaurantInfo == null || lock() == true)
         {
             return;
         }
 
+        RestaurantInfo restaurantInfo = mGourmetBookingDetail.restaurantInfo;
+
         getViewInterface().setBookingDetailMapToolbar();
 
-        addCompositeDisposable(getViewInterface().expandMap(mGourmetMultiBookingDetail.latitude, mGourmetMultiBookingDetail.longitude)//
+        addCompositeDisposable(getViewInterface().expandMap(restaurantInfo.latitude, restaurantInfo.longitude)//
             .subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
             {
                 @Override
@@ -389,7 +395,7 @@ public class GourmetBookingCancelDetailPresenter //
     @Override
     public void onCollapseMapClick()
     {
-        if (mGourmetMultiBookingDetail == null || lock() == true)
+        if (mGourmetBookingDetail == null || lock() == true)
         {
             return;
         }
@@ -412,17 +418,20 @@ public class GourmetBookingCancelDetailPresenter //
     @Override
     public void onViewDetailClick()
     {
-        if (mGourmetMultiBookingDetail == null || lock() == true)
+        if (getActivity() == null || mGourmetBookingDetail == null //
+            || mGourmetBookingDetail.restaurantInfo == null || lock() == true)
         {
             return;
         }
 
+        RestaurantInfo restaurantInfo = mGourmetBookingDetail.restaurantInfo;
+
         try
         {
-            GourmetDetailAnalyticsParam analyticsParam = mAnalytics.getDetailAnalyticsParam(mGourmetMultiBookingDetail);
+            GourmetDetailAnalyticsParam analyticsParam = mAnalytics.getDetailAnalyticsParam(mGourmetBookingDetail);
 
             Intent intent = GourmetDetailActivity.newInstance(getActivity() //
-                , mGourmetMultiBookingDetail.gourmetIndex, mGourmetMultiBookingDetail.gourmetName, null, GourmetDetailActivity.NONE_PRICE//
+                , restaurantInfo.index, restaurantInfo.name, null, GourmetDetailActivity.NONE_PRICE//
                 , mCommonDateTime.dailyDateTime//
                 , null, false, false, false, false//
                 , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
@@ -442,17 +451,19 @@ public class GourmetBookingCancelDetailPresenter //
     @Override
     public void onNavigatorClick()
     {
-        if (mGourmetMultiBookingDetail == null || lock() == true)
+        if (mGourmetBookingDetail == null || mGourmetBookingDetail.restaurantInfo == null || lock() == true)
         {
             return;
         }
+
+        RestaurantInfo restaurantInfo = mGourmetBookingDetail.restaurantInfo;
 
         NavigatorAnalyticsParam analyticsParam = new NavigatorAnalyticsParam();
         analyticsParam.category = AnalyticsManager.Category.GOURMET_BOOKINGS;
         analyticsParam.action = AnalyticsManager.Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED;
 
-        startActivityForResult(NavigatorDialogActivity.newInstance(getActivity(), mGourmetMultiBookingDetail.gourmetName//
-            , mGourmetMultiBookingDetail.latitude, mGourmetMultiBookingDetail.longitude, false, analyticsParam), GourmetBookingCancelDetailActivity.REQUEST_CODE_NAVIGATOR);
+        startActivityForResult(NavigatorDialogActivity.newInstance(getActivity(), restaurantInfo.name//
+            , restaurantInfo.latitude, restaurantInfo.longitude, false, analyticsParam), GourmetBookingCancelDetailActivity.REQUEST_CODE_NAVIGATOR);
 
         mAnalytics.onEventNavigatorClick(getActivity());
     }
@@ -460,12 +471,12 @@ public class GourmetBookingCancelDetailPresenter //
     @Override
     public void onClipAddressClick()
     {
-        if (mGourmetMultiBookingDetail == null)
+        if (getActivity() == null || mGourmetBookingDetail == null || mGourmetBookingDetail.restaurantInfo == null)
         {
             return;
         }
 
-        DailyTextUtils.clipText(getActivity(), mGourmetMultiBookingDetail.gourmetAddress);
+        DailyTextUtils.clipText(getActivity(), mGourmetBookingDetail.restaurantInfo.address);
 
         DailyToast.showToast(getActivity(), R.string.message_detail_copy_address, DailyToast.LENGTH_SHORT);
     }
@@ -509,18 +520,12 @@ public class GourmetBookingCancelDetailPresenter //
     public void onConciergeClick()
     {
         final String restaurantPhone;
-        if (mGourmetMultiBookingDetail == null)
+        if (mGourmetBookingDetail == null || mGourmetBookingDetail.restaurantInfo == null)
         {
             restaurantPhone = null;
-        } else if (DailyTextUtils.isTextEmpty(mGourmetMultiBookingDetail.phone2) == false)
+        } else if (DailyTextUtils.isTextEmpty(mGourmetBookingDetail.restaurantInfo.phoneNumber) == false)
         {
-            restaurantPhone = mGourmetMultiBookingDetail.phone2;
-        } else if (DailyTextUtils.isTextEmpty(mGourmetMultiBookingDetail.phone1) == false)
-        {
-            restaurantPhone = mGourmetMultiBookingDetail.phone1;
-        } else if (DailyTextUtils.isTextEmpty(mGourmetMultiBookingDetail.phone3) == false)
-        {
-            restaurantPhone = mGourmetMultiBookingDetail.phone3;
+            restaurantPhone = mGourmetBookingDetail.restaurantInfo.phoneNumber;
         } else
         {
             restaurantPhone = null;
@@ -559,10 +564,12 @@ public class GourmetBookingCancelDetailPresenter //
     @Override
     public void onConciergeHappyTalkClick()
     {
-        if (mGourmetMultiBookingDetail == null)
+        if (getActivity() == null || mGourmetBookingDetail == null || mGourmetBookingDetail.restaurantInfo == null)
         {
             return;
         }
+
+        RestaurantInfo restaurantInfo = mGourmetBookingDetail.restaurantInfo;
 
         try
         {
@@ -571,7 +578,7 @@ public class GourmetBookingCancelDetailPresenter //
 
             startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity() //
                 , HappyTalkCategoryDialog.CallScreen.SCREEN_GOURMET_BOOKING_CANCEL//
-                , mGourmetMultiBookingDetail.gourmetIndex, mReservationIndex, mGourmetMultiBookingDetail.gourmetName), GourmetBookingCancelDetailActivity.REQUEST_CODE_HAPPYTALK);
+                , restaurantInfo.index, mReservationIndex, restaurantInfo.name), GourmetBookingCancelDetailActivity.REQUEST_CODE_HAPPYTALK);
         } catch (Exception e)
         {
             getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
@@ -596,10 +603,15 @@ public class GourmetBookingCancelDetailPresenter //
     @Override
     public void onShareKakaoClick()
     {
-        if (mGourmetMultiBookingDetail == null)
+        if (mGourmetBookingDetail == null || mGourmetBookingDetail.restaurantInfo == null //
+            || mGourmetBookingDetail.ticketInfos == null || mGourmetBookingDetail.guestInfo == null //
+            || getActivity() == null)
         {
             return;
         }
+
+        RestaurantInfo restaurantInfo = mGourmetBookingDetail.restaurantInfo;
+        GuestInfo guestInfo = mGourmetBookingDetail.guestInfo;
 
         try
         {
@@ -608,11 +620,22 @@ public class GourmetBookingCancelDetailPresenter //
 
             String userName = DailyUserPreference.getInstance(getActivity()).getName();
 
+            TicketInfo firstTicketInfo = mGourmetBookingDetail.ticketInfos.size() == 0 ? null : mGourmetBookingDetail.ticketInfos.get(0);
+
+            String firstTicketName = "";
+            int firstTicketCount = 0;
+
+            if (firstTicketInfo != null)
+            {
+                firstTicketName = firstTicketInfo.name;
+                firstTicketCount = firstTicketInfo.count;
+            }
+
             String message = getString(R.string.message_booking_cancel_gourmet_share_kakao, userName //
-                , mGourmetMultiBookingDetail.gourmetName, mGourmetMultiBookingDetail.guestName //
-                , mGourmetMultiBookingDetail.ticketName, mGourmetMultiBookingDetail.ticketCount //
-                , DailyCalendar.convertDateFormatString(mGourmetMultiBookingDetail.cancelDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd") //
-                , mGourmetMultiBookingDetail.gourmetAddress);
+                , restaurantInfo.name, guestInfo.name //
+                , firstTicketName, getString(R.string.label_booking_count, firstTicketCount) //
+                , DailyCalendar.convertDateFormatString(mGourmetBookingDetail.canceledAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd") //
+                , restaurantInfo.address);
 
             KakaoLinkManager.newInstance(getActivity()).shareBookingCancelGourmet(message, mImageUrl);
 
@@ -636,20 +659,36 @@ public class GourmetBookingCancelDetailPresenter //
     @Override
     public void onMoreShareClick()
     {
-        if (mGourmetMultiBookingDetail == null)
+        if (mGourmetBookingDetail == null || mGourmetBookingDetail.restaurantInfo == null //
+            || mGourmetBookingDetail.ticketInfos == null || mGourmetBookingDetail.guestInfo == null //
+            || getActivity() == null)
         {
             return;
         }
+
+        RestaurantInfo restaurantInfo = mGourmetBookingDetail.restaurantInfo;
+        GuestInfo guestInfo = mGourmetBookingDetail.guestInfo;
 
         try
         {
             String userName = DailyUserPreference.getInstance(getActivity()).getName();
 
+            TicketInfo firstTicketInfo = mGourmetBookingDetail.ticketInfos.size() == 0 ? null : mGourmetBookingDetail.ticketInfos.get(0);
+
+            String firstTicketName = "";
+            int firstTicketCount = 0;
+
+            if (firstTicketInfo != null)
+            {
+                firstTicketName = firstTicketInfo.name;
+                firstTicketCount = firstTicketInfo.count;
+            }
+
             final String message = getString(R.string.message_booking_cancel_gourmet_share_sms, userName //
-                , mGourmetMultiBookingDetail.gourmetName, mGourmetMultiBookingDetail.guestName //
-                , mGourmetMultiBookingDetail.ticketName, mGourmetMultiBookingDetail.ticketCount //
-                , DailyCalendar.convertDateFormatString(mGourmetMultiBookingDetail.cancelDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd") //
-                , mGourmetMultiBookingDetail.gourmetAddress);
+                , restaurantInfo.name, guestInfo.name //
+                , firstTicketName, getString(R.string.label_booking_count, firstTicketCount) //
+                , DailyCalendar.convertDateFormatString(mGourmetBookingDetail.canceledAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd") //
+                , restaurantInfo.address);
 
             Intent intent = new Intent(android.content.Intent.ACTION_SEND);
             intent.setType("text/plain");
@@ -671,7 +710,7 @@ public class GourmetBookingCancelDetailPresenter //
     @Override
     public void onHiddenReservationClick()
     {
-        if (mGourmetMultiBookingDetail == null || lock() == true)
+        if (mGourmetBookingDetail == null || lock() == true)
         {
             return;
         }
@@ -761,19 +800,21 @@ public class GourmetBookingCancelDetailPresenter //
 
     void setGourmetBookingDetail(GourmetMultiBookingDetail gourmetBookingDetail)
     {
-        mGourmetMultiBookingDetail = gourmetBookingDetail;
+        mGourmetBookingDetail = gourmetBookingDetail;
     }
 
     void notifyGourmetBookingDetailChanged()
     {
-        if (mGourmetMultiBookingDetail == null)
+        if (mGourmetBookingDetail == null || mGourmetBookingDetail.guestInfo == null)
         {
             return;
         }
 
+        GuestInfo guestInfo = mGourmetBookingDetail.guestInfo;
+
         try
         {
-            String ticketDateFormat = DailyCalendar.convertDateFormatString(mGourmetMultiBookingDetail.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.M.d(EEE) HH:mm");
+            String ticketDateFormat = DailyCalendar.convertDateFormatString(guestInfo.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.M.d(EEE) HH:mm");
 
             // TODO : 임시 방문인원 - 서버 연결 시 추가 작업 예정
             int randPersons = new Random().nextInt(10);
@@ -784,7 +825,7 @@ public class GourmetBookingCancelDetailPresenter //
             ExLog.d(e.toString());
         }
 
-        getViewInterface().setBookingDetail(mGourmetMultiBookingDetail);
+        getViewInterface().setBookingDetail(mGourmetBookingDetail);
     }
 
     private Observable<Location> searchMyLocation(Observable locationAnimationObservable)

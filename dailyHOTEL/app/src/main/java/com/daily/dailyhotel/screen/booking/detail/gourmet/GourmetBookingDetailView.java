@@ -629,7 +629,8 @@ public class GourmetBookingDetailView extends BaseBlurView<GourmetBookingDetailV
 
         try
         {
-            dataBinding.paymentDateTextView.setText(DailyCalendar.convertDateFormatString(paymentInfo.paidAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
+            dataBinding.paymentDateTextView.setText(DailyCalendar.convertDateFormatString( //
+                paymentInfo.paidAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
         } catch (Exception e)
         {
             ExLog.d(e.toString());
