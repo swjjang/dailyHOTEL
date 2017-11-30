@@ -1576,6 +1576,7 @@ public class AnalyticsManager
         public static final String VIEW_TYPE = "view_type";
         public static final String TAG = "tag";
         public static final String AGGREGATION_ID = "aggregation_id";
+        public static final String LABEL= "label";
     }
 
     public static class ValueType

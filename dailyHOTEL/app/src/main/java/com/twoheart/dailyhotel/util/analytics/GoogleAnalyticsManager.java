@@ -710,9 +710,8 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         //        mGoogleAnalyticsTracker.send(screenCheckoutViewBuilder.build());
 
         String placeName = params.get(AnalyticsManager.KeyType.NAME);
-        String ticketName = params.get(AnalyticsManager.KeyType.TICKET_NAME);
 
-        recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, AnalyticsManager.Action.HOTEL_PAYMENT_COMPLETED, placeName + "-" + ticketName, null);
+        recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS, AnalyticsManager.Action.HOTEL_PAYMENT_COMPLETED, placeName, null);
 
         if (DEBUG == true)
         {
@@ -757,11 +756,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
         //        mGoogleAnalyticsTracker.set("&cu", "KRW");
         //        mGoogleAnalyticsTracker.send(screenCheckoutViewBuilder.build());
 
-        String placeName = params.get(AnalyticsManager.KeyType.NAME);
-        String ticketName = params.get(AnalyticsManager.KeyType.TICKET_NAME);
-        String ticketCount = params.get(AnalyticsManager.KeyType.QUANTITY);
-
-        String label = String.format(Locale.KOREA, "%s-%s(%s)", placeName, ticketName, ticketCount);
+        String label = params.get(AnalyticsManager.KeyType.LABEL);
         recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, AnalyticsManager.Action.GOURMET_PAYMENT_COMPLETED, label, null);
 
         if (DEBUG == true)
@@ -809,11 +804,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
     private Product getProduct(Map<String, String> params)
     {
         String placeIndex = params.get(AnalyticsManager.KeyType.PLACE_INDEX);
-        String ticketIndex = params.get(AnalyticsManager.KeyType.TICKET_INDEX);
-
         String placeName = params.get(AnalyticsManager.KeyType.NAME);
-        String ticketName = params.get(AnalyticsManager.KeyType.TICKET_NAME);
-
         String grade = params.get(AnalyticsManager.KeyType.GRADE);
         String category = params.get(AnalyticsManager.KeyType.CATEGORY);
 
@@ -825,10 +816,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
         String id;
 
-        if (DailyTextUtils.isTextEmpty(placeIndex, ticketIndex) == false)
-        {
-            id = placeIndex + "_" + ticketIndex;
-        } else if (DailyTextUtils.isTextEmpty(placeIndex) == false)
+        if (DailyTextUtils.isTextEmpty(placeIndex) == false)
         {
             id = placeIndex;
         } else
@@ -840,10 +828,7 @@ public class GoogleAnalyticsManager extends BaseAnalyticsManager
 
         String name = null;
 
-        if (DailyTextUtils.isTextEmpty(placeName, ticketName) == false)
-        {
-            name = placeName + "_" + ticketName;
-        } else if (DailyTextUtils.isTextEmpty(placeName) == false)
+        if (DailyTextUtils.isTextEmpty(placeName) == false)
         {
             name = placeName;
         }

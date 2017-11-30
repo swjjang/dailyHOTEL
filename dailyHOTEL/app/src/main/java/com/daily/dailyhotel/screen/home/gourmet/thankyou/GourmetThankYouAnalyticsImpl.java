@@ -57,11 +57,8 @@ public class GourmetThankYouAnalyticsImpl implements GourmetThankYouPresenter.Go
                 discountType = AnalyticsManager.Label.FULL_PAYMENT;
             }
 
-            String productIndex = mAnalyticsParam.params.get(AnalyticsManager.KeyType.TICKET_INDEX);
-
             AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, AnalyticsManager.Action.END_PAYMENT, paymentType, null);
             AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, AnalyticsManager.Action.PAYMENT_USED, discountType, null);
-            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS, AnalyticsManager.Action.PRODUCT_ID, productIndex, null);
         } catch (Exception e)
         {
             ExLog.d(e.toString());
