@@ -62,7 +62,6 @@ import com.twoheart.dailyhotel.util.Util;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -914,14 +913,9 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
 
         for (TicketInfo ticketInfo : ticketInfoList)
         {
-            // TODO : Test Code 서버 연결 작업 후 재 작업 필요.
-            int randPersons = new Random().nextInt(10);
-
             dataBinding.productInformationView.addInformation( //
-                ticketInfo.name, ticketInfo.count, randPersons, ticketInfo.subTotalPrice);
+                ticketInfo.name, ticketInfo.count, ticketInfo.numberOfStandardPerson, ticketInfo.subTotalPrice);
         }
-        // TODO : 임시 두줄
-        //        dataBinding.productInformationView.addInformation(gourmetBookingDetail.ticketName + "\n" + gourmetBookingDetail.ticketName, gourmetBookingDetail.ticketCount, randPersons, tempPrice);
     }
 
     private void setGuestInformation(Context context, LayoutGourmetBookingCancelDetail01DataBinding dataBinding, GourmetMultiBookingDetail gourmetBookingDetail)

@@ -19,6 +19,9 @@ public class TicketInfoData
     @JsonField(name = "name")
     public String name; // (string): 티켓이름 ,
 
+    @JsonField(name = "numberOfStandardPerson")
+    public int numberOfStandardPerson; // (integer): 기준인원 ,
+
     @JsonField(name = "subTotalPrice")
     public int subTotalPrice; // (integer): 티켓총가격
 
@@ -29,6 +32,7 @@ public class TicketInfoData
         ticketInfo.count = this.count;
         ticketInfo.index = this.index;
         ticketInfo.name = this.name;
+        ticketInfo.numberOfStandardPerson = this.numberOfStandardPerson;
         ticketInfo.subTotalPrice = this.subTotalPrice;
 
         return ticketInfo;
