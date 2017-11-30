@@ -776,7 +776,7 @@ public class GourmetBookingCancelDetailPresenter //
             String ticketDateFormat = DailyCalendar.convertDateFormatString(mGourmetBookingDetail.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.M.d(EEE) HH:mm");
 
             // TODO : 임시 방문인원 - 서버 연결 시 추가 작업 예정
-            int randPersons = new Random(10).nextInt();
+            int randPersons = new Random().nextInt(10);
 
             getViewInterface().setBookingDateAndPersons(ticketDateFormat, randPersons);
         } catch (Exception e)

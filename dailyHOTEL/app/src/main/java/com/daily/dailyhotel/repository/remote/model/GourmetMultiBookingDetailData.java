@@ -42,7 +42,7 @@ public class GourmetMultiBookingDetailData
     @JsonField(name = "ticketInfos")
     public List<TicketInfoData> ticketInfos; // (Array[TicketInfo]): 티켓정보
 
-    public GourmetMultiBookingDetail getBookingDetail()
+    public GourmetMultiBookingDetail getGourmetBookingDetail()
     {
         GourmetMultiBookingDetail bookingDetail = new GourmetMultiBookingDetail();
 

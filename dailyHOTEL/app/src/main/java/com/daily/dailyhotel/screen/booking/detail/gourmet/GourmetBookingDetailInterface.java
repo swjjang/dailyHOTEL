@@ -4,7 +4,8 @@ import android.app.Dialog;
 import android.location.Location;
 
 import com.daily.dailyhotel.base.BaseBlurViewInterface;
-import com.daily.dailyhotel.entity.GourmetBookingDetail;
+import com.daily.dailyhotel.entity.GourmetMultiBookingDetail;
+import com.daily.dailyhotel.entity.ReviewInfo;
 
 import io.reactivex.Observable;
 
@@ -14,7 +15,7 @@ public interface GourmetBookingDetailInterface extends BaseBlurViewInterface
 
     void setBookingDetailMapToolbar();
 
-    void setBookingDetail(GourmetBookingDetail gourmetBookingDetail);
+    void setBookingDetail(GourmetMultiBookingDetail gourmetBookingDetail);
 
     void setRemindDate(String currentDateTime, String bookingDateTime);
 
@@ -22,7 +23,7 @@ public interface GourmetBookingDetailInterface extends BaseBlurViewInterface
 
     void setHiddenBookingVisible(int bookingState);
 
-    void setReviewButtonLayout(String reviewStatus);
+    void setReviewButtonLayout(ReviewInfo reviewInfo);
 
     boolean isExpandedMap();
 

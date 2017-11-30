@@ -30,7 +30,12 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyScrollView;
 import com.daily.dailyhotel.base.BaseBlurView;
 import com.daily.dailyhotel.entity.Booking;
-import com.daily.dailyhotel.entity.GourmetBookingDetail;
+import com.daily.dailyhotel.entity.GourmetMultiBookingDetail;
+import com.daily.dailyhotel.entity.GuestInfo;
+import com.daily.dailyhotel.entity.PaymentInfo;
+import com.daily.dailyhotel.entity.RestaurantInfo;
+import com.daily.dailyhotel.entity.ReviewInfo;
+import com.daily.dailyhotel.entity.TicketInfo;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -60,6 +65,7 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -255,7 +261,7 @@ public class GourmetBookingDetailView extends BaseBlurView<GourmetBookingDetailV
     }
 
     @Override
-    public void setBookingDetail(GourmetBookingDetail gourmetBookingDetail)
+    public void setBookingDetail(GourmetMultiBookingDetail gourmetBookingDetail)
     {
         setHeaderLayout(getContext(), gourmetBookingDetail);
 
@@ -376,12 +382,15 @@ public class GourmetBookingDetailView extends BaseBlurView<GourmetBookingDetailV
         }
     }
 
-    private void setHeaderLayout(Context context, GourmetBookingDetail gourmetBookingDetail)
+    private void setHeaderLayout(Context context, GourmetMultiBookingDetail gourmetBookingDetail)
     {
-        if (context == null || gourmetBookingDetail == null || getViewDataBinding() == null)
+        if (context == null || getViewDataBinding() == null //
+            || gourmetBookingDetail == null || gourmetBookingDetail.restaurantInfo == null)
         {
             return;
         }
+
+        RestaurantInfo restaurantInfo = gourmetBookingDetail.restaurantInfo;
 
         double width = ScreenUtils.getScreenWidth(context);
         double height = ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(context));
@@ -390,7 +399,7 @@ public class GourmetBookingDetailView extends BaseBlurView<GourmetBookingDetailV
         {
             getViewDataBinding().googleMapLayout.setVisibility(View.GONE);
 
-            setImageMapLayout(context, gourmetBookingDetail.latitude, gourmetBookingDetail.longitude, (int) width, (int) height);
+            setImageMapLayout(context, restaurantInfo.latitude, restaurantInfo.longitude, (int) width, (int) height);
         } else
         {
             getViewDataBinding().googleMapLayout.setVisibility(View.VISIBLE);
@@ -400,11 +409,11 @@ public class GourmetBookingDetailView extends BaseBlurView<GourmetBookingDetailV
 
         getViewDataBinding().viewDetailView.setOnClickListener(this);
         getViewDataBinding().viewMapView.setOnClickListener(this);
-        getViewDataBinding().placeNameTextView.setText(gourmetBookingDetail.gourmetName);
+        getViewDataBinding().placeNameTextView.setText(restaurantInfo.name);
 
         getViewDataBinding().inputReviewView.setOnClickListener(this);
 
-        setReviewButtonLayout(gourmetBookingDetail.reviewStatusType);
+        setReviewButtonLayout(gourmetBookingDetail.reviewInfo);
     }
 
     private void setImageMapLayout(Context context, double latitude, double longitude, int height, int width)
@@ -431,16 +440,19 @@ public class GourmetBookingDetailView extends BaseBlurView<GourmetBookingDetailV
         getViewDataBinding().mapImageView.setImageURI(Uri.parse(url));
     }
 
-    private void setGoogleMapLayout(Context context, GourmetBookingDetail gourmetBookingDetail, int width, int height)
+    private void setGoogleMapLayout(Context context, GourmetMultiBookingDetail gourmetBookingDetail, int width, int height)
     {
-        if (context == null || getViewDataBinding() == null || gourmetBookingDetail == null)
+        if (context == null || getViewDataBinding() == null //
+            || gourmetBookingDetail == null || gourmetBookingDetail.restaurantInfo == null)
         {
             return;
         }
 
+        RestaurantInfo restaurantInfo = gourmetBookingDetail.restaurantInfo;
+
         getViewDataBinding().addressLayout.setVisibility(View.GONE);
         getViewDataBinding().searchMapsLayout.setVisibility(View.GONE);
-        getViewDataBinding().addressTextView.setText(gourmetBookingDetail.gourmetAddress);
+        getViewDataBinding().addressTextView.setText(restaurantInfo.address);
 
         getViewDataBinding().copyAddressView.setOnClickListener(new View.OnClickListener()
         {
@@ -496,7 +508,7 @@ public class GourmetBookingDetailView extends BaseBlurView<GourmetBookingDetailV
 
                 relocationMyLocation(getViewDataBinding().mapLayout);
                 relocationZoomControl(getViewDataBinding().mapLayout);
-                addMarker(mGoogleMap, gourmetBookingDetail.latitude, gourmetBookingDetail.longitude, gourmetBookingDetail.gourmetName);
+                addMarker(mGoogleMap, restaurantInfo.latitude, restaurantInfo.longitude, restaurantInfo.name);
 
                 mGoogleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback()
                 {
@@ -507,7 +519,7 @@ public class GourmetBookingDetailView extends BaseBlurView<GourmetBookingDetailV
 
                         Projection projection = mGoogleMap.getProjection();
 
-                        Point point = projection.toScreenLocation(new LatLng(gourmetBookingDetail.latitude, gourmetBookingDetail.longitude));
+                        Point point = projection.toScreenLocation(new LatLng(restaurantInfo.latitude, restaurantInfo.longitude));
                         point.y += point.y - (getViewDataBinding().fakeMapLayout.getHeight() * 0.43);
 
                         mCenterLatLng = projection.fromScreenLocation(point);
@@ -519,12 +531,14 @@ public class GourmetBookingDetailView extends BaseBlurView<GourmetBookingDetailV
     }
 
     @Override
-    public void setReviewButtonLayout(String reviewStatus)
+    public void setReviewButtonLayout(ReviewInfo reviewInfo)
     {
         if (getContext() == null || getViewDataBinding() == null)
         {
             return;
         }
+
+        String reviewStatus = reviewInfo == null ? null : reviewInfo.reviewStatusType;
 
         if (DailyTextUtils.isTextEmpty(reviewStatus) == true)
         {
@@ -557,67 +571,91 @@ public class GourmetBookingDetailView extends BaseBlurView<GourmetBookingDetailV
         }
     }
 
-    private void setBookingInformation(Context context, LayoutGourmetBookingDetail01DataBinding dataBinding, GourmetBookingDetail gourmetBookingDetail)
+    private void setBookingInformation(Context context, LayoutGourmetBookingDetail01DataBinding dataBinding, GourmetMultiBookingDetail gourmetBookingDetail)
     {
-        if (context == null || dataBinding == null || gourmetBookingDetail == null)
+        if (context == null || dataBinding == null || gourmetBookingDetail == null //
+            || gourmetBookingDetail.restaurantInfo == null)
         {
             return;
         }
 
-        dataBinding.gourmetNameTextView.setText(gourmetBookingDetail.gourmetName);
-        dataBinding.addressTextView.setText(gourmetBookingDetail.gourmetAddress);
+        RestaurantInfo restaurantInfo = gourmetBookingDetail.restaurantInfo;
 
-        // TODO : Test Code 서버 연결 작업 후 재 작업 필요.
-        int randPersons = new Random(5).nextInt() - 1;
-        int tempPrice = gourmetBookingDetail.priceTotal;
+        List<TicketInfo> ticketInfoList = gourmetBookingDetail.ticketInfos;
+        if (ticketInfoList == null || ticketInfoList.size() == 0)
+        {
+            return;
+        }
 
-        dataBinding.productInformationView.addInformation(gourmetBookingDetail.ticketName, gourmetBookingDetail.ticketCount, randPersons, tempPrice);
+        dataBinding.gourmetNameTextView.setText(restaurantInfo.name);
+        dataBinding.addressTextView.setText(restaurantInfo.address);
+
+        for (TicketInfo ticketInfo : ticketInfoList)
+        {
+            // TODO : Test Code 서버 연결 작업 후 재 작업 필요.
+            int randPersons = new Random().nextInt(10);
+
+            dataBinding.productInformationView.addInformation( //
+                ticketInfo.name, ticketInfo.count, randPersons, ticketInfo.subTotalPrice);
+        }
+
         // TODO : 임시 두줄
         //         dataBinding.productInformationView.addInformation(gourmetBookingDetail.ticketName +"\n" + gourmetBookingDetail.ticketName, gourmetBookingDetail.ticketCount, randPersons, tempPrice);
     }
 
-    private void setGuestInformation(Context context, LayoutGourmetBookingDetail01DataBinding dataBinding, GourmetBookingDetail gourmetBookingDetail)
+    private void setGuestInformation(Context context, LayoutGourmetBookingDetail01DataBinding dataBinding, GourmetMultiBookingDetail gourmetBookingDetail)
     {
-        if (context == null || dataBinding == null || gourmetBookingDetail == null)
+        if (context == null || dataBinding == null || gourmetBookingDetail == null || gourmetBookingDetail.guestInfo == null)
         {
             return;
         }
 
-        dataBinding.guestNameTextView.setText(gourmetBookingDetail.guestName);
-        dataBinding.guestPhoneTextView.setText(Util.addHyphenMobileNumber(context, gourmetBookingDetail.guestPhone));
-        dataBinding.guestEmailTextView.setText(gourmetBookingDetail.guestEmail);
+        GuestInfo guestInfo = gourmetBookingDetail.guestInfo;
+
+        dataBinding.guestNameTextView.setText(guestInfo.name);
+        dataBinding.guestPhoneTextView.setText(Util.addHyphenMobileNumber(context, guestInfo.phone));
+        dataBinding.guestEmailTextView.setText(guestInfo.email);
     }
 
-    private void setPaymentInformation(Context context, LayoutGourmetBookingDetail02DataBinding dataBinding, GourmetBookingDetail gourmetBookingDetail)
+    private void setPaymentInformation(Context context, LayoutGourmetBookingDetail02DataBinding dataBinding, GourmetMultiBookingDetail gourmetBookingDetail)
     {
-        if (context == null || getViewDataBinding() == null || gourmetBookingDetail == null)
+        if (context == null || getViewDataBinding() == null //
+            || gourmetBookingDetail == null || gourmetBookingDetail.paymentInfo == null)
         {
             return;
         }
 
-        dataBinding.bonusLayout.setVisibility(View.GONE);
+        PaymentInfo paymentInfo = gourmetBookingDetail.paymentInfo;
 
         try
         {
-            dataBinding.paymentDateTextView.setText(DailyCalendar.convertDateFormatString(gourmetBookingDetail.pamentDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
+            dataBinding.paymentDateTextView.setText(DailyCalendar.convertDateFormatString(paymentInfo.paidAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
         } catch (Exception e)
         {
             ExLog.d(e.toString());
         }
 
         // TODO : 가격 노출 확인 필요. discountTotal, priceTotal
-        dataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(context, gourmetBookingDetail.discountTotal, false));
+        dataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(context, paymentInfo.price, false));
 
-        if (gourmetBookingDetail.couponAmount > 0)
+        if (paymentInfo.bonusAmount > 0)
+        {
+            dataBinding.bonusLayout.setVisibility(View.VISIBLE);
+            dataBinding.bonusTextView.setText("- " + DailyTextUtils.getPriceFormat(context, paymentInfo.bonusAmount, false));
+        } else {
+            dataBinding.bonusLayout.setVisibility(View.GONE);
+        }
+
+        if (paymentInfo.couponAmount > 0)
         {
             dataBinding.couponLayout.setVisibility(View.VISIBLE);
-            dataBinding.couponTextView.setText("- " + DailyTextUtils.getPriceFormat(context, gourmetBookingDetail.couponAmount, false));
+            dataBinding.couponTextView.setText("- " + DailyTextUtils.getPriceFormat(context, paymentInfo.couponAmount, false));
         } else
         {
             dataBinding.couponLayout.setVisibility(View.GONE);
         }
 
-        dataBinding.totalPriceTextView.setText(DailyTextUtils.getPriceFormat(context, gourmetBookingDetail.priceTotal, false));
+        dataBinding.totalPriceTextView.setText(DailyTextUtils.getPriceFormat(context, paymentInfo.paymentAmount, false));
 
         // 영수증 발급
         dataBinding.buttonLayout.setOnClickListener(new View.OnClickListener()

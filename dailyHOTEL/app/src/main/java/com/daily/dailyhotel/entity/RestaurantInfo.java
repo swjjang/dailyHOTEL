@@ -13,4 +13,5 @@ public class RestaurantInfo
     public double latitude; // (number, optional): 위도 ,
     public double longitude; // (number, optional): 경도 ,
     public String name; // (string): 레스토랑이름
+    public String phoneNumber; // (string, optional): 전화번호
 }

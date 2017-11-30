@@ -31,6 +31,9 @@ public class RestaurantInfoData
     @JsonField(name = "name")
     public String name; // (string): 레스토랑이름
 
+    @JsonField(name = "phoneNumber")
+    public String phoneNumber; // (string, optional): 전화번호
+
     public RestaurantInfo getRestaurantInfo()
     {
         RestaurantInfo restaurantInfo = new RestaurantInfo();
@@ -42,6 +45,7 @@ public class RestaurantInfoData
         restaurantInfo.latitude = this.latitude;
         restaurantInfo.longitude = this.longitude;
         restaurantInfo.name = this.name;
+        restaurantInfo.phoneNumber = this.phoneNumber;
 
         return restaurantInfo;
     }

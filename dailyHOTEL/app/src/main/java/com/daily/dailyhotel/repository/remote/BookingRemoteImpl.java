@@ -9,6 +9,7 @@ import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.BookingCancel;
 import com.daily.dailyhotel.entity.BookingHidden;
 import com.daily.dailyhotel.entity.GourmetBookingDetail;
+import com.daily.dailyhotel.entity.GourmetMultiBookingDetail;
 import com.daily.dailyhotel.entity.StayBookingDetail;
 import com.daily.dailyhotel.entity.StayOutboundBookingDetail;
 import com.daily.dailyhotel.entity.WaitingDeposit;
@@ -17,6 +18,7 @@ import com.daily.dailyhotel.repository.remote.model.BookingData;
 import com.daily.dailyhotel.repository.remote.model.BookingHiddenData;
 import com.daily.dailyhotel.repository.remote.model.BookingHideData;
 import com.daily.dailyhotel.repository.remote.model.GourmetBookingDetailData;
+import com.daily.dailyhotel.repository.remote.model.GourmetMultiBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.WaitingDepositData;
@@ -373,7 +375,7 @@ public class BookingRemoteImpl extends BaseRemoteImpl implements BookingInterfac
     }
 
     @Override
-    public Observable<GourmetBookingDetail> getGourmetBookingDetailMulti(String aggregationId)
+    public Observable<GourmetMultiBookingDetail> getGourmetMultiBookingDetail(String aggregationId)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v6/reservation/detail/gourmet/{aggregationId}"//
             : "MTMkMTIxJDEwNiQxNTAkOTYkMjIkNzAkMTQkNjgkODUkMCQ3MCQxNTYkNDgkMTc1JDEwNiQ=$ZRDI0NkZDRTk2NYOUZGNENEOXTBFMTNBNDZBQTU2MEE1RDY5LNUJCOEFCRkVGRUQ5OUM4NCXTU5QOTk0MzU0RTQzHNDUxMEIzNkNEQzYPwWODM5MDU1OSUQ2NzU4NjdBMTVDPODJFNzc0RTdFQkJCRDE4NTcwMT0ML5ODAzNzlBNUNENDUIyNzhFQTk=$";
@@ -381,13 +383,67 @@ public class BookingRemoteImpl extends BaseRemoteImpl implements BookingInterfac
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{aggregationId}", aggregationId);
 
-        return null;
+        return mDailyMobileService.getGourmetMultiBookingDetail(Crypto.getUrlDecoderEx(API, urlParams)) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<GourmetMultiBookingDetailData>, GourmetMultiBookingDetail>()
+            {
+                @Override
+                public GourmetMultiBookingDetail apply(BaseDto<GourmetMultiBookingDetailData> gourmetMultiBookingDetailDataBaseDto) throws Exception
+                {
+                    GourmetMultiBookingDetail gourmetMultiBookingDetail;
+
+                    if (gourmetMultiBookingDetailDataBaseDto != null)
+                    {
+                        if (gourmetMultiBookingDetailDataBaseDto.msgCode == 100 && gourmetMultiBookingDetailDataBaseDto.data != null)
+                        {
+                            gourmetMultiBookingDetail = gourmetMultiBookingDetailDataBaseDto.data.getGourmetBookingDetail();
+                        } else
+                        {
+                            throw new BaseException(gourmetMultiBookingDetailDataBaseDto.msgCode, gourmetMultiBookingDetailDataBaseDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(-1, null);
+                    }
+
+                    return gourmetMultiBookingDetail;
+                }
+            });
     }
 
     @Override
-    public Observable<GourmetBookingDetail> getGourmetBookingDetailMulti(int reservationIndex)
+    public Observable<GourmetMultiBookingDetail> getGourmetMultiBookingDetail(int reservationIndex)
     {
-        return null;
+        final String API = Constants.UNENCRYPTED_URL ? "api/v6/reservation/detail/gourmet/legacy/{reservationIdx}"//
+            : "MjkkOTEkNTMkMTI0JDEyMyQxNzYkODQkMTY0JDEwMiQ5OCQ3NyQyOCQxMDckMzckMTUwJDEwNyQ=$N0E1M0FFREIxOUNCMTZEQkFFMTczPMTTkxNkMV4OEFENzI5MURCODcwUMEY1RUE0QTUzNTgxRTY4OTEU1MUJCMUANFRDE1QUVI3NjYgwODYTgG5Q0ExMThCNzk4QzA5RDA3GNBjQzRTREQkU0RDQyMjBg0QjFFMzBENjg0N0EzQUZE1RTMwNjUxMTgO=$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{reservationIdx}", Integer.toString(reservationIndex));
+
+        return mDailyMobileService.getGourmetMultiBookingDetail(Crypto.getUrlDecoderEx(API, urlParams)) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<GourmetMultiBookingDetailData>, GourmetMultiBookingDetail>()
+            {
+                @Override
+                public GourmetMultiBookingDetail apply(BaseDto<GourmetMultiBookingDetailData> gourmetMultiBookingDetailDataBaseDto) throws Exception
+                {
+                    GourmetMultiBookingDetail gourmetMultiBookingDetail;
+
+                    if (gourmetMultiBookingDetailDataBaseDto != null)
+                    {
+                        if (gourmetMultiBookingDetailDataBaseDto.msgCode == 100 && gourmetMultiBookingDetailDataBaseDto.data != null)
+                        {
+                            gourmetMultiBookingDetail = gourmetMultiBookingDetailDataBaseDto.data.getGourmetBookingDetail();
+                        } else
+                        {
+                            throw new BaseException(gourmetMultiBookingDetailDataBaseDto.msgCode, gourmetMultiBookingDetailDataBaseDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(-1, null);
+                    }
+
+                    return gourmetMultiBookingDetail;
+                }
+            });
     }
 
     @Override

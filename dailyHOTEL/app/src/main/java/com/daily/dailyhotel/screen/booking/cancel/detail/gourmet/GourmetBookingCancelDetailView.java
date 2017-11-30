@@ -894,7 +894,7 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
         dataBinding.addressTextView.setText(gourmetBookingDetail.gourmetAddress);
 
         // TODO : Test Code 서버 연결 작업 후 재 작업 필요.
-        int randPersons = new Random(5).nextInt() - 1;
+        int randPersons = new Random().nextInt(5);
         int tempPrice = gourmetBookingDetail.priceTotal;
 
         dataBinding.productInformationView.addInformation(gourmetBookingDetail.ticketName, gourmetBookingDetail.ticketCount, randPersons, tempPrice);
