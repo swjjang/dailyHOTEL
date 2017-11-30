@@ -1029,15 +1029,26 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
 
             String userName = DailyUserPreference.getInstance(getActivity()).getName();
 
-            TicketInfo firstTicketInfo = mGourmetBookingDetail.ticketInfos.size() == 0 ? null : mGourmetBookingDetail.ticketInfos.get(0);
-
             String firstTicketName = "";
-            int firstTicketCount = 0;
+            int totalTicketCount = 0;
+            int ticketSize = mGourmetBookingDetail.ticketInfos.size();
 
-            if (firstTicketInfo != null)
+            for (TicketInfo ticketInfo : mGourmetBookingDetail.ticketInfos)
             {
-                firstTicketName = firstTicketInfo.name;
-                firstTicketCount = firstTicketInfo.count;
+                if (DailyTextUtils.isTextEmpty(firstTicketName) == true)
+                {
+                    firstTicketName = ticketInfo.name;
+                }
+
+                totalTicketCount += ticketInfo.count;
+            }
+
+            String ticketName;
+            if (ticketSize > 1)
+            {
+                ticketName = getString(R.string.message_multi_ticket_name_n_count, firstTicketName, ticketSize - 1);
+            } else {
+                ticketName = firstTicketName;
             }
 
             String message = getString(R.string.message_booking_gourmet_share_kakao, //
@@ -1045,7 +1056,7 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
                 DailyTextUtils.getPriceFormat(getActivity(), paymentInfo.paymentAmount, false), //
                 DailyCalendar.convertDateFormatString(guestInfo.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"),//
                 DailyCalendar.convertDateFormatString(guestInfo.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm"), //
-                firstTicketName, getString(R.string.label_booking_count, firstTicketCount), //
+                ticketName, getString(R.string.label_booking_count, totalTicketCount), //
                 restaurantInfo.address);
 
             KakaoLinkManager.newInstance(getActivity()).shareBookingGourmet(message, restaurantInfo.index,//
@@ -1087,15 +1098,26 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
         {
             String userName = DailyUserPreference.getInstance(getActivity()).getName();
 
-            TicketInfo firstTicketInfo = mGourmetBookingDetail.ticketInfos.size() == 0 ? null : mGourmetBookingDetail.ticketInfos.get(0);
-
             String firstTicketName = "";
-            int firstTicketCount = 0;
+            int totalTicketCount = 0;
+            int ticketSize = mGourmetBookingDetail.ticketInfos.size();
 
-            if (firstTicketInfo != null)
+            for (TicketInfo ticketInfo : mGourmetBookingDetail.ticketInfos)
             {
-                firstTicketName = firstTicketInfo.name;
-                firstTicketCount = firstTicketInfo.count;
+                if (DailyTextUtils.isTextEmpty(firstTicketName) == true)
+                {
+                    firstTicketName = ticketInfo.name;
+                }
+
+                totalTicketCount += ticketInfo.count;
+            }
+
+            String ticketName;
+            if (ticketSize > 1)
+            {
+                ticketName = getString(R.string.message_multi_ticket_name_n_count, firstTicketName, ticketSize - 1);
+            } else {
+                ticketName = firstTicketName;
             }
 
             String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/gourmet/%d?reserveDate=%s"//
@@ -1107,7 +1129,7 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
                 DailyTextUtils.getPriceFormat(getActivity(), paymentInfo.paymentAmount, false), //
                 DailyCalendar.convertDateFormatString(guestInfo.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"),//
                 DailyCalendar.convertDateFormatString(guestInfo.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm"), //
-                firstTicketName, getString(R.string.label_booking_count, firstTicketCount), //
+                ticketName, getString(R.string.label_booking_count, totalTicketCount), //
                 restaurantInfo.address);
 
             CommonRemoteImpl commonRemote = new CommonRemoteImpl(getActivity());

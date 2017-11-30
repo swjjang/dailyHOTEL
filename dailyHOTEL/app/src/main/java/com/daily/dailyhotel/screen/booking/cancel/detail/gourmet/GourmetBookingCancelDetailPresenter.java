@@ -619,20 +619,31 @@ public class GourmetBookingCancelDetailPresenter //
 
             String userName = DailyUserPreference.getInstance(getActivity()).getName();
 
-            TicketInfo firstTicketInfo = mGourmetBookingDetail.ticketInfos.size() == 0 ? null : mGourmetBookingDetail.ticketInfos.get(0);
-
             String firstTicketName = "";
-            int firstTicketCount = 0;
+            int totalTicketCount = 0;
+            int ticketSize = mGourmetBookingDetail.ticketInfos.size();
 
-            if (firstTicketInfo != null)
+            for (TicketInfo ticketInfo : mGourmetBookingDetail.ticketInfos)
             {
-                firstTicketName = firstTicketInfo.name;
-                firstTicketCount = firstTicketInfo.count;
+                if (DailyTextUtils.isTextEmpty(firstTicketName) == true)
+                {
+                    firstTicketName = ticketInfo.name;
+                }
+
+                totalTicketCount += ticketInfo.count;
+            }
+
+            String ticketName;
+            if (ticketSize > 1)
+            {
+                ticketName = getString(R.string.message_multi_ticket_name_n_count, firstTicketName, ticketSize - 1);
+            } else {
+                ticketName = firstTicketName;
             }
 
             String message = getString(R.string.message_booking_cancel_gourmet_share_kakao, userName //
                 , restaurantInfo.name, guestInfo.name //
-                , firstTicketName, getString(R.string.label_booking_count, firstTicketCount) //
+                , ticketName, getString(R.string.label_booking_count, totalTicketCount) //
                 , DailyCalendar.convertDateFormatString(mGourmetBookingDetail.canceledAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd") //
                 , restaurantInfo.address);
 
@@ -672,20 +683,31 @@ public class GourmetBookingCancelDetailPresenter //
         {
             String userName = DailyUserPreference.getInstance(getActivity()).getName();
 
-            TicketInfo firstTicketInfo = mGourmetBookingDetail.ticketInfos.size() == 0 ? null : mGourmetBookingDetail.ticketInfos.get(0);
-
             String firstTicketName = "";
-            int firstTicketCount = 0;
+            int totalTicketCount = 0;
+            int ticketSize = mGourmetBookingDetail.ticketInfos.size();
 
-            if (firstTicketInfo != null)
+            for (TicketInfo ticketInfo : mGourmetBookingDetail.ticketInfos)
             {
-                firstTicketName = firstTicketInfo.name;
-                firstTicketCount = firstTicketInfo.count;
+                if (DailyTextUtils.isTextEmpty(firstTicketName) == true)
+                {
+                    firstTicketName = ticketInfo.name;
+                }
+
+                totalTicketCount += ticketInfo.count;
+            }
+
+            String ticketName;
+            if (ticketSize > 1)
+            {
+                ticketName = getString(R.string.message_multi_ticket_name_n_count, firstTicketName, ticketSize - 1);
+            } else {
+                ticketName = firstTicketName;
             }
 
             final String message = getString(R.string.message_booking_cancel_gourmet_share_sms, userName //
                 , restaurantInfo.name, guestInfo.name //
-                , firstTicketName, getString(R.string.label_booking_count, firstTicketCount) //
+                , ticketName, getString(R.string.label_booking_count, totalTicketCount) //
                 , DailyCalendar.convertDateFormatString(mGourmetBookingDetail.canceledAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd") //
                 , restaurantInfo.address);
 

@@ -761,6 +761,7 @@
     <string name="label_booking_cancel_information">2. 취소 정보</string>
     <string name="label_booking_reservation_recommend_gourmet_button">주변 추천 레스토랑 확인</string>
     <string name="label_booking_reservation_recommend_gourmet_title">주변 추천 레스토랑</string>
+    <string name="message_multi_ticket_name_n_count">%1$s외 %2$d개</string>
 
     <string name="message_consult_kakao">무엇을 도와드릴까요?</string>
     <string name="message_consult01">데일리 컨시어지팀이 친절하고 신속하게 답변해드려요.</string>
