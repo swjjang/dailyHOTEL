@@ -9,7 +9,6 @@ import com.daily.dailyhotel.repository.remote.model.CardData;
 import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
 import com.daily.dailyhotel.repository.remote.model.ConfigurationsData;
 import com.daily.dailyhotel.repository.remote.model.CouponsData;
-import com.daily.dailyhotel.repository.remote.model.DistrictData;
 import com.daily.dailyhotel.repository.remote.model.ExistCouponsData;
 import com.daily.dailyhotel.repository.remote.model.GourmetBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.GourmetCampaignTagsData;
@@ -20,6 +19,7 @@ import com.daily.dailyhotel.repository.remote.model.GourmetPaymentData;
 import com.daily.dailyhotel.repository.remote.model.NotificationData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
 import com.daily.dailyhotel.repository.remote.model.RecentlyPlacesData;
+import com.daily.dailyhotel.repository.remote.model.RegionData;
 import com.daily.dailyhotel.repository.remote.model.ReviewData;
 import com.daily.dailyhotel.repository.remote.model.ReviewScoresData;
 import com.daily.dailyhotel.repository.remote.model.RewardDetailData;
@@ -29,7 +29,6 @@ import com.daily.dailyhotel.repository.remote.model.ShortUrlData;
 import com.daily.dailyhotel.repository.remote.model.StayBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.StayDetailData;
-import com.daily.dailyhotel.repository.remote.model.StayDistrictData;
 import com.daily.dailyhotel.repository.remote.model.StayListData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundDetailData;
@@ -41,6 +40,7 @@ import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundDetailData
 import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
 import com.daily.dailyhotel.repository.remote.model.StayPaymentData;
 import com.daily.dailyhotel.repository.remote.model.StayRefundPolicyData;
+import com.daily.dailyhotel.repository.remote.model.StayRegionData;
 import com.daily.dailyhotel.repository.remote.model.SuggestsData;
 import com.daily.dailyhotel.repository.remote.model.TrueReviewsData;
 import com.daily.dailyhotel.repository.remote.model.TrueVRData;
@@ -708,11 +708,11 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Observable<BaseDto<DistrictData>> getStayDistrict(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+    Observable<BaseDto<RegionData>> getStayRegionList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Observable<BaseDto<StayDistrictData>> getStayCategoryDistrict(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+    Observable<BaseDto<StayRegionData>> getStayCategoryRegionList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // BookingRemoteImpl
@@ -920,9 +920,18 @@ public interface DailyMobileService
                                                                  @Query("reservationDate") String date, //
                                                                  @Query("term") String term);
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    // CouponRemoteImpl
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
     Observable<BaseDto<CouponsData>> getCouponHistoryList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<CouponsData>> getGourmetCouponListByPayment(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // RewardRemoteImpl

@@ -81,6 +81,40 @@ public class Coupon implements Parcelable
         this.type = couponType;
     }
 
+    public Coupon(com.daily.dailyhotel.entity.Coupon coupon)
+    {
+        if (coupon == null)
+        {
+            return;
+        }
+
+        amount = coupon.amount; // 쿠폰금액 ,,,
+        title = coupon.title; // 쿠폰명 ,,,
+        validFrom = coupon.validFrom; // 쿠폰 사용가능한 시작 시각 ,,,
+        validTo = coupon.validTo; // 쿠폰 사용가능한 마지막 시각 ,,,
+        amountMinimum = coupon.amountMinimum; // 최소주문금액 ,,,
+        isDownloaded = coupon.isDownloaded; // 유저가 다운로드 했는지 여부 ,,
+        availableItem = coupon.availableItem; // 사용가능처 ,,
+        serverDate = coupon.serverDate; // 서버시간 ,,
+        couponCode = coupon.couponCode; // 이벤트 웹뷰, 쿠폰주의사항 사용용 쿠폰 코드 - 쿠폰별 유니크 코드
+        stayFrom = coupon.stayFrom; // 투숙일 정보 - 시작일
+        stayTo = coupon.stayTo; // 투숙일 정보 - 종료일
+        downloadedAt = coupon.downloadedAt; // 유저가 해당 쿠폰을 다운로드한 시각
+        disabledAt = coupon.disabledAt; // 쿠폰 사용 완료 또는 만료된 시각 (쿠폰 상태가 완료되면, 없어집니다.)
+        description = coupon.description; // 쿠폰 설명
+        availableInDomestic = coupon.availableInDomestic; // 국내 업소만 쿠폰 적용 여부
+        availableInOverseas = coupon.availableInOverseas; // 해외 업소만 쿠폰 적용 여부
+        availableInStay = coupon.availableInStay; // 호텔 쿠폰인지 여부 (아이콘으로 쓰세요)
+        availableInGourmet = coupon.availableInGourmet; // 고메 쿠폰인지 여부 (아이콘으로 쓰세요)
+        isRedeemed = coupon.isRedeemed; // 이미 사용한 쿠폰인지 여부
+        isExpired = coupon.isExpired; // 만료된 쿠폰인지 여부
+
+        if (coupon.type != null)
+        {
+            type = Type.valueOf(coupon.type.name());
+        }
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {

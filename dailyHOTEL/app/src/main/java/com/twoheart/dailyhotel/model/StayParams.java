@@ -6,7 +6,8 @@ import android.os.Parcelable;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.daily.dailyhotel.entity.StayTown;
+import com.daily.dailyhotel.entity.StayArea;
+import com.daily.dailyhotel.entity.StayRegion;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.util.Constants;
 
@@ -65,15 +66,22 @@ public class StayParams extends PlaceParams
             }
         }
 
-        StayTown stayTown = stayCuration.getTown();
+        StayRegion stayRegion = stayCuration.getRegion();
 
-        if (stayTown != null)
+        if (stayRegion != null)
         {
-            provinceIdx = stayTown.getDistrict().index;
+            com.daily.dailyhotel.entity.Area areaGroup = stayRegion.getAreaGroup();
 
-            if (stayTown.index != StayTown.ALL)
+            if (areaGroup != null)
             {
-                areaIdx = stayTown.index;
+                provinceIdx = areaGroup.index;
+
+                StayArea area = stayRegion.getArea();
+
+                if (area != null && area.index != StayArea.ALL)
+                {
+                    areaIdx = area.index;
+                }
             }
         }
 

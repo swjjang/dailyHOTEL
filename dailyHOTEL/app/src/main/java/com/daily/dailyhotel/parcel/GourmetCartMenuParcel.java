@@ -43,7 +43,7 @@ public class GourmetCartMenuParcel implements Parcelable
 
         dest.writeInt(mGourmetCartMenu.minimumOrderQuantity);
         dest.writeInt(mGourmetCartMenu.maximumOrderQuantity);
-        dest.writeInt(mGourmetCartMenu.saleOrderQuantity);
+        dest.writeInt(mGourmetCartMenu.availableTicketNumbers);
     }
 
     private void readFromParcel(Parcel in)
@@ -60,7 +60,7 @@ public class GourmetCartMenuParcel implements Parcelable
 
         mGourmetCartMenu.minimumOrderQuantity = in.readInt();
         mGourmetCartMenu.maximumOrderQuantity = in.readInt();
-        mGourmetCartMenu.saleOrderQuantity = in.readInt();
+        mGourmetCartMenu.availableTicketNumbers = in.readInt();
     }
 
     @Override

@@ -1,8 +1,9 @@
 package com.daily.dailyhotel.domain;
 
-import com.twoheart.dailyhotel.model.Coupon;
+import com.daily.dailyhotel.entity.Coupon;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Observable;
 
@@ -12,5 +13,7 @@ import io.reactivex.Observable;
 
 public interface CouponInterface
 {
-    Observable<ArrayList<Coupon>> getCouponHistoryList();
+    Observable<List<Coupon>> getCouponHistoryList();
+
+    Observable<List<Coupon>> getGourmetCouponListByPayment(int[] ticketIndexes, int[] ticketCounts);
 }

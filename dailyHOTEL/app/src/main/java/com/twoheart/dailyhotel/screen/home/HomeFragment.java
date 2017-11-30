@@ -27,8 +27,8 @@ import com.daily.dailyhotel.entity.RewardInformation;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutbounds;
-import com.daily.dailyhotel.entity.StayTown;
-import com.daily.dailyhotel.parcel.StayTownParcel;
+import com.daily.dailyhotel.entity.StayRegion;
+import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
@@ -36,7 +36,7 @@ import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RewardRemoteImpl;
-import com.daily.dailyhotel.screen.common.district.stay.StayDistrictListActivity;
+import com.daily.dailyhotel.screen.common.area.stay.StayAreaListActivity;
 import com.daily.dailyhotel.screen.common.web.DailyWebActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
@@ -51,7 +51,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
-import com.twoheart.dailyhotel.model.Province;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.Event;
@@ -370,27 +369,27 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     case Activity.RESULT_OK:
                     case com.daily.base.BaseActivity.RESULT_CODE_START_CALENDAR:
                     {
-                        if (data != null && (data.hasExtra(StayDistrictListActivity.INTENT_EXTRA_DATA_STAY_TOWN) == false//
-                            || data.hasExtra(StayDistrictListActivity.INTENT_EXTRA_DATA_STAY_CATEGORY) == false))
+                        if (data != null && (data.hasExtra(StayAreaListActivity.INTENT_EXTRA_DATA_REGION) == false//
+                            || data.hasExtra(StayAreaListActivity.INTENT_EXTRA_DATA_STAY_CATEGORY) == false))
                         {
                             return;
                         }
 
-                        StayTownParcel stayTownParcel = data.getParcelableExtra(StayDistrictListActivity.INTENT_EXTRA_DATA_STAY_TOWN);
+                        StayRegionParcel stayRegionParcel = data.getParcelableExtra(StayAreaListActivity.INTENT_EXTRA_DATA_REGION);
 
-                        if (stayTownParcel == null)
+                        if (stayRegionParcel == null)
                         {
                             return;
                         }
 
-                        StayTown stayTown = stayTownParcel.getStayTown();
+                        StayRegion region = stayRegionParcel.getRegion();
 
-                        if (stayTown == null || stayTown.getDistrict() == null)
+                        if (region == null || region.getAreaGroup() == null || region.getArea() == null)
                         {
                             return;
                         }
 
-                        DailyCategoryType dailyCategoryType = DailyCategoryType.valueOf(data.getStringExtra(StayDistrictListActivity.INTENT_EXTRA_DATA_STAY_CATEGORY));
+                        DailyCategoryType dailyCategoryType = DailyCategoryType.valueOf(data.getStringExtra(StayAreaListActivity.INTENT_EXTRA_DATA_STAY_CATEGORY));
 
                         try
                         {
@@ -405,13 +404,13 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
                     case com.daily.base.BaseActivity.RESULT_CODE_START_AROUND_SEARCH:
                     {
-                        if (data.hasExtra(StayDistrictListActivity.INTENT_EXTRA_DATA_STAY_CATEGORY) == false)
+                        if (data.hasExtra(StayAreaListActivity.INTENT_EXTRA_DATA_STAY_CATEGORY) == false)
                         {
                             return;
                         }
 
                         // 검색 결과 화면으로 이동한다.
-                        DailyCategoryType dailyCategoryType = DailyCategoryType.valueOf(data.getStringExtra(StayDistrictListActivity.INTENT_EXTRA_DATA_STAY_CATEGORY));
+                        DailyCategoryType dailyCategoryType = DailyCategoryType.valueOf(data.getStringExtra(StayAreaListActivity.INTENT_EXTRA_DATA_STAY_CATEGORY));
 
                         try
                         {
@@ -428,56 +427,6 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         }
                     }
                     break;
-                }
-
-
-                if (resultCode == Activity.RESULT_OK)
-                {
-                    if (data != null && data.hasExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE) == true)
-                    {
-                        Province province = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PROVINCE);
-                        DailyCategoryType categoryType = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE);
-
-                        DailyPreference.getInstance(mBaseActivity).setDailyRegion(categoryType, Util.getDailyRegionJSONObject(province));
-
-                        //                        new Handler().postDelayed(new Runnable()
-                        //                        {
-                        //                            @Override
-                        //                            public void run()
-                        //                            {
-                        //                                Intent intent = StayCategoryTabActivity.newInstance(mBaseActivity, categoryType, null);
-                        //                                startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY);
-                        //                            }
-                        //                        }, 50);
-
-                        try
-                        {
-                            Intent intent = StayCategoryTabActivity.newInstance(mBaseActivity, categoryType, null);
-                            startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY);
-                        } catch (Exception e)
-                        {
-                            ExLog.e(e.toString());
-                        }
-
-                    }
-                } else if (resultCode == RESULT_ARROUND_SEARCH_LIST && data != null)
-                {
-                    // 검색 결과 화면으로 이동한다.
-                    DailyCategoryType dailyCategoryType = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE);
-
-                    try
-                    {
-                        StayBookingDay stayBookingDay = new StayBookingDay();
-                        stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
-                        stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
-
-                        Intent intent = StayCategoryNearByActivity.newInstance(mBaseActivity //
-                            , mTodayDateTime, stayBookingDay, null, dailyCategoryType, AnalyticsManager.Screen.HOME);
-                        startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
-                    } catch (Exception e)
-                    {
-                        ExLog.e(e.toString());
-                    }
                 }
                 break;
             }
@@ -967,7 +916,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     }
 
                     analyticsParam.setShowOriginalPriceYn(analyticsParam.price, analyticsParam.discountPrice);
-                    analyticsParam.setTown(null);
+                    analyticsParam.setRegion(null);
                     analyticsParam.entryPosition = -1;
                     analyticsParam.totalListCount = -1;
                     analyticsParam.isDailyChoice = false;
@@ -2274,7 +2223,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 String checkInDateTime = stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT);
                 String checkOutDateTime = stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT);
 
-                startActivityForResult(StayDistrictListActivity.newInstance(mBaseActivity//
+                startActivityForResult(StayAreaListActivity.newInstance(mBaseActivity//
                     , checkInDateTime, checkOutDateTime, categoryType, categoryType.getCodeString(mBaseActivity)), Constants.CODE_REQUEST_ACTIVITY_REGIONLIST);
 
                 String label = "";

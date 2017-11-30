@@ -9,6 +9,7 @@ import android.view.Window;
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.repository.remote.CouponRemoteImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -17,56 +18,61 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import retrofit2.Call;
 import retrofit2.Response;
 
 public class SelectGourmetCouponDialogActivity extends BaseActivity
 {
     public static final String INTENT_EXTRA_SELECT_COUPON = "selectCoupon";
-    public static final String INTENT_EXTRA_GOURMET_IDX = "gourmetIdx";
-    public static final String INTENT_EXTRA_TICKET_IDX = "ticketIdx";
-    public static final String INTENT_EXTRA_DATE = "date";
+    public static final String INTENT_EXTRA_GOURMET_INDEX = "gourmetIndex";
+    public static final String INTENT_EXTRA_TICKET_INDEXES = "ticketIndexes";
+    public static final String INTENT_EXTRA_VISIT_DAY = "visitDay";
     public static final String INTENT_EXTRA_GOURMET_NAME = "gourmetName";
-    public static final String INTENT_EXTRA_TICKET_PRICE = "ticketPrice";
-    public static final String INTENT_EXTRA_TICKET_COUNT = "ticketCount";
+    public static final String INTENT_EXTRA_TICKET_COUNTS = "ticketCounts";
 
     SelectCouponDialogLayout mLayout;
     SelectGourmetCouponNetworkController mNetworkController;
 
+    CouponRemoteImpl mCouponRemoteImpl;
+
     boolean mIsSetOk = false;
 
-    int mGourmetIdx;
-    int mTicketIdx;
+    int mGourmetIndex;
+    int[] mTicketIndexes;
+    int[] mTicketCounts;
 
-    int mTicketCount;
-    String mDate;
+    String mVisitDay;
     private String mGourmetName;
     String mCallByScreen;
 
-    public static Intent newInstance(Context context, int gourmetIdx, int ticketIdx, String date//
-        , String gourmetName, int ticketCount)
+    public static Intent newInstance(Context context, String visitDay, int gourmetIndex, String gourmetName//
+        , int[] ticketIndexes, int[] ticketCounts)
     {
         Intent intent = new Intent(context, SelectGourmetCouponDialogActivity.class);
-        intent.putExtra(INTENT_EXTRA_GOURMET_IDX, gourmetIdx);
-        intent.putExtra(INTENT_EXTRA_TICKET_IDX, ticketIdx);
-        intent.putExtra(INTENT_EXTRA_DATE, date);
+        intent.putExtra(INTENT_EXTRA_VISIT_DAY, visitDay);
+        intent.putExtra(INTENT_EXTRA_GOURMET_INDEX, gourmetIndex);
         intent.putExtra(INTENT_EXTRA_GOURMET_NAME, gourmetName);
-        intent.putExtra(INTENT_EXTRA_TICKET_COUNT, ticketCount);
+        intent.putExtra(INTENT_EXTRA_TICKET_INDEXES, ticketIndexes);
+        intent.putExtra(INTENT_EXTRA_TICKET_COUNTS, ticketCounts);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN, AnalyticsManager.Screen.DAILYGOURMET_BOOKINGINITIALISE);
 
         return intent;
     }
 
-    public static Intent newInstance(Context context, int gourmetIdx, String date, String gourmetName)
+    public static Intent newInstance(Context context, String visitDay, int gourmetIndex, String gourmetName)
     {
         Intent intent = new Intent(context, SelectGourmetCouponDialogActivity.class);
-        intent.putExtra(INTENT_EXTRA_GOURMET_IDX, gourmetIdx);
-        intent.putExtra(INTENT_EXTRA_DATE, date);
+        intent.putExtra(INTENT_EXTRA_VISIT_DAY, visitDay);
+        intent.putExtra(INTENT_EXTRA_GOURMET_INDEX, gourmetIndex);
         intent.putExtra(INTENT_EXTRA_GOURMET_NAME, gourmetName);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN, AnalyticsManager.Screen.DAILYGOURMET_DETAIL);
 
@@ -88,6 +94,8 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
 
         mCallByScreen = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_CALL_BY_SCREEN);
 
+        mCouponRemoteImpl = new CouponRemoteImpl(this);
+
         if (DailyTextUtils.isTextEmpty(mCallByScreen) == true)
         {
             Util.restartApp(this);
@@ -98,19 +106,18 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
         {
             case AnalyticsManager.Screen.DAILYGOURMET_BOOKINGINITIALISE:
             {
-                mGourmetIdx = intent.getIntExtra(INTENT_EXTRA_GOURMET_IDX, -1);
-                mDate = intent.getStringExtra(INTENT_EXTRA_DATE);
-                mTicketIdx = intent.getIntExtra(INTENT_EXTRA_TICKET_IDX, -1);
+                mVisitDay = intent.getStringExtra(INTENT_EXTRA_VISIT_DAY);
+                mGourmetIndex = intent.getIntExtra(INTENT_EXTRA_GOURMET_INDEX, -1);
                 mGourmetName = intent.getStringExtra(INTENT_EXTRA_GOURMET_NAME);
-                mTicketCount = intent.getIntExtra(INTENT_EXTRA_TICKET_COUNT, 0);
+                mTicketIndexes = intent.getIntArrayExtra(INTENT_EXTRA_TICKET_INDEXES);
+                mTicketCounts = intent.getIntArrayExtra(INTENT_EXTRA_TICKET_COUNTS);
                 break;
             }
 
             case AnalyticsManager.Screen.DAILYGOURMET_DETAIL:
             {
-                mGourmetIdx = intent.getIntExtra(INTENT_EXTRA_GOURMET_IDX, -1);
-                mDate = intent.getStringExtra(INTENT_EXTRA_DATE);
-
+                mVisitDay = intent.getStringExtra(INTENT_EXTRA_VISIT_DAY);
+                mGourmetIndex = intent.getIntExtra(INTENT_EXTRA_GOURMET_INDEX, -1);
                 mGourmetName = intent.getStringExtra(INTENT_EXTRA_GOURMET_NAME);
                 break;
             }
@@ -143,32 +150,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
 
         lockUI();
 
-        switch (mCallByScreen)
-        {
-            case AnalyticsManager.Screen.DAILYGOURMET_BOOKINGINITIALISE:
-            {
-                if (DailyTextUtils.isTextEmpty(mDate) == true)
-                {
-                    Util.restartApp(this);
-                    return;
-                }
-
-                mNetworkController.requestCouponList(mTicketIdx, mTicketCount);
-                break;
-            }
-
-            case AnalyticsManager.Screen.DAILYGOURMET_DETAIL:
-            {
-                if (DailyTextUtils.isTextEmpty(mDate) == true)
-                {
-                    Util.restartApp(this);
-                    return;
-                }
-
-                mNetworkController.requestCouponList(mGourmetIdx, mDate);
-                break;
-            }
-        }
+        onRefresh();
     }
 
     @Override
@@ -258,6 +240,93 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
         }
     };
 
+    private void onRefresh()
+    {
+        switch (mCallByScreen)
+        {
+            case AnalyticsManager.Screen.DAILYGOURMET_BOOKINGINITIALISE:
+            {
+                if (DailyTextUtils.isTextEmpty(mVisitDay) == true)
+                {
+                    Util.restartApp(this);
+                    return;
+                }
+
+                addCompositeDisposable(mCouponRemoteImpl.getGourmetCouponListByPayment(mTicketIndexes, mTicketCounts).map(new Function<List<com.daily.dailyhotel.entity.Coupon>, List<Coupon>>()
+                {
+                    @Override
+                    public List<Coupon> apply(List<com.daily.dailyhotel.entity.Coupon> coupons) throws Exception
+                    {
+                        List<Coupon> couponList = new ArrayList<>();
+
+                        for (com.daily.dailyhotel.entity.Coupon coupon : coupons)
+                        {
+                            couponList.add(new Coupon(coupon));
+                        }
+
+                        return couponList;
+                    }
+                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<Coupon>>()
+                {
+                    @Override
+                    public void accept(List<Coupon> couponList) throws Exception
+                    {
+                        if (couponList.size() == 0)
+                        {
+                            mLayout.setVisibility(false);
+                            showSimpleDialog(getString(R.string.label_booking_select_coupon), getString(R.string.message_select_coupon_empty), //
+                                getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                                {
+                                    @Override
+                                    public void onDismiss(DialogInterface dialog)
+                                    {
+                                        finish();
+                                    }
+                                });
+
+                            //                        AnalyticsManager.getInstance(SelectGourmetCouponDialogActivity.this) //
+                            //                            .recordScreen(AnalyticsManager.Screen.DAILY_GOURMET_UNAVAILABLE_COUPON_LIST);
+                        } else
+                        {
+                            mLayout.setVisibility(true);
+                            mLayout.setTitle(R.string.label_select_coupon);
+                            mLayout.setTwoButtonLayout(true, R.string.dialog_btn_text_select, R.string.dialog_btn_text_cancel);
+
+                            mLayout.setData(couponList, true);
+
+                            AnalyticsManager.getInstance(SelectGourmetCouponDialogActivity.this) //
+                                .recordScreen(SelectGourmetCouponDialogActivity.this, AnalyticsManager.Screen.DAILY_GOURMET_AVAILABLE_COUPON_LIST, null);
+                        }
+
+                        unLockUI();
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        onHandleError(throwable);
+                        finish();
+                    }
+                }));
+
+                break;
+            }
+
+            case AnalyticsManager.Screen.DAILYGOURMET_DETAIL:
+            {
+                if (DailyTextUtils.isTextEmpty(mVisitDay) == true)
+                {
+                    Util.restartApp(this);
+                    return;
+                }
+
+                mNetworkController.requestCouponList(mGourmetIndex, mVisitDay);
+                break;
+            }
+        }
+    }
+
     // ///////////////////////////////////////////////////
     // NetworkController
     // ///////////////////////////////////////////////////
@@ -338,32 +407,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
             Coupon coupon = mLayout.getCoupon(couponCode);
             analyticsDownloadCoupon(coupon);
 
-            switch (mCallByScreen)
-            {
-                case AnalyticsManager.Screen.DAILYGOURMET_BOOKINGINITIALISE:
-                {
-                    if (DailyTextUtils.isTextEmpty(mDate) == true)
-                    {
-                        Util.restartApp(SelectGourmetCouponDialogActivity.this);
-                        return;
-                    }
-
-                    mNetworkController.requestCouponList(mTicketIdx, mTicketCount);
-                    break;
-                }
-
-                case AnalyticsManager.Screen.DAILYGOURMET_DETAIL:
-                {
-                    if (DailyTextUtils.isTextEmpty(mDate) == true)
-                    {
-                        Util.restartApp(SelectGourmetCouponDialogActivity.this);
-                        return;
-                    }
-
-                    mNetworkController.requestCouponList(mGourmetIdx, mDate);
-                    break;
-                }
-            }
+            onRefresh();
         }
 
         @Override

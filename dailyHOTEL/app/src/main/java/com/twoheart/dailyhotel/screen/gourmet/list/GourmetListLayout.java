@@ -188,7 +188,7 @@ public class GourmetListLayout extends PlaceListLayout
 
                     ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
 
-                    if(emptyStatus != Constants.EmptyStatus.NONE)
+                    if (emptyStatus != Constants.EmptyStatus.NONE)
                     {
                         ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
                     }
@@ -213,7 +213,7 @@ public class GourmetListLayout extends PlaceListLayout
 
                     ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
 
-                    if(emptyStatus != Constants.EmptyStatus.NONE)
+                    if (emptyStatus != Constants.EmptyStatus.NONE)
                     {
                         ((GourmetListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
                     }

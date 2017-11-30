@@ -7,10 +7,10 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.Coupon;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.repository.remote.CouponRemoteImpl;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
@@ -150,10 +150,10 @@ public class CouponHistoryPresenter extends BaseExceptionPresenter<CouponHistory
         screenLock(showProgress);
 
         addCompositeDisposable(mCouponRemoteImpl.getCouponHistoryList() //
-            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<Coupon>>()
+            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<Coupon>>()
             {
                 @Override
-                public void accept(ArrayList<Coupon> coupons) throws Exception
+                public void accept(List<Coupon> coupons) throws Exception
                 {
                     List<ObjectItem> objectItemList = new ArrayList<>(coupons.size() + 1);
 

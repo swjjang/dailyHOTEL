@@ -3,8 +3,8 @@ package com.daily.dailyhotel.repository.remote.model;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.daily.dailyhotel.entity.Category;
-import com.daily.dailyhotel.entity.StayDistrict;
-import com.daily.dailyhotel.entity.StayTown;
+import com.daily.dailyhotel.entity.StayArea;
+import com.daily.dailyhotel.entity.StayAreaGroup;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -16,7 +16,7 @@ import java.util.Map;
  * Created by android_sam on 2017. 2. 15..
  */
 @JsonObject
-public class DistrictData
+public class RegionData
 {
     @JsonField(name = "imgUrl")
     public String imgUrl;
@@ -27,17 +27,17 @@ public class DistrictData
     @JsonField(name = "regionArea")
     public List<AreaData> regionArea;
 
-    public DistrictData()
+    public RegionData()
     {
     }
 
-    public List<StayDistrict> getDistrictList()
+    public List<StayAreaGroup> getAreaGroupList()
     {
-        List<StayDistrict> stayDistrictList = new ArrayList<>();
+        List<StayAreaGroup> areaGroupList = new ArrayList<>();
 
         if (regionProvince != null && regionProvince.size() > 0)
         {
-            StayDistrict stayDistrict;
+            StayAreaGroup stayAreaGroup;
 
             for (ProvinceData provinceData : regionProvince)
             {
@@ -47,34 +47,34 @@ public class DistrictData
                     continue;
                 }
 
-                stayDistrict = provinceData.getDistrict();
+                stayAreaGroup = provinceData.getAreaGroup();
 
                 if (regionArea != null && regionArea.size() > 0)
                 {
-                    List<StayTown> stayTownList = new ArrayList<>();
+                    List<StayArea> areaList = new ArrayList<>();
 
                     for (AreaData areaData : regionArea)
                     {
                         if (areaData.provinceIndex == provinceData.index)
                         {
-                            stayTownList.add(areaData.getTown(stayDistrict));
+                            areaList.add(areaData.getArea());
                         }
                     }
 
                     // 개수가 0보다 크면 전체 지역을 넣는다.
-                    if (stayTownList.size() > 0)
+                    if (areaList.size() > 0)
                     {
-                        stayTownList.add(0, new StayTown(stayDistrict));
+                        areaList.add(0, new StayArea(stayAreaGroup));
                     }
 
-                    stayDistrict.setTownList(stayTownList);
+                    stayAreaGroup.setAreaList(areaList);
                 }
 
-                stayDistrictList.add(stayDistrict);
+                areaGroupList.add(stayAreaGroup);
             }
         }
 
-        return stayDistrictList;
+        return areaGroupList;
     }
 
     @JsonObject
@@ -106,17 +106,17 @@ public class DistrictData
 
         }
 
-        public StayDistrict getDistrict()
+        public StayAreaGroup getAreaGroup()
         {
-            StayDistrict stayDistrict = new StayDistrict();
-            stayDistrict.index = index;
-            stayDistrict.name = name;
+            StayAreaGroup stayAreaGroup = new StayAreaGroup();
+            stayAreaGroup.index = index;
+            stayAreaGroup.name = name;
 
             if (categories != null && categories.size() > 0)
             {
                 List<Category> categoryList = new ArrayList<>();
 
-                for(LinkedHashMap<String, String> linkedHashMap : categories)
+                for (LinkedHashMap<String, String> linkedHashMap : categories)
                 {
                     Iterator<Map.Entry<String, String>> iterator = linkedHashMap.entrySet().iterator();
 
@@ -128,10 +128,10 @@ public class DistrictData
                     }
                 }
 
-                stayDistrict.setCategoryList(categoryList);
+                stayAreaGroup.setCategoryList(categoryList);
             }
 
-            return stayDistrict;
+            return stayAreaGroup;
         }
     }
 
@@ -158,19 +158,18 @@ public class DistrictData
 
         }
 
-        public StayTown getTown(StayDistrict stayDistrict)
+        public StayArea getArea()
         {
-            StayTown stayTown = new StayTown();
+            StayArea stayArea = new StayArea();
 
-            stayTown.index = index;
-            stayTown.name = name;
-            stayTown.setDistrict(stayDistrict);
+            stayArea.index = index;
+            stayArea.name = name;
 
             if (categories != null && categories.size() > 0)
             {
                 List<Category> categoryList = new ArrayList<>();
 
-                for(LinkedHashMap<String, String> linkedHashMap : categories)
+                for (LinkedHashMap<String, String> linkedHashMap : categories)
                 {
                     Iterator<Map.Entry<String, String>> iterator = linkedHashMap.entrySet().iterator();
 
@@ -182,10 +181,10 @@ public class DistrictData
                     }
                 }
 
-                stayTown.setCategoryList(categoryList);
+                stayArea.setCategoryList(categoryList);
             }
 
-            return stayTown;
+            return stayArea;
         }
     }
 }

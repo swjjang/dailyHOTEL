@@ -29,7 +29,7 @@ public interface Constants
     {
         LIST,
         MAP,
-//        GONE // 목록이 비어있는 경우.
+        //        GONE // 목록이 비어있는 경우.
     }
 
     enum UserInformationType

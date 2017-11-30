@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.common.district.stay;
+package com.daily.dailyhotel.screen.common.area.stay;
 
 import android.app.Activity;
 
@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class StayDistrictListAnalyticsImpl implements StayDistrictListPresenter.StayDistrictListAnalyticsInterface
+public class StayAreaListAnalyticsImpl implements StayAreaListPresenter.StayAreaListAnalyticsInterface
 {
     @Override
     public void onScreen(Activity activity, String categoryCode)

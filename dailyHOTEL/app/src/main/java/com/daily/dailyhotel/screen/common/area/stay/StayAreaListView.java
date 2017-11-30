@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.common.district.stay;
+package com.daily.dailyhotel.screen.common.area.stay;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
@@ -15,11 +15,11 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.ScreenUtils;
-import com.daily.dailyhotel.entity.StayDistrict;
-import com.daily.dailyhotel.entity.StayTown;
+import com.daily.dailyhotel.entity.StayArea;
+import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.ActivityStayRegionListDataBinding;
+import com.twoheart.dailyhotel.databinding.ActivityStayAreaListDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutRegionListLocationDataBinding;
 import com.twoheart.dailyhotel.widget.DailyAnimatedExpandableListView;
 
@@ -30,9 +30,9 @@ import io.reactivex.Observer;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 
-public class StayDistrictListView extends BaseDialogView<StayDistrictListView.OnEventListener, ActivityStayRegionListDataBinding> implements StayDistrictListInterface
+public class StayAreaListView extends BaseDialogView<StayAreaListView.OnEventListener, ActivityStayAreaListDataBinding> implements StayAreaListInterface
 {
-    private StayDistrictListAdapter mStayDistrictListAdapter;
+    private StayAreaListAdapter mStayDistrictListAdapter;
 
     private LayoutRegionListLocationDataBinding mLayoutRegionListLocationDataBinding;
 
@@ -40,20 +40,20 @@ public class StayDistrictListView extends BaseDialogView<StayDistrictListView.On
     {
         void onSearchClick();
 
-        void onDistrictClick(int groupPosition);
+        void onAreaGroupClick(int groupPosition);
 
-        void onTownClick(int groupPosition, StayTown stayTown);
+        void onAreaClick(int groupPosition, StayArea stayTown);
 
         void onAroundSearchClick();
     }
 
-    public StayDistrictListView(BaseActivity baseActivity, StayDistrictListView.OnEventListener listener)
+    public StayAreaListView(BaseActivity baseActivity, StayAreaListView.OnEventListener listener)
     {
         super(baseActivity, listener);
     }
 
     @Override
-    protected void setContentView(final ActivityStayRegionListDataBinding viewDataBinding)
+    protected void setContentView(final ActivityStayAreaListDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -68,7 +68,7 @@ public class StayDistrictListView extends BaseDialogView<StayDistrictListView.On
             @Override
             public boolean onGroupClick(ExpandableListView expandableListView, View view, int groupPosition, long id)
             {
-                getEventListener().onDistrictClick(groupPosition);
+                getEventListener().onAreaGroupClick(groupPosition);
                 return true;
             }
         });
@@ -86,7 +86,7 @@ public class StayDistrictListView extends BaseDialogView<StayDistrictListView.On
     }
 
     @Override
-    public void setDistrictList(List<StayDistrict> stayDistrictList)
+    public void setDistrictList(List<StayAreaGroup> stayDistrictList)
     {
         if (getViewDataBinding() == null || stayDistrictList == null || stayDistrictList.size() == 0)
         {
@@ -95,7 +95,7 @@ public class StayDistrictListView extends BaseDialogView<StayDistrictListView.On
 
         if (mStayDistrictListAdapter == null)
         {
-            mStayDistrictListAdapter = new StayDistrictListAdapter(getContext());
+            mStayDistrictListAdapter = new StayAreaListAdapter(getContext());
 
             mStayDistrictListAdapter.setTablet(isTabletDevice());
             mStayDistrictListAdapter.setOnChildClickListener(new View.OnClickListener()
@@ -110,12 +110,12 @@ public class StayDistrictListView extends BaseDialogView<StayDistrictListView.On
                         return;
                     }
 
-                    if (tag instanceof StayTown == false)
+                    if (tag instanceof StayArea == false)
                     {
                         return;
                     }
 
-                    StayTown stayTown = (StayTown) tag;
+                    StayArea stayTown = (StayArea) tag;
                     Integer groupPosition = (Integer) view.getTag(view.getId());
 
                     if (groupPosition == null)
@@ -123,7 +123,7 @@ public class StayDistrictListView extends BaseDialogView<StayDistrictListView.On
                         return;
                     }
 
-                    getEventListener().onTownClick(groupPosition, stayTown);
+                    getEventListener().onAreaClick(groupPosition, stayTown);
                 }
             });
         }
@@ -151,7 +151,7 @@ public class StayDistrictListView extends BaseDialogView<StayDistrictListView.On
             return null;
         }
 
-        StayDistrict stayDistrict = mStayDistrictListAdapter.getDistrict(groupPosition);
+        StayAreaGroup stayDistrict = mStayDistrictListAdapter.getDistrict(groupPosition);
 
         if (stayDistrict == null)
         {
@@ -219,7 +219,7 @@ public class StayDistrictListView extends BaseDialogView<StayDistrictListView.On
             return null;
         }
 
-        StayDistrict stayDistrict = mStayDistrictListAdapter.getDistrict(groupPosition);
+        StayAreaGroup stayDistrict = mStayDistrictListAdapter.getDistrict(groupPosition);
 
         if (stayDistrict == null)
         {
@@ -294,7 +294,7 @@ public class StayDistrictListView extends BaseDialogView<StayDistrictListView.On
         });
     }
 
-    private void initToolbar(ActivityStayRegionListDataBinding viewDataBinding)
+    private void initToolbar(ActivityStayAreaListDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {

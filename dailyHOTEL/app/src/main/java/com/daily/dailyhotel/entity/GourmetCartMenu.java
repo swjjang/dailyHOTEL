@@ -21,7 +21,7 @@ public class GourmetCartMenu
 
     public int minimumOrderQuantity;
     public int maximumOrderQuantity;
-    public int saleOrderQuantity;
+    public int availableTicketNumbers;
 
 
     public GourmetCartMenu()
@@ -47,7 +47,7 @@ public class GourmetCartMenu
             persons = jsonObject.getInt("persons");
             minimumOrderQuantity = jsonObject.getInt("minimumOrderQuantity");
             maximumOrderQuantity = jsonObject.getInt("maximumOrderQuantity");
-            saleOrderQuantity = jsonObject.getInt("saleOrderQuantity");
+            availableTicketNumbers = jsonObject.getInt("availableTicketNumbers");
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -72,9 +72,9 @@ public class GourmetCartMenu
             jsonObject.put("discountPrice", discountPrice);
             jsonObject.put("name", name);
             jsonObject.put("persons", persons);
-            jsonObject.put("minimumOrderQuantity", persons);
-            jsonObject.put("maximumOrderQuantity", persons);
-            jsonObject.put("saleOrderQuantity", persons);
+            jsonObject.put("minimumOrderQuantity", minimumOrderQuantity);
+            jsonObject.put("maximumOrderQuantity", maximumOrderQuantity);
+            jsonObject.put("availableTicketNumbers", availableTicketNumbers);
 
         } catch (Exception e)
         {

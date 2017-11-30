@@ -220,6 +220,20 @@ public class GourmetCart
         return menuIndexes;
     }
 
+    public int[] getCountPerMenu()
+    {
+        int[] counts = new int[getMenuCount()];
+
+        int i = 0;
+
+        for (GourmetCartMenu gourmetCartMenu : mOrderMenuMap.values())
+        {
+            counts[i++] = gourmetCartMenu.count;
+        }
+
+        return counts;
+    }
+
     public boolean equalsDay(String visitDay) throws Exception
     {
         return mGourmetBookDateTime != null ? DailyCalendar.compareDateDay(mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), visitDay) == 0 : false;
@@ -302,7 +316,7 @@ public class GourmetCart
         gourmetCartMenu.persons = gourmetMenu.persons;
         gourmetCartMenu.minimumOrderQuantity = gourmetMenu.minimumOrderQuantity;
         gourmetCartMenu.maximumOrderQuantity = gourmetMenu.maximumOrderQuantity;
-        gourmetCartMenu.saleOrderQuantity = gourmetMenu.saleOrderQuantity;
+        gourmetCartMenu.availableTicketNumbers = gourmetMenu.availableTicketNumbers;
 
         return gourmetCartMenu;
     }

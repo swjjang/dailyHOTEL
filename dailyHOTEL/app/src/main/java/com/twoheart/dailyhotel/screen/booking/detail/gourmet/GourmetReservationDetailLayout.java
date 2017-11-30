@@ -88,7 +88,7 @@ public class GourmetReservationDetailLayout extends PlaceReservationDetailLayout
 
         productView.addInformation(gourmetBookingDetail.ticketName, gourmetBookingDetail.ticketCount, randPersons, tempPrice);
         // TODO : 임시 두줄
-//        productView.addInformation(gourmetBookingDetail.ticketName +"\n" + gourmetBookingDetail.ticketName, gourmetBookingDetail.ticketCount, randPersons, tempPrice);
+        //        productView.addInformation(gourmetBookingDetail.ticketName +"\n" + gourmetBookingDetail.ticketName, gourmetBookingDetail.ticketCount, randPersons, tempPrice);
     }
 
     @Override

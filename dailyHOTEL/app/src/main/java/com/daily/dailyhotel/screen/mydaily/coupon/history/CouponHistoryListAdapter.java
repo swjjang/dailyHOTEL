@@ -10,10 +10,10 @@ import android.view.ViewGroup;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.entity.Coupon;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowCouponHistoryDataBinding;
-import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.util.CouponUtil;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
@@ -133,12 +133,13 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<RecyclerView.
 
             if (coupon.isRedeemed == true)
             {
-                builder.append("사용일: ");
+                builder.append(mContext.getString(R.string.coupon_history_day_of_use));
             } else
             {
-                builder.append("만료일: ");
+                builder.append(mContext.getString(R.string.coupon_history_expiration_date));
             }
 
+            builder.append(": ");
             builder.append(DailyCalendar.convertDateFormatString(coupon.disabledAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
 
         } catch (Exception e)

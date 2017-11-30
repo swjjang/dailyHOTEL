@@ -19,7 +19,8 @@ import android.widget.Toast;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
-import com.daily.dailyhotel.entity.StayTown;
+import com.daily.dailyhotel.entity.StayArea;
+import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
@@ -622,13 +623,15 @@ public class StayCategoryNearByActivity extends BaseActivity
                 , AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP.equalsIgnoreCase(screen) == true //
                     ? AnalyticsManager.ValueType.MAP : AnalyticsManager.ValueType.LIST);
 
-            StayTown stayTown = mStayCategoryNearByCuration.getTown();
+            StayRegion region = mStayCategoryNearByCuration.getRegion();
 
-            if (stayTown != null)
+            if (region != null)
             {
                 params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
-                params.put(AnalyticsManager.KeyType.PROVINCE, stayTown.getDistrict().name);
-                params.put(AnalyticsManager.KeyType.DISTRICT, stayTown.index == StayTown.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : stayTown.name);
+                params.put(AnalyticsManager.KeyType.PROVINCE, region.getAreaGroupName());
+
+                StayArea area = region.getArea();
+                params.put(AnalyticsManager.KeyType.DISTRICT, area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name);
             }
 
             AnalyticsManager.getInstance(StayCategoryNearByActivity.this).recordScreen(StayCategoryNearByActivity.this, screen, null, params);
@@ -1153,13 +1156,15 @@ public class StayCategoryNearByActivity extends BaseActivity
                         params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.STAY);
                         params.put(AnalyticsManager.KeyType.CATEGORY, mStayCategoryNearByCuration.getCategory().code);
 
-                        StayTown stayTown = mStayCategoryNearByCuration.getTown();
+                        StayRegion region = mStayCategoryNearByCuration.getRegion();
 
-                        if (stayTown != null)
+                        if (region != null)
                         {
                             params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
-                            params.put(AnalyticsManager.KeyType.PROVINCE, stayTown.getDistrict().name);
-                            params.put(AnalyticsManager.KeyType.DISTRICT, stayTown.index == StayTown.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : stayTown.name);
+                            params.put(AnalyticsManager.KeyType.PROVINCE, region.getAreaGroupName());
+
+                            StayArea area = region.getArea();
+                            params.put(AnalyticsManager.KeyType.DISTRICT, area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name);
                         }
 
                         params.put(AnalyticsManager.KeyType.SEARCH_COUNT, Integer.toString(mSearchCount > mSearchMaxCount ? mSearchMaxCount : mSearchCount));
@@ -1224,7 +1229,7 @@ public class StayCategoryNearByActivity extends BaseActivity
             analyticsParam.discountPrice = stay.discountPrice;
             analyticsParam.price = stay.price;
             analyticsParam.setShowOriginalPriceYn(analyticsParam.price, analyticsParam.discountPrice);
-            analyticsParam.setTown(null);
+            analyticsParam.setRegion(null);
             analyticsParam.entryPosition = stay.entryPosition;
             analyticsParam.totalListCount = listCount;
             analyticsParam.isDailyChoice = stay.isDailyChoice;
@@ -1382,12 +1387,12 @@ public class StayCategoryNearByActivity extends BaseActivity
             PlaceListFragment currentPlaceListFragment = mStayCategoryNearByLayout.getCurrentPlaceListFragment();
             if (currentPlaceListFragment == placeListFragment)
             {
-                currentPlaceListFragment.setVisibility(mViewType, Constants.EmptyStatus.NOT_EMPTY,true);
+                currentPlaceListFragment.setVisibility(mViewType, Constants.EmptyStatus.NOT_EMPTY, true);
                 currentPlaceListFragment.setPlaceCuration(mStayCategoryNearByCuration);
                 currentPlaceListFragment.refreshList(true);
             } else
             {
-                placeListFragment.setVisibility(mViewType, Constants.EmptyStatus.NOT_EMPTY,false);
+                placeListFragment.setVisibility(mViewType, Constants.EmptyStatus.NOT_EMPTY, false);
             }
         }
 
@@ -1525,13 +1530,15 @@ public class StayCategoryNearByActivity extends BaseActivity
                 params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.STAY);
                 params.put(AnalyticsManager.KeyType.CATEGORY, mStayCategoryNearByCuration.getCategory().code);
 
-                StayTown stayTown = mStayCategoryNearByCuration.getTown();
+                StayRegion region = mStayCategoryNearByCuration.getRegion();
 
-                if (stayTown != null)
+                if (region != null)
                 {
                     params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
-                    params.put(AnalyticsManager.KeyType.PROVINCE, stayTown.getDistrict().name);
-                    params.put(AnalyticsManager.KeyType.DISTRICT, stayTown.index == StayTown.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : stayTown.name);
+                    params.put(AnalyticsManager.KeyType.PROVINCE, region.getAreaGroupName());
+
+                    StayArea area = region.getArea();
+                    params.put(AnalyticsManager.KeyType.DISTRICT, area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name);
                 }
 
                 params.put(AnalyticsManager.KeyType.SEARCH_COUNT, Integer.toString(mSearchCount > mSearchMaxCount ? mSearchMaxCount : mSearchCount));

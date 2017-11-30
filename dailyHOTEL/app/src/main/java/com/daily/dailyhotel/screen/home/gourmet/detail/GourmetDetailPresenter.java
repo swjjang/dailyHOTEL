@@ -1285,8 +1285,8 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 }, true);
         } else
         {
-            Intent intent = SelectGourmetCouponDialogActivity.newInstance(getActivity(), mGourmetDetail.index, //
-                mGourmetBookDateTime.getVisitDateTime("yyyy-MM-dd"), mGourmetDetail.name);
+            Intent intent = SelectGourmetCouponDialogActivity.newInstance(getActivity(), mGourmetBookDateTime.getVisitDateTime("yyyy-MM-dd")//
+                , mGourmetDetail.index, mGourmetDetail.name);
             startActivityForResult(intent, GourmetDetailActivity.REQUEST_CODE_DOWNLOAD_COUPON);
         }
     }
@@ -2173,7 +2173,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                         hasMenu = true;
 
                         // 수량
-                        if (gourmetCartMenu.count <= gourmetMenu.saleOrderQuantity)
+                        if (gourmetCartMenu.count <= gourmetMenu.availableTicketNumbers)
                         {
                             hasOrderQuantity = true;
                         }

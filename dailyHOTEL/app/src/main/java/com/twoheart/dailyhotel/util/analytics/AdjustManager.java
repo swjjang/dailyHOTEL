@@ -30,7 +30,6 @@ import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 
-import java.text.DecimalFormat;
 import java.util.Map;
 
 /**

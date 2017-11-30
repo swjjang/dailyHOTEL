@@ -17,7 +17,8 @@ import android.widget.Toast;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
-import com.daily.dailyhotel.entity.StayTown;
+import com.daily.dailyhotel.entity.StayArea;
+import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
@@ -515,13 +516,15 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 , AnalyticsManager.Screen.DAILYHOTEL_LIST_MAP.equalsIgnoreCase(screen) == true //
                     ? AnalyticsManager.ValueType.MAP : AnalyticsManager.ValueType.LIST);
 
-            StayTown stayTown = mStaySearchCuration.getTown();
+            StayRegion region = mStaySearchCuration.getRegion();
 
-            if (stayTown != null)
+            if (region != null)
             {
                 params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
-                params.put(AnalyticsManager.KeyType.PROVINCE, stayTown.getDistrict().name);
-                params.put(AnalyticsManager.KeyType.DISTRICT, stayTown.index == StayTown.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : stayTown.name);
+                params.put(AnalyticsManager.KeyType.PROVINCE, region.getAreaGroupName());
+
+                StayArea area = region.getArea();
+                params.put(AnalyticsManager.KeyType.DISTRICT, area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name);
             }
 
             AnalyticsManager.getInstance(StaySearchResultActivity.this).recordScreen(StaySearchResultActivity.this, screen, null, params);
@@ -925,13 +928,15 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                         params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.STAY);
                         params.put(AnalyticsManager.KeyType.CATEGORY, mStaySearchCuration.getCategory().code);
 
-                        StayTown stayTown = mStaySearchCuration.getTown();
+                        StayRegion region = mStaySearchCuration.getRegion();
 
-                        if (stayTown != null)
+                        if (region != null)
                         {
                             params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
-                            params.put(AnalyticsManager.KeyType.PROVINCE, stayTown.getDistrict().name);
-                            params.put(AnalyticsManager.KeyType.DISTRICT, stayTown.index == StayTown.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : stayTown.name);
+                            params.put(AnalyticsManager.KeyType.PROVINCE, region.getAreaGroupName());
+
+                            StayArea area = region.getArea();
+                            params.put(AnalyticsManager.KeyType.DISTRICT, area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name);
                         }
 
                         params.put(AnalyticsManager.KeyType.SEARCH_COUNT, Integer.toString(mSearchCount > mSearchMaxCount ? mSearchMaxCount : mSearchCount));
@@ -996,7 +1001,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             analyticsParam.discountPrice = stay.discountPrice;
             analyticsParam.price = stay.price;
             analyticsParam.setShowOriginalPriceYn(analyticsParam.price, analyticsParam.discountPrice);
-            analyticsParam.setTown(null);
+            analyticsParam.setRegion(null);
             analyticsParam.entryPosition = stay.entryPosition;
             analyticsParam.totalListCount = listCount;
             analyticsParam.isDailyChoice = stay.isDailyChoice;
@@ -1337,13 +1342,15 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.STAY);
                 params.put(AnalyticsManager.KeyType.CATEGORY, mStaySearchCuration.getCategory().code);
 
-                StayTown stayTown = mStaySearchCuration.getTown();
+                StayRegion region = mStaySearchCuration.getRegion();
 
-                if (stayTown != null)
+                if (region != null)
                 {
                     params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
-                    params.put(AnalyticsManager.KeyType.PROVINCE, stayTown.getDistrict().name);
-                    params.put(AnalyticsManager.KeyType.DISTRICT, stayTown.index == StayTown.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : stayTown.name);
+                    params.put(AnalyticsManager.KeyType.PROVINCE, region.getAreaGroupName());
+
+                    StayArea area = region.getArea();
+                    params.put(AnalyticsManager.KeyType.DISTRICT, area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name);
                 }
 
                 params.put(AnalyticsManager.KeyType.SEARCH_COUNT, Integer.toString(mSearchCount > mSearchMaxCount ? mSearchMaxCount : mSearchCount));

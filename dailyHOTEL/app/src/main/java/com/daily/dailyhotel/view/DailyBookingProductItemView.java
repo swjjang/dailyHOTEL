@@ -57,7 +57,8 @@ public class DailyBookingProductItemView extends ConstraintLayout
         {
             mViewDataBinding.personsTextView.setText(getContext().getString(R.string.label_persons, persons));
             mViewDataBinding.personsTextView.setVisibility(View.VISIBLE);
-        } else {
+        } else
+        {
             mViewDataBinding.personsTextView.setText("");
             mViewDataBinding.personsTextView.setVisibility(View.GONE);
         }

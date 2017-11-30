@@ -2,7 +2,7 @@ package com.daily.dailyhotel.repository.remote.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.twoheart.dailyhotel.model.Coupon;
+import com.daily.dailyhotel.entity.Coupon;
 
 import java.util.ArrayList;
 import java.util.List;

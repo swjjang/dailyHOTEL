@@ -384,10 +384,10 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     {
         super.onStart();
 
-//        String checkInDate = mStayBookDateTime == null ? "" : mStayBookDateTime.getCheckInDateTime("yyyyMMdd");
-//        int nights = mStayBookDateTime == null ? 1 : mStayBookDateTime.getNights();
-//
-//        mAnalytics.onScreen(getActivity(), checkInDate, nights);
+        //        String checkInDate = mStayBookDateTime == null ? "" : mStayBookDateTime.getCheckInDateTime("yyyyMMdd");
+        //        int nights = mStayBookDateTime == null ? 1 : mStayBookDateTime.getNights();
+        //
+        //        mAnalytics.onScreen(getActivity(), checkInDate, nights);
 
         if (isRefresh() == true)
         {

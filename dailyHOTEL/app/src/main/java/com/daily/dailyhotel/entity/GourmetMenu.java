@@ -19,7 +19,7 @@ public class GourmetMenu
     public int persons;
     public int minimumOrderQuantity;
     public int maximumOrderQuantity;
-    public int saleOrderQuantity;
+    public int availableTicketNumbers;
     public String startEatingTime;
     public String endEatingTime;
     public String readyTime;

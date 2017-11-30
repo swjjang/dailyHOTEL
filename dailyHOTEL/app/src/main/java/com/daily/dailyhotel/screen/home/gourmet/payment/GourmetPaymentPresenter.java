@@ -61,6 +61,7 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -837,14 +838,12 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             default:
                 if (selected == true)
                 {
-                    int menuIndex = mGourmetCart.getMenuSaleIndexes()[0];
-                    int menuOrderCount = mGourmetCart.getMenuOrderCount(menuIndex);
+                    int[] menuIndexes = mGourmetCart.getMenuSaleIndexes();
+                    int[] menuCounts = mGourmetCart.getCountPerMenu();
 
                     try
                     {
-                        Intent intent = SelectGourmetCouponDialogActivity.newInstance(getActivity(), mGourmetCart.gourmetIndex, //
-                            menuIndex, DailyCalendar.convertDateFormatString(mGourmetCart.getVisitDateTime(), DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd (EEE)")//
-                            , mGourmetCart.gourmetName, menuOrderCount);
+                        Intent intent = SelectGourmetCouponDialogActivity.newInstance(getActivity(), DailyCalendar.convertDateFormatString(mGourmetCart.getVisitDateTime(), DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"), mGourmetCart.gourmetIndex, mGourmetCart.gourmetName, menuIndexes, menuCounts);
                         startActivityForResult(intent, GourmetPaymentActivity.REQUEST_CODE_COUPON_LIST);
                     } catch (Exception e)
                     {
@@ -1141,15 +1140,11 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
         int totalPrice = mGourmetPayment.totalPrice;
 
-        int menuIndex = mGourmetCart.getMenuSaleIndexes()[0];
-        int menuOrderCount = mGourmetCart.getMenuOrderCount(menuIndex);
-
         // 보너스 / 쿠폰 (으)로만 결제하는 경우
         if ((mSaleType == BONUS && totalPrice <= mUserSimpleInformation.bonus)//
             || (mSaleType == COUPON && totalPrice <= mSelectedCoupon.amount))
         {
-            JSONObject jsonObject = getPaymentJSONObject(mGourmetCart.getVisitDateTime(), menuIndex, menuOrderCount//
-                , mSaleType, mUserSimpleInformation.bonus, couponCode, mGuest, totalPrice, null);
+            JSONObject jsonObject = getPaymentJSONObject(mGourmetCart, mSaleType, mUserSimpleInformation.bonus, couponCode, mGuest, mPersons, totalPrice, null);
 
             addCompositeDisposable(mPaymentRemoteImpl.getGourmetPaymentTypeBonus(jsonObject).subscribe(new Consumer<PaymentResult>()
             {
@@ -1196,8 +1191,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                         return;
                     }
 
-                    JSONObject jsonObject = getPaymentJSONObject(mGourmetCart.getVisitDateTime(), menuIndex, menuOrderCount//
-                        , mSaleType, mUserSimpleInformation.bonus, couponCode, mGuest, totalPrice, mSelectedCard.billKey);
+                    JSONObject jsonObject = getPaymentJSONObject(mGourmetCart, mSaleType, mUserSimpleInformation.bonus, couponCode, mGuest, mPersons, totalPrice, mSelectedCard.billKey);
 
                     addCompositeDisposable(mPaymentRemoteImpl.getGourmetPaymentTypeEasy(jsonObject).subscribe(new Consumer<PaymentResult>()
                     {
@@ -1233,8 +1227,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                 {
                     final String PAYMENT_TYPE = "credit";
 
-                    JSONObject jsonObject = getPaymentJSONObject(mGourmetCart.getVisitDateTime(), menuIndex, menuOrderCount//
-                        , mSaleType, mUserSimpleInformation.bonus, couponCode, mGuest, totalPrice, null);
+                    JSONObject jsonObject = getPaymentJSONObject(mGourmetCart, mSaleType, mUserSimpleInformation.bonus, couponCode, mGuest, mPersons, totalPrice, null);
 
                     startActivityForResult(PaymentWebActivity.newInstance(getActivity()//
                         , getWebPaymentUrl(PAYMENT_TYPE), jsonObject.toString(), AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_PROCESS)//
@@ -1246,8 +1239,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                 {
                     final String PAYMENT_TYPE = "mobile";
 
-                    JSONObject jsonObject = getPaymentJSONObject(mGourmetCart.getVisitDateTime(), menuIndex, menuOrderCount//
-                        , mSaleType, mUserSimpleInformation.bonus, couponCode, mGuest, totalPrice, null);
+                    JSONObject jsonObject = getPaymentJSONObject(mGourmetCart, mSaleType, mUserSimpleInformation.bonus, couponCode, mGuest, mPersons, totalPrice, null);
 
                     startActivityForResult(PaymentWebActivity.newInstance(getActivity()//
                         , getWebPaymentUrl(PAYMENT_TYPE), jsonObject.toString(), AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_PROCESS)//
@@ -1259,8 +1251,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                 {
                     final String PAYMENT_TYPE = "vbank";
 
-                    JSONObject jsonObject = getPaymentJSONObject(mGourmetCart.getVisitDateTime(), menuIndex, menuOrderCount//
-                        , mSaleType, mUserSimpleInformation.bonus, couponCode, mGuest, totalPrice, null);
+                    JSONObject jsonObject = getPaymentJSONObject(mGourmetCart, mSaleType, mUserSimpleInformation.bonus, couponCode, mGuest, mPersons, totalPrice, null);
 
                     startActivityForResult(PaymentWebActivity.newInstance(getActivity()//
                         , getWebPaymentUrl(PAYMENT_TYPE), jsonObject.toString(), AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_PROCESS)//
@@ -1293,8 +1284,8 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             , GourmetPaymentActivity.REQUEST_CODE_THANK_YOU);
     }
 
-    private JSONObject getPaymentJSONObject(String arrivalDateTime, int menuIndex, int menuCount//
-        , int saleType, int bonus, String couponCode, DomesticGuest guest, int totalPrice, String billingKey)
+    private JSONObject getPaymentJSONObject(GourmetCart gourmetCart, int saleType, int bonus, String couponCode//
+        , DomesticGuest guest, int visitPersons, int totalPrice, String billingKey)
     {
         JSONObject jsonObject = new JSONObject();
 
@@ -1315,15 +1306,30 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                     break;
             }
 
-            jsonObject.put("saleRecoIdx", menuIndex);
-            jsonObject.put("ticketCount", menuCount);
+            JSONArray bookingItemsJSONArray = new JSONArray();
+
+            int menuCount = gourmetCart.getMenuCount();
+
+            int[] menuSaleIndexes = gourmetCart.getMenuSaleIndexes();
+            int[] countPerMenu = gourmetCart.getCountPerMenu();
+
+            for (int i = 0; i < menuCount; i++)
+            {
+                JSONObject bookingItem = new JSONObject();
+                bookingItem.put("saleRecoIdx", menuSaleIndexes[i]);
+                bookingItem.put("count", countPerMenu[i]);
+
+                bookingItemsJSONArray.put(bookingItem);
+            }
+
+            jsonObject.put("bookingItems", bookingItemsJSONArray);
 
             JSONObject bookingGuestJSONObject = new JSONObject();
-            bookingGuestJSONObject.put("arrivalDateTime", arrivalDateTime);
-
+            bookingGuestJSONObject.put("arrivalDateTime", gourmetCart.getVisitDateTime());
             bookingGuestJSONObject.put("email", guest.email);
             bookingGuestJSONObject.put("name", guest.name);
             bookingGuestJSONObject.put("phone", guest.phone);
+            bookingGuestJSONObject.put("numberOfGuest", visitPersons);
 
             jsonObject.put("bookingGuest", bookingGuestJSONObject);
 

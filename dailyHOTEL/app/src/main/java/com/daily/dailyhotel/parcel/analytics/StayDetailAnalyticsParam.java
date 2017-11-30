@@ -4,8 +4,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.dailyhotel.entity.StayTown;
-import com.daily.dailyhotel.parcel.StayTownParcel;
+import com.daily.dailyhotel.entity.StayArea;
+import com.daily.dailyhotel.entity.StayRegion;
+import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 /**
@@ -22,7 +23,7 @@ public class StayDetailAnalyticsParam implements Parcelable
     public String gradeName;
 
     private String mAddressAreaName; // addressSummary 의 split 이름 stay.addressSummary.split("\\||l|ㅣ|I")  index : 0;
-    private StayTown mTown;
+    private StayRegion mRegion;
     private String mShowOriginalPriceYn = "N"; // stay.price <= 0 || stay.price <= stay.discountPrice ? "N" : "Y"
 
     public StayDetailAnalyticsParam()
@@ -35,34 +36,36 @@ public class StayDetailAnalyticsParam implements Parcelable
         readFromParcel(in);
     }
 
-    public void setTown(StayTown town)
+    public void setRegion(StayRegion region)
     {
-        mTown = town;
+        mRegion = region;
     }
 
-    public StayTown getTown()
+    public StayRegion getRegion()
     {
-        return mTown;
+        return mRegion;
     }
 
     public String getProvinceName()
     {
-        if (mTown == null)
+        if (mRegion == null)
         {
             return AnalyticsManager.ValueType.EMPTY;
         }
 
-        return mTown.name;
+        return mRegion.getAreaGroupName();
     }
 
     public String getDistrictName()
     {
-        if (mTown == null)
+        if (mRegion == null)
         {
             return AnalyticsManager.ValueType.EMPTY;
         }
 
-        return mTown.index != StayTown.ALL ? mTown.name : AnalyticsManager.ValueType.ALL_LOCALE_KR;
+        StayArea area = mRegion.getArea();
+
+        return area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name;
     }
 
     public String getAddressAreaName()
@@ -108,12 +111,12 @@ public class StayDetailAnalyticsParam implements Parcelable
         dest.writeInt(totalListCount);
         dest.writeInt(isDailyChoice == true ? 1 : 0);
 
-        if (mTown == null)
+        if (mRegion == null)
         {
             dest.writeParcelable(null, flags);
         } else
         {
-            dest.writeParcelable(new StayTownParcel(mTown), flags);
+            dest.writeParcelable(new StayRegionParcel(mRegion), flags);
         }
     }
 
@@ -127,11 +130,11 @@ public class StayDetailAnalyticsParam implements Parcelable
         totalListCount = in.readInt();
         isDailyChoice = in.readInt() == 1 ? true : false;
 
-        StayTownParcel stayTownParcel = in.readParcelable(StayTownParcel.class.getClassLoader());
+        StayRegionParcel stayRegionParcel = in.readParcelable(StayRegionParcel.class.getClassLoader());
 
-        if (stayTownParcel != null)
+        if (stayRegionParcel != null)
         {
-            mTown = stayTownParcel.getStayTown();
+            mRegion = stayRegionParcel.getRegion();
         }
     }
 

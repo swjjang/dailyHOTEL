@@ -899,7 +899,7 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
 
         dataBinding.productInformationView.addInformation(gourmetBookingDetail.ticketName, gourmetBookingDetail.ticketCount, randPersons, tempPrice);
         // TODO : 임시 두줄
-//        dataBinding.productInformationView.addInformation(gourmetBookingDetail.ticketName + "\n" + gourmetBookingDetail.ticketName, gourmetBookingDetail.ticketCount, randPersons, tempPrice);
+        //        dataBinding.productInformationView.addInformation(gourmetBookingDetail.ticketName + "\n" + gourmetBookingDetail.ticketName, gourmetBookingDetail.ticketCount, randPersons, tempPrice);
     }
 
     private void setGuestInformation(Context context, LayoutGourmetBookingCancelDetail01DataBinding dataBinding, GourmetBookingDetail gourmetBookingDetail)

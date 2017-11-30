@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.common.district.stay;
+package com.daily.dailyhotel.screen.common.area.stay;
 
 
 import android.app.Activity;
@@ -14,11 +14,11 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
-import com.daily.dailyhotel.entity.District;
+import com.daily.dailyhotel.entity.StayArea;
+import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.entity.StayDistrict;
-import com.daily.dailyhotel.entity.StayTown;
-import com.daily.dailyhotel.parcel.StayTownParcel;
+import com.daily.dailyhotel.entity.StayRegion;
+import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.R;
@@ -43,23 +43,23 @@ import io.reactivex.functions.Function;
  * Created by sheldon
  * Clean Architecture
  */
-public class StayDistrictListPresenter extends BaseExceptionPresenter<StayDistrictListActivity, StayDistrictListInterface> implements StayDistrictListView.OnEventListener
+public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListActivity, StayAreaListInterface> implements StayAreaListView.OnEventListener
 {
-    private StayDistrictListAnalyticsInterface mAnalytics;
+    private StayAreaListAnalyticsInterface mAnalytics;
 
     private StayRemoteImpl mStayRemoteImpl;
 
     private StayBookDateTime mStayBookDateTime;
 
     private String mCategoryCode;
-    private List<StayDistrict> mDistrictList;
-    private int mDistrictPosition = -1;
+    private List<StayAreaGroup> mAreaGroupList;
+    private int mAreaGroupPosition = -1;
     private DailyCategoryType mDailyCategoryType;
-    private StayTown mSavedTown;
+    private StayRegion mStayRegion; // 기존에 저장된 정보
 
     DailyLocationFactory mDailyLocationFactory;
 
-    public interface StayDistrictListAnalyticsInterface extends BaseAnalyticsInterface
+    public interface StayAreaListAnalyticsInterface extends BaseAnalyticsInterface
     {
         void onScreen(Activity activity, String categoryCode);
 
@@ -77,24 +77,24 @@ public class StayDistrictListPresenter extends BaseExceptionPresenter<StayDistri
         void onEventAroundSearchClick(Activity activity, DailyCategoryType dailyCategoryType);
     }
 
-    public StayDistrictListPresenter(@NonNull StayDistrictListActivity activity)
+    public StayAreaListPresenter(@NonNull StayAreaListActivity activity)
     {
         super(activity);
     }
 
     @NonNull
     @Override
-    protected StayDistrictListInterface createInstanceViewInterface()
+    protected StayAreaListInterface createInstanceViewInterface()
     {
-        return new StayDistrictListView(getActivity(), this);
+        return new StayAreaListView(getActivity(), this);
     }
 
     @Override
-    public void constructorInitialize(StayDistrictListActivity activity)
+    public void constructorInitialize(StayAreaListActivity activity)
     {
-        setContentView(R.layout.activity_stay_region_list_data);
+        setContentView(R.layout.activity_stay_area_list_data);
 
-        setAnalytics(new StayDistrictListAnalyticsImpl());
+        setAnalytics(new StayAreaListAnalyticsImpl());
 
         mStayRemoteImpl = new StayRemoteImpl(activity);
 
@@ -104,7 +104,7 @@ public class StayDistrictListPresenter extends BaseExceptionPresenter<StayDistri
     @Override
     public void setAnalytics(BaseAnalyticsInterface analytics)
     {
-        mAnalytics = (StayDistrictListAnalyticsInterface) analytics;
+        mAnalytics = (StayAreaListAnalyticsInterface) analytics;
     }
 
     @Override
@@ -115,21 +115,21 @@ public class StayDistrictListPresenter extends BaseExceptionPresenter<StayDistri
             return true;
         }
 
-        String checkInDateTime = intent.getStringExtra(StayDistrictListActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME);
-        String checkOutDateTime = intent.getStringExtra(StayDistrictListActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME);
+        String checkInDateTime = intent.getStringExtra(StayAreaListActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME);
+        String checkOutDateTime = intent.getStringExtra(StayAreaListActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME);
 
         mStayBookDateTime = new StayBookDateTime();
         mStayBookDateTime.getCheckInDateTime(checkInDateTime);
         mStayBookDateTime.getCheckOutDateTime(checkOutDateTime);
 
         // 카테고리로 넘어오는 경우
-        mDailyCategoryType = DailyCategoryType.valueOf(intent.getStringExtra(StayDistrictListActivity.INTENT_EXTRA_DATA_STAY_CATEGORY));
+        mDailyCategoryType = DailyCategoryType.valueOf(intent.getStringExtra(StayAreaListActivity.INTENT_EXTRA_DATA_STAY_CATEGORY));
 
 
         // 이름으로 넘어오는 경우
 
 
-        mCategoryCode = intent.getStringExtra(StayDistrictListActivity.INTENT_EXTRA_DATA_CATEGORY_CODE);
+        mCategoryCode = intent.getStringExtra(StayAreaListActivity.INTENT_EXTRA_DATA_CATEGORY_CODE);
 
         return true;
     }
@@ -211,7 +211,7 @@ public class StayDistrictListPresenter extends BaseExceptionPresenter<StayDistri
 
         switch (requestCode)
         {
-            case StayDistrictListActivity.REQUEST_CODE_PERMISSION_MANAGER:
+            case StayAreaListActivity.REQUEST_CODE_PERMISSION_MANAGER:
                 getViewInterface().setLocationTermVisible(false);
 
                 if (resultCode == Activity.RESULT_OK)
@@ -220,10 +220,10 @@ public class StayDistrictListPresenter extends BaseExceptionPresenter<StayDistri
                 }
                 break;
 
-            case StayDistrictListActivity.REQUEST_CODE_SEARCH:
+            case StayAreaListActivity.REQUEST_CODE_SEARCH:
                 break;
 
-            case StayDistrictListActivity.REQUEST_CODE_SETTING_LOCATION:
+            case StayAreaListActivity.REQUEST_CODE_SETTING_LOCATION:
                 getViewInterface().setLocationTermVisible(false);
 
                 onAroundSearchClick();
@@ -242,44 +242,43 @@ public class StayDistrictListPresenter extends BaseExceptionPresenter<StayDistri
         setRefresh(false);
         screenLock(showProgress);
 
-        addCompositeDisposable(mStayRemoteImpl.getDistrictList(mDailyCategoryType).observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<List<StayDistrict>, ObservableSource<Boolean>>()
+        addCompositeDisposable(mStayRemoteImpl.getRegionList(mDailyCategoryType).observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<List<StayAreaGroup>, ObservableSource<Boolean>>()
         {
             @Override
-            public ObservableSource<Boolean> apply(List<StayDistrict> districtList) throws Exception
+            public ObservableSource<Boolean> apply(List<StayAreaGroup> areaGroupList) throws Exception
             {
-                mDistrictList = districtList;
+                mAreaGroupList = areaGroupList;
 
-                getViewInterface().setDistrictList(districtList);
+                getViewInterface().setDistrictList(areaGroupList);
 
-                mSavedTown = null;
                 Pair<String, String> namePair = getDistrictNTownNameByCategory(mDailyCategoryType);
 
                 if (namePair != null)
                 {
-                    mDistrictPosition = getDistrictPosition(districtList, namePair.first);
+                    mAreaGroupPosition = getAreaGroupPosition(areaGroupList, namePair.first);
                 } else
                 {
-                    mDistrictPosition = -1;
+                    mAreaGroupPosition = -1;
                 }
 
                 // 기존에 저장된 지역이 있는 경우
-                if (mDistrictPosition >= 0)
+                if (mAreaGroupPosition >= 0)
                 {
-                    StayDistrict stayDistrict = districtList.get(mDistrictPosition);
+                    StayAreaGroup areaGroup = areaGroupList.get(mAreaGroupPosition);
 
-                    List<StayTown> stayTownList = stayDistrict.getTownList();
+                    mStayRegion = getRegion(areaGroup, namePair.second);
+                } else
+                {
+                    // 기존에 저장된 지역이 없는 경우 첫번째 지역으로 한다.
 
-                    mSavedTown = getTown(stayTownList, namePair.second);
+                    StayAreaGroup areaGroup = areaGroupList.get(0);
 
-                    if (mSavedTown == null)
-                    {
-                        mSavedTown = new StayTown(stayDistrict);
-                    }
+                    mStayRegion = new StayRegion(areaGroup, new StayArea(areaGroup));
 
-                    return expandGroupWithAnimation(mDistrictPosition, false).subscribeOn(AndroidSchedulers.mainThread());
+                    mAreaGroupPosition = 0;
                 }
 
-                return Observable.just(true);
+                return expandGroupWithAnimation(mAreaGroupPosition, false).subscribeOn(AndroidSchedulers.mainThread());
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
         {
@@ -315,34 +314,36 @@ public class StayDistrictListPresenter extends BaseExceptionPresenter<StayDistri
         Intent intent = SearchActivity.newInstance(getActivity(), Constants.PlaceType.HOTEL//
             , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
-        startActivityForResult(intent, StayDistrictListActivity.REQUEST_CODE_SEARCH);
+        startActivityForResult(intent, StayAreaListActivity.REQUEST_CODE_SEARCH);
+
+        mAnalytics.onEventSearchClick(getActivity(), mDailyCategoryType);
     }
 
     @Override
-    public void onDistrictClick(int groupPosition)
+    public void onAreaGroupClick(int groupPosition)
     {
-        if (mDistrictList == null || mDistrictList.size() == 0 || groupPosition < 0 || lock() == true)
+        if (mAreaGroupList == null || mAreaGroupList.size() == 0 || groupPosition < 0 || lock() == true)
         {
             return;
         }
 
         // 하위 지역이 없으면 선택
-        if (mDistrictList.get(groupPosition).getTownCount() == 0)
+        if (mAreaGroupList.get(groupPosition).getAreaCount() == 0)
         {
-            onDistrictClick(mDistrictList.get(groupPosition));
+            onAreaClick(groupPosition, new StayArea(mAreaGroupList.get(groupPosition)));
 
             unLockAll();
         } else
         {
             // 하위 지역이 있으면 애니메이션
-            if (mDistrictPosition == groupPosition)
+            if (mAreaGroupPosition == groupPosition)
             {
                 addCompositeDisposable(collapseGroupWithAnimation(groupPosition, true).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                 {
                     @Override
                     public void accept(Boolean aBoolean) throws Exception
                     {
-                        mDistrictPosition = -1;
+                        mAreaGroupPosition = -1;
 
                         unLockAll();
                     }
@@ -358,7 +359,7 @@ public class StayDistrictListPresenter extends BaseExceptionPresenter<StayDistri
                 }));
             } else
             {
-                addCompositeDisposable(collapseGroupWithAnimation(mDistrictPosition, false).subscribeOn(AndroidSchedulers.mainThread()).flatMap(new Function<Boolean, ObservableSource<Boolean>>()
+                addCompositeDisposable(collapseGroupWithAnimation(mAreaGroupPosition, false).subscribeOn(AndroidSchedulers.mainThread()).flatMap(new Function<Boolean, ObservableSource<Boolean>>()
                 {
                     @Override
                     public ObservableSource<Boolean> apply(Boolean aBoolean) throws Exception
@@ -370,7 +371,7 @@ public class StayDistrictListPresenter extends BaseExceptionPresenter<StayDistri
                     @Override
                     public void accept(Boolean aBoolean) throws Exception
                     {
-                        mDistrictPosition = groupPosition;
+                        mAreaGroupPosition = groupPosition;
 
                         unLockAll();
                     }
@@ -387,38 +388,43 @@ public class StayDistrictListPresenter extends BaseExceptionPresenter<StayDistri
     }
 
     @Override
-    public void onTownClick(int groupPosition, StayTown stayTown)
+    public void onAreaClick(int groupPosition, StayArea area)
     {
-        if (groupPosition < 0 || stayTown == null)
+        if (groupPosition < 0 || area == null)
         {
             finish();
             return;
         }
 
-        StayDistrict stayDistrict = mDistrictList.get(groupPosition);
+        StayAreaGroup areaGroup = mAreaGroupList.get(groupPosition);
 
-        final String districtName = stayDistrict.name;
-        final String townName = stayTown.name;
+        if (areaGroup == null)
+        {
+            finish();
+            return;
+        }
+
+        final String areaGroupName = areaGroup.name;
+        final String areaName = area.name;
 
         // 지역이 변경된 경우 팝업을 뛰어서 날짜 변경을 할것인지 물어본다.
-        if (mDailyCategoryType != DailyCategoryType.STAY_ALL || equalsDistrictName(mSavedTown, districtName) == true)
+        if (equalsAreaGroupName(mStayRegion, areaGroupName) == true)
         {
-            setResult(Activity.RESULT_OK, mDailyCategoryType, stayTown);
+            setResult(Activity.RESULT_OK, mDailyCategoryType, areaGroup, area);
             finish();
         } else
         {
             String message = mStayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)") + "-" + mStayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)") + "\n" + getString(R.string.message_region_search_date);
-            final String previousDistrictName, previousTownName;
+            final String previousAreaGroupName, previousAreaName;
 
-            if (mSavedTown != null)
+            if (mStayRegion != null)
             {
-                District district = mSavedTown.getDistrict();
-                previousDistrictName = district == null ? null : district.name;
-                previousTownName = mSavedTown.name;
+                previousAreaGroupName = mStayRegion.getAreaGroupName();
+                previousAreaName = mStayRegion.getAreaName();
             } else
             {
-                previousDistrictName = null;
-                previousTownName = null;
+                previousAreaGroupName = null;
+                previousAreaName = null;
             }
 
             getViewInterface().showSimpleDialog(getString(R.string.label_visit_date), message, getString(R.string.dialog_btn_text_yes), getString(R.string.label_region_change_date), new View.OnClickListener()
@@ -426,9 +432,9 @@ public class StayDistrictListPresenter extends BaseExceptionPresenter<StayDistri
                 @Override
                 public void onClick(View v)
                 {
-                    mAnalytics.onEventChangedDistrictClick(getActivity(), previousDistrictName, previousTownName, districtName, townName, mStayBookDateTime);
+                    mAnalytics.onEventChangedDistrictClick(getActivity(), previousAreaGroupName, previousAreaName, areaGroupName, areaName, mStayBookDateTime);
 
-                    setResult(Activity.RESULT_OK, mDailyCategoryType, stayTown);
+                    setResult(Activity.RESULT_OK, mDailyCategoryType, areaGroup, area);
                     finish();
                 }
             }, new View.OnClickListener()
@@ -436,11 +442,11 @@ public class StayDistrictListPresenter extends BaseExceptionPresenter<StayDistri
                 @Override
                 public void onClick(View v)
                 {
-                    mAnalytics.onEventChangedDistrictClick(getActivity(), previousDistrictName, previousTownName, districtName, townName, mStayBookDateTime);
+                    mAnalytics.onEventChangedDistrictClick(getActivity(), previousAreaGroupName, previousAreaName, areaGroupName, areaName, mStayBookDateTime);
                     mAnalytics.onEventChangedDateClick(getActivity());
 
                     // 날짜 선택 화면으로 이동한다.
-                    setResult(BaseActivity.RESULT_CODE_START_CALENDAR, mDailyCategoryType, stayTown);
+                    setResult(BaseActivity.RESULT_CODE_START_CALENDAR, mDailyCategoryType, areaGroup, area);
                     finish();
                 }
             }, new DialogInterface.OnCancelListener()
@@ -460,7 +466,7 @@ public class StayDistrictListPresenter extends BaseExceptionPresenter<StayDistri
             }, true);
         }
 
-        mAnalytics.onEventTownClick(getActivity(), districtName, townName);
+        mAnalytics.onEventTownClick(getActivity(), areaGroupName, areaName);
     }
 
     @Override
@@ -489,7 +495,7 @@ public class StayDistrictListPresenter extends BaseExceptionPresenter<StayDistri
                 unLockAll();
 
                 Intent intent = PermissionManagerActivity.newInstance(getActivity(), PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
-                startActivityForResult(intent, StayDistrictListActivity.REQUEST_CODE_PERMISSION_MANAGER);
+                startActivityForResult(intent, StayAreaListActivity.REQUEST_CODE_PERMISSION_MANAGER);
             }
 
             @Override
@@ -503,7 +509,7 @@ public class StayDistrictListPresenter extends BaseExceptionPresenter<StayDistri
             {
                 unLockAll();
 
-                setResult(BaseActivity.RESULT_CODE_START_AROUND_SEARCH, mDailyCategoryType, null);
+                setResult(BaseActivity.RESULT_CODE_START_AROUND_SEARCH, mDailyCategoryType, null, null);
                 finish();
             }
 
@@ -525,23 +531,13 @@ public class StayDistrictListPresenter extends BaseExceptionPresenter<StayDistri
                         public void onClick(View v)
                         {
                             Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            startActivityForResult(intent, StayDistrictListActivity.REQUEST_CODE_SETTING_LOCATION);
+                            startActivityForResult(intent, StayAreaListActivity.REQUEST_CODE_SETTING_LOCATION);
                         }
                     }, null, false);
             }
         });
-    }
 
-    private void onDistrictClick(StayDistrict stayDistrict)
-    {
-        if (stayDistrict == null)
-        {
-            finish();
-            return;
-        }
-
-        setResult(Activity.RESULT_OK, mDailyCategoryType, new StayTown(stayDistrict));
-        finish();
+        mAnalytics.onEventAroundSearchClick(getActivity(), mDailyCategoryType);
     }
 
     /**
@@ -624,7 +620,7 @@ public class StayDistrictListPresenter extends BaseExceptionPresenter<StayDistri
         return observable;
     }
 
-    private void setResult(int resultCode, DailyCategoryType categoryType, StayTown stayTown)
+    private void setResult(int resultCode, DailyCategoryType categoryType, StayArea areaGroup, StayArea area)
     {
         if (categoryType == null)
         {
@@ -633,38 +629,50 @@ public class StayDistrictListPresenter extends BaseExceptionPresenter<StayDistri
 
         Intent intent = new Intent();
 
-        if (stayTown != null && stayTown.getDistrict() != null)
+        if (areaGroup != null && area != null)
         {
-            setCategoryRegion(categoryType, stayTown.getDistrict().name, stayTown.name);
+            setCategoryRegion(categoryType, areaGroup.name, area.name);
 
-            intent.putExtra(StayDistrictListActivity.INTENT_EXTRA_DATA_STAY_TOWN, new StayTownParcel(stayTown));
+            intent.putExtra(StayAreaListActivity.INTENT_EXTRA_DATA_REGION, new StayRegionParcel(new StayRegion(areaGroup, area)));
         }
 
-        intent.putExtra(StayDistrictListActivity.INTENT_EXTRA_DATA_STAY_CATEGORY, categoryType.name());
+        intent.putExtra(StayAreaListActivity.INTENT_EXTRA_DATA_STAY_CATEGORY, categoryType.name());
 
-        if (mSavedTown != null && mSavedTown.getDistrict() != null && mSavedTown.getDistrict().name.equalsIgnoreCase(stayTown.getDistrict().name) == true)
+        if (areaGroup != null)
         {
-            intent.putExtra(StayDistrictListActivity.INTENT_EXTRA_DATA_CHANGED_DISTRICT, false);
+            if (mStayRegion == null)
+            {
+                intent.putExtra(StayAreaListActivity.INTENT_EXTRA_DATA_CHANGED_AREA_GROUP, true);
+            } else
+            {
+                if (areaGroup.name.equalsIgnoreCase(mStayRegion.getAreaGroupName()) == true)
+                {
+                    intent.putExtra(StayAreaListActivity.INTENT_EXTRA_DATA_CHANGED_AREA_GROUP, false);
+                } else
+                {
+                    intent.putExtra(StayAreaListActivity.INTENT_EXTRA_DATA_CHANGED_AREA_GROUP, true);
+                }
+            }
         } else
         {
-            intent.putExtra(StayDistrictListActivity.INTENT_EXTRA_DATA_CHANGED_DISTRICT, true);
+            intent.putExtra(StayAreaListActivity.INTENT_EXTRA_DATA_CHANGED_AREA_GROUP, true);
         }
 
         setResult(resultCode, intent);
     }
 
-    private int getDistrictPosition(List<StayDistrict> districtList, String districtName)
+    private int getAreaGroupPosition(List<StayAreaGroup> areaGroupList, String areaName)
     {
-        if (districtList == null || districtList.size() == 0 || DailyTextUtils.isTextEmpty(districtName) == true)
+        if (areaGroupList == null || areaGroupList.size() == 0 || DailyTextUtils.isTextEmpty(areaName) == true)
         {
             return -1;
         }
 
-        int size = districtList.size();
+        int size = areaGroupList.size();
 
         for (int i = 0; i < size; i++)
         {
-            if (districtList.get(i).name.equalsIgnoreCase(districtName) == true)
+            if (areaGroupList.get(i).name.equalsIgnoreCase(areaName) == true)
             {
                 return i;
             }
@@ -673,38 +681,37 @@ public class StayDistrictListPresenter extends BaseExceptionPresenter<StayDistri
         return -1;
     }
 
-    private StayTown getTown(List<StayTown> townList, String townName)
+    private StayRegion getRegion(StayAreaGroup areaGroup, String areaName)
     {
-        if (townList == null || townList.size() == 0 || DailyTextUtils.isTextEmpty(townName) == true)
+        if (areaGroup == null || DailyTextUtils.isTextEmpty(areaName) == true)
         {
             return null;
         }
 
-        for (StayTown stayTown : townList)
+        if (areaGroup.getAreaCount() == 0)
         {
-            if (stayTown.name.equalsIgnoreCase(townName) == true)
+            return new StayRegion(areaGroup, new StayArea(areaGroup));
+        } else
+        {
+            for (StayArea area : areaGroup.getAreaList())
             {
-                return stayTown;
+                if (area.name.equalsIgnoreCase(areaName) == true)
+                {
+                    return new StayRegion(areaGroup, area);
+                }
             }
         }
 
         return null;
     }
 
-    private boolean equalsDistrictName(StayTown stayTown, String districtName)
+    private boolean equalsAreaGroupName(StayRegion stayRegion, String areaName)
     {
-        if (stayTown == null || DailyTextUtils.isTextEmpty(districtName) == true)
+        if (stayRegion == null || DailyTextUtils.isTextEmpty(areaName) == true)
         {
             return false;
         }
 
-        District district = stayTown.getDistrict();
-
-        if (district == null)
-        {
-            return false;
-        }
-
-        return districtName.equalsIgnoreCase(district.name);
+        return areaName.equalsIgnoreCase(stayRegion.getAreaGroupName());
     }
 }

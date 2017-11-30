@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.common.district.stay;
+package com.daily.dailyhotel.screen.common.area.stay;
 
 
 import android.content.Context;
@@ -14,7 +14,7 @@ import com.twoheart.dailyhotel.model.DailyCategoryType;
  * Created by sheldon
  * Clean Architecture
  */
-public class StayDistrictListActivity extends BaseActivity<StayDistrictListPresenter>
+public class StayAreaListActivity extends BaseActivity<StayAreaListPresenter>
 {
     static final int REQUEST_CODE_SETTING_LOCATION = 10000;
     static final int REQUEST_CODE_PERMISSION_MANAGER = 10001;
@@ -24,13 +24,12 @@ public class StayDistrictListActivity extends BaseActivity<StayDistrictListPrese
     static final String INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME = "checkOutDateTime";
     public static final String INTENT_EXTRA_DATA_STAY_CATEGORY = "stayCategory";
     static final String INTENT_EXTRA_DATA_CATEGORY_CODE = "categoryCode";
-    public static final String INTENT_EXTRA_DATA_STAY_TOWN = "stayTown";
-    public static final String INTENT_EXTRA_DATA_CHANGED_DISTRICT = "changedDistrict";
+    public static final String INTENT_EXTRA_DATA_REGION = "area";
+    public static final String INTENT_EXTRA_DATA_CHANGED_AREA_GROUP = "areaGroup";
 
-    public static Intent newInstance(Context context, String checkInDateTime, String checkOutDateTime
-        , DailyCategoryType dailyCategoryType, String categoryCode)
+    public static Intent newInstance(Context context, String checkInDateTime, String checkOutDateTime, DailyCategoryType dailyCategoryType, String categoryCode)
     {
-        Intent intent = new Intent(context, StayDistrictListActivity.class);
+        Intent intent = new Intent(context, StayAreaListActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_STAY_CATEGORY, dailyCategoryType.name());
@@ -49,9 +48,9 @@ public class StayDistrictListActivity extends BaseActivity<StayDistrictListPrese
 
     @NonNull
     @Override
-    protected StayDistrictListPresenter createInstancePresenter()
+    protected StayAreaListPresenter createInstancePresenter()
     {
-        return new StayDistrictListPresenter(this);
+        return new StayAreaListPresenter(this);
     }
 
     @Override
