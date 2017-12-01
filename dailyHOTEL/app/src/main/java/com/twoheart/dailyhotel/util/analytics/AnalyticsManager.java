@@ -1463,6 +1463,9 @@ public class AnalyticsManager
         public static final String CLICKED = "clicked";
         public static final String KEEP_EXISTED = "keep_existed";
         public static final String ADD_NEW = "add_new";
+
+        public static final String LINK_COPY = "link_copy";
+        public static final String ETC = "etc";
     }
 
     public static class UserType

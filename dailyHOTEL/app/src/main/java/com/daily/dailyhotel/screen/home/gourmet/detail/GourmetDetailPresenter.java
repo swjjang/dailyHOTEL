@@ -155,8 +155,9 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         void onEventShareKakaoClick(Activity activity, boolean login, String userType, boolean benefitAlarm//
             , int gourmetIndex, String gourmetName);
 
-        void onEventShareSmsClick(Activity activity, boolean login, String userType, boolean benefitAlarm//
-            , int gourmetIndex, String gourmetName);
+        void onEventCopyLinkClick(Activity activity);
+
+        void onEventMoreShareClick(Activity activity);
 
         void onEventDownloadCoupon(Activity activity, String gourmetName);
 
@@ -932,9 +933,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 }
             }));
 
-            //            mAnalytics.onEventShareSmsClick(getActivity(), DailyHotel.isLogin()//
-            //                , DailyUserPreference.getInstance(getActivity()).getType()//
-            //                , DailyUserPreference.getInstance(getActivity()).isBenefitAlarm(), mGourmetDetail.index, mGourmetDetail.name);
+            mAnalytics.onEventCopyLinkClick(getActivity());
         } catch (Exception e)
         {
             unLockAll();
@@ -1003,9 +1002,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 }
             }));
 
-            mAnalytics.onEventShareSmsClick(getActivity(), DailyHotel.isLogin()//
-                , DailyUserPreference.getInstance(getActivity()).getType()//
-                , DailyUserPreference.getInstance(getActivity()).isBenefitAlarm(), mGourmetDetail.index, mGourmetDetail.name);
+            mAnalytics.onEventMoreShareClick(getActivity());
         } catch (Exception e)
         {
             unLockAll();

@@ -538,15 +538,15 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                             startActivity(chooser);
                         }
                     }));
+
+                    AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
+                        , AnalyticsManager.Action.STAY_BOOKING_SHARE, AnalyticsManager.Label.ETC, null);
                 } catch (Exception e)
                 {
                     unLockUI();
 
                     ExLog.d(e.toString());
                 }
-
-                //                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
-                //                    , AnalyticsManager.Action.STAY_BOOKING_SHARE, AnalyticsManager.ValueType.MESSAGE, null);
             }
         });
 

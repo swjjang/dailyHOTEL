@@ -1308,7 +1308,6 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                     public void accept(Throwable throwable) throws Exception
                     {
                         onHandleError(throwable);
-                        finish();
                     }
                 }));
         }

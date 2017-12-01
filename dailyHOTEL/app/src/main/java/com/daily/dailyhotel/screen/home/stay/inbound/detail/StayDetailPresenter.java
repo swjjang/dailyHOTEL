@@ -149,8 +149,9 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         void onEventShareKakaoClick(Activity activity, boolean login, String userType, boolean benefitAlarm//
             , int stayIndex, String stayName, boolean overseas);
 
-        void onEventShareSmsClick(Activity activity, boolean login, String userType, boolean benefitAlarm//
-            , int stayIndex, String stayName, boolean overseas);
+        void onEventLinkCopyClick(Activity activity);
+
+        void onEventMoreShareClick(Activity activity);
 
         void onEventDownloadCoupon(Activity activity, String stayName);
 
@@ -908,9 +909,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 }
             }));
 
-            //            mAnalytics.onEventShareSmsClick(getActivity(), DailyHotel.isLogin()//
-            //                , DailyUserPreference.getInstance(getActivity()).getType()//
-            //                , DailyUserPreference.getInstance(getActivity()).isBenefitAlarm(), mStayDetail.index, mStayDetail.name, mStayDetail.overseas);
+            mAnalytics.onEventLinkCopyClick(getActivity());
         } catch (Exception e)
         {
             unLockAll();
@@ -978,9 +977,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 }
             }));
 
-            //            mAnalytics.onEventShareSmsClick(getActivity(), DailyHotel.isLogin()//
-            //                , DailyUserPreference.getInstance(getActivity()).getType()//
-            //                , DailyUserPreference.getInstance(getActivity()).isBenefitAlarm(), mStayDetail.index, mStayDetail.name, mStayDetail.overseas);
+            mAnalytics.onEventMoreShareClick(getActivity());
         } catch (Exception e)
         {
             unLockAll();
