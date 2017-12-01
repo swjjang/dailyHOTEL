@@ -92,7 +92,7 @@ public class GourmetBookingDetailAnalyticsImpl implements GourmetBookingDetailPr
         }
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SHARE//
-            , AnalyticsManager.Action.GOURMET_BOOKING_SHARE, AnalyticsManager.Label.ETC, null);
+            , AnalyticsManager.Action.GOURMET_BOOKING_SHARE, AnalyticsManager.ValueType.ETC, null);
     }
 
     @Override

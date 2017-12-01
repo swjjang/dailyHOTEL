@@ -168,6 +168,10 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         void onEventBookingClick(Activity activity, int stayIndex, String stayName, String roomName //
             , int discountPrice, boolean provideRewardSticker, String checkInDate, int nights);
 
+        void onEventShareKakaoClick(Activity activity);
+
+        void onEventMoreShareClick(Activity activity);
+
         StayOutboundPaymentAnalyticsParam getPaymentAnalyticsParam(String grade, boolean nrd, boolean showOriginalPrice);
     }
 
@@ -770,6 +774,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 , mStayOutboundDetail.index//
                 , imageUrl//
                 , mStayBookDateTime);
+
+            mAnalytics.onEventShareKakaoClick(getActivity());
         } catch (Exception e)
         {
             getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
@@ -821,6 +827,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             intent.putExtra(Intent.EXTRA_TEXT, message);
             Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
             startActivity(chooser);
+
+            mAnalytics.onEventMoreShareClick(getActivity());
         } catch (Exception e)
         {
             ExLog.d(e.toString());

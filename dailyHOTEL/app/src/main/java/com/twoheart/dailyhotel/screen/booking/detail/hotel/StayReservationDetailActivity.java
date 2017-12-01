@@ -540,7 +540,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                     }));
 
                     AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.SHARE//
-                        , AnalyticsManager.Action.STAY_BOOKING_SHARE, AnalyticsManager.Label.ETC, null);
+                        , AnalyticsManager.Action.STAY_BOOKING_SHARE, AnalyticsManager.ValueType.ETC, null);
                 } catch (Exception e)
                 {
                     unLockUI();

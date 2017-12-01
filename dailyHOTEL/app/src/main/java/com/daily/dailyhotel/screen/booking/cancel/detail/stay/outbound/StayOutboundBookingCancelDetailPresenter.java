@@ -78,6 +78,10 @@ public class StayOutboundBookingCancelDetailPresenter //
 
         void onEventShareClick(Activity activity);
 
+        void onEventShareKakaoClick(Activity activity);
+
+        void onEventMoreShareClick(Activity activity);
+
         void onEventConciergeClick(Activity activity);
 
         void onEventViewDetailClick(Activity activity);
@@ -537,6 +541,8 @@ public class StayOutboundBookingCancelDetailPresenter //
                 , mStayOutboundBookingDetail.address);
 
             KakaoLinkManager.newInstance(getActivity()).shareBookingCancelStay(message, mImageUrl);
+
+            mAnalytics.onEventShareKakaoClick(getActivity());
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -578,6 +584,8 @@ public class StayOutboundBookingCancelDetailPresenter //
             intent.putExtra(Intent.EXTRA_TEXT, message);
             Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
             startActivity(chooser);
+
+            mAnalytics.onEventMoreShareClick(getActivity());
         } catch (Exception e)
         {
             ExLog.d(e.toString());

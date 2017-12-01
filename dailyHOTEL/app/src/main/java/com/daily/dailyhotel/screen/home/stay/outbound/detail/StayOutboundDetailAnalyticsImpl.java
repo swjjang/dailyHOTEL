@@ -203,6 +203,30 @@ public class StayOutboundDetailAnalyticsImpl implements StayOutboundDetailPresen
     }
 
     @Override
+    public void onEventShareKakaoClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SHARE//
+            , AnalyticsManager.Action.OB_ITEM_SHARE, AnalyticsManager.ValueType.KAKAO, null);
+    }
+
+    @Override
+    public void onEventMoreShareClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SHARE//
+            , AnalyticsManager.Action.OB_ITEM_SHARE, AnalyticsManager.ValueType.ETC, null);
+    }
+
+    @Override
     public StayOutboundPaymentAnalyticsParam getPaymentAnalyticsParam(String grade, boolean nrd, boolean showOriginalPrice)
     {
         StayOutboundPaymentAnalyticsParam analyticsParam = new StayOutboundPaymentAnalyticsParam();

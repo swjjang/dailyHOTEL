@@ -254,7 +254,7 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
         }
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SHARE //
-            , AnalyticsManager.Action.STAY_ITEM_SHARE, AnalyticsManager.Label.LINK_COPY, null);
+            , AnalyticsManager.Action.STAY_ITEM_SHARE, AnalyticsManager.ValueType.LINK_COPY, null);
     }
 
     @Override
@@ -266,7 +266,7 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
         }
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SHARE //
-            , AnalyticsManager.Action.STAY_ITEM_SHARE, AnalyticsManager.Label.ETC, null);
+            , AnalyticsManager.Action.STAY_ITEM_SHARE, AnalyticsManager.ValueType.ETC, null);
     }
 
     @Override
