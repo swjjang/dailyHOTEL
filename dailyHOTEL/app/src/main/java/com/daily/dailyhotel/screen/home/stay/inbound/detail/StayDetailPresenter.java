@@ -895,8 +895,6 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                     DailyTextUtils.clipText(getActivity(), shortUrl);
 
                     DailyToast.showToast(getActivity(), R.string.toast_msg_copy_link, DailyToast.LENGTH_LONG);
-
-                    mAnalytics.onEventLinkCopyClick(getActivity());
                 }
             }, new Consumer<Throwable>()
             {
@@ -911,9 +909,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 }
             }));
 
-            //            mAnalytics.onEventShareSmsClick(getActivity(), DailyHotel.isLogin()//
-            //                , DailyUserPreference.getInstance(getActivity()).getType()//
-            //                , DailyUserPreference.getInstance(getActivity()).isBenefitAlarm(), mStayDetail.index, mStayDetail.name, mStayDetail.overseas);
+            mAnalytics.onEventLinkCopyClick(getActivity());
         } catch (Exception e)
         {
             unLockAll();

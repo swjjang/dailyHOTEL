@@ -146,55 +146,27 @@ public class GourmetDetailAnalyticsImpl implements GourmetDetailPresenter.Gourme
     }
 
     @Override
-    public void onEventShareSmsClick(Activity activity, boolean login, String userType, boolean benefitAlarm//
-        , int gourmetIndex, String gourmetName)
+    public void onEventCopyLinkClick(Activity activity)
     {
-        try
+        if (activity == null)
         {
-            Map<String, String> params = new HashMap<>();
-            params.put(AnalyticsManager.KeyType.SERVICE, AnalyticsManager.ValueType.GOURMET);
-            params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
-            params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getProvinceName());
-
-            if (login == true)
-            {
-                params.put(AnalyticsManager.KeyType.USER_TYPE, AnalyticsManager.ValueType.MEMBER);
-
-                switch (userType)
-                {
-                    case Constants.DAILY_USER:
-                        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.UserType.EMAIL);
-                        break;
-
-                    case Constants.KAKAO_USER:
-                        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.UserType.KAKAO);
-                        break;
-
-                    case Constants.FACEBOOK_USER:
-                        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.UserType.FACEBOOK);
-                        break;
-
-                    default:
-                        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.ValueType.EMPTY);
-                        break;
-                }
-            } else
-            {
-                params.put(AnalyticsManager.KeyType.USER_TYPE, AnalyticsManager.ValueType.GUEST);
-                params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.ValueType.EMPTY);
-            }
-
-            params.put(AnalyticsManager.KeyType.PUSH_NOTIFICATION, benefitAlarm ? "on" : "off");
-            params.put(AnalyticsManager.KeyType.SHARE_METHOD, AnalyticsManager.ValueType.MESSAGE);
-            params.put(AnalyticsManager.KeyType.VENDOR_ID, Integer.toString(gourmetIndex));
-            params.put(AnalyticsManager.KeyType.VENDOR_NAME, gourmetName);
-
-            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SHARE//
-                , AnalyticsManager.Action.GOURMET_ITEM_SHARE, AnalyticsManager.ValueType.MESSAGE, params);
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
+            return;
         }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SHARE //
+            , AnalyticsManager.Action.GOURMET_ITEM_SHARE, AnalyticsManager.Label.LINK_COPY, null);
+    }
+
+    @Override
+    public void onEventMoreShareClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SHARE //
+            , AnalyticsManager.Action.GOURMET_ITEM_SHARE, AnalyticsManager.Label.ETC, null);
     }
 
     @Override
