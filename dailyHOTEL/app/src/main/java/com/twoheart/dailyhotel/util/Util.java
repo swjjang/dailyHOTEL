@@ -35,6 +35,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -1510,5 +1511,51 @@ public class Util implements Constants
         }
 
         return objectClass;
+    }
+
+
+    public static final int VERIFY_USER = 1;
+    public static final int VERIFY_ERROR = 0;
+    public static final int VERIFY_DAILY_USER_NOT_VERIFY_PHONE = -10000;
+    public static final int VERIFY_SOCIAL_USER_NOT_VERIFY = -10001;
+    public static final int VERIFY_SOCIAL_USER_NOT_VERIFY_EMAIL = -10002;
+    public static final int VERIFY_SOCIAL_USER_NOT_VERIFY_PHONE = -10003;
+
+    /**
+     * @param user
+     * @return
+     */
+    public static int verifyUserInformation(User user)
+    {
+        if (user == null)
+        {
+            return VERIFY_ERROR;
+        }
+
+        boolean isDailyUser = Constants.DAILY_USER.equalsIgnoreCase(user.userType);
+
+        if (isDailyUser == true)
+        {
+            // 인증이 되어있지 않던가 기존에 인증이 되었는데 인증이 해지되었다.
+            if (Util.isValidatePhoneNumber(user.phone) == false || (user.verified == true && user.phoneVerified == false))
+            {
+                return VERIFY_DAILY_USER_NOT_VERIFY_PHONE;
+            }
+        } else
+        {
+            // 입력된 정보가 부족해.
+            if (DailyTextUtils.isTextEmpty(user.email, user.phone, user.name) == true)
+            {
+                return VERIFY_SOCIAL_USER_NOT_VERIFY;
+            } else if (android.util.Patterns.EMAIL_ADDRESS.matcher(user.email).matches() == false)
+            {
+                return VERIFY_SOCIAL_USER_NOT_VERIFY_EMAIL;
+            } else if (Util.isValidatePhoneNumber(user.phone) == false)
+            {
+                return VERIFY_SOCIAL_USER_NOT_VERIFY_PHONE;
+            }
+        }
+
+        return VERIFY_USER;
     }
 }

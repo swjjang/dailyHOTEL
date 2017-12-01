@@ -1043,59 +1043,42 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                         @Override
                         public void accept(@io.reactivex.annotations.NonNull User user) throws Exception
                         {
-                            boolean isDailyUser = Constants.DAILY_USER.equalsIgnoreCase(user.userType);
-                            StayOutboundPaymentAnalyticsParam analyticsParam = mAnalytics.getPaymentAnalyticsParam(getString(R.string.label_stay_outbound_detail_grade, (int) mStayOutboundDetail.rating)//
-                                , mSelectedRoom.nonRefundable, mSelectedRoom.promotion);
-
-                            if (isDailyUser == true)
+                            switch (Util.verifyUserInformation(user))
                             {
-                                // 인증이 되어있지 않던가 기존에 인증이 되었는데 인증이 해지되었다.
-                                if (Util.isValidatePhoneNumber(user.phone) == false || (user.verified == true && user.phoneVerified == false))
-                                {
+                                case Util.VERIFY_USER:
+                                    StayOutboundPaymentAnalyticsParam analyticsParam = mAnalytics.getPaymentAnalyticsParam(getString(R.string.label_stay_outbound_detail_grade, (int) mStayOutboundDetail.rating)//
+                                        , mSelectedRoom.nonRefundable, mSelectedRoom.promotion);
+
+                                    startActivityForResult(StayOutboundPaymentActivity.newInstance(getActivity(), mStayOutboundDetail.index//
+                                        , mStayOutboundDetail.name, mImageUrl, mSelectedRoom.total//
+                                        , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                                        , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                                        , mPeople.numberOfAdults, mPeople.getChildAgeList()//
+                                        , mSelectedRoom.roomName, mSelectedRoom.rateCode, mSelectedRoom.rateKey//
+                                        , mSelectedRoom.roomTypeCode, mSelectedRoom.roomBedTypeId, mSelectedRoom.vendorType, analyticsParam)//
+                                        , StayOutboundDetailActivity.REQUEST_CODE_PAYMENT);
+                                    break;
+
+                                case Util.VERIFY_DAILY_USER_NOT_VERIFY_PHONE:
                                     startActivityForResult(EditProfilePhoneActivity.newInstance(getActivity()//
                                         , EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER, user.phone)//
                                         , StayOutboundDetailActivity.REQUEST_CODE_PROFILE_UPDATE);
-                                } else
-                                {
-                                    startActivityForResult(StayOutboundPaymentActivity.newInstance(getActivity(), mStayOutboundDetail.index//
-                                        , mStayOutboundDetail.name, mImageUrl, mSelectedRoom.total//
-                                        , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                                        , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                                        , mPeople.numberOfAdults, mPeople.getChildAgeList()//
-                                        , mSelectedRoom.roomName, mSelectedRoom.rateCode, mSelectedRoom.rateKey//
-                                        , mSelectedRoom.roomTypeCode, mSelectedRoom.roomBedTypeId, mSelectedRoom.vendorType, analyticsParam)//
-                                        , StayOutboundDetailActivity.REQUEST_CODE_PAYMENT);
-                                }
-                            } else
-                            {
-                                // 입력된 정보가 부족해.
-                                if (DailyTextUtils.isTextEmpty(user.email, user.phone, user.name) == true//
-                                    || android.util.Patterns.EMAIL_ADDRESS.matcher(user.email).matches() == false)
-                                {
-                                    Customer customer = new Customer();
-                                    customer.setEmail(user.email);
-                                    customer.setName(user.name);
-                                    customer.setPhone(user.phone);
-                                    customer.setUserIdx(Integer.toString(user.index));
+                                    break;
 
+                                case Util.VERIFY_SOCIAL_USER_NOT_VERIFY:
+                                case Util.VERIFY_SOCIAL_USER_NOT_VERIFY_EMAIL:
                                     startActivityForResult(AddProfileSocialActivity.newInstance(getActivity()//
-                                        , customer, user.birthday), StayOutboundDetailActivity.REQUEST_CODE_PROFILE_UPDATE);
-                                } else if (Util.isValidatePhoneNumber(user.phone) == false)
-                                {
+                                        , new Customer(user), user.birthday), StayOutboundDetailActivity.REQUEST_CODE_PROFILE_UPDATE);
+                                    break;
+
+                                case Util.VERIFY_SOCIAL_USER_NOT_VERIFY_PHONE:
                                     startActivityForResult(EditProfilePhoneActivity.newInstance(getActivity()//
                                         , EditProfilePhoneActivity.Type.WRONG_PHONENUMBER, user.phone)//
                                         , StayOutboundDetailActivity.REQUEST_CODE_PROFILE_UPDATE);
-                                } else
-                                {
-                                    startActivityForResult(StayOutboundPaymentActivity.newInstance(getActivity(), mStayOutboundDetail.index//
-                                        , mStayOutboundDetail.name, mImageUrl, mSelectedRoom.total//
-                                        , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                                        , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                                        , mPeople.numberOfAdults, mPeople.getChildAgeList()//
-                                        , mSelectedRoom.roomName, mSelectedRoom.rateCode, mSelectedRoom.rateKey//
-                                        , mSelectedRoom.roomTypeCode, mSelectedRoom.roomBedTypeId, mSelectedRoom.vendorType, analyticsParam)//
-                                        , StayOutboundDetailActivity.REQUEST_CODE_PAYMENT);
-                                }
+                                    break;
+
+                                default:
+                                    break;
                             }
                         }
                     }, new Consumer<Throwable>()
