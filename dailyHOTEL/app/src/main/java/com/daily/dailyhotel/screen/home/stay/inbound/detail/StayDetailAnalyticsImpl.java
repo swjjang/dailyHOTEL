@@ -246,61 +246,27 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
     }
 
     @Override
-    public void onEventShareSmsClick(Activity activity, boolean login, String userType, boolean benefitAlarm//
-        , int stayIndex, String stayName, boolean overseas)
+    public void onEventLinkCopyClick(Activity activity)
     {
-        if (mAnalyticsParam == null || activity == null)
+        if (activity == null)
         {
             return;
         }
 
-        try
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SHARE //
+            , AnalyticsManager.Action.STAY_ITEM_SHARE, AnalyticsManager.Label.LINK_COPY, null);
+    }
+
+    @Override
+    public void onEventMoreShareClick(Activity activity)
+    {
+        if (activity == null)
         {
-            HashMap<String, String> params = new HashMap<>();
-            params.put(AnalyticsManager.KeyType.SERVICE, AnalyticsManager.ValueType.STAY);
-            params.put(AnalyticsManager.KeyType.COUNTRY, overseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
-
-            params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getProvinceName());
-
-            if (login == true)
-            {
-                params.put(AnalyticsManager.KeyType.USER_TYPE, AnalyticsManager.ValueType.MEMBER);
-
-                switch (userType)
-                {
-                    case Constants.DAILY_USER:
-                        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.UserType.EMAIL);
-                        break;
-
-                    case Constants.KAKAO_USER:
-                        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.UserType.KAKAO);
-                        break;
-
-                    case Constants.FACEBOOK_USER:
-                        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.UserType.FACEBOOK);
-                        break;
-
-                    default:
-                        params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.ValueType.EMPTY);
-                        break;
-                }
-            } else
-            {
-                params.put(AnalyticsManager.KeyType.USER_TYPE, AnalyticsManager.ValueType.GUEST);
-                params.put(AnalyticsManager.KeyType.MEMBER_TYPE, AnalyticsManager.ValueType.EMPTY);
-            }
-
-            params.put(AnalyticsManager.KeyType.PUSH_NOTIFICATION, benefitAlarm ? "on" : "off");
-            params.put(AnalyticsManager.KeyType.SHARE_METHOD, AnalyticsManager.ValueType.MESSAGE);
-            params.put(AnalyticsManager.KeyType.VENDOR_ID, Integer.toString(stayIndex));
-            params.put(AnalyticsManager.KeyType.VENDOR_NAME, stayName);
-
-            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SHARE//
-                , AnalyticsManager.Action.STAY_ITEM_SHARE, AnalyticsManager.ValueType.MESSAGE, params);
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
+            return;
         }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SHARE //
+            , AnalyticsManager.Action.STAY_ITEM_SHARE, AnalyticsManager.Label.ETC, null);
     }
 
     @Override
