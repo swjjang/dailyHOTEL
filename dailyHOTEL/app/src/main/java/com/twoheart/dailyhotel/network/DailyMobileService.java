@@ -725,7 +725,7 @@ public interface DailyMobileService
     Observable<BaseDto<PlaceWishItems<StayWishItem>>> getStayWishList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @POST()
+    @GET()
     Observable<BaseListDto<StayOutboundData>> getStayOutboundWishList(@Url String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})

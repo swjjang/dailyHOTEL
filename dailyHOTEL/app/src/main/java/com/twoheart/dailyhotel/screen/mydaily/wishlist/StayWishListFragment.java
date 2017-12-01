@@ -234,8 +234,6 @@ public class StayWishListFragment extends PlaceWishListFragment
                 onHandleError(throwable);
             }
         }));
-
-        //        ((StayWishListNetworkController) mNetworkController).requestStayWishList();
     }
 
     @Override

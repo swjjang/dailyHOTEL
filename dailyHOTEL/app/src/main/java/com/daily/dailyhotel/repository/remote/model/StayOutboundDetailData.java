@@ -57,6 +57,12 @@ public class StayOutboundDetailData
     @JsonField(name = "configurations")
     public ConfigurationsData configurations;
 
+    @JsonField(name = "myWish")
+    public boolean myWish;
+
+    @JsonField(name = "wishCount")
+    public int wishCount;
+
     public StayOutboundDetailData()
     {
 
@@ -79,6 +85,8 @@ public class StayOutboundDetailData
 
         stayOutboundDetail.latitude = latitude;
         stayOutboundDetail.longitude = longitude;
+        stayOutboundDetail.myWish = myWish;
+        stayOutboundDetail.wishCount = wishCount;
 
         LinkedHashMap<String, List<String>> detailsMap = new LinkedHashMap<>();
 

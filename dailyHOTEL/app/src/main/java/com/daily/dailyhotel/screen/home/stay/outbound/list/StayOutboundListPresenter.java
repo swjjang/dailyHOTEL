@@ -1097,7 +1097,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         }
 
         startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.OB_STAY//
-            , stayOutbound.index, !currentWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);
+            , stayOutbound.index, !currentWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), StayOutboundListActivity.REQUEST_CODE_WISH_DIALOG);
 
         mAnalytics.onEventWishClick(getActivity(), !currentWish);
     }
