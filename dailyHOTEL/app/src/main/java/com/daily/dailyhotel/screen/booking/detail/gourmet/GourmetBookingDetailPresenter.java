@@ -1047,7 +1047,8 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
             if (ticketSize > 1)
             {
                 ticketName = getString(R.string.message_multi_ticket_name_n_count, firstTicketName, ticketSize - 1);
-            } else {
+            } else
+            {
                 ticketName = firstTicketName;
             }
 
@@ -1116,7 +1117,8 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
             if (ticketSize > 1)
             {
                 ticketName = getString(R.string.message_multi_ticket_name_n_count, firstTicketName, ticketSize - 1);
-            } else {
+            } else
+            {
                 ticketName = firstTicketName;
             }
 
@@ -1165,14 +1167,14 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
                     startActivity(chooser);
                 }
             }));
+
+            mAnalytics.onEventMoreShareClick(getActivity());
         } catch (Exception e)
         {
             unLockAll();
 
             ExLog.d(e.toString());
         }
-
-        mAnalytics.onEventMoreShareClick(getActivity());
     }
 
     @Override
