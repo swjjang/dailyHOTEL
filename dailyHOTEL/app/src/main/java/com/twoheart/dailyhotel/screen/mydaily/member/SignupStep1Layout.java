@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
@@ -102,7 +103,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         mSignupBalloonsTextView = (TextView) view.findViewById(R.id.signupBalloonsTextView);
 
         mEmailView = view.findViewById(R.id.emailView);
-        mEmailEditText = (DailyAutoCompleteEditText) view.findViewById(R.id.emailEditText);
+        mEmailEditText = view.findViewById(R.id.emailEditText);
         mEmailEditText.setDeleteButtonVisible(null);
         mEmailEditText.setOnFocusChangeListener(this);
 

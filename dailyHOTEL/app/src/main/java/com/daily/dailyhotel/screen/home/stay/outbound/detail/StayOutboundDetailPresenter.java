@@ -1118,7 +1118,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                             } else
                             {
                                 // 입력된 정보가 부족해.
-                                if (DailyTextUtils.isTextEmpty(user.email, user.phone, user.name) == true)
+                                if (DailyTextUtils.isTextEmpty(user.email, user.phone, user.name) == true//
+                                    || android.util.Patterns.EMAIL_ADDRESS.matcher(user.email).matches() == false)
                                 {
                                     Customer customer = new Customer();
                                     customer.setEmail(user.email);
