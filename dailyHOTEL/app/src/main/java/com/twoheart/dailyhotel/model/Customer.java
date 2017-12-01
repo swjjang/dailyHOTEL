@@ -19,6 +19,19 @@ public class Customer implements Parcelable
         readFromParcel(in);
     }
 
+    public Customer(com.daily.dailyhotel.entity.User user)
+    {
+        if (user == null)
+        {
+            return;
+        }
+
+        mEmail = user.email;
+        mName = user.name;
+        mPhone = user.phone;
+        mUserIdx = Integer.toString(user.index);
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
