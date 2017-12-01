@@ -82,6 +82,10 @@ public class GourmetBookingCancelDetailPresenter //
 
         void onEventShareClick(Activity activity);
 
+        void onEventShareKakaoClick(Activity activity);
+
+        void onEventMoreShareClick(Activity activity);
+
         void onEventConciergeClick(Activity activity);
 
         void onEventViewDetailClick(Activity activity);
@@ -649,6 +653,7 @@ public class GourmetBookingCancelDetailPresenter //
 
             KakaoLinkManager.newInstance(getActivity()).shareBookingCancelGourmet(message, mImageUrl);
 
+            mAnalytics.onEventShareKakaoClick(getActivity());
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -719,6 +724,7 @@ public class GourmetBookingCancelDetailPresenter //
             Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
             startActivity(chooser);
 
+            mAnalytics.onEventMoreShareClick(getActivity());
         } catch (Exception e)
         {
             unLockAll();

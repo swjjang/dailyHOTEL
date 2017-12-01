@@ -76,6 +76,30 @@ public class StayOutboundBookingDetailAnalyticsImpl implements StayOutboundBooki
     }
 
     @Override
+    public void onEventShareKakaoClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SHARE//
+            , AnalyticsManager.Action.OB_BOOKING_SHARE, AnalyticsManager.ValueType.KAKAO, null);
+    }
+
+    @Override
+    public void onEventMoreShareClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SHARE//
+            , AnalyticsManager.Action.OB_BOOKING_SHARE, AnalyticsManager.ValueType.ETC, null);
+    }
+
+    @Override
     public StayOutboundDetailAnalyticsParam getDetailAnalyticsParam(StayOutboundBookingDetail stayOutboundBookingDetail)
     {
         StayOutboundDetailAnalyticsParam analyticsParam = new StayOutboundDetailAnalyticsParam();

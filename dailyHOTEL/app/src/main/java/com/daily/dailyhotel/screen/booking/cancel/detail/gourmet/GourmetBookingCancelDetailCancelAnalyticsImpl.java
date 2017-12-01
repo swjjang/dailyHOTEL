@@ -31,6 +31,30 @@ public class GourmetBookingCancelDetailCancelAnalyticsImpl implements GourmetBoo
     }
 
     @Override
+    public void onEventShareKakaoClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SHARE//
+            , AnalyticsManager.Action.GOURMET_CANCEL_SHARE, AnalyticsManager.ValueType.KAKAO, null);
+    }
+
+    @Override
+    public void onEventMoreShareClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SHARE//
+            , AnalyticsManager.Action.GOURMET_CANCEL_SHARE, AnalyticsManager.ValueType.ETC, null);
+    }
+
+    @Override
     public void onEventConciergeClick(Activity activity)
     {
         if (activity == null)

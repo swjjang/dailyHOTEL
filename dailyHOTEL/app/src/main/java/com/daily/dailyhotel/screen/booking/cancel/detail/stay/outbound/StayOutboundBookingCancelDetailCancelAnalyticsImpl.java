@@ -31,6 +31,30 @@ public class StayOutboundBookingCancelDetailCancelAnalyticsImpl implements StayO
     }
 
     @Override
+    public void onEventShareKakaoClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SHARE//
+            , AnalyticsManager.Action.OB_CANCEL_SHARE, AnalyticsManager.ValueType.KAKAO, null);
+    }
+
+    @Override
+    public void onEventMoreShareClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SHARE//
+            , AnalyticsManager.Action.OB_CANCEL_SHARE, AnalyticsManager.ValueType.ETC, null);
+    }
+
+    @Override
     public void onEventConciergeClick(Activity activity)
     {
         if (activity == null)

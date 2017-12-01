@@ -80,6 +80,10 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
     {
         void onScreen(Activity activity, int bookingState, int placeIndex, StayOutboundBookingDetail.RefundType refundType);
 
+        void onEventShareKakaoClick(Activity activity);
+
+        void onEventMoreShareClick(Activity activity);
+
         StayOutboundDetailAnalyticsParam getDetailAnalyticsParam(StayOutboundBookingDetail stayOutboundBookingDetail);
     }
 
@@ -610,6 +614,8 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
 
             KakaoLinkManager.newInstance(getActivity()).shareBookingStayOutbound(message, mStayOutboundBookingDetail.stayIndex,//
                 mImageUrl, DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", "yyyyMMdd"), nights);
+
+            mAnalytics.onEventShareKakaoClick(getActivity());
         } catch (Exception e)
         {
             ExLog.d(e.toString());
@@ -662,6 +668,8 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
             intent.putExtra(Intent.EXTRA_TEXT, message);
             Intent chooser = Intent.createChooser(intent, getString(R.string.label_doshare));
             startActivity(chooser);
+
+            mAnalytics.onEventMoreShareClick(getActivity());
         } catch (Exception e)
         {
             ExLog.d(e.toString());
