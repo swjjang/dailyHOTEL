@@ -1396,7 +1396,7 @@
     <!--<string name="message_stamp_completed_issuance">1박 무료 프리패스 쿠폰\n발급 완료!</string>-->
 
     <!-- True Review -->
-    <string name="label_detail_review_count">%1$d개의 리뷰</string>
+    <string name="label_detail_review_count">%1$s개의 리뷰</string>
     <string name="label_detail_review_terms_go">운영정책 보기</string>
     <string name="label_detail_review_more_read">더 읽어보기</string>
     <string name="message_detail_review_stay_explain">트루리뷰는 100% 직접 투숙한 고객님이 남겨주신 리뷰입니다.</string>

@@ -357,7 +357,7 @@ public class GourmetBookingCancelDetailPresenter //
 
         Intent intent = ZoomMapActivity.newInstance(getActivity()//
             , ZoomMapActivity.SourceType.GOURMET_BOOKING, restaurantInfo.name, restaurantInfo.address//
-            , restaurantInfo.latitude, restaurantInfo.longitude, true);
+            , restaurantInfo.latitude, restaurantInfo.longitude, false);
 
         startActivityForResult(intent, GourmetBookingCancelDetailActivity.REQUEST_CODE_ZOOMMAP);
         //

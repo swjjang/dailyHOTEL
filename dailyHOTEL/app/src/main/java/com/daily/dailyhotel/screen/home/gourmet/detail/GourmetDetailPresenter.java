@@ -1972,7 +1972,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                     disposable.dispose();
                 }
 
-                switch (validGourmetCart(gourmetCart))
+                switch (validGourmetCart(mGourmetIndex, gourmetCart))
                 {
                     case INVALID_GOURMET_CART_VISIT_TIME:
                     {
@@ -2129,9 +2129,14 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
      * @param gourmetCart
      * @return
      */
-    private int validGourmetCart(GourmetCart gourmetCart)
+    private int validGourmetCart(int gourmetIndex, GourmetCart gourmetCart)
     {
         if (gourmetCart == null || gourmetCart.getMenuCount() == 0)
+        {
+            return VALID_GOURMET_CART_DEFAULT;
+        }
+
+        if (gourmetCart.gourmetIndex != gourmetIndex)
         {
             return VALID_GOURMET_CART_DEFAULT;
         }

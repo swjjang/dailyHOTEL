@@ -1034,7 +1034,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
             startActivityForResult(ZoomMapActivity.newInstance(getActivity()//
                 , ZoomMapActivity.SourceType.HOTEL, mStayDetail.name, mStayDetail.address//
-                , mStayDetail.latitude, mStayDetail.longitude, true), StayDetailActivity.REQUEST_CODE_MAP);
+                , mStayDetail.latitude, mStayDetail.longitude, false), StayDetailActivity.REQUEST_CODE_MAP);
         } else
         {
             getViewInterface().showSimpleDialog(getString(R.string.dialog_title_googleplayservice)//
@@ -1548,6 +1548,15 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             {
                 getViewInterface().showSimpleDialog(null, getString(R.string.message_truevr_not_support_hardware), getString(R.string.dialog_btn_text_confirm), null);
             }
+        }
+
+        // 기본적으로 1박은 TOTAL로 연박은 AVERAGE로 보인다.
+        if (mStayBookDateTime.getNights() == 1)
+        {
+            getViewInterface().setPriceType(PriceType.TOTAL);
+        } else
+        {
+            getViewInterface().setPriceType(PriceType.AVERAGE);
         }
 
         mIsDeepLink = false;

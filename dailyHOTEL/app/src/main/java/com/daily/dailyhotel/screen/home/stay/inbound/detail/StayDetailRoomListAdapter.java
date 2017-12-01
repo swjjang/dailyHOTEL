@@ -34,7 +34,7 @@ public class StayDetailRoomListAdapter extends RecyclerView.Adapter<RecyclerView
         mOnClickListener = listener;
 
         addAll(arrayList);
-        mPriceType = StayDetailPresenter.PriceType.AVERAGE;
+        setPriceType(StayDetailPresenter.PriceType.TOTAL);
     }
 
     public void addAll(Collection<? extends StayRoom> collection)

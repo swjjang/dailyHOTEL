@@ -93,7 +93,6 @@ public class StayPaymentAnalyticsParam implements Parcelable
             dest.writeParcelable(new StayRegionParcel(mRegion), flags);
         }
 
-        dest.writeParcelable(new StayRegionParcel(mRegion), flags);
         dest.writeString(addressAreaName);
         dest.writeString(grade.name());
         dest.writeInt(provideRewardSticker ? 1 : 0);
