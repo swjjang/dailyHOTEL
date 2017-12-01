@@ -72,8 +72,8 @@ dependencies {
         transitive = true;
     }
 
-    compile 'com.google.android.gms:play-services-base:11.6.0'
-    compile 'com.google.android.gms:play-services-maps:11.6.0'
+    compile 'com.google.android.gms:play-services-base:11.4.2'
+    compile 'com.google.android.gms:play-services-maps:11.4.2'
 
     testCompile 'junit:junit:4.12'
 }
