@@ -1553,6 +1553,15 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             }
         }
 
+        // 기본적으로 1박은 TOTAL로 연박은 AVERAGE로 보인다.
+        if (mStayBookDateTime.getNights() == 1)
+        {
+            getViewInterface().setPriceType(PriceType.TOTAL);
+        } else
+        {
+            getViewInterface().setPriceType(PriceType.AVERAGE);
+        }
+
         mIsDeepLink = false;
     }
 
