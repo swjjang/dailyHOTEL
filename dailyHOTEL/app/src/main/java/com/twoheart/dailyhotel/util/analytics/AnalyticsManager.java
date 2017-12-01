@@ -934,9 +934,14 @@ public class AnalyticsManager
         public static final String ITEM_SHARE = "item_share";
         public static final String STAY_ITEM_SHARE = "stay_item_share";
         public static final String GOURMET_ITEM_SHARE = "gourmet_item_share";
+        public static final String OB_ITEM_SHARE = "ob_item_share";
         public static final String BOOKING_SHARE = "booking_share";
         public static final String STAY_BOOKING_SHARE = "stay_booking_share";
         public static final String GOURMET_BOOKING_SHARE = "gourmet_booking_share";
+        public static final String OB_BOOKING_SHARE = "ob_booking_share";
+        public static final String STAY_CANCEL_SHARE = "stay_cancel_share";
+        public static final String GOURMET_CANCEL_SHARE = "gourmet_cancel_share";
+        public static final String OB_CANCEL_SHARE = "ob_cancel_share";
 
         public static final String WAYTOVISIT_OPEN = "waytovisit_open";
         public static final String WAYTOVISIT_CLOSE = "waytovisit_close";
@@ -1463,9 +1468,6 @@ public class AnalyticsManager
         public static final String CLICKED = "clicked";
         public static final String KEEP_EXISTED = "keep_existed";
         public static final String ADD_NEW = "add_new";
-
-        public static final String LINK_COPY = "link_copy";
-        public static final String ETC = "etc";
     }
 
     public static class UserType
@@ -1617,5 +1619,7 @@ public class AnalyticsManager
         public static final String OVERSEAS = "overseas";
         public static final String DOMESTIC = "domestic";
         public static final String PENSION = "pension";
+        public static final String LINK_COPY = "link_copy";
+        public static final String ETC = "etc";
     }
 }

@@ -155,7 +155,7 @@ public class GourmetDetailAnalyticsImpl implements GourmetDetailPresenter.Gourme
         }
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SHARE //
-            , AnalyticsManager.Action.GOURMET_ITEM_SHARE, AnalyticsManager.Label.LINK_COPY, null);
+            , AnalyticsManager.Action.GOURMET_ITEM_SHARE, AnalyticsManager.ValueType.LINK_COPY, null);
     }
 
     @Override
@@ -167,7 +167,7 @@ public class GourmetDetailAnalyticsImpl implements GourmetDetailPresenter.Gourme
         }
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SHARE //
-            , AnalyticsManager.Action.GOURMET_ITEM_SHARE, AnalyticsManager.Label.ETC, null);
+            , AnalyticsManager.Action.GOURMET_ITEM_SHARE, AnalyticsManager.ValueType.ETC, null);
     }
 
     @Override

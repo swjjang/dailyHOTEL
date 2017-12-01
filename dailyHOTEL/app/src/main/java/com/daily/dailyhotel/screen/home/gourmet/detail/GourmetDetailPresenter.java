@@ -2073,43 +2073,32 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 @Override
                 public void accept(@io.reactivex.annotations.NonNull User user) throws Exception
                 {
-                    boolean isDailyUser = Constants.DAILY_USER.equalsIgnoreCase(user.userType);
-
-                    if (isDailyUser == true)
+                    switch (Util.verifyUserInformation(user))
                     {
-                        // 인증이 되어있지 않던가 기존에 인증이 되었는데 인증이 해지되었다.
-                        if (Util.isValidatePhoneNumber(user.phone) == false || (user.verified == true && user.phoneVerified == false))
-                        {
+                        case Util.VERIFY_USER:
+                            startPayment(mGourmetDetail, gourmetCart);
+                            break;
+
+                        case Util.VERIFY_DAILY_USER_NOT_VERIFY_PHONE:
                             startActivityForResult(EditProfilePhoneActivity.newInstance(getActivity()//
                                 , EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER, user.phone)//
                                 , GourmetDetailActivity.REQUEST_CODE_PROFILE_UPDATE);
-                        } else
-                        {
-                            startPayment(mGourmetDetail, gourmetCart);
-                        }
-                    } else
-                    {
-                        // 입력된 정보가 부족해.
-                        if (DailyTextUtils.isTextEmpty(user.email, user.phone, user.name) == true//
-                            || android.util.Patterns.EMAIL_ADDRESS.matcher(user.email).matches() == false)
-                        {
-                            Customer customer = new Customer();
-                            customer.setEmail(user.email);
-                            customer.setName(user.name);
-                            customer.setPhone(user.phone);
-                            customer.setUserIdx(Integer.toString(user.index));
+                            break;
 
+                        case Util.VERIFY_SOCIAL_USER_NOT_VERIFY:
+                        case Util.VERIFY_SOCIAL_USER_NOT_VERIFY_EMAIL:
                             startActivityForResult(AddProfileSocialActivity.newInstance(getActivity()//
-                                , customer, user.birthday), GourmetDetailActivity.REQUEST_CODE_PROFILE_UPDATE);
-                        } else if (Util.isValidatePhoneNumber(user.phone) == false)
-                        {
+                                , new Customer(user), user.birthday), GourmetDetailActivity.REQUEST_CODE_PROFILE_UPDATE);
+                            break;
+
+                        case Util.VERIFY_SOCIAL_USER_NOT_VERIFY_PHONE:
                             startActivityForResult(EditProfilePhoneActivity.newInstance(getActivity()//
                                 , EditProfilePhoneActivity.Type.WRONG_PHONENUMBER, user.phone)//
                                 , GourmetDetailActivity.REQUEST_CODE_PROFILE_UPDATE);
-                        } else
-                        {
-                            startPayment(mGourmetDetail, gourmetCart);
-                        }
+                            break;
+
+                        default:
+                            break;
                     }
                 }
             }, new Consumer<Throwable>()
