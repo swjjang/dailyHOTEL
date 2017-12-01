@@ -104,7 +104,8 @@ public class GourmetPaymentAnalyticsImpl implements GourmetPaymentPresenter.Gour
             mPaymentParamMap.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getAnalyticsProvinceName());
             mPaymentParamMap.put(AnalyticsManager.KeyType.DISTRICT, mAnalyticsParam.getAnalyticsDistrictName());
             mPaymentParamMap.put(AnalyticsManager.KeyType.AREA, mAnalyticsParam.getAnalyticsAddressAreaName());
-            mPaymentParamMap.put(AnalyticsManager.KeyType.LABEL, String.format(Locale.KOREA, "%s_%s", gourmetCart.getMenuCount() == 1 ? "single" : "multi", gourmetCart.gourmetName));
+            mPaymentParamMap.put(AnalyticsManager.KeyType.LABEL, String.format(Locale.KOREA, "%s_%s_%d"//
+                , gourmetCart.getMenuCount() == 1 ? "single" : "multi", gourmetCart.gourmetName, gourmetCart.getTotalCount()));
 
             switch (saleType)
             {
