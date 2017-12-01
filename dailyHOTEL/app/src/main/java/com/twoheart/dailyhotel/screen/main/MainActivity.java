@@ -1297,6 +1297,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                                 public void onClick(View v)
                                 {
                                     setResult(RESULT_CANCELED);
+                                    finish();
                                 }
                             }, null, false);
                         }
@@ -1307,7 +1308,6 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                     public void accept(Throwable throwable) throws Exception
                     {
                         onHandleError(throwable);
-                        finish();
                     }
                 }));
         }
