@@ -622,6 +622,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                     mStayOutboundDetail.wishCount = wish ? mStayOutboundDetail.wishCount + 1 : mStayOutboundDetail.wishCount - 1;
 
                     notifyWishChanged();
+
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
                 }
                 break;
         }
