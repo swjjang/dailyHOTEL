@@ -1037,7 +1037,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
             startActivityForResult(ZoomMapActivity.newInstance(getActivity()//
                 , ZoomMapActivity.SourceType.HOTEL, mStayDetail.name, mStayDetail.address//
-                , mStayDetail.latitude, mStayDetail.longitude, true), StayDetailActivity.REQUEST_CODE_MAP);
+                , mStayDetail.latitude, mStayDetail.longitude, false), StayDetailActivity.REQUEST_CODE_MAP);
         } else
         {
             getViewInterface().showSimpleDialog(getString(R.string.dialog_title_googleplayservice)//
