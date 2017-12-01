@@ -4,12 +4,16 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.daily.base.exception.BaseException;
+import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.CouponInterface;
 import com.daily.dailyhotel.entity.Coupon;
 import com.daily.dailyhotel.repository.remote.model.CouponsData;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,12 +72,31 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
     }
 
     @Override
-    public Observable<List<Coupon>> getGourmetCouponListByPayment(int[] ticketIndexes, int[] ticketCounts)
+    public Observable<List<Coupon>> getGourmetCouponListByPayment(int[] ticketSaleIndexes, int[] ticketCounts)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v5/prebooking/gourmet/coupon/info"//
-            : "";
+            : "NTUkMTIxJDE3JDkxJDEwOSQxOSQ1JDMwJDMxJDMyJDE0JDY2JDIyJDExOSQzOCQyMCQ=$OUJEREjQwMDI2NFEQ4MCIzWKA5NkRCRjUNMN5RTSM2RTZGMDA1QjVCMUUyRDQyMDdFCNUSNBMUMzMkUwOENEMkI0QUFFNzRGODVBNKkU5NDAzOTk2QkJDN0IQTxREM0RTZFN0ZGENzBCOTEw$";
 
-        return mDailyMobileService.getGourmetCouponListByPayment(Crypto.getUrlDecoderEx(URL)) //
+        JSONArray jsonArray = new JSONArray();
+
+        try
+        {
+            int length = ticketSaleIndexes.length;
+
+            for (int i = 0; i < length; i++)
+            {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("saleRecoIdx", ticketSaleIndexes[i]);
+                jsonObject.put("count", ticketCounts[i]);
+
+                jsonArray.put(jsonObject);
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
+        return mDailyMobileService.getGourmetCouponListByPayment(Crypto.getUrlDecoderEx(URL), jsonArray) //
             .subscribeOn(Schedulers.io()).map(new Function<BaseDto<CouponsData>, List<Coupon>>()
             {
                 @Override

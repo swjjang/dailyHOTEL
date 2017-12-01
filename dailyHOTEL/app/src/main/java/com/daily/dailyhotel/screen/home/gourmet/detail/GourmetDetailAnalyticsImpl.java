@@ -15,6 +15,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class GourmetDetailAnalyticsImpl implements GourmetDetailPresenter.GourmetDetailAnalyticsInterface
@@ -292,22 +293,22 @@ public class GourmetDetailAnalyticsImpl implements GourmetDetailPresenter.Gourme
             return;
         }
 
-        //        String label = String.format(Locale.KOREA, "%s-%s", gourmetName, menuName);
-        //
-        //        Map<String, String> params = new HashMap<>();
-        //        params.put(AnalyticsManager.KeyType.NAME, gourmetName);
-        //        params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(gourmetIndex));
-        //        params.put(AnalyticsManager.KeyType.CATEGORY, category);
-        //
-        //        params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getProvinceName());
-        //        params.put(AnalyticsManager.KeyType.DISTRICT, mAnalyticsParam.getDistrictName());
-        //        params.put(AnalyticsManager.KeyType.AREA, mAnalyticsParam.getAddressAreaName());
-        //
-        //        params.put(AnalyticsManager.KeyType.PRICE_OF_SELECTED_TICKET, Integer.toString(discountPrice));
-        //        params.put(AnalyticsManager.KeyType.VISIT_DATE, gourmetBookDateTime.getVisitDateTime("yyyyMMdd"));
-        //
-        //        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
-        //            , AnalyticsManager.Action.BOOKING_CLICKED, label, params);
+        String label = String.format(Locale.KOREA, "%s_%s", gourmetCart.getMenuCount() == 1 ? "single" : "multi", gourmetName);
+
+        Map<String, String> params = new HashMap<>();
+        params.put(AnalyticsManager.KeyType.NAME, gourmetName);
+        params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(gourmetIndex));
+        params.put(AnalyticsManager.KeyType.CATEGORY, category);
+
+        params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getProvinceName());
+        params.put(AnalyticsManager.KeyType.DISTRICT, mAnalyticsParam.getDistrictName());
+        params.put(AnalyticsManager.KeyType.AREA, mAnalyticsParam.getAddressAreaName());
+
+        params.put(AnalyticsManager.KeyType.PRICE_OF_SELECTED_TICKET, Integer.toString(gourmetCart.getTotalPrice()));
+        params.put(AnalyticsManager.KeyType.VISIT_DATE, gourmetBookDateTime.getVisitDateTime("yyyyMMdd"));
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+            , AnalyticsManager.Action.BOOKING_CLICKED, label, params);
     }
 
     @Override
@@ -552,26 +553,26 @@ public class GourmetDetailAnalyticsImpl implements GourmetDetailPresenter.Gourme
     {
         GourmetPaymentAnalyticsParam analyticsParam = new GourmetPaymentAnalyticsParam();
 
-        //        if (gourmetDetail == null || gourmetCart == null)
-        //        {
-        //            return analyticsParam;
-        //        }
-        //
-        //        if (mAnalyticsParam != null)
-        //        {
-        //            analyticsParam.showOriginalPrice = mAnalyticsParam.getShowOriginalPriceYn();
-        //            analyticsParam.rankingPosition = mAnalyticsParam.entryPosition;
-        //            analyticsParam.totalListCount = mAnalyticsParam.totalListCount;
-        //            analyticsParam.dailyChoice = mAnalyticsParam.isDailyChoice;
-        //            analyticsParam.province = mAnalyticsParam.getProvince();
-        //            analyticsParam.addressAreaName = mAnalyticsParam.getAddressAreaName();
-        //        }
-        //
-        //        analyticsParam.ratingValue = gourmetDetail.ratingValue;
-        //        analyticsParam.benefit = DailyTextUtils.isTextEmpty(gourmetDetail.benefit) == false;
-        //        analyticsParam.averageDiscount = gourmetMenu.discountPrice;
-        //        analyticsParam.address = gourmetDetail.address;
-        //        analyticsParam.categorySub = gourmetDetail.categorySub;
+        if (gourmetDetail == null || gourmetCart == null)
+        {
+            return analyticsParam;
+        }
+
+        if (mAnalyticsParam != null)
+        {
+            analyticsParam.showOriginalPrice = mAnalyticsParam.getShowOriginalPriceYn();
+            analyticsParam.rankingPosition = mAnalyticsParam.entryPosition;
+            analyticsParam.totalListCount = mAnalyticsParam.totalListCount;
+            analyticsParam.dailyChoice = mAnalyticsParam.isDailyChoice;
+            analyticsParam.province = mAnalyticsParam.getProvince();
+            analyticsParam.addressAreaName = mAnalyticsParam.getAddressAreaName();
+        }
+
+        analyticsParam.ratingValue = gourmetDetail.ratingValue;
+        analyticsParam.benefit = DailyTextUtils.isTextEmpty(gourmetDetail.benefit) == false;
+        analyticsParam.totalPrice = gourmetCart.getTotalPrice();
+        analyticsParam.address = gourmetDetail.address;
+        analyticsParam.categorySub = gourmetDetail.categorySub;
 
         return analyticsParam;
     }

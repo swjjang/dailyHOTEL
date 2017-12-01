@@ -2,6 +2,8 @@ package com.daily.dailyhotel.screen.home.gourmet.payment;
 
 import android.app.Activity;
 
+import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.GourmetCart;
 import com.daily.dailyhotel.entity.GourmetPayment;
 import com.daily.dailyhotel.entity.UserSimpleInformation;
@@ -9,9 +11,12 @@ import com.daily.dailyhotel.parcel.analytics.GourmetPaymentAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.GourmetThankYouAnalyticsParam;
 import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 import com.twoheart.dailyhotel.model.Coupon;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 public class GourmetPaymentAnalyticsImpl implements GourmetPaymentPresenter.GourmetPaymentAnalyticsInterface
 {
@@ -33,38 +38,36 @@ public class GourmetPaymentAnalyticsImpl implements GourmetPaymentPresenter.Gour
     @Override
     public void onScreen(Activity activity, GourmetCart gourmetCart, GourmetPayment gourmetPayment, boolean registerEasyCard)
     {
-        if (activity == null || mAnalyticsParam == null)
+        if (activity == null || mAnalyticsParam == null || gourmetCart == null || gourmetPayment == null)
         {
             return;
         }
 
-        //        try
-        //        {
-        //            Map<String, String> params = new HashMap<>();
-        //
-        //            params.put(AnalyticsManager.KeyType.NAME, gourmetName);
-        //            params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(gourmetPayment.totalPrice));
-        //            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(gourmetIndex));
-        //            params.put(AnalyticsManager.KeyType.DATE, gourmetBookDateTime.getVisitDateTime("yyyy-MM-dd"));
-        //            params.put(AnalyticsManager.KeyType.TICKET_NAME, menuName);
-        //            params.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(menuIndex));
-        //            params.put(AnalyticsManager.KeyType.CATEGORY, category);
-        //            params.put(AnalyticsManager.KeyType.DBENEFIT, mAnalyticsParam.benefit ? "yes" : "no");
-        //            params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, registerEasyCard ? "y" : "n");
-        //            params.put(AnalyticsManager.KeyType.RATING, Integer.toString(mAnalyticsParam.ratingValue));
-        //            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mAnalyticsParam.showOriginalPrice);
-        //            params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(mAnalyticsParam.rankingPosition));
-        //            params.put(AnalyticsManager.KeyType.DAILYCHOICE, mAnalyticsParam.dailyChoice ? "y" : "n");
-        //
-        //            params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getAnalyticsProvinceName());
-        //            params.put(AnalyticsManager.KeyType.DISTRICT, mAnalyticsParam.getAnalyticsDistrictName());
-        //            params.put(AnalyticsManager.KeyType.AREA, mAnalyticsParam.getAnalyticsAddressAreaName());
-        //
-        //            AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYGOURMET_BOOKINGINITIALISE, null, params);
-        //        } catch (Exception e)
-        //        {
-        //            ExLog.d(e.toString());
-        //        }
+        try
+        {
+            Map<String, String> params = new HashMap<>();
+
+            params.put(AnalyticsManager.KeyType.NAME, gourmetCart.gourmetName);
+            params.put(AnalyticsManager.KeyType.PRICE, Integer.toString(gourmetCart.getTotalPrice()));
+            params.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(gourmetCart.gourmetIndex));
+            params.put(AnalyticsManager.KeyType.DATE, gourmetCart.getGourmetBookDateTime().getVisitDateTime("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.CATEGORY, gourmetCart.gourmetCategory);
+            params.put(AnalyticsManager.KeyType.DBENEFIT, mAnalyticsParam.benefit ? "yes" : "no");
+            params.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, registerEasyCard ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.RATING, Integer.toString(mAnalyticsParam.ratingValue));
+            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mAnalyticsParam.showOriginalPrice);
+            params.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(mAnalyticsParam.rankingPosition));
+            params.put(AnalyticsManager.KeyType.DAILYCHOICE, mAnalyticsParam.dailyChoice ? "y" : "n");
+
+            params.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getAnalyticsProvinceName());
+            params.put(AnalyticsManager.KeyType.DISTRICT, mAnalyticsParam.getAnalyticsDistrictName());
+            params.put(AnalyticsManager.KeyType.AREA, mAnalyticsParam.getAnalyticsAddressAreaName());
+
+            AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYGOURMET_BOOKINGINITIALISE, null, params);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
     @Override
@@ -77,76 +80,76 @@ public class GourmetPaymentAnalyticsImpl implements GourmetPaymentPresenter.Gour
             return;
         }
 
-        //        try
-        //        {
-        //            mPaymentParamMap = new HashMap<>();
-        //
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.NAME, gourmetName);
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.PRICE, Integer.toString(gourmetPayment.totalPrice));
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(menuCount));
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(gourmetPayment.totalPrice * menuCount));
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(gourmetIndex));
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.TICKET_NAME, menuName);
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.TICKET_INDEX, Integer.toString(menuIndex));
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.DATE, DailyCalendar.convertDateFormatString(visitDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd"));
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.CATEGORY, category);
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.DBENEFIT, mAnalyticsParam.benefit ? "yes" : "no");
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.PAYMENT_TYPE, getPaymentType(paymentType));
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.RESERVATION_TIME, DailyCalendar.convertDateFormatString(visitDateTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm"));
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.VISIT_HOUR, DailyCalendar.convertDateFormatString(visitDateTime, DailyCalendar.ISO_8601_FORMAT, "HHmm"));
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, registerEasyCard ? "y" : "n");
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.RATING, Integer.toString(mAnalyticsParam.ratingValue));
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mAnalyticsParam.showOriginalPrice);
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(mAnalyticsParam.rankingPosition));
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.DAILYCHOICE, mAnalyticsParam.dailyChoice ? "y" : "n");
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.PLACE_COUNT, Integer.toString(menuCount));
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getAnalyticsProvinceName());
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.DISTRICT, mAnalyticsParam.getAnalyticsDistrictName());
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.AREA, mAnalyticsParam.getAnalyticsAddressAreaName());
-        //
-        //            switch (saleType)
-        //            {
-        //                case GourmetPaymentPresenter.BONUS:
-        //                    break;
-        //
-        //                case GourmetPaymentPresenter.COUPON:
-        //                {
-        //                    int paymentPrice = gourmetPayment.totalPrice * menuCount - coupon.amount;
-        //
-        //                    mPaymentParamMap.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
-        //                    mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_REDEEM, "true");
-        //                    mPaymentParamMap.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(paymentPrice < 0 ? 0 : paymentPrice));
-        //                    mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_NAME, coupon.title);
-        //                    mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_CODE, coupon.couponCode);
-        //                    mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_AVAILABLE_ITEM, coupon.availableItem);
-        //                    mPaymentParamMap.put(AnalyticsManager.KeyType.PRICE_OFF, Integer.toString(coupon.amount));
-        //
-        //                    String expireDate = DailyCalendar.convertDateFormatString(coupon.validTo, DailyCalendar.ISO_8601_FORMAT, "yyyyMMddHHmm");
-        //                    mPaymentParamMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, expireDate);
-        //                    break;
-        //                }
-        //
-        //                default:
-        //                {
-        //                    int paymentPrice = gourmetPayment.totalPrice * menuCount;
-        //
-        //                    mPaymentParamMap.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
-        //                    mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_REDEEM, "false");
-        //                    mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_NAME, "");
-        //                    mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_CODE, "");
-        //                    mPaymentParamMap.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(paymentPrice));
-        //                    break;
-        //                }
-        //            }
-        //
-        //            mPaymentParamMap.put(AnalyticsManager.KeyType.VISIT_DATE, DailyCalendar.convertDateFormatString(visitDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
-        //
-        //            AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_AGREEMENT_POPUP//
-        //                , null, mPaymentParamMap);
-        //        } catch (Exception e)
-        //        {
-        //            ExLog.e(e.toString());
-        //        }
+        try
+        {
+            mPaymentParamMap = new HashMap<>();
+
+            mPaymentParamMap.put(AnalyticsManager.KeyType.NAME, gourmetCart.gourmetName);
+            mPaymentParamMap.put(AnalyticsManager.KeyType.PRICE, "0");
+            mPaymentParamMap.put(AnalyticsManager.KeyType.QUANTITY, Integer.toString(gourmetCart.getTotalCount()));
+            mPaymentParamMap.put(AnalyticsManager.KeyType.TOTAL_PRICE, Integer.toString(gourmetCart.getTotalPrice()));
+            mPaymentParamMap.put(AnalyticsManager.KeyType.PLACE_INDEX, Integer.toString(gourmetCart.gourmetIndex));
+            mPaymentParamMap.put(AnalyticsManager.KeyType.DATE, gourmetCart.getGourmetBookDateTime().getVisitDateTime("yyyy-MM-dd"));
+            mPaymentParamMap.put(AnalyticsManager.KeyType.CATEGORY, gourmetCart.gourmetCategory);
+            mPaymentParamMap.put(AnalyticsManager.KeyType.DBENEFIT, mAnalyticsParam.benefit ? "yes" : "no");
+            mPaymentParamMap.put(AnalyticsManager.KeyType.PAYMENT_TYPE, getPaymentType(paymentType));
+            mPaymentParamMap.put(AnalyticsManager.KeyType.RESERVATION_TIME, DailyTextUtils.formatIntegerTimeToStringTime(gourmetCart.visitTime));
+            mPaymentParamMap.put(AnalyticsManager.KeyType.VISIT_HOUR, DailyTextUtils.formatIntegerTimeToStringTime(gourmetCart.visitTime));
+            mPaymentParamMap.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, registerEasyCard ? "y" : "n");
+            mPaymentParamMap.put(AnalyticsManager.KeyType.RATING, Integer.toString(mAnalyticsParam.ratingValue));
+            mPaymentParamMap.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mAnalyticsParam.showOriginalPrice);
+            mPaymentParamMap.put(AnalyticsManager.KeyType.LIST_INDEX, Integer.toString(mAnalyticsParam.rankingPosition));
+            mPaymentParamMap.put(AnalyticsManager.KeyType.DAILYCHOICE, mAnalyticsParam.dailyChoice ? "y" : "n");
+            mPaymentParamMap.put(AnalyticsManager.KeyType.PLACE_COUNT, Integer.toString(gourmetCart.getTotalCount()));
+            mPaymentParamMap.put(AnalyticsManager.KeyType.PROVINCE, mAnalyticsParam.getAnalyticsProvinceName());
+            mPaymentParamMap.put(AnalyticsManager.KeyType.DISTRICT, mAnalyticsParam.getAnalyticsDistrictName());
+            mPaymentParamMap.put(AnalyticsManager.KeyType.AREA, mAnalyticsParam.getAnalyticsAddressAreaName());
+            mPaymentParamMap.put(AnalyticsManager.KeyType.LABEL, String.format(Locale.KOREA, "%s_%s_%d"//
+                , gourmetCart.getMenuCount() == 1 ? "single" : "multi", gourmetCart.gourmetName, gourmetCart.getTotalCount()));
+
+            switch (saleType)
+            {
+                case GourmetPaymentPresenter.BONUS:
+                    break;
+
+                case GourmetPaymentPresenter.COUPON:
+                {
+                    int paymentPrice = gourmetPayment.totalPrice - coupon.amount;
+
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_REDEEM, "true");
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(paymentPrice < 0 ? 0 : paymentPrice));
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_NAME, coupon.title);
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_CODE, coupon.couponCode);
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_AVAILABLE_ITEM, coupon.availableItem);
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.PRICE_OFF, Integer.toString(coupon.amount));
+
+                    String expireDate = DailyCalendar.convertDateFormatString(coupon.validTo, DailyCalendar.ISO_8601_FORMAT, "yyyyMMddHHmm");
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.EXPIRATION_DATE, expireDate);
+                    break;
+                }
+
+                default:
+                {
+                    int paymentPrice = gourmetPayment.totalPrice;
+
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.USED_BOUNS, "0");
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_REDEEM, "false");
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_NAME, "");
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.COUPON_CODE, "");
+                    mPaymentParamMap.put(AnalyticsManager.KeyType.PAYMENT_PRICE, Integer.toString(paymentPrice));
+                    break;
+                }
+            }
+
+            mPaymentParamMap.put(AnalyticsManager.KeyType.VISIT_DATE, gourmetCart.getGourmetBookDateTime().getVisitDateTime("yyyyMMdd"));
+
+            AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYGOURMET_PAYMENT_AGREEMENT_POPUP//
+                , null, mPaymentParamMap);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     @Override
@@ -314,8 +317,8 @@ public class GourmetPaymentAnalyticsImpl implements GourmetPaymentPresenter.Gour
             return;
         }
 
-        //        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
-        //            , AnalyticsManager.Action.PAYMENT_CLICKED, String.format(Locale.KOREA, "%s-%s", gourmetName, menuName), null);
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS//
+            , AnalyticsManager.Action.PAYMENT_CLICKED, String.format(Locale.KOREA, "%s_%s", gourmetCart.getMenuCount() == 1 ? "single" : "multi", gourmetCart.gourmetName), null);
     }
 
     @Override

@@ -15,7 +15,7 @@ public class GourmetPaymentAnalyticsParam implements Parcelable
     public int totalListCount;
     public int ratingValue;
     public boolean benefit;
-    public int averageDiscount; // 평균 가격
+    public int totalPrice;
     public String address;
     public boolean dailyChoice;
     public Province province;
@@ -77,7 +77,7 @@ public class GourmetPaymentAnalyticsParam implements Parcelable
         dest.writeInt(totalListCount);
         dest.writeInt(ratingValue);
         dest.writeInt(benefit ? 1 : 0);
-        dest.writeInt(averageDiscount);
+        dest.writeInt(totalPrice);
         dest.writeString(address);
         dest.writeInt(dailyChoice ? 1 : 0);
         dest.writeParcelable(province, flags);
@@ -92,7 +92,7 @@ public class GourmetPaymentAnalyticsParam implements Parcelable
         totalListCount = in.readInt();
         ratingValue = in.readInt();
         benefit = in.readInt() == 1 ? true : false;
-        averageDiscount = in.readInt();
+        totalPrice = in.readInt();
         address = in.readString();
         dailyChoice = in.readInt() == 1 ? true : false;
         province = in.readParcelable(Province.class.getClassLoader());

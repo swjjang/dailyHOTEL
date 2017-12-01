@@ -644,6 +644,7 @@
     <string name="message_guide_name_hint">여권 기재 영문명을 입력해주세요</string>
     <string name="message_discount_memo">할인 수단은 중복 사용 할 수 없습니다.</string>
     <string name="message_booking_memo">예약시 요청사항이 있으면 남겨주세요.\n(※요청 내용은 업체 사정에 따라 반영되지 않을 수도 있습니다.)</string>
+    <string name="message_gourmet_booking_please_input_visit_persons">방문 인원수를 선택해주세요.</string>
     <string name="message_gourmet_please_input_guest">방문자명을 입력해주세요. 예약 확인시 필요한 정보입니다.</string>
     <string name="message_booking_cancel_coupon">쿠폰 적용을 취소할까요?</string>
     <string name="message_booking_cancel_deposit_sticker">스티커 적립 적용을 취소할까요?</string>
@@ -761,6 +762,7 @@
     <string name="label_booking_cancel_information">2. 취소 정보</string>
     <string name="label_booking_reservation_recommend_gourmet_button">주변 추천 레스토랑 확인</string>
     <string name="label_booking_reservation_recommend_gourmet_title">주변 추천 레스토랑</string>
+    <string name="message_multi_ticket_name_n_count">%1$s외 %2$d개</string>
 
     <string name="message_consult_kakao">무엇을 도와드릴까요?</string>
     <string name="message_consult01">데일리 컨시어지팀이 친절하고 신속하게 답변해드려요.</string>
@@ -921,6 +923,7 @@
     <string name="label_fnblistfragment_empty_text01">레스토랑을 준비하고 있습니다.</string>
     <string name="label_fnblistfragment_empty_text02">멋진 레스토랑을 원하시나요?\n1800–9120으로 전화주세요.</string>
     <string name="label_persons">%1$d인</string>
+    <string name="label_standard_persons">%1$d인 기준</string>
 
     <!-- Country Code List Activity -->
     <string name="label_select_country">국가 선택</string>
@@ -1393,7 +1396,7 @@
     <!--<string name="message_stamp_completed_issuance">1박 무료 프리패스 쿠폰\n발급 완료!</string>-->
 
     <!-- True Review -->
-    <string name="label_detail_review_count">%1$d개의 리뷰</string>
+    <string name="label_detail_review_count">%1$s개의 리뷰</string>
     <string name="label_detail_review_terms_go">운영정책 보기</string>
     <string name="label_detail_review_more_read">더 읽어보기</string>
     <string name="message_detail_review_stay_explain">트루리뷰는 100% 직접 투숙한 고객님이 남겨주신 리뷰입니다.</string>

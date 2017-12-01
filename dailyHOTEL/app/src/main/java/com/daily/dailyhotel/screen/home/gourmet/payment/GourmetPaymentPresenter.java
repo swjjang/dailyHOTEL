@@ -69,6 +69,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function4;
 
@@ -921,7 +922,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
     @Override
     public synchronized void onPaymentClick(String name, String phone, String email)
     {
-        if (lock() == true)
+        if (mGourmetCart == null || lock() == true)
         {
             return;
         }
@@ -942,6 +943,16 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             mGuest.name = mUserSimpleInformation.name;
             mGuest.phone = mUserSimpleInformation.phone;
             mGuest.email = mUserSimpleInformation.email;
+        }
+
+        if (mPersons == 0)
+        {
+            DailyToast.showToast(getActivity(), R.string.message_gourmet_booking_please_input_visit_persons, DailyToast.LENGTH_SHORT);
+
+            unLockAll();
+
+            getViewInterface().scrollTop();
+            return;
         }
 
         if (DailyTextUtils.isTextEmpty(mGuest.name) == true)
@@ -984,72 +995,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             return;
         }
 
-        final int totalPrice = mGourmetPayment.totalPrice;
-
-        // 보너스 / 쿠폰 (으)로만 결제하는 경우
-        if ((mSaleType == BONUS && totalPrice <= mUserSimpleInformation.bonus)//
-            || (mSaleType == COUPON && totalPrice <= mSelectedCoupon.amount))
-        {
-            // 보너스로만 결제할 경우에는 팝업이 기존의 카드 타입과 동일한다.
-            getViewInterface().showAgreeTermDialog(DailyBookingPaymentTypeView.PaymentType.FREE//
-                , getAgreedTermMessages(DailyBookingPaymentTypeView.PaymentType.FREE), new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        getViewInterface().hideSimpleDialog();
-
-                        unLockAll();
-
-                        onAgreedPaymentClick();
-                    }
-                }, new DialogInterface.OnCancelListener()
-                {
-                    @Override
-                    public void onCancel(DialogInterface dialog)
-                    {
-                        unLockAll();
-
-                        mAnalytics.onEventAgreedTermCancelClick(getActivity());
-                    }
-                });
-
-            mAnalytics.onEventStartPayment(getActivity(), DailyBookingPaymentTypeView.PaymentType.FREE);
-        } else
-        {
-            if (mPaymentType == DailyBookingPaymentTypeView.PaymentType.EASY_CARD && mSelectedCard == null)
-            {
-                startActivityForResult(RegisterCreditCardActivity.newInstance(getActivity())//
-                    , GourmetPaymentActivity.REQUEST_CODE_REGISTER_CARD_PAYMENT);
-
-                mAnalytics.onEventStartPayment(getActivity(), DailyBookingPaymentTypeView.PaymentType.EASY_CARD);
-            } else
-            {
-                getViewInterface().showAgreeTermDialog(mPaymentType, getAgreedTermMessages(mPaymentType), new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        getViewInterface().hideSimpleDialog();
-
-                        unLockAll();
-
-                        onAgreedPaymentClick();
-                    }
-                }, new DialogInterface.OnCancelListener()
-                {
-                    @Override
-                    public void onCancel(DialogInterface dialog)
-                    {
-                        unLockAll();
-
-                        mAnalytics.onEventAgreedTermCancelClick(getActivity());
-                    }
-                });
-
-                mAnalytics.onEventStartPayment(getActivity(), mPaymentType);
-            }
-        }
+        confirmLastPayment();
 
         mAnalytics.onEventAgreedTermClick(getActivity(), mGourmetCart);
     }
@@ -1125,6 +1071,146 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         getViewInterface().setPersons(mPersons);
 
         unLockAll();
+    }
+
+    private void confirmLastPayment()
+    {
+        screenLock(true);
+
+        addCompositeDisposable(mPaymentRemoteImpl.getGourmetPayment(mGourmetCart).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetPayment>()
+        {
+            @Override
+            public void accept(GourmetPayment gourmetPayment) throws Exception
+            {
+                unLockAll();
+
+                // 가격이 변동된 경우
+                if (checkChangedPrice(gourmetPayment, mGourmetCart) == true)
+                {
+                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_payment_changed_price)//
+                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialogInterface)
+                            {
+                                setResult(BaseActivity.RESULT_CODE_REFRESH);
+                                onBackClick();
+                            }
+                        });
+
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
+
+                    mAnalytics.onEventChangedPrice(getActivity(), mGourmetCart.gourmetName);
+                } else
+                {
+                    showAgreementPopup();
+                }
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                unLockAll();
+
+                onReportError(throwable);
+
+                if (throwable instanceof BaseException)
+                {
+                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), throwable.getMessage()//
+                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialog)
+                            {
+                                setResult(BaseActivity.RESULT_CODE_REFRESH);
+                                onBackClick();
+                            }
+                        });
+                } else
+                {
+                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.act_base_network_connect)//
+                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialog)
+                            {
+                                onBackClick();
+                            }
+                        });
+                }
+            }
+        }));
+    }
+
+    void showAgreementPopup()
+    {
+        final int totalPrice = mGourmetPayment.totalPrice;
+
+        // 보너스 / 쿠폰 (으)로만 결제하는 경우
+        if ((mSaleType == BONUS && totalPrice <= mUserSimpleInformation.bonus)//
+            || (mSaleType == COUPON && totalPrice <= mSelectedCoupon.amount))
+        {
+            // 보너스로만 결제할 경우에는 팝업이 기존의 카드 타입과 동일한다.
+            getViewInterface().showAgreeTermDialog(DailyBookingPaymentTypeView.PaymentType.FREE//
+                , getAgreedTermMessages(DailyBookingPaymentTypeView.PaymentType.FREE), new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        getViewInterface().hideSimpleDialog();
+
+                        unLockAll();
+
+                        onAgreedPaymentClick();
+                    }
+                }, new DialogInterface.OnCancelListener()
+                {
+                    @Override
+                    public void onCancel(DialogInterface dialog)
+                    {
+                        unLockAll();
+
+                        mAnalytics.onEventAgreedTermCancelClick(getActivity());
+                    }
+                });
+
+            mAnalytics.onEventStartPayment(getActivity(), DailyBookingPaymentTypeView.PaymentType.FREE);
+        } else
+        {
+            if (mPaymentType == DailyBookingPaymentTypeView.PaymentType.EASY_CARD && mSelectedCard == null)
+            {
+                startActivityForResult(RegisterCreditCardActivity.newInstance(getActivity())//
+                    , GourmetPaymentActivity.REQUEST_CODE_REGISTER_CARD_PAYMENT);
+
+                mAnalytics.onEventStartPayment(getActivity(), DailyBookingPaymentTypeView.PaymentType.EASY_CARD);
+            } else
+            {
+                getViewInterface().showAgreeTermDialog(mPaymentType, getAgreedTermMessages(mPaymentType), new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        getViewInterface().hideSimpleDialog();
+
+                        unLockAll();
+
+                        onAgreedPaymentClick();
+                    }
+                }, new DialogInterface.OnCancelListener()
+                {
+                    @Override
+                    public void onCancel(DialogInterface dialog)
+                    {
+                        unLockAll();
+
+                        mAnalytics.onEventAgreedTermCancelClick(getActivity());
+                    }
+                });
+
+                mAnalytics.onEventStartPayment(getActivity(), mPaymentType);
+            }
+        }
     }
 
     synchronized void onAgreedPaymentClick()
@@ -1349,8 +1435,8 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
     private String getWebPaymentUrl(String paymentType)
     {
-        final String API = Constants.UNENCRYPTED_URL ? "api/v4/booking/gourmet/{type}"//
-            : "NDYkMzEkODckNjMkMTMkMzYkMTckODckMzUkODIkNDEkMzIkOTkkNDIkOTckOTIk$NTM1NTg2NUY4MQTk0KQTkxNzI4MDU4NTVUG4FMkRYyGDREU4MDFCOTKY5M0IzNjlBODIyNLzcxREJFMkIzQTQO2QkUwNIRTg5RTWA=V=$";
+        final String API = Constants.UNENCRYPTED_URL ? "api/v5/booking/gourmet/{type}"//
+            : "ODQkMTYkODEkMjUkNzQkNjckMjEkNjgkNjUkOTIkOCQ1MiQzOCQzMyQxMDAkNzck$Njk2NTVCDMUM5QjMzZRUE5TMUY0HRkEyMKzMxQzJczMDRDNTEyMjcwPRTVBODQ5QkNGQzXk0MVGDkKzRTM0ZQjdCNEY0ORTZFMJOAS==$";
 
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{type}", paymentType);

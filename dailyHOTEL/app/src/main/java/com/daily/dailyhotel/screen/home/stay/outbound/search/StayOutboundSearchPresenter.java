@@ -50,7 +50,7 @@ import io.reactivex.functions.Consumer;
  */
 public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutboundSearchActivity, StayOutboundSearchViewInterface> implements StayOutboundSearchView.OnEventListener
 {
-    private static final int DAYS_OF_MAXCOUNT = 90;
+    private static final int DAYS_OF_MAXCOUNT = 180;
     private static final int NIGHTS_OF_MAXCOUNT = 28;
 
     private StayOutboundSearchAnalyticsInterface mAnalytics;

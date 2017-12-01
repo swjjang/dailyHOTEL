@@ -29,7 +29,10 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyScrollView;
-import com.daily.dailyhotel.entity.GourmetBookingDetail;
+import com.daily.dailyhotel.entity.GourmetMultiBookingDetail;
+import com.daily.dailyhotel.entity.GuestInfo;
+import com.daily.dailyhotel.entity.RestaurantInfo;
+import com.daily.dailyhotel.entity.TicketInfo;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -57,8 +60,8 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 
+import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -184,7 +187,7 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
     }
 
     @Override
-    public void setBookingDetail(GourmetBookingDetail gourmetBookingDetail)
+    public void setBookingDetail(GourmetMultiBookingDetail gourmetBookingDetail)
     {
         setHeaderLayout(getContext(), gourmetBookingDetail);
 
@@ -760,12 +763,15 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
         setBookingDetailToolbar();
     }
 
-    private void setHeaderLayout(Context context, GourmetBookingDetail gourmetBookingDetail)
+    private void setHeaderLayout(Context context, GourmetMultiBookingDetail gourmetBookingDetail)
     {
-        if (context == null || gourmetBookingDetail == null || getViewDataBinding() == null)
+        if (context == null || getViewDataBinding() == null //
+            || gourmetBookingDetail == null || gourmetBookingDetail.restaurantInfo == null)
         {
             return;
         }
+
+        RestaurantInfo restaurantInfo = gourmetBookingDetail.restaurantInfo;
 
         double width = ScreenUtils.getScreenWidth(context);
         double height = ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(context));
@@ -774,7 +780,7 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
         {
             getViewDataBinding().googleMapLayout.setVisibility(View.GONE);
 
-            setImageMapLayout(context, gourmetBookingDetail.latitude, gourmetBookingDetail.longitude, (int) width, (int) height);
+            setImageMapLayout(context, restaurantInfo.latitude, restaurantInfo.longitude, (int) width, (int) height);
         } else
         {
             getViewDataBinding().googleMapLayout.setVisibility(View.VISIBLE);
@@ -784,7 +790,7 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
 
         getViewDataBinding().viewDetailView.setOnClickListener(this);
         getViewDataBinding().viewMapView.setOnClickListener(this);
-        getViewDataBinding().placeNameTextView.setText(gourmetBookingDetail.gourmetName);
+        getViewDataBinding().placeNameTextView.setText(restaurantInfo.name);
     }
 
     private void setImageMapLayout(Context context, double latitude, double longitude, int height, int width)
@@ -812,16 +818,19 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
         getViewDataBinding().mapImageView.setImageURI(Uri.parse(url));
     }
 
-    private void setGoogleMapLayout(Context context, GourmetBookingDetail gourmetBookingDetail, int width, int height)
+    private void setGoogleMapLayout(Context context, GourmetMultiBookingDetail gourmetBookingDetail, int width, int height)
     {
-        if (context == null || getViewDataBinding() == null || gourmetBookingDetail == null)
+        if (context == null || getViewDataBinding() == null //
+            || gourmetBookingDetail == null || gourmetBookingDetail.restaurantInfo == null)
         {
             return;
         }
 
+        RestaurantInfo restaurantInfo = gourmetBookingDetail.restaurantInfo;
+
         getViewDataBinding().addressLayout.setVisibility(View.GONE);
         getViewDataBinding().searchMapsLayout.setVisibility(View.GONE);
-        getViewDataBinding().addressTextView.setText(gourmetBookingDetail.gourmetAddress);
+        getViewDataBinding().addressTextView.setText(restaurantInfo.address);
         getViewDataBinding().copyAddressView.setOnClickListener(this);
         getViewDataBinding().searchMapView.setOnClickListener(this);
 
@@ -861,7 +870,7 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
 
                 relocationMyLocation(getViewDataBinding().mapLayout);
                 relocationZoomControl(getViewDataBinding().mapLayout);
-                addMarker(mGoogleMap, gourmetBookingDetail.latitude, gourmetBookingDetail.longitude, gourmetBookingDetail.gourmetName);
+                addMarker(mGoogleMap, restaurantInfo.latitude, restaurantInfo.longitude, restaurantInfo.name);
 
                 mGoogleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback()
                 {
@@ -872,7 +881,7 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
 
                         Projection projection = mGoogleMap.getProjection();
 
-                        Point point = projection.toScreenLocation(new LatLng(gourmetBookingDetail.latitude, gourmetBookingDetail.longitude));
+                        Point point = projection.toScreenLocation(new LatLng(restaurantInfo.latitude, restaurantInfo.longitude));
                         point.y += (point.y - getViewDataBinding().fakeMapLayout.getHeight() * 0.43);
 
                         mCenterLatLng = projection.fromScreenLocation(point);
@@ -883,38 +892,47 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
         });
     }
 
-    private void setBookingInformation(Context context, LayoutGourmetBookingCancelDetail01DataBinding dataBinding, GourmetBookingDetail gourmetBookingDetail)
+    private void setBookingInformation(Context context, LayoutGourmetBookingCancelDetail01DataBinding dataBinding, GourmetMultiBookingDetail gourmetBookingDetail)
     {
-        if (context == null || dataBinding == null || gourmetBookingDetail == null)
+        if (context == null || dataBinding == null || //
+            gourmetBookingDetail == null || gourmetBookingDetail.restaurantInfo == null)
         {
             return;
         }
 
-        dataBinding.gourmetNameTextView.setText(gourmetBookingDetail.gourmetName);
-        dataBinding.addressTextView.setText(gourmetBookingDetail.gourmetAddress);
+        RestaurantInfo restaurantInfo = gourmetBookingDetail.restaurantInfo;
 
-        // TODO : Test Code 서버 연결 작업 후 재 작업 필요.
-        int randPersons = new Random(5).nextInt() - 1;
-        int tempPrice = gourmetBookingDetail.priceTotal;
-
-        dataBinding.productInformationView.addInformation(gourmetBookingDetail.ticketName, gourmetBookingDetail.ticketCount, randPersons, tempPrice);
-        // TODO : 임시 두줄
-        //        dataBinding.productInformationView.addInformation(gourmetBookingDetail.ticketName + "\n" + gourmetBookingDetail.ticketName, gourmetBookingDetail.ticketCount, randPersons, tempPrice);
-    }
-
-    private void setGuestInformation(Context context, LayoutGourmetBookingCancelDetail01DataBinding dataBinding, GourmetBookingDetail gourmetBookingDetail)
-    {
-        if (context == null || dataBinding == null || gourmetBookingDetail == null)
+        List<TicketInfo> ticketInfoList = gourmetBookingDetail.ticketInfos;
+        if (ticketInfoList == null || ticketInfoList.size() == 0)
         {
             return;
         }
 
-        dataBinding.guestNameTextView.setText(gourmetBookingDetail.guestName);
-        dataBinding.guestPhoneTextView.setText(Util.addHyphenMobileNumber(context, gourmetBookingDetail.guestPhone));
-        dataBinding.guestEmailTextView.setText(gourmetBookingDetail.guestEmail);
+        dataBinding.gourmetNameTextView.setText(restaurantInfo.name);
+        dataBinding.addressTextView.setText(restaurantInfo.address);
+
+        for (TicketInfo ticketInfo : ticketInfoList)
+        {
+            dataBinding.productInformationView.addInformation( //
+                ticketInfo.name, ticketInfo.count, ticketInfo.numberOfStandardPerson, ticketInfo.subTotalPrice);
+        }
     }
 
-    private void setCancelInformation(Context context, LayoutPlaceBookingCancelDetailDataBinding dataBinding, GourmetBookingDetail gourmetBookingDetail)
+    private void setGuestInformation(Context context, LayoutGourmetBookingCancelDetail01DataBinding dataBinding, GourmetMultiBookingDetail gourmetBookingDetail)
+    {
+        if (context == null || dataBinding == null || gourmetBookingDetail == null || gourmetBookingDetail.guestInfo == null)
+        {
+            return;
+        }
+
+        GuestInfo guestInfo = gourmetBookingDetail.guestInfo;
+
+        dataBinding.guestNameTextView.setText(guestInfo.name);
+        dataBinding.guestPhoneTextView.setText(Util.addHyphenMobileNumber(context, guestInfo.phone));
+        dataBinding.guestEmailTextView.setText(guestInfo.email);
+    }
+
+    private void setCancelInformation(Context context, LayoutPlaceBookingCancelDetailDataBinding dataBinding, GourmetMultiBookingDetail gourmetBookingDetail)
     {
         if (context == null || dataBinding == null || gourmetBookingDetail == null)
         {
@@ -923,7 +941,8 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
 
         try
         {
-            dataBinding.cancelDateTextView.setText(DailyCalendar.convertDateFormatString(gourmetBookingDetail.cancelDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
+            dataBinding.cancelDateTextView.setText(DailyCalendar.convertDateFormatString( //
+                gourmetBookingDetail.canceledAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
         } catch (Exception e)
         {
             ExLog.d(e.toString());

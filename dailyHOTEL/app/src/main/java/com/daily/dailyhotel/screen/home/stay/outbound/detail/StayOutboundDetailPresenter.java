@@ -102,7 +102,7 @@ import retrofit2.HttpException;
  */
 public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutboundDetailActivity, StayOutboundDetailViewInterface> implements StayOutboundDetailView.OnEventListener
 {
-    private static final int DAYS_OF_MAXCOUNT = 90;
+    private static final int DAYS_OF_MAXCOUNT = 180;
     private static final int NIGHTS_OF_MAXCOUNT = 28;
 
     public static final int STATUS_NONE = 0;
