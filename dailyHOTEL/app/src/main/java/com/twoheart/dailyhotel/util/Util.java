@@ -47,7 +47,7 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.skp.Tmap.TMapTapi;
+import com.skt.Tmap.TMapTapi;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
@@ -876,18 +876,6 @@ public class Util implements Constants
                                 }
                             });
                         }
-                    }
-
-                    @Override
-                    public void SKPMapBizAppIdSucceed()
-                    {
-                        // do nothing 삭제된 API - Callback Listener 오류로 추가
-                    }
-
-                    @Override
-                    public void SKPMapBizAppIdFailed(String s)
-                    {
-                        // do nothing 삭제된 API - Callback Listener 오류로 추가
                     }
                 });
             } else
