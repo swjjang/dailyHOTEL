@@ -15,8 +15,9 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.People;
+import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.entity.StayOutbound;
-import com.daily.dailyhotel.entity.StayWish;
+import com.daily.dailyhotel.entity.WishResult;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.WishRemoteImpl;
@@ -27,13 +28,10 @@ import com.daily.dailyhotel.view.DailyStayCardView;
 import com.daily.dailyhotel.view.DailyStayOutboundCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
-import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -53,8 +51,6 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
-import retrofit2.Call;
-import retrofit2.Response;
 
 /**
  * Created by android_sam on 2016. 11. 1..
@@ -69,9 +65,11 @@ public class StayWishListFragment extends PlaceWishListFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+
         mWishRemoteImpl = new WishRemoteImpl(getContext());
 
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return view;
     }
 
     @Override
@@ -131,12 +129,6 @@ public class StayWishListFragment extends PlaceWishListFragment
     }
 
     @Override
-    protected BaseNetworkController getNetworkController()
-    {
-        return new StayWishListNetworkController(mBaseActivity, mNetworkTag, mOnNetworkControllerListener);
-    }
-
-    @Override
     protected PlaceType getPlaceType()
     {
         return PlaceType.HOTEL;
@@ -148,14 +140,14 @@ public class StayWishListFragment extends PlaceWishListFragment
         lockUI();
 
         addCompositeDisposable(Observable.zip(mWishRemoteImpl.getStayWishList(), mWishRemoteImpl.getStayOutboundWishList()//
-            , new BiFunction<List<StayWish>, List<StayOutbound>, List<PlaceViewItem>>()
+            , new BiFunction<List<Stay>, List<StayOutbound>, List<PlaceViewItem>>()
             {
                 @Override
-                public List<PlaceViewItem> apply(List<StayWish> stayList, List<StayOutbound> stayOutboundList) throws Exception
+                public List<PlaceViewItem> apply(List<Stay> stayList, List<StayOutbound> stayOutboundList) throws Exception
                 {
                     List<PlaceViewItem> placeViewItemList = new ArrayList<>();
 
-                    for (StayWish stay : stayList)
+                    for (Stay stay : stayList)
                     {
                         placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, stay));
                     }
@@ -172,7 +164,7 @@ public class StayWishListFragment extends PlaceWishListFragment
                             String dateTime1 = getDateTime(placeViewItem1);
                             String dateTime2 = getDateTime(placeViewItem2);
 
-                            if (dateTime1.equalsIgnoreCase(dateTime2) == true)
+                            if (dateTime1 == null || dateTime2 == null || dateTime1.equalsIgnoreCase(dateTime2) == true)
                             {
                                 return getIndex(placeViewItem1) - getIndex(placeViewItem2);
                             } else
@@ -186,13 +178,12 @@ public class StayWishListFragment extends PlaceWishListFragment
                             switch (placeViewItem.mType)
                             {
                                 case PlaceViewItem.TYPE_ENTRY:
-                                    return ((StayWish) placeViewItem.getItem()).createAt;
+                                    return ((Stay) placeViewItem.getItem()).createAtWish;
 
                                 case PlaceViewItem.TYPE_OB_ENTRY:
-                                    return ((StayOutbound) placeViewItem.getItem()).createAt;
+                                    return ((StayOutbound) placeViewItem.getItem()).createAtWish;
                             }
 
-                            // null은 나올수 없다.
                             return null;
                         }
 
@@ -201,7 +192,7 @@ public class StayWishListFragment extends PlaceWishListFragment
                             switch (placeViewItem.mType)
                             {
                                 case PlaceViewItem.TYPE_ENTRY:
-                                    return ((StayWish) placeViewItem.getItem()).index;
+                                    return ((Stay) placeViewItem.getItem()).index;
 
                                 case PlaceViewItem.TYPE_OB_ENTRY:
                                     return ((StayOutbound) placeViewItem.getItem()).index;
@@ -239,9 +230,6 @@ public class StayWishListFragment extends PlaceWishListFragment
     @Override
     protected void requestRemoveWishListItem(int placeIndex)
     {
-        lockUI();
-
-        ((StayWishListNetworkController) mNetworkController).requestRemoveStayWishListItem(placeIndex);
     }
 
     private void startStayPreview(View view, int position, Stay stay)
@@ -256,7 +244,7 @@ public class StayWishListFragment extends PlaceWishListFragment
         mViewByLongPress = view;
         mPositionByLongPress = position;
 
-        Intent intent = StayPreviewActivity.newInstance(mBaseActivity, (StayBookingDay) mPlaceBookingDay, stay);
+        Intent intent = StayPreviewActivity.newInstance(mBaseActivity, (StayBookingDay) mPlaceBookingDay, stay.index, stay.name, stay.grade.getName(mBaseActivity));
 
         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
     }
@@ -309,8 +297,8 @@ public class StayWishListFragment extends PlaceWishListFragment
         analyticsParam.setRegion(null);
         analyticsParam.entryPosition = rankingPosition;
         analyticsParam.totalListCount = -1;
-        analyticsParam.isDailyChoice = stay.isDailyChoice;
-        analyticsParam.gradeName = stay.getGrade().getName(getActivity());
+        analyticsParam.isDailyChoice = stay.dailyChoice;
+        analyticsParam.gradeName = stay.grade.getName(getActivity());
 
         StayBookingDay stayBookingDay = (StayBookingDay) mPlaceBookingDay;
 
@@ -374,7 +362,7 @@ public class StayWishListFragment extends PlaceWishListFragment
                 , AnalyticsManager.Action.TRUE_REVIEW_STAY, Integer.toString(stay.index), null);
         }
 
-        if (stay.truevr == true)
+        if (stay.trueVR == true)
         {
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.STAY_ITEM_CLICK_TRUE_VR, Integer.toString(stay.index), null);
@@ -484,140 +472,6 @@ public class StayWishListFragment extends PlaceWishListFragment
             stayOutbound.name, null);
     }
 
-    private StayWishListNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new StayWishListNetworkController.OnNetworkControllerListener()
-    {
-//        @Override
-//        public void onStayWishList(ArrayList<Stay> list)
-//        {
-//            unLockUI();
-//
-//            if (isFinishing() == true)
-//            {
-//                return;
-//            }
-//
-//            if (mListLayout == null)
-//            {
-//                return;
-//            }
-//
-//            mListLayout.setData(list, false);
-//        }
-
-        @Override
-        public void onRemoveStayWishListItem(boolean isSuccess, String message, int placeIndex)
-        {
-            unLockUI();
-
-            if (isFinishing() == true)
-            {
-                return;
-            }
-
-            if (mListLayout == null)
-            {
-                return;
-            }
-
-            if (placeIndex < 0)
-            {
-                return;
-            }
-
-            if (isSuccess == false)
-            {
-                mBaseActivity.showSimpleDialog(getResources().getString(R.string.dialog_notice2) //
-                    , message, getResources().getString(R.string.dialog_btn_text_confirm), null);
-                return;
-            }
-
-            int removePosition = -1;
-            int size = mListLayout.getList().size();
-            String placeName = "";
-            int discountPrice = 0;
-            String category = "";
-
-            for (int i = 0; i < size; i++)
-            {
-                PlaceViewItem placeViewItem = mListLayout.getItem(i);
-                if (placeViewItem == null)
-                {
-                    continue;
-                }
-
-                Place place = placeViewItem.getItem();
-                if (place == null)
-                {
-                    continue;
-                }
-
-                if (placeIndex == place.index)
-                {
-                    removePosition = i;
-                    placeName = place.name;
-                    discountPrice = place.discountPrice;
-                    category = ((Stay) place).categoryCode;
-                    break;
-                }
-            }
-
-            if (removePosition != -1)
-            {
-                mListLayout.removeItem(removePosition);
-                mListLayout.notifyDataSetChanged();
-            }
-
-            Map<String, String> params = new HashMap<>();
-            params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
-            params.put(AnalyticsManager.KeyType.NAME, placeName);
-            params.put(AnalyticsManager.KeyType.VALUE, Integer.toString(discountPrice));
-            params.put(AnalyticsManager.KeyType.CATEGORY, category);
-
-            AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
-                AnalyticsManager.Category.NAVIGATION_, //
-                AnalyticsManager.Action.WISHLIST_DELETE, //
-                placeName, params);
-
-            AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION,//
-                AnalyticsManager.Action.WISHLIST_ITEM_DELETE, Integer.toString(placeIndex), null);
-
-            if (mWishListFragmentListener != null)
-            {
-                mWishListFragmentListener.onRemoveItemClick(PlaceType.HOTEL, -1);
-            }
-        }
-
-        @Override
-        public void onError(Call call, Throwable e, boolean onlyReport)
-        {
-            StayWishListFragment.this.onError(call, e, onlyReport);
-        }
-
-        @Override
-        public void onError(Throwable e)
-        {
-            StayWishListFragment.this.onError(e);
-        }
-
-        @Override
-        public void onErrorPopupMessage(int msgCode, String message)
-        {
-            StayWishListFragment.this.onErrorPopupMessage(msgCode, message);
-        }
-
-        @Override
-        public void onErrorToastMessage(String message)
-        {
-            StayWishListFragment.this.onErrorToastMessage(message);
-        }
-
-        @Override
-        public void onErrorResponse(Call call, Response response)
-        {
-            StayWishListFragment.this.onErrorResponse(call, response);
-        }
-    };
-
     StayWishListLayout.OnEventListener mEventListener = new PlaceWishListLayout.OnEventListener()
     {
         @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -678,7 +532,7 @@ public class StayWishListFragment extends PlaceWishListFragment
         @Override
         public void onListItemRemoveClick(int position)
         {
-            if (position < 0 || mListLayout == null)
+            if (position < 0 || mListLayout == null || lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }
@@ -691,13 +545,109 @@ public class StayWishListFragment extends PlaceWishListFragment
                 return;
             }
 
-            Stay stay = placeViewItem.getItem();
-            if (stay == null)
+            Observable<WishResult> observable = null;
+
+            switch (placeViewItem.mType)
             {
+                case PlaceViewItem.TYPE_ENTRY:
+                    observable = mWishRemoteImpl.removeStayWish(((Stay) placeViewItem.getItem()).index);
+                    break;
+
+                case PlaceViewItem.TYPE_OB_ENTRY:
+                    observable = mWishRemoteImpl.removeStayOutboundWish(((StayOutbound) placeViewItem.getItem()).index);
+                    break;
+            }
+
+            if (observable == null)
+            {
+                unLockUI();
                 return;
             }
 
-            StayWishListFragment.this.requestRemoveWishListItem(stay.index);
+            lockUI();
+
+            addCompositeDisposable(observable.observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<WishResult>()
+            {
+                @Override
+                public void accept(WishResult wishResult) throws Exception
+                {
+                    unLockUI();
+
+                    if (isFinishing() == true)
+                    {
+                        return;
+                    }
+
+                    if (wishResult.success == false)
+                    {
+                        mBaseActivity.showSimpleDialog(getResources().getString(R.string.dialog_notice2) //
+                            , wishResult.message, getResources().getString(R.string.dialog_btn_text_confirm), null);
+
+                        return;
+                    }
+
+                    mListLayout.removeItem(position);
+                    mListLayout.notifyDataSetChanged();
+
+                    Map<String, String> params = new HashMap<>();
+
+                    String placeName;
+                    int placeIndex;
+
+                    switch (placeViewItem.mType)
+                    {
+                        case PlaceViewItem.TYPE_ENTRY:
+                            Stay stay = placeViewItem.getItem();
+
+                            placeIndex = stay.index;
+                            placeName = stay.name;
+
+                            params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
+                            params.put(AnalyticsManager.KeyType.NAME, placeName);
+                            params.put(AnalyticsManager.KeyType.VALUE, AnalyticsManager.ValueType.EMPTY);
+                            params.put(AnalyticsManager.KeyType.CATEGORY, stay.grade.getName(getContext()));
+                            break;
+
+                        case PlaceViewItem.TYPE_OB_ENTRY:
+
+                            StayOutbound stayOutbound = placeViewItem.getItem();
+
+                            placeIndex = stayOutbound.index;
+                            placeName = stayOutbound.name;
+
+                            params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
+                            params.put(AnalyticsManager.KeyType.NAME, placeName);
+                            params.put(AnalyticsManager.KeyType.VALUE, AnalyticsManager.ValueType.EMPTY);
+                            params.put(AnalyticsManager.KeyType.CATEGORY, AnalyticsManager.ValueType.EMPTY);
+                            break;
+
+                        default:
+                            placeName = AnalyticsManager.ValueType.EMPTY;
+                            placeIndex = 0;
+                            break;
+                    }
+
+                    AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
+                        AnalyticsManager.Category.NAVIGATION_, //
+                        AnalyticsManager.Action.WISHLIST_DELETE, //
+                        placeName, params);
+
+                    AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.NAVIGATION,//
+                        AnalyticsManager.Action.WISHLIST_ITEM_DELETE, Integer.toString(placeIndex), null);
+
+                    if (mWishListFragmentListener != null)
+                    {
+                        mWishListFragmentListener.onRemoveItemClick(PlaceType.HOTEL, -1);
+                    }
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    onHandleError(throwable);
+                }
+            }));
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
                 , AnalyticsManager.Action.WISH_STAY, AnalyticsManager.Label.OFF.toLowerCase(), null);

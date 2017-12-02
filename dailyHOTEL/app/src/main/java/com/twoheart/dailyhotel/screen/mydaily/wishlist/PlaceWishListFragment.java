@@ -22,7 +22,6 @@ public abstract class PlaceWishListFragment extends BaseFragment
 
     protected BaseActivity mBaseActivity;
     protected PlaceWishListLayout mListLayout;
-    protected BaseNetworkController mNetworkController;
 
     protected PlaceBookingDay mPlaceBookingDay;
 
@@ -34,8 +33,6 @@ public abstract class PlaceWishListFragment extends BaseFragment
     protected abstract void setPlaceBookingDay(TodayDateTime todayDateTime);
 
     protected abstract PlaceWishListLayout getListLayout();
-
-    protected abstract BaseNetworkController getNetworkController();
 
     protected abstract void requestWishList();
 
@@ -58,7 +55,6 @@ public abstract class PlaceWishListFragment extends BaseFragment
     {
         mBaseActivity = (BaseActivity) getActivity();
         mListLayout = getListLayout();
-        mNetworkController = getNetworkController();
 
         return mListLayout.onCreateView(R.layout.fragment_wishlist_list, container);
     }

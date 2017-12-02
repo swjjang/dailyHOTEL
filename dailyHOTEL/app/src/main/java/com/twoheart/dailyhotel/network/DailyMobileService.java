@@ -726,7 +726,7 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET()
-    Observable<BaseListDto<StayOutboundData>> getStayOutboundWishList(@Url String mobileAPI);
+    Observable<BaseDto<StayOutboundsData>> getStayOutboundWishList(@Url String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @POST()

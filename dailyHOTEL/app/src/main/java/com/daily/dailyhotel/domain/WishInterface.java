@@ -1,6 +1,6 @@
 package com.daily.dailyhotel.domain;
 
-import com.daily.dailyhotel.entity.StayWish;
+import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.WishResult;
 
@@ -10,7 +10,7 @@ import io.reactivex.Observable;
 
 public interface WishInterface
 {
-    Observable<List<StayWish>> getStayWishList();
+    Observable<List<Stay>> getStayWishList();
 
     Observable<WishResult> addStayWish(int wishIndex);
 

@@ -8,12 +8,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.view.DailyStayCardView;
 import com.daily.dailyhotel.view.DailyStayOutboundCardView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.List;
@@ -85,24 +85,26 @@ public class StayWishListAdapter extends PlaceWishListAdapter
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void onBindViewHolder(StayInboundViewHolder holder, PlaceViewItem placeViewItem, int position)
     {
+        if (holder == null || placeViewItem == null)
+        {
+            return;
+        }
+
         final Stay stay = placeViewItem.getItem();
 
-        holder.stayCardView.setStickerVisible(mRewardEnabled && stay.provideRewardSticker);
+        holder.stayCardView.setStickerVisible(mRewardEnabled);
         holder.stayCardView.setDeleteVisible(false);
         holder.stayCardView.setWishVisible(true);
         holder.stayCardView.setWish(true);
-
         holder.stayCardView.setImage(stay.imageUrl);
-
-        holder.stayCardView.setGradeText(stay.getGrade().getName(mContext));
-        holder.stayCardView.setVRVisible(stay.truevr && mTrueVREnabled);
+        holder.stayCardView.setGradeText(stay.grade.getName(mContext));
+        holder.stayCardView.setVRVisible(stay.trueVR && mTrueVREnabled);
         holder.stayCardView.setReviewText(stay.satisfaction, stay.reviewCount);
-        holder.stayCardView.setNewVisible(stay.newItem);
+        holder.stayCardView.setNewVisible(stay.newStay);
         holder.stayCardView.setStayNameText(stay.name);
         holder.stayCardView.setDistanceVisible(false);
         holder.stayCardView.setAddressText(stay.addressSummary);
         holder.stayCardView.setPriceVisible(false);
-        holder.stayCardView.setBenefitText(stay.dBenefitText);
         holder.stayCardView.setDividerVisible(true);
     }
 
@@ -116,22 +118,17 @@ public class StayWishListAdapter extends PlaceWishListAdapter
 
         StayOutbound stayOutbound = placeViewItem.getItem();
 
-        holder.stayOutboundCardView.setStickerVisible(false);
-        holder.stayOutboundCardView.setDeleteVisible(true);
+        holder.stayOutboundCardView.setStickerVisible(mRewardEnabled);
+        holder.stayOutboundCardView.setDeleteVisible(false);
         holder.stayOutboundCardView.setWishVisible(true);
         holder.stayOutboundCardView.setWish(stayOutbound.myWish);
-
         holder.stayOutboundCardView.setImage(stayOutbound.getImageMap());
-
         holder.stayOutboundCardView.setGradeText(mContext.getString(R.string.label_stay_outbound_filter_x_star_rate, (int) stayOutbound.rating));
         holder.stayOutboundCardView.setVRVisible(false);
         holder.stayOutboundCardView.setRatingText(stayOutbound.rating);
-
         holder.stayOutboundCardView.setNewVisible(false);
-
         holder.stayOutboundCardView.setStayNameText(stayOutbound.name, stayOutbound.nameEng);
         holder.stayOutboundCardView.setDistanceVisible(false);
-
         holder.stayOutboundCardView.setAddressText(stayOutbound.locationDescription);
         holder.stayOutboundCardView.setPriceVisible(false);
         holder.stayOutboundCardView.setBenefitText(null);

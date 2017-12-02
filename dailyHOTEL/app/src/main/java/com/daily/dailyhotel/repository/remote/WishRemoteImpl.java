@@ -5,13 +5,14 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.WishInterface;
-import com.daily.dailyhotel.entity.StayWish;
+import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.WishResult;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundData;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.Setting;
-import com.twoheart.dailyhotel.network.dto.BaseListDto;
+import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.model.StayWishItem;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
@@ -34,7 +35,7 @@ public class WishRemoteImpl extends BaseRemoteImpl implements WishInterface
     }
 
     @Override
-    public Observable<List<StayWish>> getStayWishList()
+    public Observable<List<Stay>> getStayWishList()
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v5/wishes/HOTEL"//
             : "NjUkMjckNDAkNjUkNjckMzEkMyQ0OSQ4NCQ2MiQ1MiQ5MiQ4MSQ5NSQzNCQ0NyQ=$QTdCEMEQ3MENFNkVBNDhBRDVBNjUOzQjBgL0QTJGQTFFFREGI1NTEVVFQ0U5NjA2MUkZCMzhHEUNOTIyMUYI3RkQ3FQTU2MZTCIwRA==$";
@@ -42,7 +43,7 @@ public class WishRemoteImpl extends BaseRemoteImpl implements WishInterface
         return mDailyMobileService.getStayWishList(Crypto.getUrlDecoderEx(API))//
             .subscribeOn(Schedulers.io()).map(baseDto ->
             {
-                List<StayWish> stayList = new ArrayList<>();
+                List<Stay> stayList = new ArrayList<>();
 
                 if (baseDto != null)
                 {
@@ -135,10 +136,10 @@ public class WishRemoteImpl extends BaseRemoteImpl implements WishInterface
             : "NDQkNzUkMzUkNDckODQkODgkODUkMjIkMjgkMjgkNyQzMyQ2NCQyOSQxMDEkNzIk$RTYzREQEyMURBMzI5QzI4RUGQwMTVDXZBRIUUxQUYZyMTgyRDNCANTzI1OTlEMTZFCMzZGOUHU3MTgyMEY4RjYM4RjY5BUMzIH1OQ=S=$";
 
         return mDailyMobileService.getStayOutboundWishList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API)) //
-            .subscribeOn(Schedulers.io()).map(new Function<BaseListDto<StayOutboundData>, List<StayOutbound>>()
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<StayOutboundsData>, List<StayOutbound>>()
             {
                 @Override
-                public List<StayOutbound> apply(@io.reactivex.annotations.NonNull BaseListDto<StayOutboundData> baseDto) throws Exception
+                public List<StayOutbound> apply(@io.reactivex.annotations.NonNull BaseDto<StayOutboundsData> baseDto) throws Exception
                 {
                     List<StayOutbound> stayOutboundList = new ArrayList<>();
 
@@ -146,7 +147,7 @@ public class WishRemoteImpl extends BaseRemoteImpl implements WishInterface
                     {
                         if (baseDto.msgCode == 100 && baseDto.data != null)
                         {
-                            for (StayOutboundData stayOutboundData : baseDto.data)
+                            for (StayOutboundData stayOutboundData : baseDto.data.stayOutboundDataList)
                             {
                                 stayOutboundList.add(stayOutboundData.getStayOutbound());
                             }

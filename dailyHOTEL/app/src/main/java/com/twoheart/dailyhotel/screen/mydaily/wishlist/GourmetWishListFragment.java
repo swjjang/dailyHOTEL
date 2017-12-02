@@ -49,10 +49,16 @@ import retrofit2.Response;
 
 public class GourmetWishListFragment extends PlaceWishListFragment
 {
+    GourmetWishListNetworkController mNetworkController;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        return super.onCreateView(inflater, container, savedInstanceState);
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+
+        mNetworkController = new GourmetWishListNetworkController(mBaseActivity, mNetworkTag, mOnNetworkControllerListener);
+
+        return view;
     }
 
     @Override
@@ -108,12 +114,6 @@ public class GourmetWishListFragment extends PlaceWishListFragment
     protected PlaceWishListLayout getListLayout()
     {
         return new GourmetWishListLayout(mBaseActivity, mEventListener);
-    }
-
-    @Override
-    protected BaseNetworkController getNetworkController()
-    {
-        return new GourmetWishListNetworkController(mBaseActivity, mNetworkTag, mOnNetworkControllerListener);
     }
 
     @Override

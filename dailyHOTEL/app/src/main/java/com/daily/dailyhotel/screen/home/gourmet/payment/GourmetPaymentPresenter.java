@@ -547,51 +547,8 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             {
                 if (resultCode == Activity.RESULT_OK)
                 {
-                    addCompositeDisposable(mProfileRemoteImpl.getProfile().subscribe(new Consumer<User>()
-                    {
-                        @Override
-                        public void accept(@io.reactivex.annotations.NonNull User user) throws Exception
-                        {
-                            switch (Util.verifyUserInformation(user))
-                            {
-                                case Util.VERIFY_USER:
-                                    setRefresh(true);
-                                    onRefresh(true);
-                                    break;
-
-                                case Util.VERIFY_DAILY_USER_NOT_VERIFY_PHONE:
-                                    startActivityForResult(EditProfilePhoneActivity.newInstance(getActivity()//
-                                        , EditProfilePhoneActivity.Type.NEED_VERIFICATION_PHONENUMBER, user.phone)//
-                                        , GourmetPaymentActivity.REQUEST_CODE_PROFILE_UPDATE);
-                                    break;
-
-                                case Util.VERIFY_SOCIAL_USER_NOT_VERIFY:
-                                case Util.VERIFY_SOCIAL_USER_NOT_VERIFY_EMAIL:
-                                    startActivityForResult(AddProfileSocialActivity.newInstance(getActivity()//
-                                        , new Customer(user), user.birthday), GourmetPaymentActivity.REQUEST_CODE_PROFILE_UPDATE);
-                                    break;
-
-                                case Util.VERIFY_SOCIAL_USER_NOT_VERIFY_PHONE:
-                                    startActivityForResult(EditProfilePhoneActivity.newInstance(getActivity()//
-                                        , EditProfilePhoneActivity.Type.WRONG_PHONENUMBER, user.phone)//
-                                        , GourmetPaymentActivity.REQUEST_CODE_PROFILE_UPDATE);
-                                    break;
-
-                                default:
-                                    onBackClick();
-                                    break;
-                            }
-                        }
-                    }, new Consumer<Throwable>()
-                    {
-                        @Override
-                        public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
-                        {
-                            onHandleError(throwable);
-
-                            onBackClick();
-                        }
-                    }));
+                    setRefresh(true);
+                    onRefresh(true);
                 } else
                 {
                     onBackClick();
