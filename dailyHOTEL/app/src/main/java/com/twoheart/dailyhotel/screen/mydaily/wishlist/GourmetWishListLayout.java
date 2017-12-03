@@ -9,6 +9,7 @@ import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by android_sam on 2016. 11. 1..
@@ -22,7 +23,7 @@ public class GourmetWishListLayout extends PlaceWishListLayout
     }
 
     @Override
-    protected PlaceWishListAdapter getWishListAdapter(Context context, ArrayList<PlaceViewItem> list, PlaceWishListAdapter.OnPlaceWishListItemListener listener)
+    protected PlaceWishListAdapter getWishListAdapter(Context context, List<PlaceViewItem> list, PlaceWishListAdapter.OnPlaceWishListItemListener listener)
     {
         return new GourmetWishListAdapter(context, list, listener);
     }
@@ -37,25 +38,5 @@ public class GourmetWishListLayout extends PlaceWishListLayout
     protected int getEmptyButtonTextResId()
     {
         return R.string.wishlist_list_empty_button_message_gourmet;
-    }
-
-    @Override
-    protected ArrayList<PlaceViewItem> makePlaceViewItemList(ArrayList<? extends Place> list)
-    {
-        if (list == null || list.size() == 0)
-        {
-            return new ArrayList<>();
-        }
-
-        ArrayList<Gourmet> gourmetList = (ArrayList<Gourmet>) list;
-        ArrayList<PlaceViewItem> placeViewItems = new ArrayList<>();
-        for (Gourmet gourmet : gourmetList)
-        {
-            placeViewItems.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, gourmet));
-        }
-
-        placeViewItems.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
-
-        return placeViewItems;
     }
 }

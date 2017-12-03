@@ -161,6 +161,29 @@ public class StayPreviewActivity extends BaseActivity
         return intent;
     }
 
+    /**
+     * 위시 목록에서 호출
+     *
+     * @param context
+     * @param stayBookingDay
+     * @param index
+     * @param name
+     * @param grade
+     * @return
+     */
+    public static Intent newInstance(Context context, StayBookingDay stayBookingDay, int index, String name, String grade)
+    {
+        Intent intent = new Intent(context, StayPreviewActivity.class);
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, index);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, name);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, 0);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, grade);
+
+        return intent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {

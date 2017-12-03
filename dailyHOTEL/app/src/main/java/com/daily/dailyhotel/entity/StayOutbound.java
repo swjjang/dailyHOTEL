@@ -23,6 +23,8 @@ public class StayOutbound
     public boolean provideRewardSticker; // 데일리 리워드 아이콘 여부
     private List<String> mVendorTypeList;
     public int discountRate;
+    public boolean myWish;
+    public String createAtWish; // ISO-8601
 
     public StayOutbound()
     {

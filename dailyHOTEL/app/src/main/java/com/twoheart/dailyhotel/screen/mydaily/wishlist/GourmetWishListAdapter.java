@@ -16,7 +16,7 @@ import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.util.Util;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by android_sam on 2016. 11. 1..
@@ -24,15 +24,9 @@ import java.util.ArrayList;
 
 public class GourmetWishListAdapter extends PlaceWishListAdapter
 {
-    public GourmetWishListAdapter(Context context, ArrayList<PlaceViewItem> list, OnPlaceWishListItemListener listener)
+    public GourmetWishListAdapter(Context context, List<PlaceViewItem> list, OnPlaceWishListItemListener listener)
     {
         super(context, list, listener);
-    }
-
-    @Override
-    public void setPlaceBookingDay(PlaceBookingDay placeBookingDay)
-    {
-
     }
 
     @Override
@@ -79,16 +73,19 @@ public class GourmetWishListAdapter extends PlaceWishListAdapter
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void onBindViewHolder(GourmetWishViewHolder holder, PlaceViewItem placeViewItem, int position)
     {
+        if (holder == null || placeViewItem == null)
+        {
+            return;
+        }
+
         final Gourmet gourmet = placeViewItem.getItem();
 
         holder.gourmetCardView.setStickerVisible(false);
         holder.gourmetCardView.setDeleteVisible(false);
         holder.gourmetCardView.setWishVisible(true);
         holder.gourmetCardView.setWish(true);
-
         holder.gourmetCardView.setTagStickerImage(gourmet.stickerUrl);
         holder.gourmetCardView.setImage(gourmet.imageUrl);
-
         holder.gourmetCardView.setGradeText(DailyTextUtils.isTextEmpty(gourmet.subCategory) == false ? gourmet.subCategory : gourmet.category);
         holder.gourmetCardView.setVRVisible(false);
         holder.gourmetCardView.setReviewText(gourmet.satisfaction, gourmet.reviewCount);

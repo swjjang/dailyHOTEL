@@ -29,6 +29,7 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     View.OnClickListener mOnClickListener;
     View.OnLongClickListener mOnLongClickListener;
+    View.OnClickListener mOnWishClickListener;
 
     private boolean mDistanceEnabled;
     private boolean mNightsEnabled; // 연박 여부
@@ -62,6 +63,11 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
     {
         mOnClickListener = onClickListener;
         mOnLongClickListener = onLongClickListener;
+    }
+
+    public void setOnWishClickListener(View.OnClickListener listener)
+    {
+        mOnWishClickListener = listener;
     }
 
     public void clear()
@@ -196,7 +202,8 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         holder.stayOutboundCardView.setStickerVisible(mRewardEnabled && stayOutbound.provideRewardSticker);
         holder.stayOutboundCardView.setDeleteVisible(false);
-        holder.stayOutboundCardView.setWishVisible(false);
+        holder.stayOutboundCardView.setWishVisible(true);
+        holder.stayOutboundCardView.setWish(stayOutbound.myWish);
 
         holder.stayOutboundCardView.setImage(stayOutbound.getImageMap());
 
@@ -232,7 +239,7 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         holder.stayOutboundCardView.setDividerVisible(true);
     }
 
-    private class StayViewHolder extends RecyclerView.ViewHolder
+    protected class StayViewHolder extends RecyclerView.ViewHolder
     {
         DailyStayOutboundCardView stayOutboundCardView;
 
@@ -258,6 +265,14 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
                         return mOnLongClickListener.onLongClick(v);
                     }
+                }
+            });
+
+            stayOutboundCardView.setOnWishClickListener(v ->
+            {
+                if (mOnWishClickListener != null)
+                {
+                    mOnWishClickListener.onClick(stayOutboundCardView);
                 }
             });
         }

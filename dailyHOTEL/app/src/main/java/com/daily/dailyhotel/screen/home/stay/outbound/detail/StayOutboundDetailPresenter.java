@@ -47,6 +47,7 @@ import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
 import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
+import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.common.images.ImageListActivity;
 import com.daily.dailyhotel.screen.common.web.DailyWebActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.amenities.AmenityListActivity;
@@ -54,6 +55,7 @@ import com.daily.dailyhotel.screen.home.stay.outbound.payment.StayOutboundPaymen
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.preview.StayOutboundPreviewActivity;
 import com.daily.dailyhotel.screen.mydaily.reward.RewardActivity;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -167,6 +169,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
         void onEventBookingClick(Activity activity, int stayIndex, String stayName, String roomName //
             , int discountPrice, boolean provideRewardSticker, String checkInDate, int nights);
+
+        void onEventWishClick(Activity activity);
 
         void onEventShareKakaoClick(Activity activity);
 
@@ -588,6 +592,17 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 }
                 break;
 
+            case StayOutboundDetailActivity.REQUEST_CODE_LOGIN_IN_BY_WISH:
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    onWishClick();
+
+                    setRefresh(true);
+
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
+                }
+                break;
+
             case StayOutboundDetailActivity.REQUEST_CODE_PREVIEW:
                 if (resultCode == Activity.RESULT_OK)
                 {
@@ -599,6 +614,20 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                             startStayOutboundDetail(mViewByLongPress, mStayOutboundByLongPress, mPairsByLongPress);
                         }
                     }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
+                }
+                break;
+
+            case StayOutboundDetailActivity.REQUEST_CODE_WISH_DIALOG:
+                if (data != null)
+                {
+                    boolean wish = data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false);
+
+                    mStayOutboundDetail.myWish = wish;
+                    mStayOutboundDetail.wishCount = wish ? mStayOutboundDetail.wishCount + 1 : mStayOutboundDetail.wishCount - 1;
+
+                    notifyWishChanged();
+
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
                 }
                 break;
         }
@@ -719,6 +748,34 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 unLockAll();
             }
         });
+    }
+
+    @Override
+    public void onWishClick()
+    {
+        if (mStayOutboundDetail == null || lock() == true)
+        {
+            return;
+        }
+
+        if (DailyHotel.isLogin() == false)
+        {
+            DailyToast.showToast(getActivity(), R.string.toast_msg_please_login, DailyToast.LENGTH_LONG);
+
+            Intent intent = LoginActivity.newInstance(getActivity(), AnalyticsManager.Screen.DAILYHOTEL_DETAIL);
+            startActivityForResult(intent, StayOutboundDetailActivity.REQUEST_CODE_LOGIN_IN_BY_WISH);
+        } else
+        {
+            boolean wish = !mStayOutboundDetail.myWish;
+            int wishCount = wish ? mStayOutboundDetail.wishCount + 1 : mStayOutboundDetail.wishCount - 1;
+
+            notifyWishChanged(wishCount, wish);
+
+            startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.OB_STAY//
+                , mStayOutboundDetail.index, wish, -1, AnalyticsManager.Screen.DAILYHOTEL_LIST), StayOutboundDetailActivity.REQUEST_CODE_WISH_DIALOG);
+
+            mAnalytics.onEventWishClick(getActivity());
+        }
     }
 
     @Override
@@ -1543,6 +1600,44 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         }
     }
 
+    void notifyWishChanged()
+    {
+        if (mStayOutboundDetail == null)
+        {
+            return;
+        }
+
+        getViewInterface().setWishCount(mStayOutboundDetail.wishCount);
+        getViewInterface().setWishSelected(mStayOutboundDetail.myWish);
+    }
+
+    void notifyWishChanged(int wishCount, boolean myWish)
+    {
+        if (mStayOutboundDetail == null)
+        {
+            return;
+        }
+
+        getViewInterface().setWishCount(wishCount);
+        getViewInterface().setWishSelected(myWish);
+    }
+
+    private void showWishTooltip()
+    {
+        getViewInterface().showWishTooltip();
+
+        addCompositeDisposable(Observable.timer(3, TimeUnit.SECONDS).subscribeOn(Schedulers.newThread())//
+            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Long>()
+            {
+                @Override
+                public void accept(Long aLong) throws Exception
+                {
+                    DailyPreference.getInstance(getActivity()).setWishTooltip(false);
+                    getViewInterface().hideWishTooltip();
+                }
+            }));
+    }
+
     private void setRecommendAroundList(StayOutbounds stayOutbounds)
     {
         if (stayOutbounds == null)
@@ -1707,6 +1802,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 // 순서 변경 금지... 추천 영역과 상세 데이터 넣는 부분 변경시 Oreo에서 스크롤이 하단가는 이슈 발생
                 notifyRecommendAroundList();
                 onStayOutboundDetail(stayOutboundDetail);
+                notifyWishChanged();
                 notifyRewardChanged();
 
                 try
@@ -1716,6 +1812,11 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                     boolean hasRecommendList = mRecommendAroundList == null || mRecommendAroundList.size() == 0 ? false : true;
 
                     mAnalytics.onEventHasRecommendList(getActivity(), hasRecommendList);
+
+                    if (DailyPreference.getInstance(getActivity()).isWishTooltip() == true)
+                    {
+                        showWishTooltip();
+                    }
 
                     if (hasRecommendList == true)
                     {

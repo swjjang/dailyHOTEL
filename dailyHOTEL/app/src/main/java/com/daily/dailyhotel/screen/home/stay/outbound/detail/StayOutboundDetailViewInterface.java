@@ -46,6 +46,14 @@ public interface StayOutboundDetailViewInterface extends BaseBlurViewInterface
 
     void scrollTop();
 
+    void setWishCount(int count);
+
+    void setWishSelected(boolean selected);
+
+    void showWishTooltip();
+
+    void hideWishTooltip();
+
     void setRecommendAroundVisible(boolean visible);
 
     void setRecommendAroundList(ArrayList<CarouselListItem> list, StayBookDateTime stayBookDateTime);

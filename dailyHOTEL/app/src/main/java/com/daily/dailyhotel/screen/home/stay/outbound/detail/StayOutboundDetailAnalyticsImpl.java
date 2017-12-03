@@ -203,6 +203,17 @@ public class StayOutboundDetailAnalyticsImpl implements StayOutboundDetailPresen
     }
 
     @Override
+    public void onEventWishClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+
+    }
+
+    @Override
     public void onEventShareKakaoClick(Activity activity)
     {
         if (activity == null)

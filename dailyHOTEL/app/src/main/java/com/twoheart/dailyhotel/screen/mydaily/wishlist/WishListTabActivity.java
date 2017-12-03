@@ -491,12 +491,14 @@ public class WishListTabActivity extends BaseActivity
 
                 if (observable != null)
                 {
+                    lockUI(false);
+
                     addCompositeDisposable(observable.subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                     {
                         @Override
                         public void accept(Boolean aBoolean) throws Exception
                         {
-
+                            unLockUI();
                         }
                     }));
                 }

@@ -15,6 +15,7 @@ import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by android_sam on 2016. 11. 1..
@@ -38,7 +39,7 @@ public abstract class PlaceWishListLayout extends BaseBlurLayout
 
         void onEmptyButtonClick();
 
-        void onRecordAnalyticsList(ArrayList<? extends Place> list);
+        void onRecordAnalyticsList(List<PlaceViewItem> list);
 
         void onHomeClick();
     }
@@ -47,10 +48,8 @@ public abstract class PlaceWishListLayout extends BaseBlurLayout
 
     protected abstract int getEmptyButtonTextResId();
 
-    protected abstract ArrayList<PlaceViewItem> makePlaceViewItemList(ArrayList<? extends Place> list);
-
     protected abstract PlaceWishListAdapter getWishListAdapter(Context context //
-        , ArrayList<PlaceViewItem> list, PlaceWishListAdapter.OnPlaceWishListItemListener listener);
+        , List<PlaceViewItem> list, PlaceWishListAdapter.OnPlaceWishListItemListener listener);
 
     public PlaceWishListLayout(Context context, OnBaseEventListener listener)
     {
@@ -98,12 +97,12 @@ public abstract class PlaceWishListLayout extends BaseBlurLayout
         EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
     }
 
-    public void setData(ArrayList<? extends Place> list, boolean rewardEnabled)
+    public void setData(List<PlaceViewItem> list, boolean rewardEnabled)
     {
         setData(list, true, rewardEnabled);
     }
 
-    public void setData(ArrayList<? extends Place> list, boolean isShowEmpty, boolean rewardEnabled)
+    public void setData(List<PlaceViewItem> list, boolean isShowEmpty, boolean rewardEnabled)
     {
         if (list == null || list.size() == 0)
         {
@@ -115,11 +114,9 @@ public abstract class PlaceWishListLayout extends BaseBlurLayout
             setEmptyViewVisibility(View.GONE);
         }
 
-        ArrayList<PlaceViewItem> viewItemList = makePlaceViewItemList(list);
-
         if (mListAdapter == null)
         {
-            mListAdapter = getWishListAdapter(mContext, viewItemList, mItemListener);
+            mListAdapter = getWishListAdapter(mContext, list, mItemListener);
 
             if (DailyPreference.getInstance(mContext).getTrueVRSupport() > 0)
             {
@@ -129,7 +126,7 @@ public abstract class PlaceWishListLayout extends BaseBlurLayout
             mRecyclerView.setAdapter(mListAdapter);
         } else
         {
-            mListAdapter.setData(viewItemList);
+            mListAdapter.setData(list);
             mListAdapter.notifyDataSetChanged();
         }
 
@@ -138,7 +135,7 @@ public abstract class PlaceWishListLayout extends BaseBlurLayout
         ((OnEventListener) mOnEventListener).onRecordAnalyticsList(list);
     }
 
-    public ArrayList<PlaceViewItem> getList()
+    public List<PlaceViewItem> getList()
     {
         return mListAdapter != null ? mListAdapter.getList() : null;
     }

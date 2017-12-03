@@ -49,10 +49,16 @@ import retrofit2.Response;
 
 public class GourmetWishListFragment extends PlaceWishListFragment
 {
+    GourmetWishListNetworkController mNetworkController;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        return super.onCreateView(inflater, container, savedInstanceState);
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+
+        mNetworkController = new GourmetWishListNetworkController(mBaseActivity, mNetworkTag, mOnNetworkControllerListener);
+
+        return view;
     }
 
     @Override
@@ -111,12 +117,6 @@ public class GourmetWishListFragment extends PlaceWishListFragment
     }
 
     @Override
-    protected BaseNetworkController getNetworkController()
-    {
-        return new GourmetWishListNetworkController(mBaseActivity, mNetworkTag, mOnNetworkControllerListener);
-    }
-
-    @Override
     protected PlaceType getPlaceType()
     {
         return PlaceType.FNB;
@@ -141,7 +141,7 @@ public class GourmetWishListFragment extends PlaceWishListFragment
     private GourmetWishListNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new GourmetWishListNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onGourmetWishList(ArrayList<Gourmet> list)
+        public void onGourmetWishList(ArrayList<Gourmet> gourmetList)
         {
             unLockUI();
 
@@ -155,7 +155,15 @@ public class GourmetWishListFragment extends PlaceWishListFragment
                 return;
             }
 
-            mListLayout.setData(list, false);
+            List<PlaceViewItem> placeViewItemList = new ArrayList<>();
+            for (Gourmet gourmet : gourmetList)
+            {
+                placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, gourmet));
+            }
+
+            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
+
+            mListLayout.setData(placeViewItemList, false);
         }
 
         @Override
@@ -435,7 +443,7 @@ public class GourmetWishListFragment extends PlaceWishListFragment
         }
 
         @Override
-        public void onRecordAnalyticsList(ArrayList<? extends Place> list)
+        public void onRecordAnalyticsList(List<PlaceViewItem> list)
         {
             if (list == null || list.isEmpty() == true || mPlaceBookingDay == null)
             {
@@ -454,7 +462,12 @@ public class GourmetWishListFragment extends PlaceWishListFragment
                 {
                     stringBuilder.append(",");
                 }
-                stringBuilder.append(list.get(i).index);
+
+                if (list.get(i).mType == PlaceViewItem.TYPE_ENTRY)
+                {
+                    stringBuilder.append(((Gourmet) list.get(i).getItem()).index);
+                }
+
             }
 
             stringBuilder.append("]");
