@@ -1059,7 +1059,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
             startActivityForResult(ZoomMapActivity.newInstance(getActivity()//
                 , ZoomMapActivity.SourceType.GOURMET, mGourmetDetail.name, mGourmetDetail.address//
-                , mGourmetDetail.latitude, mGourmetDetail.longitude, true), GourmetDetailActivity.REQUEST_CODE_MAP);
+                , mGourmetDetail.latitude, mGourmetDetail.longitude, false), GourmetDetailActivity.REQUEST_CODE_MAP);
         } else
         {
             getViewInterface().showSimpleDialog(getString(R.string.dialog_title_googleplayservice)//
