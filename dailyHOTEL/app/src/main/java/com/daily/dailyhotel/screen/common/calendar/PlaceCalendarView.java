@@ -65,7 +65,7 @@ public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventList
             return;
         }
 
-        EdgeEffectColor.setEdgeGlowColor(viewDataBinding.calendarScrollView, getColor(R.color.default_over_scroll_edge));
+        EdgeEffectColor.setEdgeGlowColor(viewDataBinding.calendarRecyclerView, getColor(R.color.default_over_scroll_edge));
 
         viewDataBinding.closeView.setOnClickListener(this);
         viewDataBinding.exitView.setOnClickListener(this);
