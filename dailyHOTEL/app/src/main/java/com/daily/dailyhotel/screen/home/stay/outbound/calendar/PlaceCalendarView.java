@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.common.calendar;
+package com.daily.dailyhotel.screen.home.stay.outbound.calendar;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
@@ -26,12 +26,12 @@ import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyTextView;
+import com.daily.dailyhotel.entity.ObjectItem;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityCalendarDataBinding;
 import com.twoheart.dailyhotel.databinding.ViewCalendarDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -41,8 +41,6 @@ import io.reactivex.Observer;
 public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventListener, T2 extends ActivityCalendarDataBinding> extends BaseDialogView<T1, T2> implements View.OnClickListener
 {
     private static final int ANIMATION_DELAY = 200;
-    protected List<View> mDaysViewList;
-
     AnimatorSet mAnimatorSet;
 
     public interface OnEventListener extends OnBaseEventListener
@@ -81,79 +79,6 @@ public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventList
         }
 
         getViewDataBinding().titleTextView.setText(title);
-    }
-
-    void makeCalendarView(ArrayList<Pair<String, PlaceCalendarPresenter.Day[]>> arrayList)
-    {
-        if (arrayList == null)
-        {
-            return;
-        }
-
-        int size = arrayList.size();
-
-        if (mDaysViewList == null)
-        {
-            mDaysViewList = new ArrayList<>(size);
-        }
-
-        mDaysViewList.clear();
-
-        for (int i = 0; i < size; i++)
-        {
-            Pair<String, PlaceCalendarPresenter.Day[]> pair = arrayList.get(i);
-            ViewCalendarDataBinding calendarDataBinding = getMonthCalendarView(getContext(), pair);
-
-            View monthCalendarLayout = calendarDataBinding.getRoot();
-
-            if (i < size - 1)
-            {
-                monthCalendarLayout.setPadding(monthCalendarLayout.getPaddingLeft(), monthCalendarLayout.getPaddingTop()//
-                    , monthCalendarLayout.getPaddingRight(), monthCalendarLayout.getPaddingBottom() + ScreenUtils.dpToPx(getContext(), 30));
-            }
-
-            getViewDataBinding().calendarLayout.addView(monthCalendarLayout);
-        }
-    }
-
-    void smoothScrollStartDayPosition(View startDayView)
-    {
-        if (startDayView == null)
-        {
-            if (mDaysViewList == null || mDaysViewList.size() == 0)
-            {
-                return;
-            }
-
-            for (View dayView : mDaysViewList)
-            {
-                if (dayView.isSelected() == true)
-                {
-                    startDayView = dayView;
-                    break;
-                }
-            }
-
-            if (startDayView == null)
-            {
-                return;
-            }
-
-        }
-
-        final View selectView = startDayView;
-
-        getViewDataBinding().calendarScrollView.postDelayed(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                View view = (View) selectView.getParent().getParent();
-                int scrollTop = view.getTop();
-
-                getViewDataBinding().calendarScrollView.smoothScrollBy(0, scrollTop);
-            }
-        }, 200);
     }
 
     Observable<Boolean> showAnimation()
@@ -335,149 +260,6 @@ public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventList
         }
 
         getViewDataBinding().confirmView.setText(text);
-    }
-
-    void reset()
-    {
-        if (mDaysViewList != null)
-        {
-            for (View dayView : mDaysViewList)
-            {
-                if (dayView == null)
-                {
-                    continue;
-                }
-
-                if (dayView.isSelected() == true)
-                {
-                    TextView textView = (TextView) dayView.findViewById(R.id.textView);
-                    textView.setText(null);
-                    textView.setVisibility(View.INVISIBLE);
-
-                    dayView.setBackgroundDrawable(getDrawable(R.drawable.selector_calendar_day_background));
-                }
-
-                dayView.setActivated(false);
-                dayView.setSelected(false);
-                dayView.setEnabled(true);
-            }
-        }
-    }
-
-    private ViewCalendarDataBinding getMonthCalendarView(Context context, Pair<String, PlaceCalendarPresenter.Day[]> pair)
-    {
-        if (context == null || pair == null)
-        {
-            return null;
-        }
-
-        ViewCalendarDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.view_calendar_data, null, false);
-
-        dataBinding.monthTextView.setText(pair.first);
-
-        View dayView;
-
-        for (PlaceCalendarPresenter.Day dayClass : pair.second)
-        {
-            dayView = getDayView(context, dayClass);
-
-            if (dayClass != null && dayClass.isDefaultDimmed == false)
-            {
-                mDaysViewList.add(dayView);
-            }
-
-            dataBinding.calendarGridLayout.addView(dayView);
-        }
-
-        return dataBinding;
-    }
-
-    private View getDayView(Context context, PlaceCalendarPresenter.Day day)
-    {
-        RelativeLayout relativeLayout = new RelativeLayout(context);
-
-        DailyTextView visitTextView = new DailyTextView(context);
-        visitTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
-        visitTextView.setGravity(Gravity.CENTER_HORIZONTAL);
-        visitTextView.setTextColor(getColor(R.color.white));
-        visitTextView.setDuplicateParentStateEnabled(true);
-        visitTextView.setId(R.id.textView);
-        visitTextView.setVisibility(View.INVISIBLE);
-
-        RelativeLayout.LayoutParams visitLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        visitLayoutParams.topMargin = ScreenUtils.dpToPx(context, 5);
-
-        relativeLayout.addView(visitTextView, visitLayoutParams);
-
-        DailyTextView dayTextView = new DailyTextView(context);
-        dayTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
-        dayTextView.setGravity(Gravity.CENTER_HORIZONTAL);
-        dayTextView.setDuplicateParentStateEnabled(true);
-
-        RelativeLayout.LayoutParams dayLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        dayLayoutParams.bottomMargin = ScreenUtils.dpToPx(context, 6);
-        dayLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-
-        relativeLayout.addView(dayTextView, dayLayoutParams);
-
-        android.support.v7.widget.GridLayout.LayoutParams layoutParams = new android.support.v7.widget.GridLayout.LayoutParams();
-        layoutParams.width = 0;
-        layoutParams.height = ScreenUtils.dpToPx(context, 45);
-        layoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f);
-
-        relativeLayout.setLayoutParams(layoutParams);
-        relativeLayout.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.selector_calendar_day_background));
-
-        if (day == null)
-        {
-            dayTextView.setText(null);
-            relativeLayout.setTag(null);
-            relativeLayout.setEnabled(false);
-        } else
-        {
-            switch (day.dayOfWeek)
-            {
-                // 일요일
-                case Calendar.SUNDAY:
-                    dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_sunday_textcolor));
-                    break;
-
-                case Calendar.SATURDAY:
-                    if (day.isHoliday == true)
-                    {
-                        dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_sunday_textcolor));
-                    } else
-                    {
-                        dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_saturday_textcolor));
-                    }
-                    break;
-
-                default:
-                    if (day.isHoliday == true)
-                    {
-                        dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_sunday_textcolor));
-                    } else
-                    {
-                        dayTextView.setTextColor(context.getResources().getColorStateList(R.color.selector_calendar_default_text_color));
-                    }
-                    break;
-            }
-
-            dayTextView.setText(day.dayOfMonth);
-            relativeLayout.setTag(day);
-
-            if (day.isDefaultDimmed == true)
-            {
-                relativeLayout.setEnabled(false);
-            } else
-            {
-                relativeLayout.setEnabled(true);
-            }
-        }
-
-        relativeLayout.setOnClickListener(this);
-
-        return relativeLayout;
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)

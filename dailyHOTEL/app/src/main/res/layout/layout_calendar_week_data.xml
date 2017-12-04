@@ -9,7 +9,7 @@
 
         <include
             android:id="@+id/sundayLayout"
-            layout="@layout/view_calendar_day_data"
+            layout="@layout/layout_calendar_day_data"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -20,7 +20,7 @@
 
         <include
             android:id="@+id/mondayLayout"
-            layout="@layout/view_calendar_day_data"
+            layout="@layout/layout_calendar_day_data"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -30,7 +30,7 @@
 
         <include
             android:id="@+id/tuesdayLayout"
-            layout="@layout/view_calendar_day_data"
+            layout="@layout/layout_calendar_day_data"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -40,7 +40,7 @@
 
         <include
             android:id="@+id/wednesdayLayout"
-            layout="@layout/view_calendar_day_data"
+            layout="@layout/layout_calendar_day_data"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -50,7 +50,7 @@
 
         <include
             android:id="@+id/thursdayLayout"
-            layout="@layout/view_calendar_day_data"
+            layout="@layout/layout_calendar_day_data"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -60,7 +60,7 @@
 
         <include
             android:id="@+id/fridayLayout"
-            layout="@layout/view_calendar_day_data"
+            layout="@layout/layout_calendar_day_data"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -70,7 +70,7 @@
 
         <include
             android:id="@+id/saturdayLayout"
-            layout="@layout/view_calendar_day_data"
+            layout="@layout/layout_calendar_day_data"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
