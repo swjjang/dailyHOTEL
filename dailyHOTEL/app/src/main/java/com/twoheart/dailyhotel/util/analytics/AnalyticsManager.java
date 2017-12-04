@@ -1221,6 +1221,7 @@ public class AnalyticsManager
 
         public static final String REWARD = "reward";
         public static final String REGISTRATION = "registration";
+        public static final String DEVICE_INFO = "device_info";
     }
 
     public static class Label
