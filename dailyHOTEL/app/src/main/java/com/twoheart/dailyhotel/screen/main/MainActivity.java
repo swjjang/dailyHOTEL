@@ -1590,15 +1590,17 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
 
             try
             {
-                String startDay = DailyCalendar.convertDateFormatString(todayDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd");
+                Calendar startDayCalendar = DailyCalendar.getInstance();
+                DailyCalendar.setCalendarDateString(startDayCalendar, todayDateTime.dailyDateTime, -1);
+                String startDay = DailyCalendar.format(startDayCalendar.getTime(), "yyyy-MM-dd");
 
                 // 같은날짜에는 중복으로 요청하지 않는다.
                 if (startDay.equalsIgnoreCase(DailyPreference.getInstance(MainActivity.this).getCheckCalendarHolidays()) == false)
                 {
                     // 90일을 미리 얻어온다.
-                    Calendar dailyCalendar = DailyCalendar.getInstance();
-                    DailyCalendar.setCalendarDateString(dailyCalendar, todayDateTime.dailyDateTime, 90);
-                    String endDay = DailyCalendar.format(dailyCalendar.getTime(), "yyyy-MM-dd");
+                    Calendar endDayCalendar = DailyCalendar.getInstance();
+                    DailyCalendar.setCalendarDateString(endDayCalendar, todayDateTime.dailyDateTime, 180);
+                    String endDay = DailyCalendar.format(endDayCalendar.getTime(), "yyyy-MM-dd");
 
                     mNetworkController.requestHoliday(startDay, endDay);
 
