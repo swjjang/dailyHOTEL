@@ -547,9 +547,15 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 break;
 
             case GourmetDetailActivity.REQUEST_CODE_PAYMENT:
-                if (resultCode == BaseActivity.RESULT_CODE_REFRESH)
+                switch (resultCode)
                 {
-                    setRefresh(true);
+                    case BaseActivity.RESULT_CODE_REFRESH:
+                        setRefresh(true);
+                        break;
+
+                    case BaseActivity.RESULT_CODE_BACK:
+                        onBackClick();
+                        break;
                 }
                 break;
 
@@ -1480,12 +1486,10 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
             int currentTime;
 
-            // 오늘인 경우 현재 시간에 + 30분을 더해준다.
             if (todayDate.equalsIgnoreCase(gourmetBookDateTime.getVisitDateTime("yyyyMMdd")) == true)
             {
                 Calendar calendar = DailyCalendar.getInstance();
                 calendar.setTime(DailyCalendar.convertDate(commonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT));
-                calendar.add(Calendar.MINUTE, 30);
 
                 currentTime = Integer.parseInt(DailyCalendar.format(calendar.getTime(), "HHmm"));
             } else
@@ -1536,20 +1540,6 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 if (endTime < 300)
                 {
                     endTime += 2400;
-                }
-
-                // 마지막 시간에서 준비 시간을 뺀다.
-                if (readyTime > 0)
-                {
-                    endTime -= readyTime / 100 * 100;
-
-                    if (endTime % 100 >= readyTime % 100)
-                    {
-                        endTime -= readyTime % 100;
-                    } else
-                    {
-                        endTime = (endTime / 100 - 1) * 100 + endTime % 100 + ONE_HOUR_MINUTES - readyTime % 100;
-                    }
                 }
 
                 // 입장 시간이 업장 종료시간보다 큰 경우 메뉴에서 제거한다.

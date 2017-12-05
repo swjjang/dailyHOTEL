@@ -613,18 +613,24 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                 // 가격이 변동된 경우
                 if (checkChangedPrice(mGourmetPayment, mGourmetCart) == true)
                 {
-                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_payment_changed_price)//
-                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                    addCompositeDisposable(mCartLocalImpl.clearGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                    {
+                        @Override
+                        public void accept(Boolean aBoolean) throws Exception
                         {
-                            @Override
-                            public void onDismiss(DialogInterface dialogInterface)
-                            {
-                                setResult(BaseActivity.RESULT_CODE_REFRESH);
-                                onBackClick();
-                            }
-                        });
+                            getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_payment_changed_price)//
+                                , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                                {
+                                    @Override
+                                    public void onDismiss(DialogInterface dialogInterface)
+                                    {
+                                        setResult(BaseActivity.RESULT_CODE_REFRESH);
+                                        onBackClick();
+                                    }
 
-                    setResult(BaseActivity.RESULT_CODE_REFRESH);
+                                });
+                        }
+                    }));
 
                     mAnalytics.onEventChangedPrice(getActivity(), mGourmetCart.gourmetName);
                 }
@@ -672,16 +678,31 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
                 if (throwable instanceof BaseException)
                 {
-                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), throwable.getMessage()//
-                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                    addCompositeDisposable(mCartLocalImpl.clearGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                    {
+                        @Override
+                        public void accept(Boolean aBoolean) throws Exception
                         {
-                            @Override
-                            public void onDismiss(DialogInterface dialog)
-                            {
-                                setResult(BaseActivity.RESULT_CODE_REFRESH);
-                                onBackClick();
-                            }
-                        });
+                            getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), throwable.getMessage()//
+                                , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                                {
+                                    @Override
+                                    public void onDismiss(DialogInterface dialog)
+                                    {
+                                        // 특정 해외 드면 홈으로 이동한다.
+                                        if (((BaseException) throwable).getCode() == 1180)
+                                        {
+                                            setResult(BaseActivity.RESULT_CODE_BACK);
+                                        } else
+                                        {
+                                            setResult(BaseActivity.RESULT_CODE_REFRESH);
+                                        }
+
+                                        onBackClick();
+                                    }
+                                });
+                        }
+                    }));
                 } else
                 {
                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.act_base_network_connect)//
