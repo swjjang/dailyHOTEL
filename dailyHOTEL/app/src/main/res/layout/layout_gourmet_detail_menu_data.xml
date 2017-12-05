@@ -29,6 +29,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="12dp"
+            android:layout_marginTop="2dp"
             android:textColor="@color/default_text_c323232"
             android:textSize="15dp"
             app:layout_constraintLeft_toLeftOf="parent"

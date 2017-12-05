@@ -1296,6 +1296,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         getViewDataBinding().dateInformationView.setDate1DescriptionTextColor(getColor(R.color.default_text_cb70038));
         getViewDataBinding().dateInformationView.setDate1DescriptionTextDrawable(0, 0, R.drawable.navibar_m_burg_ic_v, 0);
         getViewDataBinding().dateInformationView.setData1TextSize(13.0f, 15.0f);
+        getViewDataBinding().dateInformationView.setDateTopPadding(ScreenUtils.dpToPx(getContext(), 6));
 
         getViewDataBinding().dateInformationView.setOnDateClickListener(new View.OnClickListener()
         {
@@ -1355,9 +1356,13 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
         getViewDataBinding().timesRadioGroup.addView(fullTimeTextView, fullTimeLayoutParams);
 
+        int time;
+
         // 실제 시간 넣기
-        for (int time : operationTimeList)
+        for (int i = 0; i < size; i++)
         {
+            time = operationTimeList.get(i);
+
             // 1시 이후 값은 01:00로 보이도록 한다.
             if (time >= 2500)
             {
@@ -1375,7 +1380,14 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             timeTextView.setOnClickListener(onClickListener);
 
             RadioGroup.LayoutParams timeLayoutParams = new RadioGroup.LayoutParams(ScreenUtils.dpToPx(getContext(), 56), ScreenUtils.dpToPx(getContext(), 30));
-            timeLayoutParams.rightMargin = ScreenUtils.dpToPx(getContext(), 10);
+
+            if (i == size - 1)
+            {
+                timeLayoutParams.rightMargin = ScreenUtils.dpToPx(getContext(), 15);
+            } else
+            {
+                timeLayoutParams.rightMargin = ScreenUtils.dpToPx(getContext(), 10);
+            }
 
             getViewDataBinding().timesRadioGroup.addView(timeTextView, timeLayoutParams);
         }

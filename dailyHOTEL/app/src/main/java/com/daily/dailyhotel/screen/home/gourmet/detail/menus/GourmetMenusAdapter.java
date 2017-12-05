@@ -145,6 +145,9 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
         dataBinding.getRoot().setLayoutParams(new RecyclerView.LayoutParams((int) getMenuWidth(), ViewGroup.LayoutParams.MATCH_PARENT));
         GourmetMenuViewHolder gourmetMenuViewHolder = new GourmetMenuViewHolder(dataBinding);
 
+        final int DP_6 = ScreenUtils.dpToPx(mContext, 6);
+        dataBinding.roundedConstraintLayout.setRound(DP_6, DP_6, DP_6, 0, DP_6);
+
         return gourmetMenuViewHolder;
     }
 

@@ -1384,6 +1384,8 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
             getViewDataBinding().dateInformationView.setDate2DescriptionTextDrawable(0, 0, R.drawable.navibar_m_burg_ic_v, 0);
             getViewDataBinding().dateInformationView.setData2TextSize(13.0f, 13.0f);
 
+            getViewDataBinding().dateInformationView.setDateTopPadding(ScreenUtils.dpToPx(getContext(), 6));
+
             getViewDataBinding().dateInformationView.setOnDateClickListener(new View.OnClickListener()
             {
                 @Override
