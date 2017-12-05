@@ -554,6 +554,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                         break;
 
                     case BaseActivity.RESULT_CODE_BACK:
+                        setResult(BaseActivity.RESULT_CODE_REFRESH);
                         onBackClick();
                         break;
                 }
