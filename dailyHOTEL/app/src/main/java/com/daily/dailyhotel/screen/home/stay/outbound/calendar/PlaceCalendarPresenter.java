@@ -169,10 +169,7 @@ public abstract class PlaceCalendarPresenter<T1 extends BaseActivity, T2 extends
                 i++;
             }
 
-            if (i < daysOfMonthCount)
-            {
-                weeksOfMonthList.add(new ObjectItem(ObjectItem.TYPE_WEEK_VIEW, days));
-            }
+            weeksOfMonthList.add(new ObjectItem(ObjectItem.TYPE_WEEK_VIEW, days));
         }
 
         return weeksOfMonthList;
