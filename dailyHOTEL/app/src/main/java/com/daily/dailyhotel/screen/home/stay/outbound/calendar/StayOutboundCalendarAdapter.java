@@ -215,7 +215,7 @@ public class StayOutboundCalendarAdapter extends RecyclerView.Adapter<RecyclerVi
             return;
         }
 
-        holder.dataBinding.monthTextView.setText(String.format(Locale.KOREA, "%4d.%2d", month.year, month.month));
+        holder.dataBinding.monthTextView.setText(String.format(Locale.KOREA, "%4d.%02d", month.year, month.month));
     }
 
     private void onBindViewHolder(WeekViewHolder holder, PlaceCalendarPresenter.Day[] week, int position)

@@ -619,7 +619,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
         int length = (todayDayOfWeek - 1) + monthDay + (7 - endDayOfWeek);
 
-        ExLog.d("length : " + length + " , availableLastDay : " + availableLastDay + " , today : " + today + " , todayweek : " + todayDayOfWeek + " , endDay Week : " + endDayOfWeek);
+//        ExLog.d("length : " + length + " , availableLastDay : " + availableLastDay + " , today : " + today + " , todayweek : " + todayDayOfWeek + " , endDay Week : " + endDayOfWeek);
         return length;
     }
 
