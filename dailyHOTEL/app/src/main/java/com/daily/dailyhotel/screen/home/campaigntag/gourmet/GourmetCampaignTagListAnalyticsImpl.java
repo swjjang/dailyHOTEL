@@ -53,7 +53,7 @@ public class GourmetCampaignTagListAnalyticsImpl implements GourmetCampaignTagLi
     }
 
     @Override
-    public void onEventGourmetClickOption(Activity activity, int index, boolean hasCoupon, boolean hasReview, boolean trueVR)
+    public void onEventGourmetClickOption(Activity activity, int index, boolean hasCoupon, boolean hasReview, boolean trueVR, boolean discount)
     {
         if (activity == null)
         {
@@ -71,6 +71,12 @@ public class GourmetCampaignTagListAnalyticsImpl implements GourmetCampaignTagLi
         {
             AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
                 , AnalyticsManager.Action.TRUE_REVIEW_GOURMET, Integer.toString(index), null);
+        }
+
+        if (discount == true)
+        {
+            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                , AnalyticsManager.Action.DISCOUNT_GOURMET, Integer.toString(index), null);
         }
     }
 

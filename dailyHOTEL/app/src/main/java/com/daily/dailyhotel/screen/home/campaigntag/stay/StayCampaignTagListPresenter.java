@@ -79,7 +79,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
     {
         void onCampaignTagEvent(Activity activity, CampaignTag campaignTag, int listCount);
 
-        void onEventStayClickOption(Activity activity, int index, boolean hasCoupon, boolean hasReview, boolean trueVR, boolean provideRewardSticker);
+        void onEventStayClickOption(Activity activity, int index, boolean hasCoupon, boolean hasReview, boolean trueVR, boolean provideRewardSticker, boolean discount);
 
         void onEventStayWishClick(Activity activity, boolean wish);
     }
@@ -766,7 +766,8 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
 
         mAnalytics.onEventStayClickOption(getActivity(), stay.index, DailyTextUtils.isTextEmpty(stay.couponDiscountText) == false//
             , stay.reviewCount > 0, stay.truevr == true//
-            , DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerEnabled() && stay.provideRewardSticker);
+            , DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerEnabled() && stay.provideRewardSticker//
+            , stay.discountRate > 0);
     }
 
     @Override

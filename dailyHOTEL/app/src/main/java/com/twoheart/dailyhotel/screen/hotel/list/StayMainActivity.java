@@ -1144,6 +1144,12 @@ public class StayMainActivity extends PlaceMainActivity
                             AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.REWARD//
                                 , AnalyticsManager.Action.THUMBNAIL_CLICK, Integer.toString(stay.index), null);
                         }
+
+                        if (stay.discountRate > 0)
+                        {
+                            AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                                , AnalyticsManager.Action.DISCOUNT_STAY, Integer.toString(stay.index), null);
+                        }
                     }
                     break;
                 }

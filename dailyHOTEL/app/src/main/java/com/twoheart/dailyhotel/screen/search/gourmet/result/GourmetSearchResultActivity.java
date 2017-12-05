@@ -965,6 +965,12 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                     , AnalyticsManager.Action.TRUE_REVIEW_GOURMET, Integer.toString(gourmet.index), null);
             }
 
+            if (gourmet.discountRate > 0)
+            {
+                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                    , AnalyticsManager.Action.DISCOUNT_GOURMET, Integer.toString(gourmet.index), null);
+            }
+
             if (gourmet.availableTicketNumbers == 0 || gourmet.availableTicketNumbers < gourmet.minimumOrderQuantity || gourmet.expired == true)
             {
                 switch (mSearchType)

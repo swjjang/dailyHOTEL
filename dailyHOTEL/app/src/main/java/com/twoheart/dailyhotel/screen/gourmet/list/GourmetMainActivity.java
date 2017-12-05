@@ -1118,6 +1118,12 @@ public class GourmetMainActivity extends PlaceMainActivity
                             AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
                                 , AnalyticsManager.Action.TRUE_REVIEW_GOURMET, Integer.toString(gourmet.index), null);
                         }
+
+                        if (gourmet.discountRate > 0)
+                        {
+                            AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                                , AnalyticsManager.Action.DISCOUNT_GOURMET, Integer.toString(gourmet.index), null);
+                        }
                     }
                     break;
                 }

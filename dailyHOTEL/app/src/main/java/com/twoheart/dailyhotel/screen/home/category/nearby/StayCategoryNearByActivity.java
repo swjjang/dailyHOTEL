@@ -1327,6 +1327,12 @@ public class StayCategoryNearByActivity extends BaseActivity
                 AnalyticsManager.getInstance(StayCategoryNearByActivity.this).recordEvent(AnalyticsManager.Category.REWARD//
                     , AnalyticsManager.Action.THUMBNAIL_CLICK, Integer.toString(stay.index), null);
             }
+
+            if (stay.discountRate > 0)
+            {
+                AnalyticsManager.getInstance(StayCategoryNearByActivity.this).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                    , AnalyticsManager.Action.DISCOUNT_STAY, Integer.toString(stay.index), null);
+            }
         }
 
         @Override

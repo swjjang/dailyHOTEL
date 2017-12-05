@@ -57,7 +57,7 @@ public class StayCampaignTagListAnalyticsImpl implements StayCampaignTagListPres
     }
 
     @Override
-    public void onEventStayClickOption(Activity activity, int index, boolean hasCoupon, boolean hasReview, boolean trueVR, boolean provideRewardSticker)
+    public void onEventStayClickOption(Activity activity, int index, boolean hasCoupon, boolean hasReview, boolean trueVR, boolean provideRewardSticker, boolean discount)
     {
         if (activity == null)
         {
@@ -87,6 +87,12 @@ public class StayCampaignTagListAnalyticsImpl implements StayCampaignTagListPres
         {
             AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.REWARD//
                 , AnalyticsManager.Action.THUMBNAIL_CLICK, Integer.toString(index), null);
+        }
+
+        if (discount == true)
+        {
+            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.REWARD//
+                , AnalyticsManager.Action.DISCOUNT_STAY, Integer.toString(index), null);
         }
     }
 

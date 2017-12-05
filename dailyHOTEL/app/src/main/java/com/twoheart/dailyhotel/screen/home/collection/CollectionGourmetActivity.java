@@ -638,6 +638,12 @@ public class CollectionGourmetActivity extends CollectionBaseActivity
                 AnalyticsManager.getInstance(CollectionGourmetActivity.this).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
                     , AnalyticsManager.Action.TRUE_REVIEW_GOURMET, Integer.toString(recommendationGourmet.index), null);
             }
+
+            if (recommendationGourmet.discountRate > 0)
+            {
+                AnalyticsManager.getInstance(CollectionGourmetActivity.this).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                    , AnalyticsManager.Action.DISCOUNT_GOURMET, Integer.toString(recommendationGourmet.index), null);
+            }
         }
 
         @Override

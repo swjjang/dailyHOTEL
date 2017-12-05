@@ -1103,6 +1103,8 @@ public class AnalyticsManager
         public static final String WISH_STAY = "wish_stay";
         public static final String WISH_GOURMET = "wish_gourmet";
         public static final String WISH_OUTBOUND = "wish_outbound";
+        public static final String DISCOUNT_STAY = "discount_stay";
+        public static final String DISCOUNT_GOURMET = "discount_gourmet";
 
         public static final String CANCEL_HISTORY = "cancel_history";
         public static final String BACK = "back";
