@@ -356,7 +356,7 @@ public class GourmetCart
             jsonObject.put("menus", jsonArray);
 
             jsonObject.put("gourmetCategory", gourmetCategory);
-            jsonObject.getString("imageUrl, imageUrl");
+            jsonObject.put("imageUrl", imageUrl);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
