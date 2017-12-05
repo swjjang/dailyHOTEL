@@ -85,7 +85,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
     private static final int CARD_MIN_PRICE = 1000;
     private static final int PHONE_MAX_PRICE = 500000;
 
-    private static final int MAX_PERSONS = 999;
+    private static final int MAX_PERSONS = 99;
 
     static final int NONE = 0;
     static final int BONUS = 1;
