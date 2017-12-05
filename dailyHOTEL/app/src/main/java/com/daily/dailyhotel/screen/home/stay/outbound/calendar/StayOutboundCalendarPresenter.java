@@ -236,7 +236,7 @@ public class StayOutboundCalendarPresenter extends PlaceCalendarPresenter<StayOu
                         onDayClick(checkOutDateTime, checkOutDay);
                     }
 
-                    getViewInterface().smoothScrollMonthPosition(year, month);
+                    getViewInterface().scrollMonthPosition(year, month);
                 }
             }
         }));
@@ -387,8 +387,6 @@ public class StayOutboundCalendarPresenter extends PlaceCalendarPresenter<StayOu
 
     private void reset()
     {
-        getViewInterface().reset();
-
         mCheckInDateTime = null;
         mCheckOutDateTime = null;
 
@@ -396,6 +394,11 @@ public class StayOutboundCalendarPresenter extends PlaceCalendarPresenter<StayOu
         getViewInterface().setToolbarTitle(getString(R.string.label_calendar_hotel_select_checkin));
         getViewInterface().setConfirmEnabled(false);
         getViewInterface().setConfirmText(getString(R.string.label_calendar_search_selected_date));
+
+        getViewInterface().setCheckInDay(0);
+        getViewInterface().setCheckOutDay(0);
+
+        getViewInterface().notifyCalendarDataSetChanged();
     }
 
     private void onDayClick(String dayDateTime, int yyyyMMdd)

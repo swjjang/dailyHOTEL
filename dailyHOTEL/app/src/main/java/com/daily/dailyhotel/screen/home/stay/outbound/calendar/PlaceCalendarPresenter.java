@@ -93,7 +93,7 @@ public abstract class PlaceCalendarPresenter<T1 extends BaseActivity, T2 extends
 
             if (startCalendar.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY)
             {
-                underDayCount = Calendar.SUNDAY - startCalendar.get(Calendar.DAY_OF_WEEK);
+                underDayCount = startCalendar.get(Calendar.DAY_OF_WEEK) - Calendar.SUNDAY;
             }
         }
 
@@ -135,6 +135,8 @@ public abstract class PlaceCalendarPresenter<T1 extends BaseActivity, T2 extends
 
         final boolean hasHolidays = holidaySparseIntArray != null && holidaySparseIntArray.size() > 0;
         Calendar calendar = (Calendar) monthCalendar.clone();
+        calendar.set(Calendar.DAY_OF_MONTH, startDay);
+        calendar.add(Calendar.DAY_OF_MONTH, -underDayCount);
 
         for (int i = 0; i < daysOfMonthCount; )
         {
@@ -160,7 +162,7 @@ public abstract class PlaceCalendarPresenter<T1 extends BaseActivity, T2 extends
 
                 days[j].soldOut = false;
 
-                if (i < underDayCount || i >= daysOfMonthCount - overDayCount - underDayCount)
+                if (i < underDayCount || i >= daysOfMonthCount - overDayCount)
                 {
                     days[j].sideDay = true;
                 }
@@ -261,7 +263,7 @@ public abstract class PlaceCalendarPresenter<T1 extends BaseActivity, T2 extends
 
         public String getDateTime()
         {
-            return String.format(Locale.KOREA, "%4d%2d%2dT12:00:00+09:00", year, month, dayOfMonth);
+            return String.format(Locale.KOREA, "%4d-%02d-%02dT12:00:00+09:00", year, month, dayOfMonth);
         }
     }
 

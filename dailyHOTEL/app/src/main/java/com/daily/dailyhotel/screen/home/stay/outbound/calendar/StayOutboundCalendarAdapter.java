@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.LayoutCalendarDayDataBinding;
@@ -256,7 +257,7 @@ public class StayOutboundCalendarAdapter extends RecyclerView.Adapter<RecyclerVi
 
     private void setDayView(LayoutCalendarDayDataBinding dayDataBinding, PlaceCalendarPresenter.Day day, int dayOfWeek)
     {
-        if (dayDataBinding == null || day == null)
+        if (dayDataBinding == null)
         {
             return;
         }
@@ -267,37 +268,40 @@ public class StayOutboundCalendarAdapter extends RecyclerView.Adapter<RecyclerVi
             dayDataBinding.dayTextView.setText(null);
             dayDataBinding.dayLayout.setTag(null);
             dayDataBinding.dayLayout.setEnabled(false);
-            dayDataBinding.dayLayout.setSelected(false);
-            dayDataBinding.dayLayout.setActivated(false);
-            dayDataBinding.dayLayout.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.selector_calendar_day_background));
+            dayDataBinding.dayLayout.setBackgroundResource(R.color.white);
         } else
         {
             if (day.sideDay == true)
             {
+                dayDataBinding.checkTextView.setVisibility(View.INVISIBLE);
+                dayDataBinding.dayLayout.setTag(null);
                 dayDataBinding.dayLayout.setEnabled(false);
-                dayDataBinding.dayLayout.setSelected(false);
-                dayDataBinding.dayLayout.setActivated(false);
-
-                dayDataBinding.dayTextView.setTextColor(mContext.getResources().getColorStateList(R.color.selector_calendar_default_text_color));
+                dayDataBinding.dayLayout.setBackgroundResource(R.color.white);
+                dayDataBinding.dayTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_cc5c5c5));
             } else
             {
                 // yyyyMMdd
                 int yyyyMMdd = day.year * 10000 + day.month * 100 + day.dayOfMonth;
+
+                ExLog.d("pinkred - yyyyMMdd :" + yyyyMMdd + ", mCheckInDay : " + mCheckInDay + " , mCheckOutDay : " + mCheckOutDay);
 
                 if (mCheckInDay == yyyyMMdd)
                 {
                     dayDataBinding.checkTextView.setVisibility(View.VISIBLE);
                     dayDataBinding.checkTextView.setText(R.string.act_booking_chkin);
                     dayDataBinding.dayLayout.setBackgroundResource(R.drawable.select_date_check_in);
-                    dayDataBinding.dayLayout.setSelected(true);
+                    dayDataBinding.dayTextView.setTextColor(mContext.getResources().getColor(R.color.white));
                 } else if (mCheckOutDay == yyyyMMdd)
                 {
                     dayDataBinding.checkTextView.setVisibility(View.VISIBLE);
                     dayDataBinding.checkTextView.setText(R.string.act_booking_chkout);
                     dayDataBinding.dayLayout.setBackgroundResource(R.drawable.select_date_check_out);
-                    dayDataBinding.dayLayout.setSelected(true);
+                    dayDataBinding.dayTextView.setTextColor(mContext.getResources().getColor(R.color.white));
                 } else
                 {
+                    dayDataBinding.checkTextView.setVisibility(View.INVISIBLE);
+                    dayDataBinding.dayLayout.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.selector_calendar_day_background));
+
                     if (day.holiday == true)
                     {
                         dayDataBinding.dayTextView.setTextColor(mContext.getResources().getColorStateList(R.color.selector_calendar_sunday_textcolor));
@@ -320,8 +324,6 @@ public class StayOutboundCalendarAdapter extends RecyclerView.Adapter<RecyclerVi
                         }
                     }
 
-                    dayDataBinding.dayLayout.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.selector_calendar_day_background));
-
                     if (day.lastDay == true)
                     {
                         dayDataBinding.dayLayout.setEnabled(mLastDayEnabled);
@@ -332,12 +334,12 @@ public class StayOutboundCalendarAdapter extends RecyclerView.Adapter<RecyclerVi
 
                     if (yyyyMMdd > mCheckInDay && yyyyMMdd < mCheckOutDay)
                     {
+                        dayDataBinding.dayLayout.setActivated(true);
                         dayDataBinding.dayLayout.setSelected(true); // 배경색 변경
-                        dayDataBinding.dayLayout.setActivated(true); // 글자색 그대로
                     } else
                     {
+                        dayDataBinding.dayLayout.setActivated(false);
                         dayDataBinding.dayLayout.setSelected(false); // 배경색 변경
-                        dayDataBinding.dayLayout.setActivated(false); // 글자색 그대로
                     }
                 }
             }

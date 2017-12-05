@@ -1,9 +1,9 @@
 package com.daily.dailyhotel.screen.home.stay.outbound.calendar;
 
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.util.ScreenUtils;
@@ -81,6 +81,9 @@ public class StayOutboundCalendarView extends PlaceCalendarView<StayOutboundCale
         if (mCalendarAdapter == null)
         {
             mCalendarAdapter = new StayOutboundCalendarAdapter(getContext(), calendarList);
+            mCalendarAdapter.setOnClickListener(view -> getEventListener().onDayClick((PlaceCalendarPresenter.Day) view.getTag()));
+
+
             getViewDataBinding().calendarRecyclerView.setAdapter(mCalendarAdapter);
         }
 
@@ -88,7 +91,7 @@ public class StayOutboundCalendarView extends PlaceCalendarView<StayOutboundCale
     }
 
     @Override
-    public void smoothScrollMonthPosition(int year, int month)
+    public void scrollMonthPosition(int year, int month)
     {
         if (getViewDataBinding() == null || mCalendarAdapter == null)
         {
@@ -96,15 +99,7 @@ public class StayOutboundCalendarView extends PlaceCalendarView<StayOutboundCale
         }
 
         int position = mCalendarAdapter.getMonthPosition(year, month);
-
-        getViewDataBinding().calendarRecyclerView.postDelayed(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                getViewDataBinding().calendarRecyclerView.scrollToPosition(position);
-            }
-        }, 200);
+        ((LinearLayoutManager)getViewDataBinding().calendarRecyclerView.getLayoutManager()).scrollToPositionWithOffset(position, 0);
     }
 
     @Override
@@ -139,25 +134,23 @@ public class StayOutboundCalendarView extends PlaceCalendarView<StayOutboundCale
     @Override
     public void setCheckInDay(int checkInDay)
     {
-        if (mCalendarAdapter == null || checkInDay == 0)
+        if (mCalendarAdapter == null)
         {
             return;
         }
 
         mCalendarAdapter.setCheckInDay(checkInDay);
-        mCalendarAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void setCheckOutDay(int checkOutDay)
     {
-        if (mCalendarAdapter == null || checkOutDay == 0)
+        if (mCalendarAdapter == null)
         {
             return;
         }
 
-        mCalendarAdapter.setCheckInDay(checkOutDay);
-        mCalendarAdapter.notifyDataSetChanged();
+        mCalendarAdapter.setCheckOutDay(checkOutDay);
     }
 
     @Override
@@ -203,16 +196,5 @@ public class StayOutboundCalendarView extends PlaceCalendarView<StayOutboundCale
         layoutParams.height = DEFAULT_HEIGHT + marginTop;
 
         getViewDataBinding().exitView.setLayoutParams(layoutParams);
-    }
-
-    @Override
-    public void reset()
-    {
-        if (getViewDataBinding() == null || mCalendarAdapter == null)
-        {
-            return;
-        }
-
-
     }
 }

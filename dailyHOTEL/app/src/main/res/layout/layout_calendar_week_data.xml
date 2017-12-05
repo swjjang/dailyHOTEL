@@ -4,8 +4,7 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:background="@drawable/select_date_check_in">
+        android:layout_height="45dp">
 
         <include
             android:id="@+id/sundayLayout"

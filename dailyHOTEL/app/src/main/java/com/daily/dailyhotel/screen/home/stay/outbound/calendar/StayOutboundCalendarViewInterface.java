@@ -31,9 +31,7 @@ public interface StayOutboundCalendarViewInterface extends BaseDialogViewInterfa
 
     void setMarginTop(int marginTop);
 
-    void reset();
-
-    void smoothScrollMonthPosition(int year, int month);
+    void scrollMonthPosition(int year, int month);
 
     void notifyCalendarDataSetChanged();
 }
