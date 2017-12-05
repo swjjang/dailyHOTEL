@@ -192,7 +192,7 @@ public class GourmetCartMenusAdapter extends RecyclerView.Adapter<GourmetCartMen
         });
 
         // 이용인원
-        if (gourmetCartMenu.persons > 1)
+        if (gourmetCartMenu.persons > 0)
         {
             holder.dataBinding.personsTextView.setVisibility(View.VISIBLE);
             holder.dataBinding.personsTextView.setText(mContext.getString(R.string.label_persons, gourmetCartMenu.persons));
