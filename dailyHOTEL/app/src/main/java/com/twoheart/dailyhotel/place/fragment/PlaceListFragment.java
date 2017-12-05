@@ -167,7 +167,10 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
         mViewType = viewType;
         mPlaceListLayout.setVisibility(getChildFragmentManager(), viewType, emptyStatus, isCurrentPage);
 
-        mOnPlaceListFragmentListener.onShowMenuBar();
+        if (emptyStatus == EmptyStatus.NOT_EMPTY)
+        {
+            mOnPlaceListFragmentListener.onShowMenuBar();
+        }
     }
 
     public void setScrollListTop()
