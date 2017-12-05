@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.LayoutCalendarDayDataBinding;
@@ -283,8 +282,6 @@ public class StayOutboundCalendarAdapter extends RecyclerView.Adapter<RecyclerVi
                 // yyyyMMdd
                 int yyyyMMdd = day.year * 10000 + day.month * 100 + day.dayOfMonth;
 
-                ExLog.d("pinkred - yyyyMMdd :" + yyyyMMdd + ", mCheckInDay : " + mCheckInDay + " , mCheckOutDay : " + mCheckOutDay);
-
                 if (mCheckInDay == yyyyMMdd)
                 {
                     dayDataBinding.checkTextView.setVisibility(View.VISIBLE);
@@ -324,13 +321,7 @@ public class StayOutboundCalendarAdapter extends RecyclerView.Adapter<RecyclerVi
                         }
                     }
 
-                    if (day.lastDay == true)
-                    {
-                        dayDataBinding.dayLayout.setEnabled(mLastDayEnabled);
-                    } else
-                    {
-                        dayDataBinding.dayLayout.setEnabled(true);
-                    }
+                    dayDataBinding.dayLayout.setEnabled(day.lastDay ? mLastDayEnabled : true);
 
                     if (yyyyMMdd > mCheckInDay && yyyyMMdd < mCheckOutDay)
                     {

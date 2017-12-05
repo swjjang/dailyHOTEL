@@ -10,7 +10,6 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.ObjectItem;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import java.util.ArrayList;
@@ -57,8 +56,6 @@ public abstract class PlaceCalendarPresenter<T1 extends BaseActivity, T2 extends
         }
 
         int maxMonth = getMonthInterval(startCalendar, endCalendar);
-
-        ExLog.d("pinkred - maxMonth : " + maxMonth);
 
         Calendar calendar = (Calendar) startCalendar.clone();
 
@@ -108,8 +105,6 @@ public abstract class PlaceCalendarPresenter<T1 extends BaseActivity, T2 extends
             }
         }
 
-        ExLog.d("pinkred - currentMonth : " + currentMonth + ", underDayCount : " + underDayCount + ", overDayCount : " + overDayCount);
-
         int daysOfMonthCount; // 한달의 일 개수
         int startDay = 0, endDay = 0;
 
@@ -130,8 +125,6 @@ public abstract class PlaceCalendarPresenter<T1 extends BaseActivity, T2 extends
         }
 
         daysOfMonthCount = underDayCount + overDayCount + endDay - startDay + 1;
-
-        ExLog.d("pinkred - daysOfMonthCount : " + daysOfMonthCount + ", startDay : " + startDay + ", endDay : " + endDay);
 
         final boolean hasHolidays = holidaySparseIntArray != null && holidaySparseIntArray.size() > 0;
         Calendar calendar = (Calendar) monthCalendar.clone();
@@ -176,31 +169,8 @@ public abstract class PlaceCalendarPresenter<T1 extends BaseActivity, T2 extends
                 i++;
             }
 
-            if (days != null)
+            if (i < daysOfMonthCount)
             {
-                if (Constants.DEBUG == true)
-                {
-                    StringBuilder stringBuilder = new StringBuilder();
-                    for (Day day : days)
-                    {
-                        if (day != null)
-                        {
-                            if (day.sideDay == true)
-                            {
-                                stringBuilder.append("@");
-                            }
-                            stringBuilder.append(day.dayOfMonth);
-                            stringBuilder.append(", ");
-                        } else
-                        {
-                            stringBuilder.append("n");
-                            stringBuilder.append(", ");
-                        }
-                    }
-
-                    ExLog.d("pinkred - week : " + stringBuilder.toString());
-                }
-
                 weeksOfMonthList.add(new ObjectItem(ObjectItem.TYPE_WEEK_VIEW, days));
             }
         }

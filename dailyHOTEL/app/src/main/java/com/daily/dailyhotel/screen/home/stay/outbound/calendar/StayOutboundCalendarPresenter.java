@@ -13,7 +13,6 @@ import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import java.util.Calendar;
@@ -139,41 +138,6 @@ public class StayOutboundCalendarPresenter extends PlaceCalendarPresenter<StayOu
                 List<ObjectItem> calendarList = makeCalendar(mStartDateTime, mEndDateTime, getHolidayArray(calendarHolidays));
 
                 calendarList.add(new ObjectItem(ObjectItem.TYPE_FOOTER_VIEW, null));
-
-                if (Constants.DEBUG == true)
-                {
-                    for (ObjectItem objectItem : calendarList)
-                    {
-                        if (objectItem.mType == ObjectItem.TYPE_MONTH_VIEW)
-                        {
-                            ExLog.d("pinkred : Month : " + String.format(Locale.KOREA, "%4d.%d", ((Month) objectItem.getItem()).year, ((Month) objectItem.getItem()).month));
-                        } else if (objectItem.mType == ObjectItem.TYPE_WEEK_VIEW)
-                        {
-                            StringBuilder stringBuilder = new StringBuilder();
-
-                            Day[] days = objectItem.getItem();
-
-                            for (Day day : days)
-                            {
-                                if (day != null)
-                                {
-                                    if (day.sideDay == true)
-                                    {
-                                        stringBuilder.append("@");
-                                    }
-                                    stringBuilder.append(day.dayOfMonth);
-                                    stringBuilder.append(", ");
-                                } else
-                                {
-                                    stringBuilder.append("n");
-                                    stringBuilder.append(", ");
-                                }
-                            }
-
-                            ExLog.d("pinkred - Week : " + stringBuilder.toString());
-                        }
-                    }
-                }
 
                 return calendarList;
             }
