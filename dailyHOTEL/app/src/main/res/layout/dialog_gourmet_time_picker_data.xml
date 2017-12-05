@@ -54,12 +54,11 @@
             android:id="@+id/buttonTopLineView"
             android:layout_width="0dp"
             android:layout_height="1px"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="14dp"
             android:background="@color/default_line_ce7e7e7"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/timeGridLayout"/>
-
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/negativeTextView"
