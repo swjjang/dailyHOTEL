@@ -37,6 +37,7 @@ public class StayBookingDetailActivity extends BaseActivity<StayBookingDetailPre
     static final int REQUEST_CODE_FAQ = 10013;
     static final int REQUEST_CODE_RECOMMEND_GOURMET_VIEW_ALL = 10014;
     static final int REQUEST_CODE_PREVIEW = 10015;
+    static final int REQUEST_CODE_REFUND_CALL = 10016;
 
 
     public static Intent newInstance(Context context, int reservationIndex, String aggregationId, String imageUrl, boolean isDeepLink, int bookingState)

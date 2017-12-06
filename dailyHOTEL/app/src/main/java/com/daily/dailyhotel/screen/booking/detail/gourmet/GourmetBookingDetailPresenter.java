@@ -800,7 +800,7 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
     @Override
     public void onCollapseMapClick()
     {
-        if (mGourmetBookingDetail == null || lock() == true)
+        if (lock() == true)
         {
             return;
         }

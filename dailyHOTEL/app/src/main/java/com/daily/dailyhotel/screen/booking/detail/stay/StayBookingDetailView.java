@@ -6,13 +6,11 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
@@ -23,14 +21,11 @@ import android.text.SpannableStringBuilder;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import android.widget.TextView;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.OnBaseEventListener;
@@ -68,13 +63,11 @@ import com.twoheart.dailyhotel.databinding.LayoutStayBookingDetail03DataBinding;
 import com.twoheart.dailyhotel.model.MyLocationMarker;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.place.adapter.PlaceNameInfoWindowAdapter;
-import com.twoheart.dailyhotel.screen.booking.detail.hotel.StayReservationDetailActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
 import java.util.ArrayList;
@@ -140,7 +133,7 @@ public class StayBookingDetailView extends BaseBlurView<StayBookingDetailView.On
 
         void onConciergeHappyTalkClick(boolean isRefund);
 
-        void onConciergeCallClick();
+        void onConciergeCallClick(boolean isRefund);
 
         void onShareKakaoClick();
 
@@ -330,7 +323,7 @@ public class StayBookingDetailView extends BaseBlurView<StayBookingDetailView.On
         setTimeInformation(stayBookingDetail);
         setGuestInformation(stayBookingDetail);
         setPaymentInformation(stayBookingDetail);
-//        setRefundPolicyInformation(stayBookingDetail); // 이것은 따로 진행
+        //        setRefundPolicyInformation(stayBookingDetail); // 이것은 따로 진행
 
         //        initHeaderInformationLayout(mContext, mScrollLayout, placeBookingDetail);
         //        initPlaceInformationLayout(mContext, mScrollLayout, todayDateTime, placeBookingDetail);
@@ -795,7 +788,7 @@ public class StayBookingDetailView extends BaseBlurView<StayBookingDetailView.On
                 "- " + DailyTextUtils.getPriceFormat(getContext(), stayBookingDetail.couponAmount, false));
         } else
         {
-            mBookingDetail02DataBinding. couponLayout.setVisibility(View.GONE);
+            mBookingDetail02DataBinding.couponLayout.setVisibility(View.GONE);
         }
 
         mBookingDetail02DataBinding.totalPriceTextView.setText( //
@@ -813,7 +806,7 @@ public class StayBookingDetailView extends BaseBlurView<StayBookingDetailView.On
     }
 
     @Override
-    public void setRefundPolicyInformation(boolean isVisibleRefundPolicy, boolean readyForRefund , RefundPolicy refundPolicy)
+    public void setRefundPolicyInformation(boolean isVisibleRefundPolicy, boolean readyForRefund, RefundPolicy refundPolicy)
     {
         if (getContext() == null || mBookingDetail03DataBinding == null || getViewDataBinding() == null)
         {
@@ -1424,7 +1417,7 @@ public class StayBookingDetailView extends BaseBlurView<StayBookingDetailView.On
             {
                 hideSimpleDialog();
 
-                getEventListener().onConciergeCallClick();
+                getEventListener().onConciergeCallClick(false);
             }
         });
 
@@ -1483,94 +1476,50 @@ public class StayBookingDetailView extends BaseBlurView<StayBookingDetailView.On
     }
 
     @Override
-    public void showRefundCallDialog()
+    public void showRefundCallDialog(Dialog.OnDismissListener listener)
     {
-        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View dialogView = layoutInflater.inflate(R.layout.view_dialog_contact_us_layout, null, false);
+        DialogConciergeDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_concierge_data, null, false);
 
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        dialog.setCanceledOnTouchOutside(true);
+        dataBinding.contactUs01Layout.setVisibility(View.GONE);
+        dataBinding.contactUs02Layout.setVisibility(View.GONE);
+        dataBinding.contactUs02Layout.setVisibility(View.GONE);
 
-        // 버튼
-        View contactUs01Layout = dialogView.findViewById(R.id.contactUs01Layout);
-        View contactUs02Layout = dialogView.findViewById(R.id.contactUs02Layout);
-        contactUs01Layout.setVisibility(View.GONE);
-        contactUs02Layout.setVisibility(View.GONE);
+        dataBinding.kakaoDailyView.setText(R.string.label_contact_refund_kakao);
+        dataBinding.callDailyView.setText(R.string.label_contact_refund_daily);
 
-        TextView kakaoDailyView = (TextView) dialogView.findViewById(R.id.kakaoDailyView);
-        TextView callDailyView = (TextView) dialogView.findViewById(R.id.callDailyView);
 
-        kakaoDailyView.setText(R.string.label_contact_refund_kakao);
-        callDailyView.setText(R.string.label_contact_refund_daily);
-
-        kakaoDailyView.setOnClickListener(new View.OnClickListener()
+        dataBinding.kakaoDailyView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                if (dialog.isShowing() == true)
-                {
-                    dialog.dismiss();
-                }
+                hideSimpleDialog();
 
-                startKakao(true);
+                getEventListener().onConciergeHappyTalkClick(true);
             }
         });
 
-        callDailyView.setOnClickListener(new View.OnClickListener()
+        dataBinding.callDailyView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                if (dialog.isShowing() == true)
-                {
-                    dialog.dismiss();
-                }
+                hideSimpleDialog();
 
-                showDailyCallDialog(null);
-
-                AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent(AnalyticsManager.Category.BOOKING_STATUS//
-                    , AnalyticsManager.Action.REFUND_INQUIRY, AnalyticsManager.Label.CALL, null);
+                getEventListener().onConciergeCallClick(true);
             }
         });
 
-        View closeView = dialogView.findViewById(R.id.closeView);
-        closeView.setOnClickListener(new View.OnClickListener()
+        dataBinding.closeView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                if (dialog.isShowing() == true)
-                {
-                    dialog.dismiss();
-                }
+                hideSimpleDialog();
             }
         });
 
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
-        {
-            @Override
-            public void onDismiss(DialogInterface dialog)
-            {
-                unLockUI();
-            }
-        });
-
-        try
-        {
-            dialog.setContentView(dialogView);
-
-            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, dialog);
-
-            dialog.show();
-
-            dialog.getWindow().setAttributes(layoutParams);
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
+        showSimpleDialog(dataBinding.getRoot(), null, listener, true);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////

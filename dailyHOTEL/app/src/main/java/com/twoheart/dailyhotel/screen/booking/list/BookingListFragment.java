@@ -39,6 +39,7 @@ import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.screen.booking.cancel.BookingCancelListActivity;
 import com.daily.dailyhotel.screen.booking.detail.gourmet.GourmetBookingDetailActivity;
+import com.daily.dailyhotel.screen.booking.detail.stay.StayBookingDetailActivity;
 import com.daily.dailyhotel.screen.booking.detail.stay.outbound.StayOutboundBookingDetailActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
@@ -53,7 +54,6 @@ import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
 import com.twoheart.dailyhotel.screen.booking.detail.PaymentWaitActivity;
-import com.twoheart.dailyhotel.screen.booking.detail.hotel.StayReservationDetailActivity;
 import com.twoheart.dailyhotel.screen.main.MainFragmentManager;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.review.ReviewActivity;
@@ -593,7 +593,8 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
         switch (placeType)
         {
             case STAY:
-                intent = StayReservationDetailActivity.newInstance(baseActivity, reservationIndex, aggregationId, imageUrl, isDeepLink, bookingState);
+//                intent = StayReservationDetailActivity.newInstance(baseActivity, reservationIndex, aggregationId, imageUrl, isDeepLink, bookingState);
+                intent = StayBookingDetailActivity.newInstance(baseActivity, reservationIndex, aggregationId, imageUrl, isDeepLink, bookingState);
                 break;
 
             case GOURMET:

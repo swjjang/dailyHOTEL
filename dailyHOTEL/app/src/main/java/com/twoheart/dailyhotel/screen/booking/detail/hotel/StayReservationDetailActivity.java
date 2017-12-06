@@ -1535,7 +1535,6 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
             {
                 ExLog.d(e.toString());
             }
-
         }
 
         @Override
@@ -1604,7 +1603,6 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
             {
                 unLockUI();
             }
-
         }
     };
 

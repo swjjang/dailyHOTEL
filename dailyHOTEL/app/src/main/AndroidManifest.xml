@@ -575,7 +575,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoDisplay"
-            tools:targetApi="cupcake" />
+            tools:targetApi="cupcake"/>
         <activity
             android:name=".screen.common.HappyTalkCategoryDialog"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
@@ -866,6 +866,13 @@
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
+
+        <activity
+            android:name="com.daily.dailyhotel.screen.common.dialog.call.front.FrontCallDialogActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/TransDialog"/>
         <!--  com.daily.dailyhotel.... -->
 
         <activity android:name="kr.co.kcp.android.payment.standard.ResultRcvActivity">

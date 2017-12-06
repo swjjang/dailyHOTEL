@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
 import android.view.View;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.BaseAnalyticsInterface;
@@ -26,15 +27,24 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CarouselListItem;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.RefundPolicy;
+import com.daily.dailyhotel.entity.Review;
+import com.daily.dailyhotel.entity.ReviewAnswerValue;
+import com.daily.dailyhotel.entity.ReviewItem;
+import com.daily.dailyhotel.entity.ReviewQuestionItem;
 import com.daily.dailyhotel.entity.StayBookingDetail;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.GourmetRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RefundRemoteImpl;
+import com.daily.dailyhotel.screen.booking.detail.map.GourmetBookingDetailMapActivity;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.call.front.FrontCallDialogActivity;
+import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
@@ -46,12 +56,19 @@ import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.GourmetSearchCuration;
 import com.twoheart.dailyhotel.model.GourmetSearchParams;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
+import com.twoheart.dailyhotel.model.ReviewPickQuestion;
+import com.twoheart.dailyhotel.model.ReviewScoreQuestion;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
+import com.twoheart.dailyhotel.screen.booking.detail.hotel.IssuingReceiptActivity;
 import com.twoheart.dailyhotel.screen.booking.detail.hotel.StayAutoRefundActivity;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
+import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
+import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
+import com.twoheart.dailyhotel.screen.review.ReviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
@@ -106,9 +123,7 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
 
     public interface StayBookingDetailAnalyticsInterface extends BaseAnalyticsInterface
     {
-        void onScreen(Activity activity, StayBookingDetail stayBookingDetail, String refundPolicy);
-
-        void onEventPaymentState(Activity activity, int gourmetIndex, int bookingState);
+        void onScreen(Activity activity, StayBookingDetail stayBookingDetail, String refundPolicy, int bookingState);
 
         void onEventShareClick(Activity activity);
 
@@ -128,7 +143,7 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
 
         void onEventHappyTalkClick2(Activity activity, boolean isRefund);
 
-        void onEventConciergeCallClick(Activity activity);
+        void onEventConciergeCallClick(Activity activity, boolean isRefund);
 
         void onEventStartConciergeCall(Activity activity);
 
@@ -143,6 +158,12 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
         void onEventHideBookingSuccess(Activity activity, int stayIndex);
 
         void onEventRefundClick(Activity activity, boolean isFreeRefund);
+
+        void onEventRecommendGourmetList(Activity activity, boolean hasData);
+
+        void onEventRecommendGourmetViewAllClick(Activity activity);
+
+        void onEventRecommendGourmetItemClick(Activity activity, int stayIndex, double distance);
     }
 
     public StayBookingDetailPresenter(@NonNull StayBookingDetailActivity activity)
@@ -539,7 +560,7 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
                 // 환불 대기 인 상태에서는 문구가 고정이다.
                 getViewInterface().setRefundPolicyInformation(true, mStayBookingDetail.readyForRefund, null);
 
-                mAnalytics.onScreen(getActivity(), mStayBookingDetail, null);
+                mAnalytics.onScreen(getActivity(), mStayBookingDetail, null, mBookingState);
             } else
             {
                 long checkOutDateTime = DailyCalendar.convertStringToDate(mStayBookingDetail.checkOutDateTime).getTime();
@@ -554,7 +575,7 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
                             public void accept(RefundPolicy refundPolicy) throws Exception
                             {
                                 onRefundPolicy(refundPolicy);
-                                mAnalytics.onScreen(getActivity(), mStayBookingDetail, refundPolicy.refundPolicy);
+                                mAnalytics.onScreen(getActivity(), mStayBookingDetail, refundPolicy.refundPolicy, mBookingState);
                                 unLockAll();
                             }
                         }, new Consumer<Throwable>()
@@ -563,7 +584,7 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
                             public void accept(Throwable throwable) throws Exception
                             {
                                 onRefundPolicy(null);
-                                mAnalytics.onScreen(getActivity(), mStayBookingDetail, null);
+                                mAnalytics.onScreen(getActivity(), mStayBookingDetail, null, mBookingState);
                                 unLockAll();
                             }
                         }));
@@ -572,7 +593,7 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
                 {
                     getViewInterface().setRefundPolicyInformation(false, mStayBookingDetail.readyForRefund, null);
 
-                    mAnalytics.onScreen(getActivity(), mStayBookingDetail, null);
+                    mAnalytics.onScreen(getActivity(), mStayBookingDetail, null, mBookingState);
                 }
             }
 
@@ -629,8 +650,7 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
 
                             boolean hasData = !(carouselListItemList == null || carouselListItemList.size() == 0);
 
-                            AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.BOOKING_DETAIL//
-                                , AnalyticsManager.Action.GOURMET_RECOMMEND, hasData ? AnalyticsManager.Label.Y : AnalyticsManager.Label.N, null);
+                            mAnalytics.onEventRecommendGourmetList(getActivity(), hasData);
                         }
                     }, new Consumer<Throwable>()
                     {
@@ -641,8 +661,7 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
 
                             getViewInterface().setRecommendGourmetData(null);
 
-                            AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.BOOKING_DETAIL//
-                                , AnalyticsManager.Action.GOURMET_RECOMMEND, AnalyticsManager.Label.N, null);
+                            mAnalytics.onEventRecommendGourmetList(getActivity(), false);
                         }
                     }));
             }
@@ -1076,67 +1095,249 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
     @Override
     public void onIssuingReceiptClick()
     {
+        if (getActivity() == null || lock() == true)
+        {
+            return;
+        }
 
+        startActivityForResult( //
+            IssuingReceiptActivity.newInstance(getActivity(), mReservationIndex, mBookingState) //
+            , StayBookingDetailActivity.REQUEST_CODE_ISSUING_RECEIPT);
     }
 
     @Override
     public void onShareClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
+        getViewInterface().showShareDialog(new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialog)
+            {
+                unLockAll();
+            }
+        });
+
+        mAnalytics.onEventShareClick(getActivity());
     }
 
     @Override
     public void onMapLoading()
     {
+        if (getActivity() == null)
+        {
+            return;
+        }
 
+        DailyToast.showToast(getActivity(), R.string.message_loading_map, Toast.LENGTH_SHORT);
     }
 
     @Override
     public void onMapClick()
     {
+        if (getActivity() == null || mStayBookingDetail == null || lock() == true)
+        {
+            return;
+        }
 
+        Intent intent = ZoomMapActivity.newInstance(getActivity()//
+            , ZoomMapActivity.SourceType.HOTEL_BOOKING, mStayBookingDetail.stayName, mStayBookingDetail.stayAddress//
+            , mStayBookingDetail.latitude, mStayBookingDetail.longitude, mStayBookingDetail.overseas);
+
+        startActivityForResult(intent, StayBookingDetailActivity.REQUEST_CODE_ZOOMMAP);
+
+        mAnalytics.onEventMapClick(getActivity());
     }
 
     @Override
     public void onExpandMapClick()
     {
+        if (getActivity() == null || mStayBookingDetail == null || lock() == true)
+        {
+            return;
+        }
 
+        getViewInterface().setBookingDetailMapToolbar();
+
+        addCompositeDisposable(getViewInterface().expandMap(mStayBookingDetail.latitude, mStayBookingDetail.longitude)//
+            .subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
+                {
+                    getViewInterface().setRecommendGourmetButtonAnimation(false);
+                    unLockAll();
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    unLockAll();
+                }
+            }));
+
+        mAnalytics.onEventMapClick(getActivity());
     }
 
     @Override
     public void onCollapseMapClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
+        clearCompositeDisposable();
+
+        getViewInterface().setBookingDetailToolbar();
+
+        addCompositeDisposable(getViewInterface().collapseMap()//
+            .subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
+                {
+                    unLockAll();
+                }
+            }));
     }
 
     @Override
     public void onViewDetailClick()
     {
+        if (getActivity() == null || mStayBookingDetail == null || mCommonDateTime == null || lock() == true)
+        {
+            return;
+        }
 
+        try
+        {
+            StayBookingDay stayBookingDay = new StayBookingDay();
+            stayBookingDay.setCheckInDay(mCommonDateTime.dailyDateTime);
+            stayBookingDay.setCheckOutDay(mCommonDateTime.dailyDateTime, 1);
+
+            //                Intent intent = StayDetailActivity.newInstance(StayReservationDetailActivity.this, stayBookingDay//
+            //                    , mPlaceBookingDetail.isOverseas, mPlaceBookingDetail.placeIndex, 0, false, false, false);
+
+            Intent intent = StayDetailActivity.newInstance(getActivity() //
+                , mStayBookingDetail.stayIndex, mStayBookingDetail.stayName, null, StayDetailActivity.NONE_PRICE//
+                , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+                , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, new StayDetailAnalyticsParam());
+
+            startActivityForResult(intent, StayBookingDetailActivity.REQUEST_CODE_DETAIL);
+
+            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
+            mAnalytics.onEventViewDetailClick(getActivity());
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     @Override
     public void onNavigatorClick()
     {
+        if (getActivity() == null || mStayBookingDetail == null || lock() == true)
+        {
+            return;
+        }
 
+        NavigatorAnalyticsParam analyticsParam = new NavigatorAnalyticsParam();
+        analyticsParam.category = AnalyticsManager.Category.HOTEL_BOOKINGS;
+        analyticsParam.action = AnalyticsManager.Action.HOTEL_DETAIL_NAVIGATION_APP_CLICKED;
+
+        startActivityForResult(NavigatorDialogActivity.newInstance(getActivity(), mStayBookingDetail.stayName//
+            , mStayBookingDetail.latitude, mStayBookingDetail.longitude, mStayBookingDetail.overseas, analyticsParam) //
+            , StayBookingDetailActivity.REQUEST_CODE_NAVIGATOR);
     }
 
     @Override
     public void onClipAddressClick()
     {
+        if (getActivity() == null || mStayBookingDetail == null)
+        {
+            return;
+        }
 
+        DailyTextUtils.clipText(getActivity(), mStayBookingDetail.stayAddress);
+
+        DailyToast.showToast(getActivity(), R.string.message_detail_copy_address, Toast.LENGTH_SHORT);
     }
 
     @Override
     public void onMyLocationClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
+        Observable<Long> locationAnimationObservable = getViewInterface().getLocationAnimation();
+        Observable observable = searchMyLocation(locationAnimationObservable);
+
+        if (observable != null)
+        {
+            addCompositeDisposable(observable.subscribe(new Consumer<Location>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull Location location) throws Exception
+                {
+                    unLockAll();
+                    getViewInterface().setMyLocation(location);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                {
+                    unLockAll();
+                }
+            }));
+        } else
+        {
+            unLockAll();
+
+        }
     }
 
     @Override
     public void onConciergeClick()
     {
+        if (getActivity() == null || mStayBookingDetail == null || mCommonDateTime == null || lock() == true)
+        {
+            return;
+        }
 
+        String frontPhone;
+        String frontReservationPhone;
+        if (mStayBookingDetail == null)
+        {
+            frontPhone = null;
+            frontReservationPhone = null;
+        } else
+        {
+            frontPhone = mStayBookingDetail.phone1;
+            frontReservationPhone = mStayBookingDetail.phone2;
+        }
+
+        getViewInterface().showConciergeDialog(frontPhone, frontReservationPhone, mCommonDateTime.currentDateTime, new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface)
+            {
+                unLockAll();
+                ;
+            }
+        });
+
+        mAnalytics.onEventConciergeClick(getActivity());
     }
 
     @Override
@@ -1190,12 +1391,12 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
             {
                 startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity()//
                     , HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_REFUND//
-                    , mStayBookingDetail.stayIndex, mReservationIndex, mStayBookingDetail.stayName), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+                    , mStayBookingDetail.stayIndex, mReservationIndex, mStayBookingDetail.stayName), StayBookingDetailActivity.REQUEST_CODE_HAPPYTALK);
             } else
             {
                 startActivityForResult(HappyTalkCategoryDialog.newInstance(getActivity()//
                     , HappyTalkCategoryDialog.CallScreen.SCREEN_STAY_BOOKING//
-                    , mStayBookingDetail.stayIndex, mReservationIndex, mStayBookingDetail.stayName), Constants.CODE_REQUEST_ACTIVITY_HAPPY_TALK);
+                    , mStayBookingDetail.stayIndex, mReservationIndex, mStayBookingDetail.stayName), StayBookingDetailActivity.REQUEST_CODE_HAPPYTALK);
             }
 
             mAnalytics.onEventHappyTalkClick2(getActivity(), isRefund);
@@ -1217,11 +1418,12 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
     }
 
     @Override
-    public void onConciergeCallClick()
+    public void onConciergeCallClick(boolean isRefund)
     {
-        startActivityForResult(CallDialogActivity.newInstance(getActivity()), StayBookingDetailActivity.REQUEST_CODE_CALL);
+        startActivityForResult(CallDialogActivity.newInstance(getActivity()), isRefund == true //
+            ? StayBookingDetailActivity.REQUEST_CODE_REFUND_CALL : StayBookingDetailActivity.REQUEST_CODE_CALL);
 
-        mAnalytics.onEventConciergeCallClick(getActivity());
+        mAnalytics.onEventConciergeCallClick(getActivity(), isRefund);
     }
 
     @Override
@@ -1351,24 +1553,236 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
     @Override
     public void onHiddenReservationClick()
     {
+        if (mStayBookingDetail == null || lock() == true)
+        {
+            return;
+        }
 
+        getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_delete_booking)//
+            , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    screenLock(true);
+
+                    addCompositeDisposable(mBookingRemoteImpl.getStayHiddenBooking(mReservationIndex) //
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                        {
+                            @Override
+                            public void accept(@NonNull Boolean result) throws Exception
+                            {
+                                unLockAll();
+
+                                if (result == true)
+                                {
+                                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2)//
+                                        , getString(R.string.message_booking_delete_booking)//
+                                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                                        {
+                                            @Override
+                                            public void onDismiss(DialogInterface dialog)
+                                            {
+                                                setResult(Constants.CODE_RESULT_ACTIVITY_REFRESH);
+                                                finish();
+                                            }
+                                        });
+
+                                    mAnalytics.onEventHideBookingSuccess(getActivity(), mStayBookingDetail.stayIndex);
+                                } else
+                                {
+                                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2)//
+                                        , getString(R.string.message_booking_failed_delete_booking)//
+                                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                                        {
+                                            @Override
+                                            public void onDismiss(DialogInterface dialog)
+                                            {
+                                            }
+                                        });
+                                }
+                            }
+                        }, new Consumer<Throwable>()
+                        {
+                            @Override
+                            public void accept(@NonNull Throwable throwable) throws Exception
+                            {
+                                unLockAll();
+
+                                getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2)//
+                                    , getString(R.string.message_booking_failed_delete_booking)//
+                                    , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                                    {
+                                        @Override
+                                        public void onDismiss(DialogInterface dialog)
+                                        {
+                                        }
+                                    });
+                            }
+                        }));
+                }
+            }, null, null, new DialogInterface.OnDismissListener()
+            {
+                @Override
+                public void onDismiss(DialogInterface dialog)
+                {
+                    unLock();
+                }
+            }, true);
+
+        mAnalytics.onEventHideBookingClick(getActivity(), mStayBookingDetail.stayIndex);
     }
 
     @Override
     public void onReviewClick(String reviewStatus)
     {
+        if (getActivity() == null || lock() == true)
+        {
+            return;
+        }
 
+        if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true)
+        {
+            addCompositeDisposable(mCommonRemoteImpl.getReview("hotel", mReservationIndex) //
+                .subscribeOn(Schedulers.io()).map(new Function<Review, com.twoheart.dailyhotel.model.Review>()
+                {
+                    @Override
+                    public com.twoheart.dailyhotel.model.Review apply(@io.reactivex.annotations.NonNull Review review) throws Exception
+                    {
+                        return reviewToReviewParcelable(review);
+                    }
+                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<com.twoheart.dailyhotel.model.Review>()
+                {
+                    @Override
+                    public void accept(@io.reactivex.annotations.NonNull com.twoheart.dailyhotel.model.Review review) throws Exception
+                    {
+                        Intent intent = ReviewActivity.newInstance(getActivity(), review);
+                        startActivityForResult(intent, StayBookingDetailActivity.REQUEST_CODE_REVIEW);
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                    {
+                        onHandleError(throwable);
+                    }
+                }));
+
+            mAnalytics.onEventReviewClick(getActivity());
+        }
+    }
+
+    private com.twoheart.dailyhotel.model.Review reviewToReviewParcelable(Review review)
+    {
+        com.twoheart.dailyhotel.model.Review reviewParcelable = new com.twoheart.dailyhotel.model.Review();
+
+        if (review == null)
+        {
+            return reviewParcelable;
+        }
+
+        reviewParcelable.requiredCommentReview = review.requiredCommentReview;
+        reviewParcelable.reserveIdx = review.reserveIdx;
+
+        com.twoheart.dailyhotel.model.ReviewItem reviewItemParcelable = new com.twoheart.dailyhotel.model.ReviewItem();
+
+        ReviewItem reviewItem = review.getReviewItem();
+
+        if (reviewItem != null)
+        {
+            reviewItemParcelable.itemIdx = reviewItem.itemIdx;
+            reviewItemParcelable.itemName = reviewItem.itemName;
+            reviewItemParcelable.imageUrl = reviewItem.imageUrl;
+
+            if ("HOTEL".equalsIgnoreCase(reviewItem.serviceType) == true)
+            {
+                reviewItemParcelable.placeType = Constants.PlaceType.HOTEL;
+            } else if ("GOURMET".equalsIgnoreCase(reviewItem.serviceType) == true)
+            {
+                reviewItemParcelable.placeType = Constants.PlaceType.FNB;
+            } else
+            {
+                ExLog.d("unKnown service type");
+            }
+
+            reviewItemParcelable.useEndDate = reviewItem.useEndDate;
+            reviewItemParcelable.useStartDate = reviewItem.useStartDate;
+        }
+
+        reviewParcelable.setReviewItem(reviewItemParcelable);
+
+        //
+        ArrayList<ReviewPickQuestion> reviewPickQuestionListParcelable = new ArrayList<>();
+
+        List<ReviewQuestionItem> reviewPickQuestionList = review.getReviewPickQuestionList();
+
+        if (reviewPickQuestionList != null && reviewPickQuestionList.size() > 0)
+        {
+            for (ReviewQuestionItem reviewQuestionItem : reviewPickQuestionList)
+            {
+                ReviewPickQuestion reviewPickQuestion = new ReviewPickQuestion();
+                reviewPickQuestion.title = reviewQuestionItem.title;
+                reviewPickQuestion.description = reviewQuestionItem.description;
+                reviewPickQuestion.answerCode = reviewQuestionItem.answerCode;
+
+                //
+                ArrayList<com.twoheart.dailyhotel.model.ReviewAnswerValue> reviewAnswerValueListParcelable = new ArrayList<>();
+
+                List<ReviewAnswerValue> reviewAnswerValueList = reviewQuestionItem.getAnswerValueList();
+
+                if (reviewAnswerValueList != null && reviewAnswerValueList.size() > 0)
+                {
+                    for (ReviewAnswerValue reviewAnswerValue : reviewAnswerValueList)
+                    {
+                        com.twoheart.dailyhotel.model.ReviewAnswerValue reviewAnswerValueParcelable = new com.twoheart.dailyhotel.model.ReviewAnswerValue();
+
+                        reviewAnswerValueParcelable.code = reviewAnswerValue.code;
+                        reviewAnswerValueParcelable.description = reviewAnswerValue.description;
+
+                        reviewAnswerValueListParcelable.add(reviewAnswerValueParcelable);
+                    }
+
+                    // 짝수개로 맞춘다.
+                    if (reviewAnswerValueListParcelable.size() % 2 == 1)
+                    {
+                        reviewAnswerValueListParcelable.add(new com.twoheart.dailyhotel.model.ReviewAnswerValue());
+                    }
+                }
+
+                reviewPickQuestion.setAnswerValueList(reviewAnswerValueListParcelable);
+                reviewPickQuestionListParcelable.add(reviewPickQuestion);
+            }
+        }
+
+        reviewParcelable.setReviewPickQuestionList(reviewPickQuestionListParcelable);
+
+        //
+        ArrayList<ReviewScoreQuestion> reviewScoreQuestionListParcelable = new ArrayList<ReviewScoreQuestion>();
+
+        List<ReviewQuestionItem> reviewScoreQuestionList = review.getReviewScoreQuestionList();
+
+        if (reviewScoreQuestionList != null && reviewScoreQuestionList.size() > 0)
+        {
+            for (ReviewQuestionItem reviewQuestionItem : reviewScoreQuestionList)
+            {
+                ReviewScoreQuestion reviewScoreQuestion = new ReviewScoreQuestion();
+                reviewScoreQuestion.title = reviewQuestionItem.title;
+                reviewScoreQuestion.description = reviewQuestionItem.description;
+                reviewScoreQuestion.answerCode = reviewQuestionItem.answerCode;
+
+                reviewScoreQuestionListParcelable.add(reviewScoreQuestion);
+            }
+        }
+
+        reviewParcelable.setReviewScoreQuestionList(reviewScoreQuestionListParcelable);
+
+        return reviewParcelable;
     }
 
     @Override
     public void onRefundClick()
     {
-        if (mStayBookingDetail == null)
-        {
-            return;
-        }
-
-        if (lock() == true)
+        if (mStayBookingDetail == null || lock() == true)
         {
             return;
         }
@@ -1386,7 +1800,14 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
             }
 
             default:
-                getViewInterface().showRefundCallDialog();
+                getViewInterface().showRefundCallDialog(new DialogInterface.OnDismissListener()
+                {
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface)
+                    {
+                        unLockAll();
+                    }
+                });
 
                 mAnalytics.onEventRefundClick(getActivity(), false);
                 break;
@@ -1435,18 +1856,112 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
     @Override
     public void onRecommendListItemViewAllClick()
     {
+        if (getActivity() == null || mStayBookingDetail == null || lock() == true)
+        {
+            return;
+        }
 
+        try
+        {
+            String title = getString(R.string.label_home_view_all);
+
+            long currentDateTime = DailyCalendar.convertStringToDate(mCommonDateTime.currentDateTime).getTime();
+            long checkInDateTime = DailyCalendar.convertStringToDate(mStayBookingDetail.checkInDateTime).getTime();
+
+            String visitDay = mStayBookingDetail.checkInDateTime;
+            if (currentDateTime > checkInDateTime)
+            {
+                visitDay = mCommonDateTime.dailyDateTime;
+            }
+
+            GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+            gourmetBookingDay.setVisitDay(visitDay);
+
+            ArrayList<Gourmet> gourmetList = new ArrayList<>();
+            if (mRecommendGourmetList != null && mRecommendGourmetList.size() > 0)
+            {
+                gourmetList.addAll(mRecommendGourmetList);
+            }
+
+            Location location = new Location((String) null);
+            location.setLatitude(mStayBookingDetail.latitude);
+            location.setLongitude(mStayBookingDetail.longitude);
+
+            Intent intent = GourmetBookingDetailMapActivity.newInstance( //
+                getActivity(), title, gourmetBookingDay, gourmetList //
+                , location, mStayBookingDetail.stayName, false);
+
+            getActivity().startActivityForResult(intent, StayBookingDetailActivity.REQUEST_CODE_RECOMMEND_GOURMET_VIEW_ALL);
+
+            mAnalytics.onEventRecommendGourmetViewAllClick(getActivity());
+
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
     @Override
     public void onRecommendListItemClick(View view)
     {
+        if (getActivity() == null || mStayBookingDetail == null || mCommonDateTime == null || lock() == true)
+        {
+            return;
+        }
 
+        CarouselListItem item = (CarouselListItem) view.getTag();
+        if (item == null)
+        {
+            return;
+        }
+
+        Gourmet gourmet = item.getItem();
+        if (gourmet == null)
+        {
+            return;
+        }
+
+        startGourmetDetail(view, gourmet, mCommonDateTime, mStayBookingDetail);
+
+        mAnalytics.onEventRecommendGourmetItemClick(getActivity(), gourmet.index, gourmet.distance);
     }
 
     @Override
     public void onRecommendListItemLongClick(View view)
     {
+        if (getActivity() == null || mStayBookingDetail == null || mCommonDateTime == null || lock() == true)
+        {
+            return;
+        }
 
+        CarouselListItem item = (CarouselListItem) view.getTag();
+        if (item == null)
+        {
+            return;
+        }
+
+        Gourmet gourmet = item.getItem();
+        if (gourmet == null)
+        {
+            return;
+        }
+
+        try
+        {
+            mViewByLongPress = view;
+            mGourmetByLongPress = gourmet;
+
+            getViewInterface().setBlurVisible(getActivity(), true);
+
+            GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+            gourmetBookingDay.setVisitDay(mCommonDateTime.dailyDateTime);
+
+            Intent intent = GourmetPreviewActivity.newInstance(getActivity(), gourmetBookingDay, gourmet);
+
+            startActivityForResult(intent, StayBookingDetailActivity.REQUEST_CODE_PREVIEW);
+        } catch (Exception e)
+        {
+            unLockAll();
+        }
     }
 }

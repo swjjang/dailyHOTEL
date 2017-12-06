@@ -45,7 +45,7 @@ public interface StayBookingDetailInterface extends BaseBlurViewInterface
 
     void showShareDialog(Dialog.OnDismissListener listener);
 
-    void showRefundCallDialog();
+    void showRefundCallDialog(Dialog.OnDismissListener listener);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////  고메  추천  ///////////////////////////////////////////////////
