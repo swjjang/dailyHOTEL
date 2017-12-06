@@ -961,52 +961,58 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                 {
                     JSONObject responseJSONObject = response.body();
 
-                    // TODO :  추후에 msgCode결과를 가지고 구분하는 코드가 필요할듯.
                     int msgCode = responseJSONObject.getInt("msg_code");
-                    JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-                    boolean isSignin = dataJSONObject.getBoolean("is_signin");
 
-                    String userType = mStoreParams.get("user_type");
-
-                    if (isSignin == true)
+                    if (msgCode == 0)
                     {
-                        DailyPreference.getInstance(LoginActivity.this).setLatestCouponTime("");
+                        JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
+                        boolean isSignin = dataJSONObject.getBoolean("is_signin");
 
-                        String userIndex = storeLoginInformation(responseJSONObject);
+                        String userType = mStoreParams.get("user_type");
 
-                        DailyMobileAPI.getInstance(LoginActivity.this).requestUserProfile(mNetworkTag, mUserProfileCallback);
-
-                        // 소셜 신규 가입인 경우
-                        if (mIsSocialSignUp == true)
+                        if (isSignin == true)
                         {
-                            mStoreParams.put("user_idx", userIndex);
-                            mStoreParams.put("user_type", userType);
+                            DailyPreference.getInstance(LoginActivity.this).setLatestCouponTime("");
+
+                            String userIndex = storeLoginInformation(responseJSONObject);
+
+                            DailyMobileAPI.getInstance(LoginActivity.this).requestUserProfile(mNetworkTag, mUserProfileCallback);
+
+                            // 소셜 신규 가입인 경우
+                            if (mIsSocialSignUp == true)
+                            {
+                                mStoreParams.put("user_idx", userIndex);
+                                mStoreParams.put("user_type", userType);
+                            } else
+                            {
+                                AnalyticsManager.getInstance(LoginActivity.this).recordScreen(LoginActivity.this, Screen.MENU_LOGIN_COMPLETE, null);
+
+                                if (Constants.KAKAO_USER.equalsIgnoreCase(userType) == true)
+                                {
+                                    AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, Action.LOGIN_COMPLETE, AnalyticsManager.UserType.KAKAO, null);
+                                } else if (Constants.FACEBOOK_USER.equalsIgnoreCase(userType) == true)
+                                {
+                                    AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, Action.LOGIN_COMPLETE, AnalyticsManager.UserType.FACEBOOK, null);
+                                }
+                            }
                         } else
                         {
-                            AnalyticsManager.getInstance(LoginActivity.this).recordScreen(LoginActivity.this, Screen.MENU_LOGIN_COMPLETE, null);
+                            mIsSocialSignUp = false;
 
-                            if (Constants.KAKAO_USER.equalsIgnoreCase(userType) == true)
+                            // 페이스북, 카카오톡 로그인 정보가 없는 경우 회원 가입으로 전환한다
+                            if (Constants.FACEBOOK_USER.equalsIgnoreCase(userType) == true)
                             {
-                                AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, Action.LOGIN_COMPLETE, AnalyticsManager.UserType.KAKAO, null);
-                            } else if (Constants.FACEBOOK_USER.equalsIgnoreCase(userType) == true)
+                                mStoreParams.put("dataRetentionInMonth", "12"); // 기본 저장기간 1년으로 설정
+                                DailyMobileAPI.getInstance(LoginActivity.this).requestFacebookUserSignup(mNetworkTag, mStoreParams, mSocialUserSignupCallback);
+                            } else if (Constants.KAKAO_USER.equalsIgnoreCase(userType) == true)
                             {
-                                AnalyticsManager.getInstance(LoginActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, Action.LOGIN_COMPLETE, AnalyticsManager.UserType.FACEBOOK, null);
+                                mStoreParams.put("dataRetentionInMonth", "12"); // 기본 저장기간 1년으로 설정
+                                DailyMobileAPI.getInstance(LoginActivity.this).requestKakaoUserSignup(mNetworkTag, mStoreParams, mSocialUserSignupCallback);
                             }
                         }
                     } else
                     {
-                        mIsSocialSignUp = false;
-
-                        // 페이스북, 카카오톡 로그인 정보가 없는 경우 회원 가입으로 전환한다
-                        if (Constants.FACEBOOK_USER.equalsIgnoreCase(userType) == true)
-                        {
-                            mStoreParams.put("dataRetentionInMonth", "12"); // 기본 저장기간 1년으로 설정
-                            DailyMobileAPI.getInstance(LoginActivity.this).requestFacebookUserSignup(mNetworkTag, mStoreParams, mSocialUserSignupCallback);
-                        } else if (Constants.KAKAO_USER.equalsIgnoreCase(userType) == true)
-                        {
-                            mStoreParams.put("dataRetentionInMonth", "12"); // 기본 저장기간 1년으로 설정
-                            DailyMobileAPI.getInstance(LoginActivity.this).requestKakaoUserSignup(mNetworkTag, mStoreParams, mSocialUserSignupCallback);
-                        }
+                        LoginActivity.this.onErrorResponse(call, response);
                     }
                 } catch (Exception e)
                 {

@@ -1095,6 +1095,9 @@ public class AnalyticsManager
         public static final String BUTTONS_AVAILABLE = "buttons_available";
 
         public static final String OB_KEYWORDS_IN_DOMESTIC = "ob_keywords_in_domestic";
+        public static final String GOURMET_KEYWORDS_POPED_UP = "gourmet_keywords_poped_up";
+        public static final String GOURMET_KEYWORDS_YES = "gourmet_keywords_yes";
+        public static final String GOURMET_KEYWORDS_NO = "gourmet_keywords_no";
 
         public static final String COUPON_STAY = "coupon_stay";
         public static final String COUPON_GOURMET = "coupon_gourmet";

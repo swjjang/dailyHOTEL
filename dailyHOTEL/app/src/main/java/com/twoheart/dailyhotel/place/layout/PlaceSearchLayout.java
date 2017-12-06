@@ -376,6 +376,20 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         inputMethodManager.hideSoftInputFromWindow(mSearchEditText.getWindowToken(), 0);
     }
 
+    public void searchKeyword(String keyword)
+    {
+        if (mSearchEditText == null)
+        {
+            return;
+        }
+
+        mSearchEditText.setText(keyword);
+        mSearchEditText.setSelection(mSearchEditText.length());
+        mSearchEditText.requestFocus();
+
+        showSearchKeyboard();
+    }
+
     public void setDataText(String date)
     {
         if (mDateTextView == null)

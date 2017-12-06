@@ -100,6 +100,8 @@ public abstract class PlaceSearchFragment extends BaseFragment
         void onSearchEnabled(boolean enabled);
 
         void onChangeAutoCompleteScrollView(boolean isShow);
+
+        void onSwitchClick(String keyword);
     }
 
     @Override
@@ -199,6 +201,16 @@ public abstract class PlaceSearchFragment extends BaseFragment
         }
 
         mPlaceSearchLayout.hideSearchKeyboard();
+    }
+
+    public void searchKeyword(String keyword)
+    {
+        if (mPlaceSearchLayout == null)
+        {
+            return;
+        }
+
+        mPlaceSearchLayout.searchKeyword(keyword);
     }
 
     public void hideAutoCompleteLayout()

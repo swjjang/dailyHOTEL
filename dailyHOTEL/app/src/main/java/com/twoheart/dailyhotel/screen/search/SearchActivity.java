@@ -31,6 +31,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.subjects.PublishSubject;
+
 public class SearchActivity extends BaseActivity implements View.OnClickListener
 {
     private static final int SEARCH_TAB_COUNT = 2;
@@ -48,6 +52,9 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     StaySearchFragment mStaySearchFragment;
     GourmetSearchFragment mGourmetSearchFragment;
     private boolean mIsResizeMode;
+
+    DailySwitchCompat mSwitchCompat;
+    PublishSubject<Boolean> mSwitchChangedSubject;
 
     public static Intent newInstance(Context context, PlaceType placeType, PlaceBookingDay placeBookingDay, int campaignTagIndex)
     {
@@ -234,6 +241,23 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 {
                     setSoftInputMode(isShow);
                 }
+
+                @Override
+                public void onSwitchClick(String keyword)
+                {
+                    mSwitchCompat.setChecked(true);
+
+                    mSwitchChangedSubject = PublishSubject.create();
+
+                    addCompositeDisposable(mSwitchChangedSubject.subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                    {
+                        @Override
+                        public void accept(Boolean aBoolean) throws Exception
+                        {
+                            mGourmetSearchFragment.searchKeyword(keyword);
+                        }
+                    }));
+                }
             });
 
             fragmentList.add(mStaySearchFragment);
@@ -266,13 +290,30 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 {
                     setSoftInputMode(isShow);
                 }
+
+                @Override
+                public void onSwitchClick(String keyword)
+                {
+                    mSwitchCompat.setChecked(false);
+
+                    mSwitchChangedSubject = PublishSubject.create();
+
+                    addCompositeDisposable(mSwitchChangedSubject.subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                    {
+                        @Override
+                        public void accept(Boolean aBoolean) throws Exception
+                        {
+                            mStaySearchFragment.searchKeyword(keyword);
+                        }
+                    }));
+                }
             });
 
             fragmentList.add(mGourmetSearchFragment);
 
             mSearchFragmentPagerAdapter = new SearchFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
 
-            mViewPager = (DailyViewPager) findViewById(R.id.viewPager);
+            mViewPager = findViewById(R.id.viewPager);
             mViewPager.setOffscreenPageLimit(SEARCH_TAB_COUNT);
             mViewPager.setAdapter(mSearchFragmentPagerAdapter);
             mViewPager.setPagingEnabled(false);
@@ -362,24 +403,24 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private void initPlaceSwitch(View view, PlaceType placeType)
     {
         // 가운데 스위치
-        DailySwitchCompat switchCompat = (DailySwitchCompat) view.findViewById(R.id.placeSwitch);
+        mSwitchCompat = view.findViewById(R.id.placeSwitch);
         final View hotelTextView = view.findViewById(R.id.hotelTextView);
         final View gourmetTextView = view.findViewById(R.id.gourmetTextView);
 
         switch (placeType)
         {
             case HOTEL:
-                switchCompat.setChecked(false);
+                mSwitchCompat.setChecked(false);
                 break;
 
             case FNB:
-                switchCompat.setChecked(true);
+                mSwitchCompat.setChecked(true);
                 break;
         }
 
         final PlaceType startPlaceType = placeType;
 
-        switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        mSwitchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
         {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
@@ -440,7 +481,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             }
         });
 
-        switchCompat.setOnScrollListener(new DailySwitchCompat.OnScrollListener()
+        mSwitchCompat.setOnScrollListener(new DailySwitchCompat.OnScrollListener()
         {
             @Override
             public void onScrolled(int offset, int range)
@@ -449,6 +490,13 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 {
                     mStaySearchFragment.onScrollingFragment(false);
                     mGourmetSearchFragment.onScrollingFragment(false);
+
+                    if (mSwitchChangedSubject != null)
+                    {
+                        mSwitchChangedSubject.onNext(true);
+                        mSwitchChangedSubject.onComplete();
+                        mSwitchChangedSubject = null;
+                    }
                 } else
                 {
                     mStaySearchFragment.onScrollingFragment(true);
@@ -510,7 +558,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 switch (mPlaceType)
                 {
                     case HOTEL:
-                        if (mStaySearchFragment.showCheckStayOutboundSearchDialog() == true)
+                        if (mStaySearchFragment.showCheckStayOutboundSearchDialog() == true//
+                            || mStaySearchFragment.showCheckGourmetSearchDialog() == true)
                         {
                             return;
                         }

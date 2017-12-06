@@ -112,6 +112,7 @@ public class DailyRemoteConfig
         String androidOBSearchKeyword = mFirebaseRemoteConfig.getString("androidOBSearchKeyword");
         String androidRewardSticker = mFirebaseRemoteConfig.getString("androidRewardSticker");
         String androidAppResearch = mFirebaseRemoteConfig.getString("androidAppResearch");
+        String androidGourmetSearchKeyword = mFirebaseRemoteConfig.getString("androidGourmetSearchKeyword");
 
         if (Constants.DEBUG == true)
         {
@@ -152,6 +153,7 @@ public class DailyRemoteConfig
                 }
 
                 ExLog.d("androidAppResearch : " + androidAppResearch);
+                ExLog.d("androidGourmetSearchKeyword : " + androidGourmetSearchKeyword);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -218,6 +220,9 @@ public class DailyRemoteConfig
 
         // 앱조사
         writeAppResearch(mContext, androidAppResearch);
+
+        // 고메 키워드
+        writeGourmetSearchKeyword(mContext, androidGourmetSearchKeyword);
 
         if (listener != null)
         {
@@ -632,14 +637,11 @@ public class DailyRemoteConfig
                 }
 
                 JSONArray jsonArray = jsonObject.getJSONArray("keyword");
-                String arrayString = null;
 
                 if (jsonArray != null && jsonArray.length() > 0)
                 {
-                    arrayString = jsonArray.toString();
+                    DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigObSearchKeyword(jsonArray.toString());
                 }
-
-                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigObSearchKeyword(arrayString);
             } catch (Exception e)
             {
                 ExLog.e(e.toString());
@@ -712,5 +714,45 @@ public class DailyRemoteConfig
         }
 
         DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigAppResearch(jsonString);
+    }
+
+    private void writeGourmetSearchKeyword(Context context, String jsonString)
+    {
+        if (context == null)
+        {
+            return;
+        }
+
+        if (DailyTextUtils.isTextEmpty(jsonString) == true)
+        {
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigGourmetSearchKeyword(null);
+        } else
+        {
+            try
+            {
+                JSONObject jsonObject = new JSONObject(jsonString);
+
+                if (Constants.DEBUG == true)
+                {
+                    ExLog.d("pinkred - keyword " + jsonObject);
+                }
+
+                if (jsonObject.has("keyword") == false)
+                {
+                    DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigGourmetSearchKeyword(null);
+                    return;
+                }
+
+                JSONArray jsonArray = jsonObject.getJSONArray("keyword");
+
+                if (jsonArray != null && jsonArray.length() > 0)
+                {
+                    DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigGourmetSearchKeyword(jsonArray.toString());
+                }
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
+        }
     }
 }

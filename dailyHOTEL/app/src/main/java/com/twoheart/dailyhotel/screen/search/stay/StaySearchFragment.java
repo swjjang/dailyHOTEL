@@ -52,6 +52,7 @@ import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Function3;
@@ -64,6 +65,7 @@ public class StaySearchFragment extends PlaceSearchFragment
 
     ArrayList<RecentlyPlace> mRecentlyStayList;
     ArrayList<String> mStayOutboundKeywordList;
+    ArrayList<String> mGourmetKeywordList;
 
     String mInputText;
     Object mCalenderObject;
@@ -81,7 +83,31 @@ public class StaySearchFragment extends PlaceSearchFragment
             setDateText(mStayBookingDay);
         }
 
-        setStayOutboundKeywordList(mBaseActivity);
+        addCompositeDisposable(Observable.zip(getStayOutboundKeywordList(mBaseActivity), getGourmetKeywordList(mBaseActivity), new BiFunction<ArrayList<String>, ArrayList<String>, Boolean>()
+        {
+            @Override
+            public Boolean apply(ArrayList<String> stayOutboundKeywordList, ArrayList<String> gourmetKeywordList) throws Exception
+            {
+                mStayOutboundKeywordList = stayOutboundKeywordList;
+                mGourmetKeywordList = gourmetKeywordList;
+                return true;
+            }
+        }).subscribe(new Consumer<Boolean>()
+        {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception
+            {
+
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                mStayOutboundKeywordList = null;
+                mGourmetKeywordList = null;
+            }
+        }));
     }
 
     @Override
@@ -499,15 +525,14 @@ public class StaySearchFragment extends PlaceSearchFragment
         }
     }
 
-    private void setStayOutboundKeywordList(Context context)
+    private Observable<ArrayList<String>> getStayOutboundKeywordList(Context context)
     {
         if (context == null)
         {
-            mStayOutboundKeywordList = null;
-            return;
+            return null;
         }
 
-        Observable.defer(new Callable<ObservableSource<ArrayList<String>>>()
+        return Observable.defer(new Callable<ObservableSource<ArrayList<String>>>()
         {
             @Override
             public ObservableSource<ArrayList<String>> call() throws Exception
@@ -528,23 +553,38 @@ public class StaySearchFragment extends PlaceSearchFragment
 
                 return Observable.just(arrayList);
             }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<String>>()
-        {
-            @Override
-            public void accept(ArrayList<String> stringList) throws Exception
-            {
-                mStayOutboundKeywordList = stringList;
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(Throwable throwable) throws Exception
-            {
-                ExLog.w(throwable.getMessage());
+        }).subscribeOn(Schedulers.io());
+    }
 
-                mStayOutboundKeywordList = null;
+    private Observable<ArrayList<String>> getGourmetKeywordList(Context context)
+    {
+        if (context == null)
+        {
+            return null;
+        }
+
+        return Observable.defer(new Callable<ObservableSource<ArrayList<String>>>()
+        {
+            @Override
+            public ObservableSource<ArrayList<String>> call() throws Exception
+            {
+                String prefereceText = DailyRemoteConfigPreference.getInstance(context).getKeyRemoteConfigGourmetSearchKeyword();
+                if (DailyTextUtils.isTextEmpty(prefereceText) == true)
+                {
+                    return Observable.just(new ArrayList<>());
+                }
+
+                ArrayList<String> arrayList = new ArrayList<>();
+                JSONArray jsonArray = new JSONArray(prefereceText);
+                int length = jsonArray.length();
+                for (int i = 0; i < length; i++)
+                {
+                    arrayList.add(jsonArray.getString(i));
+                }
+
+                return Observable.just(arrayList);
             }
-        });
+        }).subscribeOn(Schedulers.io());
     }
 
     public String getSearchKeyword()
@@ -565,87 +605,148 @@ public class StaySearchFragment extends PlaceSearchFragment
             DailyDeepLink dailyDeepLink = DailyDeepLink.getNewInstance(intent.getData());
 
             startActivity(StayOutboundSearchActivity.newInstance(getContext(), dailyDeepLink == null ? null : dailyDeepLink.getDeepLink()));
-            //            startActivity(DailyInternalDeepLink.getStayOutboundSearchSuggestScreenLink(getActivity(), keyword));
             return;
         }
 
         startActivity(StayOutboundSearchActivity.newInstance(getContext()));
     }
 
+    public void startGourmetSearch(String keyword)
+    {
+        if (mOnSearchFragmentListener == null)
+        {
+            return;
+        }
+
+        mOnSearchFragmentListener.onSwitchClick(keyword);
+    }
+
     public boolean showCheckStayOutboundSearchDialog()
     {
-        if (mBaseActivity == null)
+        if (mBaseActivity == null || mStayOutboundKeywordList == null || mStayOutboundKeywordList.size() == 0)
         {
             return false;
         }
 
         String keyword = getSearchKeyword();
-        if (DailyTextUtils.isTextEmpty(keyword) == true)
+        if (DailyTextUtils.isTextEmpty(keyword) == true || mStayOutboundKeywordList.contains(keyword) == false)
         {
             return false;
         }
 
-        if (mStayOutboundKeywordList == null || mStayOutboundKeywordList.size() == 0)
-        {
-            return false;
-        }
-
-        boolean hasKeyword = mStayOutboundKeywordList.contains(keyword);
-        if (hasKeyword == false)
-        {
-            return false;
-        }
-
-        String title = mBaseActivity.getResources().getString(R.string.dialog_notice2);
-        String message = mBaseActivity.getResources().getString(R.string.dialog_message_check_stayoutbound_search);
-        String positive = mBaseActivity.getResources().getString(R.string.dialog_btn_text_yes);
-        String negative = mBaseActivity.getResources().getString(R.string.dialog_btn_text_no);
-
-        mBaseActivity.showSimpleDialog(title, message, positive, negative, new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
+        mBaseActivity.showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_message_check_stayoutbound_search)//
+            , getString(R.string.dialog_btn_text_yes), mBaseActivity.getResources().getString(R.string.dialog_btn_text_no), new View.OnClickListener()
             {
-                // positive
-                startStayOutboundSearchSuggestActivity(getSearchKeyword());
+                @Override
+                public void onClick(View v)
+                {
+                    // positive
+                    startStayOutboundSearchSuggestActivity(keyword);
 
-                try
-                {
-                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.SEARCH //
-                        , AnalyticsManager.Action.OB_KEYWORDS_IN_DOMESTIC, AnalyticsManager.Label.YES, null);
-                } catch (Exception e)
-                {
-                    ExLog.w(e.toString());
-                }
-            }
-        }, new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                // negative
-                try
-                {
-                    if (mOnEventListener == null)
+                    try
                     {
-                        return;
+                        AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.SEARCH //
+                            , AnalyticsManager.Action.OB_KEYWORDS_IN_DOMESTIC, AnalyticsManager.Label.YES, null);
+                    } catch (Exception e)
+                    {
+                        ExLog.w(e.toString());
                     }
-
-                    mOnEventListener.onSearch(getSearchKeyword(), true);
-
-                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.SEARCH //
-                        , AnalyticsManager.Action.OB_KEYWORDS_IN_DOMESTIC, AnalyticsManager.Label.NO, null);
-                } catch (Exception e)
-                {
-                    ExLog.w(e.toString());
                 }
-            }
-        });
+            }, new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    // negative
+                    try
+                    {
+                        if (mOnEventListener == null)
+                        {
+                            return;
+                        }
+
+                        mOnEventListener.onSearch(keyword, true);
+
+                        AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.SEARCH //
+                            , AnalyticsManager.Action.OB_KEYWORDS_IN_DOMESTIC, AnalyticsManager.Label.NO, null);
+                    } catch (Exception e)
+                    {
+                        ExLog.w(e.toString());
+                    }
+                }
+            });
 
         try
         {
             AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.SEARCH //
                 , AnalyticsManager.Action.OB_KEYWORDS_IN_DOMESTIC, AnalyticsManager.Label.POPED_UP, null);
+        } catch (Exception e)
+        {
+            ExLog.w(e.toString());
+        }
+
+        return true;
+    }
+
+    public boolean showCheckGourmetSearchDialog()
+    {
+        if (mBaseActivity == null || mGourmetKeywordList == null || mGourmetKeywordList.size() == 0)
+        {
+            return false;
+        }
+
+        String keyword = getSearchKeyword();
+        if (DailyTextUtils.isTextEmpty(keyword) == true || mGourmetKeywordList.contains(keyword) == false)
+        {
+            return false;
+        }
+
+        mBaseActivity.showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_message_check_gourmet_search)//
+            , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    // positive
+                    startGourmetSearch(keyword);
+
+                    try
+                    {
+                        AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.SEARCH //
+                            , AnalyticsManager.Action.GOURMET_KEYWORDS_YES, keyword, null);
+                    } catch (Exception e)
+                    {
+                        ExLog.w(e.toString());
+                    }
+                }
+            }, new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    // negative
+                    try
+                    {
+                        if (mOnEventListener == null)
+                        {
+                            return;
+                        }
+
+                        mOnEventListener.onSearch(keyword, true);
+
+                        AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.SEARCH //
+                            , AnalyticsManager.Action.GOURMET_KEYWORDS_NO, keyword, null);
+                    } catch (Exception e)
+                    {
+                        ExLog.w(e.toString());
+                    }
+                }
+            });
+
+        try
+        {
+            AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.SEARCH //
+                , AnalyticsManager.Action.GOURMET_KEYWORDS_POPED_UP, keyword, null);
         } catch (Exception e)
         {
             ExLog.w(e.toString());
@@ -792,7 +893,7 @@ public class StaySearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            if (isSkipCheck == false && showCheckStayOutboundSearchDialog() == true)
+            if (isSkipCheck == false && (showCheckStayOutboundSearchDialog() == true || showCheckGourmetSearchDialog() == true))
             {
                 return;
             }
@@ -846,7 +947,7 @@ public class StaySearchFragment extends PlaceSearchFragment
         @Override
         public void onCalendarClick(boolean isAnimation, SearchType searchType)
         {
-            if (searchType == null && showCheckStayOutboundSearchDialog() == true)
+            if (searchType == null && (showCheckStayOutboundSearchDialog() == true || showCheckGourmetSearchDialog() == true))
             {
                 return;
             }
