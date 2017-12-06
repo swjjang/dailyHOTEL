@@ -1,16 +1,19 @@
 package com.daily.base;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 
 import com.daily.base.util.VersionUtils;
 
@@ -62,8 +65,7 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
         mViewDataBinding.getRoot().setVisibility(visibility);
     }
 
-    protected
-    @NonNull
+    protected @NonNull
     Context getContext()
     {
         return mActivity;
@@ -74,8 +76,7 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
         return mViewDataBinding;
     }
 
-    protected
-    @NonNull
+    protected @NonNull
     T1 getEventListener()
     {
         return mOnEventListener;
@@ -172,5 +173,16 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
         ColorStateList getColorStateList(int resId);
 
         Drawable getDrawable(int id);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    protected void setStatusBarColor(int color)
+    {
+        if (VersionUtils.isOverAPI21() == true)
+        {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(color);
+        }
     }
 }

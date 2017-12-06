@@ -30,7 +30,7 @@
         android:drawablePadding="10dp"
         android:gravity="center_vertical"
         android:text="@string/label_share_kakao"
-        android:textColor="@color/default_text_kakao"
+        android:textColor="@color/default_text_c323232"
         android:textSize="14dp"
         app:drawableCompatLeft="@drawable/ic_detail_share_kakao"
         dailyFont:style="Medium"/>
@@ -55,7 +55,7 @@
             android:drawablePadding="10dp"
             android:gravity="center_vertical"
             android:text="@string/label_copy_link"
-            android:textColor="@color/default_text_kakao"
+            android:textColor="@color/default_text_c323232"
             android:textSize="14dp"
             app:drawableCompatLeft="@drawable/popup_ic_share_link"
             dailyFont:style="Medium"/>
@@ -81,7 +81,7 @@
             android:drawablePadding="10dp"
             android:gravity="center_vertical"
             android:text="@string/label_more"
-            android:textColor="@color/default_text_kakao"
+            android:textColor="@color/default_text_c323232"
             android:textSize="14dp"
             app:drawableCompatLeft="@drawable/popup_ic_share_more"
             dailyFont:style="Medium"/>

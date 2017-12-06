@@ -402,9 +402,16 @@ public class StayBookingCancelDetailView extends BaseDialogView<StayBookingCance
             return;
         }
 
-        mBookingCancelDetail01DataBinding.checkInDayTextView.setText(checkInDate);
-        mBookingCancelDetail01DataBinding.checkOutDayTextView.setText(checkOutDate);
-        mBookingCancelDetail01DataBinding.nightsTextView.setText(getString(R.string.label_nights, nights));
+        mBookingCancelDetail01DataBinding.dateInformationView.setDateVisible(true, true);
+
+        mBookingCancelDetail01DataBinding.dateInformationView.setDate1Text(getString(R.string.label_check_in), checkInDate);
+        mBookingCancelDetail01DataBinding.dateInformationView.setData1TextSize(13.0f, 13.0f);
+
+        mBookingCancelDetail01DataBinding.dateInformationView.setCenterNightsVisible(true);
+        mBookingCancelDetail01DataBinding.dateInformationView.setCenterNightsText(getString(R.string.label_nights, nights));
+
+        mBookingCancelDetail01DataBinding.dateInformationView.setDate2Text(getString(R.string.label_check_out), checkOutDate);
+        mBookingCancelDetail01DataBinding.dateInformationView.setData2TextSize(13.0f, 13.0f);
     }
 
     @Override
