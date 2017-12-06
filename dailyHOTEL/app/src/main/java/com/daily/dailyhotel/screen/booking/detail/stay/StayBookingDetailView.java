@@ -420,40 +420,27 @@ public class StayBookingDetailView extends BaseBlurView<StayBookingDetailView.On
                 checkInDateFormat.length() - 3, checkInDateFormat.length(),//
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            mBookingDetail01DataBinding.checkInDayTextView.setText(checkInSpannableStringBuilder);
-        } catch (Exception e)
-        {
-            mBookingDetail01DataBinding.checkInDayTextView.setText(null);
-        }
-
-        try
-        {
             String checkOutDateFormat = DailyCalendar.convertDateFormatString(stayBookingDetail.checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.M.d(EEE) HH시");
             SpannableStringBuilder checkOutSpannableStringBuilder = new SpannableStringBuilder(checkOutDateFormat);
             checkOutSpannableStringBuilder.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(getContext()).getMediumTypeface()),//
                 checkOutDateFormat.length() - 3, checkOutDateFormat.length(),//
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            mBookingDetail01DataBinding.checkOutDayTextView.setText(checkOutSpannableStringBuilder);
+            int nights = DailyCalendar.compareDateDay(stayBookingDetail.checkOutDateTime, stayBookingDetail.checkInDateTime);
+
+            mBookingDetail01DataBinding.dateInformationView.setDateVisible(true, true);
+
+            mBookingDetail01DataBinding.dateInformationView.setDate1Text(getString(R.string.label_check_in), checkInSpannableStringBuilder);
+            mBookingDetail01DataBinding.dateInformationView.setData1TextSize(13.0f, 13.0f);
+
+            mBookingDetail01DataBinding.dateInformationView.setCenterNightsVisible(true);
+            mBookingDetail01DataBinding.dateInformationView.setCenterNightsText(getString(R.string.label_nights, nights));
+
+            mBookingDetail01DataBinding.dateInformationView.setDate2Text(getString(R.string.label_check_out), checkOutSpannableStringBuilder);
+            mBookingDetail01DataBinding.dateInformationView.setData2TextSize(13.0f, 13.0f);
         } catch (Exception e)
         {
-            mBookingDetail01DataBinding.checkOutDayTextView.setText(null);
-        }
-
-        try
-        {
-            // 날짜로 계산한다. 서버에 체크인시간, 체크아웃시간이 잘못 기록되어있는 경우 발생해서 예외 처리 추가
-            String[] checkInDates = stayBookingDetail.checkInDateTime.split("T");
-            String[] checkOutDates = stayBookingDetail.checkOutDateTime.split("T");
-
-            Date checkInDate = DailyCalendar.convertDate(checkInDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
-            Date checkOutDate = DailyCalendar.convertDate(checkOutDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
-
-            int nights = (int) ((DailyCalendar.clearTField(checkOutDate.getTime()) - DailyCalendar.clearTField(checkInDate.getTime())) / DailyCalendar.DAY_MILLISECOND);
-            mBookingDetail01DataBinding.nightsTextView.setText(getString(R.string.label_nights, nights));
-        } catch (Exception e)
-        {
-            mBookingDetail01DataBinding.nightsTextView.setText(null);
+            ExLog.e(e.toString());
         }
     }
 

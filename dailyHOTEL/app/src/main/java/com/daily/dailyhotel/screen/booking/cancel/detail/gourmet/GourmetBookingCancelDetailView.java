@@ -422,15 +422,19 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
                 ticketDateFormat.length() - 5, ticketDateFormat.length(),//
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            mBookingCancelDetail01DataBinding.ticketDateTextView.setText(ticketDateSpannableStringBuilder);
+            mBookingCancelDetail01DataBinding.dateInformationView.setDateVisible(true, true);
+
+            mBookingCancelDetail01DataBinding.dateInformationView.setDate1Text(getString(R.string.label_visit_day), ticketDateSpannableStringBuilder);
+            mBookingCancelDetail01DataBinding.dateInformationView.setData1TextSize(13.0f, 13.0f);
+
+            mBookingCancelDetail01DataBinding.dateInformationView.setCenterNightsVisible(false);
+
+            mBookingCancelDetail01DataBinding.dateInformationView.setDate2Text(getString(R.string.label_booking_visit_persons), getString(R.string.label_booking_visit_persons_format, persons));
+            mBookingCancelDetail01DataBinding.dateInformationView.setData2TextSize(13.0f, 13.0f);
         } catch (ParseException e)
         {
-            e.printStackTrace();
-
-            mBookingCancelDetail01DataBinding.ticketDateTextView.setText(null);
+            ExLog.e(e.toString());
         }
-
-        mBookingCancelDetail01DataBinding.visitPersonsTextView.setText(getString(R.string.label_booking_visit_persons_format, persons));
     }
 
     @Override

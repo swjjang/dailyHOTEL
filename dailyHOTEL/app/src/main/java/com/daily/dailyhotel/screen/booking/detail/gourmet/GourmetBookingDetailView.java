@@ -342,15 +342,19 @@ public class GourmetBookingDetailView extends BaseBlurView<GourmetBookingDetailV
                 ticketDateFormat.length() - 5, ticketDateFormat.length(),//
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            mBookingDetail01DataBinding.ticketDateTextView.setText(ticketDateSpannableStringBuilder);
+            mBookingDetail01DataBinding.dateInformationView.setDateVisible(true, true);
+
+            mBookingDetail01DataBinding.dateInformationView.setDate1Text(getString(R.string.label_visit_day), ticketDateSpannableStringBuilder);
+            mBookingDetail01DataBinding.dateInformationView.setData1TextSize(13.0f, 13.0f);
+
+            mBookingDetail01DataBinding.dateInformationView.setCenterNightsVisible(false);
+
+            mBookingDetail01DataBinding.dateInformationView.setDate2Text(getString(R.string.label_booking_visit_persons), getString(R.string.label_booking_visit_persons_format, persons));
+            mBookingDetail01DataBinding.dateInformationView.setData2TextSize(13.0f, 13.0f);
         } catch (ParseException e)
         {
-            e.printStackTrace();
-
-            mBookingDetail01DataBinding.ticketDateTextView.setText(null);
+            ExLog.e(e.toString());
         }
-
-        mBookingDetail01DataBinding.visitPersonsTextView.setText(getString(R.string.label_booking_visit_persons_format, persons));
     }
 
     @Override

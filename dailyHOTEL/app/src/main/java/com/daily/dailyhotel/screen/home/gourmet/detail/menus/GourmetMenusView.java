@@ -893,6 +893,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                         }
 
                         getViewDataBinding().cartMenusArrowImageView.setRotation(0.0f);
+                        getViewDataBinding().cartMenusBackgroundView.setEnabled(true);
 
                         observer.onNext(true);
                         observer.onComplete();
@@ -922,6 +923,8 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
     public Observable<Boolean> closeCartMenus(int gourmetMenuCount)
     {
         final int height = getViewDataBinding().cartMenusLayout.getHeight();
+
+        getViewDataBinding().cartMenusBackgroundView.setEnabled(false);
 
         ObjectAnimator transObjectAnimator = ObjectAnimator.ofFloat(getViewDataBinding().cartMenusLayout//
             , View.TRANSLATION_Y, 0, height);
