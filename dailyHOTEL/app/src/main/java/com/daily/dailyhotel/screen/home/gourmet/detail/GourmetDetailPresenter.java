@@ -1984,6 +1984,8 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                                 getViewInterface().showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
                             }
                         }));
+
+                        getViewInterface().setToolbarCartMenusVisible(false);
                         break;
                     }
 
@@ -2006,6 +2008,8 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                                 getViewInterface().showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
                             }
                         }));
+
+                        getViewInterface().setToolbarCartMenusVisible(false);
                         break;
                     }
 
