@@ -1296,7 +1296,6 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         getViewDataBinding().dateInformationView.setDate1DescriptionTextColor(getColor(R.color.default_text_cb70038));
         getViewDataBinding().dateInformationView.setDate1DescriptionTextDrawable(0, 0, R.drawable.navibar_m_burg_ic_v, 0);
         getViewDataBinding().dateInformationView.setData1TextSize(13.0f, 15.0f);
-        getViewDataBinding().dateInformationView.setDateTopPadding(ScreenUtils.dpToPx(getContext(), 6));
 
         getViewDataBinding().dateInformationView.setOnDateClickListener(new View.OnClickListener()
         {

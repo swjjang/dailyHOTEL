@@ -13,6 +13,7 @@ public class DailyRoundedConstraintLayout extends ConstraintLayout
 {
     private Path mRoundPath;
     private float mRadius;
+    private RectF mRectF;
 
     public DailyRoundedConstraintLayout(Context context)
     {
@@ -41,6 +42,8 @@ public class DailyRoundedConstraintLayout extends ConstraintLayout
         {
             setLayerType(LAYER_TYPE_SOFTWARE, null);
         }
+
+        mRectF = new RectF();
     }
 
     public void setRound(float radius)
@@ -68,7 +71,12 @@ public class DailyRoundedConstraintLayout extends ConstraintLayout
     {
         if (mRoundPath != null && mRoundPath.isEmpty() == true)
         {
-            mRoundPath.addRoundRect(new RectF(canvas.getClipBounds()), mRadius, mRadius, Path.Direction.CW);
+            // 추후에 패딩 안쪽으로 라운드 만들려면 추가
+            //            Rect rect = canvas.getClipBounds();
+            //            rect.set(rect.left + getPaddingLeft(), rect.top + getPaddingTop(), rect.right - getPaddingRight(), rect.bottom - getPaddingBottom());
+            mRectF.set(canvas.getClipBounds());
+
+            mRoundPath.addRoundRect(mRectF, mRadius, mRadius, Path.Direction.CW);
         }
 
         if (mRadius > 0.0f)
