@@ -34,7 +34,7 @@
             android:layout_marginRight="5dp"
             android:gravity="center_vertical"
             android:text="@string/label_share_kakao"
-            android:textColor="@color/default_text_kakao"
+            android:textColor="@color/default_text_c323232"
             android:textSize="14dp"
             app:drawableCompatLeft="@drawable/ic_detail_share_kakao"
             dailyFont:style="Medium"/>
