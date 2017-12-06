@@ -234,15 +234,4 @@ public class DailyDateInformationView extends ConstraintLayout
 
         mViewDataBinding.centerNightsTextView.setText(nights);
     }
-
-    public void setDateTopPadding(int padding)
-    {
-        if (mViewDataBinding == null)
-        {
-            return;
-        }
-
-        mViewDataBinding.date1TextView.setPadding(0, padding, 0, 0);
-        mViewDataBinding.date2TextView.setPadding(0, padding, 0, 0);
-    }
 }

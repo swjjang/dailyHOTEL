@@ -32,7 +32,7 @@
                 android:id="@+id/date1TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="8dp"
+                android:layout_marginTop="6dp"
                 android:drawablePadding="3dp"
                 android:textColor="@color/default_text_c323232"
                 android:textSize="13dp"/>
@@ -71,7 +71,7 @@
                 android:id="@+id/date2TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="8dp"
+                android:layout_marginTop="6dp"
                 android:drawablePadding="3dp"
                 android:textColor="@color/default_text_c323232"
                 android:textSize="13dp"/>
