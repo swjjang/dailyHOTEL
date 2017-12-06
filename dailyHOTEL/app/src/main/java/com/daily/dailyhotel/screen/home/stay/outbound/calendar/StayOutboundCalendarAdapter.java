@@ -225,13 +225,6 @@ public class StayOutboundCalendarAdapter extends RecyclerView.Adapter<RecyclerVi
             return;
         }
 
-        boolean lastLine = false;
-
-        if (position == getItemCount() - 1)
-        {
-            lastLine = true;
-        }
-
         // 일요일
         setDayView(holder.dataBinding.sundayLayout, week[0], Calendar.SUNDAY);
 
