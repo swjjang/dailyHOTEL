@@ -14,6 +14,8 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -27,6 +29,7 @@ import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyScrollView;
 import com.daily.dailyhotel.entity.GourmetMultiBookingDetail;
@@ -59,7 +62,9 @@ import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -407,7 +412,24 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
             return;
         }
 
-        mBookingCancelDetail01DataBinding.ticketDateTextView.setText(ticketDate);
+        try
+        {
+            String ticketDateFormat = DailyCalendar.convertDateFormatString( //
+                ticketDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.M.d(EEE) HH:mm");
+
+            SpannableStringBuilder ticketDateSpannableStringBuilder = new SpannableStringBuilder(ticketDateFormat);
+            ticketDateSpannableStringBuilder.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(getContext()).getMediumTypeface()),//
+                ticketDateFormat.length() - 5, ticketDateFormat.length(),//
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            mBookingCancelDetail01DataBinding.ticketDateTextView.setText(ticketDateSpannableStringBuilder);
+        } catch (ParseException e)
+        {
+            e.printStackTrace();
+
+            mBookingCancelDetail01DataBinding.ticketDateTextView.setText(null);
+        }
+
         mBookingCancelDetail01DataBinding.visitPersonsTextView.setText(getString(R.string.label_booking_visit_persons_format, persons));
     }
 

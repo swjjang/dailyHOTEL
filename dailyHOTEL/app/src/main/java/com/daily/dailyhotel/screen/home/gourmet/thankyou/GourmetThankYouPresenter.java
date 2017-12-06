@@ -6,11 +6,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.Spannable;
+import android.text.SpannableString;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.base.util.FontManager;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetCart;
@@ -21,6 +24,7 @@ import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
+import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
 import io.reactivex.functions.Consumer;
 
@@ -140,7 +144,12 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
         {
             String visitDate = mGourmetBookDateTime.getVisitDateTime(DATE_FORMAT);
 
-            getViewInterface().setBooking(visitDate, mPersons, mGourmetCart);
+            SpannableString visitDateSpannableString = new SpannableString(visitDate);
+            visitDateSpannableString.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getMediumTypeface()),//
+                visitDate.length() - 5, visitDate.length(),//
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            getViewInterface().setBooking(visitDateSpannableString, mPersons, mGourmetCart);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

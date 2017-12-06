@@ -98,7 +98,7 @@ public class GourmetThankYouView extends BaseDialogView<GourmetThankYouView.OnEv
     }
 
     @Override
-    public void setBooking(String visitDate, int persons, GourmetCart gourmetCart)
+    public void setBooking(SpannableString visitDate, int persons, GourmetCart gourmetCart)
     {
         if (getViewDataBinding() == null || gourmetCart == null)
         {
