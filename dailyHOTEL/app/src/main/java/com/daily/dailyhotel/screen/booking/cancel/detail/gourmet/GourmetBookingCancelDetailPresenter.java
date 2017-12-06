@@ -641,7 +641,8 @@ public class GourmetBookingCancelDetailPresenter //
             if (ticketSize > 1)
             {
                 ticketName = getString(R.string.message_multi_ticket_name_n_count, firstTicketName, ticketSize - 1);
-            } else {
+            } else
+            {
                 ticketName = firstTicketName;
             }
 
@@ -706,7 +707,8 @@ public class GourmetBookingCancelDetailPresenter //
             if (ticketSize > 1)
             {
                 ticketName = getString(R.string.message_multi_ticket_name_n_count, firstTicketName, ticketSize - 1);
-            } else {
+            } else
+            {
                 ticketName = firstTicketName;
             }
 
@@ -841,10 +843,7 @@ public class GourmetBookingCancelDetailPresenter //
 
         try
         {
-            String ticketDateFormat = DailyCalendar.convertDateFormatString( //
-                guestInfo.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.M.d(EEE) HH:mm");
-
-            getViewInterface().setBookingDateAndPersons(ticketDateFormat, guestInfo.numberOfGuest);
+            getViewInterface().setBookingDateAndPersons(guestInfo.arrivalDateTime, guestInfo.numberOfGuest);
         } catch (Exception e)
         {
             ExLog.d(e.toString());

@@ -14,6 +14,8 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -26,6 +28,7 @@ import com.daily.base.BaseActivity;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyScrollView;
 import com.daily.dailyhotel.base.BaseBlurView;
@@ -63,7 +66,9 @@ import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -327,7 +332,24 @@ public class GourmetBookingDetailView extends BaseBlurView<GourmetBookingDetailV
             return;
         }
 
-        mBookingDetail01DataBinding.ticketDateTextView.setText(ticketDate);
+        try
+        {
+            String ticketDateFormat = DailyCalendar.convertDateFormatString( //
+                ticketDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.M.d(EEE) HH:mm");
+
+            SpannableStringBuilder ticketDateSpannableStringBuilder = new SpannableStringBuilder(ticketDateFormat);
+            ticketDateSpannableStringBuilder.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(getContext()).getMediumTypeface()),//
+                ticketDateFormat.length() - 5, ticketDateFormat.length(),//
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            mBookingDetail01DataBinding.ticketDateTextView.setText(ticketDateSpannableStringBuilder);
+        } catch (ParseException e)
+        {
+            e.printStackTrace();
+
+            mBookingDetail01DataBinding.ticketDateTextView.setText(null);
+        }
+
         mBookingDetail01DataBinding.visitPersonsTextView.setText(getString(R.string.label_booking_visit_persons_format, persons));
     }
 
@@ -637,7 +659,8 @@ public class GourmetBookingDetailView extends BaseBlurView<GourmetBookingDetailV
         {
             dataBinding.bonusLayout.setVisibility(View.VISIBLE);
             dataBinding.bonusTextView.setText("- " + DailyTextUtils.getPriceFormat(context, paymentInfo.bonusAmount, false));
-        } else {
+        } else
+        {
             dataBinding.bonusLayout.setVisibility(View.GONE);
         }
 
