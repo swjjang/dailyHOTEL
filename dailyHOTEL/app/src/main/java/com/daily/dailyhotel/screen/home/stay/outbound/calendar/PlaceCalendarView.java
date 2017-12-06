@@ -261,15 +261,4 @@ public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventList
 
         getViewDataBinding().confirmView.setText(text);
     }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    void setStatusBarColor(int color)
-    {
-        if (VersionUtils.isOverAPI21() == true)
-        {
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(color);
-        }
-    }
 }

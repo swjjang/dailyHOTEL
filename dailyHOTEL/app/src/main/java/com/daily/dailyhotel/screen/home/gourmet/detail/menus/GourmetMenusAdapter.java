@@ -27,7 +27,7 @@ import java.util.Locale;
 
 public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapter.GourmetMenuViewHolder>
 {
-    public static final float MENU_WIDTH_RATIO = 0.86f;
+    public static final float MENU_WIDTH_RATIO = 0.87f;
     private Context mContext;
     private List<GourmetMenu> mList;
 

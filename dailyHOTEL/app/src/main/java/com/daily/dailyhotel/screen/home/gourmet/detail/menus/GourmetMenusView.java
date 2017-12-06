@@ -397,6 +397,8 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
             return null;
         }
 
+        getViewDataBinding().operationTimesLayout.bringToFront();
+
         int childCount = getViewDataBinding().operationTimesGridLayout.getChildCount();
 
         for (int i = 0; i < childCount; i++)
@@ -825,6 +827,8 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
             return null;
         }
 
+        getViewDataBinding().cartMenuBookingLayout.bringToFront();
+
         //
         final int ITEM_HEIGHT = ScreenUtils.dpToPx(getContext(), 88) + 1;
         final int VIEW_COUNT = 3;
@@ -846,7 +850,6 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
 
         transObjectAnimator.setDuration(200);
         transObjectAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-
         transObjectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
         {
             @Override
@@ -925,7 +928,6 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
 
         transObjectAnimator.setDuration(400);
         transObjectAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-
         transObjectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
         {
             @Override
