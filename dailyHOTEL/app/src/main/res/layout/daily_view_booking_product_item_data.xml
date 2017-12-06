@@ -50,7 +50,7 @@
             android:drawableRight="@drawable/shape_circle_bb3c5c5c5_r3"
             android:gravity="center_vertical"
             android:textColor="@color/default_text_c929292"
-            android:textSize="13dp"
+            android:textSize="12dp"
             app:layout_constraintRight_toLeftOf="@+id/priceTextView"
             app:layout_constraintTop_toBottomOf="@+id/titleTextView"
             app:layout_goneMarginRight="10dp"/>
