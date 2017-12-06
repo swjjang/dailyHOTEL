@@ -15,9 +15,38 @@ import com.twoheart.dailyhotel.R;
  */
 public class StayBookingDetailActivity extends BaseActivity<StayBookingDetailPresenter>
 {
-    public static Intent newInstance(Context context)
+    static final String NAME_INTENT_EXTRA_DATA_BOOKINGIDX = "bookingIndex";
+    static final String NAME_INTENT_EXTRA_DATA_AGGREGATION_ID = "aggregationId";
+    static final String NAME_INTENT_EXTRA_DATA_URL = "url";
+    static final String NAME_INTENT_EXTRA_DATA_DEEPLINK = "deepLink";
+    static final String NAME_INTENT_EXTRA_DATA_BOOKING_STATE = "bookingState";
+
+    static final int REQUEST_CODE_ISSUING_RECEIPT = 10000;
+    static final int REQUEST_CODE_ZOOMMAP = 10001;
+    static final int REQUEST_CODE_DETAIL = 10002;
+    static final int REQUEST_CODE_CALL = 10003;
+    static final int REQUEST_CODE_HAPPYTALK = 10004;
+    static final int REQUEST_CODE_PERMISSION_MANAGER = 10005;
+    static final int REQUEST_CODE_SETTING_LOCATION = 10006;
+    static final int REQUEST_CODE_REFUND = 10007;
+    static final int REQUEST_CODE_NAVIGATOR = 10008;
+    static final int REQUEST_CODE_FRONT_CALL = 10009;
+    static final int REQUEST_CODE_FRONT_RESERVATION_CALL = 10010;
+    static final int REQUEST_CODE_LOGIN = 10011;
+    static final int REQUEST_CODE_REVIEW = 10012;
+    static final int REQUEST_CODE_FAQ = 10013;
+    static final int REQUEST_CODE_RECOMMEND_GOURMET_VIEW_ALL = 10014;
+    static final int REQUEST_CODE_PREVIEW = 10015;
+
+
+    public static Intent newInstance(Context context, int reservationIndex, String aggregationId, String imageUrl, boolean isDeepLink, int bookingState)
     {
         Intent intent = new Intent(context, StayBookingDetailActivity.class);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, reservationIndex);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_AGGREGATION_ID, aggregationId);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_URL, imageUrl);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_DEEPLINK, isDeepLink);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKING_STATE, bookingState);
 
         return intent;
     }

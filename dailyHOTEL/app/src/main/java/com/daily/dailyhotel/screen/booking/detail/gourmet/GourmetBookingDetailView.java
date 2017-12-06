@@ -280,6 +280,7 @@ public class GourmetBookingDetailView extends BaseBlurView<GourmetBookingDetailV
         if (DailyTextUtils.isTextEmpty(currentDateTime, bookingDateTime) == true)
         {
             mBookingDetail01DataBinding.remainedDayLayout.setVisibility(View.GONE);
+            return;
         }
 
         // 3일전 부터 몇일 남음 필요.

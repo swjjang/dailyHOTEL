@@ -6,7 +6,9 @@ import android.support.annotation.NonNull;
 import com.daily.base.exception.BaseException;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.RefundInterface;
+import com.daily.dailyhotel.entity.RefundPolicy;
 import com.daily.dailyhotel.entity.StayOutboundRefundDetail;
+import com.daily.dailyhotel.repository.remote.model.RefundPolicyData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundDetailData;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
@@ -202,6 +204,51 @@ public class RefundRemoteImpl extends BaseRemoteImpl implements RefundInterface
                     }
 
                     return message;
+                }
+            }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<RefundPolicy> getStayRefundPolicy(int reservationIndex, String transactionType)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/reservation/hotel/policy_refund"//
+            : "MTAkMTEzJDkxJDkxJDYwJDckNiQ3MCQxJDcyJDIxJDQ4JDEyNyQxMDYkMzIkNDEk$OMEZGRELUMyRjLlGMTBCNAkUzNTJFRTQTyRUYxMDAT2ODQyOUMZ2QTIzNDkxN0NDRTBPGMzNCOUCSNCOEUxNTRCMUE2RDE3N0VGODXQBGMEIS5OTBGNTM0NUJEM0U1GMTQV0RTc2Njk4RjM3$";
+
+        return mDailyMobileService.getRefundPolicy(Crypto.getUrlDecoderEx(URL), reservationIndex, transactionType) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<RefundPolicyData>, RefundPolicy>()
+            {
+                @Override
+                public RefundPolicy apply(BaseDto<RefundPolicyData> refundPolicyDataBaseDto) throws Exception
+                {
+                    RefundPolicy refundPolicy;
+
+                    if (refundPolicyDataBaseDto != null)
+                    {
+                        switch (refundPolicyDataBaseDto.msgCode)
+                        {
+                            case 100:
+                            case 1015:
+                            {
+                                if (refundPolicyDataBaseDto.data != null)
+                                {
+                                    refundPolicy = refundPolicyDataBaseDto.data.getRefundPolicy();
+                                    refundPolicy.message = refundPolicyDataBaseDto.msg;
+                                } else
+                                {
+                                    throw new BaseException(refundPolicyDataBaseDto.msgCode, refundPolicyDataBaseDto.msg);
+                                }
+                                break;
+                            }
+
+                            default:
+                                throw new BaseException(refundPolicyDataBaseDto.msgCode, refundPolicyDataBaseDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(-1, null);
+                    }
+
+                    return refundPolicy;
                 }
             }).observeOn(AndroidSchedulers.mainThread());
     }

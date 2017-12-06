@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.network;
 
-import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.repository.remote.model.BookingCancelData;
 import com.daily.dailyhotel.repository.remote.model.BookingData;
 import com.daily.dailyhotel.repository.remote.model.BookingHiddenData;
@@ -20,6 +19,7 @@ import com.daily.dailyhotel.repository.remote.model.GourmetPaymentData;
 import com.daily.dailyhotel.repository.remote.model.NotificationData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
 import com.daily.dailyhotel.repository.remote.model.RecentlyPlacesData;
+import com.daily.dailyhotel.repository.remote.model.RefundPolicyData;
 import com.daily.dailyhotel.repository.remote.model.RegionData;
 import com.daily.dailyhotel.repository.remote.model.ReviewData;
 import com.daily.dailyhotel.repository.remote.model.ReviewScoresData;
@@ -32,7 +32,6 @@ import com.daily.dailyhotel.repository.remote.model.StayCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.StayDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayListData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundBookingDetailData;
-import com.daily.dailyhotel.repository.remote.model.StayOutboundData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundEmailReceiptData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundPaymentData;
@@ -787,6 +786,12 @@ public interface DailyMobileService
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
     Observable<BaseListDto<BookingCancelData>> getBookingCancelList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<RefundPolicyData>> getRefundPolicy(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+                                                          @Query("hotelReservationIdx") int hotelReservationIdx, //
+                                                          @Query("transactionType") String transactionType);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // RefundRemoteImpl

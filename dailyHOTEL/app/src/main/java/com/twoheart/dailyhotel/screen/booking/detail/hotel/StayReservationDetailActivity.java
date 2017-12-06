@@ -88,7 +88,7 @@ import retrofit2.Response;
 
 public class StayReservationDetailActivity extends PlaceReservationDetailActivity
 {
-    public static final int CODE_REQUEST_ACTIVITY_PLACE_BOOKING_DETAIL_MAP = 10000;
+    public static final int REQUEST_CODE_RECOMMEND_GOURMET_VIEW_ALL = 10000;
 
     StayReservationDetailNetworkController mNetworkController;
 
@@ -1525,7 +1525,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                     StayReservationDetailActivity.this, title, gourmetBookingDay, gourmetList //
                     , location, stayBookingDetail.placeName, false);
 
-                StayReservationDetailActivity.this.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PLACE_BOOKING_DETAIL_MAP);
+                StayReservationDetailActivity.this.startActivityForResult(intent, REQUEST_CODE_RECOMMEND_GOURMET_VIEW_ALL);
 
                 AnalyticsManager.getInstance(StayReservationDetailActivity.this).recordEvent( //
                     AnalyticsManager.Category.BOOKING_GOURMET_RECOMMEND_LIST_CLICK //
