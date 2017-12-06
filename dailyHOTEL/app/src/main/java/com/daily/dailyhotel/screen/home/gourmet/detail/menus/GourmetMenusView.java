@@ -818,9 +818,9 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
     }
 
     @Override
-    public Observable<Boolean> openCartMenus(GourmetCart gourmetCart)
+    public Observable<Boolean> openCartMenus(int gourmetMenuCount)
     {
-        if (getViewDataBinding() == null || gourmetCart == null || gourmetCart.getMenuCount() == 0)
+        if (getViewDataBinding() == null || gourmetMenuCount == 0)
         {
             return null;
         }
@@ -830,9 +830,9 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         final int VIEW_COUNT = 3;
         final int height;
 
-        if (gourmetCart.getMenuCount() < VIEW_COUNT)
+        if (gourmetMenuCount < VIEW_COUNT)
         {
-            height = ScreenUtils.dpToPx(getContext(), 42) + gourmetCart.getMenuCount() * ITEM_HEIGHT + ScreenUtils.dpToPx(getContext(), 36);
+            height = ScreenUtils.dpToPx(getContext(), 42) + gourmetMenuCount * ITEM_HEIGHT + ScreenUtils.dpToPx(getContext(), 36);
         } else
         {
             height = ScreenUtils.dpToPx(getContext(), 42) + ITEM_HEIGHT * 2 + ITEM_HEIGHT / 2 + +ScreenUtils.dpToPx(getContext(), 36);
@@ -916,14 +916,14 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
     }
 
     @Override
-    public Observable<Boolean> closeCartMenus()
+    public Observable<Boolean> closeCartMenus(int gourmetMenuCount)
     {
         final int height = getViewDataBinding().cartMenusLayout.getHeight();
 
         ObjectAnimator transObjectAnimator = ObjectAnimator.ofFloat(getViewDataBinding().cartMenusLayout//
             , View.TRANSLATION_Y, 0, height);
 
-        transObjectAnimator.setDuration(200);
+        transObjectAnimator.setDuration(400);
         transObjectAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
 
         transObjectAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()

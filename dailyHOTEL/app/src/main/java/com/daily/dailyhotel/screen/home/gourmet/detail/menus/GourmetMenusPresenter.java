@@ -781,7 +781,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         }
 
         getViewInterface().setGourmetCart(mGourmetCart);
-        Observable<Boolean> observable = getViewInterface().openCartMenus(mGourmetCart);
+        Observable<Boolean> observable = getViewInterface().openCartMenus(mGourmetCart.getMenuCount());
 
         if (observable == null)
         {
@@ -822,7 +822,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             return;
         }
 
-        Observable<Boolean> observable = getViewInterface().closeCartMenus();
+        Observable<Boolean> observable = getViewInterface().closeCartMenus(mGourmetCart.getMenuCount());
 
         if (observable == null)
         {
