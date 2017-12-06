@@ -9,6 +9,8 @@ public class ObjectItem
     public static final int TYPE_LOADING_VIEW = 4;
     public static final int TYPE_FOOTER_GUIDE_VIEW = 5;
     public static final int TYPE_HEADER_VIEW = 6;
+    public static final int TYPE_MONTH_VIEW = 7;
+    public static final int TYPE_WEEK_VIEW = 8;
 
     public int mType;
     private Object mItem;

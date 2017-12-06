@@ -25,6 +25,7 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
     public static final int RESULT_CODE_ERROR = -10001; // 종료시에 에러를 알려준다
     public static final int RESULT_CODE_START_CALENDAR = -10002; // 종료시 캘린더를 요청한다.
     public static final int RESULT_CODE_START_AROUND_SEARCH = -10003; // 종료시 주변 검색을 요청한다.
+    public static final int RESULT_CODE_BACK = -10004; // 한단계 뒤로 이동
 
     private BasePresenter mPresenter;
 

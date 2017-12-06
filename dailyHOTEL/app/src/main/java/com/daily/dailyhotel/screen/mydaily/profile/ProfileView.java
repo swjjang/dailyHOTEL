@@ -259,18 +259,11 @@ public class ProfileView extends BaseDialogView<ProfileView.OnEventListener, Act
         }
 
         // 이메일
-        if (DailyTextUtils.isTextEmpty(user.email) == true)
+        if (DailyTextUtils.isTextEmpty(user.email) == true || android.util.Patterns.EMAIL_ADDRESS.matcher(user.email).matches() == false)
         {
             getViewDataBinding().emailView.setTextColor(getContext().getResources().getColor(R.color.default_text_c323232));
             getViewDataBinding().emailTextView.setText(null);
-            getViewDataBinding().emailLayout.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    getEventListener().startEditEmail();
-                }
-            });
+            getViewDataBinding().emailLayout.setOnClickListener(v -> getEventListener().startEditEmail());
         } else
         {
             getViewDataBinding().emailTextView.setText(user.email);

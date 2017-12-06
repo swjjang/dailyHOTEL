@@ -650,6 +650,12 @@ public class CollectionStayActivity extends CollectionBaseActivity
                 AnalyticsManager.getInstance(CollectionStayActivity.this).recordEvent(AnalyticsManager.Category.REWARD//
                     , AnalyticsManager.Action.THUMBNAIL_CLICK, Integer.toString(recommendationStay.index), null);
             }
+
+            if (recommendationStay.discountRate > 0)
+            {
+                AnalyticsManager.getInstance(CollectionStayActivity.this).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                    , AnalyticsManager.Action.DISCOUNT_STAY, Integer.toString(recommendationStay.index), null);
+            }
         }
 
         @Override

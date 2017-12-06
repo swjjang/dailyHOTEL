@@ -1,24 +1,22 @@
-package com.daily.dailyhotel.screen.common.calendar;
+package com.daily.dailyhotel.screen.home.stay.outbound.calendar;
 
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.util.Pair;
-import android.util.SparseIntArray;
-import android.view.View;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
-import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Callable;
 
@@ -34,9 +32,9 @@ import io.reactivex.schedulers.Schedulers;
  * Created by sheldon
  * Clean Architecture
  */
-public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarActivity, StayCalendarViewInterface> implements StayCalendarView.OnEventListener
+public class StayOutboundCalendarPresenter extends PlaceCalendarPresenter<StayOutboundCalendarActivity, StayOutboundCalendarViewInterface> implements StayOutboundCalendarView.OnEventListener
 {
-    private StayCalendarPresenterAnalyticsInterface mAnalytics;
+    private StayOutboundCalendarPresenterAnalyticsInterface mAnalytics;
 
     String mCheckInDateTime;
     String mCheckOutDateTime;
@@ -50,24 +48,24 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
     private int mMarginTop;
     boolean mIsAnimation;
 
-    public interface StayCalendarPresenterAnalyticsInterface extends BaseAnalyticsInterface
+    public interface StayOutboundCalendarPresenterAnalyticsInterface extends BaseAnalyticsInterface
     {
     }
 
-    public StayCalendarPresenter(@NonNull StayCalendarActivity activity)
+    public StayOutboundCalendarPresenter(@NonNull StayOutboundCalendarActivity activity)
     {
         super(activity);
     }
 
     @NonNull
     @Override
-    protected StayCalendarViewInterface createInstanceViewInterface()
+    protected StayOutboundCalendarViewInterface createInstanceViewInterface()
     {
-        return new StayCalendarView(getActivity(), this);
+        return new StayOutboundCalendarView(getActivity(), this);
     }
 
     @Override
-    public void constructorInitialize(StayCalendarActivity activity)
+    public void constructorInitialize(StayOutboundCalendarActivity activity)
     {
         super.constructorInitialize(activity);
 
@@ -75,7 +73,7 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
 
         getViewInterface().setVisibility(false);
 
-        setAnalytics(new StayCalendarAnalyticsImpl());
+        setAnalytics(new StayOutboundCalendarAnalyticsImpl());
 
         setRefresh(true);
     }
@@ -83,7 +81,7 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
     @Override
     public void setAnalytics(BaseAnalyticsInterface analytics)
     {
-        mAnalytics = (StayCalendarPresenterAnalyticsInterface) analytics;
+        mAnalytics = (StayOutboundCalendarPresenterAnalyticsInterface) analytics;
     }
 
     @Override
@@ -96,17 +94,17 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
 
         try
         {
-            mCheckInDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
-            mCheckOutDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
+            mCheckInDateTime = intent.getStringExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
+            mCheckOutDateTime = intent.getStringExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
 
-            mStartDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_START_DATETIME);
-            mEndDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_END_DATETIME);
-            mNightsOfMaxCount = intent.getIntExtra(StayCalendarActivity.INTENT_EXTRA_DATA_NIGHTS_OF_MAXCOUNT, 1);
+            mStartDateTime = intent.getStringExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_START_DATETIME);
+            mEndDateTime = intent.getStringExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_END_DATETIME);
+            mNightsOfMaxCount = intent.getIntExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_NIGHTS_OF_MAXCOUNT, 1);
 
-            mCallByScreen = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CALLBYSCREEN);
-            mIsSelected = intent.getBooleanExtra(StayCalendarActivity.INTENT_EXTRA_DATA_ISSELECTED, true);
-            mMarginTop = intent.getIntExtra(StayCalendarActivity.INTENT_EXTRA_DATA_MARGIN_TOP, 0);
-            mIsAnimation = intent.getBooleanExtra(StayCalendarActivity.INTENT_EXTRA_DATA_ISANIMATION, false);
+            mCallByScreen = intent.getStringExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_CALLBYSCREEN);
+            mIsSelected = intent.getBooleanExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_ISSELECTED, true);
+            mMarginTop = intent.getIntExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_MARGIN_TOP, 0);
+            mIsAnimation = intent.getBooleanExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_ISANIMATION, false);
 
         } catch (Exception e)
         {
@@ -132,39 +130,23 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
             {
                 return Observable.just(DailyPreference.getInstance(getActivity()).getCalendarHolidays());
             }
-        }).subscribeOn(Schedulers.io()).map(new Function<String, ArrayList<Pair<String, Day[]>>>()
+        }).subscribeOn(Schedulers.io()).map(new Function<String, List<ObjectItem>>()
         {
             @Override
-            public ArrayList<Pair<String, Day[]>> apply(String calendarHolidays) throws Exception
+            public List<ObjectItem> apply(String calendarHolidays) throws Exception
             {
-                SparseIntArray holidaySparseIntArray = null;
+                List<ObjectItem> calendarList = makeCalendar(mStartDateTime, mEndDateTime, getHolidayArray(calendarHolidays));
 
-                if (DailyTextUtils.isTextEmpty(calendarHolidays) == false)
-                {
-                    String[] holidaysSplit = calendarHolidays.split("\\,");
-                    holidaySparseIntArray = new SparseIntArray(holidaysSplit.length);
+                calendarList.add(new ObjectItem(ObjectItem.TYPE_FOOTER_VIEW, null));
 
-                    for (int i = 0; i < holidaysSplit.length; i++)
-                    {
-                        try
-                        {
-                            int holiday = Integer.parseInt(holidaysSplit[i]);
-                            holidaySparseIntArray.put(holiday, holiday);
-                        } catch (NumberFormatException e)
-                        {
-                            ExLog.e(e.toString());
-                        }
-                    }
-                }
-
-                return makeCalendar(mStartDateTime, mEndDateTime, holidaySparseIntArray);
+                return calendarList;
             }
-        }).observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<ArrayList<Pair<String, Day[]>>, Observable<Boolean>>()
+        }).observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<List<ObjectItem>, Observable<Boolean>>()
         {
             @Override
-            public Observable<Boolean> apply(@io.reactivex.annotations.NonNull ArrayList<Pair<String, Day[]>> arrayList) throws Exception
+            public Observable<Boolean> apply(@io.reactivex.annotations.NonNull List<ObjectItem> arrayList) throws Exception
             {
-                getViewInterface().makeCalendarView(arrayList);
+                getViewInterface().setCalendarList(arrayList);
 
                 if (mIsAnimation == true)
                 {
@@ -201,19 +183,24 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
                 if (mIsSelected == true)
                 {
                     String checkInDateTime = mCheckInDateTime;
+                    int checkInDay = Integer.parseInt(DailyCalendar.convertDateFormatString(mCheckInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
+
                     String checkOutDateTime = mCheckOutDateTime;
+                    int checkOutDay = Integer.parseInt(DailyCalendar.convertDateFormatString(mCheckOutDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
+
+                    int year = Integer.parseInt(DailyCalendar.convertDateFormatString(mCheckInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy"));
+                    int month = Integer.parseInt(DailyCalendar.convertDateFormatString(mCheckInDateTime, DailyCalendar.ISO_8601_FORMAT, "MM"));
 
                     mCheckInDateTime = mCheckOutDateTime = null;
 
-                    getViewInterface().clickDay(checkInDateTime);
+                    onDayClick(checkInDateTime, checkInDay);
 
                     if (mNightsOfMaxCount > 1)
                     {
-                        getViewInterface().clickDay(checkOutDateTime);
+                        onDayClick(checkOutDateTime, checkOutDay);
                     }
 
-                    View checkInDayView = getViewInterface().searchDayView(checkInDateTime);
-                    getViewInterface().smoothScrollStartDayPosition(checkInDayView);
+                    getViewInterface().scrollMonthPosition(year, month);
                 }
             }
         }));
@@ -314,10 +301,8 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
     }
 
     @Override
-    public void onDayClick(View view)
+    public void onDayClick(Day day)
     {
-        Day day = (Day) view.getTag();
-
         if (day == null)
         {
             return;
@@ -330,81 +315,10 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
 
         try
         {
-            // 이미 체크인 체크아웃이 선택되어있으면 초기화
-            if (DailyTextUtils.isTextEmpty(mCheckInDateTime, mCheckOutDateTime) == false)
-            {
-                // 체크인 체크아웃이 되어있는데 마지막 날짜를 체크인할때
-                if (mEndDateTime.equalsIgnoreCase(day.dateTime) == true)
-                {
-                    DailyToast.showToast(getActivity(), getString(R.string.label_message_dont_check_date), DailyToast.LENGTH_SHORT);
-                    return;
-                } else
-                {
-                    reset();
-                }
-            }
+            String dayDateTime = day.getDateTime();
+            int yyyyMMdd = day.year * 10000 + day.month * 100 + day.dayOfMonth;
 
-            // 기존의 날짜 보다 전날짜를 선택하면 초기화.
-            if (DailyTextUtils.isTextEmpty(mCheckInDateTime) == false)
-            {
-                int compareDay = DailyCalendar.compareDateDay(mCheckInDateTime, day.dateTime);
-                if (compareDay > 0)
-                {
-                    reset();
-                } else if (compareDay == 0)
-                {
-                    return;
-                }
-            }
-
-            if (DailyTextUtils.isTextEmpty(mCheckInDateTime) == true)
-            {
-                view.setSelected(true);
-
-                mCheckInDateTime = day.dateTime;
-                getViewInterface().setCheckInDay(day.dateTime);
-                getViewInterface().setToolbarTitle(getString(R.string.label_calendar_hotel_select_checkout));
-                getViewInterface().setLastDayEnabled(true);
-
-                if (mNightsOfMaxCount == 1)
-                {
-                    Calendar calendar = DailyCalendar.getInstance();
-                    calendar.setTime(DailyCalendar.convertDate(mCheckInDateTime, DailyCalendar.ISO_8601_FORMAT));
-                    calendar.add(Calendar.DAY_OF_MONTH, 1);
-
-                    unLock();
-                    getViewInterface().clickDay(DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT));
-                }
-            } else
-            {
-                if (mNightsOfMaxCount < DailyCalendar.compareDateDay(day.dateTime, mCheckInDateTime))
-                {
-                    DailyToast.showToast(getActivity(), getString(R.string.label_calendar_possible_night, mNightsOfMaxCount), DailyToast.LENGTH_SHORT);
-                    return;
-                }
-
-                // selected가 먼저 되어야지 캘린더에서 체크인과 체크아웃 시간까지 범위를 색칠한다.
-                view.setSelected(true);
-
-                mCheckOutDateTime = day.dateTime;
-                getViewInterface().setCheckOutDay(day.dateTime);
-
-                String checkInDate = DailyCalendar.convertDateFormatString(mCheckInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)");
-                String checkOutDate = DailyCalendar.convertDateFormatString(mCheckOutDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)");
-                int nights = DailyCalendar.compareDateDay(mCheckOutDateTime, mCheckInDateTime);
-
-                String title = String.format(Locale.KOREA, "%s - %s, %d박", checkInDate, checkOutDate, nights);
-
-                getViewInterface().setToolbarTitle(title);
-
-                if (day.dateTime.equalsIgnoreCase(mEndDateTime) == false)
-                {
-                    getViewInterface().setLastDayEnabled(false);
-                }
-
-                getViewInterface().setConfirmEnabled(true);
-                getViewInterface().setConfirmText(getString(R.string.label_calendar_stay_search_selected_date, nights));
-            }
+            onDayClick(dayDateTime, yyyyMMdd);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -428,8 +342,8 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
         }
 
         Intent intent = new Intent();
-        intent.putExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME, mCheckInDateTime);
-        intent.putExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME, mCheckOutDateTime);
+        intent.putExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME, mCheckInDateTime);
+        intent.putExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME, mCheckOutDateTime);
 
         setResult(Activity.RESULT_OK, intent);
         onBackClick();
@@ -437,8 +351,6 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
 
     private void reset()
     {
-        getViewInterface().reset();
-
         mCheckInDateTime = null;
         mCheckOutDateTime = null;
 
@@ -446,5 +358,102 @@ public class StayCalendarPresenter extends PlaceCalendarPresenter<StayCalendarAc
         getViewInterface().setToolbarTitle(getString(R.string.label_calendar_hotel_select_checkin));
         getViewInterface().setConfirmEnabled(false);
         getViewInterface().setConfirmText(getString(R.string.label_calendar_search_selected_date));
+
+        getViewInterface().setCheckInDay(0);
+        getViewInterface().setCheckOutDay(0);
+
+        getViewInterface().notifyCalendarDataSetChanged();
+    }
+
+    private void onDayClick(String dayDateTime, int yyyyMMdd)
+    {
+        if (DailyTextUtils.isTextEmpty(dayDateTime) == true || yyyyMMdd == 0)
+        {
+            return;
+        }
+
+        try
+        {
+            // 이미 체크인 체크아웃이 선택되어있으면 초기화
+            if (DailyTextUtils.isTextEmpty(mCheckInDateTime, mCheckOutDateTime) == false)
+            {
+                // 체크인 체크아웃이 되어있는데 마지막 날짜를 체크인할때
+                if (mEndDateTime.equalsIgnoreCase(dayDateTime) == true)
+                {
+                    DailyToast.showToast(getActivity(), getString(R.string.label_message_dont_check_date), DailyToast.LENGTH_SHORT);
+                    return;
+                } else
+                {
+                    reset();
+                }
+            }
+
+            // 기존의 날짜 보다 전날짜를 선택하면 초기화.
+            if (DailyTextUtils.isTextEmpty(mCheckInDateTime) == false)
+            {
+                int compareDay = DailyCalendar.compareDateDay(mCheckInDateTime, dayDateTime);
+                if (compareDay > 0)
+                {
+                    reset();
+                } else if (compareDay == 0)
+                {
+                    return;
+                }
+            }
+
+            if (DailyTextUtils.isTextEmpty(mCheckInDateTime) == true)
+            {
+                mCheckInDateTime = dayDateTime;
+                getViewInterface().setCheckInDay(yyyyMMdd);
+                getViewInterface().setToolbarTitle(getString(R.string.label_calendar_hotel_select_checkout));
+                getViewInterface().setLastDayEnabled(true);
+
+                if (mNightsOfMaxCount == 1)
+                {
+                    Calendar calendar = DailyCalendar.getInstance();
+                    calendar.setTime(DailyCalendar.convertDate(dayDateTime, DailyCalendar.ISO_8601_FORMAT));
+                    calendar.add(Calendar.DAY_OF_MONTH, 1);
+
+                    unLock();
+
+                    onDayClick(DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT), calendar.get(Calendar.YEAR) * 10000 + calendar.get(Calendar.MONTH) * 100 + calendar.get(Calendar.DAY_OF_MONTH));
+                } else
+                {
+                    getViewInterface().notifyCalendarDataSetChanged();
+                }
+            } else
+            {
+                if (mNightsOfMaxCount < DailyCalendar.compareDateDay(dayDateTime, mCheckInDateTime))
+                {
+                    DailyToast.showToast(getActivity(), getString(R.string.label_calendar_possible_night, mNightsOfMaxCount), DailyToast.LENGTH_SHORT);
+                    return;
+                }
+
+                // selected가 먼저 되어야지 캘린더에서 체크인과 체크아웃 시간까지 범위를 색칠한다.
+                mCheckOutDateTime = dayDateTime;
+                getViewInterface().setCheckOutDay(yyyyMMdd);
+
+                String checkInDate = DailyCalendar.convertDateFormatString(mCheckInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)");
+                String checkOutDate = DailyCalendar.convertDateFormatString(mCheckOutDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)");
+                int nights = DailyCalendar.compareDateDay(mCheckOutDateTime, mCheckInDateTime);
+
+                String title = String.format(Locale.KOREA, "%s - %s, %d박", checkInDate, checkOutDate, nights);
+
+                getViewInterface().setToolbarTitle(title);
+
+                if (dayDateTime.equalsIgnoreCase(mEndDateTime) == false)
+                {
+                    getViewInterface().setLastDayEnabled(false);
+                }
+
+                getViewInterface().setConfirmEnabled(true);
+                getViewInterface().setConfirmText(getString(R.string.label_calendar_stay_search_selected_date, nights));
+
+                getViewInterface().notifyCalendarDataSetChanged();
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 }

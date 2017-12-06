@@ -71,6 +71,8 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
 {
     public static final String BROADCAST_EVENT_UPDATE = " com.twoheart.dailyhotel.broadcastreceiver.EVENT_UPDATE";
 
+    private static final int HOLIDAY_DAYS = 365; // 휴일 날짜를 몇일까지 가져올지
+
     // Back 버튼을 두 번 눌러 핸들러 멤버 변수
     private CloseOnBackPressed mBackButtonHandler;
     MainNetworkController mNetworkController;
@@ -1599,7 +1601,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                 {
                     // 90일을 미리 얻어온다.
                     Calendar endDayCalendar = DailyCalendar.getInstance();
-                    DailyCalendar.setCalendarDateString(endDayCalendar, todayDateTime.dailyDateTime, 180);
+                    DailyCalendar.setCalendarDateString(endDayCalendar, todayDateTime.dailyDateTime, HOLIDAY_DAYS);
                     String endDay = DailyCalendar.format(endDayCalendar.getTime(), "yyyy-MM-dd");
 
                     mNetworkController.requestHoliday(startDay, endDay);

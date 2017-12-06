@@ -31,9 +31,10 @@ import com.daily.dailyhotel.entity.UserSimpleInformation;
 import com.daily.dailyhotel.parcel.GourmetCartParcel;
 import com.daily.dailyhotel.parcel.analytics.GourmetPaymentAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.GourmetThankYouAnalyticsParam;
-import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.repository.local.CartLocalImpl;
 import com.daily.dailyhotel.repository.remote.PaymentRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
+import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.payment.PaymentWebActivity;
 import com.daily.dailyhotel.screen.home.gourmet.thankyou.GourmetThankYouActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
@@ -84,7 +85,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
     private static final int CARD_MIN_PRICE = 1000;
     private static final int PHONE_MAX_PRICE = 500000;
 
-    private static final int MAX_PERSONS = 999;
+    private static final int MAX_PERSONS = 99;
 
     static final int NONE = 0;
     static final int BONUS = 1;
@@ -101,7 +102,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
     private PaymentRemoteImpl mPaymentRemoteImpl;
     private ProfileRemoteImpl mProfileRemoteImpl;
-    private CommonRemoteImpl mCommonRemoteImpl;
+    private CartLocalImpl mCartLocalImpl;
 
     GourmetPayment mGourmetPayment;
     Card mSelectedCard;
@@ -185,7 +186,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
         mPaymentRemoteImpl = new PaymentRemoteImpl(activity);
         mProfileRemoteImpl = new ProfileRemoteImpl(activity);
-        mCommonRemoteImpl = new CommonRemoteImpl(activity);
+        mCartLocalImpl = new CartLocalImpl(activity);
 
         setRefresh(true);
     }
@@ -612,18 +613,24 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                 // 가격이 변동된 경우
                 if (checkChangedPrice(mGourmetPayment, mGourmetCart) == true)
                 {
-                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_payment_changed_price)//
-                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                    addCompositeDisposable(mCartLocalImpl.clearGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                    {
+                        @Override
+                        public void accept(Boolean aBoolean) throws Exception
                         {
-                            @Override
-                            public void onDismiss(DialogInterface dialogInterface)
-                            {
-                                setResult(BaseActivity.RESULT_CODE_REFRESH);
-                                onBackClick();
-                            }
-                        });
+                            getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_payment_changed_price)//
+                                , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                                {
+                                    @Override
+                                    public void onDismiss(DialogInterface dialogInterface)
+                                    {
+                                        setResult(BaseActivity.RESULT_CODE_REFRESH);
+                                        onBackClick();
+                                    }
 
-                    setResult(BaseActivity.RESULT_CODE_REFRESH);
+                                });
+                        }
+                    }));
 
                     mAnalytics.onEventChangedPrice(getActivity(), mGourmetCart.gourmetName);
                 }
@@ -671,16 +678,31 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
                 if (throwable instanceof BaseException)
                 {
-                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), throwable.getMessage()//
-                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                    addCompositeDisposable(mCartLocalImpl.clearGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                    {
+                        @Override
+                        public void accept(Boolean aBoolean) throws Exception
                         {
-                            @Override
-                            public void onDismiss(DialogInterface dialog)
-                            {
-                                setResult(BaseActivity.RESULT_CODE_REFRESH);
-                                onBackClick();
-                            }
-                        });
+                            getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), throwable.getMessage()//
+                                , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                                {
+                                    @Override
+                                    public void onDismiss(DialogInterface dialog)
+                                    {
+                                        // 특정 해외 드면 홈으로 이동한다.
+                                        if (((BaseException) throwable).getCode() == 1180)
+                                        {
+                                            setResult(BaseActivity.RESULT_CODE_BACK);
+                                        } else
+                                        {
+                                            setResult(BaseActivity.RESULT_CODE_REFRESH);
+                                        }
+
+                                        onBackClick();
+                                    }
+                                });
+                        }
+                    }));
                 } else
                 {
                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.act_base_network_connect)//
@@ -711,12 +733,9 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             return;
         }
 
-        //        startActivityForResult(CallDialogActivity.newInstance(getActivity()), GourmetPaymentActivity.REQUEST_CODE_CALL);
-        //
-        //        mAnalytics.onEventCallClick(getActivity());
+        startActivityForResult(CallDialogActivity.newInstance(getActivity()), GourmetPaymentActivity.REQUEST_CODE_CALL);
 
-
-        startThankYou(null, false);
+        mAnalytics.onEventCallClick(getActivity());
     }
 
     @Override
@@ -1335,12 +1354,19 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             ExLog.e(e.toString());
         }
 
-        // ThankYou 페이지를 홈탭에서 띄우기 위한 코드
-        startActivity(DailyInternalDeepLink.getHomeScreenLink(getActivity()));
+        addCompositeDisposable(mCartLocalImpl.clearGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+        {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception
+            {
+                // ThankYou 페이지를 홈탭에서 띄우기 위한 코드
+                startActivity(DailyInternalDeepLink.getHomeScreenLink(getActivity()));
 
-        startActivityForResult(GourmetThankYouActivity.newInstance(getActivity(), mGourmetCart, aggregationId//
-            , mPersons, mAnalytics.getThankYouAnalyticsParam())//
-            , GourmetPaymentActivity.REQUEST_CODE_THANK_YOU);
+                startActivityForResult(GourmetThankYouActivity.newInstance(getActivity(), mGourmetCart, aggregationId//
+                    , mPersons, mAnalytics.getThankYouAnalyticsParam())//
+                    , GourmetPaymentActivity.REQUEST_CODE_THANK_YOU);
+            }
+        }));
     }
 
     private JSONObject getPaymentJSONObject(GourmetCart gourmetCart, int saleType, int bonus, String couponCode//

@@ -79,7 +79,7 @@ public class GourmetCampaignTagListPresenter //
     {
         void onCampaignTagEvent(Activity activity, CampaignTag campaignTag, int listCount);
 
-        void onEventGourmetClickOption(Activity activity, int index, boolean hasCoupon, boolean hasReview, boolean trueVR);
+        void onEventGourmetClickOption(Activity activity, int index, boolean hasCoupon, boolean hasReview, boolean trueVR, boolean discount);
 
         void onEventGourmetWishClick(Activity activity, boolean wish);
     }
@@ -736,7 +736,9 @@ public class GourmetCampaignTagListPresenter //
             getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         }
 
-        mAnalytics.onEventGourmetClickOption(getActivity(), gourmet.index, DailyTextUtils.isTextEmpty(gourmet.couponDiscountText) == false, gourmet.reviewCount > 0, false);
+        mAnalytics.onEventGourmetClickOption(getActivity(), gourmet.index//
+            , DailyTextUtils.isTextEmpty(gourmet.couponDiscountText) == false//
+            , gourmet.reviewCount > 0, false, gourmet.discountRate > 0);
     }
 
     @Override

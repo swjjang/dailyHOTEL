@@ -44,7 +44,7 @@ import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
-import com.daily.dailyhotel.screen.common.calendar.StayCalendarActivity;
+import com.daily.dailyhotel.screen.home.stay.outbound.calendar.StayOutboundCalendarActivity;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
@@ -102,7 +102,7 @@ import retrofit2.HttpException;
  */
 public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutboundDetailActivity, StayOutboundDetailViewInterface> implements StayOutboundDetailView.OnEventListener
 {
-    private static final int DAYS_OF_MAXCOUNT = 180;
+    private static final int DAYS_OF_MAXCOUNT = 365;
     private static final int NIGHTS_OF_MAXCOUNT = 28;
 
     public static final int STATUS_NONE = 0;
@@ -522,11 +522,11 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             {
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
-                    if (data.hasExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME) == true//
-                        && data.hasExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME) == true)
+                    if (data.hasExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME) == true//
+                        && data.hasExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME) == true)
                     {
-                        String checkInDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
-                        String checkOutDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
+                        String checkInDateTime = data.getStringExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
+                        String checkOutDateTime = data.getStringExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
 
                         if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
                         {
@@ -928,7 +928,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
             String endDateTime = DailyCalendar.format(startCalendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
 
-            Intent intent = StayCalendarActivity.newInstance(getActivity()//
+            Intent intent = StayOutboundCalendarActivity.newInstance(getActivity()//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , startDateTime, endDateTime, NIGHTS_OF_MAXCOUNT, AnalyticsManager.ValueType.STAY, true, 0, true);

@@ -410,7 +410,25 @@ public abstract class PlaceMainLayout extends BaseBlurLayout
                             break;
 
                         case ViewPager.SCROLL_STATE_IDLE:
-                            showBottomLayout();
+                            PlaceListFragment placeListFragment = getCurrentPlaceListFragment();
+
+                            if (placeListFragment.getPlaceCount() == 0)
+                            {
+                                if (placeListFragment.isDefaultFilter() == true)
+                                {
+                                    setBottomOptionVisible(false);
+                                } else
+                                {
+                                    setBottomOptionVisible(true);
+                                    setOptionViewTypeEnabled(false);
+                                    setOptionFilterEnabled(true);
+                                }
+                            } else
+                            {
+                                setBottomOptionVisible(true);
+                                setOptionViewTypeEnabled(true);
+                                setOptionFilterEnabled(true);
+                            }
                             break;
                     }
                 }
