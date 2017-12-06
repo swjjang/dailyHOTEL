@@ -94,6 +94,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         }
 
         viewDataBinding.operationTimeTextView.setOnClickListener(this);
+        viewDataBinding.arrowImageView.setOnClickListener(this);
         viewDataBinding.operationTimesBackgroundView.setOnClickListener(this);
         viewDataBinding.closeImageView.setOnClickListener(this);
         viewDataBinding.cartMenusLayout.setOnClickListener(this);
@@ -627,7 +628,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
 
         // 빈공간 채우기
         int columnCount = dataBinding.timeGridLayout.getColumnCount();
-        int size = (operationTimeList.size() + 1) % columnCount;
+        int size = operationTimeList.size() % columnCount;
         size = size > 0 ? columnCount - size : 0;
 
         for (int i = 0; i < size; i++)
@@ -1012,6 +1013,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         switch (v.getId())
         {
             case R.id.operationTimeTextView:
+            case R.id.arrowImageView:
             case R.id.operationTimesBackgroundView:
                 getEventListener().onOperationTimeClick();
                 break;

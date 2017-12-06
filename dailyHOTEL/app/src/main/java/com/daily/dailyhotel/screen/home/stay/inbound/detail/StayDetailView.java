@@ -1389,8 +1389,6 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         getViewDataBinding().dateInformationView.setDate2DescriptionTextDrawable(0, 0, R.drawable.navibar_m_burg_ic_v, 0);
         getViewDataBinding().dateInformationView.setData2TextSize(13.0f, 15.0f);
 
-        getViewDataBinding().dateInformationView.setDateTopPadding(ScreenUtils.dpToPx(getContext(), 6));
-
         getViewDataBinding().dateInformationView.setOnDateClickListener(v -> getEventListener().onCalendarClick(), v -> getEventListener().onCalendarClick());
     }
 
