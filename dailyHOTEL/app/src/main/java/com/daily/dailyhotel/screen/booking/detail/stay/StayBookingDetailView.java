@@ -606,6 +606,8 @@ public class StayBookingDetailView extends BaseBlurView<StayBookingDetailView.On
             public void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt)
             {
                 getViewDataBinding().fakeMapLayout.setTranslationY(-t);
+
+                onAfterScrollChanged(scrollView, l, t, oldl, oldt);
             }
         });
 
@@ -1604,7 +1606,7 @@ public class StayBookingDetailView extends BaseBlurView<StayBookingDetailView.On
     }
 
     @Override
-    public void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt)
+    public void onAfterScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt)
     {
         if (getViewDataBinding() == null || getContext() == null)
         {

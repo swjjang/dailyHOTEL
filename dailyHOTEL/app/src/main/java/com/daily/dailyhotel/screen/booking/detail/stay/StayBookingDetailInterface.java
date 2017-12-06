@@ -59,7 +59,7 @@ public interface StayBookingDetailInterface extends BaseBlurViewInterface
 
     void setRecommendGourmetButtonAnimation(boolean isVisible);
 
-    void onScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt);
+    void onAfterScrollChanged(ScrollView scrollView, int l, int t, int oldl, int oldt);
 
     void setDepositStickerCardVisible(boolean visible);
 

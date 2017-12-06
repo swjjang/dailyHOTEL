@@ -295,12 +295,6 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
     @Override
     public boolean onBackPressed()
     {
-        if (getViewInterface() != null)
-        {
-            boolean isShow = mRecommendGourmetList != null && mRecommendGourmetList.size() > 0;
-            getViewInterface().setRecommendGourmetButtonAnimation(isShow);
-        }
-
         if (mStayBookingDetail != null && getViewInterface() != null && getViewInterface().isExpandedMap() == true)
         {
             onCollapseMapClick();
@@ -1205,6 +1199,12 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
                     unLockAll();
                 }
             }));
+
+        if (getViewInterface() != null)
+        {
+            boolean isShow = mRecommendGourmetList != null && mRecommendGourmetList.size() > 0;
+            getViewInterface().setRecommendGourmetButtonAnimation(isShow);
+        }
     }
 
     @Override
