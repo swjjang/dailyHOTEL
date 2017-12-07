@@ -3,12 +3,9 @@ package com.twoheart.dailyhotel.screen.mydaily.wishlist;
 import android.content.Context;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Gourmet;
-import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

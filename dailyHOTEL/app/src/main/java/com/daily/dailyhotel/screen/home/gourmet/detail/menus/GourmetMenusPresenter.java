@@ -1009,7 +1009,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             {
                 Observable observable = getViewInterface().removeGourmetCartMenu(menuIndex);
 
-                if(observable == null)
+                if (observable == null)
                 {
                     addCompositeDisposable(mCartLocalImpl.setGourmetCart(mGourmetCart).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                     {

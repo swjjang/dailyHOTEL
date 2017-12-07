@@ -99,7 +99,7 @@ public class StayOutboundCalendarView extends PlaceCalendarView<StayOutboundCale
         }
 
         int position = mCalendarAdapter.getMonthPosition(year, month);
-        ((LinearLayoutManager)getViewDataBinding().calendarRecyclerView.getLayoutManager()).scrollToPositionWithOffset(position, 0);
+        ((LinearLayoutManager) getViewDataBinding().calendarRecyclerView.getLayoutManager()).scrollToPositionWithOffset(position, 0);
     }
 
     @Override

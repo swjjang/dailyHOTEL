@@ -6,10 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.util.Constants;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

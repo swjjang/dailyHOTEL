@@ -487,8 +487,8 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
 
         try
         {
-//            String ticketDateFormat = DailyCalendar.convertDateFormatString( //
-//                guestInfo.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.M.d(EEE) HH:mm");
+            //            String ticketDateFormat = DailyCalendar.convertDateFormatString( //
+            //                guestInfo.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.M.d(EEE) HH:mm");
 
             getViewInterface().setBookingDateAndPersons(guestInfo.arrivalDateTime, guestInfo.numberOfGuest);
 

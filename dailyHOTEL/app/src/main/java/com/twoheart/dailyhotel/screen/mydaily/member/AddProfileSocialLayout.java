@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.InputFilter;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;

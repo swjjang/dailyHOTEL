@@ -1,7 +1,5 @@
 package com.daily.dailyhotel.screen.home.stay.outbound.calendar;
 
-import android.view.View;
-
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.dailyhotel.entity.ObjectItem;
 
