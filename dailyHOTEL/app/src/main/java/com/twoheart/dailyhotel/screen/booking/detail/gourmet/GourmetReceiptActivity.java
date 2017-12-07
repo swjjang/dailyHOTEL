@@ -2,7 +2,9 @@ package com.twoheart.dailyhotel.screen.booking.detail.gourmet;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -22,8 +24,10 @@ import com.daily.base.widget.DailyEditText;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
+import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import org.json.JSONObject;
@@ -31,11 +35,99 @@ import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class GourmetReceiptActivity extends PlaceReceiptActivity
+public class GourmetReceiptActivity extends BaseActivity
 {
+    private boolean mIsFullscreen;
+    private int mBookingIndex;
+    private DailyToolbarView mDailyToolbarView;
+    private View mBottomLayout;
     String mReservationIndex;
 
-    void makeLayout(JSONObject jsonObject) throws Exception
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setContentView(getLayout());
+
+        initToolbar();
+
+        Intent intent = getIntent();
+
+        mBookingIndex = -1;
+
+        if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX) == true)
+        {
+            mBookingIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, -1);
+        }
+
+        if (mBookingIndex < 0)
+        {
+            finish();
+            return;
+        }
+
+        mIsFullscreen = false;
+    }
+
+    private void initToolbar()
+    {
+        mDailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        mDailyToolbarView.setTitleText(R.string.frag_issuing_receipt);
+        mDailyToolbarView.setOnBackClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        });
+    }
+
+    @Override
+    protected void onResume()
+    {
+        lockUI();
+
+        requestReceiptDetail(mBookingIndex);
+
+        super.onResume();
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        if (mIsFullscreen == true)
+        {
+            mIsFullscreen = false;
+            updateFullscreenStatus(false);
+        } else
+        {
+            super.onBackPressed();
+        }
+    }
+
+    private void updateFullscreenStatus(boolean bUseFullscreen)
+    {
+        if (bUseFullscreen)
+        {
+            mDailyToolbarView.setVisibility(View.GONE);
+
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+
+            mBottomLayout.setVisibility(View.GONE);
+        } else
+        {
+            mDailyToolbarView.setVisibility(View.VISIBLE);
+
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+            mBottomLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void makeLayout(JSONObject jsonObject) throws Exception
     {
         // 영수증
         mReservationIndex = jsonObject.getString("gourmetReservationIdx");
@@ -208,7 +300,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         });
     }
 
-    protected View getLayout()
+    private View getLayout()
     {
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View viewGroup = inflater.inflate(R.layout.activity_place_receipt, null, false);
@@ -223,12 +315,12 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         return viewGroup;
     }
 
-    protected void requestReceiptDetail(int index)
+    private void requestReceiptDetail(int index)
     {
         DailyMobileAPI.getInstance(this).requestGourmetReceipt(mNetworkTag, index, mReservationReceiptCallback);
     }
 
-    void showSendEmailDialog()
+    private void showSendEmailDialog()
     {
         if (isFinishing())
         {
