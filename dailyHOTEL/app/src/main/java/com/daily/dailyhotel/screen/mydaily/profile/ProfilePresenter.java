@@ -17,6 +17,7 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.entity.UserBenefit;
 import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
+import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
@@ -47,10 +48,11 @@ import io.reactivex.functions.Consumer;
  */
 public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, ProfileInterface> implements ProfileView.OnEventListener
 {
+    private ProfileAnalyticsInterface mAnalytics;
+
     private ProfileRemoteImpl mProfileRemoteImpl;
     private ConfigLocalImpl mConfigLocalImpl;
 
-    private ProfileAnalyticsInterface mAnalytics;
     private DailyDeepLink mDailyDeepLink;
 
     public interface ProfileAnalyticsInterface extends BaseAnalyticsInterface
