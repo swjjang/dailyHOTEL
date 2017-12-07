@@ -945,7 +945,7 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
                 @Override
                 public void onClick(View v)
                 {
-                    getEventListener().onDepositStickerClick(true);
+                    getEventListener().onDepositStickerClick(getViewDataBinding().informationView.isDepositStickerSelected() == false);
                 }
             });
         }
