@@ -960,12 +960,12 @@ public class Util implements Constants
         dialog.setCanceledOnTouchOutside(false);
 
         // 상단
-        TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
+        TextView titleTextView = dialogView.findViewById(R.id.titleTextView);
         titleTextView.setVisibility(View.VISIBLE);
         titleTextView.setText(activity.getString(R.string.dialog_notice2));
 
         // 메시지
-        TextView messageTextView = (TextView) dialogView.findViewById(R.id.messageTextView);
+        TextView messageTextView = dialogView.findViewById(R.id.messageTextView);
         messageTextView.setText(activity.getString(R.string.message_tmap_navi_failed));
 
         // 버튼
@@ -976,7 +976,7 @@ public class Util implements Constants
         twoButtonLayout.setVisibility(View.GONE);
         oneButtonLayout.setVisibility(View.VISIBLE);
 
-        TextView confirmTextView = (TextView) oneButtonLayout.findViewById(R.id.confirmTextView);
+        TextView confirmTextView = oneButtonLayout.findViewById(R.id.confirmTextView);
 
         confirmTextView.setText(activity.getString(R.string.dialog_btn_text_confirm));
         oneButtonLayout.setOnClickListener(new View.OnClickListener()

@@ -44,21 +44,21 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 {
     GourmetMenusAnalyticsInterface mAnalytics;
 
-    private CartLocalImpl mCartLocalImpl;
+    CartLocalImpl mCartLocalImpl;
 
-    private GourmetBookDateTime mGourmetBookDateTime;
-    private List<GourmetMenu> mGourmetMenuList;
-    private List<GourmetMenu> mGourmetMenuVisibleList;
+    GourmetBookDateTime mGourmetBookDateTime;
+    List<GourmetMenu> mGourmetMenuList;
+    List<GourmetMenu> mGourmetMenuVisibleList;
 
-    private int mPosition;
-    private int mCenterPosition = -1;
+    int mPosition;
+    int mCenterPosition = -1;
 
-    private int mGourmetIndex;
-    private String mGourmetName, mCategory, mImageUrl;
-    private List<Integer> mOperationTimeList;
-    private int mVisitTime;
-    private GourmetCart mGourmetCart;
-    private boolean mOpenedOperationTime, mOpenedCartMenus;
+    int mGourmetIndex;
+    String mGourmetName, mCategory, mImageUrl;
+    List<Integer> mOperationTimeList;
+    int mVisitTime;
+    GourmetCart mGourmetCart;
+    boolean mOpenedOperationTime, mOpenedCartMenus;
 
     public interface GourmetMenusAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -1118,7 +1118,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         getViewInterface().setToolbarTitle(text);
     }
 
-    private void setToolbarTitle(int visitTime)
+    void setToolbarTitle(int visitTime)
     {
         if (visitTime == GourmetDetailPresenter.FULL_TIME)
         {
@@ -1150,7 +1150,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         }
     }
 
-    private void onChangeTimeClick(int menuIndex)
+    void onChangeTimeClick(int menuIndex)
     {
         if (menuIndex < 0)
         {
@@ -1169,7 +1169,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         getViewInterface().showTimePickerDialog(operationTimeList, menuIndex);
     }
 
-    private synchronized boolean plusMenu(boolean openedCartMenus, int menuIndex)
+    synchronized boolean plusMenu(boolean openedCartMenus, int menuIndex)
     {
         if (menuIndex < 0 || mGourmetCart == null || mGourmetCart.gourmetIndex != mGourmetIndex//
             || mGourmetMenuVisibleList == null || mGourmetMenuVisibleList.size() == 0)
@@ -1287,7 +1287,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         getViewInterface().setMenuIndicator(mPosition + 1, mGourmetMenuVisibleList.size());
     }
 
-    private void notifyOperationTimeChanged(int menuIndex)
+    void notifyOperationTimeChanged(int menuIndex)
     {
         if (mOperationTimeList == null || menuIndex < 0)
         {

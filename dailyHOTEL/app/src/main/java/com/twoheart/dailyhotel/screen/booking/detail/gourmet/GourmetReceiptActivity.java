@@ -65,34 +65,34 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         View bookingInfoLayout = findViewById(R.id.bookingInfoLayout);
 
         // 예약 번호
-        TextView reservationNumberTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView13);
+        TextView reservationNumberTextView = bookingInfoLayout.findViewById(R.id.textView13);
         reservationNumberTextView.setText(mReservationIndex);
 
         // 이름
-        TextView hotelNameTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView3);
+        TextView hotelNameTextView = bookingInfoLayout.findViewById(R.id.textView3);
         hotelNameTextView.setText(placeName);
 
         // 주소
-        TextView hotelAddressTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView5);
+        TextView hotelAddressTextView = bookingInfoLayout.findViewById(R.id.textView5);
         hotelAddressTextView.setText(placeAddress);
 
         // 고객성명/번호
-        TextView customerInfoTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView7);
+        TextView customerInfoTextView = bookingInfoLayout.findViewById(R.id.textView7);
         customerInfoTextView.setText(userName + " / " + userPhone);
 
         // 날짜
-        TextView checkInOutTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView9);
+        TextView checkInOutTextView = bookingInfoLayout.findViewById(R.id.textView9);
         checkInOutTextView.setText(sday.replaceAll("-", "/"));
 
         // 수량
-        TextView nightsRoomsTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView11);
+        TextView nightsRoomsTextView = bookingInfoLayout.findViewById(R.id.textView11);
         nightsRoomsTextView.setText(getString(R.string.label_booking_count, ticketCount));
 
         // **결제 정보**
         View paymentInfoLayout = findViewById(R.id.paymentInfoLayout);
 
         // 결제일
-        TextView paymentDayTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView23);
+        TextView paymentDayTextView = paymentInfoLayout.findViewById(R.id.textView23);
         paymentDayTextView.setText(DailyCalendar.convertDateFormatString(valueDate, DailyCalendar.ISO_8601_FORMAT, "yyyy/MM/dd"));
 
         // 결제수단
@@ -105,7 +105,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         {
             paymentTypeLayout.setVisibility(View.VISIBLE);
 
-            TextView paymentTypeTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView33);
+            TextView paymentTypeTextView = paymentInfoLayout.findViewById(R.id.textView33);
             paymentTypeTextView.setText(paymentType);
         }
 
@@ -113,7 +113,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         saleLayout.setVisibility(View.VISIBLE);
 
         // 총금액
-        TextView totalPriceTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView29);
+        TextView totalPriceTextView = paymentInfoLayout.findViewById(R.id.textView29);
         totalPriceTextView.setText(DailyTextUtils.getPriceFormat(this, sellingPrice, false));
 
         // 적립금 혹은 쿠폰 사용
@@ -132,7 +132,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
             }
 
             discountLayout.setVisibility(View.VISIBLE);
-            TextView discountedTextView = (TextView) paymentInfoLayout.findViewById(R.id.discountedTextView);
+            TextView discountedTextView = paymentInfoLayout.findViewById(R.id.discountedTextView);
             discountedTextView.setText("- " + DailyTextUtils.getPriceFormat(this, bonus + coupon, false));
         } else
         {
@@ -148,7 +148,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         }
 
         // 총 입금 금액
-        TextView totalPaymentTextView = (TextView) paymentInfoLayout.findViewById(R.id.totalPaymentTextView);
+        TextView totalPaymentTextView = paymentInfoLayout.findViewById(R.id.totalPaymentTextView);
         totalPaymentTextView.setText(DailyTextUtils.getPriceFormat(this, paymentAmount, false));
 
         // **공급자**
@@ -164,19 +164,19 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         View providerInfoLayout = findViewById(R.id.providerInfoLayout);
 
         // 상호
-        TextView companyNameTextView = (TextView) providerInfoLayout.findViewById(R.id.companyNameTextView);
+        TextView companyNameTextView = providerInfoLayout.findViewById(R.id.companyNameTextView);
         companyNameTextView.setText(getString(R.string.label_receipt_business_license, companyName, ceoName, phone, fax));
 
         // 주소
-        TextView addressTextView = (TextView) providerInfoLayout.findViewById(R.id.addressTextView);
+        TextView addressTextView = providerInfoLayout.findViewById(R.id.addressTextView);
         addressTextView.setText(getString(R.string.label_receipt_address, address));
 
         // 등록번호
-        TextView registrationNoTextView = (TextView) providerInfoLayout.findViewById(R.id.registrationNoTextView);
+        TextView registrationNoTextView = providerInfoLayout.findViewById(R.id.registrationNoTextView);
         registrationNoTextView.setText(getString(R.string.label_receipt_registeration_number, registrationNo));
 
         // 코멘트
-        TextView commentTextView = (TextView) findViewById(R.id.commentTextView);
+        TextView commentTextView = findViewById(R.id.commentTextView);
         commentTextView.setText(receiptNotice);
 
         View view = findViewById(R.id.receiptLayout);
@@ -213,7 +213,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View viewGroup = inflater.inflate(R.layout.activity_place_receipt, null, false);
 
-        LinearLayout receiptLayout = (LinearLayout) viewGroup.findViewById(R.id.receiptLayout);
+        LinearLayout receiptLayout = viewGroup.findViewById(R.id.receiptLayout);
 
         View reservationInfoLayout = inflater.inflate(R.layout.layout_gourmet_reservationinfo_receipt, null, false);
 
@@ -243,7 +243,7 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.setCanceledOnTouchOutside(false);
 
-        final DailyEditText emailEditTExt = (DailyEditText) dialogView.findViewById(R.id.emailEditTExt);
+        final DailyEditText emailEditTExt = dialogView.findViewById(R.id.emailEditTExt);
         emailEditTExt.setDeleteButtonVisible(new DailyEditText.OnDeleteTextClickListener()
         {
             @Override
@@ -262,8 +262,8 @@ public class GourmetReceiptActivity extends PlaceReceiptActivity
 
         twoButtonLayout.setVisibility(View.VISIBLE);
 
-        TextView negativeTextView = (TextView) twoButtonLayout.findViewById(R.id.negativeTextView);
-        final TextView positiveTextView = (TextView) twoButtonLayout.findViewById(R.id.positiveTextView);
+        TextView negativeTextView = twoButtonLayout.findViewById(R.id.negativeTextView);
+        final TextView positiveTextView = twoButtonLayout.findViewById(R.id.positiveTextView);
 
         negativeTextView.setOnClickListener(new View.OnClickListener()
         {

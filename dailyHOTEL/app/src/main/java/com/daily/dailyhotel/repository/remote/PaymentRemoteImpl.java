@@ -82,7 +82,7 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
         return mDailyMobileService.getStayOutboundPayment(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams), jsonObject) //
             .subscribeOn(Schedulers.io()).map(stayOutboundPaymentDataBaseDto ->
             {
-                StayOutboundPayment stayOutboundPayment = null;
+                StayOutboundPayment stayOutboundPayment;
 
                 if (stayOutboundPaymentDataBaseDto != null)
                 {
@@ -121,7 +121,7 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
         return mDailyMobileService.getStayPayment(Crypto.getUrlDecoderEx(API), index, stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"), nights) //
             .subscribeOn(Schedulers.io()).map(stayPaymentDataBaseDto ->
             {
-                StayPayment stayPayment = null;
+                StayPayment stayPayment;
 
                 if (stayPaymentDataBaseDto != null)
                 {
@@ -199,7 +199,7 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
         return mDailyMobileService.getGourmetPayment(Crypto.getUrlDecoderEx(API), jsonObject) //
             .subscribeOn(Schedulers.io()).map(gourmetPaymentDataBaseDto ->
             {
-                GourmetPayment gourmetPayment = null;
+                GourmetPayment gourmetPayment;
 
                 if (gourmetPaymentDataBaseDto != null)
                 {
@@ -269,7 +269,7 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
         return mDailyMobileService.getStayOutboundPaymentTypeEasy(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams), jsonObject) //
             .subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->
             {
-                PaymentResult paymentResult = null;
+                PaymentResult paymentResult;
 
                 if (paymentResultDataBaseDto != null)
                 {
@@ -303,7 +303,7 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
         return mDailyMobileService.getStayOutboundPaymentTypeBonus(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams), jsonObject) //
             .subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->
             {
-                PaymentResult paymentResult = null;
+                PaymentResult paymentResult;
 
                 if (paymentResultDataBaseDto != null)
                 {
@@ -370,7 +370,7 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
         return mDailyMobileService.getPaymentTypeEasy(Crypto.getUrlDecoderEx(API), jsonObject) //
             .subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->
             {
-                PaymentResult paymentResult = null;
+                PaymentResult paymentResult;
 
                 if (paymentResultDataBaseDto != null)
                 {
@@ -399,7 +399,7 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
         return mDailyMobileService.getPaymentTypeBonus(Crypto.getUrlDecoderEx(API), jsonObject) //
             .subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->
             {
-                PaymentResult paymentResult = null;
+                PaymentResult paymentResult;
 
                 if (paymentResultDataBaseDto != null)
                 {
@@ -510,7 +510,7 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
         return mDailyMobileService.getPaymentTypeEasy(Crypto.getUrlDecoderEx(API), jsonObject) //
             .subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->
             {
-                PaymentResult paymentResult = null;
+                PaymentResult paymentResult;
 
                 if (paymentResultDataBaseDto != null)
                 {
@@ -551,7 +551,7 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
         return mDailyMobileService.getPaymentTypeBonus(Crypto.getUrlDecoderEx(API), jsonObject) //
             .subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->
             {
-                PaymentResult paymentResult = null;
+                PaymentResult paymentResult;
 
                 if (paymentResultDataBaseDto != null)
                 {

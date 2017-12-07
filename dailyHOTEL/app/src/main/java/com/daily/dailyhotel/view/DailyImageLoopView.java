@@ -35,7 +35,7 @@ import java.util.List;
 
 public class DailyImageLoopView extends ConstraintLayout implements ViewPager.OnPageChangeListener
 {
-    private DailyViewImageLoopViewpagerDataBinding mViewDataBinding;
+    DailyViewImageLoopViewpagerDataBinding mViewDataBinding;
     private ImageViewPagerAdapter mImageViewPagerAdapter;
     private ViewPager.OnPageChangeListener mOnPageChangeListener;
 

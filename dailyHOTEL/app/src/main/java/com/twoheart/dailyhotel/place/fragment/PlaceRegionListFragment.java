@@ -96,7 +96,7 @@ public abstract class PlaceRegionListFragment extends BaseFragment
         View searchAroundLayout = headerView.findViewById(R.id.searchAroundLayout);
         searchAroundLayout.setOnClickListener(mOnHeaderClickListener);
 
-        TextView text01View = (TextView) headerView.findViewById(R.id.text01View);
+        TextView text01View = headerView.findViewById(R.id.text01View);
         text01View.setText(getAroundPlaceText());
 
         mTermsOfLocationView = headerView.findViewById(R.id.text02View);
@@ -303,7 +303,7 @@ public abstract class PlaceRegionListFragment extends BaseFragment
 
         if (VersionUtils.isOverAPI11() == true)
         {
-            final ImageView imageView = (ImageView) view.findViewById(R.id.updownArrowImageView);
+            final ImageView imageView = view.findViewById(R.id.updownArrowImageView);
 
             RotateAnimation animation = new RotateAnimation(0.0f, -180.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
             animation.setFillBefore(true);
@@ -366,7 +366,7 @@ public abstract class PlaceRegionListFragment extends BaseFragment
 
         if (VersionUtils.isOverAPI11() == true)
         {
-            final ImageView imageView = (ImageView) view.findViewById(R.id.updownArrowImageView);
+            final ImageView imageView = view.findViewById(R.id.updownArrowImageView);
 
             RotateAnimation animation = new RotateAnimation(0.0f, 180.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
             animation.setFillBefore(true);

@@ -58,7 +58,7 @@ public class ReviewCommentCardLayout extends ReviewCardLayout implements View.On
 
         View view = LayoutInflater.from(context).inflate(R.layout.scroll_row_review_comment, this);
 
-        mCommentTextView = (TextView) view.findViewById(R.id.commentTextView);
+        mCommentTextView = view.findViewById(R.id.commentTextView);
 
         switch (placeType)
         {
@@ -81,7 +81,7 @@ public class ReviewCommentCardLayout extends ReviewCardLayout implements View.On
             return;
         }
 
-        DailyTextView titleTextView = (DailyTextView) findViewById(R.id.titleTextView);
+        DailyTextView titleTextView = findViewById(R.id.titleTextView);
 
         if (DailyTextUtils.isTextEmpty(text) == true)
         {

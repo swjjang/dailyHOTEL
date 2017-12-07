@@ -49,7 +49,7 @@ public class RecentPlacesTabActivity extends BaseActivity
     private RecentPlacesFragmentPagerAdapter mPageAdapter;
 
     private CommonRemoteImpl mCommonRemoteImpl;
-    private RecentlyLocalImpl mRecentlyLocalImpl;
+    RecentlyLocalImpl mRecentlyLocalImpl;
 
     DailyViewPager mViewPager;
     private TabLayout mTabLayout;
@@ -211,7 +211,7 @@ public class RecentPlacesTabActivity extends BaseActivity
         initToolbar();
         initTabLayout();
 
-        mViewPager = (DailyViewPager) findViewById(R.id.viewPager);
+        mViewPager = findViewById(R.id.viewPager);
 
         mFragmentList = new ArrayList<>();
 
@@ -230,7 +230,7 @@ public class RecentPlacesTabActivity extends BaseActivity
 
     private void initToolbar()
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.frag_recent_places);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
@@ -244,7 +244,7 @@ public class RecentPlacesTabActivity extends BaseActivity
 
     protected void initTabLayout()
     {
-        mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        mTabLayout = findViewById(R.id.tabLayout);
 
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_stay));
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_gourmet));
@@ -324,7 +324,7 @@ public class RecentPlacesTabActivity extends BaseActivity
         }));
     }
 
-    private void setTabLayout(int position)
+    void setTabLayout(int position)
     {
         mViewPager.removeAllViews();
         mViewPager.setOffscreenPageLimit(1);

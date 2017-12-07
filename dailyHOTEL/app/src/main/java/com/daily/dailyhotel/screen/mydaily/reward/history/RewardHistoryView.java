@@ -15,7 +15,7 @@ import java.util.List;
 
 public class RewardHistoryView extends BaseDialogView<RewardHistoryView.OnEventListener, ActivityRewardHistoryDataBinding> implements RewardHistoryInterface
 {
-    private RewardHistoryAdapter mRewardHistoryAdapter;
+    RewardHistoryAdapter mRewardHistoryAdapter;
 
     public interface OnEventListener extends OnBaseEventListener
     {

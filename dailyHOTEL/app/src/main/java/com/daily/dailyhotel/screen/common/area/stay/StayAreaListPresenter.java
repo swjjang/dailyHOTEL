@@ -45,17 +45,17 @@ import io.reactivex.functions.Function;
  */
 public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListActivity, StayAreaListInterface> implements StayAreaListView.OnEventListener
 {
-    private StayAreaListAnalyticsInterface mAnalytics;
+    StayAreaListAnalyticsInterface mAnalytics;
 
     private StayRemoteImpl mStayRemoteImpl;
 
-    private StayBookDateTime mStayBookDateTime;
+    StayBookDateTime mStayBookDateTime;
 
     private String mCategoryCode;
-    private List<StayAreaGroup> mAreaGroupList;
-    private int mAreaGroupPosition = -1;
-    private DailyCategoryType mDailyCategoryType;
-    private StayRegion mStayRegion; // 기존에 저장된 정보
+    List<StayAreaGroup> mAreaGroupList;
+    int mAreaGroupPosition = -1;
+    DailyCategoryType mDailyCategoryType;
+    StayRegion mStayRegion; // 기존에 저장된 정보
 
     DailyLocationFactory mDailyLocationFactory;
 
@@ -547,7 +547,7 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
      * @param dailyCategoryType
      * @return
      */
-    private Pair<String, String> getDistrictNTownNameByCategory(DailyCategoryType dailyCategoryType)
+    Pair<String, String> getDistrictNTownNameByCategory(DailyCategoryType dailyCategoryType)
     {
         if (dailyCategoryType == null)
         {
@@ -608,7 +608,7 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
         return observable;
     }
 
-    private Observable<Boolean> expandGroupWithAnimation(int groupPosition, boolean animation)
+    Observable<Boolean> expandGroupWithAnimation(int groupPosition, boolean animation)
     {
         Observable<Boolean> observable = getViewInterface().expandGroupWithAnimation(groupPosition, animation);
 
@@ -620,7 +620,7 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
         return observable;
     }
 
-    private void setResult(int resultCode, DailyCategoryType categoryType, StayArea areaGroup, StayArea area)
+    void setResult(int resultCode, DailyCategoryType categoryType, StayArea areaGroup, StayArea area)
     {
         if (categoryType == null)
         {
@@ -661,7 +661,7 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
         setResult(resultCode, intent);
     }
 
-    private int getAreaGroupPosition(List<StayAreaGroup> areaGroupList, String areaName)
+    int getAreaGroupPosition(List<StayAreaGroup> areaGroupList, String areaName)
     {
         if (areaGroupList == null || areaGroupList.size() == 0 || DailyTextUtils.isTextEmpty(areaName) == true)
         {
@@ -681,7 +681,7 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
         return -1;
     }
 
-    private StayRegion getRegion(StayAreaGroup areaGroup, String areaName)
+    StayRegion getRegion(StayAreaGroup areaGroup, String areaName)
     {
         if (areaGroup == null || DailyTextUtils.isTextEmpty(areaName) == true)
         {

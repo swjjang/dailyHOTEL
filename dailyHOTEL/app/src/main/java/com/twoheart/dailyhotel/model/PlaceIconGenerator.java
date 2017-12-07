@@ -42,7 +42,7 @@ public class PlaceIconGenerator
     public PlaceIconGenerator(Context context)
     {
         mContainer = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.marker_hotel, null);
-        mTextView = (TextView) mContainer.findViewById(R.id.text);
+        mTextView = mContainer.findViewById(R.id.text);
     }
 
     /**

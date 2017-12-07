@@ -53,7 +53,7 @@ public class SignupStep1Activity extends BaseActivity
     Map<String, String> mSignupParams;
     String mCallByScreen;
 
-    private CommonRemoteImpl mCommonRemoteImpl;
+    CommonRemoteImpl mCommonRemoteImpl;
 
     public static Intent newInstance(Context context, String callByScreen)
     {

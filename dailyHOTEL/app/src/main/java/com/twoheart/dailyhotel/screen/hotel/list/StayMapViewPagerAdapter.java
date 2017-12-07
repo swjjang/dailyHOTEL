@@ -65,17 +65,17 @@ public class StayMapViewPagerAdapter extends PlaceMapViewPagerAdapter
 
     private void makeLayout(final View view, final Stay stay)
     {
-        com.facebook.drawee.view.SimpleDraweeView hotelImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.imageView);
-        TextView name = (TextView) view.findViewById(R.id.nameTextView);
-        TextView priceTextView = (TextView) view.findViewById(R.id.priceTextView);
-        TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
+        com.facebook.drawee.view.SimpleDraweeView hotelImageView = view.findViewById(R.id.imageView);
+        TextView name = view.findViewById(R.id.nameTextView);
+        TextView priceTextView = view.findViewById(R.id.priceTextView);
+        TextView satisfactionView = view.findViewById(R.id.satisfactionView);
         View averageTextView = view.findViewById(R.id.averageTextView);
-        TextView discountTextView = (TextView) view.findViewById(R.id.discountPriceTextView);
-        TextView addressTextView = (TextView) view.findViewById(R.id.addressTextView);
-        TextView grade = (TextView) view.findViewById(R.id.gradeTextView);
+        TextView discountTextView = view.findViewById(R.id.discountPriceTextView);
+        TextView addressTextView = view.findViewById(R.id.addressTextView);
+        TextView grade = view.findViewById(R.id.gradeTextView);
         View closeView = view.findViewById(R.id.closeImageView);
         View dBenefitLayout = view.findViewById(R.id.dBenefitLayout);
-        TextView dBenefitTextView = (TextView) view.findViewById(R.id.dBenefitTextView);
+        TextView dBenefitTextView = view.findViewById(R.id.dBenefitTextView);
         View stickerImageView = view.findViewById(R.id.stickerImageView);
 
         addressTextView.setText(stay.addressSummary);

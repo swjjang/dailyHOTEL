@@ -80,20 +80,20 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<GourmetBookingDetailActivity, GourmetBookingDetailInterface> implements GourmetBookingDetailView.OnEventListener
 {
-    private GourmetBookingDetailAnalyticsInterface mAnalytics;
+    GourmetBookingDetailAnalyticsInterface mAnalytics;
 
-    private CommonRemoteImpl mCommonRemoteImpl;
-    private BookingRemoteImpl mBookingRemoteImpl;
+    CommonRemoteImpl mCommonRemoteImpl;
+    BookingRemoteImpl mBookingRemoteImpl;
 
-    private int mReservationIndex;
-    private String mAggregationId;
-    private String mImageUrl;
-    private boolean mIsDeepLink; // 딱히 쓰지는 않음
-    private int mBookingState;
-    private CommonDateTime mCommonDateTime;
-    private GourmetMultiBookingDetail mGourmetBookingDetail;
+    int mReservationIndex;
+    String mAggregationId;
+    String mImageUrl;
+    boolean mIsDeepLink; // 딱히 쓰지는 않음
+    int mBookingState;
+    CommonDateTime mCommonDateTime;
+    GourmetMultiBookingDetail mGourmetBookingDetail;
 
-    private DailyLocationExFactory mDailyLocationExFactory;
+    DailyLocationExFactory mDailyLocationExFactory;
 
     public interface GourmetBookingDetailAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -459,7 +459,7 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
         }));
     }
 
-    private void setCommonDateTime(CommonDateTime commonDateTime)
+    void setCommonDateTime(CommonDateTime commonDateTime)
     {
         if (commonDateTime == null)
         {
@@ -469,12 +469,12 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
         mCommonDateTime = commonDateTime;
     }
 
-    private void setGourmetBookingDetail(GourmetMultiBookingDetail gourmetBookingDetail)
+    void setGourmetBookingDetail(GourmetMultiBookingDetail gourmetBookingDetail)
     {
         mGourmetBookingDetail = gourmetBookingDetail;
     }
 
-    private void notifyGourmetBookingDetail()
+    void notifyGourmetBookingDetail()
     {
         if (mGourmetBookingDetail == null || mGourmetBookingDetail.guestInfo == null //
             || mGourmetBookingDetail.restaurantInfo == null || mCommonDateTime == null)
@@ -1301,7 +1301,7 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
         }
     }
 
-    private com.twoheart.dailyhotel.model.Review reviewToReviewParcelable(Review review)
+    com.twoheart.dailyhotel.model.Review reviewToReviewParcelable(Review review)
     {
         com.twoheart.dailyhotel.model.Review reviewParcelable = new com.twoheart.dailyhotel.model.Review();
 
@@ -1386,7 +1386,7 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
         reviewParcelable.setReviewPickQuestionList(reviewPickQuestionListParcelable);
 
         //
-        ArrayList<ReviewScoreQuestion> reviewScoreQuestionListParcelable = new ArrayList<ReviewScoreQuestion>();
+        ArrayList<ReviewScoreQuestion> reviewScoreQuestionListParcelable = new ArrayList<>();
 
         List<ReviewQuestionItem> reviewScoreQuestionList = review.getReviewScoreQuestionList();
 

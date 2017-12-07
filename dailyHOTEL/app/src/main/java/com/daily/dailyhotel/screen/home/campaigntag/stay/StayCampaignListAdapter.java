@@ -29,11 +29,11 @@ import java.util.List;
 
 public class StayCampaignListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
-    private Context mContext;
+    Context mContext;
 
     //    View.OnClickListener mOnClickListener;
-    private View.OnLongClickListener mOnLongClickListener;
-    private View.OnClickListener mOnWishClickListener;
+    View.OnLongClickListener mOnLongClickListener;
+    View.OnClickListener mOnWishClickListener;
 
     OnEventListener mOnEventListener;
 

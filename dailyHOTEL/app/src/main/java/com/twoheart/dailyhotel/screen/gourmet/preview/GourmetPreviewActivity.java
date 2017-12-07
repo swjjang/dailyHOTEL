@@ -51,7 +51,7 @@ public class GourmetPreviewActivity extends BaseActivity
     PlaceReviewScores mPlaceReviewScores;
 
     private int mViewPrice;
-    private boolean mEnteredLogin;
+    boolean mEnteredLogin;
 
     /**
      * 리스트에서 호출

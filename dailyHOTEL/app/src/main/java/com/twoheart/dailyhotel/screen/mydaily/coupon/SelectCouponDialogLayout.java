@@ -66,12 +66,12 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
             layoutParams.width = ScreenUtils.getScreenWidth(mContext) * 10 / 15;
         }
 
-        mTitleTextView = (TextView) view.findViewById(R.id.titleTextView);
+        mTitleTextView = view.findViewById(R.id.titleTextView);
         mOneButtonLayout = view.findViewById(R.id.oneButtonLayout);
         mTwoButtonLayout = view.findViewById(R.id.twoButtonLayout);
-        mNegativeTextView = (TextView) mTwoButtonLayout.findViewById(R.id.negativeTextView);
-        mPositiveTextView = (TextView) mTwoButtonLayout.findViewById(R.id.positiveTextView);
-        mConfirmTextView = (TextView) mOneButtonLayout.findViewById(R.id.confirmTextView);
+        mNegativeTextView = mTwoButtonLayout.findViewById(R.id.negativeTextView);
+        mPositiveTextView = mTwoButtonLayout.findViewById(R.id.positiveTextView);
+        mConfirmTextView = mOneButtonLayout.findViewById(R.id.confirmTextView);
 
         mPositiveTextView.setEnabled(false);
 
@@ -94,7 +94,7 @@ public class SelectCouponDialogLayout extends BaseLayout implements View.OnClick
 
     private void initListView(View view)
     {
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        mRecyclerView = view.findViewById(R.id.recyclerView);
         EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
     }
 

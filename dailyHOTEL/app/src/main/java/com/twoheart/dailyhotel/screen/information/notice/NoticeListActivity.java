@@ -96,7 +96,7 @@ public class NoticeListActivity extends BaseActivity implements AdapterView.OnIt
 
     private void initToolbar()
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.actionbar_title_notice_activity);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
@@ -112,7 +112,7 @@ public class NoticeListActivity extends BaseActivity implements AdapterView.OnIt
     {
         mListLayout = findViewById(R.id.listLayout);
         mEmptyView = findViewById(R.id.emptyLayout);
-        mListView = (ListView) findViewById(R.id.listView);
+        mListView = findViewById(R.id.listView);
         mListView.setOnItemClickListener(this);
 
         EdgeEffectColor.setEdgeGlowColor(mListView, getResources().getColor(R.color.default_over_scroll_edge));

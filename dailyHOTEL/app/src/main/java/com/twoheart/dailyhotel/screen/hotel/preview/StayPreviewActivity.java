@@ -51,7 +51,7 @@ public class StayPreviewActivity extends BaseActivity
     PlaceReviewScores mPlaceReviewScores;
 
     private int mViewPrice;
-    private boolean mEnteredLogin;
+    boolean mEnteredLogin;
 
     /**
      * 리스트에서 호출, 검색 결과에서 호출

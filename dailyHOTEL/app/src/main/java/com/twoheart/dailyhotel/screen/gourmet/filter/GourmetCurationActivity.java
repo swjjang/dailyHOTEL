@@ -114,7 +114,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
 
     protected void initSortLayout(View view, ViewType viewType, GourmetCurationOption gourmetCurationOption)
     {
-        mSortRadioGroup = (RadioGroup) view.findViewById(R.id.sortLayout);
+        mSortRadioGroup = view.findViewById(R.id.sortLayout);
 
         if (viewType == ViewType.MAP)
         {
@@ -153,7 +153,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
     private void initFilterLayout(View view, GourmetCurationOption gourmetCurationOption)
     {
         // 음식 종류
-        mGridLayout = (android.support.v7.widget.GridLayout) view.findViewById(R.id.foodGridLayout);
+        mGridLayout = view.findViewById(R.id.foodGridLayout);
 
         final HashMap<String, Integer> categorySequenceMap = gourmetCurationOption.getCategorySequenceMap();
         TreeMap<String, Integer> categoryMap = new TreeMap<>(new Comparator<String>()
@@ -223,28 +223,28 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
 
     private void initAmenitiesLayout(View view, GourmetCurationOption gourmetCurationOption)
     {
-        mAmenitiesGridLayout = (android.support.v7.widget.GridLayout) view.findViewById(R.id.amenitiesGridLayout);
+        mAmenitiesGridLayout = view.findViewById(R.id.amenitiesGridLayout);
 
         View parkingCheckView = mAmenitiesGridLayout.findViewById(R.id.parkingCheckView);
         parkingCheckView.setTag(parkingCheckView.getId(), AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABLE);
 
-        DailyTextView valetCheckView = (DailyTextView) mAmenitiesGridLayout.findViewById(R.id.valetCheckView);
+        DailyTextView valetCheckView = mAmenitiesGridLayout.findViewById(R.id.valetCheckView);
         valetCheckView.setTag(parkingCheckView.getId(), AnalyticsManager.Label.SORTFILTER_VALET);
         valetCheckView.setDrawableVectorTintList(R.color.selector_svg_color_dababab_sb70038_eeaeaea);
 
-        DailyTextView privateRoomCheckView = (DailyTextView) mAmenitiesGridLayout.findViewById(R.id.privateRoomCheckView);
+        DailyTextView privateRoomCheckView = mAmenitiesGridLayout.findViewById(R.id.privateRoomCheckView);
         privateRoomCheckView.setTag(privateRoomCheckView.getId(), AnalyticsManager.Label.SORTFILTER_PRIVATEROOM);
         privateRoomCheckView.setDrawableVectorTintList(R.color.selector_svg_color_dababab_sb70038_eeaeaea);
 
-        DailyTextView groupBookingCheckView = (DailyTextView) mAmenitiesGridLayout.findViewById(R.id.groupBookingCheckView);
+        DailyTextView groupBookingCheckView = mAmenitiesGridLayout.findViewById(R.id.groupBookingCheckView);
         groupBookingCheckView.setTag(groupBookingCheckView.getId(), AnalyticsManager.Label.SORTFILTER_GROUP);
         groupBookingCheckView.setDrawableVectorTintList(R.color.selector_svg_color_dababab_sb70038_eeaeaea);
 
-        DailyTextView babySeatCheckView = (DailyTextView) mAmenitiesGridLayout.findViewById(R.id.babySeatCheckView);
+        DailyTextView babySeatCheckView = mAmenitiesGridLayout.findViewById(R.id.babySeatCheckView);
         babySeatCheckView.setTag(babySeatCheckView.getId(), AnalyticsManager.Label.SORTFILTER_BABYSEAT);
         babySeatCheckView.setDrawableVectorTintList(R.color.selector_svg_color_dababab_sb70038_eeaeaea);
 
-        DailyTextView corkageCheckView = (DailyTextView) mAmenitiesGridLayout.findViewById(R.id.corkageCheckView);
+        DailyTextView corkageCheckView = mAmenitiesGridLayout.findViewById(R.id.corkageCheckView);
         corkageCheckView.setTag(corkageCheckView.getId(), AnalyticsManager.Label.SORTFILTER_CORKAGE);
         corkageCheckView.setDrawableVectorTintList(R.color.selector_svg_color_dababab_sb70038_eeaeaea);
 
@@ -290,7 +290,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
 
     private void initTimeRangeFilterLayout(View view, GourmetCurationOption gourmetCurationOption)
     {
-        mTimeRangeLayout = (ViewGroup) view.findViewById(R.id.timeRangeLayout);
+        mTimeRangeLayout = view.findViewById(R.id.timeRangeLayout);
 
         View time0611View = mTimeRangeLayout.findViewById(R.id.time0611View);
         View time1115View = mTimeRangeLayout.findViewById(R.id.time1115View);
@@ -567,7 +567,7 @@ public class GourmetCurationActivity extends PlaceCurationActivity implements Ra
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId)
     {
-        RadioButton radioButton = (RadioButton) group.findViewById(checkedId);
+        RadioButton radioButton = group.findViewById(checkedId);
 
         if (radioButton == null)
         {

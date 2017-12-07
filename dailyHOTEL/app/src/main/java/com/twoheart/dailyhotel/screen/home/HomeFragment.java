@@ -139,8 +139,8 @@ public class HomeFragment extends BaseMenuNavigationFragment
     CarouselListItem mCarouselListItemByLongPress;
     DailyLocationFactory mDailyLocationFactory;
 
-    private RecentlyRemoteImpl mRecentlyRemoteImpl;
-    private RecentlyLocalImpl mRecentlyLocalImpl;
+    RecentlyRemoteImpl mRecentlyRemoteImpl;
+    RecentlyLocalImpl mRecentlyLocalImpl;
     private RewardRemoteImpl mRewardRemoteImpl;
     private CommonRemoteImpl mCommonRemoteImpl;
 

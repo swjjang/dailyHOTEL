@@ -67,7 +67,7 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
 
     private void initToolbar()
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.actionbar_title_edit_name);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
@@ -83,7 +83,7 @@ public class EditProfileNameActivity extends BaseActivity implements OnClickList
     {
         mNameView = findViewById(R.id.nameView);
 
-        mNameEditText = (DailyEditText) findViewById(R.id.nameEditText);
+        mNameEditText = findViewById(R.id.nameEditText);
         mNameEditText.setDeleteButtonVisible(null);
         mNameEditText.setOnFocusChangeListener(this);
 

@@ -301,7 +301,7 @@ public class AddProfileSocialActivity extends BaseActivity
         }
     }
 
-    private void onUserProfile(Customer customer, String birthday)
+    void onUserProfile(Customer customer, String birthday)
     {
         unLockUI();
 
@@ -315,7 +315,7 @@ public class AddProfileSocialActivity extends BaseActivity
         initUserInformation(customer, birthday);
     }
 
-    private void onUpdateSocialUserInformation(boolean isSuccess, String agreedDate)
+    void onUpdateSocialUserInformation(boolean isSuccess, String agreedDate)
     {
         if (isSuccess == true)
         {

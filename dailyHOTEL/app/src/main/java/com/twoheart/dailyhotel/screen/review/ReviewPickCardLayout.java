@@ -63,13 +63,13 @@ public class ReviewPickCardLayout extends ReviewCardLayout implements View.OnCli
 
         View view = LayoutInflater.from(context).inflate(R.layout.scroll_row_review_pick, this);
 
-        TextView titleTextView = (TextView) view.findViewById(R.id.titleTextView);
-        TextView descriptionTextView = (TextView) view.findViewById(R.id.descriptionTextView);
+        TextView titleTextView = view.findViewById(R.id.titleTextView);
+        TextView descriptionTextView = view.findViewById(R.id.descriptionTextView);
 
         titleTextView.setText(reviewPickQuestion.title);
         descriptionTextView.setText(reviewPickQuestion.description);
 
-        mGridLayout = (android.support.v7.widget.GridLayout) view.findViewById(R.id.gridLayout);
+        mGridLayout = view.findViewById(R.id.gridLayout);
         mGridLayout.removeAllViews();
 
         ArrayList<ReviewAnswerValue> reviewAnswerValueList = reviewPickQuestion.getAnswerValueList();
@@ -83,8 +83,8 @@ public class ReviewPickCardLayout extends ReviewCardLayout implements View.OnCli
             View pickItemView = LayoutInflater.from(context).inflate(R.layout.scroll_row_review_pick_grid_item, null);
             pickItemView.setId(mGridLayout.getId() + i + 1);
 
-            TextView gridItemTitleTextView = (TextView) pickItemView.findViewById(R.id.titleTextView);
-            TextView gridItemDescriptionTextView = (TextView) pickItemView.findViewById(R.id.descriptionTextView);
+            TextView gridItemTitleTextView = pickItemView.findViewById(R.id.titleTextView);
+            TextView gridItemDescriptionTextView = pickItemView.findViewById(R.id.descriptionTextView);
 
             // 빈상자인 경우
             if (DailyTextUtils.isTextEmpty(reviewAnswerValue.code, reviewAnswerValue.description) == true)
@@ -177,7 +177,7 @@ public class ReviewPickCardLayout extends ReviewCardLayout implements View.OnCli
 
         if (mSelectedView != null)
         {
-            DailyTextView gridItemTitleTextView = (DailyTextView) mSelectedView.findViewById(R.id.titleTextView);
+            DailyTextView gridItemTitleTextView = mSelectedView.findViewById(R.id.titleTextView);
 
             gridItemTitleTextView.setTypeface(FontManager.getInstance(mContext).getRegularTypeface());
 
@@ -188,10 +188,10 @@ public class ReviewPickCardLayout extends ReviewCardLayout implements View.OnCli
         view.setSelected(true);
         mSelectedView = view;
 
-        DailyTextView titleTextView = (DailyTextView) findViewById(R.id.titleTextView);
+        DailyTextView titleTextView = findViewById(R.id.titleTextView);
         titleTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_circular_check, 0);
 
-        DailyTextView gridItemTitleTextView = (DailyTextView) view.findViewById(R.id.titleTextView);
+        DailyTextView gridItemTitleTextView = view.findViewById(R.id.titleTextView);
 
         gridItemTitleTextView.setTypeface(FontManager.getInstance(mContext).getMediumTypeface());
 

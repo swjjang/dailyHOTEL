@@ -97,7 +97,7 @@ public class IssuingReceiptActivity extends BaseActivity
 
     private void initToolbar()
     {
-        mDailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        mDailyToolbarView = findViewById(R.id.toolbarView);
         mDailyToolbarView.setTitleText(R.string.frag_issuing_receipt);
         mDailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
@@ -113,7 +113,7 @@ public class IssuingReceiptActivity extends BaseActivity
     {
         mBookingStateLayout = findViewById(R.id.bookingStateLayout);
 
-        TextView bookingStateTextView = (TextView) findViewById(R.id.bookingStateTextView);
+        TextView bookingStateTextView = findViewById(R.id.bookingStateTextView);
         if (Booking.BOOKING_STATE_RESERVATION_WAITING == mBookingState)
         {
             bookingStateTextView.setVisibility(View.VISIBLE);
@@ -197,7 +197,7 @@ public class IssuingReceiptActivity extends BaseActivity
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         dialog.setCanceledOnTouchOutside(false);
 
-        final DailyEditText emailEditTExt = (DailyEditText) dialogView.findViewById(R.id.emailEditTExt);
+        final DailyEditText emailEditTExt = dialogView.findViewById(R.id.emailEditTExt);
         emailEditTExt.setDeleteButtonVisible(new DailyEditText.OnDeleteTextClickListener()
         {
             @Override
@@ -216,8 +216,8 @@ public class IssuingReceiptActivity extends BaseActivity
 
         twoButtonLayout.setVisibility(View.VISIBLE);
 
-        TextView negativeTextView = (TextView) twoButtonLayout.findViewById(R.id.negativeTextView);
-        final TextView positiveTextView = (TextView) twoButtonLayout.findViewById(R.id.positiveTextView);
+        TextView negativeTextView = twoButtonLayout.findViewById(R.id.negativeTextView);
+        final TextView positiveTextView = twoButtonLayout.findViewById(R.id.positiveTextView);
 
         negativeTextView.setOnClickListener(new View.OnClickListener()
         {
@@ -339,34 +339,34 @@ public class IssuingReceiptActivity extends BaseActivity
             View bookingInfoLayout = findViewById(R.id.bookingInfoLayout);
 
             // 예약 번호
-            TextView reservationNumberTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView13);
+            TextView reservationNumberTextView = bookingInfoLayout.findViewById(R.id.textView13);
             reservationNumberTextView.setText(mReservationIndex);
 
             // 호텔명
-            TextView hotelNameTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView3);
+            TextView hotelNameTextView = bookingInfoLayout.findViewById(R.id.textView3);
             hotelNameTextView.setText(hotelName);
 
             // 호텔주소
-            TextView hotelAddressTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView5);
+            TextView hotelAddressTextView = bookingInfoLayout.findViewById(R.id.textView5);
             hotelAddressTextView.setText(hotelAddress);
 
             // 고객성명/번호
-            TextView customerInfoTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView7);
+            TextView customerInfoTextView = bookingInfoLayout.findViewById(R.id.textView7);
             customerInfoTextView.setText(userName + " / " + Util.addHyphenMobileNumber(IssuingReceiptActivity.this, userPhone));
 
             // 체크인/아웃
-            TextView checkInOutTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView9);
+            TextView checkInOutTextView = bookingInfoLayout.findViewById(R.id.textView9);
             checkInOutTextView.setText(checkIn + " - " + checkOut);
 
             // 숙박 일수/객실수
-            TextView nightsRoomsTextView = (TextView) bookingInfoLayout.findViewById(R.id.textView11);
+            TextView nightsRoomsTextView = bookingInfoLayout.findViewById(R.id.textView11);
             nightsRoomsTextView.setText(nights + "일/" + rooms + "객실");
 
             // **결제 정보**
             View paymentInfoLayout = findViewById(R.id.paymentInfoLayout);
 
             // 결제일
-            TextView paymentDayTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView23);
+            TextView paymentDayTextView = paymentInfoLayout.findViewById(R.id.textView23);
             paymentDayTextView.setText(valueDate);
 
             // 결제수단
@@ -379,7 +379,7 @@ public class IssuingReceiptActivity extends BaseActivity
             {
                 paymentTypeLayout.setVisibility(View.VISIBLE);
 
-                TextView paymentTypeTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView33);
+                TextView paymentTypeTextView = paymentInfoLayout.findViewById(R.id.textView33);
                 paymentTypeTextView.setText(paymentType);
             }
 
@@ -387,7 +387,7 @@ public class IssuingReceiptActivity extends BaseActivity
             saleLayout.setVisibility(View.VISIBLE);
 
             // 총금액
-            TextView totalPriceTextView = (TextView) paymentInfoLayout.findViewById(R.id.textView29);
+            TextView totalPriceTextView = paymentInfoLayout.findViewById(R.id.textView29);
             totalPriceTextView.setText(DailyTextUtils.getPriceFormat(this, discount, false));
 
             // 적립금 혹은 쿠폰 사용
@@ -406,7 +406,7 @@ public class IssuingReceiptActivity extends BaseActivity
                 }
 
                 discountLayout.setVisibility(View.VISIBLE);
-                TextView discountedTextView = (TextView) paymentInfoLayout.findViewById(R.id.discountedTextView);
+                TextView discountedTextView = paymentInfoLayout.findViewById(R.id.discountedTextView);
                 discountedTextView.setText("- " + DailyTextUtils.getPriceFormat(this, bonus + coupon, false));
             } else
             {
@@ -422,7 +422,7 @@ public class IssuingReceiptActivity extends BaseActivity
             }
 
             // 총 입금(실 결제) 금액
-            TextView totalPaymentTextView = (TextView) paymentInfoLayout.findViewById(R.id.totalPaymentTextView);
+            TextView totalPaymentTextView = paymentInfoLayout.findViewById(R.id.totalPaymentTextView);
             totalPaymentTextView.setText(DailyTextUtils.getPriceFormat(this, pricePayment, false));
 
             // **공급자**
@@ -440,20 +440,20 @@ public class IssuingReceiptActivity extends BaseActivity
             View providerInfoLayout = findViewById(R.id.providerInfoLayout);
 
             // 상호
-            TextView companyNameTextView = (TextView) providerInfoLayout.findViewById(R.id.companyNameTextView);
+            TextView companyNameTextView = providerInfoLayout.findViewById(R.id.companyNameTextView);
             companyNameTextView.setText(getString(R.string.label_receipt_business_license, companyName, ceoName, phone, fax));
 
             // 주소
-            TextView addressTextView = (TextView) providerInfoLayout.findViewById(R.id.addressTextView);
+            TextView addressTextView = providerInfoLayout.findViewById(R.id.addressTextView);
             addressTextView.setText(getString(R.string.label_receipt_address, address));
 
 
             // 등록번호
-            TextView registrationNoTextView = (TextView) providerInfoLayout.findViewById(R.id.registrationNoTextView);
+            TextView registrationNoTextView = providerInfoLayout.findViewById(R.id.registrationNoTextView);
             registrationNoTextView.setText(getString(R.string.label_receipt_registeration_number, registrationNo));
 
             // 코멘트
-            TextView commentTextView = (TextView) findViewById(R.id.commentTextView);
+            TextView commentTextView = findViewById(R.id.commentTextView);
             commentTextView.setText(memo);
 
         } catch (Exception e)

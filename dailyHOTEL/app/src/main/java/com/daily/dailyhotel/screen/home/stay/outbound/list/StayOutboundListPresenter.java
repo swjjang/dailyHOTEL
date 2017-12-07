@@ -363,7 +363,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
                         if (observable != null)
                         {
-                            lock();
+                            screenLock(true);
 
                             setScreenVisible(ScreenType.SEARCH_LOCATION, mStayOutboundFilters);
 
@@ -418,7 +418,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
                             if (observable != null)
                             {
-                                lock();
+                                screenLock(true);
 
                                 setScreenVisible(ScreenType.SEARCH_LOCATION, mStayOutboundFilters);
 
@@ -469,7 +469,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
                             if (observable != null)
                             {
-                                lock();
+                                screenLock(true);
 
                                 setScreenVisible(ScreenType.SEARCH_LOCATION, mStayOutboundFilters);
 
@@ -521,7 +521,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
                             if (observable != null)
                             {
-                                lock();
+                                screenLock(true);
 
                                 setScreenVisible(ScreenType.SEARCH_LOCATION, mStayOutboundFilters);
 

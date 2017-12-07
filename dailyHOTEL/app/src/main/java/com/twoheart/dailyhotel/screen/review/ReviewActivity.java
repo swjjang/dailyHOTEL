@@ -474,8 +474,8 @@ public class ReviewActivity extends BaseActivity
 
         View view = LayoutInflater.from(this).inflate(R.layout.view_dialog_review, null, false);
 
-        TextView titleTextView = (TextView) view.findViewById(R.id.titleTextView);
-        TextView periodTextView = (TextView) view.findViewById(R.id.periodTextView);
+        TextView titleTextView = view.findViewById(R.id.titleTextView);
+        TextView periodTextView = view.findViewById(R.id.periodTextView);
         View goodEmoticonView = view.findViewById(R.id.goodEmoticonView);
         View badEmoticonView = view.findViewById(R.id.badEmoticonView);
 
@@ -526,8 +526,8 @@ public class ReviewActivity extends BaseActivity
         mDailyEmoticonImageView = new DailyEmoticonImageView[2];
 
         // 이미지
-        mDailyEmoticonImageView[0] = (DailyEmoticonImageView) view.findViewById(R.id.badEmoticonImageView);
-        mDailyEmoticonImageView[1] = (DailyEmoticonImageView) view.findViewById(R.id.goodEmoticonImageView);
+        mDailyEmoticonImageView[0] = view.findViewById(R.id.badEmoticonImageView);
+        mDailyEmoticonImageView[1] = view.findViewById(R.id.goodEmoticonImageView);
 
         mDailyEmoticonImageView[0].setJSONData("Review_Animation.aep.comp-737-A_not_satisfied.kf.json");
         mDailyEmoticonImageView[1].setJSONData("Review_Animation.aep.comp-573-B_satfisfied.kf.json");
@@ -546,8 +546,8 @@ public class ReviewActivity extends BaseActivity
         final View goodEmoticonDimView = view.findViewById(R.id.goodEmoticonDimView);
 
         // 텍스트
-        final TextView badEmoticonTextView = (TextView) view.findViewById(R.id.badEmoticonTextView);
-        final TextView goodEmoticonTextView = (TextView) view.findViewById(R.id.goodEmoticonTextView);
+        final TextView badEmoticonTextView = view.findViewById(R.id.badEmoticonTextView);
+        final TextView goodEmoticonTextView = view.findViewById(R.id.goodEmoticonTextView);
 
         goodEmoticonView.setOnClickListener(new View.OnClickListener()
         {

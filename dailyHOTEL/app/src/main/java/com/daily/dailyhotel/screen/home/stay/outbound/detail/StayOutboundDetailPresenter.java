@@ -132,7 +132,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     StayOutboundDetail mStayOutboundDetail;
     People mPeople;
     StayOutboundRoom mSelectedRoom;
-    private ArrayList<CarouselListItem> mRecommendAroundList;
+    ArrayList<CarouselListItem> mRecommendAroundList;
     View mViewByLongPress;
     android.support.v4.util.Pair[] mPairsByLongPress;
     StayOutbound mStayOutboundByLongPress;
@@ -476,7 +476,10 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
                 if (mIsUsedMultiTransition == true)
                 {
-                    lock();
+                    if(lock() == true)
+                    {
+                        return true;
+                    }
 
                     getViewInterface().setTransitionVisible(true);
                     getViewInterface().scrollTop();
@@ -1376,7 +1379,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void startStayOutboundDetail(View view, StayOutbound stayOutbound, android.support.v4.util.Pair[] pairs)
+    void startStayOutboundDetail(View view, StayOutbound stayOutbound, android.support.v4.util.Pair[] pairs)
     {
         String imageUrl;
         if (ScreenUtils.getScreenWidth(getActivity()) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
@@ -1622,7 +1625,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         getViewInterface().setWishSelected(myWish);
     }
 
-    private void showWishTooltip()
+    void showWishTooltip()
     {
         getViewInterface().showWishTooltip();
 
@@ -1638,7 +1641,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             }));
     }
 
-    private void setRecommendAroundList(StayOutbounds stayOutbounds)
+    void setRecommendAroundList(StayOutbounds stayOutbounds)
     {
         if (stayOutbounds == null)
         {
@@ -1666,7 +1669,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         }
     }
 
-    private void notifyRecommendAroundList()
+    void notifyRecommendAroundList()
     {
         if (getViewInterface() == null)
         {
@@ -1683,7 +1686,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         }
     }
 
-    private void notifyRewardChanged()
+    void notifyRewardChanged()
     {
         if (mStayOutboundDetail == null)
         {

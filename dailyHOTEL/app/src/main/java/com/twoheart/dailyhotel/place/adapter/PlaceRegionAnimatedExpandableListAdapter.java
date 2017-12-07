@@ -131,8 +131,8 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
     private void setRealChildView(View convertView, int groupPosition, Area[] areas, int index)
     {
         View layout = convertView.findViewById(index == 0 ? R.id.areaLayout1 : R.id.areaLayout2);
-        TextView nameTextView = (TextView) convertView.findViewById(index == 0 ? R.id.areaNameTextView1 : R.id.areaNameTextView2);
-        TextView countTextView = (TextView) convertView.findViewById(index == 0 ? R.id.areaCountTextView1 : R.id.areaCountTextView2);
+        TextView nameTextView = convertView.findViewById(index == 0 ? R.id.areaNameTextView1 : R.id.areaNameTextView2);
+        TextView countTextView = convertView.findViewById(index == 0 ? R.id.areaCountTextView1 : R.id.areaCountTextView2);
 
         layout.setOnClickListener(mOnItemClickListener);
 
@@ -281,8 +281,8 @@ public class PlaceRegionAnimatedExpandableListAdapter extends AnimatedExpandable
         View topDivider = convertView.findViewById(R.id.topDivider);
         topDivider.setVisibility(groupPosition == 0 ? View.GONE : View.VISIBLE);
 
-        ImageView arrowImageView = (ImageView) convertView.findViewById(R.id.updownArrowImageView);
-        TextView textView = (TextView) convertView.findViewById(R.id.provinceTextView);
+        ImageView arrowImageView = convertView.findViewById(R.id.updownArrowImageView);
+        TextView textView = convertView.findViewById(R.id.provinceTextView);
         View expandBottomLineView = convertView.findViewById(R.id.expandBottomLine);
         View collapseBottomLineView = convertView.findViewById(R.id.collapseBottomLine);
 

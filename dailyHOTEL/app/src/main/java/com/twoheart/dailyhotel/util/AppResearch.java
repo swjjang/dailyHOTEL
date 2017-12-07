@@ -31,7 +31,7 @@ public class AppResearch
 {
     Context mContext;
     boolean mIsMyProcessInTheForeground;
-    private String[] WATCH_LIST;
+    String[] WATCH_LIST;
 
     public AppResearch(Context context)
     {
@@ -45,7 +45,7 @@ public class AppResearch
         }
     }
 
-    private String[] getWatchList()
+    String[] getWatchList()
     {
         String[] watchList = null;
 
@@ -247,7 +247,7 @@ public class AppResearch
         });
     }
 
-    private Map<String, String> recentlyApp(List<AndroidAppProcess> androidAppProcessList)
+    Map<String, String> recentlyApp(List<AndroidAppProcess> androidAppProcessList)
     {
         Map<String, String> unknownPackageMap = new HashMap<>();
 
@@ -285,7 +285,7 @@ public class AppResearch
         return unknownPackageMap;
     }
 
-    private void recordEvent(List<String> packageList, String categoryName, String placeType, int placeIndex)
+    void recordEvent(List<String> packageList, String categoryName, String placeType, int placeIndex)
     {
         if (packageList == null || packageList.size() == 0 || DailyTextUtils.isTextEmpty(categoryName) == true)
         {

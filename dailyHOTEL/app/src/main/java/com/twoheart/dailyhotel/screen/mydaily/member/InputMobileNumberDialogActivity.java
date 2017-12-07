@@ -158,7 +158,7 @@ public class InputMobileNumberDialogActivity extends BaseActivity
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.view_mobiledialog_layout, null, false);
 
-        final EditText mobileEditText = (EditText) view.findViewById(R.id.mobileTextView);
+        final EditText mobileEditText = view.findViewById(R.id.mobileTextView);
 
         if (Util.DEFAULT_COUNTRY_CODE.equalsIgnoreCase(countryCode) == true)
         {
@@ -176,7 +176,7 @@ public class InputMobileNumberDialogActivity extends BaseActivity
         mobileEditText.setText(mobileNumber);
         mobileEditText.setSelection(mobileEditText.length());
 
-        final TextView countryTextView = (TextView) view.findViewById(R.id.countryTextView);
+        final TextView countryTextView = view.findViewById(R.id.countryTextView);
         countryTextView.setText(countryCode.substring(0, countryCode.indexOf('\n')));
         countryTextView.setOnClickListener(new View.OnClickListener()
         {

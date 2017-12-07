@@ -26,7 +26,7 @@ import java.util.Locale;
 public class BookingListAdapter extends RecyclerView.Adapter<BookingListAdapter.BookingViewHolder>
 {
     private List<Booking> mList;
-    private RecyclerView mRecyclerView;
+    RecyclerView mRecyclerView;
     Context mContext;
     BookingListFragment.OnUserActionListener mOnUserActionListener;
 

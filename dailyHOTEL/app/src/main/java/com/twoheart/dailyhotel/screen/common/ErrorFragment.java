@@ -49,7 +49,7 @@ public class ErrorFragment extends BaseFragment implements OnClickListener
 
         initToolbar(baseActivity, view);
 
-        TextView retryTextView = (TextView) view.findViewById(R.id.btn_error);
+        TextView retryTextView = view.findViewById(R.id.btn_error);
         retryTextView.setOnClickListener(this);
 
         return view;
@@ -70,7 +70,7 @@ public class ErrorFragment extends BaseFragment implements OnClickListener
 
     private void initToolbar(final BaseActivity baseActivity, View view)
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) view.findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = view.findViewById(R.id.toolbarView);
 
         if (mMainFragmentManager == null)
         {

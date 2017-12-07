@@ -48,7 +48,7 @@ public abstract class PlaceReceiptActivity extends BaseActivity
 
     private void initToolbar()
     {
-        mDailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        mDailyToolbarView = findViewById(R.id.toolbarView);
         mDailyToolbarView.setTitleText(R.string.frag_issuing_receipt);
         mDailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {

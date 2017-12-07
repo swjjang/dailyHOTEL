@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 
 import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
@@ -53,10 +52,10 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
     @Override
     protected void initSortLayout(View view, ViewType viewType, GourmetCurationOption gourmetCurationOption)
     {
-        mSortRadioGroup = (RadioGroup) view.findViewById(R.id.sortLayout);
+        mSortRadioGroup = view.findViewById(R.id.sortLayout);
 
-        RadioButton radioButton = (RadioButton) mSortRadioGroup.findViewById(R.id.regionCheckView);
-        RadioButton emptyCheckView = (RadioButton) mSortRadioGroup.findViewById(R.id.emptyCheckView);
+        RadioButton radioButton = mSortRadioGroup.findViewById(R.id.regionCheckView);
+        RadioButton emptyCheckView = mSortRadioGroup.findViewById(R.id.emptyCheckView);
 
         if (mSearchType == SearchType.LOCATION)
         {

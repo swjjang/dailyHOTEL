@@ -26,7 +26,7 @@ public class LicenseActivity extends WebViewActivity
 
     private void initToolbar()
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.frag_opensource_license);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {

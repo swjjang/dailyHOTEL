@@ -49,7 +49,7 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
 
         initToolbar();
 
-        WebView webView = (WebView) findViewById(R.id.webView);
+        WebView webView = findViewById(R.id.webView);
 
         // TODO  setWebContentsDebuggingEnabled
         //		WebView.setWebContentsDebuggingEnabled(true);
@@ -102,7 +102,7 @@ public class RegisterCreditCardActivity extends BaseActivity implements Constant
 
     private void initToolbar()
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.actionbar_title_reg_creditcard);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {

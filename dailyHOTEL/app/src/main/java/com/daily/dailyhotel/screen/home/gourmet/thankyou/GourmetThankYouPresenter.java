@@ -77,8 +77,6 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
     @Override
     public void constructorInitialize(GourmetThankYouActivity activity)
     {
-        lock();
-
         setContentView(R.layout.activity_gourmet_payment_thank_you_data);
 
         setAnalytics(new GourmetThankYouAnalyticsImpl());

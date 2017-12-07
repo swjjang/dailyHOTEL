@@ -1302,7 +1302,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
         reviewParcelable.setReviewPickQuestionList(reviewPickQuestionListParcelable);
 
         //
-        ArrayList<ReviewScoreQuestion> reviewScoreQuestionListParcelable = new ArrayList<ReviewScoreQuestion>();
+        ArrayList<ReviewScoreQuestion> reviewScoreQuestionListParcelable = new ArrayList<>();
 
         List<ReviewQuestionItem> reviewScoreQuestionList = review.getReviewScoreQuestionList();
 

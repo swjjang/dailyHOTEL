@@ -126,7 +126,7 @@ public class GourmetWishListFragment extends PlaceWishListFragment
     {
         lockUI();
 
-        ((GourmetWishListNetworkController) mNetworkController).requestGourmetWishList();
+        mNetworkController.requestGourmetWishList();
     }
 
     @Override
@@ -134,7 +134,7 @@ public class GourmetWishListFragment extends PlaceWishListFragment
     {
         lockUI();
 
-        ((GourmetWishListNetworkController) mNetworkController).requestRemoveGourmetWishListItem(placeIndex);
+        mNetworkController.requestRemoveGourmetWishListItem(placeIndex);
     }
 
     private GourmetWishListNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new GourmetWishListNetworkController.OnNetworkControllerListener()

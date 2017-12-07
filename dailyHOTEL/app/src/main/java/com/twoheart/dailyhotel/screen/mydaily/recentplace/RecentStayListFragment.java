@@ -261,7 +261,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         return list;
     }
 
-    private Observable<ArrayList<PlaceViewItem>> sortList(ArrayList<PlaceViewItem> actualList, boolean isAddFooter)
+    Observable<ArrayList<PlaceViewItem>> sortList(ArrayList<PlaceViewItem> actualList, boolean isAddFooter)
     {
         if (actualList == null || actualList.size() == 0)
         {
@@ -645,7 +645,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             AnalyticsManager.Action.RECENTVIEW_ITEM_DELETE, Integer.toString(stayOutbound.index), null);
     }
 
-    private void onChangedWish(int position, boolean wish)
+    void onChangedWish(int position, boolean wish)
     {
         if (position < 0)
         {

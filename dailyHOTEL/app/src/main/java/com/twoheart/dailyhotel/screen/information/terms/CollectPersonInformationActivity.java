@@ -34,7 +34,7 @@ public class CollectPersonInformationActivity extends WebViewActivity
 
     private void initToolbar()
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.actionbar_title_collect_person_information_activity);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {

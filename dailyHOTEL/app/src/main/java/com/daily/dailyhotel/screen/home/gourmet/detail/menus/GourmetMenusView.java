@@ -383,7 +383,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
 
             if (timeTag != null)
             {
-                if (time == (int) timeTag)
+                if (time == timeTag)
                 {
                     childView.setSelected(true);
                 } else

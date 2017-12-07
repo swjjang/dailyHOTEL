@@ -109,7 +109,7 @@ public class CouponTermActivity extends WebViewActivity
             titleString = R.string.coupon_use_notice_text;
         }
 
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(titleString);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {

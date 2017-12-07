@@ -49,7 +49,7 @@ public class WishListTabActivity extends BaseActivity
     private TabLayout mTabLayout;
     private View mLoginView;
     private View mBottomDescriptionView;
-    private DailyWishAnimationView mWishAnimationView;
+    DailyWishAnimationView mWishAnimationView;
 
     private SourceType mSourceType;
     private PlaceType mPlaceType;
@@ -195,9 +195,9 @@ public class WishListTabActivity extends BaseActivity
 
         mLoginView = findViewById(R.id.loginLayout);
         View mLoginButtonView = findViewById(R.id.loginButtonView);
-        mViewPager = (DailyViewPager) findViewById(R.id.viewPager);
+        mViewPager = findViewById(R.id.viewPager);
         mBottomDescriptionView = findViewById(R.id.bottomMessageTextView);
-        mWishAnimationView = (DailyWishAnimationView) findViewById(R.id.wishAnimationView);
+        mWishAnimationView = findViewById(R.id.wishAnimationView);
 
         mFragmentList = new ArrayList<>();
 
@@ -218,7 +218,7 @@ public class WishListTabActivity extends BaseActivity
 
     private void initToolbar()
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.actionbar_title_wishList);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
@@ -232,7 +232,7 @@ public class WishListTabActivity extends BaseActivity
 
     private void initTabLayout()
     {
-        mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        mTabLayout = findViewById(R.id.tabLayout);
 
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_stay));
         mTabLayout.addTab(mTabLayout.newTab().setText(R.string.label_gourmet));

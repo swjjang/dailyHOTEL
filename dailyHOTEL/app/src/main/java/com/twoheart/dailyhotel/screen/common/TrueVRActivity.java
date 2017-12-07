@@ -147,9 +147,9 @@ public class TrueVRActivity extends WebViewActivity implements View.OnClickListe
             mPageLayout.setVisibility(View.VISIBLE);
         }
 
-        mProductNameTextView = (TextView) findViewById(R.id.productNameTextView);
-        mCurrentPageTextView = (TextView) findViewById(R.id.currentPageTextView);
-        mTotalPageTextView = (TextView) findViewById(R.id.totalPageTextView);
+        mProductNameTextView = findViewById(R.id.productNameTextView);
+        mCurrentPageTextView = findViewById(R.id.currentPageTextView);
+        mTotalPageTextView = findViewById(R.id.totalPageTextView);
 
         mNextView = findViewById(R.id.nextView);
         mPrevView = findViewById(R.id.prevView);

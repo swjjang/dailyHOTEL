@@ -983,7 +983,7 @@ public class StayMainActivity extends PlaceMainActivity
             return false;
         }
 
-        private boolean processDeepLinkByRegionList(BaseActivity baseActivity//
+        boolean processDeepLinkByRegionList(BaseActivity baseActivity//
             , List<StayAreaGroup> stayDistrictList, TodayDateTime todayDateTime//
             , DailyDeepLink dailyDeepLink)
         {

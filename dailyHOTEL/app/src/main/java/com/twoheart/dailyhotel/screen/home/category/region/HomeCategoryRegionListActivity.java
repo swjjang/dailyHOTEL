@@ -99,7 +99,7 @@ public class HomeCategoryRegionListActivity extends BaseActivity
             return;
         }
 
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = findViewById(R.id.toolbarView);
 
         String categoryName = getResources().getString(mDailyCategoryType.getNameResId());
 
@@ -132,7 +132,7 @@ public class HomeCategoryRegionListActivity extends BaseActivity
 
     private void initViewPager()
     {
-        mViewPager = (DailyViewPager) findViewById(R.id.viewPager);
+        mViewPager = findViewById(R.id.viewPager);
 
         ArrayList<HomeCategoryRegionListFragment> fragmentList = new ArrayList<>();
         HomeCategoryRegionListFragment regionListFragment = new HomeCategoryRegionListFragment();

@@ -80,7 +80,7 @@ public class GourmetMainActivity extends PlaceMainActivity
     GourmetCuration mGourmetCuration;
     DailyDeepLink mDailyDeepLink;
 
-    private CartLocalImpl mCartLocalImpl;
+    CartLocalImpl mCartLocalImpl;
 
     public static Intent newInstance(Context context, String deepLink)
     {
@@ -549,7 +549,7 @@ public class GourmetMainActivity extends PlaceMainActivity
         }
     }
 
-    private void startPayment(GourmetCart gourmetCart)
+    void startPayment(GourmetCart gourmetCart)
     {
         if (gourmetCart == null || gourmetCart.getMenuCount() == 0)
         {

@@ -72,9 +72,9 @@ public class BonusListAdapter extends ArrayAdapter<Bonus>
 
         Bonus bonus = mBonusList.get(position);
 
-        TextView bonusTextView = (TextView) view.findViewById(R.id.bonusTextView);
-        TextView contentTextView = (TextView) view.findViewById(R.id.contentTextView);
-        TextView expireTextView = (TextView) view.findViewById(R.id.expireTextView);
+        TextView bonusTextView = view.findViewById(R.id.bonusTextView);
+        TextView contentTextView = view.findViewById(R.id.contentTextView);
+        TextView expireTextView = view.findViewById(R.id.expireTextView);
         View underLineView = view.findViewById(R.id.underLineView);
 
         String priceFormat = DailyTextUtils.getPriceFormat(mContext, bonus.bonus, false);

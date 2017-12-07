@@ -34,7 +34,7 @@ public class LifeStyleActivity extends WebViewActivity
 
     private void initToolbar()
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.label_dailyh_lifestyle);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {

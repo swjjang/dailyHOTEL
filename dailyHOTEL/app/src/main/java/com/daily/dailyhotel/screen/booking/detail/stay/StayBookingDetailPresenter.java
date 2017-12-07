@@ -99,26 +99,26 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBookingDetailActivity, StayBookingDetailInterface> implements StayBookingDetailView.OnEventListener
 {
-    private StayBookingDetailAnalyticsInterface mAnalytics;
+    StayBookingDetailAnalyticsInterface mAnalytics;
 
     private CommonRemoteImpl mCommonRemoteImpl;
-    private BookingRemoteImpl mBookingRemoteImpl;
+    BookingRemoteImpl mBookingRemoteImpl;
     private GourmetRemoteImpl mGourmetRemoteImpl;
     private RefundRemoteImpl mRefundRemoteImpl;
 
-    private int mReservationIndex;
-    private String mAggregationId;
+    int mReservationIndex;
+    String mAggregationId;
     private String mImageUrl;
     private boolean mIsDeepLink; // 딱히 쓰지는 않음
-    private int mBookingState;
-    private CommonDateTime mCommonDateTime;
-    private StayBookingDetail mStayBookingDetail;
+    int mBookingState;
+    CommonDateTime mCommonDateTime;
+    StayBookingDetail mStayBookingDetail;
     private RefundPolicy mRefundPolicy;
 
-    private DailyLocationExFactory mDailyLocationExFactory;
+    DailyLocationExFactory mDailyLocationExFactory;
 
-    private View mViewByLongPress;
-    private Gourmet mGourmetByLongPress;
+    View mViewByLongPress;
+    Gourmet mGourmetByLongPress;
     private List<Gourmet> mRecommendGourmetList;
 
     public interface StayBookingDetailAnalyticsInterface extends BaseAnalyticsInterface
@@ -513,7 +513,7 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
         }));
     }
 
-    private void setCommonDateTime(CommonDateTime commonDateTime)
+    void setCommonDateTime(CommonDateTime commonDateTime)
     {
         if (commonDateTime == null)
         {
@@ -523,12 +523,12 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
         mCommonDateTime = commonDateTime;
     }
 
-    private void setStayBookingDetail(StayBookingDetail stayBookingDetail)
+    void setStayBookingDetail(StayBookingDetail stayBookingDetail)
     {
         mStayBookingDetail = stayBookingDetail;
     }
 
-    private void notifyStayBookingDetail()
+    void notifyStayBookingDetail()
     {
         if (mStayBookingDetail == null || mCommonDateTime == null)
         {
@@ -668,7 +668,7 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
         }
     }
 
-    private void onRefundPolicy(RefundPolicy refundPolicy)
+    void onRefundPolicy(RefundPolicy refundPolicy)
     {
         if (mStayBookingDetail == null || mCommonDateTime == null)
         {
@@ -755,7 +755,7 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
         }
     }
 
-    private ArrayList<CarouselListItem> convertCarouselListItemList(List<Gourmet> list)
+    ArrayList<CarouselListItem> convertCarouselListItemList(List<Gourmet> list)
     {
         ArrayList<Gourmet> gourmetList = new ArrayList<>();
         ArrayList<CarouselListItem> carouselListItemList = new ArrayList<>();
@@ -1672,7 +1672,7 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
         }
     }
 
-    private com.twoheart.dailyhotel.model.Review reviewToReviewParcelable(Review review)
+    com.twoheart.dailyhotel.model.Review reviewToReviewParcelable(Review review)
     {
         com.twoheart.dailyhotel.model.Review reviewParcelable = new com.twoheart.dailyhotel.model.Review();
 
@@ -1757,7 +1757,7 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
         reviewParcelable.setReviewPickQuestionList(reviewPickQuestionListParcelable);
 
         //
-        ArrayList<ReviewScoreQuestion> reviewScoreQuestionListParcelable = new ArrayList<ReviewScoreQuestion>();
+        ArrayList<ReviewScoreQuestion> reviewScoreQuestionListParcelable = new ArrayList<>();
 
         List<ReviewQuestionItem> reviewScoreQuestionList = review.getReviewScoreQuestionList();
 

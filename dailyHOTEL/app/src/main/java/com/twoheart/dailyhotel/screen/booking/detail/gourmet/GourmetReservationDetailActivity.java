@@ -141,7 +141,7 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
         View contactUs01Layout = dialogView.findViewById(R.id.contactUs01Layout);
         View contactUs02Layout = dialogView.findViewById(R.id.contactUs02Layout);
 
-        DailyTextView contactUs01TextView = (DailyTextView) contactUs01Layout.findViewById(R.id.contactUs01TextView);
+        DailyTextView contactUs01TextView = contactUs01Layout.findViewById(R.id.contactUs01TextView);
         contactUs01TextView.setText(R.string.frag_faqs);
         contactUs01TextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_ops_05_faq, 0, 0, 0);
 
@@ -183,7 +183,7 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
             contactUs02Layout.setVisibility(View.GONE);
         } else
         {
-            DailyTextView contactUs02TextView = (DailyTextView) contactUs02Layout.findViewById(R.id.contactUs02TextView);
+            DailyTextView contactUs02TextView = contactUs02Layout.findViewById(R.id.contactUs02TextView);
             contactUs02TextView.setText(R.string.label_restaurant_direct_phone);
             contactUs02TextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_ops_02_restaurant_call, 0, 0, 0);
 

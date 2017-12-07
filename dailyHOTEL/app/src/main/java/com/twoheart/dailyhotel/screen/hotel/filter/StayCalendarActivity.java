@@ -193,7 +193,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
     {
         super.initLayout(layoutResID, dayCountOfMax);
 
-        mConfirmTextView = (TextView) findViewById(R.id.confirmView);
+        mConfirmTextView = findViewById(R.id.confirmView);
         mConfirmTextView.setVisibility(View.VISIBLE);
         mConfirmTextView.setOnClickListener(this);
         mConfirmTextView.setEnabled(false);
@@ -432,7 +432,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
             return;
         }
 
-        TextView visitTextView = (TextView) checkInView.findViewById(R.id.textView);
+        TextView visitTextView = checkInView.findViewById(R.id.textView);
         visitTextView.setText(R.string.act_booking_chkin);
         visitTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
         visitTextView.setTypeface(FontManager.getInstance(this).getRegularTypeface());
@@ -442,7 +442,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         visitLayoutParams.topMargin = ScreenUtils.dpToPx(this, 5);
         visitTextView.setLayoutParams(visitLayoutParams);
 
-        DailyDayStrikeTextView dayTextView = (DailyDayStrikeTextView) checkInView.findViewById(R.id.dateTextView);
+        DailyDayStrikeTextView dayTextView = checkInView.findViewById(R.id.dateTextView);
         dayTextView.setStrikeFlag(false);
 
         checkInView.setBackgroundResource(R.drawable.select_date_check_in);
@@ -455,7 +455,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
             return;
         }
 
-        TextView visitTextView = (TextView) checkOutView.findViewById(R.id.textView);
+        TextView visitTextView = checkOutView.findViewById(R.id.textView);
         visitTextView.setText(R.string.act_booking_chkout);
         visitTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
         visitTextView.setTypeface(FontManager.getInstance(this).getRegularTypeface());
@@ -465,7 +465,7 @@ public class StayCalendarActivity extends PlaceCalendarActivity
         visitLayoutParams.topMargin = ScreenUtils.dpToPx(this, 5);
         visitTextView.setLayoutParams(visitLayoutParams);
 
-        DailyDayStrikeTextView dayTextView = (DailyDayStrikeTextView) checkOutView.findViewById(R.id.dateTextView);
+        DailyDayStrikeTextView dayTextView = checkOutView.findViewById(R.id.dateTextView);
         dayTextView.setStrikeFlag(false);
 
         checkOutView.setBackgroundResource(R.drawable.select_date_check_out);

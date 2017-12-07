@@ -42,17 +42,17 @@ public class BonusLayout extends BaseLayout
     {
         initToolbar(view);
 
-        mBonusTextView = (TextView) view.findViewById(R.id.bonusTextView);
+        mBonusTextView = view.findViewById(R.id.bonusTextView);
 
         mListTopLine = view.findViewById(R.id.listTopLine);
         mListTopLine.setVisibility(View.INVISIBLE);
 
-        mListView = (ListView) view.findViewById(R.id.listView);
+        mListView = view.findViewById(R.id.listView);
 
         View header = LayoutInflater.from(mContext).inflate(R.layout.list_row_bonus_header, mListView, false);
         mListView.addHeaderView(header);
 
-        TextView guideTextView = (TextView) header.findViewById(R.id.guideTextView);
+        TextView guideTextView = header.findViewById(R.id.guideTextView);
         guideTextView.setPaintFlags(guideTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         guideTextView.setOnClickListener(new View.OnClickListener()
         {
@@ -69,7 +69,7 @@ public class BonusLayout extends BaseLayout
 
     private void initToolbar(View view)
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) view.findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = view.findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.actionbar_title_credit_frag);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {

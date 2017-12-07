@@ -30,10 +30,10 @@ import java.util.List;
 
 public class GourmetCampaignListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
-    private Context mContext;
+    Context mContext;
 
-    private View.OnLongClickListener mOnLongClickListener;
-    private View.OnClickListener mOnWishClickListener;
+    View.OnLongClickListener mOnLongClickListener;
+    View.OnClickListener mOnWishClickListener;
 
     private List<PlaceViewItem> mPlaceViewItemList;
 

@@ -33,7 +33,7 @@ public class DailyToolbarView extends ConstraintLayout
     private List<Pair<MenuItem, DailyViewToolbarMenuItemDataBinding>> mMenuItemList;
 
     ObjectAnimator mShowAnimator;
-    private ObjectAnimator mHideAnimator;
+    ObjectAnimator mHideAnimator;
 
     private ThemeColor mThemeColor;
 
