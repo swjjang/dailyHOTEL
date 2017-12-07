@@ -86,7 +86,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
 
     private void initToolbar()
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.actionbar_title_edit_birthday);
         dailyToolbarView.setOnBackClickListener(new OnClickListener()
         {
@@ -102,7 +102,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
     {
         mBirthdayView = findViewById(R.id.birthdayView);
 
-        mBirthdayEditText = (DailyEditText) findViewById(R.id.birthdayEditText);
+        mBirthdayEditText = findViewById(R.id.birthdayEditText);
         mBirthdayEditText.setDeleteButtonVisible(new DailyEditText.OnDeleteTextClickListener()
         {
             @Override
@@ -415,20 +415,19 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
 
                 // 14셈 미만 가입 금지
                 calendar.add(Calendar.YEAR, -14);
+                datePicker.setMaxDate(calendar.getTimeInMillis());
 
                 if (year < 0 || month < 0 || day < 0)
                 {
-                    startYear = calendar.get(Calendar.YEAR);
-                    startMonth = calendar.get(Calendar.MONTH);
-                    startDay = calendar.get(Calendar.DAY_OF_MONTH);
+                    startYear = 2000;
+                    startMonth = 0;
+                    startDay = 1;
                 } else
                 {
                     startYear = year;
                     startMonth = month;
                     startDay = day;
                 }
-
-                datePicker.setMaxDate(calendar.getTimeInMillis());
 
                 datePicker.init(startYear, startMonth, startDay, new DatePicker.OnDateChangedListener()
                 {
@@ -440,7 +439,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
                 });
 
                 // 상단
-                TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
+                TextView titleTextView = dialogView.findViewById(R.id.titleTextView);
                 titleTextView.setVisibility(View.VISIBLE);
                 titleTextView.setText(R.string.label_sign_up_select_birthday);
 
@@ -448,8 +447,8 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
                 View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
                 View twoButtonLayout = buttonLayout.findViewById(R.id.twoButtonLayout);
 
-                TextView negativeTextView = (TextView) twoButtonLayout.findViewById(R.id.negativeTextView);
-                TextView positiveTextView = (TextView) twoButtonLayout.findViewById(R.id.positiveTextView);
+                TextView negativeTextView = twoButtonLayout.findViewById(R.id.negativeTextView);
+                TextView positiveTextView = twoButtonLayout.findViewById(R.id.positiveTextView);
 
                 negativeTextView.setOnClickListener(new View.OnClickListener()
                 {
