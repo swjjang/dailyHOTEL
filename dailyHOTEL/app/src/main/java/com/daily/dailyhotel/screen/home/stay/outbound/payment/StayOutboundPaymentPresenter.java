@@ -665,9 +665,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                         @Override
                         public void onClick(View v)
                         {
-                            setSaleType(NONE);
-
-                            notifyStayOutboundPaymentChanged();
+                            setSaleType(BONUS);
 
                             onBonusClick(true);
                         }
@@ -718,9 +716,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                         @Override
                         public void onClick(View v)
                         {
-                            setSaleType(NONE);
-
-                            notifyStayOutboundPaymentChanged();
+                            setSaleType(STICKER);
 
                             onDepositStickerClick(true);
                         }
@@ -745,6 +741,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                             public void onClick(View v)
                             {
                                 setSaleType(NONE);
+                                getViewInterface().setDepositSticker(false);
 
                                 notifyStayOutboundPaymentChanged();
                             }
@@ -1397,21 +1394,37 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         {
             int paymentPrice, discountPrice;
 
-            if (mSaleType == BONUS)
+            switch (mSaleType)
             {
-                paymentPrice = mStayOutboundPayment.totalPrice - mUserSimpleInformation.bonus;
-                discountPrice = paymentPrice < 0 ? mStayOutboundPayment.totalPrice : mUserSimpleInformation.bonus;
+                case NONE:
+                    // 기본이 스티커 적립 상태이다.
+                    paymentPrice = mStayOutboundPayment.totalPrice;
+                    discountPrice = 0;
 
-                getViewInterface().setBonus(true, mUserSimpleInformation.bonus, discountPrice);
-                getViewInterface().setDepositSticker(false);
-            } else
-            {
-                // 기본이 스티커 적립 상태이다.
-                paymentPrice = mStayOutboundPayment.totalPrice;
-                discountPrice = 0;
+                    getViewInterface().setBonus(false, mUserSimpleInformation.bonus, 0);
+                    getViewInterface().setDepositSticker(false);
+                    break;
 
-                getViewInterface().setBonus(false, mUserSimpleInformation.bonus, 0);
-                getViewInterface().setDepositSticker(hasDepositSticker());
+                case BONUS:
+                    paymentPrice = mStayOutboundPayment.totalPrice - mUserSimpleInformation.bonus;
+                    discountPrice = paymentPrice < 0 ? mStayOutboundPayment.totalPrice : mUserSimpleInformation.bonus;
+
+                    getViewInterface().setBonus(true, mUserSimpleInformation.bonus, discountPrice);
+                    getViewInterface().setDepositSticker(false);
+                    break;
+
+                case COUPON:
+                    return;
+
+                case STICKER:
+                default:
+                    // 기본이 스티커 적립 상태이다.
+                    paymentPrice = mStayOutboundPayment.totalPrice;
+                    discountPrice = 0;
+
+                    getViewInterface().setBonus(false, mUserSimpleInformation.bonus, 0);
+                    getViewInterface().setDepositSticker(hasDepositSticker());
+                    break;
             }
 
             setDepositStickerCard(mStayOutboundPayment, mStayBookDateTime);
