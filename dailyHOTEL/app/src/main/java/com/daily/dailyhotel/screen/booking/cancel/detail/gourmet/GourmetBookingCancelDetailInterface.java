@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.location.Location;
 
 import com.daily.base.BaseDialogViewInterface;
-import com.daily.dailyhotel.entity.GourmetBookingDetail;
 import com.daily.dailyhotel.entity.GourmetMultiBookingDetail;
 
 import io.reactivex.Observable;

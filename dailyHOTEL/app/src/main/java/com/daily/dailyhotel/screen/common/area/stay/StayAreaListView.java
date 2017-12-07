@@ -32,7 +32,7 @@ import io.reactivex.functions.Function;
 
 public class StayAreaListView extends BaseDialogView<StayAreaListView.OnEventListener, ActivityStayAreaListDataBinding> implements StayAreaListInterface
 {
-    private StayAreaListAdapter mStayDistrictListAdapter;
+    StayAreaListAdapter mStayDistrictListAdapter;
 
     private LayoutRegionListLocationDataBinding mLayoutRegionListLocationDataBinding;
 

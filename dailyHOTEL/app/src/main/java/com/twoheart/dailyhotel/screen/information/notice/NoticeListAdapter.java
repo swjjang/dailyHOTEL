@@ -95,8 +95,8 @@ public class NoticeListAdapter extends ArrayAdapter<Notice>
             view = convertView;
         }
 
-        TextView titleTextView = (TextView) view.findViewById(R.id.titleTextView);
-        TextView dateTextView = (TextView) view.findViewById(R.id.dateTextView);
+        TextView titleTextView = view.findViewById(R.id.titleTextView);
+        TextView dateTextView = view.findViewById(R.id.dateTextView);
         View newIconView = view.findViewById(R.id.newIconView);
 
         Notice notice = getItem(position);

@@ -36,9 +36,9 @@ import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
-import com.daily.dailyhotel.screen.home.stay.outbound.calendar.StayOutboundCalendarActivity;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
+import com.daily.dailyhotel.screen.home.stay.outbound.calendar.StayOutboundCalendarActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.filter.StayOutboundFilterActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
@@ -363,7 +363,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
                         if (observable != null)
                         {
-                            lock();
+                            screenLock(true);
 
                             setScreenVisible(ScreenType.SEARCH_LOCATION, mStayOutboundFilters);
 
@@ -418,7 +418,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
                             if (observable != null)
                             {
-                                lock();
+                                screenLock(true);
 
                                 setScreenVisible(ScreenType.SEARCH_LOCATION, mStayOutboundFilters);
 
@@ -469,7 +469,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
                             if (observable != null)
                             {
-                                lock();
+                                screenLock(true);
 
                                 setScreenVisible(ScreenType.SEARCH_LOCATION, mStayOutboundFilters);
 
@@ -521,7 +521,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
                             if (observable != null)
                             {
-                                lock();
+                                screenLock(true);
 
                                 setScreenVisible(ScreenType.SEARCH_LOCATION, mStayOutboundFilters);
 

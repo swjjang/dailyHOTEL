@@ -90,8 +90,8 @@ public class HappyTalkCategoryDialogLayout extends BaseLayout implements View.On
 
     private void initCategoryLayout(View view, HappyTalkCategoryDialog.CallScreen callScreen)
     {
-        mMainCategorySpinner = (DailyHintSpinner) view.findViewById(R.id.mainCategorySpinner);
-        mSubCategorySpinner = (DailyHintSpinner) view.findViewById(R.id.subCategorySpinner);
+        mMainCategorySpinner = view.findViewById(R.id.mainCategorySpinner);
+        mSubCategorySpinner = view.findViewById(R.id.subCategorySpinner);
 
         View negativeTextView = view.findViewById(R.id.negativeTextView);
         final View positiveTextView = view.findViewById(R.id.positiveTextView);
@@ -226,7 +226,7 @@ public class HappyTalkCategoryDialogLayout extends BaseLayout implements View.On
             mSelectedPosition = -1;
         }
 
-        private void setSelectedPosition(int position)
+        void setSelectedPosition(int position)
         {
             mSelectedPosition = position;
         }

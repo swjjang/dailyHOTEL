@@ -42,7 +42,7 @@ public class SuggestRemoteImpl extends BaseRemoteImpl implements SuggestInterfac
         return mDailyMobileService.getSuggestsByStayOutbound(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API), keyword)//
             .subscribeOn(Schedulers.io()).map((suggestsDataBaseDto) ->
             {
-                List<Suggest> list = null;
+                List<Suggest> list;
 
                 if (suggestsDataBaseDto != null)
                 {

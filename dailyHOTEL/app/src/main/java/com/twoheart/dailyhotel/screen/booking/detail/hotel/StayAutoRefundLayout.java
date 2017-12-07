@@ -47,7 +47,7 @@ public class StayAutoRefundLayout extends BaseLayout implements Constants, View.
     @Override
     protected void initLayout(View view)
     {
-        mSelectReasonCancelTextView = (TextView) view.findViewById(R.id.selectReasonCancelView);
+        mSelectReasonCancelTextView = view.findViewById(R.id.selectReasonCancelView);
         mSelectReasonCancelTextView.setOnClickListener(this);
 
         initAccountLayout(view);
@@ -62,11 +62,11 @@ public class StayAutoRefundLayout extends BaseLayout implements Constants, View.
 
         mRefundAccountLayout = view.findViewById(R.id.refundAccountLayout);
 
-        mBankNameTextView = (TextView) view.findViewById(R.id.bankNameTextView);
+        mBankNameTextView = view.findViewById(R.id.bankNameTextView);
         mBankNameTextView.setOnClickListener(this);
 
-        mAccountNumberEditText = (EditText) view.findViewById(R.id.accountNumberEditText);
-        mAccountNameEditText = (EditText) view.findViewById(R.id.accountNameEditText);
+        mAccountNumberEditText = view.findViewById(R.id.accountNumberEditText);
+        mAccountNameEditText = view.findViewById(R.id.accountNameEditText);
 
         mAccountNumberEditText.addTextChangedListener(new TextWatcher()
         {
@@ -118,9 +118,9 @@ public class StayAutoRefundLayout extends BaseLayout implements Constants, View.
         initTimeInformationLayout(mContext, dateInformationLayout, stayBookingDetail);
 
         // 예약 장소
-        TextView hotelNameTextView = (TextView) mRootView.findViewById(R.id.hotelNameTextView);
-        TextView roomTypeTextView = (TextView) mRootView.findViewById(R.id.roomTypeTextView);
-        TextView addressTextView = (TextView) mRootView.findViewById(R.id.addressTextView);
+        TextView hotelNameTextView = mRootView.findViewById(R.id.hotelNameTextView);
+        TextView roomTypeTextView = mRootView.findViewById(R.id.roomTypeTextView);
+        TextView addressTextView = mRootView.findViewById(R.id.addressTextView);
 
         hotelNameTextView.setText(stayBookingDetail.placeName);
         roomTypeTextView.setText(stayBookingDetail.roomName);
@@ -136,9 +136,9 @@ public class StayAutoRefundLayout extends BaseLayout implements Constants, View.
             return;
         }
 
-        TextView checkInDayTextView = (TextView) view.findViewById(R.id.checkinDayTextView);
-        TextView checkOutDayTextView = (TextView) view.findViewById(R.id.checkoutDayTextView);
-        TextView nightsTextView = (TextView) view.findViewById(R.id.nightsTextView);
+        TextView checkInDayTextView = view.findViewById(R.id.checkinDayTextView);
+        TextView checkOutDayTextView = view.findViewById(R.id.checkoutDayTextView);
+        TextView nightsTextView = view.findViewById(R.id.nightsTextView);
 
         try
         {
@@ -188,14 +188,14 @@ public class StayAutoRefundLayout extends BaseLayout implements Constants, View.
             return;
         }
 
-        TextView paymentDateTextView = (TextView) view.findViewById(R.id.paymentDateTextView);
-        TextView priceTextView = (TextView) view.findViewById(R.id.priceTextView);
+        TextView paymentDateTextView = view.findViewById(R.id.paymentDateTextView);
+        TextView priceTextView = view.findViewById(R.id.priceTextView);
 
         View bonusLayout = view.findViewById(R.id.bonusLayout);
         View couponLayout = view.findViewById(R.id.couponLayout);
-        TextView bonusTextView = (TextView) view.findViewById(R.id.bonusTextView);
-        TextView couponTextView = (TextView) view.findViewById(R.id.couponTextView);
-        TextView totalPriceTextView = (TextView) view.findViewById(R.id.totalPriceTextView);
+        TextView bonusTextView = view.findViewById(R.id.bonusTextView);
+        TextView couponTextView = view.findViewById(R.id.couponTextView);
+        TextView totalPriceTextView = view.findViewById(R.id.totalPriceTextView);
 
         try
         {

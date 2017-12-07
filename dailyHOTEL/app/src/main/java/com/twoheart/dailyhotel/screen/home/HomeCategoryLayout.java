@@ -101,7 +101,7 @@ public class HomeCategoryLayout extends RelativeLayout
         nearbyStayView.setTag(DailyCategoryType.STAY_NEARBY);
         nearbyStayView.setOnClickListener(mItemClickListener);
 
-        mItemGridLayout = (android.support.v7.widget.GridLayout) findViewById(R.id.categoryGridLayout);
+        mItemGridLayout = findViewById(R.id.categoryGridLayout);
         mItemGridLayout.setColumnCount(MAX_COLUMN_COUNT);
 
         addGridItemView(mItemGridLayout, sColumnList);

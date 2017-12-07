@@ -39,7 +39,7 @@ public class GourmetReservationDetailLayout extends PlaceReservationDetailLayout
 
         // 3일전 부터 몇일 남음 필요.
         View remainedDayLayout = view.findViewById(R.id.remainedDayLayout);
-        TextView remainedDayTextView = (TextView) view.findViewById(R.id.remainedDayTextView);
+        TextView remainedDayTextView = view.findViewById(R.id.remainedDayTextView);
         String remainedDayText;
 
         try
@@ -74,13 +74,13 @@ public class GourmetReservationDetailLayout extends PlaceReservationDetailLayout
             ExLog.d(e.toString());
         }
 
-        TextView gourmetNameTextView = (TextView) view.findViewById(R.id.gourmetNameTextView);
-        TextView addressTextView = (TextView) view.findViewById(R.id.addressTextView);
+        TextView gourmetNameTextView = view.findViewById(R.id.gourmetNameTextView);
+        TextView addressTextView = view.findViewById(R.id.addressTextView);
 
         gourmetNameTextView.setText(gourmetBookingDetail.placeName);
         addressTextView.setText(gourmetBookingDetail.address);
 
-        DailyBookingProductView productView = (DailyBookingProductView) view.findViewById(R.id.productInformationView);
+        DailyBookingProductView productView = view.findViewById(R.id.productInformationView);
 
         // TODO : Test Code 서버 연결 작업 후 재 작업 필요.
         int randPersons = new Random().nextInt(5);
@@ -101,8 +101,8 @@ public class GourmetReservationDetailLayout extends PlaceReservationDetailLayout
 
         GourmetBookingDetail gourmetBookingDetail = (GourmetBookingDetail) placeBookingDetail;
 
-        TextView ticketDateTextView = (TextView) view.findViewById(R.id.ticketDateTextView);
-        TextView visitPersonTextView = (TextView) view.findViewById(R.id.visitPersonTextView);
+        TextView ticketDateTextView = view.findViewById(R.id.ticketDateTextView);
+        TextView visitPersonTextView = view.findViewById(R.id.visitPersonTextView);
 
         try
         {
@@ -134,9 +134,9 @@ public class GourmetReservationDetailLayout extends PlaceReservationDetailLayout
 
         GourmetBookingDetail gourmetBookingDetail = (GourmetBookingDetail) placeBookingDetail;
 
-        TextView guestNameTextView = (TextView) view.findViewById(R.id.guestNameTextView);
-        TextView guestPhoneTextView = (TextView) view.findViewById(R.id.guestPhoneTextView);
-        TextView guestEmailTextView = (TextView) view.findViewById(R.id.guestEmailTextView);
+        TextView guestNameTextView = view.findViewById(R.id.guestNameTextView);
+        TextView guestPhoneTextView = view.findViewById(R.id.guestPhoneTextView);
+        TextView guestEmailTextView = view.findViewById(R.id.guestEmailTextView);
 
         guestNameTextView.setText(gourmetBookingDetail.guestName);
         guestPhoneTextView.setText(Util.addHyphenMobileNumber(mContext, gourmetBookingDetail.guestPhone));
@@ -153,15 +153,15 @@ public class GourmetReservationDetailLayout extends PlaceReservationDetailLayout
 
         GourmetBookingDetail gourmetBookingDetail = (GourmetBookingDetail) placeBookingDetail;
 
-        TextView paymentDateTextView = (TextView) view.findViewById(R.id.paymentDateTextView);
-        TextView priceTextView = (TextView) view.findViewById(R.id.priceTextView);
+        TextView paymentDateTextView = view.findViewById(R.id.paymentDateTextView);
+        TextView priceTextView = view.findViewById(R.id.priceTextView);
 
         View bonusLayout = view.findViewById(R.id.bonusLayout);
         View couponLayout = view.findViewById(R.id.couponLayout);
         bonusLayout.setVisibility(View.GONE);
 
-        TextView couponTextView = (TextView) view.findViewById(R.id.couponTextView);
-        TextView totalPriceTextView = (TextView) view.findViewById(R.id.totalPriceTextView);
+        TextView couponTextView = view.findViewById(R.id.couponTextView);
+        TextView totalPriceTextView = view.findViewById(R.id.totalPriceTextView);
 
         try
         {

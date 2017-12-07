@@ -1140,7 +1140,7 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
     @SuppressWarnings("ResourceType")
     void relocationMyLocation(View view)
     {
-        mMyLocationView = (ImageView) view.findViewById(0x2);
+        mMyLocationView = view.findViewById(0x2);
 
         if (mMyLocationView != null)
         {

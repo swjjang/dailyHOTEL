@@ -76,23 +76,23 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
 
         initToolbar();
 
-        mConfirmView = (TextView) findViewById(R.id.confirmView);
+        mConfirmView = findViewById(R.id.confirmView);
         setConfirmOnClickListener(this);
 
-        ScrollView contentScrollView = (ScrollView) findViewById(R.id.contentScrollView);
+        ScrollView contentScrollView = findViewById(R.id.contentScrollView);
         EdgeEffectColor.setEdgeGlowColor(contentScrollView, getResources().getColor(R.color.default_over_scroll_edge));
 
         View resetCurationView = findViewById(R.id.resetCurationView);
         resetCurationView.setOnClickListener(this);
 
-        ViewGroup contentLayout = (ViewGroup) findViewById(R.id.contentLayout);
+        ViewGroup contentLayout = findViewById(R.id.contentLayout);
 
         initContentLayout(contentLayout);
     }
 
     private void initToolbar()
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.activity_curation_title);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {

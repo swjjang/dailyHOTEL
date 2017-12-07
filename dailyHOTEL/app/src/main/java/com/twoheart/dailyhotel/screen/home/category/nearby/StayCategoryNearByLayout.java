@@ -53,7 +53,7 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
     private View mEmptyLayout, mSearchLocationLayout;
     private View mResultLayout;
 
-    private DailyFloatingActionView mFloatingActionView;
+    DailyFloatingActionView mFloatingActionView;
 
     protected TabLayout mCategoryTabLayout;
     private View mCalendarUnderlineView;
@@ -146,9 +146,9 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
         View calendarLayout = view.findViewById(R.id.calendarLayout);
         calendarLayout.setOnClickListener(this);
 
-        mCalendarTextView = (TextView) view.findViewById(R.id.calendarTextView);
+        mCalendarTextView = view.findViewById(R.id.calendarTextView);
 
-        mDistanceFilterSpinner = (Spinner) view.findViewById(R.id.distanceSpinner);
+        mDistanceFilterSpinner = view.findViewById(R.id.distanceSpinner);
 
         CharSequence[] strings = mContext.getResources().getTextArray(R.array.search_result_distance_array);
         mDistanceFilterAdapter = new DistanceFilterAdapter(mContext, R.layout.list_row_search_result_spinner, strings);
@@ -176,9 +176,9 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
 
     private void initCategoryTabLayout(View view)
     {
-        mCategoryTabLayout = (TabLayout) view.findViewById(R.id.categoryTabLayout);
+        mCategoryTabLayout = view.findViewById(R.id.categoryTabLayout);
         mCalendarUnderlineView = view.findViewById(R.id.calendarUnderLine);
-        mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
+        mViewPager = view.findViewById(R.id.viewPager);
     }
 
     protected void setCalendarText(StayBookingDay stayBookingDay)
@@ -234,7 +234,7 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
 
     public void setToolbarTitle(String title)
     {
-        TextView titleView = (TextView) mToolbar.findViewById(R.id.titleView);
+        TextView titleView = mToolbar.findViewById(R.id.titleView);
 
         if (titleView == null)
         {
@@ -247,10 +247,10 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
 
     private void initEmptyLayout(View view)
     {
-        ImageView emptyIconImageView = (ImageView) view.findViewById(R.id.emptyIconImageView);
+        ImageView emptyIconImageView = view.findViewById(R.id.emptyIconImageView);
         View changeDateView = view.findViewById(R.id.changeDateView);
-        TextView researchView = (TextView) view.findViewById(R.id.researchView);
-        TextView callTextView = (TextView) view.findViewById(R.id.callTextView);
+        TextView researchView = view.findViewById(R.id.researchView);
+        TextView callTextView = view.findViewById(R.id.callTextView);
 
         emptyIconImageView.setImageResource(getEmptyIconResourceId());
 
@@ -277,13 +277,13 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
             return;
         }
 
-        ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        ProgressBar progressBar = view.findViewById(R.id.progressBar);
         progressBar.getIndeterminateDrawable().setColorFilter(mContext.getResources().getColor(R.color.location_progressbar_cc8c8c8), PorterDuff.Mode.SRC_IN);
     }
 
     private void initOptionLayout(View view)
     {
-        mFloatingActionView = (DailyFloatingActionView) view.findViewById(R.id.floatingActionView);
+        mFloatingActionView = view.findViewById(R.id.floatingActionView);
         mFloatingActionView.setOnViewOptionClickListener(v -> ((OnEventListener) mOnEventListener).onViewTypeClick());
         mFloatingActionView.setOnFilterOptionClickListener(v -> ((OnEventListener) mOnEventListener).onFilterClick());
         mFloatingActionView.post(() -> mFloatingActionView.setTag(mViewPager.getBottom() - mFloatingActionView.getTop()));

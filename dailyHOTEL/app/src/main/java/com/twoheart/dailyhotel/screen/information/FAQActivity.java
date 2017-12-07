@@ -50,7 +50,7 @@ public class FAQActivity extends WebViewActivity
 
     private void initToolbar()
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.frag_faqs);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {

@@ -52,17 +52,17 @@ public class GourmetMapViewPagerAdapter extends PlaceMapViewPagerAdapter
     private void makeLayout(final View view, final Gourmet gourmet)
     {
         //        View gradientView = view.findViewById(R.id.gradientView);
-        com.facebook.drawee.view.SimpleDraweeView placeImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.imageView);
-        TextView name = (TextView) view.findViewById(R.id.nameTextView);
-        TextView priceTextView = (TextView) view.findViewById(R.id.priceTextView);
-        TextView satisfactionView = (TextView) view.findViewById(R.id.satisfactionView);
-        TextView discountTextView = (TextView) view.findViewById(R.id.discountPriceTextView);
-        TextView addressTextView = (TextView) view.findViewById(R.id.addressTextView);
-        TextView grade = (TextView) view.findViewById(R.id.gradeTextView);
+        com.facebook.drawee.view.SimpleDraweeView placeImageView = view.findViewById(R.id.imageView);
+        TextView name = view.findViewById(R.id.nameTextView);
+        TextView priceTextView = view.findViewById(R.id.priceTextView);
+        TextView satisfactionView = view.findViewById(R.id.satisfactionView);
+        TextView discountTextView = view.findViewById(R.id.discountPriceTextView);
+        TextView addressTextView = view.findViewById(R.id.addressTextView);
+        TextView grade = view.findViewById(R.id.gradeTextView);
         View closeView = view.findViewById(R.id.closeImageView);
-        TextView persons = (TextView) view.findViewById(R.id.personsTextView);
+        TextView persons = view.findViewById(R.id.personsTextView);
         View dBenefitLayout = view.findViewById(R.id.dBenefitLayout);
-        TextView dBenefitTextView = (TextView) view.findViewById(R.id.dBenefitTextView);
+        TextView dBenefitTextView = view.findViewById(R.id.dBenefitTextView);
 
         addressTextView.setText(gourmet.addressSummary);
         name.setText(gourmet.name);

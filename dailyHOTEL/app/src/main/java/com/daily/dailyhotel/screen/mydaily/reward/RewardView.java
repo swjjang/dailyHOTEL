@@ -29,9 +29,9 @@ import io.reactivex.Observer;
 
 public class RewardView extends BaseDialogView<RewardView.OnEventListener, ActivityRewardDataBinding> implements RewardInterface
 {
-    private AnimatorSet mIssueCouponAnimatorSet;
-    private AnimatorSet mIssueCouponShakeAnimatorSet;
-    private AnimatorSet mStickerAnimatorSet;
+    AnimatorSet mIssueCouponAnimatorSet;
+    AnimatorSet mIssueCouponShakeAnimatorSet;
+    AnimatorSet mStickerAnimatorSet;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -305,7 +305,7 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
 
             ObjectAnimator objectAnimator3 = ObjectAnimator.ofFloat(stickerViews[i], View.ALPHA, 0.5f, 0.9f);
             objectAnimator3.setStartDelay(MS_PER_FRAME * 9);
-            objectAnimator3.setDuration(MS_PER_FRAME * 1);
+            objectAnimator3.setDuration(MS_PER_FRAME);
 
             animatorList.add(objectAnimator1);
             animatorList.add(objectAnimator2);

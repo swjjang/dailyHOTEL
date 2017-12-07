@@ -49,7 +49,7 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
         final int NUMBER_OF_RESULTS = 200;
 
         /// 디폴트 인자들
-        String sort = "DEFAULT";
+        String sort;
 
         try
         {
@@ -154,7 +154,7 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
         return mDailyMobileService.getStayOutboundDetail(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)//
             , jsonObject).subscribeOn(Schedulers.io()).map((stayOutboundDetailDataBaseDto) ->
         {
-            StayOutboundDetail stayOutboundDetail = null;
+            StayOutboundDetail stayOutboundDetail;
 
             if (stayOutboundDetailDataBaseDto != null)
             {

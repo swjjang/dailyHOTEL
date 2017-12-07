@@ -35,7 +35,7 @@ public class StayCategoryNearByListLayout extends StayListLayout
     {
         super.initLayout(view);
 
-        mResultTextView = (TextView) view.findViewById(R.id.resultCountTextView);
+        mResultTextView = view.findViewById(R.id.resultCountTextView);
     }
 
     @Override

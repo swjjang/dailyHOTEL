@@ -28,7 +28,7 @@ public class DailyRewardCardView extends ConstraintLayout
 {
     private DailyViewRewardCardDataBinding mViewDataBinding;
 
-    private AnimatorSet mStickerAnimatorSet;
+    AnimatorSet mStickerAnimatorSet;
 
     public DailyRewardCardView(Context context)
     {
@@ -461,7 +461,7 @@ public class DailyRewardCardView extends ConstraintLayout
 
             ObjectAnimator objectAnimator3 = ObjectAnimator.ofFloat(campaignViews[i], View.ALPHA, 0.5f, 1.0f);
             objectAnimator3.setStartDelay(MS_PER_FRAME * 9);
-            objectAnimator3.setDuration(MS_PER_FRAME * 1);
+            objectAnimator3.setDuration(MS_PER_FRAME);
 
             animatorList.add(objectAnimator1);
             animatorList.add(objectAnimator2);
@@ -479,7 +479,7 @@ public class DailyRewardCardView extends ConstraintLayout
 
                 ObjectAnimator objectAnimator12 = ObjectAnimator.ofFloat(lineViews[i], View.ALPHA, 0.5f, 1.0f);
                 objectAnimator12.setStartDelay(MS_PER_FRAME * 9);
-                objectAnimator12.setDuration(MS_PER_FRAME * 1);
+                objectAnimator12.setDuration(MS_PER_FRAME);
 
                 animatorList.add(objectAnimator10);
                 animatorList.add(objectAnimator11);

@@ -272,12 +272,12 @@ public class RewardHistoryPresenter extends BaseExceptionPresenter<RewardHistory
         onBackClick();
     }
 
-    private void setStickerValidity(String validity)
+    void setStickerValidity(String validity)
     {
         mStickerValidity = validity;
     }
 
-    private void notifyStickerValidityChanged()
+    void notifyStickerValidityChanged()
     {
         if (DailyTextUtils.isTextEmpty(mStickerValidity) == true)
         {
@@ -293,7 +293,7 @@ public class RewardHistoryPresenter extends BaseExceptionPresenter<RewardHistory
         }
     }
 
-    private void onRewardHistoryList(List<ObjectItem> objectItemList)
+    void onRewardHistoryList(List<ObjectItem> objectItemList)
     {
         if (objectItemList == null || objectItemList.size() == 0)
         {

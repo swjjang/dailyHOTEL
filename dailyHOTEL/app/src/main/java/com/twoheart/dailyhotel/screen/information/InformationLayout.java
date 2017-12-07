@@ -67,7 +67,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
     {
         initToolbar(mContext, view);
 
-        mScrollView = (DailyScrollView) view.findViewById(R.id.informationScrollView);
+        mScrollView = view.findViewById(R.id.informationScrollView);
         EdgeEffectColor.setEdgeGlowColor(mScrollView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
         mScrollView.setOnScrollChangedListener(new DailyScrollView.OnScrollChangedListener()
@@ -107,7 +107,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         mNewEventIconView = eventLayout.findViewById(R.id.eventNewIconView);
         mNewNoticeIconView = noticeLayout.findViewById(R.id.noticeNewIconView);
 
-        TextView versionTextView = (TextView) view.findViewById(R.id.versionTextView);
+        TextView versionTextView = view.findViewById(R.id.versionTextView);
 
         String dotVersion = String.format(Locale.KOREA, "%s.%d.%d.%s", DailyHotel.VERSION_CODE.substring(0, 1) //
             , Integer.parseInt(DailyHotel.VERSION_CODE.substring(1, 3))//
@@ -122,9 +122,9 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         {
             debugLayout.setVisibility(View.VISIBLE);
 
-            TextView productServerTextView = (TextView) debugLayout.findViewById(R.id.productServerTextView);
-            TextView stagingServerTextView = (TextView) debugLayout.findViewById(R.id.stagingServerTextView);
-            TextView devServerTextView = (TextView) debugLayout.findViewById(R.id.devServerTextView);
+            TextView productServerTextView = debugLayout.findViewById(R.id.productServerTextView);
+            TextView stagingServerTextView = debugLayout.findViewById(R.id.stagingServerTextView);
+            TextView devServerTextView = debugLayout.findViewById(R.id.devServerTextView);
 
             productServerTextView.setOnClickListener(new View.OnClickListener()
             {
@@ -162,7 +162,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
                 }
             });
 
-            TextView debugTextView = (TextView) debugLayout.findViewById(R.id.debugTextView);
+            TextView debugTextView = debugLayout.findViewById(R.id.debugTextView);
 
             WebView webView = new WebView(mContext);
             String webViewVersion = webView.getSettings().getUserAgentString();
@@ -190,7 +190,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
     private void initToolbar(Context context, View view)
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) view.findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = view.findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.actionbar_title_setting_frag);
         dailyToolbarView.setBackVisible(false);
     }

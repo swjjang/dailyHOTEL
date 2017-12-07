@@ -168,7 +168,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
     {
         super.initLayout(layoutResID, dayCountOfMax);
 
-        mConfirmTextView = (TextView) findViewById(R.id.confirmView);
+        mConfirmTextView = findViewById(R.id.confirmView);
         mConfirmTextView.setVisibility(View.VISIBLE);
         mConfirmTextView.setOnClickListener(this);
         mConfirmTextView.setEnabled(false);
@@ -333,7 +333,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
             return;
         }
 
-        TextView visitTextView = (TextView) view.findViewById(R.id.textView);
+        TextView visitTextView = view.findViewById(R.id.textView);
         visitTextView.setText(R.string.label_visit_day);
         visitTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
         visitTextView.setTypeface(FontManager.getInstance(this).getRegularTypeface());
@@ -343,7 +343,7 @@ public class GourmetCalendarActivity extends PlaceCalendarActivity
         visitLayoutParams.topMargin = ScreenUtils.dpToPx(this, 5);
         visitTextView.setLayoutParams(visitLayoutParams);
 
-        DailyDayStrikeTextView dayTextView = (DailyDayStrikeTextView) view.findViewById(R.id.dateTextView);
+        DailyDayStrikeTextView dayTextView = view.findViewById(R.id.dateTextView);
         dayTextView.setStrikeFlag(false);
 
         view.setBackgroundResource(R.drawable.select_date_gourmet);

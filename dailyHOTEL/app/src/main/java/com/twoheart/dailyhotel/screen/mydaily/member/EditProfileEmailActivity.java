@@ -59,7 +59,7 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
 
     private void initToolbar()
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.actionbar_title_edit_email);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
@@ -75,7 +75,7 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
     {
         mEmailView = findViewById(R.id.emailView);
 
-        mEmailEditText = (DailyAutoCompleteEditText) findViewById(R.id.emailEditText);
+        mEmailEditText = findViewById(R.id.emailEditText);
         mEmailEditText.setDeleteButtonVisible(null);
         mEmailEditText.setOnFocusChangeListener(this);
         mEmailEditText.addTextChangedListener(new TextWatcher()

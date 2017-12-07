@@ -4,36 +4,17 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.annotation.TargetApi;
-import android.content.Context;
-import android.databinding.DataBindingUtil;
-import android.os.Build;
-import android.support.v4.util.Pair;
-import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
-import com.daily.base.widget.DailyTextView;
-import com.daily.dailyhotel.entity.ObjectItem;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityCalendarDataBinding;
-import com.twoheart.dailyhotel.databinding.ViewCalendarDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-
-import java.util.Calendar;
-import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;

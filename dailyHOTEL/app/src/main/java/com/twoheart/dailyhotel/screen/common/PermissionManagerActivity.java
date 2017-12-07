@@ -333,8 +333,8 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
 
         View view = LayoutInflater.from(this).inflate(R.layout.view_permission_dialog_layout01, null, false);
 
-        TextView messageTextView = (TextView) view.findViewById(R.id.messageTextView);
-        TextView permissionTextView = (TextView) view.findViewById(R.id.permissionTextView);
+        TextView messageTextView = view.findViewById(R.id.messageTextView);
+        TextView permissionTextView = view.findViewById(R.id.permissionTextView);
 
         switch (permissionType)
         {
@@ -401,10 +401,10 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
 
         View view = LayoutInflater.from(this).inflate(R.layout.view_permission_dialog_layout02, null, false);
 
-        TextView messageTextView01 = (TextView) view.findViewById(R.id.messageTextView01);
-        TextView messageTextView02 = (TextView) view.findViewById(R.id.messageTextView02);
-        TextView messageTextView03 = (TextView) view.findViewById(R.id.messageTextView03);
-        TextView permissionTextView = (TextView) view.findViewById(R.id.permissionTextView);
+        TextView messageTextView01 = view.findViewById(R.id.messageTextView01);
+        TextView messageTextView02 = view.findViewById(R.id.messageTextView02);
+        TextView messageTextView03 = view.findViewById(R.id.messageTextView03);
+        TextView permissionTextView = view.findViewById(R.id.permissionTextView);
 
         switch (permissionType)
         {
@@ -529,12 +529,12 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
         dialog.setCanceledOnTouchOutside(false);
 
         // 상단
-        TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
+        TextView titleTextView = dialogView.findViewById(R.id.titleTextView);
         titleTextView.setVisibility(View.VISIBLE);
         titleTextView.setText(getString(R.string.label_search_agree_termsoflocation));
 
         // 메시지
-        TextView messageTextView = (TextView) dialogView.findViewById(R.id.messageTextView);
+        TextView messageTextView = dialogView.findViewById(R.id.messageTextView);
 
         String message = getString(R.string.message_search_agree_termsoflocation);
 
@@ -569,7 +569,7 @@ public class PermissionManagerActivity extends BaseActivity implements Constants
         twoButtonLayout.setVisibility(View.GONE);
         oneButtonLayout.setVisibility(View.VISIBLE);
 
-        TextView confirmTextView = (TextView) oneButtonLayout.findViewById(R.id.confirmTextView);
+        TextView confirmTextView = oneButtonLayout.findViewById(R.id.confirmTextView);
 
         confirmTextView.setText(R.string.label_search_agree_search_location);
         oneButtonLayout.setOnClickListener(new View.OnClickListener()

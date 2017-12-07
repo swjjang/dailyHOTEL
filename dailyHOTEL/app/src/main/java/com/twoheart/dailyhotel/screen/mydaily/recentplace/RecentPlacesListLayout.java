@@ -28,7 +28,7 @@ public abstract class RecentPlacesListLayout extends BaseBlurLayout
     private DailyImageView mEmptyImageView;
     private DailyTextView mEmptyTextView;
     private DailyTextView mEmptyButtonTextView;
-    private RecentPlacesListAdapter mListAdapter;
+    RecentPlacesListAdapter mListAdapter;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -79,10 +79,10 @@ public abstract class RecentPlacesListLayout extends BaseBlurLayout
         mEmptyLayout = view.findViewById(R.id.emptyLayout);
         setEmptyViewVisibility(View.GONE);
 
-        mEmptyImageView = (DailyImageView) view.findViewById(R.id.emptyImageView);
-        mEmptyTextView = (DailyTextView) view.findViewById(R.id.emptyTextView);
+        mEmptyImageView = view.findViewById(R.id.emptyImageView);
+        mEmptyTextView = view.findViewById(R.id.emptyTextView);
         mEmptyTextView.setText(getEmptyTextResId());
-        mEmptyButtonTextView = (DailyTextView) view.findViewById(R.id.buttonView);
+        mEmptyButtonTextView = view.findViewById(R.id.buttonView);
         mEmptyButtonTextView.setText(getEmptyButtonTextResId());
 
         mEmptyButtonTextView.setOnClickListener(new View.OnClickListener()
@@ -102,7 +102,7 @@ public abstract class RecentPlacesListLayout extends BaseBlurLayout
 
         mEmptyImageView.setVectorImageResource(imageResId);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        mRecyclerView = view.findViewById(R.id.recyclerView);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);

@@ -29,8 +29,8 @@ public class BookingCancelListAdapter extends RecyclerView.Adapter<RecyclerView.
 {
     private Context mContext;
     private List<BookingCancel> mList;
-    private RecyclerView mRecyclerView;
-    private BookingCancelListView.OnUserActionListener mOnUserActionListener;
+    RecyclerView mRecyclerView;
+    BookingCancelListView.OnUserActionListener mOnUserActionListener;
 
     public BookingCancelListAdapter(Context context, ArrayList<BookingCancel> list)
     {

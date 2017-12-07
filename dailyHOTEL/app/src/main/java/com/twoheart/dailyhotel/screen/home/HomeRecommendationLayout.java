@@ -101,7 +101,7 @@ public class HomeRecommendationLayout extends LinearLayout
         mImageHeight = ScreenUtils.getRatioHeightType21x9(mImageWidth);
         mExpectedItemHeight = mImageHeight + ScreenUtils.dpToPx(mContext, 78d);
 
-        mContentLayout = (LinearLayout) view.findViewById(R.id.contentLayout);
+        mContentLayout = view.findViewById(R.id.contentLayout);
 
         setVisibility(View.GONE);
 
@@ -196,7 +196,7 @@ public class HomeRecommendationLayout extends LinearLayout
         View view = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_recommendation_item_layout, null);
         view.setTag(recommendation);
 
-        SimpleDraweeView imageView = (SimpleDraweeView) view.findViewById(R.id.contentImageView);
+        SimpleDraweeView imageView = view.findViewById(R.id.contentImageView);
         imageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
         imageView.setTag(imageView.getId(), position);
         imageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
@@ -212,9 +212,9 @@ public class HomeRecommendationLayout extends LinearLayout
             Util.requestImageResize(mContext, imageView, recommendation.defaultImageUrl);
         }
 
-        DailyTextView titleView = (DailyTextView) view.findViewById(R.id.contentTextView);
-        DailyTextView descriptionView = (DailyTextView) view.findViewById(R.id.contentDescriptionView);
-        DailyTextView countView = (DailyTextView) view.findViewById(R.id.contentCountView);
+        DailyTextView titleView = view.findViewById(R.id.contentTextView);
+        DailyTextView descriptionView = view.findViewById(R.id.contentDescriptionView);
+        DailyTextView countView = view.findViewById(R.id.contentCountView);
 
         titleView.setText(recommendation.title);
         descriptionView.setText(recommendation.subtitle);

@@ -177,11 +177,11 @@ public class SignupStep2Activity extends BaseActivity
         dialog.setCanceledOnTouchOutside(false);
 
         // 상단
-        TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
+        TextView titleTextView = dialogView.findViewById(R.id.titleTextView);
         titleTextView.setText(DailyRemoteConfigPreference.getInstance(SignupStep2Activity.this).getRemoteConfigTextSignUpText02());
 
         // 메시지
-        TextView messageTextView = (TextView) dialogView.findViewById(R.id.messageTextView);
+        TextView messageTextView = dialogView.findViewById(R.id.messageTextView);
 
         try
         {
@@ -200,7 +200,7 @@ public class SignupStep2Activity extends BaseActivity
             messageTextView.setVisibility(View.GONE);
         }
 
-        TextView confirmTextView = (TextView) dialogView.findViewById(R.id.confirmTextView);
+        TextView confirmTextView = dialogView.findViewById(R.id.confirmTextView);
         confirmTextView.setOnClickListener(new View.OnClickListener()
         {
             @Override

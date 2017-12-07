@@ -10,7 +10,6 @@ import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseFragment;
-import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 
 /**
  * Created by android_sam on 2016. 11. 1..

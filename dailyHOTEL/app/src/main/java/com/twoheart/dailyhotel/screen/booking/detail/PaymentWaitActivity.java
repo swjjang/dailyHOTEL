@@ -161,7 +161,7 @@ public class PaymentWaitActivity extends BaseActivity
 
     private void initToolbar()
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = findViewById(R.id.toolbarView);
 
         dailyToolbarView.setTitleText(R.string.actionbar_title_payment_wait_activity);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
@@ -203,18 +203,18 @@ public class PaymentWaitActivity extends BaseActivity
             return;
         }
 
-        ScrollView scrollLayout = (ScrollView) findViewById(R.id.scrollLayout);
+        ScrollView scrollLayout = findViewById(R.id.scrollLayout);
         EdgeEffectColor.setEdgeGlowColor(scrollLayout, getResources().getColor(R.color.default_over_scroll_edge));
 
-        TextView placeNameTextView = (TextView) findViewById(R.id.paymentWaitHotelNameView);
-        mAccountTextView = (TextView) findViewById(R.id.tv_payment_wait_account);
-        mDailyTextView = (TextView) findViewById(R.id.tv_payment_wait_name);
-        mPriceTextView = (TextView) findViewById(R.id.priceTextView);
-        mBonusTextView = (TextView) findViewById(R.id.bonusTextView);
-        mCouponTextView = (TextView) findViewById(R.id.couponTextView);
-        mTotalPriceTextView = (TextView) findViewById(R.id.totalPriceTextView);
-        mDeadlineTextView = (TextView) findViewById(R.id.tv_payment_wait_deadline);
-        mGuide1Layout = (ViewGroup) findViewById(R.id.guide1Layout);
+        TextView placeNameTextView = findViewById(R.id.paymentWaitHotelNameView);
+        mAccountTextView = findViewById(R.id.tv_payment_wait_account);
+        mDailyTextView = findViewById(R.id.tv_payment_wait_name);
+        mPriceTextView = findViewById(R.id.priceTextView);
+        mBonusTextView = findViewById(R.id.bonusTextView);
+        mCouponTextView = findViewById(R.id.couponTextView);
+        mTotalPriceTextView = findViewById(R.id.totalPriceTextView);
+        mDeadlineTextView = findViewById(R.id.tv_payment_wait_deadline);
+        mGuide1Layout = findViewById(R.id.guide1Layout);
 
         mBonusLayout = findViewById(R.id.bonusLayout);
         mCouponLayout = findViewById(R.id.couponLayout);
@@ -294,7 +294,7 @@ public class PaymentWaitActivity extends BaseActivity
         View contactUs02Layout = dialogView.findViewById(R.id.contactUs02Layout);
         contactUs02Layout.setVisibility(View.GONE);
 
-        DailyTextView contactUs01TextView = (DailyTextView) contactUs01Layout.findViewById(R.id.contactUs01TextView);
+        DailyTextView contactUs01TextView = contactUs01Layout.findViewById(R.id.contactUs01TextView);
         contactUs01TextView.setText(R.string.frag_faqs);
         contactUs01TextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_ops_05_faq, 0, 0, 0);
 
@@ -429,7 +429,7 @@ public class PaymentWaitActivity extends BaseActivity
         for (String guide : guides)
         {
             View textLayout = LayoutInflater.from(this).inflate(R.layout.list_row_detail_text, viewGroups, false);
-            TextView textView = (TextView) textLayout.findViewById(R.id.textView);
+            TextView textView = textLayout.findViewById(R.id.textView);
 
             String guideText = guide.replace("\n", " ").trim();
 

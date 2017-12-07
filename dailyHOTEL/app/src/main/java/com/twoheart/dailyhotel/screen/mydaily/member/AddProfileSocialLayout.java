@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.InputFilter;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
@@ -84,7 +83,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
     private void initToolbar(View view)
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) view.findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = view.findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.actionbar_title_userinfo_update_activity);
         dailyToolbarView.setOnBackClickListener(new OnClickListener()
         {
@@ -98,14 +97,14 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
     private void initLayoutForm(View view)
     {
-        final ScrollView scrollView = (ScrollView) view.findViewById(R.id.scrollLayout);
+        final ScrollView scrollView = view.findViewById(R.id.scrollLayout);
         EdgeEffectColor.setEdgeGlowColor(scrollView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
         mPhoneLayout = view.findViewById(R.id.phoneLayout);
         mEmailLayout = view.findViewById(R.id.emailLayout);
         mNameLayout = view.findViewById(R.id.nameLayout);
 
-        mCountryEditText = (DailyEditText) mPhoneLayout.findViewById(R.id.countryEditText);
+        mCountryEditText = mPhoneLayout.findViewById(R.id.countryEditText);
         mCountryEditText.setFocusable(false);
         mCountryEditText.setCursorVisible(false);
         mCountryEditText.setOnClickListener(new OnClickListener()
@@ -118,7 +117,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         });
 
         mPhoneView = mPhoneLayout.findViewById(R.id.phoneView);
-        mPhoneEditText = (DailyEditText) mPhoneLayout.findViewById(R.id.phoneEditText);
+        mPhoneEditText = mPhoneLayout.findViewById(R.id.phoneEditText);
         mPhoneEditText.setDeleteButtonVisible(null);
         mPhoneEditText.setOnFocusChangeListener(this);
 
@@ -126,7 +125,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         confirmView.setOnClickListener(this);
 
         mEmailView = mEmailLayout.findViewById(R.id.emailView);
-        mEmailEditText = (DailyAutoCompleteEditText) mEmailLayout.findViewById(R.id.emailEditText);
+        mEmailEditText = mEmailLayout.findViewById(R.id.emailEditText);
         mEmailEditText.setDeleteButtonVisible(null);
         mEmailEditText.setOnFocusChangeListener(this);
 
@@ -134,7 +133,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         mEmailEditText.setAdapter(emailCompleteAdapter);
 
         mNameView = mNameLayout.findViewById(R.id.nameView);
-        mNameEditText = (DailyEditText) mNameLayout.findViewById(R.id.nameEditText);
+        mNameEditText = mNameLayout.findViewById(R.id.nameEditText);
         mNameEditText.setDeleteButtonVisible(null);
         mNameEditText.setOnFocusChangeListener(this);
 
@@ -157,7 +156,7 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         });
 
         mBirthdayView = view.findViewById(R.id.birthdayView);
-        mBirthdayEditText = (DailyEditText) view.findViewById(R.id.birthdayEditText);
+        mBirthdayEditText = view.findViewById(R.id.birthdayEditText);
         mBirthdayEditText.setDeleteButtonVisible(new DailyEditText.OnDeleteTextClickListener()
         {
             @Override
@@ -181,15 +180,15 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
 
     private void initLayoutCheckBox(View view)
     {
-        mAllAgreementCheckBox = (CheckBox) view.findViewById(R.id.allAgreementCheckBox);
-        mFourteenCheckBox = (CheckBox) view.findViewById(R.id.fourteenCheckBox);
-        mTermsOfPrivacyCheckBox = (CheckBox) view.findViewById(R.id.personalCheckBox);
-        mTermsOfServiceCheckBox = (CheckBox) view.findViewById(R.id.termsCheckBox);
-        mBenefitCheckBox = (CheckBox) view.findViewById(R.id.benefitCheckBox);
+        mAllAgreementCheckBox = view.findViewById(R.id.allAgreementCheckBox);
+        mFourteenCheckBox = view.findViewById(R.id.fourteenCheckBox);
+        mTermsOfPrivacyCheckBox = view.findViewById(R.id.personalCheckBox);
+        mTermsOfServiceCheckBox = view.findViewById(R.id.termsCheckBox);
+        mBenefitCheckBox = view.findViewById(R.id.benefitCheckBox);
 
-        mYearCheckBox1 = (CheckBox) view.findViewById(R.id.yearCheckBox1);
-        mYearCheckBox3 = (CheckBox) view.findViewById(R.id.yearCheckBox3);
-        mYearCheckBox5 = (CheckBox) view.findViewById(R.id.yearCheckBox5);
+        mYearCheckBox1 = view.findViewById(R.id.yearCheckBox1);
+        mYearCheckBox3 = view.findViewById(R.id.yearCheckBox3);
+        mYearCheckBox5 = view.findViewById(R.id.yearCheckBox5);
 
         if (VersionUtils.isOverAPI21() == false)
         {
@@ -224,11 +223,11 @@ public class AddProfileSocialLayout extends BaseLayout implements OnClickListene
         mYearCheckBox3.setOnClickListener(this);
         mYearCheckBox5.setOnClickListener(this);
 
-        TextView termsContentView = (TextView) view.findViewById(R.id.termsContentView);
+        TextView termsContentView = view.findViewById(R.id.termsContentView);
         termsContentView.setPaintFlags(termsContentView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         termsContentView.setOnClickListener(this);
 
-        TextView personalContentView = (TextView) view.findViewById(R.id.personalContentView);
+        TextView personalContentView = view.findViewById(R.id.personalContentView);
         personalContentView.setPaintFlags(personalContentView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         personalContentView.setOnClickListener(this);
     }

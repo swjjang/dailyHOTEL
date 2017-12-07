@@ -47,10 +47,11 @@ import io.reactivex.functions.Consumer;
  */
 public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, ProfileInterface> implements ProfileView.OnEventListener
 {
-    private ProfileRemoteImpl mProfileRemoteImpl;
+    ProfileAnalyticsInterface mAnalytics;
+
+    ProfileRemoteImpl mProfileRemoteImpl;
     private ConfigLocalImpl mConfigLocalImpl;
 
-    private ProfileAnalyticsInterface mAnalytics;
     private DailyDeepLink mDailyDeepLink;
 
     public interface ProfileAnalyticsInterface extends BaseAnalyticsInterface
@@ -347,7 +348,11 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
             @Override
             public void onClick(View v)
             {
-                lock();
+                if (lock() == true)
+                {
+                    return;
+                }
+
                 startLogin();
             }
         };
@@ -376,7 +381,7 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
         }, null, true);
     }
 
-    private void startLogin()
+    void startLogin()
     {
         Intent intent = LoginActivity.newInstance(getActivity());
         startActivityForResult(intent, ProfileActivity.REQUEST_CODE_LOGIN);

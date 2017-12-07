@@ -964,7 +964,7 @@ public class StayBookingDetailView extends BaseBlurView<StayBookingDetailView.On
     @SuppressWarnings("ResourceType")
     void relocationMyLocation(View view)
     {
-        mMyLocationView = (ImageView) view.findViewById(0x2);
+        mMyLocationView = view.findViewById(0x2);
 
         if (mMyLocationView != null)
         {

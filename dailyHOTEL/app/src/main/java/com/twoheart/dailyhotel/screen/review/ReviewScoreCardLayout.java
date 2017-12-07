@@ -71,8 +71,8 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTo
         reviewScoreScrollView.setClickable(true);
         reviewScoreScrollView.setOnTouchListener(this);
 
-        TextView titleTextView = (TextView) view.findViewById(R.id.titleTextView);
-        TextView descriptionTextView = (TextView) view.findViewById(R.id.descriptionTextView);
+        TextView titleTextView = view.findViewById(R.id.titleTextView);
+        TextView descriptionTextView = view.findViewById(R.id.descriptionTextView);
 
         titleTextView.setText(reviewScoreQuestion.title);
         descriptionTextView.setText(reviewScoreQuestion.description);
@@ -81,11 +81,11 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTo
 
         mDailyEmoticonImageView = new DailyEmoticonImageView[5];
 
-        mDailyEmoticonImageView[0] = (DailyEmoticonImageView) mEmoticonLayout.findViewById(R.id.emoticonImageView0);
-        mDailyEmoticonImageView[1] = (DailyEmoticonImageView) mEmoticonLayout.findViewById(R.id.emoticonImageView1);
-        mDailyEmoticonImageView[2] = (DailyEmoticonImageView) mEmoticonLayout.findViewById(R.id.emoticonImageView2);
-        mDailyEmoticonImageView[3] = (DailyEmoticonImageView) mEmoticonLayout.findViewById(R.id.emoticonImageView3);
-        mDailyEmoticonImageView[4] = (DailyEmoticonImageView) mEmoticonLayout.findViewById(R.id.emoticonImageView4);
+        mDailyEmoticonImageView[0] = mEmoticonLayout.findViewById(R.id.emoticonImageView0);
+        mDailyEmoticonImageView[1] = mEmoticonLayout.findViewById(R.id.emoticonImageView1);
+        mDailyEmoticonImageView[2] = mEmoticonLayout.findViewById(R.id.emoticonImageView2);
+        mDailyEmoticonImageView[3] = mEmoticonLayout.findViewById(R.id.emoticonImageView3);
+        mDailyEmoticonImageView[4] = mEmoticonLayout.findViewById(R.id.emoticonImageView4);
 
         mDailyEmoticonImageView[0].setJSONData("Review_Animation.aep.comp-618-01_worst.kf.json");
         mDailyEmoticonImageView[1].setJSONData("Review_Animation.aep.comp-74-02_bad.kf.json");
@@ -108,7 +108,7 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTo
 
         mEmoticonLayout.setLayoutParams(emoticonLayoutParams);
 
-        mResultTextView = (DailyTextView) view.findViewById(R.id.resultTextView);
+        mResultTextView = view.findViewById(R.id.resultTextView);
 
         RelativeLayout.LayoutParams resultLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         resultLayoutParams.topMargin = cardHeight * 5 / 100;
@@ -365,7 +365,7 @@ public class ReviewScoreCardLayout extends ReviewCardLayout implements View.OnTo
                 break;
         }
 
-        DailyTextView titleTextView = (DailyTextView) findViewById(R.id.titleTextView);
+        DailyTextView titleTextView = findViewById(R.id.titleTextView);
         titleTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_circular_check, 0);
     }
 

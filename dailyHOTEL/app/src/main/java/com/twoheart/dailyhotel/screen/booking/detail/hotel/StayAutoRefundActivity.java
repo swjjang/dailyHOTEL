@@ -147,7 +147,7 @@ public class StayAutoRefundActivity extends BaseActivity
 
     private void initToolbar()
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.label_request_free_refund);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
@@ -233,7 +233,7 @@ public class StayAutoRefundActivity extends BaseActivity
         //        ExLog.d("orientation : " + orientation);
 
         View topView = mDialog.findViewById(R.id.topWeightView);
-        ScrollView scrollView = (ScrollView) mDialog.findViewById(R.id.scrollView);
+        ScrollView scrollView = mDialog.findViewById(R.id.scrollView);
         View bottomView = mDialog.findViewById(R.id.bottomWeightView);
 
         if (isInMultiWindowMode == true || Configuration.ORIENTATION_LANDSCAPE == orientation)
@@ -274,7 +274,7 @@ public class StayAutoRefundActivity extends BaseActivity
         mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         mDialog.setCanceledOnTouchOutside(false);
 
-        final ScrollView scrollView = (ScrollView) dialogView.findViewById(R.id.scrollView);
+        final ScrollView scrollView = dialogView.findViewById(R.id.scrollView);
 
         //
         final View cancelRefundView01 = dialogView.findViewById(R.id.cancelRefundView01);
@@ -293,15 +293,15 @@ public class StayAutoRefundActivity extends BaseActivity
         cancelRefundView06.setTag(6);
         cancelRefundView07.setTag(7);
 
-        final DailyEditText messageEditText = (DailyEditText) dialogView.findViewById(R.id.messageEditText);
-        final TextView messageCountTextView = (TextView) dialogView.findViewById(R.id.messageCountTextView);
+        final DailyEditText messageEditText = dialogView.findViewById(R.id.messageEditText);
+        final TextView messageCountTextView = dialogView.findViewById(R.id.messageCountTextView);
         final View messageClickView = dialogView.findViewById(R.id.messageClickView);
 
         // 버튼
         View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
 
-        TextView negativeTextView = (TextView) buttonLayout.findViewById(R.id.negativeTextView);
-        final TextView positiveTextView = (TextView) buttonLayout.findViewById(R.id.positiveTextView);
+        TextView negativeTextView = buttonLayout.findViewById(R.id.negativeTextView);
+        final TextView positiveTextView = buttonLayout.findViewById(R.id.positiveTextView);
 
         messageEditText.addTextChangedListener(new TextWatcher()
         {
@@ -578,7 +578,7 @@ public class StayAutoRefundActivity extends BaseActivity
         mDialog.setCanceledOnTouchOutside(false);
 
         //
-        final RecyclerView recyclerView = (RecyclerView) dialogView.findViewById(R.id.recyclerView);
+        final RecyclerView recyclerView = dialogView.findViewById(R.id.recyclerView);
         final BankListAdapter bankListAdapter = new BankListAdapter(this, bankList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         bankListAdapter.setSelectedBank(bank);
@@ -586,8 +586,8 @@ public class StayAutoRefundActivity extends BaseActivity
         // 버튼
         View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
 
-        TextView negativeTextView = (TextView) buttonLayout.findViewById(R.id.negativeTextView);
-        final TextView positiveTextView = (TextView) buttonLayout.findViewById(R.id.positiveTextView);
+        TextView negativeTextView = buttonLayout.findViewById(R.id.negativeTextView);
+        final TextView positiveTextView = buttonLayout.findViewById(R.id.positiveTextView);
         positiveTextView.setEnabled(false);
 
         negativeTextView.setOnClickListener(new View.OnClickListener()

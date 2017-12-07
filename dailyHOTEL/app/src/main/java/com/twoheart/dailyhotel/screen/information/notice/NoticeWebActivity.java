@@ -67,7 +67,7 @@ public class NoticeWebActivity extends WebViewActivity
 
     private void initToolbar(String title)
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(title);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {

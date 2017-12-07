@@ -88,7 +88,7 @@ public abstract class PlaceMainLayout extends BaseBlurLayout
 
     private void initToolbar(View view)
     {
-        mAppBarLayout = (AppBarLayout) view.findViewById(R.id.appBarLayout);
+        mAppBarLayout = view.findViewById(R.id.appBarLayout);
         mAppBarLayout.setTag(0);
 
         mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener()
@@ -123,7 +123,7 @@ public abstract class PlaceMainLayout extends BaseBlurLayout
             }
         });
 
-        mToolbarView = (DailyToolbarView) mAppBarLayout.findViewById(R.id.toolbarView);
+        mToolbarView = mAppBarLayout.findViewById(R.id.toolbarView);
         mToolbarView.setTitleText(getAppBarTitle());
         mToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
@@ -159,7 +159,7 @@ public abstract class PlaceMainLayout extends BaseBlurLayout
     private void initOptionLayout(View view)
     {
         // 하단 지도 필터
-        mFloatingActionView = (DailyFloatingActionView) view.findViewById(R.id.floatingActionView);
+        mFloatingActionView = view.findViewById(R.id.floatingActionView);
         mFloatingActionView.setOnViewOptionClickListener(v -> ((OnEventListener) mOnEventListener).onViewTypeClick());
         mFloatingActionView.setOnFilterOptionClickListener(v -> ((OnEventListener) mOnEventListener).onFilterClick());
 
@@ -173,9 +173,9 @@ public abstract class PlaceMainLayout extends BaseBlurLayout
 
     private void initCategoryTabLayout(View view)
     {
-        mCategoryTabLayout = (TabLayout) view.findViewById(R.id.categoryTabLayout);
+        mCategoryTabLayout = view.findViewById(R.id.categoryTabLayout);
         mAppBarUnderlineView = view.findViewById(R.id.appBarUnderline);
-        mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
+        mViewPager = view.findViewById(R.id.viewPager);
     }
 
     public void setToolbarRegionText(String region)

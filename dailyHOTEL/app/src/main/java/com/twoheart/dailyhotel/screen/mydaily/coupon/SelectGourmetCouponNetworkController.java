@@ -34,10 +34,10 @@ public class SelectGourmetCouponNetworkController extends BaseNetworkController
     /**
      * 결제화면의 소유자의 전체 쿠폰리스트
      */
-//    public void requestCouponList(int ticketIdx, int ticketCount)
-//    {
-//        DailyMobileAPI.getInstance(mContext).requestCouponList(mNetworkTag, ticketIdx, ticketCount, mCouponListCallback);
-//    }
+    //    public void requestCouponList(int ticketIdx, int ticketCount)
+    //    {
+    //        DailyMobileAPI.getInstance(mContext).requestCouponList(mNetworkTag, ticketIdx, ticketCount, mCouponListCallback);
+    //    }
 
     /**
      * 상세화면의 쿠폰리스트

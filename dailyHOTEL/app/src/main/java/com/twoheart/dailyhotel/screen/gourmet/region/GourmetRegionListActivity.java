@@ -106,7 +106,7 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
     @Override
     protected void initViewPager()
     {
-        mViewPager = (ViewPager) findViewById(R.id.viewPager);
+        mViewPager = findViewById(R.id.viewPager);
 
         ArrayList<PlaceRegionListFragment> fragmentList = new ArrayList<>(GOURMET_TAB_COUNT);
 

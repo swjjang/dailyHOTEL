@@ -116,7 +116,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     private ProfileRemoteImpl mProfileRemoteImpl;
     private CalendarImpl mCalendarImpl;
     private RecentlyLocalImpl mRecentlyLocalImpl;
-    private CartLocalImpl mCartLocalImpl;
+    CartLocalImpl mCartLocalImpl;
 
     int mGourmetIndex, mPriceFromList;
     private String mGourmetName, mCategory;
@@ -124,7 +124,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     GourmetBookDateTime mGourmetBookDateTime;
     private CommonDateTime mCommonDateTime;
     GourmetDetail mGourmetDetail;
-    private ReviewScores mReviewScores;
+    ReviewScores mReviewScores;
 
     private int mStatus = STATUS_NONE;
 
@@ -478,7 +478,10 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
                 if (mIsUsedMultiTransition == true)
                 {
-                    lock();
+                    if(lock() == true)
+                    {
+                        return true;
+                    }
 
                     getViewInterface().setTransitionVisible(true);
                     getViewInterface().scrollTop();
@@ -1452,14 +1455,14 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         mAnalytics.onScreen(getActivity(), mGourmetBookDateTime, gourmetDetail, mPriceFromList);
     }
 
-    private void setVisitTime(int visitTime)
+    void setVisitTime(int visitTime)
     {
         mVisitTime = visitTime;
 
         mAnalytics.onEventVisitTimeClick(getActivity(), visitTime);
     }
 
-    private void setOperationTimes(CommonDateTime commonDateTime, GourmetBookDateTime gourmetBookDateTime, List<GourmetMenu> gourmetMenuList)
+    void setOperationTimes(CommonDateTime commonDateTime, GourmetBookDateTime gourmetBookDateTime, List<GourmetMenu> gourmetMenuList)
     {
         if (commonDateTime == null || gourmetBookDateTime == null)
         {
@@ -1535,8 +1538,6 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 int startTime = Integer.parseInt(gourmetMenu.startEatingTime.replaceAll(":", "").substring(0, 4));
                 int endTime = Integer.parseInt(gourmetMenu.endEatingTime.replaceAll(":", "").substring(0, 4));
 
-                //                ExLog.d("pinkred - ticket1 - startTime : " + startTime + ", endTime : " + endTime);
-
                 // 마지막 입장 종료시간이 새벽 3시보다 작은경우
                 if (endTime < 300)
                 {
@@ -1553,12 +1554,9 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
                 // 업장 시간 만들어 내기.
                 List<Integer> menuOperationTime = new ArrayList<>();
-                StringBuilder logStringBuilder = new StringBuilder();
 
                 final int intervalTime = gourmetMenu.timeInterval / ONE_HOUR_MINUTES * 100 + gourmetMenu.timeInterval % ONE_HOUR_MINUTES;
                 int nextTime = startTime;
-
-                //                ExLog.d("pinkred - ticket2 - startTime : " + startTime + ", endTime : " + endTime + ", intervalTime : " + intervalTime + ", readyTime : " + readyTime);
 
                 do
                 {
@@ -1584,9 +1582,6 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                     }
 
                     menuOperationTime.add(nextTime);
-                    logStringBuilder.append(nextTime);
-                    logStringBuilder.append(", ");
-
                     visitTimeSet.add(nextTime);
 
                 } while (nextTime <= endTime);
@@ -1599,24 +1594,14 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 {
                     gourmetMenu.setOperationTimeList(menuOperationTime);
                 }
-
-                //                ExLog.d("pinkred - ticket - menu time : " + logStringBuilder.toString());
             }
 
             Iterator<Integer> integerIterator = visitTimeSet.iterator();
 
-            StringBuilder logStringBuilder = new StringBuilder();
-
             while (integerIterator.hasNext())
             {
-                int intervalTime = integerIterator.next();
-                mOperationTimeList.add(intervalTime);
-
-                logStringBuilder.append(intervalTime);
-                logStringBuilder.append(", ");
+                mOperationTimeList.add(integerIterator.next());
             }
-
-            //            ExLog.d("pinkred - currentTime : " + currentTime + ", intervalTime : " + logStringBuilder.toString());
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -1768,7 +1753,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         getViewInterface().setWishSelected(myWish);
     }
 
-    private void notifyOperationTimeChanged()
+    void notifyOperationTimeChanged()
     {
         List<GourmetMenu> menuList = mGourmetDetail.getGourmetMenuList();
 
@@ -1813,7 +1798,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         getViewInterface().setMenus(menuList, SHOWN_MENU_COUNT);
     }
 
-    private void showWishTooltip()
+    void showWishTooltip()
     {
         getViewInterface().showWishTooltip();
 
@@ -2048,7 +2033,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         }));
     }
 
-    private void onBookingCartMenu(GourmetCart gourmetCart)
+    void onBookingCartMenu(GourmetCart gourmetCart)
     {
         if (mGourmetDetail == null || gourmetCart == null || gourmetCart.getMenuCount() == 0 || lock() == true)
         {
@@ -2114,7 +2099,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
      * @param gourmetCart
      * @return
      */
-    private int validGourmetCart(int gourmetIndex, GourmetCart gourmetCart)
+    int validGourmetCart(int gourmetIndex, GourmetCart gourmetCart)
     {
         if (gourmetCart == null || gourmetCart.getMenuCount() == 0)
         {

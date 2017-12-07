@@ -784,13 +784,13 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
         final FinalCheckLayout finalCheckLayout = new FinalCheckLayout(getContext());
         finalCheckLayout.setMessages(messages);
 
-        final TextView agreeSignatureTextView = (TextView) finalCheckLayout.findViewById(R.id.agreeSignatureTextView);
+        final TextView agreeSignatureTextView = finalCheckLayout.findViewById(R.id.agreeSignatureTextView);
         final View confirmTextView = finalCheckLayout.findViewById(R.id.confirmTextView);
 
         confirmTextView.setEnabled(false);
 
         // 화면이 작은 곳에서 스크롤 뷰가 들어가면서 발생하는 이슈
-        final DailyScrollView scrollLayout = (DailyScrollView) finalCheckLayout.findViewById(R.id.scrollLayout);
+        final DailyScrollView scrollLayout = finalCheckLayout.findViewById(R.id.scrollLayout);
 
         View dailySignatureView = finalCheckLayout.getDailySignatureView();
 
@@ -862,7 +862,7 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
     private View getPaymentAgreeLayout(int[] messages, View.OnClickListener onClickListener)
     {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_dialog_confirm_payment, null);
-        ViewGroup messageLayout = (ViewGroup) view.findViewById(R.id.messageLayout);
+        ViewGroup messageLayout = view.findViewById(R.id.messageLayout);
 
         makeMessagesLayout(messageLayout, messages);
 
@@ -886,7 +886,7 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
         {
             View messageRow = LayoutInflater.from(getContext()).inflate(R.layout.row_payment_agreedialog, viewGroup, false);
 
-            TextView messageTextView = (TextView) messageRow.findViewById(R.id.messageTextView);
+            TextView messageTextView = messageRow.findViewById(R.id.messageTextView);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
             if (i == length - 1)

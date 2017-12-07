@@ -251,7 +251,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
         return list;
     }
 
-    private Observable<ArrayList<PlaceViewItem>> sortList(ArrayList<PlaceViewItem> actualList, boolean isAddFooter)
+    Observable<ArrayList<PlaceViewItem>> sortList(ArrayList<PlaceViewItem> actualList, boolean isAddFooter)
     {
         if (actualList == null || actualList.size() == 0)
         {
@@ -311,7 +311,7 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
         return index;
     }
 
-    private void onChangedWish(int position, boolean wish)
+    void onChangedWish(int position, boolean wish)
     {
         if (position < 0)
         {

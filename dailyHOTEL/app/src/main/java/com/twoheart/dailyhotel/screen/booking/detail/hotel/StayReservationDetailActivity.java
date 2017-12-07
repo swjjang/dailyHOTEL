@@ -212,7 +212,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         View contactUs02Layout = dialogView.findViewById(R.id.contactUs02Layout);
         View contactUs03Layout = dialogView.findViewById(R.id.contactUs03Layout);
 
-        DailyTextView contactUs01TextView = (DailyTextView) contactUs01Layout.findViewById(R.id.contactUs01TextView);
+        DailyTextView contactUs01TextView = contactUs01Layout.findViewById(R.id.contactUs01TextView);
         contactUs01TextView.setText(R.string.frag_faqs);
         contactUs01TextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_ops_05_faq, 0, 0, 0);
 
@@ -235,7 +235,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
 
         if (DailyTextUtils.isTextEmpty(mPlaceBookingDetail.phone1) == false)
         {
-            DailyTextView contactUs02TextView = (DailyTextView) contactUs02Layout.findViewById(R.id.contactUs02TextView);
+            DailyTextView contactUs02TextView = contactUs02Layout.findViewById(R.id.contactUs02TextView);
             contactUs02TextView.setText(R.string.label_hotel_front_phone);
             contactUs02TextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_ops_01_store_call, 0, 0, 0);
 
@@ -273,7 +273,7 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         {
             contactUs03Layout.setVisibility(View.VISIBLE);
 
-            DailyTextView contactUs03TextView = (DailyTextView) contactUs03Layout.findViewById(R.id.contactUs03TextView);
+            DailyTextView contactUs03TextView = contactUs03Layout.findViewById(R.id.contactUs03TextView);
             contactUs03TextView.setText(R.string.label_hotel_reservation_phone);
             contactUs03TextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.popup_ic_ops_01_store_call, 0, 0, 0);
 
@@ -611,8 +611,8 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
         contactUs01Layout.setVisibility(View.GONE);
         contactUs02Layout.setVisibility(View.GONE);
 
-        TextView kakaoDailyView = (TextView) dialogView.findViewById(R.id.kakaoDailyView);
-        TextView callDailyView = (TextView) dialogView.findViewById(R.id.callDailyView);
+        TextView kakaoDailyView = dialogView.findViewById(R.id.kakaoDailyView);
+        TextView callDailyView = dialogView.findViewById(R.id.callDailyView);
 
         kakaoDailyView.setText(R.string.label_contact_refund_kakao);
         callDailyView.setText(R.string.label_contact_refund_daily);

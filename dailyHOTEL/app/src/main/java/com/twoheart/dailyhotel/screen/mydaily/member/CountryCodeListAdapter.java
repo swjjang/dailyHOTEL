@@ -108,7 +108,7 @@ public class CountryCodeListAdapter extends ArrayAdapter<String[]> implements Pi
                 view = convertView;
             }
 
-            TextView sectionTextView = (TextView) view.findViewById(R.id.sectionTextView);
+            TextView sectionTextView = view.findViewById(R.id.sectionTextView);
 
             sectionTextView.setText(countryCode[0]);
         } else
@@ -124,8 +124,8 @@ public class CountryCodeListAdapter extends ArrayAdapter<String[]> implements Pi
                 view = convertView;
             }
 
-            CheckBox radioCheckBox = (CheckBox) view.findViewById(R.id.radioCheckBox);
-            TextView codeTextView = (TextView) view.findViewById(R.id.codeTextView);
+            CheckBox radioCheckBox = view.findViewById(R.id.radioCheckBox);
+            TextView codeTextView = view.findViewById(R.id.codeTextView);
 
             radioCheckBox.setText(countryCode[0]);
             codeTextView.setText(countryCode[1]);

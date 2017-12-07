@@ -33,7 +33,7 @@ public class DailyToolbarView extends ConstraintLayout
     private List<Pair<MenuItem, DailyViewToolbarMenuItemDataBinding>> mMenuItemList;
 
     ObjectAnimator mShowAnimator;
-    private ObjectAnimator mHideAnimator;
+    ObjectAnimator mHideAnimator;
 
     private ThemeColor mThemeColor;
 
@@ -175,6 +175,8 @@ public class DailyToolbarView extends ConstraintLayout
                     mThemeColor = ThemeColor.DEFAULT;
                 }
             }
+
+            typedArray.recycle();
         }
 
         setBackImageResource(R.drawable.navibar_ic_back_01_black);

@@ -704,6 +704,7 @@
     <string name="label_privacy_valid_date_1year">1년</string>
     <string name="label_privacy_valid_date_3year">3년</string>
     <string name="label_privacy_valid_date_5year">5년</string>
+    <string name="label_sign_up_select_birthday">생일 선택</string>
     <string name="message_privacy_valid_date">미 선택 시에도 정보통신망법을 준수하여 개인정보를 보호합니다.</string>
 
     <string name="act_signup_btn_update">회원정보 수정</string>

@@ -65,7 +65,7 @@ public abstract class WebViewActivity extends BaseActivity implements OnLongClic
     {
         webChromeClient = new DailyHotelWebChromeClient();
         webViewClient = new DailyHotelWebViewClient();
-        mWebView = (WebView) findViewById(R.id.webView);
+        mWebView = findViewById(R.id.webView);
 
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.setVerticalScrollbarOverlay(true);

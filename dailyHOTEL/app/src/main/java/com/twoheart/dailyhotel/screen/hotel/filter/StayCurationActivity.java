@@ -131,7 +131,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
     protected void initSortLayout(View view, ViewType viewType, StayCurationOption stayCurationOption)
     {
-        mSortRadioGroup = (RadioGroup) view.findViewById(R.id.sortLayout);
+        mSortRadioGroup = view.findViewById(R.id.sortLayout);
 
         // 해외 지역 삭제
         //        if (mStayCuration.getProvince().isOverseas == true)
@@ -180,7 +180,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         mMinusPersonView = view.findViewById(R.id.minusPersonView);
         mPlusPersonView = view.findViewById(R.id.plusPersonView);
 
-        mPersonCountView = (TextView) view.findViewById(R.id.personCountView);
+        mPersonCountView = view.findViewById(R.id.personCountView);
 
         mMinusPersonView.setOnClickListener(this);
         mPlusPersonView.setOnClickListener(this);
@@ -188,10 +188,10 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
         updatePersonFilter(stayCurationOption.person);
 
         // 베드타입
-        mBedTypeLayout = (ViewGroup) view.findViewById(R.id.bedTypeLayout);
-        DailyTextView doubleCheckView = (DailyTextView) view.findViewById(R.id.doubleCheckView);
-        DailyTextView twinCheckView = (DailyTextView) view.findViewById(R.id.twinCheckView);
-        DailyTextView heatedFloorsCheckView = (DailyTextView) view.findViewById(R.id.heatedFloorsCheckView);
+        mBedTypeLayout = view.findViewById(R.id.bedTypeLayout);
+        DailyTextView doubleCheckView = view.findViewById(R.id.doubleCheckView);
+        DailyTextView twinCheckView = view.findViewById(R.id.twinCheckView);
+        DailyTextView heatedFloorsCheckView = view.findViewById(R.id.heatedFloorsCheckView);
 
         doubleCheckView.setOnClickListener(this);
         twinCheckView.setOnClickListener(this);
@@ -215,7 +215,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
     protected void initAmenitiesLayout(View view, StayCurationOption stayCurationOption)
     {
-        mAmenitiesGridLayout = (android.support.v7.widget.GridLayout) view.findViewById(R.id.amenitiesGridLayout);
+        mAmenitiesGridLayout = view.findViewById(R.id.amenitiesGridLayout);
 
         View.OnClickListener onClickListener = new View.OnClickListener()
         {
@@ -268,7 +268,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
 
     protected void initInRoomAmenitiesLayout(View view, StayCurationOption stayCurationOption)
     {
-        mInRoomAmenitiesGridLayout = (android.support.v7.widget.GridLayout) view.findViewById(R.id.inRoomAmenitiesGridLayout);
+        mInRoomAmenitiesGridLayout = view.findViewById(R.id.inRoomAmenitiesGridLayout);
 
         View.OnClickListener onClickListener = new View.OnClickListener()
         {
@@ -540,7 +540,7 @@ public class StayCurationActivity extends PlaceCurationActivity implements Radio
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId)
     {
-        RadioButton radioButton = (RadioButton) group.findViewById(checkedId);
+        RadioButton radioButton = group.findViewById(checkedId);
 
         if (radioButton == null)
         {

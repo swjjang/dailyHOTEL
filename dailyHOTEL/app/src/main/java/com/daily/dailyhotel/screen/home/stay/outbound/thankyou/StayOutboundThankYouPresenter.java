@@ -76,8 +76,6 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
     @Override
     public void constructorInitialize(StayOutboundThankYouActivity activity)
     {
-        lock();
-
         setContentView(R.layout.activity_stay_outbound_payment_thank_you_data);
 
         setAnalytics(new StayOutboundThankYouAnalyticsImpl());
@@ -319,7 +317,7 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
         }
     }
 
-    private void onRewardInformation(RewardInformation rewardInformation)
+    void onRewardInformation(RewardInformation rewardInformation)
     {
         if (rewardInformation == null || mStayBookDateTime == null)
         {

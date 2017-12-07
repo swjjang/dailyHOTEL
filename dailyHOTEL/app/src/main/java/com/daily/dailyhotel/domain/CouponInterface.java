@@ -2,7 +2,6 @@ package com.daily.dailyhotel.domain;
 
 import com.daily.dailyhotel.entity.Coupon;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;

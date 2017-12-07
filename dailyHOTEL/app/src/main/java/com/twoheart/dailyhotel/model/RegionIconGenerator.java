@@ -53,7 +53,7 @@ public class RegionIconGenerator
     {
         mContext = context;
         mContainer = (ViewGroup) LayoutInflater.from(mContext).inflate(R.layout.marker_region, null);
-        mContentView = mTextView = (TextView) mContainer.findViewById(R.id.text);
+        mContentView = mTextView = mContainer.findViewById(R.id.text);
     }
 
     /**

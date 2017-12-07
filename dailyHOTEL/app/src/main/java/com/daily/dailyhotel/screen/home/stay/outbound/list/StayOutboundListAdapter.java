@@ -227,7 +227,7 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         holder.stayOutboundCardView.setAddressText(stayOutbound.locationDescription);
 
         // 1박인 경우 nightlyRate을 사용하지 않고 total을 사용한다.
-        if(mNightsEnabled == true)
+        if (mNightsEnabled == true)
         {
             holder.stayOutboundCardView.setPriceText(stayOutbound.discountRate, stayOutbound.nightlyRate, stayOutbound.nightlyBaseRate, null, mNightsEnabled);
         } else

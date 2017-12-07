@@ -33,7 +33,7 @@ public class ContactUsActivity extends BaseActivity implements View.OnClickListe
 
     private void initToolbar()
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.label_call_service);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {

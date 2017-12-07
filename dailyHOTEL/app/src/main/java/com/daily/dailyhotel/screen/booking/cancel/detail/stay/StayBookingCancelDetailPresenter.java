@@ -67,10 +67,10 @@ public class StayBookingCancelDetailPresenter //
     StayBookingCancelAnalyticsInterface mAnalytics;
 
     private CommonRemoteImpl mCommonRemoteImpl;
-    private BookingRemoteImpl mBookingRemoteImpl;
+    BookingRemoteImpl mBookingRemoteImpl;
 
-    private int mReservationIndex;
-    private String mAggregationId;
+    int mReservationIndex;
+    String mAggregationId;
     private String mImageUrl;
 
     private CommonDateTime mCommonDateTime;

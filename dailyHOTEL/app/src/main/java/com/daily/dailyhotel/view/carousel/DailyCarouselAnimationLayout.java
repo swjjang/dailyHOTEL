@@ -105,6 +105,8 @@ public class DailyCarouselAnimationLayout extends ConstraintLayout
 
             boolean isUseViewAllButton = typedArray.getBoolean(R.styleable.dailyCarousel_useViewAllButton, true);
             setUseViewAllButtonLayout(isUseViewAllButton);
+
+            typedArray.recycle();
         } else
         {
             setUsePriceLayout(true);

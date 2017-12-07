@@ -310,8 +310,8 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             super(itemView);
 
             rootView = itemView;
-            noticeView = (DailyTextView) itemView.findViewById(R.id.couponUseNoticeTextView);
-            couponHistoryView = (DailyTextView) itemView.findViewById(R.id.couponHistoryTextView);
+            noticeView = itemView.findViewById(R.id.couponUseNoticeTextView);
+            couponHistoryView = itemView.findViewById(R.id.couponHistoryTextView);
         }
 
         public void onBindViewHolder()

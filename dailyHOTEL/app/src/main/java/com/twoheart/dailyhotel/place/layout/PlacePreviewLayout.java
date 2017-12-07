@@ -86,19 +86,19 @@ public class PlacePreviewLayout extends BaseLayout implements View.OnClickListen
 
         mPopupLayout.setLayoutParams(layoutParams);
 
-        mPlaceNameTextView = (TextView) view.findViewById(R.id.placeNameTextView);
-        mCategoryTextView = (TextView) view.findViewById(R.id.categoryTextView);
-        mDotImageView = (DailyImageView) view.findViewById(R.id.dotImageView);
-        mRewardTextView = (TextView) view.findViewById(R.id.rewardTextView);
-        mSubCategoryTextView = (TextView) view.findViewById(R.id.subCategoryTextView);
+        mPlaceNameTextView = view.findViewById(R.id.placeNameTextView);
+        mCategoryTextView = view.findViewById(R.id.categoryTextView);
+        mDotImageView = view.findViewById(R.id.dotImageView);
+        mRewardTextView = view.findViewById(R.id.rewardTextView);
+        mSubCategoryTextView = view.findViewById(R.id.subCategoryTextView);
 
         mImageLayout = view.findViewById(R.id.imageLayout);
 
         // 이미지 연동
-        SimpleDraweeView simpleDraweeView01 = (SimpleDraweeView) mImageLayout.findViewById(R.id.simpleDraweeView01);
-        SimpleDraweeView simpleDraweeView02 = (SimpleDraweeView) mImageLayout.findViewById(R.id.simpleDraweeView02);
-        SimpleDraweeView simpleDraweeView03 = (SimpleDraweeView) mImageLayout.findViewById(R.id.simpleDraweeView03);
-        SimpleDraweeView simpleDraweeView04 = (SimpleDraweeView) mImageLayout.findViewById(R.id.simpleDraweeView04);
+        SimpleDraweeView simpleDraweeView01 = mImageLayout.findViewById(R.id.simpleDraweeView01);
+        SimpleDraweeView simpleDraweeView02 = mImageLayout.findViewById(R.id.simpleDraweeView02);
+        SimpleDraweeView simpleDraweeView03 = mImageLayout.findViewById(R.id.simpleDraweeView03);
+        SimpleDraweeView simpleDraweeView04 = mImageLayout.findViewById(R.id.simpleDraweeView04);
 
         simpleDraweeView01.post(new Runnable()
         {
@@ -148,11 +148,11 @@ public class PlacePreviewLayout extends BaseLayout implements View.OnClickListen
             }
         });
 
-        mProductCountTextView = (TextView) view.findViewById(R.id.productCountTextView);
+        mProductCountTextView = view.findViewById(R.id.productCountTextView);
         mStayAverageView = view.findViewById(R.id.stayAverageView);
-        mPriceTextView = (TextView) view.findViewById(R.id.priceTextView);
+        mPriceTextView = view.findViewById(R.id.priceTextView);
 
-        mBookingTextView = (TextView) view.findViewById(R.id.bookingTextView);
+        mBookingTextView = view.findViewById(R.id.bookingTextView);
 
         mBottomBarLayout = view.findViewById(R.id.bottomBarLayout);
         mMoreInformationLayout = view.findViewById(R.id.moreInformationLayout);
@@ -190,10 +190,10 @@ public class PlacePreviewLayout extends BaseLayout implements View.OnClickListen
 
         // 이미지 연동
         SimpleDraweeView[] simpleDraweeViews = new SimpleDraweeView[IMAGE_MAX_COUNT];
-        simpleDraweeViews[0] = (SimpleDraweeView) mImageLayout.findViewById(R.id.simpleDraweeView01);
-        simpleDraweeViews[1] = (SimpleDraweeView) mImageLayout.findViewById(R.id.simpleDraweeView02);
-        simpleDraweeViews[2] = (SimpleDraweeView) mImageLayout.findViewById(R.id.simpleDraweeView03);
-        simpleDraweeViews[3] = (SimpleDraweeView) mImageLayout.findViewById(R.id.simpleDraweeView04);
+        simpleDraweeViews[0] = mImageLayout.findViewById(R.id.simpleDraweeView01);
+        simpleDraweeViews[1] = mImageLayout.findViewById(R.id.simpleDraweeView02);
+        simpleDraweeViews[2] = mImageLayout.findViewById(R.id.simpleDraweeView03);
+        simpleDraweeViews[3] = mImageLayout.findViewById(R.id.simpleDraweeView04);
 
         simpleDraweeViews[0].getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder_s);
         simpleDraweeViews[1].getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder_s);
@@ -247,8 +247,8 @@ public class PlacePreviewLayout extends BaseLayout implements View.OnClickListen
         {
             mMoreInformationLayout.setVisibility(View.VISIBLE);
 
-            TextView trueReviewCountTextView = (TextView) mMoreInformationLayout.findViewById(R.id.trueReviewCountTextView);
-            TextView wishCountTextView = (TextView) mMoreInformationLayout.findViewById(R.id.wishCountTextView);
+            TextView trueReviewCountTextView = mMoreInformationLayout.findViewById(R.id.trueReviewCountTextView);
+            TextView wishCountTextView = mMoreInformationLayout.findViewById(R.id.wishCountTextView);
             View dotView = mMoreInformationLayout.findViewById(R.id.dotView);
 
             if (reviewCount > 0 && wishCount > 0)
@@ -276,7 +276,7 @@ public class PlacePreviewLayout extends BaseLayout implements View.OnClickListen
     protected void updateBottomLayout(boolean myWish)
     {
         // 하단 메뉴 이벤트
-        DailyTextView wishTextView = (DailyTextView) mBottomBarLayout.findViewById(R.id.wishTextView);
+        DailyTextView wishTextView = mBottomBarLayout.findViewById(R.id.wishTextView);
         View shareKakaoView = mBottomBarLayout.findViewById(R.id.shareKakaoView);
         View mapView = mBottomBarLayout.findViewById(R.id.mapView);
 
