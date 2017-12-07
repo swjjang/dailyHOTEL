@@ -56,6 +56,11 @@
                 android:background="@color/default_background"/>
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/default_line_cf0f0f0"/>
+
         <com.daily.dailyhotel.view.DailyDateInformationView
             android:id="@+id/dateInformationView"
             android:layout_width="match_parent"
