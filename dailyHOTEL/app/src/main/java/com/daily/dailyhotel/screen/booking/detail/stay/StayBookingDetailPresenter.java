@@ -1333,7 +1333,6 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
             public void onDismiss(DialogInterface dialogInterface)
             {
                 unLockAll();
-                ;
             }
         });
 

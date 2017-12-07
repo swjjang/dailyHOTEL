@@ -589,7 +589,6 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
             }
 
             String totalCountText = DailyTextUtils.formatIntegerToString(mTotalCount);
-            ;
             holder.dataBinding.reviewCountTextView.setText(mContext.getString(R.string.label_detail_review_count, totalCountText));
         }
 

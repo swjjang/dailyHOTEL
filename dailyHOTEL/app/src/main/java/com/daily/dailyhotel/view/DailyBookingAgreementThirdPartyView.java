@@ -108,6 +108,8 @@ public class DailyBookingAgreementThirdPartyView extends LinearLayout
                 int serviceType = typedArray.getInt(R.styleable.dailyBookingAgreeThirdParty_serviceType, 0);
                 setServiceType(serviceType);
             }
+
+            typedArray.recycle();
         }
 
         setPersonalInformationText04(mServiceType);
