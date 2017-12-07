@@ -1,11 +1,13 @@
 package com.daily.dailyhotel.screen.home.gourmet.detail.menus;
 
 import android.animation.Animator;
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
@@ -18,6 +20,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 
@@ -40,6 +43,7 @@ import java.util.Locale;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventListener, ActivityGourmetMenusDataBinding>//
     implements GourmetMenusInterface, View.OnClickListener
@@ -124,6 +128,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
 
         viewDataBinding.cartMenusArrowImageView.setOnClickListener(this);
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.cartMenusRecyclerView, getColor(R.color.default_over_scroll_edge));
+        viewDataBinding.cartMenusRecyclerView.setItemAnimator(new CartItemAnimator());
 
         viewDataBinding.guideLayout.setOnClickListener(this);
         viewDataBinding.guideLayout.setVisibility(View.GONE);
@@ -398,6 +403,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         }
 
         getViewDataBinding().operationTimesLayout.bringToFront();
+        getViewDataBinding().getRoot().requestLayout();
 
         int childCount = getViewDataBinding().operationTimesGridLayout.getChildCount();
 
@@ -828,6 +834,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         }
 
         getViewDataBinding().cartMenuBookingLayout.bringToFront();
+        getViewDataBinding().getRoot().requestLayout();
 
         //
         final int ITEM_HEIGHT = ScreenUtils.dpToPx(getContext(), 88) + 1;
@@ -1011,6 +1018,155 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         mGourmetMenusAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public Observable<Boolean> removeGourmetCartMenu(int menuIndex)
+    {
+        if (getViewDataBinding() == null || mGourmetMenusAdapter == null)
+        {
+            return null;
+        }
+
+        int position = mGourmetCartMenusAdapter.getPosition(menuIndex);
+        RecyclerView.ViewHolder viewHolder = getViewDataBinding().cartMenusRecyclerView.findViewHolderForAdapterPosition(position);
+
+        int gourmetMenuCount = mGourmetCartMenusAdapter.getItemCount() - 1;
+
+        final int ITEM_HEIGHT = ScreenUtils.dpToPx(getContext(), 88) + 1;
+        final int VIEW_COUNT = 3;
+
+        ValueAnimator valueAnimator01;
+
+        if (gourmetMenuCount < VIEW_COUNT)
+        {
+            int height = gourmetMenuCount * ITEM_HEIGHT;
+
+            valueAnimator01 = ValueAnimator.ofInt(getViewDataBinding().cartMenusRecyclerViewLayout.getHeight(), height);
+            valueAnimator01.setDuration(300);
+            valueAnimator01.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+            {
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator)
+                {
+                    if (valueAnimator == null)
+                    {
+                        return;
+                    }
+
+                    int value = (int) valueAnimator.getAnimatedValue();
+
+                    getViewDataBinding().cartMenusRecyclerViewLayout.getLayoutParams().height = value;
+                    getViewDataBinding().cartMenusRecyclerViewLayout.setLayoutParams(getViewDataBinding().cartMenusRecyclerViewLayout.getLayoutParams());
+                }
+            });
+
+            valueAnimator01.addListener(new Animator.AnimatorListener()
+            {
+                @Override
+                public void onAnimationStart(Animator animator)
+                {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animator)
+                {
+                    valueAnimator01.removeAllUpdateListeners();
+                    valueAnimator01.removeAllListeners();
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animator)
+                {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animator)
+                {
+
+                }
+            });
+        } else
+        {
+            valueAnimator01 = null;
+        }
+
+        ValueAnimator valueAnimator02 = ValueAnimator.ofInt(viewHolder.itemView.getHeight(), 0);
+        valueAnimator02.setDuration(300);
+        valueAnimator02.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator)
+            {
+                if (valueAnimator == null)
+                {
+                    return;
+                }
+
+                int value = (int) valueAnimator.getAnimatedValue();
+
+                viewHolder.itemView.getLayoutParams().height = value;
+                viewHolder.itemView.setLayoutParams(viewHolder.itemView.getLayoutParams());
+            }
+        });
+
+        Observable<Boolean> observable = new Observable<Boolean>()
+        {
+            @Override
+            protected void subscribeActual(Observer<? super Boolean> observer)
+            {
+                valueAnimator02.addListener(new Animator.AnimatorListener()
+                {
+                    @Override
+                    public void onAnimationStart(Animator animator)
+                    {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animator)
+                    {
+                        valueAnimator02.removeAllUpdateListeners();
+                        valueAnimator02.removeAllListeners();
+
+                        mGourmetCartMenusAdapter.remove(position);
+
+                        viewHolder.itemView.getLayoutParams().height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                        viewHolder.itemView.setLayoutParams(viewHolder.itemView.getLayoutParams());
+
+                        mGourmetCartMenusAdapter.notifyDataSetChanged();
+
+                        observer.onNext(true);
+                        observer.onComplete();
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animator)
+                    {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animator)
+                    {
+
+                    }
+                });
+
+                if (valueAnimator01 == null)
+                {
+                    valueAnimator02.start();
+                } else
+                {
+                    AnimatorSet animatorSet = new AnimatorSet();
+                    animatorSet.playTogether(valueAnimator01, valueAnimator02);
+                    animatorSet.start();
+                }
+            }
+        };
+
+        return observable.subscribeOn(AndroidSchedulers.mainThread());
+    }
 
     @Override
     public void onClick(View v)
@@ -1129,6 +1285,78 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
             super.onLayoutChildren(recycler, state);
 
             scrollHorizontallyBy(0, recycler, state);
+        }
+    }
+
+
+    class CartItemAnimator extends DefaultItemAnimator
+    {
+        @Override
+        public boolean animateRemove(RecyclerView.ViewHolder holder)
+        {
+            super.animateRemove(holder);
+
+            final View view = holder.itemView;
+
+            int gourmetMenuCount = mGourmetCartMenusAdapter.getItemCount();
+
+            final int ITEM_HEIGHT = ScreenUtils.dpToPx(getContext(), 88) + 1;
+            final int VIEW_COUNT = 3;
+
+            if (gourmetMenuCount < VIEW_COUNT)
+            {
+                int height = gourmetMenuCount * ITEM_HEIGHT;
+
+                ValueAnimator valueAnimator01 = ValueAnimator.ofInt(getViewDataBinding().cartMenusRecyclerViewLayout.getHeight(), height);
+                //                valueAnimator01.setDuration(getRemoveDuration());
+                valueAnimator01.setStartDelay(getRemoveDuration());
+                valueAnimator01.setDuration(getMoveDuration());
+                valueAnimator01.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+                {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator valueAnimator)
+                    {
+                        if (valueAnimator == null)
+                        {
+                            return;
+                        }
+
+                        int value = (int) valueAnimator.getAnimatedValue();
+
+                        getViewDataBinding().cartMenusRecyclerViewLayout.getLayoutParams().height = value;
+                        getViewDataBinding().cartMenusRecyclerViewLayout.setLayoutParams(getViewDataBinding().cartMenusRecyclerViewLayout.getLayoutParams());
+                    }
+                });
+
+                valueAnimator01.start();
+
+                //                ValueAnimator valueAnimator02 = ValueAnimator.ofInt(view.getHeight(), 0);
+                //                valueAnimator02.setDuration(getRemoveDuration());
+                //                //                valueAnimator.setStartDelay(getRemoveDuration());
+                //                //                valueAnimator.setDuration(getMoveDuration());
+                //                valueAnimator02.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+                //                {
+                //                    @Override
+                //                    public void onAnimationUpdate(ValueAnimator valueAnimator)
+                //                    {
+                //                        if (valueAnimator == null)
+                //                        {
+                //                            return;
+                //                        }
+                //
+                //                        int value = (int) valueAnimator.getAnimatedValue();
+                //
+                //                        view.getLayoutParams().height = value;
+                //                        view.setLayoutParams(view.getLayoutParams());
+                //                    }
+                //                });
+                //
+                //                AnimatorSet animatorSet = new AnimatorSet();
+                //                animatorSet.playTogether(valueAnimator01, valueAnimator02);
+                //                animatorSet.start();
+            }
+
+            return true;
         }
     }
 }
