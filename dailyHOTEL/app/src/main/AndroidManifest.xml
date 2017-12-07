@@ -980,5 +980,12 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="bd223ac8e751f29e89aacd6487b47df88384f04e"/>
+
+        <provider
+            android:name="com.daily.dailyhotel.storage.database.DailyContentProvider"
+            android:authorities="com.twoheart.dailyhotel"
+            android:enabled="true"
+            android:exported="false">
+        </provider>
     </application>
 </manifest>

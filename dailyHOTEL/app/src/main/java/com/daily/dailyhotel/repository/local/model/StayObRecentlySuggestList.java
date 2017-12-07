@@ -10,7 +10,7 @@ import com.daily.dailyhotel.domain.StayObRecentlySuggestColumns;
 
 public class StayObRecentlySuggestList implements StayObRecentlySuggestColumns
 {
-    private static final String AUTHORITY = StayObRecentlySuggestList.class.getPackage().getName();
+    private static final String AUTHORITY = "com.twoheart.dailyhotel";
 
     public static final Uri NOTIFICATION_URI = Uri.parse("content://" + AUTHORITY + "/suggest");
 }
