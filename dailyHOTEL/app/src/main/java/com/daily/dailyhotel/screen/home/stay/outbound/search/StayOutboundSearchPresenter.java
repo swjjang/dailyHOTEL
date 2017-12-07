@@ -60,12 +60,12 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     private CommonDateTime mCommonDateTime;
     private StayBookDateTime mStayBookDateTime;
 
-    private Suggest mSuggest;
+    Suggest mSuggest;
     private String mKeyword;
     private String mAnalyticsClickType;
     private People mPeople;
     private boolean mIsSuggestChanged;
-    private boolean mIsShowCalendar;
+    boolean mIsShowCalendar;
 
     private DailyDeepLink mDailyDeepLink;
 
@@ -639,7 +639,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         }
     }
 
-    private void notifySuggestsChanged()
+    void notifySuggestsChanged()
     {
         if (mSuggest != null)
         {
@@ -840,7 +840,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         mIsSuggestChanged = isSuggestChanged;
     }
 
-    private void onAfterGetRecentlySuggest()
+    void onAfterGetRecentlySuggest()
     {
         if (processDeepLinkBeforeCommonDateTime(mDailyDeepLink) == true)
         {

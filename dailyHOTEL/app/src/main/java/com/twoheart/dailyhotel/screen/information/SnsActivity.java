@@ -37,7 +37,7 @@ public class SnsActivity extends BaseActivity implements View.OnClickListener
 
     private void initToolbar()
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.label_dailyh_sns);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {

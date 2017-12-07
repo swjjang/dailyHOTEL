@@ -232,7 +232,7 @@ public class StayWishListFragment extends PlaceWishListFragment
     {
     }
 
-    private void startStayPreview(View view, int position, Stay stay)
+    void startStayPreview(View view, int position, Stay stay)
     {
         if (stay == null)
         {
@@ -249,7 +249,7 @@ public class StayWishListFragment extends PlaceWishListFragment
         mBaseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
     }
 
-    private void startStayOutboundPreview(View view, int position, StayOutbound stayOutbound)
+    void startStayOutboundPreview(View view, int position, StayOutbound stayOutbound)
     {
         if (stayOutbound == null)
         {
@@ -270,7 +270,7 @@ public class StayWishListFragment extends PlaceWishListFragment
             , stayOutbound.name, checkInDateTime, checkOutDateTime, People.DEFAULT_ADULTS, null), CODE_REQUEST_ACTIVITY_PREVIEW);
     }
 
-    private void startStayDetail(View view, Stay stay)
+    void startStayDetail(View view, Stay stay)
     {
         if (stay == null)
         {
@@ -369,7 +369,7 @@ public class StayWishListFragment extends PlaceWishListFragment
         }
     }
 
-    private void startStayOutboundDetail(View view, StayOutbound stayOutbound)
+    void startStayOutboundDetail(View view, StayOutbound stayOutbound)
     {
         if (stayOutbound == null)
         {

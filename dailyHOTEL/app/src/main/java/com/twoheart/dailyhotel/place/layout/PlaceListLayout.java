@@ -117,13 +117,13 @@ public abstract class PlaceListLayout extends BaseLayout
     @Override
     protected void initLayout(View view)
     {
-        mPlaceRecyclerView = (PinnedSectionRecyclerView) view.findViewById(R.id.recyclerView);
+        mPlaceRecyclerView = view.findViewById(R.id.recyclerView);
 
         mLayoutManager = new LinearLayoutManager(mContext);
         mPlaceRecyclerView.setLayoutManager(mLayoutManager);
         EdgeEffectColor.setEdgeGlowColor(mPlaceRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
-        mPlaceListAdapter = getPlaceListAdapter(mContext, new ArrayList<PlaceViewItem>());
+        mPlaceListAdapter = getPlaceListAdapter(mContext, new ArrayList<>());
 
         if (DailyPreference.getInstance(mContext).getTrueVRSupport() > 0)
         {
@@ -139,7 +139,7 @@ public abstract class PlaceListLayout extends BaseLayout
 
         mPlaceRecyclerView.setAdapter(mPlaceListAdapter);
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
         {
@@ -216,7 +216,7 @@ public abstract class PlaceListLayout extends BaseLayout
             }
         });
 
-        mMapLayout = (ViewGroup) view.findViewById(R.id.mapLayout);
+        mMapLayout = view.findViewById(R.id.mapLayout);
         mPlaceRecyclerView.setShadowVisible(false);
         //        setBannerVisibility(false);
     }

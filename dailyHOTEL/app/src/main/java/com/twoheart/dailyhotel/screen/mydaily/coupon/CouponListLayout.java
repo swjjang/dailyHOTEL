@@ -64,8 +64,8 @@ public class CouponListLayout extends BaseLayout
         mCouponLayout = view.findViewById(R.id.couponLayout);
         mCouponLayout.setVisibility(View.INVISIBLE);
 
-        mHeaderTextView = (DailyTextView) mCouponLayout.findViewById(R.id.couponTextView);
-        mSortSpinner = (Spinner) view.findViewById(R.id.sortSpinner);
+        mHeaderTextView = mCouponLayout.findViewById(R.id.couponTextView);
+        mSortSpinner = view.findViewById(R.id.sortSpinner);
 
         CharSequence[] strings = mContext.getResources().getTextArray(R.array.coupon_sort_array);
         mSortArrayAdapter = new SortArrayAdapter(mContext, R.layout.list_row_coupon_spinner, strings);
@@ -96,7 +96,7 @@ public class CouponListLayout extends BaseLayout
 
     private void initToolbar(View view)
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) view.findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = view.findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.actionbar_title_coupon_list);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
@@ -120,7 +120,7 @@ public class CouponListLayout extends BaseLayout
 
     private void initListView(View view)
     {
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        mRecyclerView = view.findViewById(R.id.recyclerView);
 
         mEmptyView = view.findViewById(R.id.emptyView);
 

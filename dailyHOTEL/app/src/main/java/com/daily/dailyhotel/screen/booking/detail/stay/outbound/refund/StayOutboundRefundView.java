@@ -143,7 +143,7 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
             @Override
             public void onClick(View v)
             {
-                EditText messageEditText = (EditText) dataBinding.scrollLayout.findViewById(R.id.messageEditText);
+                EditText messageEditText = dataBinding.scrollLayout.findViewById(R.id.messageEditText);
                 View messageClickView = dataBinding.scrollLayout.findViewById(R.id.messageClickView);
                 View cancelReasonEtcView = dataBinding.scrollLayout.findViewById(R.id.cancelReasonEtcView);
 
@@ -199,7 +199,7 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
             @Override
             public void onClick(View v)
             {
-                EditText messageEditText = (EditText) dataBinding.scrollLayout.findViewById(R.id.messageEditText);
+                EditText messageEditText = dataBinding.scrollLayout.findViewById(R.id.messageEditText);
                 View messageClickView = dataBinding.scrollLayout.findViewById(R.id.messageClickView);
 
                 setSelected(v);
@@ -370,7 +370,7 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
 
                 if (selectedView != null)
                 {
-                    EditText messageEditText = (EditText) dataBinding.scrollLayout.findViewById(R.id.messageEditText);
+                    EditText messageEditText = dataBinding.scrollLayout.findViewById(R.id.messageEditText);
                     String message = null;
 
                     if (messageEditText != null)

@@ -41,7 +41,7 @@ public class RecentlyLocalImpl implements RecentlyLocalInterface
 {
     private static final String RECENT_PLACE_DELIMITER = ",";
 
-    private Context mContext;
+    Context mContext;
 
     public RecentlyLocalImpl(Context context)
     {
@@ -391,7 +391,7 @@ public class RecentlyLocalImpl implements RecentlyLocalInterface
         }).subscribeOn(Schedulers.io());
     }
 
-    private static int getCarouselListItemIndex(CarouselListItem carouselListItem)
+    static int getCarouselListItemIndex(CarouselListItem carouselListItem)
     {
         int index = -1;
         switch (carouselListItem.mType)
@@ -428,7 +428,7 @@ public class RecentlyLocalImpl implements RecentlyLocalInterface
         return index;
     }
 
-    private JSONArray getRecentlyJsonArray(ArrayList<RecentlyDbPlace> list, int maxSize)
+    JSONArray getRecentlyJsonArray(ArrayList<RecentlyDbPlace> list, int maxSize)
     {
         JSONArray jsonArray = new JSONArray();
 

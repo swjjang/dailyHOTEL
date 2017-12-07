@@ -8,7 +8,6 @@ import android.view.View;
 import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.place.base.BaseBlurLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
@@ -72,8 +71,8 @@ public abstract class PlaceWishListLayout extends BaseBlurLayout
         mEmptyLayout = view.findViewById(R.id.emptyLayout);
         setEmptyViewVisibility(View.GONE);
 
-        mEmptyMessageView = (DailyTextView) view.findViewById(R.id.messageTextView02);
-        mEmptyButtonView = (DailyTextView) view.findViewById(R.id.buttonView);
+        mEmptyMessageView = view.findViewById(R.id.messageTextView02);
+        mEmptyButtonView = view.findViewById(R.id.buttonView);
 
         mEmptyMessageView.setText(getEmptyMessageResId());
         mEmptyButtonView.setText(getEmptyButtonTextResId());
@@ -87,7 +86,7 @@ public abstract class PlaceWishListLayout extends BaseBlurLayout
             }
         });
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        mRecyclerView = view.findViewById(R.id.recyclerView);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);

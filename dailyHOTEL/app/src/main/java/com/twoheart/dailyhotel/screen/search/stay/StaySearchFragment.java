@@ -759,7 +759,7 @@ public class StaySearchFragment extends PlaceSearchFragment
     // OnEventListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private StaySearchLayout.OnEventListener mOnEventListener = new StaySearchLayout.OnEventListener()
+    StaySearchLayout.OnEventListener mOnEventListener = new StaySearchLayout.OnEventListener()
     {
         @Override
         public void onStayOutboundClick()

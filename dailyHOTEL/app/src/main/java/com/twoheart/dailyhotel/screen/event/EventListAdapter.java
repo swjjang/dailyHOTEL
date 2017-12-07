@@ -91,7 +91,7 @@ public class EventListAdapter extends ArrayAdapter<Event>
             view = convertView;
         }
 
-        com.facebook.drawee.view.SimpleDraweeView imageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.eventImageView);
+        com.facebook.drawee.view.SimpleDraweeView imageView = view.findViewById(R.id.eventImageView);
 
         Event event = getItem(position);
 

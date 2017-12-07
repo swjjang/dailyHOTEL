@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.text.Editable;
 import android.text.InputFilter;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
@@ -83,7 +82,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
 
     private void initToolbar(View view)
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) view.findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = view.findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.actionbar_title_signup_1_activity);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
@@ -97,10 +96,10 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
 
     private void initLayoutForm(View view)
     {
-        mScrollView = (ScrollView) view.findViewById(R.id.scrollLayout);
+        mScrollView = view.findViewById(R.id.scrollLayout);
         EdgeEffectColor.setEdgeGlowColor(mScrollView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
-        mSignupBalloonsTextView = (TextView) view.findViewById(R.id.signupBalloonsTextView);
+        mSignupBalloonsTextView = view.findViewById(R.id.signupBalloonsTextView);
 
         mEmailView = view.findViewById(R.id.emailView);
         mEmailEditText = view.findViewById(R.id.emailEditText);
@@ -123,7 +122,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         mEmailEditText.setAdapter(emailCompleteAdapter);
 
         mNameView = view.findViewById(R.id.nameView);
-        mNameEditText = (DailyEditText) view.findViewById(R.id.nameEditText);
+        mNameEditText = view.findViewById(R.id.nameEditText);
         mNameEditText.setDeleteButtonVisible(null);
         mNameEditText.setOnFocusChangeListener(this);
 
@@ -146,7 +145,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         });
 
         mPasswordView = view.findViewById(R.id.passwordView);
-        mPasswordEditText = (DailyEditText) view.findViewById(R.id.passwordEditText);
+        mPasswordEditText = view.findViewById(R.id.passwordEditText);
         mPasswordEditText.setDeleteButtonVisible(null);
         mPasswordEditText.setOnFocusChangeListener(this);
 
@@ -182,7 +181,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         });
 
         mConfirmPasswordView = view.findViewById(R.id.confirmPasswordView);
-        mConfirmPasswordEditText = (DailyEditText) view.findViewById(R.id.confirmPasswordEditText);
+        mConfirmPasswordEditText = view.findViewById(R.id.confirmPasswordEditText);
         mConfirmPasswordEditText.setDeleteButtonVisible(null);
         mConfirmPasswordEditText.setOnFocusChangeListener(this);
 
@@ -218,7 +217,7 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         });
 
         mBirthdayView = view.findViewById(R.id.birthdayView);
-        mBirthdayEditText = (DailyEditText) view.findViewById(R.id.birthdayEditText);
+        mBirthdayEditText = view.findViewById(R.id.birthdayEditText);
         mBirthdayEditText.setDeleteButtonVisible(new DailyEditText.OnDeleteTextClickListener()
         {
             @Override
@@ -247,15 +246,15 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
 
     private void initLayoutCheckBox(View view)
     {
-        mAllAgreementCheckBox = (CheckBox) view.findViewById(R.id.allAgreementCheckBox);
-        mFourteenCheckBox = (CheckBox) view.findViewById(R.id.fourteenCheckBox);
-        mTermsOfPrivacyCheckBox = (CheckBox) view.findViewById(R.id.personalCheckBox);
-        mTermsOfServiceCheckBox = (CheckBox) view.findViewById(R.id.termsCheckBox);
-        mBenefitCheckBox = (CheckBox) view.findViewById(R.id.benefitCheckBox);
+        mAllAgreementCheckBox = view.findViewById(R.id.allAgreementCheckBox);
+        mFourteenCheckBox = view.findViewById(R.id.fourteenCheckBox);
+        mTermsOfPrivacyCheckBox = view.findViewById(R.id.personalCheckBox);
+        mTermsOfServiceCheckBox = view.findViewById(R.id.termsCheckBox);
+        mBenefitCheckBox = view.findViewById(R.id.benefitCheckBox);
 
-        mYearCheckBox1 = (CheckBox) view.findViewById(R.id.yearCheckBox1);
-        mYearCheckBox3 = (CheckBox) view.findViewById(R.id.yearCheckBox3);
-        mYearCheckBox5 = (CheckBox) view.findViewById(R.id.yearCheckBox5);
+        mYearCheckBox1 = view.findViewById(R.id.yearCheckBox1);
+        mYearCheckBox3 = view.findViewById(R.id.yearCheckBox3);
+        mYearCheckBox5 = view.findViewById(R.id.yearCheckBox5);
 
         if (VersionUtils.isOverAPI21() == false)
         {
@@ -282,11 +281,11 @@ public class SignupStep1Layout extends BaseLayout implements OnClickListener, Vi
         mYearCheckBox3.setOnClickListener(this);
         mYearCheckBox5.setOnClickListener(this);
 
-        TextView termsContentView = (TextView) view.findViewById(R.id.termsContentView);
+        TextView termsContentView = view.findViewById(R.id.termsContentView);
         termsContentView.setPaintFlags(termsContentView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         termsContentView.setOnClickListener(this);
 
-        TextView personalContentView = (TextView) view.findViewById(R.id.personalContentView);
+        TextView personalContentView = view.findViewById(R.id.personalContentView);
         personalContentView.setPaintFlags(personalContentView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         personalContentView.setOnClickListener(this);
     }

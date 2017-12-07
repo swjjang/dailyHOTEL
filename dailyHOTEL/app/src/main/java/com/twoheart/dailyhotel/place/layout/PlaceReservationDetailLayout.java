@@ -128,8 +128,8 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
     {
         initToolbar(view);
 
-        mGoogleMapLayout = (RelativeLayout) view.findViewById(R.id.googleMapLayout);
-        mScrollLayout = (DailyScrollView) view.findViewById(R.id.scrollLayout);
+        mGoogleMapLayout = view.findViewById(R.id.googleMapLayout);
+        mScrollLayout = view.findViewById(R.id.scrollLayout);
         EdgeEffectColor.setEdgeGlowColor(mScrollLayout, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
         double width = ScreenUtils.getScreenWidth(mContext);
@@ -137,7 +137,7 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
         final float PLACE_INFORMATION_LAYOUT_RATIO = 0.65f;
 
         // Map 4 :2 비율 맞추기
-        com.facebook.drawee.view.SimpleDraweeView mapImageView = (com.facebook.drawee.view.SimpleDraweeView) mScrollLayout.findViewById(R.id.mapImageView);
+        com.facebook.drawee.view.SimpleDraweeView mapImageView = mScrollLayout.findViewById(R.id.mapImageView);
         mapImageView.setOnClickListener(this);
 
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mapImageView.getLayoutParams();
@@ -163,13 +163,13 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
 
         mPlaceInformationLayout.setVisibility(View.VISIBLE);
 
-        mDeleteReservationView = (TextView) view.findViewById(R.id.deleteReservationTextView);
+        mDeleteReservationView = view.findViewById(R.id.deleteReservationTextView);
         mDeleteReservationView.setPaintFlags(mDeleteReservationView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     }
 
     private void initToolbar(View view)
     {
-        mDailyToolbarView = (DailyToolbarView) view.findViewById(R.id.toolbarView);
+        mDailyToolbarView = view.findViewById(R.id.toolbarView);
 
         setReservationDetailToolbar();
     }
@@ -306,7 +306,7 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
         viewDetailView.setOnClickListener(this);
         viewMapView.setOnClickListener(this);
 
-        TextView placeNameTextView = (TextView) mPlaceInformationLayout.findViewById(R.id.placeNameTextView);
+        TextView placeNameTextView = mPlaceInformationLayout.findViewById(R.id.placeNameTextView);
         placeNameTextView.setText(placeBookingDetail.placeName);
 
         initReviewButtonLayout(mPlaceInformationLayout, placeBookingDetail);
@@ -316,7 +316,7 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
     {
         final double ratio = height / width;
 
-        com.facebook.drawee.view.SimpleDraweeView mapImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.mapImageView);
+        com.facebook.drawee.view.SimpleDraweeView mapImageView = view.findViewById(R.id.mapImageView);
         mapImageView.getHierarchy().setActualImageFocusPoint(new PointF(0.5f, 0.58f));
 
         if (width >= 720)
@@ -345,7 +345,7 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
         mAddressLayout.setVisibility(View.GONE);
         mSearchMapsLayout.setVisibility(View.GONE);
 
-        TextView addressTextView = (TextView) mAddressLayout.findViewById(R.id.addressTextView);
+        TextView addressTextView = mAddressLayout.findViewById(R.id.addressTextView);
         addressTextView.setText(placeBookingDetail.address);
 
         View clipAddress = mAddressLayout.findViewById(R.id.copyAddressView);
@@ -368,7 +368,7 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
             }
         });
 
-        mMapLayout = (FrameLayout) view.findViewById(R.id.mapLayout);
+        mMapLayout = view.findViewById(R.id.mapLayout);
         mFakeMapLayout = view.findViewById(R.id.fakeMapLayout);
 
         RelativeLayout.LayoutParams fakeMapLayoutParams = (RelativeLayout.LayoutParams) mFakeMapLayout.getLayoutParams();
@@ -442,7 +442,7 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
         }
 
         mInputReviewVerticalLine = view.findViewById(R.id.inputReviewVerticalLine);
-        mInputReviewView = (DailyTextView) view.findViewById(R.id.inputReviewView);
+        mInputReviewView = view.findViewById(R.id.inputReviewView);
         mInputReviewView.setOnClickListener(this);
 
         String reviewStatus = placeBookingDetail.reviewStatusType;
@@ -763,7 +763,7 @@ public abstract class PlaceReservationDetailLayout extends BaseBlurLayout implem
     @SuppressWarnings("ResourceType")
     void relocationMyLocation(View view)
     {
-        mMyLocationView = (ImageView) view.findViewById(0x2);
+        mMyLocationView = view.findViewById(0x2);
 
         if (mMyLocationView != null)
         {

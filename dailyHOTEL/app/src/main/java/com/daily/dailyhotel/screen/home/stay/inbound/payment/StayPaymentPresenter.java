@@ -115,7 +115,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
     StayRefundPolicy mStayRefundPolicy;
     Card mSelectedCard;
     private DomesticGuest mGuest;
-    private Coupon mSelectedCoupon;
+    Coupon mSelectedCoupon;
     private String mTransportationType;
     private DailyBookingPaymentTypeView.PaymentType mPaymentType;
     boolean mOverseas, mAgreedThirdPartyTerms;
@@ -2261,7 +2261,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         }
     }
 
-    private void setWaitingPopupMessageType(CommonDateTime commonDateTime, StayBookDateTime stayBookDateTime) throws Exception
+    void setWaitingPopupMessageType(CommonDateTime commonDateTime, StayBookDateTime stayBookDateTime) throws Exception
     {
         if (commonDateTime == null)
         {
@@ -2459,7 +2459,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         }
     }
 
-    private boolean hasDepositSticker()
+    boolean hasDepositSticker()
     {
         return mStayPayment != null && mStayPayment.activeReward == true && mStayPayment.provideRewardSticker == true;
     }
@@ -2582,7 +2582,6 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 }
             } catch (Exception e)
             {
-                msgCode = -1;
                 message = getString(R.string.act_toast_payment_fail);
 
                 confirmListener = new View.OnClickListener()

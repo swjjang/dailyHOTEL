@@ -95,8 +95,8 @@ public class GourmetListLayout extends PlaceListLayout
             return;
         }
 
-        TextView messageTextView01 = (TextView) mEmptyView.findViewById(R.id.messageTextView01);
-        TextView messageTextView02 = (TextView) mEmptyView.findViewById(R.id.messageTextView02);
+        TextView messageTextView01 = mEmptyView.findViewById(R.id.messageTextView01);
+        TextView messageTextView02 = mEmptyView.findViewById(R.id.messageTextView02);
 
         messageTextView01.setText(R.string.message_gourmet_empty_message01);
         messageTextView02.setText(R.string.message_gourmet_empty_message02);
@@ -123,7 +123,7 @@ public class GourmetListLayout extends PlaceListLayout
         });
 
 
-        TextView callTextView = (TextView) mEmptyView.findViewById(R.id.callTextView);
+        TextView callTextView = mEmptyView.findViewById(R.id.callTextView);
         callTextView.setPaintFlags(callTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
         callTextView.setOnClickListener(new View.OnClickListener()

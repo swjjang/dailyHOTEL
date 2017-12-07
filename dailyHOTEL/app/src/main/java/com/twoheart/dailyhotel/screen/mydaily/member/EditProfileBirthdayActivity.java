@@ -23,6 +23,8 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyEditText;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -42,12 +44,16 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Response;
 
 public class EditProfileBirthdayActivity extends BaseActivity implements OnClickListener, View.OnFocusChangeListener
 {
     private static final String INTENT_EXTRA_DATA_BIRTHDAY = "birthday";
+
+    private CommonRemoteImpl mCommonRemoteImpl;
 
     DailyEditText mBirthdayEditText;
     View mConfirmView, mBirthdayView;
@@ -69,6 +75,8 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
 
         setContentView(R.layout.activity_edit_birthday);
 
+        mCommonRemoteImpl = new CommonRemoteImpl(this);
+
         Intent intent = getIntent();
         String birthday = intent.getStringExtra(INTENT_EXTRA_DATA_BIRTHDAY);
 
@@ -78,7 +86,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
 
     private void initToolbar()
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.actionbar_title_edit_birthday);
         dailyToolbarView.setOnBackClickListener(new OnClickListener()
         {
@@ -94,7 +102,7 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
     {
         mBirthdayView = findViewById(R.id.birthdayView);
 
-        mBirthdayEditText = (DailyEditText) findViewById(R.id.birthdayEditText);
+        mBirthdayEditText = findViewById(R.id.birthdayEditText);
         mBirthdayEditText.setDeleteButtonVisible(new DailyEditText.OnDeleteTextClickListener()
         {
             @Override
@@ -378,97 +386,132 @@ public class EditProfileBirthdayActivity extends BaseActivity implements OnClick
 
     private void showBirthdayDatePicker(int year, int month, int day)
     {
-        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View dialogView = layoutInflater.inflate(R.layout.view_dialog_birthday_layout, null, false);
-
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        dialog.setCanceledOnTouchOutside(false);
-
-        final DatePicker datePicker = (DatePicker) dialogView.findViewById(R.id.datePicker);
-
-        if (year < 0 || month < 0 || day < 0)
+        if (lockUiComponentAndIsLockUiComponent() == true)
         {
-            year = 2000;
-            month = 0;
-            day = 1;
+            return;
         }
 
-        datePicker.init(year, month, day, new DatePicker.OnDateChangedListener()
+        lockUI();
+
+        addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<CommonDateTime>()
         {
             @Override
-            public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth)
+            public void accept(CommonDateTime commonDateTime) throws Exception
             {
+                LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View dialogView = layoutInflater.inflate(R.layout.view_dialog_birthday_layout, null, false);
 
-            }
-        });
+                final Dialog dialog = new Dialog(EditProfileBirthdayActivity.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                dialog.setCanceledOnTouchOutside(false);
 
-        datePicker.setMaxDate(DailyCalendar.getInstance().getTimeInMillis());
+                final DatePicker datePicker = dialogView.findViewById(R.id.datePicker);
 
-        // 상단
-        TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
-        titleTextView.setVisibility(View.VISIBLE);
-        titleTextView.setText("생일 선택");
+                Calendar calendar = DailyCalendar.getInstance();
+                calendar.setTime(DailyCalendar.convertDate(commonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT));
 
-        // 버튼
-        View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
-        View twoButtonLayout = buttonLayout.findViewById(R.id.twoButtonLayout);
+                int startYear, startMonth, startDay;
 
-        TextView negativeTextView = (TextView) twoButtonLayout.findViewById(R.id.negativeTextView);
-        TextView positiveTextView = (TextView) twoButtonLayout.findViewById(R.id.positiveTextView);
+                // 14셈 미만 가입 금지
+                calendar.add(Calendar.YEAR, -14);
+                datePicker.setMaxDate(calendar.getTimeInMillis());
 
-        negativeTextView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (dialog != null && dialog.isShowing())
+                if (year < 0 || month < 0 || day < 0)
                 {
-                    dialog.dismiss();
-                }
-            }
-        });
-
-        positiveTextView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (dialog != null && dialog.isShowing())
+                    startYear = 2000;
+                    startMonth = 0;
+                    startDay = 1;
+                } else
                 {
-                    dialog.dismiss();
+                    startYear = year;
+                    startMonth = month;
+                    startDay = day;
                 }
 
-                setBirthdayText(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth());
-            }
-        });
+                datePicker.init(startYear, startMonth, startDay, new DatePicker.OnDateChangedListener()
+                {
+                    @Override
+                    public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth)
+                    {
 
-        dialog.setCancelable(true);
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+                    }
+                });
+
+                // 상단
+                TextView titleTextView = dialogView.findViewById(R.id.titleTextView);
+                titleTextView.setVisibility(View.VISIBLE);
+                titleTextView.setText(R.string.label_sign_up_select_birthday);
+
+                // 버튼
+                View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
+                View twoButtonLayout = buttonLayout.findViewById(R.id.twoButtonLayout);
+
+                TextView negativeTextView = twoButtonLayout.findViewById(R.id.negativeTextView);
+                TextView positiveTextView = twoButtonLayout.findViewById(R.id.positiveTextView);
+
+                negativeTextView.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        if (dialog != null && dialog.isShowing())
+                        {
+                            dialog.dismiss();
+                        }
+                    }
+                });
+
+                positiveTextView.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        if (dialog != null && dialog.isShowing())
+                        {
+                            dialog.dismiss();
+                        }
+
+                        setBirthdayText(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth());
+                    }
+                });
+
+                dialog.setCancelable(true);
+                dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+                {
+                    @Override
+                    public void onDismiss(DialogInterface dialog)
+                    {
+                    }
+                });
+
+                // 생일 화면 부터는 키패드를 나오지 않게 한다.
+                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+                try
+                {
+                    dialog.setContentView(dialogView);
+
+                    WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(EditProfileBirthdayActivity.this, dialog);
+
+                    dialog.show();
+
+                    dialog.getWindow().setAttributes(layoutParams);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
+
+                unLockUI();
+            }
+        }, new Consumer<Throwable>()
         {
             @Override
-            public void onDismiss(DialogInterface dialog)
+            public void accept(Throwable throwable) throws Exception
             {
+                onHandleError(throwable);
             }
-        });
-
-        // 생일 화면 부터는 키패드를 나오지 않게 한다.
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-        try
-        {
-            dialog.setContentView(dialogView);
-
-            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, dialog);
-
-            dialog.show();
-
-            dialog.getWindow().setAttributes(layoutParams);
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
+        }));
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -74,7 +74,7 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
 
     private void initToolbar()
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.actionbar_title_edit_password);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
@@ -89,7 +89,7 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
     private void initLayout()
     {
         mPasswordView = findViewById(R.id.passwordView);
-        mPasswordEditText = (DailyEditText) findViewById(R.id.passwordEditText);
+        mPasswordEditText = findViewById(R.id.passwordEditText);
         mPasswordEditText.setDeleteButtonVisible(null);
         mPasswordEditText.setOnFocusChangeListener(this);
 
@@ -133,7 +133,7 @@ public class EditProfilePasswordActivity extends BaseActivity implements OnClick
         });
 
         mConfirmPasswordView = findViewById(R.id.confirmPasswordView);
-        mConfirmPasswordEditText = (DailyEditText) findViewById(R.id.confirmPasswordEditText);
+        mConfirmPasswordEditText = findViewById(R.id.confirmPasswordEditText);
         mConfirmPasswordEditText.setDeleteButtonVisible(null);
         mConfirmPasswordEditText.setOnFocusChangeListener(this);
 

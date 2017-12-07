@@ -426,7 +426,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
             return;
         }
 
-        mMyLocationView = (ImageView) getView().findViewById(0x2);
+        mMyLocationView = getView().findViewById(0x2);
 
         if (mMyLocationView != null)
         {

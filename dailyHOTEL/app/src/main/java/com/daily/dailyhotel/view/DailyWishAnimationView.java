@@ -21,7 +21,7 @@ import io.reactivex.Observer;
 public class DailyWishAnimationView extends ScrollView
 {
     private DailyViewWishAnimationDataBinding mViewDataBinding;
-    private AnimatorSet mAnimatorSet;
+    AnimatorSet mAnimatorSet;
 
     public DailyWishAnimationView(Context context)
     {

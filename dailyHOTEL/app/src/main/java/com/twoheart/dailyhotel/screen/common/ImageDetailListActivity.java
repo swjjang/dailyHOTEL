@@ -125,7 +125,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
 
     private void initToolbar(String title)
     {
-        mToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        mToolbarView = findViewById(R.id.toolbarView);
         mToolbarView.setTitleText(title);
         mToolbarView.setBackVisible(false);
 
@@ -155,7 +155,7 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
 
     private void initLayout(ArrayList<ImageInformation> arrayList, final int position)
     {
-        mListView = (DailyPlaceDetailListView) findViewById(R.id.listView);
+        mListView = findViewById(R.id.listView);
         View translationView = findViewById(R.id.translationView);
         translationView.setClickable(true);
         mAlphaView = findViewById(R.id.alphaView);
@@ -395,8 +395,8 @@ public class ImageDetailListActivity extends BaseActivity implements Constants
 
             view.setTag(position);
 
-            TextView textView = (TextView) view.findViewById(R.id.descriptionTextView);
-            final com.facebook.drawee.view.SimpleDraweeView imageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.imageView);
+            TextView textView = view.findViewById(R.id.descriptionTextView);
+            final com.facebook.drawee.view.SimpleDraweeView imageView = view.findViewById(R.id.imageView);
 
             if (DailyTextUtils.isTextEmpty(description) == false)
             {

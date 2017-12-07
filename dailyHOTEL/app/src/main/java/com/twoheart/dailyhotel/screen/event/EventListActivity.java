@@ -96,7 +96,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
 
     private void initToolbar()
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.actionbar_title_event_list_frag);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
@@ -112,7 +112,7 @@ public class EventListActivity extends BaseActivity implements AdapterView.OnIte
     {
         mEmptyView = findViewById(R.id.emptyLayout);
 
-        mListView = (ListView) findViewById(R.id.listView);
+        mListView = findViewById(R.id.listView);
         EdgeEffectColor.setEdgeGlowColor(mListView, getResources().getColor(R.color.default_over_scroll_edge));
         mListView.setOnItemClickListener(this);
 

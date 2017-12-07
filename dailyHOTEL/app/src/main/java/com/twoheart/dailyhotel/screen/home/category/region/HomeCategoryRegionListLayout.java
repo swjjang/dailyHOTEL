@@ -63,7 +63,7 @@ public class HomeCategoryRegionListLayout extends BaseLayout
     @Override
     protected void initLayout(View view)
     {
-        mListView = (DailyAnimatedExpandableListView) view.findViewById(R.id.listView);
+        mListView = view.findViewById(R.id.listView);
         mListView.setOnGroupClickListener(mOnGroupClickListener);
 
         mListView.addFooterView(getFooterView());
@@ -81,7 +81,7 @@ public class HomeCategoryRegionListLayout extends BaseLayout
         View searchAroundLayout = headerView.findViewById(R.id.searchAroundLayout);
         searchAroundLayout.setOnClickListener(mOnHeaderClickListener);
 
-        TextView text01View = (TextView) headerView.findViewById(R.id.text01View);
+        TextView text01View = headerView.findViewById(R.id.text01View);
         text01View.setText(getAroundPlaceText());
 
         mTermsOfLocationView = headerView.findViewById(R.id.text02View);
@@ -239,7 +239,7 @@ public class HomeCategoryRegionListLayout extends BaseLayout
 
         if (VersionUtils.isOverAPI11() == true)
         {
-            final ImageView imageView = (ImageView) view.findViewById(R.id.updownArrowImageView);
+            final ImageView imageView = view.findViewById(R.id.updownArrowImageView);
 
             RotateAnimation animation = new RotateAnimation(0.0f, -180.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
             animation.setFillBefore(true);
@@ -302,7 +302,7 @@ public class HomeCategoryRegionListLayout extends BaseLayout
 
         if (VersionUtils.isOverAPI11() == true)
         {
-            final ImageView imageView = (ImageView) view.findViewById(R.id.updownArrowImageView);
+            final ImageView imageView = view.findViewById(R.id.updownArrowImageView);
 
             RotateAnimation animation = new RotateAnimation(0.0f, 180.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
             animation.setFillBefore(true);

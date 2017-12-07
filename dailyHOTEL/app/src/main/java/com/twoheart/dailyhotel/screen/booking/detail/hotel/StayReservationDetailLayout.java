@@ -76,9 +76,9 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
         mRecommendGourmetItemLayout = view.findViewById(R.id.recommendGourmetLayout);
 
         mRewardCardLayout = view.findViewById(R.id.rewardCardLayout);
-        mRewardCardView = (DailyRewardCardView) view.findViewById(R.id.rewardCardView);
+        mRewardCardView = view.findViewById(R.id.rewardCardView);
 
-        mRecommendGourmetCarouselLayout = (DailyCarouselLayout) view.findViewById(R.id.recommendGourmetCarouselLayout);
+        mRecommendGourmetCarouselLayout = view.findViewById(R.id.recommendGourmetCarouselLayout);
 
         mRecommendGourmetCarouselLayout.setTitleText(R.string.label_booking_reservation_recommend_gourmet_title);
 
@@ -116,7 +116,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
 
         // 3일전 부터 몇일 남음 필요.
         View remainedDayLayout = view.findViewById(R.id.remainedDayLayout);
-        TextView remainedDayTextView = (TextView) view.findViewById(R.id.remainedDayTextView);
+        TextView remainedDayTextView = view.findViewById(R.id.remainedDayTextView);
 
         if (stayBookingDetail.readyForRefund == true)
         {
@@ -173,9 +173,9 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
         }
 
         // 예약 장소
-        TextView hotelNameTextView = (TextView) view.findViewById(R.id.hotelNameTextView);
-        TextView roomTypeTextView = (TextView) view.findViewById(R.id.roomTypeTextView);
-        TextView addressTextView = (TextView) view.findViewById(R.id.addressTextView);
+        TextView hotelNameTextView = view.findViewById(R.id.hotelNameTextView);
+        TextView roomTypeTextView = view.findViewById(R.id.roomTypeTextView);
+        TextView addressTextView = view.findViewById(R.id.addressTextView);
 
         hotelNameTextView.setText(stayBookingDetail.placeName);
         roomTypeTextView.setText(stayBookingDetail.roomName);
@@ -192,9 +192,9 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
 
         StayBookingDetail stayBookingDetail = (StayBookingDetail) placeBookingDetail;
 
-        TextView checkInDayTextView = (TextView) view.findViewById(R.id.checkinDayTextView);
-        TextView checkOutDayTextView = (TextView) view.findViewById(R.id.checkoutDayTextView);
-        TextView nightsTextView = (TextView) view.findViewById(R.id.nightsTextView);
+        TextView checkInDayTextView = view.findViewById(R.id.checkinDayTextView);
+        TextView checkOutDayTextView = view.findViewById(R.id.checkoutDayTextView);
+        TextView nightsTextView = view.findViewById(R.id.nightsTextView);
 
         try
         {
@@ -251,9 +251,9 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
 
         StayBookingDetail stayBookingDetail = (StayBookingDetail) placeBookingDetail;
 
-        TextView guestNameTextView = (TextView) view.findViewById(R.id.guestNameTextView);
-        TextView guestPhoneTextView = (TextView) view.findViewById(R.id.guestPhoneTextView);
-        TextView guestEmailTextView = (TextView) view.findViewById(R.id.guestEmailTextView);
+        TextView guestNameTextView = view.findViewById(R.id.guestNameTextView);
+        TextView guestPhoneTextView = view.findViewById(R.id.guestPhoneTextView);
+        TextView guestEmailTextView = view.findViewById(R.id.guestEmailTextView);
 
         guestNameTextView.setText(stayBookingDetail.guestName);
         guestPhoneTextView.setText(Util.addHyphenMobileNumber(mContext, stayBookingDetail.guestPhone));
@@ -262,9 +262,9 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
         View visitTypeLayout = view.findViewById(R.id.visitTypeLayout);
         View guideVisitMemoLayout = view.findViewById(R.id.guideVisitMemoLayout);
 
-        TextView visitTypeTitleTextView = (TextView) view.findViewById(R.id.visitTypeTitleTextView);
-        TextView visitTypeTextView = (TextView) view.findViewById(R.id.visitTypeTextView);
-        TextView guideVisitMemoView = (TextView) view.findViewById(R.id.guideVisitMemoView);
+        TextView visitTypeTitleTextView = view.findViewById(R.id.visitTypeTitleTextView);
+        TextView visitTypeTextView = view.findViewById(R.id.visitTypeTextView);
+        TextView guideVisitMemoView = view.findViewById(R.id.guideVisitMemoView);
 
         switch (stayBookingDetail.visitType)
         {
@@ -314,14 +314,14 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
 
         StayBookingDetail stayBookingDetail = (StayBookingDetail) placeBookingDetail;
 
-        TextView paymentDateTextView = (TextView) view.findViewById(R.id.paymentDateTextView);
-        TextView priceTextView = (TextView) view.findViewById(R.id.priceTextView);
+        TextView paymentDateTextView = view.findViewById(R.id.paymentDateTextView);
+        TextView priceTextView = view.findViewById(R.id.priceTextView);
 
         View bonusLayout = view.findViewById(R.id.bonusLayout);
         View couponLayout = view.findViewById(R.id.couponLayout);
-        TextView bonusTextView = (TextView) view.findViewById(R.id.bonusTextView);
-        TextView couponTextView = (TextView) view.findViewById(R.id.couponTextView);
-        TextView totalPriceTextView = (TextView) view.findViewById(R.id.totalPriceTextView);
+        TextView bonusTextView = view.findViewById(R.id.bonusTextView);
+        TextView couponTextView = view.findViewById(R.id.couponTextView);
+        TextView totalPriceTextView = view.findViewById(R.id.totalPriceTextView);
 
         try
         {
@@ -387,7 +387,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
 
     private void updateRefundPolicyLayout(StayBookingDetail stayBookingDetail)
     {
-        TextView refundPolicyTextView = (TextView) mRefundPolicyLayout.findViewById(R.id.refundPolicyTextView);
+        TextView refundPolicyTextView = mRefundPolicyLayout.findViewById(R.id.refundPolicyTextView);
 
         if (DailyTextUtils.isTextEmpty(stayBookingDetail.mRefundComment) == false)
         {
@@ -396,7 +396,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
         }
 
         View refundButtonLayout = mRefundPolicyLayout.findViewById(R.id.refundButtonLayout);
-        TextView buttonTextView = (TextView) refundButtonLayout.findViewById(R.id.buttonTextView);
+        TextView buttonTextView = refundButtonLayout.findViewById(R.id.buttonTextView);
 
         // 정책을 보여주지 않을 경우
         if (stayBookingDetail.isVisibleRefundPolicy == false)
@@ -404,14 +404,14 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
             setRefundLayoutVisible(false);
 
             // 해당 카테고리가 없으면 번호가 바뀐다.
-            TextView depositStickerTextView = (TextView) mRewardCardLayout.findViewById(R.id.depositStickerTextView);
+            TextView depositStickerTextView = mRewardCardLayout.findViewById(R.id.depositStickerTextView);
             depositStickerTextView.setText("3. " + mContext.getString(R.string.label_booking_used_deposit_sticker));
         } else
         {
             setRefundLayoutVisible(true);
 
             // 해당 카테고리가 없으면 번호가 바뀐다.
-            TextView depositStickerTextView = (TextView) mRewardCardLayout.findViewById(R.id.depositStickerTextView);
+            TextView depositStickerTextView = mRewardCardLayout.findViewById(R.id.depositStickerTextView);
             depositStickerTextView.setText("4. " + mContext.getString(R.string.label_booking_used_deposit_sticker));
 
             switch (getRefundPolicyStatus(stayBookingDetail))
@@ -434,7 +434,7 @@ public class StayReservationDetailLayout extends PlaceReservationDetailLayout
                     mDefaultRefundPolicyUnderLine.setVisibility(View.GONE);
                     mWaitRefundPolicyLayout.setVisibility(View.VISIBLE);
 
-                    TextView waitRefundPolicyTextView = (TextView) mWaitRefundPolicyLayout.findViewById(R.id.waitRefundPolicyTextView);
+                    TextView waitRefundPolicyTextView = mWaitRefundPolicyLayout.findViewById(R.id.waitRefundPolicyTextView);
                     waitRefundPolicyTextView.setText(Html.fromHtml(mContext.getString(R.string.message_please_wait_refund01)));
 
                     refundButtonLayout.setOnClickListener(this);

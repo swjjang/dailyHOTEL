@@ -139,21 +139,21 @@ public abstract class PlaceDetailLayout extends BaseLayout
     @Override
     protected void initLayout(View view)
     {
-        mTransSimpleDraweeView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.transImageView);
+        mTransSimpleDraweeView = view.findViewById(R.id.transImageView);
         mTransGradientBottomView = view.findViewById(R.id.transGradientBottomView);
         mTransGradientTopView = view.findViewById(R.id.transGradientTopView);
 
         mTransTitleLayout = view.findViewById(R.id.transTitleLayout);
-        mTransPlaceNameTextView = (TextView) mTransTitleLayout.findViewById(R.id.transNameTextView);
+        mTransPlaceNameTextView = mTransTitleLayout.findViewById(R.id.transNameTextView);
 
-        mScrollView = (DailyPlaceDetailScrollView) view.findViewById(R.id.placeScrollView);
+        mScrollView = view.findViewById(R.id.placeScrollView);
         mScrollView.setOnScrollChangedListener(getScrollChangedListener());
 
         // 이미지 ViewPage 넣기.
-        mDailyLineIndicator = (DailyLineIndicator) view.findViewById(R.id.viewpagerIndicator);
+        mDailyLineIndicator = view.findViewById(R.id.viewpagerIndicator);
 
         mWishTooltipView = view.findViewById(R.id.wishTooltipView);
-        mWishTooltipTextView = (TextView) view.findViewById(R.id.wishTooltipTextView);
+        mWishTooltipTextView = view.findViewById(R.id.wishTooltipTextView);
         mWishTooltipView.setOnClickListener(new OnClickListener()
         {
             @Override
@@ -166,12 +166,12 @@ public abstract class PlaceDetailLayout extends BaseLayout
             }
         });
 
-        mViewPager = (DailyLoopViewPager) view.findViewById(R.id.defaultLoopViewPager);
+        mViewPager = view.findViewById(R.id.defaultLoopViewPager);
 
         mImageAdapter = new PlaceDetailImageViewPagerAdapter(mContext);
         mViewPager.setAdapter(mImageAdapter);
 
-        mDescriptionTextView = (TextView) view.findViewById(R.id.descriptionTextView);
+        mDescriptionTextView = view.findViewById(R.id.descriptionTextView);
         mDailyLineIndicator.setViewPager(mViewPager);
 
         mViewPager.setOnPageChangeListener(mOnPageChangeListener);
@@ -197,8 +197,8 @@ public abstract class PlaceDetailLayout extends BaseLayout
         mMoreIconView = view.findViewById(R.id.moreIconView);
         mBottomLayout = view.findViewById(R.id.bottomLayout);
 
-        mBookingTextView = (TextView) mBottomLayout.findViewById(R.id.bookingTextView);
-        mSoldoutTextView = (TextView) mBottomLayout.findViewById(R.id.soldoutTextView);
+        mBookingTextView = mBottomLayout.findViewById(R.id.bookingTextView);
+        mSoldoutTextView = mBottomLayout.findViewById(R.id.soldoutTextView);
         mBottomLayout.setOnClickListener(new OnClickListener()
         {
             @Override
@@ -209,7 +209,7 @@ public abstract class PlaceDetailLayout extends BaseLayout
         });
 
         mWishPopupScrollView = view.findViewById(R.id.wishListPopupScrollView);
-        mWishPopupTextView = (DailyTextView) view.findViewById(R.id.wishListPopupView);
+        mWishPopupTextView = view.findViewById(R.id.wishListPopupView);
         //        mWishButtonTextView = (DailyTextView) view.findViewById(R.id.wishListButtonView);
         //        mWishButtonTextView.setTag(false);
         //        mWishButtonTextView.setOnClickListener(new OnClickListener()

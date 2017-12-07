@@ -182,7 +182,7 @@ public class ZoomMapActivity extends BaseActivity
 
     private void initToolbar(String title)
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = findViewById(R.id.toolbarView);
 
         dailyToolbarView.setTitleText(title);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
@@ -198,7 +198,7 @@ public class ZoomMapActivity extends BaseActivity
     private void initLayout(final String placeName, final String address, final double latitude, final double longitude, final boolean isOverseas)
     {
         // 주소지
-        final TextView hotelAddressTextView = (TextView) findViewById(R.id.addressTextView);
+        final TextView hotelAddressTextView = findViewById(R.id.addressTextView);
 
         hotelAddressTextView.setText(address);
 
@@ -254,7 +254,7 @@ public class ZoomMapActivity extends BaseActivity
             }
         });
 
-        FrameLayout mapLayout = (FrameLayout) findViewById(R.id.mapLayout);
+        FrameLayout mapLayout = findViewById(R.id.mapLayout);
         SupportMapFragment mapFragment = SupportMapFragment.newInstance();
 
         getSupportFragmentManager().beginTransaction().add(mapLayout.getId(), mapFragment).commitAllowingStateLoss();
@@ -314,7 +314,7 @@ public class ZoomMapActivity extends BaseActivity
 
     void relocationMyLocation()
     {
-        mMyLocationView = (ImageView) findViewById(0x2);
+        mMyLocationView = findViewById(0x2);
 
         if (mMyLocationView != null)
         {

@@ -365,7 +365,7 @@ public class StayOutboundCalendarPresenter extends PlaceCalendarPresenter<StayOu
         getViewInterface().notifyCalendarDataSetChanged();
     }
 
-    private void onDayClick(String dayDateTime, int yyyyMMdd)
+    void onDayClick(String dayDateTime, int yyyyMMdd)
     {
         if (DailyTextUtils.isTextEmpty(dayDateTime) == true || yyyyMMdd == 0)
         {

@@ -122,7 +122,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
     private void initSearchLayout(View view)
     {
-        mSearchEditText = (EditText) view.findViewById(R.id.searchEditText);
+        mSearchEditText = view.findViewById(R.id.searchEditText);
         mSearchEditText.setHint(getSearchHintText());
 
         StringFilter stringFilter = new StringFilter(mContext);
@@ -256,7 +256,7 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
     private void initCalendarLayout(View view)
     {
-        mDateTextView = (TextView) view.findViewById(R.id.calendarTextView);
+        mDateTextView = view.findViewById(R.id.calendarTextView);
 
         mDateTextView.setOnClickListener(this);
     }
@@ -266,10 +266,10 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         View searchAroundLayout = view.findViewById(R.id.searchAroundLayout);
         searchAroundLayout.setOnClickListener(this);
 
-        TextView text01View = (TextView) searchAroundLayout.findViewById(R.id.text01View);
+        TextView text01View = searchAroundLayout.findViewById(R.id.text01View);
         text01View.setText(getAroundPlaceText());
 
-        mTermsOfLocationView = (TextView) searchAroundLayout.findViewById(R.id.text02View);
+        mTermsOfLocationView = searchAroundLayout.findViewById(R.id.text02View);
         mTermsOfLocationView.setText(getAroundPlaceTermText());
 
         updateTermsOfLocationLayout(mTermsOfLocationView);
@@ -277,8 +277,8 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
     private void initRecyclerView(View view)
     {
-        mCircleIndicator = (DailySearchCircleIndicator) view.findViewById(R.id.searchCircleIndicator);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.searchRecyclerView);
+        mCircleIndicator = view.findViewById(R.id.searchCircleIndicator);
+        mRecyclerView = view.findViewById(R.id.searchRecyclerView);
 
         EdgeEffectColor.setEdgeGlowColor(mRecyclerView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
@@ -430,8 +430,8 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
     private void initAutoCompleteLayout(View view)
     {
         mAutoCompleteScrollLayout = view.findViewById(R.id.autoCompleteScrollLayout);
-        mAutoCompleteScrollView = (DailyScrollView) mAutoCompleteScrollLayout.findViewById(R.id.autoCompleteScrollView);
-        mAutoCompleteLayout = (ViewGroup) mAutoCompleteScrollView.findViewById(R.id.autoCompleteLayout);
+        mAutoCompleteScrollView = mAutoCompleteScrollLayout.findViewById(R.id.autoCompleteScrollView);
+        mAutoCompleteLayout = mAutoCompleteScrollView.findViewById(R.id.autoCompleteLayout);
 
         hideAutoCompleteLayout();
 
@@ -563,8 +563,8 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                 keyword = keywordList.get(i);
                 view.setTag(keyword);
 
-                TextView textView01 = (TextView) view.findViewById(R.id.textView01);
-                TextView textView02 = (TextView) view.findViewById(R.id.textView02);
+                TextView textView01 = view.findViewById(R.id.textView01);
+                TextView textView02 = view.findViewById(R.id.textView02);
 
                 updateSuggestLayout(textView01, textView02, keyword, text);
             }

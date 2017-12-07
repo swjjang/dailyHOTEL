@@ -1034,7 +1034,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
             StayCategoryTabActivity.this.onErrorResponse(call, response);
         }
 
-        private boolean processDeepLinkByRegionList(BaseActivity baseActivity //
+        boolean processDeepLinkByRegionList(BaseActivity baseActivity //
             , List<StayAreaGroup> stayDistrictList, TodayDateTime todayDateTime //
             , DailyDeepLink dailyDeepLink)
         {

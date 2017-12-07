@@ -107,7 +107,7 @@ public class StayOutboundFilterView extends BaseDialogView<StayOutboundFilterVie
     @Override
     public void onCheckedChanged(RadioGroup group, @IdRes int checkedId)
     {
-        RadioButton radioButton = (RadioButton) group.findViewById(checkedId);
+        RadioButton radioButton = group.findViewById(checkedId);
 
         if (radioButton == null)
         {

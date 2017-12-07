@@ -139,7 +139,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
         initToolbar(mEventName);
 
-        WebView webView = (WebView) findViewById(R.id.webView);
+        WebView webView = findViewById(R.id.webView);
         webView.getSettings().setAppCacheEnabled(false); // 7.4 캐시 정책 비활성화.
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
@@ -167,7 +167,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
     private void initToolbar(String title)
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(title);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {

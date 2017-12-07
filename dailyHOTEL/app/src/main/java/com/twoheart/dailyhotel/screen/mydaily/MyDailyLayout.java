@@ -87,7 +87,7 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
     {
         initToolbar(mContext, view);
 
-        mScrollView = (DailyScrollView) view.findViewById(R.id.myDailyScrollView);
+        mScrollView = view.findViewById(R.id.myDailyScrollView);
         EdgeEffectColor.setEdgeGlowColor(mScrollView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
         mScrollView.setOnScrollChangedListener(new DailyScrollView.OnScrollChangedListener()
@@ -131,8 +131,8 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
         View pushBenefitLayout = view.findViewById(R.id.pushBenefitLayout);
         pushBenefitLayout.setOnClickListener(this);
 
-        mPushTextView = (TextView) pushBenefitLayout.findViewById(R.id.pushTextView);
-        mPushBenefitTextView = (TextView) pushBenefitLayout.findViewById(R.id.pushBenefitTextView);
+        mPushTextView = pushBenefitLayout.findViewById(R.id.pushTextView);
+        mPushBenefitTextView = pushBenefitLayout.findViewById(R.id.pushBenefitTextView);
 
         boolean isLogin = DailyHotel.isLogin();
         updateLoginLayout(isLogin, true);
@@ -143,7 +143,7 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
 
         mLinkAlarmLayoutView = view.findViewById(R.id.linkAlarmLayout);
 
-        TextView linkAlarmTextView = (TextView) mLinkAlarmLayoutView.findViewById(R.id.linkAlarmTextView);
+        TextView linkAlarmTextView = mLinkAlarmLayoutView.findViewById(R.id.linkAlarmTextView);
 
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(linkAlarmTextView.getText());
 
@@ -163,7 +163,7 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
 
     private void initToolbar(Context context, View view)
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) view.findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = view.findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.menu_item_title_mydaily);
         dailyToolbarView.setBackVisible(false);
     }
@@ -173,7 +173,7 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
         View loginView = view.findViewById(R.id.loginTextView);
         View signUpView = view.findViewById(R.id.signupTextView);
         View editProfileView = view.findViewById(R.id.editProfileTextView);
-        TextView profileTextView = (TextView) view.findViewById(R.id.profileTextView);
+        TextView profileTextView = view.findViewById(R.id.profileTextView);
 
         if (ScreenUtils.getScreenWidth(context) < 720)
         {
@@ -233,15 +233,15 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
      */
     public void updateLoginLayout(boolean isLogin, boolean isInitialize)
     {
-        TextView profileTextView = (TextView) mProfileLayout.findViewById(R.id.profileTextView);
-        TextView loginMessageTextView = (TextView) mProfileLayout.findViewById(R.id.loginMessageTextView);
+        TextView profileTextView = mProfileLayout.findViewById(R.id.profileTextView);
+        TextView loginMessageTextView = mProfileLayout.findViewById(R.id.loginMessageTextView);
 
         View loginView = mProfileLayout.findViewById(R.id.loginTextView);
         View signUpView = mProfileLayout.findViewById(R.id.signupTextView);
         View editProfileView = mProfileLayout.findViewById(R.id.editProfileTextView);
         View profileLayoutBottomLine = mProfileLayout.findViewById(R.id.profileLayoutBottomLine);
 
-        ImageView profileImageView = (ImageView) mProfileLayout.findViewById(R.id.iconImageView);
+        ImageView profileImageView = mProfileLayout.findViewById(R.id.iconImageView);
 
         if (isLogin == true)
         {
@@ -325,8 +325,8 @@ public class MyDailyLayout extends BaseLayout implements View.OnClickListener
      */
     public void updateAccountLayout(boolean isLogin, int bonus, int couponCount)
     {
-        TextView couponCountTextView = (TextView) mAccountInfoLayout.findViewById(R.id.couponCountTextView);
-        TextView bonusCountTextView = (TextView) mAccountInfoLayout.findViewById(R.id.bonusCountTextView);
+        TextView couponCountTextView = mAccountInfoLayout.findViewById(R.id.couponCountTextView);
+        TextView bonusCountTextView = mAccountInfoLayout.findViewById(R.id.bonusCountTextView);
 
         bonusCountTextView.setVisibility(bonus == -1 ? View.GONE : View.VISIBLE);
         couponCountTextView.setVisibility(couponCount == -1 ? View.GONE : View.VISIBLE);

@@ -118,8 +118,8 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     private CommonDateTime mCommonDateTime;
     StayDetail mStayDetail;
     StayRoom mSelectedRoom;
-    private ReviewScores mReviewScores;
-    private List<TrueVR> mTrueVRList;
+    ReviewScores mReviewScores;
+    List<TrueVR> mTrueVRList;
 
     private int mStatus = STATUS_NONE;
 
@@ -473,7 +473,10 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
                 if (mIsUsedMultiTransition == true)
                 {
-                    lock();
+                    if(lock() == true)
+                    {
+                        return true;
+                    }
 
                     getViewInterface().setTransitionVisible(true);
                     getViewInterface().scrollTop();
@@ -1562,7 +1565,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         mIsDeepLink = false;
     }
 
-    private void notifyRewardChanged()
+    void notifyRewardChanged()
     {
         if (mStayDetail == null)
         {
@@ -1671,7 +1674,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         getViewInterface().setWishSelected(myWish);
     }
 
-    private void showWishTooltip()
+    void showWishTooltip()
     {
         getViewInterface().showWishTooltip();
 
@@ -1923,7 +1926,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         return (mStayDetail.getRoomList() == null || mStayDetail.getRoomList().size() == 0);
     }
 
-    private void startPayment(StayBookDateTime stayBookDateTime, StayDetail stayDetail, StayRoom stayRoom)
+    void startPayment(StayBookDateTime stayBookDateTime, StayDetail stayDetail, StayRoom stayRoom)
     {
         if (stayBookDateTime == null || stayDetail == null || stayRoom == null)
         {

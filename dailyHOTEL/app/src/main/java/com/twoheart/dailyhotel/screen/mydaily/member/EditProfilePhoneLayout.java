@@ -69,7 +69,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
 
     private void initToolbar(View view)
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) view.findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = view.findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.actionbar_title_edit_phone);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
@@ -83,11 +83,11 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
 
     private void initLayoutForm(View view)
     {
-        mScrollView = (ScrollView) view.findViewById(R.id.scrollView);
+        mScrollView = view.findViewById(R.id.scrollView);
         EdgeEffectColor.setEdgeGlowColor(mScrollView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
 
-        mGuideTextView = (TextView) view.findViewById(R.id.guideTextView);
-        mCountryEditText = (DailyEditText) view.findViewById(R.id.countryEditText);
+        mGuideTextView = view.findViewById(R.id.guideTextView);
+        mCountryEditText = view.findViewById(R.id.countryEditText);
         mCountryEditText.setFocusable(false);
         mCountryEditText.setCursorVisible(false);
         mCountryEditText.setOnClickListener(new OnClickListener()
@@ -100,7 +100,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
         });
 
         mPhoneView = view.findViewById(R.id.phoneView);
-        mPhoneEditText = (DailyEditText) view.findViewById(R.id.phoneEditText);
+        mPhoneEditText = view.findViewById(R.id.phoneEditText);
         mPhoneEditText.setDeleteButtonVisible(null);
         mPhoneEditText.setOnFocusChangeListener(this);
         mPhoneEditText.setOnEditorActionListener(new TextView.OnEditorActionListener()
@@ -165,7 +165,7 @@ public class EditProfilePhoneLayout extends BaseLayout implements OnClickListene
         mVerificationLayout.setVisibility(View.INVISIBLE);
         mVerificationView = mVerificationLayout.findViewById(R.id.verificationView);
 
-        mVerificationEditText = (DailyEditText) mVerificationLayout.findViewById(R.id.verificationEditText);
+        mVerificationEditText = mVerificationLayout.findViewById(R.id.verificationEditText);
         mVerificationEditText.setDeleteButtonVisible(null);
         mVerificationEditText.setOnFocusChangeListener(this);
 

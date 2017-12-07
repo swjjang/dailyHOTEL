@@ -138,8 +138,8 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     {
         setContentView(layoutResID);
 
-        mCalendarsLayout = (ViewGroup) findViewById(R.id.calendarLayout);
-        ScrollView scrollView = (ScrollView) findViewById(R.id.calendarScrollLayout);
+        mCalendarsLayout = findViewById(R.id.calendarLayout);
+        ScrollView scrollView = findViewById(R.id.calendarScrollLayout);
         EdgeEffectColor.setEdgeGlowColor(scrollView, getResources().getColor(R.color.default_over_scroll_edge));
 
         View closeView = findViewById(R.id.closeView);
@@ -325,7 +325,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
     protected void initToolbar(String title)
     {
-        mTitleTextView = (TextView) findViewById(R.id.titleTextView);
+        mTitleTextView = findViewById(R.id.titleTextView);
         setToolbarText(title);
     }
 
@@ -337,8 +337,8 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
     private View getMonthCalendarView(Context context, Pair<String, Day[]> pair)
     {
         View monthCalendarLayout = LayoutInflater.from(context).inflate(R.layout.view_calendar, null);
-        TextView monthTextView = (TextView) monthCalendarLayout.findViewById(R.id.monthTextView);
-        android.support.v7.widget.GridLayout calendarGridLayout = (android.support.v7.widget.GridLayout) monthCalendarLayout.findViewById(R.id.calendarGridLayout);
+        TextView monthTextView = monthCalendarLayout.findViewById(R.id.monthTextView);
+        android.support.v7.widget.GridLayout calendarGridLayout = monthCalendarLayout.findViewById(R.id.calendarGridLayout);
 
         monthTextView.setText(pair.first);
 
@@ -507,8 +507,8 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             return;
         }
 
-        TextView visitTextView = (TextView) dayView.findViewById(R.id.textView);
-        DailyDayStrikeTextView dayTextView = (DailyDayStrikeTextView) dayView.findViewById(R.id.dateTextView);
+        TextView visitTextView = dayView.findViewById(R.id.textView);
+        DailyDayStrikeTextView dayTextView = dayView.findViewById(R.id.dateTextView);
 
         if (isShow == true)
         {
@@ -542,7 +542,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
     protected void setDayOfWeekTextColor(View dayView)
     {
-        TextView dayTextView = (TextView) dayView.findViewById(R.id.dateTextView);
+        TextView dayTextView = dayView.findViewById(R.id.dateTextView);
 
         Day day = (Day) dayView.getTag();
 
@@ -619,7 +619,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
         int length = (todayDayOfWeek - 1) + monthDay + (7 - endDayOfWeek);
 
-//        ExLog.d("length : " + length + " , availableLastDay : " + availableLastDay + " , today : " + today + " , todayweek : " + todayDayOfWeek + " , endDay Week : " + endDayOfWeek);
+        //        ExLog.d("length : " + length + " , availableLastDay : " + availableLastDay + " , today : " + today + " , todayweek : " + todayDayOfWeek + " , endDay Week : " + endDayOfWeek);
         return length;
     }
 
@@ -645,7 +645,7 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
 
     protected void smoothScrollStartDayPosition(View startDayView)
     {
-        ScrollView scrollView = (ScrollView) findViewById(R.id.calendarScrollLayout);
+        ScrollView scrollView = findViewById(R.id.calendarScrollLayout);
 
         if (startDayView == null)
         {

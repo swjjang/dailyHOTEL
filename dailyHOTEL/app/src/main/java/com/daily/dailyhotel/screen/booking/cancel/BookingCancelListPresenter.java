@@ -50,7 +50,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCancelListActivity, BookingCancelListInterface> implements BookingCancelListView.OnEventListener
 {
-    private BookingCancelListAnalyticsInterface mAnalytics;
+    BookingCancelListAnalyticsInterface mAnalytics;
 
     private CommonRemoteImpl mCommonRemoteImpl;
     private BookingRemoteImpl mBookingRemoteImpl;
@@ -260,7 +260,7 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
         }));
     }
 
-    private void onBookingCancelList(List<BookingCancel> bookingCancelList)
+    void onBookingCancelList(List<BookingCancel> bookingCancelList)
     {
         if (bookingCancelList == null || bookingCancelList.size() == 0)
         {
@@ -300,12 +300,12 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
         }));
     }
 
-    private void setCommonDateTime(CommonDateTime commonDateTime)
+    void setCommonDateTime(CommonDateTime commonDateTime)
     {
         mCommonDateTime = commonDateTime;
     }
 
-    private List<BookingCancel> getBookingCancelSortList(List<BookingCancel> list)
+    List<BookingCancel> getBookingCancelSortList(List<BookingCancel> list)
     {
         if (list == null || list.size() == 0)
         {

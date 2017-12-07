@@ -93,7 +93,7 @@ public class BankListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         {
             super(view);
 
-            bankNameTextView = (TextView) view.findViewById(R.id.textView);
+            bankNameTextView = view.findViewById(R.id.textView);
             dividerView = view.findViewById(R.id.dividerView);
 
             bankNameTextView.setOnClickListener(BankListAdapter.this);

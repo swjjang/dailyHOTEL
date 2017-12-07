@@ -253,8 +253,8 @@ public abstract class PlaceListAdapter extends RecyclerView.Adapter<RecyclerView
         {
             super(itemView);
 
-            dailyLoopViewPager = (DailyLoopViewPager) itemView.findViewById(R.id.loopViewPager);
-            viewpagerCircleIndicator = (DailyViewPagerCircleIndicator) itemView.findViewById(R.id.viewpagerCircleIndicator);
+            dailyLoopViewPager = itemView.findViewById(R.id.loopViewPager);
+            viewpagerCircleIndicator = itemView.findViewById(R.id.viewpagerCircleIndicator);
 
             dailyLoopViewPager.setSlideTime(4);
         }

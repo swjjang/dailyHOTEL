@@ -26,9 +26,8 @@ import io.reactivex.functions.Function;
 
 public class CloseOnBackPressed
 {
-
-    private long backPressedTime = 0;
-    private MainActivity mActivity;
+    long backPressedTime = 0;
+    MainActivity mActivity;
 
     public CloseOnBackPressed(MainActivity activity)
     {

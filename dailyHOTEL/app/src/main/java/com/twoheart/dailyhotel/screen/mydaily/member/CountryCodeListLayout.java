@@ -30,7 +30,7 @@ public class CountryCodeListLayout implements OnItemClickListener
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.activity_countrycode_list, null, false);
 
-        mListView = (PinnedSectionListView) view.findViewById(R.id.listView);
+        mListView = view.findViewById(R.id.listView);
         EdgeEffectColor.setEdgeGlowColor(mListView, mContext.getResources().getColor(R.color.default_over_scroll_edge));
         mListView.setOnItemClickListener(this);
         mListView.setFastScrollEnabled(true);

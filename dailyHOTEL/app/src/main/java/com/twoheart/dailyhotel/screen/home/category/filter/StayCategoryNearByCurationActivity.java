@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
@@ -73,10 +72,10 @@ public class StayCategoryNearByCurationActivity extends StayCategoryCurationActi
     @Override
     protected void initSortLayout(View view, ViewType viewType, StayCurationOption stayCurationOption)
     {
-        mSortRadioGroup = (RadioGroup) view.findViewById(R.id.sortLayout);
+        mSortRadioGroup = view.findViewById(R.id.sortLayout);
 
-        RadioButton radioButton = (RadioButton) mSortRadioGroup.findViewById(R.id.regionCheckView);
-        RadioButton emptyCheckView = (RadioButton) mSortRadioGroup.findViewById(R.id.emptyCheckView);
+        RadioButton radioButton = mSortRadioGroup.findViewById(R.id.regionCheckView);
+        RadioButton emptyCheckView = mSortRadioGroup.findViewById(R.id.emptyCheckView);
 
         if (mSearchType == SearchType.LOCATION)
         {

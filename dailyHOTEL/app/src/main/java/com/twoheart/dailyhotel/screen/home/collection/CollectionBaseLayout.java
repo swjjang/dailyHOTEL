@@ -80,11 +80,11 @@ public abstract class CollectionBaseLayout extends BaseBlurLayout
         int height16x9 = ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext));
 
         // 이미지
-        mSimpleDraweeView = (SimpleDraweeView) imageViewLayout.findViewById(R.id.simpleDraweeView);
+        mSimpleDraweeView = imageViewLayout.findViewById(R.id.simpleDraweeView);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height16x9);
         mSimpleDraweeView.setLayoutParams(layoutParams);
 
-        final FrameLayout titleBoxLayout = (FrameLayout) view.findViewById(R.id.titleBoxLayout);
+        final FrameLayout titleBoxLayout = view.findViewById(R.id.titleBoxLayout);
         final int DP_15 = ScreenUtils.dpToPx(mContext, 15);
         int titleBoxTopPadding = ScreenUtils.getRatioHeightType16x9(ScreenUtils.getScreenWidth(mContext)) + ScreenUtils.dpToPx(mContext, 81) - DP_15 - ScreenUtils.dpToPx(mContext, 118);
         titleBoxLayout.setPadding(DP_15, titleBoxTopPadding + ScreenUtils.dpToPx(mContext, 21), DP_15, DP_15);
@@ -92,10 +92,10 @@ public abstract class CollectionBaseLayout extends BaseBlurLayout
         final View fakeBackImageView = titleBoxLayout.findViewById(R.id.fakeBackImageView);
         final View subTitleLayout = view.findViewById(R.id.subTitleLayout);
 
-        mTitleTextView = (TextView) titleBoxLayout.findViewById(R.id.titleTextView);
-        mSubTitleTextView = (TextView) subTitleLayout.findViewById(R.id.subTitleTextView);
+        mTitleTextView = titleBoxLayout.findViewById(R.id.titleTextView);
+        mSubTitleTextView = subTitleLayout.findViewById(R.id.subTitleTextView);
 
-        mCalendarTextView = (TextView) subTitleLayout.findViewById(R.id.calendarTextView);
+        mCalendarTextView = subTitleLayout.findViewById(R.id.calendarTextView);
         mCalendarTextView.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -106,7 +106,7 @@ public abstract class CollectionBaseLayout extends BaseBlurLayout
         });
 
         // 리스트
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        mRecyclerView = view.findViewById(R.id.recyclerView);
         final LinearLayoutManager linearLayoutManager = new ScrollingLinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
 
         mRecyclerView.setLayoutManager(linearLayoutManager);

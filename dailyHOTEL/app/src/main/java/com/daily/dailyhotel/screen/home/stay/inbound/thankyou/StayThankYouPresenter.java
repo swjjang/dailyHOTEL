@@ -131,8 +131,6 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
     @Override
     public void constructorInitialize(StayThankYouActivity activity)
     {
-        lock();
-
         setContentView(R.layout.activity_stay_payment_thank_you_data);
 
         setAnalytics(new StayThankYouAnalyticsImpl());
@@ -736,12 +734,12 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
         }
     }
 
-    private void setRewardInformation(RewardInformation rewardInformation)
+    void setRewardInformation(RewardInformation rewardInformation)
     {
         mRewardInformation = rewardInformation;
     }
 
-    private void onRecommendGourmetData(ArrayList<CarouselListItem> carouselListItemList)
+    void onRecommendGourmetData(ArrayList<CarouselListItem> carouselListItemList)
     {
         if (carouselListItemList == null || carouselListItemList.size() == 0)
         {
@@ -820,7 +818,7 @@ public class StayThankYouPresenter extends BaseExceptionPresenter<StayThankYouAc
         });
     }
 
-    private void notifyRewardInformationChanged()
+    void notifyRewardInformationChanged()
     {
         if (mRewardInformation == null || mStayBookDateTime == null)
         {

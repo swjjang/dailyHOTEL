@@ -32,11 +32,11 @@ import io.reactivex.functions.Consumer;
  */
 public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<StayOutboundSearchSuggestActivity, StayOutboundSearchSuggestViewInterface> implements StayOutboundSearchSuggestView.OnEventListener
 {
-    private StayOutboundSearchSuggestAnalyticsInterface mAnalytics;
+    StayOutboundSearchSuggestAnalyticsInterface mAnalytics;
     private SuggestRemoteImpl mSuggestRemoteImpl;
     private SuggestLocalImpl mSuggestLocalImpl;
 
-    private String mKeyword;
+    String mKeyword;
 
     public interface StayOutboundSearchSuggestAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -332,7 +332,7 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
             }));
     }
 
-    private void startFinishAction(Suggest suggest, String keyword, String analyticsClickType)
+    void startFinishAction(Suggest suggest, String keyword, String analyticsClickType)
     {
         Intent intent = new Intent();
         intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new SuggestParcel(suggest));
@@ -375,7 +375,7 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
             }));
     }
 
-    private void onSuggestList(List<Suggest> suggestList)
+    void onSuggestList(List<Suggest> suggestList)
     {
         getViewInterface().setProgressBarVisible(false);
 

@@ -404,7 +404,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
         }
 
         //noinspection ConstantConditions,ResourceType
-        mMyLocationView = (ImageView) getView().findViewById(0x2);
+        mMyLocationView = getView().findViewById(0x2);
 
         if (mMyLocationView != null)
         {

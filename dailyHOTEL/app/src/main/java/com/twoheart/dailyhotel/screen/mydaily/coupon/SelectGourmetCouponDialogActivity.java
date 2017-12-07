@@ -240,7 +240,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
         }
     };
 
-    private void onRefresh()
+    void onRefresh()
     {
         switch (mCallByScreen)
         {

@@ -80,33 +80,33 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
     {
         initToolbar(view);
 
-        mNestedScrollView = (NestedScrollView) view.findViewById(R.id.scrollView);
-        mScrollLayout = (ViewGroup) mNestedScrollView.findViewById(R.id.scrollLayout);
+        mNestedScrollView = view.findViewById(R.id.scrollView);
+        mScrollLayout = mNestedScrollView.findViewById(R.id.scrollLayout);
 
         mImageDimView = view.findViewById(R.id.imageDimView);
         mImageDimView.setAlpha(0.0f);
 
         int imageHeight = ScreenUtils.getRatioHeightType4x3(ScreenUtils.getScreenWidth(mContext));
-        mPlaceImageView = (com.facebook.drawee.view.SimpleDraweeView) view.findViewById(R.id.placeImageView);
+        mPlaceImageView = view.findViewById(R.id.placeImageView);
         ViewGroup.LayoutParams layoutParams = mPlaceImageView.getLayoutParams();
         layoutParams.height = imageHeight;
         mPlaceImageView.setLayoutParams(layoutParams);
 
-        mPlaceNameTextView = (TextView) view.findViewById(R.id.placeNameTextView);
-        mPeriodTextView = (TextView) view.findViewById(R.id.periodTextView);
-        mThankyouTextView = (TextView) view.findViewById(R.id.thankyouTextView);
+        mPlaceNameTextView = view.findViewById(R.id.placeNameTextView);
+        mPeriodTextView = view.findViewById(R.id.periodTextView);
+        mThankyouTextView = view.findViewById(R.id.thankyouTextView);
 
         mNestedScrollView.setOnScrollChangeListener(this);
 
-        mConfirmTextView = (TextView) view.findViewById(R.id.confirmTextView);
+        mConfirmTextView = view.findViewById(R.id.confirmTextView);
         mConfirmTextView.setOnClickListener(this);
     }
 
     private void initToolbar(View view)
     {
         mToolbar = view.findViewById(R.id.toolbar);
-        mToolbarTitle = (TextView) mToolbar.findViewById(R.id.toolbarTitle);
-        mToolbarSubTitle = (TextView) mToolbar.findViewById(R.id.toolbarSubTitle);
+        mToolbarTitle = mToolbar.findViewById(R.id.toolbarTitle);
+        mToolbarSubTitle = mToolbar.findViewById(R.id.toolbarSubTitle);
 
         mToolbarTitle.setAlpha(0.0f);
         mToolbarSubTitle.setAlpha(0.0f);

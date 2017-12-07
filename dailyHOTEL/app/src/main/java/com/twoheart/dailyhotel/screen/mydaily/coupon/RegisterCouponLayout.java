@@ -42,7 +42,7 @@ public class RegisterCouponLayout extends BaseLayout implements View.OnClickList
 
         mTitleView = view.findViewById(R.id.couponTitleView);
         mCompleteView = view.findViewById(R.id.registerCouponCompleteView);
-        mCouponEditText = (DailyEditText) view.findViewById(R.id.couponEditText);
+        mCouponEditText = view.findViewById(R.id.couponEditText);
         mCouponEditText.setDeleteButtonVisible(null);
         mCouponEditText.setOnFocusChangeListener(this);
 
@@ -75,7 +75,7 @@ public class RegisterCouponLayout extends BaseLayout implements View.OnClickList
 
     private void initToolbar(View view)
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) view.findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = view.findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.actionbar_title_register_coupon);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {

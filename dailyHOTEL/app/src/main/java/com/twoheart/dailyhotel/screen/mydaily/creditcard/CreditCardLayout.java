@@ -83,14 +83,14 @@ public class CreditCardLayout extends FrameLayout
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.layout_creditcard, this, true);
 
-        mLoginLayout = (ViewGroup) view.findViewById(R.id.loginLayout);
-        mEmptyCardLayout = (ViewGroup) mLoginLayout.findViewById(R.id.emptyCardLayout);
+        mLoginLayout = view.findViewById(R.id.loginLayout);
+        mEmptyCardLayout = mLoginLayout.findViewById(R.id.emptyCardLayout);
         mEmptyCardLayout.setOnClickListener(mAddCreditCardClickListener);
 
         mBottomLayout = view.findViewById(R.id.bottomLayout);
         View addCreditCardButton = view.findViewById(R.id.addCreditCardButton);
 
-        mListView = (ListView) view.findViewById(R.id.creditcardListView);
+        mListView = view.findViewById(R.id.creditcardListView);
         EdgeEffectColor.setEdgeGlowColor(mListView, context.getResources().getColor(R.color.default_over_scroll_edge));
 
         addCreditCardButton.setOnClickListener(mAddCreditCardClickListener);
@@ -297,7 +297,7 @@ public class CreditCardLayout extends FrameLayout
 
             final CreditCard card = getItem(position);
 
-            DailyTextView logoTextView = (DailyTextView) view.findViewById(R.id.logoTextView);
+            DailyTextView logoTextView = view.findViewById(R.id.logoTextView);
 
             if (mIsPickMode == true)
             {
@@ -332,7 +332,7 @@ public class CreditCardLayout extends FrameLayout
 
             logoTextView.setText(card.name);
 
-            TextView numberTextView = (TextView) view.findViewById(R.id.numberTextView);
+            TextView numberTextView = view.findViewById(R.id.numberTextView);
             numberTextView.setText(card.number);
 
             View deleteButton = view.findViewById(R.id.deleteImageView);

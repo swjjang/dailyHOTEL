@@ -19,7 +19,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class CartLocalImpl implements CartInterface
 {
-    private Context mContext;
+    Context mContext;
 
     public CartLocalImpl(@NonNull Context context)
     {

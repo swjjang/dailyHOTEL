@@ -18,7 +18,7 @@ buildscript {
 apply plugin: 'io.fabric'
 
 repositories {
-    google();
+    google()
     jcenter()
 
     maven { url 'https://maven.fabric.io/public' }
@@ -196,7 +196,7 @@ android {
         apkName += ".apk"
 
         variant.outputs.all { output ->
-            outputFileName = apkName;
+            outputFileName = apkName
         }
     }
 }

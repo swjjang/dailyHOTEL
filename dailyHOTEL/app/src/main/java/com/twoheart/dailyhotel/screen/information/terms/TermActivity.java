@@ -27,7 +27,7 @@ public class TermActivity extends WebViewActivity
 
     private void initToolbar()
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.actionbar_title_term_activity);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {

@@ -46,7 +46,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
         initToolbar();
 
         mEmailView = findViewById(R.id.emailView);
-        mEmailEditText = (DailyEditText) findViewById(R.id.emailEditText);
+        mEmailEditText = findViewById(R.id.emailEditText);
 
         final View forgotView = findViewById(R.id.btn_forgot_pwd);
         forgotView.setOnClickListener(this);
@@ -72,7 +72,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
 
     private void initToolbar()
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.actionbar_title_forgot_pwd_activity);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {

@@ -264,10 +264,10 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
 
         loadSplash(mSplashLayout);
 
-        ViewGroup bottomNavigationLayout = (ViewGroup) findViewById(R.id.bottomNavigationLayout);
+        ViewGroup bottomNavigationLayout = findViewById(R.id.bottomNavigationLayout);
         mMenuBarLayout = new MenuBarLayout(this, bottomNavigationLayout, onMenuBarSelectedListener);
 
-        ViewGroup contentLayout = (ViewGroup) findViewById(R.id.contentLayout);
+        ViewGroup contentLayout = findViewById(R.id.contentLayout);
         mMainFragmentManager = new MainFragmentManager(this, contentLayout, new MenuBarLayout.MenuBarLayoutOnPageChangeListener(mMenuBarLayout));
 
         mBackButtonHandler = new CloseOnBackPressed(this);
@@ -282,7 +282,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
 
         String splashVersion = DailyRemoteConfigPreference.getInstance(this).getRemoteConfigIntroImageVersion();
 
-        DailyImageView imageView = (DailyImageView) splashLayout.findViewById(R.id.splashImageView);
+        DailyImageView imageView = splashLayout.findViewById(R.id.splashImageView);
 
         if (DailyTextUtils.isTextEmpty(splashVersion) == true || Constants.DAILY_INTRO_DEFAULT_VERSION.equalsIgnoreCase(splashVersion) == true)
         {

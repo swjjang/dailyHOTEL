@@ -38,7 +38,7 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
 
     private Constants.ServiceType mServiceType;
     private int mWishIndex;
-    private boolean mWish;
+    boolean mWish;
     private String mCallByScreen;
 
     public interface WishDialogAnalyticsInterface extends BaseAnalyticsInterface
@@ -270,7 +270,7 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
         }
     }
 
-    private void showWishAnimation(WishResult wishResult, boolean wish)
+    void showWishAnimation(WishResult wishResult, boolean wish)
     {
         if (wishResult == null)
         {

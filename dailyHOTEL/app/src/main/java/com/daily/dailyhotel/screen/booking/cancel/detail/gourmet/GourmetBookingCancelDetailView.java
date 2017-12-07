@@ -978,7 +978,7 @@ public class GourmetBookingCancelDetailView extends BaseDialogView<GourmetBookin
     @SuppressWarnings("ResourceType")
     void relocationMyLocation(View view)
     {
-        mMyLocationView = (ImageView) view.findViewById(0x2);
+        mMyLocationView = view.findViewById(0x2);
 
         if (mMyLocationView != null)
         {

@@ -198,8 +198,8 @@ public class HomeLayout extends BaseBlurLayout
             return;
         }
 
-        TextView stayDoTextView = (TextView) mScrollButtonLayout.findViewById(R.id.stayDoTextView);
-        TextView gourmetDoTextView = (TextView) mScrollButtonLayout.findViewById(R.id.gourmetDoTextView);
+        TextView stayDoTextView = mScrollButtonLayout.findViewById(R.id.stayDoTextView);
+        TextView gourmetDoTextView = mScrollButtonLayout.findViewById(R.id.gourmetDoTextView);
 
         gourmetDoTextView.post(new Runnable()
         {
@@ -216,8 +216,8 @@ public class HomeLayout extends BaseBlurLayout
                         return;
                     }
 
-                    TextView actionStayDoTextView = (TextView) mActionButtonLayout.findViewById(R.id.stayDoTextView);
-                    TextView actionGourmetDoTextView = (TextView) mActionButtonLayout.findViewById(R.id.gourmetDoTextView);
+                    TextView actionStayDoTextView = mActionButtonLayout.findViewById(R.id.stayDoTextView);
+                    TextView actionGourmetDoTextView = mActionButtonLayout.findViewById(R.id.gourmetDoTextView);
                     actionStayDoTextView.setText(R.string.label_home_stay_menu_description_low_resolution);
                     actionGourmetDoTextView.setText(R.string.label_home_gourmet_menu_description_low_resolution);
                 }
@@ -228,7 +228,7 @@ public class HomeLayout extends BaseBlurLayout
 
     private void initSwipeRefreshLayout(View view)
     {
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
 
         mSwipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
         mSwipeRefreshLayout.setOnRefreshListener(() -> forceRefreshing(true));
@@ -241,7 +241,7 @@ public class HomeLayout extends BaseBlurLayout
             return;
         }
 
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) view.findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = view.findViewById(R.id.toolbarView);
         dailyToolbarView.setBackImageResource(R.drawable.img_gnb_logo);
 
         dailyToolbarView.clearMenuItem();
@@ -268,8 +268,8 @@ public class HomeLayout extends BaseBlurLayout
 
         View stayButton = mActionButtonLayout.findViewById(R.id.stayButtonLayout);
         View gourmetButton = mActionButtonLayout.findViewById(R.id.gourmetButtonLayout);
-        TextView stayDoTextView = (TextView) mActionButtonLayout.findViewById(R.id.stayDoTextView);
-        TextView gourmetDoTextView = (TextView) mActionButtonLayout.findViewById(R.id.gourmetDoTextView);
+        TextView stayDoTextView = mActionButtonLayout.findViewById(R.id.stayDoTextView);
+        TextView gourmetDoTextView = mActionButtonLayout.findViewById(R.id.gourmetDoTextView);
 
         if (ScreenUtils.getScreenWidth(mContext) < 720)
         {
@@ -300,8 +300,8 @@ public class HomeLayout extends BaseBlurLayout
             }
         });
 
-        DailyTextView errorTextView1 = (DailyTextView) mErrorPopupLayout.findViewById(R.id.errorTextView1);
-        DailyTextView errorTextView2 = (DailyTextView) mErrorPopupLayout.findViewById(R.id.errorTextView2);
+        DailyTextView errorTextView1 = mErrorPopupLayout.findViewById(R.id.errorTextView1);
+        DailyTextView errorTextView2 = mErrorPopupLayout.findViewById(R.id.errorTextView2);
         View retryButtonView = mErrorPopupLayout.findViewById(R.id.retryTextView);
         View closeButtonView = mErrorPopupLayout.findViewById(R.id.closeImageView);
 
@@ -330,7 +330,7 @@ public class HomeLayout extends BaseBlurLayout
 
     private void initHomeContentLayout(View view)
     {
-        mHomeContentLayout = (LinearLayout) view.findViewById(R.id.homeContentLayout);
+        mHomeContentLayout = view.findViewById(R.id.homeContentLayout);
 
         initEventLayout(mHomeContentLayout);
         initScrollButtonLayout(mHomeContentLayout);
@@ -359,8 +359,8 @@ public class HomeLayout extends BaseBlurLayout
         mEventAreaLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_event_layout, null);
         layout.addView(mEventAreaLayout);
 
-        mEventRecyclerView = (RecyclerView) mEventAreaLayout.findViewById(R.id.loopRecyclerView);
-        mEventCountTextView = (DailyTextView) mEventAreaLayout.findViewById(R.id.pagerCountTextView);
+        mEventRecyclerView = mEventAreaLayout.findViewById(R.id.loopRecyclerView);
+        mEventCountTextView = mEventAreaLayout.findViewById(R.id.pagerCountTextView);
 
         ViewGroup.LayoutParams params = mEventRecyclerView.getLayoutParams();
         params.height = getEventImageHeight(mContext);
@@ -392,8 +392,8 @@ public class HomeLayout extends BaseBlurLayout
 
         gourmetButton.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onGourmetButtonClick());
 
-        TextView stayDoTextView = (TextView) mScrollButtonLayout.findViewById(R.id.stayDoTextView);
-        TextView gourmetDoTextView = (TextView) mScrollButtonLayout.findViewById(R.id.gourmetDoTextView);
+        TextView stayDoTextView = mScrollButtonLayout.findViewById(R.id.stayDoTextView);
+        TextView gourmetDoTextView = mScrollButtonLayout.findViewById(R.id.gourmetDoTextView);
 
         if (ScreenUtils.getScreenWidth(mContext) < 720)
         {
@@ -575,9 +575,9 @@ public class HomeLayout extends BaseBlurLayout
         mProviderLayout = LayoutInflater.from(mContext).inflate(R.layout.list_row_home_provider_information_layout, null);
         layout.addView(mProviderLayout);
 
-        mProviderInfoView = (LinearLayout) mProviderLayout.findViewById(R.id.providerInfoLayout);
+        mProviderInfoView = mProviderLayout.findViewById(R.id.providerInfoLayout);
 
-        LinearLayout policyLayout = (LinearLayout) mProviderLayout.findViewById(R.id.policyLayout);
+        LinearLayout policyLayout = mProviderLayout.findViewById(R.id.policyLayout);
         View verticalLine1 = mProviderLayout.findViewById(R.id.verticalLineTextView1);
         View verticalLine2 = mProviderLayout.findViewById(R.id.verticalLineTextView2);
         View verticalLine3 = mProviderLayout.findViewById(R.id.verticalLineTextView3);
@@ -597,7 +597,7 @@ public class HomeLayout extends BaseBlurLayout
             verticalLine2.setVisibility(View.VISIBLE);
             verticalLine3.setVisibility(View.VISIBLE);
 
-            TextView protectYouthTermsTextView = (TextView) policyLayout.findViewById(R.id.protectYouthTermsTextView);
+            TextView protectYouthTermsTextView = policyLayout.findViewById(R.id.protectYouthTermsTextView);
             protectYouthTermsTextView.post(new Runnable()
             {
                 @Override
@@ -622,11 +622,11 @@ public class HomeLayout extends BaseBlurLayout
         String mailSalesOrderNo = DailyRemoteConfigPreference.getInstance(mContext).getRemoteConfigCompanyItcRegNumber();
         String companyName = DailyRemoteConfigPreference.getInstance(mContext).getRemoteConfigCompanyName();
 
-        DailyTextView companyInfoTextView = (DailyTextView) mProviderLayout.findViewById(R.id.companyInfoTextView);
-        DailyTextView companyAddressTextView = (DailyTextView) mProviderLayout.findViewById(R.id.companyAddressTextView);
-        DailyTextView registrationNoTextView = (DailyTextView) mProviderLayout.findViewById(R.id.registrationNoTextView);
-        DailyTextView mailSalesOrderNoTextView = (DailyTextView) mProviderLayout.findViewById(R.id.mailSalesOrderNoTextView);
-        DailyTextView privacyEmailTextView = (DailyTextView) mProviderLayout.findViewById(R.id.privacyEmailTextView);
+        DailyTextView companyInfoTextView = mProviderLayout.findViewById(R.id.companyInfoTextView);
+        DailyTextView companyAddressTextView = mProviderLayout.findViewById(R.id.companyAddressTextView);
+        DailyTextView registrationNoTextView = mProviderLayout.findViewById(R.id.registrationNoTextView);
+        DailyTextView mailSalesOrderNoTextView = mProviderLayout.findViewById(R.id.mailSalesOrderNoTextView);
+        DailyTextView privacyEmailTextView = mProviderLayout.findViewById(R.id.privacyEmailTextView);
 
         String companyText = mContext.getString(R.string.label_home_business_license01, companyName, ceoName, phone);
         SpannableStringBuilder stringBuilder = new SpannableStringBuilder(companyText);
@@ -651,7 +651,7 @@ public class HomeLayout extends BaseBlurLayout
         mailSalesOrderNoTextView.setText(mContext.getString(R.string.label_home_business_license03, mailSalesOrderNo));
         privacyEmailTextView.setText(mContext.getString(R.string.label_home_business_license04, privacyEmail));
 
-        final DailyTextView providerButtonView = (DailyTextView) mProviderLayout.findViewById(R.id.providerInfoButtonView);
+        final DailyTextView providerButtonView = mProviderLayout.findViewById(R.id.providerInfoButtonView);
         providerButtonView.setDrawableVectorTint(R.color.default_text_cababab);
         providerButtonView.setSelected(false);
         providerButtonView.setOnClickListener(v ->
@@ -706,7 +706,7 @@ public class HomeLayout extends BaseBlurLayout
     {
         mSkipScrollAnimationGapValue = ScreenUtils.dpToPx(mContext, 20);
 
-        mDailyHomeScrollView = (DailyHomeScrollView) view.findViewById(R.id.nestedScrollView);
+        mDailyHomeScrollView = view.findViewById(R.id.nestedScrollView);
         mDailyHomeScrollView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         mDailyHomeScrollView.setOnScrollChangedListener(mScrollChangedListener);
         mDailyHomeScrollView.addOnLayoutChangeListener(mOnLayoutChangeListener);
@@ -929,8 +929,8 @@ public class HomeLayout extends BaseBlurLayout
             return;
         }
 
-        DailyTextView titleView = (DailyTextView) mTextMessageLayout.findViewById(R.id.titleTextView);
-        DailyTextView descriptionView = (DailyTextView) mTextMessageLayout.findViewById(R.id.descriptionTextView);
+        DailyTextView titleView = mTextMessageLayout.findViewById(R.id.titleTextView);
+        DailyTextView descriptionView = mTextMessageLayout.findViewById(R.id.descriptionTextView);
 
         titleView.setText(title);
 

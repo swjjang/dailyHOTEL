@@ -672,7 +672,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         mDialog.setCanceledOnTouchOutside(false);
 
         // 상단
-        TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
+        TextView titleTextView = dialogView.findViewById(R.id.titleTextView);
         titleTextView.setVisibility(View.VISIBLE);
 
         if (DailyTextUtils.isTextEmpty(titleText) == true)
@@ -684,7 +684,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         }
 
         // 메시지
-        TextView messageTextView = (TextView) dialogView.findViewById(R.id.messageTextView);
+        TextView messageTextView = dialogView.findViewById(R.id.messageTextView);
         messageTextView.setText(message);
 
         // 버튼
@@ -697,8 +697,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
             twoButtonLayout.setVisibility(View.VISIBLE);
             oneButtonLayout.setVisibility(View.GONE);
 
-            TextView negativeTextView = (TextView) twoButtonLayout.findViewById(R.id.negativeTextView);
-            TextView positiveTextView = (TextView) twoButtonLayout.findViewById(R.id.positiveTextView);
+            TextView negativeTextView = twoButtonLayout.findViewById(R.id.negativeTextView);
+            TextView positiveTextView = twoButtonLayout.findViewById(R.id.positiveTextView);
 
             negativeTextView.setText(negative);
             negativeTextView.setOnClickListener(new View.OnClickListener()
@@ -740,7 +740,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
             twoButtonLayout.setVisibility(View.GONE);
             oneButtonLayout.setVisibility(View.VISIBLE);
 
-            TextView confirmTextView = (TextView) oneButtonLayout.findViewById(R.id.confirmTextView);
+            TextView confirmTextView = oneButtonLayout.findViewById(R.id.confirmTextView);
 
             confirmTextView.setText(positive);
             oneButtonLayout.setOnClickListener(new View.OnClickListener()
@@ -824,7 +824,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         mDialog.setCanceledOnTouchOutside(false);
 
         // 상단
-        TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
+        TextView titleTextView = dialogView.findViewById(R.id.titleTextView);
         titleTextView.setVisibility(View.VISIBLE);
 
         if (DailyTextUtils.isTextEmpty(titleText) == true)
@@ -836,7 +836,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         }
 
         // 메시지
-        TextView messageTextView = (TextView) dialogView.findViewById(R.id.messageTextView);
+        TextView messageTextView = dialogView.findViewById(R.id.messageTextView);
         messageTextView.setText(msg);
 
         // 버튼
@@ -849,8 +849,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
             twoButtonLayout.setVisibility(View.VISIBLE);
             oneButtonLayout.setVisibility(View.GONE);
 
-            TextView negativeTextView = (TextView) twoButtonLayout.findViewById(R.id.negativeTextView);
-            TextView positiveTextView = (TextView) twoButtonLayout.findViewById(R.id.positiveTextView);
+            TextView negativeTextView = twoButtonLayout.findViewById(R.id.negativeTextView);
+            TextView positiveTextView = twoButtonLayout.findViewById(R.id.positiveTextView);
 
             negativeTextView.setText(negative);
             negativeTextView.setOnClickListener(new View.OnClickListener()
@@ -892,7 +892,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
             twoButtonLayout.setVisibility(View.GONE);
             oneButtonLayout.setVisibility(View.VISIBLE);
 
-            TextView confirmTextView = (TextView) oneButtonLayout.findViewById(R.id.confirmTextView);
+            TextView confirmTextView = oneButtonLayout.findViewById(R.id.confirmTextView);
 
             confirmTextView.setText(positive);
             oneButtonLayout.setOnClickListener(new View.OnClickListener()
@@ -981,7 +981,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         mDialog.setCanceledOnTouchOutside(false);
 
         // 상단
-        TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
+        TextView titleTextView = dialogView.findViewById(R.id.titleTextView);
         titleTextView.setVisibility(View.VISIBLE);
 
         if (DailyTextUtils.isTextEmpty(titleText) == true)
@@ -993,7 +993,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         }
 
         // 메시지
-        TextView messageTextView = (TextView) dialogView.findViewById(R.id.messageTextView);
+        TextView messageTextView = dialogView.findViewById(R.id.messageTextView);
         messageTextView.setText(msg);
 
         // 버튼
@@ -1004,8 +1004,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         {
             twoButtonLayout.setVisibility(View.VISIBLE);
 
-            TextView negativeTextView = (TextView) twoButtonLayout.findViewById(R.id.negativeTextView);
-            TextView positiveTextView = (TextView) twoButtonLayout.findViewById(R.id.positiveTextView);
+            TextView negativeTextView = twoButtonLayout.findViewById(R.id.negativeTextView);
+            TextView positiveTextView = twoButtonLayout.findViewById(R.id.positiveTextView);
 
             negativeTextView.setText(negative);
             negativeTextView.setOnClickListener(new View.OnClickListener()
@@ -1118,7 +1118,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         mDialog.setCanceledOnTouchOutside(false);
 
         // 상단
-        TextView titleTextView = (TextView) dialogView.findViewById(R.id.titleTextView);
+        TextView titleTextView = dialogView.findViewById(R.id.titleTextView);
         titleTextView.setVisibility(View.VISIBLE);
 
         if (DailyTextUtils.isTextEmpty(titleText) == true)
@@ -1130,11 +1130,11 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         }
 
         // 메시지
-        TextView messageTextView = (TextView) dialogView.findViewById(R.id.messageTextView);
+        TextView messageTextView = dialogView.findViewById(R.id.messageTextView);
         messageTextView.setText(msg);
 
         // 체크박스
-        final CheckBox checkBox = (CheckBox) dialogView.findViewById(R.id.checkBox);
+        final CheckBox checkBox = dialogView.findViewById(R.id.checkBox);
 
         // 버튼
         View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
@@ -1144,8 +1144,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         {
             twoButtonLayout.setVisibility(View.VISIBLE);
 
-            TextView negativeTextView = (TextView) twoButtonLayout.findViewById(R.id.negativeTextView);
-            TextView positiveTextView = (TextView) twoButtonLayout.findViewById(R.id.positiveTextView);
+            TextView negativeTextView = twoButtonLayout.findViewById(R.id.negativeTextView);
+            TextView positiveTextView = twoButtonLayout.findViewById(R.id.positiveTextView);
 
             negativeTextView.setText(negative);
             negativeTextView.setOnClickListener(new View.OnClickListener()

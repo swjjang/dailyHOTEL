@@ -136,7 +136,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
     private void initToolbar()
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.actionbar_title_login_activity);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {
@@ -150,7 +150,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
     private void initTopLayout()
     {
-        mScrollView = (ScrollView) findViewById(R.id.scrollView);
+        mScrollView = findViewById(R.id.scrollView);
         EdgeEffectColor.setEdgeGlowColor(mScrollView, getResources().getColor(R.color.default_over_scroll_edge));
 
         if (VersionUtils.isOverAPI16() == true)
@@ -163,14 +163,14 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         mScrollView.getViewTreeObserver().addOnGlobalLayoutListener(mOnGlobalLayoutListener);
 
-        TextView signUpView = (TextView) findViewById(R.id.signUpView);
+        TextView signUpView = findViewById(R.id.signUpView);
         signUpView.setOnClickListener(this);
 
         String signupMessage = DailyRemoteConfigPreference.getInstance(this).getRemoteConfigTextLoginText01();
 
         if (DailyTextUtils.isTextEmpty(signupMessage) == false)
         {
-            TextView signUpTextView = (TextView) findViewById(R.id.signUpTextView);
+            TextView signUpTextView = findViewById(R.id.signUpTextView);
             signUpTextView.setText(signupMessage);
         }
     }
@@ -178,7 +178,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
     private void initEditTextsLayout()
     {
         mEmailView = findViewById(R.id.emailView);
-        mEmailEditText = (DailyAutoCompleteEditText) findViewById(R.id.emailEditText);
+        mEmailEditText = findViewById(R.id.emailEditText);
         mEmailEditText.setDeleteButtonVisible(null);
         mEmailEditText.setOnFocusChangeListener(this);
         mEmailEditText.setOnTouchListener(new View.OnTouchListener()
@@ -217,7 +217,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
         mEmailEditText.setAdapter(emailCompleteAdapter);
 
         mPasswordView = findViewById(R.id.passwordView);
-        mPasswordEditText = (DailyEditText) findViewById(R.id.passwordEditText);
+        mPasswordEditText = findViewById(R.id.passwordEditText);
         mPasswordEditText.setDeleteButtonVisible(null);
         mPasswordEditText.setOnFocusChangeListener(this);
         mPasswordEditText.setOnTouchListener(new View.OnTouchListener()
@@ -258,15 +258,15 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
     private void initButtonsLayout()
     {
-        mLoginView = (TextView) findViewById(R.id.signinView);
+        mLoginView = findViewById(R.id.signinView);
 
-        mFindPasswordView = (TextView) findViewById(R.id.findPasswordView);
+        mFindPasswordView = findViewById(R.id.findPasswordView);
         mFindPasswordView.setPaintFlags(mFindPasswordView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         mFindPasswordView.setOnClickListener(this);
 
         mSnsLoginLayout = findViewById(R.id.snsLoginLayout);
 
-        mFacebookLoginView = (com.facebook.login.widget.LoginButton) mSnsLoginLayout.findViewById(R.id.facebookLoginButton);
+        mFacebookLoginView = mSnsLoginLayout.findViewById(R.id.facebookLoginButton);
         mFacebookLoginView.setReadPermissions(Collections.singletonList("public_profile"));
 
         View facebookLoginView = mSnsLoginLayout.findViewById(R.id.facebookLoginView);
@@ -286,7 +286,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
 
         FontManager.apply(mFacebookLoginView, FontManager.getInstance(getApplicationContext()).getRegularTypeface());
 
-        mKakaoLoginView = (com.kakao.usermgmt.LoginButton) mSnsLoginLayout.findViewById(R.id.kakaoLoginButton);
+        mKakaoLoginView = mSnsLoginLayout.findViewById(R.id.kakaoLoginButton);
         View kakaoLoginView = mSnsLoginLayout.findViewById(R.id.kakaoLoginView);
         kakaoLoginView.setOnClickListener(new View.OnClickListener()
         {

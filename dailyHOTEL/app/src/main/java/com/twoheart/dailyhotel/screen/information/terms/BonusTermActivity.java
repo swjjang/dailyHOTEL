@@ -27,7 +27,7 @@ public class BonusTermActivity extends WebViewActivity
 
     private void initToolbar()
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.label_bonus_guide);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {

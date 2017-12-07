@@ -63,13 +63,13 @@ public class WriteReviewCommentLayout extends BaseLayout
     @Override
     protected void initLayout(View view)
     {
-        mToolbarTitleView = (TextView) view.findViewById(R.id.titleTextView);
+        mToolbarTitleView = view.findViewById(R.id.titleTextView);
         mCompleteView = view.findViewById(R.id.completeTextView);
         mBodyTitleLayout = view.findViewById(R.id.bodyTitleLayout);
         mBottomLayout = view.findViewById(R.id.textCountLayout);
-        mBottomTextCountView = (TextView) view.findViewById(R.id.textCountView);
-        mEditTextView = (DailyEditText) view.findViewById(R.id.writeReviewEditText);
-        mScrollView = (DailyScrollView) view.findViewById(R.id.scrollView);
+        mBottomTextCountView = view.findViewById(R.id.textCountView);
+        mEditTextView = view.findViewById(R.id.writeReviewEditText);
+        mScrollView = view.findViewById(R.id.scrollView);
 
         View backView = view.findViewById(R.id.backImageView);
         backView.setOnClickListener(new View.OnClickListener()

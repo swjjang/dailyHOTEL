@@ -444,12 +444,12 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
         startActivity(intent);
     }
 
-    private void setRewardDetail(RewardDetail rewardDetail)
+    void setRewardDetail(RewardDetail rewardDetail)
     {
         mRewardDetail = rewardDetail;
     }
 
-    private void notifyRewardDetailChanged()
+    void notifyRewardDetailChanged()
     {
         if (mRewardDetail == null)
         {

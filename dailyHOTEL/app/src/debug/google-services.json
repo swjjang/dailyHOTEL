@@ -26,7 +26,7 @@
       ],
       "services": {
         "analytics_service": {
-          "status": 2,
+          "status": 1,
           "analytics_property": {
             "tracking_id": "UA-80273653-1"
           }
@@ -60,7 +60,7 @@
       ],
       "services": {
         "analytics_service": {
-          "status": 2,
+          "status": 1,
           "analytics_property": {
             "tracking_id": "UA-80273653-1"
           }

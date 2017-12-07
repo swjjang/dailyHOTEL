@@ -38,7 +38,7 @@ public class ProfileRemoteImpl extends BaseRemoteImpl implements ProfileInterfac
         return mDailyMobileService.getUserProfile(Crypto.getUrlDecoderEx(API)) //
             .subscribeOn(Schedulers.io()).map((userDataBaseDto) ->
             {
-                User user = null;
+                User user;
 
                 if (userDataBaseDto != null)
                 {
@@ -66,7 +66,7 @@ public class ProfileRemoteImpl extends BaseRemoteImpl implements ProfileInterfac
 
         return mDailyMobileService.getUserBenefit(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io()).map((userBenefitDataBaseDto) ->
         {
-            UserBenefit userBenefit = null;
+            UserBenefit userBenefit;
 
             if (userBenefitDataBaseDto != null)
             {
@@ -95,7 +95,7 @@ public class ProfileRemoteImpl extends BaseRemoteImpl implements ProfileInterfac
         return mDailyMobileService.getUserSimpleInformation(Crypto.getUrlDecoderEx(API)) //
             .subscribeOn(Schedulers.io()).map(userInformationDataBaseDto ->
             {
-                UserSimpleInformation userSimpleInformation = null;
+                UserSimpleInformation userSimpleInformation;
 
                 if (userInformationDataBaseDto != null)
                 {
@@ -124,7 +124,7 @@ public class ProfileRemoteImpl extends BaseRemoteImpl implements ProfileInterfac
         return mDailyMobileService.getUserTracking(Crypto.getUrlDecoderEx(API)) //
             .subscribeOn(Schedulers.io()).map((BaseDto<UserTrackingData> userTrackingDataBaseDto) ->
             {
-                UserTracking userTracking = null;
+                UserTracking userTracking;
 
                 if (userTrackingDataBaseDto != null)
                 {
@@ -156,7 +156,7 @@ public class ProfileRemoteImpl extends BaseRemoteImpl implements ProfileInterfac
                 @Override
                 public User apply(BaseDto<UserData> userDataBaseDto) throws Exception
                 {
-                    User user = null;
+                    User user;
 
                     if (userDataBaseDto != null)
                     {

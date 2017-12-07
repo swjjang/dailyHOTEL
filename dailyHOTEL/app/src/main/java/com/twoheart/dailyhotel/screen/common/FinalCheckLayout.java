@@ -59,8 +59,8 @@ public class FinalCheckLayout extends FrameLayout
     {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.layout_finalcheck, this, true);
-        mMessageLayout = (ViewGroup) view.findViewById(R.id.messageLayout);
-        mDailySignatureView = (DailySignatureView) view.findViewById(R.id.signatureView);
+        mMessageLayout = view.findViewById(R.id.messageLayout);
+        mDailySignatureView = view.findViewById(R.id.signatureView);
     }
 
     public void setMessages(int[] textResIds)
@@ -79,7 +79,7 @@ public class FinalCheckLayout extends FrameLayout
         {
             View messageRow = inflater.inflate(R.layout.row_payment_agreedialog, mMessageLayout, false);
 
-            TextView messageTextView = (TextView) messageRow.findViewById(R.id.messageTextView);
+            TextView messageTextView = messageRow.findViewById(R.id.messageTextView);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
             if (i == length - 1)

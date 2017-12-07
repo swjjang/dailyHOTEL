@@ -102,19 +102,19 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
     private PaymentRemoteImpl mPaymentRemoteImpl;
     private ProfileRemoteImpl mProfileRemoteImpl;
-    private CartLocalImpl mCartLocalImpl;
+    CartLocalImpl mCartLocalImpl;
 
     GourmetPayment mGourmetPayment;
     Card mSelectedCard;
-    private DomesticGuest mGuest;
-    private Coupon mSelectedCoupon;
-    private DailyBookingPaymentTypeView.PaymentType mPaymentType;
+    DomesticGuest mGuest;
+    Coupon mSelectedCoupon;
+    DailyBookingPaymentTypeView.PaymentType mPaymentType;
     boolean mAgreedThirdPartyTerms;
-    private boolean mGuestInformationVisible;
+    boolean mGuestInformationVisible;
     UserSimpleInformation mUserSimpleInformation;
-    private int mSaleType;
-    private GourmetCart mGourmetCart;
-    private int mPersons;
+    int mSaleType;
+    GourmetCart mGourmetCart;
+    int mPersons;
 
     // ***************************************************************** //
     // ************** 변수 선언시에 onSaveInstanceState 에 꼭 등록해야하는지 판단한다.
@@ -2211,7 +2211,6 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                 }
             } catch (Exception e)
             {
-                msgCode = -1;
                 message = getString(R.string.act_toast_payment_fail);
 
                 confirmListener = new View.OnClickListener()
@@ -2274,7 +2273,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         startActivityForResult(intent, GourmetPaymentActivity.REQUEST_CODE_LOGIN_IN);
     }
 
-    private boolean checkChangedPrice(GourmetPayment gourmetPayment, GourmetCart gourmetCart)
+    boolean checkChangedPrice(GourmetPayment gourmetPayment, GourmetCart gourmetCart)
     {
         if (gourmetPayment == null || gourmetCart == null)
         {

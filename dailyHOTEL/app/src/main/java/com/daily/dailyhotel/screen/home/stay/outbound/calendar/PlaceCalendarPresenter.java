@@ -106,7 +106,7 @@ public abstract class PlaceCalendarPresenter<T1 extends BaseActivity, T2 extends
         }
 
         int daysOfMonthCount; // 한달의 일 개수
-        int startDay = 0, endDay = 0;
+        int startDay, endDay;
 
         if (firstCalendar == true)
         {

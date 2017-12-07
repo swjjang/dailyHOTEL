@@ -98,13 +98,13 @@ public class CreditCardListActivity extends BaseActivity
     {
         initToolbar();
 
-        mCreditCardLayout = (CreditCardLayout) findViewById(R.id.creditCardLayout);
+        mCreditCardLayout = findViewById(R.id.creditCardLayout);
         mCreditCardLayout.setUserActionListener(mOnUserActionListener);
     }
 
     private void initToolbar()
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.actionbar_title_creditcard_activity);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {

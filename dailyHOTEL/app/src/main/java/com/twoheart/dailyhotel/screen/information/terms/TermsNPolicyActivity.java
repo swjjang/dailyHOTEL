@@ -26,7 +26,7 @@ public class TermsNPolicyActivity extends BaseActivity implements View.OnClickLi
 
     private void initToolbar()
     {
-        DailyToolbarView dailyToolbarView = (DailyToolbarView) findViewById(R.id.toolbarView);
+        DailyToolbarView dailyToolbarView = findViewById(R.id.toolbarView);
         dailyToolbarView.setTitleText(R.string.frag_terms_and_policy);
         dailyToolbarView.setOnBackClickListener(new View.OnClickListener()
         {

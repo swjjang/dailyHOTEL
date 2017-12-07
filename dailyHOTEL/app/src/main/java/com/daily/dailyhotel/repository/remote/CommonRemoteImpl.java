@@ -42,7 +42,7 @@ public class CommonRemoteImpl extends BaseRemoteImpl implements CommonInterface
         return mDailyMobileService.getCommonDateTime(Crypto.getUrlDecoderEx(API)) //
             .subscribeOn(Schedulers.io()).map((commonDateTimeDataBaseDto) ->
             {
-                CommonDateTime commonDateTime = null;
+                CommonDateTime commonDateTime;
 
                 if (commonDateTimeDataBaseDto != null)
                 {
@@ -75,7 +75,7 @@ public class CommonRemoteImpl extends BaseRemoteImpl implements CommonInterface
         return mDailyMobileService.getReview(Crypto.getUrlDecoderEx(API, urlParams)) //
             .subscribeOn(Schedulers.io()).map((reviewDataBaseDto) ->
             {
-                Review review = null;
+                Review review;
 
                 if (reviewDataBaseDto != null)
                 {
@@ -123,7 +123,7 @@ public class CommonRemoteImpl extends BaseRemoteImpl implements CommonInterface
         return mDailyMobileService.getShortUrl(Crypto.getUrlDecoderEx(URL), jsonObject) //
             .subscribeOn(Schedulers.io()).map((shortUrlData) ->
             {
-                String shortUrl = null;
+                String shortUrl;
 
                 if (shortUrlData != null && DailyTextUtils.isTextEmpty(shortUrlData.id) == false)
                 {
@@ -146,7 +146,7 @@ public class CommonRemoteImpl extends BaseRemoteImpl implements CommonInterface
         return mDailyMobileService.updateNotification(Crypto.getUrlDecoderEx(API), agreed)//
             .subscribeOn(Schedulers.io()).map((BaseDto<NotificationData> notificationDataBaseDto) ->
             {
-                Notification notification = null;
+                Notification notification;
 
                 if (notificationDataBaseDto != null)
                 {

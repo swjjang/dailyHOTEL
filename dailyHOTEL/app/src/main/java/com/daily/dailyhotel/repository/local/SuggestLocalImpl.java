@@ -25,7 +25,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class SuggestLocalImpl implements SuggestLocalInterface
 {
-    private Context mContext;
+    Context mContext;
 
     public SuggestLocalImpl(@NonNull Context context)
     {

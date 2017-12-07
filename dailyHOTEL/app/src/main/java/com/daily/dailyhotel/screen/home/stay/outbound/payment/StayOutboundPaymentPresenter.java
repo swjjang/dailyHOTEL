@@ -1880,7 +1880,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         }
     }
 
-    private boolean hasDepositSticker()
+    boolean hasDepositSticker()
     {
         return mStayOutboundPayment != null && mStayOutboundPayment.activeReward == true && mStayOutboundPayment.provideRewardSticker == true;
     }
@@ -1973,7 +1973,6 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 }
             } catch (Exception e)
             {
-                msgCode = -1;
                 message = getString(R.string.act_toast_payment_fail);
 
                 confirmListener = new View.OnClickListener()
