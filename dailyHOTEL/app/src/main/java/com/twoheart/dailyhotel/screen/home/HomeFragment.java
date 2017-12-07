@@ -1485,7 +1485,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
             if (DailyHotel.isLogin() == true && DailyRemoteConfigPreference.getInstance(mBaseActivity).isRemoteConfigStampEnabled() == true //
                 && DailyRemoteConfigPreference.getInstance(mBaseActivity).isRemoteConfigStampHomeEnabled() == true)
             {
-                mNetworkController.requestUserStamps();
+//                mNetworkController.requestUserStamps();
             }
 
             // 리워드

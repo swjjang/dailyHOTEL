@@ -665,6 +665,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                         @Override
                         public void onClick(View v)
                         {
+                            setSaleType(BONUS);
+
                             onBonusClick(true);
                         }
                     }, null);
@@ -714,6 +716,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                         @Override
                         public void onClick(View v)
                         {
+                            setSaleType(STICKER);
+
                             onDepositStickerClick(true);
                         }
                     }, null);

@@ -87,21 +87,7 @@ public class StampActivity extends BaseActivity
 
         AnalyticsManager.getInstance(StampActivity.this).recordScreen(this, AnalyticsManager.Screen.STAMP_DETAIL, null);
 
-        if (DailyRemoteConfigPreference.getInstance(this).isRemoteConfigStampEnabled() == true)
-        {
-            if (DailyHotel.isLogin() == true)
-            {
-                lockUI();
-                mNetworkController.requestUserStamps(false);
-            } else
-            {
-                // 로그인 하지 않은 경우 멘트가 다름
-                mStampLayout.setNights(-1);
-            }
-        } else
-        {
-            showFinishDialog();
-        }
+        showFinishDialog();
     }
 
     @Override

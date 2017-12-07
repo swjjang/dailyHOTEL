@@ -785,6 +785,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                         {
                             mSelectedCoupon = null;
 
+                            setSaleType(BONUS);
                             onBonusClick(true);
                         }
                     }, null);
@@ -797,6 +798,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                         @Override
                         public void onClick(View v)
                         {
+                            setSaleType(BONUS);
                             onBonusClick(true);
                         }
                     }, null);
@@ -850,6 +852,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                         @Override
                         public void onClick(View v)
                         {
+                            setSaleType(COUPON);
                             onCouponClick(true);
                         }
                     }, null);
@@ -862,6 +865,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                         @Override
                         public void onClick(View v)
                         {
+                            setSaleType(COUPON);
                             onCouponClick(true);
                         }
                     }, null);
@@ -915,6 +919,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                         @Override
                         public void onClick(View v)
                         {
+                            setSaleType(STICKER);
                             onDepositStickerClick(true);
                         }
                     }, null);
@@ -929,6 +934,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                         {
                             mSelectedCoupon = null;
 
+                            setSaleType(STICKER);
                             onDepositStickerClick(true);
                         }
                     }, null);

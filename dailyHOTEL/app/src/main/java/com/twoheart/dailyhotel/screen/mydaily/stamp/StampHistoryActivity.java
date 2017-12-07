@@ -53,14 +53,7 @@ public class StampHistoryActivity extends BaseActivity
 
         AnalyticsManager.getInstance(StampHistoryActivity.this).recordScreen(this, AnalyticsManager.Screen.STAMP_HISTORY, null);
 
-        if (DailyRemoteConfigPreference.getInstance(this).isRemoteConfigStampEnabled() == true)
-        {
-            lockUI();
-            DailyMobileAPI.getInstance(this).requestUserStamps(mNetworkTag, true, mStampHistoryCallback);
-        } else
-        {
-            showFinishDialog();
-        }
+        showFinishDialog();
     }
 
     @Override
