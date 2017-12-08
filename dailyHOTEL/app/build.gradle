@@ -225,7 +225,7 @@ dependencies {
     compile 'com.kakao.sdk:usermgmt:1.6.2'
     compile 'com.kakao.sdk:kakaolink:1.6.2'
 
-    compile 'com.appboy:android-sdk-ui:2.1.+'
+    compile 'com.appboy:android-sdk-ui:2.2.+'
 
     compile 'com.adjust.sdk:adjust-android:4.11.4'
 
