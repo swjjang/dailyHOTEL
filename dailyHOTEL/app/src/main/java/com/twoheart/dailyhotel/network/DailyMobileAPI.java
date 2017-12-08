@@ -185,16 +185,6 @@ public class DailyMobileAPI
         executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<Object>>) listener);
     }
 
-    public void requestUserInformationForPayment(String tag, Object listener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/user/information"//
-            : "NTQkNTMkNzckMTgkODIkODEkMTgkNjYkMzQkNTYkODIkNzYkNzQkMzckNTQkMjMk$ODAzNUVCRjAyNDIwMzPClCNATc5ODc2OEEzIN0JU1MjVCMUQwNEMzOTTY2NEMUSIzRDA5MjWAyNkRTBNQDE1NUZVPFNBUEMzQTFDMg==$";
-
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestUserInformationForPayment(Crypto.getUrlDecoderEx(URL));
-        executorCallbackCall.setTag(tag);
-        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
-    }
-
     public void requestUserBillingCardList(String tag, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/user/session/billing/card/info"//
