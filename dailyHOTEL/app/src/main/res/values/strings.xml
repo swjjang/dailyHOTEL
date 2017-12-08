@@ -1348,9 +1348,9 @@
     <string name="label_gourmet_product_detail_check_the_menus">선택 메뉴 확인하기</string>
 
     <string name="message_gourmet_product_detail_time_picker_popup_message">방문시간은 하나만 선택할 수 있습니다.\n선택한 시간에 예약할 수 있는 메뉴만 노출됩니다.</string>
-    <string name="message_gourmet_product_detail_add_menu_after_initialization">방문시간이 다른 메뉴를 선택하셨습니다.\n방문 시간을 변경하시면 기존 선택한 메뉴가 모두 삭제됩니다.\n삭제하고 새로 메뉴를 추가하시겠어요?</string>
-    <string name="message_gourmet_product_detail_change_cart_other_gourmet">같은 레스토랑 내에서만 메뉴를 추가하실 수 있습니다.\n레스토랑을 변경하시면 기존 선택한 메뉴가 모두 삭제됩니다.\n삭제하고 새로 메뉴를 추가하시겠어요?</string>
-    <string name="message_gourmet_product_detail_change_cart_other_visit_day">다른 방문일을 선택하셨습니다.\n방문일을 변경하시면 기존 선택한 메뉴가 모두 삭제됩니다.\n삭제하고 새로 메뉴를 추가하시겠어요?</string>
+    <string name="message_gourmet_product_detail_add_menu_after_initialization">다른 방문시간을 선택하시면\n기존 메뉴는 모두 삭제됩니다.\n삭제하고 새로 추가하시겠어요?</string>
+    <string name="message_gourmet_product_detail_change_cart_other_gourmet">다른 레스토랑을 선택하시면\n기존 메뉴는 모두 삭제됩니다.\n삭제하고 새로 추가하시겠어요?</string>
+    <string name="message_gourmet_product_detail_change_cart_other_visit_day">다른 방문일을 선택하시면\n기존 메뉴는 모두 삭제됩니다.\n삭제하고 새로 추가하시겠어요?</string>
     <string name="message_gourmet_product_detail_after_visit_day">방문시간이 지난 메뉴는 구매하실 수 없어 모두 삭제됩니다.</string>
     <string name="message_gourmet_product_detail_insufficient_quantity">남은 수량이 부족하여 구매하실 수 없으니 다시 확인해주세요.</string>
 

@@ -157,7 +157,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="13dp"
                             android:gravity="center_vertical"
-                            android:text="@string/label_receipt_total_payment"
+                            android:text="@string/label_receipt_discounted_amount"
                             android:textColor="@color/default_text_c929292"
                             android:textSize="10dp"/>
 

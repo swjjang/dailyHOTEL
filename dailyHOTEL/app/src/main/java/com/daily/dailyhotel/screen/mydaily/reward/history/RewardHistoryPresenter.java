@@ -286,7 +286,7 @@ public class RewardHistoryPresenter extends BaseExceptionPresenter<RewardHistory
 
         try
         {
-            getViewInterface().setStickerValidityText(DailyCalendar.convertDateFormatString(mStickerValidity, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
+            getViewInterface().setStickerValidityText(DailyCalendar.convertDateFormatString(mStickerValidity, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd HH:mm까지"));
         } catch (ParseException e)
         {
             ExLog.e(e.toString());

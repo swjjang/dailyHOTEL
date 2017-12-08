@@ -185,26 +185,6 @@ public class DailyMobileAPI
         executorCallbackCall.enqueue((retrofit2.Callback<BaseDto<Object>>) listener);
     }
 
-    public void requestUserInformationForPayment(String tag, Object listener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/user/information"//
-            : "NTQkNTMkNzckMTgkODIkODEkMTgkNjYkMzQkNTYkODIkNzYkNzQkMzckNTQkMjMk$ODAzNUVCRjAyNDIwMzPClCNATc5ODc2OEEzIN0JU1MjVCMUQwNEMzOTTY2NEMUSIzRDA5MjWAyNkRTBNQDE1NUZVPFNBUEMzQTFDMg==$";
-
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestUserInformationForPayment(Crypto.getUrlDecoderEx(URL));
-        executorCallbackCall.setTag(tag);
-        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
-    }
-
-    public void requestUserUpdateInformationForSocial(String tag, Map<String, String> params, Object listener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/user/session/update/fb_user"//
-            : "NjUkNzMkMzUkNzAkNzQkNTIkNSQ2OSQzMiQ5MiQ4MyQzMyQ1MyQ0NCQxNSQyMSQ=$RDdBNAzNEMDA5NjVE4QTAI3NzUzODk4NTUSUwMURHBQjUzTRDZCRTBENS0QT0QTdFNDFGMEU4OZAThDVNEMB5QNkIQzOUJFOEUN3QQ==$";
-
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestUserUpdateInformationForSocial(Crypto.getUrlDecoderEx(URL), params);
-        executorCallbackCall.setTag(tag);
-        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
-    }
-
     public void requestUserBillingCardList(String tag, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/user/session/billing/card/info"//
@@ -297,19 +277,6 @@ public class DailyMobileAPI
         urlParams.put("{fnbReservationIdx}", Integer.toString(index));
 
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestGourmetReservationDetail(Crypto.getUrlDecoderEx(URL, urlParams));
-        executorCallbackCall.setTag(tag);
-        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
-    }
-
-    public void requestGourmetReceipt(String tag, int index, Object listener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/reservation/fnb/{reservationIdx}/receipt"//
-            : "MSQ5MCQxMTckNjgkNzAkNTIkNzMkNzIkNDIkNDckMjUkNSQxNiQyOCQ3MSQ5MyQ=$NL0Y0BQTM2RkRCRTSRBRURFMzQ1VYQTE5NzBFODc1MjZFQWjUyRSENERTMU3NzNDMUEzMUUVwQ0VPFWIRJDEwRDBGQUEyQQzc1QzI5ROkZFQTgwOEU0QkYwNjhFM0ExMjMKwMzE0NEVBQkVF$";
-
-        Map<String, String> urlParams = new HashMap<>();
-        urlParams.put("{reservationIdx}", Integer.toString(index));
-
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestGourmetReceipt(Crypto.getUrlDecoderEx(URL, urlParams));
         executorCallbackCall.setTag(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
