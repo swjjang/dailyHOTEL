@@ -722,8 +722,7 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
             return;
         }
 
-        Intent intent = new Intent(getActivity(), GourmetReceiptActivity.class);
-        intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_BOOKINGIDX, mReservationIndex);
+        Intent intent = GourmetReceiptActivity.newInstance(getActivity(), mReservationIndex, mAggregationId);
         startActivityForResult(intent, GourmetBookingDetailActivity.REQUEST_CODE_ISSUING_RECEIPT);
     }
 

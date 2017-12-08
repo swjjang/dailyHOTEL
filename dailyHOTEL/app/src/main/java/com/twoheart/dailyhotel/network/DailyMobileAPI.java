@@ -301,19 +301,6 @@ public class DailyMobileAPI
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    public void requestGourmetReceipt(String tag, int index, Object listener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/reservation/fnb/{reservationIdx}/receipt"//
-            : "MSQ5MCQxMTckNjgkNzAkNTIkNzMkNzIkNDIkNDckMjUkNSQxNiQyOCQ3MSQ5MyQ=$NL0Y0BQTM2RkRCRTSRBRURFMzQ1VYQTE5NzBFODc1MjZFQWjUyRSENERTMU3NzNDMUEzMUUVwQ0VPFWIRJDEwRDBGQUEyQQzc1QzI5ROkZFQTgwOEU0QkYwNjhFM0ExMjMKwMzE0NEVBQkVF$";
-
-        Map<String, String> urlParams = new HashMap<>();
-        urlParams.put("{reservationIdx}", Integer.toString(index));
-
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestGourmetReceipt(Crypto.getUrlDecoderEx(URL, urlParams));
-        executorCallbackCall.setTag(tag);
-        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
-    }
-
     public void requestGourmetHiddenBooking(String tag, int index, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/reservation/session/hidden"//
