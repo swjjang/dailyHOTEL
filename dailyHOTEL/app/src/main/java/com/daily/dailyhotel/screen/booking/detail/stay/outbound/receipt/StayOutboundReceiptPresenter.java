@@ -193,7 +193,7 @@ public class StayOutboundReceiptPresenter extends BaseExceptionPresenter<StayOut
             return;
         }
 
-        if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() == false)
+        if (DailyTextUtils.validEmail(email) == false)
         {
             DailyToast.showToast(getActivity(), R.string.toast_msg_wrong_email_address, DailyToast.LENGTH_SHORT);
             return;
