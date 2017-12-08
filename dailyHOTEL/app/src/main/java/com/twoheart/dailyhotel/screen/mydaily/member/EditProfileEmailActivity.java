@@ -100,7 +100,7 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
                 String email = s.toString();
 
                 // email 유효성 체크
-                if (DailyTextUtils.isTextEmpty(email) == true || android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() == false)
+                if (DailyTextUtils.validEmail(email) == false)
                 {
                     mConfirmView.setEnabled(false);
                 } else
@@ -158,7 +158,7 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
                 }
 
                 // email 유효성 체크
-                if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() == false)
+                if (DailyTextUtils.validEmail(email) == false)
                 {
                     DailyToast.showToast(EditProfileEmailActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
                     return;

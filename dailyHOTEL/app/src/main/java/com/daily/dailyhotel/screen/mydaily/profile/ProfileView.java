@@ -259,7 +259,7 @@ public class ProfileView extends BaseDialogView<ProfileView.OnEventListener, Act
         }
 
         // 이메일
-        if (DailyTextUtils.isTextEmpty(user.email) == true || android.util.Patterns.EMAIL_ADDRESS.matcher(user.email).matches() == false)
+        if (DailyTextUtils.validEmail(user.email) == false)
         {
             getViewDataBinding().emailView.setTextColor(getContext().getResources().getColor(R.color.default_text_c323232));
             getViewDataBinding().emailTextView.setText(null);

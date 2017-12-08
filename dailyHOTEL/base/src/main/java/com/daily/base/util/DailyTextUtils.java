@@ -295,4 +295,9 @@ public class DailyTextUtils
     {
         return time < 0 ? "" : String.format(Locale.KOREA, "%02d:%02d", time / 100, time % 100);
     }
+
+    public static boolean validEmail(String email)
+    {
+        return DailyTextUtils.isTextEmpty(email) == false && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
 }
