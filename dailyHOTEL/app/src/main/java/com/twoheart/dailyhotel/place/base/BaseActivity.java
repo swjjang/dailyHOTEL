@@ -429,6 +429,19 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
         onError();
     }
 
+    public void onErrorResponse(Response response, String message)
+    {
+        unLockUI();
+
+        if (response != null && response.code() == 401)
+        {
+            onExpiredSessionError();
+            return;
+        }
+
+        onErrorToastMessage(message);
+    }
+
     public void onError(Call call, Throwable e, boolean onlyReport)
     {
         if (call != null && e != null)
