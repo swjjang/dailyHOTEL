@@ -189,20 +189,6 @@ public class StayThankYouView extends BaseBlurView<StayThankYouView.OnEventListe
     }
 
     @Override
-    public void startReceiptAnimation(Animator.AnimatorListener listener)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        ThankYouScreenAnimator animator;
-        animator = new ThankYouScreenAnimator(getContext(), getViewDataBinding().checkImageView, getViewDataBinding().thankYouInformationView);
-        animator.setListener(listener);
-        animator.start();
-    }
-
-    @Override
     public void startRecommendAnimation(Animator.AnimatorListener listener)
     {
         if (getViewDataBinding() == null)
@@ -419,5 +405,18 @@ public class StayThankYouView extends BaseBlurView<StayThankYouView.OnEventListe
                 getEventListener().onBackClick();
             }
         });
+    }
+
+    void startReceiptAnimation(Animator.AnimatorListener listener)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        ThankYouScreenAnimator animator;
+        animator = new ThankYouScreenAnimator(getContext(), getViewDataBinding().checkImageView, getViewDataBinding().thankYouInformationView);
+        animator.setListener(listener);
+        animator.start();
     }
 }

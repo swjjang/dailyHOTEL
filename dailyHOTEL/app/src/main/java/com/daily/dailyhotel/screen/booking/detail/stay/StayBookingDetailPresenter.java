@@ -477,12 +477,7 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
             @Override
             public ObservableSource<? extends StayBookingDetail> call() throws Exception
             {
-                if (DailyTextUtils.isTextEmpty(mAggregationId) == true)
-                {
-                    return mBookingRemoteImpl.getStayBookingDetail(mReservationIndex);
-                }
-
-                return mBookingRemoteImpl.getStayBookingDetail(mAggregationId);
+                return DailyTextUtils.isTextEmpty(mAggregationId) ? mBookingRemoteImpl.getStayBookingDetail(mReservationIndex) : mBookingRemoteImpl.getStayBookingDetail(mAggregationId);
             }
         });
 
