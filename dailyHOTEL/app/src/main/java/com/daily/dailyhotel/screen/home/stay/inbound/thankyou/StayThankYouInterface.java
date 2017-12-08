@@ -18,8 +18,6 @@ public interface StayThankYouInterface extends BaseBlurViewInterface
 
     void setBooking(SpannableString checkInDate, SpannableString checkOutDate, int nights, String stayName, String roomType);
 
-    void startReceiptAnimation(Animator.AnimatorListener listener);
-
     void startRecommendNStampAnimation(Animator.AnimatorListener listener, boolean stampEnable);
 
     void setNoticeVisible(boolean visible);

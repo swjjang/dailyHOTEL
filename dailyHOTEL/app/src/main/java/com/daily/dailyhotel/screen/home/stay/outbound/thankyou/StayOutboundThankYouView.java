@@ -18,6 +18,10 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.schedulers.Schedulers;
+
 public class StayOutboundThankYouView extends BaseDialogView<StayOutboundThankYouView.OnEventListener, ActivityStayOutboundPaymentThankYouDataBinding> implements StayOutboundThankYouInterface, View.OnClickListener
 {
     public interface OnEventListener extends OnBaseEventListener
@@ -112,18 +116,45 @@ public class StayOutboundThankYouView extends BaseDialogView<StayOutboundThankYo
     }
 
     @Override
-    public void startAnimation(Animator.AnimatorListener listener)
+    public Observable<Boolean> getReceiptAnimation()
     {
-        if (getViewDataBinding() == null)
+        Observable<Boolean> observable = new Observable<Boolean>()
         {
-            return;
-        }
+            @Override
+            protected void subscribeActual(Observer<? super Boolean> observer)
+            {
+                startReceiptAnimation(new Animator.AnimatorListener()
+                {
+                    @Override
+                    public void onAnimationStart(Animator animation)
+                    {
 
-        ThankYouScreenAnimator animator = new ThankYouScreenAnimator(getContext()//
-            , getViewDataBinding().checkImageView, getViewDataBinding().thankYouInformationView);
+                    }
 
-        animator.setListener(listener);
-        animator.start();
+                    @Override
+                    public void onAnimationEnd(Animator animation)
+                    {
+                        observer.onNext(true);
+                        observer.onComplete();
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation)
+                    {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation)
+                    {
+
+                    }
+                });
+            }
+        };
+
+        observable.subscribeOn(Schedulers.io()).observeOn(Schedulers.io());
+        return observable;
     }
 
     @Override
@@ -197,5 +228,19 @@ public class StayOutboundThankYouView extends BaseDialogView<StayOutboundThankYo
                 getEventListener().onBackClick();
             }
         });
+    }
+
+    void startReceiptAnimation(Animator.AnimatorListener listener)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        ThankYouScreenAnimator animator = new ThankYouScreenAnimator(getContext()//
+            , getViewDataBinding().checkImageView, getViewDataBinding().thankYouInformationView);
+
+        animator.setListener(listener);
+        animator.start();
     }
 }
