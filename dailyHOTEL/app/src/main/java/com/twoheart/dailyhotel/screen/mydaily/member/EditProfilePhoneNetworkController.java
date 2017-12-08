@@ -8,9 +8,6 @@ import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -37,7 +34,7 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
 
     public void requestDailyUserVerification(String phoneNumber, boolean force)
     {
-        DailyMobileAPI.getInstance(mContext).requestDailyUserVerification(mNetworkTag, phoneNumber.replaceAll("-", ""), force, mDailUserVerificationCallback);
+        DailyMobileAPI.getInstance(mContext).requestDailyUserVerification(mNetworkTag, phoneNumber.replaceAll("-", ""), force, mDailyUserVerificationCallback);
     }
 
     public void requestUpdateDailyUserInformation(String phoneNumber, String code)
@@ -45,19 +42,11 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
         DailyMobileAPI.getInstance(mContext).requestDailyUserUpdatePhoneNumber(mNetworkTag, phoneNumber.replaceAll("-", ""), code, mDailyUserUpdateVerificationPhoneNumberCallback);
     }
 
-    public void requestUpdateSocialUserInformation(String phoneNumber)
-    {
-        Map<String, String> params = new HashMap<>();
-        params.put("user_phone", phoneNumber.replaceAll("-", ""));
-
-        DailyMobileAPI.getInstance(mContext).requestUserUpdateInformationForSocial(mNetworkTag, params, mUserUpdateSocialCallback);
-    }
-
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private retrofit2.Callback mDailUserVerificationCallback = new retrofit2.Callback<JSONObject>()
+    private retrofit2.Callback mDailyUserVerificationCallback = new retrofit2.Callback<JSONObject>()
     {
         @Override
         public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
@@ -210,46 +199,6 @@ public class EditProfilePhoneNetworkController extends BaseNetworkController
                 } else
                 {
                     mOnNetworkControllerListener.onErrorResponse(call, response);
-                }
-            } else
-            {
-                mOnNetworkControllerListener.onErrorResponse(call, response);
-            }
-        }
-
-        @Override
-        public void onFailure(Call<JSONObject> call, Throwable t)
-        {
-            mOnNetworkControllerListener.onError(call, t, false);
-        }
-    };
-
-    private retrofit2.Callback mUserUpdateSocialCallback = new retrofit2.Callback<JSONObject>()
-    {
-        @Override
-        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-        {
-            if (response != null && response.isSuccessful() && response.body() != null)
-            {
-                try
-                {
-                    JSONObject responseJSONObject = response.body();
-
-                    JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-
-                    boolean result = dataJSONObject.getBoolean("is_success");
-                    int msgCode = responseJSONObject.getInt("msg_code");
-
-                    if (result == true)
-                    {
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onConfirm();
-                    } else
-                    {
-                        mOnNetworkControllerListener.onErrorPopupMessage(msgCode, responseJSONObject.getString("msg"));
-                    }
-                } catch (Exception e)
-                {
-                    mOnNetworkControllerListener.onError(e);
                 }
             } else
             {
