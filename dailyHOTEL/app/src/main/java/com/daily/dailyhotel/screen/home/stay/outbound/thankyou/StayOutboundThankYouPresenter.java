@@ -1,7 +1,6 @@
 package com.daily.dailyhotel.screen.home.stay.outbound.thankyou;
 
 
-import android.animation.Animator;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,7 +24,9 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 
 /**
@@ -156,33 +157,6 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
         {
             ExLog.d(e.toString());
         }
-
-        getViewInterface().startAnimation(new Animator.AnimatorListener()
-        {
-            @Override
-            public void onAnimationStart(Animator animation)
-            {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation)
-            {
-                unLockAll();
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation)
-            {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation)
-            {
-
-            }
-        });
     }
 
     @Override
@@ -268,7 +242,14 @@ public class StayOutboundThankYouPresenter extends BaseExceptionPresenter<StayOu
 
         screenLock(showProgress);
 
-        addCompositeDisposable(mRewardRemoteImpl.getRewardStickerCount().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<RewardInformation>()
+        addCompositeDisposable(Observable.zip(getViewInterface().getReceiptAnimation(), mRewardRemoteImpl.getRewardStickerCount(), new BiFunction<Boolean, RewardInformation, RewardInformation>()
+        {
+            @Override
+            public RewardInformation apply(Boolean aBoolean, RewardInformation rewardInformation) throws Exception
+            {
+                return rewardInformation;
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<RewardInformation>()
         {
             @Override
             public void accept(RewardInformation rewardInformation) throws Exception

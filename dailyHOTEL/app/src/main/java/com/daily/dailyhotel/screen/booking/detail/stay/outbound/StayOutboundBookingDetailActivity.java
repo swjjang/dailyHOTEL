@@ -25,15 +25,17 @@ public class StayOutboundBookingDetailActivity extends BaseActivity<StayOutbound
     static final int REQUEST_CODE_REFUND = 10007;
     static final int REQUEST_CODE_NAVIGATOR = 10008;
 
-    static final String INTENT_EXTRA_DATA_BOOKING_INDEX = "index";
+    static final String INTENT_EXTRA_DATA_BOOKING_INDEX = "bookingIndex";
     static final String INTENT_EXTRA_DATA_IMAGE_URL = "imageUrl";
     static final String INTENT_EXTRA_DATA_BOOKING_STATE = "bookingState";
+    static final String NAME_INTENT_EXTRA_DATA_AGGREGATION_ID = "aggregationId";
 
-    public static Intent newInstance(Context context, int bookingIndex, String imageUrl, int bookingState)
+    public static Intent newInstance(Context context, int bookingIndex, String aggregationId, String imageUrl, int bookingState)
     {
         Intent intent = new Intent(context, StayOutboundBookingDetailActivity.class);
 
         intent.putExtra(INTENT_EXTRA_DATA_BOOKING_INDEX, bookingIndex);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_AGGREGATION_ID, aggregationId);
         intent.putExtra(INTENT_EXTRA_DATA_IMAGE_URL, imageUrl);
         intent.putExtra(INTENT_EXTRA_DATA_BOOKING_STATE, bookingState);
 

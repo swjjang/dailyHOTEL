@@ -49,7 +49,10 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
+import java.util.concurrent.Callable;
+
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -68,6 +71,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
     BookingRemoteImpl mBookingRemoteImpl;
 
     int mBookingIndex;
+    String mAggregationId;
     private String mImageUrl;
     int mBookingState;
 
@@ -127,6 +131,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
         }
 
         mBookingIndex = intent.getIntExtra(StayOutboundBookingDetailActivity.INTENT_EXTRA_DATA_BOOKING_INDEX, -1);
+        mAggregationId = intent.getStringExtra(StayOutboundBookingDetailActivity.NAME_INTENT_EXTRA_DATA_AGGREGATION_ID);
         mImageUrl = intent.getStringExtra(StayOutboundBookingDetailActivity.INTENT_EXTRA_DATA_IMAGE_URL);
         mBookingState = intent.getIntExtra(StayOutboundBookingDetailActivity.INTENT_EXTRA_DATA_BOOKING_STATE, Booking.BOOKING_STATE_NONE);
 
@@ -250,7 +255,16 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
         setRefresh(false);
         screenLock(showProgress);
 
-        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime(), mBookingRemoteImpl.getStayOutboundBookingDetail(mBookingIndex)//
+        Observable<StayOutboundBookingDetail> bookingDetailObservable = Observable.defer(new Callable<ObservableSource<? extends StayOutboundBookingDetail>>()
+        {
+            @Override
+            public ObservableSource<? extends StayOutboundBookingDetail> call() throws Exception
+            {
+                return DailyTextUtils.isTextEmpty(mAggregationId) ? mBookingRemoteImpl.getStayOutboundBookingDetail(mBookingIndex) : mBookingRemoteImpl.getStayOutboundBookingDetail(mAggregationId);
+            }
+        });
+
+        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime(), bookingDetailObservable//
             , new BiFunction<CommonDateTime, StayOutboundBookingDetail, StayOutboundBookingDetail>()
             {
                 @Override

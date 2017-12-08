@@ -783,11 +783,9 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                         @Override
                         public void onClick(View v)
                         {
-                            setSaleType(NONE);
                             mSelectedCoupon = null;
 
-                            notifyStayPaymentChanged();
-
+                            setSaleType(BONUS);
                             onBonusClick(true);
                         }
                     }, null);
@@ -800,10 +798,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                         @Override
                         public void onClick(View v)
                         {
-                            setSaleType(NONE);
-
-                            notifyStayPaymentChanged();
-
+                            setSaleType(BONUS);
                             onBonusClick(true);
                         }
                     }, null);
@@ -857,10 +852,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                         @Override
                         public void onClick(View v)
                         {
-                            setSaleType(NONE);
-
-                            notifyStayPaymentChanged();
-
+                            setSaleType(COUPON);
                             onCouponClick(true);
                         }
                     }, null);
@@ -873,10 +865,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                         @Override
                         public void onClick(View v)
                         {
-                            setSaleType(NONE);
-
-                            notifyStayPaymentChanged();
-
+                            setSaleType(COUPON);
                             onCouponClick(true);
                         }
                     }, null);
@@ -930,10 +919,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                         @Override
                         public void onClick(View v)
                         {
-                            setSaleType(NONE);
-
-                            notifyStayPaymentChanged();
-
+                            setSaleType(STICKER);
                             onDepositStickerClick(true);
                         }
                     }, null);
@@ -946,11 +932,9 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                         @Override
                         public void onClick(View v)
                         {
-                            setSaleType(NONE);
                             mSelectedCoupon = null;
 
-                            notifyStayPaymentChanged();
-
+                            setSaleType(STICKER);
                             onDepositStickerClick(true);
                         }
                     }, null);
@@ -971,7 +955,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                             public void onClick(View v)
                             {
                                 setSaleType(NONE);
-
+                                getViewInterface().setDepositSticker(false);
                                 notifyStayPaymentChanged();
                             }
                         }, null);
@@ -1648,6 +1632,16 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
             switch (mSaleType)
             {
+                case NONE:
+                    // 기본이 스티커 적립 상태이다.
+                    paymentPrice = mStayPayment.totalPrice;
+                    discountPrice = 0;
+
+                    getViewInterface().setBonus(false, mUserSimpleInformation.bonus, 0);
+                    getViewInterface().setCoupon(false, 0, false);
+                    getViewInterface().setDepositSticker(false);
+                    break;
+
                 case BONUS:
                     paymentPrice = mStayPayment.totalPrice - mUserSimpleInformation.bonus;
                     discountPrice = paymentPrice < 0 ? mStayPayment.totalPrice : mUserSimpleInformation.bonus;
@@ -1666,6 +1660,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                     getViewInterface().setDepositSticker(false);
                     break;
 
+                case STICKER:
                 default:
                     // 기본이 스티커 적립 상태이다.
                     paymentPrice = mStayPayment.totalPrice;

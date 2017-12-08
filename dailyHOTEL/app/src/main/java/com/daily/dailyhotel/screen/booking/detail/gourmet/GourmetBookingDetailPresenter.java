@@ -423,12 +423,7 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
             @Override
             public ObservableSource<GourmetMultiBookingDetail> call() throws Exception
             {
-                if (DailyTextUtils.isTextEmpty(mAggregationId) == true)
-                {
-                    return mBookingRemoteImpl.getGourmetMultiBookingDetail(mReservationIndex);
-                }
-
-                return mBookingRemoteImpl.getGourmetMultiBookingDetail(mAggregationId);
+                return DailyTextUtils.isTextEmpty(mAggregationId) ? mBookingRemoteImpl.getGourmetMultiBookingDetail(mReservationIndex) : mBookingRemoteImpl.getGourmetMultiBookingDetail(mAggregationId);
             }
         });
 

@@ -602,7 +602,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                 break;
 
             case STAY_OUTBOUND:
-                intent = StayOutboundBookingDetailActivity.newInstance(baseActivity, reservationIndex, imageUrl, bookingState);
+                intent = StayOutboundBookingDetailActivity.newInstance(baseActivity, reservationIndex, aggregationId, imageUrl, bookingState);
                 break;
 
             default:
