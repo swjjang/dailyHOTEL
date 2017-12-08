@@ -16,6 +16,7 @@ import com.daily.dailyhotel.repository.remote.model.GourmetDetailData;
 import com.daily.dailyhotel.repository.remote.model.GourmetListData;
 import com.daily.dailyhotel.repository.remote.model.GourmetMultiBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.GourmetPaymentData;
+import com.daily.dailyhotel.repository.remote.model.GourmetReceiptData;
 import com.daily.dailyhotel.repository.remote.model.NotificationData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
 import com.daily.dailyhotel.repository.remote.model.RecentlyPlacesData;
@@ -974,4 +975,16 @@ public interface DailyMobileService
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
     Observable<BaseDto<RewardHistoryDetailData>> getRewardHistoryDetail(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    // ReceiptRemoteImpl
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<GourmetReceiptData>> getGourmetReceipt(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @POST("{mobileAPI}")
+    Observable<BaseDto<Object>> getGourmetReceiptByEmail(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+                                                         @Query("emails") String emails);
 }

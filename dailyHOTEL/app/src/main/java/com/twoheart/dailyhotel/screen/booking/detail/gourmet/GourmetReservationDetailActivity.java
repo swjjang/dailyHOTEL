@@ -666,8 +666,7 @@ public class GourmetReservationDetailActivity extends PlaceReservationDetailActi
                 return;
             }
 
-            Intent intent = new Intent(GourmetReservationDetailActivity.this, GourmetReceiptActivity.class);
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, mReservationIndex);
+            Intent intent = GourmetReceiptActivity.newInstance(GourmetReservationDetailActivity.this, mReservationIndex, mAggregationId);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_RECEIPT);
         }
 

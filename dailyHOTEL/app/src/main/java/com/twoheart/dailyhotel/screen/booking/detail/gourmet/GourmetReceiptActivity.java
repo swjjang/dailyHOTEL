@@ -22,26 +22,41 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyEditText;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.GourmetReceipt;
+import com.daily.dailyhotel.repository.remote.ReceiptRemoteImpl;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
-import org.json.JSONObject;
+import java.util.concurrent.Callable;
 
-import retrofit2.Call;
-import retrofit2.Response;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 
 public class GourmetReceiptActivity extends BaseActivity
 {
     private boolean mIsFullscreen;
-    private int mBookingIndex;
+    private String mAggregationId;
     private DailyToolbarView mDailyToolbarView;
     private View mBottomLayout;
-    String mReservationIndex;
+    private int mReservationIndex;
+
+    private ReceiptRemoteImpl mReceiptRemoteImpl;
+
+    public static Intent newInstance(Context context, int bookingIndex, String aggregationId)
+    {
+        Intent intent = new Intent(context, GourmetReceiptActivity.class);
+
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, bookingIndex);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_AGGREGATION_ID, aggregationId);
+
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -51,22 +66,25 @@ public class GourmetReceiptActivity extends BaseActivity
 
         initToolbar();
 
+        mReservationIndex = -1;
+
         Intent intent = getIntent();
 
-        mBookingIndex = -1;
-
-        if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX) == true)
+        if (intent != null)
         {
-            mBookingIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, -1);
+            mReservationIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, -1);
+            mAggregationId = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_AGGREGATION_ID);
         }
 
-        if (mBookingIndex < 0)
+        if (mReservationIndex < 0 && DailyTextUtils.isTextEmpty(mAggregationId) == true)
         {
             finish();
             return;
         }
 
         mIsFullscreen = false;
+
+        mReceiptRemoteImpl = new ReceiptRemoteImpl(this);
     }
 
     private void initToolbar()
@@ -88,7 +106,7 @@ public class GourmetReceiptActivity extends BaseActivity
     {
         lockUI();
 
-        requestReceiptDetail(mBookingIndex);
+        requestReceiptDetail(mReservationIndex, mAggregationId);
 
         super.onResume();
     }
@@ -127,70 +145,54 @@ public class GourmetReceiptActivity extends BaseActivity
         }
     }
 
-    private void makeLayout(JSONObject jsonObject) throws Exception
+    private void makeLayout(GourmetReceipt gourmetReceipt) throws Exception
     {
         // 영수증
-        mReservationIndex = jsonObject.getString("gourmetReservationIdx");
+        mReservationIndex = gourmetReceipt.gourmetReservationIdx;
 
-        if (DailyTextUtils.isTextEmpty(mReservationIndex) == true)
+        if (gourmetReceipt.gourmetReservationIdx < 0)
         {
             Crashlytics.logException(new NullPointerException("GourmetReceiptActivity : mReservationIndex == null"));
         }
-
-        String userName = jsonObject.getString("userName");
-        String userPhone = jsonObject.getString("userPhone");
-        int ticketCount = jsonObject.getInt("ticketCount");
-        String placeName = jsonObject.getString("restaurantName");
-        String placeAddress = jsonObject.getString("restaurantAddress");
-        String sday = jsonObject.getString("sday");
-        String valueDate = jsonObject.getString("paidAt");
-        //        String currency = receiptJSONObject.getString("currency");
-        int paymentAmount = jsonObject.getInt("paymentAmount");
-        int tax = jsonObject.getInt("tax");
-        int supplyPrice = jsonObject.getInt("supplyPrice");
-        int sellingPrice = jsonObject.getInt("sellingPrice");
-        String paymentType = jsonObject.getString("paymentType");
-        int coupon = jsonObject.getInt("couponAmount");
-        int bonus = 0;
 
         // **예약 세부 정보**
         View bookingInfoLayout = findViewById(R.id.bookingInfoLayout);
 
         // 예약 번호
         TextView reservationNumberTextView = bookingInfoLayout.findViewById(R.id.textView13);
-        reservationNumberTextView.setText(mReservationIndex);
+        reservationNumberTextView.setText(Integer.toString(gourmetReceipt.gourmetReservationIdx));
 
         // 이름
         TextView hotelNameTextView = bookingInfoLayout.findViewById(R.id.textView3);
-        hotelNameTextView.setText(placeName);
+        hotelNameTextView.setText(gourmetReceipt.restaurantName);
 
         // 주소
         TextView hotelAddressTextView = bookingInfoLayout.findViewById(R.id.textView5);
-        hotelAddressTextView.setText(placeAddress);
+        hotelAddressTextView.setText(gourmetReceipt.restaurantAddress);
 
         // 고객성명/번호
         TextView customerInfoTextView = bookingInfoLayout.findViewById(R.id.textView7);
-        customerInfoTextView.setText(userName + " / " + userPhone);
+        customerInfoTextView.setText(gourmetReceipt.userName + " / " + gourmetReceipt.userPhone);
 
         // 날짜
         TextView checkInOutTextView = bookingInfoLayout.findViewById(R.id.textView9);
-        checkInOutTextView.setText(sday.replaceAll("-", "/"));
+        checkInOutTextView.setText(gourmetReceipt.sday.replaceAll("-", "/"));
 
         // 수량
         TextView nightsRoomsTextView = bookingInfoLayout.findViewById(R.id.textView11);
-        nightsRoomsTextView.setText(getString(R.string.label_booking_count, ticketCount));
+        nightsRoomsTextView.setText(getString(R.string.label_booking_count, gourmetReceipt.ticketCount));
 
         // **결제 정보**
         View paymentInfoLayout = findViewById(R.id.paymentInfoLayout);
 
         // 결제일
         TextView paymentDayTextView = paymentInfoLayout.findViewById(R.id.textView23);
-        paymentDayTextView.setText(DailyCalendar.convertDateFormatString(valueDate, DailyCalendar.ISO_8601_FORMAT, "yyyy/MM/dd"));
+        paymentDayTextView.setText(DailyCalendar.convertDateFormatString(gourmetReceipt.paidAt, DailyCalendar.ISO_8601_FORMAT, "yyyy/MM/dd"));
 
         // 결제수단
         View paymentTypeLayout = paymentInfoLayout.findViewById(R.id.paymentTypeLayout);
 
-        if (DailyTextUtils.isTextEmpty(paymentType) == true)
+        if (DailyTextUtils.isTextEmpty(gourmetReceipt.paymentType) == true)
         {
             paymentTypeLayout.setVisibility(View.GONE);
         } else
@@ -198,7 +200,7 @@ public class GourmetReceiptActivity extends BaseActivity
             paymentTypeLayout.setVisibility(View.VISIBLE);
 
             TextView paymentTypeTextView = paymentInfoLayout.findViewById(R.id.textView33);
-            paymentTypeTextView.setText(paymentType);
+            paymentTypeTextView.setText(gourmetReceipt.paymentType);
         }
 
         View saleLayout = paymentInfoLayout.findViewById(R.id.saleLayout);
@@ -206,48 +208,33 @@ public class GourmetReceiptActivity extends BaseActivity
 
         // 총금액
         TextView totalPriceTextView = paymentInfoLayout.findViewById(R.id.textView29);
-        totalPriceTextView.setText(DailyTextUtils.getPriceFormat(this, sellingPrice, false));
+        totalPriceTextView.setText(DailyTextUtils.getPriceFormat(this, gourmetReceipt.price, false));
 
         // 적립금 혹은 쿠폰 사용
         View discountLayout = paymentInfoLayout.findViewById(R.id.discountLayout);
 
-        if (bonus > 0 || coupon > 0)
+        if (gourmetReceipt.couponAmount > 0)
         {
-            if (bonus < 0)
-            {
-                bonus = 0;
-            }
-
-            if (coupon < 0)
-            {
-                coupon = 0;
-            }
-
             discountLayout.setVisibility(View.VISIBLE);
             TextView discountedTextView = paymentInfoLayout.findViewById(R.id.discountedTextView);
-            discountedTextView.setText("- " + DailyTextUtils.getPriceFormat(this, bonus + coupon, false));
-        } else
-        {
-            discountLayout.setVisibility(View.GONE);
-        }
+            discountedTextView.setText("- " + DailyTextUtils.getPriceFormat(this, gourmetReceipt.couponAmount, false));
 
-        if (bonus > 0 || coupon > 0)
-        {
             saleLayout.setVisibility(View.VISIBLE);
         } else
         {
+            discountLayout.setVisibility(View.GONE);
+
             saleLayout.setVisibility(View.GONE);
         }
 
         // 총 입금 금액
         TextView totalPaymentTextView = paymentInfoLayout.findViewById(R.id.totalPaymentTextView);
-        totalPaymentTextView.setText(DailyTextUtils.getPriceFormat(this, paymentAmount, false));
+        totalPaymentTextView.setText(DailyTextUtils.getPriceFormat(this, gourmetReceipt.paymentAmount, false));
 
         // **공급자**
 
         String phone = DailyRemoteConfigPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyPhoneNumber();
         String fax = DailyRemoteConfigPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyFax();
-        String receiptNotice = jsonObject.getString("receiptNotice");
         String address = DailyRemoteConfigPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyAddress();
         String ceoName = DailyRemoteConfigPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyCEO();
         String registrationNo = DailyRemoteConfigPreference.getInstance(GourmetReceiptActivity.this).getRemoteConfigCompanyBizRegNumber();
@@ -269,7 +256,7 @@ public class GourmetReceiptActivity extends BaseActivity
 
         // 코멘트
         TextView commentTextView = findViewById(R.id.commentTextView);
-        commentTextView.setText(receiptNotice);
+        commentTextView.setText(gourmetReceipt.notice);
 
         View view = findViewById(R.id.receiptLayout);
         view.setOnClickListener(new View.OnClickListener()
@@ -289,7 +276,7 @@ public class GourmetReceiptActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                if (DailyTextUtils.isTextEmpty(mReservationIndex) == true)
+                if (gourmetReceipt.gourmetReservationIdx < 0)
                 {
                     restartExpiredSession();
                 } else
@@ -315,9 +302,39 @@ public class GourmetReceiptActivity extends BaseActivity
         return viewGroup;
     }
 
-    private void requestReceiptDetail(int index)
+    private void requestReceiptDetail(int reservationIndex, String aggregationId)
     {
-        DailyMobileAPI.getInstance(this).requestGourmetReceipt(mNetworkTag, index, mReservationReceiptCallback);
+        Observable<GourmetReceipt> receiptObservable = Observable.defer(new Callable<ObservableSource<GourmetReceipt>>()
+        {
+            @Override
+            public ObservableSource<GourmetReceipt> call() throws Exception
+            {
+                if (DailyTextUtils.isTextEmpty(aggregationId) == true)
+                {
+                    return mReceiptRemoteImpl.getGourmetReceipt(reservationIndex);
+                }
+
+                return mReceiptRemoteImpl.getGourmetReceipt(aggregationId);
+            }
+        });
+
+        addCompositeDisposable(receiptObservable.observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetReceipt>()
+        {
+            @Override
+            public void accept(GourmetReceipt gourmetReceipt) throws Exception
+            {
+                makeLayout(gourmetReceipt);
+
+                unLockUI();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                onHandleError(throwable);
+            }
+        }));
     }
 
     private void showSendEmailDialog()
@@ -387,7 +404,37 @@ public class GourmetReceiptActivity extends BaseActivity
                     dialog.dismiss();
                 }
 
-                DailyMobileAPI.getInstance(GourmetReceiptActivity.this).requestReceiptByEmail(mNetworkTag, "gourmet", mReservationIndex, email, mReceiptByEmailCallback);
+                Observable<String> emailObservable = Observable.defer(new Callable<ObservableSource<? extends String>>()
+                {
+                    @Override
+                    public ObservableSource<? extends String> call() throws Exception
+                    {
+                        if (DailyTextUtils.isTextEmpty(mAggregationId) == true)
+                        {
+                            return mReceiptRemoteImpl.getGourmetReceiptByEmail(mReservationIndex, email);
+                        }
+
+                        return mReceiptRemoteImpl.getGourmetReceiptByEmail(mAggregationId, email);
+                    }
+                });
+
+                addCompositeDisposable(emailObservable.observeOn(AndroidSchedulers.mainThread()) //
+                    .subscribe(new Consumer<String>()
+                    {
+                        @Override
+                        public void accept(String message) throws Exception
+                        {
+                            showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
+                            unLockUI();
+                        }
+                    }, new Consumer<Throwable>()
+                    {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception
+                        {
+                            onHandleError(throwable);
+                        }
+                    }));
             }
         });
 
@@ -434,93 +481,4 @@ public class GourmetReceiptActivity extends BaseActivity
             ExLog.d(e.toString());
         }
     }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private retrofit2.Callback mReservationReceiptCallback = new retrofit2.Callback<JSONObject>()
-    {
-        @Override
-        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-        {
-            if (isFinishing() == true)
-            {
-                return;
-            }
-
-            if (response != null && response.isSuccessful() && response.body() != null)
-            {
-                try
-                {
-                    JSONObject responseJSONObject = response.body();
-
-                    int msgCode = responseJSONObject.getInt("msgCode");
-
-                    if (msgCode == 100)
-                    {
-                        makeLayout(responseJSONObject.getJSONObject("data"));
-                    } else
-                    {
-                        onErrorPopupMessage(msgCode, responseJSONObject.getString("msg"));
-                    }
-                } catch (Exception e)
-                {
-                    onError(e);
-                } finally
-                {
-                    unLockUI();
-                }
-            } else
-            {
-                GourmetReceiptActivity.this.onErrorResponse(call, response);
-            }
-        }
-
-        @Override
-        public void onFailure(Call<JSONObject> call, Throwable t)
-        {
-            GourmetReceiptActivity.this.onError(t);
-        }
-    };
-
-    retrofit2.Callback mReceiptByEmailCallback = new retrofit2.Callback<JSONObject>()
-    {
-        @Override
-        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-        {
-            if (isFinishing() == true)
-            {
-                return;
-            }
-
-            if (response != null && response.isSuccessful() && response.body() != null)
-            {
-                try
-                {
-                    JSONObject responseJSONObject = response.body();
-
-                    int msgCode = responseJSONObject.getInt("msgCode");
-                    String message = responseJSONObject.getString("msg");
-
-                    showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
-                } catch (Exception e)
-                {
-                    GourmetReceiptActivity.this.onError(e);
-                } finally
-                {
-                    unLockUI();
-                }
-            } else
-            {
-                GourmetReceiptActivity.this.onErrorResponse(call, response);
-            }
-        }
-
-        @Override
-        public void onFailure(Call<JSONObject> call, Throwable t)
-        {
-            GourmetReceiptActivity.this.onError(t);
-        }
-    };
 }

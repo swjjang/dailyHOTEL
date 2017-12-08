@@ -10,7 +10,7 @@ import com.daily.dailyhotel.domain.RecentlyColumns;
 
 public class RecentlyList implements RecentlyColumns
 {
-    private static final String AUTHORITY = "com.twoheart.dailyhotel";
+    private static final String AUTHORITY = "com.twoheart.dailyhotel.DailyContentProvider";
 
     public static final Uri NOTIFICATION_URI = Uri.parse("content://" + AUTHORITY + "/recently");
 
