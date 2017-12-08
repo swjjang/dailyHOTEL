@@ -130,7 +130,6 @@ public class AddProfileSocialActivity extends BaseActivity
 
         mCustomer = customer;
         boolean hasBirthday = false;
-        boolean invalidEmail = android.util.Patterns.EMAIL_ADDRESS.matcher(customer.getEmail()).matches() == false;
 
         try
         {
@@ -154,7 +153,9 @@ public class AddProfileSocialActivity extends BaseActivity
             mAddProfileSocialLayout.hidePhoneLayout();
         }
 
-        if (DailyTextUtils.isTextEmpty(customer.getEmail()) == true || invalidEmail == true)
+        String userEmail = customer.getEmail();
+
+        if (DailyTextUtils.validEmail(userEmail) == false)
         {
             mAddProfileSocialLayout.showEmailLayout();
             mAddProfileSocialLayout.setEmailText(customer.getEmail());
@@ -177,7 +178,7 @@ public class AddProfileSocialActivity extends BaseActivity
         if (DailyTextUtils.isTextEmpty(customer.getEmail(), customer.getPhone(), customer.getName()) == true)
         {
             showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_facebook_update), getString(R.string.dialog_btn_text_confirm), null, null, null);
-        } else if (invalidEmail == true)
+        } else if (DailyTextUtils.validEmail(userEmail) == false)
         {
             showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_msg_invalid_email), getString(R.string.dialog_btn_text_confirm), null, null, null);
         }
@@ -540,7 +541,7 @@ public class AddProfileSocialActivity extends BaseActivity
             }
 
             // 이메일이 없는 경우
-            if (DailyTextUtils.isTextEmpty(mCustomer.getEmail()) == true || android.util.Patterns.EMAIL_ADDRESS.matcher(mCustomer.getEmail()).matches() == false)
+            if (DailyTextUtils.validEmail(mCustomer.getEmail()) == false )
             {
                 if (DailyTextUtils.isTextEmpty(email) == true)
                 {
@@ -549,7 +550,7 @@ public class AddProfileSocialActivity extends BaseActivity
                 }
 
                 // email 유효성 체크
-                if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() == false)
+                if (DailyTextUtils.validEmail(email) == false)
                 {
                     DailyToast.showToast(AddProfileSocialActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
                     return;

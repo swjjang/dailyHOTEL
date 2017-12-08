@@ -171,7 +171,7 @@ public class SignupStep1Activity extends BaseActivity
             }
 
             // email 유효성 체크
-            if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() == false)
+            if (DailyTextUtils.validEmail(email) == false)
             {
                 DailyToast.showToast(SignupStep1Activity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
                 return;

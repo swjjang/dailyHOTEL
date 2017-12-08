@@ -110,7 +110,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
 
             DailyToast.showToast(this, R.string.toast_msg_please_input_email, Toast.LENGTH_SHORT);
             return;
-        } else if (android.util.Patterns.EMAIL_ADDRESS.matcher(mEmail).matches() == false)
+        } else if (DailyTextUtils.validEmail(mEmail) == false)
         {
             releaseUiComponent();
 

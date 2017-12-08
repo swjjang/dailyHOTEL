@@ -454,7 +454,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             return;
         }
 
-        if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() == false)
+        if (DailyTextUtils.validEmail(email) == false)
         {
             DailyToast.showToast(this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
             return;
