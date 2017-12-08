@@ -197,6 +197,44 @@ public class BookingRemoteImpl extends BaseRemoteImpl implements BookingInterfac
     }
 
     @Override
+    public Observable<StayOutboundBookingDetail> getStayOutboundBookingDetail(String aggregationId)
+    {
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotel-reservations/aggregations/{aggregationId}"//
+            : "MTEyJDE2NCQxMTgkMjEkMzgkMjgkMzckODUkNzkkMTQkNTIkODgkMTc4JDYyJDkxJDEyJA==$MkU2MkExQkM0UNEHE5MkEyNEjUwNUMAyQTAyMEZBDMBTI0RUJCMkYQyRjhFMzU5VNjNCREJBNkNFNDU4OEZZCRTBFMDTJjA2MTE1MDEwRTU0QUY0MzU1RERBODdEAMDdCOMUI0MTZDQ0RBMzREQkQ4QTM5RkIzMUQyNTA3OUNEQkIyRTER2ODKhGQ0U=$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{aggregationId}", aggregationId);
+
+        return mDailyMobileService.getStayOutboundBookingDetail(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<StayOutboundBookingDetailData>, StayOutboundBookingDetail>()
+            {
+                @Override
+                public StayOutboundBookingDetail apply(@io.reactivex.annotations.NonNull BaseDto<StayOutboundBookingDetailData> stayOutboundBookingDetailDataBaseDto) throws Exception
+                {
+                    StayOutboundBookingDetail stayOutboundBookingDetail;
+
+                    if (stayOutboundBookingDetailDataBaseDto != null)
+                    {
+                        if (stayOutboundBookingDetailDataBaseDto.msgCode == 100 && stayOutboundBookingDetailDataBaseDto.data != null)
+                        {
+                            stayOutboundBookingDetail = stayOutboundBookingDetailDataBaseDto.data.getStayOutboundBookingDetail();
+                        } else
+                        {
+                            throw new BaseException(stayOutboundBookingDetailDataBaseDto.msgCode, stayOutboundBookingDetailDataBaseDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(-1, null);
+                    }
+
+                    return stayOutboundBookingDetail;
+                }
+            }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
     public Observable<StayBookingDetail> getStayBookingDetail(String aggregationId)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v5/reservation/detail/hotel/{aggregationId}"//

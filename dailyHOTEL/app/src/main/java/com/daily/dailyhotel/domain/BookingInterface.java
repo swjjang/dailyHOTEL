@@ -23,8 +23,11 @@ public interface BookingInterface
     // 예약 리스트
     Observable<Boolean> getStayOutboundHideBooking(int reservationIndex);
 
-    // 예약 상세
+    // 해외 예약 상세
     Observable<StayOutboundBookingDetail> getStayOutboundBookingDetail(int reservationIndex);
+
+    // 해외 예약 상세
+    Observable<StayOutboundBookingDetail> getStayOutboundBookingDetail(String aggregationId);
 
     // 스테이 예약 상세
     Observable<StayBookingDetail> getStayBookingDetail(String aggregationId);
