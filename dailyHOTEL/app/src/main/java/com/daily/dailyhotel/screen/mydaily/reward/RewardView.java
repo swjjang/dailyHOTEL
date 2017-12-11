@@ -9,6 +9,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.ImageView;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
@@ -182,7 +183,7 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
             , getViewDataBinding().sticker8nightsTextView//
             , getViewDataBinding().sticker9nightsTextView};
 
-        final View[] stickerViews = {getViewDataBinding().sticker1nightsImageView//
+        final ImageView[] stickerViews = {getViewDataBinding().sticker1nightsImageView//
             , getViewDataBinding().sticker2nightsImageView//
             , getViewDataBinding().sticker3nightsImageView//
             , getViewDataBinding().sticker4nightsImageView//
@@ -199,6 +200,7 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
                 views[i].setVisibility(View.INVISIBLE);
                 stickerViews[i].setAlpha(0.9f);
                 stickerViews[i].setVisibility(View.VISIBLE);
+                stickerViews[i].setImageResource(R.drawable.r_ic_l_47_shadow_event);
             } else
             {
                 views[i].setVisibility(View.VISIBLE);
@@ -208,11 +210,11 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
     }
 
     @Override
-    public void setStickerCount(int count)
+    public void setStickerCount(int eventCount, int stickerCount)
     {
         final int MAX_COUNT = 9;
 
-        if (getViewDataBinding() == null || count > MAX_COUNT)
+        if (getViewDataBinding() == null || stickerCount > MAX_COUNT)
         {
             return;
         }
@@ -227,7 +229,7 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
             , getViewDataBinding().sticker8nightsTextView//
             , getViewDataBinding().sticker9nightsTextView};
 
-        final View[] stickerViews = {getViewDataBinding().sticker1nightsImageView//
+        final ImageView[] stickerViews = {getViewDataBinding().sticker1nightsImageView//
             , getViewDataBinding().sticker2nightsImageView//
             , getViewDataBinding().sticker3nightsImageView//
             , getViewDataBinding().sticker4nightsImageView//
@@ -239,11 +241,12 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
 
         for (int i = 0; i < MAX_COUNT; i++)
         {
-            if (i < count)
+            if (i < stickerCount)
             {
                 views[i].setVisibility(View.INVISIBLE);
                 stickerViews[i].setAlpha(1.0f);
                 stickerViews[i].setVisibility(View.VISIBLE);
+                stickerViews[i].setImageResource(i < eventCount ? R.drawable.r_ic_l_47_shadow_event : R.drawable.r_ic_l_47_shadow);
             } else
             {
                 views[i].setVisibility(View.VISIBLE);
