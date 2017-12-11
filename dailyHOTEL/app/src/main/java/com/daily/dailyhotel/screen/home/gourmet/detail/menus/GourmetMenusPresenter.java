@@ -978,7 +978,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 
         GourmetCartMenu gourmetCartMenu = mGourmetCart.getGourmetCartMenu(menuIndex);
 
-        if (gourmetCartMenu.minimumOrderQuantity == menuCount)
+        if (gourmetCartMenu.count <= gourmetCartMenu.minimumOrderQuantity)
         {
             unLockAll();
             return;
