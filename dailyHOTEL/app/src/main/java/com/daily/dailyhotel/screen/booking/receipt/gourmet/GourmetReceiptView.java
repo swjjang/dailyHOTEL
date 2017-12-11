@@ -34,6 +34,8 @@ public class GourmetReceiptView extends BaseDialogView<GourmetReceiptView.OnEven
         void onShowEmailDialogClick();
 
         void onSendEmailClick(String email);
+
+        void onReceiptLayoutClick();
     }
 
     public GourmetReceiptView(BaseActivity baseActivity, GourmetReceiptView.OnEventListener listener)
@@ -56,7 +58,7 @@ public class GourmetReceiptView extends BaseDialogView<GourmetReceiptView.OnEven
             @Override
             public void onClick(View v)
             {
-                updateFullScreenStatus(!isFullScreenStatus());
+                getEventListener().onReceiptLayoutClick();
             }
         });
 
@@ -68,8 +70,6 @@ public class GourmetReceiptView extends BaseDialogView<GourmetReceiptView.OnEven
                 getEventListener().onShowEmailDialogClick();
             }
         });
-
-        updateFullScreenStatus(false);
     }
 
     @Override
@@ -190,27 +190,6 @@ public class GourmetReceiptView extends BaseDialogView<GourmetReceiptView.OnEven
     }
 
     @Override
-    public boolean isFullScreenStatus()
-    {
-        if (getViewDataBinding() == null)
-        {
-            return false;
-        }
-
-        int toolbarVisibility = getViewDataBinding().toolbarView.getVisibility();
-        int bottomVisibility = getViewDataBinding().bottomLayout.getVisibility();
-
-        boolean isFullScreen = false;
-
-        if (toolbarVisibility == View.GONE || bottomVisibility == View.GONE)
-        {
-            isFullScreen = true;
-        }
-
-        return isFullScreen;
-    }
-
-    @Override
     public void updateFullScreenStatus(boolean bUseFullscreen)
     {
         if (getViewDataBinding() == null)
@@ -317,6 +296,6 @@ public class GourmetReceiptView extends BaseDialogView<GourmetReceiptView.OnEven
             }
         });
 
-        showSimpleDialog(dataBinding.getRoot(), null, listener, true);
+        showSimpleDialog(dataBinding.getRoot(), null, listener, false);
     }
 }
