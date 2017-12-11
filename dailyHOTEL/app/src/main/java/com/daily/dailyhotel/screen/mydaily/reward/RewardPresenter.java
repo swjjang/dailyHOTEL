@@ -110,7 +110,7 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
             {
                 getViewInterface().setDescriptionMessage(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerNonMemberCampaignMessage());
 
-                getViewInterface().setCampaignFreeStickerCount(2);
+                getViewInterface().setCampaignFreeStickerCount(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerNonMemberCampaignFreeNights());
             } else
             {
                 getViewInterface().setDescriptionMessage(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerNonMemberDefaultMessage());
@@ -460,7 +460,9 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
 
         getViewInterface().setDescriptionMessage(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerMemberMessage(mRewardDetail.rewardStickerCount));
 
-        getViewInterface().setStickerCount(mRewardDetail.rewardStickerCount);
+        int eventCount = DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerCampaignEnabled() ? DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerNonMemberCampaignFreeNights() : 0;
+
+        getViewInterface().setStickerCount(eventCount, mRewardDetail.rewardStickerCount);
 
         if (mRewardDetail.rewardStickerCount > 0)
         {
