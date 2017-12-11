@@ -128,7 +128,7 @@ public class GourmetThankYouView extends BaseDialogView<GourmetThankYouView.OnEv
 
             for (GourmetCartMenu menu : cartMenuList)
             {
-                getViewDataBinding().thankYouInformationView.addProductInformation(menu.name, menu.count, menu.persons, (menu.price * menu.count));
+                getViewDataBinding().thankYouInformationView.addProductInformation(menu.name, menu.count, menu.persons, (menu.discountPrice * menu.count));
             }
         }
     }
