@@ -417,14 +417,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 @Override
                 public void accept(GourmetCart gourmetCart) throws Exception
                 {
-                    if (gourmetCart.gourmetIndex == mGourmetIndex && gourmetCart.getTotalCount() > 0)
-                    {
-                        getViewInterface().setToolbarCartMenusVisible(true);
-                        getViewInterface().setToolbarCartMenusCount(gourmetCart.getTotalCount());
-                    } else
-                    {
-                        getViewInterface().setToolbarCartMenusVisible(false);
-                    }
+                    setToolbarGourmetCart(gourmetCart);
                 }
             }, new Consumer<Throwable>()
             {
@@ -478,7 +471,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
                 if (mIsUsedMultiTransition == true)
                 {
-                    if(lock() == true)
+                    if (lock() == true)
                     {
                         return true;
                     }
@@ -637,6 +630,13 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
                             }
                         }));
+                        break;
+
+                    case Activity.RESULT_CANCELED:
+                        if (data != null && data.hasExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_VISIT_TIME) == true)
+                        {
+                            getViewInterface().performVisitTimeClick(data.getIntExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_VISIT_TIME, mVisitTime));
+                        }
                         break;
 
                     default:
@@ -1999,6 +1999,8 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                     }
 
                     default:
+                        setToolbarGourmetCart(gourmetCart);
+
                         if (DailyPreference.getInstance(getActivity()).isWishTooltip() == true)
                         {
                             showWishTooltip();
@@ -2159,6 +2161,18 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         }
 
         return VALID_GOURMET_CART_DEFAULT;
+    }
+
+    void setToolbarGourmetCart(GourmetCart gourmetCart)
+    {
+        if (gourmetCart != null && gourmetCart.gourmetIndex == mGourmetIndex && gourmetCart.getTotalCount() > 0)
+        {
+            getViewInterface().setToolbarCartMenusVisible(true);
+            getViewInterface().setToolbarCartMenusCount(gourmetCart.getTotalCount());
+        } else
+        {
+            getViewInterface().setToolbarCartMenusVisible(false);
+        }
     }
 
     protected void startPayment(GourmetDetail gourmetDetail, GourmetCart gourmetCart)
