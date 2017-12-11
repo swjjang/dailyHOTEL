@@ -183,6 +183,8 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
     public void onPause()
     {
         super.onPause();
+
+        onCloseCartMenusClick();
     }
 
     @Override
