@@ -1006,6 +1006,36 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
     }
 
     @Override
+    public void performVisitTimeClick(int time)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        int childCount = getViewDataBinding().timesRadioGroup.getChildCount();
+        View childView;
+
+        for (int i = 0; i < childCount; i++)
+        {
+            childView = getViewDataBinding().timesRadioGroup.getChildAt(i);
+            Integer tag = (Integer) childView.getTag();
+
+            if (tag == null)
+            {
+                continue;
+            }
+
+            if (tag == time)
+            {
+                getViewDataBinding().timesScrollView.scrollTo((int) (childView.getX() - (getViewDataBinding().timesScrollView.getWidth() - childView.getWidth()) / 2), 0);
+                childView.performClick();
+                break;
+            }
+        }
+    }
+
+    @Override
     public Observable<Boolean> showWishView(boolean myWish)
     {
         if (getViewDataBinding() == null)

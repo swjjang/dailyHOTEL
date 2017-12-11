@@ -57,4 +57,6 @@ public interface GourmetDetailViewInterface extends BaseDialogViewInterface
     void setToolbarCartMenusVisible(boolean visible);
 
     void setToolbarCartMenusCount(int count);
+
+    void performVisitTimeClick(int time);
 }

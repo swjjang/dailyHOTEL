@@ -471,7 +471,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
                 if (mIsUsedMultiTransition == true)
                 {
-                    if(lock() == true)
+                    if (lock() == true)
                     {
                         return true;
                     }
@@ -630,6 +630,13 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
                             }
                         }));
+                        break;
+
+                    case Activity.RESULT_CANCELED:
+                        if (data != null && data.hasExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_VISIT_TIME) == true)
+                        {
+                            getViewInterface().performVisitTimeClick(data.getIntExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_VISIT_TIME, mVisitTime));
+                        }
                         break;
 
                     default:
