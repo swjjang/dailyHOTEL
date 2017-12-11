@@ -4,8 +4,9 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.databinding.ActivityCopyDataBinding;
+import com.twoheart.dailyhotel.databinding.ActivityStayFilterDataBinding;
 
-public class StayFilterView extends BaseDialogView<StayFilterView.OnEventListener, ActivityCopyDataBinding> implements StayFilterInterface
+public class StayFilterView extends BaseDialogView<StayFilterView.OnEventListener, ActivityStayFilterDataBinding> implements StayFilterInterface
 {
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -17,7 +18,7 @@ public class StayFilterView extends BaseDialogView<StayFilterView.OnEventListene
     }
 
     @Override
-    protected void setContentView(final ActivityCopyDataBinding viewDataBinding)
+    protected void setContentView(final ActivityStayFilterDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -32,7 +33,7 @@ public class StayFilterView extends BaseDialogView<StayFilterView.OnEventListene
     {
     }
 
-    private void initToolbar(ActivityCopyDataBinding viewDataBinding)
+    private void initToolbar(ActivityStayFilterDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {

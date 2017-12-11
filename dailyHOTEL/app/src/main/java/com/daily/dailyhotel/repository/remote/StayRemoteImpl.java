@@ -33,6 +33,29 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
     }
 
     @Override
+    public Observable<Integer> getListCountByFilter(Map<String, Object> queryMap, String abTestType)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales"//
+            : "NzEkOSQ1MyQ1MiQ2OCQ3MyQ3MSQ4MCQ4MCQ4OSQ3MiQ3NiQyJDUwJDM1JDEwJA==$ODWg1NUYzOPWTg1ODczQzU2ODM0N0M5RDVDNDDRBNTNCMjAzOTVEQNDYUyPRDAxNjc2QkI4RPDBGQDNVPjkM1RJMUE0RTYzNNTdCQg==$";
+
+        return mDailyMobileService.getStayListCountByFilter(Crypto.getUrlDecoderEx(API), queryMap, abTestType) //
+            .subscribeOn(Schedulers.io()).map(baseDto ->
+            {
+                int count = 0;
+
+                if (baseDto != null)
+                {
+                    if (baseDto.msgCode == 100 && baseDto.data != null)
+                    {
+                        count = baseDto.data.count;
+                    }
+                }
+
+                return count;
+            });
+    }
+
+    @Override
     public Observable<StayDetail> getDetail(int stayIndex, StayBookDateTime stayBookDateTime)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v3/hotel/{stayIndex}"//

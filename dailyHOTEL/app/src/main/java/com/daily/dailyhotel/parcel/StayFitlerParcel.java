@@ -26,7 +26,7 @@ public class StayFitlerParcel implements Parcelable
         readFromParcel(in);
     }
 
-    public StayFilter getUser()
+    public StayFilter getStayFilter()
     {
         return mStayFilter;
     }

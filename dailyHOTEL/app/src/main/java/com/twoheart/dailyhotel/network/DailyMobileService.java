@@ -31,6 +31,7 @@ import com.daily.dailyhotel.repository.remote.model.ShortUrlData;
 import com.daily.dailyhotel.repository.remote.model.StayBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.StayDetailData;
+import com.daily.dailyhotel.repository.remote.model.StayFilterCountData;
 import com.daily.dailyhotel.repository.remote.model.StayListData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundDetailData;
@@ -697,6 +698,12 @@ public interface DailyMobileService
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // StayRemoteImpl
     /////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<StayFilterCountData>> getStayListCountByFilter(@Path(value = "mobileAPI", encoded = true) String mobileAPI//
+        , @QueryMap Map<String, Object> queryMap//
+        , @Query("abtest") String abtest);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
