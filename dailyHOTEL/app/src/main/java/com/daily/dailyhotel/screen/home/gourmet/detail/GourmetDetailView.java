@@ -753,8 +753,8 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             return;
         }
 
-        getViewDataBinding().nestedScrollView.smoothScrollTo(0, 0);
-        //        getViewDataBinding().nestedScrollView.fullScroll(View.FOCUS_UP);
+        getViewDataBinding().nestedScrollView.smoothScrollTo(0, getViewDataBinding().nestedScrollView.getScrollY());
+        getViewDataBinding().nestedScrollView.scrollTo(0, 0);
     }
 
     @Override
@@ -1003,6 +1003,36 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                 getEventListener().onBookingClick();
             }
         });
+    }
+
+    @Override
+    public void performVisitTimeClick(int time)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        int childCount = getViewDataBinding().timesRadioGroup.getChildCount();
+        View childView;
+
+        for (int i = 0; i < childCount; i++)
+        {
+            childView = getViewDataBinding().timesRadioGroup.getChildAt(i);
+            Integer tag = (Integer) childView.getTag();
+
+            if (tag == null)
+            {
+                continue;
+            }
+
+            if (tag == time)
+            {
+                getViewDataBinding().timesScrollView.scrollTo((int) (childView.getX() - (getViewDataBinding().timesScrollView.getWidth() - childView.getWidth()) / 2), 0);
+                childView.performClick();
+                break;
+            }
+        }
     }
 
     @Override

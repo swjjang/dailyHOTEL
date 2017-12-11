@@ -207,6 +207,10 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             return true;
         }
 
+        Intent intent = new Intent();
+        intent.putExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_VISIT_TIME, mVisitTime);
+        setResult(Activity.RESULT_CANCELED, intent);
+
         return super.onBackPressed();
     }
 
