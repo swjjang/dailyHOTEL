@@ -31,7 +31,7 @@ public class GourmetReceiptPresenter extends BaseExceptionPresenter<GourmetRecei
 
     private ReceiptRemoteImpl mReceiptRemoteImpl;
 
-    //    private boolean mIsFullscreen;
+    private boolean mIsFullScreen;
     private String mAggregationId;
     private int mReservationIndex;
 
@@ -60,7 +60,11 @@ public class GourmetReceiptPresenter extends BaseExceptionPresenter<GourmetRecei
 
         mReceiptRemoteImpl = new ReceiptRemoteImpl(getActivity());
 
-        //        mIsFullscreen = false;
+        mIsFullScreen = false;
+        if (getViewInterface() != null)
+        {
+            getViewInterface().updateFullScreenStatus(mIsFullScreen);
+        }
 
         setRefresh(true);
     }
@@ -133,9 +137,10 @@ public class GourmetReceiptPresenter extends BaseExceptionPresenter<GourmetRecei
     @Override
     public boolean onBackPressed()
     {
-        if (getViewInterface() != null && getViewInterface().isFullScreenStatus() == true)
+        if (getViewInterface() != null && mIsFullScreen == true)
         {
-            getViewInterface().updateFullScreenStatus(false);
+            mIsFullScreen = false;
+            getViewInterface().updateFullScreenStatus(mIsFullScreen);
             return true;
         }
 
@@ -275,5 +280,18 @@ public class GourmetReceiptPresenter extends BaseExceptionPresenter<GourmetRecei
                     onHandleError(throwable);
                 }
             }));
+    }
+
+    @Override
+    public void onReceiptLayoutClick()
+    {
+        if (getViewInterface() == null)
+        {
+            return;
+        }
+
+        mIsFullScreen = !mIsFullScreen;
+
+        getViewInterface().updateFullScreenStatus(mIsFullScreen);
     }
 }

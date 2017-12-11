@@ -225,7 +225,7 @@ public class GourmetCartMenusAdapter extends RecyclerView.Adapter<GourmetCartMen
 
         GourmetCartMenuViewHolder gourmetCartMenuViewHolder = (GourmetCartMenuViewHolder) viewHolder;
 
-        if (menuOrderCount < minimumOrderQuantity)
+        if (menuOrderCount <= minimumOrderQuantity)
         {
             gourmetCartMenuViewHolder.dataBinding.menuCountMinusView.setEnabled(false);
         } else
