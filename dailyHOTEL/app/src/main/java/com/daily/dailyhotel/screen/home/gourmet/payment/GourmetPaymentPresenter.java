@@ -971,7 +971,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             return;
         }
 
-        if (android.util.Patterns.EMAIL_ADDRESS.matcher(mGuest.email).matches() == false)
+        if (DailyTextUtils.validEmail(mGuest.email) == false)
         {
             DailyToast.showToast(getActivity(), getString(R.string.toast_msg_wrong_email_address), DailyToast.LENGTH_SHORT);
 

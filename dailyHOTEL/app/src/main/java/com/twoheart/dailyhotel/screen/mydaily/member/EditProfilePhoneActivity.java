@@ -9,6 +9,8 @@ import android.view.WindowManager;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.entity.User;
+import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.R;
@@ -17,6 +19,10 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.util.Collections;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -31,6 +37,8 @@ public class EditProfilePhoneActivity extends BaseActivity
     EditProfilePhoneNetworkController mNetworkController;
     String mCountryCode;
     int mRequestVerificationCount;
+
+    ProfileRemoteImpl mProfileRemoteImpl;
 
     public enum Type
     {
@@ -66,6 +74,7 @@ public class EditProfilePhoneActivity extends BaseActivity
 
         mEditProfilePhoneLayout = new EditProfilePhoneLayout(this, mOnEventListener);
         mNetworkController = new EditProfilePhoneNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
+        mProfileRemoteImpl = new ProfileRemoteImpl(this);
 
         setContentView(mEditProfilePhoneLayout.onCreateView(R.layout.activity_edit_phone));
 
@@ -217,7 +226,30 @@ public class EditProfilePhoneActivity extends BaseActivity
                 finish();
             } else
             {
-                mNetworkController.requestUpdateSocialUserInformation(phoneNumber);
+                if (lockUiComponentAndIsLockUiComponent() == true)
+                {
+                    return;
+                }
+
+                lockUI();
+
+                addCompositeDisposable(mProfileRemoteImpl.updateUserInformation(Collections.singletonMap("phone", phoneNumber)).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<User>()
+                {
+                    @Override
+                    public void accept(User user) throws Exception
+                    {
+                        mOnNetworkControllerListener.onConfirm();
+
+                        unLockUI();
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        onHandleError(throwable);
+                    }
+                }));
             }
         }
 

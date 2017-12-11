@@ -36,11 +36,13 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
@@ -454,7 +456,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
             return;
         }
 
-        if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() == false)
+        if (DailyTextUtils.validEmail(email) == false)
         {
             DailyToast.showToast(this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
             return;
@@ -962,6 +964,7 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                     JSONObject responseJSONObject = response.body();
 
                     int msgCode = responseJSONObject.getInt("msg_code");
+                    String message = responseJSONObject.getString("msg");
 
                     if (msgCode == 0)
                     {
@@ -1012,7 +1015,32 @@ public class LoginActivity extends BaseActivity implements Constants, OnClickLis
                         }
                     } else
                     {
-                        LoginActivity.this.onErrorResponse(call, response);
+                        DailyUserPreference.getInstance(LoginActivity.this).clear();
+
+                        try
+                        {
+                            LoginManager.getInstance().logOut();
+                        } catch (Exception e)
+                        {
+                            ExLog.d(e.toString());
+                        }
+
+                        try
+                        {
+                            UserManagement.requestLogout(new LogoutResponseCallback()
+                            {
+                                @Override
+                                public void onCompleteLogout()
+                                {
+
+                                }
+                            });
+                        } catch (Exception e)
+                        {
+                            ExLog.d(e.toString());
+                        }
+
+                        LoginActivity.this.onErrorResponse(response, message);
                     }
                 } catch (Exception e)
                 {

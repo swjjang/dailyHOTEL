@@ -472,7 +472,7 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
                 getViewInterface().setStickerValidityVisible(true);
                 try
                 {
-                    getViewInterface().setStickerValidityText(getString(R.string.label_reward_sticker_validity, DailyCalendar.convertDateFormatString(mRewardDetail.expiredAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd")));
+                    getViewInterface().setStickerValidityText(getString(R.string.label_reward_sticker_validity, DailyCalendar.convertDateFormatString(mRewardDetail.expiredAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd HH:mm")));
                 } catch (ParseException e)
                 {
                     ExLog.e(e.toString());
