@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.Booking;
 import com.twoheart.dailyhotel.R;
 
 /**
@@ -16,6 +18,12 @@ import com.twoheart.dailyhotel.R;
 public class StayReceiptPresenter extends BaseExceptionPresenter<StayReceiptActivity, StayReceiptInterface> implements StayReceiptView.OnEventListener
 {
     private StayReceiptAnalyticsInterface mAnalytics;
+
+    private int mBookingIdx;
+    private int mBookingState;
+    private String mAggregationId;
+    private String mReservationIndex;
+    boolean mIsFullscreen;
 
     public interface StayReceiptAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -55,6 +63,15 @@ public class StayReceiptPresenter extends BaseExceptionPresenter<StayReceiptActi
         if (intent == null)
         {
             return true;
+        }
+
+        mBookingIdx = intent.getIntExtra(StayReceiptActivity.INTENT_EXTRA_RESERVATION_INDEX, -1);
+        mBookingState = intent.getIntExtra(StayReceiptActivity.INTENT_EXTRA_BOOKING_STATE, Booking.BOOKING_STATE_NONE);
+        mAggregationId = intent.getStringExtra(StayReceiptActivity.INTENT_EXTRA_AGGREGATION_ID);
+
+        if (mBookingIdx < 0 && DailyTextUtils.isTextEmpty(mAggregationId) == true)
+        {
+            return false;
         }
 
         return true;

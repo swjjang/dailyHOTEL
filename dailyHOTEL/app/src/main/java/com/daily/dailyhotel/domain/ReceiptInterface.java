@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.domain;
 
 import com.daily.dailyhotel.entity.GourmetReceipt;
+import com.daily.dailyhotel.entity.StayReceipt;
 
 import io.reactivex.Observable;
 
@@ -17,4 +18,12 @@ public interface ReceiptInterface
     Observable<String> getGourmetReceiptByEmail(int reservationIdx, String email);
 
     Observable<String> getGourmetReceiptByEmail(String aggregationId, String email);
+
+    Observable<StayReceipt> getStayReceipt(int reservationIdx);
+
+    Observable<StayReceipt> getStayReceipt(String aggregationId);
+
+    Observable<String> getStayReceiptByEmail(int reservationIdx, String email);
+
+    Observable<String> getStayReceiptByEmail(String aggregationId, String email);
 }
