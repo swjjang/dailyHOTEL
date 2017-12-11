@@ -9,8 +9,6 @@ public interface GourmetReceiptInterface extends BaseDialogViewInterface
 {
     void setReceipt(GourmetReceipt gourmetReceipt);
 
-    boolean isFullScreenStatus();
-
     void updateFullScreenStatus(boolean bUseFullscreen);
 
     void showSendEmailDialog(DialogInterface.OnDismissListener listener);
