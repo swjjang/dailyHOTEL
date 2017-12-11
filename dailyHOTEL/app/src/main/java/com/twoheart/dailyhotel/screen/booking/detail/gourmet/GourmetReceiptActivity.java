@@ -393,7 +393,7 @@ public class GourmetReceiptActivity extends BaseActivity
             {
                 String email = emailEditTExt.getText().toString();
 
-                if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() == false)
+                if (DailyTextUtils.validEmail(email) == false)
                 {
                     DailyToast.showToast(GourmetReceiptActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
                     return;

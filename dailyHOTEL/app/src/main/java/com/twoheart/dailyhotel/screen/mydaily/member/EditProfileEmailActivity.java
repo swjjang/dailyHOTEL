@@ -17,25 +17,25 @@ import android.widget.Toast;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.widget.DailyAutoCompleteEditText;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.User;
+import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.network.DailyMobileAPI;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-import org.json.JSONObject;
-
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collections;
 
-import retrofit2.Call;
-import retrofit2.Response;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 
 public class EditProfileEmailActivity extends BaseActivity implements OnClickListener, View.OnFocusChangeListener
 {
     DailyAutoCompleteEditText mEmailEditText;
     View mConfirmView, mEmailView;
+
+    ProfileRemoteImpl mProfileRemoteImpl;
 
     public static Intent newInstance(Context context)
     {
@@ -52,6 +52,8 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_edit_email);
+
+        mProfileRemoteImpl = new ProfileRemoteImpl(this);
 
         initToolbar();
         initLayout();
@@ -98,7 +100,7 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
                 String email = s.toString();
 
                 // email 유효성 체크
-                if (DailyTextUtils.isTextEmpty(email) == true || android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() == false)
+                if (DailyTextUtils.validEmail(email) == false)
                 {
                     mConfirmView.setEnabled(false);
                 } else
@@ -156,23 +158,13 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
                 }
 
                 // email 유효성 체크
-                if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() == false)
+                if (DailyTextUtils.validEmail(email) == false)
                 {
                     DailyToast.showToast(EditProfileEmailActivity.this, R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
                     return;
                 }
 
-                if (lockUiComponentAndIsLockUiComponent() == true)
-                {
-                    return;
-                }
-
-                lockUI();
-
-                Map<String, String> params = new HashMap<>();
-                params.put("user_email", email);
-
-                DailyMobileAPI.getInstance(this).requestUserUpdateInformationForSocial(mNetworkTag, params, mSocialUserUpdateCallback);
+                onChangeEmail(email);
                 break;
         }
     }
@@ -213,83 +205,47 @@ public class EditProfileEmailActivity extends BaseActivity implements OnClickLis
         }
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private retrofit2.Callback mSocialUserUpdateCallback = new retrofit2.Callback<JSONObject>()
+    private void onChangeEmail(String email)
     {
-        @Override
-        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        if (DailyTextUtils.isTextEmpty(email) == true || lockUiComponentAndIsLockUiComponent() == true)
         {
-            if (response != null && response.isSuccessful() && response.body() != null)
+            return;
+        }
+
+        lockUI();
+
+        addCompositeDisposable(mProfileRemoteImpl.updateUserInformation(Collections.singletonMap("email", email)).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<User>()
+        {
+            @Override
+            public void accept(User user) throws Exception
             {
-                try
+                showSimpleDialog(null, getString(R.string.toast_msg_profile_success_edit_email), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
                 {
-                    JSONObject responseJSONObject = response.body();
-
-                    JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-
-                    boolean result = dataJSONObject.getBoolean("is_success");
-
-                    // TODO :  추후에 msgCode결과를 가지고 구분하는 코드가 필요할듯.
-                    int msgCode = responseJSONObject.getInt("msg_code");
-
-                    if (result == true)
+                    @Override
+                    public void onClick(View v)
                     {
-                        showSimpleDialog(null, getString(R.string.toast_msg_profile_success_edit_email), getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                finish();
-                            }
-                        }, new DialogInterface.OnCancelListener()
-                        {
-                            @Override
-                            public void onCancel(DialogInterface dialog)
-                            {
-                                finish();
-                            }
-                        });
-
-                        setResult(RESULT_OK);
-                    } else
-                    {
-                        String message = responseJSONObject.getString("msg");
-                        showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                mEmailEditText.setText(null);
-                            }
-                        }, new DialogInterface.OnCancelListener()
-                        {
-                            @Override
-                            public void onCancel(DialogInterface dialog)
-                            {
-                                mEmailEditText.setText(null);
-                            }
-                        });
+                        finish();
                     }
-                } catch (Exception e)
+                }, new DialogInterface.OnCancelListener()
                 {
-                    onError(e);
-                } finally
-                {
-                    unLockUI();
-                }
-            } else
-            {
-                EditProfileEmailActivity.this.onErrorResponse(call, response);
-            }
-        }
+                    @Override
+                    public void onCancel(DialogInterface dialog)
+                    {
+                        finish();
+                    }
+                });
 
-        @Override
-        public void onFailure(Call<JSONObject> call, Throwable t)
+                setResult(RESULT_OK);
+
+                unLockUI();
+            }
+        }, new Consumer<Throwable>()
         {
-            EditProfileEmailActivity.this.onError(t);
-        }
-    };
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                onHandleError(throwable);
+            }
+        }));
+    }
 }

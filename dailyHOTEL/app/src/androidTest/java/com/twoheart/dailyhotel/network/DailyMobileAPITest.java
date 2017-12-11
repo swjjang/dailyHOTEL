@@ -1031,81 +1031,6 @@ public class DailyMobileAPITest
             }
         };
 
-        DailyMobileAPI.getInstance(mContext).requestUserInformationForPayment(mNetworkTag, mUserInformationFinalCheckCallback);
-        mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
-    }
-
-    @Test
-    public void requestUserUpdateInformationForSocial() throws Exception
-    {
-        mLock = new CountDownLatch(1);
-
-        retrofit2.Callback networkCallback = new retrofit2.Callback<JSONObject>()
-        {
-            @Override
-            public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-            {
-                try
-                {
-                    assertThat(response, notNullValue());
-                    assertThat(response.isSuccessful(), is(true));
-                    assertThat(response.body(), allOf(notNullValue(), isA(JSONObject.class)));
-
-                    JSONObject responseJSONObject = response.body();
-
-                    int msgCode = responseJSONObject.getInt("msg_code");
-                    String message = responseJSONObject.getString("msg");
-                    assertThat(message, isNotEmpty());
-                    assertThat(message, msgCode, is(100));
-
-                    JSONObject dataJSONObject = responseJSONObject.getJSONObject("data");
-                    assertThat(dataJSONObject, notNullValue());
-
-                    assertThat(dataJSONObject.getBoolean("is_success"), allOf(is(true), isA(Boolean.class)));
-
-                    String serverDate = dataJSONObject.getString("serverDate");
-                    assertThat(serverDate, isNotEmpty());
-                } catch (Throwable t)
-                {
-                    addException(call, response, t);
-                } finally
-                {
-                    mLock.countDown();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<JSONObject> call, Throwable t)
-            {
-                addException(call, null, t);
-                mLock.countDown();
-            }
-        };
-
-        Map<String, String> params = new HashMap<>();
-        params.put("user_email", Crypto.getUrlDecoderEx(Const.TEST_FACEBOOK_USER_EMAIL));
-        params.put("user_name", Crypto.getUrlDecoderEx(Const.TEST_FACEBOOK_USER_NAME));
-        params.put("birthday", Const.TEST_USER_BIRTHDAY);
-
-        // 전화번호 일단 패스
-        String phoneNumber = "";
-        if (DailyTextUtils.isTextEmpty(phoneNumber) == false)
-        {
-            params.put("user_phone", phoneNumber.replaceAll("-", ""));
-        }
-
-        // 추천도 일단 패스
-        String recommender = "";
-        if (DailyTextUtils.isTextEmpty(recommender) == false)
-        {
-            params.put("recommendation_code", recommender);
-        }
-
-        // 베내핏도 패스
-        boolean isBenefit = true;
-        params.put("isAgreedBenefit", isBenefit == true ? "true" : "false");
-
-        DailyMobileAPI.getInstance(mContext).requestUserUpdateInformationForSocial(mNetworkTag, params, networkCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 
@@ -2126,7 +2051,6 @@ public class DailyMobileAPITest
             }
         };
 
-        DailyMobileAPI.getInstance(mContext).requestGourmetReceipt(mNetworkTag, Const.TEST_GOURMET_RESERVATION_INDEX, networkCallback);
         mLock.await(COUNT_DOWN_DELEY_TIME, TIME_UNIT);
     }
 

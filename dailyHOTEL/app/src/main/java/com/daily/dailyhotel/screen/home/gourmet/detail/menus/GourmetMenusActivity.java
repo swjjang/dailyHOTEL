@@ -28,7 +28,7 @@ public class GourmetMenusActivity extends BaseActivity<GourmetMenusPresenter>
     static final String INTENT_EXTRA_DATA_POSITION = "position";
     static final String INTENT_EXTRA_DATA_OPERATION_TIMES = "operationTimes";
     static final String INTENT_EXTRA_DATA_VISIT_DATE_TIME = "visitDateTime";
-    static final String INTENT_EXTRA_DATA_VISIT_TIME = "visitTime";
+    public static final String INTENT_EXTRA_DATA_VISIT_TIME = "visitTime";
     static final String INTENT_EXTRA_DATA_CATEGORY = "category";
     static final String INTENT_EXTRA_DATA_IMAGE_URL = "imageUrl";
 
