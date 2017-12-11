@@ -765,6 +765,8 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             return;
         }
 
+        // 이전 버전에서는 이상이 없었는데 27버전으로 올린후에 발생하는 현상으로 임시로 수정하였음.
+        getViewDataBinding().nestedScrollView.smoothScrollTo(0, getViewDataBinding().nestedScrollView.getScrollY());
         getViewDataBinding().nestedScrollView.smoothScrollTo(0, (int) getViewDataBinding().dateInformationView.getY()//
             - getDimensionPixelSize(R.dimen.toolbar_height) - ScreenUtils.dpToPx(getContext(), 12));
     }
