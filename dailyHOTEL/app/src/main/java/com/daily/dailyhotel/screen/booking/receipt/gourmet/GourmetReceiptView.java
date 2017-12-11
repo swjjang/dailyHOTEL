@@ -278,7 +278,7 @@ public class GourmetReceiptView extends BaseDialogView<GourmetReceiptView.OnEven
             {
                 String email = dataBinding.emailEditTExt.getText().toString();
 
-                if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() == false)
+                if (DailyTextUtils.validEmail(email) == false)
                 {
                     DailyToast.showToast(getContext(), R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
                     return;
