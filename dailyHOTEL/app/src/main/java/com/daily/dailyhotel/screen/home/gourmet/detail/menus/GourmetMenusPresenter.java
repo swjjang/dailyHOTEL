@@ -976,112 +976,36 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 
         int menuCount = mGourmetCart.getMenuCount();
 
-        minusMenu(true, menuIndex);
-
         GourmetCartMenu gourmetCartMenu = mGourmetCart.getGourmetCartMenu(menuIndex);
+
+        if (gourmetCartMenu.count <= gourmetCartMenu.minimumOrderQuantity)
+        {
+            unLockAll();
+            return;
+        }
+
+        minusMenu(true, menuIndex);
 
         if (mGourmetCart.getMenuOrderCount(menuIndex) > 0)
         {
             getViewInterface().setGourmetCartMenu(menuIndex, mGourmetCart.getMenuOrderCount(menuIndex), gourmetCartMenu.minimumOrderQuantity, gourmetCartMenu.maximumOrderQuantity, gourmetCartMenu.availableTicketNumbers);
         }
 
-        if (mGourmetCart.getMenuCount() == 0)
+        addCompositeDisposable(mCartLocalImpl.setGourmetCart(mGourmetCart).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
         {
-            mGourmetCart.clear();
-
-            addCompositeDisposable(mCartLocalImpl.clearGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+            @Override
+            public void accept(Boolean aBoolean) throws Exception
             {
-                @Override
-                public void accept(Boolean aBoolean) throws Exception
-                {
-                    unLockAll();
-
-                    onCloseCartMenusClick();
-                }
-            }, new Consumer<Throwable>()
-            {
-                @Override
-                public void accept(Throwable throwable) throws Exception
-                {
-                    unLockAll();
-
-                    onCloseCartMenusClick();
-                }
-            }));
-        } else
-        {
-            // 메뉴 갯수가 변경된 경우
-            if (mGourmetCart.getMenuCount() != menuCount)
-            {
-                Observable observable = getViewInterface().removeGourmetCartMenu(menuIndex);
-
-                if (observable == null)
-                {
-                    addCompositeDisposable(mCartLocalImpl.setGourmetCart(mGourmetCart).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
-                    {
-                        @Override
-                        public void accept(Boolean aBoolean) throws Exception
-                        {
-                            unLockAll();
-
-                            getViewInterface().setGourmetCart(mGourmetCart);
-                        }
-                    }, new Consumer<Throwable>()
-                    {
-                        @Override
-                        public void accept(Throwable throwable) throws Exception
-                        {
-                            unLockAll();
-
-                            getViewInterface().setGourmetCart(mGourmetCart);
-                        }
-                    }));
-                } else
-                {
-                    addCompositeDisposable(Observable.zip(mCartLocalImpl.setGourmetCart(mGourmetCart), observable, new BiFunction<Boolean, Boolean, Boolean>()
-                    {
-                        @Override
-                        public Boolean apply(Boolean aBoolean, Boolean aBoolean2) throws Exception
-                        {
-                            return true;
-                        }
-                    }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
-                    {
-                        @Override
-                        public void accept(Boolean aBoolean) throws Exception
-                        {
-                            unLockAll();
-                        }
-                    }, new Consumer<Throwable>()
-                    {
-                        @Override
-                        public void accept(Throwable throwable) throws Exception
-                        {
-                            unLockAll();
-
-                            getViewInterface().setGourmetCart(mGourmetCart);
-                        }
-                    }));
-                }
-            } else
-            {
-                addCompositeDisposable(mCartLocalImpl.setGourmetCart(mGourmetCart).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
-                {
-                    @Override
-                    public void accept(Boolean aBoolean) throws Exception
-                    {
-                        unLockAll();
-                    }
-                }, new Consumer<Throwable>()
-                {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception
-                    {
-                        unLockAll();
-                    }
-                }));
+                unLockAll();
             }
-        }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                unLockAll();
+            }
+        }));
     }
 
     @Override

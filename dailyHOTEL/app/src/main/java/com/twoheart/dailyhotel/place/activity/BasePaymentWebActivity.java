@@ -539,7 +539,7 @@ public abstract class BasePaymentWebActivity extends BaseActivity implements Con
         @Override
         public boolean onJsAlert(WebView view, String url, String message, final android.webkit.JsResult result)
         {
-            if (isFinishing() == true || isDestroyed() == true)
+            if (isFinishing() == true || (VersionUtils.isOverAPI17() == true && isDestroyed() == true))
             {
                 return true;
             }
