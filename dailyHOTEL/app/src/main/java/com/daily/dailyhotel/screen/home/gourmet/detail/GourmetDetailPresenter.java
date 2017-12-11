@@ -417,14 +417,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 @Override
                 public void accept(GourmetCart gourmetCart) throws Exception
                 {
-                    if (gourmetCart.gourmetIndex == mGourmetIndex && gourmetCart.getTotalCount() > 0)
-                    {
-                        getViewInterface().setToolbarCartMenusVisible(true);
-                        getViewInterface().setToolbarCartMenusCount(gourmetCart.getTotalCount());
-                    } else
-                    {
-                        getViewInterface().setToolbarCartMenusVisible(false);
-                    }
+                    setToolbarGourmetCart(gourmetCart);
                 }
             }, new Consumer<Throwable>()
             {
@@ -1999,6 +1992,8 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                     }
 
                     default:
+                        setToolbarGourmetCart(gourmetCart);
+
                         if (DailyPreference.getInstance(getActivity()).isWishTooltip() == true)
                         {
                             showWishTooltip();
@@ -2159,6 +2154,18 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         }
 
         return VALID_GOURMET_CART_DEFAULT;
+    }
+
+    void setToolbarGourmetCart(GourmetCart gourmetCart)
+    {
+        if (gourmetCart != null && gourmetCart.gourmetIndex == mGourmetIndex && gourmetCart.getTotalCount() > 0)
+        {
+            getViewInterface().setToolbarCartMenusVisible(true);
+            getViewInterface().setToolbarCartMenusCount(gourmetCart.getTotalCount());
+        } else
+        {
+            getViewInterface().setToolbarCartMenusVisible(false);
+        }
     }
 
     protected void startPayment(GourmetDetail gourmetDetail, GourmetCart gourmetCart)
