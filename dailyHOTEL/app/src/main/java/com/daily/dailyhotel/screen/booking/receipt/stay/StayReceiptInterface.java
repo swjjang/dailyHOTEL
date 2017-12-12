@@ -9,7 +9,7 @@ public interface StayReceiptInterface extends BaseDialogViewInterface
 {
     void setReceipt(StayReceipt stayReceipt);
 
-    void updateFullScreenStatus(boolean bUseFullscreen);
+    void setFullScreenMode(boolean isFullScreenMode);
 
     void showSendEmailDialog(DialogInterface.OnDismissListener listener);
 

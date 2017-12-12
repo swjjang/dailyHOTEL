@@ -31,11 +31,11 @@ public class GourmetReceiptView extends BaseDialogView<GourmetReceiptView.OnEven
 {
     public interface OnEventListener extends OnBaseEventListener
     {
-        void onShowEmailDialogClick();
+        void onEmailClick();
 
         void onSendEmailClick(String email);
 
-        void onReceiptLayoutClick();
+        void onScreenClick();
     }
 
     public GourmetReceiptView(BaseActivity baseActivity, GourmetReceiptView.OnEventListener listener)
@@ -58,7 +58,7 @@ public class GourmetReceiptView extends BaseDialogView<GourmetReceiptView.OnEven
             @Override
             public void onClick(View v)
             {
-                getEventListener().onReceiptLayoutClick();
+                getEventListener().onScreenClick();
             }
         });
 
@@ -67,7 +67,7 @@ public class GourmetReceiptView extends BaseDialogView<GourmetReceiptView.OnEven
             @Override
             public void onClick(View v)
             {
-                getEventListener().onShowEmailDialogClick();
+                getEventListener().onEmailClick();
             }
         });
     }
@@ -190,14 +190,14 @@ public class GourmetReceiptView extends BaseDialogView<GourmetReceiptView.OnEven
     }
 
     @Override
-    public void updateFullScreenStatus(boolean isUseFullScreen)
+    public void setFullScreenMode(boolean isFullScreenMode)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        if (isUseFullScreen)
+        if (isFullScreenMode == true)
         {
             getViewDataBinding().toolbarView.setVisibility(View.GONE);
 

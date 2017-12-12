@@ -33,11 +33,11 @@ public class StayReceiptView extends BaseDialogView<StayReceiptView.OnEventListe
 {
     public interface OnEventListener extends OnBaseEventListener
     {
-        void onShowEmailDialogClick();
+        void onEmailClick();
 
         void onSendEmailClick(String email);
 
-        void onReceiptLayoutClick();
+        void onScreenClick();
     }
 
     public StayReceiptView(BaseActivity baseActivity, StayReceiptView.OnEventListener listener)
@@ -93,7 +93,7 @@ public class StayReceiptView extends BaseDialogView<StayReceiptView.OnEventListe
             @Override
             public void onClick(View v)
             {
-                getEventListener().onReceiptLayoutClick();
+                getEventListener().onScreenClick();
             }
         });
 
@@ -111,7 +111,7 @@ public class StayReceiptView extends BaseDialogView<StayReceiptView.OnEventListe
                 //                    showSendEmailDialog();
                 //                }
 
-                getEventListener().onShowEmailDialogClick();
+                getEventListener().onEmailClick();
             }
         });
     }
@@ -220,14 +220,14 @@ public class StayReceiptView extends BaseDialogView<StayReceiptView.OnEventListe
     }
 
     @Override
-    public void updateFullScreenStatus(boolean isUseFullScreen)
+    public void setFullScreenMode(boolean isFullScreenMode)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        if (isUseFullScreen)
+        if (isFullScreenMode == true)
         {
             getViewDataBinding().toolbarView.setVisibility(View.GONE);
             getViewDataBinding().bookingStateLayout.setVisibility(View.GONE);

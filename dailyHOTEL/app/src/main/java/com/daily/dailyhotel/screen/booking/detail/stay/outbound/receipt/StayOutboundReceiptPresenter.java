@@ -26,7 +26,7 @@ public class StayOutboundReceiptPresenter extends BaseExceptionPresenter<StayOut
     private StayOutboundReceiptRemoteImpl mStayOutboundReceiptRemoteImpl;
     private int mBookingIndex;
     private StayOutboundReceipt mStayOutboundReceipt;
-    private boolean mFullScreenEnabled;
+    private boolean mIsFullScreenMode;
 
     public interface StayOutboundReceiptAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -224,10 +224,10 @@ public class StayOutboundReceiptPresenter extends BaseExceptionPresenter<StayOut
     }
 
     @Override
-    public void onFullScreenClick()
+    public void onScreenClick()
     {
-        mFullScreenEnabled = !mFullScreenEnabled;
-        getViewInterface().setFullScreenEnabled(mFullScreenEnabled);
+        mIsFullScreenMode = !mIsFullScreenMode;
+        getViewInterface().setFullScreenMode(mIsFullScreenMode);
     }
 
     void setStayOutboundReceipt(StayOutboundReceipt stayOutboundReceipt)

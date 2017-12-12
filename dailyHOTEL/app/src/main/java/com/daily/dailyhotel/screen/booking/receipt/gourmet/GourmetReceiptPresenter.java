@@ -32,7 +32,7 @@ public class GourmetReceiptPresenter extends BaseExceptionPresenter<GourmetRecei
 
     private ReceiptRemoteImpl mReceiptRemoteImpl;
 
-    private boolean mIsFullScreen;
+    private boolean mIsFullScreenMode;
     private String mAggregationId;
     private int mReservationIndex;
 
@@ -61,10 +61,10 @@ public class GourmetReceiptPresenter extends BaseExceptionPresenter<GourmetRecei
 
         mReceiptRemoteImpl = new ReceiptRemoteImpl(getActivity());
 
-        mIsFullScreen = false;
+        mIsFullScreenMode = false;
         if (getViewInterface() != null)
         {
-            getViewInterface().updateFullScreenStatus(mIsFullScreen);
+            getViewInterface().setFullScreenMode(mIsFullScreenMode);
         }
 
         setRefresh(true);
@@ -145,10 +145,10 @@ public class GourmetReceiptPresenter extends BaseExceptionPresenter<GourmetRecei
     @Override
     public boolean onBackPressed()
     {
-        if (getViewInterface() != null && mIsFullScreen == true)
+        if (getViewInterface() != null && mIsFullScreenMode == true)
         {
-            mIsFullScreen = false;
-            getViewInterface().updateFullScreenStatus(mIsFullScreen);
+            mIsFullScreenMode = false;
+            getViewInterface().setFullScreenMode(mIsFullScreenMode);
             return true;
         }
 
@@ -231,7 +231,7 @@ public class GourmetReceiptPresenter extends BaseExceptionPresenter<GourmetRecei
     }
 
     @Override
-    public void onShowEmailDialogClick()
+    public void onEmailClick()
     {
         if (mReservationIndex < 0 && DailyTextUtils.isTextEmpty(mAggregationId) == true)
         {
@@ -291,15 +291,15 @@ public class GourmetReceiptPresenter extends BaseExceptionPresenter<GourmetRecei
     }
 
     @Override
-    public void onReceiptLayoutClick()
+    public void onScreenClick()
     {
         if (getViewInterface() == null)
         {
             return;
         }
 
-        mIsFullScreen = !mIsFullScreen;
+        mIsFullScreenMode = !mIsFullScreenMode;
 
-        getViewInterface().updateFullScreenStatus(mIsFullScreen);
+        getViewInterface().setFullScreenMode(mIsFullScreenMode);
     }
 }

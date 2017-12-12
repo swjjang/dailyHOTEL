@@ -31,7 +31,7 @@ public class StayOutboundReceiptView extends BaseDialogView<StayOutboundReceiptV
 
         void onSendEmailClick(String email);
 
-        void onFullScreenClick();
+        void onScreenClick();
     }
 
     public StayOutboundReceiptView(BaseActivity baseActivity, StayOutboundReceiptView.OnEventListener listener)
@@ -187,15 +187,20 @@ public class StayOutboundReceiptView extends BaseDialogView<StayOutboundReceiptV
             @Override
             public void onClick(View v)
             {
-                getEventListener().onFullScreenClick();
+                getEventListener().onScreenClick();
             }
         });
     }
 
     @Override
-    public void setFullScreenEnabled(boolean enabled)
+    public void setFullScreenMode(boolean isFullScreenMode)
     {
-        if (enabled)
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (isFullScreenMode == true)
         {
             getViewDataBinding().toolbarView.setVisibility(View.GONE);
 
