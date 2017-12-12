@@ -476,7 +476,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
                 if (mIsUsedMultiTransition == true)
                 {
-                    if(lock() == true)
+                    if (lock() == true)
                     {
                         return true;
                     }
