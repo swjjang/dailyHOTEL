@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.daily.base.exception.BaseException;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.domain.StayInterface;
 import com.daily.dailyhotel.entity.ReviewScores;
 import com.daily.dailyhotel.entity.StayAreaGroup;
@@ -14,6 +15,8 @@ import com.daily.dailyhotel.entity.TrueReviews;
 import com.daily.dailyhotel.entity.TrueVR;
 import com.daily.dailyhotel.entity.WishResult;
 import com.daily.dailyhotel.repository.remote.model.TrueVRData;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
@@ -39,7 +42,86 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
         final String API = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales"//
             : "NzEkOSQ1MyQ1MiQ2OCQ3MyQ3MSQ4MCQ4MCQ4OSQ3MiQ3NiQyJDUwJDM1JDEwJA==$ODWg1NUYzOPWTg1ODczQzU2ODM0N0M5RDVDNDDRBNTNCMjAzOTVEQNDYUyPRDAxNjc2QkI4RPDBGQDNVPjkM1RJMUE0RTYzNNTdCQg==$";
 
-        return mDailyMobileService.getStayListCountByFilter(Crypto.getUrlDecoderEx(API), queryMap, abTestType) //
+        StringBuffer stringBuffer = new StringBuffer(1024);
+        stringBuffer.append('?');
+
+        for (Map.Entry<String, Object> entry : queryMap.entrySet())
+        {
+            String entryKey = entry.getKey();
+            if (DailyTextUtils.isTextEmpty(entryKey) == true)
+            {
+                continue;
+            }
+
+            Object entryValue = entry.getValue();
+            if (entryValue == null)
+            {
+                continue;
+            }
+
+            if (entryValue instanceof List)
+            {
+                for (Object valueObject : (List) entryValue)
+                {
+                    String convertedEntryValue = valueObject.toString();
+
+                    if (DailyTextUtils.isTextEmpty(convertedEntryValue) == true)
+                    {
+                        continue;
+                    }
+
+                    if (stringBuffer.length() > 1)
+                    {
+                        stringBuffer.append('&');
+                    }
+
+                    stringBuffer.append(entryKey);
+                    stringBuffer.append("=");
+                    stringBuffer.append(convertedEntryValue);
+                }
+            } else
+            {
+                String convertedEntryValue = entryValue.toString();
+
+                if (DailyTextUtils.isTextEmpty(convertedEntryValue) == true)
+                {
+                    continue;
+                }
+
+                if (stringBuffer.length() > 1)
+                {
+                    stringBuffer.append('&');
+                }
+
+                stringBuffer.append(entryKey);
+                stringBuffer.append("=");
+                stringBuffer.append(convertedEntryValue);
+            }
+        }
+
+        if (DailyTextUtils.isTextEmpty(abTestType) == false)
+        {
+            if (stringBuffer.length() > 1)
+            {
+                stringBuffer.append('&');
+            }
+
+            stringBuffer.append("abtest");
+            stringBuffer.append("=");
+            stringBuffer.append(abTestType);
+        }
+
+        String baseUrl;
+
+        if (Constants.DEBUG == true)
+        {
+            baseUrl = DailyPreference.getInstance(mContext).getBaseUrl();
+        } else
+        {
+            baseUrl = Crypto.getUrlDecoderEx(Setting.getServerUrl());
+        }
+
+        return mDailyMobileService.getStayListCountByFilter(baseUrl + Crypto.getUrlDecoderEx(API) + stringBuffer.toString()) //
             .subscribeOn(Schedulers.io()).map(baseDto ->
             {
                 StayFilterCount stayFilterCount;

@@ -15,7 +15,7 @@
             android:layout_weight="1"/>
 
         <ImageView
-            android:id="@+id/minusPersonView"
+            android:id="@+id/minusPersonImageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -23,7 +23,7 @@
             app:srcCompat="@drawable/f_ic_hotel_02_pax_01"/>
 
         <com.daily.base.widget.DailyTextView
-            android:id="@+id/personCountView"
+            android:id="@+id/personCountTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -32,7 +32,7 @@
             android:textSize="13dp"/>
 
         <ImageView
-            android:id="@+id/plusPersonView"
+            android:id="@+id/plusPersonImageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"

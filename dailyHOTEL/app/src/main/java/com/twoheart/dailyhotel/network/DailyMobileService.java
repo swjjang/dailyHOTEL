@@ -92,6 +92,7 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
+import retrofit2.http.QueryName;
 import retrofit2.http.Url;
 
 public interface DailyMobileService
@@ -700,10 +701,8 @@ public interface DailyMobileService
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("{mobileAPI}")
-    Observable<BaseDto<StayFilterCountData>> getStayListCountByFilter(@Path(value = "mobileAPI", encoded = true) String mobileAPI//
-        , @QueryMap Map<String, Object> queryMap//
-        , @Query("abtest") String abtest);
+    @GET()
+    Observable<BaseDto<StayFilterCountData>> getStayListCountByFilter(@Url String url);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")

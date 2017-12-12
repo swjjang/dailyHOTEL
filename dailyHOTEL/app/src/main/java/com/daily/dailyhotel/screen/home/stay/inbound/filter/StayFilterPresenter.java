@@ -1,14 +1,21 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.filter;
 
 
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.View;
 
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.exception.DuplicateRunException;
+import com.daily.base.exception.PermissionException;
+import com.daily.base.exception.ProviderException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Area;
 import com.daily.dailyhotel.entity.Category;
@@ -21,14 +28,19 @@ import com.daily.dailyhotel.parcel.StayFitlerParcel;
 import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
+import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 
@@ -38,7 +50,9 @@ import io.reactivex.functions.Consumer;
  */
 public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivity, StayFilterInterface> implements StayFilterView.OnEventListener
 {
-    private StayFitlerAnalyticsInterface mAnalytics;
+    private static final int CLICK_FILTER_DELAY_TIME = 500;
+
+    private StayFilterAnalyticsInterface mAnalytics;
 
     StayRemoteImpl mStayRemoteImpl;
 
@@ -51,7 +65,9 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     String mSearchWord;
     Constants.ViewType mViewType;
 
-    public interface StayFitlerAnalyticsInterface extends BaseAnalyticsInterface
+    DailyLocationExFactory mDailyLocationExFactory;
+
+    public interface StayFilterAnalyticsInterface extends BaseAnalyticsInterface
     {
     }
 
@@ -82,7 +98,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     @Override
     public void setAnalytics(BaseAnalyticsInterface analytics)
     {
-        mAnalytics = (StayFitlerAnalyticsInterface) analytics;
+        mAnalytics = (StayFilterAnalyticsInterface) analytics;
     }
 
     @Override
@@ -146,15 +162,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     {
         getViewInterface().setToolbarTitle(getString(R.string.activity_curation_title));
 
-        getViewInterface().setSortLayout(mStayFilter.sortType);
-
-        getViewInterface().setSortLayoutEnabled(mViewType == Constants.ViewType.LIST);
-
-        getViewInterface().setPerson(mStayFilter.person);
-
-        getViewInterface().setAmenitiesCheck(mStayFilter.flagAmenitiesFilters);
-
-        getViewInterface().setAmenitiesCheck(mStayFilter.flagRoomAmenitiesFilters);
+        notifyFilterChanged();
     }
 
     @Override
@@ -190,6 +198,11 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     {
         // 꼭 호출해 주세요.
         super.onDestroy();
+
+        if (mDailyLocationExFactory != null)
+        {
+            mDailyLocationExFactory.stopLocationMeasure();
+        }
     }
 
     @Override
@@ -214,6 +227,30 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         unLockAll();
+
+        switch (requestCode)
+        {
+            case StayFilterActivity.REQUEST_CODE_PERMISSION_MANAGER:
+            {
+                switch (resultCode)
+                {
+                    case Activity.RESULT_OK:
+                        onCheckedChangedSort(StayFilter.SortType.DISTANCE);
+                        break;
+
+                    default:
+                        mStayFilter.sortType = StayFilter.SortType.DEFAULT;
+
+                        notifyFilterChanged();
+                        break;
+                }
+                break;
+            }
+
+            case StayFilterActivity.REQUEST_CODE_SETTING_LOCATION:
+                onCheckedChangedSort(StayFilter.SortType.DISTANCE);
+                break;
+        }
     }
 
     @Override
@@ -227,37 +264,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
         setRefresh(false);
         screenLock(showProgress);
 
-        getViewInterface().setConfirmText(getString(R.string.label_searching));
-
-        addCompositeDisposable(mStayRemoteImpl.getListCountByFilter(getQueryMap(), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayFilterCount>()
-        {
-            @Override
-            public void accept(StayFilterCount stayFilterCount) throws Exception
-            {
-                if (stayFilterCount.searchCount <= 0)
-                {
-                    getViewInterface().setConfirmText(getString(R.string.label_hotel_filter_result_empty));
-                    getViewInterface().setConfirmEnabled(false);
-                } else if (stayFilterCount.searchCount < stayFilterCount.searchCountOfMax)
-                {
-                    getViewInterface().setConfirmText(getString(R.string.label_hotel_filter_result_count, stayFilterCount.searchCount));
-                    getViewInterface().setConfirmEnabled(true);
-                } else
-                {
-                    getViewInterface().setConfirmText(getString(R.string.label_hotel_filter_result_over_count, stayFilterCount.searchCountOfMax));
-                    getViewInterface().setConfirmEnabled(true);
-                }
-
-                unLockAll();
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(Throwable throwable) throws Exception
-            {
-                onHandleError(throwable);
-            }
-        }));
+        onRefresh(0);
     }
 
     @Override
@@ -267,33 +274,183 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     }
 
     @Override
+    public void onMinusPersonClick()
+    {
+        if (--mStayFilter.person < StayFilter.PERSON_COUNT_OF_MIN)
+        {
+            mStayFilter.person = StayFilter.PERSON_COUNT_OF_MIN;
+        }
+
+        getViewInterface().setPerson(mStayFilter.person, StayFilter.PERSON_COUNT_OF_MAX, StayFilter.PERSON_COUNT_OF_MIN);
+
+        onRefresh(CLICK_FILTER_DELAY_TIME);
+    }
+
+    @Override
+    public void onPlusPersonClick()
+    {
+        if (++mStayFilter.person > StayFilter.PERSON_COUNT_OF_MAX)
+        {
+            mStayFilter.person = StayFilter.PERSON_COUNT_OF_MAX;
+        }
+
+        getViewInterface().setPerson(mStayFilter.person, StayFilter.PERSON_COUNT_OF_MAX, StayFilter.PERSON_COUNT_OF_MIN);
+
+        onRefresh(CLICK_FILTER_DELAY_TIME);
+    }
+
+    @Override
     public void onResetClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
+        mStayFilter.resetFilter();
+
+        notifyFilterChanged();
     }
 
     @Override
     public void onConfirmClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
+        Intent intent = new Intent();
+        intent.putExtra(StayFilterActivity.INTENT_EXTRA_DATA_STAY_FILTER, new StayFitlerParcel(mStayFilter));
+        setResult(Activity.RESULT_OK, intent);
     }
 
     @Override
     public void onCheckedChangedSort(StayFilter.SortType sortType)
     {
+        if (sortType == null)
+        {
+            return;
+        }
 
+        if (sortType == StayFilter.SortType.DISTANCE)
+        {
+            if (lock() == true)
+            {
+                return;
+            }
+
+            screenLock(true);
+
+            addCompositeDisposable(searchMyLocation().subscribe(new Consumer<Location>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull Location location) throws Exception
+                {
+                    mStayFilter.sortType = sortType;
+
+                    mLocation = location;
+
+                    onRefresh(CLICK_FILTER_DELAY_TIME);
+
+                    unLockAll();
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                {
+                    unLockAll();
+
+                }
+            }));
+        } else
+        {
+            mStayFilter.sortType = sortType;
+        }
     }
 
     @Override
-    public void onCheckedChangedAmenities(int falg)
+    public void onCheckedChangedBedType(int flag)
     {
+        mStayFilter.flagBedTypeFilters ^= flag;
 
+        getViewInterface().setBedTypeCheck(mStayFilter.flagBedTypeFilters);
+
+        onRefresh(CLICK_FILTER_DELAY_TIME);
+    }
+
+    @Override
+    public void onCheckedChangedAmenities(int flag)
+    {
+        mStayFilter.flagAmenitiesFilters ^= flag;
+
+        getViewInterface().setAmenitiesCheck(mStayFilter.flagAmenitiesFilters);
+
+        onRefresh(CLICK_FILTER_DELAY_TIME);
     }
 
     @Override
     public void onCheckedChangedRoomAmenities(int flag)
     {
+        mStayFilter.flagRoomAmenitiesFilters ^= flag;
 
+        getViewInterface().setRoomAmenitiesCheck(mStayFilter.flagRoomAmenitiesFilters);
+
+        onRefresh(CLICK_FILTER_DELAY_TIME);
+    }
+
+    void notifyFilterChanged()
+    {
+        if (mStayFilter == null)
+        {
+            return;
+        }
+
+        getViewInterface().setSortLayout(mStayFilter.sortType);
+        getViewInterface().setSortLayoutEnabled(mViewType == Constants.ViewType.LIST);
+        getViewInterface().setPerson(mStayFilter.person, StayFilter.PERSON_COUNT_OF_MAX, StayFilter.PERSON_COUNT_OF_MIN);
+        getViewInterface().setBedTypeCheck(mStayFilter.flagBedTypeFilters);
+        getViewInterface().setAmenitiesCheck(mStayFilter.flagAmenitiesFilters);
+        getViewInterface().setAmenitiesCheck(mStayFilter.flagRoomAmenitiesFilters);
+    }
+
+    void onRefresh(int delay)
+    {
+        clearCompositeDisposable();
+
+        getViewInterface().setConfirmText(getString(R.string.label_searching));
+
+        addCompositeDisposable(mStayRemoteImpl.getListCountByFilter(getQueryMap(), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType())//
+            .delaySubscription(delay, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayFilterCount>()
+            {
+                @Override
+                public void accept(StayFilterCount stayFilterCount) throws Exception
+                {
+                    if (stayFilterCount.searchCount <= 0)
+                    {
+                        getViewInterface().setConfirmText(getString(R.string.label_hotel_filter_result_empty));
+                        getViewInterface().setConfirmEnabled(false);
+                    } else if (stayFilterCount.searchCount < stayFilterCount.searchCountOfMax)
+                    {
+                        getViewInterface().setConfirmText(getString(R.string.label_hotel_filter_result_count, stayFilterCount.searchCount));
+                        getViewInterface().setConfirmEnabled(true);
+                    } else
+                    {
+                        getViewInterface().setConfirmText(getString(R.string.label_hotel_filter_result_over_count, stayFilterCount.searchCountOfMax));
+                        getViewInterface().setConfirmEnabled(true);
+                    }
+
+                    unLockAll();
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    onHandleError(throwable);
+                }
+            }));
     }
 
     Map<String, Object> getQueryMap()
@@ -411,11 +568,15 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
         // longitude
         // latitude
         // radius
-        if (mLocation != null && mLocation.getLatitude() != 0 && mLocation.getLongitude() != 0 && mRadius > 0)
+        if (mStayFilter.sortType == StayFilter.SortType.DISTANCE && mLocation != null)
         {
             queryMap.put("latitude", mLocation.getLatitude());
             queryMap.put("longitude", mLocation.getLongitude());
-            queryMap.put("radius", mRadius);
+
+            if (mRadius > 0)
+            {
+                queryMap.put("radius", mRadius);
+            }
         }
 
         // page
@@ -426,5 +587,140 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
         queryMap.put("details", false);
 
         return queryMap;
+    }
+
+    private Observable<Location> searchMyLocation()
+    {
+        if (mDailyLocationExFactory == null)
+        {
+            mDailyLocationExFactory = new DailyLocationExFactory(getActivity());
+        }
+
+        if (mDailyLocationExFactory.measuringLocation() == true)
+        {
+            return null;
+        }
+
+        return new Observable<Location>()
+        {
+            @Override
+            protected void subscribeActual(Observer<? super Location> observer)
+            {
+                mDailyLocationExFactory.checkLocationMeasure(new DailyLocationExFactory.OnCheckLocationListener()
+                {
+                    @Override
+                    public void onRequirePermission()
+                    {
+                        observer.onError(new PermissionException());
+                    }
+
+                    @Override
+                    public void onFailed()
+                    {
+                        observer.onError(new Exception());
+                    }
+
+                    @Override
+                    public void onProviderDisabled()
+                    {
+                        observer.onError(new ProviderException());
+                    }
+
+                    @Override
+                    public void onProviderEnabled()
+                    {
+                        mDailyLocationExFactory.startLocationMeasure(new DailyLocationExFactory.OnLocationListener()
+                        {
+                            @Override
+                            public void onFailed()
+                            {
+                                observer.onError(new Exception());
+                            }
+
+                            @Override
+                            public void onAlreadyRun()
+                            {
+                                observer.onError(new DuplicateRunException());
+                            }
+
+                            @Override
+                            public void onLocationChanged(Location location)
+                            {
+                                unLockAll();
+
+                                mDailyLocationExFactory.stopLocationMeasure();
+
+                                if (location == null)
+                                {
+                                    observer.onError(new NullPointerException());
+                                } else
+                                {
+                                    observer.onNext(location);
+                                    observer.onComplete();
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        }.doOnError(new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+            {
+                unLockAll();
+
+                if (throwable instanceof PermissionException)
+                {
+                    Intent intent = PermissionManagerActivity.newInstance(getActivity(), PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+                    startActivityForResult(intent, StayFilterActivity.REQUEST_CODE_PERMISSION_MANAGER);
+                } else if (throwable instanceof ProviderException)
+                {
+                    // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
+                    getViewInterface().showSimpleDialog(//
+                        getString(R.string.dialog_title_used_gps), getString(R.string.dialog_msg_used_gps), //
+                        getString(R.string.dialog_btn_text_dosetting), //
+                        getString(R.string.dialog_btn_text_cancel), //
+                        new View.OnClickListener()//
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                startActivityForResult(intent, StayFilterActivity.REQUEST_CODE_SETTING_LOCATION);
+                            }
+                        }, new View.OnClickListener()//
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
+
+                                onCheckedChangedSort(StayFilter.SortType.DEFAULT);
+                                getViewInterface().setSortLayout(mStayFilter.sortType);
+                            }
+                        }, new DialogInterface.OnCancelListener()
+                        {
+                            @Override
+                            public void onCancel(DialogInterface dialog)
+                            {
+                                DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
+
+                                onCheckedChangedSort(StayFilter.SortType.DEFAULT);
+                                getViewInterface().setSortLayout(mStayFilter.sortType);
+                            }
+                        }, null, true);
+                } else if (throwable instanceof DuplicateRunException)
+                {
+
+                } else
+                {
+                    DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
+
+                    onCheckedChangedSort(StayFilter.SortType.DEFAULT);
+                    getViewInterface().setSortLayout(mStayFilter.sortType);
+                }
+            }
+        });
     }
 }

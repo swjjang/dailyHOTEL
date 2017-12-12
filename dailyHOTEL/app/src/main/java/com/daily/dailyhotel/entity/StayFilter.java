@@ -5,9 +5,9 @@ import java.util.List;
 
 public class StayFilter
 {
-    public static final int MIN_PERSON = 1;
-    public static final int DEFAULT_PERSON = 2;
-    public static final int MAX_PERSON = 10;
+    public static final int PERSON_COUNT_OF_MIN = 1;
+    public static final int PERSON_COUNT_OF_DEFAULT = 2;
+    public static final int PERSON_COUNT_OF_MAX = 10;
 
     public static final int FLAG_BED_NONE = 0x00;
     public static final int FLAG_BED_DOUBLE = 0x01;
@@ -36,13 +36,12 @@ public class StayFilter
     public static final int FLAG_ROOM_AMENITIES_KARAOKE = FLAG_ROOM_AMENITIES_WIFI << 8;
     public static final int FLAG_ROOM_AMENITIES_PARTY_ROOM = FLAG_ROOM_AMENITIES_WIFI << 9;
 
-    public int person = DEFAULT_PERSON;
+    public int person = PERSON_COUNT_OF_DEFAULT;
     public int flagBedTypeFilters;
     public int flagAmenitiesFilters; // luxuries
     public int flagRoomAmenitiesFilters; // room luxuries
 
-    public SortType defaultSortType = SortType.DEFAULT;
-    public SortType sortType = defaultSortType;
+    public SortType sortType = SortType.DEFAULT;
 
     public enum SortType
     {
@@ -55,11 +54,20 @@ public class StayFilter
 
     public boolean isDefaultFilter()
     {
-        return (sortType == defaultSortType//
-            && person == DEFAULT_PERSON//
+        return (sortType == SortType.DEFAULT//
+            && person == PERSON_COUNT_OF_DEFAULT//
             && flagBedTypeFilters == FLAG_BED_NONE//
             && flagAmenitiesFilters == FLAG_AMENITIES_NONE//
             && flagRoomAmenitiesFilters == FLAG_ROOM_AMENITIES_NONE);
+    }
+
+    public void resetFilter()
+    {
+        person = PERSON_COUNT_OF_DEFAULT;
+        flagBedTypeFilters = FLAG_BED_NONE;
+        flagAmenitiesFilters = FLAG_AMENITIES_NONE;
+        flagRoomAmenitiesFilters = FLAG_ROOM_AMENITIES_NONE;
+        sortType = SortType.DEFAULT;
     }
 
     public List<String> getBedTypeList()

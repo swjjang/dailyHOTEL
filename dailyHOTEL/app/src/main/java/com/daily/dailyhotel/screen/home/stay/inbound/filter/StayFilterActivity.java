@@ -23,6 +23,9 @@ import java.util.ArrayList;
  */
 public class StayFilterActivity extends BaseActivity<StayFilterPresenter>
 {
+    static final int REQUEST_CODE_PERMISSION_MANAGER = 10000;
+    static final int REQUEST_CODE_SETTING_LOCATION = 10001;
+
     static final String INTENT_EXTRA_DATA_VIEW_TYPE = "viewType";
     static final String INTENT_EXTRA_DATA_STAY_FILTER = "stayFilter";
     static final String INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME = "checkInDateTime";

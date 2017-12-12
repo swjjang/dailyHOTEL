@@ -38,7 +38,6 @@ public class StayFitlerParcel implements Parcelable
         dest.writeInt(mStayFilter.flagBedTypeFilters);
         dest.writeInt(mStayFilter.flagAmenitiesFilters);
         dest.writeInt(mStayFilter.flagRoomAmenitiesFilters);
-        dest.writeString(mStayFilter.defaultSortType == null ? null : mStayFilter.defaultSortType.name());
         dest.writeString(mStayFilter.sortType == null ? null : mStayFilter.sortType.name());
     }
 
@@ -50,13 +49,6 @@ public class StayFitlerParcel implements Parcelable
         mStayFilter.flagBedTypeFilters = in.readInt();
         mStayFilter.flagAmenitiesFilters = in.readInt();
         mStayFilter.flagRoomAmenitiesFilters = in.readInt();
-
-        String defaultSortType = in.readString();
-
-        if (DailyTextUtils.isTextEmpty(defaultSortType) == false)
-        {
-            mStayFilter.defaultSortType = StayFilter.SortType.valueOf(defaultSortType);
-        }
 
         String sortType = in.readString();
 

@@ -9,7 +9,9 @@ public interface StayFilterInterface extends BaseDialogViewInterface
 
     void setSortLayoutEnabled(boolean enabled);
 
-    void setPerson(int person);
+    void setPerson(int person, int personCountOfMax, int personCountOfMin);
+
+    void setBedTypeCheck(int flagBedTypeFilters);
 
     void setAmenitiesCheck(int flagAmenitiesFilters);
 

@@ -1,11 +1,13 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.filter;
 
 import android.view.View;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
+import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.entity.StayFilter;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayFilterDataBinding;
@@ -15,11 +17,17 @@ public class StayFilterView extends BaseDialogView<StayFilterView.OnEventListene
 {
     public interface OnEventListener extends OnBaseEventListener
     {
+        void onMinusPersonClick();
+
+        void onPlusPersonClick();
+
         void onResetClick();
 
         void onConfirmClick();
 
         void onCheckedChangedSort(StayFilter.SortType sortType);
+
+        void onCheckedChangedBedType(int flag);
 
         void onCheckedChangedAmenities(int flag);
 
@@ -44,6 +52,8 @@ public class StayFilterView extends BaseDialogView<StayFilterView.OnEventListene
         EdgeEffectColor.setEdgeGlowColor(getViewDataBinding().nestedScrollView, getColor(R.color.default_over_scroll_edge));
 
         initSortLayout(viewDataBinding);
+        initPersonLayout(viewDataBinding);
+        initBedTypeLayout(viewDataBinding);
         initAmenitiesLayout(viewDataBinding);
         initRoomAmenitiesLayout(viewDataBinding);
 
@@ -73,23 +83,23 @@ public class StayFilterView extends BaseDialogView<StayFilterView.OnEventListene
         switch (sortType)
         {
             case DEFAULT:
-                getViewDataBinding().sortLayout.sortRadioGroup.check(R.id.regionRadioButton);
+                getViewDataBinding().sortInclude.sortRadioGroup.check(R.id.regionRadioButton);
                 break;
 
             case DISTANCE:
-                getViewDataBinding().sortLayout.sortRadioGroup.check(R.id.distanceRadioButton);
+                getViewDataBinding().sortInclude.sortRadioGroup.check(R.id.distanceRadioButton);
                 break;
 
             case LOW_PRICE:
-                getViewDataBinding().sortLayout.sortRadioGroup.check(R.id.lowPriceRadioButton);
+                getViewDataBinding().sortInclude.sortRadioGroup.check(R.id.lowPriceRadioButton);
                 break;
 
             case HIGH_PRICE:
-                getViewDataBinding().sortLayout.sortRadioGroup.check(R.id.highPriceRadioButton);
+                getViewDataBinding().sortInclude.sortRadioGroup.check(R.id.highPriceRadioButton);
                 break;
 
             case SATISFACTION:
-                getViewDataBinding().sortLayout.sortRadioGroup.check(R.id.satisfactionRadioButton);
+                getViewDataBinding().sortInclude.sortRadioGroup.check(R.id.satisfactionRadioButton);
                 break;
         }
     }
@@ -102,47 +112,62 @@ public class StayFilterView extends BaseDialogView<StayFilterView.OnEventListene
             return;
         }
 
-        getViewDataBinding().sortLayout.sortRadioGroup.setEnabled(enabled);
+        getViewDataBinding().sortInclude.sortRadioGroup.setEnabled(enabled);
 
-        int childCount = getViewDataBinding().sortLayout.sortRadioGroup.getChildCount();
+        int childCount = getViewDataBinding().sortInclude.sortRadioGroup.getChildCount();
 
         for (int i = 0; i < childCount; i++)
         {
-            getViewDataBinding().sortLayout.sortRadioGroup.getChildAt(i).setEnabled(enabled);
+            getViewDataBinding().sortInclude.sortRadioGroup.getChildAt(i).setEnabled(enabled);
         }
     }
 
     @Override
-    public void setPerson(int person)
+    public void setPerson(int person, int personCountOfMax, int personCountOfMin)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        if (person < StayFilter.MIN_PERSON)
+        if (person < personCountOfMin)
         {
-            person = StayFilter.MIN_PERSON;
-        } else if (person > StayFilter.MAX_PERSON)
+            person = personCountOfMin;
+        } else if (person > personCountOfMax)
         {
-            person = StayFilter.MAX_PERSON;
+            person = personCountOfMax;
         }
 
-        getViewDataBinding().personLayout.personCountView.setText(getString(R.string.label_more_person, person));
+        getViewDataBinding().personInclude.personCountTextView.setText(getString(R.string.label_more_person, person));
 
-        if (person == StayFilter.MIN_PERSON)
+        if (person == StayFilter.PERSON_COUNT_OF_MIN)
         {
-            getViewDataBinding().personLayout.minusPersonView.setEnabled(false);
-            getViewDataBinding().personLayout.plusPersonView.setEnabled(true);
-        } else if (person == StayFilter.MAX_PERSON)
+            getViewDataBinding().personInclude.minusPersonImageView.setEnabled(false);
+            getViewDataBinding().personInclude.plusPersonImageView.setEnabled(true);
+        } else if (person == StayFilter.PERSON_COUNT_OF_MAX)
         {
-            getViewDataBinding().personLayout.minusPersonView.setEnabled(true);
-            getViewDataBinding().personLayout.plusPersonView.setEnabled(false);
+            getViewDataBinding().personInclude.minusPersonImageView.setEnabled(true);
+            getViewDataBinding().personInclude.plusPersonImageView.setEnabled(false);
         } else
         {
-            getViewDataBinding().personLayout.minusPersonView.setEnabled(true);
-            getViewDataBinding().personLayout.plusPersonView.setEnabled(true);
+            getViewDataBinding().personInclude.minusPersonImageView.setEnabled(true);
+            getViewDataBinding().personInclude.plusPersonImageView.setEnabled(true);
         }
+    }
+
+    @Override
+    public void setBedTypeCheck(int flagBedTypeFilters)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().bedTypeInclude.doubleBedTextView.setSelected((flagBedTypeFilters & StayFilter.FLAG_BED_DOUBLE) == StayFilter.FLAG_BED_DOUBLE);
+
+        getViewDataBinding().bedTypeInclude.twinBedTextView.setSelected((flagBedTypeFilters & StayFilter.FLAG_BED_TWIN) == StayFilter.FLAG_BED_TWIN);
+
+        getViewDataBinding().bedTypeInclude.heatedFloorsTextView.setSelected((flagBedTypeFilters & StayFilter.FLAG_BED_HEATEDFLOORS) == StayFilter.FLAG_BED_HEATEDFLOORS);
     }
 
     @Override
@@ -153,21 +178,21 @@ public class StayFilterView extends BaseDialogView<StayFilterView.OnEventListene
             return;
         }
 
-        getViewDataBinding().amenityLayout.parkingTextView.setSelected((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_PARKING) == StayFilter.FLAG_AMENITIES_PARKING);
+        getViewDataBinding().amenityInclude.parkingTextView.setSelected((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_PARKING) == StayFilter.FLAG_AMENITIES_PARKING);
 
-        getViewDataBinding().amenityLayout.bbqTextView.setSelected((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_SHARED_BBQ) == StayFilter.FLAG_AMENITIES_SHARED_BBQ);
+        getViewDataBinding().amenityInclude.bbqTextView.setSelected((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_SHARED_BBQ) == StayFilter.FLAG_AMENITIES_SHARED_BBQ);
 
-        getViewDataBinding().amenityLayout.poolTextView.setSelected((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_POOL) == StayFilter.FLAG_AMENITIES_POOL);
+        getViewDataBinding().amenityInclude.poolTextView.setSelected((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_POOL) == StayFilter.FLAG_AMENITIES_POOL);
 
-        getViewDataBinding().amenityLayout.businessCenterTextView.setSelected((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_BUSINESS_CENTER) == StayFilter.FLAG_AMENITIES_BUSINESS_CENTER);
+        getViewDataBinding().amenityInclude.businessCenterTextView.setSelected((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_BUSINESS_CENTER) == StayFilter.FLAG_AMENITIES_BUSINESS_CENTER);
 
-        getViewDataBinding().amenityLayout.fitnessTextView.setSelected((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_FITNESS) == StayFilter.FLAG_AMENITIES_FITNESS);
+        getViewDataBinding().amenityInclude.fitnessTextView.setSelected((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_FITNESS) == StayFilter.FLAG_AMENITIES_FITNESS);
 
-        getViewDataBinding().amenityLayout.saunaTextView.setSelected((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_SAUNA) == StayFilter.FLAG_AMENITIES_SAUNA);
+        getViewDataBinding().amenityInclude.saunaTextView.setSelected((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_SAUNA) == StayFilter.FLAG_AMENITIES_SAUNA);
 
-        getViewDataBinding().amenityLayout.petTextView.setSelected((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_PET) == StayFilter.FLAG_AMENITIES_PET);
+        getViewDataBinding().amenityInclude.petTextView.setSelected((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_PET) == StayFilter.FLAG_AMENITIES_PET);
 
-        getViewDataBinding().amenityLayout.kidsPlayTextView.setSelected((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_KIDS_PLAY_ROOM) == StayFilter.FLAG_AMENITIES_KIDS_PLAY_ROOM);
+        getViewDataBinding().amenityInclude.kidsPlayTextView.setSelected((flagAmenitiesFilters & StayFilter.FLAG_AMENITIES_KIDS_PLAY_ROOM) == StayFilter.FLAG_AMENITIES_KIDS_PLAY_ROOM);
     }
 
     @Override
@@ -178,25 +203,25 @@ public class StayFilterView extends BaseDialogView<StayFilterView.OnEventListene
             return;
         }
 
-        getViewDataBinding().roomAmenityLayout.breakfastTextView.setSelected((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_BREAKFAST) == StayFilter.FLAG_ROOM_AMENITIES_BREAKFAST);
+        getViewDataBinding().roomAmenityInclude.breakfastTextView.setSelected((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_BREAKFAST) == StayFilter.FLAG_ROOM_AMENITIES_BREAKFAST);
 
-        getViewDataBinding().roomAmenityLayout.wifiTextView.setSelected((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_WIFI) == StayFilter.FLAG_ROOM_AMENITIES_WIFI);
+        getViewDataBinding().roomAmenityInclude.wifiTextView.setSelected((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_WIFI) == StayFilter.FLAG_ROOM_AMENITIES_WIFI);
 
-        getViewDataBinding().roomAmenityLayout.cookingTextView.setSelected((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_COOKING) == StayFilter.FLAG_ROOM_AMENITIES_COOKING);
+        getViewDataBinding().roomAmenityInclude.cookingTextView.setSelected((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_COOKING) == StayFilter.FLAG_ROOM_AMENITIES_COOKING);
 
-        getViewDataBinding().roomAmenityLayout.pcTextView.setSelected((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_PC) == StayFilter.FLAG_ROOM_AMENITIES_PC);
+        getViewDataBinding().roomAmenityInclude.pcTextView.setSelected((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_PC) == StayFilter.FLAG_ROOM_AMENITIES_PC);
 
-        getViewDataBinding().roomAmenityLayout.bathTextView.setSelected((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_BATHTUB) == StayFilter.FLAG_ROOM_AMENITIES_BATHTUB);
+        getViewDataBinding().roomAmenityInclude.bathTextView.setSelected((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_BATHTUB) == StayFilter.FLAG_ROOM_AMENITIES_BATHTUB);
 
-        getViewDataBinding().roomAmenityLayout.tvTextView.setSelected((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_TV) == StayFilter.FLAG_ROOM_AMENITIES_TV);
+        getViewDataBinding().roomAmenityInclude.tvTextView.setSelected((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_TV) == StayFilter.FLAG_ROOM_AMENITIES_TV);
 
-        getViewDataBinding().roomAmenityLayout.spaTextView.setSelected((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_SPA_WHIRLPOOL) == StayFilter.FLAG_ROOM_AMENITIES_SPA_WHIRLPOOL);
+        getViewDataBinding().roomAmenityInclude.spaTextView.setSelected((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_SPA_WHIRLPOOL) == StayFilter.FLAG_ROOM_AMENITIES_SPA_WHIRLPOOL);
 
-        getViewDataBinding().roomAmenityLayout.privateBbqTextView.setSelected((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_PRIVATE_BBQ) == StayFilter.FLAG_ROOM_AMENITIES_PRIVATE_BBQ);
+        getViewDataBinding().roomAmenityInclude.privateBbqTextView.setSelected((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_PRIVATE_BBQ) == StayFilter.FLAG_ROOM_AMENITIES_PRIVATE_BBQ);
 
-        getViewDataBinding().roomAmenityLayout.karaokeTextView.setSelected((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_KARAOKE) == StayFilter.FLAG_ROOM_AMENITIES_KARAOKE);
+        getViewDataBinding().roomAmenityInclude.karaokeTextView.setSelected((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_KARAOKE) == StayFilter.FLAG_ROOM_AMENITIES_KARAOKE);
 
-        getViewDataBinding().roomAmenityLayout.partyRoomTextView.setSelected((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_PARTY_ROOM) == StayFilter.FLAG_ROOM_AMENITIES_PARTY_ROOM);
+        getViewDataBinding().roomAmenityInclude.partyRoomTextView.setSelected((flagRoomAmenitiesFilters & StayFilter.FLAG_ROOM_AMENITIES_PARTY_ROOM) == StayFilter.FLAG_ROOM_AMENITIES_PARTY_ROOM);
     }
 
     @Override
@@ -226,6 +251,17 @@ public class StayFilterView extends BaseDialogView<StayFilterView.OnEventListene
     {
         switch (view.getId())
         {
+            // Bed Type
+            case R.id.doubleBedTextView:
+                getEventListener().onCheckedChangedBedType(StayFilter.FLAG_BED_DOUBLE);
+                break;
+            case R.id.twinBedTextView:
+                getEventListener().onCheckedChangedBedType(StayFilter.FLAG_BED_TWIN);
+                break;
+            case R.id.heatedFloorsTextView:
+                getEventListener().onCheckedChangedBedType(StayFilter.FLAG_BED_HEATEDFLOORS);
+                break;
+
             // Amenity
             case R.id.parkingTextView:
                 getEventListener().onCheckedChangedAmenities(StayFilter.FLAG_AMENITIES_PARKING);
@@ -312,11 +348,25 @@ public class StayFilterView extends BaseDialogView<StayFilterView.OnEventListene
             return;
         }
 
-        viewDataBinding.sortLayout.sortRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        viewDataBinding.sortInclude.sortRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
         {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int checkedId)
             {
+                RadioButton radioButton = radioGroup.findViewById(checkedId);
+
+                if (radioButton == null)
+                {
+                    return;
+                }
+
+                boolean isChecked = radioButton.isChecked();
+
+                if (isChecked == false)
+                {
+                    return;
+                }
+
                 switch (checkedId)
                 {
                     case R.id.regionRadioButton:
@@ -325,7 +375,7 @@ public class StayFilterView extends BaseDialogView<StayFilterView.OnEventListene
 
                     case R.id.distanceRadioButton:
                         getEventListener().onCheckedChangedSort(StayFilter.SortType.DISTANCE);
-                        return;
+                        break;
 
                     case R.id.lowPriceRadioButton:
                         getEventListener().onCheckedChangedSort(StayFilter.SortType.LOW_PRICE);
@@ -340,10 +390,47 @@ public class StayFilterView extends BaseDialogView<StayFilterView.OnEventListene
                         break;
 
                     default:
-                        return;
+                        break;
                 }
             }
         });
+    }
+
+    private void initPersonLayout(ActivityStayFilterDataBinding viewDataBinding)
+    {
+        if (viewDataBinding == null)
+        {
+            return;
+        }
+
+        viewDataBinding.personInclude.minusPersonImageView.setOnClickListener(v -> getEventListener().onMinusPersonClick());
+
+        viewDataBinding.personInclude.plusPersonImageView.setOnClickListener(v -> getEventListener().onPlusPersonClick());
+    }
+
+    private void initBedTypeLayout(ActivityStayFilterDataBinding viewDataBinding)
+    {
+        if (viewDataBinding == null)
+        {
+            return;
+        }
+
+        int count = viewDataBinding.bedTypeInclude.bedTypeLayout.getChildCount();
+
+        View view;
+
+        for (int i = 0; i < count; i++)
+        {
+            view = viewDataBinding.bedTypeInclude.bedTypeLayout.getChildAt(i);
+
+            if (view instanceof DailyTextView)
+            {
+                view.setOnClickListener(this);
+            } else
+            {
+                view.setEnabled(false);
+            }
+        }
     }
 
     private void initAmenitiesLayout(ActivityStayFilterDataBinding viewDataBinding)
@@ -353,11 +440,21 @@ public class StayFilterView extends BaseDialogView<StayFilterView.OnEventListene
             return;
         }
 
-        int count = viewDataBinding.amenityLayout.amenityGridLayout.getChildCount();
+        int count = viewDataBinding.amenityInclude.amenityGridLayout.getChildCount();
+
+        View view;
 
         for (int i = 0; i < count; i++)
         {
-            viewDataBinding.amenityLayout.amenityGridLayout.getChildAt(i).setOnClickListener(this);
+            view = viewDataBinding.amenityInclude.amenityGridLayout.getChildAt(i);
+
+            if (view instanceof DailyTextView)
+            {
+                view.setOnClickListener(this);
+            } else
+            {
+                view.setEnabled(false);
+            }
         }
     }
 
@@ -368,11 +465,21 @@ public class StayFilterView extends BaseDialogView<StayFilterView.OnEventListene
             return;
         }
 
-        int count = viewDataBinding.roomAmenityLayout.amenityRoomGridLayout.getChildCount();
+        int count = viewDataBinding.roomAmenityInclude.amenityRoomGridLayout.getChildCount();
+
+        View view;
 
         for (int i = 0; i < count; i++)
         {
-            viewDataBinding.roomAmenityLayout.amenityRoomGridLayout.getChildAt(i).setOnClickListener(this);
+            view = viewDataBinding.roomAmenityInclude.amenityRoomGridLayout.getChildAt(i);
+
+            if (view instanceof DailyTextView)
+            {
+                view.setOnClickListener(this);
+            } else
+            {
+                view.setEnabled(false);
+            }
         }
     }
 }

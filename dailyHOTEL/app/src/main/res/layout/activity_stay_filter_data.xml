@@ -46,7 +46,7 @@
                     android:textSize="13dp"/>
 
                 <include
-                    android:id="@+id/sortLayout"
+                    android:id="@+id/sortInclude"
                     layout="@layout/layout_stay_filter_sort_data"/>
 
                 <com.daily.base.widget.DailyTextView
@@ -59,7 +59,7 @@
                     android:textSize="13dp"/>
 
                 <include
-                    android:id="@+id/personLayout"
+                    android:id="@+id/personInclude"
                     layout="@layout/layout_stay_filter_person_data"/>
 
                 <com.daily.base.widget.DailyTextView
@@ -72,7 +72,7 @@
                     android:textSize="13dp"/>
 
                 <include
-                    android:id="@+id/bedTypeLayout"
+                    android:id="@+id/bedTypeInclude"
                     layout="@layout/layout_stay_filter_bed_type_data"/>
 
                 <com.daily.base.widget.DailyTextView
@@ -85,7 +85,7 @@
                     android:textSize="13dp"/>
 
                 <include
-                    android:id="@+id/amenityLayout"
+                    android:id="@+id/amenityInclude"
                     layout="@layout/layout_stay_filter_amenity_data"/>
 
                 <com.daily.base.widget.DailyTextView
@@ -98,7 +98,7 @@
                     android:textSize="13dp"/>
 
                 <include
-                    android:id="@+id/roomAmenityLayout"
+                    android:id="@+id/roomAmenityInclude"
                     layout="@layout/layout_stay_filter_room_amenity_data"/>
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>

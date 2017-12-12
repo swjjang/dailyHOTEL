@@ -742,7 +742,6 @@ public class StayMainActivity extends PlaceMainActivity
             stayFilter.flagBedTypeFilters = stayCurationOption.flagBedTypeFilters;
             stayFilter.flagAmenitiesFilters = stayCurationOption.flagAmenitiesFilters;
             stayFilter.flagRoomAmenitiesFilters = stayCurationOption.flagRoomAmenitiesFilters;
-            stayFilter.defaultSortType = com.daily.dailyhotel.entity.StayFilter.SortType.valueOf(stayCurationOption.getDefaultSortType().name());
             stayFilter.sortType = com.daily.dailyhotel.entity.StayFilter.SortType.valueOf(stayCurationOption.getSortType().name());
 
 
