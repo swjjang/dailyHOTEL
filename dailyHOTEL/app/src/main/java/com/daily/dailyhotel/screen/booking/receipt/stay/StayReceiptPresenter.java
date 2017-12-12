@@ -1,15 +1,28 @@
 package com.daily.dailyhotel.screen.booking.receipt.stay;
 
 
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
+import com.crashlytics.android.Crashlytics;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Booking;
+import com.daily.dailyhotel.entity.StayReceipt;
+import com.daily.dailyhotel.repository.remote.ReceiptRemoteImpl;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+
+import java.util.concurrent.Callable;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by sheldon
@@ -19,14 +32,16 @@ public class StayReceiptPresenter extends BaseExceptionPresenter<StayReceiptActi
 {
     private StayReceiptAnalyticsInterface mAnalytics;
 
-    private int mBookingIdx;
+    private ReceiptRemoteImpl mReceiptRemoteImpl;
+
     private int mBookingState;
     private String mAggregationId;
-    private String mReservationIndex;
-    boolean mIsFullscreen;
+    private int mReservationIndex;
+    boolean mIsFullScreen;
 
     public interface StayReceiptAnalyticsInterface extends BaseAnalyticsInterface
     {
+        void onScreen(Activity activity);
     }
 
     public StayReceiptPresenter(@NonNull StayReceiptActivity activity)
@@ -48,6 +63,15 @@ public class StayReceiptPresenter extends BaseExceptionPresenter<StayReceiptActi
 
         setAnalytics(new StayReceiptAnalyticsImpl());
 
+        mReceiptRemoteImpl = new ReceiptRemoteImpl(getActivity());
+
+        mIsFullScreen = false;
+
+        if (getViewInterface() != null)
+        {
+            getViewInterface().updateFullScreenStatus(mIsFullScreen);
+        }
+
         setRefresh(true);
     }
 
@@ -65,11 +89,11 @@ public class StayReceiptPresenter extends BaseExceptionPresenter<StayReceiptActi
             return true;
         }
 
-        mBookingIdx = intent.getIntExtra(StayReceiptActivity.INTENT_EXTRA_RESERVATION_INDEX, -1);
+        mReservationIndex = intent.getIntExtra(StayReceiptActivity.INTENT_EXTRA_RESERVATION_INDEX, -1);
         mBookingState = intent.getIntExtra(StayReceiptActivity.INTENT_EXTRA_BOOKING_STATE, Booking.BOOKING_STATE_NONE);
         mAggregationId = intent.getStringExtra(StayReceiptActivity.INTENT_EXTRA_AGGREGATION_ID);
 
-        if (mBookingIdx < 0 && DailyTextUtils.isTextEmpty(mAggregationId) == true)
+        if (mReservationIndex < 0 && DailyTextUtils.isTextEmpty(mAggregationId) == true)
         {
             return false;
         }
@@ -80,12 +104,27 @@ public class StayReceiptPresenter extends BaseExceptionPresenter<StayReceiptActi
     @Override
     public void onPostCreate()
     {
+        if (getViewInterface() == null)
+        {
+            return;
+        }
+
+        getViewInterface().setBookingState(mBookingState);
     }
 
     @Override
     public void onStart()
     {
+        mAnalytics.onScreen(getActivity());
+
         super.onStart();
+
+        if (DailyHotel.isLogin() == false)
+        {
+            setRefresh(false);
+            restartExpiredSession();
+            return;
+        }
 
         if (isRefresh() == true)
         {
@@ -120,6 +159,13 @@ public class StayReceiptPresenter extends BaseExceptionPresenter<StayReceiptActi
     @Override
     public boolean onBackPressed()
     {
+        if (getViewInterface() != null && mIsFullScreen == true)
+        {
+            mIsFullScreen = false;
+            getViewInterface().updateFullScreenStatus(mIsFullScreen);
+            return true;
+        }
+
         return super.onBackPressed();
     }
 
@@ -151,6 +197,46 @@ public class StayReceiptPresenter extends BaseExceptionPresenter<StayReceiptActi
 
         setRefresh(false);
         screenLock(showProgress);
+
+        Observable<StayReceipt> receiptObservable = Observable.defer(new Callable<ObservableSource<StayReceipt>>()
+        {
+            @Override
+            public ObservableSource<StayReceipt> call() throws Exception
+            {
+//                if (DailyTextUtils.isTextEmpty(mAggregationId) == true)
+//                {
+                    return mReceiptRemoteImpl.getStayReceipt(mReservationIndex);
+//                }
+
+                // 현재 Stay의 경우 AggregationId를 지원하지 않아 아래 코드가 불리면 죽음 - 때문에 주석 처리 함
+//                return mReceiptRemoteImpl.getStayReceipt(mAggregationId);
+            }
+        });
+
+        addCompositeDisposable(receiptObservable.observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayReceipt>()
+        {
+            @Override
+            public void accept(StayReceipt stayReceipt) throws Exception
+            {
+                mReservationIndex = stayReceipt.reservationIndex;
+
+                if (stayReceipt.reservationIndex < 0)
+                {
+                    Crashlytics.logException(new NullPointerException("StayReceiptActivity : mReservationIndex == null"));
+                }
+
+                getViewInterface().setReceipt(stayReceipt);
+
+                unLockAll();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                onHandleError(throwable);
+            }
+        }));
     }
 
     @Override
@@ -159,4 +245,75 @@ public class StayReceiptPresenter extends BaseExceptionPresenter<StayReceiptActi
         getActivity().onBackPressed();
     }
 
+    @Override
+    public void onShowEmailDialogClick()
+    {
+        if (mReservationIndex < 0 && DailyTextUtils.isTextEmpty(mAggregationId) == true)
+        {
+            restartExpiredSession();
+        } else
+        {
+            getViewInterface().showSendEmailDialog(new DialogInterface.OnDismissListener()
+            {
+                @Override
+                public void onDismiss(DialogInterface dialogInterface)
+                {
+                    unLockAll();
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onSendEmailClick(String email)
+    {
+        if (DailyTextUtils.isTextEmpty(email) == true || mReceiptRemoteImpl == null || getViewInterface() == null)
+        {
+            return;
+        }
+
+        Observable<String> emailObservable = Observable.defer(new Callable<ObservableSource<String>>()
+        {
+            @Override
+            public ObservableSource<String> call() throws Exception
+            {
+//                if (DailyTextUtils.isTextEmpty(mAggregationId) == true)
+//                {
+                    return mReceiptRemoteImpl.getStayReceiptByEmail(mReservationIndex, email);
+//                }
+
+//                return mReceiptRemoteImpl.getStayReceiptByEmail(mAggregationId, email);
+            }
+        });
+
+        addCompositeDisposable(emailObservable.observeOn(AndroidSchedulers.mainThread()) //
+            .subscribe(new Consumer<String>()
+            {
+                @Override
+                public void accept(String message) throws Exception
+                {
+                    getViewInterface().showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
+                    unLockAll();
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    onHandleError(throwable);
+                }
+            }));
+    }
+
+    @Override
+    public void onReceiptLayoutClick()
+    {
+        if (getViewInterface() == null)
+        {
+            return;
+        }
+
+        mIsFullScreen = !mIsFullScreen;
+        getViewInterface().updateFullScreenStatus(mIsFullScreen);
+    }
 }

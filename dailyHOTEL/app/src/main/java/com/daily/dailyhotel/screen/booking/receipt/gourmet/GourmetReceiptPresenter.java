@@ -12,6 +12,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.GourmetReceipt;
 import com.daily.dailyhotel.repository.remote.ReceiptRemoteImpl;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 
 import java.util.concurrent.Callable;
@@ -103,6 +104,13 @@ public class GourmetReceiptPresenter extends BaseExceptionPresenter<GourmetRecei
     public void onStart()
     {
         super.onStart();
+
+        if (DailyHotel.isLogin() == false)
+        {
+            setRefresh(false);
+            restartExpiredSession();
+            return;
+        }
 
         if (isRefresh() == true)
         {

@@ -191,7 +191,7 @@ public class ReceiptRemoteImpl extends BaseRemoteImpl implements ReceiptInterfac
 
                     if (stayReceiptDataBaseDto != null)
                     {
-                        if (stayReceiptDataBaseDto.msgCode == 100 && stayReceiptDataBaseDto.data != null)
+                        if (stayReceiptDataBaseDto.msgCode == 0 && stayReceiptDataBaseDto.data != null) // 아주 오래된 API라서 메시지코드가 100이 아니라 0입니다. 유의 하세요.
                         {
                             stayReceipt = stayReceiptDataBaseDto.data.getStayReceipt();
                         } else

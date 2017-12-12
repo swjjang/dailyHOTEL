@@ -190,14 +190,14 @@ public class GourmetReceiptView extends BaseDialogView<GourmetReceiptView.OnEven
     }
 
     @Override
-    public void updateFullScreenStatus(boolean bUseFullscreen)
+    public void updateFullScreenStatus(boolean isUseFullScreen)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        if (bUseFullscreen)
+        if (isUseFullScreen)
         {
             getViewDataBinding().toolbarView.setVisibility(View.GONE);
 

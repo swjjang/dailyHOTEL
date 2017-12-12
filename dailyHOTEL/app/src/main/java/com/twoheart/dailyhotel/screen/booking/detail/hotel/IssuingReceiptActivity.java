@@ -41,10 +41,9 @@ import retrofit2.Response;
 
 public class IssuingReceiptActivity extends BaseActivity
 {
-    private int mBookingIdx;
     private int mBookingState;
-    String mReservationIndex;
-    boolean mIsFullscreen;
+    private int mReservationIndex;
+    boolean mIsFullScreen;
     private View mBottomLayout;
     private DailyToolbarView mDailyToolbarView;
     private View mBookingStateLayout;
@@ -69,14 +68,14 @@ public class IssuingReceiptActivity extends BaseActivity
 
         Intent intent = getIntent();
 
-        mBookingIdx = -1;
+        mReservationIndex = -1;
 
         if (intent != null && intent.hasExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX) == true)
         {
-            mBookingIdx = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, -1);
+            mReservationIndex = intent.getIntExtra(NAME_INTENT_EXTRA_DATA_BOOKINGIDX, -1);
         }
 
-        if (mBookingIdx < 0)
+        if (mReservationIndex < 0)
         {
             finish();
             return;
@@ -90,7 +89,7 @@ public class IssuingReceiptActivity extends BaseActivity
             mBookingState = Booking.BOOKING_STATE_NONE;
         }
 
-        mIsFullscreen = false;
+        mIsFullScreen = false;
 
         initLayout();
     }
@@ -134,7 +133,7 @@ public class IssuingReceiptActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                if (DailyTextUtils.isTextEmpty(mReservationIndex) == true)
+                if (mReservationIndex < 0)
                 {
                     restartExpiredSession();
                 } else
@@ -165,16 +164,16 @@ public class IssuingReceiptActivity extends BaseActivity
         {
             lockUI();
 
-            DailyMobileAPI.getInstance(this).requestStayReceipt(mNetworkTag, Integer.toString(mBookingIdx), mReservationReceiptCallback);
+            DailyMobileAPI.getInstance(this).requestStayReceipt(mNetworkTag, Integer.toString(mReservationIndex), mReservationReceiptCallback);
         }
     }
 
     @Override
     public void onBackPressed()
     {
-        if (mIsFullscreen == true)
+        if (mIsFullScreen == true)
         {
-            mIsFullscreen = false;
+            mIsFullScreen = false;
             updateFullscreenStatus(false);
         } else
         {
@@ -253,7 +252,7 @@ public class IssuingReceiptActivity extends BaseActivity
                         dialog.dismiss();
                     }
 
-                    DailyMobileAPI.getInstance(IssuingReceiptActivity.this).requestReceiptByEmail(mNetworkTag, "stay", mReservationIndex, email, mReceiptByEmailCallback);
+                    DailyMobileAPI.getInstance(IssuingReceiptActivity.this).requestReceiptByEmail(mNetworkTag, "stay", Integer.toString(mReservationIndex), email, mReceiptByEmailCallback);
                 }
             }
         });
@@ -309,9 +308,9 @@ public class IssuingReceiptActivity extends BaseActivity
             // 영수증
             JSONObject receiptJSONObject = jsonObject.getJSONObject("receipt");
 
-            mReservationIndex = jsonObject.getString("reservation_idx");
+            mReservationIndex = jsonObject.getInt("reservation_idx");
 
-            if (DailyTextUtils.isTextEmpty(mReservationIndex) == true)
+            if (mReservationIndex < 0)
             {
                 Crashlytics.logException(new NullPointerException("IssuingReceiptActivity : mReservationIndex == null"));
             }
@@ -467,8 +466,8 @@ public class IssuingReceiptActivity extends BaseActivity
             @Override
             public void onClick(View v)
             {
-                mIsFullscreen = !mIsFullscreen;
-                updateFullscreenStatus(mIsFullscreen);
+                mIsFullScreen = !mIsFullScreen;
+                updateFullscreenStatus(mIsFullScreen);
             }
         });
 
