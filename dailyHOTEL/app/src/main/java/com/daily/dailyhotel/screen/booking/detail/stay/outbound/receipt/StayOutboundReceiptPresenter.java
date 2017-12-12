@@ -21,14 +21,14 @@ import io.reactivex.functions.Consumer;
  */
 public class StayOutboundReceiptPresenter extends BaseExceptionPresenter<StayOutboundReceiptActivity, StayOutboundReceiptInterface> implements StayOutboundReceiptView.OnEventListener
 {
-    private CopyAnalyticsInterface mAnalytics;
+    private StayOutboundReceiptAnalyticsInterface mAnalytics;
 
     private StayOutboundReceiptRemoteImpl mStayOutboundReceiptRemoteImpl;
     private int mBookingIndex;
     private StayOutboundReceipt mStayOutboundReceipt;
     private boolean mFullScreenEnabled;
 
-    public interface CopyAnalyticsInterface extends BaseAnalyticsInterface
+    public interface StayOutboundReceiptAnalyticsInterface extends BaseAnalyticsInterface
     {
     }
 
@@ -59,7 +59,7 @@ public class StayOutboundReceiptPresenter extends BaseExceptionPresenter<StayOut
     @Override
     public void setAnalytics(BaseAnalyticsInterface analytics)
     {
-        mAnalytics = (CopyAnalyticsInterface) analytics;
+        mAnalytics = (StayOutboundReceiptAnalyticsInterface) analytics;
     }
 
     @Override
