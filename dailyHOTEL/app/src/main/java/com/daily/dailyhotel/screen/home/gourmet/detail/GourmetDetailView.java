@@ -1295,7 +1295,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             if (ratingShow == true)
             {
                 DecimalFormat decimalFormat = new DecimalFormat("###,##0");
-                trueReviewView.setSatisfactionVText(getString(R.string.label_stay_detail_satisfaction, //
+                trueReviewView.setSatisfactionVText(getString(R.string.label_gourmet_detail_satisfaction, //
                     ratingValue, decimalFormat.format(ratingPersons)));
             }
 
