@@ -11,15 +11,18 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Area;
+import com.daily.dailyhotel.entity.Category;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
+import com.daily.dailyhotel.entity.StayFilterCount;
 import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.parcel.StayFitlerParcel;
 import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,6 +49,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     Location mLocation;
     double mRadius;
     String mSearchWord;
+    Constants.ViewType mViewType;
 
     public interface StayFitlerAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -69,6 +73,8 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
         setContentView(R.layout.activity_stay_filter_data);
 
         setAnalytics(new StayFilterAnalyticsImpl());
+
+        mStayRemoteImpl = new StayRemoteImpl(activity);
 
         setRefresh(true);
     }
@@ -108,6 +114,8 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
             return false;
         }
 
+        mViewType = Constants.ViewType.valueOf(viewType);
+
         StayFitlerParcel stayFitlerParcel = intent.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_STAY_FILTER);
 
         if (stayFitlerParcel == null)
@@ -138,7 +146,15 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     {
         getViewInterface().setToolbarTitle(getString(R.string.activity_curation_title));
 
+        getViewInterface().setSortLayout(mStayFilter.sortType);
 
+        getViewInterface().setSortLayoutEnabled(mViewType == Constants.ViewType.LIST);
+
+        getViewInterface().setPerson(mStayFilter.person);
+
+        getViewInterface().setAmenitiesCheck(mStayFilter.flagAmenitiesFilters);
+
+        getViewInterface().setAmenitiesCheck(mStayFilter.flagRoomAmenitiesFilters);
     }
 
     @Override
@@ -211,19 +227,35 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
         setRefresh(false);
         screenLock(showProgress);
 
-        addCompositeDisposable(mStayRemoteImpl.getListCountByFilter(getQueryMap(), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Integer>()
+        getViewInterface().setConfirmText(getString(R.string.label_searching));
+
+        addCompositeDisposable(mStayRemoteImpl.getListCountByFilter(getQueryMap(), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayFilterCount>()
         {
             @Override
-            public void accept(Integer integer) throws Exception
+            public void accept(StayFilterCount stayFilterCount) throws Exception
             {
+                if (stayFilterCount.searchCount <= 0)
+                {
+                    getViewInterface().setConfirmText(getString(R.string.label_hotel_filter_result_empty));
+                    getViewInterface().setConfirmEnabled(false);
+                } else if (stayFilterCount.searchCount < stayFilterCount.searchCountOfMax)
+                {
+                    getViewInterface().setConfirmText(getString(R.string.label_hotel_filter_result_count, stayFilterCount.searchCount));
+                    getViewInterface().setConfirmEnabled(true);
+                } else
+                {
+                    getViewInterface().setConfirmText(getString(R.string.label_hotel_filter_result_over_count, stayFilterCount.searchCountOfMax));
+                    getViewInterface().setConfirmEnabled(true);
+                }
 
+                unLockAll();
             }
         }, new Consumer<Throwable>()
         {
             @Override
             public void accept(Throwable throwable) throws Exception
             {
-
+                onHandleError(throwable);
             }
         }));
     }
@@ -232,6 +264,36 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     public void onBackClick()
     {
         getActivity().onBackPressed();
+    }
+
+    @Override
+    public void onResetClick()
+    {
+
+    }
+
+    @Override
+    public void onConfirmClick()
+    {
+
+    }
+
+    @Override
+    public void onCheckedChangedSort(StayFilter.SortType sortType)
+    {
+
+    }
+
+    @Override
+    public void onCheckedChangedAmenities(int falg)
+    {
+
+    }
+
+    @Override
+    public void onCheckedChangedRoomAmenities(int flag)
+    {
+
     }
 
     Map<String, Object> getQueryMap()
@@ -267,7 +329,20 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
         // category [Hotel, Boutique, GuestHouse, Pension, Motel]
         if (mCategoryList != null && mCategoryList.size() > 0)
         {
-            queryMap.put("category", mCategoryList);
+            List<String> categoryList = new ArrayList<>();
+
+            for (String category : mCategoryList)
+            {
+                if (Category.ALL.code.equalsIgnoreCase(category) == false)
+                {
+                    categoryList.add(category);
+                }
+            }
+
+            if (categoryList.size() > 0)
+            {
+                queryMap.put("category", categoryList);
+            }
         }
 
         // term

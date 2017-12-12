@@ -590,6 +590,12 @@
 
         <!--  com.daily.dailyhotel.... -->
         <activity
+            android:name="com.daily.dailyhotel.screen.home.stay.inbound.filter.StayFilterActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+
+        <activity
             android:name="com.daily.dailyhotel.screen.common.area.stay.StayAreaListActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"

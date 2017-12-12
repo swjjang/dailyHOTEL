@@ -6,7 +6,6 @@
     xmlns:dailyToolbar="http://schemas.android.com/apk/res-auto">
 
     <android.support.constraint.ConstraintLayout
-
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -20,8 +19,8 @@
             app:layout_constraintTop_toTopOf="parent"
             dailyToolbar:underLineHeight="1px"/>
 
-        <ScrollView
-            android:id="@+id/scrollView"
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/nestedScrollView"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@color/white"
@@ -32,11 +31,77 @@
             app:layout_constraintTop_toBottomOf="@+id/toolbarView">
 
             <LinearLayout
-                android:id="@+id/scrollLayout"
+                android:id="@+id/nestedScrollLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"/>
-        </ScrollView>
+                android:orientation="vertical">
+
+                <com.daily.base.widget.DailyTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:background="@drawable/layerlist_filter_title_background"
+                    android:gravity="center"
+                    android:text="@string/label_sort_by"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="13dp"/>
+
+                <include
+                    android:id="@+id/sortLayout"
+                    layout="@layout/layout_stay_filter_sort_data"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:background="@drawable/layerlist_filter_title_background"
+                    android:gravity="center"
+                    android:text="@string/label_personnel"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="13dp"/>
+
+                <include
+                    android:id="@+id/personLayout"
+                    layout="@layout/layout_stay_filter_person_data"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:background="@drawable/layerlist_filter_title_background"
+                    android:gravity="center"
+                    android:text="@string/label_bedtype"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="13dp"/>
+
+                <include
+                    android:id="@+id/bedTypeLayout"
+                    layout="@layout/layout_stay_filter_bed_type_data"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:background="@drawable/layerlist_filter_title_background"
+                    android:gravity="center"
+                    android:text="@string/label_amenities"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="13dp"/>
+
+                <include
+                    android:id="@+id/amenityLayout"
+                    layout="@layout/layout_stay_filter_amenity_data"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:background="@drawable/layerlist_filter_title_background"
+                    android:gravity="center"
+                    android:text="@string/label_room_amenities"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="13dp"/>
+
+                <include
+                    android:id="@+id/roomAmenityLayout"
+                    layout="@layout/layout_stay_filter_room_amenity_data"/>
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
 
         <View
             android:id="@+id/bottomTopLine"
@@ -57,7 +122,7 @@
             app:layout_constraintRight_toRightOf="parent">
 
             <com.daily.base.widget.DailyTextView
-                android:id="@+id/resetCurationView"
+                android:id="@+id/resetTextView"
                 android:layout_width="48dp"
                 android:layout_height="44dp"
                 android:layout_marginLeft="10dp"
@@ -74,7 +139,7 @@
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <com.daily.base.widget.DailyTextView
-                android:id="@+id/confirmView"
+                android:id="@+id/confirmTextView"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_margin="10dp"
@@ -84,7 +149,7 @@
                 android:textColor="@drawable/selector_button_default_text_color"
                 android:textSize="17dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/resetCurationView"
+                app:layout_constraintLeft_toRightOf="@+id/resetTextView"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 dailyFont:style="Medium"/>
