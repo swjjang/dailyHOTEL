@@ -103,6 +103,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     private boolean mAgreedThirdPartyTerms;
     UserSimpleInformation mUserSimpleInformation;
     private int mSaleType;
+    boolean mCheckChangedPrice;
 
     // ***************************************************************** //
     // ************** 변수 선언시에 onSaveInstanceState 에 꼭 등록해야하는지 판단한다.
@@ -577,8 +578,10 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 notifyRefundPolicyChanged();
 
                 // 가격이 변동된 경우
-                if (mRoomPrice != mStayOutboundPayment.totalPrice)
+                if (mCheckChangedPrice == false && mRoomPrice > 0 && mRoomPrice != mStayOutboundPayment.totalPrice)
                 {
+                    mCheckChangedPrice = true;
+
                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_payment_changed_price)//
                         , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
                         {
@@ -586,7 +589,6 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                             public void onDismiss(DialogInterface dialogInterface)
                             {
                                 setResult(BaseActivity.RESULT_CODE_REFRESH);
-                                onBackClick();
                             }
                         });
                 } else if (mStayOutboundPayment.availableRooms == 0) // 솔드 아웃인 경우

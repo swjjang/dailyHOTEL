@@ -1,6 +1,5 @@
 package com.daily.dailyhotel.screen.home.stay.outbound.thankyou;
 
-import android.animation.Animator;
 import android.text.SpannableString;
 
 import com.daily.base.BaseDialogViewInterface;
