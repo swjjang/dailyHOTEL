@@ -310,6 +310,8 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
         mStayFilter.resetFilter();
 
         notifyFilterChanged();
+
+        onRefresh(CLICK_FILTER_DELAY_TIME);
     }
 
     @Override
