@@ -2,7 +2,6 @@ package com.daily.dailyhotel.screen.booking.receipt.stay;
 
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,6 +13,8 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.StayReceipt;
 import com.daily.dailyhotel.repository.remote.ReceiptRemoteImpl;
+import com.daily.dailyhotel.screen.common.dialog.email.receipt.EmailDialogActivity;
+import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 
@@ -185,6 +186,15 @@ public class StayReceiptPresenter extends BaseExceptionPresenter<StayReceiptActi
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         unLockAll();
+
+        if (requestCode == StayReceiptActivity.REQUEST_CODE_EMAIL)
+        {
+            if (resultCode == Activity.RESULT_OK && data != null)
+            {
+                String email = data.getStringExtra(EmailDialogActivity.INTENT_EXTRA_DATA_EMAIL);
+                onSendEmailClick(email);
+            }
+        }
     }
 
     @Override
@@ -253,14 +263,8 @@ public class StayReceiptPresenter extends BaseExceptionPresenter<StayReceiptActi
             restartExpiredSession();
         } else
         {
-            getViewInterface().showSendEmailDialog(new DialogInterface.OnDismissListener()
-            {
-                @Override
-                public void onDismiss(DialogInterface dialogInterface)
-                {
-                    unLockAll();
-                }
-            });
+            Intent intent = EmailDialogActivity.newInstance(getActivity(), DailyUserPreference.getInstance(getActivity()).getEmail());
+            startActivityForResult(intent, StayReceiptActivity.REQUEST_CODE_EMAIL);
         }
     }
 

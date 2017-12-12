@@ -885,6 +885,13 @@
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
+
+        <activity
+            android:name="com.daily.dailyhotel.screen.common.dialog.email.receipt.EmailDialogActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/TransDialog"/>
         <!--  com.daily.dailyhotel.... -->
 
         <activity android:name="kr.co.kcp.android.payment.standard.ResultRcvActivity">

@@ -1,29 +1,17 @@
 package com.daily.dailyhotel.screen.booking.receipt.gourmet;
 
-import android.content.Context;
-import android.content.DialogInterface;
-import android.databinding.DataBindingUtil;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
-import com.daily.base.widget.DailyEditText;
-import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.GourmetReceipt;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
-import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityGourmetReceiptDataBinding;
-import com.twoheart.dailyhotel.databinding.DialogSendEmailDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetReceiptReservationInfoDataBinding;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
@@ -214,88 +202,5 @@ public class GourmetReceiptView extends BaseDialogView<GourmetReceiptView.OnEven
 
             getViewDataBinding().bottomLayout.setVisibility(View.VISIBLE);
         }
-    }
-
-    @Override
-    public void showSendEmailDialog(DialogInterface.OnDismissListener listener)
-    {
-        if (getContext() == null || getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        DialogSendEmailDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.dialog_send_email_data, null, false);
-
-        dataBinding.emailEditTExt.setDeleteButtonVisible(new DailyEditText.OnDeleteTextClickListener()
-        {
-            @Override
-            public void onDelete(DailyEditText dailyEditText)
-            {
-                InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.showSoftInput(dailyEditText, InputMethodManager.SHOW_IMPLICIT);
-            }
-        });
-        dataBinding.emailEditTExt.setText(DailyUserPreference.getInstance(getContext()).getEmail());
-        dataBinding.emailEditTExt.setSelection(dataBinding.emailEditTExt.length());
-
-        // 버튼
-//        dataBinding.twoButtonLayout.setVisibility(View.VISIBLE);
-
-        dataBinding.negativeTextView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                hideSimpleDialog();
-            }
-        });
-
-        dataBinding.positiveTextView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                String email = dataBinding.emailEditTExt.getText().toString();
-
-                if (DailyTextUtils.validEmail(email) == false)
-                {
-                    DailyToast.showToast(getContext(), R.string.toast_msg_wrong_email_address, Toast.LENGTH_SHORT);
-                    return;
-                }
-
-                hideSimpleDialog();
-
-                getEventListener().onSendEmailClick(email);
-            }
-        });
-
-        dataBinding.emailEditTExt.addTextChangedListener(new TextWatcher()
-        {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2)
-            {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
-            {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable)
-            {
-                if (editable == null || editable.length() == 0)
-                {
-                    dataBinding.positiveTextView.setEnabled(false);
-                } else
-                {
-                    dataBinding.positiveTextView.setEnabled(true);
-                }
-            }
-        });
-
-        showSimpleDialog(dataBinding.getRoot(), null, listener, false);
     }
 }

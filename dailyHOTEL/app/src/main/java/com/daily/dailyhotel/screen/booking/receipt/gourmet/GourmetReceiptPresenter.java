@@ -1,7 +1,7 @@
 package com.daily.dailyhotel.screen.booking.receipt.gourmet;
 
 
-import android.content.DialogInterface;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +12,8 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.GourmetReceipt;
 import com.daily.dailyhotel.repository.remote.ReceiptRemoteImpl;
+import com.daily.dailyhotel.screen.common.dialog.email.receipt.EmailDialogActivity;
+import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 
@@ -171,6 +173,15 @@ public class GourmetReceiptPresenter extends BaseExceptionPresenter<GourmetRecei
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         unLockAll();
+
+        if (requestCode == GourmetReceiptActivity.REQUEST_CODE_EMAIL)
+        {
+            if (resultCode == Activity.RESULT_OK && data != null)
+            {
+                String email = data.getStringExtra(EmailDialogActivity.INTENT_EXTRA_DATA_EMAIL);
+                onSendEmailClick(email);
+            }
+        }
     }
 
     @Override
@@ -238,14 +249,8 @@ public class GourmetReceiptPresenter extends BaseExceptionPresenter<GourmetRecei
             restartExpiredSession();
         } else
         {
-            getViewInterface().showSendEmailDialog(new DialogInterface.OnDismissListener()
-            {
-                @Override
-                public void onDismiss(DialogInterface dialogInterface)
-                {
-                    unLockAll();
-                }
-            });
+            Intent intent = EmailDialogActivity.newInstance(getActivity(), DailyUserPreference.getInstance(getActivity()).getEmail());
+            startActivityForResult(intent, GourmetReceiptActivity.REQUEST_CODE_EMAIL);
         }
     }
 

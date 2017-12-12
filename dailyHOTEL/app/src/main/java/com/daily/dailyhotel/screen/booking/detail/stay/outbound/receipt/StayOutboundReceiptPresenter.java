@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.booking.detail.stay.outbound.receipt;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,6 +12,7 @@ import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.StayOutboundReceipt;
 import com.daily.dailyhotel.repository.remote.StayOutboundReceiptRemoteImpl;
+import com.daily.dailyhotel.screen.common.dialog.email.receipt.EmailDialogActivity;
 import com.twoheart.dailyhotel.R;
 
 import io.reactivex.functions.Consumer;
@@ -139,6 +141,15 @@ public class StayOutboundReceiptPresenter extends BaseExceptionPresenter<StayOut
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         unLockAll();
+
+        if (requestCode == StayOutboundReceiptActivity.REQUEST_CODE_EMAIL)
+        {
+            if (resultCode == Activity.RESULT_OK && data != null)
+            {
+                String email = data.getStringExtra(EmailDialogActivity.INTENT_EXTRA_DATA_EMAIL);
+                onSendEmailClick(email);
+            }
+        }
     }
 
     @Override
@@ -181,7 +192,8 @@ public class StayOutboundReceiptPresenter extends BaseExceptionPresenter<StayOut
     @Override
     public void onEmailClick()
     {
-        getViewInterface().showSendEmailDialog(mStayOutboundReceipt.userEmail);
+        Intent intent = EmailDialogActivity.newInstance(getActivity(), mStayOutboundReceipt.userEmail);
+        startActivityForResult(intent, StayOutboundReceiptActivity.REQUEST_CODE_EMAIL);
     }
 
     @Override

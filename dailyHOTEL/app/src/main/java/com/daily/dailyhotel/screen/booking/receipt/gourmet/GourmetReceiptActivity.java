@@ -18,6 +18,7 @@ public class GourmetReceiptActivity extends BaseActivity<GourmetReceiptPresenter
     public static final String INTENT_EXTRA_RESERVATION_INDEX = "reservationIndex";
     public static final String INTENT_EXTRA_AGGREGATION_ID = "aggregationId";
 
+    public static final int REQUEST_CODE_EMAIL = 10000;
 
     public static Intent newInstance(Context context, int reservationIndex, String aggregationId)
     {

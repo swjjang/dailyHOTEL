@@ -19,6 +19,8 @@ public class StayReceiptActivity extends BaseActivity<StayReceiptPresenter>
     public static final String INTENT_EXTRA_AGGREGATION_ID = "aggregationId";
     public static final String INTENT_EXTRA_BOOKING_STATE = "bookingState";
 
+    public static final int REQUEST_CODE_EMAIL = 10000;
+
     public static Intent newInstance(Context context, int reservationIndex, String aggregationId, int bookingState)
     {
         Intent intent = new Intent(context, StayReceiptActivity.class);
