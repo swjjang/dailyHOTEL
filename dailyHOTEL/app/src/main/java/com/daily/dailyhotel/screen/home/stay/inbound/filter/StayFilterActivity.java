@@ -10,7 +10,7 @@ import android.support.annotation.NonNull;
 import com.daily.base.BaseActivity;
 import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StayRegion;
-import com.daily.dailyhotel.parcel.StayFitlerParcel;
+import com.daily.dailyhotel.parcel.StayFilterParcel;
 import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
@@ -27,12 +27,12 @@ public class StayFilterActivity extends BaseActivity<StayFilterPresenter>
     static final int REQUEST_CODE_SETTING_LOCATION = 10001;
 
     static final String INTENT_EXTRA_DATA_VIEW_TYPE = "viewType";
-    static final String INTENT_EXTRA_DATA_STAY_FILTER = "stayFilter";
+    public static final String INTENT_EXTRA_DATA_STAY_FILTER = "stayFilter";
     static final String INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME = "checkInDateTime";
     static final String INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME = "checkOutDateTime";
     static final String INTENT_EXTRA_DATA_STAY_REGION = "stayRegion";
     static final String INTENT_EXTRA_DATA_CATEGORIES = "categories";
-    static final String INTENT_EXTRA_DATA_LOCATION = "location";
+    public static final String INTENT_EXTRA_DATA_LOCATION = "location";
     static final String INTENT_EXTRA_DATA_RADIOUS = "radius";
     static final String INTENT_EXTRA_DATA_SEARCH_WORD = "searchWord";
 
@@ -53,7 +53,7 @@ public class StayFilterActivity extends BaseActivity<StayFilterPresenter>
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_VIEW_TYPE, viewType.name());
-        intent.putExtra(INTENT_EXTRA_DATA_STAY_FILTER, new StayFitlerParcel(stayFilter));
+        intent.putExtra(INTENT_EXTRA_DATA_STAY_FILTER, new StayFilterParcel(stayFilter));
         intent.putExtra(INTENT_EXTRA_DATA_STAY_REGION, new StayRegionParcel(stayRegion));
         intent.putExtra(INTENT_EXTRA_DATA_CATEGORIES, categories);
         intent.putExtra(INTENT_EXTRA_DATA_LOCATION, location);

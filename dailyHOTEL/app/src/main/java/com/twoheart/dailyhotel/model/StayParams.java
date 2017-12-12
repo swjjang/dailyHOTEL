@@ -292,11 +292,6 @@ public class StayParams extends PlaceParams
             arrayList.add("Parking");
         }
 
-        if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NO_PARKING) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NO_PARKING)
-        {
-            arrayList.add("NoParking");
-        }
-
         if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHARED_BBQ) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_SHARED_BBQ)
         {
             arrayList.add("SharedBbq");

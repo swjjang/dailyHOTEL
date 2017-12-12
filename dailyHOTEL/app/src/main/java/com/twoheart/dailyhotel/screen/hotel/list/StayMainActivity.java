@@ -22,7 +22,9 @@ import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayAreaGroup;
+import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StayRegion;
+import com.daily.dailyhotel.parcel.StayFilterParcel;
 import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
@@ -263,22 +265,37 @@ public class StayMainActivity extends PlaceMainActivity
         {
             try
             {
-                PlaceCuration placeCuration = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION);
+                StayFilterParcel stayFilterParcel = data.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_STAY_FILTER);
 
-                if ((placeCuration instanceof StayCuration) == false)
+                if (stayFilterParcel == null)
                 {
                     return;
                 }
 
-                StayCuration changedStayCuration = (StayCuration) placeCuration;
-                StayCurationOption changedStayCurationOption = (StayCurationOption) changedStayCuration.getCurationOption();
+                StayFilter stayFilter = stayFilterParcel.getStayFilter();
+
+                if (stayFilter == null)
+                {
+                    return;
+                }
+
+                StayCurationOption stayCurationOption = new StayCurationOption();
+                stayCurationOption.person = stayFilter.person;
+                stayCurationOption.flagBedTypeFilters = stayFilter.flagBedTypeFilters;
+                stayCurationOption.flagAmenitiesFilters = stayFilter.flagAmenitiesFilters;
+                stayCurationOption.flagRoomAmenitiesFilters = stayFilter.flagRoomAmenitiesFilters;
+                stayCurationOption.setSortType(Constants.SortType.valueOf(stayFilter.sortType.name()));
+
+                StayCurationOption changedStayCurationOption = stayCurationOption;
 
                 mStayCuration.setCurationOption(changedStayCurationOption);
                 mPlaceMainLayout.setOptionFilterSelected(changedStayCurationOption.isDefaultFilter() == false);
 
                 if (changedStayCurationOption.getSortType() == SortType.DISTANCE)
                 {
-                    mStayCuration.setLocation(changedStayCuration.getLocation());
+                    Location location = data.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_LOCATION);
+
+                    mStayCuration.setLocation(location);
 
                     if (mStayCuration.getLocation() != null)
                     {

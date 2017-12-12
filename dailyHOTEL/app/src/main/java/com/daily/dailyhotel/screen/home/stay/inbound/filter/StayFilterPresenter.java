@@ -24,7 +24,7 @@ import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StayFilterCount;
 import com.daily.dailyhotel.entity.StayRegion;
-import com.daily.dailyhotel.parcel.StayFitlerParcel;
+import com.daily.dailyhotel.parcel.StayFilterParcel;
 import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
@@ -132,7 +132,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
         mViewType = Constants.ViewType.valueOf(viewType);
 
-        StayFitlerParcel stayFitlerParcel = intent.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_STAY_FILTER);
+        StayFilterParcel stayFitlerParcel = intent.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_STAY_FILTER);
 
         if (stayFitlerParcel == null)
         {
@@ -321,8 +321,15 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
         }
 
         Intent intent = new Intent();
-        intent.putExtra(StayFilterActivity.INTENT_EXTRA_DATA_STAY_FILTER, new StayFitlerParcel(mStayFilter));
+        intent.putExtra(StayFilterActivity.INTENT_EXTRA_DATA_STAY_FILTER, new StayFilterParcel(mStayFilter));
+
+        if (mStayFilter.sortType == StayFilter.SortType.DISTANCE)
+        {
+            intent.putExtra(StayFilterActivity.INTENT_EXTRA_DATA_LOCATION, mLocation);
+        }
+
         setResult(Activity.RESULT_OK, intent);
+        finish();
     }
 
     @Override

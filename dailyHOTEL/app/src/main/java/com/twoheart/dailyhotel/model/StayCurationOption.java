@@ -162,11 +162,6 @@ public class StayCurationOption extends PlaceCurationOption
                 result.append(AnalyticsManager.Label.SORTFILTER_PARKINGAVAILABLE).append(delimiter);
             }
 
-            if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NO_PARKING) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_NO_PARKING)
-            {
-                result.append(AnalyticsManager.Label.SORTFILTER_PARKINGDISABLE).append(delimiter);
-            }
-
             if ((flagAmenitiesFilters & StayFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL) == StayFilter.FLAG_HOTEL_FILTER_AMENITIES_POOL)
             {
                 result.append(AnalyticsManager.Label.SORTFILTER_POOL).append(delimiter);

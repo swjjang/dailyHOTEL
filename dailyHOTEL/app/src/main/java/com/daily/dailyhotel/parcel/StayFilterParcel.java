@@ -7,11 +7,11 @@ import android.support.annotation.NonNull;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.StayFilter;
 
-public class StayFitlerParcel implements Parcelable
+public class StayFilterParcel implements Parcelable
 {
     private StayFilter mStayFilter;
 
-    public StayFitlerParcel(@NonNull StayFilter stayFilter)
+    public StayFilterParcel(@NonNull StayFilter stayFilter)
     {
         if (stayFilter == null)
         {
@@ -21,7 +21,7 @@ public class StayFitlerParcel implements Parcelable
         mStayFilter = stayFilter;
     }
 
-    public StayFitlerParcel(Parcel in)
+    public StayFilterParcel(Parcel in)
     {
         readFromParcel(in);
     }
@@ -66,15 +66,15 @@ public class StayFitlerParcel implements Parcelable
 
     public static final Creator CREATOR = new Creator()
     {
-        public StayFitlerParcel createFromParcel(Parcel in)
+        public StayFilterParcel createFromParcel(Parcel in)
         {
-            return new StayFitlerParcel(in);
+            return new StayFilterParcel(in);
         }
 
         @Override
-        public StayFitlerParcel[] newArray(int size)
+        public StayFilterParcel[] newArray(int size)
         {
-            return new StayFitlerParcel[size];
+            return new StayFilterParcel[size];
         }
 
     };
