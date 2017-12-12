@@ -566,7 +566,10 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 break;
 
             case StayOutboundDetailActivity.REQUEST_CODE_PAYMENT:
-                setRefresh(true);
+                if (resultCode == BaseActivity.RESULT_CODE_REFRESH)
+                {
+                    setRefresh(true);
+                }
                 break;
 
             case StayOutboundDetailActivity.REQUEST_CODE_PROFILE_UPDATE:
@@ -586,7 +589,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 break;
 
             case StayOutboundDetailActivity.REQUEST_CODE_LOGIN:
-
                 if (resultCode == Activity.RESULT_OK)
                 {
                     setRefresh(true);
