@@ -2,17 +2,21 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-    xmlns:dailyToolbar="http://schemas.android.com/apk/res-auto">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/providerInfoLayout"
+    <merge
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/receipt_bg_bottom"
-        android:paddingBottom="15dp"
-        android:paddingLeft="11dp"
-        android:paddingRight="11dp">
+        tools:parentTag="android.support.constraint.ConstraintLayout">
+
+        <!--<android.support.constraint.ConstraintLayout-->
+        <!--android:id="@+id/providerInfoLayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@drawable/receipt_bg_bottom"-->
+        <!--android:paddingBottom="15dp"-->
+        <!--android:paddingLeft="11dp"-->
+        <!--android:paddingRight="11dp">-->
 
         <ImageView
             android:layout_width="match_parent"
@@ -61,5 +65,7 @@
             android:textSize="10dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/addressTextView"/>
-    </android.support.constraint.ConstraintLayout>
+
+        <!--</android.support.constraint.ConstraintLayout>-->
+    </merge>
 </layout>

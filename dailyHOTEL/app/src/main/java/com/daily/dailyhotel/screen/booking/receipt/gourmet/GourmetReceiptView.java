@@ -9,7 +9,6 @@ import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.GourmetReceipt;
-import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityGourmetReceiptDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetReceiptReservationInfoDataBinding;
@@ -156,22 +155,7 @@ public class GourmetReceiptView extends BaseDialogView<GourmetReceiptView.OnEven
         // 총 입금 금액
         getViewDataBinding().totalPaymentTextView.setText(DailyTextUtils.getPriceFormat(getContext(), gourmetReceipt.paymentAmount, false));
 
-        // **공급자**
-        String phone = DailyRemoteConfigPreference.getInstance(getContext()).getRemoteConfigCompanyPhoneNumber();
-        String fax = DailyRemoteConfigPreference.getInstance(getContext()).getRemoteConfigCompanyFax();
-        String address = DailyRemoteConfigPreference.getInstance(getContext()).getRemoteConfigCompanyAddress();
-        String ceoName = DailyRemoteConfigPreference.getInstance(getContext()).getRemoteConfigCompanyCEO();
-        String registrationNo = DailyRemoteConfigPreference.getInstance(getContext()).getRemoteConfigCompanyBizRegNumber();
-        String companyName = DailyRemoteConfigPreference.getInstance(getContext()).getRemoteConfigCompanyName();
-
-        // 상호
-        getViewDataBinding().companyNameTextView.setText(getString(R.string.label_receipt_business_license, companyName, ceoName, phone, fax));
-
-        // 주소
-        getViewDataBinding().addressTextView.setText(getString(R.string.label_receipt_address, address));
-
-        // 등록번호
-        getViewDataBinding().registrationNoTextView.setText(getString(R.string.label_receipt_registeration_number, registrationNo));
+        // **공급자** 레이아웃에서 처리
 
         // 코멘트
         getViewDataBinding().commentTextView.setText(gourmetReceipt.notice);

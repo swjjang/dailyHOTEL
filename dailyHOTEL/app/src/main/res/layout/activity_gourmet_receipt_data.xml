@@ -208,56 +208,14 @@
                 </LinearLayout>
 
                 <!-- 공급자 -->
-
-                <RelativeLayout
+                <com.daily.dailyhotel.view.DailyReceiptProviderView
                     android:id="@+id/providerInfoLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/receipt_bg_bottom"
                     android:paddingBottom="15dp"
                     android:paddingLeft="11dp"
-                    android:paddingRight="11dp">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:background="@drawable/tile_receipt_bottom_underline"/>
-
-                    <ImageView
-                        android:id="@+id/imageView1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        app:srcCompat="@drawable/receipt_logo"/>
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/companyNameTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="12dp"
-                        android:layout_below="@id/imageView1"
-                        android:layout_marginTop="9dp"
-                        android:textColor="@color/default_text_c929292"
-                        android:textSize="10dp"/>
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/addressTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="12dp"
-                        android:layout_below="@id/companyNameTextView"
-                        android:layout_marginTop="9dp"
-                        android:textColor="@color/default_text_c929292"
-                        android:textSize="10dp"/>
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/registrationNoTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="12dp"
-                        android:layout_below="@id/addressTextView"
-                        android:layout_marginTop="9dp"
-                        android:textColor="@color/default_text_c929292"
-                        android:textSize="10dp"/>
-                </RelativeLayout>
+                    android:paddingRight="11dp"/>
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/commentTextView"
