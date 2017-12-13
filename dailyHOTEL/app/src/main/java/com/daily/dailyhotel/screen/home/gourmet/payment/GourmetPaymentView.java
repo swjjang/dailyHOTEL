@@ -347,6 +347,39 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
     }
 
     @Override
+    public void setMaxCouponAmountText(int maxCouponAmount)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().informationView.setMaxCouponAmount(maxCouponAmount);
+    }
+
+    @Override
+    public void setMaxCouponAmountVisible(boolean isVisible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().informationView.setMaxCouponAmountVisible(isVisible);
+    }
+
+    @Override
+    public void setCouponEnabled(boolean enabled)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().informationView.setCouponEnabled(enabled);
+    }
+
+    @Override
     public void setGuestInformationVisible(boolean visible)
     {
         if (getViewDataBinding() == null)

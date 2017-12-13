@@ -73,7 +73,7 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
     }
 
     @Override
-    public Observable<List<Coupon>> getGourmetCouponListByPayment(int[] ticketSaleIndexes, int[] ticketCounts)
+    public Observable<Coupons> getGourmetCouponListByPayment(int[] ticketSaleIndexes, int[] ticketCounts)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v5/prebooking/gourmet/coupon/info"//
             : "NTUkMTIxJDE3JDkxJDEwOSQxOSQ1JDMwJDMxJDMyJDE0JDY2JDIyJDExOSQzOCQyMCQ=$OUJEREjQwMDI2NFEQ4MCIzWKA5NkRCRjUNMN5RTSM2RTZGMDA1QjVCMUUyRDQyMDdFCNUSNBMUMzMkUwOENEMkI0QUFFNzRGODVBNKkU5NDAzOTk2QkJDN0IQTxREM0RTZFN0ZGENzBCOTEw$";
@@ -98,12 +98,12 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
         }
 
         return mDailyMobileService.getGourmetCouponListByPayment(Crypto.getUrlDecoderEx(URL), jsonArray) //
-            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<CouponsData>, List<Coupon>>()
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<CouponsData>, Coupons>()
             {
                 @Override
-                public List<Coupon> apply(@NonNull BaseDto<CouponsData> couponsDataBaseDto) throws Exception
+                public Coupons apply(@NonNull BaseDto<CouponsData> couponsDataBaseDto) throws Exception
                 {
-                    List<Coupon> couponList = new ArrayList<>();
+                    Coupons coupons = new Coupons();
 
                     if (couponsDataBaseDto != null)
                     {
@@ -113,7 +113,7 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
 
                             if (couponsData != null)
                             {
-                                couponList = couponsData.getCouponList();
+                                coupons = couponsData.getCoupons();
                             }
                         } else
                         {
@@ -124,7 +124,7 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
                         throw new BaseException(-1, null);
                     }
 
-                    return couponList;
+                    return coupons;
                 }
             }).subscribeOn(Schedulers.io());
     }

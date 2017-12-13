@@ -15,7 +15,7 @@ public interface CouponInterface
 {
     Observable<List<Coupon>> getCouponHistoryList();
 
-    Observable<List<Coupon>> getGourmetCouponListByPayment(int[] ticketIndexes, int[] ticketCounts);
+    Observable<Coupons> getGourmetCouponListByPayment(int[] ticketIndexes, int[] ticketCounts);
 
     Observable<Coupons> getStayCouponListByPayment(int stayIndex, int roomIndex, String checkIn, String checkOut);
 }

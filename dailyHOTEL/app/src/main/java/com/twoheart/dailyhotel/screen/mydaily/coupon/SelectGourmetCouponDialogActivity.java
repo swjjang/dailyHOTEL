@@ -9,6 +9,7 @@ import android.view.Window;
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.entity.Coupons;
 import com.daily.dailyhotel.repository.remote.CouponRemoteImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
@@ -38,6 +39,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
     public static final String INTENT_EXTRA_VISIT_DAY = "visitDay";
     public static final String INTENT_EXTRA_GOURMET_NAME = "gourmetName";
     public static final String INTENT_EXTRA_TICKET_COUNTS = "ticketCounts";
+    public static final String INTENT_EXTRA_MAX_COUPON_AMOUNT = "maxCouponAmount";
 
     SelectCouponDialogLayout mLayout;
     SelectGourmetCouponNetworkController mNetworkController;
@@ -53,6 +55,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
     String mVisitDay;
     private String mGourmetName;
     String mCallByScreen;
+    private int mMaxCouponAmount;
 
     public static Intent newInstance(Context context, String visitDay, int gourmetIndex, String gourmetName//
         , int[] ticketIndexes, int[] ticketCounts)
@@ -159,6 +162,10 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
         if (mIsSetOk == false)
         {
             recordCancelAnalytics();
+
+            Intent intent = new Intent();
+            intent.putExtra(INTENT_EXTRA_MAX_COUPON_AMOUNT, mMaxCouponAmount);
+            SelectGourmetCouponDialogActivity.this.setResult(RESULT_OK, intent);
         }
 
         super.finish();
@@ -211,6 +218,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
 
             Intent intent = new Intent();
             intent.putExtra(INTENT_EXTRA_SELECT_COUPON, coupon);
+            intent.putExtra(INTENT_EXTRA_MAX_COUPON_AMOUNT, mMaxCouponAmount);
 
             SelectGourmetCouponDialogActivity.this.setResult(RESULT_OK, intent);
             SelectGourmetCouponDialogActivity.this.finish();
@@ -252,14 +260,16 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
                     return;
                 }
 
-                addCompositeDisposable(mCouponRemoteImpl.getGourmetCouponListByPayment(mTicketIndexes, mTicketCounts).map(new Function<List<com.daily.dailyhotel.entity.Coupon>, List<Coupon>>()
+                addCompositeDisposable(mCouponRemoteImpl.getGourmetCouponListByPayment(mTicketIndexes, mTicketCounts).map(new Function<Coupons, List<Coupon>>()
                 {
                     @Override
-                    public List<Coupon> apply(List<com.daily.dailyhotel.entity.Coupon> coupons) throws Exception
+                    public List<Coupon> apply(Coupons coupons) throws Exception
                     {
+                        mMaxCouponAmount = coupons.maxCouponAmount;
+
                         List<Coupon> couponList = new ArrayList<>();
 
-                        for (com.daily.dailyhotel.entity.Coupon coupon : coupons)
+                        for (com.daily.dailyhotel.entity.Coupon coupon : coupons.coupons)
                         {
                             couponList.add(new Coupon(coupon));
                         }

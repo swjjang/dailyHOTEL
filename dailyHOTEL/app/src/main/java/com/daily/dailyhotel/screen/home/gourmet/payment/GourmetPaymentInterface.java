@@ -38,6 +38,12 @@ public interface GourmetPaymentInterface extends BaseDialogViewInterface
 
     void setBonusEnabled(boolean enabled);
 
+    void setMaxCouponAmountText(int maxCouponAmount);
+
+    void setMaxCouponAmountVisible(boolean isVisible);
+
+    void setCouponEnabled(boolean enabled);
+
     void setGuestInformationVisible(boolean visible);
 
     void setOverseas(boolean overseas);
