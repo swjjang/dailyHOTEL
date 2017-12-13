@@ -1207,6 +1207,13 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             return;
         }
 
+        ObjectItem objectItem = getViewInterface().getObjectItem(position);
+
+        if (objectItem.mType == ObjectItem.TYPE_ENTRY)
+        {
+            ((StayOutbound) objectItem.getItem()).myWish = wish;
+        }
+
         getViewInterface().setWish(position, wish);
     }
 
