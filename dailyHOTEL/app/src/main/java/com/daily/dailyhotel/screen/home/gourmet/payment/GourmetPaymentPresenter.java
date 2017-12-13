@@ -2265,26 +2265,38 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                         onBackClick();
                     }
                 });
-
-            return;
-        }
-
-        String message = baseException.getMessage();
-
-        switch (baseException.getCode())
+        } else
         {
+            String message = baseException.getMessage();
 
-        }
+            switch (baseException.getCode())
+            {
+                case 1180:
+                    setResult(BaseActivity.RESULT_CODE_BACK);
+                    break;
 
-        getViewInterface().showSimpleDialog(getString(R.string.dialog_title_payment), message//
-            , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                default:
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
+                    break;
+            }
+
+            addCompositeDisposable(mCartLocalImpl.clearGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
             {
                 @Override
-                public void onDismiss(DialogInterface dialog)
+                public void accept(Boolean aBoolean) throws Exception
                 {
-                    onBackClick();
+                    getViewInterface().showSimpleDialog(getString(R.string.dialog_title_payment), message//
+                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialog)
+                            {
+                                onBackClick();
+                            }
+                        });
                 }
-            }, false);
+            }));
+        }
     }
 
     private void startLogin()
