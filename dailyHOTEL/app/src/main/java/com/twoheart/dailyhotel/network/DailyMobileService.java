@@ -959,6 +959,12 @@ public interface DailyMobileService
     @POST("{mobileAPI}")
     Observable<BaseDto<CouponsData>> getGourmetCouponListByPayment(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Body JSONArray jsonArray);
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<CouponsData>> getStayCouponListByPayment(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+                                                                @Query("hotelIdx") int stayIndex, @Query("roomIdx") int roomIndex, //
+                                                                @Query("checkIn") String checkIn, @Query("checkOut") String checkOut);
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // RewardRemoteImpl

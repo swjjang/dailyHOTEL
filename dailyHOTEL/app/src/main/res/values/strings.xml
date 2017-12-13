@@ -617,6 +617,8 @@
     <string name="label_booking_reward_phonepay_description">(월 50만원 이내 결제 가능, 적용시 스티커 적립 불가)</string>
     <string name="label_booking_virtualpay_description">(가상계좌로 10분 내 입금시 결제 완료)</string>
     <string name="label_booking_own_bonus">(보유: %1$s)</string>
+    <string name="label_booking_max_coupon_amount">(최대 할인쿠폰: %1$s)</string>
+    <string name="label_booking_max_coupon_amount_empty">(사용가능: 없음)</string>
     <string name="label_booking_memo">예약시 요청사항</string>
     <string name="label_booking_discount_information">할인 정보</string>
     <string name="label_booking_discount_reward_information">할인 및 적립 정보</string>

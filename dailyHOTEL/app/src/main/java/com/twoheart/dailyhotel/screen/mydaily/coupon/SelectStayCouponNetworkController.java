@@ -24,7 +24,7 @@ public class SelectStayCouponNetworkController extends BaseNetworkController
 {
     protected interface OnNetworkControllerListener extends OnBaseNetworkControllerListener
     {
-        void onCouponList(List<Coupon> list);
+        void onCouponList(List<Coupon> list, int maxCouponAmount);
 
         /**
          * 쿠폰 다운로드 결과
@@ -89,17 +89,25 @@ public class SelectStayCouponNetworkController extends BaseNetworkController
                     int msgCode = responseJSONObject.getInt("msgCode");
                     if (msgCode == 100)
                     {
+
+                        int maxCouponAmount = 0;
                         ArrayList<Coupon> list = new ArrayList<>();
 
                         try
                         {
                             list = CouponUtil.getCouponList(responseJSONObject);
+
+                            JSONObject data = responseJSONObject.getJSONObject("data");
+                            if (data != null)
+                            {
+                                maxCouponAmount = data.getInt("maxCouponAmount");
+                            }
                         } catch (Exception e)
                         {
                             ExLog.e(e.toString());
                         }
 
-                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onCouponList(list);
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onCouponList(list, maxCouponAmount);
                     } else
                     {
                         String message = responseJSONObject.getString("msg");

@@ -7,6 +7,7 @@ import com.daily.base.exception.BaseException;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.CouponInterface;
 import com.daily.dailyhotel.entity.Coupon;
+import com.daily.dailyhotel.entity.Coupons;
 import com.daily.dailyhotel.repository.remote.model.CouponsData;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.util.Constants;
@@ -124,6 +125,43 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
                     }
 
                     return couponList;
+                }
+            }).subscribeOn(Schedulers.io());
+    }
+
+    @Override
+    public Observable<Coupons> getStayCouponListByPayment(int stayIndex, int roomIndex, String checkIn, String checkOut)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/payment/coupons"//
+            : "MjkkMTckODAkNTkkNTEkMzAkMyQ0MiQ2NyQzMiQ0OCQ2NCQ1NCQ3OSQxJDUxJA==$MBDgCxMDk2MDFENTI1QUkFGRkFDREY5OFCNDhGQUQ5NzFM4NTOUC1NjAQzMMjZCRDU2JQKjNCZOTYyOTQT4NDQwRjY5RDPM2N0ZCQQ==$";
+
+        return mDailyMobileService.getStayCouponListByPayment(Crypto.getUrlDecoderEx(URL), stayIndex, roomIndex, checkIn, checkOut) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<CouponsData>, Coupons>()
+            {
+                @Override
+                public Coupons apply(BaseDto<CouponsData> couponsDataBaseDto) throws Exception
+                {
+                    Coupons coupons = new Coupons();
+
+                    if (couponsDataBaseDto != null)
+                    {
+                        if (couponsDataBaseDto.msgCode == 100 && couponsDataBaseDto.data != null)
+                        {
+                            CouponsData couponsData = couponsDataBaseDto.data;
+                            if (couponsData != null)
+                            {
+                                coupons = couponsData.getCoupons();
+                            }
+                        } else
+                        {
+                            throw new BaseException(couponsDataBaseDto.msgCode, couponsDataBaseDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(-1, null);
+                    }
+
+                    return coupons;
                 }
             }).subscribeOn(Schedulers.io());
     }
