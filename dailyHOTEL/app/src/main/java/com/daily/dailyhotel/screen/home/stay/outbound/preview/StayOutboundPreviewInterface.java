@@ -15,6 +15,8 @@ public interface StayOutboundPreviewInterface extends BaseDialogViewInterface
 
     void setRoomInformation(boolean soldOut, int roomCount, int night, int minPrice, int maxPrice);
 
+    void setWish(boolean wish, int wishCount);
+
     void showAnimation();
 
     void hideAnimation();

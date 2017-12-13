@@ -2078,7 +2078,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
                     stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
 
-                    startActivityForResult(StayOutboundPreviewActivity.newInstance(getActivity(), stayOutbound.index//
+                    startActivityForResult(StayOutboundPreviewActivity.newInstance(getActivity(), stayOutbound.index, -1//
                         , stayOutbound.name//
                         , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
                         , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
