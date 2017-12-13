@@ -72,7 +72,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
 
         void onStayClick(android.support.v4.util.Pair[] pairs, StayOutbound stayOutbound);
 
-        void onStayLongClick(android.support.v4.util.Pair[] pairs, StayOutbound stayOutbound);
+        void onStayLongClick(int position, android.support.v4.util.Pair[] pairs, StayOutbound stayOutbound);
 
         void onScrollList(int listSize, int lastVisibleItemPosition);
 
@@ -323,7 +323,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
                     {
                         if (view instanceof DailyStayOutboundCardView == true)
                         {
-                            getEventListener().onStayLongClick(((DailyStayOutboundCardView) view).getOptionsCompat(), objectItem.getItem());
+                            getEventListener().onStayLongClick(position, ((DailyStayOutboundCardView) view).getOptionsCompat(), objectItem.getItem());
                         } else
                         {
                             View simpleDraweeView = view.findViewById(R.id.imageView);
@@ -336,7 +336,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
                             pairs[1] = android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view));
                             pairs[2] = android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view));
 
-                            getEventListener().onStayLongClick(pairs, objectItem.getItem());
+                            getEventListener().onStayLongClick(position, pairs, objectItem.getItem());
                         }
                     }
 
@@ -865,6 +865,17 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
                 }
             }
         });
+    }
+
+    @Override
+    public ObjectItem getObjectItem(int position)
+    {
+        if (getViewDataBinding() == null || mStayOutboundListAdapter == null)
+        {
+            return null;
+        }
+
+        return mStayOutboundListAdapter.getItem(position);
     }
 
     private void showViewPagerAnimation()

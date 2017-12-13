@@ -2221,39 +2221,38 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             unLockAll();
 
             String title = getString(R.string.dialog_title_payment);
-            String message;
-
-            int msgCode;
-            View.OnClickListener confirmListener = null;
 
             try
             {
                 JSONObject jsonObject = new JSONObject(result);
-                msgCode = jsonObject.getInt("msgCode");
+                int msgCode = jsonObject.getInt("msgCode");
 
                 // 다날 핸드폰 화면에서 취소 버튼 누르는 경우
                 if (msgCode == -104)
                 {
-                    message = getString(R.string.act_toast_payment_canceled);
+                    getViewInterface().showSimpleDialog(title, getString(R.string.act_toast_payment_canceled), getString(R.string.dialog_btn_text_confirm), null, null, null, false);
                 } else
                 {
-                    message = jsonObject.getString("msg");
-
-                    confirmListener = new View.OnClickListener()
+                    addCompositeDisposable(mCartLocalImpl.clearGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                     {
                         @Override
-                        public void onClick(View view)
+                        public void accept(Boolean aBoolean) throws Exception
                         {
-                            setResult(BaseActivity.RESULT_CODE_REFRESH);
-                            onBackClick();
+                            getViewInterface().showSimpleDialog(title, jsonObject.getString("msg"), getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(View view)
+                                {
+                                    setResult(BaseActivity.RESULT_CODE_REFRESH);
+                                    onBackClick();
+                                }
+                            }, null, false);
                         }
-                    };
+                    }));
                 }
             } catch (Exception e)
             {
-                message = getString(R.string.act_toast_payment_fail);
-
-                confirmListener = new View.OnClickListener()
+                getViewInterface().showSimpleDialog(title, getString(R.string.act_toast_payment_fail), getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View view)
@@ -2261,10 +2260,8 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                         setResult(BaseActivity.RESULT_CODE_REFRESH);
                         onBackClick();
                     }
-                };
+                }, null, false);
             }
-
-            getViewInterface().showSimpleDialog(title, message, getString(R.string.dialog_btn_text_confirm), null, confirmListener, null, false);
         }
     }
 
@@ -2283,26 +2280,38 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                         onBackClick();
                     }
                 });
-
-            return;
-        }
-
-        String message = baseException.getMessage();
-
-        switch (baseException.getCode())
+        } else
         {
+            String message = baseException.getMessage();
 
-        }
+            switch (baseException.getCode())
+            {
+                case 1180:
+                    setResult(BaseActivity.RESULT_CODE_BACK);
+                    break;
 
-        getViewInterface().showSimpleDialog(getString(R.string.dialog_title_payment), message//
-            , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                default:
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
+                    break;
+            }
+
+            addCompositeDisposable(mCartLocalImpl.clearGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
             {
                 @Override
-                public void onDismiss(DialogInterface dialog)
+                public void accept(Boolean aBoolean) throws Exception
                 {
-                    onBackClick();
+                    getViewInterface().showSimpleDialog(getString(R.string.dialog_title_payment), message//
+                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialog)
+                            {
+                                onBackClick();
+                            }
+                        });
                 }
-            }, false);
+            }));
+        }
     }
 
     private void startLogin()
