@@ -8,13 +8,14 @@
         android:layout_width="match_parent"
         android:layout_height="74dp"
         android:orientation="horizontal"
+        android:background="@color/white"
         android:paddingLeft="10dp"
         android:paddingRight="10dp">
 
         <com.daily.base.widget.DailyRadioButton
             android:id="@+id/regionRadioButton"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="74dp"
             android:layout_weight="1"
             android:background="@null"
             android:button="@null"
@@ -28,7 +29,7 @@
         <com.daily.base.widget.DailyRadioButton
             android:id="@+id/distanceRadioButton"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="74dp"
             android:layout_weight="1"
             android:background="@null"
             android:button="@null"
@@ -42,7 +43,7 @@
         <com.daily.base.widget.DailyRadioButton
             android:id="@+id/lowPriceRadioButton"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="74dp"
             android:layout_weight="1"
             android:background="@null"
             android:button="@null"
@@ -56,7 +57,7 @@
         <com.daily.base.widget.DailyRadioButton
             android:id="@+id/highPriceRadioButton"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="74dp"
             android:layout_weight="1"
             android:background="@null"
             android:button="@null"
@@ -70,7 +71,7 @@
         <com.daily.base.widget.DailyRadioButton
             android:id="@+id/satisfactionRadioButton"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="74dp"
             android:layout_weight="1"
             android:background="@null"
             android:button="@null"

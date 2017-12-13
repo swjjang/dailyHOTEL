@@ -23,7 +23,6 @@
             android:id="@+id/nestedScrollView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/white"
             android:fadingEdge="none"
             app:layout_constraintBottom_toTopOf="@+id/bottomTopLine"
             app:layout_constraintLeft_toLeftOf="parent"
