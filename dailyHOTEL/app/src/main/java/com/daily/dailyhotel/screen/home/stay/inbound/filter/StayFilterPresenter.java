@@ -64,11 +64,21 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     double mRadius;
     String mSearchWord;
     Constants.ViewType mViewType;
+    StayFilterCount mStayFilterCount;
 
     DailyLocationExFactory mDailyLocationExFactory;
 
     public interface StayFilterAnalyticsInterface extends BaseAnalyticsInterface
     {
+        void onScreen(Activity activity);
+
+        void onConfirmClick(Activity activity, StayRegion stayRegion, StayFilter stayFilter, int listCountByFilter);
+
+        void onBackClick(Activity activity);
+
+        void onResetClick(Activity activity);
+
+        void onEmptyResult(Activity activity, StayFilter stayFilter);
     }
 
     public StayFilterPresenter(@NonNull StayFilterActivity activity)
@@ -169,6 +179,8 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     public void onStart()
     {
         super.onStart();
+
+        mAnalytics.onScreen(getActivity());
 
         if (isRefresh() == true)
         {
@@ -271,6 +283,8 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     public void onBackClick()
     {
         getActivity().onBackPressed();
+
+        mAnalytics.onBackClick(getActivity());
     }
 
     @Override
@@ -312,6 +326,8 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
         notifyFilterChanged();
 
         onRefresh(CLICK_FILTER_DELAY_TIME);
+
+        mAnalytics.onResetClick(getActivity());
     }
 
     @Override
@@ -332,6 +348,8 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
         setResult(Activity.RESULT_OK, intent);
         finish();
+
+        mAnalytics.onConfirmClick(getActivity(), mStayRegion, mStayFilter, mStayFilterCount.searchCount);
     }
 
     @Override
@@ -436,10 +454,15 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
                 @Override
                 public void accept(StayFilterCount stayFilterCount) throws Exception
                 {
+                    mStayFilterCount = stayFilterCount;
+
                     if (stayFilterCount.searchCount <= 0)
                     {
                         getViewInterface().setConfirmText(getString(R.string.label_hotel_filter_result_empty));
                         getViewInterface().setConfirmEnabled(false);
+
+                        mAnalytics.onEmptyResult(getActivity(), mStayFilter);
+
                     } else if (stayFilterCount.searchCount < stayFilterCount.searchCountOfMax)
                     {
                         getViewInterface().setConfirmText(getString(R.string.label_hotel_filter_result_count, stayFilterCount.searchCount));
