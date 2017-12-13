@@ -136,17 +136,33 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"/>
 
-                <com.daily.base.widget.DailyTextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="7dp"
                     android:duplicateParentState="true"
-                    android:text="@string/label_booking_used_coupon"
-                    android:textColor="@drawable/selector_text_color_c323232_cb70038_cc5c5c5"
-                    android:textSize="13dp"
+                    android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toRightOf="@+id/couponRadioView"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.daily.base.widget.DailyTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:duplicateParentState="true"
+                        android:text="@string/label_booking_used_coupon"
+                        android:textColor="@drawable/selector_text_color_c323232_cb70038_cc5c5c5"
+                        android:textSize="13dp"/>
+
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/couponTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:duplicateParentState="true"
+                        android:textColor="@drawable/selector_text_color_c929292_cc5c5c5"
+                        android:textSize="11dp"
+                        android:visibility="gone"/>
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/couponTabLayout"

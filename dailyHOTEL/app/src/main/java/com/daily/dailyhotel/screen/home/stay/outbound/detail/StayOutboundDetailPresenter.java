@@ -568,6 +568,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             case StayOutboundDetailActivity.REQUEST_CODE_PAYMENT:
                 if (resultCode == BaseActivity.RESULT_CODE_REFRESH)
                 {
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
                     setRefresh(true);
                 }
                 break;
@@ -1332,7 +1333,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
             getViewInterface().setBlurVisible(getActivity(), true);
 
-            startActivityForResult(StayOutboundPreviewActivity.newInstance(getActivity(), stayOutbound.index//
+            startActivityForResult(StayOutboundPreviewActivity.newInstance(getActivity(), stayOutbound.index, -1//
                 , stayOutbound.name//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//

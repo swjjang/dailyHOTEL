@@ -589,6 +589,21 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                             }
                         }).subscribeOn(AndroidSchedulers.mainThread()).subscribe());
                         break;
+
+                    case BaseActivity.RESULT_CODE_DATA_CHANGED:
+                        if (data != null && data.hasExtra(StayOutboundPreviewActivity.INTENT_EXTRA_DATA_STAY_POSITION) == true//
+                            && data.hasExtra(StayOutboundPreviewActivity.INTENT_EXTRA_DATA_MY_WISH) == true)
+                        {
+                            int position = data.getIntExtra(StayOutboundPreviewActivity.INTENT_EXTRA_DATA_STAY_POSITION, -1);
+                            boolean wish = data.getBooleanExtra(StayOutboundPreviewActivity.INTENT_EXTRA_DATA_MY_WISH, false);
+
+                            onChangedWish(position, wish);
+                        }
+                        break;
+
+                    case com.daily.base.BaseActivity.RESULT_CODE_REFRESH:
+                        setRefresh(true);
+                        break;
                 }
                 break;
 
@@ -887,7 +902,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     }
 
     @Override
-    public void onStayLongClick(android.support.v4.util.Pair[] pair, StayOutbound stayOutbound)
+    public void onStayLongClick(int position, android.support.v4.util.Pair[] pair, StayOutbound stayOutbound)
     {
         mPairsByLongPress = pair;
         mStayOutboundByLongPress = stayOutbound;
@@ -895,7 +910,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         getViewInterface().setBlurVisible(getActivity(), true);
 
         startActivityForResult(StayOutboundPreviewActivity.newInstance(getActivity(), stayOutbound.index//
-            , stayOutbound.name//
+            , position, stayOutbound.name//
             , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mPeople.numberOfAdults, mPeople.getChildAgeList())//
@@ -1205,6 +1220,13 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         if (position < 0)
         {
             return;
+        }
+
+        ObjectItem objectItem = getViewInterface().getObjectItem(position);
+
+        if (objectItem.mType == ObjectItem.TYPE_ENTRY)
+        {
+            ((StayOutbound) objectItem.getItem()).myWish = wish;
         }
 
         getViewInterface().setWish(position, wish);

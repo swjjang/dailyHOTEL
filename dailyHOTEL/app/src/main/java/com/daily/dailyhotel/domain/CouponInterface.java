@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.domain;
 
 import com.daily.dailyhotel.entity.Coupon;
+import com.daily.dailyhotel.entity.Coupons;
 
 import java.util.List;
 
@@ -14,5 +15,7 @@ public interface CouponInterface
 {
     Observable<List<Coupon>> getCouponHistoryList();
 
-    Observable<List<Coupon>> getGourmetCouponListByPayment(int[] ticketIndexes, int[] ticketCounts);
+    Observable<Coupons> getGourmetCouponListByPayment(int[] ticketIndexes, int[] ticketCounts);
+
+    Observable<Coupons> getStayCouponListByPayment(int stayIndex, int roomIndex, String checkIn, String checkOut);
 }

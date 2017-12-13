@@ -35,8 +35,6 @@ public class StayOutboundPreviewView extends BaseDialogView<StayOutboundPreviewV
         void onViewDetailClick();
 
         void onHideAnimation();
-
-        void onCloseClick();
     }
 
     public StayOutboundPreviewView(BaseActivity baseActivity, StayOutboundPreviewView.OnEventListener listener)
@@ -65,10 +63,10 @@ public class StayOutboundPreviewView extends BaseDialogView<StayOutboundPreviewV
         viewDataBinding.popupLayout.setLayoutParams(layoutParams);
 
         viewDataBinding.popupLayout.setOnClickListener(this);
-        viewDataBinding.closeView.setOnClickListener(this);
+        viewDataBinding.closeImageView.setOnClickListener(this);
         viewDataBinding.wishTextView.setOnClickListener(this);
-        viewDataBinding.shareKakaoView.setOnClickListener(this);
-        viewDataBinding.mapView.setOnClickListener(this);
+        viewDataBinding.shareKakaoTextView.setOnClickListener(this);
+        viewDataBinding.mapTextView.setOnClickListener(this);
 
         // 이미지 연동
         viewDataBinding.imageLayout.post(new Runnable()
@@ -100,19 +98,19 @@ public class StayOutboundPreviewView extends BaseDialogView<StayOutboundPreviewV
                 getEventListener().onViewDetailClick();
                 break;
 
-            case R.id.closeView:
-                getEventListener().onCloseClick();
+            case R.id.closeImageView:
+                getEventListener().onBackClick();
                 break;
 
             case R.id.wishTextView:
                 getEventListener().onWishClick();
                 break;
 
-            case R.id.shareKakaoView:
+            case R.id.shareKakaoTextView:
                 getEventListener().onKakaoClick();
                 break;
 
-            case R.id.mapView:
+            case R.id.mapTextView:
                 getEventListener().onMapClick();
                 break;
         }
@@ -216,6 +214,34 @@ public class StayOutboundPreviewView extends BaseDialogView<StayOutboundPreviewV
             }
 
             getViewDataBinding().priceTextView.setText(priceFormat);
+        }
+    }
+
+    @Override
+    public void setWish(boolean wish, int wishCount)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (wish == true)
+        {
+            getViewDataBinding().wishTextView.setText(R.string.label_preview_remove_wish);
+            getViewDataBinding().wishTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_lp_01_wishlist_on, 0, 0);
+        } else
+        {
+            getViewDataBinding().wishTextView.setText(R.string.label_preview_add_wish);
+            getViewDataBinding().wishTextView.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_lp_01_wishlist_off, 0, 0);
+        }
+
+        if (wishCount <= 0)
+        {
+            getViewDataBinding().moreInformationLayout.setVisibility(View.GONE);
+        } else
+        {
+            getViewDataBinding().moreInformationLayout.setVisibility(View.VISIBLE);
+            getViewDataBinding().wishCountTextView.setText(getString(R.string.label_detail_wish_count, wishCount));
         }
     }
 

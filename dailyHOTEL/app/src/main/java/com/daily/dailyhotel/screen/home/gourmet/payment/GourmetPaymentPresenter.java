@@ -20,6 +20,7 @@ import com.daily.base.util.FontManager;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Card;
+import com.daily.dailyhotel.entity.Coupons;
 import com.daily.dailyhotel.entity.DomesticGuest;
 import com.daily.dailyhotel.entity.GourmetCart;
 import com.daily.dailyhotel.entity.GourmetCartMenu;
@@ -32,6 +33,7 @@ import com.daily.dailyhotel.parcel.GourmetCartParcel;
 import com.daily.dailyhotel.parcel.analytics.GourmetPaymentAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.GourmetThankYouAnalyticsParam;
 import com.daily.dailyhotel.repository.local.CartLocalImpl;
+import com.daily.dailyhotel.repository.remote.CouponRemoteImpl;
 import com.daily.dailyhotel.repository.remote.PaymentRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
@@ -102,6 +104,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
     private PaymentRemoteImpl mPaymentRemoteImpl;
     private ProfileRemoteImpl mProfileRemoteImpl;
+    private CouponRemoteImpl mCouponRemoteImpl;
     CartLocalImpl mCartLocalImpl;
 
     GourmetPayment mGourmetPayment;
@@ -115,6 +118,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
     int mSaleType;
     GourmetCart mGourmetCart;
     int mPersons;
+    private int mMaxCouponAmount;
 
     // ***************************************************************** //
     // ************** 변수 선언시에 onSaveInstanceState 에 꼭 등록해야하는지 판단한다.
@@ -186,6 +190,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
         mPaymentRemoteImpl = new PaymentRemoteImpl(activity);
         mProfileRemoteImpl = new ProfileRemoteImpl(activity);
+        mCouponRemoteImpl = new CouponRemoteImpl(activity);
         mCartLocalImpl = new CartLocalImpl(activity);
 
         setRefresh(true);
@@ -529,13 +534,22 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                 break;
 
             case GourmetPaymentActivity.REQUEST_CODE_COUPON_LIST:
-                if (resultCode == Activity.RESULT_OK && data != null)
+                if (data != null)
                 {
-                    Coupon coupon = data.getParcelableExtra(SelectGourmetCouponDialogActivity.INTENT_EXTRA_SELECT_COUPON);
+                    int maxCouponAmount = data.getIntExtra(SelectGourmetCouponDialogActivity.INTENT_EXTRA_MAX_COUPON_AMOUNT, 0);
+                    setMaxCouponAmount(maxCouponAmount, false);
 
-                    setCoupon(coupon);
+                    if (resultCode == Activity.RESULT_OK)
+                    {
+                        Coupon coupon = data.getParcelableExtra(SelectGourmetCouponDialogActivity.INTENT_EXTRA_SELECT_COUPON);
+                        setCoupon(coupon);
+                    } else
+                    {
+                        setCoupon(null);
+                    }
                 } else
                 {
+                    setMaxCouponAmount(mMaxCouponAmount, false);
                     setCoupon(null);
                 }
                 break;
@@ -602,6 +616,10 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             public void accept(@io.reactivex.annotations.NonNull User user) throws Exception
             {
                 onBookingInformation(mGourmetPayment, mGourmetCart);
+
+                int[] menuIndexes = mGourmetCart.getMenuSaleIndexes();
+                int[] menuCounts = mGourmetCart.getCountPerMenu();
+                getMaxCouponAmount(menuIndexes, menuCounts);
 
                 notifyUserInformationChanged();
 
@@ -2203,39 +2221,38 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             unLockAll();
 
             String title = getString(R.string.dialog_title_payment);
-            String message;
-
-            int msgCode;
-            View.OnClickListener confirmListener = null;
 
             try
             {
                 JSONObject jsonObject = new JSONObject(result);
-                msgCode = jsonObject.getInt("msgCode");
+                int msgCode = jsonObject.getInt("msgCode");
 
                 // 다날 핸드폰 화면에서 취소 버튼 누르는 경우
                 if (msgCode == -104)
                 {
-                    message = getString(R.string.act_toast_payment_canceled);
+                    getViewInterface().showSimpleDialog(title, getString(R.string.act_toast_payment_canceled), getString(R.string.dialog_btn_text_confirm), null, null, null, false);
                 } else
                 {
-                    message = jsonObject.getString("msg");
-
-                    confirmListener = new View.OnClickListener()
+                    addCompositeDisposable(mCartLocalImpl.clearGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                     {
                         @Override
-                        public void onClick(View view)
+                        public void accept(Boolean aBoolean) throws Exception
                         {
-                            setResult(BaseActivity.RESULT_CODE_REFRESH);
-                            onBackClick();
+                            getViewInterface().showSimpleDialog(title, jsonObject.getString("msg"), getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(View view)
+                                {
+                                    setResult(BaseActivity.RESULT_CODE_REFRESH);
+                                    onBackClick();
+                                }
+                            }, null, false);
                         }
-                    };
+                    }));
                 }
             } catch (Exception e)
             {
-                message = getString(R.string.act_toast_payment_fail);
-
-                confirmListener = new View.OnClickListener()
+                getViewInterface().showSimpleDialog(title, getString(R.string.act_toast_payment_fail), getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View view)
@@ -2243,10 +2260,8 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                         setResult(BaseActivity.RESULT_CODE_REFRESH);
                         onBackClick();
                     }
-                };
+                }, null, false);
             }
-
-            getViewInterface().showSimpleDialog(title, message, getString(R.string.dialog_btn_text_confirm), null, confirmListener, null, false);
         }
     }
 
@@ -2265,26 +2280,38 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                         onBackClick();
                     }
                 });
-
-            return;
-        }
-
-        String message = baseException.getMessage();
-
-        switch (baseException.getCode())
+        } else
         {
+            String message = baseException.getMessage();
 
-        }
+            switch (baseException.getCode())
+            {
+                case 1180:
+                    setResult(BaseActivity.RESULT_CODE_BACK);
+                    break;
 
-        getViewInterface().showSimpleDialog(getString(R.string.dialog_title_payment), message//
-            , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                default:
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
+                    break;
+            }
+
+            addCompositeDisposable(mCartLocalImpl.clearGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
             {
                 @Override
-                public void onDismiss(DialogInterface dialog)
+                public void accept(Boolean aBoolean) throws Exception
                 {
-                    onBackClick();
+                    getViewInterface().showSimpleDialog(getString(R.string.dialog_title_payment), message//
+                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialog)
+                            {
+                                onBackClick();
+                            }
+                        });
                 }
-            }, false);
+            }));
+        }
     }
 
     private void startLogin()
@@ -2314,5 +2341,53 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         }
 
         return false;
+    }
+
+    private void getMaxCouponAmount(int[] ticketSaleIndexes, int[] ticketCount)
+    {
+        if (ticketSaleIndexes == null || ticketCount == null)
+        {
+            return;
+        }
+
+        addCompositeDisposable(mCouponRemoteImpl.getGourmetCouponListByPayment(ticketSaleIndexes, ticketCount) //
+            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Coupons>()
+            {
+                @Override
+                public void accept(Coupons coupons) throws Exception
+                {
+                    setMaxCouponAmount(coupons.maxCouponAmount, false);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    setMaxCouponAmount(0, true);
+                }
+            }));
+    }
+
+    private void setMaxCouponAmount(int maxCouponAmount, boolean isError)
+    {
+        mMaxCouponAmount = maxCouponAmount;
+
+        if (isError == true)
+        {
+            getViewInterface().setCouponEnabled(true);
+            getViewInterface().setMaxCouponAmountVisible(false);
+            return;
+        }
+
+        if (maxCouponAmount > 0)
+        {
+            getViewInterface().setCouponEnabled(true);
+        } else
+        {
+            getViewInterface().setCouponEnabled(false);
+        }
+
+        getViewInterface().setMaxCouponAmountText(maxCouponAmount);
+        getViewInterface().setMaxCouponAmountVisible(true);
     }
 }
