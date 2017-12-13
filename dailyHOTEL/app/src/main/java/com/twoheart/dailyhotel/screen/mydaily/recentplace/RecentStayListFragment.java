@@ -577,7 +577,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         mViewByLongPress = view;
         mPositionByLongPress = position;
 
-        mBaseActivity.startActivityForResult(StayOutboundPreviewActivity.newInstance(getActivity(), stayOutbound.index//
+        mBaseActivity.startActivityForResult(StayOutboundPreviewActivity.newInstance(getActivity(), stayOutbound.index, -1//
             , stayOutbound.name//
             , ((StayBookingDay) mPlaceBookingDay).getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
             , ((StayBookingDay) mPlaceBookingDay).getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//

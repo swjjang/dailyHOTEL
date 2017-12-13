@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 
+import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
@@ -19,10 +20,14 @@ import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
 import com.daily.dailyhotel.entity.StayOutboundRoom;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
+import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 
@@ -43,6 +48,7 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
     private StayBookDateTime mStayBookDateTime;
     private StayOutboundDetail mStayOutboundDetail;
     private People mPeople;
+    private int mPosition;
 
     public interface StayOutboundPreviewAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -92,6 +98,8 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
         {
             return false;
         }
+
+        mPosition = intent.getIntExtra(StayOutboundPreviewActivity.INTENT_EXTRA_DATA_STAY_POSITION, -1);
 
         mStayName = intent.getStringExtra(StayOutboundPreviewActivity.INTENT_EXTRA_DATA_STAY_NAME);
 
@@ -171,6 +179,45 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         unLockAll();
+
+        switch (requestCode)
+        {
+            case StayOutboundPreviewActivity.REQUEST_CODE_WISH_DIALOG:
+                switch (resultCode)
+                {
+                    case Activity.RESULT_OK:
+                    case BaseActivity.RESULT_CODE_ERROR:
+                        if (data != null)
+                        {
+                            boolean wish = data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false);
+
+                            if (mStayOutboundDetail.myWish == wish)
+                            {
+                                getViewInterface().setWish(wish, mStayOutboundDetail.wishCount);
+                            } else
+                            {
+                                getViewInterface().setWish(wish, mStayOutboundDetail.wishCount + (wish ? 1 : -1));
+                            }
+
+                            Intent intent = new Intent();
+                            intent.putExtra(StayOutboundPreviewActivity.INTENT_EXTRA_DATA_MY_WISH, wish);
+                            intent.putExtra(StayOutboundPreviewActivity.INTENT_EXTRA_DATA_STAY_POSITION, mPosition);
+                            setResult(BaseActivity.RESULT_CODE_DATA_CHANGED, intent);
+                        } else
+                        {
+                            setResult(BaseActivity.RESULT_CODE_REFRESH);
+                        }
+
+                        onBackClick();
+                        break;
+
+                    case com.daily.base.BaseActivity.RESULT_CODE_REFRESH:
+                        setResult(BaseActivity.RESULT_CODE_REFRESH);
+                        onBackClick();
+                        break;
+                }
+                break;
+        }
     }
 
     @Override
@@ -213,6 +260,20 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
     @Override
     public void onWishClick()
     {
+        if (mStayOutboundDetail == null || lock() == true)
+        {
+            return;
+        }
+
+        boolean currentWish = mStayOutboundDetail.myWish;
+
+        if (DailyHotel.isLogin() == true)
+        {
+            getViewInterface().setWish(!currentWish, mStayOutboundDetail.wishCount + (!currentWish ? 1 : -1));
+        }
+
+        startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.OB_STAY//
+            , mStayOutboundDetail.index, !currentWish, mPosition, AnalyticsManager.Screen.DAILYHOTEL_LIST), StayOutboundPreviewActivity.REQUEST_CODE_WISH_DIALOG);
 
     }
 
@@ -312,17 +373,6 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
         finish();
     }
 
-    @Override
-    public void onCloseClick()
-    {
-        if (lock() == true)
-        {
-            return;
-        }
-
-        getViewInterface().hideAnimation();
-    }
-
     private void setPeople(int numberOfAdults, ArrayList<Integer> childAgeList)
     {
         if (mPeople == null)
@@ -371,6 +421,7 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
 
         getViewInterface().setCategory(stayOutboundDetail.rating, stayOutboundDetail.activeReward && stayOutboundDetail.provideRewardSticker);
         getViewInterface().setImages(stayOutboundDetail.getImageList());
+        getViewInterface().setWish(stayOutboundDetail.myWish, stayOutboundDetail.wishCount);
 
         try
         {

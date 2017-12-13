@@ -266,7 +266,7 @@ public class StayWishListFragment extends PlaceWishListFragment
         String checkInDateTime = stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT);
         String checkOutDateTime = stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT);
 
-        mBaseActivity.startActivityForResult(StayOutboundPreviewActivity.newInstance(getActivity(), stayOutbound.index//
+        mBaseActivity.startActivityForResult(StayOutboundPreviewActivity.newInstance(getActivity(), stayOutbound.index, -1//
             , stayOutbound.name, checkInDateTime, checkOutDateTime, People.DEFAULT_ADULTS, null), CODE_REQUEST_ACTIVITY_PREVIEW);
     }
 
