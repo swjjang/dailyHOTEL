@@ -209,7 +209,7 @@
             android:layout_height="25dp"
             android:background="@color/default_background_section_cf2f2f3"
             android:gravity="center"
-            android:text="@string/label_in_room_amenities"
+            android:text="@string/label_room_amenities"
             android:textColor="@color/default_text_c929292"
             android:textSize="13dp"/>
 

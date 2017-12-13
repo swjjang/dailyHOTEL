@@ -568,6 +568,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             case StayOutboundDetailActivity.REQUEST_CODE_PAYMENT:
                 if (resultCode == BaseActivity.RESULT_CODE_REFRESH)
                 {
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
                     setRefresh(true);
                 }
                 break;

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.v7.widget.GridLayout
+        android:id="@+id/amenityGridLayout"
+        android:layout_width="match_parent"
+        android:layout_height="148dp"
+        android:background="@color/white"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        app:columnCount="5">
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/parkingTextView"
+            android:layout_width="0dp"
+            android:layout_height="74dp"
+            android:gravity="center_horizontal"
+            android:paddingTop="12dp"
+            android:text="@string/label_parking"
+            android:textColor="@color/selector_curation_textcolor"
+            android:textSize="11dp"
+            app:drawableCompatTop="@drawable/f_ic_facilities_05"
+            app:layout_columnWeight="1"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/poolTextView"
+            android:layout_width="0dp"
+            android:layout_height="74dp"
+            android:gravity="center_horizontal"
+            android:paddingTop="12dp"
+            android:text="@string/label_pool"
+            android:textColor="@color/selector_curation_textcolor"
+            android:textSize="11dp"
+            app:drawableCompatTop="@drawable/f_ic_facilities_06"
+            app:layout_columnWeight="1"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/fitnessTextView"
+            android:layout_width="0dp"
+            android:layout_height="74dp"
+            android:gravity="center_horizontal"
+            android:paddingTop="12dp"
+            android:text="@string/label_fitness"
+            android:textColor="@color/selector_curation_textcolor"
+            android:textSize="11dp"
+            app:drawableCompatTop="@drawable/f_ic_facilities_07"
+            app:layout_columnWeight="1"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/saunaTextView"
+            android:layout_width="0dp"
+            android:layout_height="74dp"
+            android:gravity="center_horizontal"
+            android:paddingTop="12dp"
+            android:text="@string/label_sauna"
+            android:textColor="@color/selector_curation_textcolor"
+            android:textSize="11dp"
+            app:drawableCompatTop="@drawable/f_ic_facilities_16"
+            app:layout_columnWeight="1"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/businessCenterTextView"
+            android:layout_width="0dp"
+            android:layout_height="74dp"
+            android:gravity="center_horizontal"
+            android:paddingTop="12dp"
+            android:text="@string/label_business_center"
+            android:textColor="@color/selector_curation_textcolor"
+            android:textSize="11dp"
+            app:drawableCompatTop="@drawable/f_ic_facilities_15"
+            app:layout_columnWeight="1"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/kidsPlayTextView"
+            android:layout_width="0dp"
+            android:layout_height="74dp"
+            android:gravity="center_horizontal"
+            android:paddingTop="12dp"
+            android:text="@string/label_kids_play_room"
+            android:textColor="@color/selector_curation_textcolor"
+            android:textSize="11dp"
+            app:drawableCompatTop="@drawable/f_ic_facilities_17"
+            app:layout_columnWeight="1"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/bbqTextView"
+            android:layout_width="0dp"
+            android:layout_height="74dp"
+            android:gravity="center_horizontal"
+            android:paddingTop="12dp"
+            android:text="@string/label_allowed_barbecue"
+            android:textColor="@color/selector_curation_textcolor"
+            android:textSize="11dp"
+            app:drawableCompatTop="@drawable/f_ic_facilities_09"
+            app:layout_columnWeight="1"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/petTextView"
+            android:layout_width="0dp"
+            android:layout_height="74dp"
+            android:gravity="center_horizontal"
+            android:paddingTop="12dp"
+            android:text="@string/label_allowed_pet"
+            android:textColor="@color/selector_curation_textcolor"
+            android:textSize="11dp"
+            app:drawableCompatTop="@drawable/f_ic_facilities_08"
+            app:layout_columnWeight="1"/>
+    </android.support.v7.widget.GridLayout>
+</layout>

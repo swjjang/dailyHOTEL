@@ -22,12 +22,15 @@ import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayAreaGroup;
+import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StayRegion;
+import com.daily.dailyhotel.parcel.StayFilterParcel;
 import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
 import com.daily.dailyhotel.screen.common.area.stay.StayAreaListActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
+import com.daily.dailyhotel.screen.home.stay.inbound.filter.StayFilterActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.view.DailyStayCardView;
@@ -53,7 +56,6 @@ import com.twoheart.dailyhotel.place.fragment.PlaceMainActivity;
 import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
-import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
@@ -66,6 +68,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -262,22 +265,37 @@ public class StayMainActivity extends PlaceMainActivity
         {
             try
             {
-                PlaceCuration placeCuration = data.getParcelableExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION);
+                StayFilterParcel stayFilterParcel = data.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_STAY_FILTER);
 
-                if ((placeCuration instanceof StayCuration) == false)
+                if (stayFilterParcel == null)
                 {
                     return;
                 }
 
-                StayCuration changedStayCuration = (StayCuration) placeCuration;
-                StayCurationOption changedStayCurationOption = (StayCurationOption) changedStayCuration.getCurationOption();
+                StayFilter stayFilter = stayFilterParcel.getStayFilter();
+
+                if (stayFilter == null)
+                {
+                    return;
+                }
+
+                StayCurationOption stayCurationOption = new StayCurationOption();
+                stayCurationOption.person = stayFilter.person;
+                stayCurationOption.flagBedTypeFilters = stayFilter.flagBedTypeFilters;
+                stayCurationOption.flagAmenitiesFilters = stayFilter.flagAmenitiesFilters;
+                stayCurationOption.flagRoomAmenitiesFilters = stayFilter.flagRoomAmenitiesFilters;
+                stayCurationOption.setSortType(Constants.SortType.valueOf(stayFilter.sortType.name()));
+
+                StayCurationOption changedStayCurationOption = stayCurationOption;
 
                 mStayCuration.setCurationOption(changedStayCurationOption);
                 mPlaceMainLayout.setOptionFilterSelected(changedStayCurationOption.isDefaultFilter() == false);
 
                 if (changedStayCurationOption.getSortType() == SortType.DISTANCE)
                 {
-                    mStayCuration.setLocation(changedStayCuration.getLocation());
+                    Location location = data.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_LOCATION);
+
+                    mStayCuration.setLocation(location);
 
                     if (mStayCuration.getLocation() != null)
                     {
@@ -726,7 +744,42 @@ public class StayMainActivity extends PlaceMainActivity
                 return;
             }
 
-            Intent intent = StayCurationActivity.newInstance(StayMainActivity.this, mViewType, mStayCuration);
+            //            Intent intent = StayCurationActivity.newInstance(StayMainActivity.this, mViewType, mStayCuration);
+            //            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
+
+            StayBookingDay stayBookingDay = mStayCuration.getStayBookingDay();
+
+            String checkInDateTime = stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT);
+            String checkOutDateTime = stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT);
+
+            com.daily.dailyhotel.entity.StayFilter stayFilter = new com.daily.dailyhotel.entity.StayFilter();
+            StayCurationOption stayCurationOption = (StayCurationOption) mStayCuration.getCurationOption();
+
+            stayFilter.person = stayCurationOption.person;
+            stayFilter.flagBedTypeFilters = stayCurationOption.flagBedTypeFilters;
+            stayFilter.flagAmenitiesFilters = stayCurationOption.flagAmenitiesFilters;
+            stayFilter.flagRoomAmenitiesFilters = stayCurationOption.flagRoomAmenitiesFilters;
+            stayFilter.sortType = com.daily.dailyhotel.entity.StayFilter.SortType.valueOf(stayCurationOption.getSortType().name());
+
+
+            ArrayList<String> categoryList = new ArrayList();
+            categoryList.add(mStayCuration.getCategory().code);
+
+            Location location;
+            double radius;
+
+            if (stayCurationOption.getSortType() == SortType.DISTANCE)
+            {
+                location = mStayCuration.getLocation();
+                radius = 10;
+            } else
+            {
+                location = null;
+                radius = 0;
+            }
+
+            Intent intent = StayFilterActivity.newInstance(StayMainActivity.this, checkInDateTime, checkOutDateTime//
+                , mViewType, stayFilter, mStayCuration.getRegion(), categoryList, location, radius, null);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
 
             String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
