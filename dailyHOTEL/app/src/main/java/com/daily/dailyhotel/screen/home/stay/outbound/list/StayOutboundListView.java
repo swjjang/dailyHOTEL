@@ -867,6 +867,17 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         });
     }
 
+    @Override
+    public ObjectItem getObjectItem(int position)
+    {
+        if (getViewDataBinding() == null || mStayOutboundListAdapter == null)
+        {
+            return null;
+        }
+
+        return mStayOutboundListAdapter.getItem(position);
+    }
+
     private void showViewPagerAnimation()
     {
         if (mValueAnimator != null && mValueAnimator.isRunning() == true)

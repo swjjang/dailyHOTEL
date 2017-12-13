@@ -72,4 +72,6 @@ public interface StayOutboundListViewInterface extends BaseBlurViewInterface
     void showPreviewGuide();
 
     void setWish(int position, boolean wish);
+
+    ObjectItem getObjectItem(int position);
 }
