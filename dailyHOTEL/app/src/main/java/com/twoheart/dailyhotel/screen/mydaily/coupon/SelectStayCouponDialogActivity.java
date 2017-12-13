@@ -39,6 +39,7 @@ public class SelectStayCouponDialogActivity extends BaseActivity
     public static final String INTENT_EXTRA_ROOM_PRICE = "roomPrice";
     public static final String INTENT_EXTRA_CHECK_IN_DATE = "checkInDate";
     public static final String INTENT_EXTRA_CHECK_OUT_DATE = "checkOutDate";
+    public static final String INTENT_EXTRA_MAX_COUPON_AMOUNT = "maxCouponAmount";
 
     SelectCouponDialogLayout mLayout;
     SelectStayCouponNetworkController mNetworkController;
@@ -53,6 +54,7 @@ public class SelectStayCouponDialogActivity extends BaseActivity
     private String mHotelName;
     String mCallByScreen;
     StayBookingDay mStayBookingDay;
+    private int mMaxCouponAmount;
 
     public static Intent newInstance(Context context, int hotelIdx, int roomIdx, String checkInDate, String checkOutDate//
         , String categoryCode, String hotelName, int roomPrice)
@@ -193,6 +195,10 @@ public class SelectStayCouponDialogActivity extends BaseActivity
         if (mIsSetOk == false)
         {
             recordCancelAnalytics();
+
+            Intent intent = new Intent();
+            intent.putExtra(INTENT_EXTRA_MAX_COUPON_AMOUNT, mMaxCouponAmount);
+            SelectStayCouponDialogActivity.this.setResult(RESULT_CANCELED, intent);
         }
 
         super.finish();
@@ -245,6 +251,7 @@ public class SelectStayCouponDialogActivity extends BaseActivity
 
             Intent intent = new Intent();
             intent.putExtra(INTENT_EXTRA_SELECT_COUPON, coupon);
+            intent.putExtra(INTENT_EXTRA_MAX_COUPON_AMOUNT, mMaxCouponAmount);
 
             SelectStayCouponDialogActivity.this.setResult(RESULT_OK, intent);
             SelectStayCouponDialogActivity.this.finish();
@@ -281,9 +288,10 @@ public class SelectStayCouponDialogActivity extends BaseActivity
     private SelectStayCouponNetworkController.OnNetworkControllerListener mNetworkControllerListener = new SelectStayCouponNetworkController.OnNetworkControllerListener()
     {
         @Override
-        public void onCouponList(List<Coupon> list)
+        public void onCouponList(List<Coupon> list, int maxCouponAmount)
         {
             boolean isEmpty = (list == null || list.size() == 0);
+            mMaxCouponAmount = maxCouponAmount;
 
             switch (mCallByScreen)
             {

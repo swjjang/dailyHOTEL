@@ -22,6 +22,7 @@ import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Card;
 import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.entity.Coupons;
 import com.daily.dailyhotel.entity.DomesticGuest;
 import com.daily.dailyhotel.entity.PaymentResult;
 import com.daily.dailyhotel.entity.StayBookDateTime;
@@ -31,6 +32,7 @@ import com.daily.dailyhotel.entity.UserSimpleInformation;
 import com.daily.dailyhotel.parcel.analytics.StayPaymentAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayThankYouAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.repository.remote.CouponRemoteImpl;
 import com.daily.dailyhotel.repository.remote.PaymentRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
@@ -62,6 +64,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Function4;
@@ -105,6 +108,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
     PaymentRemoteImpl mPaymentRemoteImpl;
     private ProfileRemoteImpl mProfileRemoteImpl;
     private CommonRemoteImpl mCommonRemoteImpl;
+    private CouponRemoteImpl mCouponRemoteImpl;
 
     StayBookDateTime mStayBookDateTime;
     CommonDateTime mCommonDateTime;
@@ -123,6 +127,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
     UserSimpleInformation mUserSimpleInformation;
     private int mWaitingForBookingMessageType;
     private int mSaleType;
+    private int mMaxCouponAmount;
 
     // ***************************************************************** //
     // ************** 변수 선언시에 onSaveInstanceState 에 꼭 등록해야하는지 판단한다.
@@ -201,6 +206,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         mPaymentRemoteImpl = new PaymentRemoteImpl(activity);
         mProfileRemoteImpl = new ProfileRemoteImpl(activity);
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
+        mCouponRemoteImpl = new CouponRemoteImpl(activity);
 
         setRefresh(true);
     }
@@ -568,13 +574,22 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 break;
 
             case StayPaymentActivity.REQUEST_CODE_COUPON_LIST:
-                if (resultCode == Activity.RESULT_OK && data != null)
+                if (data != null)
                 {
-                    Coupon coupon = data.getParcelableExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_SELECT_COUPON);
+                    int maxCouponAmount = data.getIntExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_MAX_COUPON_AMOUNT, 0);
+                    setMaxCouponAmount(maxCouponAmount, false);
 
-                    setCoupon(coupon);
+                    if (resultCode == Activity.RESULT_OK)
+                    {
+                        Coupon coupon = data.getParcelableExtra(SelectStayCouponDialogActivity.INTENT_EXTRA_SELECT_COUPON);
+                        setCoupon(coupon);
+                    } else
+                    {
+                        setCoupon(null);
+                    }
                 } else
                 {
+                    setMaxCouponAmount(mMaxCouponAmount, false);
                     setCoupon(null);
                 }
                 break;
@@ -627,6 +642,8 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             @Override
             public void accept(StayRefundPolicy stayRefundPolicy) throws Exception
             {
+                getMaxCouponAmount(mStayIndex, mRoomIndex, mStayBookDateTime);
+
                 setStayRefundPolicy(stayRefundPolicy);
 
                 onBookingInformation(mStayPayment, mStayBookDateTime);
@@ -2629,5 +2646,54 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                     onBackClick();
                 }
             }, false);
+    }
+
+    private void getMaxCouponAmount(int stayIndex, int roomIndex, StayBookDateTime stayBookDateTime)
+    {
+        if (stayBookDateTime == null)
+        {
+            return;
+        }
+
+        addCompositeDisposable(mCouponRemoteImpl.getStayCouponListByPayment(stayIndex, roomIndex //
+            , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)) //
+            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Coupons>()
+            {
+                @Override
+                public void accept(Coupons coupons) throws Exception
+                {
+                    setMaxCouponAmount(coupons.maxCouponAmount, false);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    setMaxCouponAmount(0, true);
+                }
+            }));
+    }
+
+    private void setMaxCouponAmount(int maxCouponAmount, boolean isError)
+    {
+        mMaxCouponAmount = maxCouponAmount;
+
+        if (isError == true)
+        {
+            getViewInterface().setCouponEnabled(true);
+            getViewInterface().setMaxCouponAmountVisible(false);
+            return;
+        }
+
+        if (maxCouponAmount > 0)
+        {
+            getViewInterface().setCouponEnabled(true);
+        } else
+        {
+            getViewInterface().setCouponEnabled(false);
+        }
+
+        getViewInterface().setMaxCouponAmountText(maxCouponAmount);
+        getViewInterface().setMaxCouponAmountVisible(true);
     }
 }

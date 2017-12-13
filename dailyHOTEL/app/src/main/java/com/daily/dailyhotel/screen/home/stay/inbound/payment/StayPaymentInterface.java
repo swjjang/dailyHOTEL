@@ -52,6 +52,12 @@ public interface StayPaymentInterface extends BaseDialogViewInterface
 
     void setBonusEnabled(boolean enabled);
 
+    void setMaxCouponAmountText(int maxCouponAmount);
+
+    void setMaxCouponAmountVisible(boolean isVisible);
+
+    void setCouponEnabled(boolean enabled);
+
     void setTransportation(String type);
 
     void setTransportationType(@StayPaymentPresenter.Transportation String type);

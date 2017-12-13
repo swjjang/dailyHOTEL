@@ -497,6 +497,39 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
     }
 
     @Override
+    public void setMaxCouponAmountText(int maxCouponAmount)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().informationView.setMaxCouponAmount(maxCouponAmount);
+    }
+
+    @Override
+    public void setMaxCouponAmountVisible(boolean isVisible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().informationView.setMaxCouponAmountVisible(isVisible);
+    }
+
+    @Override
+    public void setCouponEnabled(boolean enabled)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().informationView.setCouponEnabled(enabled);
+    }
+
+    @Override
     public void setTransportation(String type)
     {
         if (getViewDataBinding() == null)
@@ -890,6 +923,11 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
                         return;
                     }
 
+                    if (getViewDataBinding().informationView.isCouponEnabled() == false)
+                    {
+                        return;
+                    }
+
                     getEventListener().onCouponClick(getViewDataBinding().informationView.isCouponSelected() == false);
                 }
             });
@@ -901,6 +939,11 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
                 @Override
                 public void onClick(View v)
                 {
+                    if (getViewDataBinding().informationView.isCouponEnabled() == false)
+                    {
+                        return;
+                    }
+
                     getEventListener().onCouponClick(true);
                 }
             });
@@ -911,6 +954,11 @@ public class StayPaymentView extends BaseDialogView<StayPaymentView.OnEventListe
                 public void onClick(View v)
                 {
                     if (getViewDataBinding() == null)
+                    {
+                        return;
+                    }
+
+                    if (getViewDataBinding().informationView.isCouponEnabled() == false)
                     {
                         return;
                     }
