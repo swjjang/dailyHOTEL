@@ -781,6 +781,11 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
                         return;
                     }
 
+                    if (getViewDataBinding().informationView.isCouponEnabled() == false)
+                    {
+                        return;
+                    }
+
                     getEventListener().onCouponClick(getViewDataBinding().informationView.isCouponSelected() == false);
                 }
             });
@@ -792,6 +797,11 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
                 @Override
                 public void onClick(View v)
                 {
+                    if (getViewDataBinding().informationView.isCouponEnabled() == false)
+                    {
+                        return;
+                    }
+
                     getEventListener().onCouponClick(true);
                 }
             });
@@ -802,6 +812,11 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
                 public void onClick(View v)
                 {
                     if (getViewDataBinding() == null)
+                    {
+                        return;
+                    }
+
+                    if (getViewDataBinding().informationView.isCouponEnabled() == false)
                     {
                         return;
                     }
