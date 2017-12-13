@@ -20,6 +20,8 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.Constants;
 
+import java.util.concurrent.TimeUnit;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
@@ -175,7 +177,16 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
                     setResult(BaseActivity.RESULT_CODE_REFRESH);
                 } else
                 {
-                    onBackClick();
+                    screenLock(false);
+
+                    addCompositeDisposable(Observable.just(true).delaySubscription(300, TimeUnit.MILLISECONDS).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                    {
+                        @Override
+                        public void accept(Boolean aBoolean) throws Exception
+                        {
+                            onBackClick();
+                        }
+                    }));
                 }
                 break;
         }
