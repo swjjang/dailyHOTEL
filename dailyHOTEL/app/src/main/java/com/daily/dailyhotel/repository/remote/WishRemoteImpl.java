@@ -7,6 +7,7 @@ import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.WishInterface;
 import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.entity.StayOutbound;
+import com.daily.dailyhotel.entity.WishCount;
 import com.daily.dailyhotel.entity.WishResult;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
@@ -220,6 +221,72 @@ public class WishRemoteImpl extends BaseRemoteImpl implements WishInterface
                 }
 
                 return wishResult;
+            });
+    }
+
+    /**
+     * 국내 스테이, 고메 위시 개수
+     * @return
+     */
+    public Observable<WishCount> getWishCount()
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/wishes"//
+            : "MzgkMTUkMzIkMTgkNDAkNDEkMzMkMjkkNDMkMTQkMjIkMTkkNDUkNTAkMjgkMzIk$NTBFODQwNDgzNTPAWzNFF0IWxQUIL2OEMER4NzBCWCMjMyNIALIkOEVCNDU=$";
+
+        return mDailyMobileService.getWishCount(Crypto.getUrlDecoderEx(API))//
+            .subscribeOn(Schedulers.io()).map(baseDto ->
+            {
+                WishCount wishCount;
+
+                if (baseDto != null)
+                {
+                    if (baseDto.msgCode == 100 && baseDto.data != null)
+                    {
+                        wishCount = baseDto.data.getWishCount();
+                    } else
+                    {
+                        throw new BaseException(baseDto.msgCode, baseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return wishCount;
+            });
+    }
+
+    /**
+     * 해외 스테이 위시 개수
+     * @return
+     */
+    public Observable<Integer> getStayOutboundWishCount()
+    {
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/wishes"//
+            : "MzUkODMkMjgkMjAkMjUkODMkNDIkODckNTMkMjckMjckMTMkNiQ0OCQ0MSQxNiQ=$NDRBMDFlCQzZBOSDXQ5MDlDKMEY2FMSUUJDRRDRGMjFNDFOTNcJyQjM1QjM4NQjI1RTc1NEM2NzZEQUVDQTdBRjBGNkUOwMLDMI1OQ==$";
+
+        return mDailyMobileService.getStayOutboundWishCount(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API))//
+            .subscribeOn(Schedulers.io()).map(baseDto ->
+            {
+                int wishCount = 0;
+
+                if (baseDto != null)
+                {
+                    if (baseDto.msgCode == 100 && baseDto.data != null)
+                    {
+                        wishCount = baseDto.data.wishOutboundCount;
+                    } else
+                    {
+                        throw new BaseException(baseDto.msgCode, baseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return wishCount;
             });
     }
 }

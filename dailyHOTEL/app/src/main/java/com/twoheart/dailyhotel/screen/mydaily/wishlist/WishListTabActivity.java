@@ -14,6 +14,10 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyViewPager;
+import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.entity.WishCount;
+import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.repository.remote.WishRemoteImpl;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.daily.dailyhotel.view.DailyWishAnimationView;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -31,8 +35,7 @@ import java.util.ArrayList;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
-import retrofit2.Call;
-import retrofit2.Response;
+import io.reactivex.functions.Function3;
 
 /**
  * Created by android_sam on 2016. 11. 1..
@@ -43,7 +46,8 @@ public class WishListTabActivity extends BaseActivity
     ArrayList<PlaceWishListFragment> mFragmentList;
     private WishListFragmentPageAdapter mPageAdapter;
 
-    WishListTabNetworkController mNetworkController;
+    CommonRemoteImpl mCommonRemoteImpl;
+    WishRemoteImpl mWishRemoteImpl;
 
     DailyViewPager mViewPager;
     private TabLayout mTabLayout;
@@ -90,7 +94,8 @@ public class WishListTabActivity extends BaseActivity
 
         setContentView(R.layout.activity_wishlist);
 
-        mNetworkController = new WishListTabNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
+        mCommonRemoteImpl = new CommonRemoteImpl(this);
+        mWishRemoteImpl = new WishRemoteImpl(this);
 
         initIntent(getIntent());
 
@@ -115,10 +120,9 @@ public class WishListTabActivity extends BaseActivity
             } else
             {
                 lockUI();
-                mNetworkController.requestCommonDateTime();
+                onRefresh();
             }
         }
-
 
         super.onResume();
     }
@@ -333,6 +337,50 @@ public class WishListTabActivity extends BaseActivity
         }
     }
 
+    private void onRefresh()
+    {
+        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime(), mWishRemoteImpl.getWishCount(), mWishRemoteImpl.getStayOutboundWishCount(), new Function3<CommonDateTime, WishCount, Integer, WishCount>()
+        {
+            @Override
+            public WishCount apply(CommonDateTime commonDateTime, WishCount wishCount, Integer wishStayOutboundCount) throws Exception
+            {
+                if (mFragmentList != null)
+                {
+                    TodayDateTime todayDateTime = new TodayDateTime();
+                    todayDateTime.openDateTime = commonDateTime.openDateTime;
+                    todayDateTime.closeDateTime = commonDateTime.closeDateTime;
+                    todayDateTime.currentDateTime = commonDateTime.currentDateTime;
+                    todayDateTime.dailyDateTime = commonDateTime.dailyDateTime;
+
+                    for (PlaceWishListFragment fragment : mFragmentList)
+                    {
+                        fragment.setPlaceBookingDay(todayDateTime);
+                    }
+                }
+
+                wishCount.wishStayOutboundCount = wishStayOutboundCount;
+
+                return wishCount;
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<WishCount>()
+        {
+            @Override
+            public void accept(WishCount wishCount) throws Exception
+            {
+                unLockUI();
+
+                WishListTabActivity.this.setTabLayout(wishCount.wishStayCount + wishCount.wishStayOutboundCount, wishCount.wishGourmetCount);
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                onHandleError(throwable);
+            }
+        }));
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -519,61 +567,6 @@ public class WishListTabActivity extends BaseActivity
             {
                 AnalyticsManager.getInstance(WishListTabActivity.this).recordScreen(WishListTabActivity.this, AnalyticsManager.Screen.MENU_WISHLIST_EMPTY, null);
             }
-        }
-    };
-
-    private final WishListTabNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new WishListTabNetworkController.OnNetworkControllerListener()
-    {
-        @Override
-        public void onCommonDateTime(TodayDateTime todayDateTime)
-        {
-            if (mFragmentList != null)
-            {
-                for (PlaceWishListFragment fragment : mFragmentList)
-                {
-                    fragment.setPlaceBookingDay(todayDateTime);
-                }
-            }
-
-            mNetworkController.requestWishListCount();
-        }
-
-        @Override
-        public void onWishListCount(int stayCount, int gourmetCount)
-        {
-            WishListTabActivity.this.setTabLayout(stayCount, gourmetCount);
-        }
-
-        @Override
-        public void onError(Call call, Throwable e, boolean onlyReport)
-        {
-            WishListTabActivity.this.onError(call, e, onlyReport);
-        }
-
-        @Override
-        public void onError(Throwable e)
-        {
-            WishListTabActivity.this.onError(e);
-        }
-
-        @Override
-        public void onErrorPopupMessage(int msgCode, String message)
-        {
-            WishListTabActivity.this.onErrorPopupMessage(msgCode, message);
-        }
-
-        @Override
-        public void onErrorToastMessage(String message)
-        {
-            WishListTabActivity.this.onErrorToastMessage(message);
-            finish();
-        }
-
-        @Override
-        public void onErrorResponse(Call call, Response response)
-        {
-            WishListTabActivity.this.onErrorResponse(call, response);
-            finish();
         }
     };
 }

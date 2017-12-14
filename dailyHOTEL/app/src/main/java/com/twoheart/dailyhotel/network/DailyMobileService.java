@@ -40,6 +40,7 @@ import com.daily.dailyhotel.repository.remote.model.StayOutboundPaymentData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundReceiptData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundDetailData;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundWishCountData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
 import com.daily.dailyhotel.repository.remote.model.StayPaymentData;
 import com.daily.dailyhotel.repository.remote.model.StayRefundPolicyData;
@@ -52,6 +53,7 @@ import com.daily.dailyhotel.repository.remote.model.UserData;
 import com.daily.dailyhotel.repository.remote.model.UserInformationData;
 import com.daily.dailyhotel.repository.remote.model.UserTrackingData;
 import com.daily.dailyhotel.repository.remote.model.WaitingDepositData;
+import com.daily.dailyhotel.repository.remote.model.WishCountData;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.network.model.Event;
@@ -676,14 +678,6 @@ public interface DailyMobileService
         , @Query("dateSale") String visitDate);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @POST("{mobileAPI}")
-    Observable<BaseDto<String>> addWish(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
-
-    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @POST("{mobileAPI}")
-    Observable<BaseDto<String>> removeWish(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
-
-    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
     Observable<BaseDto<ReviewScoresData>> getReviewScores(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
@@ -741,6 +735,22 @@ public interface DailyMobileService
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @POST()
     Observable<BaseDto<String>> removeStayOutboundWish(@Url String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST("{mobileAPI}")
+    Observable<BaseDto<String>> addWish(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST("{mobileAPI}")
+    Observable<BaseDto<String>> removeWish(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<WishCountData>> getWishCount(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET()
+    Observable<BaseDto<StayOutboundWishCountData>> getStayOutboundWishCount(@Url String mobileAPI);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // BookingRemoteImpl

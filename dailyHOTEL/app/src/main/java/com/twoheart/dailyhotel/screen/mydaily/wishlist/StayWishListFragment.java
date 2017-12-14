@@ -213,9 +213,15 @@ public class StayWishListFragment extends PlaceWishListFragment
             {
                 mWishList = placeViewItemList;
 
-                mWishList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
+                if (placeViewItemList.size() == 0)
+                {
+                    mListLayout.setData(null, false);
+                } else
+                {
+                    mWishList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
 
-                mListLayout.setData(mWishList, false);
+                    mListLayout.setData(mWishList, false);
+                }
             }
         }, new Consumer<Throwable>()
         {
