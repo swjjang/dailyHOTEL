@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
-        android:id="@+id/paymentInfoLayout"
-        android:layout_width="0dp"
+    <merge
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/receipt_bg_middle"
         android:orientation="vertical"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bookingInfoLayout">
+        tools:parentTag="LinearLayout">
+
+        <!--<LinearLayout-->
+        <!--android:id="@+id/paymentInfoLayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@drawable/receipt_bg_middle"-->
+        <!--android:orientation="vertical"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/bookingInfoLayout">-->
 
         <com.daily.base.widget.DailyTextView
             android:layout_width="wrap_content"
@@ -35,7 +39,6 @@
             android:layout_marginTop="@dimen/issuingreceipt_linespacing">
 
             <com.daily.base.widget.DailyTextView
-                android:id="@+id/textView22"
                 android:layout_width="wrap_content"
                 android:layout_height="13dp"
                 android:gravity="center_vertical"
@@ -161,7 +164,7 @@
                 dailyFont:style="Medium"/>
 
             <com.daily.base.widget.DailyTextView
-                android:id="@+id/totalPaymentTextView"
+                android:id="@+id/paymentPriceTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="13dp"
                 android:layout_alignParentRight="true"
@@ -169,6 +172,6 @@
                 android:textSize="11dp"
                 dailyFont:style="Bold"/>
         </RelativeLayout>
-    </LinearLayout>
-
-</android.support.constraint.ConstraintLayout>
+        <!--</LinearLayout>-->
+    </merge>
+</layout>

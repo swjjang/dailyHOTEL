@@ -7,7 +7,6 @@ import android.view.WindowManager;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
-import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.StayReceipt;
 import com.daily.dailyhotel.entity.StayReceiptItem;
@@ -126,56 +125,8 @@ public class StayReceiptView extends BaseDialogView<StayReceiptView.OnEventListe
         getViewDataBinding().textView11.setText(item.nights + "일/" + item.rooms + "객실");
 
         // **결제 정보**
-        // 결제일
-        getViewDataBinding().textView23.setText(item.paidAt);
-
-        // 결제수단
-        if (DailyTextUtils.isTextEmpty(item.paymentType) == true)
-        {
-            getViewDataBinding().paymentTypeLayout.setVisibility(View.GONE);
-        } else
-        {
-            getViewDataBinding().paymentTypeLayout.setVisibility(View.VISIBLE);
-
-            getViewDataBinding().textView33.setText(item.paymentType);
-        }
-
-        getViewDataBinding().saleLayout.setVisibility(View.VISIBLE);
-
-        // 총금액
-        getViewDataBinding().textView29.setText(DailyTextUtils.getPriceFormat(getContext(), item.price, false));
-
-        // 적립금 혹은 쿠폰 사용
-        if (item.bonusAmount > 0 || item.couponAmount > 0)
-        {
-            if (item.bonusAmount < 0)
-            {
-                item.bonusAmount = 0;
-            }
-
-            if (item.couponAmount < 0)
-            {
-                item.couponAmount = 0;
-            }
-
-            getViewDataBinding().discountLayout.setVisibility(View.VISIBLE);
-            getViewDataBinding().discountedTextView.setText("- " + DailyTextUtils.getPriceFormat(getContext() //
-                , item.bonusAmount + item.couponAmount, false));
-        } else
-        {
-            getViewDataBinding().discountLayout.setVisibility(View.GONE);
-        }
-
-        if (item.bonusAmount > 0 || item.couponAmount > 0)
-        {
-            getViewDataBinding().saleLayout.setVisibility(View.VISIBLE);
-        } else
-        {
-            getViewDataBinding().saleLayout.setVisibility(View.GONE);
-        }
-
-        // 총 입금(실 결제) 금액
-        getViewDataBinding().totalPaymentTextView.setText(DailyTextUtils.getPriceFormat(getContext(), item.paymentAmount, false));
+        getViewDataBinding().paymentInfoLayout.setData(item.paidAt, item.paymentType, item.price //
+            , item.bonusAmount, item.couponAmount, item.paymentAmount);
 
         // **공급자** 레이아웃에서 처리
 

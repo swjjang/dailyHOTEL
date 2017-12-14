@@ -6,7 +6,6 @@ import android.view.WindowManager;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
-import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.StayOutboundReceipt;
 import com.twoheart.dailyhotel.R;
@@ -97,60 +96,9 @@ public class StayOutboundReceiptView extends BaseDialogView<StayOutboundReceiptV
         }
 
         // **결제 정보**
-        // 결제일
-        try
-        {
-            getViewDataBinding().paymentDateTextView.setText(DailyCalendar.convertDateFormatString(stayOutboundReceipt.paymentDate, DailyCalendar.ISO_8601_FORMAT, "yyyy/MM/dd"));
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-
-        // 결제수단
-        if (DailyTextUtils.isTextEmpty(stayOutboundReceipt.paymentTypeName) == true)
-        {
-            getViewDataBinding().paymentTypeLayout.setVisibility(View.GONE);
-        } else
-        {
-            getViewDataBinding().paymentTypeLayout.setVisibility(View.VISIBLE);
-            getViewDataBinding().paymentTypeTextView.setText(stayOutboundReceipt.paymentTypeName);
-        }
-
-        getViewDataBinding().saleLayout.setVisibility(View.VISIBLE);
-
-        // 총금액
-        getViewDataBinding().totalPriceTextView.setText(DailyTextUtils.getPriceFormat(getContext(), stayOutboundReceipt.totalPrice, false));
-
-        // 적립금 혹은 쿠폰 사용
-        if (stayOutboundReceipt.bonus > 0 || stayOutboundReceipt.coupon > 0)
-        {
-            if (stayOutboundReceipt.bonus < 0)
-            {
-                stayOutboundReceipt.bonus = 0;
-            }
-
-            if (stayOutboundReceipt.coupon < 0)
-            {
-                stayOutboundReceipt.coupon = 0;
-            }
-
-            getViewDataBinding().discountLayout.setVisibility(View.VISIBLE);
-            getViewDataBinding().discountPriceTextView.setText("- " + DailyTextUtils.getPriceFormat(getContext(), stayOutboundReceipt.bonus + stayOutboundReceipt.coupon, false));
-        } else
-        {
-            getViewDataBinding().discountLayout.setVisibility(View.GONE);
-        }
-
-        if (stayOutboundReceipt.bonus > 0 || stayOutboundReceipt.coupon > 0)
-        {
-            getViewDataBinding().saleLayout.setVisibility(View.VISIBLE);
-        } else
-        {
-            getViewDataBinding().saleLayout.setVisibility(View.GONE);
-        }
-
-        // 총 입금(실 결제) 금액
-        getViewDataBinding().totalPaymentTextView.setText(DailyTextUtils.getPriceFormat(getContext(), stayOutboundReceipt.paymentAmount, false));
+        getViewDataBinding().paymentInfoLayout.setData(stayOutboundReceipt.paymentDate, stayOutboundReceipt.paymentTypeName //
+            , stayOutboundReceipt.totalPrice, stayOutboundReceipt.bonus, stayOutboundReceipt.coupon //
+            ,stayOutboundReceipt.paymentAmount);
 
         // **공급자** 레이아웃에서 처리
 

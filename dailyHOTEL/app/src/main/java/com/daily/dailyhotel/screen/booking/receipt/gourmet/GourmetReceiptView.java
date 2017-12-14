@@ -6,13 +6,10 @@ import android.view.WindowManager;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
-import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.GourmetReceipt;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityGourmetReceiptDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetReceiptReservationInfoDataBinding;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 
 public class GourmetReceiptView extends BaseDialogView<GourmetReceiptView.OnEventListener, ActivityGourmetReceiptDataBinding> implements GourmetReceiptInterface
 {
@@ -114,46 +111,9 @@ public class GourmetReceiptView extends BaseDialogView<GourmetReceiptView.OnEven
 
         // **결제 정보**
         // 결제일
-        String paidAtDate = null;
-        try
-        {
-            paidAtDate = DailyCalendar.convertDateFormatString(gourmetReceipt.paidAt, DailyCalendar.ISO_8601_FORMAT, "yyyy/MM/dd");
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
 
-        getViewDataBinding().textView23.setText(paidAtDate);
-
-        // 결제수단
-        if (DailyTextUtils.isTextEmpty(gourmetReceipt.paymentType) == true)
-        {
-            getViewDataBinding().paymentTypeLayout.setVisibility(View.GONE);
-        } else
-        {
-            getViewDataBinding().paymentTypeLayout.setVisibility(View.VISIBLE);
-            getViewDataBinding().textView33.setText(gourmetReceipt.paymentType);
-        }
-
-        getViewDataBinding().saleLayout.setVisibility(View.VISIBLE);
-
-        // 총금액
-        getViewDataBinding().textView29.setText(DailyTextUtils.getPriceFormat(getContext(), gourmetReceipt.price, false));
-
-        // 적립금 혹은 쿠폰 사용
-        if (gourmetReceipt.couponAmount > 0)
-        {
-            getViewDataBinding().discountedTextView.setText("- " + DailyTextUtils.getPriceFormat(getContext(), gourmetReceipt.couponAmount, false));
-            getViewDataBinding().discountLayout.setVisibility(View.VISIBLE);
-            getViewDataBinding().saleLayout.setVisibility(View.VISIBLE);
-        } else
-        {
-            getViewDataBinding().discountLayout.setVisibility(View.GONE);
-            getViewDataBinding().saleLayout.setVisibility(View.GONE);
-        }
-
-        // 총 입금 금액
-        getViewDataBinding().totalPaymentTextView.setText(DailyTextUtils.getPriceFormat(getContext(), gourmetReceipt.paymentAmount, false));
+        getViewDataBinding().paymentInfoLayout.setData(gourmetReceipt.paidAt, gourmetReceipt.paymentType //
+            , gourmetReceipt.price, 0, gourmetReceipt.couponAmount, gourmetReceipt.paymentAmount);
 
         // **공급자** 레이아웃에서 처리
 
