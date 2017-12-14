@@ -171,7 +171,7 @@ public class StayWishListFragment extends PlaceWishListFragment
                                 return getIndex(placeViewItem1) - getIndex(placeViewItem2);
                             } else
                             {
-                                return dateTime1.compareToIgnoreCase(dateTime2);
+                                return dateTime2.compareToIgnoreCase(dateTime1);
                             }
                         }
 
