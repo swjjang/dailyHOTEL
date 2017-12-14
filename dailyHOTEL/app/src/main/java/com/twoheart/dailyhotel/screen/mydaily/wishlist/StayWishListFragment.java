@@ -104,16 +104,18 @@ public class StayWishListFragment extends PlaceWishListFragment
                 switch (resultCode)
                 {
                     case Activity.RESULT_OK:
-                        Observable.create(new ObservableOnSubscribe<Object>()
+                        addCompositeDisposable(Observable.create(new ObservableOnSubscribe<Object>()
                         {
                             @Override
                             public void subscribe(ObservableEmitter<Object> e) throws Exception
                             {
                                 mEventListener.onListItemClick(mViewByLongPress, mPositionByLongPress);
                             }
-                        }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
+                        }).subscribeOn(AndroidSchedulers.mainThread()).subscribe());
                         break;
 
+                    case com.daily.base.BaseActivity.RESULT_CODE_REFRESH:
+                    case com.daily.base.BaseActivity.RESULT_CODE_DATA_CHANGED:
                     case Constants.CODE_RESULT_ACTIVITY_REFRESH:
                         forceRefreshList();
                         break;
@@ -181,7 +183,7 @@ public class StayWishListFragment extends PlaceWishListFragment
                                     return ((Stay) placeViewItem.getItem()).createAtWish;
 
                                 case PlaceViewItem.TYPE_OB_ENTRY:
-                                    return ((StayOutbound) placeViewItem.getItem()).createAtWish;
+                                    return ((StayOutbound) placeViewItem.getItem()).createdAtAtWish;
                             }
 
                             return null;
