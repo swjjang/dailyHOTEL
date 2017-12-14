@@ -350,16 +350,21 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
             @Override
             public List<Suggest> apply(CommonDateTime commonDateTime, List<Suggest> suggests) throws Exception
             {
-                ExLog.d("pinkred : " + Thread.currentThread().getName());
-
                 setCommonDateTime(commonDateTime);
 
+                return suggests;
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<Suggest>>()
+        {
+            @Override
+            public void accept(List<Suggest> suggestList) throws Exception
+            {
                 String checkInDate = DailyPreference.getInstance(getActivity()).getStayOutboundSearchCheckInDate();
                 String checkOutDate = DailyPreference.getInstance(getActivity()).getStayOutboundSearchCheckOutDate();
 
                 if (DailyTextUtils.isTextEmpty(checkInDate, checkOutDate) == true)
                 {
-                    setStayBookDefaultDateTime(commonDateTime);
+                    setStayBookDefaultDateTime(mCommonDateTime);
                 } else
                 {
                     long currentTime;
@@ -367,7 +372,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
                     try
                     {
-                        currentTime = DailyCalendar.convertDate(commonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT).getTime();
+                        currentTime = DailyCalendar.convertDate(mCommonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT).getTime();
                         checkInTime = DailyCalendar.convertDate(checkInDate, DailyCalendar.ISO_8601_FORMAT).getTime();
                     } catch (Exception e)
                     {
@@ -379,29 +384,24 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
                     if (currentTime > checkInTime)
                     {
-                        setStayBookDefaultDateTime(commonDateTime);
+                        setStayBookDefaultDateTime(mCommonDateTime);
                     } else
                     {
                         setStayBookDateTime(checkInDate, 0, checkOutDate, 0);
                     }
                 }
 
-                if (processDeepLinkAfterCommonDateTime(mDailyDeepLink, commonDateTime) == true)
+                if (processDeepLinkAfterCommonDateTime(mDailyDeepLink, mCommonDateTime) == true)
                 {
                     mDailyDeepLink.clear();
                     mDailyDeepLink = null;
                 }
 
-                return suggests;
-            }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<Suggest>>()
-        {
-            @Override
-            public void accept(List<Suggest> suggestList) throws Exception
-            {
                 getViewInterface().setPopularAreaList(suggestList);
 
                 notifyStayBookDateTimeChanged();
+
+                unLockAll();
             }
         }, new Consumer<Throwable>()
         {

@@ -85,7 +85,21 @@ public class SuggestsData
 
     public List<Suggest> getRegionSuggestList(Context context)
     {
-        return getSuggestList(context.getString(R.string.label_stay_outbound_suggest_region), regionSuggestDataList, Integer.MAX_VALUE);
+        List<Suggest> regionSuggestList = new ArrayList<>();
+
+        if (regionSuggestDataList == null || regionSuggestDataList.size() == 0)
+        {
+            return regionSuggestList;
+        }
+
+        int count = regionSuggestDataList.size();
+
+        for (SuggestData suggestData : regionSuggestDataList)
+        {
+            regionSuggestList.add(suggestData.getSuggests());
+        }
+
+        return regionSuggestList;
     }
 
     private List<Suggest> getSuggestList(String title, List<SuggestData> suggestDataList, int maxCount)

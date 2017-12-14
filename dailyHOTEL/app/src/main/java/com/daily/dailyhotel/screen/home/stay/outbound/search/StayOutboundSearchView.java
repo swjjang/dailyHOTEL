@@ -53,8 +53,10 @@ public class StayOutboundSearchView extends BaseDialogView<StayOutboundSearchVie
         viewDataBinding.doSearchView.setOnClickListener(this);
 
         //
+        int margin = (int) (ScreenUtils.getScreenWidth(getContext()) * (1.0f - CARD_WIDTH_RATIO) / 2.0f);
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) viewDataBinding.popularLayout.getLayoutParams();
-        layoutParams.width = (int) (ScreenUtils.getScreenWidth(getContext()) * CARD_WIDTH_RATIO);
+        layoutParams.leftMargin = margin;
+        layoutParams.rightMargin = margin;
         viewDataBinding.popularLayout.setLayoutParams(layoutParams);
 
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.popularRecyclerView, getColor(R.color.default_over_scroll_edge));
@@ -146,6 +148,8 @@ public class StayOutboundSearchView extends BaseDialogView<StayOutboundSearchVie
         {
             return;
         }
+
+        getViewDataBinding().popularLayout.setVisibility((suggestList == null || suggestList.size() == 0) ? View.GONE : View.VISIBLE);
 
         if (mPopularAreaListAdapter == null)
         {
