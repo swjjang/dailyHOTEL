@@ -400,16 +400,16 @@
 
                 <!-- 공급자 -->
                 <com.daily.dailyhotel.view.DailyReceiptProviderView
-                android:id="@+id/providerInfoLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/paymentInfoLayout"
-                android:layout_marginLeft="7dp"
-                android:layout_marginRight="7dp"
-                android:background="@drawable/receipt_bg_bottom"
-                android:paddingBottom="15dp"
-                android:paddingLeft="11dp"
-                android:paddingRight="11dp"/>
+                    android:id="@+id/providerInfoLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/paymentInfoLayout"
+                    android:layout_marginLeft="7dp"
+                    android:layout_marginRight="7dp"
+                    android:background="@drawable/receipt_bg_bottom"
+                    android:paddingBottom="15dp"
+                    android:paddingLeft="11dp"
+                    android:paddingRight="11dp"/>
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/commentTextView"
