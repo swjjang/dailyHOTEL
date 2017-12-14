@@ -355,6 +355,13 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         switch (requestCode)
         {
             case StayOutboundListActivity.REQUEST_CODE_DETAIL:
+                switch (resultCode)
+                {
+                    case BaseActivity.RESULT_CODE_DATA_CHANGED:
+                        setRefresh(true);
+                        break;
+                }
+
                 // https://dailyhotel.atlassian.net/browse/ANDKR-1601 상세화면에서 목록을 갱신시키지 않도록 한다.
                 //                if (resultCode == BaseActivity.RESULT_CODE_REFRESH)
                 //                {
