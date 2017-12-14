@@ -30,6 +30,8 @@ public class StayOutboundSearchView extends BaseDialogView<StayOutboundSearchVie
         void onCalendarClick();
 
         void onPeopleClick();
+
+        void onPopularAreaClick(Suggest suggest);
     }
 
     public StayOutboundSearchView(BaseActivity baseActivity, StayOutboundSearchView.OnEventListener listener)
@@ -158,7 +160,7 @@ public class StayOutboundSearchView extends BaseDialogView<StayOutboundSearchVie
                 @Override
                 public void onClick(View view)
                 {
-
+                    getEventListener().onPopularAreaClick((Suggest) view.getTag());
                 }
             });
 
