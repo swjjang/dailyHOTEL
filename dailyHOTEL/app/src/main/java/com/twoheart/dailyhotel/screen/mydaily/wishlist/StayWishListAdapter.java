@@ -105,6 +105,7 @@ public class StayWishListAdapter extends PlaceWishListAdapter
         holder.stayCardView.setDistanceVisible(false);
         holder.stayCardView.setAddressText(stay.addressSummary);
         holder.stayCardView.setPriceVisible(false);
+        holder.stayCardView.setBenefitText(stay.dBenefitText);
         holder.stayCardView.setDividerVisible(true);
     }
 
@@ -132,6 +133,7 @@ public class StayWishListAdapter extends PlaceWishListAdapter
         holder.stayOutboundCardView.setAddressText(stayOutbound.locationDescription);
         holder.stayOutboundCardView.setPriceVisible(false);
         holder.stayOutboundCardView.setBenefitText(null);
+        holder.stayOutboundCardView.setDividerVisible(true);
     }
 
     private class FooterViewHolder extends RecyclerView.ViewHolder
