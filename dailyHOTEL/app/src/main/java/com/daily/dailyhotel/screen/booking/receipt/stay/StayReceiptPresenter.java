@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.booking.receipt.gourmet;
+package com.daily.dailyhotel.screen.booking.receipt.stay;
 
 
 import android.app.Activity;
@@ -10,7 +10,8 @@ import com.crashlytics.android.Crashlytics;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
-import com.daily.dailyhotel.entity.GourmetReceipt;
+import com.daily.dailyhotel.entity.Booking;
+import com.daily.dailyhotel.entity.StayReceipt;
 import com.daily.dailyhotel.repository.remote.ReceiptRemoteImpl;
 import com.daily.dailyhotel.screen.common.dialog.email.receipt.EmailDialogActivity;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
@@ -28,42 +29,45 @@ import io.reactivex.functions.Consumer;
  * Created by sheldon
  * Clean Architecture
  */
-public class GourmetReceiptPresenter extends BaseExceptionPresenter<GourmetReceiptActivity, GourmetReceiptInterface> implements GourmetReceiptView.OnEventListener
+public class StayReceiptPresenter extends BaseExceptionPresenter<StayReceiptActivity, StayReceiptInterface> implements StayReceiptView.OnEventListener
 {
-    private GourmetReceiptAnalyticsInterface mAnalytics;
+    private StayReceiptAnalyticsInterface mAnalytics;
 
     private ReceiptRemoteImpl mReceiptRemoteImpl;
 
-    private boolean mIsFullScreenMode;
+    private int mBookingState;
     private String mAggregationId;
     private int mReservationIndex;
+    boolean mIsFullScreenMode;
 
-    public interface GourmetReceiptAnalyticsInterface extends BaseAnalyticsInterface
+    public interface StayReceiptAnalyticsInterface extends BaseAnalyticsInterface
     {
+        void onScreen(Activity activity);
     }
 
-    public GourmetReceiptPresenter(@NonNull GourmetReceiptActivity activity)
+    public StayReceiptPresenter(@NonNull StayReceiptActivity activity)
     {
         super(activity);
     }
 
     @NonNull
     @Override
-    protected GourmetReceiptInterface createInstanceViewInterface()
+    protected StayReceiptInterface createInstanceViewInterface()
     {
-        return new GourmetReceiptView(getActivity(), this);
+        return new StayReceiptView(getActivity(), this);
     }
 
     @Override
-    public void constructorInitialize(GourmetReceiptActivity activity)
+    public void constructorInitialize(StayReceiptActivity activity)
     {
-        setContentView(R.layout.activity_gourmet_receipt_data);
+        setContentView(R.layout.activity_stay_receipt_data);
 
-        setAnalytics(new GourmetReceiptAnalyticsImpl());
+        setAnalytics(new StayReceiptAnalyticsImpl());
 
         mReceiptRemoteImpl = new ReceiptRemoteImpl(getActivity());
 
         mIsFullScreenMode = false;
+
         if (getViewInterface() != null)
         {
             getViewInterface().setFullScreenMode(mIsFullScreenMode);
@@ -75,7 +79,7 @@ public class GourmetReceiptPresenter extends BaseExceptionPresenter<GourmetRecei
     @Override
     public void setAnalytics(BaseAnalyticsInterface analytics)
     {
-        mAnalytics = (GourmetReceiptAnalyticsInterface) analytics;
+        mAnalytics = (StayReceiptAnalyticsInterface) analytics;
     }
 
     @Override
@@ -86,8 +90,9 @@ public class GourmetReceiptPresenter extends BaseExceptionPresenter<GourmetRecei
             return true;
         }
 
-        mReservationIndex = intent.getIntExtra(GourmetReceiptActivity.INTENT_EXTRA_RESERVATION_INDEX, -1);
-        mAggregationId = intent.getStringExtra(GourmetReceiptActivity.INTENT_EXTRA_AGGREGATION_ID);
+        mReservationIndex = intent.getIntExtra(StayReceiptActivity.INTENT_EXTRA_RESERVATION_INDEX, -1);
+        mBookingState = intent.getIntExtra(StayReceiptActivity.INTENT_EXTRA_BOOKING_STATE, Booking.BOOKING_STATE_NONE);
+        mAggregationId = intent.getStringExtra(StayReceiptActivity.INTENT_EXTRA_AGGREGATION_ID);
 
         if (mReservationIndex < 0 && DailyTextUtils.isTextEmpty(mAggregationId) == true)
         {
@@ -100,11 +105,19 @@ public class GourmetReceiptPresenter extends BaseExceptionPresenter<GourmetRecei
     @Override
     public void onPostCreate()
     {
+        if (getViewInterface() == null)
+        {
+            return;
+        }
+
+        getViewInterface().setBookingState(mBookingState);
     }
 
     @Override
     public void onStart()
     {
+        mAnalytics.onScreen(getActivity());
+
         super.onStart();
 
         if (DailyHotel.isLogin() == false)
@@ -174,7 +187,7 @@ public class GourmetReceiptPresenter extends BaseExceptionPresenter<GourmetRecei
     {
         unLockAll();
 
-        if (requestCode == GourmetReceiptActivity.REQUEST_CODE_EMAIL)
+        if (requestCode == StayReceiptActivity.REQUEST_CODE_EMAIL)
         {
             if (resultCode == Activity.RESULT_OK && data != null)
             {
@@ -195,33 +208,34 @@ public class GourmetReceiptPresenter extends BaseExceptionPresenter<GourmetRecei
         setRefresh(false);
         screenLock(showProgress);
 
-        Observable<GourmetReceipt> receiptObservable = Observable.defer(new Callable<ObservableSource<GourmetReceipt>>()
+        Observable<StayReceipt> receiptObservable = Observable.defer(new Callable<ObservableSource<StayReceipt>>()
         {
             @Override
-            public ObservableSource<GourmetReceipt> call() throws Exception
+            public ObservableSource<StayReceipt> call() throws Exception
             {
-                if (DailyTextUtils.isTextEmpty(mAggregationId) == true)
-                {
-                    return mReceiptRemoteImpl.getGourmetReceipt(mReservationIndex);
-                }
+//                if (DailyTextUtils.isTextEmpty(mAggregationId) == true)
+//                {
+                    return mReceiptRemoteImpl.getStayReceipt(mReservationIndex);
+//                }
 
-                return mReceiptRemoteImpl.getGourmetReceipt(mAggregationId);
+                // 현재 Stay의 경우 AggregationId를 지원하지 않아 아래 코드가 불리면 죽음 - 때문에 주석 처리 함
+//                return mReceiptRemoteImpl.getStayReceipt(mAggregationId);
             }
         });
 
-        addCompositeDisposable(receiptObservable.observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetReceipt>()
+        addCompositeDisposable(receiptObservable.observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayReceipt>()
         {
             @Override
-            public void accept(GourmetReceipt gourmetReceipt) throws Exception
+            public void accept(StayReceipt stayReceipt) throws Exception
             {
-                mReservationIndex = gourmetReceipt.gourmetReservationIdx;
+                mReservationIndex = stayReceipt.reservationIndex;
 
-                if (gourmetReceipt.gourmetReservationIdx < 0)
+                if (stayReceipt.reservationIndex < 0)
                 {
-                    Crashlytics.logException(new NullPointerException("GourmetReceiptActivity : mReservationIndex == null"));
+                    Crashlytics.logException(new NullPointerException("StayReceiptActivity : mReservationIndex == null"));
                 }
 
-                getViewInterface().setReceipt(gourmetReceipt);
+                getViewInterface().setReceipt(stayReceipt);
 
                 unLockAll();
             }
@@ -250,7 +264,7 @@ public class GourmetReceiptPresenter extends BaseExceptionPresenter<GourmetRecei
         } else
         {
             Intent intent = EmailDialogActivity.newInstance(getActivity(), DailyUserPreference.getInstance(getActivity()).getEmail());
-            startActivityForResult(intent, GourmetReceiptActivity.REQUEST_CODE_EMAIL);
+            startActivityForResult(intent, StayReceiptActivity.REQUEST_CODE_EMAIL);
         }
     }
 
@@ -262,17 +276,17 @@ public class GourmetReceiptPresenter extends BaseExceptionPresenter<GourmetRecei
             return;
         }
 
-        Observable<String> emailObservable = Observable.defer(new Callable<ObservableSource<? extends String>>()
+        Observable<String> emailObservable = Observable.defer(new Callable<ObservableSource<String>>()
         {
             @Override
-            public ObservableSource<? extends String> call() throws Exception
+            public ObservableSource<String> call() throws Exception
             {
-                if (DailyTextUtils.isTextEmpty(mAggregationId) == true)
-                {
-                    return mReceiptRemoteImpl.getGourmetReceiptByEmail(mReservationIndex, email);
-                }
+//                if (DailyTextUtils.isTextEmpty(mAggregationId) == true)
+//                {
+                    return mReceiptRemoteImpl.getStayReceiptByEmail(mReservationIndex, email);
+//                }
 
-                return mReceiptRemoteImpl.getGourmetReceiptByEmail(mAggregationId, email);
+//                return mReceiptRemoteImpl.getStayReceiptByEmail(mAggregationId, email);
             }
         });
 
@@ -304,7 +318,6 @@ public class GourmetReceiptPresenter extends BaseExceptionPresenter<GourmetRecei
         }
 
         mIsFullScreenMode = !mIsFullScreenMode;
-
         getViewInterface().setFullScreenMode(mIsFullScreenMode);
     }
 }

@@ -40,6 +40,7 @@ import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.GourmetRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RefundRemoteImpl;
 import com.daily.dailyhotel.screen.booking.detail.map.GourmetBookingDetailMapActivity;
+import com.daily.dailyhotel.screen.booking.receipt.stay.StayReceiptActivity;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.call.front.FrontCallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
@@ -60,7 +61,6 @@ import com.twoheart.dailyhotel.model.ReviewPickQuestion;
 import com.twoheart.dailyhotel.model.ReviewScoreQuestion;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
-import com.twoheart.dailyhotel.screen.booking.detail.hotel.IssuingReceiptActivity;
 import com.twoheart.dailyhotel.screen.booking.detail.hotel.StayAutoRefundActivity;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
@@ -1090,7 +1090,7 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
         }
 
         startActivityForResult( //
-            IssuingReceiptActivity.newInstance(getActivity(), mReservationIndex, mBookingState) //
+            StayReceiptActivity.newInstance(getActivity(), mReservationIndex, null, mBookingState) //
             , StayBookingDetailActivity.REQUEST_CODE_ISSUING_RECEIPT);
     }
 

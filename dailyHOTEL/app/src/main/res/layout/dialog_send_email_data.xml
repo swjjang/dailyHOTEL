@@ -53,45 +53,39 @@
             android:textSize="15dp"
             android:theme="@style/EditTextTheme"/>
 
-        <RelativeLayout
-            android:id="@+id/buttonLayout"
+        <LinearLayout
+            android:id="@+id/twoButtonLayout"
             android:layout_width="match_parent"
             android:layout_height="38dp"
             android:layout_marginTop="24dp">
 
-            <LinearLayout
-                android:id="@+id/twoButtonLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/negativeTextView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/selector_dialog_button02"
+                android:gravity="center"
+                android:text="@string/dialog_btn_text_no"
+                android:textColor="@drawable/selector_dialog_text_color02"
+                android:textSize="14dp"
+                dailyFont:style="Medium"/>
 
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/negativeTextView"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/selector_dialog_button02"
-                    android:gravity="center"
-                    android:text="@string/dialog_btn_text_no"
-                    android:textColor="@drawable/selector_dialog_text_color02"
-                    android:textSize="14dp"
-                    dailyFont:style="Medium"/>
+            <View
+                android:layout_width="10dp"
+                android:layout_height="match_parent"/>
 
-                <View
-                    android:layout_width="10dp"
-                    android:layout_height="match_parent"/>
-
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/positiveTextView"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/selector_dialog_button01"
-                    android:gravity="center"
-                    android:text="@string/dialog_btn_text_yes"
-                    android:textColor="@drawable/selector_dialog_text_color01"
-                    android:textSize="14dp"
-                    dailyFont:style="Medium"/>
-            </LinearLayout>
-        </RelativeLayout>
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/positiveTextView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/selector_dialog_button01"
+                android:gravity="center"
+                android:text="@string/dialog_btn_text_yes"
+                android:textColor="@drawable/selector_dialog_text_color01"
+                android:textSize="14dp"
+                dailyFont:style="Medium"/>
+        </LinearLayout>
     </LinearLayout>
 </layout>

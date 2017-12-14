@@ -17,6 +17,8 @@ public class StayOutboundReceiptActivity extends BaseActivity<StayOutboundReceip
 {
     static final String INTENT_EXTRA_DATA_BOOKING_INDEX = "bookingIndex";
 
+    public static final int REQUEST_CODE_EMAIL = 10000;
+
     public static Intent newInstance(Context context, int bookingIndex)
     {
         Intent intent = new Intent(context, StayOutboundReceiptActivity.class);

@@ -6,7 +6,9 @@ import android.support.annotation.NonNull;
 import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.ReceiptInterface;
 import com.daily.dailyhotel.entity.GourmetReceipt;
+import com.daily.dailyhotel.entity.StayReceipt;
 import com.daily.dailyhotel.repository.remote.model.GourmetReceiptData;
+import com.daily.dailyhotel.repository.remote.model.StayReceiptData;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
@@ -171,5 +173,89 @@ public class ReceiptRemoteImpl extends BaseRemoteImpl implements ReceiptInterfac
                     return message;
                 }
             });
+    }
+
+    @Override
+    public Observable<StayReceipt> getStayReceipt(int reservationIdx)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/reserv/receipt"//
+            : "NTIkMzckNDYkNDQkNjEkMzIkNzMkNDQkMjUkODQkODMkMiQ2NiQyNCQ4NyQ3MSQ=$ODPIyNDhGMzU1QTQzNzRBQjgR1QD0E2MTJBLNzRFRWDVDRkNQY0NRTEzRTk1PNzY3OTODUzZRDU1RjlTEMzUxRDCFFSGMzNDNzM0QQ==$";
+
+        return mDailyMobileService.getStayReceipt(Crypto.getUrlDecoderEx(URL), Integer.toString(reservationIdx)) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<StayReceiptData>, StayReceipt>()
+            {
+                @Override
+                public StayReceipt apply(BaseDto<StayReceiptData> stayReceiptDataBaseDto) throws Exception
+                {
+                    StayReceipt stayReceipt;
+
+                    if (stayReceiptDataBaseDto != null)
+                    {
+                        if (stayReceiptDataBaseDto.msgCode == 0 && stayReceiptDataBaseDto.data != null) // 아주 오래된 API라서 메시지코드가 100이 아니라 0입니다. 유의 하세요.
+                        {
+                            stayReceipt = stayReceiptDataBaseDto.data.getStayReceipt();
+                        } else
+                        {
+                            throw new BaseException(stayReceiptDataBaseDto.msgCode, stayReceiptDataBaseDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(-1, null);
+                    }
+
+                    return stayReceipt;
+                }
+            });
+    }
+
+    @Override
+    public Observable<StayReceipt> getStayReceipt(String aggregationId)
+    {
+        // not yet used.
+        return null;
+    }
+
+    @Override
+    public Observable<String> getStayReceiptByEmail(int reservationIdx, String email)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/reservations/{kind}/{reservationIdx}/receipts" //
+            : "ODQkOTgkMTY5JDckNTYkNjkkNTkkOTUkNjQkMTczJDEyOCQ3NiQ0NCQ0NCQ3OSQxMTEk$OUIxOEUQwMUJFREVGQkMwOENEOEE5MkY5REY2NjE0QTcFC2REU0RDk2MzEVyOZURCMXDQ1Q0UOzRUEPYzOENFMzZGREMwNQUEwQUHFDNkVDQRzIQxRjFBNzJGQUQwQTJCMDg5NOEU2NTc1QzgyRkE1QkFCQ0E0NzQ0ODlBRTYzN0ZGMjhFMYzFMDMDQ=$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{kind}", "stay");
+        urlParams.put("{reservationIdx}", Integer.toString(reservationIdx));
+
+        return mDailyMobileService.getStayReceiptByEmail(Crypto.getUrlDecoderEx(URL, urlParams), email) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<Object>, String>()
+            {
+                @Override
+                public String apply(BaseDto<Object> objectBaseDto) throws Exception
+                {
+                    String message = null;
+
+                    if (objectBaseDto != null)
+                    {
+                        if (objectBaseDto.msgCode == 100)
+                        {
+                            message = objectBaseDto.msg;
+                        } else
+                        {
+                            throw new BaseException(objectBaseDto.msgCode, objectBaseDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(-1, null);
+                    }
+
+                    return message;
+                }
+            });
+    }
+
+    @Override
+    public Observable<String> getStayReceiptByEmail(String aggregationId, String email)
+    {
+        // not yet used;
+        return null;
     }
 }

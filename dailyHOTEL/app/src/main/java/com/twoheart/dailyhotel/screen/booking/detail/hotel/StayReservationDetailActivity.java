@@ -37,6 +37,7 @@ import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.GourmetRemoteImpl;
 import com.daily.dailyhotel.screen.booking.detail.map.GourmetBookingDetailMapActivity;
+import com.daily.dailyhotel.screen.booking.receipt.stay.StayReceiptActivity;
 import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
@@ -1255,7 +1256,8 @@ public class StayReservationDetailActivity extends PlaceReservationDetailActivit
                 return;
             }
 
-            startActivityForResult(IssuingReceiptActivity.newInstance(StayReservationDetailActivity.this, mReservationIndex, mBookingState), CODE_REQUEST_ACTIVITY_RECEIPT);
+            startActivityForResult(StayReceiptActivity.newInstance(StayReservationDetailActivity.this //
+                , mReservationIndex, null, mBookingState), CODE_REQUEST_ACTIVITY_RECEIPT);
         }
 
         @Override

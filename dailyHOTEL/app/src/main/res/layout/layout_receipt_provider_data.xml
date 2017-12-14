@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <merge
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:parentTag="android.support.constraint.ConstraintLayout">
+
+        <!--<android.support.constraint.ConstraintLayout-->
+        <!--android:id="@+id/providerInfoLayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@drawable/receipt_bg_bottom"-->
+        <!--android:paddingBottom="15dp"-->
+        <!--android:paddingLeft="11dp"-->
+        <!--android:paddingRight="11dp">-->
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/tile_receipt_bottom_underline"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+            android:id="@+id/logoImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/receipt_logo"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/nameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="12dp"
+            android:layout_marginTop="9dp"
+            android:textColor="@color/default_text_c929292"
+            android:textSize="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/logoImageView"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/addressTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="12dp"
+            android:layout_marginTop="9dp"
+            android:textColor="@color/default_text_c929292"
+            android:textSize="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/nameTextView"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/registrationNoTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="12dp"
+            android:layout_marginTop="9dp"
+            android:textColor="@color/default_text_c929292"
+            android:textSize="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/addressTextView"/>
+
+        <!--</android.support.constraint.ConstraintLayout>-->
+    </merge>
+</layout>

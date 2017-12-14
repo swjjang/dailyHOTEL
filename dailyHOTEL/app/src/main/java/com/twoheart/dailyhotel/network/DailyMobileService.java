@@ -43,6 +43,7 @@ import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundDetailData
 import com.daily.dailyhotel.repository.remote.model.StayOutboundWishCountData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
 import com.daily.dailyhotel.repository.remote.model.StayPaymentData;
+import com.daily.dailyhotel.repository.remote.model.StayReceiptData;
 import com.daily.dailyhotel.repository.remote.model.StayRefundPolicyData;
 import com.daily.dailyhotel.repository.remote.model.StayRegionData;
 import com.daily.dailyhotel.repository.remote.model.SuggestsData;
@@ -1014,4 +1015,11 @@ public interface DailyMobileService
     @POST("{mobileAPI}")
     Observable<BaseDto<Object>> getGourmetReceiptByEmail(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
                                                          @Query("emails") String emails);
+
+    @GET("{mobileAPI}")
+    Observable<BaseDto<StayReceiptData>> getStayReceipt(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("reservation_idx") String index);
+
+    @POST("{mobileAPI}")
+    Observable<BaseDto<Object>> getStayReceiptByEmail(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
+                                                      @Query("emails") String emails);
 }
