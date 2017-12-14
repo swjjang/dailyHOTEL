@@ -142,4 +142,35 @@ public class SuggestRemoteImpl extends BaseRemoteImpl implements SuggestInterfac
                 }
             }).observeOn(AndroidSchedulers.mainThread());
     }
+
+    @Override
+    public Observable<List<Suggest>> getPopularRegionSuggestsByStayOutbound()
+    {
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/hot-keywords"//
+            : "";
+
+        return mDailyMobileService.getPopularAreaSuggestsByStayOutbound(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API))//
+            .subscribeOn(Schedulers.io()).map((suggestsDataBaseDto) ->
+            {
+                List<Suggest> list;
+
+                if (suggestsDataBaseDto != null)
+                {
+                    if (suggestsDataBaseDto.msgCode == 100 && suggestsDataBaseDto.data != null)
+                    {
+                        list = suggestsDataBaseDto.data.getRegionSuggestList(mContext);
+                    } else
+                    {
+                        throw new BaseException(suggestsDataBaseDto.msgCode, suggestsDataBaseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return list;
+            });
+    }
 }

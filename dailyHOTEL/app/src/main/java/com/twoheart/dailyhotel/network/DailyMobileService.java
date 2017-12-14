@@ -549,6 +549,11 @@ public interface DailyMobileService
     @GET()
     Observable<BaseDto<SuggestsData>> getSuggestsByStayOutbound(@Url String mobileAPI, @Query(value = "keyword") String keyword);
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET()
+    Observable<BaseDto<SuggestsData>> getPopularAreaSuggestsByStayOutbound(@Url String mobileAPI);
+
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // StayOutboundRemoteImpl
     /////////////////////////////////////////////////////////////////////////////////////////////////

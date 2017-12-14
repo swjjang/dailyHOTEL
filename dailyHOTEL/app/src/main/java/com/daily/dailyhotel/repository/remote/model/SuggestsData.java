@@ -83,6 +83,11 @@ public class SuggestsData
         return list;
     }
 
+    public List<Suggest> getRegionSuggestList(Context context)
+    {
+        return getSuggestList(context.getString(R.string.label_stay_outbound_suggest_region), regionSuggestDataList, Integer.MAX_VALUE);
+    }
+
     private List<Suggest> getSuggestList(String title, List<SuggestData> suggestDataList, int maxCount)
     {
         if (suggestDataList == null || suggestDataList.size() == 0 || DailyTextUtils.isTextEmpty(title) == true)

@@ -1,16 +1,26 @@
 package com.daily.dailyhotel.screen.home.stay.outbound.search;
 
+import android.support.constraint.ConstraintLayout;
 import android.view.View;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.entity.Suggest;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundSearchDataBinding;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
+
+import java.util.List;
 
 public class StayOutboundSearchView extends BaseDialogView<StayOutboundSearchView.OnEventListener, ActivityStayOutboundSearchDataBinding> implements StayOutboundSearchViewInterface, View.OnClickListener
 {
+    private static final float CARD_WIDTH_RATIO = 0.772f; // 270/360 = 0.772222222222222;
+
+    StayOutboundSearchPopularAreaListAdapter mPopularAreaListAdapter;
+
     public interface OnEventListener extends OnBaseEventListener
     {
         void onSuggestClick(boolean isUserAction);
@@ -41,6 +51,13 @@ public class StayOutboundSearchView extends BaseDialogView<StayOutboundSearchVie
         viewDataBinding.calendarTextView.setOnClickListener(this);
         viewDataBinding.peopleTextView.setOnClickListener(this);
         viewDataBinding.doSearchView.setOnClickListener(this);
+
+        //
+        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) viewDataBinding.popularLayout.getLayoutParams();
+        layoutParams.width = (int) (ScreenUtils.getScreenWidth(getContext()) * CARD_WIDTH_RATIO);
+        viewDataBinding.popularLayout.setLayoutParams(layoutParams);
+
+        EdgeEffectColor.setEdgeGlowColor(viewDataBinding.popularRecyclerView, getColor(R.color.default_over_scroll_edge));
     }
 
     @Override
@@ -120,6 +137,32 @@ public class StayOutboundSearchView extends BaseDialogView<StayOutboundSearchVie
                 getEventListener().onSearchKeyword();
                 break;
         }
+    }
+
+    @Override
+    public void setPopularAreaList(List<Suggest> suggestList)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (mPopularAreaListAdapter == null)
+        {
+            mPopularAreaListAdapter = new StayOutboundSearchPopularAreaListAdapter(getContext(), new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+
+                }
+            });
+
+            getViewDataBinding().popularRecyclerView.setAdapter(mPopularAreaListAdapter);
+        }
+
+        mPopularAreaListAdapter.setData(suggestList);
+        mPopularAreaListAdapter.notifyDataSetChanged();
     }
 
     private void initToolbar(ActivityStayOutboundSearchDataBinding viewDataBinding)

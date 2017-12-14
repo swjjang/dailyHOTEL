@@ -21,6 +21,7 @@ import com.daily.dailyhotel.parcel.SuggestParcel;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
 import com.daily.dailyhotel.repository.local.SuggestLocalImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
 import com.daily.dailyhotel.screen.home.stay.outbound.calendar.StayOutboundCalendarActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.StayOutboundListActivity;
@@ -38,10 +39,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 
 /**
@@ -56,6 +60,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     private StayOutboundSearchAnalyticsInterface mAnalytics;
     private CommonRemoteImpl mCommonRemoteImpl;
     private SuggestLocalImpl mSuggestLocalImpl;
+    private SuggestRemoteImpl mSuggestRemoteImpl;
 
     private CommonDateTime mCommonDateTime;
     private StayBookDateTime mStayBookDateTime;
@@ -101,6 +106,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
         mSuggestLocalImpl = new SuggestLocalImpl(activity);
+        mSuggestRemoteImpl = new SuggestRemoteImpl(activity);
 
         addCompositeDisposable(mSuggestLocalImpl.getRecentlySuggest().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Suggest>()
         {
@@ -339,9 +345,13 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         setRefresh(false);
         screenLock(showProgress);
 
-        addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime()//
-            .subscribe(commonDateTime ->
+        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime(), mSuggestRemoteImpl.getPopularRegionSuggestsByStayOutbound(), new BiFunction<CommonDateTime, List<Suggest>, List<Suggest>>()
+        {
+            @Override
+            public List<Suggest> apply(CommonDateTime commonDateTime, List<Suggest> suggests) throws Exception
             {
+                ExLog.d("pinkred : " + Thread.currentThread().getName());
+
                 setCommonDateTime(commonDateTime);
 
                 String checkInDate = DailyPreference.getInstance(getActivity()).getStayOutboundSearchCheckInDate();
@@ -382,18 +392,25 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                     mDailyDeepLink = null;
                 }
 
-                notifyStayBookDateTimeChanged();
-
-
-                screenUnLock();
-            }, new Consumer<Throwable>()
+                return suggests;
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<Suggest>>()
+        {
+            @Override
+            public void accept(List<Suggest> suggestList) throws Exception
             {
-                @Override
-                public void accept(Throwable throwable) throws Exception
-                {
-                    StayOutboundSearchPresenter.this.onHandleErrorAndFinish(throwable);
-                }
-            }));
+                getViewInterface().setPopularAreaList(suggestList);
+
+                notifyStayBookDateTimeChanged();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                onHandleErrorAndFinish(throwable);
+            }
+        }));
     }
 
     @Override
