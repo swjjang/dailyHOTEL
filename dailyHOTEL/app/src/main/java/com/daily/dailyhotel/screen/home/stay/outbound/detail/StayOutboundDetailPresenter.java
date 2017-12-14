@@ -605,7 +605,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
                     setRefresh(true);
 
-                    setResult(BaseActivity.RESULT_CODE_REFRESH);
+                    setResult(BaseActivity.RESULT_CODE_DATA_CHANGED);
                 }
                 break;
 
@@ -633,7 +633,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
                     notifyWishChanged();
 
-                    setResult(BaseActivity.RESULT_CODE_REFRESH);
+                    setResult(BaseActivity.RESULT_CODE_DATA_CHANGED);
                 }
                 break;
         }
