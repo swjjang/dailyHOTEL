@@ -66,8 +66,8 @@ public class StayOutboundData
     @JsonField(name = "myWish")
     public boolean myWish;
 
-    @JsonField(name = "createAt")
-    public String createAtWish; // 위시 목록일때만 내려옴.
+    @JsonField(name = "createdAt")
+    public String createdAt; // 위시 목록일때만 내려옴.
 
     public StayOutboundData()
     {
@@ -103,7 +103,7 @@ public class StayOutboundData
 
         stayOutbound.provideRewardSticker = provideRewardSticker;
         stayOutbound.myWish = myWish;
-        stayOutbound.createAtWish = createAtWish;
+        stayOutbound.createdAtAtWish = createdAt;
 
         return stayOutbound;
     }
