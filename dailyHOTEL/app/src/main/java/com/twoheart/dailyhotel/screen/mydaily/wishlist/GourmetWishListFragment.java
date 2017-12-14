@@ -154,15 +154,21 @@ public class GourmetWishListFragment extends PlaceWishListFragment
                 return;
             }
 
-            List<PlaceViewItem> placeViewItemList = new ArrayList<>();
-            for (Gourmet gourmet : gourmetList)
+            if (gourmetList == null || gourmetList.size() == 0)
             {
-                placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, gourmet));
+                mListLayout.setData(null, false);
+            } else
+            {
+                List<PlaceViewItem> placeViewItemList = new ArrayList<>();
+                for (Gourmet gourmet : gourmetList)
+                {
+                    placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, gourmet));
+                }
+
+                placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
+
+                mListLayout.setData(placeViewItemList, false);
             }
-
-            placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_FOOTER_VIEW, null));
-
-            mListLayout.setData(placeViewItemList, false);
         }
 
         @Override

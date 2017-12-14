@@ -103,6 +103,7 @@ public abstract class PlaceWishListLayout extends BaseBlurLayout
 
     public void setData(List<PlaceViewItem> list, boolean isShowEmpty, boolean rewardEnabled)
     {
+        // 1개면 Footer만 있는 상태이다.
         if (list == null || list.size() == 0)
         {
             list = new ArrayList<>();

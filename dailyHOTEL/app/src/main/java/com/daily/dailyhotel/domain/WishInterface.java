@@ -21,5 +21,4 @@ public interface WishInterface
     Observable<WishResult> addStayOutboundWish(int wishIndex);
 
     Observable<WishResult> removeStayOutboundWish(int wishIndex);
-
 }
