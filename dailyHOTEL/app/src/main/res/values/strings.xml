@@ -1421,6 +1421,7 @@
     <string name="label_stay_outbound_suggest_point">주요지점</string>
     <string name="label_stay_outbound_suggest_station">역</string>
     <string name="label_stay_outbound_suggest_airport">공항</string>
+    <string name="label_stay_outbound_suggest_popular_area">인기 지역</string>
 
     <string name="message_stay_outbound_suggest_empty_suggest">검색어를 변경하거나 영문으로 검색해 보세요.</string>
 

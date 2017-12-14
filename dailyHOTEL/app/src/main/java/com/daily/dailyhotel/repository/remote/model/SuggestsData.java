@@ -83,6 +83,25 @@ public class SuggestsData
         return list;
     }
 
+    public List<Suggest> getRegionSuggestList(Context context)
+    {
+        List<Suggest> regionSuggestList = new ArrayList<>();
+
+        if (regionSuggestDataList == null || regionSuggestDataList.size() == 0)
+        {
+            return regionSuggestList;
+        }
+
+        int count = regionSuggestDataList.size();
+
+        for (SuggestData suggestData : regionSuggestDataList)
+        {
+            regionSuggestList.add(suggestData.getSuggests());
+        }
+
+        return regionSuggestList;
+    }
+
     private List<Suggest> getSuggestList(String title, List<SuggestData> suggestDataList, int maxCount)
     {
         if (suggestDataList == null || suggestDataList.size() == 0 || DailyTextUtils.isTextEmpty(title) == true)
