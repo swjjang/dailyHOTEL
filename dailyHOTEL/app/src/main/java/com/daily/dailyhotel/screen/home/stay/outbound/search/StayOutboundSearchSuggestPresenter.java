@@ -17,6 +17,7 @@ import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
@@ -25,6 +26,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 /**
  * Created by sheldon
@@ -181,12 +183,24 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
         }
 
         addCompositeDisposable(mSuggestLocalImpl.getRecentlySuggestList() //
-            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<Suggest>>()
+            .observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<List<Suggest>, ObservableSource<List<Suggest>>>()
+            {
+                @Override
+                public ObservableSource<List<Suggest>> apply(List<Suggest> suggests) throws Exception
+                {
+                    getViewInterface().setRecentlySuggests(suggests);
+
+                    return suggests.size() == 0 ? mSuggestRemoteImpl.getPopularRegionSuggestsByStayOutbound() : Observable.just(new ArrayList<>());
+                }
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<Suggest>>()
             {
                 @Override
                 public void accept(List<Suggest> suggests) throws Exception
                 {
-                    getViewInterface().setRecentlySuggests(suggests);
+                    if (suggests.size() > 0)
+                    {
+                        getViewInterface().setPopularAreaSuggests(suggests);
+                    }
 
                     unLockAll();
                 }
@@ -362,6 +376,9 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
                     mAnalytics.onEventDeleteAllRecentlySuggestClick(getActivity());
 
                     unLockAll();
+
+                    setRefresh(true);
+                    onRefresh(true);
                 }
             }, new Consumer<Throwable>()
             {
