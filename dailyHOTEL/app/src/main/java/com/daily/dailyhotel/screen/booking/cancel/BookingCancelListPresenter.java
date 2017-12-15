@@ -129,9 +129,19 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
     {
         super.onStart();
 
-        if (isRefresh() == true)
+        if (DailyHotel.isLogin() == false)
         {
-            onRefresh(true);
+            if (getViewInterface() != null)
+            {
+                getViewInterface().logoutLayout();
+                setRefresh(false);
+            }
+        } else
+        {
+            if (isRefresh() == true)
+            {
+                onRefresh(true);
+            }
         }
 
         mAnalytics.onScreen(getActivity());
@@ -142,18 +152,9 @@ public class BookingCancelListPresenter extends BaseExceptionPresenter<BookingCa
     {
         super.onResume();
 
-        if (DailyHotel.isLogin() == false)
+        if (isRefresh() == true)
         {
-            if (getViewInterface() != null)
-            {
-                getViewInterface().logoutLayout();
-            }
-        } else
-        {
-            if (isRefresh() == true)
-            {
-                onRefresh(true);
-            }
+            onRefresh(true);
         }
     }
 

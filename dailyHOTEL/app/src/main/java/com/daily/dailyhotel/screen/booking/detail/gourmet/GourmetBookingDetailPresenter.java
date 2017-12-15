@@ -209,6 +209,7 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
 
         if (DailyHotel.isLogin() == false)
         {
+            setRefresh(false);
             startLogin();
             return;
         }

@@ -245,6 +245,7 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
 
         if (DailyHotel.isLogin() == false)
         {
+            setRefresh(false);
             startLogin();
             return;
         }
