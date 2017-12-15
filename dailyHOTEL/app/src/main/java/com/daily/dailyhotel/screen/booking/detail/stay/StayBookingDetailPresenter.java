@@ -843,12 +843,6 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
                     }
                 });
 
-                //                Intent intent = GourmetDetailActivity.newInstance(StayReservationDetailActivity.this //
-                //                    , gourmetBookingDay, gourmet.index, gourmet.name //
-                //                    , gourmet.imageUrl, gourmet.category, gourmet.isSoldOut, analyticsParam, true //
-                //                    , PlaceDetailLayout.TRANS_GRADIENT_BOTTOM_TYPE_NONE);
-
-
                 Intent intent = GourmetDetailActivity.newInstance(getActivity() //
                     , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
                     , visitDateTime, gourmet.category, gourmet.isSoldOut, false, false, true//
@@ -1216,9 +1210,6 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
             StayBookingDay stayBookingDay = new StayBookingDay();
             stayBookingDay.setCheckInDay(mCommonDateTime.dailyDateTime);
             stayBookingDay.setCheckOutDay(mCommonDateTime.dailyDateTime, 1);
-
-            //                Intent intent = StayDetailActivity.newInstance(StayReservationDetailActivity.this, stayBookingDay//
-            //                    , mPlaceBookingDetail.isOverseas, mPlaceBookingDetail.placeIndex, 0, false, false, false);
 
             Intent intent = StayDetailActivity.newInstance(getActivity() //
                 , mStayBookingDetail.stayIndex, mStayBookingDetail.stayName, null, StayDetailActivity.NONE_PRICE//

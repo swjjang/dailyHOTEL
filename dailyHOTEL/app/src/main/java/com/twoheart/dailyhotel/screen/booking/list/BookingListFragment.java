@@ -593,7 +593,6 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
         switch (placeType)
         {
             case STAY:
-                //                intent = StayReservationDetailActivity.newInstance(baseActivity, reservationIndex, aggregationId, imageUrl, isDeepLink, bookingState);
                 intent = StayBookingDetailActivity.newInstance(baseActivity, reservationIndex, aggregationId, imageUrl, isDeepLink, bookingState);
                 break;
 
