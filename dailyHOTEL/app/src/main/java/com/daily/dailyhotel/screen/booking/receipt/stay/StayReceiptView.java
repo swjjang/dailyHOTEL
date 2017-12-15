@@ -13,6 +13,7 @@ import com.daily.dailyhotel.entity.StayReceiptItem;
 import com.daily.dailyhotel.entity.StayReceiptProvider;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayReceiptDataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutStayReceiptReservationInfoDataBinding;
 import com.twoheart.dailyhotel.util.Util;
 
 public class StayReceiptView extends BaseDialogView<StayReceiptView.OnEventListener, ActivityStayReceiptDataBinding> implements StayReceiptInterface
@@ -106,23 +107,24 @@ public class StayReceiptView extends BaseDialogView<StayReceiptView.OnEventListe
         StayReceiptProvider provider = stayReceipt.provider;
 
         // **예약 세부 정보**
+        LayoutStayReceiptReservationInfoDataBinding reservationDataBinding = getViewDataBinding().reservationInfoDataBinding;
         // 예약 번호
-        getViewDataBinding().textView13.setText(Integer.toString(stayReceipt.reservationIndex));
+        reservationDataBinding.bookingIndexTextView.setText(Integer.toString(stayReceipt.reservationIndex));
 
         // 호텔명
-        getViewDataBinding().textView3.setText(item.stayName);
+        reservationDataBinding.stayNameTextView.setText(item.stayName);
 
         // 호텔주소
-        getViewDataBinding().textView5.setText(item.stayAddress);
+        reservationDataBinding.addressTextView.setText(item.stayAddress);
 
         // 고객성명/번호
-        getViewDataBinding().textView7.setText(item.userName + " / " + Util.addHyphenMobileNumber(getContext(), item.userPhone));
+        reservationDataBinding.guestTextView.setText(item.userName + " / " + Util.addHyphenMobileNumber(getContext(), item.userPhone));
 
         // 체크인/아웃
-        getViewDataBinding().textView9.setText(item.checkInDate + " - " + item.checkOutDate);
+        reservationDataBinding.checkInOutTextView.setText(item.checkInDate + " - " + item.checkOutDate);
 
         // 숙박 일수/객실수
-        getViewDataBinding().textView11.setText(item.nights + "일/" + item.rooms + "객실");
+        reservationDataBinding.roomTextView.setText(item.nights + "일/" + item.rooms + "객실");
 
         // **결제 정보**
         getViewDataBinding().paymentInfoLayout.setData(item.paidAt, item.paymentType, item.price //
