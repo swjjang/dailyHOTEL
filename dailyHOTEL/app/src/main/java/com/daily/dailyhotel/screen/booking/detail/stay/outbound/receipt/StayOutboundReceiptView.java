@@ -78,7 +78,7 @@ public class StayOutboundReceiptView extends BaseDialogView<StayOutboundReceiptV
         getViewDataBinding().addressTextView.setText(stayOutboundReceipt.placeAddress);
 
         // 고객성명/번호
-        getViewDataBinding().guestTxtView.setText(stayOutboundReceipt.userName + " / " + Util.addHyphenMobileNumber(getContext(), stayOutboundReceipt.userPhone));
+        getViewDataBinding().guestTextView.setText(stayOutboundReceipt.userName + " / " + Util.addHyphenMobileNumber(getContext(), stayOutboundReceipt.userPhone));
 
         // 체크인/아웃
         getViewDataBinding().checkInOutTextView.setText(stayOutboundReceipt.checkInDate + " - " + stayOutboundReceipt.checkOutDate);
@@ -89,7 +89,7 @@ public class StayOutboundReceiptView extends BaseDialogView<StayOutboundReceiptV
                 , DailyCalendar.convertDateFormatString(stayOutboundReceipt.checkInDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
 
             // 숙박 일수/객실수
-            getViewDataBinding().roomTxtView.setText(getString(R.string.label_stay_outbound_booking_night_room, nights, stayOutboundReceipt.roomCount));
+            getViewDataBinding().roomTextView.setText(getString(R.string.label_stay_outbound_booking_night_room, nights, stayOutboundReceipt.roomCount));
         } catch (Exception e)
         {
             ExLog.d(e.toString());
