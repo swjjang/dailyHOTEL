@@ -40,7 +40,7 @@ import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.GourmetRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RefundRemoteImpl;
 import com.daily.dailyhotel.screen.booking.detail.map.GourmetBookingDetailMapActivity;
-import com.daily.dailyhotel.screen.booking.receipt.stay.StayReceiptActivity;
+import com.daily.dailyhotel.screen.booking.detail.stay.receipt.StayReceiptActivity;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.call.front.FrontCallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;

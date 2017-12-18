@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.booking.receipt.stay;
+package com.daily.dailyhotel.screen.booking.detail.gourmet.receipt;
 
 
 import android.content.Context;
@@ -13,20 +13,19 @@ import com.twoheart.dailyhotel.R;
  * Created by sheldon
  * Clean Architecture
  */
-public class StayReceiptActivity extends BaseActivity<StayReceiptPresenter>
+public class GourmetReceiptActivity extends BaseActivity<GourmetReceiptPresenter>
 {
     public static final String INTENT_EXTRA_RESERVATION_INDEX = "reservationIndex";
     public static final String INTENT_EXTRA_AGGREGATION_ID = "aggregationId";
-    public static final String INTENT_EXTRA_BOOKING_STATE = "bookingState";
 
     public static final int REQUEST_CODE_EMAIL = 10000;
 
-    public static Intent newInstance(Context context, int reservationIndex, String aggregationId, int bookingState)
+    public static Intent newInstance(Context context, int reservationIndex, String aggregationId)
     {
-        Intent intent = new Intent(context, StayReceiptActivity.class);
+        Intent intent = new Intent(context, GourmetReceiptActivity.class);
+
         intent.putExtra(INTENT_EXTRA_RESERVATION_INDEX, reservationIndex);
         intent.putExtra(INTENT_EXTRA_AGGREGATION_ID, aggregationId);
-        intent.putExtra(INTENT_EXTRA_BOOKING_STATE, bookingState);
 
         return intent;
     }
@@ -41,9 +40,9 @@ public class StayReceiptActivity extends BaseActivity<StayReceiptPresenter>
 
     @NonNull
     @Override
-    protected StayReceiptPresenter createInstancePresenter()
+    protected GourmetReceiptPresenter createInstancePresenter()
     {
-        return new StayReceiptPresenter(this);
+        return new GourmetReceiptPresenter(this);
     }
 
     @Override
