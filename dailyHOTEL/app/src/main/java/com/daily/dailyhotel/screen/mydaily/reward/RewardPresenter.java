@@ -140,16 +140,19 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
 
             if (jsonArray != null && jsonArray.length() > 0)
             {
+                getViewInterface().setGuideTitleMessage(jsonArray.getJSONObject(0).getString("titleMessage"));
+                getViewInterface().setGuideDescriptionMessage(jsonArray.getJSONObject(0).getString("descriptionMessage"));
+
                 int length = jsonArray.length();
 
                 List<Pair<String, String>> guideList = new ArrayList<>(length);
 
-                for (int i = 0; i < length; i++)
+                for (int i = 1; i < length; i++)
                 {
                     guideList.add(new Pair<>(jsonArray.getJSONObject(i).getString("titleMessage"), jsonArray.getJSONObject(i).getString("descriptionMessage")));
                 }
 
-                getViewInterface().setGuideList(guideList);
+                getViewInterface().setOthersGuideList(guideList);
             }
         } catch (Exception e)
         {
