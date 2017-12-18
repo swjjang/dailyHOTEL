@@ -53,15 +53,16 @@ public class DailyBookingProductItemView extends ConstraintLayout
         mViewDataBinding.titleTextView.setText(title);
         mViewDataBinding.countTextView.setText(getContext().getString(R.string.label_booking_count, count));
 
-        if (persons > 0)
-        {
-            mViewDataBinding.personsTextView.setText(getContext().getString(R.string.label_standard_persons, persons));
-            mViewDataBinding.personsTextView.setVisibility(View.VISIBLE);
-        } else
-        {
+        // 기준 인원 일단 안보이게 하기로 함 - Cleo 요청
+//        if (persons > 0)
+//        {
+//            mViewDataBinding.personsTextView.setText(getContext().getString(R.string.label_standard_persons, persons));
+//            mViewDataBinding.personsTextView.setVisibility(View.VISIBLE);
+//        } else
+//        {
             mViewDataBinding.personsTextView.setText("");
             mViewDataBinding.personsTextView.setVisibility(View.GONE);
-        }
+//        }
 
         String priceString = DailyTextUtils.getPriceFormat(getContext(), price, false);
         mViewDataBinding.priceTextView.setText(priceString);
