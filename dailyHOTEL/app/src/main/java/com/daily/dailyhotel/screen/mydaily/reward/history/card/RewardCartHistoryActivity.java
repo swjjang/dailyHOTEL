@@ -13,11 +13,11 @@ import com.twoheart.dailyhotel.R;
  * Created by sheldon
  * Clean Architecture
  */
-public class CopyActivity extends BaseActivity<CopyPresenter>
+public class RewardCartHistoryActivity extends BaseActivity<RewardCardHistoryPresenter>
 {
     public static Intent newInstance(Context context)
     {
-        Intent intent = new Intent(context, CopyActivity.class);
+        Intent intent = new Intent(context, RewardCartHistoryActivity.class);
 
         return intent;
     }
@@ -32,9 +32,9 @@ public class CopyActivity extends BaseActivity<CopyPresenter>
 
     @NonNull
     @Override
-    protected CopyPresenter createInstancePresenter()
+    protected RewardCardHistoryPresenter createInstancePresenter()
     {
-        return new CopyPresenter(this);
+        return new RewardCardHistoryPresenter(this);
     }
 
     @Override

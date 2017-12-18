@@ -1590,6 +1590,7 @@
     <string name="label_daily_reward">데일리 리워드</string>
     <string name="label_used_reward">적립 및 사용</string>
     <string name="label_reward_reward_history">데일리 리워드 내역</string>
+    <string name="label_reward_reward_card_history">이전 카드 내역</string>
     <string name="label_reward_reward_guide">데일리 리워드 안내</string>
     <string name="label_reward_reward_terms">데일리 리워드 유의사항</string>
     <string name="label_reward_notification_on_setting">혜택 알림 받기 설정하기</string>

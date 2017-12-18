@@ -7,38 +7,48 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.RewardCardHistoryDetail;
+import com.daily.dailyhotel.repository.remote.RewardRemoteImpl;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Util;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by sheldon
  * Clean Architecture
  */
-public class CopyPresenter extends BaseExceptionPresenter<CopyActivity, CopyInterface> implements CopyView.OnEventListener
+public class RewardCardHistoryPresenter extends BaseExceptionPresenter<RewardCartHistoryActivity, RewardCardHistoryInterface> implements RewardCardHistoryView.OnEventListener
 {
-    private CopyAnalyticsInterface mAnalytics;
+    private RewardCardHistoryAnalyticsInterface mAnalytics;
 
-    public interface CopyAnalyticsInterface extends BaseAnalyticsInterface
+    private RewardRemoteImpl mRewardRemoteImpl;
+
+    public interface RewardCardHistoryAnalyticsInterface extends BaseAnalyticsInterface
     {
     }
 
-    public CopyPresenter(@NonNull CopyActivity activity)
+    public RewardCardHistoryPresenter(@NonNull RewardCartHistoryActivity activity)
     {
         super(activity);
     }
 
     @NonNull
     @Override
-    protected CopyInterface createInstanceViewInterface()
+    protected RewardCardHistoryInterface createInstanceViewInterface()
     {
-        return new CopyView(getActivity(), this);
+        return new RewardCardHistoryView(getActivity(), this);
     }
 
     @Override
-    public void constructorInitialize(CopyActivity activity)
+    public void constructorInitialize(RewardCartHistoryActivity activity)
     {
-        setContentView(R.layout.activity_copy_data);
+        setContentView(R.layout.activity_reward_card_data);
 
-        setAnalytics(new CopyAnalyticsImpl());
+        setAnalytics(new RewardCardHistoryAnalyticsImpl());
+
+        mRewardRemoteImpl = new RewardRemoteImpl(activity);
 
         setRefresh(true);
     }
@@ -46,7 +56,7 @@ public class CopyPresenter extends BaseExceptionPresenter<CopyActivity, CopyInte
     @Override
     public void setAnalytics(BaseAnalyticsInterface analytics)
     {
-        mAnalytics = (CopyAnalyticsInterface) analytics;
+        mAnalytics = (RewardCardHistoryAnalyticsInterface) analytics;
     }
 
     @Override
@@ -63,6 +73,7 @@ public class CopyPresenter extends BaseExceptionPresenter<CopyActivity, CopyInte
     @Override
     public void onPostCreate()
     {
+        getViewInterface().setToolbarTitle(getString(R.string.label_reward_reward_card_history));
     }
 
     @Override
@@ -134,6 +145,28 @@ public class CopyPresenter extends BaseExceptionPresenter<CopyActivity, CopyInte
 
         setRefresh(false);
         screenLock(showProgress);
+
+        addCompositeDisposable(mRewardRemoteImpl.getRewardCardHistoryDetail().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<RewardCardHistoryDetail>()
+        {
+            @Override
+            public void accept(RewardCardHistoryDetail rewardCardHistoryDetail) throws Exception
+            {
+                if (rewardCardHistoryDetail.activeReward == false)
+                {
+                    Util.restartApp(getActivity());
+                } else
+                {
+                    getViewInterface().setRewardCardHistoryList(rewardCardHistoryDetail.getRewardCardHistoryList());
+                }
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                onHandleError(throwable);
+            }
+        }));
     }
 
     @Override
