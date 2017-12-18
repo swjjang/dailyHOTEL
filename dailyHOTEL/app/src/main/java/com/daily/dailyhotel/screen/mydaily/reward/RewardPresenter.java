@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Pair;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
@@ -27,7 +28,11 @@ import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 
+import org.json.JSONArray;
+
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -130,6 +135,28 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
 
         getViewInterface().setGuideTitleMessage(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerGuideTitleMessage());
         getViewInterface().setGuideDescriptionMessage(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerGuideDescriptionMessage());
+
+        try
+        {
+            JSONArray jsonArray = new JSONArray(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerOthersGuides());
+
+            if (jsonArray != null && jsonArray.length() > 0)
+            {
+                int length = jsonArray.length();
+
+                List<Pair<String, String>> guideList = new ArrayList<>(length);
+
+                for (int i = 0; i < length; i++)
+                {
+                    guideList.add(new Pair<>(jsonArray.getJSONObject(i).getString("titleMessage"), jsonArray.getJSONObject(i).getString("descriptionMessage")));
+                }
+
+                getViewInterface().setOthersGuideList(guideList);
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
 
         getViewInterface().setNotificationVisible(DailyUserPreference.getInstance(getActivity()).isBenefitAlarm() == false);
     }

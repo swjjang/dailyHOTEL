@@ -1,6 +1,10 @@
 package com.daily.dailyhotel.screen.mydaily.reward;
 
+import android.util.Pair;
+
 import com.daily.base.BaseDialogViewInterface;
+
+import java.util.List;
 
 import io.reactivex.Observable;
 
@@ -31,6 +35,8 @@ public interface RewardInterface extends BaseDialogViewInterface
     void setGuideTitleMessage(String message);
 
     void setGuideDescriptionMessage(String message);
+
+    void setOthersGuideList(List<Pair<String, String>> guideList);
 
     void setNotificationVisible(boolean visible);
 
