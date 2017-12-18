@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.mydaily.reward.history;
+package com.daily.dailyhotel.screen.mydaily.reward.history.card;
 
 
 import android.content.Context;
@@ -13,11 +13,11 @@ import com.twoheart.dailyhotel.R;
  * Created by sheldon
  * Clean Architecture
  */
-public class RewardHistoryActivity extends BaseActivity<RewardHistoryPresenter>
+public class CopyActivity extends BaseActivity<CopyPresenter>
 {
     public static Intent newInstance(Context context)
     {
-        Intent intent = new Intent(context, RewardHistoryActivity.class);
+        Intent intent = new Intent(context, CopyActivity.class);
 
         return intent;
     }
@@ -32,9 +32,9 @@ public class RewardHistoryActivity extends BaseActivity<RewardHistoryPresenter>
 
     @NonNull
     @Override
-    protected RewardHistoryPresenter createInstancePresenter()
+    protected CopyPresenter createInstancePresenter()
     {
-        return new RewardHistoryPresenter(this);
+        return new CopyPresenter(this);
     }
 
     @Override

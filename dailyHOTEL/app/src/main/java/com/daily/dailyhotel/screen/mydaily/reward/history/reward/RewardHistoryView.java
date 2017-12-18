@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.mydaily.reward.history;
+package com.daily.dailyhotel.screen.mydaily.reward.history.reward;
 
 import android.view.View;
 

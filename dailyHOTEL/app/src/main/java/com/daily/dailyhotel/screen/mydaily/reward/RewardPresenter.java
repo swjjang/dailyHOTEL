@@ -18,7 +18,7 @@ import com.daily.dailyhotel.entity.RewardDetail;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RewardRemoteImpl;
 import com.daily.dailyhotel.screen.common.web.DailyWebActivity;
-import com.daily.dailyhotel.screen.mydaily.reward.history.RewardHistoryActivity;
+import com.daily.dailyhotel.screen.mydaily.reward.history.reward.RewardHistoryActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.DailyHotel;
