@@ -18,6 +18,7 @@ import com.daily.dailyhotel.entity.RewardDetail;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RewardRemoteImpl;
 import com.daily.dailyhotel.screen.common.web.DailyWebActivity;
+import com.daily.dailyhotel.screen.mydaily.reward.history.card.RewardCartHistoryActivity;
 import com.daily.dailyhotel.screen.mydaily.reward.history.reward.RewardHistoryActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
@@ -468,6 +469,17 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
         startActivity(intent);
     }
 
+    @Override
+    public void onRewardCardHistoryClick()
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        startActivityForResult(RewardCartHistoryActivity.newInstance(getActivity()), RewardActivity.REQUEST_CODE_REWARD_CARD_HISTORY);
+    }
+
     void setRewardDetail(RewardDetail rewardDetail)
     {
         mRewardDetail = rewardDetail;
@@ -508,6 +520,8 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
         {
             getViewInterface().setStickerValidityVisible(false);
         }
+
+        getViewInterface().setRewardCardHistoryVisible(mRewardDetail.hasRewardCardHistory);
 
         if (mRewardDetail.availableRewardCouponCount > 0)
         {

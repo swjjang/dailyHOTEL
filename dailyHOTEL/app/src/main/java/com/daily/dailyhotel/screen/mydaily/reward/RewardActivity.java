@@ -18,6 +18,7 @@ public class RewardActivity extends BaseActivity<RewardPresenter>
     static final int REQUEST_CODE_LOGIN = 10000;
     static final int REQUEST_CODE_WEB = 10001;
     static final int REQUEST_CODE_REWARD_HISTORY = 10002;
+    static final int REQUEST_CODE_REWARD_CARD_HISTORY = 10003;
 
     public static Intent newInstance(Context context)
     {

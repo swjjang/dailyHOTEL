@@ -1,32 +1,24 @@
 package com.daily.dailyhotel.entity;
 
+import java.util.List;
+
 /**
  * Created by android_sam on 2016. 11. 25..
  */
 
 public class RewardCardHistory
 {
-    public enum Type
+    public String startDate;
+    public String couponIssueDate;
+    public List<String> mStickerTypeList;
+
+    public List<String> getStickerTypeList()
     {
-        CREATED_STICKER // 스티커 적립
-        ,
-        EXPIRED_STICKER // 스티커 만료
-        ,
-        PUBLISHED_COUPON // 쿠폰 발행
+        return mStickerTypeList;
     }
 
-    public enum ServiceType
+    public void setStickerTypeList(List<String> stickerTypeList)
     {
-        HOTEL,
-        GOURMET,
-        OUTBOUND,
-        ALL
+        mStickerTypeList = stickerTypeList;
     }
-
-    public int expiredStickerCount;
-    public String date;
-    public Type type;
-    public String reservationName;
-    public ServiceType serviceType;
-    public String rewardStickerType; // R(reward), E(event)
 }

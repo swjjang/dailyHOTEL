@@ -1,39 +1,24 @@
 package com.daily.dailyhotel.screen.mydaily.reward.history.card;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
-import android.os.Build;
 import android.support.v7.widget.RecyclerView;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
-import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
-import com.daily.base.util.ScreenUtils;
-import com.daily.dailyhotel.entity.ObjectItem;
-import com.daily.dailyhotel.entity.RewardHistory;
+import com.daily.dailyhotel.entity.RewardCardHistory;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.LayoutRewardHistoryDataBinding;
-import com.twoheart.dailyhotel.databinding.LayoutRewardHistoryFooterDataBinding;
-import com.twoheart.dailyhotel.databinding.LayoutRewardHistoryHeaderDataBinding;
-import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.databinding.LayoutRewardCardHistoryDataBinding;
 
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-public class RewardCardHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class RewardCardHistoryAdapter extends RecyclerView.Adapter<RewardCardHistoryAdapter.CardHistoryViewHolder>
 {
     Context mContext;
-    private List<ObjectItem> mList;
+    private List<RewardCardHistory> mList;
     OnEventListener mOnEventListener;
 
     public interface OnEventListener
@@ -58,20 +43,7 @@ public class RewardCardHistoryAdapter extends RecyclerView.Adapter<RecyclerView.
         mList.clear();
     }
 
-    public void add(ObjectItem objectItem)
-    {
-        mList.add(objectItem);
-    }
-
-    public void add(int position, ObjectItem placeViewItem)
-    {
-        if (position >= 0 && position < mList.size())
-        {
-            mList.add(position, placeViewItem);
-        }
-    }
-
-    public void addAll(Collection<? extends ObjectItem> collection)
+    public void addAll(List<RewardCardHistory> collection)
     {
         if (collection == null)
         {
@@ -81,7 +53,7 @@ public class RewardCardHistoryAdapter extends RecyclerView.Adapter<RecyclerView.
         mList.addAll(collection);
     }
 
-    public void setAll(Collection<? extends ObjectItem> collection)
+    public void setAll(List<RewardCardHistory> collection)
     {
         clear();
         addAll(collection);
@@ -97,7 +69,7 @@ public class RewardCardHistoryAdapter extends RecyclerView.Adapter<RecyclerView.
         mList.remove(position);
     }
 
-    public ObjectItem getItem(int position)
+    public RewardCardHistory getItem(int position)
     {
         if (position < 0 || mList.size() <= position)
         {
@@ -105,12 +77,6 @@ public class RewardCardHistoryAdapter extends RecyclerView.Adapter<RecyclerView.
         }
 
         return mList.get(position);
-    }
-
-    @Override
-    public int getItemViewType(int position)
-    {
-        return mList.get(position).mType;
     }
 
     @Override
@@ -125,246 +91,58 @@ public class RewardCardHistoryAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    public RewardCardHistoryAdapter.CardHistoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        switch (viewType)
-        {
-            case ObjectItem.TYPE_HEADER_VIEW:
-            {
-                LayoutRewardHistoryHeaderDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_reward_history_header_data, parent, false);
+        LayoutRewardCardHistoryDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_reward_card_history_data, parent, false);
 
-                return new BaseDataBindingViewHolder(dataBinding);
-            }
-
-            case ObjectItem.TYPE_ENTRY:
-            {
-                LayoutRewardHistoryDataBinding viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_reward_history_data, parent, false);
-
-                return new HistoryViewHolder(viewDataBinding);
-            }
-
-            case ObjectItem.TYPE_FOOTER_VIEW:
-            {
-                LayoutRewardHistoryFooterDataBinding viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_reward_history_footer_data, parent, false);
-
-                return new BaseDataBindingViewHolder(viewDataBinding);
-            }
-        }
-
-        return null;
+        return new CardHistoryViewHolder(dataBinding);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position)
+    public void onBindViewHolder(RewardCardHistoryAdapter.CardHistoryViewHolder holder, int position)
     {
-        ObjectItem item = getItem(position);
+        final int MAX_COUNT = 9;
 
-        if (item == null)
+        RewardCardHistory rewardCardHistory = getItem(position);
+        List<String> rewardCartHistoryList = rewardCardHistory.getStickerTypeList();
+
+        for(int i = 0; i < MAX_COUNT; i++)
         {
-            return;
-        }
-
-        switch (item.mType)
-        {
-            case ObjectItem.TYPE_ENTRY:
-                onBindViewHolder((HistoryViewHolder) holder, item);
-                break;
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void onBindViewHolder(HistoryViewHolder holder, ObjectItem objectItem)
-    {
-        if (holder == null || objectItem == null)
-        {
-            return;
-        }
-
-        final String DATE_FORMAT = "yyyy.MM.dd(EEE)";
-
-        RewardHistory rewardHistory = objectItem.getItem();
-
-        switch (rewardHistory.type)
-        {
-            case CREATED_STICKER:
-                switch (rewardHistory.rewardStickerType)
-                {
-                    case "R":
-                    {
-                        final int DP_16 = ScreenUtils.dpToPx(mContext, 16);
-                        final int DP_18 = ScreenUtils.dpToPx(mContext, 18);
-                        holder.dataBinding.descriptionLayout.setPadding(0, DP_16, 0, DP_18);
-
-                        final int[] RESOURCE_NIGHT = {R.drawable.vector_ic_reward_history_night_1//
-                            , R.drawable.vector_ic_reward_history_night_2//
-                            , R.drawable.vector_ic_reward_history_night_3//
-                            , R.drawable.vector_ic_reward_history_night_4//
-                            , R.drawable.vector_ic_reward_history_night_5//
-                            , R.drawable.vector_ic_reward_history_night_6//
-                            , R.drawable.vector_ic_reward_history_night_7//
-                            , R.drawable.vector_ic_reward_history_night_8//
-                            , R.drawable.vector_ic_reward_history_night_9};
-
-                        holder.dataBinding.rewardImageView.setVectorImageResource(RESOURCE_NIGHT[rewardHistory.nights - 1]);
-
-                        holder.dataBinding.titleTextView.setVisibility(View.VISIBLE);
-                        holder.dataBinding.titleTextView.setText(rewardHistory.reservationName);
-
-                        final int DP_4 = ScreenUtils.dpToPx(mContext, 4);
-                        holder.dataBinding.descriptionTextView.setPadding(0, DP_4, 0, 0);
-                        holder.dataBinding.descriptionTextView.setText(R.string.message_reward_issue_sticker);
-
-                        if (DailyTextUtils.isTextEmpty(rewardHistory.date) == true)
-                        {
-                            holder.dataBinding.dateTextView.setText(null);
-                        } else
-                        {
-                            try
-                            {
-                                final String text = mContext.getString(R.string.label_reward_payment_deposit, DailyCalendar.convertDateFormatString(rewardHistory.date, DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT));
-                                int startIndex = text.indexOf("ㅣ");
-
-                                SpannableString spannableString = new SpannableString(text);
-                                spannableString.setSpan(new ForegroundColorSpan(mContext.getResources().getColor(R.color.cb3b3b3)), //
-                                    startIndex, startIndex + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                                holder.dataBinding.dateTextView.setText(spannableString);
-                            } catch (ParseException e)
-                            {
-                                ExLog.d(e.toString());
-                            }
-                        }
-
-                        final String linkText = mContext.getString(R.string.label_reward_view_reservation);
-
-                        SpannableString spannableString = new SpannableString(linkText);
-                        spannableString.setSpan(new UnderlineSpan(), 0, linkText.length(), 0);
-                        holder.dataBinding.reservationLinkTextView.setVisibility(View.VISIBLE);
-                        holder.dataBinding.reservationLinkTextView.setText(spannableString);
-                        break;
-                    }
-
-                    case "E":
-                    {
-                        holder.dataBinding.descriptionLayout.setPadding(0, 0, 0, 0);
-
-                        holder.dataBinding.rewardImageView.setVectorImageResource(R.drawable.vector_ic_icon_reward_history_event);
-                        holder.dataBinding.titleTextView.setVisibility(View.GONE);
-
-                        holder.dataBinding.descriptionTextView.setPadding(0, 0, 0, 0);
-                        holder.dataBinding.descriptionTextView.setText(R.string.message_reward_issue_sticker);
-
-                        if (DailyTextUtils.isTextEmpty(rewardHistory.date) == true)
-                        {
-                            holder.dataBinding.dateTextView.setText(null);
-                        } else
-                        {
-                            try
-                            {
-                                holder.dataBinding.dateTextView.setText(mContext.getString(R.string.label_reward_sticker_issue_date, DailyCalendar.convertDateFormatString(rewardHistory.date, DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT)));
-                            } catch (ParseException e)
-                            {
-                                ExLog.d(e.toString());
-                            }
-                        }
-
-                        holder.dataBinding.reservationLinkTextView.setVisibility(View.GONE);
-                        break;
-                    }
-                }
-                break;
-
-            // 스티커 만료
-            case EXPIRED_STICKER:
+            switch (rewardCartHistoryList.get(i))
             {
-                holder.dataBinding.descriptionLayout.setPadding(0, 0, 0, 0);
+                case "EVENT":
+                    holder.dataBinding.sticker1nightsImageView;
+                    holder.stickerViews[i].setVisibility(View.VISIBLE);
+                    holder.stickerViews[i].setImageResource(R.drawable.r_ic_l_47_shadow_event);
+                    break;
 
-                holder.dataBinding.rewardImageView.setVectorImageResource(R.drawable.vector_ic_reward_history_expired);
-                holder.dataBinding.titleTextView.setVisibility(View.GONE);
 
-                holder.dataBinding.descriptionTextView.setPadding(0, 0, 0, 0);
-                holder.dataBinding.descriptionTextView.setText(mContext.getString(R.string.message_reward_expire_sticker, rewardHistory.expiredStickerCount));
-
-                if (DailyTextUtils.isTextEmpty(rewardHistory.date) == true)
-                {
-                    holder.dataBinding.dateTextView.setText(null);
-                } else
-                {
-                    try
-                    {
-                        holder.dataBinding.dateTextView.setText(mContext.getString(R.string.label_reward_sticker_expiration_date, DailyCalendar.convertDateFormatString(rewardHistory.date, DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT)));
-                    } catch (ParseException e)
-                    {
-                        ExLog.d(e.toString());
-                    }
-                }
-
-                holder.dataBinding.reservationLinkTextView.setVisibility(View.GONE);
-                break;
-            }
-
-            // 쿠폰 발행
-            case PUBLISHED_COUPON:
-            {
-                //
-                final int DP_16 = ScreenUtils.dpToPx(mContext, 16);
-                final int DP_18 = ScreenUtils.dpToPx(mContext, 18);
-                holder.dataBinding.descriptionLayout.setPadding(0, DP_16, 0, DP_18);
-
-                holder.dataBinding.rewardImageView.setVectorImageResource(R.drawable.vector_ic_reward_history_coupon);
-
-                holder.dataBinding.titleTextView.setVisibility(View.VISIBLE);
-                holder.dataBinding.titleTextView.setText(DailyTextUtils.getPriceFormat(mContext, rewardHistory.couponPrice, false));
-
-                final int DP_4 = ScreenUtils.dpToPx(mContext, 4);
-                holder.dataBinding.descriptionTextView.setPadding(0, DP_4, 0, 0);
-                holder.dataBinding.descriptionTextView.setText(R.string.message_reward_issue_reward_coupon);
-
-                if (DailyTextUtils.isTextEmpty(rewardHistory.date) == true)
-                {
-                    holder.dataBinding.dateTextView.setText(null);
-                } else
-                {
-                    try
-                    {
-                        holder.dataBinding.dateTextView.setText(mContext.getString(R.string.label_reward_coupon_issue_date, DailyCalendar.convertDateFormatString(rewardHistory.date, DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT)));
-                    } catch (ParseException e)
-                    {
-                        ExLog.d(e.toString());
-                    }
-                }
-
-                holder.dataBinding.reservationLinkTextView.setVisibility(View.GONE);
-                break;
+                case "REWARD":
+                    break;
             }
         }
     }
 
-    private class HistoryViewHolder extends RecyclerView.ViewHolder
+    class CardHistoryViewHolder extends RecyclerView.ViewHolder
     {
-        LayoutRewardHistoryDataBinding dataBinding;
+        LayoutRewardCardHistoryDataBinding dataBinding;
+        final ImageView[] stickerViews;
 
-        public HistoryViewHolder(LayoutRewardHistoryDataBinding dataBinding)
+        public CardHistoryViewHolder(LayoutRewardCardHistoryDataBinding dataBinding)
         {
             super(dataBinding.getRoot());
 
             this.dataBinding = dataBinding;
 
-            dataBinding.reservationLinkTextView.setOnClickListener(v ->
-            {
-                if (mOnEventListener != null)
-                {
-                    mOnEventListener.onClick(dataBinding.getRoot());
-                }
-            });
-        }
-    }
-
-    private class BaseDataBindingViewHolder extends RecyclerView.ViewHolder
-    {
-        public BaseDataBindingViewHolder(ViewDataBinding dataBinding)
-        {
-            super(dataBinding.getRoot());
+            stickerViews = new ImageView[]{dataBinding.sticker1nightsImageView//
+                , dataBinding.sticker2nightsImageView//
+                , dataBinding.sticker3nightsImageView//
+                , dataBinding.sticker4nightsImageView//
+                , dataBinding.sticker5nightsImageView//
+                , dataBinding.sticker6nightsImageView//
+                , dataBinding.sticker7nightsImageView//
+                , dataBinding.sticker8nightsImageView//
+                , dataBinding.sticker9nightsImageView};
         }
     }
 }
