@@ -94,6 +94,31 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         return intent;
     }
 
+    public static Intent newInstance(Context context, PlaceType placeType, String checkInDateTime, String checkOutDateTime, int campaignTagIndex)
+    {
+        Intent intent = new Intent(context, SearchActivity.class);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_INDEX, campaignTagIndex);
+
+        return intent;
+    }
+
+    public static Intent newInstance(Context context, PlaceType placeType, String checkInDateTime, String checkOutDateTime, String word)
+    {
+        Intent intent = new Intent(context, SearchActivity.class);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
+
+        if (DailyTextUtils.isTextEmpty(word) == false)
+        {
+            intent.putExtra(INTENT_EXTRA_DATA_WORD, word);
+        }
+        return intent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {

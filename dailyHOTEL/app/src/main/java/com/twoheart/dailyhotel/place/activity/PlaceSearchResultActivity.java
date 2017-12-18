@@ -41,6 +41,8 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
     public static final String INTENT_EXTRA_DATA_RADIUS = "radius";
     public static final String INTENT_EXTRA_DATA_IS_DEEPLINK = "isDeepLink";
     public static final String INTENT_EXTRA_DATA_CALL_BY_SCREEN = "callByScreen";
+    public static final String INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME = "checkInDateTime";
+    public static final String INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME = "checkOutDateTime";
 
     protected static final double DEFAULT_SEARCH_RADIUS = 10d;
 

@@ -194,6 +194,11 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseDial
         mCompositeDisposable.clear();
     }
 
+    private void disposeCompositeDisposable()
+    {
+        mCompositeDisposable.dispose();
+    }
+
     protected boolean isLock()
     {
         return mLock.isLock();
@@ -243,10 +248,5 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseDial
     protected boolean equalsCallingActivity(Class className)
     {
         return mActivity.equalsCallingActivity(className);
-    }
-
-    private void disposeCompositeDisposable()
-    {
-        mCompositeDisposable.dispose();
     }
 }

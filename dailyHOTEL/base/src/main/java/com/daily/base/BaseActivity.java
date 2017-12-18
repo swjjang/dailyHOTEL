@@ -13,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.VersionUtils;
 
 public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatActivity
@@ -58,12 +57,21 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
         mPresenter.onPostCreate();
     }
 
-    protected abstract
-    @NonNull
+    @Override
+    protected void onNewIntent(Intent intent)
+    {
+        super.onNewIntent(intent);
+
+        if (mPresenter != null)
+        {
+            mPresenter.onNewIntent(intent);
+        }
+    }
+
+    protected abstract @NonNull
     T1 createInstancePresenter();
 
-    public
-    @NonNull
+    public @NonNull
     T1 getPresenter()
     {
         if (mPresenter == null)

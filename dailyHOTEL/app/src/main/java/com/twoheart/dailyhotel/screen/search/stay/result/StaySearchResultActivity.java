@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
@@ -114,6 +115,31 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         intent.putExtra(INTENT_EXTRA_DATA_LOCATION, location);
         intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SearchType.LOCATION.name());
         intent.putExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
+
+        return intent;
+    }
+
+    public static Intent newInstance(Context context, String checkInDateTime, String checkOutDateTime, LatLng latLng, double radius, boolean isDeepLink)
+    {
+        Intent intent = new Intent(context, StaySearchResultActivity.class);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_LATLNG, latLng);
+        intent.putExtra(INTENT_EXTRA_DATA_RADIUS, radius);
+        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SearchType.LOCATION.name());
+        intent.putExtra(INTENT_EXTRA_DATA_IS_DEEPLINK, isDeepLink);
+
+        return intent;
+    }
+
+    public static Intent newInstance(Context context, String checkInDateTime, String checkOutDateTime, String inputText, Keyword keyword, SearchType searchType)
+    {
+        Intent intent = new Intent(context, StaySearchResultActivity.class);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, keyword);
+        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, searchType.name());
+        intent.putExtra(INTENT_EXTRA_DATA_INPUTTEXT, inputText);
 
         return intent;
     }

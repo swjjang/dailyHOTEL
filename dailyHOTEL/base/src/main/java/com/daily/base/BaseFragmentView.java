@@ -18,7 +18,7 @@ import android.view.WindowManager;
 
 import com.daily.base.util.VersionUtils;
 
-public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDataBinding> implements BaseViewInterface
+public abstract class BaseFragmentView<T1 extends OnBaseEventListener, T2 extends ViewDataBinding> implements BaseFragmentViewInterface
 {
     private BaseActivity mActivity;
     private T2 mViewDataBinding;
@@ -26,34 +26,30 @@ public abstract class BaseView<T1 extends OnBaseEventListener, T2 extends ViewDa
 
     protected abstract void setContentView(T2 viewDataBinding);
 
-    public BaseView(BaseActivity activity, T1 listener)
+    public BaseFragmentView(T1 listener)
     {
-        if (activity == null || listener == null)
+        if (listener == null)
         {
             throw new NullPointerException();
         }
 
-        mActivity = activity;
         mOnEventListener = listener;
     }
 
     @Override
-    public final void setContentView(int layoutResID)
+    public final View getContentView(LayoutInflater layoutInflater, int layoutResID, ViewGroup viewGroup)
     {
-        if (layoutResID != 0)
-        {
-            mViewDataBinding = DataBindingUtil.setContentView(mActivity, layoutResID);
-        }
+        mViewDataBinding = DataBindingUtil.inflate(layoutInflater, layoutResID, viewGroup, false);
 
         setContentView(mViewDataBinding);
+
+        return mViewDataBinding.getRoot();
     }
 
     @Override
-    public final void setContentView(int layoutResID, ViewGroup viewGroup)
+    public void setActivity(BaseActivity activity)
     {
-        mViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity), layoutResID, viewGroup, false);
-
-        setContentView(mViewDataBinding);
+        mActivity = activity;
     }
 
     protected void setVisibility(int visibility)
