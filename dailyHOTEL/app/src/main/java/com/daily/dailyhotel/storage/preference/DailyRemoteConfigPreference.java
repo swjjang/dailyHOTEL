@@ -138,6 +138,7 @@ public class DailyRemoteConfigPreference
     private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_GUIDE_TITLE_MESSAGE = "420";
     private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_GUIDE_DESCRIPTION_MESSAGE = "421";
     private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_REWARD_TITLE_MESSAGE = "422";
+    private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_OTHERS_GUIDES = "423";
 
     // Gourmet Keywrod
     private static final String KEY_REMOTE_CONFIG_GOURMET_SEARCH_KEYWORD = "430";
@@ -1107,6 +1108,16 @@ public class DailyRemoteConfigPreference
     public String getKeyRemoteConfigRewardStickerGuideTitleMessage()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_REWARD_STICKER_GUIDE_TITLE_MESSAGE, null);
+    }
+
+    public void setKeyRemoteConfigRewardStickerOthersGuides(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_REWARD_STICKER_OTHERS_GUIDES, value);
+    }
+
+    public String getKeyRemoteConfigRewardStickerOthersGuides()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_REWARD_STICKER_OTHERS_GUIDES, null);
     }
 
     public void setKeyRemoteConfigRewardStickerGuideDescriptionMessage(String value)
