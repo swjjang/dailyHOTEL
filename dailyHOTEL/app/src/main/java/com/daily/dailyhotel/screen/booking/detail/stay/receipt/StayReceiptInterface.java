@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.booking.receipt.stay;
+package com.daily.dailyhotel.screen.booking.detail.stay.receipt;
 
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.dailyhotel.entity.StayReceipt;

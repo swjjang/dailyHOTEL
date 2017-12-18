@@ -189,16 +189,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".screen.booking.detail.hotel.StayReservationDetailActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".screen.booking.detail.gourmet.GourmetReservationDetailActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".screen.booking.detail.hotel.StayAutoRefundActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
@@ -881,13 +871,13 @@
             android:theme="@style/TransDialog"/>
 
         <activity
-            android:name="com.daily.dailyhotel.screen.booking.receipt.gourmet.GourmetReceiptActivity"
+            android:name="com.daily.dailyhotel.screen.booking.detail.gourmet.receipt.GourmetReceiptActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name="com.daily.dailyhotel.screen.booking.receipt.stay.StayReceiptActivity"
+            android:name="com.daily.dailyhotel.screen.booking.detail.stay.receipt.StayReceiptActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>

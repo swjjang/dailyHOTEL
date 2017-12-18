@@ -682,6 +682,16 @@ public class DailyRemoteConfig
                 String guideDescriptionMessage = jsonObject.getString("guideDescriptionMessage");
                 DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerGuideDescriptionMessage(guideDescriptionMessage);
 
+                JSONArray guidesJSONArray = jsonObject.getJSONArray("othersGuides");
+
+                if (guidesJSONArray == null || guidesJSONArray.length() == 0)
+                {
+                    DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerOthersGuides(null);
+                } else
+                {
+                    DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerOthersGuides(guidesJSONArray.toString());
+                }
+
                 JSONObject nonMemberJSONObject = jsonObject.getJSONObject("nonMember");
                 JSONObject nonMemberMessageJSONObject = nonMemberJSONObject.getJSONObject("message");
                 String nonMemberDefaultMessage = nonMemberMessageJSONObject.getString("default");

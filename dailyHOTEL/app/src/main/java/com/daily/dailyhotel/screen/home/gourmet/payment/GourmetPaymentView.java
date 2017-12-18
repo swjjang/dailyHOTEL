@@ -682,16 +682,7 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
             dataBinding.menuNameTextView.setText(gourmetCartMenu.name);
             dataBinding.menuOrderCountTextView.setText(getString(R.string.label_booking_count, gourmetCartMenu.count));
             dataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(getContext(), gourmetCartMenu.discountPrice * gourmetCartMenu.count, false));
-
-            if (gourmetCartMenu.persons > 0)
-            {
-                dataBinding.personsTextView.setVisibility(View.VISIBLE);
-                dataBinding.personsTextView.setText(getString(R.string.label_persons, gourmetCartMenu.persons));
-            } else
-            {
-                dataBinding.personsTextView.setVisibility(View.GONE);
-            }
-
+            dataBinding.personsTextView.setVisibility(View.GONE);
             dataBinding.bottomLineView.setVisibility(++i == size ? View.GONE : View.VISIBLE);
         }
     }

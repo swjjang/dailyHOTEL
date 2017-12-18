@@ -432,8 +432,17 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/guideDescriptionTextView"/>
 
+                <LinearLayout
+                    android:id="@+id/guidesLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/guideLinkTextView"/>
+
                 <View
-                    android:id="@+id/guideUnderLineView"
+                    android:id="@+id/guideNotificationTopLineView"
                     android:layout_width="0dp"
                     android:layout_height="1px"
                     android:layout_marginLeft="15dp"
@@ -441,7 +450,7 @@
                     android:background="@color/default_line_cdcdcdd"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/guideLinkTextView"/>
+                    app:layout_constraintTop_toBottomOf="@+id/guidesLayout"/>
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/guideNotificationTextView"
@@ -449,13 +458,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="10dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="13dp"
                     android:text="@string/message_reward_confirm_reward_notification"
                     android:textColor="@color/default_text_c323232"
                     android:textSize="13dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/guideUnderLineView"
+                    app:layout_constraintTop_toBottomOf="@+id/guideNotificationTopLineView"
                     dailyFont:style="Medium"/>
 
                 <com.daily.base.widget.DailyTextView

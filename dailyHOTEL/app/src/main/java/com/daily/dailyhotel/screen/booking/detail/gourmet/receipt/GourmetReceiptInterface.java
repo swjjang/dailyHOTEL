@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.booking.receipt.gourmet;
+package com.daily.dailyhotel.screen.booking.detail.gourmet.receipt;
 
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.dailyhotel.entity.GourmetReceipt;

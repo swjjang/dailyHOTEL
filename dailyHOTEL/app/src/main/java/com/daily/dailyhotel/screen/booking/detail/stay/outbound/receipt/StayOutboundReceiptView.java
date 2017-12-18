@@ -10,6 +10,7 @@ import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.StayOutboundReceipt;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundReceiptDataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutStayReceiptReservationInfoDataBinding;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -68,20 +69,22 @@ public class StayOutboundReceiptView extends BaseDialogView<StayOutboundReceiptV
             return;
         }
         // **예약 세부 정보**
+        LayoutStayReceiptReservationInfoDataBinding reservationDataBinding = getViewDataBinding().reservationInfoDataBinding;
+
         // 예약 번호
-        getViewDataBinding().bookingIndexTextView.setText(Integer.toString(stayOutboundReceipt.index));
+        reservationDataBinding.bookingIndexTextView.setText(Integer.toString(stayOutboundReceipt.index));
 
         // 호텔명
-        getViewDataBinding().stayNameTextView.setText(stayOutboundReceipt.placeName);
+        reservationDataBinding.stayNameTextView.setText(stayOutboundReceipt.placeName);
 
         // 호텔주소
-        getViewDataBinding().addressTextView.setText(stayOutboundReceipt.placeAddress);
+        reservationDataBinding.addressTextView.setText(stayOutboundReceipt.placeAddress);
 
         // 고객성명/번호
-        getViewDataBinding().guestTxtView.setText(stayOutboundReceipt.userName + " / " + Util.addHyphenMobileNumber(getContext(), stayOutboundReceipt.userPhone));
+        reservationDataBinding.guestTextView.setText(stayOutboundReceipt.userName + " / " + Util.addHyphenMobileNumber(getContext(), stayOutboundReceipt.userPhone));
 
         // 체크인/아웃
-        getViewDataBinding().checkInOutTextView.setText(stayOutboundReceipt.checkInDate + " - " + stayOutboundReceipt.checkOutDate);
+        reservationDataBinding.checkInOutTextView.setText(stayOutboundReceipt.checkInDate + " - " + stayOutboundReceipt.checkOutDate);
 
         try
         {
@@ -89,7 +92,7 @@ public class StayOutboundReceiptView extends BaseDialogView<StayOutboundReceiptV
                 , DailyCalendar.convertDateFormatString(stayOutboundReceipt.checkInDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
 
             // 숙박 일수/객실수
-            getViewDataBinding().roomTxtView.setText(getString(R.string.label_stay_outbound_booking_night_room, nights, stayOutboundReceipt.roomCount));
+            reservationDataBinding.roomTextView.setText(getString(R.string.label_stay_outbound_booking_night_room, nights, stayOutboundReceipt.roomCount));
         } catch (Exception e)
         {
             ExLog.d(e.toString());

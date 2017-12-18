@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.booking.receipt.gourmet;
+package com.daily.dailyhotel.screen.booking.detail.gourmet.receipt;
 
 
 import android.app.Activity;

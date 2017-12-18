@@ -3,10 +3,13 @@ package com.daily.dailyhotel.screen.mydaily.reward;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.databinding.DataBindingUtil;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.UnderlineSpan;
+import android.util.Pair;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
@@ -19,6 +22,7 @@ import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityRewardDataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutRewardGuideDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
@@ -441,6 +445,31 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
     }
 
     @Override
+    public void setOthersGuideList(List<Pair<String, String>> guideList)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (guideList == null || guideList.size() == 0)
+        {
+            getViewDataBinding().guidesLayout.setVisibility(View.GONE);
+        } else
+        {
+            getViewDataBinding().guidesLayout.setVisibility(View.VISIBLE);
+
+            for (Pair<String, String> guide : guideList)
+            {
+                LayoutRewardGuideDataBinding viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.layout_reward_guide_data, getViewDataBinding().guidesLayout, true);
+
+                viewDataBinding.guideTitleTextView.setText(guide.first);
+                viewDataBinding.guideDescriptionTextView.setText(guide.second);
+            }
+        }
+    }
+
+    @Override
     public void setNotificationVisible(boolean visible)
     {
         if (getViewDataBinding() == null)
@@ -450,7 +479,7 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
 
         int flag = visible ? View.VISIBLE : View.GONE;
 
-        getViewDataBinding().guideUnderLineView.setVisibility(flag);
+        getViewDataBinding().guideNotificationTopLineView.setVisibility(flag);
         getViewDataBinding().guideNotificationTextView.setVisibility(flag);
         getViewDataBinding().guideNotificationLinkTextView.setVisibility(flag);
     }

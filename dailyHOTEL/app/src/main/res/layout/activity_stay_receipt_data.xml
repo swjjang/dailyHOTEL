@@ -68,176 +68,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="8dp"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
                 android:paddingTop="8dp">
 
                 <!-- 예약 세부정보 -->
-
-                <RelativeLayout
-                    android:id="@+id/bookingInfoLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="7dp"
-                    android:layout_marginRight="7dp"
-                    android:background="@drawable/receipt_bg_top"
-                    android:minHeight="165dp"
-                    android:paddingLeft="11dp"
-                    android:paddingRight="11dp">
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/textView1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="15dp"
-                        android:layout_marginTop="10dp"
-                        android:text="@string/label_receipt_bookinginfo"
-                        android:textColor="@color/default_text_c323232"
-                        android:textSize="13dp"
-                        dailyFont:style="Bold"/>
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/textView12"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/textView1"
-                        android:layout_marginTop="@dimen/issuingreceipt_linespacing"
-                        android:gravity="center_vertical"
-                        android:text="@string/label_receipt_reservation_index"
-                        android:textColor="@color/default_text_c929292"
-                        android:textSize="10dp"/>
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/textView13"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_below="@id/textView1"
-                        android:layout_marginLeft="69dp"
-                        android:layout_marginTop="@dimen/issuingreceipt_linespacing"
-                        android:gravity="right"
-                        android:textColor="@color/default_text_c323232"
-                        android:textSize="11dp"/>
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/textView2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/textView12"
-                        android:layout_marginTop="@dimen/issuingreceipt_linespacing"
-                        android:gravity="center_vertical"
-                        android:text="@string/label_receipt_hotelname"
-                        android:textColor="@color/default_text_c929292"
-                        android:textSize="10dp"/>
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/textView3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_below="@id/textView12"
-                        android:layout_marginLeft="69dp"
-                        android:layout_marginTop="@dimen/issuingreceipt_linespacing"
-                        android:layout_toRightOf="@id/textView2"
-                        android:gravity="right"
-                        android:textColor="@color/default_text_c323232"
-                        android:textSize="11dp"/>
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/textView4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/textView3"
-                        android:layout_marginTop="@dimen/issuingreceipt_linespacing"
-                        android:gravity="center_vertical"
-                        android:text="@string/label_receipt_hoteladdress"
-                        android:textColor="@color/default_text_c929292"
-                        android:textSize="10dp"/>
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/textView5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_below="@+id/textView3"
-                        android:layout_marginLeft="58dp"
-                        android:layout_marginTop="@dimen/issuingreceipt_linespacing"
-                        android:layout_toRightOf="@id/textView4"
-                        android:gravity="right"
-                        android:maxLines="2"
-                        android:textColor="@color/default_text_c323232"
-                        android:textSize="11dp"/>
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/textView6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/textView5"
-                        android:layout_marginTop="@dimen/issuingreceipt_linespacing"
-                        android:gravity="center_vertical"
-                        android:text="@string/label_receipt_customerinfo"
-                        android:textColor="@color/default_text_c929292"
-                        android:textSize="10dp"/>
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/textView7"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_below="@id/textView5"
-                        android:layout_marginTop="@dimen/issuingreceipt_linespacing"
-                        android:textColor="@color/default_text_c323232"
-                        android:textSize="11dp"/>
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/textView8"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/textView6"
-                        android:layout_marginTop="@dimen/issuingreceipt_linespacing"
-                        android:gravity="center_vertical"
-                        android:text="@string/label_receipt_checkinout"
-                        android:textColor="@color/default_text_c929292"
-                        android:textSize="10dp"/>
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/textView9"
-                        android:layout_width="wrap_content"
-                        android:layout_height="13dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_below="@id/textView6"
-                        android:layout_marginTop="@dimen/issuingreceipt_linespacing"
-                        android:textColor="@color/default_text_c323232"
-                        android:textSize="11dp"/>
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/textView10"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/textView8"
-                        android:layout_marginBottom="@dimen/issuingreceipt_linespacing"
-                        android:layout_marginTop="@dimen/issuingreceipt_linespacing"
-                        android:gravity="center_vertical"
-                        android:text="@string/label_receipt_nights_rooms"
-                        android:textColor="@color/default_text_c929292"
-                        android:textSize="10dp"/>
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/textView11"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_below="@id/textView8"
-                        android:layout_marginTop="@dimen/issuingreceipt_linespacing"
-                        android:textColor="@color/default_text_c323232"
-                        android:textSize="11dp"/>
-                </RelativeLayout>
+                <include
+                    android:id="@+id/reservationInfoDataBinding"
+                    layout="@layout/layout_stay_receipt_reservation_info_data"/>
 
                 <!-- 결제 정보 -->
                 <com.daily.dailyhotel.view.DailyReceiptPaymentView
                     android:id="@+id/paymentInfoLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/bookingInfoLayout"
-                    android:layout_marginLeft="7dp"
-                    android:layout_marginRight="7dp"
+                    android:layout_below="@+id/reservationInfoDataBinding"
                     android:background="@drawable/receipt_bg_middle"/>
 
                 <!-- 공급자 -->
@@ -246,8 +91,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/paymentInfoLayout"
-                    android:layout_marginLeft="7dp"
-                    android:layout_marginRight="7dp"
                     android:background="@drawable/receipt_bg_bottom"
                     android:paddingBottom="15dp"
                     android:paddingLeft="11dp"
@@ -259,8 +102,6 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/providerInfoLayout"
                     android:layout_marginBottom="24dp"
-                    android:layout_marginLeft="7dp"
-                    android:layout_marginRight="7dp"
                     android:layout_marginTop="22dp"
                     android:gravity="center_horizontal"
                     android:lineSpacingExtra="3dp"
