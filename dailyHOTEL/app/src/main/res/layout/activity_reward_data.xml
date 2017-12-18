@@ -114,9 +114,9 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:background="@drawable/r_box_bottom"
-                    android:paddingBottom="18dp"
                     android:paddingLeft="18dp"
                     android:paddingRight="18dp"
+                    android:paddingBottom="29dp"
                     android:paddingTop="16dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
@@ -352,44 +352,45 @@
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/sticker6nightsTextView"/>
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/rewardHistoryTextView"
-                        android:layout_width="0dp"
-                        android:layout_height="38dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginTop="21dp"
-                        android:background="@drawable/shape_fillrect_ldcdcdd_bffffff_r2"
-                        android:gravity="center"
-                        android:text="@string/label_reward_reward_history"
-                        android:textColor="@drawable/selector_text_color_c323232_cc5c5c5"
-                        android:textSize="13dp"
-                        app:layout_constraintHorizontal_weight="1"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toLeftOf="@+id/rewardTermsTextView"
-                        app:layout_constraintTop_toBottomOf="@id/stickerValidityTextView"
-                        app:layout_goneMarginTop="15dp"
-                        dailyFont:style="Medium"/>
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/rewardTermsTextView"
-                        android:layout_width="0dp"
-                        android:layout_height="38dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginTop="21dp"
-                        android:background="@drawable/shape_fillrect_ldcdcdd_bffffff_r2"
-                        android:gravity="center"
-                        android:text="@string/label_reward_reward_terms"
-                        android:textColor="@drawable/selector_text_color_c323232_cc5c5c5"
-                        android:textSize="13dp"
-                        app:layout_constraintHorizontal_weight="1"
-                        app:layout_constraintLeft_toRightOf="@+id/rewardHistoryTextView"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/stickerValidityTextView"
-                        app:layout_goneMarginTop="15dp"
-                        dailyFont:style="Medium"/>
-
                 </android.support.constraint.ConstraintLayout>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/rewardHistoryTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="38dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/shape_fillrect_ldcdcdd_bffffff_r2"
+                    android:gravity="center"
+                    android:text="@string/label_reward_reward_history"
+                    android:textColor="@drawable/selector_text_color_c323232_cc5c5c5"
+                    android:textSize="13dp"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toLeftOf="@+id/rewardTermsTextView"
+                    app:layout_constraintTop_toBottomOf="@id/stickerBoardBottomLayout"
+                    app:layout_goneMarginTop="15dp"
+                    dailyFont:style="Medium"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/rewardTermsTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="38dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/shape_fillrect_ldcdcdd_bffffff_r2"
+                    android:gravity="center"
+                    android:text="@string/label_reward_reward_terms"
+                    android:textColor="@drawable/selector_text_color_c323232_cc5c5c5"
+                    android:textSize="13dp"
+                    app:layout_constraintHorizontal_weight="1"
+                    app:layout_constraintLeft_toRightOf="@+id/rewardHistoryTextView"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/stickerBoardBottomLayout"
+                    app:layout_goneMarginTop="15dp"
+                    dailyFont:style="Medium"/>
 
                 <com.daily.base.widget.DailyTextView
                     android:id="@+id/guideTitleTextView"
@@ -397,7 +398,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="10dp"
-                    android:layout_marginTop="11dp"
+                    android:layout_marginTop="65dp"
                     android:textColor="@color/default_text_c323232"
                     android:textSize="13dp"
                     app:layout_constraintLeft_toLeftOf="parent"
