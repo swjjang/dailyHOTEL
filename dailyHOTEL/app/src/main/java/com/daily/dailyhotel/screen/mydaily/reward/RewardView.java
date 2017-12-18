@@ -423,29 +423,7 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
     }
 
     @Override
-    public void setGuideTitleMessage(String message)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        getViewDataBinding().guideTitleTextView.setText(message);
-    }
-
-    @Override
-    public void setGuideDescriptionMessage(String message)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        getViewDataBinding().guideDescriptionTextView.setText(message);
-    }
-
-    @Override
-    public void setOthersGuideList(List<Pair<String, String>> guideList)
+    public void setGuideList(List<Pair<String, String>> guideList)
     {
         if (getViewDataBinding() == null)
         {
@@ -459,12 +437,20 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
         {
             getViewDataBinding().guidesLayout.setVisibility(View.VISIBLE);
 
-            for (Pair<String, String> guide : guideList)
-            {
-                LayoutRewardGuideDataBinding viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.layout_reward_guide_data, getViewDataBinding().guidesLayout, true);
+            getViewDataBinding().guideTitleTextView.setText(guideList.get(0).first);
+            getViewDataBinding().guideDescriptionTextView.setText(guideList.get(0).second);
 
-                viewDataBinding.guideTitleTextView.setText(guide.first);
-                viewDataBinding.guideDescriptionTextView.setText(guide.second);
+            int size = guideList.size();
+
+            if (size > 1)
+            {
+                for (int i = 1; i < size; i++)
+                {
+                    LayoutRewardGuideDataBinding viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.layout_reward_guide_data, getViewDataBinding().guidesLayout, true);
+
+                    viewDataBinding.guideTitleTextView.setText(guideList.get(i).first);
+                    viewDataBinding.guideDescriptionTextView.setText(guideList.get(i).second);
+                }
             }
         }
     }

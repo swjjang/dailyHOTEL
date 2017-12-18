@@ -32,11 +32,7 @@ public interface RewardInterface extends BaseDialogViewInterface
 
     void setRewardHistoryEnabled(boolean enabled);
 
-    void setGuideTitleMessage(String message);
-
-    void setGuideDescriptionMessage(String message);
-
-    void setOthersGuideList(List<Pair<String, String>> guideList);
+    void setGuideList(List<Pair<String, String>> guideList);
 
     void setNotificationVisible(boolean visible);
 

@@ -133,12 +133,9 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
             getViewInterface().setIssueCouponVisible(false);
         }
 
-        getViewInterface().setGuideTitleMessage(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerGuideTitleMessage());
-        getViewInterface().setGuideDescriptionMessage(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerGuideDescriptionMessage());
-
         try
         {
-            JSONArray jsonArray = new JSONArray(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerOthersGuides());
+            JSONArray jsonArray = new JSONArray(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerGuides());
 
             if (jsonArray != null && jsonArray.length() > 0)
             {
@@ -151,7 +148,7 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
                     guideList.add(new Pair<>(jsonArray.getJSONObject(i).getString("titleMessage"), jsonArray.getJSONObject(i).getString("descriptionMessage")));
                 }
 
-                getViewInterface().setOthersGuideList(guideList);
+                getViewInterface().setGuideList(guideList);
             }
         } catch (Exception e)
         {

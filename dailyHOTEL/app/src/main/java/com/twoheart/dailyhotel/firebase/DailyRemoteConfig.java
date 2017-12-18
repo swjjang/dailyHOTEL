@@ -676,20 +676,14 @@ public class DailyRemoteConfig
                 boolean campaignEnabled = jsonObject.getBoolean("campaignEnabled");
                 DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerCampaignEnabled(campaignEnabled);
 
-                String guideTitleMessage = jsonObject.getString("guideTitleMessage");
-                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerGuideTitleMessage(guideTitleMessage);
-
-                String guideDescriptionMessage = jsonObject.getString("guideDescriptionMessage");
-                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerGuideDescriptionMessage(guideDescriptionMessage);
-
-                JSONArray guidesJSONArray = jsonObject.getJSONArray("othersGuides");
+                JSONArray guidesJSONArray = jsonObject.getJSONArray("guides");
 
                 if (guidesJSONArray == null || guidesJSONArray.length() == 0)
                 {
-                    DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerOthersGuides(null);
+                    DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerGuides(null);
                 } else
                 {
-                    DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerOthersGuides(guidesJSONArray.toString());
+                    DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigRewardStickerGuides(guidesJSONArray.toString());
                 }
 
                 JSONObject nonMemberJSONObject = jsonObject.getJSONObject("nonMember");
