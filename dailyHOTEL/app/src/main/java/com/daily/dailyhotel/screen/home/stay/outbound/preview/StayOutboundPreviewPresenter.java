@@ -158,6 +158,11 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
     @Override
     public boolean onBackPressed()
     {
+        if (lock() == true)
+        {
+            return false;
+        }
+
         getViewInterface().hideAnimation();
 
         return true;
