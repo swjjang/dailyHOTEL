@@ -1,23 +1,32 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.list;
 
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
+import com.daily.base.BaseFragmentPagerAdapter;
 import com.daily.base.OnBaseEventListener;
+import com.daily.base.util.ExLog;
+import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.Category;
-import com.twoheart.dailyhotel.databinding.ActivityStayListDataBinding;
+import com.twoheart.dailyhotel.databinding.ActivityStayTabDataBinding;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, ActivityStayListDataBinding> implements StayTabInterface
+public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, ActivityStayTabDataBinding> implements StayTabInterface
 {
+    private BaseFragmentPagerAdapter<StayListFragment> mFragmentPagerAdapter;
+
     public interface OnEventListener extends OnBaseEventListener
     {
+        void onCategoryTabSelected(StayListFragment currentFragment, StayListFragment previousFragment);
     }
 
     public StayTabView(BaseActivity baseActivity, StayTabView.OnEventListener listener)
@@ -26,7 +35,7 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
     }
 
     @Override
-    protected void setContentView(final ActivityStayListDataBinding viewDataBinding)
+    protected void setContentView(final ActivityStayTabDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -56,185 +65,162 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
     @Override
     public void setCategoryTabLayout(FragmentManager fragmentManager, List<? extends Category> categoryList, Category selectedCategory)
     {
-        if(getViewDataBinding() == null)
+        if (getViewDataBinding() == null)
         {
             return;
         }
 
         getViewDataBinding().categoryTabLayout.setOnTabSelectedListener(null);
 
-            if (categoryList == null)
+        if (categoryList == null)
+        {
+            getViewDataBinding().viewPager.removeAllViews();
+            setCategoryTabLayoutVisibility(View.GONE);
+            return;
+        }
+
+        int size = categoryList.size();
+
+        if (size <= 2)
+        {
+            size = 1;
+            setCategoryTabLayoutVisibility(View.GONE);
+
+            mFragmentPagerAdapter = createFragmentPagerAdapter(fragmentManager, size);
+
+            getViewDataBinding().viewPager.removeAllViews();
+            getViewDataBinding().viewPager.setOffscreenPageLimit(size);
+            getViewDataBinding().viewPager.setAdapter(mFragmentPagerAdapter);
+            getViewDataBinding().viewPager.clearOnPageChangeListeners();
+
+            getViewDataBinding().categoryTabLayout.setOnTabSelectedListener(null);
+        } else
+        {
+            setCategoryTabLayoutVisibility(View.VISIBLE);
+
+            Category category;
+            TabLayout.Tab tab;
+            TabLayout.Tab selectedTab = null;
+
+            getViewDataBinding().categoryTabLayout.removeAllTabs();
+
+            int position = 0;
+
+            for (int i = 0; i < size; i++)
             {
-                getViewDataBinding().viewPager.removeAllViews();
-                setCategoryTabLayoutVisibility(View.GONE);
-                return;
+                category = categoryList.get(i);
+
+                tab = getViewDataBinding().categoryTabLayout.newTab();
+                tab.setText(category.name);
+                tab.setTag(category);
+                getViewDataBinding().categoryTabLayout.addTab(tab);
+
+                if (selectedCategory != null && category.code.equalsIgnoreCase(selectedCategory.code) == true)
+                {
+                    position = i;
+                    selectedTab = tab;
+                }
             }
 
-            int size = categoryList.size();
+            mFragmentPagerAdapter = createFragmentPagerAdapter(fragmentManager, size);
 
-            if (size <= 2)
+            getViewDataBinding().viewPager.removeAllViews();
+            getViewDataBinding().viewPager.setOffscreenPageLimit(size);
+
+            Class reflectionClass = ViewPager.class;
+
+            try
             {
-                size = 1;
-                setCategoryTabLayoutVisibility(View.GONE);
-
-                mFragmentPagerAdapter = getPlaceListFragmentPagerAdapter(fragmentManager, size, mFloatingActionView, listener);
-
-                mViewPager.removeAllViews();
-                mViewPager.setOffscreenPageLimit(size);
-                mViewPager.setAdapter(mFragmentPagerAdapter);
-                mViewPager.clearOnPageChangeListeners();
-
-                mCategoryTabLayout.setOnTabSelectedListener(null);
-            } else
+                Field mCurItem = reflectionClass.getDeclaredField("mCurItem");
+                mCurItem.setAccessible(true);
+                mCurItem.setInt(getViewDataBinding().viewPager, position);
+            } catch (Exception e)
             {
-                setCategoryTabLayoutVisibility(View.VISIBLE);
+                ExLog.d(e.toString());
+            }
 
-                Category category;
-                TabLayout.Tab tab;
-                TabLayout.Tab selectedTab = null;
+            getViewDataBinding().viewPager.setAdapter(mFragmentPagerAdapter);
+            getViewDataBinding().viewPager.clearOnPageChangeListeners();
+            getViewDataBinding().viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(getViewDataBinding().categoryTabLayout));
+            getViewDataBinding().viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
+            {
+                boolean isScrolling = false;
+                int prevPosition = -1;
 
-                mCategoryTabLayout.removeAllTabs();
-
-                int position = 0;
-
-                for (int i = 0; i < size; i++)
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
                 {
-                    category = categoryList.get(i);
 
-                    tab = mCategoryTabLayout.newTab();
-                    tab.setText(category.name);
-                    tab.setTag(category);
-                    mCategoryTabLayout.addTab(tab);
-
-                    if (selectedCategory != null && category.code.equalsIgnoreCase(selectedCategory.code) == true)
-                    {
-                        position = i;
-                        selectedTab = tab;
-                    }
                 }
 
-                mFragmentPagerAdapter = getPlaceListFragmentPagerAdapter(fragmentManager, size, mFloatingActionView, listener);
-
-                mViewPager.removeAllViews();
-                mViewPager.setOffscreenPageLimit(size);
-
-                Class reflectionClass = ViewPager.class;
-
-                try
+                @Override
+                public void onPageSelected(int position)
                 {
-                    Field mCurItem = reflectionClass.getDeclaredField("mCurItem");
-                    mCurItem.setAccessible(true);
-                    mCurItem.setInt(mViewPager, position);
-                } catch (Exception e)
-                {
-                    ExLog.d(e.toString());
-                }
-
-                mViewPager.setAdapter(mFragmentPagerAdapter);
-                mViewPager.clearOnPageChangeListeners();
-                mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mCategoryTabLayout));
-                mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
-                {
-                    boolean isScrolling = false;
-                    int prevPosition = -1;
-
-                    @Override
-                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
+                    if (prevPosition != position)
                     {
-
-                    }
-
-                    @Override
-                    public void onPageSelected(int position)
-                    {
-                        if (prevPosition != position)
-                        {
-                            if (isScrolling == true)
-                            {
-                                isScrolling = false;
-
-                                onAnalyticsCategoryFlicking(mCategoryTabLayout.getTabAt(position).getText().toString());
-                            } else
-                            {
-                                onAnalyticsCategoryClick(mCategoryTabLayout.getTabAt(position).getText().toString());
-                            }
-                        } else
+                        if (isScrolling == true)
                         {
                             isScrolling = false;
-                        }
 
-                        ((OnEventListener) mOnEventListener).onPageSelected(position, prevPosition);
-
-                        prevPosition = position;
-
-                        PlaceListFragment placeListFragment = getPlaceListFragment().get(position);
-
-                        if (placeListFragment.getPlaceCount() == 0)
-                        {
-                            if (placeListFragment.isDefaultFilter() == true)
-                            {
-                                setBottomOptionVisible(false);
-                            } else
-                            {
-                                setBottomOptionVisible(true);
-                                setOptionViewTypeEnabled(false);
-                                setOptionFilterEnabled(true);
-                            }
+                            //                            onAnalyticsCategoryFlicking(mCategoryTabLayout.getTabAt(position).getText().toString());
                         } else
                         {
-                            setBottomOptionVisible(true);
-                            setOptionViewTypeEnabled(true);
-                            setOptionFilterEnabled(true);
+                            //                            onAnalyticsCategoryClick(mCategoryTabLayout.getTabAt(position).getText().toString());
                         }
-                    }
-
-                    @Override
-                    public void onPageScrollStateChanged(int state)
+                    } else
                     {
-                        switch (state)
-                        {
-                            case ViewPager.SCROLL_STATE_DRAGGING:
-                                isScrolling = true;
-                                //                            hideBottomLayout();
-
-                                ((OnEventListener) mOnEventListener).onPageScroll();
-                                break;
-
-                            case ViewPager.SCROLL_STATE_IDLE:
-                                PlaceListFragment placeListFragment = getCurrentPlaceListFragment();
-
-                                if (placeListFragment.getPlaceCount() == 0)
-                                {
-                                    if (placeListFragment.isDefaultFilter() == true)
-                                    {
-                                        setBottomOptionVisible(false);
-                                    } else
-                                    {
-                                        setBottomOptionVisible(true);
-                                        setOptionViewTypeEnabled(false);
-                                        setOptionFilterEnabled(true);
-                                    }
-                                } else
-                                {
-                                    setBottomOptionVisible(true);
-                                    setOptionViewTypeEnabled(true);
-                                    setOptionFilterEnabled(true);
-                                }
-                                break;
-                        }
+                        isScrolling = false;
                     }
-                });
 
-                if (selectedTab != null)
-                {
-                    selectedTab.select();
+                    getEventListener().onPageSelected(mFragmentPagerAdapter.getItem(position), mFragmentPagerAdapter.getItem(prevPosition));
+
+                    prevPosition = position;
                 }
 
-                mCategoryTabLayout.setOnTabSelectedListener(mOnCategoryTabSelectedListener);
+                @Override
+                public void onPageScrollStateChanged(int state)
+                {
+                    switch (state)
+                    {
+                        case ViewPager.SCROLL_STATE_DRAGGING:
+                            isScrolling = true;
+                            break;
 
-                FontManager.apply(mCategoryTabLayout, FontManager.getInstance(mContext).getRegularTypeface());
+                        case ViewPager.SCROLL_STATE_IDLE:
+                            break;
+                    }
+                }
+            });
+
+            if (selectedTab != null)
+            {
+                selectedTab.select();
             }
+
+            getViewDataBinding().categoryTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener()
+            {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab)
+                {
+
+                }
+
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab)
+                {
+
+                }
+
+                @Override
+                public void onTabReselected(TabLayout.Tab tab)
+                {
+
+                }
+            });
+
+            FontManager.apply(getViewDataBinding().categoryTabLayout, FontManager.getInstance(getContext()).getRegularTypeface());
         }
+    }
 
     @Override
     public void setOptionFilterSelected(boolean selected)
@@ -242,7 +228,7 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
 
     }
 
-    private void initToolbar(ActivityStayListDataBinding viewDataBinding)
+    private void initToolbar(ActivityStayTabDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -254,7 +240,7 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
 
     public void setCategoryTabLayoutVisibility(int visibility)
     {
-        if(getViewDataBinding() == null)
+        if (getViewDataBinding() == null)
         {
             return;
         }
@@ -277,22 +263,20 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
         }
     }
 
-    private StayTabFragmentPagerAdapter createFragmentPagerAdapter(FragmentManager fragmentManager, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener)
+    private BaseFragmentPagerAdapter createFragmentPagerAdapter(FragmentManager fragmentManager, int count)
     {
-        StayTabFragmentPagerAdapter fragmentPagerAdapter = new StayTabFragmentPagerAdapter(fragmentManager);
+        BaseFragmentPagerAdapter fragmentPagerAdapter = new BaseFragmentPagerAdapter(fragmentManager);
 
         List<StayListFragment> fragmentList = new ArrayList<>(count);
 
         for (int i = 0; i < count; i++)
         {
             StayListFragment stayListFragment = new StayListFragment();
-            stayListFragment.setPlaceOnListFragmentListener(listener);
-            stayListFragment.setBottomOptionLayout(bottomOptionLayout);
-            list.add(stayListFragment);
+            fragmentList.add(stayListFragment);
         }
 
-        placeListFragmentPagerAdapter.setPlaceFragmentList(list);
+        fragmentPagerAdapter.setFragmentList(fragmentList);
 
-        return placeListFragmentPagerAdapter;
+        return fragmentPagerAdapter;
     }
 }

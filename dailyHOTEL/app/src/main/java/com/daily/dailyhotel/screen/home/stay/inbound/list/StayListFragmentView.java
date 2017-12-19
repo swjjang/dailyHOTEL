@@ -1,25 +1,17 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.list;
 
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
+import android.view.ViewGroup;
 
-import com.daily.base.BaseActivity;
-import com.daily.base.BaseDialogView;
 import com.daily.base.BaseFragmentDialogView;
-import com.daily.base.BaseFragmentPresenter;
-import com.daily.base.BaseView;
 import com.daily.base.OnBaseEventListener;
-import com.daily.dailyhotel.entity.ObjectItem;
-import com.twoheart.dailyhotel.databinding.ActivityStayListDataBinding;
-import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.databinding.ActivityStayTabDataBinding;
 
 /**
  * Created by sheldon
  * Clean Architecture
  */
-public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmentView.OnEventListener, ActivityStayListDataBinding>
+public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmentView.OnEventListener, ActivityStayTabDataBinding>
 {
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -31,13 +23,25 @@ public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmen
     }
 
     @Override
+    public void setContentView(int layoutResID)
+    {
+
+    }
+
+    @Override
+    public void setContentView(int layoutResID, ViewGroup viewGroup)
+    {
+
+    }
+
+    @Override
     public void setToolbarTitle(String title)
     {
 
     }
 
     @Override
-    protected void setContentView(ActivityStayListDataBinding viewDataBinding)
+    protected void setContentView(ActivityStayTabDataBinding viewDataBinding)
     {
 
     }

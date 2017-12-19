@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.inbound.list;
+package com.daily.base;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -7,11 +7,11 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StayTabFragmentPagerAdapter extends FragmentStatePagerAdapter
+public class BaseFragmentPagerAdapter<T extends BaseFragment> extends FragmentStatePagerAdapter
 {
-    private List<StayListFragment> mFragmentList;
+    private List<T> mFragmentList;
 
-    public StayTabFragmentPagerAdapter(FragmentManager fragmentManager)
+    public BaseFragmentPagerAdapter(FragmentManager fragmentManager)
     {
         super(fragmentManager);
 
@@ -19,7 +19,7 @@ public class StayTabFragmentPagerAdapter extends FragmentStatePagerAdapter
     }
 
     @Override
-    public Fragment getItem(int position)
+    public T getItem(int position)
     {
         if (mFragmentList.size() == 0)
         {
@@ -36,7 +36,7 @@ public class StayTabFragmentPagerAdapter extends FragmentStatePagerAdapter
         return position == -1 ? POSITION_NONE : position;
     }
 
-    public List<StayListFragment> getFragmentList()
+    public List<T> getFragmentList()
     {
         return mFragmentList;
     }
@@ -62,7 +62,7 @@ public class StayTabFragmentPagerAdapter extends FragmentStatePagerAdapter
         return mFragmentList.size();
     }
 
-    public void setPlaceFragmentList(List<StayListFragment> fragmentList)
+    public void setFragmentList(List<T> fragmentList)
     {
         if (mFragmentList == null || fragmentList == null)
         {
@@ -70,10 +70,10 @@ public class StayTabFragmentPagerAdapter extends FragmentStatePagerAdapter
         }
 
         mFragmentList.clear();
-        addPlaceListFragment(fragmentList);
+        addListFragment(fragmentList);
     }
 
-    public void addPlaceListFragment(List<StayListFragment> fragmentList)
+    public void addListFragment(List<T> fragmentList)
     {
         if (mFragmentList == null || fragmentList == null)
         {

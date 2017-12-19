@@ -150,6 +150,12 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
         getViewInterface().setToolbarTitle(mTitle);
