@@ -53,6 +53,9 @@ public interface BookingInterface
     // 고메 숨기기
     Observable<Boolean> getGourmetHiddenBooking(int reservationIndex);
 
+    // 고메 숨기기
+    Observable<Boolean> getGourmetHiddenBooking(String aggregationId);
+
     // 임금 대기
     Observable<WaitingDeposit> getWaitingDeposit(String aggregationId);
 
