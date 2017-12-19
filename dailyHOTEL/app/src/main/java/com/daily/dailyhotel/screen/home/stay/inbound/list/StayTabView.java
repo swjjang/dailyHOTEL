@@ -26,7 +26,9 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
 
     public interface OnEventListener extends OnBaseEventListener
     {
-        void onCategoryTabSelected(StayListFragment currentFragment, StayListFragment previousFragment);
+        void onCategoryTabSelected(TabLayout.Tab tab);
+
+        void onCategoryTabReselected(TabLayout.Tab tab);
     }
 
     public StayTabView(BaseActivity baseActivity, StayTabView.OnEventListener listener)
@@ -172,7 +174,7 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
                         isScrolling = false;
                     }
 
-                    getEventListener().onPageSelected(mFragmentPagerAdapter.getItem(position), mFragmentPagerAdapter.getItem(prevPosition));
+//                    getEventListener().onPageSelected(mFragmentPagerAdapter.getItem(position), mFragmentPagerAdapter.getItem(prevPosition));
 
                     prevPosition = position;
                 }
@@ -202,7 +204,7 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
                 @Override
                 public void onTabSelected(TabLayout.Tab tab)
                 {
-
+                    getEventListener().onCategoryTabSelected(tab);
                 }
 
                 @Override
@@ -214,7 +216,7 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
                 @Override
                 public void onTabReselected(TabLayout.Tab tab)
                 {
-
+                    getEventListener().onCategoryTabReselected(tab);
                 }
             });
 
@@ -224,6 +226,12 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
 
     @Override
     public void setOptionFilterSelected(boolean selected)
+    {
+
+    }
+
+    @Override
+    public void setCategoryTab(int position)
     {
 
     }
