@@ -25,7 +25,6 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:lineSpacingExtra="-2dp"
-                android:text="리워드 쿠폰 발행 예정"
                 android:textColor="@color/default_text_c323232"
                 android:textSize="18dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -63,184 +62,184 @@
             app:layout_constraintTop_toBottomOf="@id/cardTopLayout">
 
             <!--<com.daily.base.widget.DailyTextView-->
-                <!--android:id="@+id/sticker1nightsTextView"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:background="@drawable/r_ic_l_47_placeholder"-->
-                <!--android:gravity="center"-->
-                <!--android:paddingBottom="2dp"-->
-                <!--android:text="1"-->
-                <!--android:textColor="@color/default_text_ce9a230"-->
-                <!--android:textSize="17dp"-->
-                <!--app:layout_constraintHorizontal_chainStyle="packed"-->
-                <!--app:layout_constraintLeft_toLeftOf="parent"-->
-                <!--app:layout_constraintRight_toLeftOf="@+id/sticker2nightsTextView"-->
-                <!--app:layout_constraintTop_toTopOf="parent"/>-->
+            <!--android:id="@+id/sticker1nightsTextView"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@drawable/r_ic_l_47_placeholder"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingBottom="2dp"-->
+            <!--android:text="1"-->
+            <!--android:textColor="@color/default_text_ce9a230"-->
+            <!--android:textSize="17dp"-->
+            <!--app:layout_constraintHorizontal_chainStyle="packed"-->
+            <!--app:layout_constraintLeft_toLeftOf="parent"-->
+            <!--app:layout_constraintRight_toLeftOf="@+id/sticker2nightsTextView"-->
+            <!--app:layout_constraintTop_toTopOf="parent"/>-->
 
             <ImageView
                 android:id="@+id/sticker1nightsImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/r_ic_l_47_shadow"
-                android:paddingBottom="2dp"
                 android:alpha="0.5"
+                android:paddingBottom="2dp"
+                android:src="@drawable/r_ic_l_47_shadow_event"
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@+id/sticker2nightsImageView"
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <!--<com.daily.base.widget.DailyTextView-->
-                <!--android:id="@+id/sticker2nightsTextView"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginLeft="9dp"-->
-                <!--android:background="@drawable/r_ic_l_47_placeholder"-->
-                <!--android:gravity="center"-->
-                <!--android:paddingBottom="2dp"-->
-                <!--android:text="2"-->
-                <!--android:textColor="@color/default_text_ce9a230"-->
-                <!--android:textSize="17dp"-->
-                <!--app:layout_constraintLeft_toRightOf="@+id/sticker1nightsTextView"-->
-                <!--app:layout_constraintRight_toLeftOf="@+id/sticker3nightsTextView"-->
-                <!--app:layout_constraintTop_toTopOf="parent"/>-->
+            <!--android:id="@+id/sticker2nightsTextView"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="9dp"-->
+            <!--android:background="@drawable/r_ic_l_47_placeholder"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingBottom="2dp"-->
+            <!--android:text="2"-->
+            <!--android:textColor="@color/default_text_ce9a230"-->
+            <!--android:textSize="17dp"-->
+            <!--app:layout_constraintLeft_toRightOf="@+id/sticker1nightsTextView"-->
+            <!--app:layout_constraintRight_toLeftOf="@+id/sticker3nightsTextView"-->
+            <!--app:layout_constraintTop_toTopOf="parent"/>-->
 
             <ImageView
                 android:id="@+id/sticker2nightsImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/r_ic_l_47_shadow"
                 android:layout_marginLeft="9dp"
-                android:paddingBottom="2dp"
                 android:alpha="0.5"
+                android:paddingBottom="2dp"
+                android:src="@drawable/r_ic_l_47_shadow_event"
                 app:layout_constraintLeft_toRightOf="@+id/sticker1nightsImageView"
                 app:layout_constraintRight_toLeftOf="@+id/sticker3nightsImageView"
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <!--<com.daily.base.widget.DailyTextView-->
-                <!--android:id="@+id/sticker3nightsTextView"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginLeft="9dp"-->
-                <!--android:background="@drawable/r_ic_l_47_placeholder"-->
-                <!--android:gravity="center"-->
-                <!--android:paddingBottom="2dp"-->
-                <!--android:text="3"-->
-                <!--android:textColor="@color/default_text_ce9a230"-->
-                <!--android:textSize="17dp"-->
-                <!--app:layout_constraintLeft_toRightOf="@+id/sticker2nightsTextView"-->
-                <!--app:layout_constraintRight_toLeftOf="@+id/sticker4nightsTextView"-->
-                <!--app:layout_constraintTop_toTopOf="parent"/>-->
+            <!--android:id="@+id/sticker3nightsTextView"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="9dp"-->
+            <!--android:background="@drawable/r_ic_l_47_placeholder"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingBottom="2dp"-->
+            <!--android:text="3"-->
+            <!--android:textColor="@color/default_text_ce9a230"-->
+            <!--android:textSize="17dp"-->
+            <!--app:layout_constraintLeft_toRightOf="@+id/sticker2nightsTextView"-->
+            <!--app:layout_constraintRight_toLeftOf="@+id/sticker4nightsTextView"-->
+            <!--app:layout_constraintTop_toTopOf="parent"/>-->
 
             <ImageView
                 android:id="@+id/sticker3nightsImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="9dp"
-                android:src="@drawable/r_ic_l_47_shadow"
-                android:paddingBottom="2dp"
                 android:alpha="0.5"
+                android:paddingBottom="2dp"
+                android:src="@drawable/r_ic_l_47_shadow"
                 app:layout_constraintLeft_toRightOf="@+id/sticker2nightsImageView"
                 app:layout_constraintRight_toLeftOf="@+id/sticker4nightsImageView"
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <!--<com.daily.base.widget.DailyTextView-->
-                <!--android:id="@+id/sticker4nightsTextView"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginLeft="9dp"-->
-                <!--android:background="@drawable/r_ic_l_47_placeholder"-->
-                <!--android:gravity="center"-->
-                <!--android:paddingBottom="2dp"-->
-                <!--android:text="4"-->
-                <!--android:textColor="@color/default_text_ce9a230"-->
-                <!--android:textSize="17dp"-->
-                <!--app:layout_constraintLeft_toRightOf="@+id/sticker3nightsTextView"-->
-                <!--app:layout_constraintRight_toLeftOf="@+id/sticker5nightsTextView"-->
-                <!--app:layout_constraintTop_toTopOf="parent"/>-->
+            <!--android:id="@+id/sticker4nightsTextView"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="9dp"-->
+            <!--android:background="@drawable/r_ic_l_47_placeholder"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingBottom="2dp"-->
+            <!--android:text="4"-->
+            <!--android:textColor="@color/default_text_ce9a230"-->
+            <!--android:textSize="17dp"-->
+            <!--app:layout_constraintLeft_toRightOf="@+id/sticker3nightsTextView"-->
+            <!--app:layout_constraintRight_toLeftOf="@+id/sticker5nightsTextView"-->
+            <!--app:layout_constraintTop_toTopOf="parent"/>-->
 
             <ImageView
                 android:id="@+id/sticker4nightsImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/r_ic_l_47_shadow"
                 android:layout_marginLeft="9dp"
-                android:paddingBottom="2dp"
                 android:alpha="0.5"
+                android:paddingBottom="2dp"
+                android:src="@drawable/r_ic_l_47_shadow"
                 app:layout_constraintLeft_toRightOf="@+id/sticker3nightsImageView"
                 app:layout_constraintRight_toLeftOf="@+id/sticker5nightsImageView"
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <!--<com.daily.base.widget.DailyTextView-->
-                <!--android:id="@+id/sticker5nightsTextView"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginLeft="9dp"-->
-                <!--android:background="@drawable/r_ic_l_47_placeholder"-->
-                <!--android:gravity="center"-->
-                <!--android:paddingBottom="2dp"-->
-                <!--android:text="5"-->
-                <!--android:textColor="@color/default_text_ce9a230"-->
-                <!--android:textSize="17dp"-->
-                <!--app:layout_constraintLeft_toRightOf="@+id/sticker4nightsTextView"-->
-                <!--app:layout_constraintRight_toRightOf="parent"-->
-                <!--app:layout_constraintTop_toTopOf="parent"/>-->
+            <!--android:id="@+id/sticker5nightsTextView"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="9dp"-->
+            <!--android:background="@drawable/r_ic_l_47_placeholder"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingBottom="2dp"-->
+            <!--android:text="5"-->
+            <!--android:textColor="@color/default_text_ce9a230"-->
+            <!--android:textSize="17dp"-->
+            <!--app:layout_constraintLeft_toRightOf="@+id/sticker4nightsTextView"-->
+            <!--app:layout_constraintRight_toRightOf="parent"-->
+            <!--app:layout_constraintTop_toTopOf="parent"/>-->
 
             <ImageView
                 android:id="@+id/sticker5nightsImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/r_ic_l_47_shadow"
                 android:layout_marginLeft="9dp"
-                android:paddingBottom="2dp"
                 android:alpha="0.5"
+                android:paddingBottom="2dp"
+                android:src="@drawable/r_ic_l_47_shadow"
                 app:layout_constraintLeft_toRightOf="@+id/sticker4nightsImageView"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <!--<com.daily.base.widget.DailyTextView-->
-                <!--android:id="@+id/sticker6nightsTextView"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginTop="9dp"-->
-                <!--android:background="@drawable/r_ic_l_47_placeholder"-->
-                <!--android:gravity="center"-->
-                <!--android:paddingBottom="2dp"-->
-                <!--android:text="6"-->
-                <!--android:textColor="@color/default_text_ce9a230"-->
-                <!--android:textSize="17dp"-->
-                <!--app:layout_constraintHorizontal_chainStyle="packed"-->
-                <!--app:layout_constraintLeft_toLeftOf="parent"-->
-                <!--app:layout_constraintRight_toLeftOf="@+id/sticker7nightsTextView"-->
-                <!--app:layout_constraintTop_toBottomOf="@+id/sticker1nightsTextView"/>-->
+            <!--android:id="@+id/sticker6nightsTextView"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="9dp"-->
+            <!--android:background="@drawable/r_ic_l_47_placeholder"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingBottom="2dp"-->
+            <!--android:text="6"-->
+            <!--android:textColor="@color/default_text_ce9a230"-->
+            <!--android:textSize="17dp"-->
+            <!--app:layout_constraintHorizontal_chainStyle="packed"-->
+            <!--app:layout_constraintLeft_toLeftOf="parent"-->
+            <!--app:layout_constraintRight_toLeftOf="@+id/sticker7nightsTextView"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/sticker1nightsTextView"/>-->
 
             <ImageView
                 android:id="@+id/sticker6nightsImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/r_ic_l_47_shadow"
                 android:layout_marginTop="9dp"
-                android:paddingBottom="2dp"
                 android:alpha="0.5"
+                android:paddingBottom="2dp"
+                android:src="@drawable/r_ic_l_47_shadow"
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@+id/sticker7nightsImageView"
                 app:layout_constraintTop_toBottomOf="@+id/sticker1nightsImageView"/>
 
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/sticker7nightsTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="9dp"
-                android:layout_marginTop="9dp"
-                android:background="@drawable/r_ic_l_47_placeholder"
-                android:gravity="center"
-                android:paddingBottom="2dp"
-                android:text="7"
-                android:textColor="@color/default_text_ce9a230"
-                android:textSize="17dp"
-                app:layout_constraintLeft_toRightOf="@+id/sticker6nightsTextView"
-                app:layout_constraintRight_toLeftOf="@+id/sticker8nightsTextView"
-                app:layout_constraintTop_toBottomOf="@+id/sticker1nightsTextView"/>
+            <!--<com.daily.base.widget.DailyTextView-->
+            <!--android:id="@+id/sticker7nightsTextView"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="9dp"-->
+            <!--android:layout_marginTop="9dp"-->
+            <!--android:background="@drawable/r_ic_l_47_placeholder"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingBottom="2dp"-->
+            <!--android:text="7"-->
+            <!--android:textColor="@color/default_text_ce9a230"-->
+            <!--android:textSize="17dp"-->
+            <!--app:layout_constraintLeft_toRightOf="@+id/sticker6nightsTextView"-->
+            <!--app:layout_constraintRight_toLeftOf="@+id/sticker8nightsTextView"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/sticker1nightsTextView"/>-->
 
             <ImageView
                 android:id="@+id/sticker7nightsImageView"
@@ -248,84 +247,93 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="9dp"
                 android:layout_marginTop="9dp"
-                android:src="@drawable/r_ic_l_47_shadow"
-                android:visibility="invisible"
-                app:layout_constraintLeft_toLeftOf="@id/sticker7nightsTextView"
-                app:layout_constraintTop_toTopOf="@id/sticker7nightsTextView"/>
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/sticker8nightsTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="9dp"
-                android:layout_marginTop="9dp"
-                android:background="@drawable/r_ic_l_47_placeholder"
-                android:gravity="center"
+                android:alpha="0.5"
                 android:paddingBottom="2dp"
-                android:text="8"
-                android:textColor="@color/default_text_ce9a230"
-                android:textSize="17dp"
-                app:layout_constraintLeft_toRightOf="@+id/sticker7nightsTextView"
-                app:layout_constraintRight_toLeftOf="@+id/sticker9nightsTextView"
-                app:layout_constraintTop_toBottomOf="@+id/sticker1nightsTextView"/>
+                android:src="@drawable/r_ic_l_47_shadow"
+                app:layout_constraintLeft_toRightOf="@+id/sticker6nightsImageView"
+                app:layout_constraintRight_toLeftOf="@+id/sticker8nightsImageView"
+                app:layout_constraintTop_toBottomOf="@+id/sticker1nightsImageView"/>
+
+            <!--<com.daily.base.widget.DailyTextView-->
+            <!--android:id="@+id/sticker8nightsTextView"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="9dp"-->
+            <!--android:layout_marginTop="9dp"-->
+            <!--android:background="@drawable/r_ic_l_47_placeholder"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingBottom="2dp"-->
+            <!--android:text="8"-->
+            <!--android:textColor="@color/default_text_ce9a230"-->
+            <!--android:textSize="17dp"-->
+            <!--app:layout_constraintLeft_toRightOf="@+id/sticker7nightsTextView"-->
+            <!--app:layout_constraintRight_toLeftOf="@+id/sticker9nightsTextView"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/sticker1nightsTextView"/>-->
 
             <ImageView
                 android:id="@+id/sticker8nightsImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/r_ic_l_47_shadow"
-                android:visibility="invisible"
-                app:layout_constraintLeft_toLeftOf="@id/sticker8nightsTextView"
-                app:layout_constraintTop_toTopOf="@id/sticker8nightsTextView"/>
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/sticker9nightsTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_marginLeft="9dp"
                 android:layout_marginTop="9dp"
-                android:background="@drawable/r_ic_l_47_placeholder"
-                android:gravity="center"
+                android:alpha="0.5"
                 android:paddingBottom="2dp"
-                android:text="9"
-                android:textColor="@color/default_text_ce9a230"
-                android:textSize="17dp"
-                app:layout_constraintLeft_toRightOf="@+id/sticker8nightsTextView"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sticker1nightsTextView"/>
+                android:src="@drawable/r_ic_l_47_shadow"
+                app:layout_constraintLeft_toRightOf="@+id/sticker7nightsImageView"
+                app:layout_constraintRight_toLeftOf="@+id/sticker9nightsImageView"
+                app:layout_constraintTop_toBottomOf="@+id/sticker1nightsImageView"/>
+
+            <!--<com.daily.base.widget.DailyTextView-->
+            <!--android:id="@+id/sticker9nightsTextView"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="9dp"-->
+            <!--android:layout_marginTop="9dp"-->
+            <!--android:background="@drawable/r_ic_l_47_placeholder"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingBottom="2dp"-->
+            <!--android:text="9"-->
+            <!--android:textColor="@color/default_text_ce9a230"-->
+            <!--android:textSize="17dp"-->
+            <!--app:layout_constraintLeft_toRightOf="@+id/sticker8nightsTextView"-->
+            <!--app:layout_constraintRight_toRightOf="parent"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/sticker1nightsTextView"/>-->
 
             <ImageView
                 android:id="@+id/sticker9nightsImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="9dp"
+                android:layout_marginTop="9dp"
+                android:alpha="0.5"
+                android:paddingBottom="2dp"
                 android:src="@drawable/r_ic_l_47_shadow"
-                android:visibility="invisible"
-                app:layout_constraintLeft_toLeftOf="@id/sticker9nightsTextView"
-                app:layout_constraintTop_toTopOf="@id/sticker9nightsTextView"/>
+                app:layout_constraintLeft_toRightOf="@+id/sticker8nightsImageView"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sticker1nightsImageView"/>
 
             <com.daily.base.widget.DailyTextView
-                android:id="@+id/cardStartDayTextView"
+                android:id="@+id/cardStartedDayTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:text="카드 시작일 : YYYY.MM.DD 00:00"
                 android:textColor="@color/default_text_cc5c5c5"
                 android:textSize="13dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/sticker6nightsTextView"/>
+                app:layout_constraintTop_toBottomOf="@id/sticker6nightsImageView"/>
 
             <com.daily.base.widget.DailyTextView
-                android:id="@+id/couponIssueDayTextView"
+                android:id="@+id/couponIssuedDayTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
-                android:text="쿠폰 발행일: YYYY.MM.DD(요일)"
                 android:textColor="@color/default_text_cc5c5c5"
                 android:textSize="13dp"
+                android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cardStartDayTextView"/>
+                app:layout_constraintTop_toBottomOf="@id/cardStartedDayTextView"/>
         </android.support.constraint.ConstraintLayout>
     </android.support.constraint.ConstraintLayout>
 </layout>

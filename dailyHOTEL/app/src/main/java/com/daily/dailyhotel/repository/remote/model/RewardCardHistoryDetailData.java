@@ -49,18 +49,6 @@ public class RewardCardHistoryDetailData
     @JsonObject
     static class RewardCardHistoryData
     {
-        @JsonField(name = "aggregationId")
-        public String aggregationId;
-
-        @JsonField(name = "reservationIdx")
-        public int reservationIdx;
-
-        @JsonField(name = "couponAmount")
-        public int couponAmount;
-
-        @JsonField(name = "expiredStickerCount")
-        public int expiredStickerCount;
-
         @JsonField(name = "createdAt")
         public String createdAt;
 
@@ -69,12 +57,6 @@ public class RewardCardHistoryDetailData
 
         @JsonField(name = "historyType")
         public String historyType;
-
-        @JsonField(name = "reservationName")
-        public String reservationName;
-
-        @JsonField(name = "roomnights")
-        public int roomNights;
 
         @JsonField(name = "serviceType")
         public String serviceType;

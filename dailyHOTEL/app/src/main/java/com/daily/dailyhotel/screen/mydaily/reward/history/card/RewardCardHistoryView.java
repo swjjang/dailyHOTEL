@@ -5,7 +5,6 @@ import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.entity.RewardCardHistory;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.ActivityCopyDataBinding;
 import com.twoheart.dailyhotel.databinding.ActivityRewardCardDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 
@@ -13,9 +12,7 @@ import java.util.List;
 
 public class RewardCardHistoryView extends BaseDialogView<RewardCardHistoryView.OnEventListener, ActivityRewardCardDataBinding> implements RewardCardHistoryInterface
 {
-
-
-
+    private RewardCardHistoryAdapter mRewardCardHistoryAdapter;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -42,12 +39,31 @@ public class RewardCardHistoryView extends BaseDialogView<RewardCardHistoryView.
     @Override
     public void setToolbarTitle(String title)
     {
-        if(getViewDataBinding() == null)
+        if (getViewDataBinding() == null)
         {
             return;
         }
 
         getViewDataBinding().toolbarView.setTitleText(title);
+    }
+
+    @Override
+    public void setRewardCardHistoryList(List<RewardCardHistory> rewardCardHistoryList)
+    {
+        if (getViewDataBinding() == null || rewardCardHistoryList == null || rewardCardHistoryList.size() == 0)
+        {
+            return;
+        }
+
+        if (mRewardCardHistoryAdapter == null)
+        {
+            mRewardCardHistoryAdapter = new RewardCardHistoryAdapter(getContext());
+
+            getViewDataBinding().recyclerView.setAdapter(mRewardCardHistoryAdapter);
+        }
+
+        mRewardCardHistoryAdapter.setAll(rewardCardHistoryList);
+        mRewardCardHistoryAdapter.notifyDataSetChanged();
     }
 
     private void initToolbar(ActivityRewardCardDataBinding viewDataBinding)
@@ -60,14 +76,4 @@ public class RewardCardHistoryView extends BaseDialogView<RewardCardHistoryView.
         viewDataBinding.toolbarView.setOnBackClickListener(v -> getEventListener().onBackClick());
     }
 
-    @Override
-    public void setRewardCardHistoryList(List<RewardCardHistory> rewardCardHistoryList)
-    {
-        if(getViewDataBinding() == null || rewardCardHistoryList == null || rewardCardHistoryList.size() == 0)
-        {
-            return;
-        }
-
-
-    }
 }

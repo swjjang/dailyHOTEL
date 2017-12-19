@@ -8,8 +8,8 @@ import java.util.List;
 
 public class RewardCardHistory
 {
-    public String startDate;
-    public String couponIssueDate;
+    public String startedDate;
+    public String couponIssuedDate;
     public List<String> mStickerTypeList;
 
     public List<String> getStickerTypeList()
