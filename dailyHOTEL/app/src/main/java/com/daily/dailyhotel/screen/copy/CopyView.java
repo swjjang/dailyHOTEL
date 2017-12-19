@@ -30,6 +30,12 @@ public class CopyView extends BaseDialogView<CopyView.OnEventListener, ActivityC
     @Override
     public void setToolbarTitle(String title)
     {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().toolbarView.setTitleText(title);
     }
 
     private void initToolbar(ActivityCopyDataBinding viewDataBinding)

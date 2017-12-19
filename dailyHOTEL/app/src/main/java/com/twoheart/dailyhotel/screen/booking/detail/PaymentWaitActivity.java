@@ -99,7 +99,7 @@ public class PaymentWaitActivity extends BaseActivity
 
         mBooking = bookingParcel.getBooking();
 
-        setContentView(R.layout.activity_payment_wait);
+        setContentView(R.layout.activity_payment_wait_data);
 
         initToolbar();
         initLayout(mBooking);
