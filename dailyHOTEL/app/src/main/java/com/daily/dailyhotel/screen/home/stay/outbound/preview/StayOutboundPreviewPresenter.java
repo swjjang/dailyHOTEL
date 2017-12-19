@@ -158,6 +158,11 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
     @Override
     public boolean onBackPressed()
     {
+        if (lock() == true)
+        {
+            return false;
+        }
+
         getViewInterface().hideAnimation();
 
         return true;
@@ -178,8 +183,6 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        unLockAll();
-
         switch (requestCode)
         {
             case StayOutboundPreviewActivity.REQUEST_CODE_WISH_DIALOG:
@@ -216,6 +219,10 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
                         onBackClick();
                         break;
                 }
+                break;
+
+            default:
+                unLockAll();
                 break;
         }
     }
