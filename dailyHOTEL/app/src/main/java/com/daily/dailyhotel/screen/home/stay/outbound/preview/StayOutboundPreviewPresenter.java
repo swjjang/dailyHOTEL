@@ -337,8 +337,12 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
                 , mStayOutboundDetail.index//
                 , imageUrl//
                 , mStayBookDateTime);
+
+            getViewInterface().hideAnimation();
         } catch (Exception e)
         {
+            unLockAll();
+
             getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
                 , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
                 , new View.OnClickListener()
@@ -347,11 +351,11 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
                     public void onClick(View v)
                     {
                         Util.installPackage(getActivity(), "com.kakao.talk");
+
+                        onBackClick();
                     }
                 }, null);
         }
-
-        onBackClick();
     }
 
     @Override
@@ -364,7 +368,7 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
 
         Util.shareGoogleMap(getActivity(), mStayOutboundDetail.name, Double.toString(mStayOutboundDetail.latitude), Double.toString(mStayOutboundDetail.longitude));
 
-        onBackClick();
+        getViewInterface().hideAnimation();
     }
 
     @Override
@@ -376,7 +380,7 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
         }
 
         setResult(Activity.RESULT_OK);
-        onBackClick();
+        getViewInterface().hideAnimation();
     }
 
     @Override
