@@ -70,6 +70,6 @@ dependencies {
         transitive = true;
     }
 
-    implementation 'com.google.android.gms:play-services-base:11.6.2'
-    implementation 'com.google.android.gms:play-services-maps:11.6.2'
+    implementation 'com.google.android.gms:play-services-base:11.8.0'
+    implementation 'com.google.android.gms:play-services-maps:11.8.0'
 }
