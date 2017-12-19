@@ -487,23 +487,25 @@ public class BookingRemoteImpl extends BaseRemoteImpl implements BookingInterfac
     @Override
     public Observable<Boolean> getGourmetHiddenBooking(int reservationIndex)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/fnb/reservation/session/hidden"//
-            : "MTEzJDQ4JDM1JDEzJDI4JDY5JDkzJDcxJDEzMSQ5NiQxNSQxMzckMTIwJDUzJDU4JDk0JA==$N0U1RjY2MjIzQPzRkyOEVEQzQ0RkED4Mjg4RDEW5RTM3MzkwRTZGZQQTBEBMTczQzNDQUMwNFUJIxQkE1NkZGOUJGODY3QRzBFMNS0RCMkNFNDgxRERCNTZDQ0EX1NFEI3RjNBQzYE4QzOM2$";
+        final String API = Constants.UNENCRYPTED_URL ? "api/v6/reservation/hidden/gourmet/legacy/{reservationIdx}"//
+            : "NjYkNTMkMTAzJDUxJDEzNSQzMiQ0NyQxNDMkODUkNzEkNzQkMTQ0JDE2JDk5JDYwJDMwJA==$MkNEQUI3N0QzQkM0UQ0QwRUQ5NjAwRVjQ0GQjIzQ0I5MkY5QzSQ2NjFQDOLEZTEQ0E3NTIzMUJLQzVM0IwRURDOTZGZN0M3ODQ1OTVc5NjdBOThFNO0EyQTUzMDY3N0U5RkZEN0I1MkZCOEMF3OTIdBBQ0IyOERCMDBEMjE1NUE2MTAxMTU5RUJBQUI=$";
 
-        return mDailyMobileService.getGourmetHiddenBooking(Crypto.getUrlDecoderEx(URL), reservationIndex) //
-            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<BookingHiddenData>, Boolean>()
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{reservationIdx}", Integer.toString(reservationIndex));
+
+        return mDailyMobileService.getGourmetHiddenBooking(Crypto.getUrlDecoderEx(API, urlParams)) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<Object>, Boolean>()
             {
                 @Override
-                public Boolean apply(@io.reactivex.annotations.NonNull BaseDto<BookingHiddenData> bookingHiddenDataBaseDto) throws Exception
+                public Boolean apply(@io.reactivex.annotations.NonNull BaseDto<Object> bookingHiddenDataBaseDto) throws Exception
                 {
-                    BookingHidden bookingHidden;
+                    boolean isSuccess = false;
                     if (bookingHiddenDataBaseDto != null)
                     {
-                        // 이 요청은 메세지 코드를 보지 않음
-                        //                    if (bookingHiddenDataBaseDto.msgCode == 100 && bookingHiddenDataBaseDto.data != null)
-                        if (bookingHiddenDataBaseDto.data != null)
+                        // 이 요청은 메세지 코드만 판단
+                        if (bookingHiddenDataBaseDto.msgCode == 100)
                         {
-                            bookingHidden = bookingHiddenDataBaseDto.data.getBookingHidden();
+                            isSuccess = true;
                         } else
                         {
                             throw new BaseException(bookingHiddenDataBaseDto.msgCode, bookingHiddenDataBaseDto.msg);
@@ -513,7 +515,43 @@ public class BookingRemoteImpl extends BaseRemoteImpl implements BookingInterfac
                         throw new BaseException(-1, null);
                     }
 
-                    return bookingHidden.isSuccess;
+                    return isSuccess;
+                }
+            }).subscribeOn(Schedulers.io());
+    }
+
+    @Override
+    public Observable<Boolean> getGourmetHiddenBooking(String aggregationId)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v6/reservation/hidden/gourmet/{aggregationId}"//
+            : "MTIyJDQ3JDYkMTM5JDgzJDMkMTI5JDkxJDE1OCQxNzYkMTI0JDI3JDMkNTIkMTEwJDUxJA==$NEYKNzRjMk1OTYyRTNCMEI1RkVDMDDhDQ0IzMzk2MDI3NDBBNjYCMR5MUM4QjhCMTE5NUZGNUEzNTA3OTgxNzI3QSTBCQjFQCQ0U3MzNFM0E5Q0XQ1MkI0NjkwQzQyQjRTFNDLY3OQzZFRjVCQzlGMRUVBQTlBNDg2RDAg2Nzc1ODM3NkRDQjgRwM0M=$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{aggregationId}", aggregationId);
+
+        return mDailyMobileService.getGourmetHiddenBooking(Crypto.getUrlDecoderEx(API, urlParams)) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<Object>, Boolean>()
+            {
+                @Override
+                public Boolean apply(@io.reactivex.annotations.NonNull BaseDto<Object> bookingHiddenDataBaseDto) throws Exception
+                {
+                    boolean isSuccess = false;
+                    if (bookingHiddenDataBaseDto != null)
+                    {
+                        // 이 요청은 메세지 코드만 판단
+                        if (bookingHiddenDataBaseDto.msgCode == 100)
+                        {
+                            isSuccess = true;
+                        } else
+                        {
+                            throw new BaseException(bookingHiddenDataBaseDto.msgCode, bookingHiddenDataBaseDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(-1, null);
+                    }
+
+                    return isSuccess;
                 }
             }).subscribeOn(Schedulers.io());
     }
