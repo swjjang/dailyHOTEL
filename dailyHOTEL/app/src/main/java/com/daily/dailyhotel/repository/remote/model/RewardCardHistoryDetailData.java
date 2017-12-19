@@ -11,8 +11,8 @@ import java.util.List;
 @JsonObject
 public class RewardCardHistoryDetailData
 {
-    @JsonField(name = "rewardCards")
-    public List<RewardCardHistoryData> rewardCards;
+    @JsonField(name = "cardDetails")
+    public List<CardDetailsData> cardDetails;
 
     @JsonField(name = "configurations")
     public ConfigurationsData configurations;
@@ -26,17 +26,17 @@ public class RewardCardHistoryDetailData
     {
         RewardCardHistoryDetail rewardCardHistoryDetail = new RewardCardHistoryDetail();
 
-        if (rewardCards != null && rewardCards.size() > 0)
+        List<RewardCardHistory> rewardCardHistoryList = new ArrayList<>();
+
+        if (cardDetails != null && cardDetails.size() > 0)
         {
-            List<RewardCardHistory> rewardCardHistoryList = new ArrayList<>();
-
-            for (RewardCardHistoryData rewardCardHistoryData : rewardCards)
+            for (CardDetailsData cardDetailsData : cardDetails)
             {
-                rewardCardHistoryList.add(rewardCardHistoryData.getRewardCardHistory());
+                rewardCardHistoryList.add(cardDetailsData.getRewardCardHistory());
             }
-
-            rewardCardHistoryDetail.setRewardCardHistoryList(rewardCardHistoryList);
         }
+
+        rewardCardHistoryDetail.setRewardCardHistoryList(rewardCardHistoryList);
 
         if (configurations != null)
         {
@@ -47,29 +47,62 @@ public class RewardCardHistoryDetailData
     }
 
     @JsonObject
-    static class RewardCardHistoryData
+    static class CardDetailsData
     {
-        @JsonField(name = "createdAt")
-        public String createdAt;
+        @JsonField(name = "rewardCard")
+        public RewardCardData rewardCard;
 
-        @JsonField(name = "expiredAt")
-        public String expiredAt;
-
-        @JsonField(name = "historyType")
-        public String historyType;
-
-        @JsonField(name = "serviceType")
-        public String serviceType;
+        @JsonField(name = "rewardCouponPublishedAt")
+        public String rewardCouponPublishedAt;
 
         @JsonField(name = "rewardStickerType")
         public String rewardStickerType;
+
+        @JsonField(name = "rewardStickers")
+        public List<RewardStickersData> rewardStickers;
 
         public RewardCardHistory getRewardCardHistory()
         {
             RewardCardHistory rewardCardHistory = new RewardCardHistory();
 
+            if (rewardCard != null)
+            {
+                rewardCardHistory.createdAtDateTime = rewardCard.createdAt;
+                rewardCardHistory.rewardStickerCount = rewardCard.rewardStickerCount;
+            }
+
+            rewardCardHistory.rewardCouponPublishedAtDateTime = rewardCouponPublishedAt;
+
+            List<String> stickerList = new ArrayList<>();
+
+            if (rewardStickers != null && rewardStickers.size() > 0)
+            {
+                for (RewardStickersData rewardStickersData : rewardStickers)
+                {
+                    stickerList.add(rewardStickersData.rewardStickerType);
+                }
+            }
+
+            rewardCardHistory.setStickerTypeList(stickerList);
 
             return rewardCardHistory;
         }
+    }
+
+    @JsonObject
+    static class RewardCardData
+    {
+        @JsonField(name = "createdAt")
+        public String createdAt;
+
+        @JsonField(name = "rewardStickerCount")
+        public int rewardStickerCount;
+    }
+
+    @JsonObject
+    static class RewardStickersData
+    {
+        @JsonField(name = "rewardStickerType")
+        public String rewardStickerType;
     }
 }

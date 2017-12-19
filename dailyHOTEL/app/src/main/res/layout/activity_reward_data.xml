@@ -411,7 +411,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="10dp"
-                    android:layout_marginTop="65dp"
+                    android:layout_marginTop="63dp"
                     android:textColor="@color/default_text_c323232"
                     android:textSize="13dp"
                     app:layout_constraintLeft_toLeftOf="parent"

@@ -136,8 +136,8 @@ public class RewardRemoteImpl extends BaseRemoteImpl implements RewardInterface
     @Override
     public Observable<RewardCardHistoryDetail> getRewardCardHistoryDetail()
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v5/reward/cards"//
-            : "";
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v5/reward/card/history"//
+            : "NDQkMTEkMzAkNDQkNDUkODAkNjgkNiQ1MyQyMyQ4NCQzJDg5JDMwJDI3JDc3JA==$RUIC1QTJIzMjQDxQUEyOThBQXzkYzQTGEwNTjc5QUIxNTlGQTGYI0QQzMFxMjRDNTNFQUZCN0NKCNOEExREEyQjAKH3NHkRGQkMxOQ==$";
 
         return mDailyMobileService.getRewardCardHistoryDetail(Crypto.getUrlDecoderEx(URL)) //
             .subscribeOn(Schedulers.io()).map(new Function<BaseDto<RewardCardHistoryDetailData>, RewardCardHistoryDetail>()

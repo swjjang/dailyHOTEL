@@ -8,9 +8,10 @@ import java.util.List;
 
 public class RewardCardHistory
 {
-    public String startedDate;
-    public String couponIssuedDate;
-    public List<String> mStickerTypeList;
+    public String createdAtDateTime;
+    public String rewardCouponPublishedAtDateTime;
+    public int rewardStickerCount;
+    private List<String> mStickerTypeList;
 
     public List<String> getStickerTypeList()
     {

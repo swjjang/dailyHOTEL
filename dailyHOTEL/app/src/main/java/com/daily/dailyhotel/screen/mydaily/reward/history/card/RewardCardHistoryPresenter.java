@@ -158,6 +158,8 @@ public class RewardCardHistoryPresenter extends BaseExceptionPresenter<RewardCar
                 {
                     getViewInterface().setRewardCardHistoryList(rewardCardHistoryDetail.getRewardCardHistoryList());
                 }
+
+                unLockAll();
             }
         }, new Consumer<Throwable>()
         {

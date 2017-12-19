@@ -104,52 +104,50 @@ public class RewardCardHistoryAdapter extends RecyclerView.Adapter<RewardCardHis
     @Override
     public void onBindViewHolder(RewardCardHistoryAdapter.CardHistoryViewHolder holder, int position)
     {
-        final int MAX_COUNT = 9;
-
         RewardCardHistory rewardCardHistory = getItem(position);
 
         // 리워드
-        holder.dataBinding.cardTitleTextView.setText(DailyTextUtils.isTextEmpty(rewardCardHistory.couponIssuedDate) ? R.string.label_reward_card_history_coupon_will_be_issued : R.string.label_reward_card_history_coupon_issued);
+        holder.dataBinding.cardTitleTextView.setText(DailyTextUtils.isTextEmpty(rewardCardHistory.rewardCouponPublishedAtDateTime) ? R.string.label_reward_card_history_coupon_will_be_issued : R.string.label_reward_card_history_coupon_issued);
 
         List<String> rewardCartHistoryList = rewardCardHistory.getStickerTypeList();
 
-        for (int i = 0; i < MAX_COUNT; i++)
+        for (int i = 0; i < rewardCardHistory.rewardStickerCount; i++)
         {
             switch (rewardCartHistoryList.get(i))
             {
-                case "EVENT":
+                case "E":
                     holder.stickerViews[i].setImageResource(R.drawable.r_ic_l_47_shadow_event);
                     break;
 
 
-                case "REWARD":
+                case "R":
                     holder.stickerViews[i].setImageResource(R.drawable.r_ic_l_47_shadow);
                     break;
             }
         }
 
         // 카드 시작일
-        if (DailyTextUtils.isTextEmpty(rewardCardHistory.startedDate) == true)
+        if (DailyTextUtils.isTextEmpty(rewardCardHistory.createdAtDateTime) == true)
         {
-            holder.dataBinding.cardStartedDayTextView.setVisibility(View.GONE);
+            holder.dataBinding.cardCreatedDayTextView.setVisibility(View.GONE);
         } else
         {
-            holder.dataBinding.cardStartedDayTextView.setVisibility(View.VISIBLE);
+            holder.dataBinding.cardCreatedDayTextView.setVisibility(View.VISIBLE);
 
             try
             {
-                holder.dataBinding.cardStartedDayTextView.setText(mContext.getString(R.string.label_reward_card_history_coupon_issued_date//
-                    , DailyCalendar.convertDateFormatString(rewardCardHistory.startedDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd HH:mm")));
+                holder.dataBinding.cardCreatedDayTextView.setText(mContext.getString(R.string.label_reward_card_history_coupon_started_date//
+                    , DailyCalendar.convertDateFormatString(rewardCardHistory.createdAtDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd HH:mm")));
             } catch (Exception e)
             {
                 ExLog.e(e.toString());
 
-                holder.dataBinding.cardStartedDayTextView.setVisibility(View.GONE);
+                holder.dataBinding.cardCreatedDayTextView.setVisibility(View.GONE);
             }
         }
 
         // 쿠폰 발행일
-        if (DailyTextUtils.isTextEmpty(rewardCardHistory.couponIssuedDate) == true)
+        if (DailyTextUtils.isTextEmpty(rewardCardHistory.rewardCouponPublishedAtDateTime) == true)
         {
             holder.dataBinding.couponIssuedDayTextView.setVisibility(View.GONE);
         } else
@@ -159,7 +157,7 @@ public class RewardCardHistoryAdapter extends RecyclerView.Adapter<RewardCardHis
             try
             {
                 holder.dataBinding.couponIssuedDayTextView.setText(mContext.getString(R.string.label_reward_card_history_coupon_issued_date//
-                    , DailyCalendar.convertDateFormatString(rewardCardHistory.couponIssuedDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)")));
+                    , DailyCalendar.convertDateFormatString(rewardCardHistory.rewardCouponPublishedAtDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)")));
             } catch (Exception e)
             {
                 ExLog.e(e.toString());
