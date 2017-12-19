@@ -115,20 +115,25 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
             return true;
         }
 
-        String checkInDateTime = intent.getStringExtra(StayAreaListActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME);
-        String checkOutDateTime = intent.getStringExtra(StayAreaListActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME);
+        try
+        {
+            String checkInDateTime = intent.getStringExtra(StayAreaListActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME);
+            String checkOutDateTime = intent.getStringExtra(StayAreaListActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME);
 
-        mStayBookDateTime = new StayBookDateTime();
-        mStayBookDateTime.getCheckInDateTime(checkInDateTime);
-        mStayBookDateTime.getCheckOutDateTime(checkOutDateTime);
+            mStayBookDateTime = new StayBookDateTime();
+            mStayBookDateTime.setCheckInDateTime(checkInDateTime);
+            mStayBookDateTime.setCheckOutDateTime(checkOutDateTime);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+
+            return false;
+        }
 
         // 카테고리로 넘어오는 경우
         mDailyCategoryType = DailyCategoryType.valueOf(intent.getStringExtra(StayAreaListActivity.INTENT_EXTRA_DATA_STAY_CATEGORY));
 
-
         // 이름으로 넘어오는 경우
-
-
         mCategoryCode = intent.getStringExtra(StayAreaListActivity.INTENT_EXTRA_DATA_CATEGORY_CODE);
 
         return true;

@@ -459,12 +459,14 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
         {
             getViewDataBinding().guidesLayout.setVisibility(View.VISIBLE);
 
-            for (Pair<String, String> guide : guideList)
+            int size = guideList.size();
+
+            for (int i = 0; i < size; i++)
             {
                 LayoutRewardGuideDataBinding viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.layout_reward_guide_data, getViewDataBinding().guidesLayout, true);
 
-                viewDataBinding.guideTitleTextView.setText(guide.first);
-                viewDataBinding.guideDescriptionTextView.setText(guide.second);
+                viewDataBinding.guideTitleTextView.setText(guideList.get(i).first);
+                viewDataBinding.guideDescriptionTextView.setText(guideList.get(i).second);
             }
         }
     }
