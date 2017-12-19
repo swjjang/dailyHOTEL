@@ -132,14 +132,6 @@ public abstract class BaseFragmentView<T1 extends OnBaseEventListener, T2 extend
         return mActivity.getResources().getDimensionPixelSize(id);
     }
 
-    protected int getDpi()
-    {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        mActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-
-        return displayMetrics.densityDpi;
-    }
-
     @NonNull
     BaseActivity getActivity()
     {
@@ -170,16 +162,5 @@ public abstract class BaseFragmentView<T1 extends OnBaseEventListener, T2 extend
         ColorStateList getColorStateList(int resId);
 
         Drawable getDrawable(int id);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    protected void setStatusBarColor(int color)
-    {
-        if (VersionUtils.isOverAPI21() == true)
-        {
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(color);
-        }
     }
 }
