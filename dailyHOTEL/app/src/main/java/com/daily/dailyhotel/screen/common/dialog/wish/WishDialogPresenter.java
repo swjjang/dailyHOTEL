@@ -147,7 +147,7 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
     @Override
     public boolean onBackPressed()
     {
-        return super.onBackPressed();
+        return true;
     }
 
     @Override
@@ -184,7 +184,7 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
                         @Override
                         public void accept(Boolean aBoolean) throws Exception
                         {
-                            onBackClick();
+                            finish();
                         }
                     }));
                 }
@@ -222,7 +222,7 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
 
         if (wishResultObservable == null)
         {
-            onBackClick();
+            finish();
             return;
         }
 
@@ -246,7 +246,7 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
 
                 setResult(BaseActivity.RESULT_CODE_ERROR, intent);
 
-                onBackClick();
+                finish();
             }
         }));
     }
@@ -254,7 +254,6 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
     @Override
     public void onBackClick()
     {
-        getActivity().onBackPressed();
     }
 
     @Override
@@ -285,11 +284,10 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
     {
         if (wishResult == null)
         {
-            onBackClick();
+            finish();
             return;
         }
 
-        unLockAll();
         screenLock(false);
 
         if (wishResult.success == true)
@@ -303,22 +301,18 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
                     @Override
                     public void accept(@io.reactivex.annotations.NonNull Boolean aBoolean) throws Exception
                     {
-                        unLockAll();
-
                         // 로그인 후에 변경시에는 전체 리플래쉬가 되어야 한다.
                         Intent intent = new Intent();
                         intent.putExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, mWish);
 
                         setResult(Activity.RESULT_OK, intent);
 
-                        onBackClick();
+                        finish();
                     }
                 }));
             } else
             {
-                unLockAll();
-
-                onBackClick();
+                finish();
             }
         } else
         {
@@ -328,7 +322,7 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
                     @Override
                     public void onDismiss(DialogInterface dialog)
                     {
-                        onBackClick();
+                        finish();
                     }
                 });
 

@@ -160,7 +160,7 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
     {
         if (lock() == true)
         {
-            return false;
+            return true;
         }
 
         getViewInterface().hideAnimation();
@@ -211,12 +211,13 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
                             setResult(BaseActivity.RESULT_CODE_REFRESH);
                         }
 
-                        onBackClick();
+                        getViewInterface().hideAnimation();
                         break;
 
                     case com.daily.base.BaseActivity.RESULT_CODE_REFRESH:
                         setResult(BaseActivity.RESULT_CODE_REFRESH);
-                        onBackClick();
+
+                        getViewInterface().hideAnimation();
                         break;
                 }
                 break;
@@ -281,7 +282,6 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
 
         startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.OB_STAY//
             , mStayOutboundDetail.index, !currentWish, mPosition, AnalyticsManager.Screen.DAILYHOTEL_LIST), StayOutboundPreviewActivity.REQUEST_CODE_WISH_DIALOG);
-
     }
 
     @Override
@@ -370,6 +370,11 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
     @Override
     public void onViewDetailClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
+
         setResult(Activity.RESULT_OK);
         onBackClick();
     }
