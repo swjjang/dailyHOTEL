@@ -1189,7 +1189,21 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
                 {
                     screenLock(true);
 
-                    addCompositeDisposable(mBookingRemoteImpl.getGourmetHiddenBooking(mReservationIndex) //
+                    Observable<Boolean> hiddenObservable = Observable.defer(new Callable<ObservableSource<? extends Boolean>>()
+                    {
+                        @Override
+                        public ObservableSource<? extends Boolean> call() throws Exception
+                        {
+                            if  (DailyTextUtils.isTextEmpty(mAggregationId) == true)
+                            {
+                                return mBookingRemoteImpl.getGourmetHiddenBooking(mReservationIndex);
+                            }
+
+                            return mBookingRemoteImpl.getGourmetHiddenBooking(mAggregationId);
+                        }
+                    });
+
+                    addCompositeDisposable(hiddenObservable //
                         .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                         {
                             @Override
