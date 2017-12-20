@@ -1545,7 +1545,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 }
 
                 // 입장 시간이 업장 종료시간보다 큰 경우 메뉴에서 제거한다.
-                if (startTime >= endTime)
+                if (startTime > endTime)
                 {
                     gourmetMenuList.remove(i);
 
@@ -1560,30 +1560,39 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
                 do
                 {
-                    int nextHours = nextTime / 100 + intervalTime / 100;
-                    int nextMinutes = nextTime % 100 + intervalTime % 100;
-
-                    if (nextMinutes >= ONE_HOUR_MINUTES)
-                    {
-                        nextHours += nextMinutes / ONE_HOUR_MINUTES;
-                        nextMinutes = nextMinutes % ONE_HOUR_MINUTES;
-                    }
-
-                    nextTime = nextHours * 100 + nextMinutes;
-
                     if (todayStartTime > nextTime)
                     {
-                        continue;
-                    }
+                        int nextHours = nextTime / 100 + intervalTime / 100;
+                        int nextMinutes = nextTime % 100 + intervalTime % 100;
 
-                    if (nextTime > endTime)
+                        if (nextMinutes >= ONE_HOUR_MINUTES)
+                        {
+                            nextHours += nextMinutes / ONE_HOUR_MINUTES;
+                            nextMinutes = nextMinutes % ONE_HOUR_MINUTES;
+                        }
+
+                        nextTime = nextHours * 100 + nextMinutes;
+                    } else
                     {
-                        break;
+                        if (nextTime > endTime)
+                        {
+                            break;
+                        }
+
+                        menuOperationTime.add(nextTime);
+                        visitTimeSet.add(nextTime);
+
+                        int nextHours = nextTime / 100 + intervalTime / 100;
+                        int nextMinutes = nextTime % 100 + intervalTime % 100;
+
+                        if (nextMinutes >= ONE_HOUR_MINUTES)
+                        {
+                            nextHours += nextMinutes / ONE_HOUR_MINUTES;
+                            nextMinutes = nextMinutes % ONE_HOUR_MINUTES;
+                        }
+
+                        nextTime = nextHours * 100 + nextMinutes;
                     }
-
-                    menuOperationTime.add(nextTime);
-                    visitTimeSet.add(nextTime);
-
                 } while (nextTime <= endTime);
 
                 // 메뉴시간이 나오지 않는 것은 삭제시켜버린다.
