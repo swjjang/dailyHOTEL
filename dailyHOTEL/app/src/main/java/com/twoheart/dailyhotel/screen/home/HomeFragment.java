@@ -1438,6 +1438,8 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     {
                         for (StayOutbound stayOutbound : stayOutboundList)
                         {
+                            // 홈에서는 당분간 트립어드바이져 평점을 보여주지 않기로 한다.
+                            stayOutbound.tripAdvisorRating = 0.0f;
                             CarouselListItem item = new CarouselListItem(CarouselListItem.TYPE_OB_STAY, stayOutbound);
                             carouselListItemList.add(item);
                         }
