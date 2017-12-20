@@ -785,7 +785,13 @@
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name="com.daily.dailyhotel.screen.mydaily.reward.history.RewardHistoryActivity"
+            android:name="com.daily.dailyhotel.screen.mydaily.reward.history.reward.RewardHistoryActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name="com.daily.dailyhotel.screen.mydaily.reward.history.card.RewardCartHistoryActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>

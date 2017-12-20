@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.databinding.DataBindingUtil;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.UnderlineSpan;
 import android.util.Pair;
@@ -53,6 +54,8 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
         void onNotificationClick();
 
         void onGoBookingClick();
+
+        void onRewardCardHistoryClick();
     }
 
     public RewardView(BaseActivity baseActivity, RewardView.OnEventListener listener)
@@ -77,6 +80,11 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
         viewDataBinding.loginTextView.setOnClickListener(v -> getEventListener().onLoginClick());
         viewDataBinding.rewardHistoryTextView.setOnClickListener(v -> getEventListener().onHistoryClick());
         viewDataBinding.rewardTermsTextView.setOnClickListener(v -> getEventListener().onTermsClick());
+
+        SpannableString spannableString = new SpannableString(getString(R.string.label_reward_reward_card_history));
+        spannableString.setSpan(new UnderlineSpan(), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        viewDataBinding.rewardCardHistoryTextView.setText(spannableString);
+        viewDataBinding.rewardCardHistoryTextView.setOnClickListener(v -> getEventListener().onRewardCardHistoryClick());
 
         viewDataBinding.issueCouponLayout.setTranslationY(DP_192);
 
@@ -390,6 +398,17 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
         }
 
         getViewDataBinding().stickerValidityTextView.setText(message);
+    }
+
+    @Override
+    public void setRewardCardHistoryVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().rewardCardHistoryTextView.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     @Override

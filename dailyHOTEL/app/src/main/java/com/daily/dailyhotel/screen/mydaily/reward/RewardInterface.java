@@ -51,4 +51,6 @@ public interface RewardInterface extends BaseDialogViewInterface
     boolean isOpenedIssueCoupon();
 
     void setIssueCouponAnimation(boolean visible);
+
+    void setRewardCardHistoryVisible(boolean visible);
 }

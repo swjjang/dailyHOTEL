@@ -17,6 +17,9 @@ public class RewardDetailData
     @JsonField(name = "hasRewardHistory")
     public boolean hasRewardHistory;
 
+    @JsonField(name = "hasRewardCardHistory")
+    public boolean hasRewardCardHistory;
+
     @JsonField(name = "rewardCard")
     public RewardCardData rewardCard;
 
@@ -37,6 +40,7 @@ public class RewardDetailData
 
         rewardDetail.availableRewardCouponCount = availableRewardCouponCount;
         rewardDetail.hasRewardHistory = hasRewardHistory;
+        rewardDetail.hasRewardCardHistory = hasRewardCardHistory;
 
         if (rewardCard != null)
         {
