@@ -261,7 +261,8 @@ public class PaymentWaitPresenter extends BaseExceptionPresenter<PaymentWaitActi
             {
                 unLockAll();
 
-                setWaitingDeposit(waitingDeposit);
+                getViewInterface().setPlaceName(mBooking.placeName);
+                getViewInterface().setWaitingDeposit(waitingDeposit);
             }
         }, new Consumer<Throwable>()
         {

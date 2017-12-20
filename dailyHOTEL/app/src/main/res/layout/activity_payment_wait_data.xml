@@ -171,7 +171,7 @@
                             android:textSize="13dp"/>
 
                         <com.daily.base.widget.DailyTextView
-                            android:id="@+id/tv_payment_wait_account"
+                            android:id="@+id/accountNumberView"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.7"
@@ -197,7 +197,7 @@
                             android:textSize="13dp"/>
 
                         <com.daily.base.widget.DailyTextView
-                            android:id="@+id/tv_payment_wait_name"
+                            android:id="@+id/accountHolderView"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.7"
@@ -223,7 +223,7 @@
                             android:textSize="13dp"/>
 
                         <com.daily.base.widget.DailyTextView
-                            android:id="@+id/tv_payment_wait_deadline"
+                            android:id="@+id/waitingDeadlineView"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.7"

@@ -208,13 +208,13 @@ public class PaymentWaitActivity extends BaseActivity
         EdgeEffectColor.setEdgeGlowColor(scrollLayout, getResources().getColor(R.color.default_over_scroll_edge));
 
         TextView placeNameTextView = findViewById(R.id.paymentWaitHotelNameView);
-        mAccountTextView = findViewById(R.id.tv_payment_wait_account);
-        mDailyTextView = findViewById(R.id.tv_payment_wait_name);
+        mAccountTextView = findViewById(R.id.accountNumberView);
+        mDailyTextView = findViewById(R.id.accountHolderView);
         mPriceTextView = findViewById(R.id.priceTextView);
         mBonusTextView = findViewById(R.id.bonusTextView);
         mCouponTextView = findViewById(R.id.couponTextView);
         mTotalPriceTextView = findViewById(R.id.totalPriceTextView);
-        mDeadlineTextView = findViewById(R.id.tv_payment_wait_deadline);
+        mDeadlineTextView = findViewById(R.id.waitingDeadlineView);
         mGuide1Layout = findViewById(R.id.guide1Layout);
 
         mBonusLayout = findViewById(R.id.bonusLayout);
@@ -434,7 +434,7 @@ public class PaymentWaitActivity extends BaseActivity
 
         for (String guide : guides)
         {
-            View textLayout = LayoutInflater.from(this).inflate(R.layout.list_row_detail_text, viewGroups, false);
+            View textLayout = LayoutInflater.from(this).inflate(R.layout.list_row_payment_wait_guide_data, viewGroups, false);
             TextView textView = textLayout.findViewById(R.id.textView);
 
             String guideText = guide.replace("\n", " ").trim();

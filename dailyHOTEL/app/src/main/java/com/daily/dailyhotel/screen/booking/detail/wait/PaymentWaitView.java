@@ -4,16 +4,24 @@ import android.app.Dialog;
 import android.databinding.DataBindingUtil;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
+import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.Booking;
+import com.daily.dailyhotel.entity.WaitingDeposit;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityPaymentWaitDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding;
+import com.twoheart.dailyhotel.databinding.ListRowPaymentWaitGuideDataBinding;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+
+import java.text.ParseException;
 
 public class PaymentWaitView extends BaseDialogView<PaymentWaitView.OnEventListener, ActivityPaymentWaitDataBinding> implements PaymentWaitInterface
 {
@@ -57,7 +65,7 @@ public class PaymentWaitView extends BaseDialogView<PaymentWaitView.OnEventListe
                     return;
                 }
 
-                String accountNumber = (String) getViewDataBinding().tvPaymentWaitAccount.getTag();
+                String accountNumber = (String) getViewDataBinding().accountNumberView.getTag();
                 getEventListener().onClipAccountNumberClick(accountNumber);
             }
         });
@@ -148,5 +156,109 @@ public class PaymentWaitView extends BaseDialogView<PaymentWaitView.OnEventListe
         });
 
         showSimpleDialog(dataBinding.getRoot(), null, listener, true);
+    }
+
+    @Override
+    public void setPlaceName(String placeName)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().paymentWaitHotelNameView.setText(placeName);
+    }
+
+    @Override
+    public void setWaitingDeposit(WaitingDeposit waitingDeposit)
+    {
+        if (getViewDataBinding() == null || waitingDeposit == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().accountNumberView.setText(waitingDeposit.bankName + ", " + waitingDeposit.accountNumber);
+        getViewDataBinding().accountNumberView.setTag(waitingDeposit.accountNumber);
+
+        getViewDataBinding().accountHolderView.setText(waitingDeposit.accountHolder);
+
+        // 입금기한
+        String validToDate = null;
+        try
+        {
+            validToDate = DailyCalendar.convertDateFormatString(waitingDeposit.expiredAt, DailyCalendar.ISO_8601_FORMAT, "yyyy년 MM월 dd일 HH시 mm분 까지");
+        } catch (ParseException e)
+        {
+            ExLog.d("expiredAt error : " + e.getMessage());
+        }
+        getViewDataBinding().waitingDeadlineView.setText(validToDate);
+
+        // 결재 금액 정보
+        getViewDataBinding().priceTextView.setText(DailyTextUtils.getPriceFormat(getContext(), waitingDeposit.totalPrice, false));
+
+        if (waitingDeposit.bonusAmount > 0)
+        {
+            getViewDataBinding().bonusLayout.setVisibility(View.VISIBLE);
+            getViewDataBinding().bonusTextView.setText("- " + DailyTextUtils.getPriceFormat(getContext(), waitingDeposit.bonusAmount, false));
+        } else
+        {
+            getViewDataBinding().bonusLayout.setVisibility(View.GONE);
+        }
+
+        if (waitingDeposit.couponAmount > 0)
+        {
+            getViewDataBinding().couponLayout.setVisibility(View.VISIBLE);
+            getViewDataBinding().couponTextView.setText("- " + DailyTextUtils.getPriceFormat(getContext(), waitingDeposit.couponAmount, false));
+        } else
+        {
+            getViewDataBinding().couponLayout.setVisibility(View.GONE);
+        }
+
+        getViewDataBinding().totalPriceTextView.setText(DailyTextUtils.getPriceFormat(getContext(), waitingDeposit.depositWaitingAmount, false));
+
+        // 확인 사항
+        if (waitingDeposit.getMessage1List() != null)
+        {
+            String[] messages1 = waitingDeposit.getMessage1List().toArray(new String[waitingDeposit.getMessage1List().size()]);
+            setGuideText(messages1, false);
+        }
+
+        if (waitingDeposit.getMessage2List() != null)
+        {
+            String[] messages2 = waitingDeposit.getMessage2List().toArray(new String[waitingDeposit.getMessage2List().size()]);
+            setGuideText(messages2, true);
+        }
+    }
+
+    private void setGuideText(String[] guides, boolean isImportant)
+    {
+        if (getViewDataBinding() == null || getContext() == null || guides == null)
+        {
+            return;
+        }
+
+        for (String guide : guides)
+        {
+            ListRowPaymentWaitGuideDataBinding listRowPaymentWaitGuideDataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.list_row_payment_wait_guide_data, getViewDataBinding().guide1Layout, false);
+            View textLayout = LayoutInflater.from(getContext()).inflate(R.layout.list_row_payment_wait_guide_data, getViewDataBinding().guide1Layout, false);
+
+            TextView textView = textLayout.findViewById(R.id.textView);
+
+            String guideText = guide.replace("\n", " ").trim();
+
+            if (guideText.endsWith(".") == false)
+            {
+                guideText += ".";
+            }
+
+            textView.setText(guideText);
+
+            if (isImportant == true)
+            {
+                textView.setTextColor(getColor(R.color.dh_theme_color));
+            }
+
+            getViewDataBinding().guide1Layout.addView(textLayout);
+        }
     }
 }
