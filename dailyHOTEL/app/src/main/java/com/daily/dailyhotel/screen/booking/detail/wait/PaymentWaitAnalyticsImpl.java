@@ -86,12 +86,41 @@ public class PaymentWaitAnalyticsImpl implements PaymentWaitPresenter.PaymentWai
     }
 
     @Override
-    public void onEventConciergeCallClick(Activity activity, Booking.PlaceType placeType)
+    public void onEventConciergeCallClick(Activity activity)
     {
         if (activity == null)
         {
             return;
         }
 
+        AnalyticsManager.getInstance(activity).recordEvent(//
+            AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.DEPOSIT_WAITING,//
+            AnalyticsManager.Label.CLICK, null);
+    }
+
+    @Override
+    public void onEventConciergeCallResultOK(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(//
+            AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.DEPOSIT_WAITING,//
+            AnalyticsManager.Label.CALL, null);
+    }
+
+    @Override
+    public void onEventConciergeCallResultCancel(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(//
+            AnalyticsManager.Category.CALL_BUTTON_CLICKED, AnalyticsManager.Action.DEPOSIT_WAITING,//
+            AnalyticsManager.Label.CANCEL_, null);
     }
 }

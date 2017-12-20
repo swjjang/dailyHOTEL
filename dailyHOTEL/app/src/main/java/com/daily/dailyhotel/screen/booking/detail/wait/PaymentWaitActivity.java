@@ -20,6 +20,7 @@ public class PaymentWaitActivity extends BaseActivity<PaymentWaitPresenter>
     public static String INTENT_EXTRA_DATA_BOOKING = "booking";
 
     public static final int REQUEST_CODE_FAQ = 10000;
+    public static final int REQUEST_CODE_CALL = 10001;
 
     public static Intent newInstance(Context context, Booking booking)
     {

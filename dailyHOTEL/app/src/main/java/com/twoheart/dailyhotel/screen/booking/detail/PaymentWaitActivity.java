@@ -52,6 +52,7 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Locale;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import retrofit2.Call;
@@ -254,7 +255,7 @@ public class PaymentWaitActivity extends BaseActivity
             }
         } else
         {
-            addCompositeDisposable(mBookingRemoteImpl.getWaitingDeposit(booking.aggregationId).subscribe(new Consumer<WaitingDeposit>()
+            addCompositeDisposable(mBookingRemoteImpl.getWaitingDeposit(booking.aggregationId).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<WaitingDeposit>()
             {
                 @Override
                 public void accept(@NonNull WaitingDeposit waitingDeposit) throws Exception
@@ -268,7 +269,12 @@ public class PaymentWaitActivity extends BaseActivity
                 @Override
                 public void accept(@NonNull Throwable throwable) throws Exception
                 {
-                    onHandleError(throwable);
+
+                    Intent intent = new Intent();
+                    intent.putExtra("msg", throwable.getMessage());
+                    setResult(CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT, intent);
+                    finish();
+//                    onHandleError(throwable);
                 }
             }));
         }
@@ -540,15 +546,15 @@ public class PaymentWaitActivity extends BaseActivity
         mTotalPriceTextView.setText(DailyTextUtils.getPriceFormat(this, waitingDeposit.depositWaitingAmount, false));
 
         // 확인 사항
-        if (waitingDeposit.getMessageList() != null)
+        if (waitingDeposit.getMessage1List() != null)
         {
-            String[] messages1 = waitingDeposit.getMessageList().toArray(new String[waitingDeposit.getMessageList().size()]);
+            String[] messages1 = waitingDeposit.getMessage1List().toArray(new String[waitingDeposit.getMessage1List().size()]);
             setGuideText(mGuide1Layout, messages1, false);
         }
 
-        if (DailyTextUtils.isTextEmpty(waitingDeposit.message2) == false)
+        if (waitingDeposit.getMessage2List() != null)
         {
-            String[] messages2 = new String[]{waitingDeposit.message2};
+            String[] messages2 = waitingDeposit.getMessage2List().toArray(new String[waitingDeposit.getMessage2List().size()]);
             setGuideText(mGuide1Layout, messages2, true);
         }
     }

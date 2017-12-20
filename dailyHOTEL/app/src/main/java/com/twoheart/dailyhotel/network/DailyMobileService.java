@@ -15,6 +15,7 @@ import com.daily.dailyhotel.repository.remote.model.GourmetCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.GourmetDetailData;
 import com.daily.dailyhotel.repository.remote.model.GourmetListData;
 import com.daily.dailyhotel.repository.remote.model.GourmetMultiBookingDetailData;
+import com.daily.dailyhotel.repository.remote.model.GourmetOldWaitingDepositData;
 import com.daily.dailyhotel.repository.remote.model.GourmetPaymentData;
 import com.daily.dailyhotel.repository.remote.model.GourmetReceiptData;
 import com.daily.dailyhotel.repository.remote.model.NotificationData;
@@ -33,6 +34,7 @@ import com.daily.dailyhotel.repository.remote.model.StayCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.StayDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayFilterCountData;
 import com.daily.dailyhotel.repository.remote.model.StayListData;
+import com.daily.dailyhotel.repository.remote.model.StayOldWaitingDepositData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundEmailReceiptData;
@@ -95,7 +97,6 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
-import retrofit2.http.QueryName;
 import retrofit2.http.Url;
 
 public interface DailyMobileService
@@ -801,6 +802,15 @@ public interface DailyMobileService
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
     Observable<BaseDto<WaitingDepositData>> getWaitingDeposit(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<StayOldWaitingDepositData>> getStayOldWaitingDeposit(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<GourmetOldWaitingDepositData>> getGourmetOldWaitingDeposit( //
+        @Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("tid") String tid);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET()

@@ -11,10 +11,11 @@ import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.ActivityCopyDataBinding;
+import com.twoheart.dailyhotel.databinding.ActivityPaymentWaitDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 
-public class PaymentWaitView extends BaseDialogView<PaymentWaitView.OnEventListener, ActivityCopyDataBinding> implements PaymentWaitInterface
+public class PaymentWaitView extends BaseDialogView<PaymentWaitView.OnEventListener, ActivityPaymentWaitDataBinding> implements PaymentWaitInterface
 {
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -25,6 +26,8 @@ public class PaymentWaitView extends BaseDialogView<PaymentWaitView.OnEventListe
         void onConciergeHappyTalkClick(Booking.PlaceType placeType);
 
         void onConciergeCallClick(Booking.PlaceType placeType);
+
+        void onClipAccountNumberClick(String accountNumber);
     }
 
     public PaymentWaitView(BaseActivity baseActivity, PaymentWaitView.OnEventListener listener)
@@ -33,7 +36,7 @@ public class PaymentWaitView extends BaseDialogView<PaymentWaitView.OnEventListe
     }
 
     @Override
-    protected void setContentView(final ActivityCopyDataBinding viewDataBinding)
+    protected void setContentView(final ActivityPaymentWaitDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -41,6 +44,24 @@ public class PaymentWaitView extends BaseDialogView<PaymentWaitView.OnEventListe
         }
 
         initToolbar(viewDataBinding);
+
+        EdgeEffectColor.setEdgeGlowColor(viewDataBinding.scrollLayout, getColor(R.color.default_over_scroll_edge));
+
+        viewDataBinding.editLinearLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if (getViewDataBinding() == null)
+                {
+                    return;
+                }
+
+                String accountNumber = (String) getViewDataBinding().tvPaymentWaitAccount.getTag();
+                getEventListener().onClipAccountNumberClick(accountNumber);
+            }
+        });
+
     }
 
     @Override
@@ -54,7 +75,7 @@ public class PaymentWaitView extends BaseDialogView<PaymentWaitView.OnEventListe
         getViewDataBinding().toolbarView.setTitleText(title);
     }
 
-    private void initToolbar(ActivityCopyDataBinding viewDataBinding)
+    private void initToolbar(ActivityPaymentWaitDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
