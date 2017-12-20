@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.RewardCardHistory;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.LayoutRewardCardHistoryDataBinding;
@@ -105,6 +106,14 @@ public class RewardCardHistoryAdapter extends RecyclerView.Adapter<RewardCardHis
     public void onBindViewHolder(RewardCardHistoryAdapter.CardHistoryViewHolder holder, int position)
     {
         RewardCardHistory rewardCardHistory = getItem(position);
+
+        if (position == 0)
+        {
+            holder.dataBinding.getRoot().setPadding(0, ScreenUtils.dpToPx(mContext, 6), 0, 0);
+        } else
+        {
+            holder.dataBinding.getRoot().setPadding(0, 0, 0, 0);
+        }
 
         // 리워드
         holder.dataBinding.cardTitleTextView.setText(DailyTextUtils.isTextEmpty(rewardCardHistory.rewardCouponPublishedAtDateTime) ? R.string.label_reward_card_history_coupon_will_be_issued : R.string.label_reward_card_history_coupon_issued);
