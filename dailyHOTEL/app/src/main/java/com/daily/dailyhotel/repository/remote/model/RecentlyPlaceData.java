@@ -36,6 +36,9 @@ public class RecentlyPlaceData
     @JsonField(name = "addrSummary")
     public String addrSummary;
 
+    @JsonField(name = "createdAt")
+    public String createdAt;
+
     @JsonField(name = "imgPathMain")
     public Map<String, Object> imgPathMain;
 
@@ -68,6 +71,7 @@ public class RecentlyPlaceData
         place.details = details.getDetail();
         place.isSoldOut = isSoldOut;
         place.imageUrl = getImageUrl();
+        place.createdDateTime = createdAt;
 
         place.reviewCount = reviewCount;
         place.newItem = newItem;

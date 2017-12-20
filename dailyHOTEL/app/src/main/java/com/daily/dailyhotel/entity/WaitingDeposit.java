@@ -13,20 +13,30 @@ public class WaitingDeposit
     public int totalPrice;
     public String expiredAt;
     private List<String> mMessage1List;
-    public String message2;
+    private List<String> mMessage2List;
 
     public WaitingDeposit()
     {
 
     }
 
-    public void setMessageList(List<String> messageList)
+    public void setMessage1List(List<String> messageList)
     {
         mMessage1List = messageList;
     }
 
-    public List<String> getMessageList()
+    public List<String> getMessage1List()
     {
         return mMessage1List;
+    }
+
+    public void setMessage2List(List<String> messageList)
+    {
+        mMessage2List = messageList;
+    }
+
+    public List<String> getMessage2List()
+    {
+        return mMessage2List;
     }
 }

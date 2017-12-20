@@ -103,7 +103,7 @@ public class StayOutboundData
 
         stayOutbound.provideRewardSticker = provideRewardSticker;
         stayOutbound.myWish = myWish;
-        stayOutbound.createdAtAtWish = createdAt;
+        stayOutbound.createdWishDateTime = createdAt;
 
         return stayOutbound;
     }

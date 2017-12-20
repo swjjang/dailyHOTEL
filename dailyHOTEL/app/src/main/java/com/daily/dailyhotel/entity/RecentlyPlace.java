@@ -21,6 +21,7 @@ public class RecentlyPlace
     public RecentlyPlaceDetail details;
     public String imageUrl;
     public boolean isSoldOut;
+    public String createdDateTime; // wish 에서만 사용된다. 추후에 최근본 업장과 위시를 분리해야 할것 같다.
 
     public int reviewCount;
     public boolean newItem;

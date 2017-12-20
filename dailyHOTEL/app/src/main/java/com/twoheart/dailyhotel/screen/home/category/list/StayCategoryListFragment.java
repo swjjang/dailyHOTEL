@@ -281,83 +281,83 @@ public class StayCategoryListFragment extends StayListFragment
         String abTest = DailyRemoteConfigPreference.getInstance(getContext()).getKeyRemoteConfigStayRankTestName();
         String abTestType = DailyRemoteConfigPreference.getInstance(getContext()).getKeyRemoteConfigStayRankTestType();
 
-        if (DailyTextUtils.isTextEmpty(abTest, abTestType) == true)
-        {
-            String previousRegion = null;
-            boolean hasDailyChoice = false;
-
-            // 기존 그대로
-            if (hasSection == true)
-            {
-                for (Place place : placeList)
-                {
-                    // 지역순에만 section 존재함
-                    if (SortType.DEFAULT == sortType)
-                    {
-                        String region = place.districtName;
-
-                        if (DailyTextUtils.isTextEmpty(region) == true)
-                        {
-                            continue;
-                        }
-
-                        if (localPlusList != null && localPlusList.size() > 0)
-                        {
-                            int placeIndex = place.index;
-                            boolean isAlreadyShowPlace = false;
-
-                            for (Place localPlace : localPlusList)
-                            {
-                                // 기존 광고 BM 에 추가 되어있으면 바로 검색 끝
-                                if (placeIndex == localPlace.index)
-                                {
-                                    isAlreadyShowPlace = true;
-                                    break;
-                                }
-                            }
-
-                            // 기존에 노출 되어있으면 다음 리스트로 넘김
-                            if (isAlreadyShowPlace == true)
-                            {
-                                continue;
-                            }
-                        }
-
-                        if (place.isDailyChoice == true)
-                        {
-                            if (hasDailyChoice == false)
-                            {
-                                hasDailyChoice = true;
-
-                                PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, mBaseActivity.getResources().getString(R.string.label_dailychoice));
-                                placeViewItemList.add(section);
-                            }
-                        } else
-                        {
-                            if (DailyTextUtils.isTextEmpty(previousRegion) == true || region.equalsIgnoreCase(previousRegion) == false)
-                            {
-                                previousRegion = region;
-
-                                PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, region);
-                                placeViewItemList.add(section);
-                            }
-                        }
-                    }
-
-                    place.entryPosition = entryPosition;
-                    placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, place));
-                    entryPosition++;
-                }
-            } else
-            {
-                for (Place place : placeList)
-                {
-                    place.entryPosition = entryPosition;
-                    placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, place));
-                    entryPosition++;
-                }
-            }
-        } else
+        //        if (DailyTextUtils.isTextEmpty(abTest, abTestType) == true)
+        //        {
+        //            String previousRegion = null;
+        //            boolean hasDailyChoice = false;
+        //
+        //            // 기존 그대로
+        //            if (hasSection == true)
+        //            {
+        //                for (Place place : placeList)
+        //                {
+        //                    // 지역순에만 section 존재함
+        //                    if (SortType.DEFAULT == sortType)
+        //                    {
+        //                        String region = place.districtName;
+        //
+        //                        if (DailyTextUtils.isTextEmpty(region) == true)
+        //                        {
+        //                            continue;
+        //                        }
+        //
+        //                        if (localPlusList != null && localPlusList.size() > 0)
+        //                        {
+        //                            int placeIndex = place.index;
+        //                            boolean isAlreadyShowPlace = false;
+        //
+        //                            for (Place localPlace : localPlusList)
+        //                            {
+        //                                // 기존 광고 BM 에 추가 되어있으면 바로 검색 끝
+        //                                if (placeIndex == localPlace.index)
+        //                                {
+        //                                    isAlreadyShowPlace = true;
+        //                                    break;
+        //                                }
+        //                            }
+        //
+        //                            // 기존에 노출 되어있으면 다음 리스트로 넘김
+        //                            if (isAlreadyShowPlace == true)
+        //                            {
+        //                                continue;
+        //                            }
+        //                        }
+        //
+        //                        if (place.isDailyChoice == true)
+        //                        {
+        //                            if (hasDailyChoice == false)
+        //                            {
+        //                                hasDailyChoice = true;
+        //
+        //                                PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, mBaseActivity.getResources().getString(R.string.label_dailychoice));
+        //                                placeViewItemList.add(section);
+        //                            }
+        //                        } else
+        //                        {
+        //                            if (DailyTextUtils.isTextEmpty(previousRegion) == true || region.equalsIgnoreCase(previousRegion) == false)
+        //                            {
+        //                                previousRegion = region;
+        //
+        //                                PlaceViewItem section = new PlaceViewItem(PlaceViewItem.TYPE_SECTION, region);
+        //                                placeViewItemList.add(section);
+        //                            }
+        //                        }
+        //                    }
+        //
+        //                    place.entryPosition = entryPosition;
+        //                    placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, place));
+        //                    entryPosition++;
+        //                }
+        //            } else
+        //            {
+        //                for (Place place : placeList)
+        //                {
+        //                    place.entryPosition = entryPosition;
+        //                    placeViewItemList.add(new PlaceViewItem(PlaceViewItem.TYPE_ENTRY, place));
+        //                    entryPosition++;
+        //                }
+        //            }
+        //        } else
         {
             // AB Test 시에는 첫번째 스테이가 데초면 섹션을 만들고 첫번째 스테이가 데초가 아니면 섹션이 없는 것으로 간주한다
             if (hasSection == true && placeList.get(0).isDailyChoice == true)

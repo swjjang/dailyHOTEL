@@ -36,6 +36,7 @@ import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RewardRemoteImpl;
+import com.daily.dailyhotel.repository.remote.WishRemoteImpl;
 import com.daily.dailyhotel.screen.common.area.stay.StayAreaListActivity;
 import com.daily.dailyhotel.screen.common.web.DailyWebActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
@@ -91,6 +92,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -143,6 +146,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
     RecentlyLocalImpl mRecentlyLocalImpl;
     private RewardRemoteImpl mRewardRemoteImpl;
     private CommonRemoteImpl mCommonRemoteImpl;
+    private WishRemoteImpl mWishRemoteImpl;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -152,6 +156,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
         mRecentlyRemoteImpl = new RecentlyRemoteImpl(getActivity());
         mRecentlyLocalImpl = new RecentlyLocalImpl(getActivity());
         mRewardRemoteImpl = new RewardRemoteImpl(getActivity());
+        mWishRemoteImpl = new WishRemoteImpl(getActivity());
     }
 
     @Nullable
@@ -1280,7 +1285,109 @@ public class HomeFragment extends BaseMenuNavigationFragment
             return;
         }
 
-        mNetworkController.requestWishList();
+        final int MAX_VALUE = 10;
+
+        addCompositeDisposable(Observable.zip(mWishRemoteImpl.getHomeWishList(), mWishRemoteImpl.getStayOutboundWishList(MAX_VALUE), new BiFunction<List<RecentlyPlace>, List<StayOutbound>, ArrayList<CarouselListItem>>()
+        {
+            @Override
+            public ArrayList<CarouselListItem> apply(List<RecentlyPlace> recentlyPlaceList, List<StayOutbound> stayOutboundList) throws Exception
+            {
+                ArrayList<CarouselListItem> carouselListItemList = new ArrayList<>();
+
+                if (recentlyPlaceList != null && recentlyPlaceList.size() > 0)
+                {
+                    for (RecentlyPlace recentlyPlace : recentlyPlaceList)
+                    {
+                        carouselListItemList.add(new CarouselListItem(CarouselListItem.TYPE_RECENTLY_PLACE, recentlyPlace));
+                    }
+                }
+
+                if (stayOutboundList != null && stayOutboundList.size() > 0)
+                {
+                    for (StayOutbound stayOutbound : stayOutboundList)
+                    {
+                        carouselListItemList.add(new CarouselListItem(CarouselListItem.TYPE_OB_STAY, stayOutbound));
+                    }
+                }
+
+                Collections.sort(carouselListItemList, new Comparator<CarouselListItem>()
+                {
+                    public int compare(CarouselListItem carouselListItem1, CarouselListItem carouselListItem2)
+                    {
+                        String dateTime1 = getDateTime(carouselListItem1);
+                        String dateTime2 = getDateTime(carouselListItem2);
+
+                        if (dateTime1 == null || dateTime2 == null || dateTime1.equalsIgnoreCase(dateTime2) == true)
+                        {
+                            return getIndex(carouselListItem1) - getIndex(carouselListItem2);
+                        } else
+                        {
+                            return dateTime2.compareToIgnoreCase(dateTime1);
+                        }
+                    }
+
+                    private String getDateTime(CarouselListItem carouselListItem)
+                    {
+                        Object objectItem = carouselListItem.getItem();
+
+                        if (objectItem instanceof RecentlyPlace)
+                        {
+                            return ((RecentlyPlace) objectItem).createdDateTime;
+                        } else if (objectItem instanceof StayOutbound)
+                        {
+                            return ((StayOutbound) objectItem).createdWishDateTime;
+                        }
+
+                        return null;
+                    }
+
+                    private int getIndex(CarouselListItem carouselListItem)
+                    {
+                        Object objectItem = carouselListItem.getItem();
+
+                        if (objectItem instanceof RecentlyPlace)
+                        {
+                            return ((RecentlyPlace) objectItem).index;
+                        } else if (objectItem instanceof StayOutbound)
+                        {
+                            return ((StayOutbound) objectItem).index;
+                        }
+
+                        return 0;
+                    }
+                });
+
+                return carouselListItemList;
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<CarouselListItem>>()
+        {
+            @Override
+            public void accept(ArrayList<CarouselListItem> carouselListItems) throws Exception
+            {
+                if (mHomeLayout != null)
+                {
+                    mHomeLayout.setWishListData(carouselListItems, false);
+                }
+
+                mNetworkRunState = mNetworkRunState | IS_RUNNED_WISHLIST;
+
+                sendHomeBlockEventAnalytics();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                if (mHomeLayout != null)
+                {
+                    mHomeLayout.setWishListData(null, true);
+                }
+
+                mNetworkRunState = mNetworkRunState | IS_RUNNED_WISHLIST;
+
+                sendHomeBlockEventAnalytics();
+            }
+        }));
     }
 
     private void requestRecentList()
@@ -1926,17 +2033,33 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 return;
             }
 
-            RecentlyPlace wishItem = item.getItem();
-            if (wishItem == null)
+            int index;
+            if (CarouselListItem.TYPE_OB_STAY == item.mType)
             {
-                return;
-            }
+                // stayOutbound
+                StayOutbound stayOutbound = item.getItem();
+                if (stayOutbound == null)
+                {
+                    return;
+                }
 
-            startPlaceDetail(view, item, mTodayDateTime);
+                index = stayOutbound.index;
+                startStayOutboundDetail(view, item, mTodayDateTime);
+            } else
+            {
+                RecentlyPlace recentlyPlace = item.getItem();
+                if (recentlyPlace == null)
+                {
+                    return;
+                }
+
+                index = recentlyPlace.index;
+                startPlaceDetail(view, item, mTodayDateTime);
+            }
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                 AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.HOME_WISHLIST_CLICK,//
-                Integer.toString(wishItem.index), null);
+                Integer.toString(index), null);
         }
 
         @Override
@@ -1955,42 +2078,68 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
             try
             {
-                RecentlyPlace recentlyPlace = item.getItem();
-                if (recentlyPlace == null)
+                if (CarouselListItem.TYPE_OB_STAY == item.mType)
                 {
-                    return;
-                }
-
-                mViewByLongPress = view;
-                mCarouselListItemByLongPress = item;
-
-                mHomeLayout.setBlurVisibility(mBaseActivity, true);
-
-                ServiceType serviceType = ServiceType.valueOf(recentlyPlace.serviceType);
-
-                switch (serviceType)
-                {
-                    case HOTEL:
+                    StayOutbound stayOutbound = item.getItem();
+                    if (stayOutbound == null)
                     {
-                        StayBookingDay stayBookingDay = new StayBookingDay();
-                        stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
-                        stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
-
-                        Intent intent = StayPreviewActivity.newInstance(mBaseActivity, stayBookingDay, recentlyPlace);
-
-                        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
-                        break;
+                        return;
                     }
 
-                    case GOURMET:
+                    mViewByLongPress = view;
+                    mCarouselListItemByLongPress = item;
+
+                    mHomeLayout.setBlurVisibility(mBaseActivity, true);
+
+                    StayBookingDay stayBookingDay = new StayBookingDay();
+                    stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
+                    stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
+
+                    startActivityForResult(StayOutboundPreviewActivity.newInstance(getActivity(), stayOutbound.index, -1//
+                        , stayOutbound.name//
+                        , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                        , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+                        , People.DEFAULT_ADULTS, null)//
+                        , CODE_REQUEST_ACTIVITY_PREVIEW);
+                } else
+                {
+                    RecentlyPlace recentlyPlace = item.getItem();
+                    if (recentlyPlace == null)
                     {
-                        GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
-                        gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
+                        return;
+                    }
 
-                        Intent intent = GourmetPreviewActivity.newInstance(mBaseActivity, gourmetBookingDay, recentlyPlace);
+                    mViewByLongPress = view;
+                    mCarouselListItemByLongPress = item;
 
-                        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
-                        break;
+                    mHomeLayout.setBlurVisibility(mBaseActivity, true);
+
+                    ServiceType serviceType = ServiceType.valueOf(recentlyPlace.serviceType);
+
+                    switch (serviceType)
+                    {
+                        case HOTEL:
+                        {
+                            StayBookingDay stayBookingDay = new StayBookingDay();
+                            stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
+                            stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
+
+                            Intent intent = StayPreviewActivity.newInstance(mBaseActivity, stayBookingDay, recentlyPlace);
+
+                            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
+                            break;
+                        }
+
+                        case GOURMET:
+                        {
+                            GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+                            gourmetBookingDay.setVisitDay(mTodayDateTime.dailyDateTime);
+
+                            Intent intent = GourmetPreviewActivity.newInstance(mBaseActivity, gourmetBookingDay, recentlyPlace);
+
+                            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_PREVIEW);
+                            break;
+                        }
                     }
                 }
             } catch (Exception e)
@@ -2317,14 +2466,14 @@ public class HomeFragment extends BaseMenuNavigationFragment
         @Override
         public void onWishList(ArrayList<CarouselListItem> list, boolean isError)
         {
-            if (mHomeLayout != null)
-            {
-                mHomeLayout.setWishListData(list, isError);
-            }
-
-            mNetworkRunState = mNetworkRunState | IS_RUNNED_WISHLIST;
-
-            sendHomeBlockEventAnalytics();
+//            if (mHomeLayout != null)
+//            {
+//                mHomeLayout.setWishListData(list, isError);
+//            }
+//
+//            mNetworkRunState = mNetworkRunState | IS_RUNNED_WISHLIST;
+//
+//            sendHomeBlockEventAnalytics();
         }
 
         @Override

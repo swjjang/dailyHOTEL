@@ -42,7 +42,7 @@ public class Stay
     public boolean overseas;
     public boolean provideRewardSticker; // 데일리 리워드 아이콘 여부
 
-    public String createAtWish; // ISO-8601 위시 등록 시간
+    public String createdWishDateTime; // ISO-8601 위시 등록 시간
 
     public enum Grade
     {
