@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.databinding.DataBindingUtil;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
@@ -239,10 +238,9 @@ public class PaymentWaitView extends BaseDialogView<PaymentWaitView.OnEventListe
 
         for (String guide : guides)
         {
-            ListRowPaymentWaitGuideDataBinding listRowPaymentWaitGuideDataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.list_row_payment_wait_guide_data, getViewDataBinding().guide1Layout, false);
-            View textLayout = LayoutInflater.from(getContext()).inflate(R.layout.list_row_payment_wait_guide_data, getViewDataBinding().guide1Layout, false);
-
-            TextView textView = textLayout.findViewById(R.id.textView);
+            ListRowPaymentWaitGuideDataBinding dataBinding = DataBindingUtil.inflate( //
+                LayoutInflater.from(getContext()), R.layout.list_row_payment_wait_guide_data //
+                , getViewDataBinding().guide1Layout, false);
 
             String guideText = guide.replace("\n", " ").trim();
 
@@ -251,14 +249,14 @@ public class PaymentWaitView extends BaseDialogView<PaymentWaitView.OnEventListe
                 guideText += ".";
             }
 
-            textView.setText(guideText);
+            dataBinding.textView.setText(guideText);
 
             if (isImportant == true)
             {
-                textView.setTextColor(getColor(R.color.dh_theme_color));
+                dataBinding.textView.setTextColor(getColor(R.color.dh_theme_color));
             }
 
-            getViewDataBinding().guide1Layout.addView(textLayout);
+            getViewDataBinding().guide1Layout.addView(dataBinding.getRoot());
         }
     }
 }
