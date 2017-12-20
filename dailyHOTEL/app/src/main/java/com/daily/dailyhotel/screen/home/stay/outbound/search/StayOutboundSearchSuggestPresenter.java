@@ -98,6 +98,12 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
         if (DailyTextUtils.isTextEmpty(mKeyword) == false)

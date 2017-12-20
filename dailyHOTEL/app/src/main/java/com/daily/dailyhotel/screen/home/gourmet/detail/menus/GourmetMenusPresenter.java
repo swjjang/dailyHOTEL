@@ -148,6 +148,12 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
         if (DailyPreference.getInstance(getActivity()).getGourmetProductDetailGuide() == true)

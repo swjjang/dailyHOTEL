@@ -89,6 +89,12 @@ public class DailyWebPresenter extends BaseExceptionPresenter<DailyWebActivity, 
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
         getViewInterface().setToolbarTitle(mTitleText);

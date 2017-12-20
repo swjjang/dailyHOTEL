@@ -65,7 +65,7 @@ public class StayListFragmentPresenter extends BaseFragmentPresenter<StayListFra
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        return getViewInterface().getContentView(inflater, R.layout.fragment_hotel_list, container);
+        return getViewInterface().getContentView(inflater, R.layout.fragment_stay_list_data, container);
     }
 
     @NonNull

@@ -117,6 +117,12 @@ public class StayOutboundCalendarPresenter extends PlaceCalendarPresenter<StayOu
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
         screenLock(false);

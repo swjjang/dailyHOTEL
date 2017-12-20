@@ -76,6 +76,12 @@ public class CouponHistoryPresenter extends BaseExceptionPresenter<CouponHistory
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
         //        getViewInterface().setToolbarTitle(getActivity().getResources().getString(R.string.actionbar_title_coupon_history)); // 뷰 자체에서 생성

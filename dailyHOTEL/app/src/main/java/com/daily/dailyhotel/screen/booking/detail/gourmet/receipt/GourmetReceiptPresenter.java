@@ -98,6 +98,12 @@ public class GourmetReceiptPresenter extends BaseExceptionPresenter<GourmetRecei
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
     }

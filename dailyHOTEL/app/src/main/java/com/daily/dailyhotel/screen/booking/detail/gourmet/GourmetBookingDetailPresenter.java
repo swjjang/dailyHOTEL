@@ -192,6 +192,12 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
     }

@@ -355,6 +355,12 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
         if (mIsDeepLink == false && mIsUsedMultiTransition == true)

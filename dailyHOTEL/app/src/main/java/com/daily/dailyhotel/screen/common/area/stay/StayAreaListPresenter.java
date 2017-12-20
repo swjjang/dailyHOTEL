@@ -140,6 +140,12 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
         getViewInterface().setToolbarTitle(getString(R.string.label_selectarea_stay_area));
