@@ -158,6 +158,11 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
     @Override
     public boolean onBackPressed()
     {
+        if (lock() == true)
+        {
+            return true;
+        }
+
         getViewInterface().hideAnimation();
 
         return true;
@@ -178,8 +183,6 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        unLockAll();
-
         switch (requestCode)
         {
             case StayOutboundPreviewActivity.REQUEST_CODE_WISH_DIALOG:
@@ -208,14 +211,19 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
                             setResult(BaseActivity.RESULT_CODE_REFRESH);
                         }
 
-                        onBackClick();
+                        getViewInterface().hideAnimation();
                         break;
 
                     case com.daily.base.BaseActivity.RESULT_CODE_REFRESH:
                         setResult(BaseActivity.RESULT_CODE_REFRESH);
-                        onBackClick();
+
+                        getViewInterface().hideAnimation();
                         break;
                 }
+                break;
+
+            default:
+                unLockAll();
                 break;
         }
     }
@@ -274,7 +282,6 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
 
         startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.OB_STAY//
             , mStayOutboundDetail.index, !currentWish, mPosition, AnalyticsManager.Screen.DAILYHOTEL_LIST), StayOutboundPreviewActivity.REQUEST_CODE_WISH_DIALOG);
-
     }
 
     @Override
@@ -330,8 +337,12 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
                 , mStayOutboundDetail.index//
                 , imageUrl//
                 , mStayBookDateTime);
+
+            getViewInterface().hideAnimation();
         } catch (Exception e)
         {
+            unLockAll();
+
             getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
                 , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
                 , new View.OnClickListener()
@@ -340,11 +351,11 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
                     public void onClick(View v)
                     {
                         Util.installPackage(getActivity(), "com.kakao.talk");
+
+                        onBackClick();
                     }
                 }, null);
         }
-
-        onBackClick();
     }
 
     @Override
@@ -357,14 +368,19 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
 
         Util.shareGoogleMap(getActivity(), mStayOutboundDetail.name, Double.toString(mStayOutboundDetail.latitude), Double.toString(mStayOutboundDetail.longitude));
 
-        onBackClick();
+        getViewInterface().hideAnimation();
     }
 
     @Override
     public void onViewDetailClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
+
         setResult(Activity.RESULT_OK);
-        onBackClick();
+        getViewInterface().hideAnimation();
     }
 
     @Override
