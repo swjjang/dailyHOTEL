@@ -4,15 +4,20 @@ import android.content.Context;
 
 import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.RewardInterface;
+import com.daily.dailyhotel.entity.RewardCardHistory;
+import com.daily.dailyhotel.entity.RewardCardHistoryDetail;
 import com.daily.dailyhotel.entity.RewardDetail;
 import com.daily.dailyhotel.entity.RewardHistoryDetail;
 import com.daily.dailyhotel.entity.RewardInformation;
+import com.daily.dailyhotel.repository.remote.model.RewardCardHistoryDetailData;
 import com.daily.dailyhotel.repository.remote.model.RewardDetailData;
 import com.daily.dailyhotel.repository.remote.model.RewardHistoryDetailData;
 import com.daily.dailyhotel.repository.remote.model.RewardInformationData;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
+
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.functions.Function;
@@ -124,6 +129,39 @@ public class RewardRemoteImpl extends BaseRemoteImpl implements RewardInterface
                     }
 
                     return rewardHistoryDetail;
+                }
+            });
+    }
+
+    @Override
+    public Observable<RewardCardHistoryDetail> getRewardCardHistoryDetail()
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v5/reward/card/history"//
+            : "NDQkMTEkMzAkNDQkNDUkODAkNjgkNiQ1MyQyMyQ4NCQzJDg5JDMwJDI3JDc3JA==$RUIC1QTJIzMjQDxQUEyOThBQXzkYzQTGEwNTjc5QUIxNTlGQTGYI0QQzMFxMjRDNTNFQUZCN0NKCNOEExREEyQjAKH3NHkRGQkMxOQ==$";
+
+        return mDailyMobileService.getRewardCardHistoryDetail(Crypto.getUrlDecoderEx(URL)) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<RewardCardHistoryDetailData>, RewardCardHistoryDetail>()
+            {
+                @Override
+                public RewardCardHistoryDetail apply(BaseDto<RewardCardHistoryDetailData> baseDto) throws Exception
+                {
+                    RewardCardHistoryDetail rewardCardHistoryDetail;
+
+                    if (baseDto != null)
+                    {
+                        if (baseDto.msgCode == 100 && baseDto.data != null)
+                        {
+                            rewardCardHistoryDetail = baseDto.data.getRewardCardHistoryDetail();
+                        } else
+                        {
+                            throw new BaseException(baseDto.msgCode, baseDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(-1, null);
+                    }
+
+                    return rewardCardHistoryDetail;
                 }
             });
     }

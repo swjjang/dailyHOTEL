@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.mydaily.reward.history;
+package com.daily.dailyhotel.screen.mydaily.reward.history.reward;
 
 
 import android.app.Activity;
@@ -17,6 +17,7 @@ import com.daily.dailyhotel.repository.remote.RewardRemoteImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
+import com.twoheart.dailyhotel.util.Util;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -167,35 +168,47 @@ public class RewardHistoryPresenter extends BaseExceptionPresenter<RewardHistory
             @Override
             public List<ObjectItem> apply(@io.reactivex.annotations.NonNull RewardHistoryDetail rewardHistoryDetail) throws Exception
             {
-                setStickerValidity(rewardHistoryDetail.expiredAt);
-
-                List<ObjectItem> objectItemList = new ArrayList<>();
-                List<RewardHistory> rewardHistoryList = rewardHistoryDetail.getRewardHistoryList();
-
-                if (rewardHistoryList != null && rewardHistoryList.size() > 0)
+                if (rewardHistoryDetail.activeReward == false)
                 {
-                    objectItemList.add(new ObjectItem(ObjectItem.TYPE_HEADER_VIEW, null));
+                    return new ArrayList<>();
+                } else
+                {
+                    setStickerValidity(rewardHistoryDetail.expiredAt);
 
-                    for (RewardHistory rewardHistory : rewardHistoryList)
+                    List<ObjectItem> objectItemList = new ArrayList<>();
+                    List<RewardHistory> rewardHistoryList = rewardHistoryDetail.getRewardHistoryList();
+
+                    if (rewardHistoryList != null && rewardHistoryList.size() > 0)
                     {
-                        objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, rewardHistory));
+                        objectItemList.add(new ObjectItem(ObjectItem.TYPE_HEADER_VIEW, null));
+
+                        for (RewardHistory rewardHistory : rewardHistoryList)
+                        {
+                            objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, rewardHistory));
+                        }
+
+                        objectItemList.add(new ObjectItem(ObjectItem.TYPE_FOOTER_VIEW, null));
                     }
 
-                    objectItemList.add(new ObjectItem(ObjectItem.TYPE_FOOTER_VIEW, null));
+                    return objectItemList;
                 }
-
-                return objectItemList;
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<ObjectItem>>()
         {
             @Override
             public void accept(List<ObjectItem> objectItemList) throws Exception
             {
-                notifyStickerValidityChanged();
+                if (objectItemList.size() == 0)
+                {
+                    Util.restartApp(getActivity());
+                } else
+                {
+                    notifyStickerValidityChanged();
 
-                onRewardHistoryList(objectItemList);
+                    onRewardHistoryList(objectItemList);
 
-                unLockAll();
+                    unLockAll();
+                }
             }
         }, new Consumer<Throwable>()
         {

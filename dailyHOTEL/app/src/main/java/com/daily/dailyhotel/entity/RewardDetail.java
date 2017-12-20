@@ -12,6 +12,7 @@ public class RewardDetail extends Configurations
     public int rewardStickerCount;
     public String expiredAt;
     public boolean hasRewardHistory;
+    public boolean hasRewardCardHistory;
 
     private List<RewardSticker> mRewardStickerList;
 
