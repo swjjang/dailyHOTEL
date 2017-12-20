@@ -10,6 +10,7 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.RewardCardHistoryDetail;
 import com.daily.dailyhotel.repository.remote.RewardRemoteImpl;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
 import com.twoheart.dailyhotel.util.Util;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -177,4 +178,15 @@ public class RewardCardHistoryPresenter extends BaseExceptionPresenter<RewardCar
         getActivity().onBackPressed();
     }
 
+    @Override
+    public void onHomeClick()
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        startActivity(DailyInternalDeepLink.getHomeScreenLink(getActivity()));
+        onBackClick();
+    }
 }

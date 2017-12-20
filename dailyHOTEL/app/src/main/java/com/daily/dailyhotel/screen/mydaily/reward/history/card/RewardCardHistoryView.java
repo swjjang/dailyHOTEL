@@ -16,6 +16,7 @@ public class RewardCardHistoryView extends BaseDialogView<RewardCardHistoryView.
 
     public interface OnEventListener extends OnBaseEventListener
     {
+        void onHomeClick();
     }
 
     public RewardCardHistoryView(BaseActivity baseActivity, RewardCardHistoryView.OnEventListener listener)
@@ -34,6 +35,8 @@ public class RewardCardHistoryView extends BaseDialogView<RewardCardHistoryView.
         initToolbar(viewDataBinding);
 
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.recyclerView, getColor(R.color.default_over_scroll_edge));
+
+        viewDataBinding.homeImageView.setOnClickListener(v -> getEventListener().onHomeClick());
     }
 
     @Override
