@@ -4,7 +4,9 @@ import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.BookingCancel;
 import com.daily.dailyhotel.entity.GourmetBookingDetail;
 import com.daily.dailyhotel.entity.GourmetMultiBookingDetail;
+import com.daily.dailyhotel.entity.GourmetOldWaitingDeposit;
 import com.daily.dailyhotel.entity.StayBookingDetail;
+import com.daily.dailyhotel.entity.StayOldWaitingDeposit;
 import com.daily.dailyhotel.entity.StayOutboundBookingDetail;
 import com.daily.dailyhotel.entity.WaitingDeposit;
 
@@ -58,6 +60,12 @@ public interface BookingInterface
 
     // 임금 대기
     Observable<WaitingDeposit> getWaitingDeposit(String aggregationId);
+
+    // 입금 대기 - Stay Old
+    Observable<StayOldWaitingDeposit> getStayOldWaitingDeposit(int reservationIndex);
+
+    // 입금 대기 - Gourmet Old
+    Observable<GourmetOldWaitingDeposit> getGourmetOldWaitingDeposit(int reservationIndex);
 
     // 국내 취소내역 리스트
     Observable<List<BookingCancel>> getBookingCancelList();

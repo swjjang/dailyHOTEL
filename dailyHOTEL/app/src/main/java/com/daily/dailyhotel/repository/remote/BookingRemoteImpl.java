@@ -10,7 +10,9 @@ import com.daily.dailyhotel.entity.BookingCancel;
 import com.daily.dailyhotel.entity.BookingHidden;
 import com.daily.dailyhotel.entity.GourmetBookingDetail;
 import com.daily.dailyhotel.entity.GourmetMultiBookingDetail;
+import com.daily.dailyhotel.entity.GourmetOldWaitingDeposit;
 import com.daily.dailyhotel.entity.StayBookingDetail;
+import com.daily.dailyhotel.entity.StayOldWaitingDeposit;
 import com.daily.dailyhotel.entity.StayOutboundBookingDetail;
 import com.daily.dailyhotel.entity.WaitingDeposit;
 import com.daily.dailyhotel.repository.remote.model.BookingCancelData;
@@ -19,7 +21,9 @@ import com.daily.dailyhotel.repository.remote.model.BookingHiddenData;
 import com.daily.dailyhotel.repository.remote.model.BookingHideData;
 import com.daily.dailyhotel.repository.remote.model.GourmetBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.GourmetMultiBookingDetailData;
+import com.daily.dailyhotel.repository.remote.model.GourmetOldWaitingDepositData;
 import com.daily.dailyhotel.repository.remote.model.StayBookingDetailData;
+import com.daily.dailyhotel.repository.remote.model.StayOldWaitingDepositData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.WaitingDepositData;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
@@ -589,7 +593,76 @@ public class BookingRemoteImpl extends BaseRemoteImpl implements BookingInterfac
 
                     return waitingDeposit;
                 }
+            });
+    }
+
+    @Override
+    public Observable<StayOldWaitingDeposit> getStayOldWaitingDeposit(int reservationIndex)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v2/reservation/account/{tid}"//
+            : "MTE5JDg1JDk2JDEzJDIyJDgkMzgkMTUkMTE1JDExMSQ2MiQ2JDE3JDEzMSQxMjYkMTQwJA==$MEQ3Q0OU5XRDlFOFKJUI5RkE0MOjI2MzdDMzFGOEIS0QTlGOUExQjREM0JCNkVGRVDVFNDVBRTZGNTFGNkRGNkZBRTFBMVDhEODdFRTVSCQkI3RjcxKRDQ3DRTQ3QTDBBNEYFJ1RkMwQKjA4$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{tid}", Integer.toString(reservationIndex));
+
+        return mDailyMobileService.getStayOldWaitingDeposit(Crypto.getUrlDecoderEx(API, urlParams)) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<StayOldWaitingDepositData>, StayOldWaitingDeposit>()
+            {
+                @Override
+                public StayOldWaitingDeposit apply(BaseDto<StayOldWaitingDepositData> stayOldWaitingDepositDataBaseDto) throws Exception
+                {
+                    StayOldWaitingDeposit stayOldWaitingDeposit;
+
+                    if (stayOldWaitingDepositDataBaseDto != null)
+                    {
+                        if (stayOldWaitingDepositDataBaseDto.msgCode == 100 && stayOldWaitingDepositDataBaseDto.data != null)
+                        {
+                            stayOldWaitingDeposit = stayOldWaitingDepositDataBaseDto.data.getWaitingDeposit();
+                        } else
+                        {
+                            throw new BaseException(stayOldWaitingDepositDataBaseDto.msgCode, stayOldWaitingDepositDataBaseDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(-1, null);
+                    }
+
+                    return stayOldWaitingDeposit;
+                }
             }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public Observable<GourmetOldWaitingDeposit> getGourmetOldWaitingDeposit(int reservationIndex)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/fnb/reservation/session/vbank/account/info"//
+            : "MjUkNzckMzkkODQkNzQkMTA4JDExMSQxMDUkODMkMyQ1MCQ0NyQxMDQkNDckNTUkMzYk$OUUSxNjYxRDI3OUQ0OEY2MTE4MLzU1RkFCNETYxNzVk2QkNDPHOTJTFQVzU3N0I0NjIyMzI3MDYxQzAzIQTI0UMDQH5MMzZENDI1RTEyODkX4N0IyXMDUX1RAUQzOUUyN0RCQUNGRDU2NTJB$";
+
+        return mDailyMobileService.getGourmetOldWaitingDeposit(Crypto.getUrlDecoderEx(API), Integer.toString(reservationIndex)) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<GourmetOldWaitingDepositData>, GourmetOldWaitingDeposit>()
+            {
+                @Override
+                public GourmetOldWaitingDeposit apply(BaseDto<GourmetOldWaitingDepositData> gourmetOldWaitingDepositDataBaseDto) throws Exception
+                {
+                    GourmetOldWaitingDeposit gourmetOldWaitingDeposit;
+
+                    if (gourmetOldWaitingDepositDataBaseDto != null)
+                    {
+                        if (gourmetOldWaitingDepositDataBaseDto.msgCode == 100 && gourmetOldWaitingDepositDataBaseDto.data != null)
+                        {
+                            gourmetOldWaitingDeposit = gourmetOldWaitingDepositDataBaseDto.data.getWaitingDeposit();
+                        } else
+                        {
+                            throw new BaseException(gourmetOldWaitingDepositDataBaseDto.msgCode, gourmetOldWaitingDepositDataBaseDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(-1, null);
+                    }
+
+                    return gourmetOldWaitingDeposit;
+                }
+            });
     }
 
     @Override

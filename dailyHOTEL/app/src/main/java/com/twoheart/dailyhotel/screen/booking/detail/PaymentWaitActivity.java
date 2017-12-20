@@ -52,6 +52,7 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Locale;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import retrofit2.Call;
@@ -99,7 +100,7 @@ public class PaymentWaitActivity extends BaseActivity
 
         mBooking = bookingParcel.getBooking();
 
-        setContentView(R.layout.activity_payment_wait);
+        setContentView(R.layout.activity_payment_wait_data);
 
         initToolbar();
         initLayout(mBooking);
@@ -207,13 +208,13 @@ public class PaymentWaitActivity extends BaseActivity
         EdgeEffectColor.setEdgeGlowColor(scrollLayout, getResources().getColor(R.color.default_over_scroll_edge));
 
         TextView placeNameTextView = findViewById(R.id.paymentWaitHotelNameView);
-        mAccountTextView = findViewById(R.id.tv_payment_wait_account);
-        mDailyTextView = findViewById(R.id.tv_payment_wait_name);
+        mAccountTextView = findViewById(R.id.accountNumberView);
+        mDailyTextView = findViewById(R.id.accountHolderView);
         mPriceTextView = findViewById(R.id.priceTextView);
         mBonusTextView = findViewById(R.id.bonusTextView);
         mCouponTextView = findViewById(R.id.couponTextView);
         mTotalPriceTextView = findViewById(R.id.totalPriceTextView);
-        mDeadlineTextView = findViewById(R.id.tv_payment_wait_deadline);
+        mDeadlineTextView = findViewById(R.id.waitingDeadlineView);
         mGuide1Layout = findViewById(R.id.guide1Layout);
 
         mBonusLayout = findViewById(R.id.bonusLayout);
@@ -254,7 +255,7 @@ public class PaymentWaitActivity extends BaseActivity
             }
         } else
         {
-            addCompositeDisposable(mBookingRemoteImpl.getWaitingDeposit(booking.aggregationId).subscribe(new Consumer<WaitingDeposit>()
+            addCompositeDisposable(mBookingRemoteImpl.getWaitingDeposit(booking.aggregationId).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<WaitingDeposit>()
             {
                 @Override
                 public void accept(@NonNull WaitingDeposit waitingDeposit) throws Exception
@@ -268,7 +269,12 @@ public class PaymentWaitActivity extends BaseActivity
                 @Override
                 public void accept(@NonNull Throwable throwable) throws Exception
                 {
-                    onHandleError(throwable);
+
+                    Intent intent = new Intent();
+                    intent.putExtra("msg", throwable.getMessage());
+                    setResult(CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT, intent);
+                    finish();
+//                    onHandleError(throwable);
                 }
             }));
         }
@@ -428,7 +434,7 @@ public class PaymentWaitActivity extends BaseActivity
 
         for (String guide : guides)
         {
-            View textLayout = LayoutInflater.from(this).inflate(R.layout.list_row_detail_text, viewGroups, false);
+            View textLayout = LayoutInflater.from(this).inflate(R.layout.list_row_payment_wait_guide_data, viewGroups, false);
             TextView textView = textLayout.findViewById(R.id.textView);
 
             String guideText = guide.replace("\n", " ").trim();
@@ -540,15 +546,15 @@ public class PaymentWaitActivity extends BaseActivity
         mTotalPriceTextView.setText(DailyTextUtils.getPriceFormat(this, waitingDeposit.depositWaitingAmount, false));
 
         // 확인 사항
-        if (waitingDeposit.getMessageList() != null)
+        if (waitingDeposit.getMessage1List() != null)
         {
-            String[] messages1 = waitingDeposit.getMessageList().toArray(new String[waitingDeposit.getMessageList().size()]);
+            String[] messages1 = waitingDeposit.getMessage1List().toArray(new String[waitingDeposit.getMessage1List().size()]);
             setGuideText(mGuide1Layout, messages1, false);
         }
 
-        if (DailyTextUtils.isTextEmpty(waitingDeposit.message2) == false)
+        if (waitingDeposit.getMessage2List() != null)
         {
-            String[] messages2 = new String[]{waitingDeposit.message2};
+            String[] messages2 = waitingDeposit.getMessage2List().toArray(new String[waitingDeposit.getMessage2List().size()]);
             setGuideText(mGuide1Layout, messages2, true);
         }
     }

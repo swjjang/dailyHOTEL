@@ -2,8 +2,10 @@ package com.daily.dailyhotel.repository.remote.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.WaitingDeposit;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @JsonObject
@@ -55,8 +57,14 @@ public class WaitingDepositData
         waitingDeposit.depositWaitingAmount = depositWaitingAmount;
         waitingDeposit.totalPrice = totalPrice;
         waitingDeposit.expiredAt = expiredAt;
-        waitingDeposit.setMessageList(message1List);
-        waitingDeposit.message2 = message2;
+        waitingDeposit.setMessage1List(message1List);
+
+        if (DailyTextUtils.isTextEmpty(message2) == false)
+        {
+            List<String> message2List = new ArrayList<>();
+            message2List.add(message2);
+            waitingDeposit.setMessage2List(message2List);
+        }
 
         return waitingDeposit;
     }
