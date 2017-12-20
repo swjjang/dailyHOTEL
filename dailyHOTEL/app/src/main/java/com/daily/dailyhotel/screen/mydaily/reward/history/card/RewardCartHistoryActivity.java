@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.mydaily.reward;
+package com.daily.dailyhotel.screen.mydaily.reward.history.card;
 
 
 import android.content.Context;
@@ -13,16 +13,11 @@ import com.twoheart.dailyhotel.R;
  * Created by sheldon
  * Clean Architecture
  */
-public class RewardActivity extends BaseActivity<RewardPresenter>
+public class RewardCartHistoryActivity extends BaseActivity<RewardCardHistoryPresenter>
 {
-    static final int REQUEST_CODE_LOGIN = 10000;
-    static final int REQUEST_CODE_WEB = 10001;
-    static final int REQUEST_CODE_REWARD_HISTORY = 10002;
-    static final int REQUEST_CODE_REWARD_CARD_HISTORY = 10003;
-
     public static Intent newInstance(Context context)
     {
-        Intent intent = new Intent(context, RewardActivity.class);
+        Intent intent = new Intent(context, RewardCartHistoryActivity.class);
 
         return intent;
     }
@@ -37,9 +32,9 @@ public class RewardActivity extends BaseActivity<RewardPresenter>
 
     @NonNull
     @Override
-    protected RewardPresenter createInstancePresenter()
+    protected RewardCardHistoryPresenter createInstancePresenter()
     {
-        return new RewardPresenter(this);
+        return new RewardCardHistoryPresenter(this);
     }
 
     @Override

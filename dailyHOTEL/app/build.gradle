@@ -218,9 +218,9 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
 
-    implementation 'com.facebook.fresco:fresco:1.5.0'
-    implementation 'com.facebook.fresco:drawee:1.5.0'
-    implementation 'com.facebook.fresco:imagepipeline-okhttp3:1.5.0'
+    implementation 'com.facebook.fresco:fresco:1.7.1'
+    implementation 'com.facebook.fresco:drawee:1.7.1'
+    implementation 'com.facebook.fresco:imagepipeline-okhttp3:1.7.1'
 
     implementation 'com.kakao.sdk:usermgmt:1.6.2'
     implementation 'com.kakao.sdk:kakaolink:1.6.2'

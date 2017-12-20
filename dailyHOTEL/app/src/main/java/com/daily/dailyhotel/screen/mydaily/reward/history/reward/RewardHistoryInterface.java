@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.mydaily.reward.history;
+package com.daily.dailyhotel.screen.mydaily.reward.history.reward;
 
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.dailyhotel.entity.ObjectItem;
