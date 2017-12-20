@@ -192,11 +192,9 @@ public class RecentlyLocalImpl implements RecentlyLocalInterface
                     @Override
                     public int compare(RecentlyDbPlace o1, RecentlyDbPlace o2)
                     {
-                        return Long.compare(o1.savingTime, o2.savingTime);
+                        return Long.compare(o2.savingTime, o1.savingTime);
                     }
                 });
-
-                Collections.reverse(recentlyDbPlaces);
 
                 if (recentlyDbPlaces == null || recentlyDbPlaces.size() == 0)
                 {

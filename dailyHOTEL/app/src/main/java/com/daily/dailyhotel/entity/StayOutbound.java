@@ -24,7 +24,7 @@ public class StayOutbound
     private List<String> mVendorTypeList;
     public int discountRate;
     public boolean myWish;
-    public String createdAtAtWish; // ISO-8601
+    public String createdWishDateTime; // ISO-8601
 
     public StayOutbound()
     {

@@ -180,10 +180,10 @@ public class StayWishListFragment extends PlaceWishListFragment
                             switch (placeViewItem.mType)
                             {
                                 case PlaceViewItem.TYPE_ENTRY:
-                                    return ((Stay) placeViewItem.getItem()).createAtWish;
+                                    return ((Stay) placeViewItem.getItem()).createdWishDateTime;
 
                                 case PlaceViewItem.TYPE_OB_ENTRY:
-                                    return ((StayOutbound) placeViewItem.getItem()).createdAtAtWish;
+                                    return ((StayOutbound) placeViewItem.getItem()).createdWishDateTime;
                             }
 
                             return null;

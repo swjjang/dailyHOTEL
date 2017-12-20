@@ -126,7 +126,7 @@ public class StayWishListAdapter extends PlaceWishListAdapter
         holder.stayOutboundCardView.setImage(stayOutbound.getImageMap());
         holder.stayOutboundCardView.setGradeText(mContext.getString(R.string.label_stay_outbound_filter_x_star_rate, (int) stayOutbound.rating));
         holder.stayOutboundCardView.setVRVisible(false);
-        holder.stayOutboundCardView.setRatingText(stayOutbound.rating);
+        holder.stayOutboundCardView.setRatingText(stayOutbound.tripAdvisorRating);
         holder.stayOutboundCardView.setNewVisible(false);
         holder.stayOutboundCardView.setStayNameText(stayOutbound.name, stayOutbound.nameEng);
         holder.stayOutboundCardView.setDistanceVisible(false);

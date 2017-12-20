@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.WishInterface;
+import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.WishCount;
@@ -33,6 +34,35 @@ public class WishRemoteImpl extends BaseRemoteImpl implements WishInterface
     public WishRemoteImpl(@NonNull Context context)
     {
         super(context);
+    }
+
+    @Override
+    public Observable<List<RecentlyPlace>> getHomeWishList()
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v4/home/wishes"//
+            : "MzMkMjkkNDIkNzIkODIkNjEkNzMkNTQkMCQ2MCQ4OSQxMCQxNSQyMSQ1OSQ5MSQ=$JRDI2RUU4MCURFMYkJDN0YE3ODU4MTUyMYjIyNSzQwN0M1TRkY2MThDMTYPIyRkIL5M0GE0NkVGODc2QOOUFDOTQ0MEDEQV2MUUwRQ==$";
+
+        return mDailyMobileService.getHomeWishList(Crypto.getUrlDecoderEx(API))//
+            .subscribeOn(Schedulers.io()).map(baseDto ->
+            {
+                List<RecentlyPlace> recentlyPlaceList;
+
+                if (baseDto != null)
+                {
+                    if (baseDto.msgCode == 100 && baseDto.data != null)
+                    {
+                        recentlyPlaceList = baseDto.data.getRecentlyPlaceList();
+                    } else
+                    {
+                        throw new BaseException(baseDto.msgCode, baseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return recentlyPlaceList;
+            });
     }
 
     @Override
@@ -131,12 +161,20 @@ public class WishRemoteImpl extends BaseRemoteImpl implements WishInterface
     @Override
     public Observable<List<StayOutbound>> getStayOutboundWishList()
     {
+        final int MAX_VALUE = 100;
+
+        return getStayOutboundWishList(MAX_VALUE);
+    }
+
+    @Override
+    public Observable<List<StayOutbound>> getStayOutboundWishList(int maxCount)
+    {
         final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/wishitems"//
             : "NDQkNzUkMzUkNDckODQkODgkODUkMjIkMjgkMjgkNyQzMyQ2NCQyOSQxMDEkNzIk$RTYzREQEyMURBMzI5QzI4RUGQwMTVDXZBRIUUxQUYZyMTgyRDNCANTzI1OTlEMTZFCMzZGOUHU3MTgyMEY4RjYM4RjY5BUMzIH1OQ=S=$";
 
-        return mDailyMobileService.getStayOutboundWishList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API)) //
+        return mDailyMobileService.getStayOutboundWishList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API), maxCount) //
             .subscribeOn(Schedulers.io()).map(new Function<BaseDto<StayOutboundsData>, List<StayOutbound>>()
             {
                 @Override
@@ -226,6 +264,7 @@ public class WishRemoteImpl extends BaseRemoteImpl implements WishInterface
 
     /**
      * 국내 스테이, 고메 위시 개수
+     *
      * @return
      */
     public Observable<WishCount> getWishCount()
@@ -258,6 +297,7 @@ public class WishRemoteImpl extends BaseRemoteImpl implements WishInterface
 
     /**
      * 해외 스테이 위시 개수
+     *
      * @return
      */
     public Observable<Integer> getStayOutboundWishCount()

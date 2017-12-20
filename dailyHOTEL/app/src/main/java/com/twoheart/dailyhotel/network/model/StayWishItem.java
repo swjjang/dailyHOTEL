@@ -41,7 +41,7 @@ public class StayWishItem extends PlaceWishItem<StayWishDetails>
         stay.reviewCount = reviewCount;
         stay.newStay = newItem;
         stay.myWish = myWish;
-        stay.createAtWish = createdAt;
+        stay.createdWishDateTime = createdAt;
 
         return stay;
     }

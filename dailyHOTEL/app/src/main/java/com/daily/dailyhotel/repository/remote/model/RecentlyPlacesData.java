@@ -22,12 +22,12 @@ public class RecentlyPlacesData
 
     public List<RecentlyPlace> getRecentlyPlaceList()
     {
+        List<RecentlyPlace> placeList = new ArrayList<>();
+
         if (items == null || items.size() == 0)
         {
-            return null;
+            return placeList;
         }
-
-        List<RecentlyPlace> placeList = new ArrayList<>();
 
         for (RecentlyPlaceData placeData : items)
         {

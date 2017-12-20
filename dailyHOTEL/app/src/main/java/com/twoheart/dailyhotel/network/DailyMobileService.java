@@ -730,11 +730,15 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
+    Observable<BaseDto<RecentlyPlacesData>> getHomeWishList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
     Observable<BaseDto<PlaceWishItems<StayWishItem>>> getStayWishList(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET()
-    Observable<BaseDto<StayOutboundsData>> getStayOutboundWishList(@Url String mobileAPI);
+    Observable<BaseDto<StayOutboundsData>> getStayOutboundWishList(@Url String mobileAPI, @Query("maxCount") int maxCount);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @POST()
