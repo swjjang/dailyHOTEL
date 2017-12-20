@@ -68,20 +68,6 @@ public class StayListFragmentPresenter extends BaseFragmentPresenter<StayListFra
         return getViewInterface().getContentView(inflater, R.layout.fragment_hotel_list, container);
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState)
-    {
-        super.onActivityCreated(savedInstanceState);
-
-
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-
-    }
-
     @NonNull
     @Override
     protected StayListFragmentView createInstanceViewInterface()
@@ -97,6 +83,20 @@ public class StayListFragmentPresenter extends BaseFragmentPresenter<StayListFra
 
     @Override
     public void setAnalytics(BaseAnalyticsInterface analytics)
+    {
+
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState)
+    {
+        super.onActivityCreated(savedInstanceState);
+
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
 
     }

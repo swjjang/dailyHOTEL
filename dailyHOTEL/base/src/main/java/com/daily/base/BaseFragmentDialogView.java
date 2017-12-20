@@ -8,7 +8,7 @@ import android.view.View;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyToast;
 
-public abstract class BaseFragmentDialogView<T1 extends OnBaseEventListener, T2 extends ViewDataBinding> extends BaseFragmentView<T1, T2> implements BaseDialogViewInterface
+public abstract class BaseFragmentDialogView<T1 extends OnBaseEventListener, T2 extends ViewDataBinding> extends BaseFragmentView<T1, T2> implements BaseFragmentDialogViewInterface
 {
     private Dialog mDialog;
 

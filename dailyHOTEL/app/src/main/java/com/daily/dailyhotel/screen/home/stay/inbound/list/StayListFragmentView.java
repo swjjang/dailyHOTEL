@@ -23,24 +23,6 @@ public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmen
     }
 
     @Override
-    public void setContentView(int layoutResID)
-    {
-
-    }
-
-    @Override
-    public void setContentView(int layoutResID, ViewGroup viewGroup)
-    {
-
-    }
-
-    @Override
-    public void setToolbarTitle(String title)
-    {
-
-    }
-
-    @Override
     protected void setContentView(ActivityStayTabDataBinding viewDataBinding)
     {
 

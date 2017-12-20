@@ -4,6 +4,7 @@ package com.daily.dailyhotel.screen.home.stay.inbound.list;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TabLayout;
 import android.util.Pair;
 
 import com.daily.base.BaseAnalyticsInterface;
@@ -63,7 +64,6 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
     DailyDeepLink mDailyDeepLink;
     boolean mHasDeepLink;
-
 
     public interface StayTabAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -272,6 +272,18 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
     public void onBackClick()
     {
         getActivity().onBackPressed();
+    }
+
+    @Override
+    public void onCategoryTabSelected(TabLayout.Tab tab)
+    {
+
+    }
+
+    @Override
+    public void onCategoryTabReselected(TabLayout.Tab tab)
+    {
+
     }
 
     void setCommonDateTime(@NonNull CommonDateTime commonDateTime)
