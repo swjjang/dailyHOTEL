@@ -349,6 +349,11 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             String checkInDateTime = intent.getStringExtra(StayDetailActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME);
             String checkOutDateTime = intent.getStringExtra(StayDetailActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME);
 
+            if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
+            {
+                return false;
+            }
+
             setStayBookDateTime(checkInDateTime, checkOutDateTime);
 
             mAnalytics.setAnalyticsParam(intent.getParcelableExtra(BaseActivity.INTENT_EXTRA_DATA_ANALYTICS));
@@ -473,7 +478,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
                 if (mIsUsedMultiTransition == true)
                 {
-                    if(lock() == true)
+                    if (lock() == true)
                     {
                         return true;
                     }

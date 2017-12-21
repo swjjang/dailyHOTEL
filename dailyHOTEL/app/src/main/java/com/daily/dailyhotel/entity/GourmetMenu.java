@@ -30,9 +30,10 @@ public class GourmetMenu
     private List<String> mMenuDetailList;
 
     // 멀티 메뉴
+    private List<Integer> mOperationTimeList;
+
     public boolean visible;
     public int orderCount;
-    private List<Integer> mOperationTimeList;
 
     public GourmetMenu()
     {
