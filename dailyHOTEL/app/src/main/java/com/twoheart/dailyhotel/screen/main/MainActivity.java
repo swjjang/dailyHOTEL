@@ -173,6 +173,11 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
 
         initLayout();
 
+        if (Util.checkGooglePlayServiceStatus(this) == false)
+        {
+            return;
+        }
+
         if (DailyPreference.getInstance(this).isShowAppPermissionsGuide() == true)
         {
             showAppPermissionsGuideDialog(new View.OnClickListener()
