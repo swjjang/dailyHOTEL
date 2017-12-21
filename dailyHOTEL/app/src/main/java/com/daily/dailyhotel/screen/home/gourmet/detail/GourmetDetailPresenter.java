@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 
+import com.crashlytics.android.Crashlytics;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
@@ -1517,6 +1518,12 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             {
                 GourmetMenu gourmetMenu = gourmetMenuList.get(i);
 
+                // 서버에서 오류로 인터벌이 없는 경우가 있어서 기본 30분으로 수정
+                if (gourmetMenu.timeInterval <= 0)
+                {
+                    gourmetMenu.timeInterval = 30;
+                }
+
                 // 준비 시간
                 int readyTime = 0;
 
@@ -1551,7 +1558,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 }
 
                 // 입장 시간이 업장 종료시간보다 큰 경우 메뉴에서 제거한다.
-                if (startTime >= endTime)
+                if (startTime > endTime)
                 {
                     gourmetMenuList.remove(i);
 
@@ -1564,33 +1571,32 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 final int intervalTime = gourmetMenu.timeInterval / ONE_HOUR_MINUTES * 100 + gourmetMenu.timeInterval % ONE_HOUR_MINUTES;
                 int nextTime = startTime;
 
-                do
+                try
                 {
-                    int nextHours = nextTime / 100 + intervalTime / 100;
-                    int nextMinutes = nextTime % 100 + intervalTime % 100;
-
-                    if (nextMinutes >= ONE_HOUR_MINUTES)
+                    while (nextTime <= endTime)
                     {
-                        nextHours += nextMinutes / ONE_HOUR_MINUTES;
-                        nextMinutes = nextMinutes % ONE_HOUR_MINUTES;
+                        if (todayStartTime <= nextTime)
+                        {
+                            menuOperationTime.add(nextTime);
+                            visitTimeSet.add(nextTime);
+                        }
+
+                        int nextHours = nextTime / 100 + intervalTime / 100;
+                        int nextMinutes = nextTime % 100 + intervalTime % 100;
+
+                        if (nextMinutes >= ONE_HOUR_MINUTES)
+                        {
+                            nextHours += nextMinutes / ONE_HOUR_MINUTES;
+                            nextMinutes = nextMinutes % ONE_HOUR_MINUTES;
+                        }
+
+                        nextTime = nextHours * 100 + nextMinutes;
                     }
-
-                    nextTime = nextHours * 100 + nextMinutes;
-
-                    if (todayStartTime > nextTime)
-                    {
-                        continue;
-                    }
-
-                    if (nextTime > endTime)
-                    {
-                        break;
-                    }
-
-                    menuOperationTime.add(nextTime);
-                    visitTimeSet.add(nextTime);
-
-                } while (nextTime <= endTime);
+                } catch (OutOfMemoryError error)
+                {
+                    Crashlytics.log("name : " + mGourmetDetail.name + ", index : " + mGourmetDetail.index + ", ticket name : " + gourmetMenu.name + " , ticket index : " + gourmetMenu.index);
+                    Crashlytics.logException(error);
+                }
 
                 // 메뉴시간이 나오지 않는 것은 삭제시켜버린다.
                 if (menuOperationTime.size() == 0)

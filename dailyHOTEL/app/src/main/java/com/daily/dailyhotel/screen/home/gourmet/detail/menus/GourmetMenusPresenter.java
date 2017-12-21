@@ -162,7 +162,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             getViewInterface().setGuideVisible(true);
         }
 
-        setToolbarTitle(mVisitTime);
+        setToolbarTitle(mVisitTime < 2400 ? mVisitTime : mVisitTime - 2400);
     }
 
     @Override
@@ -414,7 +414,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
                 @Override
                 public void accept(Boolean aBoolean) throws Exception
                 {
-                    setToolbarTitle(mVisitTime);
+                    setToolbarTitle(mVisitTime < 2400 ? mVisitTime : mVisitTime - 2400);
 
                     mOpenedOperationTime = false;
 
@@ -479,7 +479,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             @Override
             public void accept(Boolean aBoolean) throws Exception
             {
-                setToolbarTitle(mVisitTime);
+                setToolbarTitle(mVisitTime < 2400 ? mVisitTime : mVisitTime - 2400);
 
                 unLockAll();
             }
@@ -513,7 +513,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 
         notifyOperationTimeChanged(menuIndex);
 
-        setToolbarTitle(mVisitTime);
+        setToolbarTitle(mVisitTime < 2400 ? mVisitTime : mVisitTime - 2400);
 
         mGourmetCart.setGourmetInformation(mGourmetIndex, mGourmetName, mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), mVisitTime);
         mGourmetCart.setGourmetSubInformation(mCategory, mImageUrl);

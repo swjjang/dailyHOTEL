@@ -102,6 +102,7 @@ public abstract class PlaceMainActivity extends BaseActivity
         } else
         {
             lockUI();
+
             mPlaceMainNetworkController.requestDateTime();
         }
 

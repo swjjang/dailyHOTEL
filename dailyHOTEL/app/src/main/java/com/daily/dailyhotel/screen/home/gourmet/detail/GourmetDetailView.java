@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
@@ -1394,14 +1395,9 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         {
             time = operationTimeList.get(i);
 
-            // 1시 이후 값은 01:00로 보이도록 한다.
-            if (time >= 2500)
-            {
-                time -= 2400;
-            }
-
+            // 24시 이후 값은 00:00로 보이도록 한다.
             DailyRadioButton timeTextView = new DailyRadioButton(getContext());
-            timeTextView.setText(DailyTextUtils.formatIntegerTimeToStringTime(time));
+            timeTextView.setText(DailyTextUtils.formatIntegerTimeToStringTime(time < 2400 ? time : time - 2400));
             timeTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
             timeTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c323232_cffffff));
             timeTextView.setBackgroundResource(R.drawable.selector_gourmet_time_background_drawable);
@@ -1501,16 +1497,24 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                 position++;
             }
 
-            mMoreMenuLayout.post(new Runnable()
+            mMoreMenuLayout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener()
             {
                 @Override
-                public void run()
+                public boolean onPreDraw()
                 {
+                    mMoreMenuLayout.getViewTreeObserver().removeOnPreDrawListener(this);
                     mMoreMenuLayout.setTag(mMoreMenuLayout.getHeight());
 
                     LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mMoreMenuLayout.getLayoutParams();
-                    layoutParams.height = 0;
+
+                    if (layoutParams != null)
+                    {
+                        layoutParams.height = 0;
+                    }
+
                     mMoreMenuLayout.requestLayout();
+
+                    return false;
                 }
             });
         } else

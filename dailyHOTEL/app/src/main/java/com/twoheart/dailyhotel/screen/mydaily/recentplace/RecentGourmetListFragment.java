@@ -133,6 +133,10 @@ public class RecentGourmetListFragment extends RecentPlacesListFragment
                             onChangedWish(mWishPosition, data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false));
                         }
                         break;
+
+                    case com.daily.base.BaseActivity.RESULT_CODE_REFRESH:
+                        requestRecentPlacesList();
+                        break;
                 }
                 break;
         }
