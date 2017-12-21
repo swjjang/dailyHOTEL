@@ -17,6 +17,7 @@ import android.util.Pair;
 import android.view.View;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
@@ -618,21 +619,31 @@ public class StayCategoryTabActivity extends PlaceMainActivity
         //            StayCategoryTabActivity.this, mDailyCategoryType, mStayCategoryCuration.getStayBookingDay()) //
         //            , Constants.CODE_REQUEST_ACTIVITY_REGIONLIST);
 
-        String checkInDateTime = mStayCategoryCuration.getStayBookingDay().getCheckInDay(DailyCalendar.ISO_8601_FORMAT);
-        String checkOutDateTime = mStayCategoryCuration.getStayBookingDay().getCheckOutDay(DailyCalendar.ISO_8601_FORMAT);
-
-        startActivityForResult(StayAreaListActivity.newInstance(this//
-            , checkInDateTime, checkOutDateTime, mDailyCategoryType, mStayCategoryCuration.getCategory().code), Constants.CODE_REQUEST_ACTIVITY_REGIONLIST);
-
-        switch (mViewType)
+        try
         {
-            case LIST:
-                //                    AnalyticsManager.getInstance(StaySubCategoryActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label._HOTEL_LIST, null);
-                break;
+            String checkInDateTime = mStayCategoryCuration.getStayBookingDay().getCheckInDay(DailyCalendar.ISO_8601_FORMAT);
+            String checkOutDateTime = mStayCategoryCuration.getStayBookingDay().getCheckOutDay(DailyCalendar.ISO_8601_FORMAT);
 
-            case MAP:
-                //                    AnalyticsManager.getInstance(StaySubCategoryActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label._HOTEL_MAP, null);
-                break;
+            startActivityForResult(StayAreaListActivity.newInstance(this//
+                , checkInDateTime, checkOutDateTime, mDailyCategoryType, mStayCategoryCuration.getCategory().code), Constants.CODE_REQUEST_ACTIVITY_REGIONLIST);
+
+//            switch (mViewType)
+//            {
+//                case LIST:
+//                    AnalyticsManager.getInstance(StaySubCategoryActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label._HOTEL_LIST, null);
+//                    break;
+//
+//                case MAP:
+//                    AnalyticsManager.getInstance(StaySubCategoryActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label._HOTEL_MAP, null);
+//                    break;
+//            }
+        } catch (Exception e)
+        {
+            Crashlytics.logException(e);
+
+            lockUI();
+
+            mPlaceMainNetworkController.requestDateTime();
         }
     }
 
@@ -914,13 +925,12 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                 StayBookingDay stayBookingDay = mStayCategoryCuration.getStayBookingDay();
 
                 // 체크인 시간이 설정되어 있지 않는 경우 기본값을 넣어준다.
-                if (stayBookingDay == null)
+                if (stayBookingDay == null || stayBookingDay.validate() == false)
                 {
                     stayBookingDay = new StayBookingDay();
 
                     stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
                     stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
-
                 } else
                 {
                     // 예외 처리로 보고 있는 체크인/체크아웃 날짜가 지나 간경우 다음 날로 변경해준다.

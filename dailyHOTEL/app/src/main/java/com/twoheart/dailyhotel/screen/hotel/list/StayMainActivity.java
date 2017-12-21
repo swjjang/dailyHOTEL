@@ -839,8 +839,6 @@ public class StayMainActivity extends PlaceMainActivity
 
                     stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
                     stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
-
-                    mStayCuration.setStayBookingDay(stayBookingDay);
                 } else
                 {
                     // 예외 처리로 보고 있는 체크인/체크아웃 날짜가 지나 간경우 다음 날로 변경해준다.
@@ -865,6 +863,8 @@ public class StayMainActivity extends PlaceMainActivity
                         stayBookingDay.setCheckOutDay(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), 1);
                     }
                 }
+
+                mStayCuration.setStayBookingDay(stayBookingDay);
 
                 if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true //
                     && processDeepLinkByDateTime(StayMainActivity.this, mTodayDateTime, mDailyDeepLink) == true)
