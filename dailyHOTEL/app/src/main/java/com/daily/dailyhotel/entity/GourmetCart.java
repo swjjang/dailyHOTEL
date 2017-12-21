@@ -8,6 +8,7 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -243,8 +244,19 @@ public class GourmetCart
     {
         try
         {
-            return String.format(Locale.KOREA, "%sT%s:00+09:00", mGourmetBookDateTime.getVisitDateTime("yyyy-MM-dd")//
-                , DailyTextUtils.formatIntegerTimeToStringTime(visitTime));
+            if (visitTime < 2400)
+            {
+                return String.format(Locale.KOREA, "%sT%s:00+09:00", mGourmetBookDateTime.getVisitDateTime("yyyy-MM-dd")//
+                    , DailyTextUtils.formatIntegerTimeToStringTime(visitTime));
+            } else
+            {
+                Calendar calendar = DailyCalendar.getInstance();
+                calendar.setTime(DailyCalendar.convertDate(mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), DailyCalendar.ISO_8601_FORMAT));
+                calendar.add(Calendar.DAY_OF_MONTH, 1);
+
+                return String.format(Locale.KOREA, "%sT%s:00+09:00", DailyCalendar.format(calendar.getTime(), "yyyy-MM-dd")//
+                    , DailyTextUtils.formatIntegerTimeToStringTime(visitTime - 2400));
+            }
         } catch (Exception e)
         {
             ExLog.e(e.toString());
