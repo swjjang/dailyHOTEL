@@ -473,7 +473,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             @Override
             public void accept(Boolean aBoolean) throws Exception
             {
-                setToolbarTitle(mVisitTime);
+                setToolbarTitle(mVisitTime < 2400 ? mVisitTime : mVisitTime - 2400);
 
                 unLockAll();
             }
