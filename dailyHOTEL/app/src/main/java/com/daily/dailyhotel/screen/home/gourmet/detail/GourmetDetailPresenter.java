@@ -1546,7 +1546,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 int endTime = Integer.parseInt(gourmetMenu.endEatingTime.replaceAll(":", "").substring(0, 4));
 
                 // 마지막 입장 종료시간이 새벽 3시보다 작은경우
-                if (endTime < 300)
+                if (endTime <= 300)
                 {
                     endTime += 2400;
                 }
