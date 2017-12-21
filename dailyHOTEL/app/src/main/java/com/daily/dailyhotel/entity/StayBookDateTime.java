@@ -67,6 +67,22 @@ public class StayBookDateTime extends PlaceBookDateTime
         }
     }
 
+    public boolean validate()
+    {
+        try
+        {
+            if (getNights() == 0)
+            {
+                return false;
+            }
+        } catch (Exception e)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     //    public void verifyCommonDateTime(@NonNull CommonDateTime commonDateTime) throws Exception
     //    {
     //        if (commonDateTime == null)

@@ -50,18 +50,34 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
     @Override
     public void setToolbarTitle(String title)
     {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().toolbarView.setTitleText(title);
     }
 
     @Override
     public void setToolbarDateText(String text)
     {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
 
+        getViewDataBinding().navigationBarView.setDateText(text);
     }
 
     @Override
     public void setToolbarRegionText(String text)
     {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
 
+        getViewDataBinding().navigationBarView.setRegionText(text);
     }
 
     @Override
@@ -174,7 +190,7 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
                         isScrolling = false;
                     }
 
-//                    getEventListener().onPageSelected(mFragmentPagerAdapter.getItem(position), mFragmentPagerAdapter.getItem(prevPosition));
+                    //                    getEventListener().onPageSelected(mFragmentPagerAdapter.getItem(position), mFragmentPagerAdapter.getItem(prevPosition));
 
                     prevPosition = position;
                 }

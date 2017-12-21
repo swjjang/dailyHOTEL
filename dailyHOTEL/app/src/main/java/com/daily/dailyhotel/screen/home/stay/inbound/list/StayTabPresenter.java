@@ -1,12 +1,19 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.list;
 
 
+import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.util.Pair;
 
+import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
@@ -37,6 +44,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import io.reactivex.Observable;
@@ -56,11 +64,26 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
     CommonRemoteImpl mCommonRemoteImpl;
     StayRemoteImpl mStayRemoteImpl;
 
-    CommonDateTime mCommonDateTime;
-    StayBookDateTime mStayBookDateTime;
-    StayFilter mStayFilter;
-    StayRegion mStayRegion;
-    Category mCategory;
+    class StayViewModel extends ViewModel
+    {
+        MutableLiveData<CommonDateTime> commonDateTime = new MutableLiveData<>();
+        MutableLiveData<StayBookDateTime> stayBookDateTime = new MutableLiveData<>();
+        MutableLiveData<StayFilter> stayFilter = new MutableLiveData<>();
+        MutableLiveData<StayRegion> stayRegion = new MutableLiveData<>();
+        MutableLiveData<Category> category = new MutableLiveData<>();
+    }
+
+    class StayViewModelFactory implements ViewModelProvider.Factory
+    {
+        @NonNull
+        @Override
+        public StayViewModel create(@NonNull Class modelClass)
+        {
+            return new StayViewModel();
+        }
+    }
+
+    StayViewModel mStayViewModel;
 
     DailyDeepLink mDailyDeepLink;
     boolean mHasDeepLink;
@@ -89,6 +112,9 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         setAnalytics(new StayTabAnalyticsImpl());
 
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
+        mStayRemoteImpl = new StayRemoteImpl(activity);
+
+        initViewModel(activity);
 
         setRefresh(true);
     }
@@ -119,6 +145,9 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
     @Override
     public void onPostCreate()
     {
+        getViewInterface().setToolbarTitle(getString(R.string.label_daily_hotel));
+
+
     }
 
     @Override
@@ -201,13 +230,13 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                 try
                 {
                     // 체크인 시간이 설정되어 있지 않는 경우 기본값을 넣어준다.
-                    if (mStayBookDateTime == null)
+                    if (mStayViewModel.stayBookDateTime.getValue() == null || mStayViewModel.stayBookDateTime.getValue().validate() == false)
                     {
                         setStayBookDateTime(commonDateTime.dailyDateTime, 1);
                     } else
                     {
                         // 예외 처리로 보고 있는 체크인/체크아웃 날짜가 지나 간경우 다음 날로 변경해준다.
-                        if (DailyCalendar.compareDateDay(commonDateTime.dailyDateTime, mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)) < 0)
+                        if (DailyCalendar.compareDateDay(commonDateTime.dailyDateTime, mStayViewModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)) < 0)
                         {
                             setStayBookDateTime(commonDateTime.dailyDateTime, 1);
                         }
@@ -236,27 +265,29 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                 } else
                 {
                     if (mDailyDeepLink != null && mDailyDeepLink.isValidateLink() == true//
-                        && processDeepLinkByRegionList(areaGroupList, mCommonDateTime, mDailyDeepLink) == true)
+                        && processDeepLinkByRegionList(areaGroupList, mStayViewModel.commonDateTime.getValue(), mDailyDeepLink) == true)
                     {
 
                     } else
                     {
                         notifyDateTextChanged();
 
-                        if (mStayRegion == null)
+                        if (mStayViewModel.stayRegion.getValue() == null)
                         {
-                            mStayRegion = searchRegion(areaGroupList, getDistrictNTownNameByCategory(DailyCategoryType.STAY_ALL));
+                            mStayViewModel.stayRegion.setValue(searchRegion(areaGroupList, getDistrictNTownNameByCategory(DailyCategoryType.STAY_ALL)));
                         }
 
-                        if (mStayRegion == null)
+                        if (mStayViewModel.stayRegion.getValue() == null)
                         {
-                            mStayRegion = new StayRegion(areaGroupList.get(0), new StayArea(areaGroupList.get(0)));
+                            mStayViewModel.stayRegion.setValue(new StayRegion(areaGroupList.get(0), new StayArea(areaGroupList.get(0))));
                         }
 
                         notifyRegionTextChanged();
                         notifyCategoryChanged();
                     }
                 }
+
+                unLockAll();
             }
         }, new Consumer<Throwable>()
         {
@@ -286,6 +317,45 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
     }
 
+    private void initViewModel(BaseActivity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        mStayViewModel = ViewModelProviders.of(activity, new StayViewModelFactory()).get(StayViewModel.class);
+
+        mStayViewModel.category.observe(activity, new Observer<Category>()
+        {
+            @Override
+            public void onChanged(@Nullable Category category)
+            {
+                DailyPreference.getInstance(getActivity()).setStayCategory(category.name, category.code);
+            }
+        });
+
+        mStayViewModel.stayRegion.observe(activity, new Observer<StayRegion>()
+        {
+            @Override
+            public void onChanged(@Nullable StayRegion stayRegion)
+            {
+
+            }
+        });
+
+        String oldCategoryCode = DailyPreference.getInstance(activity).getStayCategoryCode();
+        String oldCategoryName = DailyPreference.getInstance(activity).getStayCategoryName();
+
+        if (DailyTextUtils.isTextEmpty(oldCategoryCode, oldCategoryName) == false)
+        {
+            mStayViewModel.category.setValue(new Category(oldCategoryName, oldCategoryCode));
+        } else
+        {
+            mStayViewModel.category.setValue(Category.ALL);
+        }
+    }
+
     void setCommonDateTime(@NonNull CommonDateTime commonDateTime)
     {
         if (commonDateTime == null)
@@ -293,7 +363,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             return;
         }
 
-        mCommonDateTime = commonDateTime;
+        mStayViewModel.commonDateTime.setValue(commonDateTime);
     }
 
     /**
@@ -307,15 +377,15 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             return;
         }
 
-        if (mStayBookDateTime == null)
+        if (mStayViewModel.stayBookDateTime.getValue() == null)
         {
-            mStayBookDateTime = new StayBookDateTime();
+            mStayViewModel.stayBookDateTime.setValue(new StayBookDateTime());
         }
 
         try
         {
-            mStayBookDateTime.setCheckInDateTime(checkInDateTime);
-            mStayBookDateTime.setCheckOutDateTime(checkOutDateTime);
+            mStayViewModel.stayBookDateTime.getValue().setCheckInDateTime(checkInDateTime);
+            mStayViewModel.stayBookDateTime.getValue().setCheckOutDateTime(checkOutDateTime);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -329,15 +399,15 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             return;
         }
 
-        if (mStayBookDateTime == null)
+        if (mStayViewModel.stayBookDateTime.getValue() == null)
         {
-            mStayBookDateTime = new StayBookDateTime();
+            mStayViewModel.stayBookDateTime.setValue(new StayBookDateTime());
         }
 
         try
         {
-            mStayBookDateTime.setCheckInDateTime(checkInDateTime);
-            mStayBookDateTime.setCheckOutDateTime(checkInDateTime, afterDay);
+            mStayViewModel.stayBookDateTime.getValue().setCheckInDateTime(checkInDateTime);
+            mStayViewModel.stayBookDateTime.getValue().setCheckOutDateTime(checkInDateTime, afterDay);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -346,17 +416,35 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
     void notifyDateTextChanged()
     {
+        if (mStayViewModel == null || mStayViewModel.stayBookDateTime.getValue() == null)
+        {
+            return;
+        }
 
+        String checkInDay = mStayViewModel.stayBookDateTime.getValue().getCheckInDateTime("M.d(EEE)");
+        String checkOutDay = mStayViewModel.stayBookDateTime.getValue().getCheckOutDateTime("M.d(EEE)");
+
+        getViewInterface().setToolbarDateText(String.format(Locale.KOREA, "%s - %s", checkInDay, checkOutDay));
     }
 
     void notifyRegionTextChanged()
     {
+        if (mStayViewModel == null || mStayViewModel.stayRegion.getValue() == null)
+        {
+            return;
+        }
 
+        getViewInterface().setToolbarRegionText(mStayViewModel.stayRegion.getValue().getAreaName());
     }
 
     void notifyCategoryChanged()
     {
+        if (mStayViewModel == null || mStayViewModel.stayRegion.getValue() == null || mStayViewModel.category.getValue() == null)
+        {
+            return;
+        }
 
+        getViewInterface().setCategoryTabLayout(getSupportFragmentManager(), mStayViewModel.stayRegion.getValue().getArea().getCategoryList(), mStayViewModel.category.getValue());
     }
 
     StayRegion searchRegion(List<StayAreaGroup> areaGroupList, Pair<String, String> namePair)
@@ -564,7 +652,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
                 stayBookDateTime.setCheckOutDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), nights);
 
-                mStayBookDateTime = stayBookDateTime;
+                mStayViewModel.stayBookDateTime.setValue(stayBookDateTime);
 
                 if (externalDeepLink.isCampaignTagListView() == true)
                 {
@@ -664,7 +752,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
                     stayBookDateTime.setCheckOutDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), nights);
 
-                    mStayBookDateTime = stayBookDateTime;
+                    mStayViewModel.stayBookDateTime.setValue(stayBookDateTime);
 
                     switch (searchType)
                     {
@@ -737,14 +825,14 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                 String date = externalDeepLink.getDate();
                 int datePlus = externalDeepLink.getDatePlus();
 
-                if (mStayFilter == null)
+                if (mStayViewModel.stayFilter.getValue() == null)
                 {
-                    mStayFilter = new StayFilter();
-                    mStayFilter.resetFilter();
+                    mStayViewModel.stayFilter.setValue(new StayFilter());
+                    mStayViewModel.stayFilter.getValue().resetFilter();
                 }
 
-                mStayFilter.sortType = StayFilter.SortType.valueOf(externalDeepLink.getSorting().name());
-                getViewInterface().setOptionFilterSelected(mStayFilter.isDefaultFilter() == false);
+                mStayViewModel.stayFilter.getValue().sortType = StayFilter.SortType.valueOf(externalDeepLink.getSorting().name());
+                getViewInterface().setOptionFilterSelected(mStayViewModel.stayFilter.getValue().isDefaultFilter() == false);
 
                 int nights = 1;
                 int provinceIndex;
@@ -790,7 +878,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                     return false;
                 }
 
-                mStayRegion = region;
+                mStayViewModel.stayRegion.setValue(region);
                 notifyRegionTextChanged();
 
                 // 카테고리가 있는 경우 카테고리를 디폴트로 잡아주어야 한다
@@ -800,7 +888,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                     {
                         if (category.code.equalsIgnoreCase(categoryCode) == true)
                         {
-                            mCategory = category;
+                            mStayViewModel.category.setValue(category);
                             break;
                         }
                     }

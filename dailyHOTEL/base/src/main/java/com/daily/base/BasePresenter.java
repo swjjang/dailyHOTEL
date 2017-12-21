@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.FragmentManager;
 
 import com.daily.base.util.DailyLock;
 
@@ -248,5 +249,10 @@ public abstract class BasePresenter<T1 extends BaseActivity, T2 extends BaseDial
     protected boolean equalsCallingActivity(Class className)
     {
         return mActivity.equalsCallingActivity(className);
+    }
+
+    protected FragmentManager getSupportFragmentManager()
+    {
+        return mActivity.getSupportFragmentManager();
     }
 }

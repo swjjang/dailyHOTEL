@@ -41,6 +41,7 @@ import com.daily.dailyhotel.screen.common.area.stay.StayAreaListActivity;
 import com.daily.dailyhotel.screen.common.web.DailyWebActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
+import com.daily.dailyhotel.screen.home.stay.inbound.list.StayTabActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.preview.StayOutboundPreviewActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchActivity;
@@ -1798,7 +1799,10 @@ public class HomeFragment extends BaseMenuNavigationFragment
             return;
         }
 
-        mBaseActivity.startActivityForResult(StayMainActivity.newInstance(mBaseActivity//
+        //        mBaseActivity.startActivityForResult(StayMainActivity.newInstance(mBaseActivity//
+        //            , dailyDeepLink != null ? dailyDeepLink.getDeepLink() : null), Constants.CODE_REQUEST_ACTIVITY_STAY);
+
+        mBaseActivity.startActivityForResult(StayTabActivity.newInstance(mBaseActivity//
             , dailyDeepLink != null ? dailyDeepLink.getDeepLink() : null), Constants.CODE_REQUEST_ACTIVITY_STAY);
 
         if (isDeepLink == false)

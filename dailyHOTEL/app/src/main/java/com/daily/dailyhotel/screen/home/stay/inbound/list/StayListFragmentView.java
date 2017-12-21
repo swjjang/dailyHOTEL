@@ -6,12 +6,13 @@ import android.view.ViewGroup;
 import com.daily.base.BaseFragmentDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.databinding.ActivityStayTabDataBinding;
+import com.twoheart.dailyhotel.databinding.FragmentStayListDataBinding;
 
 /**
  * Created by sheldon
  * Clean Architecture
  */
-public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmentView.OnEventListener, ActivityStayTabDataBinding>
+public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmentView.OnEventListener, FragmentStayListDataBinding>
 {
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -23,7 +24,7 @@ public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmen
     }
 
     @Override
-    protected void setContentView(ActivityStayTabDataBinding viewDataBinding)
+    protected void setContentView(FragmentStayListDataBinding viewDataBinding)
     {
 
     }

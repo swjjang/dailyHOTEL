@@ -29,8 +29,6 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
 
     private BasePresenter mPresenter;
 
-    private FragmentManager mFragmentManager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -43,8 +41,6 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(getResources().getColor(R.color.default_statusbar_background));
         }
-
-        mFragmentManager = getSupportFragmentManager();
 
         mPresenter = createInstancePresenter();
 
@@ -217,76 +213,6 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
         //        {
         //            finish();
         //        }
-    }
-
-    /**
-     * Fragment 컨테이너의 표시되는 Fragment를 변경할 때 Fragment 컨테이너에 적재된 Fragment들을 정리한다.
-     */
-    private void clearFragmentBackStack()
-    {
-        if (mFragmentManager == null)
-        {
-            return;
-        }
-
-        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-
-        for (int i = 0; i < mFragmentManager.getBackStackEntryCount(); ++i)
-        {
-            mFragmentManager.popBackStackImmediate();
-        }
-
-        fragmentTransaction.commitAllowingStateLoss();
-    }
-
-    public void replaceFragment(@IdRes int containerViewId, Fragment fragment, @Nullable String tag)
-    {
-        if (isFinishing() == true || mFragmentManager == null)
-        {
-            return;
-        }
-
-        try
-        {
-            clearFragmentBackStack();
-
-            mFragmentManager.beginTransaction().replace(containerViewId, fragment, tag).commitAllowingStateLoss();
-        } catch (Exception e)
-        {
-
-        }
-    }
-
-    public void addFragment(@IdRes int containerViewId, Fragment fragment, @Nullable String tag)
-    {
-        if (isFinishing() == true || mFragmentManager == null)
-        {
-            return;
-        }
-
-        try
-        {
-            mFragmentManager.beginTransaction().add(containerViewId, fragment, tag).commitAllowingStateLoss();
-        } catch (Exception e)
-        {
-
-        }
-    }
-
-    public void removeFragment(Fragment fragment)
-    {
-        if (isFinishing() == true || mFragmentManager == null || fragment == null)
-        {
-            return;
-        }
-
-        try
-        {
-            mFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss();
-        } catch (Exception e)
-        {
-
-        }
     }
 
     protected boolean equalsCallingActivity(Class className)

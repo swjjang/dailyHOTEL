@@ -1,6 +1,7 @@
 package com.daily.base;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,20 +23,20 @@ public abstract class BaseFragmentPresenter<T1 extends Fragment, T2 extends Base
         mFragment = fragment;
 
         mOnViewInterface = createInstanceViewInterface();
-
-        constructorInitialize();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState)
     {
         mOnViewInterface.setActivity(getActivity());
+
+        constructorInitialize(getActivity());
     }
 
     protected abstract @NonNull
     T2 createInstanceViewInterface();
 
-    public abstract void constructorInitialize();
+    public abstract void constructorInitialize(BaseActivity baseActivity);
 
     public abstract void setAnalytics(BaseAnalyticsInterface analytics);
 
