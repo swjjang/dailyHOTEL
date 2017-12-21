@@ -238,13 +238,13 @@ dependencies {
 
     compile project(':AndroidMapsUtils')
     compile project(':androidnumberpicker')
-    compile project(':keyframes')
     compile project(':base')
     // 라이브러리를 빌드하면 항상 release 버전이 되어서..
 //    releaseCompile project(path: ':base', configuration: 'release')
 //    debugCompile project(path: ':base', configuration: 'debug')
 
     compile files('libs/com.skt.Tmap_1.0.49.jar')
+    compile files('libs/com.facebook.keyframes.aar')
 
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile 'io.reactivex.rxjava2:rxjava:2.1.7'

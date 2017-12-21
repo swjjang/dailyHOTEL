@@ -148,6 +148,9 @@
 -keep @com.bluelinelabs.logansquare.annotation.JsonObject class *
 -keep class **$$JsonObjectMapper { *; }
 
+#KeyFrames
+-keep class com.facebook.keyframes.** { *; }
+
 #RetroLambda
 -dontwarn java.lang.invoke.*
 -dontwarn **$$Lambda$*
