@@ -532,21 +532,31 @@ public class StayMainActivity extends PlaceMainActivity
         //        Intent intent = StayRegionListActivity.newInstance(StayMainActivity.this, //
         //            mStayCuration.getProvince(), mStayCuration.getStayBookingDay(), mStayCuration.getCategory().code);
 
-        String checkInDateTime = mStayCuration.getStayBookingDay().getCheckInDay(DailyCalendar.ISO_8601_FORMAT);
-        String checkOutDateTime = mStayCuration.getStayBookingDay().getCheckOutDay(DailyCalendar.ISO_8601_FORMAT);
-
-        startActivityForResult(StayAreaListActivity.newInstance(StayMainActivity.this//
-            , checkInDateTime, checkOutDateTime, DailyCategoryType.STAY_ALL, mStayCuration.getCategory().code), Constants.CODE_REQUEST_ACTIVITY_REGIONLIST);
-
-        switch (mViewType)
+        try
         {
-            case LIST:
-                AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label._HOTEL_LIST, null);
-                break;
+            String checkInDateTime = mStayCuration.getStayBookingDay().getCheckInDay(DailyCalendar.ISO_8601_FORMAT);
+            String checkOutDateTime = mStayCuration.getStayBookingDay().getCheckOutDay(DailyCalendar.ISO_8601_FORMAT);
 
-            case MAP:
-                AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label._HOTEL_MAP, null);
-                break;
+            startActivityForResult(StayAreaListActivity.newInstance(StayMainActivity.this//
+                , checkInDateTime, checkOutDateTime, DailyCategoryType.STAY_ALL, mStayCuration.getCategory().code), Constants.CODE_REQUEST_ACTIVITY_REGIONLIST);
+
+            switch (mViewType)
+            {
+                case LIST:
+                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label._HOTEL_LIST, null);
+                    break;
+
+                case MAP:
+                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label._HOTEL_MAP, null);
+                    break;
+            }
+        } catch (Exception e)
+        {
+            Crashlytics.logException(e);
+
+            lockUI();
+
+            mPlaceMainNetworkController.requestDateTime();
         }
     }
 
@@ -823,7 +833,7 @@ public class StayMainActivity extends PlaceMainActivity
                 StayBookingDay stayBookingDay = mStayCuration.getStayBookingDay();
 
                 // 체크인 시간이 설정되어 있지 않는 경우 기본값을 넣어준다.
-                if (stayBookingDay == null)
+                if (stayBookingDay == null || stayBookingDay.validate() == false)
                 {
                     stayBookingDay = new StayBookingDay();
 
