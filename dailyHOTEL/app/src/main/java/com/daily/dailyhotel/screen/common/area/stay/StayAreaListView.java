@@ -233,15 +233,22 @@ public class StayAreaListView extends BaseDialogView<StayAreaListView.OnEventLis
             {
                 if (animation == true)
                 {
-                    getViewDataBinding().expandableListView.expandGroupWithAnimation(groupPosition, new DailyAnimatedExpandableListView.OnAnimationListener()
+                    try
                     {
-                        @Override
-                        public void onAnimationEnd()
+                        getViewDataBinding().expandableListView.expandGroupWithAnimation(groupPosition, new DailyAnimatedExpandableListView.OnAnimationListener()
                         {
-                            observer.onNext(true);
-                            observer.onComplete();
-                        }
-                    });
+                            @Override
+                            public void onAnimationEnd()
+                            {
+                                observer.onNext(true);
+                                observer.onComplete();
+                            }
+                        });
+                    } catch (Exception e)
+                    {
+                        observer.onNext(true);
+                        observer.onComplete();
+                    }
 
                     // 마지막 리스트 목록은 애니메이션으로 안잡힌다.
                     if (groupPosition == mStayDistrictListAdapter.getGroupCount() - 1)
