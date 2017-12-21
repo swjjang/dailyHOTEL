@@ -994,7 +994,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
     @Override
     public void onEasyCardManagerClick()
     {
-        if (lock() == true)
+        if (mSelectedCard == null || lock() == true)
         {
             return;
         }
