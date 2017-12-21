@@ -1357,6 +1357,15 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     }
                 });
 
+                // 최대 10개만 노출
+                if (carouselListItemList.size() > MAX_VALUE)
+                {
+                    for (int i = carouselListItemList.size() - 1; i >= MAX_VALUE; i--)
+                    {
+                        carouselListItemList.remove(i);
+                    }
+                }
+
                 return carouselListItemList;
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<CarouselListItem>>()
@@ -2468,14 +2477,14 @@ public class HomeFragment extends BaseMenuNavigationFragment
         @Override
         public void onWishList(ArrayList<CarouselListItem> list, boolean isError)
         {
-//            if (mHomeLayout != null)
-//            {
-//                mHomeLayout.setWishListData(list, isError);
-//            }
-//
-//            mNetworkRunState = mNetworkRunState | IS_RUNNED_WISHLIST;
-//
-//            sendHomeBlockEventAnalytics();
+            //            if (mHomeLayout != null)
+            //            {
+            //                mHomeLayout.setWishListData(list, isError);
+            //            }
+            //
+            //            mNetworkRunState = mNetworkRunState | IS_RUNNED_WISHLIST;
+            //
+            //            sendHomeBlockEventAnalytics();
         }
 
         @Override
