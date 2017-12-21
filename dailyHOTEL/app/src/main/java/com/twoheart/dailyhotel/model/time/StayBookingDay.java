@@ -67,6 +67,22 @@ public class StayBookingDay extends PlaceBookingDay
         return (int) ((checkOutCalendar.getTimeInMillis() - checkInCalendar.getTimeInMillis()) / DailyCalendar.DAY_MILLISECOND);
     }
 
+    public boolean validate()
+    {
+        try
+        {
+            if (getNights() == 0)
+            {
+                return false;
+            }
+        } catch (Exception e)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     @Override
     public int describeContents()
     {
