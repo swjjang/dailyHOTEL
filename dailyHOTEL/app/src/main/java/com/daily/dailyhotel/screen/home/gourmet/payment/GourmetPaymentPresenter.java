@@ -1508,7 +1508,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         try
         {
             String visitDay = DailyCalendar.convertDateFormatString(gourmetCart.getVisitDateTime(), DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT);
-            String visitDateTime = visitDay + " " + DailyTextUtils.formatIntegerTimeToStringTime(mGourmetCart.visitTime);
+            String visitDateTime = visitDay + " " + DailyTextUtils.formatIntegerTimeToStringTime(mGourmetCart.visitTime < 2400 ? mGourmetCart.visitTime : mGourmetCart.visitTime - 2400);
 
             SpannableString spannableString = new SpannableString(visitDateTime);
             spannableString.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getMediumTypeface()),//

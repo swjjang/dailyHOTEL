@@ -1263,18 +1263,18 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
         {
             mDelayTimeHandler.removeMessages(0);
 
-            addCompositeDisposable(new CommonRemoteImpl(MainActivity.this).getConfigurations() //
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Configurations>()
-                {
-                    @Override
-                    public void accept(Configurations configurations) throws Exception
+            // 메시지가 있을때 무조건 팝업을 발생한다.
+            if (DailyTextUtils.isTextEmpty(title, message) == true)
+            {
+                addCompositeDisposable(new CommonRemoteImpl(MainActivity.this).getConfigurations() //
+                    .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Configurations>()
                     {
-                        unLockUI();
-
-                        DailyRemoteConfigPreference.getInstance(MainActivity.this).setKeyRemoteConfigRewardStickerEnabled(configurations.activeReward);
-
-                        if (DailyTextUtils.isTextEmpty(title, message) == true)
+                        @Override
+                        public void accept(Configurations configurations) throws Exception
                         {
+                            unLockUI();
+
+                            DailyRemoteConfigPreference.getInstance(MainActivity.this).setKeyRemoteConfigRewardStickerEnabled(configurations.activeReward);
                             new DailyRemoteConfig(MainActivity.this).requestRemoteConfig(new DailyRemoteConfig.OnCompleteListener()
                             {
                                 @Override
@@ -1291,27 +1291,30 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                                     analyticsRankABTest();
                                 }
                             });
-                        } else
-                        {
-                            showSimpleDialog(title, message, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
-                            {
-                                @Override
-                                public void onClick(View v)
-                                {
-                                    setResult(RESULT_CANCELED);
-                                    finish();
-                                }
-                            }, null, false);
                         }
-                    }
-                }, new Consumer<Throwable>()
+                    }, new Consumer<Throwable>()
+                    {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception
+                        {
+                            onHandleError(throwable);
+                        }
+                    }));
+            } else
+            {
+                unLockUI();
+
+                showSimpleDialog(title, message, getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
                 {
                     @Override
-                    public void accept(Throwable throwable) throws Exception
+                    public void onClick(View v)
                     {
-                        onHandleError(throwable);
+                        setResult(RESULT_CANCELED);
+                        finish();
                     }
-                }));
+
+                }, null, false);
+            }
         }
 
         @Override
