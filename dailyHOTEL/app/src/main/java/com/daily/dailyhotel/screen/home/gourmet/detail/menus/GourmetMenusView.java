@@ -741,7 +741,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         }
 
         // 방문시긴
-        String visitTimeText = getString(R.string.label_gourmet_product_detail_cart_visit_time, DailyTextUtils.formatIntegerTimeToStringTime(gourmetCart.visitTime));
+        String visitTimeText = getString(R.string.label_gourmet_product_detail_cart_visit_time, DailyTextUtils.formatIntegerTimeToStringTime(gourmetCart.visitTime < 2400 ? gourmetCart.visitTime : gourmetCart.visitTime - 2400));
         SpannableString spannableString = new SpannableString(visitTimeText);
 
         int startIndex = visitTimeText.indexOf(' ');

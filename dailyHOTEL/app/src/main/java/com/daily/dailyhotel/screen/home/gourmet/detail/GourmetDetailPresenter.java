@@ -1512,6 +1512,11 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             {
                 GourmetMenu gourmetMenu = gourmetMenuList.get(i);
 
+                if (gourmetMenu.timeInterval <= 0)
+                {
+                    gourmetMenu.timeInterval = 30;
+                }
+
                 // 준비 시간
                 int readyTime = 0;
 
