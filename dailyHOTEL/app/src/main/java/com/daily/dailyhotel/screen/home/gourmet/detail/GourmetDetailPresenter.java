@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 
+import com.crashlytics.android.Crashlytics;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
@@ -1558,29 +1559,15 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 final int intervalTime = gourmetMenu.timeInterval / ONE_HOUR_MINUTES * 100 + gourmetMenu.timeInterval % ONE_HOUR_MINUTES;
                 int nextTime = startTime;
 
-                do
+                try
                 {
-                    if (todayStartTime > nextTime)
+                    while (nextTime <= endTime)
                     {
-                        int nextHours = nextTime / 100 + intervalTime / 100;
-                        int nextMinutes = nextTime % 100 + intervalTime % 100;
-
-                        if (nextMinutes >= ONE_HOUR_MINUTES)
+                        if (todayStartTime <= nextTime)
                         {
-                            nextHours += nextMinutes / ONE_HOUR_MINUTES;
-                            nextMinutes = nextMinutes % ONE_HOUR_MINUTES;
+                            menuOperationTime.add(nextTime);
+                            visitTimeSet.add(nextTime);
                         }
-
-                        nextTime = nextHours * 100 + nextMinutes;
-                    } else
-                    {
-                        if (nextTime > endTime)
-                        {
-                            break;
-                        }
-
-                        menuOperationTime.add(nextTime);
-                        visitTimeSet.add(nextTime);
 
                         int nextHours = nextTime / 100 + intervalTime / 100;
                         int nextMinutes = nextTime % 100 + intervalTime % 100;
@@ -1593,7 +1580,11 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
                         nextTime = nextHours * 100 + nextMinutes;
                     }
-                } while (nextTime <= endTime);
+                } catch (OutOfMemoryError error)
+                {
+                    Crashlytics.log("name : " + mGourmetDetail.name + ", index : " + mGourmetDetail.index + ", ticket name : " + gourmetMenu.name + " , ticket index : " + gourmetMenu.index);
+                    Crashlytics.logException(error);
+                }
 
                 // 메뉴시간이 나오지 않는 것은 삭제시켜버린다.
                 if (menuOperationTime.size() == 0)

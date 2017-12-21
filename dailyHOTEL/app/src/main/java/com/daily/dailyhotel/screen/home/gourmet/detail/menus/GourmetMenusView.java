@@ -316,14 +316,9 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
 
         for (int time : operationTimeList)
         {
-            // 1시 이후 값은 01:00로 보이도록 한다.
-            if (time >= 2500)
-            {
-                time -= 2400;
-            }
-
+            // 24시 이후 값은 00:00로 보이도록 한다.
             DailyTextView dailyTextView = new DailyTextView(getContext());
-            dailyTextView.setText(DailyTextUtils.formatIntegerTimeToStringTime(time));
+            dailyTextView.setText(DailyTextUtils.formatIntegerTimeToStringTime(time < 2400 ? time : time - 2400));
             dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
             dailyTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c323232_cffffff));
             dailyTextView.setBackgroundResource(R.drawable.selector_gourmet_time_background_drawable);
@@ -615,7 +610,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         for (int time : operationTimeList)
         {
             DailyTextView dailyTextView = new DailyTextView(getContext());
-            dailyTextView.setText(DailyTextUtils.formatIntegerTimeToStringTime(time));
+            dailyTextView.setText(DailyTextUtils.formatIntegerTimeToStringTime(time < 2400 ? time : time - 2400));
             dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
             dailyTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c323232_cffffff));
             dailyTextView.setBackgroundResource(R.drawable.selector_gourmet_time_background_drawable);
