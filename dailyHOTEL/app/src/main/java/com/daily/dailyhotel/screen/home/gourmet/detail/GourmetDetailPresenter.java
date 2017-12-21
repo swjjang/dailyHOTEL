@@ -1512,6 +1512,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             {
                 GourmetMenu gourmetMenu = gourmetMenuList.get(i);
 
+                // 서버에서 오류로 인터벌이 없는 경우가 있어서 기본 30분으로 수정
                 if (gourmetMenu.timeInterval <= 0)
                 {
                     gourmetMenu.timeInterval = 30;
