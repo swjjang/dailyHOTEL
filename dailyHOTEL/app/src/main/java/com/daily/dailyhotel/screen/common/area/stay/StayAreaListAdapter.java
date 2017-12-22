@@ -31,7 +31,7 @@ public class StayAreaListAdapter extends AnimatedExpandableListAdapter
         mContext = context;
         mStayDistrictList = new ArrayList<>();
 
-        setDistrictPosition(-1);
+        setSelectedGroupPosition(-1);
     }
 
     public void setData(List<StayAreaGroup> districtList)
@@ -66,7 +66,7 @@ public class StayAreaListAdapter extends AnimatedExpandableListAdapter
         return mStayDistrictList.get(groupPosition).getAreaList().get(childPosition);
     }
 
-    public StayAreaGroup getDistrict(int groupPosition)
+    public StayAreaGroup getAreaGroup(int groupPosition)
     {
         return mStayDistrictList.get(groupPosition);
     }
@@ -76,7 +76,7 @@ public class StayAreaListAdapter extends AnimatedExpandableListAdapter
         mTablet = tablet;
     }
 
-    public void setDistrictPosition(int position)
+    public void setSelectedGroupPosition(int position)
     {
         mSelectedGroupPosition = position;
     }

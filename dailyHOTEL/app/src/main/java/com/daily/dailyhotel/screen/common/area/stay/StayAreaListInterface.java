@@ -9,11 +9,13 @@ import io.reactivex.Observable;
 
 public interface StayAreaListInterface extends BaseDialogViewInterface
 {
-    void setDistrictList(List<StayAreaGroup> districtList);
+    void setAreaList(List<StayAreaGroup> areaList);
 
     void setLocationTermVisible(boolean visible);
 
     Observable<Boolean> collapseGroupWithAnimation(int groupPosition, boolean animation);
 
     Observable<Boolean> expandGroupWithAnimation(int groupPosition, boolean animation);
+
+    void setSelectedAreaGroup(int groupPosition);
 }

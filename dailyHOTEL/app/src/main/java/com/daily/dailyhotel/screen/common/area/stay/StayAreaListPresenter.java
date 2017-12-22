@@ -253,14 +253,14 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
         setRefresh(false);
         screenLock(showProgress);
 
-        addCompositeDisposable(mStayRemoteImpl.getRegionList(mDailyCategoryType).observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<List<StayAreaGroup>, ObservableSource<Boolean>>()
+        addCompositeDisposable(mStayRemoteImpl.getRegionList(mDailyCategoryType).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<StayAreaGroup>>()
         {
             @Override
-            public ObservableSource<Boolean> apply(List<StayAreaGroup> areaGroupList) throws Exception
+            public void accept(List<StayAreaGroup> areaGroupList) throws Exception
             {
                 mAreaGroupList = areaGroupList;
 
-                getViewInterface().setDistrictList(areaGroupList);
+                getViewInterface().setAreaList(areaGroupList);
 
                 Pair<String, String> namePair = getDistrictNTownNameByCategory(mDailyCategoryType);
 
@@ -272,30 +272,26 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
                     mAreaGroupPosition = -1;
                 }
 
+                StayAreaGroup areaGroup;
+
                 // 기존에 저장된 지역이 있는 경우
                 if (mAreaGroupPosition >= 0)
                 {
-                    StayAreaGroup areaGroup = areaGroupList.get(mAreaGroupPosition);
+                    areaGroup = areaGroupList.get(mAreaGroupPosition);
 
                     mStayRegion = getRegion(areaGroup, namePair.second);
                 } else
                 {
                     // 기존에 저장된 지역이 없는 경우 첫번째 지역으로 한다.
-
-                    StayAreaGroup areaGroup = areaGroupList.get(0);
+                    areaGroup = areaGroupList.get(0);
 
                     mStayRegion = new StayRegion(areaGroup, new StayArea(areaGroup));
 
                     mAreaGroupPosition = 0;
                 }
 
-                return expandGroupWithAnimation(mAreaGroupPosition, false).subscribeOn(AndroidSchedulers.mainThread());
-            }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
-        {
-            @Override
-            public void accept(Boolean aBoolean) throws Exception
-            {
+                getViewInterface().setSelectedAreaGroup(mAreaGroupPosition);
+
                 unLockAll();
             }
         }, new Consumer<Throwable>()
