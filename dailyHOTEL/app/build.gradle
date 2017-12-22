@@ -224,8 +224,8 @@ dependencies {
     implementation 'com.facebook.fresco:drawee:1.7.1'
     implementation 'com.facebook.fresco:imagepipeline-okhttp3:1.7.1'
 
-    implementation 'com.kakao.sdk:usermgmt:1.6.2'
-    implementation 'com.kakao.sdk:kakaolink:1.6.2'
+    implementation 'com.kakao.sdk:usermgmt:1.7.0'
+    implementation 'com.kakao.sdk:kakaolink:1.7.0'
 
     implementation 'com.appboy:android-sdk-ui:2.2.+'
 
