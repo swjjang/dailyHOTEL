@@ -14,6 +14,7 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseFragmentExceptionPresenter;
+import com.daily.dailyhotel.entity.Category;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
 import com.twoheart.dailyhotel.R;
@@ -30,6 +31,8 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
     StayRemoteImpl mStayRemoteImpl;
 
     StayTabPresenter.StayViewModel mStayViewModel;
+
+    Category mCategory;
 
     public interface StayListFragmentAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -118,6 +121,20 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
 
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null)
+        {
+            String name = savedInstanceState.getString("name");
+            String code = savedInstanceState.getString("code");
+
+            mCategory = new Category(code, name);
+        }
     }
 
     @Override
@@ -212,6 +229,6 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
 
         mStayViewModel = ViewModelProviders.of(activity).get(StayTabPresenter.StayViewModel.class);
 
-        ExLog.d("pinkred : " + mStayViewModel.stayRegion.getValue().getAreaName() + ", " + mStayViewModel.commonDateTime.getValue().dailyDateTime + ", " + mStayViewModel.stayBookDateTime.getValue().getNights() + ", " + mStayViewModel.category.getValue().name);
+        ExLog.d("pinkred : Category name : " + mCategory.name + ", " + mStayViewModel.stayRegion.getValue().getAreaName() + ", " + mStayViewModel.commonDateTime.getValue().dailyDateTime + ", " + mStayViewModel.stayBookDateTime.getValue().getNights() + ", " + mStayViewModel.selectedCategory.getValue().name);
     }
 }

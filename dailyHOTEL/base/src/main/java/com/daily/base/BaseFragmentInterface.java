@@ -10,6 +10,8 @@ public interface BaseFragmentInterface
 {
     View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
 
+    void onCreate(Bundle savedInstanceState);
+
     void onStart();
 
     void onResume();

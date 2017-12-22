@@ -1,5 +1,6 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.list;
 
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -104,7 +105,7 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
             size = 1;
             setCategoryTabLayoutVisibility(View.GONE);
 
-            mFragmentPagerAdapter = createFragmentPagerAdapter(fragmentManager, size);
+            mFragmentPagerAdapter = createFragmentPagerAdapter(fragmentManager, categoryList.subList(0, 1));
 
             getViewDataBinding().viewPager.removeAllViews();
             getViewDataBinding().viewPager.setOffscreenPageLimit(size);
@@ -140,7 +141,7 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
                 }
             }
 
-            mFragmentPagerAdapter = createFragmentPagerAdapter(fragmentManager, size);
+            mFragmentPagerAdapter = createFragmentPagerAdapter(fragmentManager, categoryList);
 
             getViewDataBinding().viewPager.removeAllViews();
             getViewDataBinding().viewPager.setOffscreenPageLimit(size);
@@ -287,15 +288,26 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
         }
     }
 
-    private BaseFragmentPagerAdapter createFragmentPagerAdapter(FragmentManager fragmentManager, int count)
+    private BaseFragmentPagerAdapter createFragmentPagerAdapter(FragmentManager fragmentManager, List<? extends Category> categoryList)
     {
+        if (fragmentManager == null || categoryList == null || categoryList.size() == 0)
+        {
+            return null;
+        }
+
         BaseFragmentPagerAdapter fragmentPagerAdapter = new BaseFragmentPagerAdapter(fragmentManager);
 
-        List<StayListFragment> fragmentList = new ArrayList<>(count);
+        List<StayListFragment> fragmentList = new ArrayList<>();
 
-        for (int i = 0; i < count; i++)
+        for (Category category : categoryList)
         {
             StayListFragment stayListFragment = new StayListFragment();
+
+            Bundle bundle = new Bundle();
+            bundle.putString("name", category.name);
+            bundle.putString("code", category.code);
+
+            stayListFragment.setArguments(bundle);
             fragmentList.add(stayListFragment);
         }
 

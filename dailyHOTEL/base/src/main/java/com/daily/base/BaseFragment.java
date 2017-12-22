@@ -30,6 +30,17 @@ public abstract class BaseFragment<T1 extends BaseFragmentPresenter> extends Fra
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
+        if (mPresenter != null)
+        {
+            mPresenter.onCreate(savedInstanceState);
+        }
+    }
+
+    @Override
     public void onStart()
     {
         super.onStart();

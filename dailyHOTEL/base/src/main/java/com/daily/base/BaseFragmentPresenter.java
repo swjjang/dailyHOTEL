@@ -72,6 +72,12 @@ public abstract class BaseFragmentPresenter<T1 extends Fragment, T2 extends Base
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+
+    }
+
+    @Override
     public void onStart()
     {
 

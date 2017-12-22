@@ -70,7 +70,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         MutableLiveData<StayBookDateTime> stayBookDateTime = new MutableLiveData<>();
         MutableLiveData<StayFilter> stayFilter = new MutableLiveData<>();
         MutableLiveData<StayRegion> stayRegion = new MutableLiveData<>();
-        MutableLiveData<Category> category = new MutableLiveData<>();
+        MutableLiveData<Category> selectedCategory = new MutableLiveData<>();
     }
 
     class StayViewModelFactory implements ViewModelProvider.Factory
@@ -326,7 +326,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
         mStayViewModel = ViewModelProviders.of(activity, new StayViewModelFactory()).get(StayViewModel.class);
 
-        mStayViewModel.category.observe(activity, new Observer<Category>()
+        mStayViewModel.selectedCategory.observe(activity, new Observer<Category>()
         {
             @Override
             public void onChanged(@Nullable Category category)
@@ -349,10 +349,10 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
         if (DailyTextUtils.isTextEmpty(oldCategoryCode, oldCategoryName) == false)
         {
-            mStayViewModel.category.setValue(new Category(oldCategoryName, oldCategoryCode));
+            mStayViewModel.selectedCategory.setValue(new Category(oldCategoryName, oldCategoryCode));
         } else
         {
-            mStayViewModel.category.setValue(Category.ALL);
+            mStayViewModel.selectedCategory.setValue(Category.ALL);
         }
     }
 
@@ -439,12 +439,12 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
     void notifyCategoryChanged()
     {
-        if (mStayViewModel == null || mStayViewModel.stayRegion.getValue() == null || mStayViewModel.category.getValue() == null)
+        if (mStayViewModel == null || mStayViewModel.stayRegion.getValue() == null || mStayViewModel.selectedCategory.getValue() == null)
         {
             return;
         }
 
-        getViewInterface().setCategoryTabLayout(getSupportFragmentManager(), mStayViewModel.stayRegion.getValue().getArea().getCategoryList(), mStayViewModel.category.getValue());
+        getViewInterface().setCategoryTabLayout(getSupportFragmentManager(), mStayViewModel.stayRegion.getValue().getArea().getCategoryList(), mStayViewModel.selectedCategory.getValue());
     }
 
     StayRegion searchRegion(List<StayAreaGroup> areaGroupList, Pair<String, String> namePair)
@@ -532,7 +532,6 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
         return null;
     }
-
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Deep Link
@@ -888,7 +887,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                     {
                         if (category.code.equalsIgnoreCase(categoryCode) == true)
                         {
-                            mStayViewModel.category.setValue(category);
+                            mStayViewModel.selectedCategory.setValue(category);
                             break;
                         }
                     }
