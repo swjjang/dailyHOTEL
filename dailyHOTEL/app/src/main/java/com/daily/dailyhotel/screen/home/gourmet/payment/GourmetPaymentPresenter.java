@@ -2331,7 +2331,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
         for (GourmetCartMenu gourmetCartMenu : mGourmetCart.getMenuList())
         {
-            for (GourmetPaymentMenu gourmetPaymentMenu : mGourmetPayment.getGourmetPaymentMenuList())
+            for (GourmetPaymentMenu gourmetPaymentMenu : gourmetPayment.getGourmetPaymentMenuList())
             {
                 if (gourmetCartMenu.saleIndex == gourmetPaymentMenu.saleIndex && gourmetCartMenu.getTotalPrice() != gourmetPaymentMenu.subTotalPrice)
                 {
