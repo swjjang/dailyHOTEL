@@ -229,7 +229,7 @@ public class Util implements Constants
 
     public static boolean isUsedMultiTransition()
     {
-        return VersionUtils.isOverAPI21() == true;
+        return VersionUtils.isOverAPI23() == true;
     }
 
     public static boolean isTelephonyEnabled(Context context)
