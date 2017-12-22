@@ -32,7 +32,7 @@ import io.reactivex.functions.Function;
 
 public class StayAreaListView extends BaseDialogView<StayAreaListView.OnEventListener, ActivityStayAreaListDataBinding> implements StayAreaListInterface
 {
-    StayAreaListAdapter mStayDistrictListAdapter;
+    StayAreaListAdapter mStayAreaListAdapter;
 
     private LayoutRegionListLocationDataBinding mLayoutRegionListLocationDataBinding;
 
@@ -86,19 +86,19 @@ public class StayAreaListView extends BaseDialogView<StayAreaListView.OnEventLis
     }
 
     @Override
-    public void setDistrictList(List<StayAreaGroup> stayDistrictList)
+    public void setAreaList(List<StayAreaGroup> areaList)
     {
-        if (getViewDataBinding() == null || stayDistrictList == null || stayDistrictList.size() == 0)
+        if (getViewDataBinding() == null || areaList == null || areaList.size() == 0)
         {
             return;
         }
 
-        if (mStayDistrictListAdapter == null)
+        if (mStayAreaListAdapter == null)
         {
-            mStayDistrictListAdapter = new StayAreaListAdapter(getContext());
+            mStayAreaListAdapter = new StayAreaListAdapter(getContext());
 
-            mStayDistrictListAdapter.setTablet(isTabletDevice());
-            mStayDistrictListAdapter.setOnChildClickListener(new View.OnClickListener()
+            mStayAreaListAdapter.setTablet(isTabletDevice());
+            mStayAreaListAdapter.setOnChildClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View view)
@@ -128,8 +128,8 @@ public class StayAreaListView extends BaseDialogView<StayAreaListView.OnEventLis
             });
         }
 
-        mStayDistrictListAdapter.setData(stayDistrictList);
-        getViewDataBinding().expandableListView.setAdapter(mStayDistrictListAdapter);
+        mStayAreaListAdapter.setData(areaList);
+        getViewDataBinding().expandableListView.setAdapter(mStayAreaListAdapter);
     }
 
     @Override
@@ -151,7 +151,7 @@ public class StayAreaListView extends BaseDialogView<StayAreaListView.OnEventLis
             return null;
         }
 
-        StayAreaGroup stayDistrict = mStayDistrictListAdapter.getDistrict(groupPosition);
+        StayAreaGroup stayDistrict = mStayAreaListAdapter.getAreaGroup(groupPosition);
 
         if (stayDistrict == null)
         {
@@ -193,7 +193,7 @@ public class StayAreaListView extends BaseDialogView<StayAreaListView.OnEventLis
                 @Override
                 public Boolean apply(Boolean aBoolean) throws Exception
                 {
-                    mStayDistrictListAdapter.setDistrictPosition(-1);
+                    mStayAreaListAdapter.setSelectedGroupPosition(-1);
                     return true;
                 }
             });
@@ -204,7 +204,7 @@ public class StayAreaListView extends BaseDialogView<StayAreaListView.OnEventLis
                 @Override
                 public Boolean apply(Boolean aBoolean, Boolean aBoolean2) throws Exception
                 {
-                    mStayDistrictListAdapter.setDistrictPosition(-1);
+                    mStayAreaListAdapter.setSelectedGroupPosition(-1);
                     return true;
                 }
             });
@@ -219,7 +219,7 @@ public class StayAreaListView extends BaseDialogView<StayAreaListView.OnEventLis
             return null;
         }
 
-        StayAreaGroup stayDistrict = mStayDistrictListAdapter.getDistrict(groupPosition);
+        StayAreaGroup stayDistrict = mStayAreaListAdapter.getAreaGroup(groupPosition);
 
         if (stayDistrict == null)
         {
@@ -233,25 +233,18 @@ public class StayAreaListView extends BaseDialogView<StayAreaListView.OnEventLis
             {
                 if (animation == true)
                 {
-                    try
+                    getViewDataBinding().expandableListView.expandGroupWithAnimation(groupPosition, new DailyAnimatedExpandableListView.OnAnimationListener()
                     {
-                        getViewDataBinding().expandableListView.expandGroupWithAnimation(groupPosition, new DailyAnimatedExpandableListView.OnAnimationListener()
+                        @Override
+                        public void onAnimationEnd()
                         {
-                            @Override
-                            public void onAnimationEnd()
-                            {
-                                observer.onNext(true);
-                                observer.onComplete();
-                            }
-                        });
-                    } catch (Exception e)
-                    {
-                        observer.onNext(true);
-                        observer.onComplete();
-                    }
+                            observer.onNext(true);
+                            observer.onComplete();
+                        }
+                    });
 
                     // 마지막 리스트 목록은 애니메이션으로 안잡힌다.
-                    if (groupPosition == mStayDistrictListAdapter.getGroupCount() - 1)
+                    if (groupPosition == mStayAreaListAdapter.getGroupCount() - 1)
                     {
                         getViewDataBinding().expandableListView.setOnScrollListener(new AbsListView.OnScrollListener()
                         {
@@ -294,11 +287,32 @@ public class StayAreaListView extends BaseDialogView<StayAreaListView.OnEventLis
             @Override
             public Boolean apply(Boolean aBoolean, Boolean aBoolean2) throws Exception
             {
-                mStayDistrictListAdapter.setDistrictPosition(groupPosition);
+                mStayAreaListAdapter.setSelectedGroupPosition(groupPosition);
 
                 return true;
             }
         });
+    }
+
+    @Override
+    public void setSelectedAreaGroup(int groupPosition)
+    {
+        if (getViewDataBinding() == null || mStayAreaListAdapter == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().expandableListView.setSelection(groupPosition);
+
+        if (mStayAreaListAdapter.getChildren(groupPosition) == null)
+        {
+            getViewDataBinding().expandableListView.setSelectedGroup(groupPosition);
+        } else
+        {
+            getViewDataBinding().expandableListView.expandGroup(groupPosition);
+        }
+
+        mStayAreaListAdapter.setSelectedGroupPosition(groupPosition);
     }
 
     private void initToolbar(ActivityStayAreaListDataBinding viewDataBinding)
