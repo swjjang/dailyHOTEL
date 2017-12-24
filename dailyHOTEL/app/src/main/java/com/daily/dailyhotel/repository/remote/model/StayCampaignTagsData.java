@@ -20,7 +20,7 @@ public class StayCampaignTagsData
     public String imageUrl;
 
     @JsonField(name = "saleRecords")
-    public ArrayList<StaySalesData> saleRecords;
+    public ArrayList<StayData> saleRecords;
 
     @JsonField(name = "configurations")
     public ConfigurationsData configurations;
@@ -45,7 +45,7 @@ public class StayCampaignTagsData
     {
         ArrayList<Stay> stayList = new ArrayList<>();
 
-        for (StaySalesData staySalesData : saleRecords)
+        for (StayData staySalesData : saleRecords)
         {
             Stay stay = staySalesData.getStay();
 

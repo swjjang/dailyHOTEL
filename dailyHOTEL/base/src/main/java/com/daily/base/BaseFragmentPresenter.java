@@ -45,6 +45,11 @@ public abstract class BaseFragmentPresenter<T1 extends Fragment, T2 extends Base
         return (BaseActivity)mFragment.getActivity();
     }
 
+    public T1 getFragment()
+    {
+        return mFragment;
+    }
+
     public BasePresenter getActivityPresenter()
     {
         return getActivity() == null ? null : getActivity().getPresenter();
@@ -69,12 +74,6 @@ public abstract class BaseFragmentPresenter<T1 extends Fragment, T2 extends Base
         }
 
         return mOnViewInterface;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-
     }
 
     @Override

@@ -7,6 +7,7 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -64,6 +65,12 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
     CommonRemoteImpl mCommonRemoteImpl;
     StayRemoteImpl mStayRemoteImpl;
 
+    enum ViewType
+    {
+        LIST,
+        MAP,
+    }
+
     class StayViewModel extends ViewModel
     {
         MutableLiveData<CommonDateTime> commonDateTime = new MutableLiveData<>();
@@ -71,6 +78,8 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         MutableLiveData<StayFilter> stayFilter = new MutableLiveData<>();
         MutableLiveData<StayRegion> stayRegion = new MutableLiveData<>();
         MutableLiveData<Category> selectedCategory = new MutableLiveData<>();
+        MutableLiveData<Location> location = new MutableLiveData<>();
+        MutableLiveData<ViewType> viewType = new MutableLiveData<>();
     }
 
     class StayViewModelFactory implements ViewModelProvider.Factory
