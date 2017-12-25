@@ -176,7 +176,7 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
     }
 
     @Override
-    public void onRoomListClick(Activity activity, String stayName)
+    public void onRoomListOpenClick(Activity activity, String stayName)
     {
         if (activity == null)
         {
@@ -185,6 +185,30 @@ public class StayDetailAnalyticsImpl implements StayDetailPresenter.StayDetailAn
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
             , AnalyticsManager.Action.ROOM_TYPE_CLICKED, stayName, null);
+    }
+
+    @Override
+    public void onRoomListCloseClick(Activity activity, String stayName)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
+            , AnalyticsManager.Action.ROOM_TYPE_CANCEL_CLICKED, stayName, null);
+    }
+
+    @Override
+    public void onRoomClick(Activity activity, String roomName)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.HOTEL_BOOKINGS//
+            , AnalyticsManager.Action.ROOM_TYPE_ITEM_CLICKED, roomName, null);
     }
 
     @Override
