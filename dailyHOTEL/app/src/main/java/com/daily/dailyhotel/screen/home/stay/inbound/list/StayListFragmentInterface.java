@@ -9,7 +9,7 @@ import com.daily.base.BaseFragmentDialogViewInterface;
  */
 public interface StayListFragmentInterface extends BaseFragmentDialogViewInterface
 {
-    void addList(ㅣㅑㄴㅅ)
+    void addList();
 
     void setSwipeRefreshing(boolean refreshing);
 }

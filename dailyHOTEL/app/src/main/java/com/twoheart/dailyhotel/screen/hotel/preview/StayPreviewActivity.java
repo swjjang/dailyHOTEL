@@ -80,19 +80,19 @@ public class StayPreviewActivity extends BaseActivity
      * @param context
      * @param checkInDate
      * @param checkOutDate
-     * @param stay
      * @return
      */
-    public static Intent newInstance(Context context, String checkInDate, String checkOutDate, Stay stay)
+    public static Intent newInstance(Context context, String checkInDate, String checkOutDate, int stayIndex//
+        , String stayName, int discountPrice, String gradeName)
     {
         Intent intent = new Intent(context, StayPreviewActivity.class);
 
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECK_IN_DATE, checkInDate);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_CHECK_OUT_DATE, checkOutDate);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, stay.index);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, stay.name);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, stay.discountPrice);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, stay.getGrade().name());
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEIDX, stayIndex);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACENAME, stayName);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_DISCOUNTPRICE, discountPrice);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_GRADE, gradeName);
 
         return intent;
     }

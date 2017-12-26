@@ -1,7 +1,5 @@
 package com.daily.dailyhotel.entity;
 
-import com.twoheart.dailyhotel.model.Stay;
-
 import java.util.ArrayList;
 
 /**

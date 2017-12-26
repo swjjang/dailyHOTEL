@@ -6,6 +6,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -71,6 +72,10 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         MAP,
     }
 
+    StayViewModel mStayViewModel;
+    DailyDeepLink mDailyDeepLink;
+    boolean mHasDeepLink;
+
     class StayViewModel extends ViewModel
     {
         MutableLiveData<CommonDateTime> commonDateTime = new MutableLiveData<>();
@@ -84,18 +89,42 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
     class StayViewModelFactory implements ViewModelProvider.Factory
     {
+        private Context mContext;
+
+        public StayViewModelFactory(Context context)
+        {
+            mContext = context;
+        }
+
         @NonNull
         @Override
         public StayViewModel create(@NonNull Class modelClass)
         {
-            return new StayViewModel();
+            StayViewModel stayViewModel = new StayViewModel();
+
+            stayViewModel.stayFilter.setValue(new StayFilter());
+            stayViewModel.viewType.setValue(ViewType.LIST);
+
+            if (mContext == null)
+            {
+                stayViewModel.selectedCategory.setValue(Category.ALL);
+            } else
+            {
+                String oldCategoryCode = DailyPreference.getInstance(mContext).getStayCategoryCode();
+                String oldCategoryName = DailyPreference.getInstance(mContext).getStayCategoryName();
+
+                if (DailyTextUtils.isTextEmpty(oldCategoryCode, oldCategoryName) == false)
+                {
+                    mStayViewModel.selectedCategory.setValue(new Category(oldCategoryName, oldCategoryCode));
+                } else
+                {
+                    mStayViewModel.selectedCategory.setValue(Category.ALL);
+                }
+            }
+
+            return stayViewModel;
         }
     }
-
-    StayViewModel mStayViewModel;
-
-    DailyDeepLink mDailyDeepLink;
-    boolean mHasDeepLink;
 
     public interface StayTabAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -333,7 +362,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             return;
         }
 
-        mStayViewModel = ViewModelProviders.of(activity, new StayViewModelFactory()).get(StayViewModel.class);
+        mStayViewModel = ViewModelProviders.of(activity, new StayViewModelFactory(getActivity())).get(StayViewModel.class);
 
         mStayViewModel.selectedCategory.observe(activity, new Observer<Category>()
         {
@@ -352,17 +381,6 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
             }
         });
-
-        String oldCategoryCode = DailyPreference.getInstance(activity).getStayCategoryCode();
-        String oldCategoryName = DailyPreference.getInstance(activity).getStayCategoryName();
-
-        if (DailyTextUtils.isTextEmpty(oldCategoryCode, oldCategoryName) == false)
-        {
-            mStayViewModel.selectedCategory.setValue(new Category(oldCategoryName, oldCategoryCode));
-        } else
-        {
-            mStayViewModel.selectedCategory.setValue(Category.ALL);
-        }
     }
 
     void setCommonDateTime(@NonNull CommonDateTime commonDateTime)

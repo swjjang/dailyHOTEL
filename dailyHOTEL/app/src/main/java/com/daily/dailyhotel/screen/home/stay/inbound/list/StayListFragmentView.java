@@ -28,4 +28,16 @@ public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmen
     {
 
     }
+
+    @Override
+    public void addList()
+    {
+
+    }
+
+    @Override
+    public void setSwipeRefreshing(boolean refreshing)
+    {
+
+    }
 }
