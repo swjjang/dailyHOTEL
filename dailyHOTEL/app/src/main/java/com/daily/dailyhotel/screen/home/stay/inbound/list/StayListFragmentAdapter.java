@@ -13,13 +13,12 @@ import android.view.ViewGroup;
 
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.ObjectItem;
+import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.view.DailyStayCardView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.LayoutFooterDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutListLoadingDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutSectionDataBinding;
-import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView;
 
@@ -92,11 +91,11 @@ public class StayListFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
         mList.add(objectItem);
     }
 
-    public void add(int position, ObjectItem placeViewItem)
+    public void add(int position, ObjectItem objectItem)
     {
         if (position >= 0 && position < mList.size())
         {
-            mList.add(position, placeViewItem);
+            mList.add(position, objectItem);
         }
     }
 
@@ -154,18 +153,24 @@ public class StayListFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     @Override
+    public boolean isItemViewTypePinned(int viewType)
+    {
+        return viewType == ObjectItem.TYPE_SECTION;
+    }
+
+    @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         switch (viewType)
         {
-            case PlaceViewItem.TYPE_SECTION:
+            case ObjectItem.TYPE_SECTION:
             {
                 LayoutSectionDataBinding viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_section_data, parent, false);
 
                 return new SectionViewHolder(viewDataBinding);
             }
 
-            case PlaceViewItem.TYPE_ENTRY:
+            case ObjectItem.TYPE_ENTRY:
             {
                 DailyStayCardView stayCardView = new DailyStayCardView(mContext);
                 stayCardView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -173,7 +178,7 @@ public class StayListFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
                 return new StayViewHolder(stayCardView);
             }
 
-            case PlaceViewItem.TYPE_FOOTER_VIEW:
+            case ObjectItem.TYPE_FOOTER_VIEW:
             {
                 LayoutFooterDataBinding viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_footer_data, parent, false);
 
@@ -183,7 +188,7 @@ public class StayListFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
                 return new BaseDataBindingViewHolder(viewDataBinding);
             }
 
-            case PlaceViewItem.TYPE_LOADING_VIEW:
+            case ObjectItem.TYPE_LOADING_VIEW:
             {
                 LayoutListLoadingDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_list_loading_data, parent, false);
 
@@ -206,11 +211,11 @@ public class StayListFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         switch (item.mType)
         {
-            case PlaceViewItem.TYPE_ENTRY:
+            case ObjectItem.TYPE_ENTRY:
                 onBindViewHolder((StayViewHolder) holder, item, position);
                 break;
 
-            case PlaceViewItem.TYPE_SECTION:
+            case ObjectItem.TYPE_SECTION:
                 onBindViewHolder((SectionViewHolder) holder, item);
                 break;
         }
@@ -238,11 +243,11 @@ public class StayListFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         holder.stayCardView.setImage(stay.imageUrl);
 
-        holder.stayCardView.setGradeText(stay.getGrade().getName(mContext));
-        holder.stayCardView.setVRVisible(stay.truevr && mTrueVREnabled);
+        holder.stayCardView.setGradeText(stay.grade.getName(mContext));
+        holder.stayCardView.setVRVisible(stay.trueVR && mTrueVREnabled);
         holder.stayCardView.setReviewText(stay.satisfaction, stay.reviewCount);
 
-        holder.stayCardView.setNewVisible(stay.newItem);
+        holder.stayCardView.setNewVisible(stay.newStay);
 
         holder.stayCardView.setStayNameText(stay.name);
 
@@ -257,7 +262,7 @@ public class StayListFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         holder.stayCardView.setAddressText(stay.addressSummary);
 
-        if (stay.isSoldOut == true)
+        if (stay.soldOut == true)
         {
             holder.stayCardView.setPriceText(0, 0, 0, null, false);
         } else
@@ -267,19 +272,13 @@ public class StayListFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         holder.stayCardView.setBenefitText(stay.dBenefitText);
 
-        if (position == 0 || getItem(position - 1).mType != PlaceViewItem.TYPE_SECTION)
+        if (position == 0 || getItem(position - 1).mType != ObjectItem.TYPE_SECTION)
         {
             holder.stayCardView.setDividerVisible(true);
         } else
         {
             holder.stayCardView.setDividerVisible(false);
         }
-    }
-
-    @Override
-    public boolean isItemViewTypePinned(int viewType)
-    {
-        return viewType == ObjectItem.TYPE_SECTION;
     }
 
     protected class StayViewHolder extends RecyclerView.ViewHolder
@@ -292,11 +291,11 @@ public class StayListFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
 
             this.stayCardView = stayCardView;
 
-            itemView.setOnClickListener(mOnClickListener);
+            stayCardView.setOnClickListener(mOnClickListener);
 
             if (Util.supportPreview(mContext) == true)
             {
-                itemView.setOnLongClickListener(new View.OnLongClickListener()
+                stayCardView.setOnLongClickListener(new View.OnLongClickListener()
                 {
                     @Override
                     public boolean onLongClick(View v)

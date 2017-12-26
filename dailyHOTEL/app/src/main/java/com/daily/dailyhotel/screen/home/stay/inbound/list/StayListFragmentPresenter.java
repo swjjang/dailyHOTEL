@@ -131,7 +131,7 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
 
         initViewModel(activity);
 
-        setRefresh(false);
+        setRefresh(isCurrentFragment() == true);
     }
 
     @Override
@@ -144,7 +144,6 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
     public void onActivityCreated(Bundle savedInstanceState)
     {
         super.onActivityCreated(savedInstanceState);
-
 
     }
 
@@ -185,8 +184,14 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
     @Override
     protected synchronized void onRefresh(boolean showProgress)
     {
-        if (getActivity().isFinishing() == true || isRefresh() == false)
+        onRefresh(showProgress, mPage);
+    }
+
+    protected synchronized void onRefresh(boolean showProgress, int page)
+    {
+        if (getActivity().isFinishing() == true || isRefresh() == false || mStayViewModel == null)
         {
+            setRefresh(false);
             return;
         }
 
@@ -195,18 +200,10 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
             || mStayViewModel.viewType.getValue() == null//
             || mStayViewModel.stayRegion.getValue() == null//
             || mStayViewModel.stayBookDateTime.getValue() == null//
-            || mStayViewModel.commonDateTime.getValue() == null)
+            || mStayViewModel.commonDateTime.getValue() == null//
+            || lock() == true)
         {
-            return;
-        }
-
-        onRefresh(showProgress, mPage);
-    }
-
-    protected synchronized void onRefresh(boolean showProgress, int page)
-    {
-        if (getActivity().isFinishing() == true || isRefresh() == false || mStayViewModel == null)
-        {
+            setRefresh(false);
             return;
         }
 
@@ -260,61 +257,63 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
 
         mStayViewModel = ViewModelProviders.of(activity).get(StayTabPresenter.StayViewModel.class);
 
-        mStayViewModel.stayBookDateTime.observe(activity, new Observer<StayBookDateTime>()
-        {
-            @Override
-            public void onChanged(@Nullable StayBookDateTime stayBookDateTime)
-            {
-                if (mStayViewModel.selectedCategory.getValue() != null && mCategory != null//
-                    && mStayViewModel.selectedCategory.getValue().code.equalsIgnoreCase(mCategory.code) == true)
-                {
-                    setRefresh(true);
-                    onRefresh(true);
-                }
-            }
-        });
+//        mStayViewModel.stayBookDateTime.observe(activity, new Observer<StayBookDateTime>()
+//        {
+//            @Override
+//            public void onChanged(@Nullable StayBookDateTime stayBookDateTime)
+//            {
+//                if (isCurrentFragment() == true)
+//                {
+//                    setRefresh(true);
+//                    onRefresh(true);
+//                }
+//            }
+//        });
+//
+//        mStayViewModel.stayRegion.observe(activity, new Observer<StayRegion>()
+//        {
+//            @Override
+//            public void onChanged(@Nullable StayRegion stayRegion)
+//            {
+//                if (isCurrentFragment() == true)
+//                {
+//                    setRefresh(true);
+//                    onRefresh(true);
+//                }
+//            }
+//        });
+//
+//        mStayViewModel.selectedCategory.observe(activity, new Observer<Category>()
+//        {
+//            @Override
+//            public void onChanged(@Nullable Category category)
+//            {
+//                if (isCurrentFragment() == true)
+//                {
+//                    setRefresh(true);
+//                    onRefresh(true);
+//                }
+//            }
+//        });
+//
+//        mStayViewModel.stayFilter.observe(activity, new Observer<StayFilter>()
+//        {
+//            @Override
+//            public void onChanged(@Nullable StayFilter stayFilter)
+//            {
+//                if (isCurrentFragment() == true)
+//                {
+//                    setRefresh(true);
+//                    onRefresh(true);
+//                }
+//            }
+//        });
+    }
 
-        mStayViewModel.stayRegion.observe(activity, new Observer<StayRegion>()
-        {
-            @Override
-            public void onChanged(@Nullable StayRegion stayRegion)
-            {
-                if (mStayViewModel.selectedCategory.getValue() != null && mCategory != null//
-                    && mStayViewModel.selectedCategory.getValue().code.equalsIgnoreCase(mCategory.code) == true)
-                {
-                    setRefresh(true);
-                    onRefresh(true);
-                }
-            }
-        });
-
-        mStayViewModel.selectedCategory.observe(activity, new Observer<Category>()
-        {
-            @Override
-            public void onChanged(@Nullable Category category)
-            {
-                if (mStayViewModel.selectedCategory.getValue() != null && mCategory != null//
-                    && mStayViewModel.selectedCategory.getValue().code.equalsIgnoreCase(mCategory.code) == true)
-                {
-                    setRefresh(true);
-                    onRefresh(true);
-                }
-            }
-        });
-
-        mStayViewModel.stayFilter.observe(activity, new Observer<StayFilter>()
-        {
-            @Override
-            public void onChanged(@Nullable StayFilter stayFilter)
-            {
-                if (mStayViewModel.selectedCategory.getValue() != null && mCategory != null//
-                    && mStayViewModel.selectedCategory.getValue().code.equalsIgnoreCase(mCategory.code) == true)
-                {
-                    setRefresh(true);
-                    onRefresh(true);
-                }
-            }
-        });
+    boolean isCurrentFragment()
+    {
+        return (mStayViewModel.selectedCategory.getValue() != null && mCategory != null//
+            && mStayViewModel.selectedCategory.getValue().code.equalsIgnoreCase(mCategory.code) == true);
     }
 
     /**
