@@ -1551,8 +1551,8 @@
     <string name="label_detail_stay_product_count">%1$d개의 객실타입</string>
     <string name="label_detail_gourmet_product_count">%1$d개의 메뉴</string>
 
-    <string name="label_detail_truereview_count">%1$d개 트루리뷰</string>
-    <string name="label_detail_wish_count">%1$d명 위시리스트</string>
+    <string name="label_detail_truereview_count">%1$s개 트루리뷰</string>
+    <string name="label_detail_wish_count">%1$s명 위시리스트</string>
 
     <string name="message_preview_guide">목록을 길게 꾸~욱 누르면,\n원하시는 정보를 살짝 엿볼 수 있어요!</string>
     <string name="message_preview_changed_price">판매 정보는 상세화면에서\n확인해주세요.</string>

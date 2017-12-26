@@ -241,7 +241,7 @@ public class StayOutboundPreviewView extends BaseDialogView<StayOutboundPreviewV
         } else
         {
             getViewDataBinding().moreInformationLayout.setVisibility(View.VISIBLE);
-            getViewDataBinding().wishCountTextView.setText(getString(R.string.label_detail_wish_count, wishCount));
+            getViewDataBinding().wishCountTextView.setText(getString(R.string.label_detail_wish_count, DailyTextUtils.formatIntegerToString(wishCount)));
         }
     }
 
