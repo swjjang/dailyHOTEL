@@ -3,7 +3,6 @@ package com.daily.dailyhotel.repository.remote.model;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.daily.dailyhotel.entity.RewardDetail;
-import com.daily.dailyhotel.entity.RewardSticker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +22,8 @@ public class RewardDetailData
     @JsonField(name = "rewardCard")
     public RewardCardData rewardCard;
 
-    @JsonField(name = "stickers")
-    public List<StickerData> stickers;
+    @JsonField(name = "rewardStickers")
+    public List<RewardStickersData> rewardStickers;
 
     @JsonField(name = "configurations")
     public ConfigurationsData configurations;
@@ -48,13 +47,13 @@ public class RewardDetailData
             rewardDetail.rewardStickerCount = rewardCard.rewardStickerCount;
         }
 
-        if (stickers != null && stickers.size() > 0)
+        if (rewardStickers != null && rewardStickers.size() > 0)
         {
-            List<RewardSticker> rewardStickerList = new ArrayList<>();
+            List<String> rewardStickerList = new ArrayList<>();
 
-            for (StickerData stickerData : stickers)
+            for (RewardStickersData rewardStickersData : rewardStickers)
             {
-                rewardStickerList.add(stickerData.getRewardSticker());
+                rewardStickerList.add(rewardStickersData.rewardStickerType);
             }
 
             rewardDetail.setRewardStickerList(rewardStickerList);
@@ -79,22 +78,9 @@ public class RewardDetailData
     }
 
     @JsonObject
-    static class StickerData
+    static class RewardStickersData
     {
-        @JsonField(name = "cardIdx")
-        public int cardIdx;
-
         @JsonField(name = "rewardStickerType")
         public String rewardStickerType;
-
-        public RewardSticker getRewardSticker()
-        {
-            RewardSticker rewardSticker = new RewardSticker();
-
-            rewardSticker.cardIndex = cardIdx;
-            rewardSticker.rewardStickerType = rewardStickerType;
-
-            return rewardSticker;
-        }
     }
 }

@@ -14,14 +14,14 @@ public class RewardDetail extends Configurations
     public boolean hasRewardHistory;
     public boolean hasRewardCardHistory;
 
-    private List<RewardSticker> mRewardStickerList;
+    private List<String> mRewardStickerList;
 
-    public void setRewardStickerList(List<RewardSticker> rewardStickerList)
+    public void setRewardStickerList(List<String> rewardStickerList)
     {
         mRewardStickerList = rewardStickerList;
     }
 
-    public List<RewardSticker> getRewardStickerList()
+    public List<String> getRewardStickerList()
     {
         return mRewardStickerList;
     }

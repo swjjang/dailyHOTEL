@@ -498,10 +498,7 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
         final int MAX_COUNT = 9;
 
         getViewInterface().setDescriptionMessage(DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerMemberMessage(mRewardDetail.rewardStickerCount));
-
-        int eventCount = DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerCampaignEnabled() ? DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigRewardStickerNonMemberCampaignFreeNights() : 0;
-
-        getViewInterface().setStickerCount(eventCount, mRewardDetail.rewardStickerCount);
+        getViewInterface().setStickerList(mRewardDetail.getRewardStickerList());
 
         if (mRewardDetail.rewardStickerCount > 0)
         {
