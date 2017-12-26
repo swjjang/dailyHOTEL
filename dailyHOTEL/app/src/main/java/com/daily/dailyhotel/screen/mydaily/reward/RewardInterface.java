@@ -16,7 +16,7 @@ public interface RewardInterface extends BaseDialogViewInterface
 
     void setDescriptionMessage(String message);
 
-    void setStickerCount(int eventCount, int stickerCount);
+    void setStickerList(List<String> stickerList);
 
     void setCampaignFreeStickerCount(int count);
 

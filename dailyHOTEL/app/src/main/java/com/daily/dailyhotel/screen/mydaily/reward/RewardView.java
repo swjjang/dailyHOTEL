@@ -222,11 +222,11 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
     }
 
     @Override
-    public void setStickerCount(int eventCount, int stickerCount)
+    public void setStickerList(List<String> stickerList)
     {
         final int MAX_COUNT = 9;
 
-        if (getViewDataBinding() == null || stickerCount > MAX_COUNT)
+        if (getViewDataBinding() == null || stickerList == null || stickerList.size() == 0)
         {
             return;
         }
@@ -251,14 +251,26 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
             , getViewDataBinding().sticker8nightsImageView//
             , getViewDataBinding().sticker9nightsImageView};
 
+        int size = stickerList.size();
+
         for (int i = 0; i < MAX_COUNT; i++)
         {
-            if (i < stickerCount)
+            if (i < size)
             {
                 views[i].setVisibility(View.INVISIBLE);
                 stickerViews[i].setAlpha(1.0f);
                 stickerViews[i].setVisibility(View.VISIBLE);
-                stickerViews[i].setImageResource(i < eventCount ? R.drawable.r_ic_l_47_shadow_event : R.drawable.r_ic_l_47_shadow);
+
+                switch (stickerList.get(i))
+                {
+                    case "E":
+                        stickerViews[i].setImageResource(R.drawable.r_ic_l_47_shadow_event);
+                        break;
+
+                    case "R":
+                        stickerViews[i].setImageResource(R.drawable.r_ic_l_47_shadow);
+                        break;
+                }
             } else
             {
                 views[i].setVisibility(View.VISIBLE);
