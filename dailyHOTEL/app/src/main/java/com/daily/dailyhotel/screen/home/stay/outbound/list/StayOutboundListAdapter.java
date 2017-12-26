@@ -16,7 +16,7 @@ import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.view.DailyStayOutboundCardView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.LayoutFooterDataBinding;
-import com.twoheart.dailyhotel.databinding.ListRowLoadingDataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutListLoadingDataBinding;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -163,7 +163,7 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
             case ObjectItem.TYPE_LOADING_VIEW:
             {
-                ListRowLoadingDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_loading_data, parent, false);
+                LayoutListLoadingDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_list_loading_data, parent, false);
 
                 return new BaseDataBindingViewHolder(dataBinding);
             }

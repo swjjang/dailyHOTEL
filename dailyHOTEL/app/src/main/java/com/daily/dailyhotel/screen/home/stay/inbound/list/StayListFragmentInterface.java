@@ -2,6 +2,9 @@ package com.daily.dailyhotel.screen.home.stay.inbound.list;
 
 
 import com.daily.base.BaseFragmentDialogViewInterface;
+import com.daily.dailyhotel.entity.ObjectItem;
+
+import java.util.List;
 
 /**
  * Created by sheldon
@@ -9,7 +12,9 @@ import com.daily.base.BaseFragmentDialogViewInterface;
  */
 public interface StayListFragmentInterface extends BaseFragmentDialogViewInterface
 {
-    void addList();
+    void setList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean isNights, boolean rewardEnabled, boolean supportTrueVR);
+
+    void addList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean isNights, boolean rewardEnabled, boolean supportTrueVR);
 
     void setSwipeRefreshing(boolean refreshing);
 }

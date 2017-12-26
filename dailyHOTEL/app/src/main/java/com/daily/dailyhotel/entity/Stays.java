@@ -25,7 +25,7 @@ public class Stays extends Configurations
         mStayList = stayList;
     }
 
-    public List<Stay> getStayDataList()
+    public List<Stay> getStayList()
     {
         return mStayList;
     }

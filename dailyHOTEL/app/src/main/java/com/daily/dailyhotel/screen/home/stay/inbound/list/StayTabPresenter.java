@@ -115,10 +115,10 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
                 if (DailyTextUtils.isTextEmpty(oldCategoryCode, oldCategoryName) == false)
                 {
-                    mStayViewModel.selectedCategory.setValue(new Category(oldCategoryName, oldCategoryCode));
+                    stayViewModel.selectedCategory.setValue(new Category(oldCategoryName, oldCategoryCode));
                 } else
                 {
-                    mStayViewModel.selectedCategory.setValue(Category.ALL);
+                    stayViewModel.selectedCategory.setValue(Category.ALL);
                 }
             }
 

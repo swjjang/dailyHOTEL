@@ -41,8 +41,6 @@ public abstract class BaseFragmentView<T1 extends OnBaseEventListener, T2 extend
     {
         mViewDataBinding = DataBindingUtil.inflate(layoutInflater, layoutResID, viewGroup, false);
 
-        setContentView(mViewDataBinding);
-
         return mViewDataBinding.getRoot();
     }
 
@@ -50,6 +48,8 @@ public abstract class BaseFragmentView<T1 extends OnBaseEventListener, T2 extend
     public void setActivity(BaseActivity activity)
     {
         mActivity = activity;
+
+        setContentView(mViewDataBinding);
     }
 
     protected void setVisibility(int visibility)
