@@ -14,6 +14,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.TextView;
 
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyImageView;
@@ -302,7 +303,7 @@ public class PlacePreviewLayout extends BaseLayout implements View.OnClickListen
             return;
         }
 
-        String trueReviewCount = mContext.getString(R.string.label_detail_truereview_count, count);
+        String trueReviewCount = mContext.getString(R.string.label_detail_truereview_count, DailyTextUtils.formatIntegerToString(count));
 
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(trueReviewCount);
         spannableStringBuilder.setSpan( //
@@ -320,7 +321,7 @@ public class PlacePreviewLayout extends BaseLayout implements View.OnClickListen
             return;
         }
 
-        String wishCount = mContext.getString(R.string.label_detail_wish_count, count);
+        String wishCount = mContext.getString(R.string.label_detail_wish_count, DailyTextUtils.formatIntegerToString(count));
 
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(wishCount);
         spannableStringBuilder.setSpan( //
