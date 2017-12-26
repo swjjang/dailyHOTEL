@@ -342,7 +342,8 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
     {
         super.onRestoreInstanceState(savedInstanceState);
 
-        mGourmetCart = savedInstanceState.getParcelable("gourmetCart");
+        GourmetCartParcel gourmetCartParcel = savedInstanceState.getParcelable("gourmetCart");
+        mGourmetCart = gourmetCartParcel.getGourmetCart();
 
         try
         {
