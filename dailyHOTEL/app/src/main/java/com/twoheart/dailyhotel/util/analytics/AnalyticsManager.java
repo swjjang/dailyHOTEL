@@ -1210,6 +1210,7 @@ public class AnalyticsManager
         public static final String OB_SEARCH_NO_RESULT = "ob_search_no_result";
         public static final String OB_SEARCH_RESULT = "ob_search_result";
         public static final String OB_SEARCH_RECENT = "ob_search_recent";
+        public static final String OB_SEARCH_RECOMMEND = "ob_search_recommend";
         public static final String OB_SEARCH_ORIGIN_AUTO = "ob_search_origin_auto";
         public static final String OB_SEARCH_ORIGIN_RECENT = "ob_search_origin_recent";
         public static final String OB_SEARCH_ORIGIN_ETC = "ob_search_origin_etc";

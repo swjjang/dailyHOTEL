@@ -51,6 +51,8 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
         void onEventSuggestClick(Activity activity, String suggestDisplayName, String keyword);
 
         void onEventRecentlySuggestClick(Activity activity, String suggestDisplayName, String keyword);
+
+        void onEventPopularSuggestClick(Activity activity, String suggestDisplayName);
     }
 
     public StayOutboundSearchSuggestPresenter(@NonNull StayOutboundSearchSuggestActivity activity)
@@ -342,6 +344,53 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
                     }
 
                     startFinishAction(suggest, "", AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECENT);
+                }
+            }));
+    }
+
+    @Override
+    public void onPopularSuggestClick(Suggest suggest)
+    {
+        if (suggest == null)
+        {
+            return;
+        }
+
+        if (lock() == true)
+        {
+            return;
+        }
+
+        addCompositeDisposable(mSuggestLocalImpl.getRecentlySuggestKeyword(suggest.id) //
+            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<String>()
+            {
+                @Override
+                public void accept(String keyword) throws Exception
+                {
+                    try
+                    {
+                        mAnalytics.onEventPopularSuggestClick(getActivity(), suggest.display);
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.getMessage());
+                    }
+
+                    startFinishAction(suggest, keyword, AnalyticsManager.Category.OB_SEARCH_RECOMMEND);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    try
+                    {
+                        mAnalytics.onEventPopularSuggestClick(getActivity(), suggest.display);
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.getMessage());
+                    }
+
+                    startFinishAction(suggest, "", AnalyticsManager.Category.OB_SEARCH_RECOMMEND);
                 }
             }));
     }
