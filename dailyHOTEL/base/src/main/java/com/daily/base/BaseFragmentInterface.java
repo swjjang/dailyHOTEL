@@ -21,4 +21,6 @@ public interface BaseFragmentInterface
     void onActivityCreated(Bundle savedInstanceState);
 
     void onActivityResult(int requestCode, int resultCode, Intent data);
+
+    void notifyRefresh(boolean force);
 }

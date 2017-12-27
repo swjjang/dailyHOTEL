@@ -250,7 +250,26 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
     @Override
     public void setCategoryTab(int position)
     {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
 
+        getViewDataBinding().viewPager.setCurrentItem(position);
+    }
+
+    @Override
+    public void notifyRefreshFragments(boolean force)
+    {
+        if (getViewDataBinding() == null || mFragmentPagerAdapter == null)
+        {
+            return;
+        }
+
+        for (StayListFragment stayListFragment : mFragmentPagerAdapter.getFragmentList())
+        {
+            stayListFragment.notifyRefresh(force);
+        }
     }
 
     private void initToolbar(ActivityStayTabDataBinding viewDataBinding)

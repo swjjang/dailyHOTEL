@@ -1,6 +1,9 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.list;
 
 
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+
 import com.daily.base.BaseFragmentDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.entity.ObjectItem;
@@ -20,6 +23,9 @@ public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmen
 
     public interface OnEventListener extends OnBaseEventListener
     {
+        void onSwipeRefreshing();
+
+        void onMoreRefreshing();
     }
 
     public StayListFragmentView(OnEventListener listener)
@@ -30,6 +36,43 @@ public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmen
     @Override
     protected void setContentView(FragmentStayListDataBinding viewDataBinding)
     {
+        viewDataBinding.recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
+        {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            {
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+
+                // SwipeRefreshLayout
+                if (dy <= 0)
+                {
+                    int firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition();
+
+                    if (firstVisibleItem == 0)
+                    {
+                        setSwipeRefreshing(true);
+                    } else
+                    {
+                        setSwipeRefreshing(false);
+                    }
+                } else
+                {
+                    int lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
+                    int itemCount = linearLayoutManager.getItemCount();
+
+                    if (lastVisibleItemPosition > itemCount * 2 / 3)
+                    {
+                        getEventListener().onMoreRefreshing();
+                    }
+                }
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+            {
+            }
+        });
+
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.recyclerView, getColor(R.color.default_over_scroll_edge));
     }
 
@@ -82,6 +125,11 @@ public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmen
     @Override
     public void setSwipeRefreshing(boolean refreshing)
     {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
 
+        getViewDataBinding().swipeRefreshLayout.setRefreshing(refreshing);
     }
 }

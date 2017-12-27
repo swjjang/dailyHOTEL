@@ -1,12 +1,10 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.list;
 
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -21,9 +19,7 @@ import com.daily.dailyhotel.entity.Category;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.entity.StayArea;
-import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
-import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.entity.Stays;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
@@ -46,6 +42,9 @@ import io.reactivex.functions.Function;
  */
 public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<StayListFragment, StayListFragmentInterface> implements StayListFragmentView.OnEventListener
 {
+    static final int PAGE_NONE = -1;
+    static final int PAGE_FINISH = Integer.MAX_VALUE;
+
     private StayListFragmentAnalyticsInterface mAnalytics;
 
     StayRemoteImpl mStayRemoteImpl;
@@ -53,7 +52,7 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
     StayTabPresenter.StayViewModel mStayViewModel;
 
     Category mCategory;
-    int mPage;
+    int mPage = PAGE_NONE;
 
     public interface StayListFragmentAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -131,7 +130,7 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
 
         initViewModel(activity);
 
-        setRefresh(isCurrentFragment() == true);
+        setRefresh(false);
     }
 
     @Override
@@ -151,6 +150,23 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
 
+    }
+
+    @Override
+    public void notifyRefresh(boolean force)
+    {
+        if (force == true || (isCurrentFragment() == true && mPage == PAGE_NONE))
+        {
+            mPage = 1;
+
+            setRefresh(true);
+
+            // Activity 가 아직 생성되지 않은 경우가 있다.
+            if (getActivity() != null)
+            {
+                onRefresh(true);
+            }
+        }
     }
 
     @Override
@@ -184,12 +200,7 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
     @Override
     protected synchronized void onRefresh(boolean showProgress)
     {
-        onRefresh(showProgress, mPage);
-    }
-
-    protected synchronized void onRefresh(boolean showProgress, int page)
-    {
-        if (getActivity().isFinishing() == true || isRefresh() == false || mStayViewModel == null)
+        if (getActivity().isFinishing() == true || isRefresh() == false || mStayViewModel == null || mPage == PAGE_FINISH)
         {
             setRefresh(false);
             return;
@@ -210,7 +221,7 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
         setRefresh(false);
         screenLock(showProgress);
 
-        addCompositeDisposable(mStayRemoteImpl.getList(getQueryMap(page), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()).map(new Function<Stays, Pair<Boolean, List<ObjectItem>>>()
+        addCompositeDisposable(mStayRemoteImpl.getList(getQueryMap(mPage), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()).map(new Function<Stays, Pair<Boolean, List<ObjectItem>>>()
         {
             @Override
             public Pair<Boolean, List<ObjectItem>> apply(Stays stays) throws Exception
@@ -224,9 +235,12 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
             @Override
             public void accept(Pair<Boolean, List<ObjectItem>> pair) throws Exception
             {
-                mPage = page;
+                if (pair.second.size() < Constants.PAGENATION_LIST_SIZE)
+                {
+                    mPage = PAGE_FINISH;
+                }
 
-                if (page > 1)
+                if (mPage > 1)
                 {
                     getViewInterface().addList(pair.second, mStayViewModel.stayFilter.getValue().sortType == StayFilter.SortType.DISTANCE//
                         , mStayViewModel.stayBookDateTime.getValue().getNights() > 1, pair.first, DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
@@ -248,6 +262,34 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
         }));
     }
 
+    @Override
+    public void onSwipeRefreshing()
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        mPage = 1;
+
+        setRefresh(true);
+        onRefresh(false);
+    }
+
+    @Override
+    public void onMoreRefreshing()
+    {
+        if (mPage == PAGE_FINISH || lock() == true)
+        {
+            return;
+        }
+
+        mPage++;
+
+        setRefresh(true);
+        onRefresh(true);
+    }
+
     private void initViewModel(BaseActivity activity)
     {
         if (activity == null)
@@ -257,57 +299,7 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
 
         mStayViewModel = ViewModelProviders.of(activity).get(StayTabPresenter.StayViewModel.class);
 
-//        mStayViewModel.stayBookDateTime.observe(activity, new Observer<StayBookDateTime>()
-//        {
-//            @Override
-//            public void onChanged(@Nullable StayBookDateTime stayBookDateTime)
-//            {
-//                if (isCurrentFragment() == true)
-//                {
-//                    setRefresh(true);
-//                    onRefresh(true);
-//                }
-//            }
-//        });
-//
-//        mStayViewModel.stayRegion.observe(activity, new Observer<StayRegion>()
-//        {
-//            @Override
-//            public void onChanged(@Nullable StayRegion stayRegion)
-//            {
-//                if (isCurrentFragment() == true)
-//                {
-//                    setRefresh(true);
-//                    onRefresh(true);
-//                }
-//            }
-//        });
-//
-//        mStayViewModel.selectedCategory.observe(activity, new Observer<Category>()
-//        {
-//            @Override
-//            public void onChanged(@Nullable Category category)
-//            {
-//                if (isCurrentFragment() == true)
-//                {
-//                    setRefresh(true);
-//                    onRefresh(true);
-//                }
-//            }
-//        });
-//
-//        mStayViewModel.stayFilter.observe(activity, new Observer<StayFilter>()
-//        {
-//            @Override
-//            public void onChanged(@Nullable StayFilter stayFilter)
-//            {
-//                if (isCurrentFragment() == true)
-//                {
-//                    setRefresh(true);
-//                    onRefresh(true);
-//                }
-//            }
-//        });
+
     }
 
     boolean isCurrentFragment()
@@ -481,12 +473,11 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
 
         // page
         // limit
-        final int MAX_LIMIT = 200;
         // 페이지 번호. 0 보다 큰 정수. 값을 입력하지 않으면 페이지네이션을 적용하지 않고 전체 데이터를 반환함
         if (page > 0)
         {
             queryMap.put("page", page);
-            queryMap.put("limit", MAX_LIMIT);
+            queryMap.put("limit", Constants.PAGENATION_LIST_SIZE);
         }
 
         // details

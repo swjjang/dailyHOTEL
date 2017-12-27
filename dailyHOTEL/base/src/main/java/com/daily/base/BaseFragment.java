@@ -1,6 +1,5 @@
 package com.daily.base;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,8 +18,7 @@ public abstract class BaseFragment<T1 extends BaseFragmentPresenter> extends Fra
         mPresenter = createInstancePresenter();
     }
 
-    protected abstract
-    @NonNull
+    protected abstract @NonNull
     T1 createInstancePresenter();
 
     @Nullable
@@ -93,6 +91,14 @@ public abstract class BaseFragment<T1 extends BaseFragmentPresenter> extends Fra
         if (mPresenter != null)
         {
             mPresenter.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    public void notifyRefresh(boolean force)
+    {
+        if (mPresenter != null)
+        {
+            mPresenter.notifyRefresh(false);
         }
     }
 }

@@ -85,6 +85,9 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         MutableLiveData<Category> selectedCategory = new MutableLiveData<>();
         MutableLiveData<Location> location = new MutableLiveData<>();
         MutableLiveData<ViewType> viewType = new MutableLiveData<>();
+
+//        // 화면 갱신
+//        MutableLiveData<Boolean> notifyRefreshFragment = new MutableLiveData<>();
     }
 
     class StayViewModelFactory implements ViewModelProvider.Factory
@@ -115,12 +118,14 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
                 if (DailyTextUtils.isTextEmpty(oldCategoryCode, oldCategoryName) == false)
                 {
-                    stayViewModel.selectedCategory.setValue(new Category(oldCategoryName, oldCategoryCode));
+                    stayViewModel.selectedCategory.setValue(new Category(oldCategoryCode, oldCategoryName));
                 } else
                 {
                     stayViewModel.selectedCategory.setValue(Category.ALL);
                 }
             }
+
+//            stayViewModel.notifyRefreshFragment.setValue(false);
 
             return stayViewModel;
         }
@@ -322,6 +327,8 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
                         notifyRegionTextChanged();
                         notifyCategoryChanged();
+
+                        getViewInterface().notifyRefreshFragments(false);
                     }
                 }
 
@@ -346,7 +353,18 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
     @Override
     public void onCategoryTabSelected(TabLayout.Tab tab)
     {
+        if (tab == null)
+        {
+            return;
+        }
 
+        Category category = (Category) tab.getTag();
+
+        mStayViewModel.selectedCategory.setValue(category);
+
+        getViewInterface().setCategoryTab(tab.getPosition());
+
+        getViewInterface().notifyRefreshFragments(false);
     }
 
     @Override
