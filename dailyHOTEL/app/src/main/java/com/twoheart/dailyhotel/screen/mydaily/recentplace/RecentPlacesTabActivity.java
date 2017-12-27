@@ -413,10 +413,15 @@ public class RecentPlacesTabActivity extends BaseActivity
                 switch (resultCode)
                 {
                     case Activity.RESULT_OK:
+                    case com.daily.base.BaseActivity.RESULT_CODE_DATA_CHANGED:
                         mFragmentList.get(mViewPager.getCurrentItem()).onActivityResult(requestCode, resultCode, data);
                         break;
 
-                    case CODE_RESULT_ACTIVITY_REFRESH:
+                    case com.daily.base.BaseActivity.RESULT_CODE_REFRESH:
+                        mDontReloadAtOnResume = false;
+                        break;
+
+                    case Constants.CODE_RESULT_ACTIVITY_REFRESH:
                         if (data == null)
                         {
                             mDontReloadAtOnResume = false;
