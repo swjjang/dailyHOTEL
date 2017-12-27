@@ -75,7 +75,8 @@ public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.
             , suggest, keyword, null);
 
         if (AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECENT.equalsIgnoreCase(category) == false //
-            && AnalyticsManager.Category.OB_SEARCH_ORIGIN_AUTO.equalsIgnoreCase(category) == false)
+            && AnalyticsManager.Category.OB_SEARCH_ORIGIN_AUTO.equalsIgnoreCase(category) == false//
+            &&  AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECOMMEND.equalsIgnoreCase(category) == false)
         {
             category = AnalyticsManager.Category.OB_SEARCH_ORIGIN_ETC;
         }

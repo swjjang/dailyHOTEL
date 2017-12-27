@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -28,6 +29,8 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
     public static final int RESULT_CODE_DATA_CHANGED = -10005; // 데이터가 변동되었다.
 
     private BasePresenter mPresenter;
+
+    private boolean mScreenTouchEnabled = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -98,6 +101,17 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
         {
             mPresenter.onResume();
         }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev)
+    {
+        if (mScreenTouchEnabled == false)
+        {
+            return true;
+        }
+
+        return super.dispatchTouchEvent(ev);
     }
 
     @Override
@@ -191,6 +205,11 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
         {
             mPresenter.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    public void setScreenTouchEnabled(boolean touchEnabled)
+    {
+        mScreenTouchEnabled = touchEnabled;
     }
 
     /**

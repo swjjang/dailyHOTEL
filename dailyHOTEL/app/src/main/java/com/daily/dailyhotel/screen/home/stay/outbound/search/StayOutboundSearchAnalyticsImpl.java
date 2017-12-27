@@ -2,6 +2,7 @@ package com.daily.dailyhotel.screen.home.stay.outbound.search;
 
 import android.app.Activity;
 
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.HashMap;
@@ -59,5 +60,17 @@ public class StayOutboundSearchAnalyticsImpl implements StayOutboundSearchPresen
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH//
             , AnalyticsManager.Action.MEMBER_SELECT, null, null);
+    }
+
+    @Override
+    public void onEventPopularSuggestClick(Activity activity, String suggestDisplayName)
+    {
+        if (activity == null || DailyTextUtils.isTextEmpty(suggestDisplayName) == true)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.OB_SEARCH_RECOMMEND //
+            , suggestDisplayName, AnalyticsManager.ValueType.EMPTY, null);
     }
 }

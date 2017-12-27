@@ -3,6 +3,7 @@ package com.daily.dailyhotel.screen.mydaily.reward.history.card;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
+import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.RewardCardHistory;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityRewardCardDataBinding;
@@ -51,7 +52,7 @@ public class RewardCardHistoryView extends BaseDialogView<RewardCardHistoryView.
     }
 
     @Override
-    public void setRewardCardHistoryList(List<RewardCardHistory> rewardCardHistoryList)
+    public void setRewardCardHistoryList(List<ObjectItem> rewardCardHistoryList)
     {
         if (getViewDataBinding() == null || rewardCardHistoryList == null || rewardCardHistoryList.size() == 0)
         {

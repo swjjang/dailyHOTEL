@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -87,6 +88,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     Dialog mDialog;
     LoadingDialog mLockUI;
     protected String mNetworkTag;
+    private boolean mScreenTouchEnabled = true;
 
     private Handler mHandler = new Handler()
     {
@@ -225,6 +227,17 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     }
 
     @Override
+    public boolean dispatchTouchEvent(MotionEvent ev)
+    {
+        if (mScreenTouchEnabled == false)
+        {
+            return true;
+        }
+
+        return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
         switch (item.getItemId())
@@ -234,6 +247,11 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setScreenTouchEnabled(boolean touchEnabled)
+    {
+        mScreenTouchEnabled = touchEnabled;
     }
 
     protected void setLockUICancelable(boolean flag)

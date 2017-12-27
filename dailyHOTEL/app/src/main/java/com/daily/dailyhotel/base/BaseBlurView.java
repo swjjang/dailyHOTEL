@@ -1,6 +1,5 @@
 package com.daily.dailyhotel.base;
 
-import android.app.Activity;
 import android.databinding.ViewDataBinding;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -43,7 +42,7 @@ public abstract class BaseBlurView<T1 extends OnBaseEventListener, T2 extends Vi
     }
 
     @Override
-    public void setBlurVisible(Activity activity, boolean visible)
+    public void setBlurVisible(BaseActivity activity, boolean visible)
     {
         if (activity == null)
         {
@@ -52,6 +51,8 @@ public abstract class BaseBlurView<T1 extends OnBaseEventListener, T2 extends Vi
 
         if (visible == true)
         {
+            activity.setScreenTouchEnabled(false);
+
             if (mBlurImageView == null)
             {
                 mBlurImageView = new ImageView(activity);
@@ -113,6 +114,8 @@ public abstract class BaseBlurView<T1 extends OnBaseEventListener, T2 extends Vi
                 mBlurImageView.setBackgroundDrawable(null);
                 mBlurImageView.setVisibility(View.GONE);
             }
+
+            activity.setScreenTouchEnabled(true);
         }
     }
 }

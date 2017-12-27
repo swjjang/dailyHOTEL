@@ -2,6 +2,7 @@ package com.daily.dailyhotel.screen.mydaily.reward.history.card;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,18 +12,20 @@ import android.widget.ImageView;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.RewardCardHistory;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.LayoutRewardCardHistoryDataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutRewardCardHistoryFooterDataBinding;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RewardCardHistoryAdapter extends RecyclerView.Adapter<RewardCardHistoryAdapter.CardHistoryViewHolder>
+public class RewardCardHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
     Context mContext;
-    private List<RewardCardHistory> mList;
+    private List<ObjectItem> mList;
     OnEventListener mOnEventListener;
 
     public interface OnEventListener
@@ -47,7 +50,7 @@ public class RewardCardHistoryAdapter extends RecyclerView.Adapter<RewardCardHis
         mList.clear();
     }
 
-    public void addAll(List<RewardCardHistory> collection)
+    public void addAll(List<ObjectItem> collection)
     {
         if (collection == null)
         {
@@ -57,7 +60,7 @@ public class RewardCardHistoryAdapter extends RecyclerView.Adapter<RewardCardHis
         mList.addAll(collection);
     }
 
-    public void setAll(List<RewardCardHistory> collection)
+    public void setAll(List<ObjectItem> collection)
     {
         clear();
         addAll(collection);
@@ -73,7 +76,7 @@ public class RewardCardHistoryAdapter extends RecyclerView.Adapter<RewardCardHis
         mList.remove(position);
     }
 
-    public RewardCardHistory getItem(int position)
+    public ObjectItem getItem(int position)
     {
         if (position < 0 || mList.size() <= position)
         {
@@ -95,17 +98,51 @@ public class RewardCardHistoryAdapter extends RecyclerView.Adapter<RewardCardHis
     }
 
     @Override
-    public RewardCardHistoryAdapter.CardHistoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    public int getItemViewType(int position)
     {
-        LayoutRewardCardHistoryDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_reward_card_history_data, parent, false);
-
-        return new CardHistoryViewHolder(dataBinding);
+        return mList.get(position).mType;
     }
 
     @Override
-    public void onBindViewHolder(RewardCardHistoryAdapter.CardHistoryViewHolder holder, int position)
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        RewardCardHistory rewardCardHistory = getItem(position);
+        switch (viewType)
+        {
+            case ObjectItem.TYPE_ENTRY:
+            {
+                LayoutRewardCardHistoryDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_reward_card_history_data, parent, false);
+
+                return new CardHistoryViewHolder(dataBinding);
+            }
+
+            case ObjectItem.TYPE_FOOTER_VIEW:
+            {
+                LayoutRewardCardHistoryFooterDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_reward_card_history_footer_data, parent, false);
+
+                return new BaseDataBindingViewHolder(dataBinding);
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position)
+    {
+        switch (getItemViewType(position))
+        {
+            case ObjectItem.TYPE_ENTRY:
+                onBindViewHolder((CardHistoryViewHolder) holder, position);
+                break;
+
+            case ObjectItem.TYPE_FOOTER_VIEW:
+                break;
+        }
+    }
+
+    private void onBindViewHolder(CardHistoryViewHolder holder, int position)
+    {
+        RewardCardHistory rewardCardHistory = getItem(position).getItem();
 
         if (position == 0)
         {
@@ -196,6 +233,14 @@ public class RewardCardHistoryAdapter extends RecyclerView.Adapter<RewardCardHis
                 , dataBinding.sticker7nightsImageView//
                 , dataBinding.sticker8nightsImageView//
                 , dataBinding.sticker9nightsImageView};
+        }
+    }
+
+    protected class BaseDataBindingViewHolder extends RecyclerView.ViewHolder
+    {
+        public BaseDataBindingViewHolder(ViewDataBinding dataBinding)
+        {
+            super(dataBinding.getRoot());
         }
     }
 }

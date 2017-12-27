@@ -83,6 +83,8 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         void onEventSuggestClick(Activity activity);
 
         void onEventPeopleClick(Activity activity);
+
+        void onEventPopularSuggestClick(Activity activity, String suggestDisplayName);
     }
 
     public StayOutboundSearchPresenter(@NonNull StayOutboundSearchActivity activity)
@@ -553,7 +555,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
             return;
         }
 
-        addCompositeDisposable(setSuggestAndKeyword(suggest, suggest.display, null).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer()
+        addCompositeDisposable(setSuggestAndKeyword(suggest, suggest.display, AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECOMMEND).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer()
         {
             @Override
             public void accept(Object o) throws Exception
@@ -563,6 +565,8 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                 unLockAll();
             }
         }));
+
+        mAnalytics.onEventPopularSuggestClick(getActivity(), suggest.display);
     }
 
     private void setCommonDateTime(CommonDateTime commonDateTime)

@@ -41,6 +41,7 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
 {
     private SuggestListAdapter mSuggestListAdapter;
     private RecentlySuggestListAdapter mRecentlySuggestListAdapter;
+    private RecentlySuggestListAdapter mPopularSuggestListAdapter;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -49,6 +50,8 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
         void onSuggestClick(Suggest suggest);
 
         void onRecentlySuggestClick(Suggest suggest);
+
+        void onPopularSuggestClick(Suggest suggest);
 
         void onDeleteAllRecentlySuggest();
     }
@@ -403,9 +406,9 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
                     }
                 }
             });
-
-            getViewDataBinding().recentlySuggestRecyclerView.setAdapter(mRecentlySuggestListAdapter);
         }
+
+        getViewDataBinding().recentlySuggestRecyclerView.setAdapter(mRecentlySuggestListAdapter);
 
         if (suggestList == null || suggestList.size() == 0)
         {
@@ -440,9 +443,9 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
             return;
         }
 
-        if (mRecentlySuggestListAdapter == null)
+        if (mPopularSuggestListAdapter == null)
         {
-            mRecentlySuggestListAdapter = new RecentlySuggestListAdapter(getContext(), new View.OnClickListener()
+            mPopularSuggestListAdapter = new RecentlySuggestListAdapter(getContext(), new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -451,19 +454,19 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
 
                     if (suggest != null)
                     {
-                        getEventListener().onRecentlySuggestClick(suggest);
+                        getEventListener().onPopularSuggestClick(suggest);
                     }
                 }
             });
-
-            getViewDataBinding().recentlySuggestRecyclerView.setAdapter(mRecentlySuggestListAdapter);
         }
+
+        getViewDataBinding().recentlySuggestRecyclerView.setAdapter(mPopularSuggestListAdapter);
 
         if (suggestList == null || suggestList.size() == 0)
         {
             getViewDataBinding().recentlySuggestLayout.setVisibility(View.GONE);
-            mRecentlySuggestListAdapter.setAll(null);
-            mRecentlySuggestListAdapter.notifyDataSetChanged();
+            mPopularSuggestListAdapter.setAll(null);
+            mPopularSuggestListAdapter.notifyDataSetChanged();
             return;
         }
 
@@ -480,8 +483,8 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
 
         objectItemList.add(new ObjectItem(ObjectItem.TYPE_FOOTER_VIEW, null));
 
-        mRecentlySuggestListAdapter.setAll(objectItemList);
-        mRecentlySuggestListAdapter.notifyDataSetChanged();
+        mPopularSuggestListAdapter.setAll(objectItemList);
+        mPopularSuggestListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -780,173 +783,6 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
         private List<ObjectItem> mSuggestList;
 
         public RecentlySuggestListAdapter(Context context, View.OnClickListener listener)
-        {
-            mContext = context;
-            mOnClickListener = listener;
-
-            setAll(null);
-        }
-
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
-        {
-            switch (viewType)
-            {
-                case ObjectItem.TYPE_FOOTER_VIEW:
-                {
-                    View view = new View(mContext);
-                    ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(mContext, 10d));
-                    view.setLayoutParams(params);
-
-                    FooterViewHolder titleViewHolder = new FooterViewHolder(view);
-
-                    return titleViewHolder;
-                }
-
-                case ObjectItem.TYPE_ENTRY:
-                {
-                    ListRowStayOutboundSuggestEntryDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_stay_outbound_suggest_entry_data, parent, false);
-
-                    EntryViewHolder entryViewHolder = new EntryViewHolder(dataBinding);
-
-                    return entryViewHolder;
-                }
-            }
-
-            return null;
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position)
-        {
-            ObjectItem item = getItem(position);
-
-            if (item == null)
-            {
-                return;
-            }
-
-            switch (item.mType)
-            {
-                case ObjectItem.TYPE_FOOTER_VIEW:
-                    break;
-
-                case ObjectItem.TYPE_ENTRY:
-                    onBindViewHolder((EntryViewHolder) holder, item, position);
-                    break;
-            }
-        }
-
-        @Override
-        public int getItemCount()
-        {
-            if (mSuggestList == null)
-            {
-                return 0;
-            } else
-            {
-                return mSuggestList.size();
-            }
-        }
-
-        @Override
-        public int getItemViewType(int position)
-        {
-            return mSuggestList.get(position).mType;
-        }
-
-        public void setAll(List<ObjectItem> objectItemList)
-        {
-            if (mSuggestList == null)
-            {
-                mSuggestList = new ArrayList<>();
-            }
-
-            mSuggestList.clear();
-
-            if (objectItemList != null && objectItemList.size() > 0)
-            {
-                mSuggestList.addAll(objectItemList);
-            }
-        }
-
-        public ObjectItem getItem(int position)
-        {
-            if (position < 0 || mSuggestList.size() <= position)
-            {
-                return null;
-            }
-
-            return mSuggestList.get(position);
-        }
-
-        private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)
-        {
-            Suggest suggest = item.getItem();
-
-            holder.itemView.getRootView().setTag(suggest);
-
-            holder.dataBinding.textView.setText(suggest.display);
-
-            switch (suggest.categoryKey)
-            {
-                case Suggest.CATEGORY_AIRPORT:
-                    holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_04_airport, 0, 0, 0);
-                    break;
-
-                case Suggest.CATEGORY_HOTEL:
-                    holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_02_hotel, 0, 0, 0);
-                    break;
-
-                case Suggest.CATEGORY_POINT:
-                    holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_03_landmark, 0, 0, 0);
-                    break;
-
-                case Suggest.CATEGORY_REGION:
-                    holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_01_region, 0, 0, 0);
-                    break;
-
-                case Suggest.CATEGORY_STATION:
-                    holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_05_train, 0, 0, 0);
-                    break;
-
-                default:
-                    holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_01_region, 0, 0, 0);
-                    break;
-            }
-        }
-
-        class FooterViewHolder extends RecyclerView.ViewHolder
-        {
-            public FooterViewHolder(View itemView)
-            {
-                super(itemView);
-            }
-        }
-
-        class EntryViewHolder extends RecyclerView.ViewHolder
-        {
-            ListRowStayOutboundSuggestEntryDataBinding dataBinding;
-
-            public EntryViewHolder(ListRowStayOutboundSuggestEntryDataBinding dataBinding)
-            {
-                super(dataBinding.getRoot());
-
-                this.dataBinding = dataBinding;
-
-                dataBinding.getRoot().setOnClickListener(mOnClickListener);
-            }
-        }
-    }
-
-    private class PopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
-    {
-        private Context mContext;
-        View.OnClickListener mOnClickListener;
-
-        private List<ObjectItem> mSuggestList;
-
-        public PopularSuggestListAdapter(Context context, View.OnClickListener listener)
         {
             mContext = context;
             mOnClickListener = listener;

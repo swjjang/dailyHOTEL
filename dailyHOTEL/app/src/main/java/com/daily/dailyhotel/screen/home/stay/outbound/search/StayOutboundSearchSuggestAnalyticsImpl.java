@@ -15,8 +15,8 @@ public class StayOutboundSearchSuggestAnalyticsImpl implements StayOutboundSearc
             return;
         }
 
-        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH//
-            , AnalyticsManager.Action.KEYWORD_NOT_MATCH_OUTBOUND, keyword, null);
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.AUTOSEARCHNOTFOUND_OUTBOUND//
+            , keyword, AnalyticsManager.ValueType.EMPTY, null);
     }
 
     @Override
@@ -66,5 +66,17 @@ public class StayOutboundSearchSuggestAnalyticsImpl implements StayOutboundSearc
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.OB_SEARCH_RECENT //
             , suggestDisplayName, keyword, null);
+    }
+
+    @Override
+    public void onEventPopularSuggestClick(Activity activity, String suggestDisplayName)
+    {
+        if (activity == null || DailyTextUtils.isTextEmpty(suggestDisplayName) == true)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.OB_SEARCH_RECOMMEND //
+            , suggestDisplayName, AnalyticsManager.ValueType.EMPTY, null);
     }
 }

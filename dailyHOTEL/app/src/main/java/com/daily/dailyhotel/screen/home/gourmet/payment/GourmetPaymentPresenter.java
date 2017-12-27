@@ -1576,208 +1576,71 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
             getViewInterface().setGourmetPayment(totalPrice, discountPrice);
 
-            // 1000원 미만 결제시에 간편/일반 결제 불가 - 쿠폰 또는 적립금 전체 사용이 아닌경우 조건 추가
-            DailyBookingPaymentTypeView.PaymentType paymentType;
-
-            if (paymentPrice > 0 && paymentPrice < CARD_MIN_PRICE)
-            {
-                if (mPaymentType == DailyBookingPaymentTypeView.PaymentType.EASY_CARD || mPaymentType == DailyBookingPaymentTypeView.PaymentType.CARD)
-                {
-                    paymentType = null;
-                } else
-                {
-                    paymentType = mPaymentType;
-                }
-
-                getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.EASY_CARD, false);
-                getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.CARD, false);
-
-                if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigGourmetPhonePaymentEnabled() == true)
-                {
-                    getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.PHONE, true);
-
-                    if (paymentType == null)
-                    {
-                        paymentType = DailyBookingPaymentTypeView.PaymentType.PHONE;
-                    }
-                } else
-                {
-                    getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.PHONE, false);
-
-                    if (paymentType == DailyBookingPaymentTypeView.PaymentType.PHONE)
-                    {
-                        paymentType = null;
-                    }
-                }
-
-                if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigGourmetVirtualPaymentEnabled() == true)
-                {
-                    getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.VBANK, true);
-
-                    if (paymentType == null)
-                    {
-                        paymentType = DailyBookingPaymentTypeView.PaymentType.VBANK;
-                    }
-                } else
-                {
-                    getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.VBANK, false);
-
-                    if (paymentType == DailyBookingPaymentTypeView.PaymentType.VBANK)
-                    {
-                        paymentType = null;
-                    }
-                }
-
-                getViewInterface().setPaymentType(paymentType);
-            } else if (paymentPrice > PHONE_MAX_PRICE)
-            {
-                if (mPaymentType == DailyBookingPaymentTypeView.PaymentType.PHONE)
-                {
-                    paymentType = null;
-                } else
-                {
-                    paymentType = mPaymentType;
-                }
-
-                if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigGourmetSimpleCardPaymentEnabled() == true)
-                {
-                    getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.EASY_CARD, true);
-
-                    if (paymentType == null)
-                    {
-                        paymentType = DailyBookingPaymentTypeView.PaymentType.EASY_CARD;
-                    }
-                } else
-                {
-                    getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.EASY_CARD, false);
-
-                    if (paymentType == DailyBookingPaymentTypeView.PaymentType.EASY_CARD)
-                    {
-                        paymentType = null;
-                    }
-                }
-
-                if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigGourmetCardPaymentEnabled() == true)
-                {
-                    getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.CARD, true);
-
-                    if (paymentType == null)
-                    {
-                        paymentType = DailyBookingPaymentTypeView.PaymentType.CARD;
-                    }
-                } else
-                {
-                    getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.CARD, false);
-
-                    if (paymentType == DailyBookingPaymentTypeView.PaymentType.CARD)
-                    {
-                        paymentType = null;
-                    }
-                }
-
-                getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.PHONE, false);
-
-                if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigGourmetVirtualPaymentEnabled() == true)
-                {
-                    getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.VBANK, true);
-
-                    if (paymentType == null)
-                    {
-                        paymentType = DailyBookingPaymentTypeView.PaymentType.VBANK;
-                    }
-                } else
-                {
-                    getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.VBANK, false);
-
-                    if (paymentType == DailyBookingPaymentTypeView.PaymentType.VBANK)
-                    {
-                        paymentType = null;
-                    }
-                }
-
-                getViewInterface().setPaymentType(paymentType);
-            } else if (paymentPrice > 0)
-            {
-                paymentType = mPaymentType;
-
-                if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigGourmetSimpleCardPaymentEnabled() == true)
-                {
-                    getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.EASY_CARD, true);
-
-                    if (paymentType == null)
-                    {
-                        paymentType = DailyBookingPaymentTypeView.PaymentType.EASY_CARD;
-                    }
-                } else
-                {
-                    getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.EASY_CARD, false);
-
-                    if (paymentType == DailyBookingPaymentTypeView.PaymentType.EASY_CARD)
-                    {
-                        paymentType = null;
-                    }
-                }
-
-                if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigGourmetCardPaymentEnabled() == true)
-                {
-                    getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.CARD, true);
-
-                    if (paymentType == null)
-                    {
-                        paymentType = DailyBookingPaymentTypeView.PaymentType.CARD;
-                    }
-                } else
-                {
-                    getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.CARD, false);
-
-                    if (paymentType == DailyBookingPaymentTypeView.PaymentType.CARD)
-                    {
-                        paymentType = null;
-                    }
-                }
-
-                if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigGourmetPhonePaymentEnabled() == true)
-                {
-                    getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.PHONE, true);
-
-                    if (paymentType == null)
-                    {
-                        paymentType = DailyBookingPaymentTypeView.PaymentType.PHONE;
-                    }
-                } else
-                {
-                    getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.PHONE, false);
-
-                    if (paymentType == DailyBookingPaymentTypeView.PaymentType.PHONE)
-                    {
-                        paymentType = null;
-                    }
-                }
-
-                if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigGourmetVirtualPaymentEnabled() == true)
-                {
-                    getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.VBANK, true);
-
-                    if (paymentType == null)
-                    {
-                        paymentType = DailyBookingPaymentTypeView.PaymentType.VBANK;
-                    }
-                } else
-                {
-                    getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.VBANK, false);
-
-                    if (paymentType == DailyBookingPaymentTypeView.PaymentType.VBANK)
-                    {
-                        paymentType = null;
-                    }
-                }
-
-                getViewInterface().setPaymentType(paymentType);
-            } else
+            if (paymentPrice <= 0)
             {
                 getViewInterface().setPaymentType(DailyBookingPaymentTypeView.PaymentType.FREE);
-            }
+            } else
+            {
+                boolean easyCardEnabled = true;
+                boolean cardEnabled = true;
+                boolean phoneEnabled = true;
+                boolean vBankEnabled = true;
 
+                // 리모트에서 조절되는 부분
+                if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStaySimpleCardPaymentEnabled() == false)
+                {
+                    easyCardEnabled = false;
+                }
+
+                if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStayCardPaymentEnabled() == false)
+                {
+                    cardEnabled = false;
+                }
+
+                if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStayPhonePaymentEnabled() == false)
+                {
+                    phoneEnabled = false;
+                }
+
+                if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStayVirtualPaymentEnabled() == false)
+                {
+                    vBankEnabled = false;
+                }
+
+                if (paymentPrice <= 0)
+                {
+                    getViewInterface().setPaymentType(DailyBookingPaymentTypeView.PaymentType.FREE);
+                } else
+                {
+                    if (paymentPrice > 0 && paymentPrice < CARD_MIN_PRICE)
+                    {
+                        easyCardEnabled = false;
+                        cardEnabled = false;
+                    } else if (paymentPrice > PHONE_MAX_PRICE)
+                    {
+                        phoneEnabled = false;
+                    }
+                }
+
+                getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.EASY_CARD, easyCardEnabled);
+                getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.CARD, cardEnabled);
+                getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.PHONE, phoneEnabled);
+                getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.VBANK, vBankEnabled);
+
+                if (easyCardEnabled == true)
+                {
+                    getViewInterface().setPaymentType(DailyBookingPaymentTypeView.PaymentType.EASY_CARD);
+                } else if (cardEnabled == true)
+                {
+                    getViewInterface().setPaymentType(DailyBookingPaymentTypeView.PaymentType.CARD);
+                } else if (phoneEnabled == true)
+                {
+                    getViewInterface().setPaymentType(DailyBookingPaymentTypeView.PaymentType.PHONE);
+                } else if (vBankEnabled == true)
+                {
+                    getViewInterface().setPaymentType(DailyBookingPaymentTypeView.PaymentType.VBANK);
+                }
+            }
         } catch (Exception e)
         {
             ExLog.d(e.toString());
