@@ -10,10 +10,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.VersionUtils;
 
 public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatActivity
@@ -31,6 +31,8 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
     private BasePresenter mPresenter;
 
     private FragmentManager mFragmentManager;
+
+    private boolean mScreenTouchEnabled = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -58,12 +60,10 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
         mPresenter.onPostCreate();
     }
 
-    protected abstract
-    @NonNull
+    protected abstract @NonNull
     T1 createInstancePresenter();
 
-    public
-    @NonNull
+    public @NonNull
     T1 getPresenter()
     {
         if (mPresenter == null)
@@ -94,6 +94,17 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
         {
             mPresenter.onResume();
         }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev)
+    {
+        if (mScreenTouchEnabled == false)
+        {
+            return true;
+        }
+
+        return super.dispatchTouchEvent(ev);
     }
 
     @Override
@@ -187,6 +198,11 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
         {
             mPresenter.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    public void setScreenTouchEnabled(boolean touchEnabled)
+    {
+        mScreenTouchEnabled = touchEnabled;
     }
 
     /**

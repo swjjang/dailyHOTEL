@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.place.base;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -39,7 +38,7 @@ public abstract class BaseBlurLayout extends BaseLayout
         return mBlurImageView.getVisibility() == View.VISIBLE;
     }
 
-    public void setBlurVisibility(Activity activity, boolean visible)
+    public void setBlurVisibility(BaseActivity activity, boolean visible)
     {
         if (activity == null)
         {
@@ -48,6 +47,8 @@ public abstract class BaseBlurLayout extends BaseLayout
 
         if (visible == true)
         {
+            activity.setScreenTouchEnabled(false);
+
             if (mBlurImageView == null)
             {
                 mBlurImageView = new ImageView(activity);
@@ -109,6 +110,8 @@ public abstract class BaseBlurLayout extends BaseLayout
                 mBlurImageView.setBackgroundDrawable(null);
                 mBlurImageView.setVisibility(View.GONE);
             }
+
+            activity.setScreenTouchEnabled(true);
         }
     }
 }
