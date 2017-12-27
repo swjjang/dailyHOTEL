@@ -109,12 +109,21 @@ public class RecentStayListFragment extends RecentPlacesListFragment
             case CODE_REQUEST_ACTIVITY_STAY_DETAIL:
             case RecentStayListFragment.REQUEST_CODE_DETAIL:
             {
-                if (resultCode == com.daily.base.BaseActivity.RESULT_CODE_REFRESH && data != null)
+                switch (resultCode)
                 {
-                    if (data.hasExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH) == true)
-                    {
-                        onChangedWish(mWishPosition, data.getBooleanExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH, false));
-                    }
+                    case com.daily.base.BaseActivity.RESULT_CODE_REFRESH:
+                        if (data != null && data.hasExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH) == true)
+                        {
+                            onChangedWish(mWishPosition, data.getBooleanExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH, false));
+                        } else
+                        {
+                            requestRecentPlacesList();
+                        }
+                        break;
+
+                    case com.daily.base.BaseActivity.RESULT_CODE_DATA_CHANGED:
+                        requestRecentPlacesList();
+                        break;
                 }
                 break;
             }
@@ -133,11 +142,26 @@ public class RecentStayListFragment extends RecentPlacesListFragment
                         }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
                         break;
 
+                    case com.daily.base.BaseActivity.RESULT_CODE_DATA_CHANGED:
+                        if (data != null && data.hasExtra(StayOutboundPreviewActivity.INTENT_EXTRA_DATA_STAY_POSITION) == true//
+                            && data.hasExtra(StayOutboundPreviewActivity.INTENT_EXTRA_DATA_MY_WISH) == true)
+                        {
+                            int position = data.getIntExtra(StayOutboundPreviewActivity.INTENT_EXTRA_DATA_STAY_POSITION, -1);
+                            boolean wish = data.getBooleanExtra(StayOutboundPreviewActivity.INTENT_EXTRA_DATA_MY_WISH, false);
+
+                            onChangedWish(position, wish);
+                        }
+                        break;
+
                     case Constants.CODE_RESULT_ACTIVITY_REFRESH:
                         if (data != null && data.hasExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH) == true)
                         {
                             onChangedWish(mWishPosition, data.getBooleanExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH, false));
                         }
+                        break;
+
+                    case com.daily.base.BaseActivity.RESULT_CODE_REFRESH:
+                        requestRecentPlacesList();
                         break;
                 }
                 break;
@@ -581,7 +605,7 @@ public class RecentStayListFragment extends RecentPlacesListFragment
         mViewByLongPress = view;
         mPositionByLongPress = position;
 
-        mBaseActivity.startActivityForResult(StayOutboundPreviewActivity.newInstance(getActivity(), stayOutbound.index, -1//
+        mBaseActivity.startActivityForResult(StayOutboundPreviewActivity.newInstance(getActivity(), stayOutbound.index, position//
             , stayOutbound.name//
             , ((StayBookingDay) mPlaceBookingDay).getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
             , ((StayBookingDay) mPlaceBookingDay).getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//

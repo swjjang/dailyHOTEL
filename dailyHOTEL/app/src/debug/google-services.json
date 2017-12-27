@@ -60,7 +60,7 @@
       ],
       "services": {
         "analytics_service": {
-          "status": 1,
+          "status": 2,
           "analytics_property": {
             "tracking_id": "UA-80273653-1"
           }
