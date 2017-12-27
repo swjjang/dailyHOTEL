@@ -549,7 +549,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
             return;
         }
 
-        addCompositeDisposable(setSuggestAndKeyword(suggest, suggest.display, AnalyticsManager.Category.OB_SEARCH_RECOMMEND).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer()
+        addCompositeDisposable(setSuggestAndKeyword(suggest, suggest.display, AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECOMMEND).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer()
         {
             @Override
             public void accept(Object o) throws Exception

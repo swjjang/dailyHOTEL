@@ -375,7 +375,7 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
                         ExLog.d(e.getMessage());
                     }
 
-                    startFinishAction(suggest, keyword, AnalyticsManager.Category.OB_SEARCH_RECOMMEND);
+                    startFinishAction(suggest, keyword, AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECOMMEND);
                 }
             }, new Consumer<Throwable>()
             {
@@ -390,7 +390,7 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
                         ExLog.d(e.getMessage());
                     }
 
-                    startFinishAction(suggest, "", AnalyticsManager.Category.OB_SEARCH_RECOMMEND);
+                    startFinishAction(suggest, "", AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECOMMEND);
                 }
             }));
     }

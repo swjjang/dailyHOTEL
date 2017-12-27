@@ -15,8 +15,8 @@ public class StayOutboundSearchSuggestAnalyticsImpl implements StayOutboundSearc
             return;
         }
 
-        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH//
-            , AnalyticsManager.Action.KEYWORD_NOT_MATCH_OUTBOUND, keyword, null);
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.AUTOSEARCHNOTFOUND_OUTBOUND//
+            , keyword, AnalyticsManager.ValueType.EMPTY, null);
     }
 
     @Override
