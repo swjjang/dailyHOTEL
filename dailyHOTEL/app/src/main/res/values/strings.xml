@@ -652,6 +652,7 @@
     <string name="message_gourmet_please_input_guest">방문자명을 입력해주세요. 예약 확인시 필요한 정보입니다.</string>
     <string name="message_booking_cancel_coupon">쿠폰 적용을 취소할까요?</string>
     <string name="message_booking_cancel_deposit_sticker">스티커 적립 적용을 취소할까요?</string>
+    <string name="message_booking_cancel_deposit_sticker_by_payment_phone">스티커 적립 적용을 취소하고 휴대폰 결제로 진행할까요?</string>
     <string name="message_booking_cancel_bonus">적립금 적용을 취소할까요?</string>
     <string name="message_over_coupon_price">할인쿠폰 금액이\n총결제금액 보다 %1$s 더 많습니다.\n그대로 적용할까요?</string>
     <string name="message_dont_support_payment_type">일시적으로 %1$s 수단은 사용할 수 없습니다.</string>
