@@ -7,14 +7,19 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.ObjectItem;
+import com.daily.dailyhotel.entity.RewardCardHistory;
 import com.daily.dailyhotel.entity.RewardCardHistoryDetail;
 import com.daily.dailyhotel.repository.remote.RewardRemoteImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyInternalDeepLink;
-import com.twoheart.dailyhotel.util.Util;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 /**
  * Created by sheldon
@@ -147,17 +152,36 @@ public class RewardCardHistoryPresenter extends BaseExceptionPresenter<RewardCar
         setRefresh(false);
         screenLock(showProgress);
 
-        addCompositeDisposable(mRewardRemoteImpl.getRewardCardHistoryDetail().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<RewardCardHistoryDetail>()
+        addCompositeDisposable(mRewardRemoteImpl.getRewardCardHistoryDetail().map(new Function<RewardCardHistoryDetail, List<ObjectItem>>()
         {
             @Override
-            public void accept(RewardCardHistoryDetail rewardCardHistoryDetail) throws Exception
+            public List<ObjectItem> apply(RewardCardHistoryDetail rewardCardHistoryDetail) throws Exception
             {
-                if (rewardCardHistoryDetail.activeReward == false)
+                List<ObjectItem> list = new ArrayList<>();
+
+                if (rewardCardHistoryDetail.activeReward == true)
                 {
-                    Util.restartApp(getActivity());
+                    for (RewardCardHistory rewardCardHistory : rewardCardHistoryDetail.getRewardCardHistoryList())
+                    {
+                        list.add(new ObjectItem(ObjectItem.TYPE_ENTRY, rewardCardHistory));
+                    }
+
+                    list.add(new ObjectItem(ObjectItem.TYPE_FOOTER_VIEW, null));
+                }
+
+                return list;
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<ObjectItem>>()
+        {
+            @Override
+            public void accept(List<ObjectItem> objectItemList) throws Exception
+            {
+                if (objectItemList.size() == 0)
+                {
+                    finish();
                 } else
                 {
-                    getViewInterface().setRewardCardHistoryList(rewardCardHistoryDetail.getRewardCardHistoryList());
+                    getViewInterface().setRewardCardHistoryList(objectItemList);
                 }
 
                 unLockAll();
