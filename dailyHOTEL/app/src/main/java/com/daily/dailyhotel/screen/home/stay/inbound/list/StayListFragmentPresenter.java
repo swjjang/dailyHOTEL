@@ -211,8 +211,7 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
             || mStayViewModel.viewType.getValue() == null//
             || mStayViewModel.stayRegion.getValue() == null//
             || mStayViewModel.stayBookDateTime.getValue() == null//
-            || mStayViewModel.commonDateTime.getValue() == null//
-            || lock() == true)
+            || mStayViewModel.commonDateTime.getValue() == null)
         {
             setRefresh(false);
             return;
@@ -235,21 +234,31 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
             @Override
             public void accept(Pair<Boolean, List<ObjectItem>> pair) throws Exception
             {
-                if (pair.second.size() < Constants.PAGENATION_LIST_SIZE)
+                int listSize = pair.second.size();
+
+                if (listSize < Constants.PAGENATION_LIST_SIZE)
                 {
                     mPage = PAGE_FINISH;
+
+                    pair.second.add(new ObjectItem(ObjectItem.TYPE_FOOTER_VIEW, null));
+                } else
+                {
+                    pair.second.add(new ObjectItem(ObjectItem.TYPE_LOADING_VIEW, null));
                 }
 
                 if (mPage > 1)
                 {
                     getViewInterface().addList(pair.second, mStayViewModel.stayFilter.getValue().sortType == StayFilter.SortType.DISTANCE//
-                        , mStayViewModel.stayBookDateTime.getValue().getNights() > 1, pair.first, DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
+                        , mStayViewModel.stayBookDateTime.getValue().getNights() > 1, pair.first,//
+                        DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
                 } else
                 {
                     getViewInterface().setList(pair.second, mStayViewModel.stayFilter.getValue().sortType == StayFilter.SortType.DISTANCE//
-                        , mStayViewModel.stayBookDateTime.getValue().getNights() > 1, pair.first, DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
+                        , mStayViewModel.stayBookDateTime.getValue().getNights() > 1, pair.first//
+                        , DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
                 }
 
+                getViewInterface().setSwipeRefreshing(false);
                 unLockAll();
             }
         }, new Consumer<Throwable>()
@@ -257,6 +266,8 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
             @Override
             public void accept(Throwable throwable) throws Exception
             {
+                getViewInterface().setSwipeRefreshing(false);
+
                 onHandleError(throwable);
             }
         }));

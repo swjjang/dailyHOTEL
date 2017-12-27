@@ -36,11 +36,18 @@ public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmen
     @Override
     protected void setContentView(FragmentStayListDataBinding viewDataBinding)
     {
+        viewDataBinding.swipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
+
         viewDataBinding.recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
         {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy)
             {
+                if (getViewDataBinding().swipeRefreshLayout.isRefreshing() == true)
+                {
+                    return;
+                }
+
                 LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
 
                 // SwipeRefreshLayout
@@ -50,10 +57,10 @@ public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmen
 
                     if (firstVisibleItem == 0)
                     {
-                        setSwipeRefreshing(true);
+                        getViewDataBinding().swipeRefreshLayout.setEnabled(true);
                     } else
                     {
-                        setSwipeRefreshing(false);
+                        getViewDataBinding().swipeRefreshLayout.setEnabled(false);
                     }
                 } else
                 {
@@ -112,6 +119,13 @@ public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmen
             mStayListFragmentAdapter = new StayListFragmentAdapter(getContext(), null);
 
             getViewDataBinding().recyclerView.setAdapter(mStayListFragmentAdapter);
+        }
+
+        // 항상 마지막 아이템은 Loading, Footer View 이다.
+        int itemCount = mStayListFragmentAdapter.getItemCount();
+        if (itemCount > 0)
+        {
+            mStayListFragmentAdapter.remove(itemCount - 1);
         }
 
         mStayListFragmentAdapter.setDistanceEnabled(isSortByDistance);
