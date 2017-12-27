@@ -261,6 +261,14 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
         setContentView(R.layout.activity_main);
 
         mSplashLayout = findViewById(R.id.splashLayout);
+        mSplashLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+
+            }
+        });
 
         loadSplash(mSplashLayout);
 
