@@ -8,8 +8,14 @@ import com.daily.dailyhotel.entity.Card;
 import com.daily.dailyhotel.entity.GourmetCart;
 import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 
+import java.util.List;
+
 public interface GourmetPaymentInterface extends BaseDialogViewInterface
 {
+    void setCardEventVisible(boolean visible);
+
+    void addCardEventData(String title, List<String> messageList);
+
     void setBooking(CharSequence visitDateTime, GourmetCart gourmetCart);
 
     void setUserInformation(String name, String mobile, String email);

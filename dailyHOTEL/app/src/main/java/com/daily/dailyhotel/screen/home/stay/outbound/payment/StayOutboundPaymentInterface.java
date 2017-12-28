@@ -17,6 +17,10 @@ public interface StayOutboundPaymentInterface extends BaseDialogViewInterface
 
     void setCheeringMessageVisible(boolean visible);
 
+    void setCardEventVisible(boolean visible);
+
+    void addCardEventData(String title, List<String> messageList);
+
     void setBooking(SpannableString checkInDate, SpannableString checkOutDate, int nights, String stayName, String roomType);
 
     void setGuestInformation(String firstName, String lastName, String mobile, String email);

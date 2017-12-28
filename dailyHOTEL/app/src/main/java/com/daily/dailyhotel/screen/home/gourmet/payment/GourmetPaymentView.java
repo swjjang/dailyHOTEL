@@ -39,6 +39,7 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailySignatureView;
 
 import java.util.Collection;
+import java.util.List;
 
 public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEventListener, ActivityGourmetPaymentDataBinding>//
     implements GourmetPaymentInterface, View.OnClickListener
@@ -104,6 +105,28 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
 
         getViewDataBinding().toolbarView.setTitleText(title);
     }
+
+    public void setCardEventVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().cardEventView.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void addCardEventData(String title, List<String> messageList)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().cardEventView.addData(title, messageList);
+    }
+
 
     @Override
     public void setBooking(CharSequence visitDateTime, GourmetCart gourmetCart)

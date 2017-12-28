@@ -134,6 +134,28 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         getViewDataBinding().cheeringLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
+    public void setCardEventVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().cardEventView.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void addCardEventData(String title, List<String> messageList)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().cardEventView.addData(title, messageList);
+    }
+
+
     @Override
     public void setBooking(SpannableString checkInDate, SpannableString checkOutDate, int nights, String stayName, String roomType)
     {

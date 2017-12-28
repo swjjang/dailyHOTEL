@@ -113,6 +113,7 @@ public class DailyRemoteConfig
         String androidRewardSticker = mFirebaseRemoteConfig.getString("androidRewardSticker");
         String androidAppResearch = mFirebaseRemoteConfig.getString("androidAppResearch");
         String androidGourmetSearchKeyword = mFirebaseRemoteConfig.getString("androidGourmetSearchKeyword");
+        String androidPaymentCardEvent = mFirebaseRemoteConfig.getString("androidPaymentCardEvent");
 
         if (Constants.DEBUG == true)
         {
@@ -154,6 +155,7 @@ public class DailyRemoteConfig
 
                 ExLog.d("androidAppResearch : " + androidAppResearch);
                 ExLog.d("androidGourmetSearchKeyword : " + androidGourmetSearchKeyword);
+                ExLog.d("androidPaymentCardEvent : " + androidPaymentCardEvent);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -223,6 +225,9 @@ public class DailyRemoteConfig
 
         // 고메 키워드
         writeGourmetSearchKeyword(mContext, androidGourmetSearchKeyword);
+
+        // 카드 이벤트 업체
+        writePaymentCardEvent(mContext, androidPaymentCardEvent);
 
         if (listener != null)
         {
@@ -752,6 +757,46 @@ public class DailyRemoteConfig
                 if (jsonArray != null && jsonArray.length() > 0)
                 {
                     DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigGourmetSearchKeyword(jsonArray.toString());
+                }
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
+        }
+    }
+
+    private void writePaymentCardEvent(Context context, String jsonString)
+    {
+        if (context == null)
+        {
+            return;
+        }
+
+        if (DailyTextUtils.isTextEmpty(jsonString) == true)
+        {
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigPaymentCardEvent(null);
+        } else
+        {
+            try
+            {
+                JSONObject jsonObject = new JSONObject(jsonString);
+
+                if (Constants.DEBUG == true)
+                {
+                    ExLog.d("pinkred - " + jsonObject);
+                }
+
+                if (jsonObject.getBoolean("enabled") == false)
+                {
+                    DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigPaymentCardEvent(null);
+                    return;
+                }
+
+                JSONArray jsonArray = jsonObject.getJSONArray("cardEvents");
+
+                if (jsonArray != null && jsonArray.length() > 0)
+                {
+                    DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigPaymentCardEvent(jsonArray.toString());
                 }
             } catch (Exception e)
             {

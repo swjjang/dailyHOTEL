@@ -8,11 +8,17 @@ import com.daily.base.BaseDialogViewInterface;
 import com.daily.dailyhotel.entity.Card;
 import com.daily.dailyhotel.view.DailyBookingPaymentTypeView;
 
+import java.util.List;
+
 public interface StayPaymentInterface extends BaseDialogViewInterface
 {
     void setCheeringMessage(boolean enabledSticker, String titleText, String warningText);
 
     void setCheeringMessageVisible(boolean visible);
+
+    void setCardEventVisible(boolean visible);
+
+    void addCardEventData(String title, List<String> messageList);
 
     void setBooking(SpannableString checkInDate, SpannableString checkOutDate, int nights, String stayName, String roomName);
 

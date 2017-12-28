@@ -57,8 +57,10 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -662,6 +664,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                     notifyGuestInformationChanged(getOverseasGustInformation(mUserSimpleInformation));
                 }
 
+                notifyCardEventChanged(mCommonDateTime);
                 notifyBonusEnabledChanged();
                 notifyPaymentTypeChanged();
                 notifyEasyCardChanged();
@@ -1789,6 +1792,17 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 } else if (vBankEnabled == true)
                 {
                     getViewInterface().setPaymentType(DailyBookingPaymentTypeView.PaymentType.VBANK);
+                } else
+                {
+                    getViewInterface().showSimpleDialog(null, getString(R.string.message_payment_none_payment_type)//
+                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialog)
+                            {
+                                finish();
+                            }
+                        });
                 }
             }
         } catch (Exception e)
@@ -2032,6 +2046,68 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         }
     }
 
+    void notifyCardEventChanged(CommonDateTime commonDateTime)
+    {
+        if (commonDateTime == null)
+        {
+            return;
+        }
+
+        String cardEvent = DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigPaymentCardEvent();
+
+        if (DailyTextUtils.isTextEmpty(cardEvent) == true)
+        {
+            getViewInterface().setCardEventVisible(false);
+        } else
+        {
+            try
+            {
+                long currentTime = DailyCalendar.convertDate(commonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT).getTime();
+
+                JSONArray jsonArray = new JSONArray(cardEvent);
+
+                int length = jsonArray.length();
+
+                boolean visible = false;
+
+                for (int i = 0; i < length; i++)
+                {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                    if (jsonObject.getBoolean("enabled") == false)
+                    {
+                        continue;
+                    }
+
+                    long startTime = DailyCalendar.convertDate(jsonObject.getString("startDateTime"), DailyCalendar.ISO_8601_FORMAT).getTime();
+                    long endTime = DailyCalendar.convertDate(jsonObject.getString("endDateTime"), DailyCalendar.ISO_8601_FORMAT).getTime();
+
+                    if (currentTime >= startTime && currentTime <= endTime)
+                    {
+                        List<String> messageList = new ArrayList<>();
+                        JSONArray messageJSONArray = jsonObject.getJSONArray("messages");
+
+                        int messageCount = messageJSONArray.length();
+
+                        for (int j = 0; j < messageCount; j++)
+                        {
+                            messageList.add(messageJSONArray.getString(i));
+                        }
+
+                        getViewInterface().addCardEventData(jsonObject.getString("title"), messageList);
+
+                        visible = true;
+                    }
+                }
+
+                getViewInterface().setCardEventVisible(visible);
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
+        }
+    }
+
     Card getSelectedCard(List<Card> cardList)
     {
         if (cardList == null || cardList.size() == 0)
@@ -2119,25 +2195,6 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         } else
         {
             getViewInterface().setGuidePaymentType(null);
-        }
-
-        getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.EASY_CARD, isSimpleCardPaymentEnabled);
-        getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.CARD, isCardPaymentEnabled);
-        getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.PHONE, isPhonePaymentEnabled);
-        getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.VBANK, isVirtualPaymentEnabled);
-
-        if (isSimpleCardPaymentEnabled == true)
-        {
-            setPaymentType(DailyBookingPaymentTypeView.PaymentType.EASY_CARD);
-        } else if (isCardPaymentEnabled == true)
-        {
-            setPaymentType(DailyBookingPaymentTypeView.PaymentType.CARD);
-        } else if (isPhonePaymentEnabled == true)
-        {
-            setPaymentType(DailyBookingPaymentTypeView.PaymentType.PHONE);
-        } else if (isVirtualPaymentEnabled == true)
-        {
-            setPaymentType(DailyBookingPaymentTypeView.PaymentType.VBANK);
         }
     }
 

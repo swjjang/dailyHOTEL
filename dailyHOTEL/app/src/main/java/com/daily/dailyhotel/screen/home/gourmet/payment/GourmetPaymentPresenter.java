@@ -9,6 +9,7 @@ import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.util.Pair;
 import android.view.View;
 
 import com.daily.base.BaseActivity;
@@ -20,6 +21,7 @@ import com.daily.base.util.FontManager;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Card;
+import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.Coupons;
 import com.daily.dailyhotel.entity.DomesticGuest;
 import com.daily.dailyhotel.entity.GourmetCart;
@@ -33,6 +35,7 @@ import com.daily.dailyhotel.parcel.GourmetCartParcel;
 import com.daily.dailyhotel.parcel.analytics.GourmetPaymentAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.GourmetThankYouAnalyticsParam;
 import com.daily.dailyhotel.repository.local.CartLocalImpl;
+import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CouponRemoteImpl;
 import com.daily.dailyhotel.repository.remote.PaymentRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
@@ -66,6 +69,7 @@ import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,7 +77,7 @@ import java.util.Map;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function4;
+import io.reactivex.functions.Function5;
 
 /**
  * Created by sheldon
@@ -105,6 +109,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
     private PaymentRemoteImpl mPaymentRemoteImpl;
     private ProfileRemoteImpl mProfileRemoteImpl;
     private CouponRemoteImpl mCouponRemoteImpl;
+    private CommonRemoteImpl mCommonRemoteImpl;
     CartLocalImpl mCartLocalImpl;
 
     GourmetPayment mGourmetPayment;
@@ -191,6 +196,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         mPaymentRemoteImpl = new PaymentRemoteImpl(activity);
         mProfileRemoteImpl = new ProfileRemoteImpl(activity);
         mCouponRemoteImpl = new CouponRemoteImpl(activity);
+        mCommonRemoteImpl = new CommonRemoteImpl(activity);
         mCartLocalImpl = new CartLocalImpl(activity);
 
         setRefresh(true);
@@ -603,24 +609,26 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
         addCompositeDisposable(Observable.zip(mPaymentRemoteImpl.getGourmetPayment(mGourmetCart)//
             , mPaymentRemoteImpl.getEasyCardList(), mProfileRemoteImpl.getProfile(), mProfileRemoteImpl.getUserSimpleInformation()//
-            , new Function4<GourmetPayment, List<Card>, User, UserSimpleInformation, User>()
+            , mCommonRemoteImpl.getCommonDateTime()//
+            , new Function5<GourmetPayment, List<Card>, User, UserSimpleInformation, CommonDateTime, Pair<CommonDateTime, User>>()
             {
                 @Override
-                public User apply(@io.reactivex.annotations.NonNull GourmetPayment gourmetPayment//
+                public Pair<CommonDateTime, User> apply(@io.reactivex.annotations.NonNull GourmetPayment gourmetPayment//
                     , @io.reactivex.annotations.NonNull List<Card> cardList//
                     , @io.reactivex.annotations.NonNull User user//
-                    , @io.reactivex.annotations.NonNull UserSimpleInformation userSimpleInformation) throws Exception
+                    , @io.reactivex.annotations.NonNull UserSimpleInformation userSimpleInformation//
+                    , @io.reactivex.annotations.NonNull CommonDateTime commonDateTime) throws Exception
                 {
                     setGourmetPayment(gourmetPayment);
                     setSelectCard(getSelectedCard(cardList));
                     setUserInformation(userSimpleInformation);
 
-                    return user;
+                    return new Pair<CommonDateTime, User>(commonDateTime, user);
                 }
-            }).subscribe(new Consumer<User>()
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Pair<CommonDateTime, User>>()
         {
             @Override
-            public void accept(@io.reactivex.annotations.NonNull User user) throws Exception
+            public void accept(@io.reactivex.annotations.NonNull Pair<CommonDateTime, User> pair) throws Exception
             {
                 onBookingInformation(mGourmetPayment, mGourmetCart);
 
@@ -630,6 +638,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
                 notifyUserInformationChanged();
 
+                notifyCardEventChanged(pair.first);
                 notifyBonusEnabledChanged();
                 notifyPaymentTypeChanged();
                 notifyEasyCardChanged();
@@ -662,6 +671,8 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                 }
 
                 mAnalytics.onScreen(getActivity(), mGourmetCart, mGourmetPayment, mSelectedCard != null);
+
+                User user = pair.second;
 
                 switch (Util.verifyUserInformation(user))
                 {
@@ -1587,22 +1598,22 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                 boolean vBankEnabled = true;
 
                 // 리모트에서 조절되는 부분
-                if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStaySimpleCardPaymentEnabled() == false)
+                if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigGourmetSimpleCardPaymentEnabled() == false)
                 {
                     easyCardEnabled = false;
                 }
 
-                if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStayCardPaymentEnabled() == false)
+                if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigGourmetCardPaymentEnabled() == false)
                 {
                     cardEnabled = false;
                 }
 
-                if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStayPhonePaymentEnabled() == false)
+                if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigGourmetPhonePaymentEnabled() == false)
                 {
                     phoneEnabled = false;
                 }
 
-                if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStayVirtualPaymentEnabled() == false)
+                if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigGourmetVirtualPaymentEnabled() == false)
                 {
                     vBankEnabled = false;
                 }
@@ -1639,11 +1650,84 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                 } else if (vBankEnabled == true)
                 {
                     getViewInterface().setPaymentType(DailyBookingPaymentTypeView.PaymentType.VBANK);
+                } else
+                {
+                    getViewInterface().showSimpleDialog(null, getString(R.string.message_payment_none_payment_type)//
+                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialog)
+                            {
+                                finish();
+                            }
+                        });
                 }
             }
         } catch (Exception e)
         {
             ExLog.d(e.toString());
+        }
+    }
+
+    void notifyCardEventChanged(CommonDateTime commonDateTime)
+    {
+        if (commonDateTime == null)
+        {
+            return;
+        }
+
+        String cardEvent = DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigPaymentCardEvent();
+
+        if (DailyTextUtils.isTextEmpty(cardEvent) == true)
+        {
+            getViewInterface().setCardEventVisible(false);
+        } else
+        {
+            try
+            {
+                long currentTime = DailyCalendar.convertDate(commonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT).getTime();
+
+                JSONArray jsonArray = new JSONArray(cardEvent);
+
+                int length = jsonArray.length();
+
+                boolean visible = false;
+
+                for (int i = 0; i < length; i++)
+                {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                    if (jsonObject.getBoolean("enabled") == false)
+                    {
+                        continue;
+                    }
+
+                    long startTime = DailyCalendar.convertDate(jsonObject.getString("startDateTime"), DailyCalendar.ISO_8601_FORMAT).getTime();
+                    long endTime = DailyCalendar.convertDate(jsonObject.getString("endDateTime"), DailyCalendar.ISO_8601_FORMAT).getTime();
+
+                    if (currentTime >= startTime && currentTime <= endTime)
+                    {
+                        List<String> messageList = new ArrayList<>();
+                        JSONArray messageJSONArray = jsonObject.getJSONArray("messages");
+
+                        int messageCount = messageJSONArray.length();
+
+                        for (int j = 0; j < messageCount; j++)
+                        {
+                            messageList.add(messageJSONArray.getString(i));
+                        }
+
+                        getViewInterface().addCardEventData(jsonObject.getString("title"), messageList);
+
+                        visible = true;
+                    }
+                }
+
+                getViewInterface().setCardEventVisible(visible);
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
         }
     }
 
@@ -1925,25 +2009,6 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         } else
         {
             getViewInterface().setGuidePaymentType(null);
-        }
-
-        getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.EASY_CARD, isSimpleCardPaymentEnabled);
-        getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.CARD, isCardPaymentEnabled);
-        getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.PHONE, isPhonePaymentEnabled);
-        getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.VBANK, isVirtualPaymentEnabled);
-
-        if (isSimpleCardPaymentEnabled == true)
-        {
-            setPaymentType(DailyBookingPaymentTypeView.PaymentType.EASY_CARD);
-        } else if (isCardPaymentEnabled == true)
-        {
-            setPaymentType(DailyBookingPaymentTypeView.PaymentType.CARD);
-        } else if (isPhonePaymentEnabled == true)
-        {
-            setPaymentType(DailyBookingPaymentTypeView.PaymentType.PHONE);
-        } else if (isVirtualPaymentEnabled == true)
-        {
-            setPaymentType(DailyBookingPaymentTypeView.PaymentType.VBANK);
         }
     }
 
