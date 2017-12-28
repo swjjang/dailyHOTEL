@@ -736,7 +736,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     notifyStayOutboundPaymentChanged();
                 } else
                 {
-                    getViewInterface().showSimpleDialog(null, getString(R.string.message_booking_cancel_deposit_sticker), getString(R.string.dialog_btn_text_yes), //
+                    getViewInterface().showSimpleDialog(null, getString(R.string.message_booking_cancel_deposit_sticker_by_payment_phone), getString(R.string.dialog_btn_text_yes), //
                         getString(R.string.dialog_btn_text_no), new View.OnClickListener()
                         {
                             @Override
