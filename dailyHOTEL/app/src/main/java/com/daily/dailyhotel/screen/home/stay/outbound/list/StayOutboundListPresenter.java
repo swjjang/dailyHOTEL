@@ -101,7 +101,6 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     boolean mMoreResultsAvailable, mMoreEnabled;
 
     private ViewState mViewState = ViewState.LIST;
-    private boolean mFirstRequest;
     protected int mWishPosition;
 
     StayOutbound mStayOutboundByLongPress;
@@ -663,12 +662,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 return stayOutbounds;
             }).subscribe(stayOutbounds ->
         {
-            if (mFirstRequest == false)
-            {
-                mFirstRequest = true;
-
-                mAnalytics.onEventList(getActivity(), mSuggest.display, stayOutbounds.getStayOutbound().size());
-            }
+            mAnalytics.onEventList(getActivity(), mSuggest.display, stayOutbounds.getStayOutbound().size());
 
             onStayOutbounds(stayOutbounds);
 
