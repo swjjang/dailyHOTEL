@@ -1522,9 +1522,21 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 } else if (phoneEnabled == true)
                 {
                     getViewInterface().setPaymentType(DailyBookingPaymentTypeView.PaymentType.PHONE);
-                } else if (vBankEnabled == true)
+//                }
+//                else if (vBankEnabled == true)
+//                {
+//                    getViewInterface().setPaymentType(DailyBookingPaymentTypeView.PaymentType.VBANK);
+                } else
                 {
-                    getViewInterface().setPaymentType(DailyBookingPaymentTypeView.PaymentType.VBANK);
+                    getViewInterface().showSimpleDialog(null, getString(R.string.message_payment_none_payment_type)//
+                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialog)
+                            {
+                                finish();
+                            }
+                        });
                 }
             }
         } catch (Exception e)
@@ -1791,6 +1803,17 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         } else if (isPhonePaymentEnabled == true)
         {
             setPaymentType(DailyBookingPaymentTypeView.PaymentType.PHONE);
+        } else
+        {
+            getViewInterface().showSimpleDialog(null, getString(R.string.message_payment_none_payment_type)//
+                , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                {
+                    @Override
+                    public void onDismiss(DialogInterface dialog)
+                    {
+                        finish();
+                    }
+                });
         }
     }
 

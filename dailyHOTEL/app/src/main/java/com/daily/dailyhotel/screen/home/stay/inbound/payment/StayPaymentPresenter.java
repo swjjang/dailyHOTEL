@@ -1783,6 +1783,17 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 } else if (vBankEnabled == true)
                 {
                     getViewInterface().setPaymentType(DailyBookingPaymentTypeView.PaymentType.VBANK);
+                } else
+                {
+                    getViewInterface().showSimpleDialog(null, getString(R.string.message_payment_none_payment_type)//
+                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialog)
+                            {
+                                finish();
+                            }
+                        });
                 }
             }
         } catch (Exception e)
@@ -2132,6 +2143,17 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         } else if (isVirtualPaymentEnabled == true)
         {
             setPaymentType(DailyBookingPaymentTypeView.PaymentType.VBANK);
+        } else
+        {
+            getViewInterface().showSimpleDialog(null, getString(R.string.message_payment_none_payment_type)//
+                , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                {
+                    @Override
+                    public void onDismiss(DialogInterface dialog)
+                    {
+                        finish();
+                    }
+                });
         }
     }
 
