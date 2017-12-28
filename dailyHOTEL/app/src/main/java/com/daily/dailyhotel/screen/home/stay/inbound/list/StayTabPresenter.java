@@ -300,7 +300,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                     } else
                     {
                         // 예외 처리로 보고 있는 체크인/체크아웃 날짜가 지나 간경우 다음 날로 변경해준다.
-                        if (DailyCalendar.compareDateDay(commonDateTime.dailyDateTime, mStayViewModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)) < 0)
+                        if (DailyCalendar.compareDateDay(commonDateTime.dailyDateTime, mStayViewModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)) > 0)
                         {
                             setStayBookDateTime(commonDateTime.dailyDateTime, 1);
                         }
