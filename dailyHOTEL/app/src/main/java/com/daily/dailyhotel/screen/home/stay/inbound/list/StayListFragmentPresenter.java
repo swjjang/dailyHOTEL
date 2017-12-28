@@ -176,6 +176,10 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
     {
         super.onStart();
 
+        if (isRefresh() == true)
+        {
+            onRefresh(true);
+        }
     }
 
     @Override
@@ -183,6 +187,10 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
     {
         super.onResume();
 
+        if (isRefresh() == true)
+        {
+            onRefresh(true);
+        }
     }
 
     @Override
