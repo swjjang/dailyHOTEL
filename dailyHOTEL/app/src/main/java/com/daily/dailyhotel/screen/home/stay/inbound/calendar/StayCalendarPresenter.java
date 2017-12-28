@@ -36,8 +36,8 @@ public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarAct
 {
     private StayCalendarPresenterAnalyticsInterface mAnalytics;
 
-    String mCheckInDateTime;
-    String mCheckOutDateTime;
+    String mCheckInDateTime, mEnterCheckInDateTime;
+    String mCheckOutDateTime, mEnterCheckOutDateTime;
 
     String mStartDateTime;
     String mEndDateTime;
@@ -50,6 +50,11 @@ public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarAct
 
     public interface StayCalendarPresenterAnalyticsInterface extends BaseAnalyticsInterface
     {
+        void onScreen(Activity activity);
+
+        void onCloseEventClick(Activity activity, String callByScreen);
+
+        void onConfirmClick(Activity activity, String callByScreen, boolean changedDate, String checkInDateTime, String checkOutDateTime);
     }
 
     public StayCalendarPresenter(@NonNull StayCalendarActivity activity)
@@ -94,8 +99,8 @@ public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarAct
 
         try
         {
-            mCheckInDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
-            mCheckOutDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
+            mEnterCheckInDateTime = mCheckInDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
+            mEnterCheckOutDateTime = mCheckOutDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
 
             mStartDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_START_DATETIME);
             mEndDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_END_DATETIME);
@@ -217,6 +222,8 @@ public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarAct
     {
         super.onStart();
 
+        mAnalytics.onScreen(getActivity());
+
         if (isRefresh() == true)
         {
             onRefresh(true);
@@ -303,6 +310,8 @@ public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarAct
     @Override
     public void onBackClick()
     {
+        mAnalytics.onCloseEventClick(getActivity(), mCallByScreen);
+
         getActivity().onBackPressed();
     }
 
@@ -352,6 +361,12 @@ public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarAct
         intent.putExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME, mCheckOutDateTime);
 
         setResult(Activity.RESULT_OK, intent);
+
+        if (DailyTextUtils.isTextEmpty(mEnterCheckInDateTime, mEnterCheckOutDateTime, mCheckInDateTime, mCheckOutDateTime) == false)
+        {
+            mAnalytics.onConfirmClick(getActivity(), mCallByScreen, mEnterCheckInDateTime.equalsIgnoreCase(mCheckInDateTime) && mEnterCheckOutDateTime.equalsIgnoreCase(mCheckOutDateTime), mCheckInDateTime, mCheckOutDateTime);
+        }
+
         onBackClick();
     }
 
