@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringDef;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.util.Pair;
 import android.view.View;
 
 import com.daily.base.BaseActivity;
@@ -2068,7 +2069,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
                 int length = jsonArray.length();
 
-                boolean visible = false;
+                List<Pair<String, List<String>>> cardEventList = new ArrayList<>();
 
                 for (int i = 0; i < length; i++)
                 {
@@ -2094,16 +2095,22 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                             messageList.add(messageJSONArray.getString(i));
                         }
 
-                        getViewInterface().addCardEventData(jsonObject.getString("title"), messageList);
-
-                        visible = true;
+                        cardEventList.add(new Pair<>(jsonObject.getString("title"), messageList));
                     }
                 }
 
-                getViewInterface().setCardEventVisible(visible);
+                if(cardEventList.size() == 0)
+                {
+                    getViewInterface().setCardEventVisible(false);
+                } else
+                {
+                    getViewInterface().setCardEventVisible(true);
+                }
             } catch (Exception e)
             {
                 ExLog.e(e.toString());
+
+                getViewInterface().setCardEventVisible(false);
             }
         }
     }

@@ -2,6 +2,7 @@ package com.daily.dailyhotel.screen.home.stay.outbound.payment;
 
 import android.content.DialogInterface;
 import android.text.SpannableString;
+import android.util.Pair;
 import android.view.View;
 
 import com.daily.base.BaseDialogViewInterface;
@@ -19,7 +20,7 @@ public interface StayOutboundPaymentInterface extends BaseDialogViewInterface
 
     void setCardEventVisible(boolean visible);
 
-    void addCardEventData(String title, List<String> messageList);
+    void setCardEventData(List<Pair<String, List<String>>> cardEventList);
 
     void setBooking(SpannableString checkInDate, SpannableString checkOutDate, int nights, String stayName, String roomType);
 

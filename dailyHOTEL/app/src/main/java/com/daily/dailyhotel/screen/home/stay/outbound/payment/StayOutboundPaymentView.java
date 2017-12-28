@@ -7,6 +7,7 @@ import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -145,16 +146,20 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
     }
 
     @Override
-    public void addCardEventData(String title, List<String> messageList)
+    public void setCardEventData(List<Pair<String, List<String>>> cardEventList)
     {
-        if (getViewDataBinding() == null)
+        if (getViewDataBinding() == null || cardEventList == null || cardEventList.size() == 0)
         {
             return;
         }
 
-        getViewDataBinding().cardEventView.addData(title, messageList);
-    }
+        getViewDataBinding().cardEventView.clearView();
 
+        for(Pair<String, List<String>> pair : cardEventList)
+        {
+            getViewDataBinding().cardEventView.addCardEventView(pair.first, pair.second);
+        }
+    }
 
     @Override
     public void setBooking(SpannableString checkInDate, SpannableString checkOutDate, int nights, String stayName, String roomType)

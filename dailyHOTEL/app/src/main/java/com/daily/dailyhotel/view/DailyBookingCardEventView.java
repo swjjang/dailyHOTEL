@@ -44,7 +44,7 @@ public class DailyBookingCardEventView extends ConstraintLayout
         mViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_booking_card_event_data, this, true);
     }
 
-    public void addData(String title, List<String> messageList)
+    public void addCardEventView(String title, List<String> messageList)
     {
         if (mViewDataBinding == null || DailyTextUtils.isTextEmpty(title) == true || messageList == null || messageList.size() == 0)
         {
@@ -59,5 +59,15 @@ public class DailyBookingCardEventView extends ConstraintLayout
             DailyViewBookingCardEventMessageDataBinding messageDataBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.daily_view_booking_card_event_message_data, mViewDataBinding.cardEventLayout, true);
             messageDataBinding.messageTextView.setText(message);
         }
+    }
+
+    public void clearView()
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.cardEventLayout.removeAllViews();
     }
 }
