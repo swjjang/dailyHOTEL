@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.list;
 
 
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -37,6 +38,14 @@ public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmen
     protected void setContentView(FragmentStayListDataBinding viewDataBinding)
     {
         viewDataBinding.swipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
+        viewDataBinding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+        {
+            @Override
+            public void onRefresh()
+            {
+                getEventListener().onSwipeRefreshing();
+            }
+        });
 
         viewDataBinding.recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
         {

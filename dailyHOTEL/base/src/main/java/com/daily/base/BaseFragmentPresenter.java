@@ -1,14 +1,18 @@
 package com.daily.base;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 public abstract class BaseFragmentPresenter<T1 extends Fragment, T2 extends BaseFragmentDialogViewInterface> implements BaseFragmentInterface
 {
@@ -42,7 +46,7 @@ public abstract class BaseFragmentPresenter<T1 extends Fragment, T2 extends Base
 
     public BaseActivity getActivity()
     {
-        return (BaseActivity)mFragment.getActivity();
+        return (BaseActivity) mFragment.getActivity();
     }
 
     public T1 getFragment()

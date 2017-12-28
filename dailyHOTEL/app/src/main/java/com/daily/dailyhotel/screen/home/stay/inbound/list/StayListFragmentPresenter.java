@@ -42,6 +42,7 @@ import io.reactivex.functions.Function;
  */
 public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<StayListFragment, StayListFragmentInterface> implements StayListFragmentView.OnEventListener
 {
+    static final int MAXIMUM_NUMBER_PER_PAGE = Constants.PAGENATION_LIST_SIZE;
     static final int PAGE_NONE = -1;
     static final int PAGE_FINISH = Integer.MAX_VALUE;
 
@@ -53,6 +54,7 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
 
     Category mCategory;
     int mPage = PAGE_NONE;
+    boolean mMoreRefreshing;
 
     public interface StayListFragmentAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -174,10 +176,6 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
     {
         super.onStart();
 
-        if (isRefresh() == true)
-        {
-            onRefresh(true);
-        }
     }
 
     @Override
@@ -185,10 +183,6 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
     {
         super.onResume();
 
-        if (isRefresh() == true)
-        {
-            onRefresh(true);
-        }
     }
 
     @Override
@@ -218,7 +212,12 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
         }
 
         setRefresh(false);
-        screenLock(showProgress);
+
+        // 더보기 시에는 화면 락을 걸지 않음.
+        if (mPage <= 1)
+        {
+            screenLock(showProgress);
+        }
 
         addCompositeDisposable(mStayRemoteImpl.getList(getQueryMap(mPage), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()).map(new Function<Stays, Pair<Boolean, List<ObjectItem>>>()
         {
@@ -236,7 +235,7 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
             {
                 int listSize = pair.second.size();
 
-                if (listSize < Constants.PAGENATION_LIST_SIZE)
+                if (listSize < MAXIMUM_NUMBER_PER_PAGE)
                 {
                     mPage = PAGE_FINISH;
 
@@ -258,6 +257,7 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
                         , DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
                 }
 
+                mMoreRefreshing = false;
                 getViewInterface().setSwipeRefreshing(false);
                 unLockAll();
             }
@@ -266,6 +266,7 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
             @Override
             public void accept(Throwable throwable) throws Exception
             {
+                mMoreRefreshing = false;
                 getViewInterface().setSwipeRefreshing(false);
 
                 onHandleError(throwable);
@@ -281,6 +282,8 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
             return;
         }
 
+        clearCompositeDisposable();
+
         mPage = 1;
 
         setRefresh(true);
@@ -290,15 +293,17 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
     @Override
     public void onMoreRefreshing()
     {
-        if (mPage == PAGE_FINISH || lock() == true)
+        if (mPage == PAGE_FINISH || mMoreRefreshing == true)
         {
             return;
         }
 
+        mMoreRefreshing = true;
+
         mPage++;
 
         setRefresh(true);
-        onRefresh(true);
+        onRefresh(false);
     }
 
     private void initViewModel(BaseActivity activity)
@@ -488,7 +493,7 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
         if (page > 0)
         {
             queryMap.put("page", page);
-            queryMap.put("limit", Constants.PAGENATION_LIST_SIZE);
+            queryMap.put("limit", MAXIMUM_NUMBER_PER_PAGE);
         }
 
         // details

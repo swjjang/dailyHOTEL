@@ -331,8 +331,6 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                         getViewInterface().notifyRefreshFragments(false);
                     }
                 }
-
-                unLockAll();
             }
         }, new Consumer<Throwable>()
         {
