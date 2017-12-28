@@ -51,8 +51,8 @@ public class StayCalendarAnalyticsImpl implements StayCalendarPresenter.StayCale
             int nights = DailyCalendar.compareDateDay(checkInDateTime, checkOutDateTime);
 
             Map<String, String> params = new HashMap<>();
-            params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, DailyCalendar.convertDateFormatString(checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd");
-            params.put(AnalyticsManager.KeyType.CHECK_OUT_DATE, DailyCalendar.convertDateFormatString(checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd");
+            params.put(AnalyticsManager.KeyType.CHECK_IN_DATE, DailyCalendar.convertDateFormatString(checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
+            params.put(AnalyticsManager.KeyType.CHECK_OUT_DATE, DailyCalendar.convertDateFormatString(checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
             params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(nights));
             params.put(AnalyticsManager.KeyType.SCREEN, callByScreen);
 
@@ -66,5 +66,4 @@ public class StayCalendarAnalyticsImpl implements StayCalendarPresenter.StayCale
             ExLog.e(e.toString());
         }
     }
-}
 }
