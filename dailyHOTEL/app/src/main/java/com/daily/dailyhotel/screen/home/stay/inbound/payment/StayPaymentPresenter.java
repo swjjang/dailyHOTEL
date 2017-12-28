@@ -975,17 +975,23 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                     notifyStayPaymentChanged();
                 } else
                 {
-                    getViewInterface().showSimpleDialog(null, getString(R.string.message_booking_cancel_deposit_sticker_by_payment_phone), getString(R.string.dialog_btn_text_yes), //
-                        getString(R.string.dialog_btn_text_no), new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
+                    if (DailyRemoteConfigPreference.getInstance(getActivity()).isRemoteConfigStayPhonePaymentEnabled() == false)
+                    {
+                        getViewInterface().showSimpleDialog(null, getString(R.string.message_payment_none_payment_phone_type), getString(R.string.dialog_btn_text_confirm), null);//
+                    } else
+                    {
+                        getViewInterface().showSimpleDialog(null, getString(R.string.message_booking_cancel_deposit_sticker_by_payment_phone), getString(R.string.dialog_btn_text_yes), //
+                            getString(R.string.dialog_btn_text_no), new View.OnClickListener()
                             {
-                                setSaleType(NONE);
-                                getViewInterface().setDepositSticker(false);
-                                notifyStayPaymentChanged();
-                            }
-                        }, null);
+                                @Override
+                                public void onClick(View v)
+                                {
+                                    setSaleType(NONE);
+                                    getViewInterface().setDepositSticker(false);
+                                    notifyStayPaymentChanged();
+                                }
+                            }, null);
+                    }
                 }
                 break;
         }
@@ -2099,7 +2105,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                     }
                 }
 
-                if(cardEventList.size() == 0)
+                if (cardEventList.size() == 0)
                 {
                     getViewInterface().setCardEventVisible(false);
                 } else
