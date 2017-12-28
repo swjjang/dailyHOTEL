@@ -220,12 +220,7 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
         }
 
         setRefresh(false);
-
-        // 더보기 시에는 화면 락을 걸지 않음.
-        if (mPage <= 1)
-        {
-            screenLock(showProgress);
-        }
+        screenLock(showProgress);
 
         addCompositeDisposable(mStayRemoteImpl.getList(getQueryMap(mPage), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()).map(new Function<Stays, Pair<Boolean, List<ObjectItem>>>()
         {
@@ -253,17 +248,9 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
                     pair.second.add(new ObjectItem(ObjectItem.TYPE_LOADING_VIEW, null));
                 }
 
-                if (mPage > 1)
-                {
-                    getViewInterface().addList(pair.second, mStayViewModel.stayFilter.getValue().sortType == StayFilter.SortType.DISTANCE//
-                        , mStayViewModel.stayBookDateTime.getValue().getNights() > 1, pair.first,//
-                        DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
-                } else
-                {
-                    getViewInterface().setList(pair.second, mStayViewModel.stayFilter.getValue().sortType == StayFilter.SortType.DISTANCE//
-                        , mStayViewModel.stayBookDateTime.getValue().getNights() > 1, pair.first//
-                        , DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
-                }
+                getViewInterface().setList(pair.second, mStayViewModel.stayFilter.getValue().sortType == StayFilter.SortType.DISTANCE//
+                    , mStayViewModel.stayBookDateTime.getValue().getNights() > 1, pair.first//
+                    , DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
 
                 mMoreRefreshing = false;
                 getViewInterface().setSwipeRefreshing(false);
@@ -301,7 +288,17 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
     @Override
     public void onMoreRefreshing()
     {
-        if (mPage == PAGE_FINISH || mMoreRefreshing == true)
+        if (getActivity().isFinishing() == true || mStayViewModel == null || mPage == PAGE_FINISH || mMoreRefreshing == true)
+        {
+            return;
+        }
+
+        if (mStayViewModel.selectedCategory.getValue() == null//
+            || mStayViewModel.stayFilter.getValue() == null//
+            || mStayViewModel.viewType.getValue() == null//
+            || mStayViewModel.stayRegion.getValue() == null//
+            || mStayViewModel.stayBookDateTime.getValue() == null//
+            || mStayViewModel.commonDateTime.getValue() == null)
         {
             return;
         }
@@ -310,8 +307,51 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
 
         mPage++;
 
-        setRefresh(true);
-        onRefresh(false);
+        addCompositeDisposable(mStayRemoteImpl.getList(getQueryMap(mPage), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()).map(new Function<Stays, Pair<Boolean, List<ObjectItem>>>()
+        {
+            @Override
+            public Pair<Boolean, List<ObjectItem>> apply(Stays stays) throws Exception
+            {
+                DailyRemoteConfigPreference.getInstance(getActivity()).setKeyRemoteConfigRewardStickerEnabled(stays.activeReward);
+
+                return new Pair<>(stays.activeReward, makeObjectItemList(stays.getStayList(), mStayViewModel.stayFilter.getValue().sortType == StayFilter.SortType.DEFAULT));
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Pair<Boolean, List<ObjectItem>>>()
+        {
+            @Override
+            public void accept(Pair<Boolean, List<ObjectItem>> pair) throws Exception
+            {
+                int listSize = pair.second.size();
+
+                if (listSize < MAXIMUM_NUMBER_PER_PAGE)
+                {
+                    mPage = PAGE_FINISH;
+
+                    pair.second.add(new ObjectItem(ObjectItem.TYPE_FOOTER_VIEW, null));
+                } else
+                {
+                    pair.second.add(new ObjectItem(ObjectItem.TYPE_LOADING_VIEW, null));
+                }
+
+                getViewInterface().addList(pair.second, mStayViewModel.stayFilter.getValue().sortType == StayFilter.SortType.DISTANCE//
+                    , mStayViewModel.stayBookDateTime.getValue().getNights() > 1, pair.first,//
+                    DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
+
+                mMoreRefreshing = false;
+                getViewInterface().setSwipeRefreshing(false);
+                unLockAll();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                mMoreRefreshing = false;
+                getViewInterface().setSwipeRefreshing(false);
+
+                onHandleError(throwable);
+            }
+        }));
     }
 
     private void initViewModel(BaseActivity activity)
