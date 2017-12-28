@@ -46,7 +46,7 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
         JSONObject jsonObject = new JSONObject();
 
         final int NUMBER_OF_ROOMS = 1;
-        final int NUMBER_OF_RESULTS = 200;
+        final int NUMBER_OF_RESULTS = 20;
 
         /// 디폴트 인자들
         String sort;
@@ -92,8 +92,8 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
 
         final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
-        final String API = Constants.UNENCRYPTED_URL ? "api/v2/outbound/geographicalid-find-hotels"//
-            : "MzAkNzgkNjAkMTgkMTE2JDEyNSQzNyQxMDckMTE5JDEzNCQ2MyQxMDkkNzMkMTE4JDQ1JDQwJA==$NDEzMDFFRTE4MEYzNkQE5QUQ2OEY4Q0GFBMzZNDMEDA3OTWE5MjVGOUMxMUJDRDQIO0MzFCRDAzUOEZFNjQwNA0FENzhGMTYzOUEyNEU4NTBFQkFGZCOTk1MRjMzGIOUNDQzEyPOUIxMJjNC$";
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/outbound/geographicalid-find-hotels"//
+            : "MTE4JDg0JDQ2JDEwNSQzOSQ4MyQxMDckMTE2JDEyNyQyNCQxMjMkMzYkMTEzJDU0JDEyOSQ3NCQ=$QzIwOUJFRDQ4RjFDREY2MzUwQMTRFOUNERUZTCQThZERDM3QjXY5NDRdBMTg3NjY0QUM0NUYyOZDU5QjlERUY1MNTdDTQzc4NDI5MzQ3RTQ3NEIVKwQEkJCMTBczMjcEzNRDNAOwQTI2Mzgy$";
 
         return mDailyMobileService.getStayOutboundList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API), jsonObject) //
             .subscribeOn(Schedulers.io()).map(new Function<BaseDto<StayOutboundsData>, StayOutbounds>()
@@ -107,7 +107,7 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
                     {
                         if (stayOutboundDataBaseDto.msgCode == 100 && stayOutboundDataBaseDto.data != null)
                         {
-                            stayOutbounds = stayOutboundDataBaseDto.data.getStayOutboundList();
+                            stayOutbounds = stayOutboundDataBaseDto.data.getStayOutbounds();
                         } else
                         {
                             throw new BaseException(stayOutboundDataBaseDto.msgCode, stayOutboundDataBaseDto.msg);
@@ -215,7 +215,7 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
                     {
                         if (stayOutboundDataBaseDto.msgCode == 100 && stayOutboundDataBaseDto.data != null)
                         {
-                            stayOutbounds = stayOutboundDataBaseDto.data.getStayOutboundList();
+                            stayOutbounds = stayOutboundDataBaseDto.data.getStayOutbounds();
                         } else
                         {
                             throw new BaseException(stayOutboundDataBaseDto.msgCode, stayOutboundDataBaseDto.msg);

@@ -921,7 +921,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     @Override
     public synchronized void onScrollList(int listSize, int lastVisibleItemPosition)
     {
-        if (mMoreEnabled == true && mMoreResultsAvailable == true && lastVisibleItemPosition > listSize / 3)
+        if (mMoreEnabled == true && mMoreResultsAvailable == true && lastVisibleItemPosition > listSize * 2 / 3)
         {
             mMoreEnabled = false;
 
@@ -1306,7 +1306,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
                 mCacheKey = stayOutbounds.cacheKey;
                 mCacheLocation = stayOutbounds.cacheLocation;
-                mMoreEnabled = mMoreResultsAvailable;
+                mMoreEnabled = mMoreResultsAvailable = stayOutbounds.moreResultsAvailable;
 
                 return objectItemList;
             }
