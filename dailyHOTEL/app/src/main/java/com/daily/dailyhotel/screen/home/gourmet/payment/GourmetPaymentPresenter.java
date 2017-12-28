@@ -1685,7 +1685,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
                 int length = jsonArray.length();
 
-                boolean visible = false;
+                List<Pair<String, List<String>>> cardEventList = new ArrayList<>();
 
                 for (int i = 0; i < length; i++)
                 {
@@ -1711,16 +1711,22 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                             messageList.add(messageJSONArray.getString(i));
                         }
 
-                        getViewInterface().addCardEventData(jsonObject.getString("title"), messageList);
-
-                        visible = true;
+                        cardEventList.add(new Pair<>(jsonObject.getString("title"), messageList));
                     }
                 }
 
-                getViewInterface().setCardEventVisible(visible);
+                if(cardEventList.size() == 0)
+                {
+                    getViewInterface().setCardEventVisible(false);
+                } else
+                {
+                    getViewInterface().setCardEventVisible(true);
+                }
             } catch (Exception e)
             {
                 ExLog.e(e.toString());
+
+                getViewInterface().setCardEventVisible(false);
             }
         }
     }

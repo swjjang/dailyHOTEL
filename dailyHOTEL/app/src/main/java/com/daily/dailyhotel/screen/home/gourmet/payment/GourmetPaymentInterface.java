@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.home.gourmet.payment;
 
 import android.content.DialogInterface;
+import android.util.Pair;
 import android.view.View;
 
 import com.daily.base.BaseDialogViewInterface;
@@ -14,7 +15,7 @@ public interface GourmetPaymentInterface extends BaseDialogViewInterface
 {
     void setCardEventVisible(boolean visible);
 
-    void addCardEventData(String title, List<String> messageList);
+    void setCardEventData(List<Pair<String, List<String>>> cardEventList);
 
     void setBooking(CharSequence visitDateTime, GourmetCart gourmetCart);
 
