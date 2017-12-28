@@ -135,13 +135,16 @@ public class DailyRemoteConfigPreference
     private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_MEMBER_MESSAGE_7_NIGHTS = "417";
     private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_MEMBER_MESSAGE_8_NIGHTS = "418";
     private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_MEMBER_MESSAGE_9_NIGHTS = "419";
-//    private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_GUIDE_TITLE_MESSAGE = "420";
-//    private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_GUIDE_DESCRIPTION_MESSAGE = "421";
+    //    private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_GUIDE_TITLE_MESSAGE = "420";
+    //    private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_GUIDE_DESCRIPTION_MESSAGE = "421";
     private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_REWARD_TITLE_MESSAGE = "422";
     private static final String KEY_REMOTE_CONFIG_REWARD_STICKER_GUIDES = "423";
 
     // Gourmet Keywrod
     private static final String KEY_REMOTE_CONFIG_GOURMET_SEARCH_KEYWORD = "430";
+
+    // Payment Card Event
+    private static final String KEY_REMOTE_CONFIG_PAYMENT_CARD_EVENT = "431";
 
     // A/B Test
     private static final String KEY_REMOTE_CONFIG_STAY_RANK_TEST_NAME = "1000";
@@ -1100,15 +1103,15 @@ public class DailyRemoteConfigPreference
         }
     }
 
-//    public void setKeyRemoteConfigRewardStickerGuideTitleMessage(String value)
-//    {
-//        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_REWARD_STICKER_GUIDE_TITLE_MESSAGE, value);
-//    }
-//
-//    public String getKeyRemoteConfigRewardStickerGuideTitleMessage()
-//    {
-//        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_REWARD_STICKER_GUIDE_TITLE_MESSAGE, null);
-//    }
+    //    public void setKeyRemoteConfigRewardStickerGuideTitleMessage(String value)
+    //    {
+    //        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_REWARD_STICKER_GUIDE_TITLE_MESSAGE, value);
+    //    }
+    //
+    //    public String getKeyRemoteConfigRewardStickerGuideTitleMessage()
+    //    {
+    //        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_REWARD_STICKER_GUIDE_TITLE_MESSAGE, null);
+    //    }
 
     public void setKeyRemoteConfigRewardStickerGuides(String value)
     {
@@ -1120,15 +1123,15 @@ public class DailyRemoteConfigPreference
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_REWARD_STICKER_GUIDES, null);
     }
 
-//    public void setKeyRemoteConfigRewardStickerGuideDescriptionMessage(String value)
-//    {
-//        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_REWARD_STICKER_GUIDE_DESCRIPTION_MESSAGE, value);
-//    }
-//
-//    public String getKeyRemoteConfigRewardStickerGuideDescriptionMessage()
-//    {
-//        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_REWARD_STICKER_GUIDE_DESCRIPTION_MESSAGE, null);
-//    }
+    //    public void setKeyRemoteConfigRewardStickerGuideDescriptionMessage(String value)
+    //    {
+    //        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_REWARD_STICKER_GUIDE_DESCRIPTION_MESSAGE, value);
+    //    }
+    //
+    //    public String getKeyRemoteConfigRewardStickerGuideDescriptionMessage()
+    //    {
+    //        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_REWARD_STICKER_GUIDE_DESCRIPTION_MESSAGE, null);
+    //    }
 
     public void setKeyRemoteConfigAppResearch(String value)
     {
@@ -1148,5 +1151,15 @@ public class DailyRemoteConfigPreference
     public String getKeyRemoteConfigGourmetSearchKeyword()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_GOURMET_SEARCH_KEYWORD, null);
+    }
+
+    public void setKeyRemoteConfigPaymentCardEvent(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_PAYMENT_CARD_EVENT, value);
+    }
+
+    public String getKeyRemoteConfigPaymentCardEvent()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_PAYMENT_CARD_EVENT, null);
     }
 }

@@ -334,6 +334,15 @@
                     android:layout_height="1dp"
                     android:background="@color/default_line_cf0f0f0"/>
 
+                <com.daily.dailyhotel.view.DailyBookingCardEventView
+                    android:id="@+id/cardEventView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:visibility="gone"/>
+
                 <com.daily.dailyhotel.view.DailyBookingPaymentTypeView
                     android:id="@+id/paymentTypeView"
                     android:layout_width="match_parent"
