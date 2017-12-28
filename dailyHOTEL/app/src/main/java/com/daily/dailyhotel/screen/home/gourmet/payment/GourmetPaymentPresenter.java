@@ -2004,25 +2004,6 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         {
             getViewInterface().setGuidePaymentType(null);
         }
-
-        getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.EASY_CARD, isSimpleCardPaymentEnabled);
-        getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.CARD, isCardPaymentEnabled);
-        getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.PHONE, isPhonePaymentEnabled);
-        getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.VBANK, isVirtualPaymentEnabled);
-
-        if (isSimpleCardPaymentEnabled == true)
-        {
-            setPaymentType(DailyBookingPaymentTypeView.PaymentType.EASY_CARD);
-        } else if (isCardPaymentEnabled == true)
-        {
-            setPaymentType(DailyBookingPaymentTypeView.PaymentType.CARD);
-        } else if (isPhonePaymentEnabled == true)
-        {
-            setPaymentType(DailyBookingPaymentTypeView.PaymentType.PHONE);
-        } else if (isVirtualPaymentEnabled == true)
-        {
-            setPaymentType(DailyBookingPaymentTypeView.PaymentType.VBANK);
-        }
     }
 
     private int[] getAgreedTermMessages(DailyBookingPaymentTypeView.PaymentType paymentType)

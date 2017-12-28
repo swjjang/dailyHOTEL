@@ -1857,21 +1857,6 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         {
             getViewInterface().setGuidePaymentType(null);
         }
-
-        getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.EASY_CARD, isSimpleCardPaymentEnabled);
-        getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.CARD, isCardPaymentEnabled);
-        getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.PHONE, isPhonePaymentEnabled);
-
-        if (isSimpleCardPaymentEnabled == true)
-        {
-            setPaymentType(DailyBookingPaymentTypeView.PaymentType.EASY_CARD);
-        } else if (isCardPaymentEnabled == true)
-        {
-            setPaymentType(DailyBookingPaymentTypeView.PaymentType.CARD);
-        } else if (isPhonePaymentEnabled == true)
-        {
-            setPaymentType(DailyBookingPaymentTypeView.PaymentType.PHONE);
-        }
     }
 
     private void setDepositStickerCard(StayOutboundPayment stayOutboundPayment, StayBookDateTime stayBookDateTime)
