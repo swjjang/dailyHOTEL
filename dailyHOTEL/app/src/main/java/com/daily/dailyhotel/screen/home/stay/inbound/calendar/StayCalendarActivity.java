@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.outbound.calendar;
+package com.daily.dailyhotel.screen.home.stay.inbound.calendar;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,7 +8,7 @@ import android.support.annotation.NonNull;
 import com.daily.base.BaseActivity;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 
-public class StayOutboundCalendarActivity extends BaseActivity<StayOutboundCalendarPresenter>
+public class StayCalendarActivity extends BaseActivity<StayCalendarPresenter>
 {
     public static final String INTENT_EXTRA_DATA_CHECKIN_DATETIME = "checkInDateTime";
     public static final String INTENT_EXTRA_DATA_CHECKOUT_DATETIME = "checkOutDateTime";
@@ -24,7 +24,7 @@ public class StayOutboundCalendarActivity extends BaseActivity<StayOutboundCalen
         , String startDateTime, String endDateTime, int nightsOfMaxCount//
         , String callByScreen, boolean isSelected, int marginTop, boolean isAnimation)
     {
-        Intent intent = new Intent(context, StayOutboundCalendarActivity.class);
+        Intent intent = new Intent(context, StayCalendarActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_CHECKIN_DATETIME, checkInDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_CHECKOUT_DATETIME, checkOutDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_START_DATETIME, startDateTime);
@@ -46,8 +46,8 @@ public class StayOutboundCalendarActivity extends BaseActivity<StayOutboundCalen
 
     @NonNull
     @Override
-    protected StayOutboundCalendarPresenter createInstancePresenter()
+    protected StayCalendarPresenter createInstancePresenter()
     {
-        return new StayOutboundCalendarPresenter(this);
+        return new StayCalendarPresenter(this);
     }
 }

@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.list;
 
 
+import android.app.Activity;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
@@ -15,6 +16,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.util.Pair;
 
+import com.crashlytics.android.Crashlytics;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
@@ -27,8 +29,11 @@ import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StayRegion;
+import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
+import com.daily.dailyhotel.screen.common.area.stay.StayAreaListActivity;
+import com.daily.dailyhotel.screen.home.stay.inbound.calendar.StayCalendarActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.R;
@@ -40,10 +45,12 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -61,6 +68,9 @@ import io.reactivex.functions.Function;
  */
 public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, StayTabInterface> implements StayTabView.OnEventListener
 {
+    private static final int DAYS_OF_MAXCOUNT = 60;
+    private static final int NIGHTS_OF_MAXCOUNT = 60;
+
     private StayTabAnalyticsInterface mAnalytics;
 
     CommonRemoteImpl mCommonRemoteImpl;
@@ -86,8 +96,8 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         MutableLiveData<Location> location = new MutableLiveData<>();
         MutableLiveData<ViewType> viewType = new MutableLiveData<>();
 
-//        // 화면 갱신
-//        MutableLiveData<Boolean> notifyRefreshFragment = new MutableLiveData<>();
+        //        // 화면 갱신
+        //        MutableLiveData<Boolean> notifyRefreshFragment = new MutableLiveData<>();
     }
 
     class StayViewModelFactory implements ViewModelProvider.Factory
@@ -125,7 +135,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                 }
             }
 
-//            stayViewModel.notifyRefreshFragment.setValue(false);
+            //            stayViewModel.notifyRefreshFragment.setValue(false);
 
             return stayViewModel;
         }
@@ -250,6 +260,17 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         unLockAll();
+
+        switch (requestCode)
+        {
+            case StayTabActivity.REQUEST_CODE_CALENDAR:
+                onCalendarActivityResult(resultCode, data);
+                break;
+
+            case StayTabActivity.REQUEST_CODE_REGION:
+                onRegionActivityResult(resultCode, data);
+                break;
+        }
     }
 
     @Override
@@ -371,6 +392,56 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
     }
 
+    @Override
+    public void onRegionClick()
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        try
+        {
+            String checkInDateTime = mStayViewModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT);
+            String checkOutDateTime = mStayViewModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT);
+
+            startActivityForResult(StayAreaListActivity.newInstance(getActivity()//
+                , checkInDateTime, checkOutDateTime, DailyCategoryType.STAY_ALL//
+                , mStayViewModel.selectedCategory.getValue().code), StayTabActivity.REQUEST_CODE_REGION);
+
+            //            switch (mViewType)
+            //            {
+            //                case LIST:
+            //                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label._HOTEL_LIST, null);
+            //                    break;
+            //
+            //                case MAP:
+            //                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label._HOTEL_MAP, null);
+            //                    break;
+            //            }
+        } catch (Exception e)
+        {
+            Crashlytics.logException(e);
+
+            setRefresh(true);
+            onRefresh(true);
+        }
+    }
+
+    @Override
+    public void onCalendarClick()
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        startCalendar(AnalyticsManager.ValueType.LIST);
+        //
+        //        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
+        //            , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.LIST, null);
+    }
+
     private void initViewModel(BaseActivity activity)
     {
         if (activity == null)
@@ -397,6 +468,32 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
             }
         });
+    }
+
+    private void startCalendar(String callByScreen)
+    {
+        try
+        {
+            Calendar calendar = DailyCalendar.getInstance();
+            calendar.setTime(DailyCalendar.convertDate(mStayViewModel.commonDateTime.getValue().dailyDateTime, DailyCalendar.ISO_8601_FORMAT));
+
+            String startDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+
+            calendar.add(Calendar.DAY_OF_MONTH, DAYS_OF_MAXCOUNT - 1);
+
+            String endDateTime = DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT);
+
+            Intent intent = StayCalendarActivity.newInstance(getActivity()//
+                , mStayViewModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , mStayViewModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , startDateTime, endDateTime, NIGHTS_OF_MAXCOUNT, callByScreen, true//
+                , 0, true);
+
+            startActivityForResult(intent, StayTabActivity.REQUEST_CODE_CALENDAR);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     void setCommonDateTime(@NonNull CommonDateTime commonDateTime)
@@ -575,6 +672,82 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
         return null;
     }
+
+    private void onCalendarActivityResult(int resultCode, Intent data)
+    {
+        switch (resultCode)
+        {
+            case Activity.RESULT_OK:
+
+                if (data != null && data.hasExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME) == true//
+                    && data.hasExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME) == true)
+                {
+                    String checkInDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
+                    String checkOutDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
+
+                    if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
+                    {
+                        return;
+                    }
+
+                    setStayBookDateTime(checkInDateTime, checkOutDateTime);
+                    notifyDateTextChanged();
+
+                    setRefresh(true);
+                }
+                break;
+        }
+    }
+
+    private void onRegionActivityResult(int resultCode, Intent data)
+    {
+        switch (resultCode)
+        {
+            case Activity.RESULT_OK:
+            case com.daily.base.BaseActivity.RESULT_CODE_START_CALENDAR:
+                if (data != null && data.hasExtra(StayAreaListActivity.INTENT_EXTRA_DATA_REGION) == true)
+                {
+                    StayRegionParcel stayRegionParcel = data.getParcelableExtra(StayAreaListActivity.INTENT_EXTRA_DATA_REGION);
+
+                    if (stayRegionParcel == null)
+                    {
+                        return;
+                    }
+
+                    StayRegion region = stayRegionParcel.getRegion();
+
+                    if (region == null || region.getAreaGroup() == null || region.getArea() == null)
+                    {
+                        return;
+                    }
+
+                    mStayViewModel.stayRegion.setValue(region);
+
+                    // 지역이 수정 되면 필터가 초기화 된다.
+                    mStayViewModel.stayFilter.getValue().resetFilter();
+                    mStayViewModel.selectedCategory.setValue(Category.ALL);
+
+                    setRefresh(true);
+                }
+
+                if (resultCode == com.daily.base.BaseActivity.RESULT_CODE_START_CALENDAR)
+                {
+                    lock();
+                    startCalendar(AnalyticsManager.Label.CHANGE_LOCATION);
+                }
+                break;
+
+
+            case com.daily.base.BaseActivity.RESULT_CODE_START_AROUND_SEARCH:
+            {
+                // 검색 결과 화면으로 이동한다.
+                //                        startAroundSearchResult(this, mTodayDateTime, mStayCuration.getStayBookingDay()//
+                //                            , null, AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC);
+                break;
+            }
+        }
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Deep Link

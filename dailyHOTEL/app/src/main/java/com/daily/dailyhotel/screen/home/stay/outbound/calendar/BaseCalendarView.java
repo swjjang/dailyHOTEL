@@ -19,7 +19,7 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 
-public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventListener, T2 extends ActivityCalendarDataBinding> extends BaseDialogView<T1, T2> implements View.OnClickListener
+public abstract class BaseCalendarView<T1 extends BaseCalendarView.OnEventListener, T2 extends ActivityCalendarDataBinding> extends BaseDialogView<T1, T2> implements View.OnClickListener
 {
     private static final int ANIMATION_DELAY = 200;
     AnimatorSet mAnimatorSet;
@@ -28,7 +28,7 @@ public abstract class PlaceCalendarView<T1 extends PlaceCalendarView.OnEventList
     {
     }
 
-    public PlaceCalendarView(BaseActivity baseActivity, T1 listener)
+    public BaseCalendarView(BaseActivity baseActivity, T1 listener)
     {
         super(baseActivity, listener);
 

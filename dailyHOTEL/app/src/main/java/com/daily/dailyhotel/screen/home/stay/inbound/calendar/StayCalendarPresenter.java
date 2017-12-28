@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.outbound.calendar;
+package com.daily.dailyhotel.screen.home.stay.inbound.calendar;
 
 
 import android.app.Activity;
@@ -32,9 +32,9 @@ import io.reactivex.schedulers.Schedulers;
  * Created by sheldon
  * Clean Architecture
  */
-public class StayOutboundCalendarPresenter extends BaseCalendarPresenter<StayOutboundCalendarActivity, StayOutboundCalendarViewInterface> implements StayOutboundCalendarView.OnEventListener
+public class StayCalendarPresenter extends BaseCalendarPresenter<StayCalendarActivity, StayCalendarViewInterface> implements StayCalendarView.OnEventListener
 {
-    private StayOutboundCalendarPresenterAnalyticsInterface mAnalytics;
+    private StayCalendarPresenterAnalyticsInterface mAnalytics;
 
     String mCheckInDateTime;
     String mCheckOutDateTime;
@@ -48,24 +48,24 @@ public class StayOutboundCalendarPresenter extends BaseCalendarPresenter<StayOut
     private int mMarginTop;
     boolean mIsAnimation;
 
-    public interface StayOutboundCalendarPresenterAnalyticsInterface extends BaseAnalyticsInterface
+    public interface StayCalendarPresenterAnalyticsInterface extends BaseAnalyticsInterface
     {
     }
 
-    public StayOutboundCalendarPresenter(@NonNull StayOutboundCalendarActivity activity)
+    public StayCalendarPresenter(@NonNull StayCalendarActivity activity)
     {
         super(activity);
     }
 
     @NonNull
     @Override
-    protected StayOutboundCalendarViewInterface createInstanceViewInterface()
+    protected StayCalendarViewInterface createInstanceViewInterface()
     {
-        return new StayOutboundCalendarView(getActivity(), this);
+        return new StayCalendarView(getActivity(), this);
     }
 
     @Override
-    public void constructorInitialize(StayOutboundCalendarActivity activity)
+    public void constructorInitialize(StayCalendarActivity activity)
     {
         super.constructorInitialize(activity);
 
@@ -73,7 +73,7 @@ public class StayOutboundCalendarPresenter extends BaseCalendarPresenter<StayOut
 
         getViewInterface().setVisibility(false);
 
-        setAnalytics(new StayOutboundCalendarAnalyticsImpl());
+        setAnalytics(new StayCalendarAnalyticsImpl());
 
         setRefresh(true);
     }
@@ -81,7 +81,7 @@ public class StayOutboundCalendarPresenter extends BaseCalendarPresenter<StayOut
     @Override
     public void setAnalytics(BaseAnalyticsInterface analytics)
     {
-        mAnalytics = (StayOutboundCalendarPresenterAnalyticsInterface) analytics;
+        mAnalytics = (StayCalendarPresenterAnalyticsInterface) analytics;
     }
 
     @Override
@@ -94,17 +94,17 @@ public class StayOutboundCalendarPresenter extends BaseCalendarPresenter<StayOut
 
         try
         {
-            mCheckInDateTime = intent.getStringExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
-            mCheckOutDateTime = intent.getStringExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
+            mCheckInDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
+            mCheckOutDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
 
-            mStartDateTime = intent.getStringExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_START_DATETIME);
-            mEndDateTime = intent.getStringExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_END_DATETIME);
-            mNightsOfMaxCount = intent.getIntExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_NIGHTS_OF_MAXCOUNT, 1);
+            mStartDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_START_DATETIME);
+            mEndDateTime = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_END_DATETIME);
+            mNightsOfMaxCount = intent.getIntExtra(StayCalendarActivity.INTENT_EXTRA_DATA_NIGHTS_OF_MAXCOUNT, 1);
 
-            mCallByScreen = intent.getStringExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_CALLBYSCREEN);
-            mIsSelected = intent.getBooleanExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_ISSELECTED, true);
-            mMarginTop = intent.getIntExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_MARGIN_TOP, 0);
-            mIsAnimation = intent.getBooleanExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_ISANIMATION, false);
+            mCallByScreen = intent.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CALLBYSCREEN);
+            mIsSelected = intent.getBooleanExtra(StayCalendarActivity.INTENT_EXTRA_DATA_ISSELECTED, true);
+            mMarginTop = intent.getIntExtra(StayCalendarActivity.INTENT_EXTRA_DATA_MARGIN_TOP, 0);
+            mIsAnimation = intent.getBooleanExtra(StayCalendarActivity.INTENT_EXTRA_DATA_ISANIMATION, false);
 
         } catch (Exception e)
         {
@@ -348,8 +348,8 @@ public class StayOutboundCalendarPresenter extends BaseCalendarPresenter<StayOut
         }
 
         Intent intent = new Intent();
-        intent.putExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME, mCheckInDateTime);
-        intent.putExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME, mCheckOutDateTime);
+        intent.putExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME, mCheckInDateTime);
+        intent.putExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME, mCheckOutDateTime);
 
         setResult(Activity.RESULT_OK, intent);
         onBackClick();

@@ -30,6 +30,10 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
         void onCategoryTabSelected(TabLayout.Tab tab);
 
         void onCategoryTabReselected(TabLayout.Tab tab);
+
+        void onRegionClick();
+
+        void onCalendarClick();
     }
 
     public StayTabView(BaseActivity baseActivity, StayTabView.OnEventListener listener)
@@ -46,6 +50,9 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
         }
 
         initToolbar(viewDataBinding);
+
+        viewDataBinding.navigationBarView.setOnRegionClickListener(v -> getEventListener().onRegionClick());
+        viewDataBinding.navigationBarView.setOnDateClickListener(v -> getEventListener().onCalendarClick());
     }
 
     @Override

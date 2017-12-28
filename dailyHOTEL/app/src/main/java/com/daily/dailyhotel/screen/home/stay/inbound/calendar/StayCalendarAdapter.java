@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.outbound.calendar;
+package com.daily.dailyhotel.screen.home.stay.inbound.calendar;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
-public class StayOutboundCalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class StayCalendarAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
     Context mContext;
     private List<ObjectItem> mList;
@@ -31,7 +31,7 @@ public class StayOutboundCalendarAdapter extends RecyclerView.Adapter<RecyclerVi
 
     View.OnClickListener mOnClickListener;
 
-    public StayOutboundCalendarAdapter(Context context, List<ObjectItem> arrayList)
+    public StayCalendarAdapter(Context context, List<ObjectItem> arrayList)
     {
         mContext = context;
 
