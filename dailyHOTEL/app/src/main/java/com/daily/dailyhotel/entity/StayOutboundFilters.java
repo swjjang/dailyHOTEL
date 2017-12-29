@@ -2,9 +2,6 @@ package com.daily.dailyhotel.entity;
 
 public class StayOutboundFilters
 {
-    public static final int RATING_MIN_VALUE = 1;
-    public static final int RATING_MAX_VALUE = 5;
-
     public int rating;
     public SortType sortType;
     public double latitude;

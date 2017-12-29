@@ -222,7 +222,7 @@ public class DailyStayOutboundCardView extends ConstraintLayout
             return;
         }
 
-        mViewDataBinding.vrTextView.setVisibility(visible ? VISIBLE : GONE);
+        //        mViewDataBinding.vrTextView.setVisibility(visible ? VISIBLE : GONE);
     }
 
     public void setRatingText(float rating)
