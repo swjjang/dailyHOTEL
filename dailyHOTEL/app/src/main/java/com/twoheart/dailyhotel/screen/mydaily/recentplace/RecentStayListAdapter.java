@@ -145,7 +145,14 @@ public class RecentStayListAdapter extends RecentPlacesListAdapter
 
         holder.stayOutboundCardView.setImage(stayOutbound.getImageMap());
 
-        holder.stayOutboundCardView.setGradeText(mContext.getString(R.string.label_stay_outbound_filter_x_star_rate, (int) stayOutbound.rating));
+        if ((int) stayOutbound.rating == 0)
+        {
+            holder.stayOutboundCardView.setGradeText(null);
+        } else
+        {
+            holder.stayOutboundCardView.setGradeText(mContext.getString(R.string.label_stay_outbound_filter_x_star_rate, (int) stayOutbound.rating));
+        }
+
         holder.stayOutboundCardView.setVRVisible(false);
         holder.stayOutboundCardView.setRatingText(stayOutbound.tripAdvisorRating);
 

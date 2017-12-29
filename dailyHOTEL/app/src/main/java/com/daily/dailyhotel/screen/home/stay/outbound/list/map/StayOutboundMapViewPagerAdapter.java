@@ -94,7 +94,14 @@ public class StayOutboundMapViewPagerAdapter extends PagerAdapter
         }
 
         // grade
-        dataBinding.gradeTextView.setText(mContext.getString(R.string.label_stay_outbound_filter_x_star_rate, (int) stayOutbound.rating));
+        if ((int) stayOutbound.rating == 0)
+        {
+            dataBinding.gradeTextView.setVisibility(View.GONE);
+        } else
+        {
+            dataBinding.gradeTextView.setVisibility(View.VISIBLE);
+            dataBinding.gradeTextView.setText(mContext.getString(R.string.label_stay_outbound_filter_x_star_rate, (int) stayOutbound.rating));
+        }
 
         // Image
         dataBinding.simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
