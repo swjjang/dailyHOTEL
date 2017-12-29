@@ -1302,7 +1302,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         titleInformationView.setEnglishNameVisible(false);
 
         // 등급
-        titleInformationView.setCategoryText(grade.getName(getContext()));
+        titleInformationView.setCategory(grade.getName(getContext()), null);
 
         // 리워드 여부
         titleInformationView.setRewardVisible(hasProviderSticker);
