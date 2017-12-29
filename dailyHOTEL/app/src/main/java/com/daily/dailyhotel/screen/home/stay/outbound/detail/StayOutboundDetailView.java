@@ -1313,7 +1313,13 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
         titleInformationView.setEnglishNameText("(" + englishName + ")");
 
         // 등급
-        titleInformationView.setCategoryText(getString(R.string.label_stay_outbound_detail_grade, (int) rating));
+        if ((int) rating == 0)
+        {
+            titleInformationView.setCategoryText(null);
+        } else
+        {
+            titleInformationView.setCategoryText(getString(R.string.label_stay_outbound_detail_grade, (int) rating));
+        }
 
         // 리워드 여부
         titleInformationView.setRewardVisible(hasProviderSticker);

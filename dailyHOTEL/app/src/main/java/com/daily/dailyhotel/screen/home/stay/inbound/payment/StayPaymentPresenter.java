@@ -2092,7 +2092,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
                         for (int j = 0; j < messageCount; j++)
                         {
-                            messageList.add(messageJSONArray.getString(i));
+                            messageList.add(messageJSONArray.getString(j));
                         }
 
                         cardEventList.add(new Pair<>(jsonObject.getString("title"), messageList));
@@ -2105,6 +2105,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 } else
                 {
                     getViewInterface().setCardEventVisible(true);
+                    getViewInterface().setCardEventData(cardEventList);
                 }
             } catch (Exception e)
             {

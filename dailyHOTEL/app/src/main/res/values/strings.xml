@@ -110,6 +110,7 @@
     <string name="label_check_out">체크아웃</string>
     <string name="label_include_tax">(세금/봉사료 포함)</string>
     <string name="label_download_coupon_price">%1$s 할인쿠폰 다운받기</string>
+    <string name="label_event">EVENT</string>
 
     <string name="label_count_stay">%1$d개 스테이</string>
     <string name="label_count_gourmet">%1$d개 고메</string>
@@ -633,7 +634,6 @@
     <string name="label_booking_required_fileds">(필수입력 사항)</string>
     <string name="label_booking_refund_policy">취소 및 환불 규정</string>
     <string name="label_gourmet_payment_number_of_persons">%1$d명</string>
-    <string name="label_booking_card_discounts">할인 혜택</string>
 
     <string name="label_booking_input_name">이름 입력</string>
     <string name="label_booking_input_phone">전화번호 입력</string>

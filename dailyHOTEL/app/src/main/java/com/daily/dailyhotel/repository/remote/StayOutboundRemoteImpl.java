@@ -338,7 +338,7 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
         JSONObject filterJSONObject = new JSONObject();
 
         double maxStarRating = 5.0;
-        double minStarRating = 1.0;
+        double minStarRating = 0.0;
 
         if (stayOutboundFilters != null && stayOutboundFilters.rating > 0)
         {
