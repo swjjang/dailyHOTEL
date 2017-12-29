@@ -86,16 +86,6 @@ public class DailyDetailTitleInformationView extends ConstraintLayout
         }
     }
 
-    public void setCategoryText(String text)
-    {
-        if (mViewDataBinding == null)
-        {
-            return;
-        }
-
-        mViewDataBinding.categoryTextView.setText(text);
-    }
-
     public void setRewardVisible(boolean visible)
     {
         if (mViewDataBinding == null)
@@ -116,7 +106,14 @@ public class DailyDetailTitleInformationView extends ConstraintLayout
             return;
         }
 
-        mViewDataBinding.categoryTextView.setText(category);
+        if (DailyTextUtils.isTextEmpty(category) == false)
+        {
+            mViewDataBinding.categoryTextView.setVisibility(View.VISIBLE);
+            mViewDataBinding.categoryTextView.setText(category);
+        } else
+        {
+            mViewDataBinding.categoryTextView.setVisibility(View.GONE);
+        }
 
         if (DailyTextUtils.isTextEmpty(subCategory) == false)
         {
