@@ -959,7 +959,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     @Override
     public void onMapReady()
     {
-        getViewInterface().setStayOutboundMakeMarker(mStayOutboundList, true);
+        getViewInterface().setStayOutboundMakeMarker(mStayOutboundList, true, true);
 
         unLockAll();
     }
@@ -1157,20 +1157,11 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             @Override
             public void accept(StayOutbounds stayOutbounds) throws Exception
             {
-                ExLog.d("pinkred - result : " +  stayOutbounds.getStayOutbound().size());
+                ExLog.d("pinkred - result : " + stayOutbounds.getStayOutbound().size());
 
                 DailyRemoteConfigPreference.getInstance(getActivity()).setKeyRemoteConfigRewardStickerEnabled(stayOutbounds.activeReward);
 
-                getViewInterface().setStayOutboundMakeMarker(stayOutbounds.getStayOutbound(), false);
-
-//                try
-//                {
-//                    getViewInterface().setStayOutboundMapViewPagerList(getActivity(), stayOutbounds.getStayOutbound(), mStayBookDateTime.getNights() > 1//
-//                        , stayOutbounds.activeReward);
-//                } catch (Exception e)
-//                {
-//                    ExLog.d(e.toString());
-//                }
+                getViewInterface().setStayOutboundMakeMarker(stayOutbounds.getStayOutbound(), false, false);
 
                 unLockAll();
 
@@ -1187,45 +1178,12 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             }
         });
 
-
-        //        mChangedLocationDisposable = mStayOutboundRemoteImpl.getList(mStayBookDateTime, latLng.latitude, latLng.longitude, radius//
-        //            , mPeople, mStayOutboundFilters, numberOfResults).delaySubscription(1000, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayOutbounds>()
-        //        {
-        //            @Override
-        //            public void accept(StayOutbounds stayOutbounds) throws Exception
-        //            {
-        //                DailyRemoteConfigPreference.getInstance(getActivity()).setKeyRemoteConfigRewardStickerEnabled(stayOutbounds.activeReward);
-        //
-        //                getViewInterface().setStayOutboundMakeMarker(stayOutbounds.getStayOutbound(), false);
-        //
-        //                try
-        //                {
-        //                    getViewInterface().setStayOutboundMapViewPagerList(getActivity(), stayOutbounds.getStayOutbound(), mStayBookDateTime.getNights() > 1//
-        //                        , stayOutbounds.activeReward);
-        //                } catch (Exception e)
-        //                {
-        //                    ExLog.d(e.toString());
-        //                }
-        //
-        //                unLockAll();
-        //            }
-        //        }, new Consumer<Throwable>()
-        //        {
-        //            @Override
-        //            public void accept(Throwable throwable) throws Exception
-        //            {
-        //                onHandleError(throwable);
-        //            }
-        //        });
-
         addCompositeDisposable(mChangedLocationDisposable);
     }
 
     @Override
     public void onClearChangedLocation()
     {
-        ExLog.d("pinkred : onClearChangedLocation");
-
         if (mChangedLocationDisposable != null)
         {
             mChangedLocationDisposable.dispose();
@@ -1377,7 +1335,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         if (mViewState == ViewState.MAP)
         {
-            getViewInterface().setStayOutboundMakeMarker(mStayOutboundList, true);
+            getViewInterface().setStayOutboundMakeMarker(mStayOutboundList, true, true);
 
             try
             {

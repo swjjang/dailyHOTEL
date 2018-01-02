@@ -414,14 +414,14 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
     }
 
     @Override
-    public void setStayOutboundMakeMarker(List<StayOutbound> stayOutboundList, boolean moveCameraBounds)
+    public void setStayOutboundMakeMarker(List<StayOutbound> stayOutboundList, boolean moveCameraBounds, boolean clear)
     {
         if (mStayOutboundMapFragment == null || stayOutboundList == null)
         {
             return;
         }
 
-        mStayOutboundMapFragment.setStayOutboundList(stayOutboundList, moveCameraBounds);
+        mStayOutboundMapFragment.setStayOutboundList(stayOutboundList, moveCameraBounds, clear);
     }
 
     @Override

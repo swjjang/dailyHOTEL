@@ -31,7 +31,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
-import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.MyLocationMarker;
 import com.twoheart.dailyhotel.model.PlaceRenderer;
@@ -171,7 +170,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
         });
 
         mClusterManager.setRenderer(mClusterRenderer);
-        mClusterManager.setAlgorithm(new NonHierarchicalDistanceBasedAlgorithm<StayOutboundClusterItem>());
+        //        mClusterManager.setAlgorithm(new NonHierarchicalDistanceBasedAlgorithm<StayOutboundClusterItem>());
 
         mGoogleMap.setInfoWindowAdapter(new MapWindowAdapter(getContext()));
 
@@ -278,7 +277,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
         mOnEventListener = listener;
     }
 
-    public void setStayOutboundList(List<StayOutbound> stayOutboundList, boolean moveCameraBounds)
+    public void setStayOutboundList(List<StayOutbound> stayOutboundList, boolean moveCameraBounds, boolean clear)
     {
         if (mGoogleMap == null || stayOutboundList == null || stayOutboundList.size() == 0)
         {
@@ -287,10 +286,10 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
 
         if (mSelectedMarker == null)
         {
-            makeMarker(stayOutboundList, null, true, moveCameraBounds);
+            makeMarker(stayOutboundList, null, clear, moveCameraBounds);
         } else
         {
-            makeMarker(stayOutboundList, (StayOutbound) mSelectedMarker.getTag(), true, moveCameraBounds);
+            makeMarker(stayOutboundList, (StayOutbound) mSelectedMarker.getTag(), clear, moveCameraBounds);
         }
     }
 
@@ -492,9 +491,15 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
             myLatLng = null;
         }
 
-        removeHiddenMarker();
+        // 화면에 보이지 않는 마커를 제거한다.
 
-        //        mGoogleMap.clear();
+        if (refreshAll == true)
+        {
+            mGoogleMap.clear();
+        } else
+        {
+            removeHiddenMarker();
+        }
 
         if (stayOutboundList == null || stayOutboundList.size() == 0)
         {
@@ -522,9 +527,30 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
             {
                 List<StayOutbound> stayOutboundArrangeList = reLocationDuplicateStayOutbound(stayOutboundList);
                 List<StayOutboundClusterItem> stayOutboundClusterItemList = new ArrayList<>(stayOutboundArrangeList.size());
+                List<StayOutboundClusterItem> currentClusterItemList = (List<StayOutboundClusterItem>) mClusterManager.getAlgorithm().getItems();
 
                 for (StayOutbound stayOutbound : stayOutboundArrangeList)
                 {
+                    // 기존에 이미 있는 좌표는 더하지 않는다.
+                    if (refreshAll == false && currentClusterItemList != null && currentClusterItemList.size() > 0)
+                    {
+                        boolean hasClusterItem = false;
+
+                        for (StayOutboundClusterItem clusterItem : currentClusterItemList)
+                        {
+                            if (stayOutbound.latitude == clusterItem.getStayOutbound().latitude && stayOutbound.longitude == clusterItem.getStayOutbound().longitude)
+                            {
+                                hasClusterItem = true;
+                                break;
+                            }
+                        }
+
+                        if (hasClusterItem == true)
+                        {
+                            continue;
+                        }
+                    }
+
                     StayOutboundClusterItem stayOutboundClusterItem = new StayOutboundClusterItem(stayOutbound);
 
                     // 시작시에 전체 영역을 계산하여 화면에 보일수 있도록 한다.
