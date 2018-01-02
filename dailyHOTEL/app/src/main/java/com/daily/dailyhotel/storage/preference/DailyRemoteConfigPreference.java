@@ -114,6 +114,7 @@ public class DailyRemoteConfigPreference
     private static final String KEY_REMOTE_CONFIG_STATIC_URL_COLLECTPERSONAL = "385";
     private static final String KEY_REMOTE_CONFIG_STATIC_URL_DAILYREWARD = "386";
     private static final String KEY_REMOTE_CONFIG_STATIC_URL_DAILYREWARD_TERMS = "387";
+    private static final String KEY_REMOTE_CONFIG_STATIC_URL_DAILYREWARD_COUPON_TERMS = "388";
 
     private static final String KEY_REMOTE_CONFIG_OB_SEARCH_KEYWORD = "390";
 
@@ -926,6 +927,17 @@ public class DailyRemoteConfigPreference
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_DAILYREWARD_TERMS, Crypto.getUrlDecoderEx(Constants.URL_WEB_DAILY_REWARD_TERMS));
     }
+
+    public void setKeyRemoteConfigStaticUrlDailyRewardCouponTerms(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_STATIC_URL_DAILYREWARD_COUPON_TERMS, value);
+    }
+
+    public String getKeyRemoteConfigStaticUrlDailyRewardCouponTerms()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_STATIC_URL_DAILYREWARD_COUPON_TERMS, Crypto.getUrlDecoderEx(Constants.URL_WEB_DAILY_REWARD_COUPON_TERMS));
+    }
+
 
     public void setKeyRemoteConfigStayRankTestName(String value)
     {
