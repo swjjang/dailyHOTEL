@@ -19,6 +19,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.provider.Telephony;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.TelephonyManager;
@@ -281,11 +282,48 @@ public class Util implements Constants
         }
 
         String title = activity.getString(R.string.dialog_title_googleplayservice);
-        String dialogText = null;
+        String dialogText;
+        boolean isEnabledGms;
         int status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(activity);
-//        status = ConnectionResult.SERVICE_UPDATING;
 
-        ExLog.d("Google status : " + status);
+        try
+        {
+            ApplicationInfo gmsInfo = activity.getPackageManager().getApplicationInfo(GoogleApiAvailability.GOOGLE_PLAY_SERVICES_PACKAGE, 0);
+            isEnabledGms = gmsInfo.enabled;
+        } catch (PackageManager.NameNotFoundException e)
+        {
+            ExLog.d("GoogleApiAvailability.GOOGLE_PLAY_SERVICES_PACKAGE NameNotFoundException");
+            isEnabledGms = true;
+        }
+
+        ExLog.d("Google status : " + status + " , isEnabledGms : " + isEnabledGms);
+
+        if (isEnabledGms == false || ConnectionResult.SERVICE_DISABLED == status) // 이 기기에서 설치된 Google Play 서비스 버전이 사용 중지되었습니다.
+        {
+            dialogText = activity.getString(R.string.dialog_message_need_enable_gms);
+
+            activity.showSimpleDialog(title, dialogText //
+                , activity.getString(R.string.dialog_btn_text_confirm), activity.getString(R.string.dialog_btn_text_cancel) //
+                , new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        intent.setData(Uri.parse("package:" + GoogleApiAvailability.GOOGLE_PLAY_SERVICES_PACKAGE));
+                        activity.startActivity(intent);
+                    }
+                }, null, null, new DialogInterface.OnDismissListener()
+                {
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface)
+                    {
+                        System.exit(0);
+                    }
+                }, true);
+
+            return false;
+        }
 
         if (ConnectionResult.SUCCESS == status)
         {
@@ -321,7 +359,6 @@ public class Util implements Constants
                 break;
             }
 
-            case ConnectionResult.SERVICE_DISABLED: // 이 기기에서 설치된 Google Play 서비스 버전이 사용 중지되었습니다.
             case ConnectionResult.SERVICE_INVALID: // 이 기기에 설치된 Google Play 서비스의 버전이 인증되지 않았습니다.
             {
                 dialogText = activity.getString(R.string.dialog_message_need_reinstall_gms);
@@ -338,16 +375,17 @@ public class Util implements Constants
         }
 
         // set dialog message
-        activity.showSimpleDialog(activity.getString(R.string.dialog_title_googleplayservice), dialogText //
-            , activity.getString(R.string.dialog_btn_text_install), activity.getString(R.string.dialog_btn_text_cancel) //
-            , new View.OnClickListener()
+        activity.showSimpleDialog(title, dialogText, activity.getString(R.string.dialog_btn_text_install) //
+            , activity.getString(R.string.dialog_btn_text_cancel), new View.OnClickListener()
             {
                 @Override
                 public void onClick(View view)
                 {
                     try
                     {
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.gms"));
+                        Intent intent = new Intent(Intent.ACTION_VIEW //
+                            , Uri.parse("http://play.google.com/store/apps/details?id=" //
+                            + GoogleApiAvailability.GOOGLE_PLAY_SERVICES_PACKAGE));
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
                         intent.setPackage("com.android.vending");
                         activity.startActivity(intent);
@@ -355,28 +393,29 @@ public class Util implements Constants
                     {
                         try
                         {
-                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.gms"));
+                            Intent intent = new Intent(Intent.ACTION_VIEW //
+                                , Uri.parse("market://details?id=" + GoogleApiAvailability.GOOGLE_PLAY_SERVICES_PACKAGE));
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
                             intent.setPackage("com.android.vending");
                             activity.startActivity(intent);
                         } catch (ActivityNotFoundException f)
                         {
-                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.gms"));
+                            Intent intent = new Intent(Intent.ACTION_VIEW //
+                                , Uri.parse("http://play.google.com/store/apps/details?id=" //
+                                + GoogleApiAvailability.GOOGLE_PLAY_SERVICES_PACKAGE));
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
                             activity.startActivity(intent);
                         }
                     }
-
-                    System.exit(0);
                 }
-            }, null, new DialogInterface.OnCancelListener()
+            }, null, null, new DialogInterface.OnDismissListener()
             {
                 @Override
-                public void onCancel(DialogInterface dialogInterface)
+                public void onDismiss(DialogInterface dialogInterface)
                 {
                     System.exit(0);
                 }
-            }, null, true);
+            }, true);
 
         return false;
     }
