@@ -126,6 +126,27 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
         setBookingInformation(getContext(), mRefund01DataBinding, stayOutboundRefundDetail);
 
         setPaymentInformation(getContext(), mRefund02DataBinding, stayOutboundRefundDetail);
+
+        if (stayOutboundRefundDetail.refundStatus != null)
+        {
+            switch (stayOutboundRefundDetail.refundStatus)
+            {
+                case PARTIAL:
+                    mRefund03DataBinding.requestRefundView.setText(R.string.label_contact_request_refund);
+                    break;
+
+                case FULL:
+                    mRefund03DataBinding.requestRefundView.setText(R.string.label_request_free_refund);
+                    break;
+
+                default:
+                    mRefund03DataBinding.requestRefundView.setEnabled(false);
+                    break;
+            }
+        } else
+        {
+            mRefund03DataBinding.requestRefundView.setEnabled(false);
+        }
     }
 
     @Override
