@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.home.stay.outbound.list.map;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -51,7 +52,7 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class StayOutboundMapFragment extends com.google.android.gms.maps.SupportMapFragment//
-    implements OnMapReadyCallback, GoogleMap.OnMapClickListener//
+    implements OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnCameraIdleListener//
     , ClusterManager.OnClusterClickListener<StayOutboundClusterItem>, ClusterManager.OnClusterItemClickListener<StayOutboundClusterItem>
 {
     GoogleMap mGoogleMap;
@@ -63,6 +64,8 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
     ClusterManager mClusterManager;
     StayOutboundClusterRenderer mClusterRenderer;
 
+    List<StayOutbound> mStayOutboundList;
+
     // 특별히 많은 데이터를 관리하기 때문에 넣어주었다.
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
@@ -72,13 +75,15 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
     {
         void onMapReady();
 
-        void onMarkerClick(StayOutbound stayOutbound);
+        void onMarkerClick(StayOutbound stayOutbound, List<StayOutbound> stayOutboundList);
 
         void onMarkersCompleted();
 
         void onMapClick();
 
         void onMyLocationClick();
+
+        void onChangedLocation(LatLng latLng, float radius, float zoom);
     }
 
     public StayOutboundMapFragment()
@@ -115,7 +120,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
 
         if (mCompositeDisposable != null)
         {
-            mCompositeDisposable.clear();
+            mCompositeDisposable.dispose();
         }
 
         if (mSelectedMarker != null)
@@ -128,6 +133,12 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
         {
             mMyLocationMarker.remove();
             mMyLocationMarker = null;
+        }
+
+        if (mStayOutboundList != null)
+        {
+            mStayOutboundList.clear();
+            mStayOutboundList = null;
         }
 
         super.onDestroyView();
@@ -245,24 +256,51 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
         return true;
     }
 
+    @Override
+    public void onCameraIdle()
+    {
+        if (mClusterManager != null)
+        {
+            mClusterManager.onCameraIdle();
+        }
+
+        if (mOnEventListener != null && mGoogleMap != null)
+        {
+            LatLng centerLatLng = mGoogleMap.getCameraPosition().target;
+            LatLng radiusLatLng = mGoogleMap.getProjection().fromScreenLocation(new Point(0, ScreenUtils.getScreenHeight(getContext()) / 2));
+
+            Location centerLocation = new Location("center");
+            centerLocation.setLatitude(centerLatLng.latitude);
+            centerLocation.setLongitude(centerLatLng.longitude);
+
+            Location radiusLocation = new Location("radius");
+            radiusLocation.setLatitude(radiusLatLng.latitude);
+            radiusLocation.setLongitude(radiusLatLng.longitude);
+
+            mOnEventListener.onChangedLocation(centerLatLng, centerLocation.distanceTo(radiusLocation) / 1000, mGoogleMap.getCameraPosition().zoom);
+        }
+    }
+
     public void setOnEventListener(OnEventListener listener)
     {
         mOnEventListener = listener;
     }
 
-    public void setStayOutboundList(List<StayOutbound> stayOutboundList)
+    public void setStayOutboundList(List<StayOutbound> stayOutboundList, boolean moveCameraBounds)
     {
         if (mGoogleMap == null || stayOutboundList == null || stayOutboundList.size() == 0)
         {
             return;
         }
 
+        mStayOutboundList = stayOutboundList;
+
         if (mSelectedMarker == null)
         {
-            makeMarker(stayOutboundList, null, true);
+            makeMarker(stayOutboundList, null, true, moveCameraBounds);
         } else
         {
-            makeMarker(stayOutboundList, (StayOutbound) mSelectedMarker.getTag(), true);
+            makeMarker(stayOutboundList, (StayOutbound) mSelectedMarker.getTag(), true, moveCameraBounds);
         }
     }
 
@@ -299,7 +337,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
                         @Override
                         public void onCameraIdle()
                         {
-                            mGoogleMap.setOnCameraIdleListener(mClusterManager);
+                            mGoogleMap.setOnCameraIdleListener(StayOutboundMapFragment.this);
                         }
                     });
                     mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
@@ -447,7 +485,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
         }
     }
 
-    private void makeMarker(List<StayOutbound> stayOutboundList, StayOutbound selectedStayOutbound, boolean refreshAll)
+    private void makeMarker(List<StayOutbound> stayOutboundList, StayOutbound selectedStayOutbound, boolean refreshAll, boolean moveCameraBounds)
     {
         if (isFinishing() == true || mGoogleMap == null)
         {
@@ -531,7 +569,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
             @Override
             public void accept(@NonNull Integer size) throws Exception
             {
-                if (refreshAll == true)
+                if (refreshAll == true && moveCameraBounds == true)
                 {
                     try
                     {
@@ -542,7 +580,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
                     }
                 } else
                 {
-                    mGoogleMap.setOnCameraIdleListener(mClusterManager);
+                    mGoogleMap.setOnCameraIdleListener(StayOutboundMapFragment.this);
                     mClusterManager.cluster();
                 }
 
@@ -657,7 +695,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
                 @Override
                 public void onCameraIdle()
                 {
-                    mGoogleMap.setOnCameraIdleListener(mClusterManager);
+                    mGoogleMap.setOnCameraIdleListener(StayOutboundMapFragment.this);
                 }
             });
             mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
@@ -673,7 +711,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
 
         if (mOnEventListener != null)
         {
-            mOnEventListener.onMarkerClick(stayOutboundClusterItem.getStayOutbound());
+            mOnEventListener.onMarkerClick(stayOutboundClusterItem.getStayOutbound(), mStayOutboundList);
         }
     }
 
@@ -689,7 +727,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
                 @Override
                 public void onCameraIdle()
                 {
-                    mGoogleMap.setOnCameraIdleListener(mClusterManager);
+                    mGoogleMap.setOnCameraIdleListener(StayOutboundMapFragment.this);
 
                     if (isFinishing() == true)
                     {
@@ -709,7 +747,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
                 @Override
                 public void onCameraIdle()
                 {
-                    mGoogleMap.setOnCameraIdleListener(mClusterManager);
+                    mGoogleMap.setOnCameraIdleListener(StayOutboundMapFragment.this);
 
                     if (isFinishing() == true)
                     {
@@ -735,7 +773,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
             return;
         }
 
-        mGoogleMap.setOnCameraIdleListener(mClusterManager);
+        mGoogleMap.setOnCameraIdleListener(StayOutboundMapFragment.this);
 
         if (hotelCount == 1)
         {

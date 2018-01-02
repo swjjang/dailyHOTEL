@@ -17,6 +17,7 @@ import android.text.Spanned;
 import android.text.style.ScaleXSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -27,6 +28,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.base.BaseBlurView;
 import com.daily.dailyhotel.entity.ObjectItem;
+import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.map.StayOutboundMapFragment;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.map.StayOutboundMapViewPagerAdapter;
@@ -58,6 +60,8 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
 
     ValueAnimator mValueAnimator;
 
+    boolean mPossibleLoadingListByMap;
+
     public interface OnEventListener extends OnBaseEventListener
     {
         void onRefreshAll(boolean showProgress);
@@ -81,7 +85,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         // Map Event
         void onMapReady();
 
-        void onMarkerClick(StayOutbound stayOutbound);
+        void onMarkerClick(StayOutbound stayOutbound, List<StayOutbound> stayOutboundList);
 
         void onMarkersCompleted();
 
@@ -96,6 +100,10 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         void onCallClick();
 
         void onWishClick(int position, StayOutbound stayOutbound);
+
+        void onChangedLocation(LatLng latLng, float radius, float zoom);
+
+        void onClearChangedLocation();
     }
 
     public StayOutboundListView(BaseActivity baseActivity, StayOutboundListView.OnEventListener listener)
@@ -405,14 +413,14 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
     }
 
     @Override
-    public void setStayOutboundMakeMarker(List<StayOutbound> stayOutboundList)
+    public void setStayOutboundMakeMarker(List<StayOutbound> stayOutboundList, boolean moveCameraBounds)
     {
         if (mStayOutboundMapFragment == null || stayOutboundList == null)
         {
             return;
         }
 
-        mStayOutboundMapFragment.setStayOutboundList(stayOutboundList);
+        mStayOutboundMapFragment.setStayOutboundList(stayOutboundList, moveCameraBounds);
     }
 
     @Override
@@ -521,6 +529,28 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         }
 
         fragmentManager.beginTransaction().add(getViewDataBinding().mapLayout.getId(), mStayOutboundMapFragment, "MAP").commitAllowingStateLoss();
+
+        getViewDataBinding().mapLayout.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                switch (event.getAction())
+                {
+                    case MotionEvent.ACTION_DOWN:
+                        mPossibleLoadingListByMap = false;
+
+                        getEventListener().onClearChangedLocation();
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        mPossibleLoadingListByMap = true;
+                        break;
+                }
+
+                return false;
+            }
+        });
 
         mViewPager = addMapViewPager(getContext(), getViewDataBinding().mapLayout);
     }
@@ -803,9 +833,9 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
     }
 
     @Override
-    public void onMarkerClick(StayOutbound stayOutbound)
+    public void onMarkerClick(StayOutbound stayOutbound, List<StayOutbound> stayOutboundList)
     {
-        getEventListener().onMarkerClick(stayOutbound);
+        getEventListener().onMarkerClick(stayOutbound, stayOutboundList);
     }
 
     @Override
@@ -824,6 +854,19 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
     public void onMyLocationClick()
     {
         getEventListener().onMyLocationClick();
+    }
+
+    @Override
+    public void onChangedLocation(LatLng latLng, float radius, float zoom)
+    {
+        if (mPossibleLoadingListByMap == true)
+        {
+            mPossibleLoadingListByMap = false;
+
+            getEventListener().onChangedLocation(latLng, radius, zoom);
+
+            hideViewPagerAnimation();
+        }
     }
 
     @Override

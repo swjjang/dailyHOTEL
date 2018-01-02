@@ -123,6 +123,79 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
     }
 
     @Override
+    public Observable<StayOutbounds> getList(StayBookDateTime stayBookDateTime, double latitude, double longitude, float radius//
+        , People people, StayOutboundFilters stayOutboundFilters, int numberOfResults)
+    {
+        JSONObject jsonObject = new JSONObject();
+
+        final int NUMBER_OF_ROOMS = 1;
+
+        /// 디폴트 인자들
+        String sort;
+
+        try
+        {
+            jsonObject.put("arrivalDate", stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
+            jsonObject.put("departureDate", stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd"));
+
+            jsonObject.put("numberOfRooms", NUMBER_OF_ROOMS);
+            jsonObject.put("numberOfResults", numberOfResults);
+
+            jsonObject.put("rooms", getRooms(new People[]{people}));
+            jsonObject.put("filter", getFilter(stayOutboundFilters));
+
+            jsonObject.put("latitude", latitude);
+            jsonObject.put("longitude", longitude);
+
+            int searchRadius = (int) radius;
+
+            final int MIN_RADIUS = 2; // (km)
+            final int MAX_RADIUS = 80; // (km)
+
+            jsonObject.put("searchRadius", searchRadius < MIN_RADIUS ? MIN_RADIUS : searchRadius);
+            jsonObject.put("searchRadiusUnit", "KM");
+
+            jsonObject.put("sort", "DEFAULT");
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+
+            jsonObject = null;
+        }
+
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/outbound/coordinate-find-hotels"//
+            : "NzgkNDEkODckMTkkMTA0JDI2JDM4JDU3JDcwJDEwNCQzNSQzNyQxMjIkMzUkNzgkMTMzJA==$MUIwQURENEVCREE4RDYC0RkJEQWzIzNUJBMGTDPJCYQzdBNZzczMDNEMjRCNMTY3QzAyMUVFMTkVDNKEI3NjRDMUFFDNTZGQFjlCMUVFMjNECMkI1HRjgyMjg3QTSVGMDM5ODNhBRUY4Q0Uy$";
+
+        return mDailyMobileService.getStayOutboundList(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API), jsonObject) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<StayOutboundsData>, StayOutbounds>()
+            {
+                @Override
+                public StayOutbounds apply(@io.reactivex.annotations.NonNull BaseDto<StayOutboundsData> stayOutboundDataBaseDto) throws Exception
+                {
+                    StayOutbounds stayOutbounds;
+
+                    if (stayOutboundDataBaseDto != null)
+                    {
+                        if (stayOutboundDataBaseDto.msgCode == 100 && stayOutboundDataBaseDto.data != null)
+                        {
+                            stayOutbounds = stayOutboundDataBaseDto.data.getStayOutbounds();
+                        } else
+                        {
+                            throw new BaseException(stayOutboundDataBaseDto.msgCode, stayOutboundDataBaseDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(-1, null);
+                    }
+
+                    return stayOutbounds;
+                }
+            });
+    }
+
+    @Override
     public Observable<StayOutboundDetail> getDetail(int index, StayBookDateTime stayBookDateTime, People people)
     {
         JSONObject jsonObject = new JSONObject();

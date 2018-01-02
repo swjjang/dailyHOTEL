@@ -94,7 +94,7 @@
                     android:scrollbars="vertical"/>
             </android.support.v4.widget.SwipeRefreshLayout>
 
-            <FrameLayout
+            <com.daily.base.widget.DailyTouchableFrameView
                 android:id="@+id/mapLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

@@ -47,6 +47,7 @@ import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
@@ -61,10 +62,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -105,6 +108,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
     StayOutbound mStayOutboundByLongPress;
     android.support.v4.util.Pair[] mPairsByLongPress;
+
+    private Disposable mChangedLocationDisposable;
 
     enum ViewState
     {
@@ -954,15 +959,15 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     @Override
     public void onMapReady()
     {
-        getViewInterface().setStayOutboundMakeMarker(mStayOutboundList);
+        getViewInterface().setStayOutboundMakeMarker(mStayOutboundList, true);
 
         unLockAll();
     }
 
     @Override
-    public void onMarkerClick(StayOutbound stayOutbound)
+    public void onMarkerClick(StayOutbound stayOutbound, List<StayOutbound> stayOutboundList)
     {
-        if (stayOutbound == null || mStayOutboundList == null)
+        if (stayOutbound == null || stayOutboundList == null)
         {
             return;
         }
@@ -986,9 +991,9 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                     }
                 };
 
-                Collections.sort(mStayOutboundList, comparator);
+                Collections.sort(stayOutboundList, comparator);
 
-                return mStayOutboundList;
+                return stayOutboundList;
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<StayOutbound>>()
         {
@@ -1117,6 +1122,120 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             , stayOutbound.index, !currentWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), StayOutboundListActivity.REQUEST_CODE_WISH_DIALOG);
 
         mAnalytics.onEventWishClick(getActivity(), !currentWish);
+    }
+
+    @Override
+    public void onChangedLocation(LatLng latLng, float radius, float zoom)
+    {
+        if (latLng == null || radius <= 0.0 || zoom == 0)
+        {
+            return;
+        }
+
+        int numberOfResults = zoom >= 13.0f ? 200 : 20;
+
+        ExLog.d("pinkred : onChangedLocation");
+
+//        ExLog.d("pinkred : " + latLng.latitude + ", " + latLng.longitude + ", " + radius + ", " + zoom);
+
+        if (mChangedLocationDisposable != null)
+        {
+            mChangedLocationDisposable.dispose();
+            mChangedLocationDisposable = null;
+        }
+
+        mChangedLocationDisposable = Observable.just(numberOfResults).delaySubscription(1000, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<Integer, ObservableSource<StayOutbounds>>()
+        {
+            @Override
+            public ObservableSource<StayOutbounds> apply(Integer numberOfResults) throws Exception
+            {
+                lock();
+                screenLock(true);
+
+                ExLog.d("pinkred : " + Thread.currentThread().getName());
+
+                ExLog.d("pinkred : " + latLng.latitude + ", " + latLng.longitude + ", " + radius + ", " + zoom);
+
+                return mStayOutboundRemoteImpl.getList(mStayBookDateTime, latLng.latitude, latLng.longitude, radius//
+                    , mPeople, mStayOutboundFilters, numberOfResults);
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayOutbounds>()
+        {
+            @Override
+            public void accept(StayOutbounds stayOutbounds) throws Exception
+            {
+                ExLog.d("pinkred - result : " +  stayOutbounds.getStayOutbound().size());
+
+                DailyRemoteConfigPreference.getInstance(getActivity()).setKeyRemoteConfigRewardStickerEnabled(stayOutbounds.activeReward);
+
+                getViewInterface().setStayOutboundMakeMarker(stayOutbounds.getStayOutbound(), false);
+
+//                try
+//                {
+//                    getViewInterface().setStayOutboundMapViewPagerList(getActivity(), stayOutbounds.getStayOutbound(), mStayBookDateTime.getNights() > 1//
+//                        , stayOutbounds.activeReward);
+//                } catch (Exception e)
+//                {
+//                    ExLog.d(e.toString());
+//                }
+
+                unLockAll();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                onHandleError(throwable);
+            }
+        });
+
+
+        //        mChangedLocationDisposable = mStayOutboundRemoteImpl.getList(mStayBookDateTime, latLng.latitude, latLng.longitude, radius//
+        //            , mPeople, mStayOutboundFilters, numberOfResults).delaySubscription(1000, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayOutbounds>()
+        //        {
+        //            @Override
+        //            public void accept(StayOutbounds stayOutbounds) throws Exception
+        //            {
+        //                DailyRemoteConfigPreference.getInstance(getActivity()).setKeyRemoteConfigRewardStickerEnabled(stayOutbounds.activeReward);
+        //
+        //                getViewInterface().setStayOutboundMakeMarker(stayOutbounds.getStayOutbound(), false);
+        //
+        //                try
+        //                {
+        //                    getViewInterface().setStayOutboundMapViewPagerList(getActivity(), stayOutbounds.getStayOutbound(), mStayBookDateTime.getNights() > 1//
+        //                        , stayOutbounds.activeReward);
+        //                } catch (Exception e)
+        //                {
+        //                    ExLog.d(e.toString());
+        //                }
+        //
+        //                unLockAll();
+        //            }
+        //        }, new Consumer<Throwable>()
+        //        {
+        //            @Override
+        //            public void accept(Throwable throwable) throws Exception
+        //            {
+        //                onHandleError(throwable);
+        //            }
+        //        });
+
+        addCompositeDisposable(mChangedLocationDisposable);
+    }
+
+    @Override
+    public void onClearChangedLocation()
+    {
+        ExLog.d("pinkred : onClearChangedLocation");
+
+        if (mChangedLocationDisposable != null)
+        {
+            mChangedLocationDisposable.dispose();
+            mChangedLocationDisposable = null;
+        }
+
+        unLockAll();
     }
 
     private void setPeople(int numberOfAdults, ArrayList<Integer> childAgeList)
@@ -1261,7 +1380,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         if (mViewState == ViewState.MAP)
         {
-            getViewInterface().setStayOutboundMakeMarker(mStayOutboundList);
+            getViewInterface().setStayOutboundMakeMarker(mStayOutboundList, true);
 
             try
             {
