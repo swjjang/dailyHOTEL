@@ -1134,10 +1134,6 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         int numberOfResults = zoom >= 13.0f ? 200 : 20;
 
-        ExLog.d("pinkred : onChangedLocation");
-
-//        ExLog.d("pinkred : " + latLng.latitude + ", " + latLng.longitude + ", " + radius + ", " + zoom);
-
         if (mChangedLocationDisposable != null)
         {
             mChangedLocationDisposable.dispose();
@@ -1149,11 +1145,6 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             @Override
             public ObservableSource<StayOutbounds> apply(Integer numberOfResults) throws Exception
             {
-                lock();
-                screenLock(true);
-
-                ExLog.d("pinkred : " + Thread.currentThread().getName());
-
                 ExLog.d("pinkred : " + latLng.latitude + ", " + latLng.longitude + ", " + radius + ", " + zoom);
 
                 return mStayOutboundRemoteImpl.getList(mStayBookDateTime, latLng.latitude, latLng.longitude, radius//

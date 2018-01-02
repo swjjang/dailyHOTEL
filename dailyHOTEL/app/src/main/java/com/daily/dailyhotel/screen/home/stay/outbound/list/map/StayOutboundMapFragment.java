@@ -64,8 +64,6 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
     ClusterManager mClusterManager;
     StayOutboundClusterRenderer mClusterRenderer;
 
-    List<StayOutbound> mStayOutboundList;
-
     // 특별히 많은 데이터를 관리하기 때문에 넣어주었다.
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
@@ -133,12 +131,6 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
         {
             mMyLocationMarker.remove();
             mMyLocationMarker = null;
-        }
-
-        if (mStayOutboundList != null)
-        {
-            mStayOutboundList.clear();
-            mStayOutboundList = null;
         }
 
         super.onDestroyView();
@@ -292,8 +284,6 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
         {
             return;
         }
-
-        mStayOutboundList = stayOutboundList;
 
         if (mSelectedMarker == null)
         {
@@ -502,7 +492,9 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
             myLatLng = null;
         }
 
-        mGoogleMap.clear();
+        removeHiddenMarker();
+
+        //        mGoogleMap.clear();
 
         if (stayOutboundList == null || stayOutboundList.size() == 0)
         {
@@ -559,7 +551,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
                     stayOutboundClusterItemList.add(stayOutboundClusterItem);
                 }
 
-                mClusterManager.clearItems();
+                //                mClusterManager.clearItems();
                 mClusterManager.addItems(stayOutboundClusterItemList);
 
                 return stayOutboundClusterItemList.size();
@@ -592,6 +584,8 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
                 {
                     mOnEventListener.onMarkersCompleted();
                 }
+
+                ExLog.d("pinkred - marker count : " + mClusterManager.getAlgorithm().getItems().size());
             }
         }, new Consumer<Throwable>()
         {
@@ -604,6 +598,47 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
                 }
             }
         }));
+    }
+
+    /**
+     * 화면에서 보이지않는 마커는 삭제한다.
+     */
+    private void removeHiddenMarker()
+    {
+        List<StayOutboundClusterItem> stayOutboundClusterItemList = (List<StayOutboundClusterItem>) mClusterManager.getAlgorithm().getItems();
+
+        if (stayOutboundClusterItemList != null || stayOutboundClusterItemList.size() > 0)
+        {
+            int beforeSize = stayOutboundClusterItemList.size();
+
+            LatLng centerLatLng = mGoogleMap.getCameraPosition().target;
+            LatLng radiusLatLng = mGoogleMap.getProjection().fromScreenLocation(new Point(0, ScreenUtils.getScreenHeight(getContext()) / 2));
+
+            Location centerLocation = new Location("center");
+            centerLocation.setLatitude(centerLatLng.latitude);
+            centerLocation.setLongitude(centerLatLng.longitude);
+
+            Location radiusLocation = new Location("radius");
+            radiusLocation.setLatitude(radiusLatLng.latitude);
+            radiusLocation.setLongitude(radiusLatLng.longitude);
+
+            final float radius = centerLocation.distanceTo(radiusLocation) * 1.5f;
+
+            for (StayOutboundClusterItem stayOutboundClusterItem : stayOutboundClusterItemList)
+            {
+                LatLng latLng = stayOutboundClusterItem.getPosition();
+
+                radiusLocation.setLatitude(latLng.latitude);
+                radiusLocation.setLongitude(latLng.longitude);
+
+                if (radius < centerLocation.distanceTo(radiusLocation))
+                {
+                    mClusterManager.removeItem(stayOutboundClusterItem);
+                }
+            }
+
+            ExLog.d("pinkred - remove size : " + (beforeSize - ((List<StayOutboundClusterItem>) mClusterManager.getAlgorithm().getItems()).size()));
+        }
     }
 
     /**
@@ -711,7 +746,18 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
 
         if (mOnEventListener != null)
         {
-            mOnEventListener.onMarkerClick(stayOutboundClusterItem.getStayOutbound(), mStayOutboundList);
+            List<StayOutboundClusterItem> stayOutboundClusterItemList = (List<StayOutboundClusterItem>) mClusterManager.getAlgorithm().getItems();
+            List<StayOutbound> stayOutboundList = new ArrayList<>();
+
+            if (stayOutboundClusterItemList != null || stayOutboundClusterItemList.size() > 0)
+            {
+                for (StayOutboundClusterItem clusterItem : stayOutboundClusterItemList)
+                {
+                    stayOutboundList.add(clusterItem.getStayOutbound());
+                }
+            }
+
+            mOnEventListener.onMarkerClick(stayOutboundClusterItem.getStayOutbound(), stayOutboundList);
         }
     }
 

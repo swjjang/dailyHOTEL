@@ -586,6 +586,8 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         getViewDataBinding().mapLayout.setVisibility(View.GONE);
         getViewDataBinding().swipeRefreshLayout.setVisibility(View.VISIBLE);
 
+        mStayOutboundMapFragment = null;
+        
         resetMenuBarLayoutTranslation();
     }
 
