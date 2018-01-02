@@ -5,6 +5,8 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.SharedElementCallback;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -21,11 +23,16 @@ import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.Stays;
+import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
+import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -352,6 +359,161 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
                 onHandleError(throwable);
             }
         }));
+    }
+
+    @Override
+    public void onCalendarClick()
+    {
+
+    }
+
+    @Override
+    public void onPeopleClick()
+    {
+
+    }
+
+    @Override
+    public void onFilterClick()
+    {
+
+    }
+
+    @Override
+    public void onViewTypeClick()
+    {
+
+    }
+
+    @Override
+    public void onStayClick(android.support.v4.util.Pair[] pairs, Stay stay, int listCount)
+    {
+        if (mStayViewModel == null || stay == null || lock() == true)
+        {
+            return;
+        }
+
+        StayDetailAnalyticsParam analyticsParam = new StayDetailAnalyticsParam();
+        analyticsParam.setAddressAreaName(stay.addressSummary);
+        analyticsParam.discountPrice = stay.discountPrice;
+        analyticsParam.price = stay.price;
+        analyticsParam.setShowOriginalPriceYn(analyticsParam.price, analyticsParam.discountPrice);
+        analyticsParam.setRegion(mStayViewModel.stayRegion.getValue());
+        analyticsParam.entryPosition = stay.entryPosition;
+        analyticsParam.totalListCount = listCount;
+        analyticsParam.isDailyChoice = stay.dailyChoice;
+        analyticsParam.gradeName = stay.grade.getName(getActivity());
+
+        if (Util.isUsedMultiTransition() == true)
+        {
+            getActivity().setExitSharedElementCallback(new SharedElementCallback()
+            {
+                @Override
+                public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements, List<View> sharedElementSnapshots)
+                {
+                    super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots);
+
+                    for (View view : sharedElements)
+                    {
+                        if (view instanceof SimpleDraweeView)
+                        {
+                            view.setVisibility(View.VISIBLE);
+                            break;
+                        }
+                    }
+                }
+            });
+
+            ActivityOptionsCompat optionsCompat;
+            Intent intent;
+
+            optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);
+
+            intent = StayDetailActivity.newInstance(getActivity() //
+                , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
+                , mStayViewModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , mStayViewModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , true, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST, analyticsParam);
+
+            startActivityForResult(intent, StayListFragment.REQUEST_CODE_DETAIL, optionsCompat.toBundle());
+        } else
+        {
+            Intent intent = StayDetailActivity.newInstance(getActivity() //
+                , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
+                , mStayViewModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , mStayViewModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam);
+
+            startActivityForResult(intent, StayListFragment.REQUEST_CODE_DETAIL);
+
+            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+        }
+    }
+
+    @Override
+    public void onStayLongClick(int position, android.support.v4.util.Pair[] pairs, Stay stay)
+    {
+
+    }
+
+    @Override
+    public void onViewPagerClose()
+    {
+
+    }
+
+    @Override
+    public void onMapReady()
+    {
+
+    }
+
+    @Override
+    public void onMarkerClick(Stay stay)
+    {
+
+    }
+
+    @Override
+    public void onMarkersCompleted()
+    {
+
+    }
+
+    @Override
+    public void onMapClick()
+    {
+
+    }
+
+    @Override
+    public void onMyLocationClick()
+    {
+
+    }
+
+    @Override
+    public void onRetryClick()
+    {
+
+    }
+
+    @Override
+    public void onResearchClick()
+    {
+
+    }
+
+    @Override
+    public void onCallClick()
+    {
+
+    }
+
+    @Override
+    public void onWishClick(int position, Stay stay)
+    {
+
     }
 
     private void initViewModel(BaseActivity activity)

@@ -4,10 +4,13 @@ package com.daily.dailyhotel.screen.home.stay.inbound.list;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.daily.base.BaseFragmentDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.entity.ObjectItem;
+import com.daily.dailyhotel.entity.Stay;
+import com.daily.dailyhotel.view.DailyStayCardView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.FragmentStayListDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
@@ -27,6 +30,39 @@ public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmen
         void onSwipeRefreshing();
 
         void onMoreRefreshing();
+
+        void onCalendarClick();
+
+        void onPeopleClick();
+
+        void onFilterClick();
+
+        void onViewTypeClick();
+
+        void onStayClick(android.support.v4.util.Pair[] pairs, Stay stay, int listCount);
+
+        void onStayLongClick(int position, android.support.v4.util.Pair[] pairs, Stay stay);
+
+        void onViewPagerClose();
+
+        // Map Event
+        void onMapReady();
+
+        void onMarkerClick(Stay stay);
+
+        void onMarkersCompleted();
+
+        void onMapClick();
+
+        void onMyLocationClick();
+
+        void onRetryClick();
+
+        void onResearchClick();
+
+        void onCallClick();
+
+        void onWishClick(int position, Stay stay);
     }
 
     public StayListFragmentView(OnEventListener listener)
@@ -103,6 +139,47 @@ public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmen
         if (mStayListFragmentAdapter == null)
         {
             mStayListFragmentAdapter = new StayListFragmentAdapter(getContext(), null);
+            mStayListFragmentAdapter.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    int position = getViewDataBinding().recyclerView.getChildAdapterPosition(view);
+                    if (position < 0)
+                    {
+                        return;
+                    }
+
+                    ObjectItem objectItem = mStayListFragmentAdapter.getItem(position);
+
+                    if (objectItem.mType == objectItem.TYPE_ENTRY)
+                    {
+                        if (view instanceof DailyStayCardView == true)
+                        {
+                            getEventListener().onStayClick(((DailyStayCardView) view).getOptionsCompat(), objectItem.getItem(), mStayListFragmentAdapter.getItemCount());
+                        } else
+                        {
+
+                        }
+                    }
+                }
+            }, new View.OnLongClickListener()
+            {
+                @Override
+                public boolean onLongClick(View v)
+                {
+                    return false;
+                }
+            });
+
+            mStayListFragmentAdapter.setOnWishClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+
+                }
+            });
 
             getViewDataBinding().recyclerView.setAdapter(mStayListFragmentAdapter);
         }

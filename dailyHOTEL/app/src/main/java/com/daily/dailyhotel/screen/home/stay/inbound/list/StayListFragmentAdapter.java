@@ -40,7 +40,6 @@ public class StayListFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
     View.OnClickListener mOnWishClickListener;
     View.OnLongClickListener mOnLongClickListener;
 
-
     public StayListFragmentAdapter(Context context, ArrayList<ObjectItem> arrayList)
     {
         mContext = context;

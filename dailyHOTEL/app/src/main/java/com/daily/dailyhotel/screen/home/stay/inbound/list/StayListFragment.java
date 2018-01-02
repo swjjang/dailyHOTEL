@@ -11,6 +11,8 @@ import com.daily.base.BaseFragment;
  */
 public class StayListFragment extends BaseFragment<StayListFragmentPresenter>
 {
+    static final int REQUEST_CODE_DETAIL = 11000;
+
     @NonNull
     @Override
     protected StayListFragmentPresenter createInstancePresenter()

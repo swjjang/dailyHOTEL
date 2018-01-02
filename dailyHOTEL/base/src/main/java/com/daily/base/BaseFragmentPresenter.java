@@ -115,6 +115,11 @@ public abstract class BaseFragmentPresenter<T1 extends Fragment, T2 extends Base
         mFragment.startActivityForResult(intent, requestCode);
     }
 
+    protected void startActivityForResult(Intent intent, int requestCode, Bundle options)
+    {
+        mFragment.startActivityForResult(intent, requestCode, options);
+    }
+
     protected void startActivity(Activity activity, Intent intent)
     {
         if (activity == null)
