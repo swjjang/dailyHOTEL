@@ -11,8 +11,10 @@ import android.view.View;
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.screen.common.web.DailyWebActivity;
 import com.daily.dailyhotel.screen.mydaily.coupon.history.CouponHistoryActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Coupon;
@@ -333,10 +335,23 @@ public class CouponListActivity extends BaseActivity
         @Override
         public void showListItemNotice(Coupon coupon)
         {
-            // 리스트 아이템 쿠폰 유의사항 팝업
-            // 쿠폰 사용시 유의사항 안내
-            Intent intent = CouponTermActivity.newInstance(CouponListActivity.this, coupon.couponCode);
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COUPON_TERMS);
+            if (coupon == null)
+            {
+                return;
+            }
+
+            if (coupon.type == Coupon.Type.REWARD)
+            {
+                startActivityForResult(DailyWebActivity.newInstance(CouponListActivity.this, getString(R.string.coupon_notice_text)//
+                    , DailyRemoteConfigPreference.getInstance(CouponListActivity.this).getKeyRemoteConfigStaticUrlDailyRewardCouponTerms())//
+                    , CODE_REQUEST_ACTIVITY_COUPON_TERMS);
+            } else
+            {
+                // 리스트 아이템 쿠폰 유의사항 팝업
+                // 쿠폰 사용시 유의사항 안내
+                Intent intent = CouponTermActivity.newInstance(CouponListActivity.this, coupon.couponCode);
+                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_COUPON_TERMS);
+            }
         }
 
         @Override
