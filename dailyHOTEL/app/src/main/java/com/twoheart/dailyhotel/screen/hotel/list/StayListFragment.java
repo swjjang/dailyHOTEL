@@ -200,7 +200,7 @@ public class StayListFragment extends PlaceListFragment
 
         PlaceViewItem placeViewItem = mPlaceListLayout.getItem(position);
 
-        if (placeViewItem == null)
+        if (placeViewItem == null || placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
         {
             return;
         }

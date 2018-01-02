@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -272,53 +273,112 @@ public class Util implements Constants
         return isInstalled;
     }
 
-    public static boolean installGooglePlayService(final BaseActivity activity)
+    public static boolean checkGooglePlayServiceStatus(final BaseActivity activity)
     {
-        if (isInstallGooglePlayService(activity) == true)
+        if (activity == null || activity.isFinishing() == true)
+        {
+            return false;
+        }
+
+        String title = activity.getString(R.string.dialog_title_googleplayservice);
+        String dialogText = null;
+        int status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(activity);
+//        status = ConnectionResult.SERVICE_UPDATING;
+
+        ExLog.d("Google status : " + status);
+
+        if (ConnectionResult.SUCCESS == status)
         {
             return true;
-        } else
-        {
-            if (activity == null || activity.isFinishing() == true)
-            {
-                return false;
-            }
+        }
 
-            // set dialog message
-            activity.showSimpleDialog(activity.getString(R.string.dialog_title_googleplayservice), activity.getString(R.string.dialog_msg_install_update_googleplayservice), //
-                activity.getString(R.string.dialog_btn_text_install), activity.getString(R.string.dialog_btn_text_cancel), //
-                new View.OnClickListener()
+        if (ConnectionResult.SERVICE_UPDATING == status)
+        {
+            // 이 기기에서 현재 Google Play 서비스가 업데이트되고 있습니다.
+            dialogText = activity.getString(R.string.dialog_message_updating_finish_gms);
+
+            activity.showSimpleDialog(title, dialogText //
+                , activity.getString(R.string.dialog_btn_text_confirm), null //
+                , new DialogInterface.OnDismissListener()
                 {
                     @Override
-                    public void onClick(View v)
+                    public void onDismiss(DialogInterface dialogInterface)
                     {
-                        try
-                        {
-                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.gms"));
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-                            intent.setPackage("com.android.vending");
-                            activity.startActivity(intent);
-                        } catch (ActivityNotFoundException e)
-                        {
-                            try
-                            {
-                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.gms"));
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-                                intent.setPackage("com.android.vending");
-                                activity.startActivity(intent);
-                            } catch (ActivityNotFoundException f)
-                            {
-                                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.gms"));
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-                                activity.startActivity(intent);
-                            }
-                        }
+                        System.exit(0);
                     }
-                }, null, true);
-
+                });
 
             return false;
         }
+
+        switch (status)
+        {
+
+            case ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED:
+            {
+                // 설치된 Google Play 서비스 버전이 오래되었습니다.
+                dialogText = activity.getString(R.string.dialog_message_need_update_gms);
+                break;
+            }
+
+            case ConnectionResult.SERVICE_DISABLED: // 이 기기에서 설치된 Google Play 서비스 버전이 사용 중지되었습니다.
+            case ConnectionResult.SERVICE_INVALID: // 이 기기에 설치된 Google Play 서비스의 버전이 인증되지 않았습니다.
+            {
+                dialogText = activity.getString(R.string.dialog_message_need_reinstall_gms);
+                break;
+            }
+
+            case ConnectionResult.SERVICE_MISSING:
+            default:
+            {
+                // 이 기기에는 Google Play 서비스가 없습니다.
+                dialogText = activity.getString(R.string.dialog_message_need_install_gms);
+                break;
+            }
+        }
+
+        // set dialog message
+        activity.showSimpleDialog(activity.getString(R.string.dialog_title_googleplayservice), dialogText //
+            , activity.getString(R.string.dialog_btn_text_install), activity.getString(R.string.dialog_btn_text_cancel) //
+            , new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    try
+                    {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.gms"));
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                        intent.setPackage("com.android.vending");
+                        activity.startActivity(intent);
+                    } catch (ActivityNotFoundException e)
+                    {
+                        try
+                        {
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.gms"));
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                            intent.setPackage("com.android.vending");
+                            activity.startActivity(intent);
+                        } catch (ActivityNotFoundException f)
+                        {
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.gms"));
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                            activity.startActivity(intent);
+                        }
+                    }
+
+                    System.exit(0);
+                }
+            }, null, new DialogInterface.OnCancelListener()
+            {
+                @Override
+                public void onCancel(DialogInterface dialogInterface)
+                {
+                    System.exit(0);
+                }
+            }, null, true);
+
+        return false;
     }
 
     public interface OnGoogleCloudMessagingListener

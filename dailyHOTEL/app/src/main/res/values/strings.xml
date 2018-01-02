@@ -110,6 +110,7 @@
     <string name="label_check_out">체크아웃</string>
     <string name="label_include_tax">(세금/봉사료 포함)</string>
     <string name="label_download_coupon_price">%1$s 할인쿠폰 다운받기</string>
+    <string name="label_event">EVENT</string>
 
     <string name="label_count_stay">%1$d개 스테이</string>
     <string name="label_count_gourmet">%1$d개 고메</string>
@@ -406,6 +407,11 @@
     <string name="dialog_message_check_stayoutbound_search">해외 스테이를 검색 중이세요?</string>
     <string name="dialog_message_check_gourmet_search">데일리고메 레스토랑을 검색 중이세요?</string>
 
+    <string name="dialog_message_need_install_gms">Google Play 설치 후 이용해주세요.</string>
+    <string name="dialog_message_need_reinstall_gms">현재 Google Play 버전 삭제 후 다시 설치하시고 이용해주세요.</string>
+    <string name="dialog_message_need_update_gms">Google Play 버전 업데이트 후 이용해주세요.</string>
+    <string name="dialog_message_updating_finish_gms">Google Play 업데이트 중입니다. 업데이트 완료 후 다시 이용해주세요.</string>
+
     <!-- Main Drawer Menu Titles -->
     <string name="menu_item_title_home">홈</string>
     <string name="menu_item_title_bookings">예약내역</string>
@@ -633,7 +639,6 @@
     <string name="label_booking_required_fileds">(필수입력 사항)</string>
     <string name="label_booking_refund_policy">취소 및 환불 규정</string>
     <string name="label_gourmet_payment_number_of_persons">%1$d명</string>
-    <string name="label_booking_card_discounts">할인 혜택</string>
 
     <string name="label_booking_input_name">이름 입력</string>
     <string name="label_booking_input_phone">전화번호 입력</string>

@@ -1789,15 +1789,19 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
                 if (easyCardEnabled == true)
                 {
+                    setPaymentType(DailyBookingPaymentTypeView.PaymentType.EASY_CARD);
                     getViewInterface().setPaymentType(DailyBookingPaymentTypeView.PaymentType.EASY_CARD);
                 } else if (cardEnabled == true)
                 {
+                    setPaymentType(DailyBookingPaymentTypeView.PaymentType.CARD);
                     getViewInterface().setPaymentType(DailyBookingPaymentTypeView.PaymentType.CARD);
                 } else if (phoneEnabled == true)
                 {
+                    setPaymentType(DailyBookingPaymentTypeView.PaymentType.PHONE);
                     getViewInterface().setPaymentType(DailyBookingPaymentTypeView.PaymentType.PHONE);
                 } else if (vBankEnabled == true)
                 {
+                    setPaymentType(DailyBookingPaymentTypeView.PaymentType.VBANK);
                     getViewInterface().setPaymentType(DailyBookingPaymentTypeView.PaymentType.VBANK);
                 } else
                 {
@@ -2098,7 +2102,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
                         for (int j = 0; j < messageCount; j++)
                         {
-                            messageList.add(messageJSONArray.getString(i));
+                            messageList.add(messageJSONArray.getString(j));
                         }
 
                         cardEventList.add(new Pair<>(jsonObject.getString("title"), messageList));
@@ -2111,6 +2115,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 } else
                 {
                     getViewInterface().setCardEventVisible(true);
+                    getViewInterface().setCardEventData(cardEventList);
                 }
             } catch (Exception e)
             {

@@ -165,16 +165,6 @@ public class DailyMobileAPI
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
-    public void requestUserCheckEmail(String tag, String userEmail, Object listener)
-    {
-        final String URL = Constants.UNENCRYPTED_URL ? "user/check/email_auth"//
-            : "ODAkOSQxOSQ1OCQ3NSQ2NiQ1OCQzNiQ5MSQzNCQzOSQ3OCQ2JDc4JDU4JDg3JA==$MzAwMkIQwOCDU5MDRERTQI3MDkyODZCNDBGWQkFJVFQUFCMDcyMjJENDI3ENTY0RPMDU0NDEU0OTgyOHDCVDMMzMZDOTk2BRDQU0NQ==$";
-
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestUserCheckEmail(Crypto.getUrlDecoderEx(URL), userEmail);
-        executorCallbackCall.setTag(tag);
-        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
-    }
-
     public void requestUserChangePassword(String tag, String email, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/users/password/email"//

@@ -125,8 +125,14 @@ public class StayOutboundPreviewView extends BaseDialogView<StayOutboundPreviewV
         }
 
         // 등급
-        getViewDataBinding().categoryTextView.setVisibility(View.VISIBLE);
-        getViewDataBinding().categoryTextView.setText(getString(R.string.label_stay_outbound_detail_grade, (int) rating));
+        if ((int) rating == 0)
+        {
+            getViewDataBinding().categoryTextView.setVisibility(View.GONE);
+        } else
+        {
+            getViewDataBinding().categoryTextView.setVisibility(View.VISIBLE);
+            getViewDataBinding().categoryTextView.setText(getString(R.string.label_stay_outbound_detail_grade, (int) rating));
+        }
 
         int flag = provideRewardSticker ? View.VISIBLE : View.GONE;
 

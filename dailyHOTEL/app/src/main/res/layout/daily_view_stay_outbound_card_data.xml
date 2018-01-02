@@ -109,35 +109,36 @@
             app:layout_constraintLeft_toRightOf="@id/newStayImageView"
             app:layout_goneMarginLeft="15dp"/>
 
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/vrTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="18dp"
-            android:layout_marginLeft="3dp"
-            android:background="@drawable/shape_fillrect_cccffffff_b4c000000_w1px"
-            android:freezesText="true"
-            android:gravity="center_vertical"
-            android:paddingLeft="6dp"
-            android:paddingRight="6dp"
-            android:text="@string/label_vr"
-            android:textColor="@color/white"
-            android:textSize="11dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/gradeTextView"
-            app:layout_constraintLeft_toRightOf="@id/gradeTextView"
-            app:layout_constraintTop_toTopOf="@id/gradeTextView"/>
+        <!--<com.daily.base.widget.DailyTextView-->
+        <!--android:id="@+id/vrTextView"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="18dp"-->
+        <!--android:layout_marginLeft="3dp"-->
+        <!--android:background="@drawable/shape_fillrect_cccffffff_b4c000000_w1px"-->
+        <!--android:freezesText="true"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:paddingLeft="6dp"-->
+        <!--android:paddingRight="6dp"-->
+        <!--android:text="@string/label_vr"-->
+        <!--android:textColor="@color/white"-->
+        <!--android:textSize="11dp"-->
+        <!--android:visibility="gone"-->
+        <!--app:layout_constraintBottom_toBottomOf="@id/gradeTextView"-->
+        <!--app:layout_constraintLeft_toRightOf="@id/gradeTextView"-->
+        <!--app:layout_constraintTop_toTopOf="@id/gradeTextView"/>-->
 
         <LinearLayout
             android:id="@+id/tripAdvisorLayout"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="18dp"
+            android:layout_marginBottom="14dp"
             android:layout_marginLeft="5dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/gradeTextView"
-            app:layout_constraintLeft_toRightOf="@id/vrTextView"
-            app:layout_constraintTop_toTopOf="@id/gradeTextView">
+            app:layout_constraintBottom_toBottomOf="@id/simpleDraweeView"
+            app:layout_constraintLeft_toRightOf="@id/gradeTextView"
+            app:layout_goneMarginLeft="15dp">
 
             <ImageView
                 android:id="@+id/tripAdvisorImageView"

@@ -22,9 +22,6 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -119,7 +116,7 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
         }
 
         lockUI();
-        DailyMobileAPI.getInstance(this).requestUserCheckEmail(mNetworkTag, mEmail, mUserCheckEmailCallback);
+        DailyMobileAPI.getInstance(ForgotPasswordActivity.this).requestUserChangePassword(mNetworkTag, mEmail, mUserChangePwCallback);
     }
 
     @Override
@@ -214,58 +211,6 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
 
         @Override
         public void onFailure(Call<BaseDto<Object>> call, Throwable t)
-        {
-            ForgotPasswordActivity.this.onError(call, t, false);
-        }
-    };
-
-    private retrofit2.Callback mUserCheckEmailCallback = new retrofit2.Callback<JSONObject>()
-    {
-        @Override
-        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
-        {
-            if (response != null && response.isSuccessful() && response.body() != null)
-            {
-                try
-                {
-                    JSONObject responseJSONObject = response.body();
-
-                    String result = responseJSONObject.getString("isSuccess");
-
-                    if ("true".equalsIgnoreCase(result) == true)
-                    {
-                        if (DailyTextUtils.isTextEmpty(mEmail) == true)
-                        {
-                            DailyToast.showToast(ForgotPasswordActivity.this, R.string.toast_msg_please_input_email, Toast.LENGTH_SHORT);
-                        } else
-                        {
-                            DailyMobileAPI.getInstance(ForgotPasswordActivity.this).requestUserChangePassword(mNetworkTag, mEmail, mUserChangePwCallback);
-                        }
-                    } else
-                    {
-                        unLockUI();
-
-                        if (isFinishing() == true)
-                        {
-                            return;
-                        }
-
-                        String message = responseJSONObject.getString("msg");
-                        showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
-                    }
-                } catch (JSONException e)
-                {
-                    onError(e);
-                    unLockUI();
-                }
-            } else
-            {
-                ForgotPasswordActivity.this.onErrorResponse(call, response);
-            }
-        }
-
-        @Override
-        public void onFailure(Call<JSONObject> call, Throwable t)
         {
             ForgotPasswordActivity.this.onError(call, t, false);
         }
