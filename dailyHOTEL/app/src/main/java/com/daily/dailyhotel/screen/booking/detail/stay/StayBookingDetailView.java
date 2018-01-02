@@ -702,41 +702,49 @@ public class StayBookingDetailView extends BaseBlurView<StayBookingDetailView.On
         mBookingDetail01DataBinding.guestPhoneTextView.setText(Util.addHyphenMobileNumber(getContext(), stayBookingDetail.guestPhone));
         mBookingDetail01DataBinding.guestEmailTextView.setText(stayBookingDetail.guestEmail);
 
-        switch (stayBookingDetail.guestTransportation)
+
+        if (DailyTextUtils.isTextEmpty(stayBookingDetail.guestTransportation) == true)
         {
-            case "CAR":
-                mBookingDetail01DataBinding.visitTypeLayout.setVisibility(View.VISIBLE);
+            mBookingDetail01DataBinding.visitTypeLayout.setVisibility(View.GONE);
+            mBookingDetail01DataBinding.guideVisitMemoLayout.setVisibility(View.GONE);
+        } else
+        {
+            switch (stayBookingDetail.guestTransportation)
+            {
+                case "CAR":
+                    mBookingDetail01DataBinding.visitTypeLayout.setVisibility(View.VISIBLE);
 
-                mBookingDetail01DataBinding.visitTypeTitleTextView.setText(R.string.label_how_to_visit);
-                mBookingDetail01DataBinding.visitTypeTextView.setText(R.string.label_visit_car);
+                    mBookingDetail01DataBinding.visitTypeTitleTextView.setText(R.string.label_how_to_visit);
+                    mBookingDetail01DataBinding.visitTypeTextView.setText(R.string.label_visit_car);
 
-                mBookingDetail01DataBinding.guideVisitMemoLayout.setVisibility(View.VISIBLE);
-                mBookingDetail01DataBinding.guideVisitMemoView.setText(R.string.message_visit_car_memo);
-                break;
+                    mBookingDetail01DataBinding.guideVisitMemoLayout.setVisibility(View.VISIBLE);
+                    mBookingDetail01DataBinding.guideVisitMemoView.setText(R.string.message_visit_car_memo);
+                    break;
 
-            case "NO_PARKING":
-                mBookingDetail01DataBinding.visitTypeLayout.setVisibility(View.VISIBLE);
+                case "NO_PARKING":
+                    mBookingDetail01DataBinding.visitTypeLayout.setVisibility(View.VISIBLE);
 
-                mBookingDetail01DataBinding.visitTypeTitleTextView.setText(R.string.label_parking_information);
-                mBookingDetail01DataBinding.visitTypeTextView.setText(R.string.label_no_parking);
+                    mBookingDetail01DataBinding.visitTypeTitleTextView.setText(R.string.label_parking_information);
+                    mBookingDetail01DataBinding.visitTypeTextView.setText(R.string.label_no_parking);
 
-                mBookingDetail01DataBinding.guideVisitMemoLayout.setVisibility(View.VISIBLE);
-                mBookingDetail01DataBinding.guideVisitMemoView.setText(R.string.message_visit_no_parking_memo);
-                break;
+                    mBookingDetail01DataBinding.guideVisitMemoLayout.setVisibility(View.VISIBLE);
+                    mBookingDetail01DataBinding.guideVisitMemoView.setText(R.string.message_visit_no_parking_memo);
+                    break;
 
-            case "WALKING":
-                mBookingDetail01DataBinding.visitTypeLayout.setVisibility(View.VISIBLE);
+                case "WALKING":
+                    mBookingDetail01DataBinding.visitTypeLayout.setVisibility(View.VISIBLE);
 
-                mBookingDetail01DataBinding.visitTypeTitleTextView.setText(R.string.label_how_to_visit);
-                mBookingDetail01DataBinding.visitTypeTextView.setText(R.string.label_visit_walk);
+                    mBookingDetail01DataBinding.visitTypeTitleTextView.setText(R.string.label_how_to_visit);
+                    mBookingDetail01DataBinding.visitTypeTextView.setText(R.string.label_visit_walk);
 
-                mBookingDetail01DataBinding.guideVisitMemoLayout.setVisibility(View.GONE);
-                break;
+                    mBookingDetail01DataBinding.guideVisitMemoLayout.setVisibility(View.GONE);
+                    break;
 
-            default:
-                mBookingDetail01DataBinding.visitTypeLayout.setVisibility(View.GONE);
-                mBookingDetail01DataBinding.guideVisitMemoLayout.setVisibility(View.GONE);
-                break;
+                default:
+                    mBookingDetail01DataBinding.visitTypeLayout.setVisibility(View.GONE);
+                    mBookingDetail01DataBinding.guideVisitMemoLayout.setVisibility(View.GONE);
+                    break;
+            }
         }
     }
 
