@@ -648,7 +648,13 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
             radiusLocation.setLatitude(radiusLatLng.latitude);
             radiusLocation.setLongitude(radiusLatLng.longitude);
 
-            final float radius = centerLocation.distanceTo(radiusLocation) * 1.5f;
+            float radius = centerLocation.distanceTo(radiusLocation) * 1.5f;
+
+            // 서버에서 최소 radius 가 2km이다.
+            if (radius < 2.0f)
+            {
+                radius = 2.0f;
+            }
 
             for (StayOutboundClusterItem stayOutboundClusterItem : stayOutboundClusterItemList)
             {
