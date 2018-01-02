@@ -28,7 +28,6 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.base.BaseBlurView;
 import com.daily.dailyhotel.entity.ObjectItem;
-import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.map.StayOutboundMapFragment;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.map.StayOutboundMapViewPagerAdapter;
@@ -188,6 +187,8 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         });
 
         viewDataBinding.progressBar.getIndeterminateDrawable().setColorFilter(getColor(R.color.location_progressbar_cc8c8c8), PorterDuff.Mode.SRC_IN);
+
+        viewDataBinding.mapProgressBar.getIndeterminateDrawable().setColorFilter(getColor(R.color.dh_theme_color),android.graphics.PorterDuff.Mode.SRC_IN);
     }
 
     @Override
@@ -586,8 +587,10 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         getViewDataBinding().mapLayout.setVisibility(View.GONE);
         getViewDataBinding().swipeRefreshLayout.setVisibility(View.VISIBLE);
 
+        setMapProgressBarVisible(false);
+
         mStayOutboundMapFragment = null;
-        
+
         resetMenuBarLayoutTranslation();
     }
 
@@ -921,6 +924,17 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         }
 
         return mStayOutboundListAdapter.getItem(position);
+    }
+
+    @Override
+    public void setMapProgressBarVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().mapProgressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     private void showViewPagerAnimation()

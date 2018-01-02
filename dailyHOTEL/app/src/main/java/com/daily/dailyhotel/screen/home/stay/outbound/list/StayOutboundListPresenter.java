@@ -1145,6 +1145,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             @Override
             public ObservableSource<StayOutbounds> apply(Integer numberOfResults) throws Exception
             {
+                getViewInterface().setMapProgressBarVisible(true);
+
                 ExLog.d("pinkred : " + latLng.latitude + ", " + latLng.longitude + ", " + radius + ", " + zoom);
 
                 return mStayOutboundRemoteImpl.getList(mStayBookDateTime, latLng.latitude, latLng.longitude, radius//
@@ -1171,6 +1173,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 //                }
 
                 unLockAll();
+
+                getViewInterface().setMapProgressBarVisible(false);
             }
         }, new Consumer<Throwable>()
         {
@@ -1178,6 +1182,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             public void accept(Throwable throwable) throws Exception
             {
                 onHandleError(throwable);
+
+                getViewInterface().setMapProgressBarVisible(false);
             }
         });
 
