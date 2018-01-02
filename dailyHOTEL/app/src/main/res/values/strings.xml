@@ -407,6 +407,11 @@
     <string name="dialog_message_check_stayoutbound_search">해외 스테이를 검색 중이세요?</string>
     <string name="dialog_message_check_gourmet_search">데일리고메 레스토랑을 검색 중이세요?</string>
 
+    <string name="dialog_message_need_install_gms">Google Play 설치 후 이용해주세요.</string>
+    <string name="dialog_message_need_reinstall_gms">현재 Google Play 버전 삭제 후 다시 설치하시고 이용해주세요.</string>
+    <string name="dialog_message_need_update_gms">Google Play 버전 업데이트 후 이용해주세요.</string>
+    <string name="dialog_message_updating_finish_gms">Google Play 업데이트 중입니다. 업데이트 완료 후 다시 이용해주세요.</string>
+
     <!-- Main Drawer Menu Titles -->
     <string name="menu_item_title_home">홈</string>
     <string name="menu_item_title_bookings">예약내역</string>
