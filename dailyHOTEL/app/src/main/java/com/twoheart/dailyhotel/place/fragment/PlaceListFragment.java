@@ -17,6 +17,7 @@ import com.twoheart.dailyhotel.place.base.BaseFragment;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,8 +129,9 @@ public abstract class PlaceListFragment extends BaseFragment implements Constant
 
     public void refreshList(boolean isShowProgress)
     {
-        if (mViewType == null)
+        if (mViewType == null || mPlaceListLayout == null)
         {
+            Util.restartApp(getContext());
             return;
         }
 
