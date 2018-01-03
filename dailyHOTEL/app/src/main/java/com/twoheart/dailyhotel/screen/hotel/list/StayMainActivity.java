@@ -34,6 +34,7 @@ import com.daily.dailyhotel.screen.home.stay.inbound.filter.StayFilterActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.view.DailyStayCardView;
+import com.daily.dailyhotel.view.DailyStayMapCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -1140,24 +1141,19 @@ public class StayMainActivity extends PlaceMainActivity
                                 , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
                                 , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
                                 , true, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST, analyticsParam);
-                        } else
+                        } else if (view instanceof DailyStayMapCardView == true)
                         {
-                            View simpleDraweeView = view.findViewById(R.id.imageView);
-                            View gradeTextView = view.findViewById(R.id.gradeTextView);
-                            View nameTextView = view.findViewById(R.id.nameTextView);
-                            View gradientTopView = view.findViewById(R.id.gradientTopView);
-                            View gradientBottomView = view.findViewById(R.id.gradientView);
+                            optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(StayMainActivity.this, ((DailyStayMapCardView) view).getOptionsCompat());
 
                             intent = StayDetailActivity.newInstance(StayMainActivity.this //
                                 , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
                                 , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
                                 , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
                                 , true, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP, analyticsParam);
-
-                            optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(StayMainActivity.this,//
-                                android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
-                                android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)),//
-                                android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
+                        } else
+                        {
+                            unLockUI();
+                            return;
                         }
 
                         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL, optionsCompat.toBundle());
