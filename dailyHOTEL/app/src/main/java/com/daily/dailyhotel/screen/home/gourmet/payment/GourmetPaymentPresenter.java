@@ -2269,7 +2269,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             return true;
         }
 
-        for (GourmetCartMenu gourmetCartMenu : mGourmetCart.getMenuList())
+        for (GourmetCartMenu gourmetCartMenu : gourmetCart.getMenuList())
         {
             for (GourmetPaymentMenu gourmetPaymentMenu : gourmetPayment.getGourmetPaymentMenuList())
             {
