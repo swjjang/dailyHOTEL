@@ -511,6 +511,13 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             case GourmetPaymentActivity.REQUEST_CODE_PAYMENT_WEB_CARD:
             case GourmetPaymentActivity.REQUEST_CODE_PAYMENT_WEB_PHONE:
             case GourmetPaymentActivity.REQUEST_CODE_PAYMENT_WEB_VBANK:
+                // 가격 변동인 경우 결제 화면 전체를 갱신해야 한다.
+                if (requestCode == Constants.CODE_RESULT_ACTIVITY_PAYMENT_CHANGED_PRICE)
+                {
+                    setRefresh(true);
+                    break;
+                }
+
                 // 결제 진행후 취소시에 적립금과 쿠폰을 돌려주어야 한다.
                 if (resultCode != Activity.RESULT_OK)
                 {
