@@ -94,11 +94,21 @@
                     android:scrollbars="vertical"/>
             </android.support.v4.widget.SwipeRefreshLayout>
 
-            <FrameLayout
+            <com.daily.base.widget.DailyTouchableFrameView
                 android:id="@+id/mapLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone"/>
+
+            <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+                android:id="@+id/mapProgressBar"
+                style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:indeterminate="true"
+                android:visibility="gone"
+                app:mpb_progressStyle="horizontal"
+                app:mpb_useIntrinsicPadding="false"/>
         </FrameLayout>
 
         <RelativeLayout

@@ -17,6 +17,7 @@ import android.text.Spanned;
 import android.text.style.ScaleXSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -58,6 +59,8 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
 
     ValueAnimator mValueAnimator;
 
+    boolean mPossibleLoadingListByMap;
+
     public interface OnEventListener extends OnBaseEventListener
     {
         void onRefreshAll(boolean showProgress);
@@ -81,7 +84,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         // Map Event
         void onMapReady();
 
-        void onMarkerClick(StayOutbound stayOutbound);
+        void onMarkerClick(StayOutbound stayOutbound, List<StayOutbound> stayOutboundList);
 
         void onMarkersCompleted();
 
@@ -96,6 +99,10 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         void onCallClick();
 
         void onWishClick(int position, StayOutbound stayOutbound);
+
+        void onChangedLocation(LatLng latLng, float radius, float zoom);
+
+        void onClearChangedLocation();
     }
 
     public StayOutboundListView(BaseActivity baseActivity, StayOutboundListView.OnEventListener listener)
@@ -180,6 +187,8 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         });
 
         viewDataBinding.progressBar.getIndeterminateDrawable().setColorFilter(getColor(R.color.location_progressbar_cc8c8c8), PorterDuff.Mode.SRC_IN);
+
+        viewDataBinding.mapProgressBar.getIndeterminateDrawable().setColorFilter(getColor(R.color.dh_theme_color),android.graphics.PorterDuff.Mode.SRC_IN);
     }
 
     @Override
@@ -405,14 +414,14 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
     }
 
     @Override
-    public void setStayOutboundMakeMarker(List<StayOutbound> stayOutboundList)
+    public void setStayOutboundMakeMarker(List<StayOutbound> stayOutboundList, boolean moveCameraBounds, boolean clear)
     {
         if (mStayOutboundMapFragment == null || stayOutboundList == null)
         {
             return;
         }
 
-        mStayOutboundMapFragment.setStayOutboundList(stayOutboundList);
+        mStayOutboundMapFragment.setStayOutboundList(stayOutboundList, moveCameraBounds, clear);
     }
 
     @Override
@@ -522,6 +531,28 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
 
         fragmentManager.beginTransaction().add(getViewDataBinding().mapLayout.getId(), mStayOutboundMapFragment, "MAP").commitAllowingStateLoss();
 
+        getViewDataBinding().mapLayout.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                switch (event.getAction())
+                {
+                    case MotionEvent.ACTION_DOWN:
+                        mPossibleLoadingListByMap = false;
+
+                        getEventListener().onClearChangedLocation();
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        mPossibleLoadingListByMap = true;
+                        break;
+                }
+
+                return false;
+            }
+        });
+
         mViewPager = addMapViewPager(getContext(), getViewDataBinding().mapLayout);
     }
 
@@ -555,6 +586,10 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         getViewDataBinding().mapLayout.removeAllViews();
         getViewDataBinding().mapLayout.setVisibility(View.GONE);
         getViewDataBinding().swipeRefreshLayout.setVisibility(View.VISIBLE);
+
+        setMapProgressBarVisible(false);
+
+        mStayOutboundMapFragment = null;
 
         resetMenuBarLayoutTranslation();
     }
@@ -803,9 +838,9 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
     }
 
     @Override
-    public void onMarkerClick(StayOutbound stayOutbound)
+    public void onMarkerClick(StayOutbound stayOutbound, List<StayOutbound> stayOutboundList)
     {
-        getEventListener().onMarkerClick(stayOutbound);
+        getEventListener().onMarkerClick(stayOutbound, stayOutboundList);
     }
 
     @Override
@@ -824,6 +859,19 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
     public void onMyLocationClick()
     {
         getEventListener().onMyLocationClick();
+    }
+
+    @Override
+    public void onChangedLocation(LatLng latLng, float radius, float zoom)
+    {
+        if (mPossibleLoadingListByMap == true)
+        {
+            mPossibleLoadingListByMap = false;
+
+            getEventListener().onChangedLocation(latLng, radius, zoom);
+
+            hideViewPagerAnimation();
+        }
     }
 
     @Override
@@ -876,6 +924,17 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         }
 
         return mStayOutboundListAdapter.getItem(position);
+    }
+
+    @Override
+    public void setMapProgressBarVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().mapProgressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     private void showViewPagerAnimation()
