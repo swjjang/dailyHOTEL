@@ -63,19 +63,6 @@
                 app:drawableCompatRight="@drawable/navibar_m_ic_v"/>
         </LinearLayout>
 
-        <me.zhanghai.android.materialprogressbar.MaterialProgressBar
-            android:id="@+id/mapProgressBar"
-            style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
-            android:layout_width="0dp"
-            android:layout_height="4dp"
-            android:indeterminate="true"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@+id/subToolbarLayout"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:mpb_progressStyle="horizontal"
-            app:mpb_useIntrinsicPadding="false"/>
-
         <View
             android:id="@+id/underLineView"
             android:layout_width="0dp"
@@ -112,6 +99,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone"/>
+
+            <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+                android:id="@+id/mapProgressBar"
+                style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:indeterminate="true"
+                android:visibility="gone"
+                app:mpb_progressStyle="horizontal"
+                app:mpb_useIntrinsicPadding="false"/>
         </FrameLayout>
 
         <RelativeLayout
