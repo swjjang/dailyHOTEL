@@ -719,36 +719,13 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
                 }
             });
 
-            ActivityOptionsCompat optionsCompat;
-            Intent intent;
+            ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), ((DailyStayCardView) view).getOptionsCompat());
 
-            if (view instanceof DailyStayCardView == true)
-            {
-                optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), ((DailyStayCardView) view).getOptionsCompat());
-
-                intent = StayDetailActivity.newInstance(getActivity() //
-                    , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
-                    , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                    , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                    , true, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST, analyticsParam);
-            } else
-            {
-                View simpleDraweeView = view.findViewById(R.id.imageView);
-                View nameTextView = view.findViewById(R.id.nameTextView);
-                View gradientTopView = view.findViewById(R.id.gradientTopView);
-                View gradientBottomView = view.findViewById(R.id.gradientView);
-
-                intent = StayDetailActivity.newInstance(getActivity() //
-                    , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
-                    , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                    , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                    , true, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP, analyticsParam);
-
-                optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),//
-                    android.support.v4.util.Pair.create(simpleDraweeView, getString(R.string.transition_place_image)),//
-                    android.support.v4.util.Pair.create(gradientTopView, getString(R.string.transition_gradient_top_view)),//
-                    android.support.v4.util.Pair.create(gradientBottomView, getString(R.string.transition_gradient_bottom_view)));
-            }
+            Intent intent = StayDetailActivity.newInstance(getActivity() //
+                , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
+                , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , true, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST, analyticsParam);
 
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_STAY_DETAIL, optionsCompat.toBundle());
         } else
