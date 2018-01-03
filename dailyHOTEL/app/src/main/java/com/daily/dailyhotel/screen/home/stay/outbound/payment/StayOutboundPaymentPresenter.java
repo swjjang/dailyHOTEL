@@ -508,40 +508,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
             case StayOutboundPaymentActivity.REQUEST_CODE_PAYMENT_WEB_CARD:
             case StayOutboundPaymentActivity.REQUEST_CODE_PAYMENT_WEB_PHONE:
-                // 가격 변동인 경우 결제 화면 전체를 갱신해야 한다. - 전체 갱신이기때문에 onPaymentWebResult를 호출하지 않는다.
-                if (requestCode == Constants.CODE_RESULT_ACTIVITY_PAYMENT_CHANGED_PRICE)
-                {
-                    setRefresh(true);
-                    break;
-                }
-
-                // 결제 진행후 취소시에 적립금과 쿠폰을 돌려주어야 한다.
-                if (resultCode != Activity.RESULT_OK)
-                {
-                    addCompositeDisposable(mProfileRemoteImpl.getUserSimpleInformation().subscribe(new Consumer<UserSimpleInformation>()
-                    {
-                        @Override
-                        public void accept(@io.reactivex.annotations.NonNull UserSimpleInformation userSimpleInformation) throws Exception
-                        {
-                            setUserInformation(userSimpleInformation);
-
-                            notifyBonusEnabledChanged();
-                            notifyStayOutboundPaymentChanged();
-                        }
-                    }, new Consumer<Throwable>()
-                    {
-                        @Override
-                        public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
-                        {
-
-                        }
-                    }));
-                }
-
-                if (data != null)
-                {
-                    onPaymentWebResult(resultCode, data.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_PAYMENT_RESULT));
-                }
+                onPaymentWebResult(resultCode, data);
                 break;
         }
     }
@@ -1917,8 +1884,46 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         return mStayOutboundPayment != null && mStayOutboundPayment.activeReward == true && mStayOutboundPayment.provideRewardSticker == true;
     }
 
-    private void onPaymentWebResult(int resultCode, String result)
+    private void onPaymentWebResult(int resultCode, Intent data)
     {
+        // 가격 변동인 경우 결제 화면 전체를 갱신해야 한다. - 전체 갱신이기때문에 onPaymentWebResult를 호출하지 않는다.
+        if (resultCode == Constants.CODE_RESULT_ACTIVITY_PAYMENT_CHANGED_PRICE)
+        {
+            setRefresh(true);
+            return;
+        }
+
+        if (resultCode == Constants.CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION)
+        {
+            restartExpiredSession();
+            return;
+        }
+
+        // 결제 진행후 취소시에 적립금과 쿠폰을 돌려주어야 한다.
+        if (resultCode != Activity.RESULT_OK)
+        {
+            addCompositeDisposable(mProfileRemoteImpl.getUserSimpleInformation().subscribe(new Consumer<UserSimpleInformation>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull UserSimpleInformation userSimpleInformation) throws Exception
+                {
+                    setUserInformation(userSimpleInformation);
+
+                    notifyBonusEnabledChanged();
+                    notifyStayOutboundPaymentChanged();
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                {
+
+                }
+            }));
+        }
+
+        String result = data == null ? null : data.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_PAYMENT_RESULT);
+
         if (resultCode == Activity.RESULT_OK)
         {
             Observable.just(result).map(jsonString ->
@@ -1978,7 +1983,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             String message;
 
             int msgCode;
-            View.OnClickListener confirmListener = null;
+            DialogInterface.OnDismissListener dismissListener = null;
 
             try
             {
@@ -1992,11 +1997,10 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 } else
                 {
                     message = jsonObject.getString("msg");
-
-                    confirmListener = new View.OnClickListener()
+                    dismissListener = new DialogInterface.OnDismissListener()
                     {
                         @Override
-                        public void onClick(View view)
+                        public void onDismiss(DialogInterface dialogInterface)
                         {
                             setResult(BaseActivity.RESULT_CODE_REFRESH);
                             onBackClick();
@@ -2006,11 +2010,10 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             } catch (Exception e)
             {
                 message = getString(R.string.act_toast_payment_fail);
-
-                confirmListener = new View.OnClickListener()
+                dismissListener = new DialogInterface.OnDismissListener()
                 {
                     @Override
-                    public void onClick(View view)
+                    public void onDismiss(DialogInterface dialogInterface)
                     {
                         setResult(BaseActivity.RESULT_CODE_REFRESH);
                         onBackClick();
@@ -2018,7 +2021,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 };
             }
 
-            getViewInterface().showSimpleDialog(title, message, getString(R.string.dialog_btn_text_confirm), null, confirmListener, null, false);
+            getViewInterface().showSimpleDialog(title, message, getString(R.string.dialog_btn_text_confirm), null, dismissListener);
         }
     }
 

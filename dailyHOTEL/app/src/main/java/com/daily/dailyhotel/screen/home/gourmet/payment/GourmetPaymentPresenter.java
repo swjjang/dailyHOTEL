@@ -511,40 +511,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             case GourmetPaymentActivity.REQUEST_CODE_PAYMENT_WEB_CARD:
             case GourmetPaymentActivity.REQUEST_CODE_PAYMENT_WEB_PHONE:
             case GourmetPaymentActivity.REQUEST_CODE_PAYMENT_WEB_VBANK:
-                // 가격 변동인 경우 결제 화면 전체를 갱신해야 한다. - 전체 갱신이기때문에 onPaymentWebResult를 호출하지 않는다.
-                if (requestCode == Constants.CODE_RESULT_ACTIVITY_PAYMENT_CHANGED_PRICE)
-                {
-                    setRefresh(true);
-                    break;
-                }
-
-                // 결제 진행후 취소시에 적립금과 쿠폰을 돌려주어야 한다.
-                if (resultCode != Activity.RESULT_OK)
-                {
-                    addCompositeDisposable(mProfileRemoteImpl.getUserSimpleInformation().subscribe(new Consumer<UserSimpleInformation>()
-                    {
-                        @Override
-                        public void accept(@io.reactivex.annotations.NonNull UserSimpleInformation userSimpleInformation) throws Exception
-                        {
-                            setUserInformation(userSimpleInformation);
-
-                            notifyBonusEnabledChanged();
-                            notifyGourmetPaymentChanged();
-                        }
-                    }, new Consumer<Throwable>()
-                    {
-                        @Override
-                        public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
-                        {
-
-                        }
-                    }));
-                }
-
-                if (data != null)
-                {
-                    onPaymentWebResult(mPaymentType, resultCode, data.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_PAYMENT_RESULT));
-                }
+                onPaymentWebResult(mPaymentType, resultCode, data);
                 break;
 
             case GourmetPaymentActivity.REQUEST_CODE_COUPON_LIST:
@@ -1726,7 +1693,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                     }
                 }
 
-                if(cardEventList.size() == 0)
+                if (cardEventList.size() == 0)
                 {
                     getViewInterface().setCardEventVisible(false);
                 } else
@@ -2078,8 +2045,46 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         return messages;
     }
 
-    private void onPaymentWebResult(DailyBookingPaymentTypeView.PaymentType paymentType, int resultCode, String result)
+    private void onPaymentWebResult(DailyBookingPaymentTypeView.PaymentType paymentType, int resultCode, Intent data)
     {
+        // 가격 변동인 경우 결제 화면 전체를 갱신해야 한다. - 전체 갱신이기때문에 onPaymentWebResult를 호출하지 않는다.
+        if (resultCode == Constants.CODE_RESULT_ACTIVITY_PAYMENT_CHANGED_PRICE)
+        {
+            setRefresh(true);
+            return;
+        }
+
+        if (resultCode == Constants.CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION)
+        {
+            restartExpiredSession();
+            return;
+        }
+
+        // 결제 진행후 취소시에 적립금과 쿠폰을 돌려주어야 한다.
+        if (resultCode != Activity.RESULT_OK)
+        {
+            addCompositeDisposable(mProfileRemoteImpl.getUserSimpleInformation().subscribe(new Consumer<UserSimpleInformation>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull UserSimpleInformation userSimpleInformation) throws Exception
+                {
+                    setUserInformation(userSimpleInformation);
+
+                    notifyBonusEnabledChanged();
+                    notifyGourmetPaymentChanged();
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                {
+
+                }
+            }));
+        }
+
+        String result = data == null ? null : data.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_PAYMENT_RESULT);
+
         if (resultCode == Activity.RESULT_OK)
         {
             Observable.just(result).map(jsonString ->
@@ -2185,29 +2190,29 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                         @Override
                         public void accept(Boolean aBoolean) throws Exception
                         {
-                            getViewInterface().showSimpleDialog(title, jsonObject.getString("msg"), getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
+                            getViewInterface().showSimpleDialog(title, jsonObject.getString("msg"), getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
                             {
                                 @Override
-                                public void onClick(View view)
+                                public void onDismiss(DialogInterface dialogInterface)
                                 {
                                     setResult(BaseActivity.RESULT_CODE_REFRESH);
                                     onBackClick();
                                 }
-                            }, null, false);
+                            });
                         }
                     }));
                 }
             } catch (Exception e)
             {
-                getViewInterface().showSimpleDialog(title, getString(R.string.act_toast_payment_fail), getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
+                getViewInterface().showSimpleDialog(title, getString(R.string.act_toast_payment_fail), getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
                 {
                     @Override
-                    public void onClick(View view)
+                    public void onDismiss(DialogInterface dialogInterface)
                     {
                         setResult(BaseActivity.RESULT_CODE_REFRESH);
                         onBackClick();
                     }
-                }, null, false);
+                });
             }
         }
     }
