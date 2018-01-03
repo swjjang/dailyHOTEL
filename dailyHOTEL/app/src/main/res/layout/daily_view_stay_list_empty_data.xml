@@ -13,7 +13,7 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/emptyIconImageView"
+                android:id="@+id/emptyImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_gravity="center_horizontal"
@@ -23,7 +23,6 @@
                 app:srcCompat="@drawable/no_hotel_ic"/>
 
             <LinearLayout
-                android:id="@+id/textLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -31,7 +30,7 @@
                 android:orientation="vertical">
 
                 <com.daily.base.widget.DailyTextView
-                    android:id="@+id/messageTextView01"
+                    android:id="@+id/message01TextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/label_searchresult_empty"
@@ -40,7 +39,7 @@
                     dailyFont:style="Medium"/>
 
                 <com.daily.base.widget.DailyTextView
-                    android:id="@+id/messageTextView02"
+                    android:id="@+id/message02TextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="13dp"
@@ -51,7 +50,7 @@
             </LinearLayout>
 
             <com.daily.base.widget.DailyTextView
-                android:id="@+id/changeRegionView"
+                android:id="@+id/button01TextView"
                 android:layout_width="180dp"
                 android:layout_height="38dp"
                 android:layout_gravity="center_horizontal"
@@ -64,7 +63,7 @@
                 dailyFont:style="Medium"/>
 
             <com.daily.base.widget.DailyTextView
-                android:id="@+id/changeDateView"
+                android:id="@+id/button02TextView"
                 android:layout_width="180dp"
                 android:layout_height="38dp"
                 android:layout_gravity="center_horizontal"
@@ -77,6 +76,7 @@
                 dailyFont:style="Medium"/>
 
             <LinearLayout
+                android:id="@+id/bottomMessageLayout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginTop="25dp"

@@ -17,4 +17,6 @@ public interface StayListFragmentInterface extends BaseFragmentDialogViewInterfa
     void addList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean isNights, boolean rewardEnabled, boolean supportTrueVR);
 
     void setSwipeRefreshing(boolean refreshing);
+
+    void setEmptyViewVisible(boolean visible, boolean applyFilter);
 }

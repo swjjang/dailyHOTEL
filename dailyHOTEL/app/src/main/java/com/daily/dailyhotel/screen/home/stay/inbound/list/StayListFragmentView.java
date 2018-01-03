@@ -10,6 +10,7 @@ import com.daily.base.BaseFragmentDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.Stay;
+import com.daily.dailyhotel.screen.home.stay.inbound.list.map.StayMapFragment;
 import com.daily.dailyhotel.view.DailyStayCardView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.FragmentStayListDataBinding;
@@ -25,19 +26,13 @@ public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmen
 {
     private StayListFragmentAdapter mStayListFragmentAdapter;
 
+    private StayMapFragment mStayMapFragment;
+
     public interface OnEventListener extends OnBaseEventListener
     {
         void onSwipeRefreshing();
 
         void onMoreRefreshing();
-
-        void onCalendarClick();
-
-        void onPeopleClick();
-
-        void onFilterClick();
-
-        void onViewTypeClick();
 
         void onStayClick(android.support.v4.util.Pair[] pairs, Stay stay, int listCount);
 
@@ -61,6 +56,12 @@ public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmen
         void onResearchClick();
 
         void onCallClick();
+
+        void onFilterClick();
+
+        void onRegionClick();
+
+        void onCalendarClick();
 
         void onWishClick(int position, Stay stay);
     }
@@ -231,5 +232,53 @@ public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmen
         }
 
         getViewDataBinding().swipeRefreshLayout.setRefreshing(refreshing);
+    }
+
+    @Override
+    public void setEmptyViewVisible(boolean visible, boolean applyFilter)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().emptyView.setVisibility(visible ? View.VISIBLE : View.GONE);
+
+        if (applyFilter == true)
+        {
+            getViewDataBinding().emptyView.setMessageTextView(getString(R.string.message_not_exist_filters), getString(R.string.message_changing_filter_option));
+            getViewDataBinding().emptyView.setButton01(true, getString(R.string.label_hotel_list_changing_filter), new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    getEventListener().onFilterClick();
+                }
+            });
+
+            getViewDataBinding().emptyView.setButton02(false, null, null);
+            getViewDataBinding().emptyView.setBottomMessage(false);
+        } else
+        {
+            getViewDataBinding().emptyView.setMessageTextView(getString(R.string.message_stay_empty_message01), getString(R.string.message_stay_empty_message02));
+            getViewDataBinding().emptyView.setButton01(true, getString(R.string.label_stay_category_change_region), new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    getEventListener().onRegionClick();
+                }
+            });
+
+            getViewDataBinding().emptyView.setButton02(true, getString(R.string.label_stay_category_change_date), new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    getEventListener().onCalendarClick();
+                }
+            });
+            getViewDataBinding().emptyView.setBottomMessage(false);
+        }
     }
 }

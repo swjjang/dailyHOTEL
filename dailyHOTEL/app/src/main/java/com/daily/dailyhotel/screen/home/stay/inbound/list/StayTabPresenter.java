@@ -442,6 +442,12 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         //            , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.LIST, null);
     }
 
+    @Override
+    public void onFilterClick()
+    {
+
+    }
+
     private void initViewModel(BaseActivity activity)
     {
         if (activity == null)

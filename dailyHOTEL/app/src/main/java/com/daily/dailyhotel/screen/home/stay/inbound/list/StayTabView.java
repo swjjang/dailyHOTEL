@@ -21,7 +21,8 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, ActivityStayTabDataBinding> implements StayTabInterface
+public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, ActivityStayTabDataBinding> //
+    implements StayTabInterface, StayListFragment.OnEventListener
 {
     private BaseFragmentPagerAdapter<StayListFragment> mFragmentPagerAdapter;
 
@@ -34,6 +35,8 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
         void onRegionClick();
 
         void onCalendarClick();
+
+        void onFilterClick();
     }
 
     public StayTabView(BaseActivity baseActivity, StayTabView.OnEventListener listener)
@@ -276,6 +279,39 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
         mFragmentPagerAdapter.getItem(getViewDataBinding().viewPager.getCurrentItem()).notifyRefresh(false);
     }
 
+    @Override
+    public void onRegionClick()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getEventListener().onRegionClick();
+    }
+
+    @Override
+    public void onCalendarClick()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getEventListener().onCalendarClick();
+    }
+
+    @Override
+    public void onFilterClick()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getEventListener().onFilterClick();
+    }
+
     private void initToolbar(ActivityStayTabDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
@@ -331,6 +367,8 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
             bundle.putString("code", category.code);
 
             stayListFragment.setArguments(bundle);
+            stayListFragment.setOnFragmentEventListener(this);
+
             fragmentList.add(stayListFragment);
         }
 

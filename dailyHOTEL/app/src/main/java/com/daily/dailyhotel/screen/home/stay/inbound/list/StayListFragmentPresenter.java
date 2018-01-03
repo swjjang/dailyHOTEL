@@ -47,7 +47,8 @@ import io.reactivex.functions.Function;
  * Created by sheldon
  * Clean Architecture
  */
-public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<StayListFragment, StayListFragmentInterface> implements StayListFragmentView.OnEventListener
+public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<StayListFragment, StayListFragmentInterface>//
+    implements StayListFragmentView.OnEventListener
 {
     static final int MAXIMUM_NUMBER_PER_PAGE = Constants.PAGENATION_LIST_SIZE;
     static final int PAGE_NONE = -1;
@@ -245,19 +246,27 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
             {
                 int listSize = pair.second.size();
 
-                if (listSize < MAXIMUM_NUMBER_PER_PAGE)
+                if (listSize == 0)
                 {
-                    mPage = PAGE_FINISH;
-
-                    pair.second.add(new ObjectItem(ObjectItem.TYPE_FOOTER_VIEW, null));
+                    getViewInterface().setEmptyViewVisible(true, mStayViewModel.stayFilter.getValue().isDefaultFilter() == false);
                 } else
                 {
-                    pair.second.add(new ObjectItem(ObjectItem.TYPE_LOADING_VIEW, null));
-                }
+                    if (listSize < MAXIMUM_NUMBER_PER_PAGE)
+                    {
+                        mPage = PAGE_FINISH;
 
-                getViewInterface().setList(pair.second, mStayViewModel.stayFilter.getValue().sortType == StayFilter.SortType.DISTANCE//
-                    , mStayViewModel.stayBookDateTime.getValue().getNights() > 1, pair.first//
-                    , DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
+                        pair.second.add(new ObjectItem(ObjectItem.TYPE_FOOTER_VIEW, null));
+                    } else
+                    {
+                        pair.second.add(new ObjectItem(ObjectItem.TYPE_LOADING_VIEW, null));
+                    }
+
+                    getViewInterface().setEmptyViewVisible(false, mStayViewModel.stayFilter.getValue().isDefaultFilter() == false);
+
+                    getViewInterface().setList(pair.second, mStayViewModel.stayFilter.getValue().sortType == StayFilter.SortType.DISTANCE//
+                        , mStayViewModel.stayBookDateTime.getValue().getNights() > 1, pair.first//
+                        , DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
+                }
 
                 mMoreRefreshing = false;
                 getViewInterface().setSwipeRefreshing(false);
@@ -359,30 +368,6 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
                 onHandleError(throwable);
             }
         }));
-    }
-
-    @Override
-    public void onCalendarClick()
-    {
-
-    }
-
-    @Override
-    public void onPeopleClick()
-    {
-
-    }
-
-    @Override
-    public void onFilterClick()
-    {
-
-    }
-
-    @Override
-    public void onViewTypeClick()
-    {
-
     }
 
     @Override
@@ -505,6 +490,39 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
     public void onCallClick()
     {
 
+    }
+
+    @Override
+    public void onFilterClick()
+    {
+        if (getFragment() == null || getFragment().getFragmentEventListener() == null)
+        {
+            return;
+        }
+
+        getFragment().getFragmentEventListener().onFilterClick();
+    }
+
+    @Override
+    public void onRegionClick()
+    {
+        if (getFragment() == null || getFragment().getFragmentEventListener() == null)
+        {
+            return;
+        }
+
+        getFragment().getFragmentEventListener().onRegionClick();
+    }
+
+    @Override
+    public void onCalendarClick()
+    {
+        if (getFragment() == null || getFragment().getFragmentEventListener() == null)
+        {
+            return;
+        }
+
+        getFragment().getFragmentEventListener().onCalendarClick();
     }
 
     @Override

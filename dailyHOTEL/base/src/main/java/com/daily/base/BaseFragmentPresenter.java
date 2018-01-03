@@ -14,7 +14,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
-public abstract class BaseFragmentPresenter<T1 extends Fragment, T2 extends BaseFragmentDialogViewInterface> implements BaseFragmentInterface
+public abstract class BaseFragmentPresenter<T1 extends BaseFragment, T2 extends BaseFragmentDialogViewInterface> implements BaseFragmentInterface
 {
     private T1 mFragment;
 
