@@ -404,7 +404,7 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
         analyticsParam.isDailyChoice = stay.dailyChoice;
         analyticsParam.gradeName = stay.grade.getName(getActivity());
 
-        if (Util.isUsedMultiTransition() == true)
+        if (Util.isUsedMultiTransition() == true && pairs != null)
         {
             getActivity().setExitSharedElementCallback(new SharedElementCallback()
             {
@@ -424,12 +424,9 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
                 }
             });
 
-            ActivityOptionsCompat optionsCompat;
-            Intent intent;
+            ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);
 
-            optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);
-
-            intent = StayDetailActivity.newInstance(getActivity() //
+            Intent intent = StayDetailActivity.newInstance(getActivity() //
                 , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
                 , mStayViewModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayViewModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
