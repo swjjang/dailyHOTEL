@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.RewardInterface;
-import com.daily.dailyhotel.entity.RewardCardHistory;
 import com.daily.dailyhotel.entity.RewardCardHistoryDetail;
 import com.daily.dailyhotel.entity.RewardDetail;
 import com.daily.dailyhotel.entity.RewardHistoryDetail;
@@ -16,8 +15,6 @@ import com.daily.dailyhotel.repository.remote.model.RewardInformationData;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
-
-import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.functions.Function;

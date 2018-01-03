@@ -127,7 +127,7 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
 
         getViewDataBinding().cardEventView.clearView();
 
-        for(Pair<String, List<String>> pair : cardEventList)
+        for (Pair<String, List<String>> pair : cardEventList)
         {
             getViewDataBinding().cardEventView.addCardEventView(pair.first, pair.second);
         }

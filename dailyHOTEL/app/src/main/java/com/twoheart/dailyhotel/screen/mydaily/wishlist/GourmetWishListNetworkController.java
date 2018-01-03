@@ -15,7 +15,6 @@ import com.twoheart.dailyhotel.network.model.Sticker;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -119,7 +118,7 @@ public class GourmetWishListNetworkController extends BaseNetworkController
             mOnNetworkControllerListener.onError(call, t, false);
         }
 
-        private ArrayList<Gourmet> makeGourmetList(List<GourmetWishItem> gourmetWishItemList, String imageUrl) throws JSONException
+        private ArrayList<Gourmet> makeGourmetList(List<GourmetWishItem> gourmetWishItemList, String imageUrl)
         {
             if (gourmetWishItemList == null || gourmetWishItemList.size() == 0)
             {

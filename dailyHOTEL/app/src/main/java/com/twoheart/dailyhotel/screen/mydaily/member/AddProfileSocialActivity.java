@@ -541,7 +541,7 @@ public class AddProfileSocialActivity extends BaseActivity
             }
 
             // 이메일이 없는 경우
-            if (DailyTextUtils.validEmail(mCustomer.getEmail()) == false )
+            if (DailyTextUtils.validEmail(mCustomer.getEmail()) == false)
             {
                 if (DailyTextUtils.isTextEmpty(email) == true)
                 {

@@ -136,7 +136,7 @@ public class EmailDialogPresenter extends BaseExceptionPresenter<EmailDialogActi
         }
 
         setRefresh(false);
-//        screenLock(showProgress);
+        //        screenLock(showProgress);
 
         showEmailDialog();
     }
