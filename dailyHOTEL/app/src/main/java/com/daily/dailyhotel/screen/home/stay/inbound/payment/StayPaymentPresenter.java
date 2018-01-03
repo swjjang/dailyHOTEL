@@ -547,7 +547,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             case StayPaymentActivity.REQUEST_CODE_PAYMENT_WEB_CARD:
             case StayPaymentActivity.REQUEST_CODE_PAYMENT_WEB_PHONE:
             case StayPaymentActivity.REQUEST_CODE_PAYMENT_WEB_VBANK:
-                // 가격 변동인 경우 결제 화면 전체를 갱신해야 한다.
+                // 가격 변동인 경우 결제 화면 전체를 갱신해야 한다. - 전체 갱신이기때문에 onPaymentWebResult를 호출하지 않는다.
                 if (requestCode == Constants.CODE_RESULT_ACTIVITY_PAYMENT_CHANGED_PRICE)
                 {
                     setRefresh(true);
@@ -2578,7 +2578,20 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
         switch (baseException.getCode())
         {
-
+            case 1190:
+            {
+                getViewInterface().showSimpleDialog(getString(R.string.dialog_title_payment), message//
+                    , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                    {
+                        @Override
+                        public void onDismiss(DialogInterface dialog)
+                        {
+                            setRefresh(true);
+                            onRefresh(true);
+                        }
+                    }, false);
+                return;
+            }
         }
 
         getViewInterface().showSimpleDialog(getString(R.string.dialog_title_payment), message//
