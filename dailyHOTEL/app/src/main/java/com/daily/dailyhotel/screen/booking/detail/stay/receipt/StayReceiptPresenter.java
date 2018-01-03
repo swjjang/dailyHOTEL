@@ -213,13 +213,13 @@ public class StayReceiptPresenter extends BaseExceptionPresenter<StayReceiptActi
             @Override
             public ObservableSource<StayReceipt> call() throws Exception
             {
-//                if (DailyTextUtils.isTextEmpty(mAggregationId) == true)
-//                {
-                    return mReceiptRemoteImpl.getStayReceipt(mReservationIndex);
-//                }
+                //                if (DailyTextUtils.isTextEmpty(mAggregationId) == true)
+                //                {
+                return mReceiptRemoteImpl.getStayReceipt(mReservationIndex);
+                //                }
 
                 // 현재 Stay의 경우 AggregationId를 지원하지 않아 아래 코드가 불리면 죽음 - 때문에 주석 처리 함
-//                return mReceiptRemoteImpl.getStayReceipt(mAggregationId);
+                //                return mReceiptRemoteImpl.getStayReceipt(mAggregationId);
             }
         });
 
@@ -281,12 +281,12 @@ public class StayReceiptPresenter extends BaseExceptionPresenter<StayReceiptActi
             @Override
             public ObservableSource<String> call() throws Exception
             {
-//                if (DailyTextUtils.isTextEmpty(mAggregationId) == true)
-//                {
-                    return mReceiptRemoteImpl.getStayReceiptByEmail(mReservationIndex, email);
-//                }
+                //                if (DailyTextUtils.isTextEmpty(mAggregationId) == true)
+                //                {
+                return mReceiptRemoteImpl.getStayReceiptByEmail(mReservationIndex, email);
+                //                }
 
-//                return mReceiptRemoteImpl.getStayReceiptByEmail(mAggregationId, email);
+                //                return mReceiptRemoteImpl.getStayReceiptByEmail(mAggregationId, email);
             }
         });
 

@@ -273,7 +273,7 @@ public class ZoomMapActivity extends BaseActivity
                 mGoogleMap.getUiSettings().setTiltGesturesEnabled(false);
                 mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
 
-                mGoogleMap.setMyLocationEnabled(false);
+                //                mGoogleMap.setMyLocationEnabled(false);
 
                 relocationMyLocation();
                 relocationZoomControl();
