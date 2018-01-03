@@ -503,7 +503,7 @@ public class BookingRemoteImpl extends BaseRemoteImpl implements BookingInterfac
                 @Override
                 public Boolean apply(@io.reactivex.annotations.NonNull BaseDto<Object> bookingHiddenDataBaseDto) throws Exception
                 {
-                    boolean isSuccess = false;
+                    boolean isSuccess;
                     if (bookingHiddenDataBaseDto != null)
                     {
                         // 이 요청은 메세지 코드만 판단
@@ -539,7 +539,7 @@ public class BookingRemoteImpl extends BaseRemoteImpl implements BookingInterfac
                 @Override
                 public Boolean apply(@io.reactivex.annotations.NonNull BaseDto<Object> bookingHiddenDataBaseDto) throws Exception
                 {
-                    boolean isSuccess = false;
+                    boolean isSuccess;
                     if (bookingHiddenDataBaseDto != null)
                     {
                         // 이 요청은 메세지 코드만 판단

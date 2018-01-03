@@ -394,19 +394,19 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
             {
                 mDontReload = false;
                 // ⬇︎ Old source 예약 대기 화면 진입 후 복귀시 Refresh 하도록 수정 - 에러 메시지는 이전 화면에서 보여주고 종료 하도록 수정되었음
-//                if (resultCode == CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT)
-//                {
-//                    BaseActivity baseActivity = (BaseActivity) getActivity();
-//
-//                    if (baseActivity == null)
-//                    {
-//                        return;
-//                    }
-//
-//                    baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), data.getStringExtra("msg"), getString(R.string.dialog_btn_text_confirm), null);
-//                }
-//
-//                mDontReload = true;
+                //                if (resultCode == CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT)
+                //                {
+                //                    BaseActivity baseActivity = (BaseActivity) getActivity();
+                //
+                //                    if (baseActivity == null)
+                //                    {
+                //                        return;
+                //                    }
+                //
+                //                    baseActivity.showSimpleDialog(getString(R.string.dialog_notice2), data.getStringExtra("msg"), getString(R.string.dialog_btn_text_confirm), null);
+                //                }
+                //
+                //                mDontReload = true;
                 break;
             }
 
@@ -990,7 +990,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
                 case Booking.PAYMENT_WAITING:
                     // 가상계좌 입금대기
-//                    intent = PaymentWaitActivity.newInstance(baseActivity, booking);
+                    //                    intent = PaymentWaitActivity.newInstance(baseActivity, booking);
                     intent = com.daily.dailyhotel.screen.booking.detail.wait.PaymentWaitActivity.newInstance(baseActivity, booking);
                     baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_VIRTUAL_BOOKING_DETAIL);
 
