@@ -274,7 +274,7 @@ public class PaymentWaitActivity extends BaseActivity
                     intent.putExtra("msg", throwable.getMessage());
                     setResult(CODE_RESULT_ACTIVITY_EXPIRED_PAYMENT_WAIT, intent);
                     finish();
-//                    onHandleError(throwable);
+                    //                    onHandleError(throwable);
                 }
             }));
         }

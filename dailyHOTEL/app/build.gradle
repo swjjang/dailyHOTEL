@@ -231,6 +231,8 @@ dependencies {
 
     implementation 'com.adjust.sdk:adjust-android:4.11.4'
 
+    implementation 'me.zhanghai.android.materialprogressbar:library:1.4.2'
+
     compile('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
         transitive = true
     }

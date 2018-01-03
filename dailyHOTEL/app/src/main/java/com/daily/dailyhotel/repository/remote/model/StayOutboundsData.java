@@ -34,7 +34,7 @@ public class StayOutboundsData
 
     }
 
-    public StayOutbounds getStayOutboundList()
+    public StayOutbounds getStayOutbounds()
     {
         StayOutbounds stayOutbounds = new StayOutbounds();
         List<StayOutbound> stayOutboundList = new ArrayList<>();

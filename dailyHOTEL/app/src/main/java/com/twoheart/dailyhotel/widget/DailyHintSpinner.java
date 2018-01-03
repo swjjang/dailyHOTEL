@@ -107,7 +107,7 @@ public class DailyHintSpinner extends AppCompatSpinner
             }
         }
 
-        protected View getView(int position, View convertView, ViewGroup parent) throws IllegalAccessException
+        protected View getView(int position, View convertView, ViewGroup parent)
         {
 
             if (position < 0)

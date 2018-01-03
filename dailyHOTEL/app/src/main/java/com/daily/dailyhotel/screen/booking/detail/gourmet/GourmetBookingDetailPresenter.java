@@ -35,8 +35,8 @@ import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
-import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.booking.detail.gourmet.receipt.GourmetReceiptActivity;
+import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.call.restaurant.RestaurantCallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
@@ -1201,7 +1201,7 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
                         @Override
                         public ObservableSource<? extends Boolean> call() throws Exception
                         {
-                            if  (DailyTextUtils.isTextEmpty(mAggregationId) == true)
+                            if (DailyTextUtils.isTextEmpty(mAggregationId) == true)
                             {
                                 return mBookingRemoteImpl.getGourmetHiddenBooking(mReservationIndex);
                             }

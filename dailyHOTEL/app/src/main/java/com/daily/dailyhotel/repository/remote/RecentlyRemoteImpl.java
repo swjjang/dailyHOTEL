@@ -70,7 +70,7 @@ public class RecentlyRemoteImpl extends BaseRemoteImpl implements RecentlyInterf
                             {
                                 if (stayOutboundsDataBaseDto.msgCode == 100 && stayOutboundsDataBaseDto.data != null)
                                 {
-                                    stayOutbounds = stayOutboundsDataBaseDto.data.getStayOutboundList();
+                                    stayOutbounds = stayOutboundsDataBaseDto.data.getStayOutbounds();
 
                                     if (stayOutbounds == null)
                                     {

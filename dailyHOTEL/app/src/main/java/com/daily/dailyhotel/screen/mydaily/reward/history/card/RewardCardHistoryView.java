@@ -4,7 +4,6 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.entity.ObjectItem;
-import com.daily.dailyhotel.entity.RewardCardHistory;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityRewardCardDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;

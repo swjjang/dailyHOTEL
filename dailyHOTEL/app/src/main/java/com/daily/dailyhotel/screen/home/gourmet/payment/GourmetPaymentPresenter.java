@@ -1725,7 +1725,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                     }
                 }
 
-                if(cardEventList.size() == 0)
+                if (cardEventList.size() == 0)
                 {
                     getViewInterface().setCardEventVisible(false);
                 } else
