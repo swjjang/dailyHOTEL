@@ -138,13 +138,13 @@ public class KakaoLinkManager implements Constants
         {
             KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
 
-            //            String checkInDay = stayBookDateTime.getCheckInDateTime("yyyyMMdd");
+            String checkInDay = stayBookDateTime.getCheckInDateTime("yyyyMMdd");
             int nights = stayBookDateTime.getNights();
-            //            String schemeParams = String.format(Locale.KOREA, "vc=5&v=hd&i=%d&d=%s&n=%d", hotelIndex, checkInDay, nights);
-            //
-            //            messageBuilder.addAppButton(mContext.getString(R.string.kakao_btn_go_hotel), //
-            //                new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build())//
-            //                    .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
+            String schemeParams = String.format(Locale.KOREA, "vc=20&v=pd&pt=stayOutbound&i=%d&d=%s&n=%d", hotelIndex, checkInDay, nights);
+
+            messageBuilder.addAppButton(mContext.getString(R.string.label_kakao_mobile_app), //
+                new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build())//
+                    .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
 
             String text = mContext.getString(R.string.kakao_btn_share_stay_outbound, name, hotelName//
                 , stayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)"), stayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)"), nights, nights + 1, address);
@@ -201,11 +201,11 @@ public class KakaoLinkManager implements Constants
         {
             KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
 
-            //            String schemeParams = String.format(Locale.KOREA, "vc=5&v=hd&i=%d&d=%s&n=%d", stayIndex, checkInDate, nights);
-            //
-            //            messageBuilder.addAppButton(mContext.getString(R.string.label_kakao_reservation_stay), //
-            //                new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build())//
-            //                    .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
+            String schemeParams = String.format(Locale.KOREA, "vc=20&v=pd&pt=stayOutbound&i=%d&d=%s&n=%d", stayIndex, checkInDate, nights);
+
+            messageBuilder.addAppButton(mContext.getString(R.string.label_kakao_mobile_app), //
+                new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build())//
+                    .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
 
             if (DailyTextUtils.isTextEmpty(imageUrl) == false)
             {
