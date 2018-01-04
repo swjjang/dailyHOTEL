@@ -124,6 +124,8 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
     GourmetCart mGourmetCart;
     int mPersons;
     private int mMaxCouponAmount;
+    private boolean mCheckChangedPrice;
+    private boolean mNeedOverwritePrice;
 
     // ***************************************************************** //
     // ************** 변수 선언시에 onSaveInstanceState 에 꼭 등록해야하는지 판단한다.
@@ -612,9 +614,16 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                 notifyEasyCardChanged();
                 notifyGourmetPaymentChanged();
 
-                // 가격이 변동된 경우
-                if (checkChangedPrice(mGourmetPayment, mGourmetCart) == true)
+                if (mNeedOverwritePrice == true)
                 {
+                    mNeedOverwritePrice = false;
+                    overwriteGourmetCartPrice(mGourmetPayment, mGourmetCart);
+                }
+
+                // 가격이 변동된 경우
+                if (mCheckChangedPrice == false && checkChangedPrice(mGourmetPayment, mGourmetCart) == true)
+                {
+                    mCheckChangedPrice = true;
                     setResult(BaseActivity.RESULT_CODE_REFRESH);
 
                     addCompositeDisposable(mCartLocalImpl.clearGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
@@ -1082,8 +1091,9 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                 unLockAll();
 
                 // 가격이 변동된 경우
-                if (checkChangedPrice(gourmetPayment, mGourmetCart) == true)
+                if (mCheckChangedPrice == false && checkChangedPrice(gourmetPayment, mGourmetCart) == true)
                 {
+                    mCheckChangedPrice = true;
                     setResult(BaseActivity.RESULT_CODE_REFRESH);
 
                     addCompositeDisposable(mCartLocalImpl.clearGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
@@ -2050,6 +2060,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         // 가격 변동인 경우 결제 화면 전체를 갱신해야 한다. - 전체 갱신이기때문에 onPaymentWebResult를 호출하지 않는다.
         if (resultCode == Constants.CODE_RESULT_ACTIVITY_PAYMENT_CHANGED_PRICE)
         {
+            mNeedOverwritePrice = true;
             setRefresh(true);
             return;
         }
@@ -2246,6 +2257,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                             @Override
                             public void onDismiss(DialogInterface dialog)
                             {
+                                mNeedOverwritePrice = true;
                                 setRefresh(true);
                                 onRefresh(true);
                             }
@@ -2308,6 +2320,26 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         }
 
         return false;
+    }
+
+    private void overwriteGourmetCartPrice(GourmetPayment gourmetPayment, GourmetCart gourmetCart)
+    {
+        if (gourmetPayment == null || gourmetCart == null)
+        {
+            return;
+        }
+
+        for (GourmetCartMenu gourmetCartMenu : gourmetCart.getMenuList())
+        {
+            for (GourmetPaymentMenu gourmetPaymentMenu : gourmetPayment.getGourmetPaymentMenuList())
+            {
+                if (gourmetCartMenu.saleIndex == gourmetPaymentMenu.saleIndex)
+                {
+                    gourmetCartMenu.discountPrice = gourmetPaymentMenu.price;
+                    break;
+                }
+            }
+        }
     }
 
     private void getMaxCouponAmount(int[] ticketSaleIndexes, int[] ticketCount)

@@ -131,6 +131,8 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
     private int mWaitingForBookingMessageType;
     private int mSaleType;
     private int mMaxCouponAmount;
+    boolean mCheckChangedPrice;
+    boolean mNeedOverwritePrice;
 
     // ***************************************************************** //
     // ************** 변수 선언시에 onSaveInstanceState 에 꼭 등록해야하는지 판단한다.
@@ -642,8 +644,15 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 // 위의 리워드 스티커 여부와 정책 여부에 따라서 순서 및 단어가 바뀐다.
                 notifyRefundPolicyChanged();
 
-                if (mRoomPrice != mStayPayment.totalPrice)
+                if (mNeedOverwritePrice == true)
                 {
+                    mNeedOverwritePrice = false;
+                    mRoomPrice = mStayPayment.totalPrice;
+                }
+
+                if (mCheckChangedPrice == false && mRoomPrice != mStayPayment.totalPrice)
+                {
+                    mCheckChangedPrice = true;
                     // 가격이 변동된 경우
                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_payment_changed_price)//
                         , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
@@ -2392,6 +2401,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
         // 가격 변동인 경우 결제 화면 전체를 갱신해야 한다. - 전체 갱신이기때문에 onPaymentWebResult를 호출하지 않는다.
         if (resultCode == Constants.CODE_RESULT_ACTIVITY_PAYMENT_CHANGED_PRICE)
         {
+            mNeedOverwritePrice = true;
             setRefresh(true);
             return;
         }
@@ -2589,6 +2599,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                         @Override
                         public void onDismiss(DialogInterface dialog)
                         {
+                            mNeedOverwritePrice = true;
                             setRefresh(true);
                             onRefresh(true);
                         }

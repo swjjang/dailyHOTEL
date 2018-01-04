@@ -108,6 +108,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     UserSimpleInformation mUserSimpleInformation;
     private int mSaleType;
     boolean mCheckChangedPrice;
+    boolean mNeedOverwritePrice;
 
     // ***************************************************************** //
     // ************** 변수 선언시에 onSaveInstanceState 에 꼭 등록해야하는지 판단한다.
@@ -557,6 +558,12 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
                 // 위의 리워드 스티커 여부와 정책 여부에 따라서 순서 및 단어가 바뀐다.
                 notifyRefundPolicyChanged();
+
+                if (mNeedOverwritePrice == true)
+                {
+                    mNeedOverwritePrice = false;
+                    mRoomPrice = mStayOutboundPayment.totalPrice;
+                }
 
                 // 가격이 변동된 경우
                 if (mCheckChangedPrice == false && mRoomPrice > 0 && mRoomPrice != mStayOutboundPayment.totalPrice)
@@ -1889,6 +1896,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         // 가격 변동인 경우 결제 화면 전체를 갱신해야 한다. - 전체 갱신이기때문에 onPaymentWebResult를 호출하지 않는다.
         if (resultCode == Constants.CODE_RESULT_ACTIVITY_PAYMENT_CHANGED_PRICE)
         {
+            mNeedOverwritePrice = true;
             setRefresh(true);
             return;
         }
@@ -2056,6 +2064,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                         @Override
                         public void onDismiss(DialogInterface dialog)
                         {
+                            mNeedOverwritePrice = true;
                             setRefresh(true);
                             onRefresh(true);
                         }
