@@ -1147,7 +1147,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             {
                 getViewInterface().setMapProgressBarVisible(true);
 
-                ExLog.d("pinkred : " + latLng.latitude + ", " + latLng.longitude + ", " + radius + ", " + zoom);
+                //                ExLog.d("pinkred : " + latLng.latitude + ", " + latLng.longitude + ", " + radius + ", " + zoom);
 
                 return mStayOutboundRemoteImpl.getList(mStayBookDateTime, latLng.latitude, latLng.longitude, radius//
                     , mPeople, mStayOutboundFilters, numberOfResults);
@@ -1157,7 +1157,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             @Override
             public void accept(StayOutbounds stayOutbounds) throws Exception
             {
-                ExLog.d("pinkred - result : " + stayOutbounds.getStayOutbound().size());
+                //                ExLog.d("pinkred - result : " + stayOutbounds.getStayOutbound().size());
 
                 DailyRemoteConfigPreference.getInstance(getActivity()).setKeyRemoteConfigRewardStickerEnabled(stayOutbounds.activeReward);
 
@@ -1367,11 +1367,29 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                     stayOutbounds.moreResultsAvailable = false;
                 }
 
-                if (objectItemList.size() > 0)
+                if (isAdded == false)
                 {
-                    if (stayOutbounds.moreResultsAvailable == true)
+                    if (objectItemList.size() > 0)
                     {
-                        objectItemList.add(new ObjectItem(ObjectItem.TYPE_LOADING_VIEW, null));
+                        if (stayOutbounds.moreResultsAvailable == true)
+                        {
+                            objectItemList.add(new ObjectItem(ObjectItem.TYPE_LOADING_VIEW, null));
+                        } else
+                        {
+                            objectItemList.add(new ObjectItem(ObjectItem.TYPE_FOOTER_VIEW, null));
+                        }
+                    }
+                } else
+                {
+                    if (objectItemList.size() > 0)
+                    {
+                        if (stayOutbounds.moreResultsAvailable == true)
+                        {
+                            objectItemList.add(new ObjectItem(ObjectItem.TYPE_LOADING_VIEW, null));
+                        } else
+                        {
+                            objectItemList.add(new ObjectItem(ObjectItem.TYPE_FOOTER_VIEW, null));
+                        }
                     } else
                     {
                         objectItemList.add(new ObjectItem(ObjectItem.TYPE_FOOTER_VIEW, null));
