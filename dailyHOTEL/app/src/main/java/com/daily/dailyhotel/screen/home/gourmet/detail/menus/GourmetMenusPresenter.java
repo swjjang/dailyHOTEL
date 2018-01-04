@@ -612,7 +612,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
                     // 방문 일이 변경되는 경우
                     message = getString(R.string.message_gourmet_product_detail_change_cart_other_visit_day);
                     actionAnalytics = AnalyticsManager.Action.POPUP_DIFFERENT_DAY;
-                } else if (mGourmetCart.visitTime != mVisitTime)
+                } else if (mGourmetCart.visitTime.equalsIgnoreCase(mVisitTime) == false)
                 {
                     // 방문 시간이 변경되는 경우
                     message = getString(R.string.message_gourmet_product_detail_add_menu_after_initialization);
@@ -1282,7 +1282,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
                         try
                         {
                             if (mGourmetCart != null && mGourmetCart.equalsDay(mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)) == true//
-                                && mGourmetCart.gourmetIndex == mGourmetIndex && mGourmetCart.visitTime == time)
+                                && mGourmetCart.gourmetIndex == mGourmetIndex && mGourmetCart.visitTime.equalsIgnoreCase(time) == true)
                             {
                                 gourmetMenu.orderCount = mGourmetCart.getMenuOrderCount(gourmetMenu.index);
                             }
