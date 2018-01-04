@@ -310,7 +310,7 @@ public class WishRemoteImpl extends BaseRemoteImpl implements WishInterface
         return mDailyMobileService.getStayOutboundWishCount(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API))//
             .subscribeOn(Schedulers.io()).map(baseDto ->
             {
-                int wishCount = 0;
+                int wishCount;
 
                 if (baseDto != null)
                 {

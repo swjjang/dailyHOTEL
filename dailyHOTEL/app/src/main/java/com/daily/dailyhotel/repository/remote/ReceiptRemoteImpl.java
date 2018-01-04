@@ -118,7 +118,7 @@ public class ReceiptRemoteImpl extends BaseRemoteImpl implements ReceiptInterfac
                 @Override
                 public String apply(BaseDto<Object> objectBaseDto) throws Exception
                 {
-                    String message = null;
+                    String message;
 
                     if (objectBaseDto != null)
                     {
@@ -154,7 +154,7 @@ public class ReceiptRemoteImpl extends BaseRemoteImpl implements ReceiptInterfac
                 @Override
                 public String apply(BaseDto<Object> objectBaseDto) throws Exception
                 {
-                    String message = null;
+                    String message;
 
                     if (objectBaseDto != null)
                     {
@@ -231,7 +231,7 @@ public class ReceiptRemoteImpl extends BaseRemoteImpl implements ReceiptInterfac
                 @Override
                 public String apply(BaseDto<Object> objectBaseDto) throws Exception
                 {
-                    String message = null;
+                    String message;
 
                     if (objectBaseDto != null)
                     {

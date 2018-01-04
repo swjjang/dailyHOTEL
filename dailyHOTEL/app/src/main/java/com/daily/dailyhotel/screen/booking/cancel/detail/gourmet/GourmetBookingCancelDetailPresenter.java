@@ -757,7 +757,7 @@ public class GourmetBookingCancelDetailPresenter //
                         @Override
                         public ObservableSource<? extends Boolean> call() throws Exception
                         {
-                            if  (DailyTextUtils.isTextEmpty(mAggregationId) == true)
+                            if (DailyTextUtils.isTextEmpty(mAggregationId) == true)
                             {
                                 return mBookingRemoteImpl.getGourmetHiddenBooking(mReservationIndex);
                             }

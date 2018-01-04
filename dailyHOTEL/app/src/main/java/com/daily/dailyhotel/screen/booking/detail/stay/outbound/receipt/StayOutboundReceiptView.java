@@ -101,7 +101,7 @@ public class StayOutboundReceiptView extends BaseDialogView<StayOutboundReceiptV
         // **결제 정보**
         getViewDataBinding().paymentInfoLayout.setData(stayOutboundReceipt.paymentDate, stayOutboundReceipt.paymentTypeName //
             , stayOutboundReceipt.totalPrice, stayOutboundReceipt.bonus, stayOutboundReceipt.coupon //
-            ,stayOutboundReceipt.paymentAmount);
+            , stayOutboundReceipt.paymentAmount);
 
         // **공급자** 레이아웃에서 처리
 

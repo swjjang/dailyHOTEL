@@ -14,5 +14,5 @@ public class StayOldWaitingDepositReservation
     public String accountNumber; // 계좌번호(입금계좌) "vactNum": "99289014792994",
     public String userName; // "userName": "dh00",
     public String bankName; // "bankName": "국민은행",
-    public int bonusAmount;; // "bonus": 0
+    public int bonusAmount; // "bonus": 0
 }

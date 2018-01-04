@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface ImageListInterface extends BaseDialogViewInterface
 {
-    void setImageList(List<DetailImageInformation> imageList, int position);
+    void setImageList(String imageUrl, List<DetailImageInformation> imageList, int position);
 }

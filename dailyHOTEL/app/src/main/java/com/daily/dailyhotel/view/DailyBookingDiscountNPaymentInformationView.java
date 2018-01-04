@@ -249,12 +249,13 @@ public class DailyBookingDiscountNPaymentInformationView extends ConstraintLayou
             return;
         }
 
-        String text = null;
+        String text;
         if (maxCouponAmount > 0)
         {
             String priceFormat = DailyTextUtils.getPriceFormat(getContext(), maxCouponAmount, false);
             text = getContext().getString(R.string.label_booking_max_coupon_amount, priceFormat);
-        } else {
+        } else
+        {
             text = getContext().getString(R.string.label_booking_max_coupon_amount_empty);
         }
 
