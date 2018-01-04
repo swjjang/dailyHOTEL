@@ -448,6 +448,42 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
     }
 
+    @Override
+    public void onViewTypeClick()
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        switch (mStayViewModel.viewType.getValue())
+        {
+            // 현재 리스트 화면인 경우
+            case LIST:
+            {
+                screenLock(true);
+
+                mStayViewModel.viewType.setValue(ViewType.MAP);
+
+                getViewInterface().setViewType(ViewType.MAP);
+                break;
+            }
+
+            // 현재 맵화면인 경우
+            case MAP:
+            {
+                mStayViewModel.viewType.setValue(ViewType.LIST);
+
+                clearCompositeDisposable();
+
+                getViewInterface().setViewType(ViewType.LIST);
+
+                unLockAll();
+                break;
+            }
+        }
+    }
+
     private void initViewModel(BaseActivity activity)
     {
         if (activity == null)

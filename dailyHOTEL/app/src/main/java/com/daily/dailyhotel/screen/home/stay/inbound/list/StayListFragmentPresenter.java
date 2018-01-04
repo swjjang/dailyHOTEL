@@ -1,10 +1,12 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.list;
 
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
 import android.support.v7.widget.RecyclerView;
@@ -540,7 +542,28 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
 
         mStayViewModel = ViewModelProviders.of(activity).get(StayTabPresenter.StayViewModel.class);
 
+        mStayViewModel.viewType.observe(activity, new Observer<StayTabPresenter.ViewType>()
+        {
+            @Override
+            public void onChanged(@Nullable StayTabPresenter.ViewType viewType)
+            {
+                if (isCurrentFragment() == false)
+                {
+                    return;
+                }
 
+                switch (viewType)
+                {
+                    case LIST:
+                        getViewInterface().showMapLayout(getFragment().getFragmentManager());
+                        break;
+
+                    case MAP:
+                        getViewInterface().hideMapLayout(getFragment().getFragmentManager());
+                        break;
+                }
+            }
+        });
     }
 
     boolean isCurrentFragment()

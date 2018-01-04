@@ -17,6 +17,8 @@ public interface StayTabInterface extends BaseDialogViewInterface
 
     void setOptionFilterSelected(boolean selected);
 
+    void setViewType(StayTabPresenter.ViewType viewType);
+
     void setCategoryTab(int position);
 
     void notifyRefreshFragments(boolean force);

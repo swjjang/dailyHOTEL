@@ -1,20 +1,30 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.list;
 
 
+import android.content.Context;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.daily.base.BaseFragmentDialogView;
 import com.daily.base.OnBaseEventListener;
+import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.screen.home.stay.inbound.list.map.StayMapFragment;
+import com.daily.dailyhotel.screen.home.stay.inbound.list.map.StayMapViewPagerAdapter;
 import com.daily.dailyhotel.view.DailyStayCardView;
+import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.FragmentStayListDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.widget.DailyOverScrollViewPager;
 
 import java.util.List;
 
@@ -24,9 +34,19 @@ import java.util.List;
  */
 public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmentView.OnEventListener, FragmentStayListDataBinding> implements StayListFragmentInterface
 {
+    private static final int ANIMATION_DELAY = 200;
+    private static final int VIEWPAGER_HEIGHT_DP = 125;
+    private static final int VIEWPAGER_TOP_PADDING_DP = 10;
+    private static final int VIEWPAGER_OTHER_PADDING_DP = 15;
+    private static final int VIEWPAGER_PAGE_MARGIN_DP = 5;
+
     private StayListFragmentAdapter mStayListFragmentAdapter;
 
     private StayMapFragment mStayMapFragment;
+
+    private StayMapViewPagerAdapter mViewPagerAdapter;
+
+    DailyOverScrollViewPager mViewPager;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -280,5 +300,168 @@ public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmen
             });
             getViewDataBinding().emptyView.setBottomMessage(false);
         }
+    }
+
+    @Override
+    public void showMapLayout(FragmentManager fragmentManager)
+    {
+        if (getViewDataBinding() == null || fragmentManager == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().swipeRefreshLayout.setVisibility(View.INVISIBLE);
+        getViewDataBinding().mapLayout.setVisibility(View.VISIBLE);
+
+        if (mStayMapFragment == null)
+        {
+            mStayMapFragment = new StayMapFragment();
+            mStayMapFragment.setOnEventListener(new StayMapFragment.OnEventListener()
+            {
+                @Override
+                public void onMapReady()
+                {
+
+                }
+
+                @Override
+                public void onMarkerClick(Stay stay, List<Stay> stayList)
+                {
+
+                }
+
+                @Override
+                public void onMarkersCompleted()
+                {
+
+                }
+
+                @Override
+                public void onMapClick()
+                {
+
+                }
+
+                @Override
+                public void onMyLocationClick()
+                {
+
+                }
+
+                @Override
+                public void onChangedLocation(LatLng latLng, float radius, float zoom)
+                {
+
+                }
+            });
+        }
+
+        fragmentManager.beginTransaction().add(getViewDataBinding().mapLayout.getId(), mStayMapFragment, "MAP").commitAllowingStateLoss();
+
+        //        getViewDataBinding().mapLayout.setOnTouchListener(new View.OnTouchListener()
+        //        {
+        //            @Override
+        //            public boolean onTouch(View v, MotionEvent event)
+        //            {
+        //                switch (event.getAction())
+        //                {
+        //                    case MotionEvent.ACTION_DOWN:
+        //                        mPossibleLoadingListByMap = false;
+        //
+        //                        getEventListener().onClearChangedLocation();
+        //                        break;
+        //
+        //                    case MotionEvent.ACTION_UP:
+        //                        mPossibleLoadingListByMap = true;
+        //                        break;
+        //                }
+        //
+        //                return false;
+        //            }
+        //        });
+
+        mViewPager = addMapViewPager(getContext(), getViewDataBinding().mapLayout);
+    }
+
+    @Override
+    public void hideMapLayout(FragmentManager fragmentManager)
+    {
+        if (getViewDataBinding() == null || fragmentManager == null || mStayMapFragment == null)
+        {
+            return;
+        }
+
+        if (mViewPagerAdapter != null)
+        {
+            mViewPagerAdapter.clear();
+            mViewPagerAdapter = null;
+        }
+
+        if (mViewPager != null)
+        {
+            mViewPager.removeAllViews();
+            mViewPager = null;
+        }
+
+        fragmentManager.beginTransaction().remove(mStayMapFragment).commitAllowingStateLoss();
+
+        getViewDataBinding().mapLayout.removeAllViews();
+        getViewDataBinding().mapLayout.setVisibility(View.GONE);
+        getViewDataBinding().swipeRefreshLayout.setVisibility(View.VISIBLE);
+
+        //        setMapProgressBarVisible(false);
+
+        mStayMapFragment = null;
+
+        //        resetMenuBarLayoutTranslation();
+    }
+
+    private DailyOverScrollViewPager addMapViewPager(Context context, ViewGroup viewGroup)
+    {
+        if (context == null || viewGroup == null)
+        {
+            return null;
+        }
+
+        int paddingOther = ScreenUtils.dpToPx(context, VIEWPAGER_OTHER_PADDING_DP);
+        int paddingTop = ScreenUtils.dpToPx(context, VIEWPAGER_TOP_PADDING_DP);
+
+        DailyOverScrollViewPager viewPager = new DailyOverScrollViewPager(context);
+        viewPager.setOffscreenPageLimit(2);
+        viewPager.setClipToPadding(false);
+        viewPager.setPageMargin(ScreenUtils.dpToPx(context, VIEWPAGER_PAGE_MARGIN_DP));
+        viewPager.setPadding(paddingOther, paddingTop, paddingOther, paddingOther);
+        viewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
+
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(context, VIEWPAGER_HEIGHT_DP));
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener()
+        {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
+            {
+
+            }
+
+            @Override
+            public void onPageSelected(int position)
+            {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state)
+            {
+
+            }
+        });
+
+        layoutParams.gravity = Gravity.BOTTOM;
+
+        viewPager.setLayoutParams(layoutParams);
+        viewPager.setVisibility(View.INVISIBLE);
+
+        viewGroup.addView(viewPager);
+
+        return viewPager;
     }
 }

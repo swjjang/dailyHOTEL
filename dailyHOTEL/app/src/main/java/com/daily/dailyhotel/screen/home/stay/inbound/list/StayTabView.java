@@ -37,6 +37,8 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
         void onCalendarClick();
 
         void onFilterClick();
+
+        void onViewTypeClick();
     }
 
     public StayTabView(BaseActivity baseActivity, StayTabView.OnEventListener listener)
@@ -255,6 +257,26 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
     public void setOptionFilterSelected(boolean selected)
     {
 
+    }
+
+    @Override
+    public void setViewType(StayTabPresenter.ViewType viewType)
+    {
+        if (viewType == null || getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        switch (viewType)
+        {
+            case LIST:
+                getViewDataBinding().floatingActionView.setViewOptionMapSelected();
+                break;
+
+            case MAP:
+                getViewDataBinding().floatingActionView.setViewOptionListSelected();
+                break;
+        }
     }
 
     @Override
