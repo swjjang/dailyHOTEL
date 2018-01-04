@@ -10,6 +10,16 @@ import com.kakao.kakaolink.AppActionBuilder;
 import com.kakao.kakaolink.AppActionInfoBuilder;
 import com.kakao.kakaolink.KakaoLink;
 import com.kakao.kakaolink.KakaoTalkLinkMessageBuilder;
+import com.kakao.kakaolink.v2.KakaoLinkResponse;
+import com.kakao.kakaolink.v2.KakaoLinkService;
+import com.kakao.message.template.ButtonObject;
+import com.kakao.message.template.ContentObject;
+import com.kakao.message.template.FeedTemplate;
+import com.kakao.message.template.LinkObject;
+import com.kakao.message.template.LocationTemplate;
+import com.kakao.message.template.SocialObject;
+import com.kakao.network.ErrorResult;
+import com.kakao.network.callback.ResponseCallback;
 import com.kakao.util.KakaoParameterException;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
@@ -61,31 +71,70 @@ public class KakaoLinkManager implements Constants
     {
         try
         {
-            KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
-
             String checkInDay = stayBookingDay.getCheckInDay("yyyyMMdd");
             int nights = stayBookingDay.getNights();
             String schemeParams = String.format(Locale.KOREA, "vc=5&v=hd&i=%d&d=%s&n=%d", hotelIndex, checkInDay, nights);
-
-            messageBuilder.addAppButton(mContext.getString(R.string.label_kakao_mobile_app), //
-                new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build())//
-                    .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
-
             String text = mContext.getString(R.string.kakao_btn_share_hotel, name, hotelName//
                 , stayBookingDay.getCheckInDay("yyyy.MM.dd(EEE)"), stayBookingDay.getCheckOutDay("yyyy.MM.dd(EEE)"), nights, nights + 1, address);
 
-            if (DailyTextUtils.isTextEmpty(imageUrl) == false)
-            {
-                int lastSlash = imageUrl.lastIndexOf('/');
-                String fileName = imageUrl.substring(lastSlash + 1);
-                messageBuilder.addImage(imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName), 300, 200);
-            }
+            LocationTemplate params = LocationTemplate.newBuilder(address,
+                ContentObject.newBuilder(hotelName,
+                    imageUrl,
+                    LinkObject.newBuilder()
+                        .setWebUrl("https://mobile.dailyhotel.co.kr/stay/" + hotelIndex)
+                        .setMobileWebUrl("https://mobile.dailyhotel.co.kr/stay/" + hotelIndex)
+                        .setAndroidExecutionParams(schemeParams)
+                        .setIosExecutionParams(schemeParams)
+                        .build())
+                    .setDescrption(text)
+                    .build())
+                .addButton(new ButtonObject("웹으로 보기", LinkObject.newBuilder()
+                    .setWebUrl("https://mobile.dailyhotel.co.kr/stay/" + hotelIndex)
+                    .setMobileWebUrl("https://mobile.dailyhotel.co.kr/stay/" + hotelIndex)
+                    .build()))
+                .setAddressTitle(hotelName)
+                .build();
 
-            messageBuilder.addText(text);
+            KakaoLinkService.getInstance().sendDefault(mContext, params, new ResponseCallback<KakaoLinkResponse>() {
+                @Override
+                public void onFailure(ErrorResult errorResult) {
+                    ExLog.e(errorResult.toString());
+                }
 
-            messageBuilder.addWebLink(mContext.getString(R.string.label_kakao_web_link), "https://mobile.dailyhotel.co.kr/stay/" + hotelIndex);
+                @Override
+                public void onSuccess(KakaoLinkResponse result) {
 
-            mKakaoLink.sendMessage(messageBuilder, mContext);
+                }
+            });
+
+
+//
+//
+//            KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
+//
+////            String checkInDay = stayBookingDay.getCheckInDay("yyyyMMdd");
+////            int nights = stayBookingDay.getNights();
+////            String schemeParams = String.format(Locale.KOREA, "vc=5&v=hd&i=%d&d=%s&n=%d", hotelIndex, checkInDay, nights);
+//
+//            messageBuilder.addAppButton(mContext.getString(R.string.label_kakao_mobile_app), //
+//                new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build())//
+//                    .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
+//
+////            String text = mContext.getString(R.string.kakao_btn_share_hotel, name, hotelName//
+////                , stayBookingDay.getCheckInDay("yyyy.MM.dd(EEE)"), stayBookingDay.getCheckOutDay("yyyy.MM.dd(EEE)"), nights, nights + 1, address);
+//
+//            if (DailyTextUtils.isTextEmpty(imageUrl) == false)
+//            {
+//                int lastSlash = imageUrl.lastIndexOf('/');
+//                String fileName = imageUrl.substring(lastSlash + 1);
+//                messageBuilder.addImage(imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName), 300, 200);
+//            }
+//
+//            messageBuilder.addText(text);
+//
+//            messageBuilder.addWebLink(mContext.getString(R.string.label_kakao_web_link), "https://mobile.dailyhotel.co.kr/stay/" + hotelIndex);
+//
+//            mKakaoLink.sendMessage(messageBuilder, mContext);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -136,6 +185,25 @@ public class KakaoLinkManager implements Constants
 
         try
         {
+            FeedTemplate params = FeedTemplate
+                .newBuilder(ContentObject.newBuilder("딸기 치즈 케익",
+                    "http://mud-kage.kakao.co.kr/dn/Q2iNx/btqgeRgV54P/VLdBs9cvyn8BJXB3o7N8UK/kakaolink40_original.png",
+                    LinkObject.newBuilder().setWebUrl("https://developers.kakao.com")
+                        .setMobileWebUrl("https://developers.kakao.com").build())
+                    .setDescrption("#케익 #딸기 #삼평동 #카페 #분위기 #소개팅")
+                    .build())
+                .setSocial(SocialObject.newBuilder().setLikeCount(286).setCommentCount(45)
+                    .setSharedCount(845).build())
+                .addButton(new ButtonObject("웹으로 보기", LinkObject.newBuilder().setWebUrl("https://developers.kakao.com").setMobileWebUrl("https://developers.kakao.com").build()))
+                .addButton(new ButtonObject("앱으로 보기", LinkObject.newBuilder()
+                    .setWebUrl("https://developers.kakao.com")
+                    .setMobileWebUrl("https://developers.kakao.com")
+                    .setAndroidExecutionParams("key1=value1")
+                    .setIosExecutionParams("key1=value1")
+                    .build()))
+                .build();
+
+
             KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
 
             String checkInDay = stayBookDateTime.getCheckInDateTime("yyyyMMdd");
