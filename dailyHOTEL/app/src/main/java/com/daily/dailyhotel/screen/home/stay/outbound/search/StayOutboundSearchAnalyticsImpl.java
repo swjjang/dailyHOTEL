@@ -58,7 +58,7 @@ public class StayOutboundSearchAnalyticsImpl implements StayOutboundSearchPresen
             return;
         }
 
-        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH//
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
             , AnalyticsManager.Action.MEMBER_SELECT, null, null);
     }
 
