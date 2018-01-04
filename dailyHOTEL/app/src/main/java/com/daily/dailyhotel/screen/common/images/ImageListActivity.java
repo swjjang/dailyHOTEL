@@ -22,6 +22,7 @@ import java.util.List;
 public class ImageListActivity extends BaseActivity<ImageListPresenter>
 {
     static final String INTENT_EXTRA_DATA_TITLE = "title";
+    static final String INTENT_EXTRA_DATA_BASE_IMAGE_URL = "baseImageUrl";
     static final String INTENT_EXTRA_DATA_IMAGE_LIST = "imageList";
     static final String INTENT_EXTRA_DATA_INDEX = "index";
 
@@ -30,6 +31,31 @@ public class ImageListActivity extends BaseActivity<ImageListPresenter>
     {
         Intent intent = new Intent(context, ImageListActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_TITLE, title);
+
+        if (imageList != null && imageList.size() > 0)
+        {
+            ArrayList<DetailImageInformationParcel> list = new ArrayList<>();
+
+            for (DetailImageInformation detailImageInformation : imageList)
+            {
+                list.add(new DetailImageInformationParcel(detailImageInformation));
+            }
+
+            intent.putExtra(INTENT_EXTRA_DATA_IMAGE_LIST, list);
+        }
+
+        intent.putExtra(INTENT_EXTRA_DATA_INDEX, index);
+        intent.putExtra(INTENT_EXTRA_DATA_ANALYTICS, analyticsParam);
+
+        return intent;
+    }
+
+    public static Intent newInstance(Context context, String title, String baseImageUrl, List<DetailImageInformation> imageList//
+        , int index, ImageListAnalyticsParam analyticsParam)
+    {
+        Intent intent = new Intent(context, ImageListActivity.class);
+        intent.putExtra(INTENT_EXTRA_DATA_TITLE, title);
+        intent.putExtra(INTENT_EXTRA_DATA_BASE_IMAGE_URL, baseImageUrl);
 
         if (imageList != null && imageList.size() > 0)
         {

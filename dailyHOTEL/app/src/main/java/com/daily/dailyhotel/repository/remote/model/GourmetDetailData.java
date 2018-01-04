@@ -1,5 +1,7 @@
 package com.daily.dailyhotel.repository.remote.model;
 
+import android.net.Uri;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.daily.base.util.DailyTextUtils;
@@ -366,14 +368,21 @@ public class GourmetDetailData
 
             List<DetailImageInformation> detailImageInformationList = new ArrayList<>();
 
+            if(images != null && images.size() > 0)
+            {
+                gourmetMenu.baseImageUrl = images.get(0).imageUrl.substring(0, images.get(0).imageUrl.lastIndexOf(Uri.parse(images.get(0).imageUrl).getLastPathSegment()));
+            }
+
             for (MenuImageData menuImageData : images)
             {
                 DetailImageInformation detailImageInformation = new DetailImageInformation();
 
+                String fileName = Uri.parse(menuImageData.imageUrl).getLastPathSegment();
+
                 ImageMap imageMap = new ImageMap();
                 imageMap.smallUrl = null;
-                imageMap.mediumUrl = menuImageData.imageUrl;
-                imageMap.bigUrl = menuImageData.imageUrl;
+                imageMap.mediumUrl = fileName;
+                imageMap.bigUrl = fileName;
 
                 detailImageInformation.caption = menuImageData.imageDescription;
                 detailImageInformation.setImageMap(imageMap);
