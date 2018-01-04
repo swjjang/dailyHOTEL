@@ -3,11 +3,13 @@ package com.twoheart.dailyhotel.screen.hotel.list;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Vibrator;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.view.DailyStayCardView;
@@ -96,6 +98,9 @@ public class StayListAdapter extends PlaceListAdapter
             case PlaceViewItem.TYPE_LOADING_VIEW:
             {
                 View view = mInflater.inflate(R.layout.list_row_loading, parent, false);
+
+                ProgressBar progressBar = view.findViewById(R.id.progressBar);
+                progressBar.getIndeterminateDrawable().setColorFilter(mContext.getResources().getColor(R.color.probressbar_default), PorterDuff.Mode.SRC_IN);
 
                 return new BaseViewHolder(view);
             }
