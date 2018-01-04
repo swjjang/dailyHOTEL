@@ -1570,7 +1570,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                 url = "android_gourmet_product_xxxhdpi";
             }
 
-            viewDataBinding.simpleDraweeView.setImageURI(Uri.parse(gourmetMenu.getPrimaryImage().getImageMap().bigUrl + "?impolicy=" + url));
+            viewDataBinding.simpleDraweeView.setImageURI(Uri.parse(gourmetMenu.baseImageUrl + gourmetMenu.getPrimaryImage().getImageMap().bigUrl + "?impolicy=" + url));
             viewDataBinding.simpleDraweeView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder_s);
             viewDataBinding.simpleDraweeView.getHierarchy().setFailureImage(R.drawable.layerlist_failure_image);
         }
