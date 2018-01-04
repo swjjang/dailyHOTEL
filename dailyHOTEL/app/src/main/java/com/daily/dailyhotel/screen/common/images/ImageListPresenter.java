@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.DetailImageInformation;
 import com.daily.dailyhotel.parcel.DetailImageInformationParcel;
@@ -28,6 +29,7 @@ public class ImageListPresenter extends BaseExceptionPresenter<ImageListActivity
     private String mTitle;
     private List<DetailImageInformation> mImageList;
     private int mIndex;
+    private String mImageUrl;
     private boolean mTouchMoving;
 
     public interface ImageListAnalyticsInterface extends BaseAnalyticsInterface
@@ -80,6 +82,12 @@ public class ImageListPresenter extends BaseExceptionPresenter<ImageListActivity
         }
 
         mTitle = intent.getStringExtra(ImageListActivity.INTENT_EXTRA_DATA_TITLE);
+        mImageUrl = intent.getStringExtra(ImageListActivity.INTENT_EXTRA_DATA_BASE_IMAGE_URL);
+
+        if(DailyTextUtils.isTextEmpty(mImageUrl) == true)
+        {
+            mImageUrl = "";
+        }
 
         List<DetailImageInformationParcel> imageList = (List<DetailImageInformationParcel>) intent.getSerializableExtra(ImageListActivity.INTENT_EXTRA_DATA_IMAGE_LIST);
 
@@ -110,7 +118,7 @@ public class ImageListPresenter extends BaseExceptionPresenter<ImageListActivity
     {
         getViewInterface().setToolbarTitle(mTitle);
 
-        getViewInterface().setImageList(mImageList, mIndex);
+        getViewInterface().setImageList(mImageUrl, mImageList, mIndex);
     }
 
     @Override

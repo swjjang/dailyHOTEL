@@ -392,7 +392,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         analyticsParam.serviceType = Constants.ServiceType.GOURMET;
 
         startActivityForResult(ImageListActivity.newInstance(getActivity(), gourmetMenu.name//
-            , gourmetMenuImageList, 0, analyticsParam), GourmetMenusActivity.REQUEST_CODE_IMAGE_LIST);
+            , gourmetMenu.baseImageUrl, gourmetMenuImageList, 0, analyticsParam), GourmetMenusActivity.REQUEST_CODE_IMAGE_LIST);
 
         mAnalytics.onEventImageClick(getActivity(), Integer.toString(gourmetMenu.index));
     }

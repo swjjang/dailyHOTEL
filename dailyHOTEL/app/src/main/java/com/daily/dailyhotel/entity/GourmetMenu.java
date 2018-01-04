@@ -25,6 +25,7 @@ public class GourmetMenu
     public String readyTime;
     public String expiryTime;
     public int timeInterval;
+    public String baseImageUrl;
 
     private List<DetailImageInformation> mDetailImageInformationList;
     private List<String> mMenuDetailList;

@@ -64,7 +64,6 @@ public class GourmetRemoteImpl extends BaseRemoteImpl implements GourmetInterfac
     @Override
     public Observable<GourmetDetail> getDetail(int gourmetIndex, GourmetBookDateTime gourmetBookDateTime)
     {
-
         final String API = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/{restaurantIdx}"//
             : "MTckNjMkNTQkNyQ2NSQ1MyQyNSQyMiQ0JDk0JDYxJDM1JDgkNjckMzckMTAxJA==$QkJCSMjBPVENkQ3RTU4MTjkyDOTQVyODZBQjSZFBNTMwMDI3MDQ5N0RDMDYGxRFDFg4NZEI4NTDXM2OUNGRUQ0QTY4N0MyNjVEMRgJ==$";
 

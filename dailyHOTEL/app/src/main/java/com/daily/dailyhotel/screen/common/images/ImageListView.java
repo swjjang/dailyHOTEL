@@ -215,7 +215,7 @@ public class ImageListView extends BaseDialogView<ImageListView.OnEventListener,
     }
 
     @Override
-    public void setImageList(List<DetailImageInformation> imageList, int position)
+    public void setImageList(String imageUrl, List<DetailImageInformation> imageList, int position)
     {
         if (getViewDataBinding() == null)
         {
@@ -224,7 +224,7 @@ public class ImageListView extends BaseDialogView<ImageListView.OnEventListener,
 
         if (mImageDetailListAdapter == null)
         {
-            mImageDetailListAdapter = new ImageDetailListAdapter(getContext(), 0);
+            mImageDetailListAdapter = new ImageDetailListAdapter(getContext(), 0, imageUrl);
             getViewDataBinding().listView.setAdapter(mImageDetailListAdapter);
         }
 
@@ -270,12 +270,14 @@ public class ImageListView extends BaseDialogView<ImageListView.OnEventListener,
     private class ImageDetailListAdapter extends ArrayAdapter<DetailImageInformation>
     {
         private Context mContext;
+        private String mImageUrl;
 
-        public ImageDetailListAdapter(Context context, int resourceId)
+        public ImageDetailListAdapter(Context context, int resourceId, String imageUrl)
         {
             super(context, resourceId);
 
             mContext = context;
+            mImageUrl = imageUrl;
         }
 
         @Override
@@ -358,13 +360,13 @@ public class ImageListView extends BaseDialogView<ImageListView.OnEventListener,
                             return;
                         }
 
-                        dataBinding.imageView.setImageURI(imageMap.smallUrl);
+                        dataBinding.imageView.setImageURI(mImageUrl + imageMap.smallUrl);
                     }
                 }
             };
 
             DraweeController draweeController = Fresco.newDraweeControllerBuilder()//
-                .setControllerListener(controllerListener).setUri(url).build();
+                .setControllerListener(controllerListener).setUri(mImageUrl + url).build();
 
             dataBinding.imageView.setController(draweeController);
 
