@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 
-import com.crashlytics.android.Crashlytics;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
@@ -71,7 +70,6 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -106,7 +104,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     private static final int INVALID_GOURMET_CART_VISIT_TIME = 1;
     private static final int INVALID_GOURMET_CART_QUANTITY = 2;
 
-    public static final int FULL_TIME = -1;
+    public static final String FULL_TIME = "FULL_TIME";
 
     static final int SHOWN_MENU_COUNT = 5;
 
@@ -139,8 +137,8 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     boolean mShowTrueVR;
 
     // 멀티 구매
-    private int mVisitTime;
-    private List<Integer> mOperationTimeList;
+    private String mVisitTime;
+    private List<String> mOperationTimeList;
 
     DailyDeepLink mDailyDeepLink;
     private AppResearch mAppResearch;
@@ -203,7 +201,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
         void onEventShowCoupon(Activity activity, int gourmetIndex);
 
-        void onEventVisitTimeClick(Activity activity, int visitTime);
+        void onEventVisitTimeClick(Activity activity, String visitTime);
 
         void onEventToolbarBookingClick(Activity activity, int gourmetIndex);
     }
@@ -236,6 +234,8 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         mCartLocalImpl = new CartLocalImpl(activity);
 
         setStatus(STATUS_NONE);
+
+        setVisitTime(FULL_TIME);
 
         setRefresh(false);
     }
@@ -636,7 +636,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                     case Activity.RESULT_CANCELED:
                         if (data != null && data.hasExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_VISIT_TIME) == true)
                         {
-                            getViewInterface().performVisitTimeClick(data.getIntExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_VISIT_TIME, mVisitTime));
+                            getViewInterface().performVisitTimeClick(data.getStringExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_VISIT_TIME));
                         }
                         break;
 
@@ -1379,7 +1379,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     }
 
     @Override
-    public void onVisitTimeClick(int visitTime)
+    public void onVisitTimeClick(String visitTime)
     {
         if (lock() == true)
         {
@@ -1456,7 +1456,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         mAnalytics.onScreen(getActivity(), mGourmetBookDateTime, gourmetDetail, mPriceFromList);
     }
 
-    void setVisitTime(int visitTime)
+    void setVisitTime(String visitTime)
     {
         mVisitTime = visitTime;
 
@@ -1482,127 +1482,19 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             return;
         }
 
-        // 업장 시간과 티켓 시간을 만든다
-        // https://docs.google.com/spreadsheets/d/1AoHc40ayjQP8psgWvo6dyaVBkyLcKtIT2RKzN0-SFD8/edit#gid=793396576
-        // 업장 시간
         try
         {
-            String todayDate = DailyCalendar.convertDateFormatString(commonDateTime.dailyDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd");
+            TreeSet<String> visitTimeSet = new TreeSet<>();
 
-            int currentTime;
-
-            if (todayDate.equalsIgnoreCase(gourmetBookDateTime.getVisitDateTime("yyyyMMdd")) == true)
+            for (GourmetMenu gourmetMenu : gourmetMenuList)
             {
-                Calendar calendar = DailyCalendar.getInstance();
-                calendar.setTime(DailyCalendar.convertDate(commonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT));
-
-                currentTime = Integer.parseInt(DailyCalendar.format(calendar.getTime(), "HHmm"));
-            } else
-            {
-                currentTime = -1;
-            }
-
-            TreeSet<Integer> visitTimeSet = new TreeSet<>();
-            final int ONE_HOUR_MINUTES = 60;
-
-            int size = gourmetMenuList.size();
-
-            // 업장 영역 시간 알아내기
-            for (int i = size - 1; i >= 0; i--)
-            {
-                GourmetMenu gourmetMenu = gourmetMenuList.get(i);
-
-                // 서버에서 오류로 인터벌이 없는 경우가 있어서 기본 30분으로 수정
-                if (gourmetMenu.timeInterval <= 0)
+                for (String time : gourmetMenu.getOperationTimeList())
                 {
-                    gourmetMenu.timeInterval = 30;
-                }
-
-                // 준비 시간
-                int readyTime = 0;
-
-                if (DailyTextUtils.isTextEmpty(gourmetMenu.readyTime) == false)
-                {
-                    readyTime = Integer.parseInt(gourmetMenu.readyTime.replaceAll(":", "").substring(0, 4));
-                }
-
-                // 오늘인 경우 오늘 시작 시간
-                int todayStartTime = 0;
-
-                if (currentTime > 0)
-                {
-                    int minutes = currentTime % 100 + readyTime % 100;
-
-                    if (minutes > ONE_HOUR_MINUTES)
-                    {
-                        minutes = minutes / ONE_HOUR_MINUTES * 100 + minutes % ONE_HOUR_MINUTES;
-                    }
-
-                    todayStartTime = (currentTime / 100 + readyTime / 100) * 100 + minutes;
-                }
-
-                // 입장 시작 / 종료 시간
-                int startTime = Integer.parseInt(gourmetMenu.startEatingTime.replaceAll(":", "").substring(0, 4));
-                int endTime = Integer.parseInt(gourmetMenu.endEatingTime.replaceAll(":", "").substring(0, 4));
-
-                // 마지막 입장 종료시간이 새벽 3시보다 작은경우
-                if (endTime < 300)
-                {
-                    endTime += 2400;
-                }
-
-                // 입장 시간이 업장 종료시간보다 큰 경우 메뉴에서 제거한다.
-                if (startTime > endTime)
-                {
-                    gourmetMenuList.remove(i);
-
-                    continue;
-                }
-
-                // 업장 시간 만들어 내기.
-                List<Integer> menuOperationTime = new ArrayList<>();
-
-                final int intervalTime = gourmetMenu.timeInterval / ONE_HOUR_MINUTES * 100 + gourmetMenu.timeInterval % ONE_HOUR_MINUTES;
-                int nextTime = startTime;
-
-                try
-                {
-                    while (nextTime <= endTime)
-                    {
-                        if (todayStartTime <= nextTime)
-                        {
-                            menuOperationTime.add(nextTime);
-                            visitTimeSet.add(nextTime);
-                        }
-
-                        int nextHours = nextTime / 100 + intervalTime / 100;
-                        int nextMinutes = nextTime % 100 + intervalTime % 100;
-
-                        if (nextMinutes >= ONE_HOUR_MINUTES)
-                        {
-                            nextHours += nextMinutes / ONE_HOUR_MINUTES;
-                            nextMinutes = nextMinutes % ONE_HOUR_MINUTES;
-                        }
-
-                        nextTime = nextHours * 100 + nextMinutes;
-                    }
-                } catch (OutOfMemoryError error)
-                {
-                    Crashlytics.log("name : " + mGourmetDetail.name + ", index : " + mGourmetDetail.index + ", ticket name : " + gourmetMenu.name + " , ticket index : " + gourmetMenu.index);
-                    Crashlytics.logException(error);
-                }
-
-                // 메뉴시간이 나오지 않는 것은 삭제시켜버린다.
-                if (menuOperationTime.size() == 0)
-                {
-                    gourmetMenuList.remove(i);
-                } else
-                {
-                    gourmetMenu.setOperationTimeList(menuOperationTime);
+                    visitTimeSet.add(time);
                 }
             }
 
-            Iterator<Integer> integerIterator = visitTimeSet.iterator();
+            Iterator<String> integerIterator = visitTimeSet.iterator();
 
             while (integerIterator.hasNext())
             {
@@ -1769,7 +1661,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             return;
         }
 
-        if (mVisitTime == FULL_TIME)
+        if (FULL_TIME.equalsIgnoreCase(mVisitTime) == true)
         {
             for (GourmetMenu gourmetMenu : menuList)
             {
@@ -1783,16 +1675,16 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 gourmetMenu.visible = false;
                 gourmetMenu.orderCount = 0;
 
-                List<Integer> operationTimeList = gourmetMenu.getOperationTimeList();
+                List<String> operationTimeList = gourmetMenu.getOperationTimeList();
 
                 if (operationTimeList == null)
                 {
                     continue;
                 }
 
-                for (int operationTime : gourmetMenu.getOperationTimeList())
+                for (String operationTime : gourmetMenu.getOperationTimeList())
                 {
-                    if (operationTime == mVisitTime)
+                    if (mVisitTime.equalsIgnoreCase(operationTime) == true)
                     {
                         gourmetMenu.visible = true;
                         break;
@@ -2107,7 +1999,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
      * @param gourmetCart
      * @return
      */
-    int validGourmetCart(int gourmetIndex, GourmetCart gourmetCart)
+    int validGourmetCart(int gourmetIndex, GourmetCart gourmetCart) throws Exception
     {
         if (gourmetCart == null || gourmetCart.getMenuCount() == 0)
         {
@@ -2134,7 +2026,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         }
 
         // 방문 시간 체크, 첫번째 운영 시간 보다 작으면 안됨.
-        if (gourmetCart.visitTime < mOperationTimeList.get(0))
+        if (DailyCalendar.compareDateTime(gourmetCart.visitTime, mOperationTimeList.get(0)) < 0)
         {
             return INVALID_GOURMET_CART_VISIT_TIME;
         } else

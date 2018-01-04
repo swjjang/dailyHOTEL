@@ -55,8 +55,8 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 
     int mGourmetIndex;
     String mGourmetName, mCategory, mImageUrl;
-    List<Integer> mOperationTimeList;
-    int mVisitTime;
+    List<String> mOperationTimeList;
+    String mVisitTime;
     GourmetCart mGourmetCart;
     boolean mOpenedOperationTime, mOpenedCartMenus;
 
@@ -76,7 +76,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 
         void onEventOpenOperationTimeClick(Activity activity);
 
-        void onEventOperationVisitTimeClick(Activity activity, int visitTime);
+        void onEventOperationVisitTimeClick(Activity activity, String visitTime);
 
         void onEventChangeCart(Activity activity, String action, String label);
     }
@@ -139,10 +139,15 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         }
 
         mPosition = intent.getIntExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_POSITION, 0);
-        mOperationTimeList = intent.getIntegerArrayListExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_OPERATION_TIMES);
-        mVisitTime = intent.getIntExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_VISIT_TIME, GourmetDetailPresenter.FULL_TIME);
+        mOperationTimeList = intent.getStringArrayListExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_OPERATION_TIMES);
+        mVisitTime = intent.getStringExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_VISIT_TIME);
         mCategory = intent.getStringExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_CATEGORY);
         mImageUrl = intent.getStringExtra(GourmetMenusActivity.INTENT_EXTRA_DATA_IMAGE_URL);
+
+        if (DailyTextUtils.isTextEmpty(mVisitTime) == true)
+        {
+            mVisitTime = GourmetDetailPresenter.FULL_TIME;
+        }
 
         return true;
     }
@@ -156,7 +161,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             getViewInterface().setGuideVisible(true);
         }
 
-        setToolbarTitle(mVisitTime < 2400 ? mVisitTime : mVisitTime - 2400);
+        setToolbarTitle(mVisitTime);
     }
 
     @Override
@@ -408,7 +413,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
                 @Override
                 public void accept(Boolean aBoolean) throws Exception
                 {
-                    setToolbarTitle(mVisitTime < 2400 ? mVisitTime : mVisitTime - 2400);
+                    setToolbarTitle(mVisitTime);
 
                     mOpenedOperationTime = false;
 
@@ -453,7 +458,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
     }
 
     @Override
-    public void onVisitTimeClick(int time)
+    public void onVisitTimeClick(String time)
     {
         if (lock() == true)
         {
@@ -473,7 +478,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             @Override
             public void accept(Boolean aBoolean) throws Exception
             {
-                setToolbarTitle(mVisitTime < 2400 ? mVisitTime : mVisitTime - 2400);
+                setToolbarTitle(mVisitTime);
 
                 unLockAll();
             }
@@ -496,9 +501,9 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
      * @param menuIndex
      */
     @Override
-    public void onVisitTimeClick(int time, int menuIndex)
+    public void onVisitTimeClick(String time, int menuIndex)
     {
-        if (time <= 0 || menuIndex < 0 || lock() == true)
+        if (DailyTextUtils.isTextEmpty(time) == true || menuIndex < 0 || lock() == true)
         {
             return;
         }
@@ -507,7 +512,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
 
         notifyOperationTimeChanged(menuIndex);
 
-        setToolbarTitle(mVisitTime < 2400 ? mVisitTime : mVisitTime - 2400);
+        setToolbarTitle(mVisitTime);
 
         mGourmetCart.setGourmetInformation(mGourmetIndex, mGourmetName, mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), mVisitTime);
         mGourmetCart.setGourmetSubInformation(mCategory, mImageUrl);
@@ -556,7 +561,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         // 처음 메뉴 개수가 0인경우
         if (mGourmetCart.getMenuCount() == 0)
         {
-            if (mVisitTime > 0)
+            if (GourmetDetailPresenter.FULL_TIME.equalsIgnoreCase(mVisitTime) == false)
             {
                 mGourmetCart.setGourmetInformation(mGourmetIndex, mGourmetName, mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), mVisitTime);
                 mGourmetCart.setGourmetSubInformation(mCategory, mImageUrl);
@@ -663,7 +668,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
                                     @Override
                                     public void accept(Boolean aBoolean) throws Exception
                                     {
-                                        if (mVisitTime > 0)
+                                        if (GourmetDetailPresenter.FULL_TIME.equalsIgnoreCase(mVisitTime) == false)
                                         {
                                             mGourmetCart.setGourmetInformation(mGourmetIndex, mGourmetName, mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), mVisitTime);
                                             mGourmetCart.setGourmetSubInformation(mCategory, mImageUrl);
@@ -1043,19 +1048,20 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         }
     }
 
-    private void setToolbarTitle(String text)
+    void setToolbarTitle(String visitTime)
     {
-        getViewInterface().setToolbarTitle(text);
-    }
-
-    void setToolbarTitle(int visitTime)
-    {
-        if (visitTime == GourmetDetailPresenter.FULL_TIME)
+        if (GourmetDetailPresenter.FULL_TIME.equalsIgnoreCase(visitTime) == true)
         {
             getViewInterface().setToolbarTitle(getString(R.string.label_gourmet_product_detail_operation_time_list));
         } else
         {
-            getViewInterface().setToolbarTitle(DailyTextUtils.formatIntegerTimeToStringTime(visitTime) + " " + getString(R.string.label_menu));
+            try
+            {
+                getViewInterface().setToolbarTitle(DailyCalendar.convertDateFormatString(visitTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm") + " " + getString(R.string.label_menu));
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
         }
     }
 
@@ -1094,7 +1100,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             return;
         }
 
-        List<Integer> operationTimeList = gourmetMenu.getOperationTimeList();
+        List<String> operationTimeList = gourmetMenu.getOperationTimeList();
 
         getViewInterface().showTimePickerDialog(operationTimeList, menuIndex);
     }
@@ -1248,7 +1254,7 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
         getViewInterface().setMenuIndicator(mPosition + 1, mGourmetMenuVisibleList.size());
     }
 
-    private List<GourmetMenu> getGourmetMenuList(int time)
+    private List<GourmetMenu> getGourmetMenuList(String time)
     {
         List<GourmetMenu> gourmetMenuList = new ArrayList<>();
 
@@ -1258,16 +1264,16 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             gourmetMenu.visible = true;
         }
 
-        if (time == GourmetDetailPresenter.FULL_TIME)
+        if (GourmetDetailPresenter.FULL_TIME.equalsIgnoreCase(time) == true)
         {
             gourmetMenuList.addAll(mGourmetMenuList);
         } else
         {
             for (GourmetMenu gourmetMenu : mGourmetMenuList)
             {
-                for (int operationTime : gourmetMenu.getOperationTimeList())
+                for (String operationTime : gourmetMenu.getOperationTimeList())
                 {
-                    if (operationTime == time)
+                    if (operationTime.equalsIgnoreCase(time) == true)
                     {
                         gourmetMenu.visible = true;
 

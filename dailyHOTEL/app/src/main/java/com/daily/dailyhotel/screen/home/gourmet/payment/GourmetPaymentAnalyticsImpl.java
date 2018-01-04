@@ -93,8 +93,8 @@ public class GourmetPaymentAnalyticsImpl implements GourmetPaymentPresenter.Gour
             mPaymentParamMap.put(AnalyticsManager.KeyType.CATEGORY, gourmetCart.gourmetCategory);
             mPaymentParamMap.put(AnalyticsManager.KeyType.DBENEFIT, mAnalyticsParam.benefit ? "yes" : "no");
             mPaymentParamMap.put(AnalyticsManager.KeyType.PAYMENT_TYPE, getPaymentType(paymentType));
-            mPaymentParamMap.put(AnalyticsManager.KeyType.RESERVATION_TIME, DailyTextUtils.formatIntegerTimeToStringTime(gourmetCart.visitTime));
-            mPaymentParamMap.put(AnalyticsManager.KeyType.VISIT_HOUR, DailyTextUtils.formatIntegerTimeToStringTime(gourmetCart.visitTime));
+            mPaymentParamMap.put(AnalyticsManager.KeyType.RESERVATION_TIME, DailyCalendar.convertDateFormatString(gourmetCart.visitTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm"));
+            mPaymentParamMap.put(AnalyticsManager.KeyType.VISIT_HOUR, DailyCalendar.convertDateFormatString(gourmetCart.visitTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm"));
             mPaymentParamMap.put(AnalyticsManager.KeyType.REGISTERED_SIMPLE_CARD, registerEasyCard ? "y" : "n");
             mPaymentParamMap.put(AnalyticsManager.KeyType.RATING, Integer.toString(mAnalyticsParam.ratingValue));
             mPaymentParamMap.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mAnalyticsParam.showOriginalPrice);

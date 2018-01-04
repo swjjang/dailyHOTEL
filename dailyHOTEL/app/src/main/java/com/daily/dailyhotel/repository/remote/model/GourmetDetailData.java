@@ -305,6 +305,9 @@ public class GourmetDetailData
         @JsonField(name = "reserveCondition")
         public String reserveCondition;
 
+        @JsonField(name = "bookableEatingTimes")
+        public List<String> bookableEatingTimes;
+
         public MenuData()
         {
 
@@ -368,7 +371,7 @@ public class GourmetDetailData
 
             List<DetailImageInformation> detailImageInformationList = new ArrayList<>();
 
-            if(images != null && images.size() > 0)
+            if (images != null && images.size() > 0)
             {
                 gourmetMenu.baseImageUrl = images.get(0).imageUrl.substring(0, images.get(0).imageUrl.lastIndexOf(Uri.parse(images.get(0).imageUrl).getLastPathSegment()));
             }
@@ -398,6 +401,7 @@ public class GourmetDetailData
 
             gourmetMenu.setImageList(detailImageInformationList);
             gourmetMenu.setMenuDetailList(menuDetail);
+            gourmetMenu.setOperationTimeList(bookableEatingTimes);
 
             return gourmetMenu;
         }

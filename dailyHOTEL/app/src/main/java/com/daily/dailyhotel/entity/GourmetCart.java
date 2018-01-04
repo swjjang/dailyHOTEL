@@ -19,7 +19,7 @@ import java.util.Locale;
  */
 public class GourmetCart
 {
-    public int visitTime; // 방문 시간
+    public String visitTime; // 방문 시간
     public int gourmetIndex;
     public String gourmetName;
 
@@ -44,7 +44,7 @@ public class GourmetCart
 
         try
         {
-            visitTime = jsonObject.getInt("visitTime");
+            visitTime = jsonObject.getString("visitTime");
             gourmetIndex = jsonObject.getInt("gourmetIndex");
             gourmetName = jsonObject.getString("gourmetName");
             mGourmetBookDateTime = new GourmetBookDateTime();
@@ -130,7 +130,7 @@ public class GourmetCart
      * @param gourmetName
      * @param visitDateTime 실제는 날짜 정보지만 ISO-8601 타입으로 받음
      */
-    public void setGourmetInformation(int gourmetIndex, String gourmetName, String visitDateTime, int visitTime)
+    public void setGourmetInformation(int gourmetIndex, String gourmetName, String visitDateTime, String visitTime)
     {
         this.gourmetIndex = gourmetIndex;
         this.gourmetName = gourmetName;
@@ -151,7 +151,7 @@ public class GourmetCart
 
     public void clear()
     {
-        visitTime = 0;
+        visitTime = null;
         gourmetIndex = 0;
         gourmetName = null;
         mGourmetBookDateTime = null;
@@ -238,31 +238,6 @@ public class GourmetCart
     public boolean equalsDay(String visitDay) throws Exception
     {
         return mGourmetBookDateTime != null ? DailyCalendar.compareDateDay(mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), visitDay) == 0 : false;
-    }
-
-    public String getVisitDateTime()
-    {
-        try
-        {
-            if (visitTime < 2400)
-            {
-                return String.format(Locale.KOREA, "%sT%s:00+09:00", mGourmetBookDateTime.getVisitDateTime("yyyy-MM-dd")//
-                    , DailyTextUtils.formatIntegerTimeToStringTime(visitTime));
-            } else
-            {
-                Calendar calendar = DailyCalendar.getInstance();
-                calendar.setTime(DailyCalendar.convertDate(mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), DailyCalendar.ISO_8601_FORMAT));
-                calendar.add(Calendar.DAY_OF_MONTH, 1);
-
-                return String.format(Locale.KOREA, "%sT%s:00+09:00", DailyCalendar.format(calendar.getTime(), "yyyy-MM-dd")//
-                    , DailyTextUtils.formatIntegerTimeToStringTime(visitTime - 2400));
-            }
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
-
-        return null;
     }
 
     public GourmetBookDateTime getGourmetBookDateTime()

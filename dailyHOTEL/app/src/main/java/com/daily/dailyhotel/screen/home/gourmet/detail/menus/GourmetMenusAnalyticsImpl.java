@@ -91,14 +91,14 @@ public class GourmetMenusAnalyticsImpl implements GourmetMenusPresenter.GourmetM
     }
 
     @Override
-    public void onEventOperationVisitTimeClick(Activity activity, int visitTime)
+    public void onEventOperationVisitTimeClick(Activity activity, String visitTime)
     {
         if (activity == null)
         {
             return;
         }
 
-        String label = visitTime == GourmetDetailPresenter.FULL_TIME ? AnalyticsManager.Label.FULL_TIME : AnalyticsManager.Label.SELECT_TIME;
+        String label = GourmetDetailPresenter.FULL_TIME.equalsIgnoreCase(visitTime) ? AnalyticsManager.Label.FULL_TIME : AnalyticsManager.Label.SELECT_TIME;
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.GOURMET_BOOKINGS,//
             AnalyticsManager.Action.AVAILABLE_TIME_EXTRA, label, null);
