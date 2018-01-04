@@ -142,6 +142,12 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         void onEventWishClick(Activity activity, boolean wish);
 
+        void onEventMapClick(Activity activity);
+
+        void onEventFilterClick(Activity activity);
+
+        void onEventCalendarClick(Activity activity);
+
         StayOutboundDetailAnalyticsParam getDetailAnalyticsParam(StayOutbound stayOutbound, String grade, int rankingPosition, int listSize);
     }
 
@@ -722,6 +728,11 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 , startDateTime, endDateTime, NIGHTS_OF_MAXCOUNT, AnalyticsManager.ValueType.STAY, true, 0, true);
 
             startActivityForResult(intent, StayOutboundListActivity.REQUEST_CODE_CALENDAR);
+
+            if(mViewState == ViewState.LIST)
+            {
+                mAnalytics.onEventCalendarClick(getActivity());
+            }
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -765,6 +776,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             {
                 Intent intent = StayOutboundFilterActivity.newInstance(getActivity(), mStayOutboundFilters, true, true);
                 startActivityForResult(intent, StayOutboundListActivity.REQUEST_CODE_FILTER);
+
+                mAnalytics.onEventFilterClick(getActivity());
                 break;
             }
 
@@ -797,6 +810,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 getViewInterface().showMapLayout(getActivity().getSupportFragmentManager());
 
                 getViewInterface().setViewTypeOptionImage(ViewState.MAP);
+
+                mAnalytics.onEventMapClick(getActivity());
                 break;
             }
 

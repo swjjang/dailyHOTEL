@@ -31,6 +31,9 @@ public class StayOutboundFilterPresenter extends BaseExceptionPresenter<StayOutb
 
     public interface StayOutboundFilterAnalyticsInterface extends BaseAnalyticsInterface
     {
+        void onSortClick(Activity activity, StayOutboundFilters.SortType sortType);
+
+        void onRatingClick(Activity activity, int rating);
     }
 
     public StayOutboundFilterPresenter(@NonNull StayOutboundFilterActivity activity)
@@ -202,6 +205,11 @@ public class StayOutboundFilterPresenter extends BaseExceptionPresenter<StayOutb
             return;
         }
 
+        if (mPrevSortType != null && mPrevSortType != sortType)
+        {
+            mAnalytics.onSortClick(getActivity(), sortType);
+        }
+
         mPrevSortType = mStayOutboundFilters.sortType;
         mStayOutboundFilters.sortType = sortType;
 
@@ -218,6 +226,8 @@ public class StayOutboundFilterPresenter extends BaseExceptionPresenter<StayOutb
     public void onRatingClick(int rating)
     {
         mStayOutboundFilters.rating = rating;
+
+        mAnalytics.onRatingClick(getActivity(), rating);
     }
 
     @Override
