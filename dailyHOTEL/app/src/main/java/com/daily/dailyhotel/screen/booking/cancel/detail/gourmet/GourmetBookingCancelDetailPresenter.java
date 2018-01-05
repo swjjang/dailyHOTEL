@@ -652,7 +652,7 @@ public class GourmetBookingCancelDetailPresenter //
                 , DailyCalendar.convertDateFormatString(mGourmetBookingDetail.canceledAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd") //
                 , restaurantInfo.address);
 
-            KakaoLinkManager.newInstance(getActivity()).shareBookingCancelGourmet(message, mImageUrl);
+            KakaoLinkManager.newInstance(getActivity()).shareBookingCancelGourmet(message, restaurantInfo.name, restaurantInfo.address, mImageUrl);
 
             mAnalytics.onEventShareKakaoClick(getActivity());
         } catch (Exception e)

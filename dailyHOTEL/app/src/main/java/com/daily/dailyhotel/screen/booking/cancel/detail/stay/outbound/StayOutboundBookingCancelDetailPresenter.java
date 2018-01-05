@@ -540,7 +540,8 @@ public class StayOutboundBookingCancelDetailPresenter //
                 , DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.cancelDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd") //
                 , mStayOutboundBookingDetail.address);
 
-            KakaoLinkManager.newInstance(getActivity()).shareBookingCancelStay(message, mImageUrl);
+            KakaoLinkManager.newInstance(getActivity()).shareBookingCancelStay(message //
+                , mStayOutboundBookingDetail.name, mStayOutboundBookingDetail.address, mImageUrl);
 
             mAnalytics.onEventShareKakaoClick(getActivity());
         } catch (Exception e)

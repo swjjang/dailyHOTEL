@@ -593,7 +593,8 @@ public class StayBookingCancelDetailPresenter //
                 , DailyCalendar.convertDateFormatString(mStayBookingDetail.cancelDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd") //
                 , mStayBookingDetail.stayAddress);
 
-            KakaoLinkManager.newInstance(getActivity()).shareBookingCancelStay(message, mImageUrl);
+            KakaoLinkManager.newInstance(getActivity()).shareBookingCancelStay(message //
+                , mStayBookingDetail.stayName, mStayBookingDetail.stayAddress, mImageUrl);
 
             mAnalytics.onEventShareKakaoClick(getActivity());
 
