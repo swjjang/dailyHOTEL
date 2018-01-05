@@ -100,7 +100,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     DailyLocationExFactory mDailyLocationExFactory;
 
     // 리스트 요청시에 다음이 있는지에 대한 인자들
-    String mCacheKey, mCacheLocation;
+    String mCacheKey, mCacheLocation, mCustomerSessionId;
     boolean mMoreResultsAvailable, mMoreEnabled;
 
     private ViewState mViewState = ViewState.LIST;
@@ -663,7 +663,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime()//
             , mStayOutboundRemoteImpl.getList(mStayBookDateTime, mSuggest.id, mSuggest.categoryKey//
-                , mPeople, mStayOutboundFilters, mCacheKey, mCacheLocation)//
+                , mPeople, mStayOutboundFilters, mCacheKey, mCacheLocation, mCustomerSessionId)//
             , (commonDateTime, stayOutbounds) ->
             {
                 setCommonDateTime(commonDateTime);
@@ -952,7 +952,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             mMoreEnabled = false;
 
             addCompositeDisposable(mStayOutboundRemoteImpl.getList(mStayBookDateTime, mSuggest.id, mSuggest.categoryKey//
-                , mPeople, mStayOutboundFilters, mCacheKey, mCacheLocation).subscribe(stayOutbounds ->
+                , mPeople, mStayOutboundFilters, mCacheKey, mCacheLocation, mCustomerSessionId).subscribe(stayOutbounds ->
             {
                 onStayOutbounds(stayOutbounds);
 
@@ -1337,7 +1337,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         final boolean isAdded;
 
-        if (DailyTextUtils.isTextEmpty(mCacheKey, mCacheLocation) == true)
+        if (DailyTextUtils.isTextEmpty(mCacheKey, mCacheLocation, mCustomerSessionId) == true)
         {
             isAdded = false;
 
@@ -1383,7 +1383,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                     objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, stayOutbound));
                 }
 
-                if (DailyTextUtils.isTextEmpty(stayOutbounds.cacheKey, stayOutbounds.cacheLocation) == true)
+                if (DailyTextUtils.isTextEmpty(stayOutbounds.cacheKey, stayOutbounds.cacheLocation, stayOutbounds.customerSessionId) == true)
                 {
                     stayOutbounds.moreResultsAvailable = false;
                 }
@@ -1419,6 +1419,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
                 mCacheKey = stayOutbounds.cacheKey;
                 mCacheLocation = stayOutbounds.cacheLocation;
+                mCustomerSessionId = stayOutbounds.customerSessionId;
                 mMoreEnabled = mMoreResultsAvailable = stayOutbounds.moreResultsAvailable;
 
                 return objectItemList;
@@ -1513,6 +1514,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     {
         mCacheKey = null;
         mCacheLocation = null;
+        mCustomerSessionId = null;
         mMoreResultsAvailable = false;
         mMoreEnabled = false;
 

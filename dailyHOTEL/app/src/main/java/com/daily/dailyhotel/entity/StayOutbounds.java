@@ -8,6 +8,7 @@ public class StayOutbounds extends Configurations
 
     public String cacheKey;
     public String cacheLocation;
+    public String customerSessionId;
     public boolean moreResultsAvailable;
 
     public StayOutbounds()
