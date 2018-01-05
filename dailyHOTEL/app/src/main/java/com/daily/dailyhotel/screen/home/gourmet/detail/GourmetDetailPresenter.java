@@ -286,6 +286,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
                         String date = externalDeepLink.getDate();
                         int datePlus = externalDeepLink.getDatePlus();
+                        String week = externalDeepLink.getWeek();
                         mShowCalendar = externalDeepLink.isShowCalendar();
                         mShowTrueVR = externalDeepLink.isShowVR();
 
@@ -295,6 +296,17 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                             {
                                 Date visitDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
                                 setGourmetBookDateTime(DailyCalendar.format(visitDate, DailyCalendar.ISO_8601_FORMAT));
+                            } else
+                            {
+                                setGourmetBookDateTime(commonDateTime.dailyDateTime);
+                            }
+                        } else if (DailyTextUtils.isTextEmpty(week) == false)
+                        {
+                            String searchDateTime = DailyCalendar.searchClosedDayOfWeek(commonDateTime.currentDateTime, week.toCharArray());
+
+                            if (DailyTextUtils.isTextEmpty(searchDateTime) == false)
+                            {
+                                setGourmetBookDateTime(searchDateTime);
                             } else
                             {
                                 setGourmetBookDateTime(commonDateTime.dailyDateTime);
