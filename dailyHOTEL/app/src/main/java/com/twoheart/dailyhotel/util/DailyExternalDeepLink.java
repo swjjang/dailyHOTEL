@@ -133,11 +133,13 @@ public class DailyExternalDeepLink extends DailyDeepLink
 
     private static final String PARAM_V19_CATEGORY_KEY = "ck"; // 해외 호텔 검색에서 사용되는 키값
 
+    private static final String PARAM_V22_WEEK = "week";
+
 
     // Version
 
     private static final int MINIMUM_VERSION_CODE = 3;
-    private static final int MAXIMUM_VERSION_CODE = 21;
+    private static final int MAXIMUM_VERSION_CODE = 22;
 
     private int mVersionCode;
 
@@ -243,6 +245,15 @@ public class DailyExternalDeepLink extends DailyDeepLink
         }
 
         return value;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    // Version 22
+    ///////////////////////////////////////////////////////////////////////////////////
+
+    public String getWeek()
+    {
+        return getStringValue(22, PARAM_V22_WEEK);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////

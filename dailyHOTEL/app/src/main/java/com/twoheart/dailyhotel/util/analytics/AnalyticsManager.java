@@ -997,6 +997,8 @@ public class AnalyticsManager
         public static final String GOURMET_MENU_FLICKING = "gourmet_menu_flicking";
 
         public static final String STAY_SORT = "stay_sort";
+        public static final String SORT = "sort";
+        public static final String FILTER = "filter";
         public static final String STAY_PERSON = "stay_person";
         public static final String STAY_BEDTYPE = "stay_bedtype";
         public static final String STAY_AMENITIES = "stay_amenities";
@@ -1476,6 +1478,8 @@ public class AnalyticsManager
         public static final String CLICKED = "clicked";
         public static final String KEEP_EXISTED = "keep_existed";
         public static final String ADD_NEW = "add_new";
+
+        public static final String OB = "ob";
     }
 
     public static class UserType

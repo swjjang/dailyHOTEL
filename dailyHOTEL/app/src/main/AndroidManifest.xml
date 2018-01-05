@@ -1013,7 +1013,7 @@
 
         <provider
             android:name="com.daily.dailyhotel.storage.database.DailyContentProvider"
-            android:authorities="com.twoheart.dailyhotel.DailyContentProvider"
+            android:authorities=".DailyContentProvider"
             android:enabled="true"
             android:exported="false">
         </provider>

@@ -188,7 +188,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
 
         viewDataBinding.progressBar.getIndeterminateDrawable().setColorFilter(getColor(R.color.location_progressbar_cc8c8c8), PorterDuff.Mode.SRC_IN);
 
-        viewDataBinding.mapProgressBar.getIndeterminateDrawable().setColorFilter(getColor(R.color.dh_theme_color),android.graphics.PorterDuff.Mode.SRC_IN);
+        viewDataBinding.mapProgressBar.getIndeterminateDrawable().setColorFilter(getColor(R.color.dh_theme_color), android.graphics.PorterDuff.Mode.SRC_IN);
     }
 
     @Override
@@ -398,7 +398,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
 
         setRefreshing(false);
 
-        if (mStayOutboundListAdapter == null || objectItemList == null || objectItemList.size() == 0)
+        if (mStayOutboundListAdapter == null)
         {
             return;
         }

@@ -178,7 +178,7 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
 
         try
         {
-            jsonObject.put("arrivalDateTime", gourmetCart.getVisitDateTime());
+            jsonObject.put("arrivalDateTime", gourmetCart.visitTime);
 
             JSONArray menuJsonArray = new JSONArray();
             for (GourmetCartMenu gourmetCartMenu : gourmetCart.getMenuList())

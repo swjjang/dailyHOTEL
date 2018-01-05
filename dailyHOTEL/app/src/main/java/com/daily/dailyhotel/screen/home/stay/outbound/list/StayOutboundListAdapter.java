@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
+import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Vibrator;
 import android.support.v7.widget.RecyclerView;
@@ -164,6 +165,7 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
             case ObjectItem.TYPE_LOADING_VIEW:
             {
                 LayoutListLoadingDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_list_loading_data, parent, false);
+                dataBinding.progressBar.getIndeterminateDrawable().setColorFilter(mContext.getResources().getColor(R.color.probressbar_default), PorterDuff.Mode.SRC_IN);
 
                 return new BaseDataBindingViewHolder(dataBinding);
             }

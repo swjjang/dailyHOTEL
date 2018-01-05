@@ -114,7 +114,7 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
             return true;
         }
 
-        setGourmetBookDateTime(mGourmetCart.getVisitDateTime());
+        setGourmetBookDateTime(mGourmetCart.visitTime);
 
         mAggregationId = intent.getStringExtra(GourmetThankYouActivity.INTENT_EXTRA_DATA_AGGREGATION_ID);
 

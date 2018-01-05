@@ -873,7 +873,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
                     try
                     {
-                        Intent intent = SelectGourmetCouponDialogActivity.newInstance(getActivity(), DailyCalendar.convertDateFormatString(mGourmetCart.getVisitDateTime(), DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"), mGourmetCart.gourmetIndex, mGourmetCart.gourmetName, menuIndexes, menuCounts);
+                        Intent intent = SelectGourmetCouponDialogActivity.newInstance(getActivity(), DailyCalendar.convertDateFormatString(mGourmetCart.visitTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"), mGourmetCart.gourmetIndex, mGourmetCart.gourmetName, menuIndexes, menuCounts);
                         startActivityForResult(intent, GourmetPaymentActivity.REQUEST_CODE_COUPON_LIST);
                     } catch (Exception e)
                     {
@@ -1468,7 +1468,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             jsonObject.put("bookingItems", bookingItemsJSONArray);
 
             JSONObject bookingGuestJSONObject = new JSONObject();
-            bookingGuestJSONObject.put("arrivalDateTime", gourmetCart.getVisitDateTime());
+            bookingGuestJSONObject.put("arrivalDateTime", gourmetCart.visitTime);
             bookingGuestJSONObject.put("email", guest.email);
             bookingGuestJSONObject.put("name", guest.name);
             bookingGuestJSONObject.put("phone", guest.phone);
@@ -1525,8 +1525,8 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
         try
         {
-            String visitDay = DailyCalendar.convertDateFormatString(gourmetCart.getVisitDateTime(), DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT);
-            String visitDateTime = visitDay + " " + DailyTextUtils.formatIntegerTimeToStringTime(mGourmetCart.visitTime < 2400 ? mGourmetCart.visitTime : mGourmetCart.visitTime - 2400);
+            String visitDay = DailyCalendar.convertDateFormatString(gourmetCart.visitTime, DailyCalendar.ISO_8601_FORMAT, DATE_FORMAT);
+            String visitDateTime = visitDay + DailyCalendar.convertDateFormatString(gourmetCart.visitTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm");
 
             SpannableString spannableString = new SpannableString(visitDateTime);
             spannableString.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(getActivity()).getMediumTypeface()),//

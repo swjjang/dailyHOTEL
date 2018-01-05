@@ -296,6 +296,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
                         String date = externalDeepLink.getDate();
                         int datePlus = externalDeepLink.getDatePlus();
+                        String week = externalDeepLink.getWeek();
                         mShowCalendar = externalDeepLink.isShowCalendar();
                         mShowTrueVR = externalDeepLink.isShowVR();
 
@@ -308,14 +309,25 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                                 setStayBookDateTime(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT), 0, nights);
                             } else
                             {
-                                setStayBookDateTime(commonDateTime.currentDateTime, 0, 1);
+                                setStayBookDateTime(commonDateTime.dailyDateTime, 0, 1);
+                            }
+                        } else if (DailyTextUtils.isTextEmpty(week) == false)
+                        {
+                            String searchDateTime = DailyCalendar.searchClosedDayOfWeek(commonDateTime.currentDateTime, week.toCharArray());
+
+                            if (DailyTextUtils.isTextEmpty(searchDateTime) == false)
+                            {
+                                setStayBookDateTime(searchDateTime, 0, nights);
+                            } else
+                            {
+                                setStayBookDateTime(commonDateTime.dailyDateTime, 0, 1);
                             }
                         } else if (datePlus >= 0)
                         {
-                            setStayBookDateTime(commonDateTime.currentDateTime, datePlus, nights);
+                            setStayBookDateTime(commonDateTime.dailyDateTime, datePlus, nights);
                         } else
                         {
-                            setStayBookDateTime(commonDateTime.currentDateTime, 0, 1);
+                            setStayBookDateTime(commonDateTime.dailyDateTime, 0, 1);
                         }
 
                         mDailyDeepLink.clear();
@@ -865,7 +877,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 , mStayDetail.name//
                 , mStayDetail.address//
                 , mStayDetail.index//
-                , mStayDetail.getImageInformationList().get(0).getImageMap().bigUrl //
+                , mStayDetail.getImageInformationList() == null || mStayDetail.getImageInformationList().size() == 0 ? null : mStayDetail.getImageInformationList().get(0).getImageMap().bigUrl //
                 , mStayBookDateTime);
 
             mAnalytics.onEventShareKakaoClick(getActivity(), DailyHotel.isLogin()//

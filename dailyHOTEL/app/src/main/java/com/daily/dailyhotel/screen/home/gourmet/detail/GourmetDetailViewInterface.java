@@ -14,7 +14,7 @@ import io.reactivex.Observable;
 public interface GourmetDetailViewInterface extends BaseDialogViewInterface
 {
     void setGourmetDetail(GourmetBookDateTime gourmetBookDateTime, GourmetDetail gourmetDetail//
-        , List<Integer> operationTimeList, int trueReviewCount, int shownMenuCount);
+        , List<String> operationTimeList, int trueReviewCount, int shownMenuCount);
 
     Observable<Boolean> getSharedElementTransition(int gradientType);
 
@@ -58,5 +58,5 @@ public interface GourmetDetailViewInterface extends BaseDialogViewInterface
 
     void setToolbarCartMenusCount(int count);
 
-    void performVisitTimeClick(int time);
+    void performVisitTimeClick(String time);
 }

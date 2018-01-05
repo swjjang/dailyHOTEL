@@ -6,6 +6,7 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
@@ -502,6 +503,7 @@ public class TrueReviewView extends BaseDialogView<TrueReviewView.OnEventListene
                 case ObjectItem.TYPE_LOADING_VIEW:
                 {
                     LayoutTrueReviewLoadingDataBinding viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_true_review_loading_data, parent, false);
+                    viewDataBinding.progressBar.getIndeterminateDrawable().setColorFilter(mContext.getResources().getColor(R.color.probressbar_default), PorterDuff.Mode.SRC_IN);
 
                     return new ViewHolder(viewDataBinding);
                 }

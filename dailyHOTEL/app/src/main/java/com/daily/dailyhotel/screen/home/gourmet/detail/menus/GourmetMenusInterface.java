@@ -18,17 +18,17 @@ public interface GourmetMenusInterface extends BaseDialogViewInterface
 
     Observable<Boolean> hideGuideAnimation();
 
-    void setOperationTimes(List<Integer> operationTimeList);
+    void setOperationTimes(List<String> operationTimeList);
 
-    void setVisitTime(int time);
+    void setVisitTime(String time);
 
-    Observable<Boolean> openOperationTimes(int selectedTimes);
+    Observable<Boolean> openOperationTimes(String selectedTimes);
 
     Observable<Boolean> closeOperationTimes();
 
     void setMenuOrderCount(int menuIndex, int menuOrderCount, int minimumOrderQuantity, int maximumOrderQuantity, int saleOrderQuantity);
 
-    void showTimePickerDialog(List<Integer> operationTimeList, int menuIndex);
+    void showTimePickerDialog(List<String> operationTimeList, int menuIndex);
 
     void setSummeryCart(String text, int totalCount, int totalPrice);
 
