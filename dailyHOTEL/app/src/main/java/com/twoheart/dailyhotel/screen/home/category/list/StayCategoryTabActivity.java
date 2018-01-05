@@ -178,10 +178,16 @@ public class StayCategoryTabActivity extends PlaceMainActivity
     {
         super.onDestroy();
 
-        String label = StayCategoryTabActivity.this.getResources().getString(mDailyCategoryType.getCodeResId());
+        try
+        {
+            String label = StayCategoryTabActivity.this.getResources().getString(mDailyCategoryType.getCodeResId());
 
-        AnalyticsManager.getInstance(StayCategoryTabActivity.this).recordEvent( //
-            AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.STAY_BACK_BUTTON_CLICK, label, null);
+            AnalyticsManager.getInstance(StayCategoryTabActivity.this).recordEvent( //
+                AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.STAY_BACK_BUTTON_CLICK, label, null);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
     }
 
     @Override
