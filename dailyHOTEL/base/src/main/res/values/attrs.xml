@@ -14,5 +14,6 @@
         <attr name="drawableCompatTop" format="reference"/>
         <attr name="drawableCompatRight" format="reference"/>
         <attr name="drawableCompatBottom" format="reference"/>
+        <attr name="maxHeight" format="dimension"/>
     </declare-styleable>
 </resources>

@@ -1,9 +1,13 @@
 package com.daily.base.widget;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+
+import com.daily.base.R;
 
 public class DailyNestedScrollView extends android.support.v4.widget.NestedScrollView
 {
@@ -13,6 +17,7 @@ public class DailyNestedScrollView extends android.support.v4.widget.NestedScrol
     private float mDistanceY;
     private float mLastX;
     private float mLastY;
+    private int maxHeight;
 
     public DailyNestedScrollView(Context context)
     {
@@ -22,11 +27,36 @@ public class DailyNestedScrollView extends android.support.v4.widget.NestedScrol
     public DailyNestedScrollView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
+
+        setMaxHeight(context, attrs);
     }
 
-    public DailyNestedScrollView(Context context, AttributeSet attrs, int defStyle)
+    public DailyNestedScrollView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr)
     {
-        super(context, attrs, defStyle);
+        super(context, attrs, defStyleAttr);
+
+        setMaxHeight(context, attrs);
+    }
+
+    private void setMaxHeight(Context context, AttributeSet attrs)
+    {
+        if (context == null || attrs == null)
+        {
+            return;
+        }
+
+        maxHeight = context.obtainStyledAttributes(attrs, R.styleable.app).getDimensionPixelSize(R.styleable.app_maxHeight, -1);
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
+    {
+        if (maxHeight > 0)
+        {
+            heightMeasureSpec = MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.AT_MOST);
+        }
+
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
     @Override

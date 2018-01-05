@@ -631,9 +631,9 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                 GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
                 layoutParams.width = ScreenUtils.dpToPx(getContext(), 56);
                 layoutParams.height = ScreenUtils.dpToPx(getContext(), 30);
+                layoutParams.topMargin = ScreenUtils.dpToPx(getContext(), 10);
                 layoutParams.leftMargin = ScreenUtils.dpToPx(getContext(), 5);
                 layoutParams.rightMargin = ScreenUtils.dpToPx(getContext(), 5);
-                layoutParams.bottomMargin = ScreenUtils.dpToPx(getContext(), 10);
                 layoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f);
 
                 dataBinding.timeGridLayout.addView(dailyTextView, layoutParams);
@@ -652,13 +652,15 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         {
             DailyTextView dailyTextView = new DailyTextView(getContext());
             dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
+            dailyTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c323232_cffffff));
+            dailyTextView.setGravity(Gravity.CENTER);
 
             GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
             layoutParams.width = ScreenUtils.dpToPx(getContext(), 56);
-            layoutParams.height = 1;
+            layoutParams.height = ScreenUtils.dpToPx(getContext(), 30);
+            layoutParams.topMargin = ScreenUtils.dpToPx(getContext(), 10);
             layoutParams.leftMargin = ScreenUtils.dpToPx(getContext(), 5);
             layoutParams.rightMargin = ScreenUtils.dpToPx(getContext(), 5);
-            layoutParams.bottomMargin = ScreenUtils.dpToPx(getContext(), 10);
             layoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f);
 
             dataBinding.timeGridLayout.addView(dailyTextView, layoutParams);
