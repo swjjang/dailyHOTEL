@@ -1453,6 +1453,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             bookingGuestJSONObject.put("numberOfGuest", visitPersons);
 
             jsonObject.put("bookingGuest", bookingGuestJSONObject);
+            jsonObject.put("discountTotal", totalPrice);
 
             if (DailyTextUtils.isTextEmpty(billingKey) == false)
             {

@@ -1459,6 +1459,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             jsonObject.put("checkInDate", stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
             jsonObject.put("days", stayBookDateTime.getNights());
             jsonObject.put("roomIdx", roomIndex);
+            jsonObject.put("discountTotal", totalPrice);
 
             JSONObject bookingGuestJSONObject = new JSONObject();
             bookingGuestJSONObject.put("arrivalDateTime", stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT));
