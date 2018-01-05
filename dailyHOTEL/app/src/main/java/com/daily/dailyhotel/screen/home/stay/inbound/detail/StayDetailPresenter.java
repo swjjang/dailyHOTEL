@@ -70,7 +70,6 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -310,30 +309,25 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                                 setStayBookDateTime(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT), 0, nights);
                             } else
                             {
-                                setStayBookDateTime(commonDateTime.currentDateTime, 0, 1);
+                                setStayBookDateTime(commonDateTime.dailyDateTime, 0, 1);
+                            }
+                        } else if (DailyTextUtils.isTextEmpty(week) == false)
+                        {
+                            String searchDateTime = DailyCalendar.searchClosedDayOfWeek(commonDateTime.currentDateTime, week.toCharArray());
+
+                            if (DailyTextUtils.isTextEmpty(searchDateTime) == false)
+                            {
+                                setStayBookDateTime(searchDateTime, 0, nights);
+                            } else
+                            {
+                                setStayBookDateTime(commonDateTime.dailyDateTime, 0, 1);
                             }
                         } else if (datePlus >= 0)
                         {
-                            setStayBookDateTime(commonDateTime.currentDateTime, datePlus, nights);
-                        } else if(DailyTextUtils.isTextEmpty(week) == false)
-                        {
-                            Calendar calendar = DailyCalendar.getInstance();
-                            calendar.setTime(DailyCalendar.convertDate(commonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT));
-
-                            int currentWeek = calendar.get(Calendar.WEEK_OF_MONTH);
-
-                            char[] weeks = week.toCharArray();
-
-                            for(char dayOfWeek : weeks)
-                            {
-                                if(currentWeek <= dayOfWeek)
-                                {
-                                    break;
-                                }
-                            }
+                            setStayBookDateTime(commonDateTime.dailyDateTime, datePlus, nights);
                         } else
                         {
-                            setStayBookDateTime(commonDateTime.currentDateTime, 0, 1);
+                            setStayBookDateTime(commonDateTime.dailyDateTime, 0, 1);
                         }
 
                         mDailyDeepLink.clear();
