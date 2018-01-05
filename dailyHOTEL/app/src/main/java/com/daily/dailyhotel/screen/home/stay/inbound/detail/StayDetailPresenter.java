@@ -70,6 +70,7 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -296,6 +297,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
                         String date = externalDeepLink.getDate();
                         int datePlus = externalDeepLink.getDatePlus();
+                        String week = externalDeepLink.getWeek();
                         mShowCalendar = externalDeepLink.isShowCalendar();
                         mShowTrueVR = externalDeepLink.isShowVR();
 
@@ -313,6 +315,22 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                         } else if (datePlus >= 0)
                         {
                             setStayBookDateTime(commonDateTime.currentDateTime, datePlus, nights);
+                        } else if(DailyTextUtils.isTextEmpty(week) == false)
+                        {
+                            Calendar calendar = DailyCalendar.getInstance();
+                            calendar.setTime(DailyCalendar.convertDate(commonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT));
+
+                            int currentWeek = calendar.get(Calendar.WEEK_OF_MONTH);
+
+                            char[] weeks = week.toCharArray();
+
+                            for(char dayOfWeek : weeks)
+                            {
+                                if(currentWeek <= dayOfWeek)
+                                {
+                                    break;
+                                }
+                            }
                         } else
                         {
                             setStayBookDateTime(commonDateTime.currentDateTime, 0, 1);
