@@ -428,7 +428,7 @@ public class GourmetPreviewActivity extends BaseActivity
                     , gourmetDetailParams.name//
                     , gourmetDetailParams.address//
                     , mPlaceDetail.index//
-                    , gourmetDetailParams.getImageList().get(0).getImageUrl()//
+                    , gourmetDetailParams.getImageList() == null || gourmetDetailParams.getImageList().size() == 0 ? null : gourmetDetailParams.getImageList().get(0).getImageUrl()//
                     , mPlaceBookingDay);
 
                 GourmetPreviewActivity.this.finish();

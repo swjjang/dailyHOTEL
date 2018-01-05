@@ -896,7 +896,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
             KakaoLinkManager.newInstance(getActivity()).shareGourmet(name, mGourmetDetail.name, mGourmetDetail.address//
                 , mGourmetDetail.index //
-                , mGourmetDetail.getImageInformationList().get(0).getImageMap().bigUrl //
+                , mGourmetDetail.getImageInformationList() == null || mGourmetDetail.getImageInformationList().size() == 0 ? null : mGourmetDetail.getImageInformationList().get(0).getImageMap().bigUrl //
                 , mGourmetBookDateTime);
 
             mAnalytics.onEventShareKakaoClick(getActivity(), DailyHotel.isLogin()//

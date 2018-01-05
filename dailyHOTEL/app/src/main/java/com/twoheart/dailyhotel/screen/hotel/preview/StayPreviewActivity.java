@@ -483,7 +483,7 @@ public class StayPreviewActivity extends BaseActivity
                     , stayDetailParams.name//
                     , stayDetailParams.address//
                     , stayDetail.index//
-                    , stayDetailParams.getImageList().get(0).getImageUrl()//
+                    , stayDetailParams.getImageList() == null || stayDetailParams.getImageList().size() == 0 ? null : stayDetailParams.getImageList().get(0).getImageUrl()//
                     , mPlaceBookingDay);
 
                 StayPreviewActivity.this.finish();

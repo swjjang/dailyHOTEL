@@ -871,7 +871,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 , mStayDetail.name//
                 , mStayDetail.address//
                 , mStayDetail.index//
-                , mStayDetail.getImageInformationList().get(0).getImageMap().bigUrl //
+                , mStayDetail.getImageInformationList() == null || mStayDetail.getImageInformationList().size() == 0 ? null : mStayDetail.getImageInformationList().get(0).getImageMap().bigUrl //
                 , mStayBookDateTime);
 
             mAnalytics.onEventShareKakaoClick(getActivity(), DailyHotel.isLogin()//
