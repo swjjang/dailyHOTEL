@@ -1999,6 +1999,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 msgCode = jsonObject.getInt("msgCode");
 
                 // 다날 핸드폰 화면에서 취소 버튼 누르는 경우
+                // 사용자가 일반 결제 등의 화면에서 back key를 눌러 나타나는 취소 팝업에서 명시적으로 취소 했을 경우
                 if (msgCode == -104)
                 {
                     message = getString(R.string.act_toast_payment_canceled);
