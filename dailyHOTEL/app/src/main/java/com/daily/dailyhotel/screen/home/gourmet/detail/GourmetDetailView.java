@@ -1506,17 +1506,22 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                 @Override
                 public boolean onPreDraw()
                 {
-                    mMoreMenuLayout.getViewTreeObserver().removeOnPreDrawListener(this);
-                    mMoreMenuLayout.setTag(mMoreMenuLayout.getHeight());
-
-                    LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mMoreMenuLayout.getLayoutParams();
-
-                    if (layoutParams != null)
+                    try
                     {
-                        layoutParams.height = 0;
-                    }
+                        mMoreMenuLayout.getViewTreeObserver().removeOnPreDrawListener(this);
+                        mMoreMenuLayout.setTag(mMoreMenuLayout.getHeight());
 
-                    mMoreMenuLayout.requestLayout();
+                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mMoreMenuLayout.getLayoutParams();
+
+                        if (layoutParams != null)
+                        {
+                            layoutParams.height = 0;
+                            mMoreMenuLayout.setLayoutParams(layoutParams);
+                        }
+                    } catch (Exception e)
+                    {
+                        ExLog.e(e.toString());
+                    }
 
                     return false;
                 }
