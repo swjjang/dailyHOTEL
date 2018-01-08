@@ -36,6 +36,7 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyRadioButton;
 import com.daily.base.widget.DailyTextView;
@@ -67,6 +68,7 @@ import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailMenuDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailMoreMenuDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetail05DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailInformationDataBinding;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.widget.AlphaTransition;
 
@@ -132,7 +134,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
         void onHideWishTooltipClick();
 
-        void onVisitTimeClick(int visitTime);
+        void onVisitTimeClick(String visitTime);
 
         void onBookingClick();
     }
@@ -230,7 +232,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
     @Override
     public void setGourmetDetail(GourmetBookDateTime gourmetBookDateTime, GourmetDetail gourmetDetail//
-        , List<Integer> operationTimeList, int trueReviewCount, int shownMenuCount)
+        , List<String> operationTimeList, int trueReviewCount, int shownMenuCount)
     {
         if (getViewDataBinding() == null || gourmetBookDateTime == null || gourmetDetail == null)
         {
@@ -1009,7 +1011,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
     }
 
     @Override
-    public void performVisitTimeClick(int time)
+    public void performVisitTimeClick(String time)
     {
         if (getViewDataBinding() == null)
         {
@@ -1022,14 +1024,14 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         for (int i = 0; i < childCount; i++)
         {
             childView = getViewDataBinding().timesRadioGroup.getChildAt(i);
-            Integer tag = (Integer) childView.getTag();
+            String tag = (String) childView.getTag();
 
             if (tag == null)
             {
                 continue;
             }
 
-            if (tag == time)
+            if (tag.equalsIgnoreCase(time) == true)
             {
                 getViewDataBinding().timesScrollView.scrollTo((int) (childView.getX() - (getViewDataBinding().timesScrollView.getWidth() - childView.getWidth()) / 2), 0);
                 childView.performClick();
@@ -1340,7 +1342,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         }, null);
     }
 
-    private void setOperationTimes(List<Integer> operationTimeList)
+    private void setOperationTimes(List<String> operationTimeList)
     {
         if (getViewDataBinding() == null)
         {
@@ -1367,7 +1369,7 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             @Override
             public void onClick(View v)
             {
-                getEventListener().onVisitTimeClick((int) v.getTag());
+                getEventListener().onVisitTimeClick((String) v.getTag());
             }
         };
 
@@ -1388,35 +1390,37 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
         getViewDataBinding().timesRadioGroup.addView(fullTimeTextView, fullTimeLayoutParams);
 
-        int time;
-
         // 실제 시간 넣기
         for (int i = 0; i < size; i++)
         {
-            time = operationTimeList.get(i);
-
-            // 24시 이후 값은 00:00로 보이도록 한다.
-            DailyRadioButton timeTextView = new DailyRadioButton(getContext());
-            timeTextView.setText(DailyTextUtils.formatIntegerTimeToStringTime(time < 2400 ? time : time - 2400));
-            timeTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
-            timeTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c323232_cffffff));
-            timeTextView.setBackgroundResource(R.drawable.selector_gourmet_time_background_drawable);
-            timeTextView.setTag(time);
-            timeTextView.setButtonDrawable(new StateListDrawable());
-            timeTextView.setGravity(Gravity.CENTER);
-            timeTextView.setOnClickListener(onClickListener);
-
-            RadioGroup.LayoutParams timeLayoutParams = new RadioGroup.LayoutParams(ScreenUtils.dpToPx(getContext(), 56), ScreenUtils.dpToPx(getContext(), 30));
-
-            if (i == size - 1)
+            try
             {
-                timeLayoutParams.rightMargin = ScreenUtils.dpToPx(getContext(), 15);
-            } else
+                // 24시 이후 값은 00:00로 보이도록 한다.
+                DailyRadioButton timeTextView = new DailyRadioButton(getContext());
+                timeTextView.setText(DailyCalendar.convertDateFormatString(operationTimeList.get(i), DailyCalendar.ISO_8601_FORMAT, "HH:mm"));
+                timeTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
+                timeTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c323232_cffffff));
+                timeTextView.setBackgroundResource(R.drawable.selector_gourmet_time_background_drawable);
+                timeTextView.setTag(operationTimeList.get(i));
+                timeTextView.setButtonDrawable(new StateListDrawable());
+                timeTextView.setGravity(Gravity.CENTER);
+                timeTextView.setOnClickListener(onClickListener);
+
+                RadioGroup.LayoutParams timeLayoutParams = new RadioGroup.LayoutParams(ScreenUtils.dpToPx(getContext(), 56), ScreenUtils.dpToPx(getContext(), 30));
+
+                if (i == size - 1)
+                {
+                    timeLayoutParams.rightMargin = ScreenUtils.dpToPx(getContext(), 15);
+                } else
+                {
+                    timeLayoutParams.rightMargin = ScreenUtils.dpToPx(getContext(), 10);
+                }
+
+                getViewDataBinding().timesRadioGroup.addView(timeTextView, timeLayoutParams);
+            } catch (Exception e)
             {
-                timeLayoutParams.rightMargin = ScreenUtils.dpToPx(getContext(), 10);
+                ExLog.e(e.toString());
             }
-
-            getViewDataBinding().timesRadioGroup.addView(timeTextView, timeLayoutParams);
         }
 
         fullTimeTextView.setChecked(true);

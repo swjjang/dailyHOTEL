@@ -30,7 +30,7 @@ public interface StayOutboundListViewInterface extends BaseBlurViewInterface
 
     void addStayOutboundList(List<ObjectItem> objectItemList);
 
-    void setStayOutboundMakeMarker(List<StayOutbound> stayOutboundList);
+    void setStayOutboundMakeMarker(List<StayOutbound> stayOutboundList, boolean fixedMap, boolean clear);
 
     void setStayOutboundMapViewPagerList(Context context, List<StayOutbound> stayOutboundList, boolean isNights, boolean rewardEnabled);
 
@@ -74,4 +74,6 @@ public interface StayOutboundListViewInterface extends BaseBlurViewInterface
     void setWish(int position, boolean wish);
 
     ObjectItem getObjectItem(int position);
+
+    void setMapProgressBarVisible(boolean visible);
 }

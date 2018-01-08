@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.home.stay.outbound.list.map;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -30,7 +31,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
-import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.MyLocationMarker;
 import com.twoheart.dailyhotel.model.PlaceRenderer;
@@ -51,7 +51,7 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class StayOutboundMapFragment extends com.google.android.gms.maps.SupportMapFragment//
-    implements OnMapReadyCallback, GoogleMap.OnMapClickListener//
+    implements OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnCameraIdleListener//
     , ClusterManager.OnClusterClickListener<StayOutboundClusterItem>, ClusterManager.OnClusterItemClickListener<StayOutboundClusterItem>
 {
     GoogleMap mGoogleMap;
@@ -72,13 +72,15 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
     {
         void onMapReady();
 
-        void onMarkerClick(StayOutbound stayOutbound);
+        void onMarkerClick(StayOutbound stayOutbound, List<StayOutbound> stayOutboundList);
 
         void onMarkersCompleted();
 
         void onMapClick();
 
         void onMyLocationClick();
+
+        void onChangedLocation(LatLng latLng, float radius, float zoom);
     }
 
     public StayOutboundMapFragment()
@@ -115,7 +117,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
 
         if (mCompositeDisposable != null)
         {
-            mCompositeDisposable.clear();
+            mCompositeDisposable.dispose();
         }
 
         if (mSelectedMarker != null)
@@ -168,7 +170,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
         });
 
         mClusterManager.setRenderer(mClusterRenderer);
-        mClusterManager.setAlgorithm(new NonHierarchicalDistanceBasedAlgorithm<StayOutboundClusterItem>());
+        //        mClusterManager.setAlgorithm(new NonHierarchicalDistanceBasedAlgorithm<StayOutboundClusterItem>());
 
         mGoogleMap.setInfoWindowAdapter(new MapWindowAdapter(getContext()));
 
@@ -245,12 +247,37 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
         return true;
     }
 
+    @Override
+    public void onCameraIdle()
+    {
+        if (mClusterManager != null)
+        {
+            mClusterManager.onCameraIdle();
+        }
+
+        if (mOnEventListener != null && mGoogleMap != null)
+        {
+            LatLng centerLatLng = mGoogleMap.getCameraPosition().target;
+            LatLng radiusLatLng = mGoogleMap.getProjection().fromScreenLocation(new Point(0, ScreenUtils.getScreenHeight(getContext()) / 2));
+
+            Location centerLocation = new Location("center");
+            centerLocation.setLatitude(centerLatLng.latitude);
+            centerLocation.setLongitude(centerLatLng.longitude);
+
+            Location radiusLocation = new Location("radius");
+            radiusLocation.setLatitude(radiusLatLng.latitude);
+            radiusLocation.setLongitude(radiusLatLng.longitude);
+
+            mOnEventListener.onChangedLocation(centerLatLng, centerLocation.distanceTo(radiusLocation) / 1000, mGoogleMap.getCameraPosition().zoom);
+        }
+    }
+
     public void setOnEventListener(OnEventListener listener)
     {
         mOnEventListener = listener;
     }
 
-    public void setStayOutboundList(List<StayOutbound> stayOutboundList)
+    public void setStayOutboundList(List<StayOutbound> stayOutboundList, boolean moveCameraBounds, boolean clear)
     {
         if (mGoogleMap == null || stayOutboundList == null || stayOutboundList.size() == 0)
         {
@@ -259,10 +286,10 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
 
         if (mSelectedMarker == null)
         {
-            makeMarker(stayOutboundList, null, true);
+            makeMarker(stayOutboundList, null, clear, moveCameraBounds);
         } else
         {
-            makeMarker(stayOutboundList, (StayOutbound) mSelectedMarker.getTag(), true);
+            makeMarker(stayOutboundList, (StayOutbound) mSelectedMarker.getTag(), clear, moveCameraBounds);
         }
     }
 
@@ -299,7 +326,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
                         @Override
                         public void onCameraIdle()
                         {
-                            mGoogleMap.setOnCameraIdleListener(mClusterManager);
+                            mGoogleMap.setOnCameraIdleListener(StayOutboundMapFragment.this);
                         }
                     });
                     mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
@@ -447,7 +474,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
         }
     }
 
-    private void makeMarker(List<StayOutbound> stayOutboundList, StayOutbound selectedStayOutbound, boolean refreshAll)
+    private void makeMarker(List<StayOutbound> stayOutboundList, StayOutbound selectedStayOutbound, boolean refreshAll, boolean moveCameraBounds)
     {
         if (isFinishing() == true || mGoogleMap == null)
         {
@@ -464,7 +491,15 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
             myLatLng = null;
         }
 
-        mGoogleMap.clear();
+        // 화면에 보이지 않는 마커를 제거한다.
+
+        if (refreshAll == true)
+        {
+            mGoogleMap.clear();
+        } else
+        {
+            removeHiddenMarker();
+        }
 
         if (stayOutboundList == null || stayOutboundList.size() == 0)
         {
@@ -492,9 +527,30 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
             {
                 List<StayOutbound> stayOutboundArrangeList = reLocationDuplicateStayOutbound(stayOutboundList);
                 List<StayOutboundClusterItem> stayOutboundClusterItemList = new ArrayList<>(stayOutboundArrangeList.size());
+                List<StayOutboundClusterItem> currentClusterItemList = (List<StayOutboundClusterItem>) mClusterManager.getAlgorithm().getItems();
 
                 for (StayOutbound stayOutbound : stayOutboundArrangeList)
                 {
+                    // 기존에 이미 있는 좌표는 더하지 않는다.
+                    if (refreshAll == false && currentClusterItemList != null && currentClusterItemList.size() > 0)
+                    {
+                        boolean hasClusterItem = false;
+
+                        for (StayOutboundClusterItem clusterItem : currentClusterItemList)
+                        {
+                            if (stayOutbound.latitude == clusterItem.getStayOutbound().latitude && stayOutbound.longitude == clusterItem.getStayOutbound().longitude)
+                            {
+                                hasClusterItem = true;
+                                break;
+                            }
+                        }
+
+                        if (hasClusterItem == true)
+                        {
+                            continue;
+                        }
+                    }
+
                     StayOutboundClusterItem stayOutboundClusterItem = new StayOutboundClusterItem(stayOutbound);
 
                     // 시작시에 전체 영역을 계산하여 화면에 보일수 있도록 한다.
@@ -521,7 +577,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
                     stayOutboundClusterItemList.add(stayOutboundClusterItem);
                 }
 
-                mClusterManager.clearItems();
+                //                mClusterManager.clearItems();
                 mClusterManager.addItems(stayOutboundClusterItemList);
 
                 return stayOutboundClusterItemList.size();
@@ -531,7 +587,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
             @Override
             public void accept(@NonNull Integer size) throws Exception
             {
-                if (refreshAll == true)
+                if (refreshAll == true && moveCameraBounds == true)
                 {
                     try
                     {
@@ -542,7 +598,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
                     }
                 } else
                 {
-                    mGoogleMap.setOnCameraIdleListener(mClusterManager);
+                    mGoogleMap.setOnCameraIdleListener(StayOutboundMapFragment.this);
                     mClusterManager.cluster();
                 }
 
@@ -554,6 +610,8 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
                 {
                     mOnEventListener.onMarkersCompleted();
                 }
+
+//                ExLog.d("pinkred - marker count : " + mClusterManager.getAlgorithm().getItems().size());
             }
         }, new Consumer<Throwable>()
         {
@@ -566,6 +624,53 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
                 }
             }
         }));
+    }
+
+    /**
+     * 화면에서 보이지않는 마커는 삭제한다.
+     */
+    private void removeHiddenMarker()
+    {
+        List<StayOutboundClusterItem> stayOutboundClusterItemList = (List<StayOutboundClusterItem>) mClusterManager.getAlgorithm().getItems();
+
+        if (stayOutboundClusterItemList != null || stayOutboundClusterItemList.size() > 0)
+        {
+            int beforeSize = stayOutboundClusterItemList.size();
+
+            LatLng centerLatLng = mGoogleMap.getCameraPosition().target;
+            LatLng radiusLatLng = mGoogleMap.getProjection().fromScreenLocation(new Point(0, ScreenUtils.getScreenHeight(getContext()) / 2));
+
+            Location centerLocation = new Location("center");
+            centerLocation.setLatitude(centerLatLng.latitude);
+            centerLocation.setLongitude(centerLatLng.longitude);
+
+            Location radiusLocation = new Location("radius");
+            radiusLocation.setLatitude(radiusLatLng.latitude);
+            radiusLocation.setLongitude(radiusLatLng.longitude);
+
+            float radius = centerLocation.distanceTo(radiusLocation) * 1.5f;
+
+            // 서버에서 최소 radius 가 2km이다.
+            if (radius < 2.0f)
+            {
+                radius = 2.0f;
+            }
+
+            for (StayOutboundClusterItem stayOutboundClusterItem : stayOutboundClusterItemList)
+            {
+                LatLng latLng = stayOutboundClusterItem.getPosition();
+
+                radiusLocation.setLatitude(latLng.latitude);
+                radiusLocation.setLongitude(latLng.longitude);
+
+                if (radius < centerLocation.distanceTo(radiusLocation))
+                {
+                    mClusterManager.removeItem(stayOutboundClusterItem);
+                }
+            }
+
+//            ExLog.d("pinkred - remove size : " + (beforeSize - ((List<StayOutboundClusterItem>) mClusterManager.getAlgorithm().getItems()).size()));
+        }
     }
 
     /**
@@ -657,7 +762,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
                 @Override
                 public void onCameraIdle()
                 {
-                    mGoogleMap.setOnCameraIdleListener(mClusterManager);
+                    mGoogleMap.setOnCameraIdleListener(StayOutboundMapFragment.this);
                 }
             });
             mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(mSelectedMarker.getPosition()));
@@ -673,7 +778,18 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
 
         if (mOnEventListener != null)
         {
-            mOnEventListener.onMarkerClick(stayOutboundClusterItem.getStayOutbound());
+            List<StayOutboundClusterItem> stayOutboundClusterItemList = (List<StayOutboundClusterItem>) mClusterManager.getAlgorithm().getItems();
+            List<StayOutbound> stayOutboundList = new ArrayList<>();
+
+            if (stayOutboundClusterItemList != null || stayOutboundClusterItemList.size() > 0)
+            {
+                for (StayOutboundClusterItem clusterItem : stayOutboundClusterItemList)
+                {
+                    stayOutboundList.add(clusterItem.getStayOutbound());
+                }
+            }
+
+            mOnEventListener.onMarkerClick(stayOutboundClusterItem.getStayOutbound(), stayOutboundList);
         }
     }
 
@@ -689,7 +805,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
                 @Override
                 public void onCameraIdle()
                 {
-                    mGoogleMap.setOnCameraIdleListener(mClusterManager);
+                    mGoogleMap.setOnCameraIdleListener(StayOutboundMapFragment.this);
 
                     if (isFinishing() == true)
                     {
@@ -709,7 +825,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
                 @Override
                 public void onCameraIdle()
                 {
-                    mGoogleMap.setOnCameraIdleListener(mClusterManager);
+                    mGoogleMap.setOnCameraIdleListener(StayOutboundMapFragment.this);
 
                     if (isFinishing() == true)
                     {
@@ -735,7 +851,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
             return;
         }
 
-        mGoogleMap.setOnCameraIdleListener(mClusterManager);
+        mGoogleMap.setOnCameraIdleListener(StayOutboundMapFragment.this);
 
         if (hotelCount == 1)
         {

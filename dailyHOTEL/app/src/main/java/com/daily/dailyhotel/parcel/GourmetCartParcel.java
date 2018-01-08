@@ -39,7 +39,7 @@ public class GourmetCartParcel implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        dest.writeInt(mGourmetCart.visitTime);
+        dest.writeString(mGourmetCart.visitTime);
         dest.writeInt(mGourmetCart.gourmetIndex);
         dest.writeString(mGourmetCart.gourmetName);
 
@@ -68,7 +68,7 @@ public class GourmetCartParcel implements Parcelable
     {
         mGourmetCart = new GourmetCart();
 
-        mGourmetCart.visitTime = in.readInt();
+        mGourmetCart.visitTime = in.readString();
         mGourmetCart.gourmetIndex = in.readInt();
         mGourmetCart.gourmetName = in.readString();
         mGourmetCart.setGourmetBookDateTime(in.readString());

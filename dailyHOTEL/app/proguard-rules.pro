@@ -19,8 +19,8 @@
    *;
 }
 
--keep com.daily.base.**  { *; }
--keep com.twoheart.dailyhotel.widget.**  { *; }
+-keep class com.daily.base.**  { *; }
+-keep class com.twoheart.dailyhotel.widget.**  { *; }
 
 -keep public class com.twoheart.dailyhotel.JavaScriptInterface
 

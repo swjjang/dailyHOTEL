@@ -20,6 +20,9 @@ public class StayOutboundsData
     @JsonField(name = "cacheLocation")
     public String cacheLocation;
 
+    @JsonField(name = "customerSessionId")
+    public String customerSessionId;
+
     @JsonField(name = "moreResultsAvailable")
     public boolean moreResultsAvailable;
 
@@ -34,7 +37,7 @@ public class StayOutboundsData
 
     }
 
-    public StayOutbounds getStayOutboundList()
+    public StayOutbounds getStayOutbounds()
     {
         StayOutbounds stayOutbounds = new StayOutbounds();
         List<StayOutbound> stayOutboundList = new ArrayList<>();
@@ -48,6 +51,7 @@ public class StayOutboundsData
 
         stayOutbounds.cacheKey = cacheKey;
         stayOutbounds.cacheLocation = cacheLocation;
+        stayOutbounds.customerSessionId = customerSessionId;
         stayOutbounds.moreResultsAvailable = moreResultsAvailable;
 
         if (configurations != null)

@@ -180,7 +180,7 @@
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/confirmView"
                 android:layout_width="0dp"
-                android:layout_height="54dp"
+                android:layout_height="44dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"

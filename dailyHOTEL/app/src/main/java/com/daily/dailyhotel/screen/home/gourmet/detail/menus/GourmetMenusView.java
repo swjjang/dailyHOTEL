@@ -28,6 +28,7 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.entity.GourmetCart;
@@ -36,6 +37,7 @@ import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailPresenter;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityGourmetMenusDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogGourmetTimePickerDataBinding;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 
 import java.util.List;
@@ -65,9 +67,9 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
 
         void onOperationTimeClick();
 
-        void onVisitTimeClick(int time);
+        void onVisitTimeClick(String time);
 
-        void onVisitTimeClick(int time, int menuIndex);
+        void onVisitTimeClick(String time, int menuIndex);
 
         void onMenuOderCountPlusClick(int position);
 
@@ -277,7 +279,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
     }
 
     @Override
-    public void setOperationTimes(List<Integer> operationTimeList)
+    public void setOperationTimes(List<String> operationTimeList)
     {
         if (getViewDataBinding() == null)
         {
@@ -289,7 +291,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
             @Override
             public void onClick(View v)
             {
-                getEventListener().onVisitTimeClick((int) v.getTag());
+                getEventListener().onVisitTimeClick((String) v.getTag());
             }
         };
 
@@ -314,27 +316,33 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
 
         getViewDataBinding().operationTimesGridLayout.addView(fullTimeTextView, fullTimeLayoutParams);
 
-        for (int time : operationTimeList)
+        for (String time : operationTimeList)
         {
-            // 24시 이후 값은 00:00로 보이도록 한다.
-            DailyTextView dailyTextView = new DailyTextView(getContext());
-            dailyTextView.setText(DailyTextUtils.formatIntegerTimeToStringTime(time < 2400 ? time : time - 2400));
-            dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
-            dailyTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c323232_cffffff));
-            dailyTextView.setBackgroundResource(R.drawable.selector_gourmet_time_background_drawable);
-            dailyTextView.setTag(time);
-            dailyTextView.setGravity(Gravity.CENTER);
-            dailyTextView.setOnClickListener(onClickListener);
+            try
+            {
+                // 24시 이후 값은 00:00로 보이도록 한다.
+                DailyTextView dailyTextView = new DailyTextView(getContext());
+                dailyTextView.setText(DailyCalendar.convertDateFormatString(time, DailyCalendar.ISO_8601_FORMAT, "HH:mm"));
+                dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
+                dailyTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c323232_cffffff));
+                dailyTextView.setBackgroundResource(R.drawable.selector_gourmet_time_background_drawable);
+                dailyTextView.setTag(time);
+                dailyTextView.setGravity(Gravity.CENTER);
+                dailyTextView.setOnClickListener(onClickListener);
 
-            GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
-            layoutParams.width = ScreenUtils.dpToPx(getContext(), 56);
-            layoutParams.height = ScreenUtils.dpToPx(getContext(), 30);
-            layoutParams.leftMargin = ScreenUtils.dpToPx(getContext(), 5);
-            layoutParams.rightMargin = ScreenUtils.dpToPx(getContext(), 5);
-            layoutParams.bottomMargin = ScreenUtils.dpToPx(getContext(), 10);
-            layoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f);
+                GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
+                layoutParams.width = ScreenUtils.dpToPx(getContext(), 56);
+                layoutParams.height = ScreenUtils.dpToPx(getContext(), 30);
+                layoutParams.leftMargin = ScreenUtils.dpToPx(getContext(), 5);
+                layoutParams.rightMargin = ScreenUtils.dpToPx(getContext(), 5);
+                layoutParams.bottomMargin = ScreenUtils.dpToPx(getContext(), 10);
+                layoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f);
 
-            getViewDataBinding().operationTimesGridLayout.addView(dailyTextView, layoutParams);
+                getViewDataBinding().operationTimesGridLayout.addView(dailyTextView, layoutParams);
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
         }
 
         // 빈공간 채우기
@@ -362,7 +370,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
     }
 
     @Override
-    public void setVisitTime(int time)
+    public void setVisitTime(String time)
     {
         if (getViewDataBinding() == null)
         {
@@ -374,11 +382,11 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         for (int i = 0; i < size; i++)
         {
             View childView = getViewDataBinding().operationTimesGridLayout.getChildAt(i);
-            Integer timeTag = (Integer) childView.getTag();
+            String timeTag = (String) childView.getTag();
 
             if (timeTag != null)
             {
-                if (time == timeTag)
+                if (time.equalsIgnoreCase(timeTag) == true)
                 {
                     childView.setSelected(true);
                 } else
@@ -390,7 +398,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
     }
 
     @Override
-    public Observable<Boolean> openOperationTimes(int selectedTimes)
+    public Observable<Boolean> openOperationTimes(String selectedTimes)
     {
         if (getViewDataBinding() == null)
         {
@@ -404,9 +412,9 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
 
         for (int i = 0; i < childCount; i++)
         {
-            Integer time = (Integer) getViewDataBinding().operationTimesGridLayout.getChildAt(i).getTag();
+            String time = (String) getViewDataBinding().operationTimesGridLayout.getChildAt(i).getTag();
 
-            if (time != null && time == selectedTimes)
+            if (time != null && time.equalsIgnoreCase(selectedTimes) == true)
             {
                 getViewDataBinding().operationTimesGridLayout.getChildAt(i).setSelected(true);
             } else
@@ -582,7 +590,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
     }
 
     @Override
-    public void showTimePickerDialog(List<Integer> operationTimeList, int menuIndex)
+    public void showTimePickerDialog(List<String> operationTimeList, int menuIndex)
     {
         if (getViewDataBinding() == null)
         {
@@ -607,26 +615,32 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
             }
         };
 
-        for (int time : operationTimeList)
+        for (String time : operationTimeList)
         {
-            DailyTextView dailyTextView = new DailyTextView(getContext());
-            dailyTextView.setText(DailyTextUtils.formatIntegerTimeToStringTime(time < 2400 ? time : time - 2400));
-            dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
-            dailyTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c323232_cffffff));
-            dailyTextView.setBackgroundResource(R.drawable.selector_gourmet_time_background_drawable);
-            dailyTextView.setTag(time);
-            dailyTextView.setGravity(Gravity.CENTER);
-            dailyTextView.setOnClickListener(onClickListener);
+            try
+            {
+                DailyTextView dailyTextView = new DailyTextView(getContext());
+                dailyTextView.setText(DailyCalendar.convertDateFormatString(time, DailyCalendar.ISO_8601_FORMAT, "HH:mm"));
+                dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
+                dailyTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c323232_cffffff));
+                dailyTextView.setBackgroundResource(R.drawable.selector_gourmet_time_background_drawable);
+                dailyTextView.setTag(time);
+                dailyTextView.setGravity(Gravity.CENTER);
+                dailyTextView.setOnClickListener(onClickListener);
 
-            GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
-            layoutParams.width = ScreenUtils.dpToPx(getContext(), 56);
-            layoutParams.height = ScreenUtils.dpToPx(getContext(), 30);
-            layoutParams.leftMargin = ScreenUtils.dpToPx(getContext(), 5);
-            layoutParams.rightMargin = ScreenUtils.dpToPx(getContext(), 5);
-            layoutParams.bottomMargin = ScreenUtils.dpToPx(getContext(), 10);
-            layoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f);
+                GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
+                layoutParams.width = ScreenUtils.dpToPx(getContext(), 56);
+                layoutParams.height = ScreenUtils.dpToPx(getContext(), 30);
+                layoutParams.topMargin = ScreenUtils.dpToPx(getContext(), 10);
+                layoutParams.leftMargin = ScreenUtils.dpToPx(getContext(), 5);
+                layoutParams.rightMargin = ScreenUtils.dpToPx(getContext(), 5);
+                layoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f);
 
-            dataBinding.timeGridLayout.addView(dailyTextView, layoutParams);
+                dataBinding.timeGridLayout.addView(dailyTextView, layoutParams);
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
         }
 
         // 빈공간 채우기
@@ -638,13 +652,15 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         {
             DailyTextView dailyTextView = new DailyTextView(getContext());
             dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
+            dailyTextView.setTextColor(getColorStateList(R.drawable.selector_text_color_c323232_cffffff));
+            dailyTextView.setGravity(Gravity.CENTER);
 
             GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
             layoutParams.width = ScreenUtils.dpToPx(getContext(), 56);
-            layoutParams.height = 1;
+            layoutParams.height = ScreenUtils.dpToPx(getContext(), 30);
+            layoutParams.topMargin = ScreenUtils.dpToPx(getContext(), 10);
             layoutParams.leftMargin = ScreenUtils.dpToPx(getContext(), 5);
             layoutParams.rightMargin = ScreenUtils.dpToPx(getContext(), 5);
-            layoutParams.bottomMargin = ScreenUtils.dpToPx(getContext(), 10);
             layoutParams.columnSpec = android.support.v7.widget.GridLayout.spec(Integer.MIN_VALUE, 1, 1.0f);
 
             dataBinding.timeGridLayout.addView(dailyTextView, layoutParams);
@@ -666,13 +682,13 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
             public void onClick(View v)
             {
                 int size = dataBinding.timeGridLayout.getChildCount();
-                int time = GourmetDetailPresenter.FULL_TIME;
+                String time = GourmetDetailPresenter.FULL_TIME;
 
                 for (int i = 0; i < size; i++)
                 {
                     if (dataBinding.timeGridLayout.getChildAt(i).isSelected() == true)
                     {
-                        time = (int) dataBinding.timeGridLayout.getChildAt(i).getTag();
+                        time = (String) dataBinding.timeGridLayout.getChildAt(i).getTag();
                         break;
                     }
                 }
@@ -740,15 +756,22 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
             return;
         }
 
-        // 방문시긴
-        String visitTimeText = getString(R.string.label_gourmet_product_detail_cart_visit_time, DailyTextUtils.formatIntegerTimeToStringTime(gourmetCart.visitTime < 2400 ? gourmetCart.visitTime : gourmetCart.visitTime - 2400));
-        SpannableString spannableString = new SpannableString(visitTimeText);
+        // 방문시간
+        try
+        {
+            String visitTimeText = getString(R.string.label_gourmet_product_detail_cart_visit_time//
+                , DailyCalendar.convertDateFormatString(gourmetCart.visitTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm"));
+            SpannableString spannableString = new SpannableString(visitTimeText);
 
-        int startIndex = visitTimeText.indexOf(' ');
-        spannableString.setSpan(new ForegroundColorSpan(getContext().getResources().getColor(R.color.dh_theme_color)), //
-            startIndex, visitTimeText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            int startIndex = visitTimeText.indexOf(' ');
+            spannableString.setSpan(new ForegroundColorSpan(getContext().getResources().getColor(R.color.dh_theme_color)), //
+                startIndex, visitTimeText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        getViewDataBinding().cartMenusVisitTimeTextView.setText(spannableString);
+            getViewDataBinding().cartMenusVisitTimeTextView.setText(spannableString);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
 
         if (mGourmetCartMenusAdapter == null)
         {

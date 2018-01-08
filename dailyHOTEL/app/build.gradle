@@ -49,8 +49,8 @@ android {
         applicationId "com.twoheart.dailyhotel"
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 2010700
-        versionName "2.1.7"
+        versionCode 2010800
+        versionName "2.1.8"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
 
@@ -228,6 +228,8 @@ dependencies {
     implementation 'com.appboy:android-sdk-ui:2.2.+'
 
     implementation 'com.adjust.sdk:adjust-android:4.11.4'
+
+    implementation 'me.zhanghai.android.materialprogressbar:library:1.4.2'
 
     compile('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
         transitive = true

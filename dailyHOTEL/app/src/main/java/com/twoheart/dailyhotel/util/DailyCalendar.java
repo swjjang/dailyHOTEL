@@ -307,6 +307,57 @@ public class DailyCalendar
         return (int) ((date1.getTime() - date2.getTime()) / DAY_MILLISECOND);
     }
 
+    /**
+     *
+     * @param dateTime
+     * @param weeks [1,2,3,4,5,6,7]
+     * @return
+     * @throws ParseException
+     */
+    public static String searchClosedDayOfWeek(String dateTime, char[] weeks) throws ParseException
+    {
+        if (dateTime == null || weeks == null)
+        {
+            return null;
+        }
+
+        Calendar calendar = DailyCalendar.getInstance();
+        calendar.setTime(DailyCalendar.convertDate(dateTime, DailyCalendar.ISO_8601_FORMAT));
+
+        int findWeek = 0;
+
+        // 만일 여기서 무한 루프 돌면 말도 안되는 현상
+        while (findWeek == 0)
+        {
+            int currentWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+            for (char week : weeks)
+            {
+                int dayOfWeek = week - '0';
+
+                if (dayOfWeek < Calendar.SUNDAY || dayOfWeek > Calendar.SATURDAY)
+                {
+                    findWeek = -1;
+                    break;
+                }
+
+                if (currentWeek <= dayOfWeek)
+                {
+                    findWeek = 1;
+                    calendar.add(Calendar.DAY_OF_MONTH, dayOfWeek - currentWeek);
+                    break;
+                }
+            }
+
+            if (findWeek == 0)
+            {
+                calendar.add(Calendar.DAY_OF_MONTH, Calendar.SATURDAY - currentWeek + 1);
+            }
+        }
+
+        return findWeek == 1 ? DailyCalendar.format(calendar.getTime(), DailyCalendar.ISO_8601_FORMAT) : null;
+    }
+
     private static TreeMap<Integer, Integer> searchFormat(StringBuilder stringBuilder)
     {
         TreeMap<Integer, Integer> treeMap = new TreeMap<>();

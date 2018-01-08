@@ -101,7 +101,8 @@ public class StayOutboundClusterRenderer extends DefaultClusterRenderer<StayOutb
     @Override
     protected boolean shouldRenderAsCluster(Cluster<StayOutboundClusterItem> cluster, float zoom)
     {
-        return (Float.compare(zoom, 13.0f) < 0);
+//        return (Float.compare(zoom, 13.0f) < 0);
+        return false;
     }
 
     public void setSelectedClusterItem(StayOutboundClusterItem placeClusterItem)
