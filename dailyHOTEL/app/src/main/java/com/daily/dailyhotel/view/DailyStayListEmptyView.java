@@ -36,6 +36,8 @@ public class DailyStayListEmptyView extends android.support.v4.widget.NestedScro
 
     private void initLayout(Context context)
     {
+        setFillViewport(true);
+
         mViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_stay_list_empty_data, this, true);
     }
 
@@ -81,7 +83,7 @@ public class DailyStayListEmptyView extends android.support.v4.widget.NestedScro
             return;
         }
 
-        mViewDataBinding.bottomMessageLayout.setVisibility(visible ? VISIBLE : GONE);
+        mViewDataBinding.bottomMessageLayout.setVisibility(visible ? VISIBLE : INVISIBLE);
     }
 
     public void setOnCallClickListener(View.OnClickListener listener)

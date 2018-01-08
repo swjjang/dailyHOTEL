@@ -65,6 +65,7 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
     Category mCategory;
     int mPage = PAGE_NONE;
     boolean mMoreRefreshing;
+    StayTabPresenter.ViewType mViewType;
 
     public interface StayListFragmentAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -167,16 +168,41 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
     @Override
     public void notifyRefresh(boolean force)
     {
-        if (force == true || (isCurrentFragment() == true && mPage == PAGE_NONE))
+        if (mStayViewModel.viewType.getValue() == mViewType)
         {
-            mPage = 1;
-
-            setRefresh(true);
-
-            // Activity 가 아직 생성되지 않은 경우가 있다.
-            if (getActivity() != null)
+            switch (mViewType)
             {
-                onRefresh(true);
+                case LIST:
+                    if (force == true || (isCurrentFragment() == true && mPage == PAGE_NONE))
+                    {
+                        mPage = 1;
+
+                        setRefresh(true);
+
+                        // Activity 가 아직 생성되지 않은 경우가 있다.
+                        if (getActivity() != null)
+                        {
+                            onRefresh(true);
+                        }
+                    }
+                    break;
+
+                case MAP:
+                    break;
+            }
+        } else
+        {
+            mViewType = mStayViewModel.viewType.getValue();
+
+            switch (mViewType)
+            {
+                case LIST:
+                    getViewInterface().hideMapLayout(getFragment().getFragmentManager());
+                    break;
+
+                case MAP:
+                    getViewInterface().showMapLayout(getFragment().getFragmentManager());
+                    break;
             }
         }
     }
@@ -449,6 +475,54 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
     @Override
     public void onMapReady()
     {
+        if (getActivity().isFinishing() == true || mStayViewModel == null)
+        {
+            return;
+        }
+
+        if (mStayViewModel.selectedCategory.getValue() == null//
+            || mStayViewModel.stayFilter.getValue() == null//
+            || mStayViewModel.viewType.getValue() == null//
+            || mStayViewModel.stayRegion.getValue() == null//
+            || mStayViewModel.stayBookDateTime.getValue() == null//
+            || mStayViewModel.commonDateTime.getValue() == null)
+        {
+            return;
+        }
+
+        lock();
+
+        screenLock(true);
+
+        mPage = 0;
+
+        addCompositeDisposable(mStayRemoteImpl.getList(getQueryMap(mPage), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Stays>()
+        {
+            @Override
+            public void accept(Stays stays) throws Exception
+            {
+                DailyRemoteConfigPreference.getInstance(getActivity()).setKeyRemoteConfigRewardStickerEnabled(stays.activeReward);
+
+                if(stays.getStayList() == null || stays.getStayList().size() == 0)
+                {
+                    getViewInterface().setEmptyViewVisible(true, mStayViewModel.stayFilter.getValue().isDefaultFilter() == false);
+                } else
+                {
+                    getViewInterface().setEmptyViewVisible(false, mStayViewModel.stayFilter.getValue().isDefaultFilter() == false);
+
+                    getViewInterface().setMapList(stays.getStayList(), true, true);
+                }
+
+                unLockAll();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                onHandleError(throwable);
+            }
+        }));
 
     }
 
@@ -540,6 +614,8 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
             return;
         }
 
+        mViewType = StayTabPresenter.ViewType.LIST;
+
         mStayViewModel = ViewModelProviders.of(activity).get(StayTabPresenter.StayViewModel.class);
 
         mStayViewModel.viewType.observe(activity, new Observer<StayTabPresenter.ViewType>()
@@ -552,14 +628,16 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
                     return;
                 }
 
+                mViewType = viewType;
+
                 switch (viewType)
                 {
                     case LIST:
-                        getViewInterface().showMapLayout(getFragment().getFragmentManager());
+                        getViewInterface().hideMapLayout(getFragment().getFragmentManager());
                         break;
 
                     case MAP:
-                        getViewInterface().hideMapLayout(getFragment().getFragmentManager());
+                        getViewInterface().showMapLayout(getFragment().getFragmentManager());
                         break;
                 }
             }

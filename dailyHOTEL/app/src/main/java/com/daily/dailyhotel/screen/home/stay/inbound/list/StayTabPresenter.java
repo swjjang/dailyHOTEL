@@ -34,6 +34,7 @@ import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
 import com.daily.dailyhotel.screen.common.area.stay.StayAreaListActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.calendar.StayCalendarActivity;
+import com.daily.dailyhotel.screen.home.stay.inbound.filter.StayFilterActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.R;
@@ -76,7 +77,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
     CommonRemoteImpl mCommonRemoteImpl;
     StayRemoteImpl mStayRemoteImpl;
 
-    enum ViewType
+    public enum ViewType
     {
         LIST,
         MAP,
@@ -445,7 +446,49 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
     @Override
     public void onFilterClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
+        String checkInDateTime = mStayViewModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT);
+        String checkOutDateTime = mStayViewModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT);
+
+        ArrayList<String> categoryList = new ArrayList();
+        categoryList.add(mStayViewModel.selectedCategory.getValue().code);
+
+        Location location;
+        double radius;
+
+        if (mStayViewModel.stayFilter.getValue().sortType == StayFilter.SortType.DISTANCE)
+        {
+            location = mStayViewModel.location.getValue();
+            radius = 10;
+        } else
+        {
+            location = null;
+            radius = 0;
+        }
+
+        Intent intent = StayFilterActivity.newInstance(getActivity(), checkInDateTime, checkOutDateTime//
+            , mStayViewModel.viewType.getValue(), mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue(), categoryList, location, radius, null);
+        startActivityForResult(intent, StayTabActivity.REQUEST_CODE_FILTER);
+
+        //        String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
+        //
+        //        switch (mViewType)
+        //        {
+        //            case LIST:
+        //                viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
+        //                break;
+        //
+        //            case MAP:
+        //                viewType = AnalyticsManager.Label.VIEWTYPE_MAP;
+        //                break;
+        //        }
+        //
+        //        AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
+        //            , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, viewType, null);
     }
 
     @Override

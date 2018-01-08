@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 
 import com.daily.base.BaseFragmentDialogViewInterface;
 import com.daily.dailyhotel.entity.ObjectItem;
+import com.daily.dailyhotel.entity.Stay;
 
 import java.util.List;
 
@@ -26,4 +27,6 @@ public interface StayListFragmentInterface extends BaseFragmentDialogViewInterfa
     void showMapLayout(FragmentManager fragmentManager);
 
     void hideMapLayout(FragmentManager fragmentManager);
+
+    void setMapList(List<Stay> stayList, boolean moveCameraBounds, boolean clear);
 }

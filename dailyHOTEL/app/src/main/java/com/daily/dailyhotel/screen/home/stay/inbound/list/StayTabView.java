@@ -58,6 +58,9 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
 
         viewDataBinding.navigationBarView.setOnRegionClickListener(v -> getEventListener().onRegionClick());
         viewDataBinding.navigationBarView.setOnDateClickListener(v -> getEventListener().onCalendarClick());
+
+        viewDataBinding.floatingActionView.setOnViewOptionClickListener(v -> getEventListener().onViewTypeClick());
+        viewDataBinding.floatingActionView.setOnFilterOptionClickListener(v -> getEventListener().onFilterClick());
     }
 
     @Override

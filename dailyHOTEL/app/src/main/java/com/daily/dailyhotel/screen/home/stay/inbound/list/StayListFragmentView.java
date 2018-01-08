@@ -14,6 +14,7 @@ import android.widget.FrameLayout;
 
 import com.daily.base.BaseFragmentDialogView;
 import com.daily.base.OnBaseEventListener;
+import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.Stay;
@@ -321,7 +322,7 @@ public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmen
                 @Override
                 public void onMapReady()
                 {
-
+                    getEventListener().onMapReady();
                 }
 
                 @Override
@@ -356,7 +357,7 @@ public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmen
             });
         }
 
-        fragmentManager.beginTransaction().add(getViewDataBinding().mapLayout.getId(), mStayMapFragment, "MAP").commitAllowingStateLoss();
+        fragmentManager.beginTransaction().add(getViewDataBinding().mapLayout.getId(), mStayMapFragment).commitAllowingStateLoss();
 
         //        getViewDataBinding().mapLayout.setOnTouchListener(new View.OnTouchListener()
         //        {
@@ -414,6 +415,18 @@ public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmen
         mStayMapFragment = null;
 
         //        resetMenuBarLayoutTranslation();
+    }
+
+    @Override
+    public void setMapList(List<Stay> stayList, boolean moveCameraBounds, boolean clear)
+    {
+        if (getViewDataBinding() == null || mStayMapFragment == null)
+        {
+            return;
+        }
+
+        mStayMapFragment.setStayList(stayList, moveCameraBounds, clear);
+
     }
 
     private DailyOverScrollViewPager addMapViewPager(Context context, ViewGroup viewGroup)
