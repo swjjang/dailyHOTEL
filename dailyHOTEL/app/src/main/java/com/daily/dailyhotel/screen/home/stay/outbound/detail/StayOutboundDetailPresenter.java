@@ -474,6 +474,12 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             default:
                 setStatus(STATUS_FINISH);
 
+                if (getResultCode() == BaseActivity.RESULT_CODE_REFRESH)
+                {
+                    finish();
+                    return true;
+                }
+
                 if (mIsUsedMultiTransition == true)
                 {
                     if (lock() == true)

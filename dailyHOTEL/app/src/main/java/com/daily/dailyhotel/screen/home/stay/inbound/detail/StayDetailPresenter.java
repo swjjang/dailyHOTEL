@@ -480,6 +480,12 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             default:
                 setStatus(STATUS_FINISH);
 
+                if (getResultCode() == BaseActivity.RESULT_CODE_REFRESH)
+                {
+                    finish();
+                    return true;
+                }
+
                 if (mIsUsedMultiTransition == true)
                 {
                     if (lock() == true)
