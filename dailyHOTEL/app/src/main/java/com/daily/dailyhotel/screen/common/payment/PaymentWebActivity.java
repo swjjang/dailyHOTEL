@@ -1,9 +1,11 @@
 package com.daily.dailyhotel.screen.common.payment;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
 import android.webkit.WebView;
 import android.widget.Toast;
 
@@ -113,7 +115,7 @@ public class PaymentWebActivity extends BasePaymentWebActivity
         webViewPostAsyncTask.execute(url);
     }
 
-    protected class WebViewPostAsyncTask extends AsyncTask<String, Void, String>
+    protected class WebViewPostAsyncTask extends AsyncTask<String, Void, Response>
     {
         private WebView mWebView;
         private String mJSONString;
@@ -126,18 +128,13 @@ public class PaymentWebActivity extends BasePaymentWebActivity
         }
 
         @Override
-        protected String doInBackground(String... params)
+        protected Response doInBackground(String... params)
         {
             mUrl = params[0];
 
-            if (DEBUG == true)
-            {
-                ExLog.d("pinkred : " + mJSONString);
-            }
-
             try
             {
-                if (Constants.DEBUG == true)
+                if (DEBUG == true || Constants.DEBUG == true)
                 {
                     ExLog.d("pinkred : " + mJSONString);
                 }
@@ -154,14 +151,7 @@ public class PaymentWebActivity extends BasePaymentWebActivity
                     .post(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), mJSONString)).build();
 
                 Response response = okHttpClient.newCall(request).execute();
-
-                // 세션이 만료된 경우
-                if (response.code() == 401)
-                {
-                    return "401";
-                }
-
-                return response.body().string();
+                return response;
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -171,16 +161,67 @@ public class PaymentWebActivity extends BasePaymentWebActivity
         }
 
         @Override
-        protected void onPostExecute(String data)
+        protected void onPostExecute(Response response)
         {
-            if (DailyTextUtils.isTextEmpty(data) == true)
+            if (response == null)
             {
                 setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
                 finish();
                 return;
-            } else if ("401".equalsIgnoreCase(data) == true)
+            }
+
+            int code = response.code();
+
+            // 세션이 만료된 경우
+            if (code == 401)
             {
                 setResult(CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION);
+                finish();
+                return;
+            }
+
+            // 가격이 변동된 경우
+            if (code == 1190)
+            {
+                String message = response.message();
+                if (DailyTextUtils.isTextEmpty(message) == true)
+                {
+                    message = getString(R.string.dialog_msg_hotel_payment_changed_price);
+                }
+
+                showSimpleDialog(getString(R.string.dialog_title_payment) //
+                    , message, getString(R.string.dialog_btn_text_confirm), new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View view)
+                        {
+
+                        }
+                    }, new DialogInterface.OnDismissListener()
+                    {
+                        @Override
+                        public void onDismiss(DialogInterface dialogInterface)
+                        {
+                            setResult(CODE_RESULT_ACTIVITY_PAYMENT_CHANGED_PRICE);
+                            finish();
+                        }
+                    });
+                return;
+            }
+
+            String data = null;
+
+            try
+            {
+                data = response.body().string();
+            } catch (Exception e)
+            {
+                ExLog.d(e.toString());
+            }
+
+            if (DailyTextUtils.isTextEmpty(data) == true)
+            {
+                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
                 finish();
                 return;
             }
