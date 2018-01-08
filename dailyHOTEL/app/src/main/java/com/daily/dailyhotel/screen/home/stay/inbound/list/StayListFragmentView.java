@@ -14,7 +14,6 @@ import android.widget.FrameLayout;
 
 import com.daily.base.BaseFragmentDialogView;
 import com.daily.base.OnBaseEventListener;
-import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.Stay;
@@ -263,44 +262,63 @@ public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmen
             return;
         }
 
-        getViewDataBinding().emptyView.setVisibility(visible ? View.VISIBLE : View.GONE);
-
-        if (applyFilter == true)
+        if (visible == false)
         {
-            getViewDataBinding().emptyView.setMessageTextView(getString(R.string.message_not_exist_filters), getString(R.string.message_changing_filter_option));
-            getViewDataBinding().emptyView.setButton01(true, getString(R.string.label_hotel_list_changing_filter), new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    getEventListener().onFilterClick();
-                }
-            });
-
-            getViewDataBinding().emptyView.setButton02(false, null, null);
-            getViewDataBinding().emptyView.setBottomMessage(false);
+            getViewDataBinding().emptyView.setVisibility(View.GONE);
         } else
         {
-            getViewDataBinding().emptyView.setMessageTextView(getString(R.string.message_stay_empty_message01), getString(R.string.message_stay_empty_message02));
-            getViewDataBinding().emptyView.setButton01(true, getString(R.string.label_stay_category_change_region), new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    getEventListener().onRegionClick();
-                }
-            });
+            getViewDataBinding().swipeRefreshLayout.setVisibility(View.INVISIBLE);
+            getViewDataBinding().mapLayout.setVisibility(View.GONE);
+            getViewDataBinding().emptyView.setVisibility(View.VISIBLE);
 
-            getViewDataBinding().emptyView.setButton02(true, getString(R.string.label_stay_category_change_date), new View.OnClickListener()
+            if (applyFilter == true)
             {
-                @Override
-                public void onClick(View v)
+                getViewDataBinding().emptyView.setMessageTextView(getString(R.string.message_not_exist_filters), getString(R.string.message_changing_filter_option));
+                getViewDataBinding().emptyView.setButton01(true, getString(R.string.label_hotel_list_changing_filter), new View.OnClickListener()
                 {
-                    getEventListener().onCalendarClick();
-                }
-            });
-            getViewDataBinding().emptyView.setBottomMessage(false);
+                    @Override
+                    public void onClick(View v)
+                    {
+                        getEventListener().onFilterClick();
+                    }
+                });
+
+                getViewDataBinding().emptyView.setButton02(false, null, null);
+                getViewDataBinding().emptyView.setBottomMessage(false);
+            } else
+            {
+                getViewDataBinding().emptyView.setMessageTextView(getString(R.string.message_stay_empty_message01), getString(R.string.message_stay_empty_message02));
+                getViewDataBinding().emptyView.setButton01(true, getString(R.string.label_stay_category_change_region), new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        getEventListener().onRegionClick();
+                    }
+                });
+
+                getViewDataBinding().emptyView.setButton02(true, getString(R.string.label_stay_category_change_date), new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        getEventListener().onCalendarClick();
+                    }
+                });
+                getViewDataBinding().emptyView.setBottomMessage(false);
+            }
         }
+    }
+
+    @Override
+    public void setListLayoutVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().swipeRefreshLayout.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
@@ -357,7 +375,7 @@ public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmen
             });
         }
 
-        fragmentManager.beginTransaction().add(getViewDataBinding().mapLayout.getId(), mStayMapFragment).commitAllowingStateLoss();
+        fragmentManager.beginTransaction().add(getViewDataBinding().mapLayout.getId(), mStayMapFragment).commit();
 
         //        getViewDataBinding().mapLayout.setOnTouchListener(new View.OnTouchListener()
         //        {
@@ -408,7 +426,6 @@ public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmen
 
         getViewDataBinding().mapLayout.removeAllViews();
         getViewDataBinding().mapLayout.setVisibility(View.GONE);
-        getViewDataBinding().swipeRefreshLayout.setVisibility(View.VISIBLE);
 
         //        setMapProgressBarVisible(false);
 

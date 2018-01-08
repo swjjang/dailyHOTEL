@@ -192,18 +192,7 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
             }
         } else
         {
-            mViewType = mStayViewModel.viewType.getValue();
-
-            switch (mViewType)
-            {
-                case LIST:
-                    getViewInterface().hideMapLayout(getFragment().getFragmentManager());
-                    break;
-
-                case MAP:
-                    getViewInterface().showMapLayout(getFragment().getFragmentManager());
-                    break;
-            }
+            setViewType(mStayViewModel.viewType.getValue());
         }
     }
 
@@ -503,7 +492,7 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
             {
                 DailyRemoteConfigPreference.getInstance(getActivity()).setKeyRemoteConfigRewardStickerEnabled(stays.activeReward);
 
-                if(stays.getStayList() == null || stays.getStayList().size() == 0)
+                if (stays.getStayList() == null || stays.getStayList().size() == 0)
                 {
                     getViewInterface().setEmptyViewVisible(true, mStayViewModel.stayFilter.getValue().isDefaultFilter() == false);
                 } else
@@ -614,7 +603,7 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
             return;
         }
 
-        mViewType = StayTabPresenter.ViewType.LIST;
+        setViewType(StayTabPresenter.ViewType.LIST);
 
         mStayViewModel = ViewModelProviders.of(activity).get(StayTabPresenter.StayViewModel.class);
 
@@ -628,18 +617,7 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
                     return;
                 }
 
-                mViewType = viewType;
-
-                switch (viewType)
-                {
-                    case LIST:
-                        getViewInterface().hideMapLayout(getFragment().getFragmentManager());
-                        break;
-
-                    case MAP:
-                        getViewInterface().showMapLayout(getFragment().getFragmentManager());
-                        break;
-                }
+                setViewType(viewType);
             }
         });
     }
@@ -648,6 +626,29 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
     {
         return (mStayViewModel.selectedCategory.getValue() != null && mCategory != null//
             && mStayViewModel.selectedCategory.getValue().code.equalsIgnoreCase(mCategory.code) == true);
+    }
+
+    void setViewType(StayTabPresenter.ViewType viewType)
+    {
+        if (viewType == null)
+        {
+            return;
+        }
+
+        mViewType = viewType;
+
+        switch (mViewType)
+        {
+            case LIST:
+                getViewInterface().setSwipeRefreshing(true);
+                getViewInterface().hideMapLayout(getFragment().getChildFragmentManager());
+                break;
+
+            case MAP:
+                getViewInterface().setSwipeRefreshing(false);
+                getViewInterface().showMapLayout(getFragment().getChildFragmentManager());
+                break;
+        }
     }
 
     /**
