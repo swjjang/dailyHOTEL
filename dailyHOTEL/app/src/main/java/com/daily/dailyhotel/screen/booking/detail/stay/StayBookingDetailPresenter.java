@@ -1442,7 +1442,8 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
 
             int nights = (int) ((DailyCalendar.clearTField(checkOutDate.getTime()) - DailyCalendar.clearTField(checkInDate.getTime())) / DailyCalendar.DAY_MILLISECOND);
 
-            KakaoLinkManager.newInstance(getActivity()).shareBookingStay(message, mStayBookingDetail.stayIndex,//
+            KakaoLinkManager.newInstance(getActivity()).shareBookingStay(message //
+                , mStayBookingDetail.stayName, mStayBookingDetail.stayAddress, mStayBookingDetail.stayIndex,//
                 mImageUrl, DailyCalendar.convertDateFormatString(mStayBookingDetail.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"), nights);
 
             mAnalytics.onEventShareKakaoClick(getActivity());

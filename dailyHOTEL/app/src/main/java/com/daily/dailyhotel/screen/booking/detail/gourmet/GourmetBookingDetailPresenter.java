@@ -1055,7 +1055,8 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
                 ticketName, getString(R.string.label_booking_count, totalTicketCount), //
                 restaurantInfo.address);
 
-            KakaoLinkManager.newInstance(getActivity()).shareBookingGourmet(message, restaurantInfo.index,//
+            KakaoLinkManager.newInstance(getActivity()).shareBookingGourmet(message //
+                , restaurantInfo.name, restaurantInfo.address, restaurantInfo.index,//
                 mImageUrl, DailyCalendar.convertDateFormatString(guestInfo.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
 
             mAnalytics.onEventShareKakaoClick(getActivity());
