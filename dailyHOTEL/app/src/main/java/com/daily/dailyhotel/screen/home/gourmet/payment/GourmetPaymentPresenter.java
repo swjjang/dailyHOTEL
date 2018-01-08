@@ -124,6 +124,8 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
     GourmetCart mGourmetCart;
     int mPersons;
     private int mMaxCouponAmount;
+    private boolean mCheckChangedPrice;
+    private boolean mNeedOverwritePrice;
 
     // ***************************************************************** //
     // ************** 변수 선언시에 onSaveInstanceState 에 꼭 등록해야하는지 판단한다.
@@ -517,33 +519,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             case GourmetPaymentActivity.REQUEST_CODE_PAYMENT_WEB_CARD:
             case GourmetPaymentActivity.REQUEST_CODE_PAYMENT_WEB_PHONE:
             case GourmetPaymentActivity.REQUEST_CODE_PAYMENT_WEB_VBANK:
-                // 결제 진행후 취소시에 적립금과 쿠폰을 돌려주어야 한다.
-                if (resultCode != Activity.RESULT_OK)
-                {
-                    addCompositeDisposable(mProfileRemoteImpl.getUserSimpleInformation().subscribe(new Consumer<UserSimpleInformation>()
-                    {
-                        @Override
-                        public void accept(@io.reactivex.annotations.NonNull UserSimpleInformation userSimpleInformation) throws Exception
-                        {
-                            setUserInformation(userSimpleInformation);
-
-                            notifyBonusEnabledChanged();
-                            notifyGourmetPaymentChanged();
-                        }
-                    }, new Consumer<Throwable>()
-                    {
-                        @Override
-                        public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
-                        {
-
-                        }
-                    }));
-                }
-
-                if (data != null)
-                {
-                    onPaymentWebResult(mPaymentType, resultCode, data.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_PAYMENT_RESULT));
-                }
+                onPaymentWebResult(mPaymentType, resultCode, data);
                 break;
 
             case GourmetPaymentActivity.REQUEST_CODE_COUPON_LIST:
@@ -644,9 +620,16 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                 notifyEasyCardChanged();
                 notifyGourmetPaymentChanged();
 
-                // 가격이 변동된 경우
-                if (checkChangedPrice(mGourmetPayment, mGourmetCart) == true)
+                if (mNeedOverwritePrice == true)
                 {
+                    mNeedOverwritePrice = false;
+                    overwriteGourmetCartPrice(mGourmetPayment, mGourmetCart);
+                }
+
+                // 가격이 변동된 경우
+                if (mCheckChangedPrice == false && checkChangedPrice(mGourmetPayment, mGourmetCart) == true)
+                {
+                    mCheckChangedPrice = true;
                     setResult(BaseActivity.RESULT_CODE_REFRESH);
 
                     addCompositeDisposable(mCartLocalImpl.clearGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
@@ -1114,8 +1097,9 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                 unLockAll();
 
                 // 가격이 변동된 경우
-                if (checkChangedPrice(gourmetPayment, mGourmetCart) == true)
+                if (mCheckChangedPrice == false && checkChangedPrice(gourmetPayment, mGourmetCart) == true)
                 {
+                    mCheckChangedPrice = true;
                     setResult(BaseActivity.RESULT_CODE_REFRESH);
 
                     addCompositeDisposable(mCartLocalImpl.clearGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
@@ -1475,6 +1459,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             bookingGuestJSONObject.put("numberOfGuest", visitPersons);
 
             jsonObject.put("bookingGuest", bookingGuestJSONObject);
+            jsonObject.put("discountTotal", totalPrice);
 
             if (DailyTextUtils.isTextEmpty(billingKey) == false)
             {
@@ -2077,8 +2062,47 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         return messages;
     }
 
-    private void onPaymentWebResult(DailyBookingPaymentTypeView.PaymentType paymentType, int resultCode, String result)
+    private void onPaymentWebResult(DailyBookingPaymentTypeView.PaymentType paymentType, int resultCode, Intent data)
     {
+        // 가격 변동인 경우 결제 화면 전체를 갱신해야 한다. - 전체 갱신이기때문에 onPaymentWebResult를 호출하지 않는다.
+        if (resultCode == Constants.CODE_RESULT_ACTIVITY_PAYMENT_CHANGED_PRICE)
+        {
+            mNeedOverwritePrice = true;
+            setRefresh(true);
+            return;
+        }
+
+        if (resultCode == Constants.CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION)
+        {
+            restartExpiredSession();
+            return;
+        }
+
+        // 결제 진행후 취소시에 적립금과 쿠폰을 돌려주어야 한다.
+        if (resultCode != Activity.RESULT_OK)
+        {
+            addCompositeDisposable(mProfileRemoteImpl.getUserSimpleInformation().subscribe(new Consumer<UserSimpleInformation>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull UserSimpleInformation userSimpleInformation) throws Exception
+                {
+                    setUserInformation(userSimpleInformation);
+
+                    notifyBonusEnabledChanged();
+                    notifyGourmetPaymentChanged();
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                {
+
+                }
+            }));
+        }
+
+        String result = data == null ? null : data.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_PAYMENT_RESULT);
+
         if (resultCode == Activity.RESULT_OK)
         {
             Observable.just(result).map(jsonString ->
@@ -2174,9 +2198,11 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                 int msgCode = jsonObject.getInt("msgCode");
 
                 // 다날 핸드폰 화면에서 취소 버튼 누르는 경우
+                // 사용자가 일반 결제 등의 화면에서 back key를 눌러 나타나는 취소 팝업에서 명시적으로 취소 했을 경우
                 if (msgCode == -104)
                 {
-                    getViewInterface().showSimpleDialog(title, getString(R.string.act_toast_payment_canceled), getString(R.string.dialog_btn_text_confirm), null, null, null, false);
+                    getViewInterface().showSimpleDialog(title, getString(R.string.act_toast_payment_canceled) //
+                        , getString(R.string.dialog_btn_text_confirm), null, null, null, false);
                 } else
                 {
                     addCompositeDisposable(mCartLocalImpl.clearGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
@@ -2184,29 +2210,29 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                         @Override
                         public void accept(Boolean aBoolean) throws Exception
                         {
-                            getViewInterface().showSimpleDialog(title, jsonObject.getString("msg"), getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
+                            getViewInterface().showSimpleDialog(title, jsonObject.getString("msg"), getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
                             {
                                 @Override
-                                public void onClick(View view)
+                                public void onDismiss(DialogInterface dialogInterface)
                                 {
                                     setResult(BaseActivity.RESULT_CODE_REFRESH);
                                     onBackClick();
                                 }
-                            }, null, false);
+                            });
                         }
                     }));
                 }
             } catch (Exception e)
             {
-                getViewInterface().showSimpleDialog(title, getString(R.string.act_toast_payment_fail), getString(R.string.dialog_btn_text_confirm), null, new View.OnClickListener()
+                getViewInterface().showSimpleDialog(title, getString(R.string.act_toast_payment_fail), getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
                 {
                     @Override
-                    public void onClick(View view)
+                    public void onDismiss(DialogInterface dialogInterface)
                     {
                         setResult(BaseActivity.RESULT_CODE_REFRESH);
                         onBackClick();
                     }
-                }, null, false);
+                });
             }
         }
     }
@@ -2232,6 +2258,22 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
             switch (baseException.getCode())
             {
+                case 1190:
+                {
+                    getViewInterface().showSimpleDialog(getString(R.string.dialog_title_payment), message//
+                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialog)
+                            {
+                                mNeedOverwritePrice = true;
+                                setRefresh(true);
+                                onRefresh(true);
+                            }
+                        }, false);
+                    return;
+                }
+
                 case 1180:
                     setResult(BaseActivity.RESULT_CODE_BACK);
                     break;
@@ -2275,7 +2317,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             return true;
         }
 
-        for (GourmetCartMenu gourmetCartMenu : mGourmetCart.getMenuList())
+        for (GourmetCartMenu gourmetCartMenu : gourmetCart.getMenuList())
         {
             for (GourmetPaymentMenu gourmetPaymentMenu : gourmetPayment.getGourmetPaymentMenuList())
             {
@@ -2287,6 +2329,26 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         }
 
         return false;
+    }
+
+    private void overwriteGourmetCartPrice(GourmetPayment gourmetPayment, GourmetCart gourmetCart)
+    {
+        if (gourmetPayment == null || gourmetCart == null)
+        {
+            return;
+        }
+
+        for (GourmetCartMenu gourmetCartMenu : gourmetCart.getMenuList())
+        {
+            for (GourmetPaymentMenu gourmetPaymentMenu : gourmetPayment.getGourmetPaymentMenuList())
+            {
+                if (gourmetCartMenu.saleIndex == gourmetPaymentMenu.saleIndex)
+                {
+                    gourmetCartMenu.discountPrice = gourmetPaymentMenu.price;
+                    break;
+                }
+            }
+        }
     }
 
     private void getMaxCouponAmount(int[] ticketSaleIndexes, int[] ticketCount)

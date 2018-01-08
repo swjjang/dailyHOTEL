@@ -328,6 +328,7 @@
     <string name="dialog_msg_hotel_payment_message13">이곳에 서명해주세요.</string>
     <string name="dialog_msg_hotel_payment_message14">환불 불가 표시 상품의 경우 규정과 상관없이 변경, 취소, 환불이 &lt;b&gt;절대 불가&lt;/b&gt;합니다.</string>
     <string name="dialog_msg_hotel_payment_overlap">동일한 체크인 날짜에\n예약한 건이 있습니다.\n예약을 진행할까요?</string>
+    <string name="dialog_msg_hotel_payment_changed_price">가격이 변경되었으니 확인 후 결제해주세요.</string>
 
 
     <string name="dialog_msg_gourmet_payment_message01">&lt;b&gt;예약 취소, 변경 및 환불 불가&lt;/b&gt; 상품입니다.</string>

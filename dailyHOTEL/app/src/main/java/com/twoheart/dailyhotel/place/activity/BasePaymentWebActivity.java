@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.place.activity;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
@@ -9,6 +10,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -35,6 +37,9 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 
@@ -72,6 +77,7 @@ public abstract class BasePaymentWebActivity extends BaseActivity implements Con
 
     protected abstract void onIntent(Intent intent);
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @SuppressLint("AddJavascriptInterface")
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -517,6 +523,21 @@ public abstract class BasePaymentWebActivity extends BaseActivity implements Con
             @Override
             public void onClick(View view)
             {
+                try
+                {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("msgCode", -104);
+                    jsonObject.put("msg", getString(R.string.act_toast_payment_canceled));
+
+                    Intent intent = new Intent();
+                    intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_PAYMENT_RESULT, jsonObject.toString());
+
+                    setResult(Activity.RESULT_CANCELED, intent);
+                } catch (JSONException e)
+                {
+                    ExLog.d(e.getMessage());
+                }
+
                 finish();
             }
         };
