@@ -193,12 +193,17 @@ public class KakaoLinkManager implements Constants
 
         try
         {
+            name = Util.getShareName(mContext, name);
+            if (DailyTextUtils.isTextEmpty(name) == true)
+            {
+                name = mContext.getString(R.string.label_friend);
+            }
+
             String checkInDay = stayBookDateTime.getCheckInDateTime("yyyyMMdd");
             int nights = stayBookDateTime.getNights();
             String schemeParams = String.format(Locale.KOREA, "vc=20&v=pd&pt=stayOutbound&i=%d&d=%s&n=%d", stayIndex, checkInDay, nights);
 
-            String text = mContext.getString(R.string.kakao_btn_share_stay_outbound, name, stayName//
-                , stayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)"), stayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)"), nights, nights + 1, address);
+            String text = mContext.getString(R.string.kakao_btn_share_stay_outbound, name);
 
             String kakaoImageUrl = null;
             if (DailyTextUtils.isTextEmpty(imageUrl) == false)
