@@ -22,5 +22,7 @@ public interface BaseFragmentInterface
 
     void onActivityResult(int requestCode, int resultCode, Intent data);
 
-    void notifyRefresh(boolean force);
+    void onSelected(); //
+
+    void onUnselected();
 }

@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 public abstract class BaseFragment<T1 extends BaseFragmentPresenter, T2 extends OnBaseFragmentEventListener> extends Fragment
 {
-    private T1 mPresenter;
+    protected T1 mPresenter;
     private T2 mOnFragmentEventListener;
 
     public BaseFragment()
@@ -92,14 +92,6 @@ public abstract class BaseFragment<T1 extends BaseFragmentPresenter, T2 extends 
         if (mPresenter != null)
         {
             mPresenter.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    public void notifyRefresh(boolean force)
-    {
-        if (mPresenter != null)
-        {
-            mPresenter.notifyRefresh(false);
         }
     }
 

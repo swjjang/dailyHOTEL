@@ -166,37 +166,6 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
     }
 
     @Override
-    public void notifyRefresh(boolean force)
-    {
-        if (mStayViewModel.viewType.getValue() == mViewType)
-        {
-            switch (mViewType)
-            {
-                case LIST:
-                    if (force == true || (isCurrentFragment() == true && mPage == PAGE_NONE))
-                    {
-                        mPage = 1;
-
-                        setRefresh(true);
-
-                        // Activity 가 아직 생성되지 않은 경우가 있다.
-                        if (getActivity() != null)
-                        {
-                            onRefresh(true);
-                        }
-                    }
-                    break;
-
-                case MAP:
-                    break;
-            }
-        } else
-        {
-            setViewType(mStayViewModel.viewType.getValue());
-        }
-    }
-
-    @Override
     public void onStart()
     {
         super.onStart();
@@ -220,6 +189,42 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
 
     @Override
     public void onBackClick()
+    {
+
+    }
+
+    @Override
+    public void onSelected()
+    {
+        if (mStayViewModel.viewType.getValue() != mViewType)
+        {
+            setViewType(mStayViewModel.viewType.getValue());
+        }
+
+        switch (mViewType)
+        {
+            case LIST:
+                if (isCurrentFragment() == true && mPage == PAGE_NONE)
+                {
+                    mPage = 1;
+
+                    setRefresh(true);
+
+                    // Activity 가 아직 생성되지 않은 경우가 있다.
+                    if (getActivity() != null)
+                    {
+                        onRefresh(true);
+                    }
+                }
+                break;
+
+            case MAP:
+                break;
+        }
+    }
+
+    @Override
+    public void onUnselected()
     {
 
     }
@@ -483,9 +488,9 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
 
         screenLock(true);
 
-        mPage = 0;
-
-        addCompositeDisposable(mStayRemoteImpl.getList(getQueryMap(mPage), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Stays>()
+        // 맵은 모든 마커를 받아와야 하기 때문에 페이지 개수를 -1으로 한다.
+        // 맵의 마커와 리스트의 목록은 상관관계가 없다.
+        addCompositeDisposable(mStayRemoteImpl.getList(getQueryMap(-1), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Stays>()
         {
             @Override
             public void accept(Stays stays) throws Exception
@@ -499,7 +504,7 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
                 {
                     getViewInterface().setEmptyViewVisible(false, mStayViewModel.stayFilter.getValue().isDefaultFilter() == false);
 
-                    getViewInterface().setMapList(stays.getStayList(), true, true);
+                    getViewInterface().setMapList(stays.getStayList(), true, true, false);
                 }
 
                 unLockAll();
@@ -603,7 +608,7 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
             return;
         }
 
-        setViewType(StayTabPresenter.ViewType.LIST);
+        setViewType(StayTabPresenter.ViewType.NONE);
 
         mStayViewModel = ViewModelProviders.of(activity).get(StayTabPresenter.StayViewModel.class);
 
@@ -640,13 +645,13 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
         switch (mViewType)
         {
             case LIST:
-                getViewInterface().setSwipeRefreshing(true);
+                getViewInterface().setListLayoutVisible(true);
                 getViewInterface().hideMapLayout(getFragment().getChildFragmentManager());
                 break;
 
             case MAP:
-                getViewInterface().setSwipeRefreshing(false);
-                getViewInterface().showMapLayout(getFragment().getChildFragmentManager());
+                getViewInterface().setListLayoutVisible(false);
+                getViewInterface().showMapLayout(getFragment().getChildFragmentManager(), mPage == PAGE_NONE);
                 break;
         }
     }

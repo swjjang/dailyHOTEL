@@ -21,5 +21,5 @@ public interface StayTabInterface extends BaseDialogViewInterface
 
     void setCategoryTab(int position);
 
-    void notifyRefreshFragments(boolean force);
+    void onSelectedCategory();
 }

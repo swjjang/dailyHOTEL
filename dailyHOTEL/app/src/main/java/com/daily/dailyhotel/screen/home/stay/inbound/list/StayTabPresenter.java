@@ -79,6 +79,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
     public enum ViewType
     {
+        NONE,
         LIST,
         MAP,
     }
@@ -349,8 +350,6 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
                         notifyRegionTextChanged();
                         notifyCategoryChanged();
-
-                        getViewInterface().notifyRefreshFragments(false);
                     }
                 }
             }
@@ -384,7 +383,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
         getViewInterface().setCategoryTab(tab.getPosition());
 
-        getViewInterface().notifyRefreshFragments(false);
+        getViewInterface().onSelectedCategory();
     }
 
     @Override

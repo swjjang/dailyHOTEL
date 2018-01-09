@@ -5,12 +5,13 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseFragment;
 import com.daily.base.OnBaseFragmentEventListener;
+import com.daily.dailyhotel.base.BasePagerFragment;
 
 /**
  * Created by sheldon
  * Clean Architecture
  */
-public class StayListFragment extends BaseFragment<StayListFragmentPresenter, StayListFragment.OnEventListener>
+public class StayListFragment extends BasePagerFragment<StayListFragmentPresenter, StayListFragment.OnEventListener>
 {
     static final int REQUEST_CODE_DETAIL = 11000;
 

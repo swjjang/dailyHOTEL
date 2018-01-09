@@ -322,7 +322,7 @@ public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmen
     }
 
     @Override
-    public void showMapLayout(FragmentManager fragmentManager)
+    public void showMapLayout(FragmentManager fragmentManager, boolean hide)
     {
         if (getViewDataBinding() == null || fragmentManager == null)
         {
@@ -330,7 +330,7 @@ public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmen
         }
 
         getViewDataBinding().swipeRefreshLayout.setVisibility(View.INVISIBLE);
-        getViewDataBinding().mapLayout.setVisibility(View.VISIBLE);
+        getViewDataBinding().mapLayout.setVisibility(hide ? View.INVISIBLE : View.VISIBLE);
 
         if (mStayMapFragment == null)
         {
@@ -435,12 +435,14 @@ public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmen
     }
 
     @Override
-    public void setMapList(List<Stay> stayList, boolean moveCameraBounds, boolean clear)
+    public void setMapList(List<Stay> stayList, boolean moveCameraBounds, boolean clear, boolean hide)
     {
         if (getViewDataBinding() == null || mStayMapFragment == null)
         {
             return;
         }
+
+        getViewDataBinding().mapLayout.setVisibility(hide ? View.INVISIBLE : View.VISIBLE);
 
         mStayMapFragment.setStayList(stayList, moveCameraBounds, clear);
 
