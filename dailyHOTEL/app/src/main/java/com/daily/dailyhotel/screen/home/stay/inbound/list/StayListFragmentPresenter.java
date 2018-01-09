@@ -303,10 +303,6 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                 break;
 
             case MAP:
-                if (mEmptyList == true)
-                {
-                    onMapReady();
-                }
                 break;
         }
 
@@ -314,13 +310,18 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
         {
             getFragment().getFragmentEventListener().setFloatingActionViewVisible(true);
             getFragment().getFragmentEventListener().setFloatingActionViewTypeMapEnabled(true);
-        } else if (mStayViewModel.stayFilter.getValue().isDefaultFilter() == false)
+        } else
         {
-            getFragment().getFragmentEventListener().setFloatingActionViewVisible(true);
-            getFragment().getFragmentEventListener().setFloatingActionViewTypeMapEnabled(false);
+            if (mStayViewModel.stayFilter.getValue().isDefaultFilter() == true)
+            {
+                getFragment().getFragmentEventListener().setFloatingActionViewVisible(false);
+            } else
+            {
+                getFragment().getFragmentEventListener().setFloatingActionViewVisible(true);
+                getFragment().getFragmentEventListener().setFloatingActionViewTypeMapEnabled(false);
+            }
         }
     }
-
 
     @Override
     public void onUnselected()
@@ -659,7 +660,6 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                 if (stays.getStayList() == null || stays.getStayList().size() == 0)
                 {
                     mEmptyList = true;
-                    mPage = PAGE_NONE;
 
                     getFragment().getFragmentEventListener().setFloatingActionViewVisible(notDefaultFilter);
                     getFragment().getFragmentEventListener().setFloatingActionViewTypeMapEnabled(false);

@@ -16,6 +16,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.Category;
+import com.daily.dailyhotel.view.DailyFloatingActionView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayTabDataBinding;
 
@@ -266,11 +267,11 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
         switch (viewType)
         {
             case LIST:
-                getViewDataBinding().floatingActionView.setViewOptionMapSelected();
+                getViewDataBinding().floatingActionView.setViewOption(DailyFloatingActionView.ViewOption.LIST);
                 break;
 
             case MAP:
-                getViewDataBinding().floatingActionView.setViewOptionListSelected();
+                getViewDataBinding().floatingActionView.setViewOption(DailyFloatingActionView.ViewOption.MAP);
                 break;
         }
     }
