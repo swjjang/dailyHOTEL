@@ -56,74 +56,21 @@ public class KakaoLinkManager implements Constants
     //        }
     //    }
 
-    public void shareStay(String name, String hotelName, String address, int hotelIndex, String imageUrl, StayBookingDay stayBookingDay)
+    public void shareStay(String name, String stayName, String address, int stayIndex //
+        , String imageUrl, String mobileWebUrl, StayBookingDay stayBookingDay)
     {
         try
         {
-            String checkInDay = stayBookingDay.getCheckInDay("yyyyMMdd");
-            int nights = stayBookingDay.getNights();
-            String schemeParams = String.format(Locale.KOREA, "vc=5&v=hd&i=%d&d=%s&n=%d", hotelIndex, checkInDay, nights);
-            String text = mContext.getString(R.string.kakao_btn_share_hotel, name, hotelName//
-                , stayBookingDay.getCheckInDay("yyyy.MM.dd(EEE)"), stayBookingDay.getCheckOutDay("yyyy.MM.dd(EEE)"), nights, nights + 1, address);
-
-            String kakaoImageUrl = null;
-            if (DailyTextUtils.isTextEmpty(imageUrl) == false)
+            name = Util.getShareName(mContext, name);
+            if (DailyTextUtils.isTextEmpty(name) == true)
             {
-                int lastSlash = imageUrl.lastIndexOf('/');
-                String fileName = imageUrl.substring(lastSlash + 1);
-                kakaoImageUrl = imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName);
+                name = mContext.getString(R.string.label_friend);
             }
 
-            LocationTemplate params = LocationTemplate.newBuilder(address, //
-                ContentObject.newBuilder(hotelName, //
-                    kakaoImageUrl, //
-                    LinkObject.newBuilder() //
-                        .setWebUrl("https://mobile.dailyhotel.co.kr/stay/" + hotelIndex) //
-                        .setMobileWebUrl("https://mobile.dailyhotel.co.kr/stay/" + hotelIndex) //
-                        .setAndroidExecutionParams(schemeParams) //
-                        .setIosExecutionParams(schemeParams) //
-                        .build()) //
-                    .setDescrption(text) //
-                    .build()) //
-                .addButton(new ButtonObject(mContext.getString(R.string.label_kakao_mobile_app), LinkObject.newBuilder() //
-                    .setWebUrl("https://mobile.dailyhotel.co.kr/stay/" + hotelIndex) //
-                    .setMobileWebUrl("https://mobile.dailyhotel.co.kr/stay/" + hotelIndex) //
-                    .setAndroidExecutionParams(schemeParams) //
-                    .setIosExecutionParams(schemeParams) //
-                    .build())) //
-                .setAddressTitle(hotelName) //
-                .build();
-
-            mKakaoLinkService.sendDefault(mContext, params, new ResponseCallback<KakaoLinkResponse>()
-            {
-                @Override
-                public void onFailure(ErrorResult errorResult)
-                {
-                    ExLog.e(errorResult.toString());
-                }
-
-                @Override
-                public void onSuccess(KakaoLinkResponse result)
-                {
-
-                }
-            });
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
-    }
-
-    public void shareStay(String name, String stayName, String address, int stayIndex, String imageUrl, StayBookDateTime stayBookDateTime)
-    {
-        try
-        {
-            String checkInDay = stayBookDateTime.getCheckInDateTime("yyyyMMdd");
-            int nights = stayBookDateTime.getNights();
+            String checkInDay = stayBookingDay.getCheckInDay("yyyyMMdd");
+            int nights = stayBookingDay.getNights();
             String schemeParams = String.format(Locale.KOREA, "vc=5&v=hd&i=%d&d=%s&n=%d", stayIndex, checkInDay, nights);
-
-            String text = mContext.getString(R.string.kakao_btn_share_hotel, name, stayName//
-                , stayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)"), stayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)"), nights, nights + 1, address);
+            String text = mContext.getString(R.string.kakao_btn_share_hotel, name, mobileWebUrl);
 
             String kakaoImageUrl = null;
             if (DailyTextUtils.isTextEmpty(imageUrl) == false)
@@ -137,16 +84,16 @@ public class KakaoLinkManager implements Constants
                 ContentObject.newBuilder(stayName, //
                     kakaoImageUrl, //
                     LinkObject.newBuilder() //
-                        .setWebUrl("https://mobile.dailyhotel.co.kr/stay/" + stayIndex) //
-                        .setMobileWebUrl("https://mobile.dailyhotel.co.kr/stay/" + stayIndex) //
+                        .setWebUrl(mobileWebUrl) //
+                        .setMobileWebUrl(mobileWebUrl) //
                         .setAndroidExecutionParams(schemeParams) //
                         .setIosExecutionParams(schemeParams) //
                         .build()) //
                     .setDescrption(text) //
                     .build()) //
                 .addButton(new ButtonObject(mContext.getString(R.string.label_kakao_mobile_app), LinkObject.newBuilder() //
-                    .setWebUrl("https://mobile.dailyhotel.co.kr/stay/" + stayIndex) //
-                    .setMobileWebUrl("https://mobile.dailyhotel.co.kr/stay/" + stayIndex) //
+                    .setWebUrl(mobileWebUrl) //
+                    .setMobileWebUrl(mobileWebUrl) //
                     .setAndroidExecutionParams(schemeParams) //
                     .setIosExecutionParams(schemeParams) //
                     .build())) //
@@ -173,8 +120,70 @@ public class KakaoLinkManager implements Constants
         }
     }
 
-    //    public void shareStayOutbound(String name, String hotelName, String englishName, String address, double latitude, double longitude
-    //        , int hotelIndex, String imageUrl, StayBookDateTime stayBookDateTime)
+    public void shareStay(String name, String stayName, String address, int stayIndex //
+        , String imageUrl, String mobileWebUrl, StayBookDateTime stayBookDateTime)
+    {
+        try
+        {
+            name = Util.getShareName(mContext, name);
+            if (DailyTextUtils.isTextEmpty(name) == true)
+            {
+                name = mContext.getString(R.string.label_friend);
+            }
+
+            String checkInDay = stayBookDateTime.getCheckInDateTime("yyyyMMdd");
+            int nights = stayBookDateTime.getNights();
+            String schemeParams = String.format(Locale.KOREA, "vc=5&v=hd&i=%d&d=%s&n=%d", stayIndex, checkInDay, nights);
+            String text = mContext.getString(R.string.kakao_btn_share_hotel, name, mobileWebUrl);
+
+            String kakaoImageUrl = null;
+            if (DailyTextUtils.isTextEmpty(imageUrl) == false)
+            {
+                int lastSlash = imageUrl.lastIndexOf('/');
+                String fileName = imageUrl.substring(lastSlash + 1);
+                kakaoImageUrl = imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName);
+            }
+
+            LocationTemplate params = LocationTemplate.newBuilder(address, //
+                ContentObject.newBuilder(stayName, //
+                    kakaoImageUrl, //
+                    LinkObject.newBuilder() //
+                        .setWebUrl(mobileWebUrl) //
+                        .setMobileWebUrl(mobileWebUrl) //
+                        .setAndroidExecutionParams(schemeParams) //
+                        .setIosExecutionParams(schemeParams) //
+                        .build()) //
+                    .setDescrption(text) //
+                    .build()) //
+                .addButton(new ButtonObject(mContext.getString(R.string.label_kakao_mobile_app), LinkObject.newBuilder() //
+                    .setWebUrl(mobileWebUrl) //
+                    .setMobileWebUrl(mobileWebUrl) //
+                    .setAndroidExecutionParams(schemeParams) //
+                    .setIosExecutionParams(schemeParams) //
+                    .build())) //
+                .setAddressTitle(stayName) //
+                .build();
+
+            mKakaoLinkService.sendDefault(mContext, params, new ResponseCallback<KakaoLinkResponse>()
+            {
+                @Override
+                public void onFailure(ErrorResult errorResult)
+                {
+                    ExLog.e(errorResult.toString());
+                }
+
+                @Override
+                public void onSuccess(KakaoLinkResponse result)
+                {
+
+                }
+            });
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
     public void shareStayOutbound(String name, String stayName, String address, int stayIndex, String imageUrl, StayBookDateTime stayBookDateTime)
     {
         if (DailyTextUtils.isTextEmpty(name, stayName, address) == true || stayBookDateTime == null)
