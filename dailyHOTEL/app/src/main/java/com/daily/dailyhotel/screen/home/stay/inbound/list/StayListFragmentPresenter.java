@@ -26,6 +26,7 @@ import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
+import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.entity.Stays;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
@@ -196,7 +197,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                 }
                 break;
 
-            case Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG:
+            case StayListFragment.REQUEST_CODE_WISH_DIALOG:
                 switch (resultCode)
                 {
                     case BaseActivity.RESULT_CODE_REFRESH:
@@ -299,8 +300,19 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
     @Override
     public void onRefresh()
     {
-        setRefresh(true);
-        onRefresh(true);
+        switch (mViewType)
+        {
+            case LIST:
+                mPage = 1;
+
+                setRefresh(true);
+                onRefresh(true);
+                break;
+
+            case MAP:
+                onMapReady();
+                break;
+        }
     }
 
     @Override
@@ -715,10 +727,10 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
             {
                 if (isCurrentFragment() == false)
                 {
-                    return;
+                } else
+                {
+                    setViewType(viewType);
                 }
-
-                setViewType(viewType);
             }
         });
 
@@ -727,7 +739,46 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
             @Override
             public void onChanged(@Nullable StayBookDateTime stayBookDateTime)
             {
+                // 날짜가 변경되면 해당 화면 진입시 재 로딩할 준비를 한다.
+                if (isCurrentFragment() == false)
+                {
+                    mPage = PAGE_NONE;
+                } else
+                {
 
+                }
+            }
+        });
+
+        mStayViewModel.stayRegion.observe(activity, new Observer<StayRegion>()
+        {
+            @Override
+            public void onChanged(@Nullable StayRegion stayRegion)
+            {
+                // 지역이 변경되면 해당 화면 진입시 재 로딩할 준비를 한다.
+                if (isCurrentFragment() == false)
+                {
+                    mPage = PAGE_NONE;
+                } else
+                {
+
+                }
+            }
+        });
+
+        mStayViewModel.stayFilter.observe(activity, new Observer<StayFilter>()
+        {
+            @Override
+            public void onChanged(@Nullable StayFilter stayFilter)
+            {
+                // 필터가 변경되면 해당 화면 진입시 재 로딩할 준비를 한다.
+                if (isCurrentFragment() == false)
+                {
+                    mPage = PAGE_NONE;
+                } else
+                {
+
+                }
             }
         });
     }

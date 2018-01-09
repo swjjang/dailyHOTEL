@@ -495,6 +495,7 @@ public class StayMapFragment extends com.google.android.gms.maps.SupportMapFragm
         if (refreshAll == true)
         {
             mGoogleMap.clear();
+            mClusterManager.clearItems();
         } else
         {
             removeHiddenMarker();
@@ -576,7 +577,6 @@ public class StayMapFragment extends com.google.android.gms.maps.SupportMapFragm
                     stayClusterItemList.add(stayClusterItem);
                 }
 
-                //                mClusterManager.clearItems();
                 mClusterManager.addItems(stayClusterItemList);
 
                 return stayClusterItemList.size();

@@ -18,9 +18,6 @@ public class StayTabActivity extends BaseActivity<StayTabPresenter>
 {
     static final int REQUEST_CODE_CALENDAR = 10000;
     static final int REQUEST_CODE_FILTER = 10001;
-    static final int REQUEST_CODE_PERMISSION_MANAGER = 10002;
-    static final int REQUEST_CODE_SETTING_LOCATION = 10003;
-    static final int REQUEST_CODE_WISH_DIALOG = 10005;
     static final int REQUEST_CODE_SEARCH = 10006;
     static final int REQUEST_CODE_SEARCH_RESULT = 10007;
     static final int REQUEST_CODE_REGION = 10008;

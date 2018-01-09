@@ -76,6 +76,12 @@ public abstract class BaseFragmentDialogView<T1 extends OnBaseEventListener, T2 
         getActivity().getPresenter().getViewInterface().showSimpleDialog(titleText, msg, positive, negative, positiveListener, negativeListener, cancelListener, dismissListener, cancelable);
     }
 
+    @Override
+    public void showSimpleDialog(View view, DialogInterface.OnCancelListener cancelListener//
+        , DialogInterface.OnDismissListener dismissListener, boolean cancelable)
+    {
+        getActivity().getPresenter().getViewInterface().showSimpleDialog(view, cancelListener, dismissListener, cancelable);
+    }
 
     @Override
     public void showToast(String message, int duration)

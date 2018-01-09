@@ -245,7 +245,12 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
     @Override
     public void setOptionFilterSelected(boolean selected)
     {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
 
+        getViewDataBinding().floatingActionView.setFilterOptionSelected(selected);
     }
 
     @Override
