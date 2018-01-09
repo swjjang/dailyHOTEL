@@ -44,10 +44,8 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 
 /**
  * Created by sheldon
@@ -360,10 +358,10 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         setRefresh(false);
         screenLock(showProgress);
 
-        addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime().observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<CommonDateTime, ObservableSource<List<Suggest>>>()
+        addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<CommonDateTime>()
         {
             @Override
-            public ObservableSource<List<Suggest>> apply(CommonDateTime commonDateTime) throws Exception
+            public void accept(CommonDateTime commonDateTime) throws Exception
             {
                 setCommonDateTime(commonDateTime);
 
@@ -407,9 +405,18 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
                 notifyStayBookDateTimeChanged();
 
-                return mSuggestRemoteImpl.getPopularRegionSuggestsByStayOutbound();
+                unLockAll();
             }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<Suggest>>()
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                onHandleErrorAndFinish(throwable);
+            }
+        }));
+
+        addCompositeDisposable(mSuggestRemoteImpl.getPopularRegionSuggestsByStayOutbound().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<Suggest>>()
         {
             @Override
             public void accept(List<Suggest> suggests) throws Exception
@@ -422,23 +429,13 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                     getViewInterface().setPopularAreaVisible(true);
                     getViewInterface().setPopularAreaList(suggests);
                 }
-
-                unLockAll();
             }
         }, new Consumer<Throwable>()
         {
             @Override
             public void accept(Throwable throwable) throws Exception
             {
-                unLockAll();
-
-                if (mCommonDateTime == null)
-                {
-                    onHandleErrorAndFinish(throwable);
-                } else
-                {
-                    getViewInterface().setPopularAreaVisible(false);
-                }
+                getViewInterface().setPopularAreaVisible(false);
             }
         }));
     }
