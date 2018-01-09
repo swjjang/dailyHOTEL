@@ -44,9 +44,10 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 /**
  * Created by sheldon
@@ -359,20 +360,13 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         setRefresh(false);
         screenLock(showProgress);
 
-        addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime(), mSuggestRemoteImpl.getPopularRegionSuggestsByStayOutbound(), new BiFunction<CommonDateTime, List<Suggest>, List<Suggest>>()
+        addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime().observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<CommonDateTime, ObservableSource<List<Suggest>>>()
         {
             @Override
-            public List<Suggest> apply(CommonDateTime commonDateTime, List<Suggest> suggests) throws Exception
+            public ObservableSource<List<Suggest>> apply(CommonDateTime commonDateTime) throws Exception
             {
                 setCommonDateTime(commonDateTime);
 
-                return suggests;
-            }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<Suggest>>()
-        {
-            @Override
-            public void accept(List<Suggest> suggestList) throws Exception
-            {
                 String checkInDate = DailyPreference.getInstance(getActivity()).getStayOutboundSearchCheckInDate();
                 String checkOutDate = DailyPreference.getInstance(getActivity()).getStayOutboundSearchCheckOutDate();
 
@@ -411,9 +405,23 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                     mDailyDeepLink = null;
                 }
 
-                getViewInterface().setPopularAreaList(suggestList);
-
                 notifyStayBookDateTimeChanged();
+
+                return mSuggestRemoteImpl.getPopularRegionSuggestsByStayOutbound();
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<Suggest>>()
+        {
+            @Override
+            public void accept(List<Suggest> suggests) throws Exception
+            {
+                if (suggests == null || suggests.size() == 0)
+                {
+                    getViewInterface().setPopularAreaVisible(false);
+                } else
+                {
+                    getViewInterface().setPopularAreaVisible(true);
+                    getViewInterface().setPopularAreaList(suggests);
+                }
 
                 unLockAll();
             }
@@ -422,7 +430,15 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
             @Override
             public void accept(Throwable throwable) throws Exception
             {
-                onHandleErrorAndFinish(throwable);
+                unLockAll();
+
+                if (mCommonDateTime == null)
+                {
+                    onHandleErrorAndFinish(throwable);
+                } else
+                {
+                    getViewInterface().setPopularAreaVisible(false);
+                }
             }
         }));
     }
