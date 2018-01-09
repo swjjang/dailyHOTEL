@@ -148,6 +148,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         void onEventCalendarClick(Activity activity);
 
+        void onEventPeopleClick(Activity activity);
+
         StayOutboundDetailAnalyticsParam getDetailAnalyticsParam(StayOutbound stayOutbound, String grade, int rankingPosition, int listSize);
     }
 
@@ -729,7 +731,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
             startActivityForResult(intent, StayOutboundListActivity.REQUEST_CODE_CALENDAR);
 
-            if(mViewState == ViewState.LIST)
+            if (mViewState == ViewState.LIST)
             {
                 mAnalytics.onEventCalendarClick(getActivity());
             }
@@ -760,6 +762,15 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         }
 
         startActivityForResult(intent, StayOutboundListActivity.REQUEST_CODE_PEOPLE);
+
+        switch (mViewState)
+        {
+            case LIST:
+                mAnalytics.onEventPeopleClick(getActivity());
+
+            case MAP:
+                break;
+        }
     }
 
     @Override

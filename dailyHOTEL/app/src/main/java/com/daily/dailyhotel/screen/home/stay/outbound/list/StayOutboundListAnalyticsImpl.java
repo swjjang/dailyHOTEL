@@ -133,6 +133,18 @@ public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.
     }
 
     @Override
+    public void onEventPeopleClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
+            , AnalyticsManager.Action.MEMBER_SELECT, null, null);
+    }
+
+    @Override
     public StayOutboundDetailAnalyticsParam getDetailAnalyticsParam(StayOutbound stayOutbound, String grade, int rankingPosition, int listSize)
     {
         StayOutboundDetailAnalyticsParam analyticsParam = new StayOutboundDetailAnalyticsParam();
