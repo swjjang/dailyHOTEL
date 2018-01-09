@@ -4,12 +4,6 @@
         xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
-    <merge
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        tools:parentTag="android.support.v4.widget.NestedScrollView">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -83,6 +77,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginTop="25dp"
+                android:paddingBottom="@dimen/toolbar_height"
                 android:layout_weight="1"
                 android:gravity="bottom"
                 android:minHeight="60dp"
@@ -109,5 +104,4 @@
                     android:textSize="12dp"/>
             </LinearLayout>
         </LinearLayout>
-    </merge>
 </layout>

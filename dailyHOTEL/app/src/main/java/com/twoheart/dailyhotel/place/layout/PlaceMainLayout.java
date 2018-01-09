@@ -467,7 +467,7 @@ public abstract class PlaceMainLayout extends BaseBlurLayout
             return;
         }
 
-        mFloatingActionView.setViewOptionEnable(enabled);
+        mFloatingActionView.setViewOptionEnabled(enabled);
     }
 
     public void setOptionFilterEnabled(boolean enabled)

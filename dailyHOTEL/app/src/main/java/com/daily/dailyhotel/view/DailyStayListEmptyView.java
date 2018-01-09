@@ -5,11 +5,12 @@ import android.databinding.DataBindingUtil;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ScrollView;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.DailyViewStayListEmptyDataBinding;
 
-public class DailyStayListEmptyView extends android.support.v4.widget.NestedScrollView
+public class DailyStayListEmptyView extends ScrollView
 {
     private DailyViewStayListEmptyDataBinding mViewDataBinding;
 
@@ -76,7 +77,7 @@ public class DailyStayListEmptyView extends android.support.v4.widget.NestedScro
         mViewDataBinding.button02TextView.setOnClickListener(listener);
     }
 
-    public void setBottomMessage(boolean visible)
+    public void setBottomMessageVisible(boolean visible)
     {
         if (mViewDataBinding == null)
         {

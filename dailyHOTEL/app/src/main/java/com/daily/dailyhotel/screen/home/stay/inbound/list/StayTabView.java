@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -15,6 +16,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.Category;
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayTabDataBinding;
 
 import java.lang.reflect.Field;
@@ -330,6 +332,24 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
     }
 
     @Override
+    public void showPreviewGuide()
+    {
+        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.view_dialog_preview_layout, null, false);
+
+        View confirmTextView = dialogView.findViewById(R.id.confirmTextView);
+        confirmTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                hideSimpleDialog();
+            }
+        });
+
+        showSimpleDialog(dialogView, null, null, false);
+    }
+
+    @Override
     public void onRegionClick()
     {
         if (getViewDataBinding() == null)
@@ -360,6 +380,39 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
         }
 
         getEventListener().onFilterClick();
+    }
+
+    @Override
+    public void setFloatingActionViewVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().floatingActionView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    @Override
+    public void setFloatingActionViewTypeMapEnabled(boolean enabled)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().floatingActionView.setViewOptionMapEnabled(enabled);
+    }
+
+    @Override
+    public void setFloatingActionViewTranslationY(float translationY)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().floatingActionView.setTranslationY(translationY);
     }
 
     private void initToolbar(ActivityStayTabDataBinding viewDataBinding)

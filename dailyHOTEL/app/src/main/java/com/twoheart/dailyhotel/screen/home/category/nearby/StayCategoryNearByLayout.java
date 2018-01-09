@@ -323,7 +323,7 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
             return;
         }
 
-        mFloatingActionView.setViewOptionEnable(enabled);
+        mFloatingActionView.setViewOptionEnabled(enabled);
     }
 
     public void setOptionFilterEnabled(boolean enabled)

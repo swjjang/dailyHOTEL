@@ -33,5 +33,5 @@ public interface StayListFragmentInterface extends BaseBlurFragmentViewInterface
 
     void setMapList(List<Stay> stayList, boolean moveCameraBounds, boolean clear, boolean hide);
 
-    void showPreviewGuide();
+    void setWish(int position, boolean wish);
 }

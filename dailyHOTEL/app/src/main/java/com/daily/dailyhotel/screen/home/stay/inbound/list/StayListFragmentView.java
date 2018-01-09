@@ -8,7 +8,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -179,7 +178,7 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
                     {
                         if (view instanceof DailyStayCardView == true)
                         {
-                            getEventListener().onStayClick(((DailyStayCardView) view).getOptionsCompat(), objectItem.getItem(), mStayListFragmentAdapter.getItemCount());
+                            getEventListener().onStayClick(position, ((DailyStayCardView) view).getOptionsCompat(), objectItem.getItem(), mStayListFragmentAdapter.getItemCount());
                         } else
                         {
 
@@ -315,7 +314,7 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
                 });
 
                 getViewDataBinding().emptyView.setButton02(false, null, null);
-                getViewDataBinding().emptyView.setBottomMessage(false);
+                getViewDataBinding().emptyView.setBottomMessageVisible(false);
             } else
             {
                 getViewDataBinding().emptyView.setMessageTextView(getString(R.string.message_stay_empty_message01), getString(R.string.message_stay_empty_message02));
@@ -336,7 +335,9 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
                         getEventListener().onCalendarClick();
                     }
                 });
-                getViewDataBinding().emptyView.setBottomMessage(false);
+
+                getViewDataBinding().emptyView.setBottomMessageVisible(true);
+                getViewDataBinding().emptyView.setOnCallClickListener(v -> getEventListener().onCallClick());
             }
         }
     }
@@ -480,21 +481,31 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
     }
 
     @Override
-    public void showPreviewGuide()
+    public void setWish(int position, boolean wish)
     {
-        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.view_dialog_preview_layout, null, false);
+        if (getViewDataBinding() == null || mStayListFragmentAdapter == null)
+        {
+            return;
+        }
 
-        View confirmTextView = dialogView.findViewById(R.id.confirmTextView);
-        confirmTextView.setOnClickListener(new View.OnClickListener()
+        if (mStayListFragmentAdapter.getItem(position).mType == ObjectItem.TYPE_ENTRY)
+        {
+            ((Stay) mStayListFragmentAdapter.getItem(position).getItem()).myWish = wish;
+        }
+
+        getViewDataBinding().recyclerView.post(new Runnable()
         {
             @Override
-            public void onClick(View v)
+            public void run()
             {
-                hideSimpleDialog();
+                StayListFragmentAdapter.StayViewHolder stayViewHolder = (StayListFragmentAdapter.StayViewHolder) getViewDataBinding().recyclerView.findViewHolderForAdapterPosition(position);
+
+                if (stayViewHolder != null)
+                {
+                    stayViewHolder.stayCardView.setWish(wish);
+                }
             }
         });
-
-        showSimpleDialog(dialogView, null, null, false);
     }
 
     private DailyOverScrollViewPager addMapViewPager(Context context, ViewGroup viewGroup)

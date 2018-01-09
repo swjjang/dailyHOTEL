@@ -253,6 +253,25 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         {
             onRefresh(true);
         }
+
+        if (Util.supportPreview(getActivity()) == true)
+        {
+            // View 타입이 리스트일때만
+            if (mStayViewModel.viewType.getValue() == StayTabPresenter.ViewType.LIST)
+            {
+                int count = DailyPreference.getInstance(getActivity()).getCountPreviewGuide() + 1;
+
+                if (count == 2)
+                {
+                    getViewInterface().showPreviewGuide();
+                } else if (count > 2)
+                {
+                    return;
+                }
+
+                DailyPreference.getInstance(getActivity()).setCountPreviewGuide(count);
+            }
+        }
     }
 
     @Override

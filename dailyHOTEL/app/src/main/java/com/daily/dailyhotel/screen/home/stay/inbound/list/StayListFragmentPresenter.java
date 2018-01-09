@@ -35,11 +35,13 @@ import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -80,6 +82,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
     android.support.v4.util.Pair[] mPairsByLongPress;
 
     int mWishPosition;
+    boolean mEmptyList;
 
     public interface StayListFragmentAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -189,13 +192,19 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                             @Override
                             public void subscribe(ObservableEmitter<Object> e) throws Exception
                             {
-                                onStayClick(mPairsByLongPress, mStayByLongPress, mListCountByLongPress);
+                                onStayClick(mWishPosition, mPairsByLongPress, mStayByLongPress, mListCountByLongPress);
                             }
                         }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
                         break;
 
-                    case BaseActivity.RESULT_CODE_REFRESH:
-                        onRefresh();
+                    case Constants.CODE_RESULT_ACTIVITY_REFRESH:
+                        if (data != null && data.hasExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH) == true)
+                        {
+                            onChangedWish(mWishPosition, data.getBooleanExtra(StayPreviewActivity.INTENT_EXTRA_DATA_WISH, false));
+                        } else
+                        {
+                            onRefresh();
+                        }
                         break;
                 }
                 break;
@@ -258,29 +267,9 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
             onRefresh(true);
         }
 
-        if (Util.supportPreview(getActivity()) == true)
+        if (Util.supportPreview(getActivity()) == true && getViewInterface().isBlurVisible() == true)
         {
-            if (getViewInterface().isBlurVisible() == true)
-            {
-                getViewInterface().setBlurVisible(getActivity(), false);
-            } else
-            {
-                // View 타입이 리스트일때만
-                if (mViewType == StayTabPresenter.ViewType.LIST)
-                {
-                    int count = DailyPreference.getInstance(getActivity()).getCountPreviewGuide() + 1;
-
-                    if (count == 2)
-                    {
-                        getViewInterface().showPreviewGuide();
-                    } else if (count > 2)
-                    {
-                        return;
-                    }
-
-                    DailyPreference.getInstance(getActivity()).setCountPreviewGuide(count);
-                }
-            }
+            getViewInterface().setBlurVisible(getActivity(), false);
         }
     }
 
@@ -303,8 +292,6 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
             case LIST:
                 if (isCurrentFragment() == true && mPage == PAGE_NONE)
                 {
-                    mPage = 1;
-
                     setRefresh(true);
 
                     // Activity 가 아직 생성되지 않은 경우가 있다.
@@ -316,9 +303,24 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                 break;
 
             case MAP:
+                if (mEmptyList == true)
+                {
+                    onMapReady();
+                }
                 break;
         }
+
+        if (mEmptyList == false)
+        {
+            getFragment().getFragmentEventListener().setFloatingActionViewVisible(true);
+            getFragment().getFragmentEventListener().setFloatingActionViewTypeMapEnabled(true);
+        } else if (mStayViewModel.stayFilter.getValue().isDefaultFilter() == false)
+        {
+            getFragment().getFragmentEventListener().setFloatingActionViewVisible(true);
+            getFragment().getFragmentEventListener().setFloatingActionViewTypeMapEnabled(false);
+        }
     }
+
 
     @Override
     public void onUnselected()
@@ -332,8 +334,6 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
         switch (mViewType)
         {
             case LIST:
-                mPage = 1;
-
                 setRefresh(true);
                 onRefresh(true);
                 break;
@@ -373,6 +373,10 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
         setRefresh(false);
         screenLock(showProgress);
 
+        mPage = 1;
+
+        getViewInterface().setEmptyViewVisible(false, mStayViewModel.stayFilter.getValue().isDefaultFilter() == false);
+
         addCompositeDisposable(mStayRemoteImpl.getList(getQueryMap(mPage), DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStayRankTestType()).map(new Function<Stays, Pair<Boolean, List<ObjectItem>>>()
         {
             @Override
@@ -389,11 +393,24 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
             {
                 int listSize = pair.second.size();
 
+                boolean notDefaultFilter = mStayViewModel.stayFilter.getValue().isDefaultFilter() == false;
+
                 if (listSize == 0)
                 {
-                    getViewInterface().setEmptyViewVisible(true, mStayViewModel.stayFilter.getValue().isDefaultFilter() == false);
+                    mEmptyList = true;
+                    mPage = PAGE_NONE;
+
+                    getFragment().getFragmentEventListener().setFloatingActionViewVisible(notDefaultFilter);
+                    getFragment().getFragmentEventListener().setFloatingActionViewTypeMapEnabled(false);
+
+                    getViewInterface().setEmptyViewVisible(true, notDefaultFilter);
                 } else
                 {
+                    mEmptyList = false;
+
+                    getFragment().getFragmentEventListener().setFloatingActionViewVisible(true);
+                    getFragment().getFragmentEventListener().setFloatingActionViewTypeMapEnabled(true);
+
                     if (listSize < MAXIMUM_NUMBER_PER_PAGE)
                     {
                         mPage = PAGE_FINISH;
@@ -437,8 +454,6 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
         }
 
         clearCompositeDisposable();
-
-        mPage = 1;
 
         setRefresh(true);
         onRefresh(false);
@@ -514,12 +529,14 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
     }
 
     @Override
-    public void onStayClick(android.support.v4.util.Pair[] pairs, Stay stay, int listCount)
+    public void onStayClick(int position, android.support.v4.util.Pair[] pairs, Stay stay, int listCount)
     {
         if (mStayViewModel == null || stay == null || lock() == true)
         {
             return;
         }
+
+        mWishPosition = position;
 
         StayDetailAnalyticsParam analyticsParam = new StayDetailAnalyticsParam();
         analyticsParam.setAddressAreaName(stay.addressSummary);
@@ -624,8 +641,9 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
         }
 
         lock();
-
         screenLock(true);
+
+        getViewInterface().setEmptyViewVisible(false, mStayViewModel.stayFilter.getValue().isDefaultFilter() == false);
 
         // 맵은 모든 마커를 받아와야 하기 때문에 페이지 개수를 -1으로 한다.
         // 맵의 마커와 리스트의 목록은 상관관계가 없다.
@@ -636,12 +654,24 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
             {
                 DailyRemoteConfigPreference.getInstance(getActivity()).setKeyRemoteConfigRewardStickerEnabled(stays.activeReward);
 
+                boolean notDefaultFilter = mStayViewModel.stayFilter.getValue().isDefaultFilter() == false;
+
                 if (stays.getStayList() == null || stays.getStayList().size() == 0)
                 {
-                    getViewInterface().setEmptyViewVisible(true, mStayViewModel.stayFilter.getValue().isDefaultFilter() == false);
+                    mEmptyList = true;
+                    mPage = PAGE_NONE;
+
+                    getFragment().getFragmentEventListener().setFloatingActionViewVisible(notDefaultFilter);
+                    getFragment().getFragmentEventListener().setFloatingActionViewTypeMapEnabled(false);
+
+                    getViewInterface().setEmptyViewVisible(true, notDefaultFilter);
                 } else
                 {
-                    getViewInterface().setEmptyViewVisible(false, mStayViewModel.stayFilter.getValue().isDefaultFilter() == false);
+                    mEmptyList = false;
+                    getFragment().getFragmentEventListener().setFloatingActionViewVisible(true);
+                    getFragment().getFragmentEventListener().setFloatingActionViewTypeMapEnabled(true);
+
+                    getViewInterface().setEmptyViewVisible(false, notDefaultFilter);
 
                     getViewInterface().setMapList(stays.getStayList(), true, true, false);
                 }
@@ -737,7 +767,25 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
     @Override
     public void onWishClick(int position, Stay stay)
     {
+        if (position < 0 || stay == null)
+        {
+            return;
+        }
 
+        mWishPosition = position;
+
+        boolean currentWish = stay.myWish;
+
+        if (DailyHotel.isLogin() == true)
+        {
+            onChangedWish(position, !currentWish);
+        }
+
+        startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.HOTEL//
+            , stay.index, !currentWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), StayTabActivity.REQUEST_CODE_WISH_DIALOG);
+
+        //        AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+        //            , AnalyticsManager.Action.WISH_STAY, !currentWish ? AnalyticsManager.Label.ON.toLowerCase() : AnalyticsManager.Label.OFF.toLowerCase(), null);
     }
 
     private void initViewModel(BaseActivity activity)
@@ -761,6 +809,12 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                 } else
                 {
                     setViewType(viewType);
+
+                    // 목록을 한번도 호출한적이 없는 경우
+                    if (viewType == StayTabPresenter.ViewType.LIST && mPage == PAGE_NONE)
+                    {
+                        onRefresh();
+                    }
                 }
             }
         });
@@ -850,22 +904,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
             return;
         }
 
-        if (mPlaceListLayout == null)
-        {
-            Util.restartApp(getContext());
-            return;
-        }
-
-        PlaceViewItem placeViewItem = mPlaceListLayout.getItem(position);
-
-        if (placeViewItem == null || placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
-        {
-            return;
-        }
-
-        Stay stay = placeViewItem.getItem();
-        stay.myWish = wish;
-        mPlaceListLayout.notifyWishChanged(position, wish);
+        getViewInterface().setWish(position, wish);
     }
 
     /**
