@@ -288,7 +288,7 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
         mFloatingActionView.setOnFilterOptionClickListener(v -> ((OnEventListener) mOnEventListener).onFilterClick());
         mFloatingActionView.post(() -> mFloatingActionView.setTag(mViewPager.getBottom() - mFloatingActionView.getTop()));
 
-        setViewTypeVisibility(false);
+        setViewTypeVisibility(true);
 
         // 기본 설정
         setOptionViewTypeView(Constants.ViewType.LIST);

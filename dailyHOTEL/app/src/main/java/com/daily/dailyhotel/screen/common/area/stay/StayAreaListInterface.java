@@ -11,6 +11,8 @@ public interface StayAreaListInterface extends BaseDialogViewInterface
 {
     void setAreaList(List<StayAreaGroup> areaList);
 
+    void setLocationText(String locationText);
+
     void setLocationTermVisible(boolean visible);
 
     Observable<Boolean> collapseGroupWithAnimation(int groupPosition, boolean animation);

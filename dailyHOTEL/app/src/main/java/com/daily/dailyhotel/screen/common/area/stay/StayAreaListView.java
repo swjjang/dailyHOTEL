@@ -133,6 +133,17 @@ public class StayAreaListView extends BaseDialogView<StayAreaListView.OnEventLis
     }
 
     @Override
+    public void setLocationText(String locationText)
+    {
+        if (getViewDataBinding() == null || mLayoutRegionListLocationDataBinding == null)
+        {
+            return;
+        }
+
+        mLayoutRegionListLocationDataBinding.myLocationTextView.setText(locationText);
+    }
+
+    @Override
     public void setLocationTermVisible(boolean visible)
     {
         if (getViewDataBinding() == null || mLayoutRegionListLocationDataBinding == null)
