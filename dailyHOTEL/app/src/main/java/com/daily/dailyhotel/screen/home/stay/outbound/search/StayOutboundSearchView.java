@@ -146,12 +146,10 @@ public class StayOutboundSearchView extends BaseDialogView<StayOutboundSearchVie
     @Override
     public void setPopularAreaList(List<Suggest> suggestList)
     {
-        if (getViewDataBinding() == null)
+        if (getViewDataBinding() == null || suggestList == null || suggestList.size() == 0)
         {
             return;
         }
-
-        getViewDataBinding().popularLayout.setVisibility((suggestList == null || suggestList.size() == 0) ? View.GONE : View.VISIBLE);
 
         if (mPopularAreaListAdapter == null)
         {
@@ -169,6 +167,17 @@ public class StayOutboundSearchView extends BaseDialogView<StayOutboundSearchVie
 
         mPopularAreaListAdapter.setData(suggestList);
         mPopularAreaListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setPopularAreaVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().popularLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     private void initToolbar(ActivityStayOutboundSearchDataBinding viewDataBinding)

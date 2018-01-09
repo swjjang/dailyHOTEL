@@ -16,4 +16,6 @@ public interface StayOutboundSearchViewInterface extends BaseDialogViewInterface
     void setPeopleText(String peopleText);
 
     void setPopularAreaList(List<Suggest> suggestList);
+
+    void setPopularAreaVisible(boolean visible);
 }
