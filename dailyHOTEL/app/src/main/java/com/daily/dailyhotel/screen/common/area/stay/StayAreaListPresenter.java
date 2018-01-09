@@ -142,8 +142,6 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
     @Override
     public void onPostCreate()
     {
-        getViewInterface().setToolbarTitle(getString(R.string.label_selectarea_stay_area));
-
         if (mDailyCategoryType != null)
         {
             switch (mDailyCategoryType)
@@ -152,15 +150,18 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
                 case STAY_BOUTIQUE:
                 case STAY_PENSION:
                 case STAY_RESORT:
+                    getViewInterface().setToolbarTitle(getString(R.string.label_select_area_daily_category_format, getString(mDailyCategoryType.getNameResId())));
                     getViewInterface().setLocationText(getString(R.string.label_view_my_around_daily_category_format, getString(mDailyCategoryType.getNameResId())));
                     break;
 
                 default:
+                    getViewInterface().setToolbarTitle(getString(R.string.label_selectarea_stay_area));
                     getViewInterface().setLocationText(getString(R.string.label_region_around_stay));
                     break;
             }
         } else
         {
+            getViewInterface().setToolbarTitle(getString(R.string.label_selectarea_stay_area));
             getViewInterface().setLocationText(getString(R.string.label_region_around_stay));
         }
 
