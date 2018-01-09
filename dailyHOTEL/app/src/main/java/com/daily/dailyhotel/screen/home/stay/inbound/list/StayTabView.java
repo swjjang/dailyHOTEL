@@ -319,6 +319,17 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
     }
 
     @Override
+    public void scrollTopCurrentCategory()
+    {
+        if (getViewDataBinding() == null || mFragmentPagerAdapter == null)
+        {
+            return;
+        }
+
+        mFragmentPagerAdapter.getItem(getViewDataBinding().viewPager.getCurrentItem()).scrollTop();
+    }
+
+    @Override
     public void onRegionClick()
     {
         if (getViewDataBinding() == null)

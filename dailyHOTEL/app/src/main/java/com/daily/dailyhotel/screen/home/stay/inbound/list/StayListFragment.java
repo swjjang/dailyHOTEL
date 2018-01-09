@@ -13,12 +13,6 @@ import com.daily.dailyhotel.base.BasePagerFragment;
  */
 public class StayListFragment extends BasePagerFragment<StayListFragmentPresenter, StayListFragment.OnEventListener>
 {
-    static final int REQUEST_CODE_DETAIL = 11000;
-    static final int REQUEST_CODE_PREVIEW = 11001;
-    static final int REQUEST_CODE_PERMISSION_MANAGER = 11002;
-    static final int REQUEST_CODE_SETTING_LOCATION = 11003;
-    static final int REQUEST_CODE_WISH_DIALOG = 11004;
-
     public interface OnEventListener extends OnBaseFragmentEventListener
     {
         void onRegionClick();

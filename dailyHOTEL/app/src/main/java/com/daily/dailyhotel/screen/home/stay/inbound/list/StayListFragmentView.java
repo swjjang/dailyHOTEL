@@ -56,7 +56,7 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
 
         void onMoreRefreshing();
 
-        void onStayClick(android.support.v4.util.Pair[] pairs, Stay stay, int listCount);
+        void onStayClick(int position, android.support.v4.util.Pair[] pairs, Stay stay, int listCount);
 
         void onStayLongClick(int position, android.support.v4.util.Pair[] pairs, Stay stay, int listCount);
 

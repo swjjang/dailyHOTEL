@@ -24,4 +24,6 @@ public interface StayTabInterface extends BaseDialogViewInterface
     void onSelectedCategory();
 
     void refreshCurrentCategory();
+
+    void scrollTopCurrentCategory();
 }

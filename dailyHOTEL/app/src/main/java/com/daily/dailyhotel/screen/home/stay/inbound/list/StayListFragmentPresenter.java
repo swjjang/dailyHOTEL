@@ -30,6 +30,7 @@ import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.entity.Stays;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
+import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
@@ -77,6 +78,8 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
     Stay mStayByLongPress;
     int mListCountByLongPress;
     android.support.v4.util.Pair[] mPairsByLongPress;
+
+    int mWishPosition;
 
     public interface StayListFragmentAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -177,7 +180,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
         switch (requestCode)
         {
-            case StayListFragment.REQUEST_CODE_PREVIEW:
+            case StayTabActivity.REQUEST_CODE_PREVIEW:
                 switch (resultCode)
                 {
                     case Activity.RESULT_OK:
@@ -197,11 +200,37 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                 }
                 break;
 
-            case StayListFragment.REQUEST_CODE_WISH_DIALOG:
+            case StayTabActivity.REQUEST_CODE_WISH_DIALOG:
+                switch (resultCode)
+                {
+                    case Activity.RESULT_OK:
+                    case BaseActivity.RESULT_CODE_ERROR:
+                        if (data != null)
+                        {
+                            onChangedWish(mWishPosition, data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false));
+                        }
+                        break;
+
+                    case BaseActivity.RESULT_CODE_REFRESH:
+                        onRefresh();
+                        break;
+                }
+                break;
+
+            case StayTabActivity.REQUEST_CODE_DETAIL:
                 switch (resultCode)
                 {
                     case BaseActivity.RESULT_CODE_REFRESH:
-                        onRefresh();
+                        if (data.hasExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH) == true)
+                        {
+                            onChangedWish(mWishPosition, data.getBooleanExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH, false));
+                        } else
+                        {
+                            onRefresh();
+                        }
+                        break;
+
+                    default:
                         break;
                 }
                 break;
@@ -531,7 +560,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                 , mStayViewModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , true, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST, analyticsParam);
 
-            startActivityForResult(intent, StayListFragment.REQUEST_CODE_DETAIL, optionsCompat.toBundle());
+            startActivityForResult(intent, StayTabActivity.REQUEST_CODE_DETAIL, optionsCompat.toBundle());
         } else
         {
             Intent intent = StayDetailActivity.newInstance(getActivity() //
@@ -540,7 +569,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                 , mStayViewModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam);
 
-            startActivityForResult(intent, StayListFragment.REQUEST_CODE_DETAIL);
+            startActivityForResult(intent, StayTabActivity.REQUEST_CODE_DETAIL);
 
             getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         }
@@ -554,7 +583,9 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
             return;
         }
 
-        mListCountByLongPress = position;
+        mWishPosition = position;
+
+        mListCountByLongPress = listCount;
         mPairsByLongPress = pairs;
         mStayByLongPress = stay;
 
@@ -565,7 +596,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
             , mStayViewModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , stay.index, stay.name, stay.discountPrice, stay.grade.name());
 
-        startActivityForResult(intent, StayListFragment.REQUEST_CODE_PREVIEW);
+        startActivityForResult(intent, StayTabActivity.REQUEST_CODE_PREVIEW);
     }
 
     @Override
@@ -810,6 +841,31 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                 getViewInterface().showMapLayout(getFragment().getChildFragmentManager(), mPage == PAGE_NONE);
                 break;
         }
+    }
+
+    void onChangedWish(int position, boolean wish)
+    {
+        if (position < 0)
+        {
+            return;
+        }
+
+        if (mPlaceListLayout == null)
+        {
+            Util.restartApp(getContext());
+            return;
+        }
+
+        PlaceViewItem placeViewItem = mPlaceListLayout.getItem(position);
+
+        if (placeViewItem == null || placeViewItem.mType != PlaceViewItem.TYPE_ENTRY)
+        {
+            return;
+        }
+
+        Stay stay = placeViewItem.getItem();
+        stay.myWish = wish;
+        mPlaceListLayout.notifyWishChanged(position, wish);
     }
 
     /**

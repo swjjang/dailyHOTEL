@@ -10,6 +10,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -35,6 +36,7 @@ import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
 import com.daily.dailyhotel.screen.common.area.stay.StayAreaListActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.calendar.StayCalendarActivity;
+import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.filter.StayFilterActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.google.android.gms.maps.model.LatLng;
@@ -190,13 +192,37 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             return true;
         }
 
+        onNewIntent(intent);
+
         return true;
     }
 
     @Override
     public void onNewIntent(Intent intent)
     {
+        if (intent == null || intent.hasExtra(Constants.NAME_INTENT_EXTRA_DATA_DEEPLINK) == false)
+        {
+            return;
+        }
 
+        try
+        {
+            mDailyDeepLink = DailyDeepLink.getNewInstance(Uri.parse(intent.getStringExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK)));
+
+            if (mDailyDeepLink.isExternalDeepLink() == true)
+            {
+                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) mDailyDeepLink;
+
+                if (externalDeepLink.isHotelDetailView() == true && moveDeepLinkDetail(externalDeepLink) == true)
+                {
+                    setRefresh(false);
+                    unLockAll();
+                }
+            }
+        } catch (Exception e)
+        {
+            mDailyDeepLink = null;
+        }
     }
 
     @Override
@@ -280,7 +306,13 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             case StayTabActivity.REQUEST_CODE_FILTER:
                 onFilterActivityResult(resultCode, data);
                 break;
+
+            case StayTabActivity.REQUEST_CODE_DETAIL:
+                setRefresh(true);
+                break;
         }
+
+        mHasDeepLink = false;
     }
 
     @Override
@@ -397,7 +429,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
     @Override
     public void onCategoryTabReselected(TabLayout.Tab tab)
     {
-
+        getViewInterface().scrollTopCurrentCategory();
     }
 
     @Override
@@ -1302,4 +1334,38 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
         return true;
     }
+
+    boolean moveDeepLinkDetail(DailyDeepLink dailyDeepLink)
+    {
+        if (dailyDeepLink == null)
+        {
+            return false;
+        }
+
+        try
+        {
+            if (dailyDeepLink.isExternalDeepLink() == true)
+            {
+                Intent intent = StayDetailActivity.newInstance(getActivity(), dailyDeepLink.getDeepLink());
+                startActivityForResult(intent, StayTabActivity.REQUEST_CODE_DETAIL);
+
+                getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
+                mHasDeepLink = true;
+            } else
+            {
+
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+            return false;
+        } finally
+        {
+            dailyDeepLink.clear();
+        }
+
+        return true;
+    }
+
 }
