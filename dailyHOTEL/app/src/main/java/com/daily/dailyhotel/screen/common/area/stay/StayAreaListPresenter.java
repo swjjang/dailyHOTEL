@@ -143,6 +143,27 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
     public void onPostCreate()
     {
         getViewInterface().setToolbarTitle(getString(R.string.label_selectarea_stay_area));
+
+        if (mDailyCategoryType != null)
+        {
+            switch (mDailyCategoryType)
+            {
+                case STAY_HOTEL:
+                case STAY_BOUTIQUE:
+                case STAY_PENSION:
+                case STAY_RESORT:
+                    getViewInterface().setLocationText(getString(R.string.label_view_my_around_daily_category_format, getString(mDailyCategoryType.getNameResId())));
+                    break;
+
+                default:
+                    getViewInterface().setLocationText(getString(R.string.label_region_around_stay));
+                    break;
+            }
+        } else
+        {
+            getViewInterface().setLocationText(getString(R.string.label_region_around_stay));
+        }
+
         getViewInterface().setLocationTermVisible(DailyPreference.getInstance(getActivity()).isAgreeTermsOfLocation() == false);
     }
 
