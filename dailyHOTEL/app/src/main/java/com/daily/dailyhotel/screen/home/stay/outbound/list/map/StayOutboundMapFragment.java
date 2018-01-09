@@ -492,10 +492,10 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
         }
 
         // 화면에 보이지 않는 마커를 제거한다.
-
         if (refreshAll == true)
         {
             mGoogleMap.clear();
+            mClusterManager.clearItems();
         } else
         {
             removeHiddenMarker();
@@ -577,7 +577,6 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
                     stayOutboundClusterItemList.add(stayOutboundClusterItem);
                 }
 
-                //                mClusterManager.clearItems();
                 mClusterManager.addItems(stayOutboundClusterItemList);
 
                 return stayOutboundClusterItemList.size();
