@@ -10,8 +10,6 @@ import com.daily.base.widget.DailyToast;
 
 public abstract class BaseFragmentDialogView<T1 extends OnBaseEventListener, T2 extends ViewDataBinding> extends BaseFragmentView<T1, T2> implements BaseFragmentDialogViewInterface
 {
-    private Dialog mDialog;
-
     public BaseFragmentDialogView(T1 listener)
     {
         super(listener);
@@ -26,15 +24,7 @@ public abstract class BaseFragmentDialogView<T1 extends OnBaseEventListener, T2 
     @Override
     public void hideSimpleDialog()
     {
-        if (mDialog != null)
-        {
-            if (mDialog.isShowing() == true)
-            {
-                mDialog.dismiss();
-            }
-
-            mDialog = null;
-        }
+        getActivity().getPresenter().getViewInterface().hideSimpleDialog();
     }
 
     @Override
@@ -85,6 +75,7 @@ public abstract class BaseFragmentDialogView<T1 extends OnBaseEventListener, T2 
     {
         getActivity().getPresenter().getViewInterface().showSimpleDialog(titleText, msg, positive, negative, positiveListener, negativeListener, cancelListener, dismissListener, cancelable);
     }
+
 
     @Override
     public void showToast(String message, int duration)

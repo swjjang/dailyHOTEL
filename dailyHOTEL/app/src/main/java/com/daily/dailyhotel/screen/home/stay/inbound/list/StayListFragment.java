@@ -14,6 +14,7 @@ import com.daily.dailyhotel.base.BasePagerFragment;
 public class StayListFragment extends BasePagerFragment<StayListFragmentPresenter, StayListFragment.OnEventListener>
 {
     static final int REQUEST_CODE_DETAIL = 11000;
+    static final int REQUEST_CODE_PREVIEW = 11001;
 
     public interface OnEventListener extends OnBaseFragmentEventListener
     {

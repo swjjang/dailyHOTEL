@@ -4,6 +4,7 @@ package com.daily.dailyhotel.screen.home.stay.inbound.list;
 import android.support.v4.app.FragmentManager;
 
 import com.daily.base.BaseFragmentDialogViewInterface;
+import com.daily.dailyhotel.base.BaseBlurFragmentViewInterface;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.Stay;
 
@@ -13,7 +14,7 @@ import java.util.List;
  * Created by sheldon
  * Clean Architecture
  */
-public interface StayListFragmentInterface extends BaseFragmentDialogViewInterface
+public interface StayListFragmentInterface extends BaseBlurFragmentViewInterface
 {
     void setList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean isNights, boolean rewardEnabled, boolean supportTrueVR);
 
@@ -31,4 +32,6 @@ public interface StayListFragmentInterface extends BaseFragmentDialogViewInterfa
     void hideMapLayout(FragmentManager fragmentManager);
 
     void setMapList(List<Stay> stayList, boolean moveCameraBounds, boolean clear, boolean hide);
+
+    void showPreviewGuide();
 }

@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.list;
 
 
+import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -17,7 +18,6 @@ import android.view.ViewGroup;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
-import com.daily.dailyhotel.base.BaseFragmentExceptionPresenter;
 import com.daily.dailyhotel.base.BasePagerFragmentPresenter;
 import com.daily.dailyhotel.entity.Area;
 import com.daily.dailyhotel.entity.Category;
@@ -34,6 +34,7 @@ import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
@@ -43,6 +44,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -68,6 +72,10 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
     int mPage = PAGE_NONE;
     boolean mMoreRefreshing;
     StayTabPresenter.ViewType mViewType;
+
+    Stay mStayByLongPress;
+    int mListCountByLongPress;
+    android.support.v4.util.Pair[] mPairsByLongPress;
 
     public interface StayListFragmentAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -164,7 +172,39 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+        unLockAll();
 
+        switch (requestCode)
+        {
+            case StayListFragment.REQUEST_CODE_PREVIEW:
+                switch (resultCode)
+                {
+                    case Activity.RESULT_OK:
+                        Observable.create(new ObservableOnSubscribe<Object>()
+                        {
+                            @Override
+                            public void subscribe(ObservableEmitter<Object> e) throws Exception
+                            {
+                                onStayClick(mPairsByLongPress, mStayByLongPress, mListCountByLongPress);
+                            }
+                        }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
+                        break;
+
+                    case BaseActivity.RESULT_CODE_REFRESH:
+                        onRefresh();
+                        break;
+                }
+                break;
+
+            case Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG:
+                switch (resultCode)
+                {
+                    case BaseActivity.RESULT_CODE_REFRESH:
+                        onRefresh();
+                        break;
+                }
+                break;
+        }
     }
 
     @Override
@@ -186,6 +226,31 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
         if (isRefresh() == true)
         {
             onRefresh(true);
+        }
+
+        if (Util.supportPreview(getActivity()) == true)
+        {
+            if (getViewInterface().isBlurVisible() == true)
+            {
+                getViewInterface().setBlurVisible(getActivity(), false);
+            } else
+            {
+                // View 타입이 리스트일때만
+                if (mViewType == StayTabPresenter.ViewType.LIST)
+                {
+                    int count = DailyPreference.getInstance(getActivity()).getCountPreviewGuide() + 1;
+
+                    if (count == 2)
+                    {
+                        getViewInterface().showPreviewGuide();
+                    } else if (count > 2)
+                    {
+                        return;
+                    }
+
+                    DailyPreference.getInstance(getActivity()).setCountPreviewGuide(count);
+                }
+            }
         }
     }
 
@@ -470,9 +535,25 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
     }
 
     @Override
-    public void onStayLongClick(int position, android.support.v4.util.Pair[] pairs, Stay stay)
+    public void onStayLongClick(int position, android.support.v4.util.Pair[] pairs, Stay stay, int listCount)
     {
+        if (mStayViewModel == null || stay == null || lock() == true)
+        {
+            return;
+        }
 
+        mListCountByLongPress = position;
+        mPairsByLongPress = pairs;
+        mStayByLongPress = stay;
+
+        getViewInterface().setBlurVisible(getActivity(), true);
+
+        Intent intent = StayPreviewActivity.newInstance(getActivity()//
+            , mStayViewModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , mStayViewModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , stay.index, stay.name, stay.discountPrice, stay.grade.name());
+
+        startActivityForResult(intent, StayListFragment.REQUEST_CODE_PREVIEW);
     }
 
     @Override

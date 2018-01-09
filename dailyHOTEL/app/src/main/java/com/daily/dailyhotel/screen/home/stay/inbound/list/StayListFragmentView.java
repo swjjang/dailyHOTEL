@@ -8,13 +8,14 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.daily.base.BaseFragmentDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.base.BaseBlurFragmentView;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.screen.home.stay.inbound.list.map.StayMapFragment;
@@ -32,7 +33,8 @@ import java.util.List;
  * Created by sheldon
  * Clean Architecture
  */
-public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmentView.OnEventListener, FragmentStayListDataBinding> implements StayListFragmentInterface
+public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentView.OnEventListener, FragmentStayListDataBinding>//
+    implements StayListFragmentInterface
 {
     private static final int ANIMATION_DELAY = 200;
     private static final int VIEWPAGER_HEIGHT_DP = 125;
@@ -56,7 +58,7 @@ public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmen
 
         void onStayClick(android.support.v4.util.Pair[] pairs, Stay stay, int listCount);
 
-        void onStayLongClick(int position, android.support.v4.util.Pair[] pairs, Stay stay);
+        void onStayLongClick(int position, android.support.v4.util.Pair[] pairs, Stay stay, int listCount);
 
         void onViewPagerClose();
 
@@ -187,18 +189,47 @@ public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmen
             }, new View.OnLongClickListener()
             {
                 @Override
-                public boolean onLongClick(View v)
+                public boolean onLongClick(View view)
                 {
-                    return false;
+                    int position = getViewDataBinding().recyclerView.getChildAdapterPosition(view);
+                    if (position < 0)
+                    {
+                        return false;
+                    }
+
+                    ObjectItem objectItem = mStayListFragmentAdapter.getItem(position);
+
+                    if (objectItem.mType == objectItem.TYPE_ENTRY)
+                    {
+                        getEventListener().onStayLongClick(position, ((DailyStayCardView) view).getOptionsCompat(), objectItem.getItem(), mStayListFragmentAdapter.getItemCount());
+                    }
+
+                    return true;
                 }
             });
 
             mStayListFragmentAdapter.setOnWishClickListener(new View.OnClickListener()
             {
                 @Override
-                public void onClick(View v)
+                public void onClick(View view)
                 {
+                    if (getViewDataBinding() == null)
+                    {
+                        return;
+                    }
 
+                    int position = getViewDataBinding().recyclerView.getChildAdapterPosition(view);
+                    if (position < 0)
+                    {
+                        return;
+                    }
+
+                    ObjectItem objectItem = mStayListFragmentAdapter.getItem(position);
+
+                    if (objectItem.mType == ObjectItem.TYPE_ENTRY)
+                    {
+                        getEventListener().onWishClick(position, objectItem.getItem());
+                    }
                 }
             });
 
@@ -446,6 +477,24 @@ public class StayListFragmentView extends BaseFragmentDialogView<StayListFragmen
 
         mStayMapFragment.setStayList(stayList, moveCameraBounds, clear);
 
+    }
+
+    @Override
+    public void showPreviewGuide()
+    {
+        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.view_dialog_preview_layout, null, false);
+
+        View confirmTextView = dialogView.findViewById(R.id.confirmTextView);
+        confirmTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                hideSimpleDialog();
+            }
+        });
+
+        showSimpleDialog(dialogView, null, null, false);
     }
 
     private DailyOverScrollViewPager addMapViewPager(Context context, ViewGroup viewGroup)
