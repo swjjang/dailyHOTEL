@@ -253,11 +253,20 @@ public class KakaoLinkManager implements Constants
         }
     }
 
-    public void shareBookingStay(String message, String stayName, String address, int stayIndex, String imageUrl, String checkInDate, int nights)
+    public void shareBookingStay(String name, String stayName, String address, int stayIndex, String imageUrl, String mobileWebUrl, String checkInDate, int nights)
     {
         try
         {
+            name = Util.getShareName(mContext, name);
+            if (DailyTextUtils.isTextEmpty(name) == true)
+            {
+                name = mContext.getString(R.string.label_friend);
+            }
+
             String schemeParams = String.format(Locale.KOREA, "vc=5&v=hd&i=%d&d=%s&n=%d", stayIndex, checkInDate, nights);
+
+            String text = mContext.getString(R.string.message_booking_stay_share_kakao, //
+                name, mobileWebUrl);
 
             String kakaoImageUrl = null;
             if (DailyTextUtils.isTextEmpty(imageUrl) == false)
@@ -271,16 +280,16 @@ public class KakaoLinkManager implements Constants
                 ContentObject.newBuilder(stayName, //
                     kakaoImageUrl, //
                     LinkObject.newBuilder() //
-                        .setWebUrl("https://mobile.dailyhotel.co.kr/stay/" + stayIndex) //
-                        .setMobileWebUrl("https://mobile.dailyhotel.co.kr/stay/" + stayIndex) //
+                        .setWebUrl(mobileWebUrl) //
+                        .setMobileWebUrl(mobileWebUrl) //
                         .setAndroidExecutionParams(schemeParams) //
                         .setIosExecutionParams(schemeParams) //
                         .build()) //
-                    .setDescrption(message) //
+                    .setDescrption(text) //
                     .build()) //
                 .addButton(new ButtonObject(mContext.getString(R.string.label_kakao_mobile_app), LinkObject.newBuilder() //
-                    .setWebUrl("https://mobile.dailyhotel.co.kr/stay/" + stayIndex) //
-                    .setMobileWebUrl("https://mobile.dailyhotel.co.kr/stay/" + stayIndex) //
+                    .setWebUrl(mobileWebUrl) //
+                    .setMobileWebUrl(mobileWebUrl) //
                     .setAndroidExecutionParams(schemeParams) //
                     .setIosExecutionParams(schemeParams) //
                     .build())) //

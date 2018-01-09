@@ -1425,14 +1425,9 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
             // 카카오톡 패키지 설치 여부
             getActivity().getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
 
-            String userName = DailyUserPreference.getInstance(getActivity()).getName();
+            screenLock(true);
 
-            String message = getString(R.string.message_booking_stay_share_kakao, //
-                userName, mStayBookingDetail.stayName, mStayBookingDetail.guestName,//
-                DailyTextUtils.getPriceFormat(getActivity(), mStayBookingDetail.priceTotal, false), //
-                mStayBookingDetail.roomName, DailyCalendar.convertDateFormatString(mStayBookingDetail.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH시"),//
-                DailyCalendar.convertDateFormatString(mStayBookingDetail.checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE) HH시"), //
-                mStayBookingDetail.stayAddress);
+            String userName = DailyUserPreference.getInstance(getActivity()).getName();
 
             String[] checkInDates = mStayBookingDetail.checkInDateTime.split("T");
             String[] checkOutDates = mStayBookingDetail.checkOutDateTime.split("T");
@@ -1442,14 +1437,50 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
 
             int nights = (int) ((DailyCalendar.clearTField(checkOutDate.getTime()) - DailyCalendar.clearTField(checkInDate.getTime())) / DailyCalendar.DAY_MILLISECOND);
 
-            KakaoLinkManager.newInstance(getActivity()).shareBookingStay(message //
-                , mStayBookingDetail.stayName, mStayBookingDetail.stayAddress, mStayBookingDetail.stayIndex,//
-                mImageUrl, DailyCalendar.convertDateFormatString(mStayBookingDetail.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"), nights);
+            String urlFormat = "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d&utm_source=share&utm_medium=stay_booking_kakaotalk";
+            String longUrl = String.format(Locale.KOREA, urlFormat, mStayBookingDetail.stayIndex //
+                , DailyCalendar.convertDateFormatString(mStayBookingDetail.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd"), nights);
+
+            addCompositeDisposable(mCommonRemoteImpl.getShortUrl(longUrl).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<String>()
+            {
+                @Override
+                public void accept(String shortUrl) throws Exception
+                {
+                    unLockAll();
+
+                    KakaoLinkManager.newInstance(getActivity()).shareBookingStay(userName //
+                        , mStayBookingDetail.stayName //
+                        , mStayBookingDetail.stayAddress //
+                        , mStayBookingDetail.stayIndex //
+                        , mImageUrl //
+                        , shortUrl //
+                        , DailyCalendar.convertDateFormatString(mStayBookingDetail.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"), nights);
+
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    unLockAll();
+
+                    KakaoLinkManager.newInstance(getActivity()).shareBookingStay(userName //
+                        , mStayBookingDetail.stayName //
+                        , mStayBookingDetail.stayAddress //
+                        , mStayBookingDetail.stayIndex //
+                        , mImageUrl //
+                        , "https://mobile.dailyhotel.co.kr/stay/" + mStayBookingDetail.stayIndex //
+                        , DailyCalendar.convertDateFormatString(mStayBookingDetail.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"), nights);
+
+                }
+            }));
 
             mAnalytics.onEventShareKakaoClick(getActivity());
         } catch (Exception e)
         {
             ExLog.d(e.toString());
+
+            unLockAll();
 
             getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
                 , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
