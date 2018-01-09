@@ -29,6 +29,7 @@ import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StayRegion;
+import com.daily.dailyhotel.parcel.StayFilterParcel;
 import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
@@ -46,6 +47,7 @@ import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
 import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONObject;
@@ -256,6 +258,8 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
     public void onRestoreInstanceState(Bundle savedInstanceState)
     {
         super.onRestoreInstanceState(savedInstanceState);
+
+        Util.restartApp(getActivity());
     }
 
     @Override
@@ -271,6 +275,10 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
             case StayTabActivity.REQUEST_CODE_REGION:
                 onRegionActivityResult(resultCode, data);
+                break;
+
+            case StayTabActivity.REQUEST_CODE_FILTER:
+                onFilterActivityResult(resultCode, data);
                 break;
         }
     }
@@ -552,6 +560,15 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
             }
         });
+
+        mStayViewModel.stayFilter.observe(activity, new Observer<StayFilter>()
+        {
+            @Override
+            public void onChanged(@Nullable StayFilter stayFilter)
+            {
+                getViewInterface().setOptionFilterSelected(stayFilter != null && stayFilter.isDefaultFilter() == false);
+            }
+        });
     }
 
     private void startCalendar(String callByScreen)
@@ -777,7 +794,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                     setStayBookDateTime(checkInDateTime, checkOutDateTime);
                     notifyDateTextChanged();
 
-                    setRefresh(true);
+                    getViewInterface().refreshCurrentCategory();
                 }
                 break;
         }
@@ -821,7 +838,6 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                 }
                 break;
 
-
             case com.daily.base.BaseActivity.RESULT_CODE_START_AROUND_SEARCH:
             {
                 // 검색 결과 화면으로 이동한다.
@@ -832,6 +848,64 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         }
     }
 
+    private void onFilterActivityResult(int resultCode, Intent data)
+    {
+        switch (resultCode)
+        {
+            case Activity.RESULT_OK:
+                if (data != null)
+                {
+                    try
+                    {
+                        StayFilterParcel stayFilterParcel = data.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_STAY_FILTER);
+
+                        if (stayFilterParcel == null)
+                        {
+                            return;
+                        }
+
+                        StayFilter stayFilter = stayFilterParcel.getStayFilter();
+
+                        if (stayFilter == null)
+                        {
+                            return;
+                        }
+
+                        mStayViewModel.stayFilter.setValue(stayFilter);
+
+                        if (stayFilter.sortType == StayFilter.SortType.DISTANCE)
+                        {
+                            Location location = data.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_LOCATION);
+
+                            if (location != null)
+                            {
+                                mStayViewModel.location.setValue(location);
+                            } else
+                            {
+                                mStayViewModel.stayFilter.getValue().sortType = StayFilter.SortType.DEFAULT;
+                            }
+
+                            getViewInterface().refreshCurrentCategory();
+                        } else
+                        {
+                            getViewInterface().refreshCurrentCategory();
+                        }
+                    } catch (Exception e)
+                    {
+                        // 예외 처리 추가 원인 찾기
+                        Crashlytics.log(data.toString());
+                        Crashlytics.logException(e);
+
+                        // 지역이 수정 되면 필터가 초기화 된다.
+                        mStayViewModel.stayFilter.getValue().resetFilter();
+                        mStayViewModel.selectedCategory.setValue(Category.ALL);
+
+                        setRefresh(true);
+                    }
+                }
+                break;
+        }
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Deep Link

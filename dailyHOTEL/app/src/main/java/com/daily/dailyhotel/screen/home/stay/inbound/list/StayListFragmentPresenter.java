@@ -18,11 +18,13 @@ import android.view.ViewGroup;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.dailyhotel.base.BaseFragmentExceptionPresenter;
+import com.daily.dailyhotel.base.BasePagerFragmentPresenter;
 import com.daily.dailyhotel.entity.Area;
 import com.daily.dailyhotel.entity.Category;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.entity.StayArea;
+import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.Stays;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
@@ -49,7 +51,7 @@ import io.reactivex.functions.Function;
  * Created by sheldon
  * Clean Architecture
  */
-public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<StayListFragment, StayListFragmentInterface>//
+public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayListFragment, StayListFragmentInterface>//
     implements StayListFragmentView.OnEventListener
 {
     static final int MAXIMUM_NUMBER_PER_PAGE = Constants.PAGENATION_LIST_SIZE;
@@ -225,6 +227,19 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
 
     @Override
     public void onUnselected()
+    {
+
+    }
+
+    @Override
+    public void onRefresh()
+    {
+        setRefresh(true);
+        onRefresh(true);
+    }
+
+    @Override
+    public void scrollTop()
     {
 
     }
@@ -623,6 +638,15 @@ public class StayListFragmentPresenter extends BaseFragmentExceptionPresenter<St
                 }
 
                 setViewType(viewType);
+            }
+        });
+
+        mStayViewModel.stayBookDateTime.observe(activity, new Observer<StayBookDateTime>()
+        {
+            @Override
+            public void onChanged(@Nullable StayBookDateTime stayBookDateTime)
+            {
+
             }
         });
     }

@@ -25,9 +25,9 @@ import java.util.List;
 
 public class DailyLocationExFactory
 {
-    private static final long UPDATE_INTERVAL = 5000; // Every 60 seconds.
-    private static final long FASTEST_UPDATE_INTERVAL = 1000; // Every 30 seconds
-    private static final long MAX_WAIT_TIME = UPDATE_INTERVAL * 3; // Every 3 minutes.
+    private static final long UPDATE_INTERVAL = 5000;
+    private static final long FASTEST_UPDATE_INTERVAL = 1000;
+    private static final long MAX_WAIT_TIME = UPDATE_INTERVAL * 3;
 
     FusedLocationProviderClient mFusedLocationClient;
     LocationRequest mLocationRequest;

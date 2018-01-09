@@ -13,7 +13,7 @@ import com.daily.base.BaseFragment;
 import com.daily.base.BaseFragmentPresenter;
 import com.daily.base.OnBaseFragmentEventListener;
 
-public abstract class BasePagerFragment<T1 extends BaseFragmentPresenter, T2 extends OnBaseFragmentEventListener> extends BaseFragment<T1, T2>
+public abstract class BasePagerFragment<T1 extends BasePagerFragmentPresenter, T2 extends OnBaseFragmentEventListener> extends BaseFragment<T1, T2>
 {
     public BasePagerFragment()
     {
@@ -33,6 +33,22 @@ public abstract class BasePagerFragment<T1 extends BaseFragmentPresenter, T2 ext
         if (mPresenter != null)
         {
             mPresenter.onUnselected();
+        }
+    }
+
+    public void onRefresh()
+    {
+        if(mPresenter != null)
+        {
+            mPresenter.onRefresh();
+        }
+    }
+
+    public void scrollTop()
+    {
+        if(mPresenter != null)
+        {
+            mPresenter.scrollTop();
         }
     }
 }

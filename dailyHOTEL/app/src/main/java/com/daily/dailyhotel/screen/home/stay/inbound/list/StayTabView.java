@@ -97,7 +97,7 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
     }
 
     @Override
-    public void setCategoryTabLayout(FragmentManager fragmentManager, List<? extends Category> categoryList, Category selectedCategory)
+    public void setCategoryTabLayout(FragmentManager fragmentManager, List<Category> categoryList, Category selectedCategory)
     {
         if (getViewDataBinding() == null)
         {
@@ -106,23 +106,16 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
 
         getViewDataBinding().categoryTabLayout.setOnTabSelectedListener(null);
 
-        if (categoryList == null)
+        // 카테고리가 2보다 작으면 전체 하나만 보여주기 때문에 카테고리 탭을 안보이도록 한다.
+        if (categoryList == null || categoryList.size() <= 2)
         {
-            getViewDataBinding().viewPager.removeAllViews();
-            setCategoryTabLayoutVisibility(View.GONE);
-            return;
+            categoryList = new ArrayList();
+            categoryList.add(Category.ALL);
         }
 
         int size = categoryList.size();
 
-        // 카테고리가 2보다 작으면 전체 하나만 보여주기 때문에 카테고리 탭을 안보이도록 한다.
-        if (size <= 2)
-        {
-            size = 1;
-            setCategoryTabLayoutVisibility(View.GONE);
-
-            categoryList = categoryList.subList(0, 1);
-        }
+        setCategoryTabLayoutVisibility(size == 1 ? View.GONE : View.VISIBLE);
 
         Category category;
         TabLayout.Tab tab;
@@ -307,6 +300,17 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
                 mFragmentPagerAdapter.getItem(i).onUnselected();
             }
         }
+    }
+
+    @Override
+    public void refreshCurrentCategory()
+    {
+        if (getViewDataBinding() == null || mFragmentPagerAdapter == null)
+        {
+            return;
+        }
+
+        mFragmentPagerAdapter.getItem(getViewDataBinding().viewPager.getCurrentItem()).onRefresh();
     }
 
     @Override

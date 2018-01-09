@@ -13,7 +13,7 @@ public interface StayTabInterface extends BaseDialogViewInterface
 
     void setToolbarRegionText(String text);
 
-    void setCategoryTabLayout(FragmentManager fragmentManager, List<? extends Category> categoryList, Category selectedCategory);
+    void setCategoryTabLayout(FragmentManager fragmentManager, List<Category> categoryList, Category selectedCategory);
 
     void setOptionFilterSelected(boolean selected);
 
@@ -22,4 +22,6 @@ public interface StayTabInterface extends BaseDialogViewInterface
     void setCategoryTab(int position);
 
     void onSelectedCategory();
+
+    void refreshCurrentCategory();
 }
