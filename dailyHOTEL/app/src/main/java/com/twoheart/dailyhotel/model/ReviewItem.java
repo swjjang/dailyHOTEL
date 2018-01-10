@@ -42,57 +42,84 @@ public class ReviewItem implements Parcelable
         itemIdx = jsonObject.getInt("itemIdx");
         itemName = jsonObject.getString("itemName");
 
-        String baseImagePath = jsonObject.getString("baseImagePath");
-        JSONObject imageJSONObject = new JSONObject(jsonObject.getString("itemImagePath"));
-
-        Iterator<String> iterator = imageJSONObject.keys();
-        while (iterator.hasNext())
+        if (jsonObject.has("serviceType") == true)
         {
-            String key = iterator.next();
+            String serviceType = jsonObject.getString("serviceType");
 
-            try
+            if (DailyTextUtils.isTextEmpty(serviceType) == false)
             {
-                JSONArray pathJSONArray = imageJSONObject.getJSONArray(key);
-                imageUrl = baseImagePath + key + pathJSONArray.getString(0);
-                break;
-            } catch (JSONException e)
+                switch (serviceType)
+                {
+                    case "HOTEL":
+                    {
+                        this.serviceType = Constants.ServiceType.HOTEL;
+
+                        String baseImagePath = jsonObject.getString("baseImagePath");
+                        JSONObject imageJSONObject = new JSONObject(jsonObject.getString("itemImagePath"));
+
+                        Iterator<String> iterator = imageJSONObject.keys();
+                        while (iterator.hasNext())
+                        {
+                            String key = iterator.next();
+
+                            try
+                            {
+                                JSONArray pathJSONArray = imageJSONObject.getJSONArray(key);
+                                imageUrl = baseImagePath + key + pathJSONArray.getString(0);
+                                break;
+                            } catch (JSONException e)
+                            {
+                            }
+                        }
+                        break;
+                    }
+
+                    case "GOURMET":
+                    {
+                        this.serviceType = Constants.ServiceType.GOURMET;
+
+                        String baseImagePath = jsonObject.getString("baseImagePath");
+                        JSONObject imageJSONObject = new JSONObject(jsonObject.getString("itemImagePath"));
+
+                        Iterator<String> iterator = imageJSONObject.keys();
+                        while (iterator.hasNext())
+                        {
+                            String key = iterator.next();
+
+                            try
+                            {
+                                JSONArray pathJSONArray = imageJSONObject.getJSONArray(key);
+                                imageUrl = baseImagePath + key + pathJSONArray.getString(0);
+                                break;
+                            } catch (JSONException e)
+                            {
+                            }
+                        }
+                        break;
+                    }
+
+                    case "OUTBOUND":
+                        this.serviceType = Constants.ServiceType.OB_STAY;
+                        break;
+
+                    default:
+                        ExLog.d("unKnown service type");
+                        break;
+                }
+            } else
             {
-            }
-        }
-
-        String serviceType = jsonObject.getString("serviceType");
-
-        if (DailyTextUtils.isTextEmpty(serviceType) == false)
-        {
-            switch (serviceType)
-            {
-                case "HOTEL":
-                    this.serviceType = Constants.ServiceType.HOTEL;
-                    break;
-
-                case "GOURMET":
-                    this.serviceType = Constants.ServiceType.GOURMET;
-                    break;
-
-                case "OUTBOUND":
-                    this.serviceType = Constants.ServiceType.OB_STAY;
-                    break;
-
-                default:
-                    ExLog.d("unKnown service type");
-                    break;
+                ExLog.d("serviceType is null");
             }
         } else
         {
             ExLog.d("serviceType is null");
         }
 
-
         useStartDate = jsonObject.getString("useStartDate");
         useEndDate = jsonObject.getString("useEndDate");
     }
 
-    public String getPlaceType()
+    public String getServiceType()
     {
         switch (serviceType)
         {

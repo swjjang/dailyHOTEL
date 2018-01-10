@@ -15,6 +15,7 @@ import com.twoheart.dailyhotel.network.model.Status;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -400,6 +401,8 @@ public class MainNetworkController extends BaseNetworkController
                     if (msgCode == 100 && responseJSONObject.has("data") == true)
                     {
                         Review review = new Review(responseJSONObject.getJSONObject("data"));
+
+                        review.getReviewItem().serviceType = Constants.ServiceType.OB_STAY;
 
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewStayOutbound(review);
                     } else

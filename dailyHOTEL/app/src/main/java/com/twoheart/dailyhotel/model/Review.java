@@ -191,10 +191,22 @@ public class Review implements Parcelable
 
         try
         {
-            jsonObject.put("grade", grade);
-            jsonObject.put("itemIdx", reviewItem.itemIdx);
-            jsonObject.put("reserveIdx", reserveIdx);
-            jsonObject.put("serviceType", reviewItem.getPlaceType());
+            switch (reviewItem.serviceType)
+            {
+                case HOTEL:
+                case GOURMET:
+                    jsonObject.put("grade", grade);
+                    jsonObject.put("itemIdx", reviewItem.itemIdx);
+                    jsonObject.put("reserveIdx", reserveIdx);
+                    jsonObject.put("serviceType", reviewItem.getServiceType());
+                    break;
+
+                case OB_STAY:
+                    jsonObject.put("grade", grade);
+                    jsonObject.put("itemIdx", reviewItem.itemIdx);
+                    jsonObject.put("reserveIdx", reserveIdx);
+                    break;
+            }
         } catch (JSONException e)
         {
             ExLog.e(e.toString());
@@ -232,7 +244,7 @@ public class Review implements Parcelable
             jsonObject.put("reviewScores", scoreJSONArray);
             jsonObject.put("reviewPicks", pickJSONArray);
 
-            jsonObject.put("serviceType", reviewItem.getPlaceType());
+            jsonObject.put("serviceType", reviewItem.getServiceType());
         } catch (JSONException e)
         {
             ExLog.e(e.toString());
