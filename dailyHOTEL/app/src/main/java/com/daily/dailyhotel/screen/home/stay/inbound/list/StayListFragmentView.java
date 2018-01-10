@@ -41,7 +41,7 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
     private static final int VIEWPAGER_OTHER_PADDING_DP = 15;
     private static final int VIEWPAGER_PAGE_MARGIN_DP = 5;
 
-    private StayListFragmentAdapter mStayListFragmentAdapter;
+    private StayListAdapter mStayListAdapter;
 
     private StayMapFragment mStayMapFragment;
 
@@ -158,10 +158,10 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
             return;
         }
 
-        if (mStayListFragmentAdapter == null)
+        if (mStayListAdapter == null)
         {
-            mStayListFragmentAdapter = new StayListFragmentAdapter(getContext(), null);
-            mStayListFragmentAdapter.setOnClickListener(new View.OnClickListener()
+            mStayListAdapter = new StayListAdapter(getContext(), null);
+            mStayListAdapter.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View view)
@@ -172,13 +172,13 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
                         return;
                     }
 
-                    ObjectItem objectItem = mStayListFragmentAdapter.getItem(position);
+                    ObjectItem objectItem = mStayListAdapter.getItem(position);
 
                     if (objectItem.mType == objectItem.TYPE_ENTRY)
                     {
                         if (view instanceof DailyStayCardView == true)
                         {
-                            getEventListener().onStayClick(position, ((DailyStayCardView) view).getOptionsCompat(), objectItem.getItem(), mStayListFragmentAdapter.getItemCount());
+                            getEventListener().onStayClick(position, ((DailyStayCardView) view).getOptionsCompat(), objectItem.getItem(), mStayListAdapter.getItemCount());
                         } else
                         {
 
@@ -196,18 +196,18 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
                         return false;
                     }
 
-                    ObjectItem objectItem = mStayListFragmentAdapter.getItem(position);
+                    ObjectItem objectItem = mStayListAdapter.getItem(position);
 
                     if (objectItem.mType == objectItem.TYPE_ENTRY)
                     {
-                        getEventListener().onStayLongClick(position, ((DailyStayCardView) view).getOptionsCompat(), objectItem.getItem(), mStayListFragmentAdapter.getItemCount());
+                        getEventListener().onStayLongClick(position, ((DailyStayCardView) view).getOptionsCompat(), objectItem.getItem(), mStayListAdapter.getItemCount());
                     }
 
                     return true;
                 }
             });
 
-            mStayListFragmentAdapter.setOnWishClickListener(new View.OnClickListener()
+            mStayListAdapter.setOnWishClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View view)
@@ -223,7 +223,7 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
                         return;
                     }
 
-                    ObjectItem objectItem = mStayListFragmentAdapter.getItem(position);
+                    ObjectItem objectItem = mStayListAdapter.getItem(position);
 
                     if (objectItem.mType == ObjectItem.TYPE_ENTRY)
                     {
@@ -232,15 +232,15 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
                 }
             });
 
-            getViewDataBinding().recyclerView.setAdapter(mStayListFragmentAdapter);
+            getViewDataBinding().recyclerView.setAdapter(mStayListAdapter);
         }
 
-        mStayListFragmentAdapter.setDistanceEnabled(isSortByDistance);
-        mStayListFragmentAdapter.setNightsEnabled(isNights);
-        mStayListFragmentAdapter.setRewardEnabled(rewardEnabled);
-        mStayListFragmentAdapter.setTrueVREnabled(supportTrueVR);
-        mStayListFragmentAdapter.setAll(objectItemList);
-        mStayListFragmentAdapter.notifyDataSetChanged();
+        mStayListAdapter.setDistanceEnabled(isSortByDistance);
+        mStayListAdapter.setNightsEnabled(isNights);
+        mStayListAdapter.setRewardEnabled(rewardEnabled);
+        mStayListAdapter.setTrueVREnabled(supportTrueVR);
+        mStayListAdapter.setAll(objectItemList);
+        mStayListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -251,26 +251,26 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
             return;
         }
 
-        if (mStayListFragmentAdapter == null)
+        if (mStayListAdapter == null)
         {
-            mStayListFragmentAdapter = new StayListFragmentAdapter(getContext(), null);
+            mStayListAdapter = new StayListAdapter(getContext(), null);
 
-            getViewDataBinding().recyclerView.setAdapter(mStayListFragmentAdapter);
+            getViewDataBinding().recyclerView.setAdapter(mStayListAdapter);
         }
 
         // 항상 마지막 아이템은 Loading, Footer View 이다.
-        int itemCount = mStayListFragmentAdapter.getItemCount();
+        int itemCount = mStayListAdapter.getItemCount();
         if (itemCount > 0)
         {
-            mStayListFragmentAdapter.remove(itemCount - 1);
+            mStayListAdapter.remove(itemCount - 1);
         }
 
-        mStayListFragmentAdapter.setDistanceEnabled(isSortByDistance);
-        mStayListFragmentAdapter.setNightsEnabled(isNights);
-        mStayListFragmentAdapter.setRewardEnabled(rewardEnabled);
-        mStayListFragmentAdapter.setTrueVREnabled(supportTrueVR);
-        mStayListFragmentAdapter.addAll(objectItemList);
-        mStayListFragmentAdapter.notifyDataSetChanged();
+        mStayListAdapter.setDistanceEnabled(isSortByDistance);
+        mStayListAdapter.setNightsEnabled(isNights);
+        mStayListAdapter.setRewardEnabled(rewardEnabled);
+        mStayListAdapter.setTrueVREnabled(supportTrueVR);
+        mStayListAdapter.addAll(objectItemList);
+        mStayListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -483,14 +483,14 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
     @Override
     public void setWish(int position, boolean wish)
     {
-        if (getViewDataBinding() == null || mStayListFragmentAdapter == null)
+        if (getViewDataBinding() == null || mStayListAdapter == null)
         {
             return;
         }
 
-        if (mStayListFragmentAdapter.getItem(position).mType == ObjectItem.TYPE_ENTRY)
+        if (mStayListAdapter.getItem(position).mType == ObjectItem.TYPE_ENTRY)
         {
-            ((Stay) mStayListFragmentAdapter.getItem(position).getItem()).myWish = wish;
+            ((Stay) mStayListAdapter.getItem(position).getItem()).myWish = wish;
         }
 
         getViewDataBinding().recyclerView.post(new Runnable()
@@ -498,7 +498,7 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
             @Override
             public void run()
             {
-                StayListFragmentAdapter.StayViewHolder stayViewHolder = (StayListFragmentAdapter.StayViewHolder) getViewDataBinding().recyclerView.findViewHolderForAdapterPosition(position);
+                StayListAdapter.StayViewHolder stayViewHolder = (StayListAdapter.StayViewHolder) getViewDataBinding().recyclerView.findViewHolderForAdapterPosition(position);
 
                 if (stayViewHolder != null)
                 {
@@ -506,6 +506,17 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
                 }
             }
         });
+    }
+
+    @Override
+    public void scrollTop()
+    {
+        if (getViewDataBinding() == null || mStayListAdapter == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().recyclerView.scrollToPosition(0);
     }
 
     private DailyOverScrollViewPager addMapViewPager(Context context, ViewGroup viewGroup)

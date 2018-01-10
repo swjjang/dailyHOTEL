@@ -73,16 +73,19 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
     StayTabPresenter.StayViewModel mStayViewModel;
 
     Category mCategory;
-    int mPage = PAGE_NONE;
-    boolean mMoreRefreshing;
+    int mPage = PAGE_NONE; // 리스트에서 페이지
+    boolean mMoreRefreshing; // 특정 스크를 이상 내려가면 더보기로 목록을 요청하는데 lock()걸리면 안되지만 계속 요청되면 안되어서 해당 키로 락을 건다.
+    boolean mNeedToRefresh; // 화면 리플래쉬가 필요한 경우
     StayTabPresenter.ViewType mViewType;
 
+    //
     Stay mStayByLongPress;
     int mListCountByLongPress;
     android.support.v4.util.Pair[] mPairsByLongPress;
 
+    //
     int mWishPosition;
-    boolean mEmptyList;
+    boolean mEmptyList; // 목록, 맵이 비어있는지 확인
 
     public interface StayListFragmentAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -285,25 +288,12 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
         if (mStayViewModel.viewType.getValue() != mViewType)
         {
             setViewType(mStayViewModel.viewType.getValue());
-        }
-
-        switch (mViewType)
+        } else
         {
-            case LIST:
-                if (isCurrentFragment() == true && mPage == PAGE_NONE)
-                {
-                    setRefresh(true);
-
-                    // Activity 가 아직 생성되지 않은 경우가 있다.
-                    if (getActivity() != null)
-                    {
-                        onRefresh(true);
-                    }
-                }
-                break;
-
-            case MAP:
-                break;
+            if (mNeedToRefresh == true)
+            {
+                onRefresh();
+            }
         }
 
         if (mEmptyList == false)
@@ -332,6 +322,8 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
     @Override
     public void onRefresh()
     {
+        mNeedToRefresh = false;
+
         switch (mViewType)
         {
             case LIST:
@@ -354,7 +346,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
     @Override
     protected synchronized void onRefresh(boolean showProgress)
     {
-        if (getActivity().isFinishing() == true || isRefresh() == false || mStayViewModel == null || mPage == PAGE_FINISH)
+        if (getActivity().isFinishing() == true || isRefresh() == false || mStayViewModel == null)
         {
             setRefresh(false);
             return;
@@ -456,8 +448,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
         clearCompositeDisposable();
 
-        setRefresh(true);
-        onRefresh(false);
+        onRefresh();
     }
 
     @Override
@@ -809,12 +800,6 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                 } else
                 {
                     setViewType(viewType);
-
-                    // 목록을 한번도 호출한적이 없는 경우
-                    if (viewType == StayTabPresenter.ViewType.LIST && mPage == PAGE_NONE)
-                    {
-                        onRefresh();
-                    }
                 }
             }
         });
@@ -827,7 +812,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                 // 날짜가 변경되면 해당 화면 진입시 재 로딩할 준비를 한다.
                 if (isCurrentFragment() == false)
                 {
-                    mPage = PAGE_NONE;
+                    mNeedToRefresh = true;
                 } else
                 {
 
@@ -843,7 +828,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                 // 지역이 변경되면 해당 화면 진입시 재 로딩할 준비를 한다.
                 if (isCurrentFragment() == false)
                 {
-                    mPage = PAGE_NONE;
+                    mNeedToRefresh = true;
                 } else
                 {
 
@@ -859,7 +844,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                 // 필터가 변경되면 해당 화면 진입시 재 로딩할 준비를 한다.
                 if (isCurrentFragment() == false)
                 {
-                    mPage = PAGE_NONE;
+                    mNeedToRefresh = true;
                 } else
                 {
 
@@ -876,7 +861,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
     void setViewType(StayTabPresenter.ViewType viewType)
     {
-        if (viewType == null)
+        if (viewType == null || mViewType == viewType)
         {
             return;
         }
@@ -888,10 +873,18 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
             case LIST:
                 getViewInterface().setListLayoutVisible(true);
                 getViewInterface().hideMapLayout(getFragment().getChildFragmentManager());
+
+                if (mPage == PAGE_NONE || mNeedToRefresh == true)
+                {
+                    onRefresh();
+                }
                 break;
 
             case MAP:
                 getViewInterface().setListLayoutVisible(false);
+
+                // mPage == PAGE_NONE은 현재 호출된 목록이 없다. 진입을 바로 맵으로 했다.
+                // show가 되면 onMapReady() 가 호출 되어서 자동 갱신된다.
                 getViewInterface().showMapLayout(getFragment().getChildFragmentManager(), mPage == PAGE_NONE);
                 break;
         }

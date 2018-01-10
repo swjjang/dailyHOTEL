@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class StayListFragmentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements PinnedSectionRecyclerView.PinnedSectionListAdapter
+public class StayListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements PinnedSectionRecyclerView.PinnedSectionListAdapter
 {
     Context mContext;
     List<ObjectItem> mList;
@@ -40,7 +40,7 @@ public class StayListFragmentAdapter extends RecyclerView.Adapter<RecyclerView.V
     View.OnClickListener mOnWishClickListener;
     View.OnLongClickListener mOnLongClickListener;
 
-    public StayListFragmentAdapter(Context context, ArrayList<ObjectItem> arrayList)
+    public StayListAdapter(Context context, ArrayList<ObjectItem> arrayList)
     {
         mContext = context;
 
