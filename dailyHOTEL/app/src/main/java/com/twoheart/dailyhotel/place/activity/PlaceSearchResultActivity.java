@@ -10,6 +10,7 @@ import android.view.View;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.PlaceCuration;
@@ -521,6 +522,20 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
                             mDailyLocationFactory.stopLocationMeasure();
 
                             PlaceSearchResultActivity.this.onLocationChanged(location);
+                        }
+
+                        @Override
+                        public void onCheckSetting(ResolvableApiException exception)
+                        {
+                            unLockUI();
+
+                            try
+                            {
+                                exception.startResolutionForResult( PlaceSearchResultActivity.this, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                            }catch (Exception e)
+                            {
+
+                            }
                         }
                     });
                 }

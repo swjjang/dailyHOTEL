@@ -37,6 +37,7 @@ import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailA
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
@@ -862,22 +863,12 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
                     @Override
                     public void onRequirePermission()
                     {
-                        if (locationAnimationDisposable != null)
-                        {
-                            locationAnimationDisposable.dispose();
-                        }
-
                         observer.onError(new PermissionException());
                     }
 
                     @Override
                     public void onFailed()
                     {
-                        if (locationAnimationDisposable != null)
-                        {
-                            locationAnimationDisposable.dispose();
-                        }
-
                         observer.onError(new Exception());
                     }
 
@@ -889,33 +880,18 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
                             @Override
                             public void onFailed()
                             {
-                                if (locationAnimationDisposable != null)
-                                {
-                                    locationAnimationDisposable.dispose();
-                                }
-
                                 observer.onError(new Exception());
                             }
 
                             @Override
                             public void onAlreadyRun()
                             {
-                                if (locationAnimationDisposable != null)
-                                {
-                                    locationAnimationDisposable.dispose();
-                                }
-
                                 observer.onError(new DuplicateRunException());
                             }
 
                             @Override
                             public void onLocationChanged(Location location)
                             {
-                                if (locationAnimationDisposable != null)
-                                {
-                                    locationAnimationDisposable.dispose();
-                                }
-
                                 unLockAll();
 
                                 mDailyLocationExFactory.stopLocationMeasure();
@@ -929,17 +905,18 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
                                     observer.onComplete();
                                 }
                             }
+
+                            @Override
+                            public void onCheckSetting(ResolvableApiException exception)
+                            {
+                                observer.onError(exception);
+                            }
                         });
                     }
 
                     @Override
                     public void onProviderDisabled()
                     {
-                        if (locationAnimationDisposable != null)
-                        {
-                            locationAnimationDisposable.dispose();
-                        }
-
                         observer.onError(new ProviderException());
                     }
                 });
@@ -959,6 +936,11 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
         }).doOnError(throwable ->
         {
             unLockAll();
+
+            if (locationAnimationDisposable != null)
+            {
+                locationAnimationDisposable.dispose();
+            }
 
             if (throwable instanceof PermissionException)
             {
@@ -1003,6 +985,15 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
             } else if (throwable instanceof DuplicateRunException)
             {
 
+            } else if (throwable instanceof ResolvableApiException)
+            {
+                try
+                {
+                    ((ResolvableApiException) throwable).startResolutionForResult(getActivity(), StayOutboundBookingDetailActivity.REQUEST_CODE_SETTING_LOCATION);
+                } catch (Exception e)
+                {
+                    DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
+                }
             } else
             {
                 DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);

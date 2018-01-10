@@ -42,6 +42,7 @@ import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivi
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
@@ -561,22 +562,12 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
                     @Override
                     public void onRequirePermission()
                     {
-                        if (locationAnimationDisposable != null)
-                        {
-                            locationAnimationDisposable.dispose();
-                        }
-
                         observer.onError(new PermissionException());
                     }
 
                     @Override
                     public void onFailed()
                     {
-                        if (locationAnimationDisposable != null)
-                        {
-                            locationAnimationDisposable.dispose();
-                        }
-
                         observer.onError(new Exception());
                     }
 
@@ -588,33 +579,18 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
                             @Override
                             public void onFailed()
                             {
-                                if (locationAnimationDisposable != null)
-                                {
-                                    locationAnimationDisposable.dispose();
-                                }
-
                                 observer.onError(new Exception());
                             }
 
                             @Override
                             public void onAlreadyRun()
                             {
-                                if (locationAnimationDisposable != null)
-                                {
-                                    locationAnimationDisposable.dispose();
-                                }
-
                                 observer.onError(new DuplicateRunException());
                             }
 
                             @Override
                             public void onLocationChanged(Location location)
                             {
-                                if (locationAnimationDisposable != null)
-                                {
-                                    locationAnimationDisposable.dispose();
-                                }
-
                                 unLockAll();
 
                                 mDailyLocationExFactory.stopLocationMeasure();
@@ -628,17 +604,18 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
                                     observer.onComplete();
                                 }
                             }
+
+                            @Override
+                            public void onCheckSetting(ResolvableApiException exception)
+                            {
+                                observer.onError(exception);
+                            }
                         });
                     }
 
                     @Override
                     public void onProviderDisabled()
                     {
-                        if (locationAnimationDisposable != null)
-                        {
-                            locationAnimationDisposable.dispose();
-                        }
-
                         observer.onError(new ProviderException());
                     }
                 });
@@ -658,6 +635,11 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
         }).doOnError(throwable ->
         {
             unLockAll();
+
+            if (locationAnimationDisposable != null)
+            {
+                locationAnimationDisposable.dispose();
+            }
 
             if (throwable instanceof PermissionException)
             {
@@ -702,6 +684,15 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
             } else if (throwable instanceof DuplicateRunException)
             {
 
+            } else if (throwable instanceof ResolvableApiException)
+            {
+                try
+                {
+                    ((ResolvableApiException) throwable).startResolutionForResult(getActivity(), GourmetBookingDetailActivity.REQUEST_CODE_SETTING_LOCATION);
+                } catch (Exception e)
+                {
+                    DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
+                }
             } else
             {
                 DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);

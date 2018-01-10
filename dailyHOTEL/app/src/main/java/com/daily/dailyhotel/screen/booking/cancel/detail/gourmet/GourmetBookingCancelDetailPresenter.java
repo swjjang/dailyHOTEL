@@ -33,6 +33,7 @@ import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivi
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
@@ -623,28 +624,28 @@ public class GourmetBookingCancelDetailPresenter //
 
             String userName = DailyUserPreference.getInstance(getActivity()).getName();
 
-//            String firstTicketName = "";
-//            int totalTicketCount = 0;
-//            int ticketSize = mGourmetBookingDetail.ticketInfos.size();
-//
-//            for (TicketInfo ticketInfo : mGourmetBookingDetail.ticketInfos)
-//            {
-//                if (DailyTextUtils.isTextEmpty(firstTicketName) == true)
-//                {
-//                    firstTicketName = ticketInfo.name;
-//                }
-//
-//                totalTicketCount += ticketInfo.count;
-//            }
-//
-//            String ticketName;
-//            if (ticketSize > 1)
-//            {
-//                ticketName = getString(R.string.message_multi_ticket_name_n_count, firstTicketName, ticketSize - 1);
-//            } else
-//            {
-//                ticketName = firstTicketName;
-//            }
+            //            String firstTicketName = "";
+            //            int totalTicketCount = 0;
+            //            int ticketSize = mGourmetBookingDetail.ticketInfos.size();
+            //
+            //            for (TicketInfo ticketInfo : mGourmetBookingDetail.ticketInfos)
+            //            {
+            //                if (DailyTextUtils.isTextEmpty(firstTicketName) == true)
+            //                {
+            //                    firstTicketName = ticketInfo.name;
+            //                }
+            //
+            //                totalTicketCount += ticketInfo.count;
+            //            }
+            //
+            //            String ticketName;
+            //            if (ticketSize > 1)
+            //            {
+            //                ticketName = getString(R.string.message_multi_ticket_name_n_count, firstTicketName, ticketSize - 1);
+            //            } else
+            //            {
+            //                ticketName = firstTicketName;
+            //            }
 
             String reserveDate = DailyCalendar.convertDateFormatString(guestInfo.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd");
             String canceledAt = DailyCalendar.convertDateFormatString(mGourmetBookingDetail.canceledAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
@@ -653,8 +654,8 @@ public class GourmetBookingCancelDetailPresenter //
                 , restaurantInfo.name //
                 , restaurantInfo.address //
                 , mImageUrl //
-                ,reserveDate //
-                ,canceledAt //
+                , reserveDate //
+                , canceledAt //
             );
 
             mAnalytics.onEventShareKakaoClick(getActivity());
@@ -901,22 +902,12 @@ public class GourmetBookingCancelDetailPresenter //
                     @Override
                     public void onRequirePermission()
                     {
-                        if (locationAnimationDisposable != null)
-                        {
-                            locationAnimationDisposable.dispose();
-                        }
-
                         observer.onError(new PermissionException());
                     }
 
                     @Override
                     public void onFailed()
                     {
-                        if (locationAnimationDisposable != null)
-                        {
-                            locationAnimationDisposable.dispose();
-                        }
-
                         observer.onError(new Exception());
                     }
 
@@ -928,33 +919,18 @@ public class GourmetBookingCancelDetailPresenter //
                             @Override
                             public void onFailed()
                             {
-                                if (locationAnimationDisposable != null)
-                                {
-                                    locationAnimationDisposable.dispose();
-                                }
-
                                 observer.onError(new Exception());
                             }
 
                             @Override
                             public void onAlreadyRun()
                             {
-                                if (locationAnimationDisposable != null)
-                                {
-                                    locationAnimationDisposable.dispose();
-                                }
-
                                 observer.onError(new DuplicateRunException());
                             }
 
                             @Override
                             public void onLocationChanged(Location location)
                             {
-                                if (locationAnimationDisposable != null)
-                                {
-                                    locationAnimationDisposable.dispose();
-                                }
-
                                 unLockAll();
 
                                 mDailyLocationExFactory.stopLocationMeasure();
@@ -968,17 +944,18 @@ public class GourmetBookingCancelDetailPresenter //
                                     observer.onComplete();
                                 }
                             }
+
+                            @Override
+                            public void onCheckSetting(ResolvableApiException exception)
+                            {
+                                observer.onError(exception);
+                            }
                         });
                     }
 
                     @Override
                     public void onProviderDisabled()
                     {
-                        if (locationAnimationDisposable != null)
-                        {
-                            locationAnimationDisposable.dispose();
-                        }
-
                         observer.onError(new ProviderException());
                     }
                 });
@@ -998,6 +975,11 @@ public class GourmetBookingCancelDetailPresenter //
         }).doOnError(throwable ->
         {
             unLockAll();
+
+            if (locationAnimationDisposable != null)
+            {
+                locationAnimationDisposable.dispose();
+            }
 
             if (throwable instanceof PermissionException)
             {
@@ -1042,6 +1024,15 @@ public class GourmetBookingCancelDetailPresenter //
             } else if (throwable instanceof DuplicateRunException)
             {
 
+            } else if (throwable instanceof ResolvableApiException)
+            {
+                try
+                {
+                    ((ResolvableApiException) throwable).startResolutionForResult(getActivity(), GourmetBookingCancelDetailActivity.REQUEST_CODE_SETTING_LOCATION);
+                } catch (Exception e)
+                {
+                    DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
+                }
             } else
             {
                 DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);

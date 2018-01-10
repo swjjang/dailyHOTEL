@@ -18,6 +18,7 @@ import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
 import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
 import com.daily.dailyhotel.view.DailyToolbarView;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -480,6 +481,20 @@ public class ZoomMapActivity extends BaseActivity
 
                         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(latLngBounds.build(), ScreenUtils.dpToPx(ZoomMapActivity.this, 50));
                         mGoogleMap.animateCamera(cameraUpdate);
+                    }
+
+                    @Override
+                    public void onCheckSetting(ResolvableApiException exception)
+                    {
+                        unLockUI();
+
+                        try
+                        {
+                            exception.startResolutionForResult(ZoomMapActivity.this, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                        }catch (Exception e)
+                        {
+
+                        }
                     }
                 });
             }

@@ -18,6 +18,7 @@ import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
@@ -523,6 +524,20 @@ public abstract class PlaceSearchFragment extends BaseFragment
                         {
                             // 서버
                             onSearch(location);
+                        }
+                    }
+
+                    @Override
+                    public void onCheckSetting(ResolvableApiException exception)
+                    {
+                        unLockUI();
+
+                        try
+                        {
+                            exception.startResolutionForResult(mBaseActivity, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                        }catch (Exception e)
+                        {
+
                         }
                     }
                 });

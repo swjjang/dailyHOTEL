@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -1173,6 +1174,20 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
                         setMyLocation(location, true);
                         moveCameraPosition(mMyLocationMarkerOptions.getPosition());
+                    }
+
+                    @Override
+                    public void onCheckSetting(ResolvableApiException exception)
+                    {
+                        mBaseActivity.unLockUI();
+
+                        try
+                        {
+                            exception.startResolutionForResult(getActivity(), Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                        }catch (Exception e)
+                        {
+
+                        }
                     }
                 });
             }
