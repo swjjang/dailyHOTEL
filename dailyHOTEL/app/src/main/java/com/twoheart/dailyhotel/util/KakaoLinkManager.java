@@ -6,11 +6,15 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.kakao.kakaolink.AppActionBuilder;
-import com.kakao.kakaolink.AppActionInfoBuilder;
-import com.kakao.kakaolink.KakaoLink;
-import com.kakao.kakaolink.KakaoTalkLinkMessageBuilder;
-import com.kakao.util.KakaoParameterException;
+import com.kakao.kakaolink.v2.KakaoLinkResponse;
+import com.kakao.kakaolink.v2.KakaoLinkService;
+import com.kakao.message.template.ButtonObject;
+import com.kakao.message.template.ContentObject;
+import com.kakao.message.template.FeedTemplate;
+import com.kakao.message.template.LinkObject;
+import com.kakao.message.template.LocationTemplate;
+import com.kakao.network.ErrorResult;
+import com.kakao.network.callback.ResponseCallback;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
@@ -20,19 +24,13 @@ import java.util.Locale;
 
 public class KakaoLinkManager implements Constants
 {
-    private KakaoLink mKakaoLink;
     private Context mContext;
+    private KakaoLinkService mKakaoLinkService;
 
     private KakaoLinkManager(Context context)
     {
-        try
-        {
-            mContext = context;
-            mKakaoLink = KakaoLink.getKakaoLink(mContext);
-        } catch (KakaoParameterException e)
-        {
-            ExLog.e(e.toString());
-        }
+        mContext = context;
+        mKakaoLinkService = KakaoLinkService.getInstance();
     }
 
     public static KakaoLinkManager newInstance(Context context)
@@ -40,328 +38,639 @@ public class KakaoLinkManager implements Constants
         return new KakaoLinkManager(context);
     }
 
-    public void sendInviteKakaoLink(String text, String recommendCode)
-    {
-        final String URL = "https://app.adjust.com/lkhiuk?campaign=referral-in_app&adgroup=invite_friend&creative=app_download&deep_link=dailyhotel%3A%2F%2Fdailyhotel.co.kr%3Fvc%3D6%26v%3Dsu%26rc%3D" + recommendCode;
+    //    @Deprecated
+    //    public void sendInviteKakaoLink(String text, String recommendCode)
+    //    {
+    //        final String URL = "https://app.adjust.com/lkhiuk?campaign=referral-in_app&adgroup=invite_friend&creative=app_download&deep_link=dailyhotel%3A%2F%2Fdailyhotel.co.kr%3Fvc%3D6%26v%3Dsu%26rc%3D" + recommendCode;
+    //
+    //        try
+    //        {
+    //            KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
+    //            messageBuilder.addImage("http://img.dailyhotel.me/app_static/kakao01.jpg", 300, 400);
+    //            messageBuilder.addText(text);
+    //            messageBuilder.addWebButton(mContext.getString(R.string.kakao_btn_invited_friend), URL);
+    //            mKakaoLink.sendMessage(messageBuilder, mContext);
+    //        } catch (KakaoParameterException e)
+    //        {
+    //            ExLog.e(e.toString());
+    //        }
+    //    }
 
+    public void shareStay(String name, String stayName, String address, int stayIndex //
+        , String imageUrl, String mobileWebUrl, StayBookingDay stayBookingDay)
+    {
         try
         {
-            KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
-            messageBuilder.addImage("http://img.dailyhotel.me/app_static/kakao01.jpg", 300, 400);
-            messageBuilder.addText(text);
-            messageBuilder.addWebButton(mContext.getString(R.string.kakao_btn_invited_friend), URL);
-            mKakaoLink.sendMessage(messageBuilder, mContext);
-        } catch (KakaoParameterException e)
-        {
-            ExLog.e(e.toString());
-        }
-    }
-
-    public void shareStay(String name, String hotelName, String address, int hotelIndex, String imageUrl, StayBookingDay stayBookingDay)
-    {
-        try
-        {
-            KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
+            name = Util.getShareName(name);
+            if (DailyTextUtils.isTextEmpty(name) == true)
+            {
+                name = mContext.getString(R.string.label_friend);
+            }
 
             String checkInDay = stayBookingDay.getCheckInDay("yyyyMMdd");
             int nights = stayBookingDay.getNights();
-            String schemeParams = String.format(Locale.KOREA, "vc=5&v=hd&i=%d&d=%s&n=%d", hotelIndex, checkInDay, nights);
+            String schemeParams = String.format(Locale.KOREA, "vc=5&v=hd&i=%d&d=%s&n=%d", stayIndex, checkInDay, nights);
+            String text = mContext.getString(R.string.kakao_btn_share_hotel, name, mobileWebUrl);
 
-            messageBuilder.addAppButton(mContext.getString(R.string.label_kakao_mobile_app), //
-                new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build())//
-                    .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
-
-            String text = mContext.getString(R.string.kakao_btn_share_hotel, name, hotelName//
-                , stayBookingDay.getCheckInDay("yyyy.MM.dd(EEE)"), stayBookingDay.getCheckOutDay("yyyy.MM.dd(EEE)"), nights, nights + 1, address);
-
+            String kakaoImageUrl = null;
             if (DailyTextUtils.isTextEmpty(imageUrl) == false)
             {
                 int lastSlash = imageUrl.lastIndexOf('/');
                 String fileName = imageUrl.substring(lastSlash + 1);
-                messageBuilder.addImage(imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName), 300, 200);
+                kakaoImageUrl = imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName);
             }
 
-            messageBuilder.addText(text);
+            LocationTemplate params = LocationTemplate.newBuilder(address, //
+                ContentObject.newBuilder(stayName, //
+                    kakaoImageUrl, //
+                    LinkObject.newBuilder() //
+                        .setWebUrl(mobileWebUrl) //
+                        .setMobileWebUrl(mobileWebUrl) //
+                        .setAndroidExecutionParams(schemeParams) //
+                        .setIosExecutionParams(schemeParams) //
+                        .build()) //
+                    .setDescrption(text) //
+                    .build()) //
+                .addButton(new ButtonObject(mContext.getString(R.string.label_kakao_mobile_app), LinkObject.newBuilder() //
+                    .setWebUrl(mobileWebUrl) //
+                    .setMobileWebUrl(mobileWebUrl) //
+                    .setAndroidExecutionParams(schemeParams) //
+                    .setIosExecutionParams(schemeParams) //
+                    .build())) //
+                .setAddressTitle(stayName) //
+                .build();
 
-            messageBuilder.addWebLink(mContext.getString(R.string.label_kakao_web_link), "https://mobile.dailyhotel.co.kr/stay/" + hotelIndex);
+            mKakaoLinkService.sendDefault(mContext, params, new ResponseCallback<KakaoLinkResponse>()
+            {
+                @Override
+                public void onFailure(ErrorResult errorResult)
+                {
+                    ExLog.e(errorResult.toString());
+                }
 
-            mKakaoLink.sendMessage(messageBuilder, mContext);
+                @Override
+                public void onSuccess(KakaoLinkResponse result)
+                {
+
+                }
+            });
         } catch (Exception e)
         {
             ExLog.e(e.toString());
         }
     }
 
-    public void shareStay(String name, String hotelName, String address, int hotelIndex, String imageUrl, StayBookDateTime stayBookDateTime)
+    public void shareStay(String name, String stayName, String address, int stayIndex //
+        , String imageUrl, String mobileWebUrl, StayBookDateTime stayBookDateTime)
     {
         try
         {
-            KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
+            name = Util.getShareName(name);
+            if (DailyTextUtils.isTextEmpty(name) == true)
+            {
+                name = mContext.getString(R.string.label_friend);
+            }
 
             String checkInDay = stayBookDateTime.getCheckInDateTime("yyyyMMdd");
             int nights = stayBookDateTime.getNights();
-            String schemeParams = String.format(Locale.KOREA, "vc=5&v=hd&i=%d&d=%s&n=%d", hotelIndex, checkInDay, nights);
+            String schemeParams = String.format(Locale.KOREA, "vc=5&v=hd&i=%d&d=%s&n=%d", stayIndex, checkInDay, nights);
+            String text = mContext.getString(R.string.kakao_btn_share_hotel, name, mobileWebUrl);
 
-            messageBuilder.addAppButton(mContext.getString(R.string.label_kakao_mobile_app), //
-                new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build())//
-                    .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
-
-            String text = mContext.getString(R.string.kakao_btn_share_hotel, name, hotelName//
-                , stayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)"), stayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)"), nights, nights + 1, address);
-
+            String kakaoImageUrl = null;
             if (DailyTextUtils.isTextEmpty(imageUrl) == false)
             {
                 int lastSlash = imageUrl.lastIndexOf('/');
                 String fileName = imageUrl.substring(lastSlash + 1);
-                messageBuilder.addImage(imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName), 300, 200);
+                kakaoImageUrl = imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName);
             }
 
-            messageBuilder.addText(text);
+            LocationTemplate params = LocationTemplate.newBuilder(address, //
+                ContentObject.newBuilder(stayName, //
+                    kakaoImageUrl, //
+                    LinkObject.newBuilder() //
+                        .setWebUrl(mobileWebUrl) //
+                        .setMobileWebUrl(mobileWebUrl) //
+                        .setAndroidExecutionParams(schemeParams) //
+                        .setIosExecutionParams(schemeParams) //
+                        .build()) //
+                    .setDescrption(text) //
+                    .build()) //
+                .addButton(new ButtonObject(mContext.getString(R.string.label_kakao_mobile_app), LinkObject.newBuilder() //
+                    .setWebUrl(mobileWebUrl) //
+                    .setMobileWebUrl(mobileWebUrl) //
+                    .setAndroidExecutionParams(schemeParams) //
+                    .setIosExecutionParams(schemeParams) //
+                    .build())) //
+                .setAddressTitle(stayName) //
+                .build();
 
-            messageBuilder.addWebLink(mContext.getString(R.string.label_kakao_web_link), "https://mobile.dailyhotel.co.kr/stay/" + hotelIndex);
+            mKakaoLinkService.sendDefault(mContext, params, new ResponseCallback<KakaoLinkResponse>()
+            {
+                @Override
+                public void onFailure(ErrorResult errorResult)
+                {
+                    ExLog.e(errorResult.toString());
+                }
 
-            mKakaoLink.sendMessage(messageBuilder, mContext);
+                @Override
+                public void onSuccess(KakaoLinkResponse result)
+                {
+
+                }
+            });
         } catch (Exception e)
         {
             ExLog.e(e.toString());
         }
     }
 
-    public void shareStayOutbound(String name, String hotelName, String address, int hotelIndex, String imageUrl, StayBookDateTime stayBookDateTime)
+    public void shareStayOutbound(String name, String stayName, String address, int stayIndex, String imageUrl, StayBookDateTime stayBookDateTime)
     {
-        if (DailyTextUtils.isTextEmpty(name, hotelName, address) == true || stayBookDateTime == null)
+        if (DailyTextUtils.isTextEmpty(name, stayName, address) == true || stayBookDateTime == null)
         {
             return;
         }
 
         try
         {
-            KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
+            name = Util.getShareName(name);
+            if (DailyTextUtils.isTextEmpty(name) == true)
+            {
+                name = mContext.getString(R.string.label_friend);
+            }
 
             String checkInDay = stayBookDateTime.getCheckInDateTime("yyyyMMdd");
             int nights = stayBookDateTime.getNights();
-            String schemeParams = String.format(Locale.KOREA, "vc=20&v=pd&pt=stayOutbound&i=%d&d=%s&n=%d", hotelIndex, checkInDay, nights);
+            String schemeParams = String.format(Locale.KOREA, "vc=20&v=pd&pt=stayOutbound&i=%d&d=%s&n=%d", stayIndex, checkInDay, nights);
 
-            messageBuilder.addAppButton(mContext.getString(R.string.label_kakao_mobile_app), //
-                new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build())//
-                    .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
+            String text = mContext.getString(R.string.kakao_btn_share_stay_outbound, name);
 
-            String text = mContext.getString(R.string.kakao_btn_share_stay_outbound, name, hotelName//
-                , stayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)"), stayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)"), nights, nights + 1, address);
-
+            String kakaoImageUrl = null;
             if (DailyTextUtils.isTextEmpty(imageUrl) == false)
             {
                 int lastSlash = imageUrl.lastIndexOf('/');
                 String fileName = imageUrl.substring(lastSlash + 1);
-                messageBuilder.addImage(imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName), 300, 200);
+                kakaoImageUrl = imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName);
             }
 
-            messageBuilder.addText(text);
+            // 명칭은 띄어쓰기는 '+' 로 연결 - 호텔 컬리넌 개포 ==> 호텔+컬리넌+개포  ,   lat, long , 지도레벨z 보통 17 구글에게 실망해서 안 넣기로 함
+            // https://www.google.com/maps/search/데님호텔/@37.4761828,127.0466549,17z
+            // String changePlaceName = englishName.replaceAll(" ", "\\+");
+            // ExLog.d("sam : " + hotelName +" , " + changePlaceName);
+            // String locationUrl = "https://www.google.com/maps/search/" + changePlaceName + "/@" + latitude + "," + longitude + ",17z";
 
-            mKakaoLink.sendMessage(messageBuilder, mContext);
+            FeedTemplate params = FeedTemplate //
+                .newBuilder(ContentObject.newBuilder(stayName, //
+                    kakaoImageUrl, //
+                    LinkObject.newBuilder() //
+                        .setAndroidExecutionParams(schemeParams) //
+                        .setIosExecutionParams(schemeParams) //
+                        .build()) //
+                    .setDescrption(text) //
+                    .build()) //
+                .addButton(new ButtonObject(mContext.getString(R.string.label_kakao_mobile_app), LinkObject.newBuilder() //
+                    .setAndroidExecutionParams(schemeParams) //
+                    .setIosExecutionParams(schemeParams) //
+                    .build())) //
+                .build();
+
+            mKakaoLinkService.sendDefault(mContext, params, new ResponseCallback<KakaoLinkResponse>()
+            {
+                @Override
+                public void onFailure(ErrorResult errorResult)
+                {
+                    ExLog.e(errorResult.toString());
+                }
+
+                @Override
+                public void onSuccess(KakaoLinkResponse result)
+                {
+                }
+            });
         } catch (Exception e)
         {
             ExLog.e(e.toString());
         }
     }
 
-    public void shareBookingStay(String message, int stayIndex, String imageUrl, String checkInDate, int nights)
+    public void shareBookingStay(String name, String stayName, String address, int stayIndex, String imageUrl, String mobileWebUrl, String checkInDate, int nights)
     {
         try
         {
-            KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
+            name = Util.getShareName(name);
+            if (DailyTextUtils.isTextEmpty(name) == true)
+            {
+                name = mContext.getString(R.string.label_share_customer);
+            }
 
             String schemeParams = String.format(Locale.KOREA, "vc=5&v=hd&i=%d&d=%s&n=%d", stayIndex, checkInDate, nights);
 
-            messageBuilder.addAppButton(mContext.getString(R.string.label_kakao_mobile_app), //
-                new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build())//
-                    .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
+            String text = mContext.getString(R.string.message_booking_stay_share_kakao, //
+                name, mobileWebUrl);
 
+            String kakaoImageUrl = null;
             if (DailyTextUtils.isTextEmpty(imageUrl) == false)
             {
                 int lastSlash = imageUrl.lastIndexOf('/');
                 String fileName = imageUrl.substring(lastSlash + 1);
-                messageBuilder.addImage(imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName), 300, 200);
+                kakaoImageUrl = imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName);
             }
 
-            messageBuilder.addText(message);
+            LocationTemplate params = LocationTemplate.newBuilder(address, //
+                ContentObject.newBuilder(stayName, //
+                    kakaoImageUrl, //
+                    LinkObject.newBuilder() //
+                        .setWebUrl(mobileWebUrl) //
+                        .setMobileWebUrl(mobileWebUrl) //
+                        .setAndroidExecutionParams(schemeParams) //
+                        .setIosExecutionParams(schemeParams) //
+                        .build()) //
+                    .setDescrption(text) //
+                    .build()) //
+                .addButton(new ButtonObject(mContext.getString(R.string.label_kakao_mobile_app), LinkObject.newBuilder() //
+                    .setWebUrl(mobileWebUrl) //
+                    .setMobileWebUrl(mobileWebUrl) //
+                    .setAndroidExecutionParams(schemeParams) //
+                    .setIosExecutionParams(schemeParams) //
+                    .build())) //
+                .setAddressTitle(stayName) //
+                .build();
 
-            messageBuilder.addWebLink(mContext.getString(R.string.label_kakao_web_link), "https://mobile.dailyhotel.co.kr/stay/" + stayIndex);
+            mKakaoLinkService.sendDefault(mContext, params, new ResponseCallback<KakaoLinkResponse>()
+            {
+                @Override
+                public void onFailure(ErrorResult errorResult)
+                {
+                    ExLog.e(errorResult.toString());
+                }
 
-            mKakaoLink.sendMessage(messageBuilder, mContext);
+                @Override
+                public void onSuccess(KakaoLinkResponse result)
+                {
+
+                }
+            });
         } catch (Exception e)
         {
             ExLog.e(e.toString());
         }
     }
 
-    public void shareBookingStayOutbound(String message, int stayIndex, String imageUrl, String checkInDate, int nights)
+    public void shareBookingStayOutbound(String name, String stayName, int stayIndex, String imageUrl, String checkInDate, int nights)
     {
         try
         {
-            KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
+            name = Util.getShareName(name);
+            if (DailyTextUtils.isTextEmpty(name) == true)
+            {
+                name = mContext.getString(R.string.label_share_customer);
+            }
 
             String schemeParams = String.format(Locale.KOREA, "vc=20&v=pd&pt=stayOutbound&i=%d&d=%s&n=%d", stayIndex, checkInDate, nights);
+            String text = mContext.getString(R.string.message_booking_stay_outbound_share_kakao, name);
 
-            messageBuilder.addAppButton(mContext.getString(R.string.label_kakao_mobile_app), //
-                new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder().setExecuteParam(schemeParams).build())//
-                    .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
-
+            String kakaoImageUrl = null;
             if (DailyTextUtils.isTextEmpty(imageUrl) == false)
             {
                 int lastSlash = imageUrl.lastIndexOf('/');
                 String fileName = imageUrl.substring(lastSlash + 1);
-                messageBuilder.addImage(imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName), 300, 200);
+                kakaoImageUrl = imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName);
             }
 
-            messageBuilder.addText(message);
+            // 명칭은 띄어쓰기는 '+' 로 연결 - 호텔 컬리넌 개포 ==> 호텔+컬리넌+개포  ,   lat, long , 지도레벨z 보통 17 구글에게 실망해서 안 넣기로 함
+            // https://www.google.com/maps/search/데님호텔/@37.4761828,127.0466549,17z
+            // String changePlaceName = englishName.replaceAll(" ", "\\+");
+            // ExLog.d("sam : " + hotelName +" , " + changePlaceName);
+            // String locationUrl = "https://www.google.com/maps/search/" + URLEncoder.encode(stayName, "UTF-8") + "/@" + latitude + "," + longitude + ",17z";
 
-            mKakaoLink.sendMessage(messageBuilder, mContext);
+            FeedTemplate params = FeedTemplate //
+                .newBuilder(ContentObject.newBuilder(stayName, //
+                    kakaoImageUrl, //
+                    LinkObject.newBuilder() //
+                        .setAndroidExecutionParams(schemeParams) //
+                        .setIosExecutionParams(schemeParams) //
+                        .build()) //
+                    .setDescrption(text) //
+                    .build()) //
+                .addButton(new ButtonObject(mContext.getString(R.string.label_kakao_mobile_app), LinkObject.newBuilder() //
+                    .setAndroidExecutionParams(schemeParams) //
+                    .setIosExecutionParams(schemeParams) //
+                    .build())) //
+                .build();
+
+            mKakaoLinkService.sendDefault(mContext, params, new ResponseCallback<KakaoLinkResponse>()
+            {
+                @Override
+                public void onFailure(ErrorResult errorResult)
+                {
+                    ExLog.e(errorResult.toString());
+                }
+
+                @Override
+                public void onSuccess(KakaoLinkResponse result)
+                {
+                }
+            });
         } catch (Exception e)
         {
             ExLog.e(e.toString());
         }
     }
 
-    public void shareBookingCancelStay(String message, String imageUrl)
+    public void shareBookingCancelStay(String name, String stayName, String address //
+        , String imageUrl, String checkInDate, String checkOutDate, int nights)
     {
         try
         {
-            KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
+            name = Util.getShareName(name);
+            if (DailyTextUtils.isTextEmpty(name) == true)
+            {
+                name = mContext.getString(R.string.label_share_customer);
+            }
 
+            String title = mContext.getString(R.string.title_booking_cancel_share_kakao, stayName, name);
+            String message = mContext.getString(R.string.message_booking_cancel_stay_share_kakao, checkInDate, checkOutDate, nights, nights + 1);
+
+            String kakaoImageUrl = null;
             if (DailyTextUtils.isTextEmpty(imageUrl) == false)
             {
                 int lastSlash = imageUrl.lastIndexOf('/');
                 String fileName = imageUrl.substring(lastSlash + 1);
-                messageBuilder.addImage(imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName), 300, 200);
+                kakaoImageUrl = imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName);
             }
 
-            messageBuilder.addText(message);
+            FeedTemplate params = FeedTemplate //
+                .newBuilder(ContentObject.newBuilder(title, //
+                    kakaoImageUrl, //
+                    LinkObject.newBuilder() //
+                        .build()) //
+                    .setDescrption(message) //
+                    .build()) //
+                .addButton(new ButtonObject(mContext.getString(R.string.label_kakao_mobile_app), LinkObject.newBuilder() //
+                    .setAndroidExecutionParams("") //
+                    .setIosExecutionParams("") //
+                    .build())) //
+                .build();
 
-            mKakaoLink.sendMessage(messageBuilder, mContext);
+            mKakaoLinkService.sendDefault(mContext, params, new ResponseCallback<KakaoLinkResponse>()
+            {
+                @Override
+                public void onFailure(ErrorResult errorResult)
+                {
+                    ExLog.e(errorResult.toString());
+                }
+
+                @Override
+                public void onSuccess(KakaoLinkResponse result)
+                {
+
+                }
+            });
         } catch (Exception e)
         {
             ExLog.e(e.toString());
         }
     }
 
-    public void shareGourmet(String name, String placeName, String address, int index, String imageUrl, GourmetBookingDay gourmetBookingDay)
+    public void shareGourmet(String name, String placeName, String address, int index //
+        , String imageUrl, String mobileWebUrl, GourmetBookingDay gourmetBookingDay)
     {
         try
         {
-            KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
+            name = Util.getShareName(name);
+            if (DailyTextUtils.isTextEmpty(name) == true)
+            {
+                name = mContext.getString(R.string.label_friend);
+            }
 
             String date = gourmetBookingDay.getVisitDay("yyyyMMdd");
             String schemeParams = String.format(Locale.KOREA, "vc=5&v=gd&i=%d&d=%s", index, date);
 
-            messageBuilder.addAppButton(mContext.getString(R.string.label_kakao_mobile_app)//
-                , new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder()//
-                    .setExecuteParam(schemeParams).build())//
-                    .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
+            String text = mContext.getString(R.string.kakao_btn_share_fnb, name, mobileWebUrl);
 
-            String text = mContext.getString(R.string.kakao_btn_share_fnb, name, placeName//
-                , gourmetBookingDay.getVisitDay("yyyy.MM.dd(EEE)"), address);
-
+            String kakaoImageUrl = null;
             if (DailyTextUtils.isTextEmpty(imageUrl) == false)
             {
                 int lastSlash = imageUrl.lastIndexOf('/');
                 String fileName = imageUrl.substring(lastSlash + 1);
-                messageBuilder.addImage(imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName), 300, 200);
+                kakaoImageUrl = imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName);
             }
 
-            messageBuilder.addText(text);
+            LocationTemplate params = LocationTemplate.newBuilder(address, //
+                ContentObject.newBuilder(placeName, //
+                    kakaoImageUrl, //
+                    LinkObject.newBuilder() //
+                        .setWebUrl(mobileWebUrl) //
+                        .setMobileWebUrl(mobileWebUrl) //
+                        .setAndroidExecutionParams(schemeParams) //
+                        .setIosExecutionParams(schemeParams) //
+                        .build()) //
+                    .setDescrption(text) //
+                    .build()) //
+                .addButton(new ButtonObject(mContext.getString(R.string.label_kakao_mobile_app), LinkObject.newBuilder() //
+                    .setWebUrl(mobileWebUrl) //
+                    .setMobileWebUrl(mobileWebUrl) //
+                    .setAndroidExecutionParams(schemeParams) //
+                    .setIosExecutionParams(schemeParams) //
+                    .build())) //
+                .setAddressTitle(placeName) //
+                .build();
 
-            messageBuilder.addWebLink(mContext.getString(R.string.label_kakao_web_link), "https://mobile.dailyhotel.co.kr/gourmet/" + index);
+            mKakaoLinkService.sendDefault(mContext, params, new ResponseCallback<KakaoLinkResponse>()
+            {
+                @Override
+                public void onFailure(ErrorResult errorResult)
+                {
+                    ExLog.e(errorResult.toString());
+                }
 
-            mKakaoLink.sendMessage(messageBuilder, mContext);
+                @Override
+                public void onSuccess(KakaoLinkResponse result)
+                {
+
+                }
+            });
         } catch (Exception e)
         {
             ExLog.e(e.toString());
         }
     }
 
-    public void shareGourmet(String name, String placeName, String address, int index, String imageUrl, GourmetBookDateTime gourmetBookDateTime)
+    public void shareGourmet(String name, String placeName, String address, int index //
+        , String imageUrl, String mobileWebUrl, GourmetBookDateTime gourmetBookDateTime)
     {
         try
         {
-            KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
+            name = Util.getShareName(name);
+            if (DailyTextUtils.isTextEmpty(name) == true)
+            {
+                name = mContext.getString(R.string.label_friend);
+            }
 
             String date = gourmetBookDateTime.getVisitDateTime("yyyyMMdd");
             String schemeParams = String.format(Locale.KOREA, "vc=5&v=gd&i=%d&d=%s", index, date);
 
-            messageBuilder.addAppButton(mContext.getString(R.string.label_kakao_mobile_app)//
-                , new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder()//
-                    .setExecuteParam(schemeParams).build())//
-                    .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
+            String text = mContext.getString(R.string.kakao_btn_share_fnb, name, mobileWebUrl);
 
-            String text = mContext.getString(R.string.kakao_btn_share_fnb, name, placeName//
-                , gourmetBookDateTime.getVisitDateTime("yyyy.MM.dd(EEE)"), address);
-
+            String kakaoImageUrl = null;
             if (DailyTextUtils.isTextEmpty(imageUrl) == false)
             {
                 int lastSlash = imageUrl.lastIndexOf('/');
                 String fileName = imageUrl.substring(lastSlash + 1);
-                messageBuilder.addImage(imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName), 300, 200);
+                kakaoImageUrl = imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName);
             }
 
-            messageBuilder.addText(text);
+            LocationTemplate params = LocationTemplate.newBuilder(address, //
+                ContentObject.newBuilder(placeName, //
+                    kakaoImageUrl, //
+                    LinkObject.newBuilder() //
+                        .setWebUrl(mobileWebUrl) //
+                        .setMobileWebUrl(mobileWebUrl) //
+                        .setAndroidExecutionParams(schemeParams) //
+                        .setIosExecutionParams(schemeParams) //
+                        .build()) //
+                    .setDescrption(text) //
+                    .build()) //
+                .addButton(new ButtonObject(mContext.getString(R.string.label_kakao_mobile_app), LinkObject.newBuilder() //
+                    .setWebUrl(mobileWebUrl) //
+                    .setMobileWebUrl(mobileWebUrl) //
+                    .setAndroidExecutionParams(schemeParams) //
+                    .setIosExecutionParams(schemeParams) //
+                    .build())) //
+                .setAddressTitle(placeName) //
+                .build();
 
-            messageBuilder.addWebLink(mContext.getString(R.string.label_kakao_web_link), "https://mobile.dailyhotel.co.kr/gourmet/" + index);
+            mKakaoLinkService.sendDefault(mContext, params, new ResponseCallback<KakaoLinkResponse>()
+            {
+                @Override
+                public void onFailure(ErrorResult errorResult)
+                {
+                    ExLog.e(errorResult.toString());
+                }
 
-            mKakaoLink.sendMessage(messageBuilder, mContext);
+                @Override
+                public void onSuccess(KakaoLinkResponse result)
+                {
+
+                }
+            });
         } catch (Exception e)
         {
             ExLog.e(e.toString());
         }
     }
 
-    public void shareBookingGourmet(String message, int index, String imageUrl, String reservationDate)
+    public void shareBookingGourmet(String name, String placeName, String address, int index, String imageUrl, String mobileWebUrl, String reservationDate)
     {
         try
         {
-            KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
+            name = Util.getShareName(name);
+            if (DailyTextUtils.isTextEmpty(name) == true)
+            {
+                name = mContext.getString(R.string.label_share_customer);
+            }
 
             String schemeParams = String.format(Locale.KOREA, "vc=5&v=gd&i=%d&d=%s", index, reservationDate);
+            String text = mContext.getString(R.string.message_booking_gourmet_share_kakao, //
+                name, mobileWebUrl);
 
-            messageBuilder.addAppButton(mContext.getString(R.string.label_kakao_mobile_app)//
-                , new AppActionBuilder().addActionInfo(AppActionInfoBuilder.createAndroidActionInfoBuilder()//
-                    .setExecuteParam(schemeParams).build())//
-                    .addActionInfo(AppActionInfoBuilder.createiOSActionInfoBuilder().setExecuteParam(schemeParams).build()).build());
-
+            String kakaoImageUrl = null;
             if (DailyTextUtils.isTextEmpty(imageUrl) == false)
             {
                 int lastSlash = imageUrl.lastIndexOf('/');
                 String fileName = imageUrl.substring(lastSlash + 1);
-                messageBuilder.addImage(imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName), 300, 200);
+                kakaoImageUrl = imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName);
             }
 
-            messageBuilder.addText(message);
+            LocationTemplate params = LocationTemplate.newBuilder(address, //
+                ContentObject.newBuilder(placeName, //
+                    kakaoImageUrl, //
+                    LinkObject.newBuilder() //
+                        .setWebUrl(mobileWebUrl) //
+                        .setMobileWebUrl(mobileWebUrl) //
+                        .setAndroidExecutionParams(schemeParams) //
+                        .setIosExecutionParams(schemeParams) //
+                        .build()) //
+                    .setDescrption(text) //
+                    .build()) //
+                .addButton(new ButtonObject(mContext.getString(R.string.label_kakao_mobile_app), LinkObject.newBuilder() //
+                    .setWebUrl(mobileWebUrl) //
+                    .setMobileWebUrl(mobileWebUrl) //
+                    .setAndroidExecutionParams(schemeParams) //
+                    .setIosExecutionParams(schemeParams) //
+                    .build())) //
+                .setAddressTitle(placeName) //
+                .build();
 
-            messageBuilder.addWebLink(mContext.getString(R.string.label_kakao_web_link), "https://mobile.dailyhotel.co.kr/gourmet/" + index);
+            mKakaoLinkService.sendDefault(mContext, params, new ResponseCallback<KakaoLinkResponse>()
+            {
+                @Override
+                public void onFailure(ErrorResult errorResult)
+                {
+                    ExLog.e(errorResult.toString());
+                }
 
-            mKakaoLink.sendMessage(messageBuilder, mContext);
+                @Override
+                public void onSuccess(KakaoLinkResponse result)
+                {
+
+                }
+            });
         } catch (Exception e)
         {
             ExLog.e(e.toString());
         }
     }
 
-    public void shareBookingCancelGourmet(String message, String imageUrl)
+    public void shareBookingCancelGourmet(String name, String placeName, String address //
+        , String imageUrl, String reserveDate, String canceledAt)
     {
         try
         {
-            KakaoTalkLinkMessageBuilder messageBuilder = mKakaoLink.createKakaoTalkLinkMessageBuilder();
+            name = Util.getShareName(name);
+            if (DailyTextUtils.isTextEmpty(name) == true)
+            {
+                name = mContext.getString(R.string.label_share_customer);
+            }
 
+            String title = mContext.getString(R.string.title_booking_cancel_share_kakao, placeName, name);
+            String message = mContext.getString(R.string.message_booking_cancel_gourmet_share_kakao, reserveDate, canceledAt);
+
+            String kakaoImageUrl = null;
             if (DailyTextUtils.isTextEmpty(imageUrl) == false)
             {
                 int lastSlash = imageUrl.lastIndexOf('/');
                 String fileName = imageUrl.substring(lastSlash + 1);
-                messageBuilder.addImage(imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName), 300, 200);
+                kakaoImageUrl = imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName);
             }
 
-            messageBuilder.addText(message);
+            FeedTemplate params = FeedTemplate //
+                .newBuilder(ContentObject.newBuilder(title, //
+                    kakaoImageUrl, //
+                    LinkObject.newBuilder() //
+                        .build()) //
+                    .setDescrption(message) //
+                    .build()) //
+                .addButton(new ButtonObject(mContext.getString(R.string.label_kakao_mobile_app), LinkObject.newBuilder() //
+                    .setAndroidExecutionParams("") //
+                    .setIosExecutionParams("") //
+                    .build())) //
+                .build();
 
-            mKakaoLink.sendMessage(messageBuilder, mContext);
+            mKakaoLinkService.sendDefault(mContext, params, new ResponseCallback<KakaoLinkResponse>()
+            {
+                @Override
+                public void onFailure(ErrorResult errorResult)
+                {
+                    ExLog.e(errorResult.toString());
+                }
+
+                @Override
+                public void onSuccess(KakaoLinkResponse result)
+                {
+
+                }
+            });
         } catch (Exception e)
         {
             ExLog.e(e.toString());

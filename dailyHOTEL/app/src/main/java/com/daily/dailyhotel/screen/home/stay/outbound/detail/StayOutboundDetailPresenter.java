@@ -811,14 +811,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
             String name = DailyUserPreference.getInstance(getActivity()).getName();
 
-            if (DailyTextUtils.isTextEmpty(name) == true)
-            {
-                name = getString(R.string.label_friend) + "가";
-            } else
-            {
-                name += "님이";
-            }
-
             String imageUrl;
 
             ImageMap imageMap = mStayOutboundDetail.getImageList().get(0).getImageMap();
@@ -1027,7 +1019,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                         }
                     }
                 }, null, true);
-
         }
     }
 

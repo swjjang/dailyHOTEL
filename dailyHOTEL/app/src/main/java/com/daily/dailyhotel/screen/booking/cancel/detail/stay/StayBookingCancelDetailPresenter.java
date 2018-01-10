@@ -594,12 +594,24 @@ public class StayBookingCancelDetailPresenter //
 
             String userName = DailyUserPreference.getInstance(getActivity()).getName();
 
-            String message = getString(R.string.message_booking_cancel_stay_share_kakao, userName //
-                , mStayBookingDetail.stayName, mStayBookingDetail.guestName, mStayBookingDetail.roomName //
-                , DailyCalendar.convertDateFormatString(mStayBookingDetail.cancelDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd") //
-                , mStayBookingDetail.stayAddress);
+            String[] checkInDates = mStayBookingDetail.checkInDateTime.split("T");
+            String[] checkOutDates = mStayBookingDetail.checkOutDateTime.split("T");
 
-            KakaoLinkManager.newInstance(getActivity()).shareBookingCancelStay(message, mImageUrl);
+            Date checkInDate = DailyCalendar.convertDate(checkInDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
+            Date checkOutDate = DailyCalendar.convertDate(checkOutDates[0] + "T00:00:00+09:00", DailyCalendar.ISO_8601_FORMAT);
+
+            int nights = (int) ((DailyCalendar.clearTField(checkOutDate.getTime()) - DailyCalendar.clearTField(checkInDate.getTime())) / DailyCalendar.DAY_MILLISECOND);
+
+            String checkInDay = DailyCalendar.convertDateFormatString(mStayBookingDetail.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
+            String checkOutDay = DailyCalendar.convertDateFormatString(mStayBookingDetail.checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
+
+            KakaoLinkManager.newInstance(getActivity()).shareBookingCancelStay(userName //
+                , mStayBookingDetail.stayName //
+                , mStayBookingDetail.stayAddress //
+                , mImageUrl //
+                , checkInDay //
+                , checkOutDay //
+            , nights);
 
             mAnalytics.onEventShareKakaoClick(getActivity());
 

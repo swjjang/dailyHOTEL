@@ -6,13 +6,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Toast;
 
-import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.RecentlyPlace;
+import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
@@ -31,7 +32,10 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -45,6 +49,8 @@ public class StayPreviewActivity extends BaseActivity
 
     protected StayPreviewLayout mPreviewLayout;
     protected StayPreviewNetworkController mNetworkController;
+    private CommonRemoteImpl mCommonRemoteImpl;
+
 
     StayBookingDay mPlaceBookingDay;
     StayDetail mPlaceDetail;
@@ -199,6 +205,7 @@ public class StayPreviewActivity extends BaseActivity
 
         mPreviewLayout = new StayPreviewLayout(this, mOnEventListener);
         mNetworkController = new StayPreviewNetworkController(this, getNetworkTag(), mOnNetworkControllerListener);
+        mCommonRemoteImpl = new CommonRemoteImpl(this);
 
         mEnteredLogin = DailyHotel.isLogin();
 
@@ -456,16 +463,6 @@ public class StayPreviewActivity extends BaseActivity
                 // 카카오톡 패키지 설치 여부
                 getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
 
-                String name = DailyUserPreference.getInstance(StayPreviewActivity.this).getName();
-
-                if (DailyTextUtils.isTextEmpty(name) == true)
-                {
-                    name = getString(R.string.label_friend) + "가";
-                } else
-                {
-                    name += "님이";
-                }
-
                 StayDetail stayDetail = mPlaceDetail;
 
                 if (stayDetail == null)
@@ -479,16 +476,52 @@ public class StayPreviewActivity extends BaseActivity
                     return;
                 }
 
-                KakaoLinkManager.newInstance(StayPreviewActivity.this).shareStay(name//
-                    , stayDetailParams.name//
-                    , stayDetailParams.address//
-                    , stayDetail.index//
-                    , stayDetailParams.getImageList() == null || stayDetailParams.getImageList().size() == 0 ? null : stayDetailParams.getImageList().get(0).getImageUrl()//
-                    , mPlaceBookingDay);
+                lockUI();
 
-                StayPreviewActivity.this.finish();
+                String name = DailyUserPreference.getInstance(StayPreviewActivity.this).getName();
+                String urlFormat = "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d&utm_source=share&utm_medium=stay_detail_kakaotalk";
+                String longUrl = String.format(Locale.KOREA, urlFormat, stayDetail.index //
+                    , mPlaceBookingDay.getCheckInDay("yyyy-MM-dd"), mPlaceBookingDay.getNights());
+
+                addCompositeDisposable(mCommonRemoteImpl.getShortUrl(longUrl).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<String>()
+                {
+                    @Override
+                    public void accept(@NonNull String shortUrl) throws Exception
+                    {
+                        unLockUI();
+
+                        KakaoLinkManager.newInstance(StayPreviewActivity.this).shareStay(name//
+                            , stayDetailParams.name//
+                            , stayDetailParams.address//
+                            , stayDetail.index//
+                            , stayDetailParams.getImageList() == null || stayDetailParams.getImageList().size() == 0 ? null : stayDetailParams.getImageList().get(0).getImageUrl()//
+                            , shortUrl //
+                            , mPlaceBookingDay);
+
+                        StayPreviewActivity.this.finish();
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception
+                    {
+                        unLockUI();
+
+                        KakaoLinkManager.newInstance(StayPreviewActivity.this).shareStay(name//
+                            , stayDetailParams.name//
+                            , stayDetailParams.address//
+                            , stayDetail.index//
+                            , stayDetailParams.getImageList() == null || stayDetailParams.getImageList().size() == 0 ? null : stayDetailParams.getImageList().get(0).getImageUrl()//
+                            , "https://mobile.dailyhotel.co.kr/stay/" + stayDetail.index //
+                            , mPlaceBookingDay);
+
+                        StayPreviewActivity.this.finish();
+                    }
+                }));
             } catch (Exception e)
             {
+                unLockUI();
+
                 showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
                     , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
                     , new View.OnClickListener()

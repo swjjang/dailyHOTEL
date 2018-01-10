@@ -870,21 +870,41 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             getActivity().getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
 
             String name = DailyUserPreference.getInstance(getActivity()).getName();
+            String urlFormat = "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d&utm_source=share&utm_medium=stay_detail_kakaotalk";
+            String longUrl = String.format(Locale.KOREA, urlFormat, mStayDetail.index //
+                , mStayBookDateTime.getCheckInDateTime("yyyy-MM-dd"), mStayBookDateTime.getNights());
 
-            if (DailyTextUtils.isTextEmpty(name) == true)
+            addCompositeDisposable(mCommonRemoteImpl.getShortUrl(longUrl).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<String>()
             {
-                name = getString(R.string.label_friend) + "가";
-            } else
-            {
-                name += "님이";
-            }
+                @Override
+                public void accept(String shortUrl) throws Exception
+                {
+                    unLockAll();
 
-            KakaoLinkManager.newInstance(getActivity()).shareStay(name//
-                , mStayDetail.name//
-                , mStayDetail.address//
-                , mStayDetail.index//
-                , mStayDetail.getImageInformationList() == null || mStayDetail.getImageInformationList().size() == 0 ? null : mStayDetail.getImageInformationList().get(0).getImageMap().bigUrl //
-                , mStayBookDateTime);
+                    KakaoLinkManager.newInstance(getActivity()).shareStay(name//
+                        , mStayDetail.name//
+                        , mStayDetail.address//
+                        , mStayDetail.index//
+                        , mStayDetail.getImageInformationList() == null || mStayDetail.getImageInformationList().size() == 0 ? null : mStayDetail.getImageInformationList().get(0).getImageMap().bigUrl //
+                        , shortUrl //
+                        , mStayBookDateTime);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    unLockAll();
+
+                    KakaoLinkManager.newInstance(getActivity()).shareStay(name//
+                        , mStayDetail.name//
+                        , mStayDetail.address//
+                        , mStayDetail.index//
+                        , mStayDetail.getImageInformationList() == null || mStayDetail.getImageInformationList().size() == 0 ? null : mStayDetail.getImageInformationList().get(0).getImageMap().bigUrl //
+                        , "https://mobile.dailyhotel.co.kr/stay/" + mStayDetail.index //
+                        , mStayBookDateTime);
+                }
+            }));
 
             mAnalytics.onEventShareKakaoClick(getActivity(), DailyHotel.isLogin()//
                 , DailyUserPreference.getInstance(getActivity()).getType()//
@@ -901,9 +921,9 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                         Util.installPackage(getActivity(), "com.kakao.talk");
                     }
                 }, null);
-        }
 
-        unLockAll();
+            unLockAll();
+        }
     }
 
     @Override
@@ -917,7 +937,6 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         try
         {
             int nights = mStayBookDateTime.getNights();
-
             String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d"//
                 , mStayDetail.index, mStayBookDateTime.getCheckInDateTime("yyyy-MM-dd"), nights);
 
@@ -960,8 +979,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         try
         {
             int nights = mStayBookDateTime.getNights();
-
-            String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d"//
+            String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/stay/%d?dateCheckIn=%s&stays=%d&utm_source=share&utm_medium=stay_detail_moretab"//
                 , mStayDetail.index, mStayBookDateTime.getCheckInDateTime("yyyy-MM-dd"), nights);
 
             String name = DailyUserPreference.getInstance(getActivity()).getName();
