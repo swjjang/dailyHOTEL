@@ -892,18 +892,41 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
             String name = DailyUserPreference.getInstance(getActivity()).getName();
 
-            if (DailyTextUtils.isTextEmpty(name) == true)
-            {
-                name = getString(R.string.label_friend) + "가";
-            } else
-            {
-                name += "님이";
-            }
+            String urlFormat = "https://mobile.dailyhotel.co.kr/gourmet/%d?reserveDate=%s&utm_source=share&utm_medium=gourmet_detail_kakaotalk";
+            String longUrl = String.format(Locale.KOREA, urlFormat, mGourmetDetail.index //
+                , mGourmetBookDateTime.getVisitDateTime("yyyy-MM-dd"));
 
-            KakaoLinkManager.newInstance(getActivity()).shareGourmet(name, mGourmetDetail.name, mGourmetDetail.address//
-                , mGourmetDetail.index //
-                , mGourmetDetail.getImageInformationList() == null || mGourmetDetail.getImageInformationList().size() == 0 ? null : mGourmetDetail.getImageInformationList().get(0).getImageMap().bigUrl //
-                , mGourmetBookDateTime);
+            addCompositeDisposable(mCommonRemoteImpl.getShortUrl(longUrl).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<String>()
+            {
+                @Override
+                public void accept(String shortUrl) throws Exception
+                {
+                    unLockAll();
+
+                    KakaoLinkManager.newInstance(getActivity()).shareGourmet(name //
+                        , mGourmetDetail.name //
+                        , mGourmetDetail.address//
+                        , mGourmetDetail.index //
+                        , mGourmetDetail.getImageInformationList() == null || mGourmetDetail.getImageInformationList().size() == 0 ? null : mGourmetDetail.getImageInformationList().get(0).getImageMap().bigUrl //
+                        , shortUrl
+                        , mGourmetBookDateTime);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    unLockAll();
+
+                    KakaoLinkManager.newInstance(getActivity()).shareGourmet(name //
+                        , mGourmetDetail.name //
+                        , mGourmetDetail.address//
+                        , mGourmetDetail.index //
+                        , mGourmetDetail.getImageInformationList() == null || mGourmetDetail.getImageInformationList().size() == 0 ? null : mGourmetDetail.getImageInformationList().get(0).getImageMap().bigUrl //
+                        , "https://mobile.dailyhotel.co.kr/gourmet/" + mGourmetDetail.index
+                        , mGourmetBookDateTime);
+                }
+            }));
 
             mAnalytics.onEventShareKakaoClick(getActivity(), DailyHotel.isLogin()//
                 , DailyUserPreference.getInstance(getActivity()).getType()//
@@ -920,9 +943,9 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                         Util.installPackage(getActivity(), "com.kakao.talk");
                     }
                 }, null);
-        }
 
-        unLockAll();
+            unLockAll();
+        }
     }
 
     @Override
@@ -981,7 +1004,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
         try
         {
-            String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/gourmet/%d?reserveDate=%s"//
+            String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/gourmet/%d?reserveDate=%s&utm_source=share&utm_medium=gourmet_detail_moretab"//
                 , mGourmetDetail.index, mGourmetBookDateTime.getVisitDateTime("yyyy-MM-dd"));
 
             String name = DailyUserPreference.getInstance(getActivity()).getName();
