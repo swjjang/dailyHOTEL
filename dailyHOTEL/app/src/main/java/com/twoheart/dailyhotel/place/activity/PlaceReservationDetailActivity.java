@@ -194,6 +194,7 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
 
             case CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL:
             case CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET:
+            case CODE_REQUEST_ACTIVITY_SATISFACTION_STAYOUTBOUND:
             {
                 if (resultCode == RESULT_OK)
                 {

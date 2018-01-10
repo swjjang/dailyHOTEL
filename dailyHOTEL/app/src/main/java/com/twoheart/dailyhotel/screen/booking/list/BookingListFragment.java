@@ -37,6 +37,7 @@ import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
+import com.daily.dailyhotel.repository.remote.ReviewRemoteImpl;
 import com.daily.dailyhotel.screen.booking.cancel.BookingCancelListActivity;
 import com.daily.dailyhotel.screen.booking.detail.gourmet.GourmetBookingDetailActivity;
 import com.daily.dailyhotel.screen.booking.detail.stay.StayBookingDetailActivity;
@@ -99,6 +100,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
     boolean mCheckVerify; // 인증이 해지되었는지 예약 리스트 진입시 한번만 체크한다.
 
     CommonRemoteImpl mCommonRemoteImpl;
+    ReviewRemoteImpl mReviewRemoteImpl;
     private BookingRemoteImpl mBookingRemoteImpl;
     private ProfileRemoteImpl mProfileRemoteImpl;
 
@@ -117,6 +119,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
         super.onCreate(savedInstanceState);
 
         mCommonRemoteImpl = new CommonRemoteImpl(getContext());
+        mReviewRemoteImpl = new ReviewRemoteImpl(getContext());
         mBookingRemoteImpl = new BookingRemoteImpl(getContext());
         mProfileRemoteImpl = new ProfileRemoteImpl(getContext());
     }
@@ -441,6 +444,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
             case CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL:
             case CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET:
+            case CODE_REQUEST_ACTIVITY_SATISFACTION_STAYOUTBOUND:
             default:
                 mDontReload = false;
                 break;
@@ -1016,7 +1020,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
             {
                 case STAY:
                 {
-                    addCompositeDisposable(mCommonRemoteImpl.getReview("hotel", booking.reservationIndex) //
+                    addCompositeDisposable(mReviewRemoteImpl.getStayReview(booking.reservationIndex) //
                         .subscribeOn(Schedulers.io()).map(new Function<Review, com.twoheart.dailyhotel.model.Review>()
                         {
                             @Override
@@ -1048,7 +1052,7 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
 
                 case GOURMET:
                 {
-                    addCompositeDisposable(mCommonRemoteImpl.getReview("gourmet", booking.reservationIndex) //
+                    addCompositeDisposable(mReviewRemoteImpl.getGourmetReview(booking.reservationIndex) //
                         .subscribeOn(Schedulers.io()).map(new Function<Review, com.twoheart.dailyhotel.model.Review>()
                         {
                             @Override
@@ -1079,6 +1083,34 @@ public class BookingListFragment extends BaseMenuNavigationFragment implements V
                 }
 
                 case STAY_OUTBOUND:
+                {
+                    addCompositeDisposable(mReviewRemoteImpl.getStayOutboundReview(booking.reservationIndex) //
+                        .subscribeOn(Schedulers.io()).map(new Function<Review, com.twoheart.dailyhotel.model.Review>()
+                        {
+                            @Override
+                            public com.twoheart.dailyhotel.model.Review apply(@NonNull Review review) throws Exception
+                            {
+                                return reviewToReviewParcelable(review);
+                            }
+                        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<com.twoheart.dailyhotel.model.Review>()
+                        {
+                            @Override
+                            public void accept(@NonNull com.twoheart.dailyhotel.model.Review review) throws Exception
+                            {
+                                Intent intent = ReviewActivity.newInstance(getActivity(), review);
+                                startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_STAYOUTBOUND);
+                            }
+                        }, new Consumer<Throwable>()
+                        {
+                            @Override
+                            public void accept(@NonNull Throwable throwable) throws Exception
+                            {
+                                onHandleError(throwable);
+                            }
+                        }));
+                    break;
+                }
+
                 default:
                 {
                     unLockUI();

@@ -311,6 +311,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
             case CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL:
             case CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET:
+            case CODE_REQUEST_ACTIVITY_SATISFACTION_STAYOUTBOUND:
             {
                 mDontReload = true;
 

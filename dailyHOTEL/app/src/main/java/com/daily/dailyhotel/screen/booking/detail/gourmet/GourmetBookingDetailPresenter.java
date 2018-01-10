@@ -35,6 +35,7 @@ import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.repository.remote.ReviewRemoteImpl;
 import com.daily.dailyhotel.screen.booking.detail.gourmet.receipt.GourmetReceiptActivity;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.call.restaurant.RestaurantCallDialogActivity;
@@ -83,6 +84,7 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
     GourmetBookingDetailAnalyticsInterface mAnalytics;
 
     CommonRemoteImpl mCommonRemoteImpl;
+    ReviewRemoteImpl mReviewRemoteImpl;
     BookingRemoteImpl mBookingRemoteImpl;
 
     int mReservationIndex;
@@ -152,6 +154,7 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
         setAnalytics(new GourmetBookingDetailAnalyticsImpl());
 
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
+        mReviewRemoteImpl = new ReviewRemoteImpl(activity);
         mBookingRemoteImpl = new BookingRemoteImpl(activity);
 
         setRefresh(true);
@@ -1287,7 +1290,7 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
 
         if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true)
         {
-            addCompositeDisposable(mCommonRemoteImpl.getReview("gourmet", mReservationIndex) //
+            addCompositeDisposable(mReviewRemoteImpl.getGourmetReview(mReservationIndex) //
                 .subscribeOn(Schedulers.io()).map(new Function<Review, com.twoheart.dailyhotel.model.Review>()
                 {
                     @Override

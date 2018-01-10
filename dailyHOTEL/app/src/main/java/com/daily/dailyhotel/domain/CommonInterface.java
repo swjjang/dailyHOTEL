@@ -11,8 +11,6 @@ public interface CommonInterface
 {
     Observable<CommonDateTime> getCommonDateTime();
 
-    Observable<Review> getReview(String placeType, int reservationIndex);
-
     Observable<String> getShortUrl(String longUrl);
 
     Observable<Notification> updateNotification(boolean agreed);

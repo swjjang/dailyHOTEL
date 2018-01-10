@@ -12,6 +12,8 @@ import com.daily.dailyhotel.entity.Configurations;
 import com.daily.dailyhotel.entity.Notification;
 import com.daily.dailyhotel.entity.Review;
 import com.daily.dailyhotel.repository.remote.model.NotificationData;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
@@ -59,39 +61,6 @@ public class CommonRemoteImpl extends BaseRemoteImpl implements CommonInterface
                 }
 
                 return commonDateTime;
-            }).observeOn(AndroidSchedulers.mainThread());
-    }
-
-    @Override
-    public Observable<Review> getReview(String placeType, int reservationIndex)
-    {
-        final String API = Constants.UNENCRYPTED_URL ? "api/v4/review/{type}/{reserveIdx}/question"//
-            : "NjEkMTI2JDE2JDkyJDgzJDEyNyQ2MCQxMTQkNzMkOTkkMzEkMTkkMTEzJDY2JDI2JDgzJA==$OThEOEU5OTFDOUExRNTJA0NEYyJNkE4MkZMzQkRFRTcwNEQ3MEUyNTM4MjhFRkFOCNAXkYwMzM3OUGYxRDcGxQURDQSkZEMTA4OUXM4QQjRGOUUyMjc5MRDREMVENDMjQ1NEFFMTJCCRMkQx$";
-
-        Map<String, String> urlParams = new HashMap<>();
-        urlParams.put("{type}", placeType);
-        urlParams.put("{reserveIdx}", Integer.toString(reservationIndex));
-
-        return mDailyMobileService.getReview(Crypto.getUrlDecoderEx(API, urlParams)) //
-            .subscribeOn(Schedulers.io()).map((reviewDataBaseDto) ->
-            {
-                Review review;
-
-                if (reviewDataBaseDto != null)
-                {
-                    if (reviewDataBaseDto.msgCode == 100 && reviewDataBaseDto.data != null)
-                    {
-                        review = reviewDataBaseDto.data.getReview();
-                    } else
-                    {
-                        throw new BaseException(reviewDataBaseDto.msgCode, reviewDataBaseDto.msg);
-                    }
-                } else
-                {
-                    throw new BaseException(-1, null);
-                }
-
-                return review;
             }).observeOn(AndroidSchedulers.mainThread());
     }
 
