@@ -20,6 +20,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.view.DailyToolbarView;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
@@ -427,6 +428,20 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
                             mDailyLocationFactory.stopLocationMeasure();
 
                             onSearchLocationResult(location);
+                        }
+
+                        @Override
+                        public void onCheckSetting(ResolvableApiException exception)
+                        {
+                            unLockUI();
+
+                            try
+                            {
+                                exception.startResolutionForResult(PlaceCurationActivity.this, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                            }catch (Exception e)
+                            {
+
+                            }
                         }
                     });
                 }

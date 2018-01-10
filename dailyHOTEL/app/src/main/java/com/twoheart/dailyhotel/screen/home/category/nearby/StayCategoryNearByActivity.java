@@ -28,6 +28,7 @@ import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.daily.dailyhotel.view.DailyStayCardView;
 import com.daily.dailyhotel.view.DailyStayMapCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
@@ -840,6 +841,20 @@ public class StayCategoryNearByActivity extends BaseActivity
                             mDailyLocationFactory.stopLocationMeasure();
 
                             StayCategoryNearByActivity.this.onLocationChanged(location);
+                        }
+
+                        @Override
+                        public void onCheckSetting(ResolvableApiException exception)
+                        {
+                            unLockUI();
+
+                            try
+                            {
+                                exception.startResolutionForResult(StayCategoryNearByActivity.this, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                            }catch (Exception e)
+                            {
+
+                            }
                         }
                     });
                 }

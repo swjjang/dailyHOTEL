@@ -29,6 +29,7 @@ import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -691,6 +692,12 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
                                     observer.onComplete();
                                 }
                             }
+
+                            @Override
+                            public void onCheckSetting(ResolvableApiException exception)
+                            {
+                                observer.onError(exception);
+                            }
                         });
                     }
                 });
@@ -745,6 +752,18 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
                 } else if (throwable instanceof DuplicateRunException)
                 {
 
+                } else if (throwable instanceof ResolvableApiException)
+                {
+                    try
+                    {
+                        ((ResolvableApiException) throwable).startResolutionForResult(getActivity(), StayFilterActivity.REQUEST_CODE_SETTING_LOCATION);
+                    } catch (Exception e)
+                    {
+                        DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
+
+                        onCheckedChangedSort(StayFilter.SortType.DEFAULT);
+                        getViewInterface().setSortLayout(mStayFilter.sortType);
+                    }
                 } else
                 {
                     DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
