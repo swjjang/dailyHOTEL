@@ -535,12 +535,19 @@ public class StayOutboundBookingCancelDetailPresenter //
 
             String userName = DailyUserPreference.getInstance(getActivity()).getName();
 
-            String message = getString(R.string.message_booking_cancel_stay_share_kakao, userName //
-                , mStayOutboundBookingDetail.name, mStayOutboundBookingDetail.guestLastName + " " + mStayOutboundBookingDetail.guestFirstName, mStayOutboundBookingDetail.roomName //
-                , DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.cancelDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd") //
-                , mStayOutboundBookingDetail.address);
+            int nights = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkOutDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
+                , DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
 
-            KakaoLinkManager.newInstance(getActivity()).shareBookingCancelStay(message, mImageUrl);
+            String checkInDay = DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
+            String checkOutDay = DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
+
+            KakaoLinkManager.newInstance(getActivity()).shareBookingCancelStay(userName //
+                , mStayOutboundBookingDetail.name //
+                , mStayOutboundBookingDetail.address //
+                , mImageUrl //
+                , checkInDay //
+                , checkOutDay //
+                , nights);
 
             mAnalytics.onEventShareKakaoClick(getActivity());
         } catch (Exception e)

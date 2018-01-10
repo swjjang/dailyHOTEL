@@ -8,10 +8,10 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 
-import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.RecentlyPlace;
+import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
@@ -31,7 +31,10 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -45,6 +48,7 @@ public class GourmetPreviewActivity extends BaseActivity
 
     protected GourmetPreviewLayout mPreviewLayout;
     protected GourmetPreviewNetworkController mNetworkController;
+    private CommonRemoteImpl mCommonRemoteImpl;
 
     GourmetBookingDay mPlaceBookingDay;
     GourmetDetail mPlaceDetail;
@@ -168,6 +172,7 @@ public class GourmetPreviewActivity extends BaseActivity
 
         mPreviewLayout = new GourmetPreviewLayout(this, mOnEventListener);
         mNetworkController = new GourmetPreviewNetworkController(this, getNetworkTag(), mOnNetworkControllerListener);
+        mCommonRemoteImpl = new CommonRemoteImpl(this);
 
         mEnteredLogin = DailyHotel.isLogin();
 
@@ -405,14 +410,6 @@ public class GourmetPreviewActivity extends BaseActivity
 
                 String name = DailyUserPreference.getInstance(GourmetPreviewActivity.this).getName();
 
-                if (DailyTextUtils.isTextEmpty(name) == true)
-                {
-                    name = getString(R.string.label_friend) + "가";
-                } else
-                {
-                    name += "님이";
-                }
-
                 if (mPlaceDetail == null)
                 {
                     return;
@@ -424,14 +421,41 @@ public class GourmetPreviewActivity extends BaseActivity
                     return;
                 }
 
-                KakaoLinkManager.newInstance(GourmetPreviewActivity.this).shareGourmet(name//
-                    , gourmetDetailParams.name//
-                    , gourmetDetailParams.address//
-                    , mPlaceDetail.index//
-                    , gourmetDetailParams.getImageList() == null || gourmetDetailParams.getImageList().size() == 0 ? null : gourmetDetailParams.getImageList().get(0).getImageUrl()//
-                    , mPlaceBookingDay);
+                String urlFormat = "https://mobile.dailyhotel.co.kr/gourmet/%d?reserveDate=%s&utm_source=share&utm_medium=gourmet_detail_kakaotalk";
+                String longUrl = String.format(Locale.KOREA, urlFormat, mPlaceDetail.index //
+                    , mPlaceBookingDay.getVisitDay("yyyy-MM-dd"));
 
-                GourmetPreviewActivity.this.finish();
+                addCompositeDisposable(mCommonRemoteImpl.getShortUrl(longUrl).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<String>()
+                {
+                    @Override
+                    public void accept(String shortUrl) throws Exception
+                    {
+                        KakaoLinkManager.newInstance(GourmetPreviewActivity.this).shareGourmet(name//
+                            , gourmetDetailParams.name//
+                            , gourmetDetailParams.address//
+                            , mPlaceDetail.index//
+                            , gourmetDetailParams.getImageList() == null || gourmetDetailParams.getImageList().size() == 0 ? null : gourmetDetailParams.getImageList().get(0).getImageUrl()//
+                            , shortUrl //
+                            , mPlaceBookingDay);
+
+                        GourmetPreviewActivity.this.finish();
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        KakaoLinkManager.newInstance(GourmetPreviewActivity.this).shareGourmet(name//
+                            , gourmetDetailParams.name//
+                            , gourmetDetailParams.address//
+                            , mPlaceDetail.index//
+                            , gourmetDetailParams.getImageList() == null || gourmetDetailParams.getImageList().size() == 0 ? null : gourmetDetailParams.getImageList().get(0).getImageUrl()//
+                            , "https://mobile.dailyhotel.co.kr/gourmet/" + mPlaceDetail.index //
+                            , mPlaceBookingDay);
+
+                        GourmetPreviewActivity.this.finish();
+                    }
+                }));
             } catch (Exception e)
             {
                 showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//

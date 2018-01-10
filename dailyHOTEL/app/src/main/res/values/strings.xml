@@ -41,6 +41,7 @@
     <string name="label_hotel_reservation_phone">스테이 전화 문의(예약 관련)</string>
     <string name="label_hotel_front_phone">스테이 전화 문의(이용 관련)</string>
     <string name="label_friend">친구</string>
+    <string name="label_share_customer">고객</string>
     <string name="label_domestic">국내</string>
     <string name="label_global">해외</string>
     <string name="label_on">ON</string>
@@ -788,11 +789,12 @@
     <string name="message_booking_detail_do_login">로그인 후 예약 내역을 확인할 수 있습니다.\n로그인 할까요?</string>
     <string name="message_booking_already_input_review">리뷰를 이미 입력하셨습니다.\n입력하신 리뷰를 확인하실 수 있도록 준비 중입니다.</string>
 
-    <string name="message_booking_stay_share_kakao">%1$s님이 예약하신 스테이\n\n%2$s\n예약자명: %3$s\n결제금액: %4$s\n객실: %5$s\n체크인: %6$s\n체크아웃: %7$s\n주소: %8$s\n\n지금 데일리호텔에서 스테이 정보를 확인할 수 있어요!</string>
-    <string name="message_booking_stay_outbound_share_kakao">%1$s님이 예약하신 스테이\n\n%2$s\n예약자명: %3$s\n결제금액: %4$s\n객실: %5$s\n체크인: %6$s\n체크아웃: %7$s\n주소: %8$s\n\n지금 데일리호텔에서 스테이 정보를 확인할 수 있어요!</string>
-    <string name="message_booking_gourmet_share_kakao">%1$s님이 예약하신 고메\n\n%2$s\n예약자명: %3$s\n결제금액: %4$s\n방문일: %5$s\n방문시간: %6$s\n상품: %7$s\n수량: %8$s\n주소: %9$s\n\n지금 데일리호텔에서 고메 정보를 확인할 수 있어요!</string>
-    <string name="message_booking_cancel_stay_share_kakao">%1$s의 취소내역입니다.\n\n%2$s\n예약자명: %3$s\n객실: %4$s\n취소일: %5$s\n주소: %6$s</string>
-    <string name="message_booking_cancel_gourmet_share_kakao">%1$s의 취소내역입니다.\n\n%2$s\n예약자명: %3$s\n상품: %4$s\n수량: %5$s\n취소일: %6$s\n주소: %7$s</string>
+    <string name="message_booking_stay_share_kakao">%1$s님의 예약 스테이\n%2$s</string>
+    <string name="message_booking_stay_outbound_share_kakao">%1$s님의 예약 스테이</string>
+    <string name="message_booking_gourmet_share_kakao">%1$s님의 예약 고메\n%2$s</string>
+    <string name="title_booking_cancel_share_kakao">%1$s\n%2$s님의 취소내역입니다.</string>
+    <string name="message_booking_cancel_stay_share_kakao">체크인 : %1$s\n체크아웃 : %2$s (%3$d박 %4$d일)</string>
+    <string name="message_booking_cancel_gourmet_share_kakao">방문일 : %1$s\n취소일 : %2$s</string>
 
     <string name="message_booking_stay_share_sms">[데일리호텔] %1$s님이 예약하신 스테이\n\n%2$s\n예약자명: %3$s\n결제금액: %4$s\n객실: %5$s\n체크인: %6$s\n체크아웃: %7$s\n주소: %8$s\n\n예약 스테이 확인\n</string>
     <string name="message_booking_stay_outbound_share_sms">[데일리호텔] %1$s님이 예약하신 스테이\n\n%2$s\n예약자명: %3$s\n결제금액: %4$s\n객실: %5$s\n체크인: %6$s\n체크아웃: %7$s\n주소: %8$s</string>
@@ -814,13 +816,13 @@
     <string name="kakao_btn_invited_friend">데일리호텔 다운받기</string>
     <string name="label_kakao_web_link">모바일웹에서 확인</string>
     <string name="label_kakao_mobile_app">앱에서 확인</string>
-    <string name="kakao_btn_share_hotel">%1$s 추천하는 근사한 스테이!\n\n%2$s\n체크인 : %3$s\n체크아웃 : %4$s (%5$d박 %6$d일)\n주소 : %7$s\n\n지금 데일리호텔에서 맘에 드는 객실을 확인할 수 있어요!</string>
-    <string name="kakao_btn_share_fnb">%1$s 추천하는 근사한 고메!\n\n%2$s\n날짜 : %3$s\n주소 : %4$s\n\n지금 데일리호텔에서 메뉴와\n이용시간을 확인할 수 있어요!</string>
-    <string name="kakao_btn_share_stay_outbound">%1$s 추천하는 근사한 호텔!\n\n%2$s\n체크인 : %3$s\n체크아웃 : %4$s (%5$d박 %6$d일)\n주소 : %7$s\n\n지금 데일리호텔에서 맘에 드는 객실을 확인할 수 있어요!</string>
+    <string name="kakao_btn_share_hotel">%1$s 추천하는 근사한 스테이!\n%2$s</string>
+    <string name="kakao_btn_share_fnb">%1$s 추천하는 근사한 고메!\n%2$s</string>
+    <string name="kakao_btn_share_stay_outbound">%1$s 추천하는 근사한 스테이!</string>
 
     <string name="message_detail_stay_share_sms">[데일리호텔] %1$s 추천하는 근사한 스테이!\n\n%2$s\n체크인: %3$s\n체크아웃: %4$s (%5$d박 %6$d일)\n주소: %7$s\n\n추천 스테이 확인\n</string>
     <string name="message_detail_gourmet_share_sms">[데일리호텔] %1$s 추천하는 근사한 고메!\n\n%2$s\n날짜: %3$s\n주소: %4$s\n\n추천 고메 확인\n</string>
-    <string name="message_detail_stay_outbound_share_sms">[데일리호텔] %1$s 추천하는 근사한 호텔!\n\n%2$s\n체크인: %3$s\n체크아웃: %4$s (%5$d박 %6$d일)\n주소: %7$s</string>
+    <string name="message_detail_stay_outbound_share_sms">[데일리호텔] %1$s 추천하는 근사한 스테이!\n\n%2$s\n체크인: %3$s\n체크아웃: %4$s (%5$d박 %6$d일)\n주소: %7$s</string>
 
     <!-- Base Activity -->
     <string name="act_base_network_connect">서버와의 접속이 원활하지 않습니다.\n잠시 후 다시 시도해주세요.</string>
