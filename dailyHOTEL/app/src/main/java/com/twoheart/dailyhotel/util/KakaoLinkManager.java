@@ -406,6 +406,10 @@ public class KakaoLinkManager implements Constants
                         .build()) //
                     .setDescrption(message) //
                     .build()) //
+                .addButton(new ButtonObject(mContext.getString(R.string.label_kakao_mobile_app), LinkObject.newBuilder() //
+                    .setAndroidExecutionParams("") //
+                    .setIosExecutionParams("") //
+                    .build())) //
                 .build();
 
             mKakaoLinkService.sendDefault(mContext, params, new ResponseCallback<KakaoLinkResponse>()
@@ -647,6 +651,10 @@ public class KakaoLinkManager implements Constants
                         .build()) //
                     .setDescrption(message) //
                     .build()) //
+                .addButton(new ButtonObject(mContext.getString(R.string.label_kakao_mobile_app), LinkObject.newBuilder() //
+                    .setAndroidExecutionParams("") //
+                    .setIosExecutionParams("") //
+                    .build())) //
                 .build();
 
             mKakaoLinkService.sendDefault(mContext, params, new ResponseCallback<KakaoLinkResponse>()
