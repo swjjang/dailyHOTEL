@@ -24,7 +24,6 @@ public class GourmetDetail
     public String benefit;
     public int wishCount;
     public boolean myWish;
-    public boolean hasCoupon;
     public int couponPrice;
 
     private Sticker mSticker;

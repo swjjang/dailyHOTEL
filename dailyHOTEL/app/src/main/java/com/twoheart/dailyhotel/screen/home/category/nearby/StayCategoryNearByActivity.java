@@ -381,6 +381,8 @@ public class StayCategoryNearByActivity extends BaseActivity
             {
                 mStayCategoryNearByLayout.setCategoryTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
             }
+
+            mStayCategoryNearByLayout.setMenuBarLayoutTranslationY(0);
         }
     }
 
@@ -418,6 +420,8 @@ public class StayCategoryNearByActivity extends BaseActivity
             {
                 refreshCurrentFragment(true);
             }
+
+            mStayCategoryNearByLayout.setMenuBarLayoutTranslationY(0);
         } else if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
         {
             setResult(resultCode);
@@ -851,7 +855,7 @@ public class StayCategoryNearByActivity extends BaseActivity
                             try
                             {
                                 exception.startResolutionForResult(StayCategoryNearByActivity.this, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
-                            }catch (Exception e)
+                            } catch (Exception e)
                             {
 
                             }
@@ -1064,6 +1068,8 @@ public class StayCategoryNearByActivity extends BaseActivity
             {
                 return;
             }
+
+            mStayCategoryNearByLayout.setMenuBarLayoutTranslationY(0);
 
             mStayCategoryNearByCuration.setRadius(radius);
 

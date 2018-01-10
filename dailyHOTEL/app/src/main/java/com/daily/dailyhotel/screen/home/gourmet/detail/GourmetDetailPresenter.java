@@ -84,7 +84,7 @@ import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function7;
+import io.reactivex.functions.Function6;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -914,8 +914,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                         , mGourmetDetail.address//
                         , mGourmetDetail.index //
                         , mGourmetDetail.getImageInformationList() == null || mGourmetDetail.getImageInformationList().size() == 0 ? null : mGourmetDetail.getImageInformationList().get(0).getImageMap().bigUrl //
-                        , shortUrl
-                        , mGourmetBookDateTime);
+                        , shortUrl, mGourmetBookDateTime);
                 }
             }, new Consumer<Throwable>()
             {
@@ -929,8 +928,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                         , mGourmetDetail.address//
                         , mGourmetDetail.index //
                         , mGourmetDetail.getImageInformationList() == null || mGourmetDetail.getImageInformationList().size() == 0 ? null : mGourmetDetail.getImageInformationList().get(0).getImageMap().bigUrl //
-                        , "https://mobile.dailyhotel.co.kr/gourmet/" + mGourmetDetail.index
-                        , mGourmetBookDateTime);
+                        , "https://mobile.dailyhotel.co.kr/gourmet/" + mGourmetDetail.index, mGourmetBookDateTime);
                 }
             }));
 
@@ -1853,26 +1851,21 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             , mGourmetRemoteImpl.getDetail(mGourmetIndex, mGourmetBookDateTime)//
             , mCalendarImpl.getGourmetUnavailableDates(mGourmetIndex, GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT, false)//
             , mGourmetRemoteImpl.getReviewScores(mGourmetIndex)//
-            , mGourmetRemoteImpl.getHasCoupon(mGourmetIndex, mGourmetBookDateTime)//
             , mCommonRemoteImpl.getCommonDateTime()//
             , mCartLocalImpl.getGourmetCart()//
-            , new Function7<Boolean, GourmetDetail, List<Integer>, ReviewScores, Boolean, CommonDateTime, GourmetCart, GourmetCart>()
+            , new Function6<Boolean, GourmetDetail, List<Integer>, ReviewScores, CommonDateTime, GourmetCart, GourmetCart>()
             {
                 @Override
                 public GourmetCart apply(@io.reactivex.annotations.NonNull Boolean aBoolean//
                     , @io.reactivex.annotations.NonNull GourmetDetail gourmetDetail//
                     , @io.reactivex.annotations.NonNull List<Integer> unavailableDates//
                     , @io.reactivex.annotations.NonNull ReviewScores reviewScores//
-                    , @io.reactivex.annotations.NonNull Boolean hasCoupon//
                     , @io.reactivex.annotations.NonNull CommonDateTime commonDateTime//
                     , @io.reactivex.annotations.NonNull GourmetCart gourmetCart) throws Exception
                 {
                     setCommonDateTime(commonDateTime);
                     setReviewScores(reviewScores);
                     setSoldOutDateList(unavailableDates);
-
-                    gourmetDetail.hasCoupon = hasCoupon;
-
                     setGourmetDetail(gourmetDetail);
                     setOperationTimes(commonDateTime, mGourmetBookDateTime, gourmetDetail.getGourmetMenuList());
                     setVisitTime(FULL_TIME);
