@@ -18,6 +18,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.Stay;
@@ -368,33 +369,18 @@ public abstract class PlaceBookingDetailMapPresenter extends BaseExceptionPresen
                     @Override
                     public void onRequirePermission()
                     {
-                        if (locationAnimationDisposable != null)
-                        {
-                            locationAnimationDisposable.dispose();
-                        }
-
                         observer.onError(new PermissionException());
                     }
 
                     @Override
                     public void onFailed()
                     {
-                        if (locationAnimationDisposable != null)
-                        {
-                            locationAnimationDisposable.dispose();
-                        }
-
                         observer.onError(new Exception());
                     }
 
                     @Override
                     public void onProviderDisabled()
                     {
-                        if (locationAnimationDisposable != null)
-                        {
-                            locationAnimationDisposable.dispose();
-                        }
-
                         observer.onError(new ProviderException());
                     }
 
@@ -406,33 +392,18 @@ public abstract class PlaceBookingDetailMapPresenter extends BaseExceptionPresen
                             @Override
                             public void onFailed()
                             {
-                                if (locationAnimationDisposable != null)
-                                {
-                                    locationAnimationDisposable.dispose();
-                                }
-
                                 observer.onError(new Exception());
                             }
 
                             @Override
                             public void onAlreadyRun()
                             {
-                                if (locationAnimationDisposable != null)
-                                {
-                                    locationAnimationDisposable.dispose();
-                                }
-
                                 observer.onError(new DuplicateRunException());
                             }
 
                             @Override
                             public void onLocationChanged(Location location)
                             {
-                                if (locationAnimationDisposable != null)
-                                {
-                                    locationAnimationDisposable.dispose();
-                                }
-
                                 unLockAll();
 
                                 mDailyLocationExFactory.stopLocationMeasure();
@@ -445,6 +416,12 @@ public abstract class PlaceBookingDetailMapPresenter extends BaseExceptionPresen
                                     observer.onNext(location);
                                     observer.onComplete();
                                 }
+                            }
+
+                            @Override
+                            public void onCheckSetting(ResolvableApiException exception)
+                            {
+                                observer.onError(exception);
                             }
                         });
                     }
@@ -476,6 +453,11 @@ public abstract class PlaceBookingDetailMapPresenter extends BaseExceptionPresen
             public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
             {
                 unLockAll();
+
+                if (locationAnimationDisposable != null)
+                {
+                    locationAnimationDisposable.dispose();
+                }
 
                 if (throwable instanceof PermissionException)
                 {
@@ -520,6 +502,15 @@ public abstract class PlaceBookingDetailMapPresenter extends BaseExceptionPresen
                 } else if (throwable instanceof DuplicateRunException)
                 {
 
+                } else if (throwable instanceof ResolvableApiException)
+                {
+                    try
+                    {
+                        ((ResolvableApiException) throwable).startResolutionForResult(getActivity(), PlaceBookingDetailMapActivity.REQUEST_CODE_SETTING_LOCATION);
+                    } catch (Exception e)
+                    {
+                        DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
+                    }
                 } else
                 {
                     DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);

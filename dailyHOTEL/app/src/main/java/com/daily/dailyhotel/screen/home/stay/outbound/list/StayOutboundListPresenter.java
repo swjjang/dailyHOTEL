@@ -47,6 +47,7 @@ import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
@@ -1632,33 +1633,18 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                     @Override
                     public void onRequirePermission()
                     {
-                        if (locationAnimationDisposable != null)
-                        {
-                            locationAnimationDisposable.dispose();
-                        }
-
                         observer.onError(new PermissionException());
                     }
 
                     @Override
                     public void onFailed()
                     {
-                        if (locationAnimationDisposable != null)
-                        {
-                            locationAnimationDisposable.dispose();
-                        }
-
                         observer.onError(new Exception());
                     }
 
                     @Override
                     public void onProviderDisabled()
                     {
-                        if (locationAnimationDisposable != null)
-                        {
-                            locationAnimationDisposable.dispose();
-                        }
-
                         observer.onError(new ProviderException());
                     }
 
@@ -1670,33 +1656,18 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                             @Override
                             public void onFailed()
                             {
-                                if (locationAnimationDisposable != null)
-                                {
-                                    locationAnimationDisposable.dispose();
-                                }
-
                                 observer.onError(new Exception());
                             }
 
                             @Override
                             public void onAlreadyRun()
                             {
-                                if (locationAnimationDisposable != null)
-                                {
-                                    locationAnimationDisposable.dispose();
-                                }
-
                                 observer.onError(new DuplicateRunException());
                             }
 
                             @Override
                             public void onLocationChanged(Location location)
                             {
-                                if (locationAnimationDisposable != null)
-                                {
-                                    locationAnimationDisposable.dispose();
-                                }
-
                                 unLockAll();
 
                                 mDailyLocationExFactory.stopLocationMeasure();
@@ -1709,6 +1680,12 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                                     observer.onNext(location);
                                     observer.onComplete();
                                 }
+                            }
+
+                            @Override
+                            public void onCheckSetting(ResolvableApiException exception)
+                            {
+                                observer.onError(exception);
                             }
                         });
                     }
@@ -1740,6 +1717,11 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
             {
                 unLockAll();
+
+                if (locationAnimationDisposable != null)
+                {
+                    locationAnimationDisposable.dispose();
+                }
 
                 if (throwable instanceof PermissionException)
                 {
@@ -1778,6 +1760,15 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 } else if (throwable instanceof DuplicateRunException)
                 {
 
+                } else if (throwable instanceof ResolvableApiException)
+                {
+                    try
+                    {
+                        ((ResolvableApiException) throwable).startResolutionForResult(getActivity(), StayOutboundListActivity.REQUEST_CODE_SETTING_LOCATION);
+                    } catch (Exception e)
+                    {
+                        DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
+                    }
                 } else
                 {
                     DailyToast.showToast(getActivity(), R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);

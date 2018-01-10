@@ -1,16 +1,14 @@
 package com.twoheart.dailyhotel.util;
 
 import android.Manifest;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -20,21 +18,29 @@ import android.widget.Toast;
 import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationAvailability;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.twoheart.dailyhotel.R;
 
-import java.util.List;
-
 public class DailyLocationFactory
 {
-    private static final long UPDATE_INTERVAL = 5000; // Every 60 seconds.
-    private static final long FASTEST_UPDATE_INTERVAL = 1000; // Every 30 seconds
-    private static final long MAX_WAIT_TIME = UPDATE_INTERVAL * 3; // Every 3 minutes.
+    private static final long UPDATE_INTERVAL = 1000;
+    private static final long FASTEST_UPDATE_INTERVAL = UPDATE_INTERVAL / 2;
+    private static final long MAX_WAIT_TIME = 15000;
 
     private boolean mIsMeasuringLocation = false;
     OnLocationListener mLocationListener;
@@ -44,6 +50,9 @@ public class DailyLocationFactory
 
     FusedLocationProviderClient mFusedLocationClient;
     LocationRequest mLocationRequest;
+    LocationSettingsRequest mLocationSettingsRequest;
+    SettingsClient mSettingsClient;
+    LocationCallback mLocationCallback;
 
     Handler mHandler = new Handler()
     {
@@ -115,6 +124,8 @@ public class DailyLocationFactory
         void onAlreadyRun();
 
         void onLocationChanged(Location location);
+
+        void onCheckSetting(ResolvableApiException exception);
     }
 
     public interface OnCheckLocationListener
@@ -236,9 +247,46 @@ public class DailyLocationFactory
                             if (mLocationRequest == null)
                             {
                                 mLocationRequest = createLocationRequest();
+                                mLocationSettingsRequest = buildLocationSettingsRequest(mLocationRequest);
+                                mSettingsClient = LocationServices.getSettingsClient(mContext);
+                                mLocationCallback = createLocationCallback();
                             }
 
-                            mFusedLocationClient.requestLocationUpdates(mLocationRequest, getPendingIntent(mContext));
+                            mSettingsClient.checkLocationSettings(mLocationSettingsRequest).addOnSuccessListener(new OnSuccessListener<LocationSettingsResponse>()
+                            {
+                                @Override
+                                public void onSuccess(LocationSettingsResponse locationSettingsResponse)
+                                {
+                                    mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+                                }
+                            }).addOnFailureListener(new OnFailureListener()
+                            {
+                                @Override
+                                public void onFailure(@NonNull Exception e)
+                                {
+                                    stopLocationMeasure();
+
+                                    int statusCode = ((ApiException) e).getStatusCode();
+
+                                    switch (statusCode)
+                                    {
+                                        case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                                            if (mLocationListener != null)
+                                            {
+                                                mLocationListener.onCheckSetting((ResolvableApiException) e);
+                                            }
+                                            break;
+
+                                        case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                                        default:
+                                            if (mLocationListener != null)
+                                            {
+                                                mLocationListener.onFailed();
+                                            }
+                                            break;
+                                    }
+                                }
+                            });
 
                             mHandler.sendEmptyMessageDelayed(1, 1000);
                             mHandler.removeMessages(0);
@@ -275,20 +323,12 @@ public class DailyLocationFactory
 
         mHandler.sendEmptyMessage(3);
 
-        if (mFusedLocationClient != null)
+        if (mFusedLocationClient != null && mLocationCallback != null)
         {
-            mFusedLocationClient.removeLocationUpdates(getPendingIntent(mContext));
+            mFusedLocationClient.removeLocationUpdates(mLocationCallback);
         }
 
         mIsMeasuringLocation = false;
-    }
-
-    PendingIntent getPendingIntent(Context context)
-    {
-        Intent intent = new Intent(context, LocationUpdatesBroadcastReceiver.class);
-        intent.setAction(LocationUpdatesBroadcastReceiver.ACTION_PROCESS_UPDATES);
-
-        return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     LocationRequest createLocationRequest()
@@ -297,9 +337,56 @@ public class DailyLocationFactory
         locationRequest.setInterval(UPDATE_INTERVAL);
         locationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setMaxWaitTime(MAX_WAIT_TIME);
 
         return locationRequest;
+    }
+
+    LocationCallback createLocationCallback()
+    {
+        return new LocationCallback()
+        {
+            @Override
+            public void onLocationResult(LocationResult locationResult)
+            {
+                super.onLocationResult(locationResult);
+
+                if (mLocationListener != null)
+                {
+                    mLocationListener.onLocationChanged(locationResult.getLastLocation());
+                }
+
+                stopLocationMeasure();
+            }
+
+            @Override
+            public void onLocationAvailability(LocationAvailability locationAvailability)
+            {
+                super.onLocationAvailability(locationAvailability);
+
+                if (locationAvailability.isLocationAvailable() == false)
+                {
+                    stopLocationMeasure();
+
+                    if (mLocationListener != null)
+                    {
+                        mLocationListener.onFailed();
+                    }
+                }
+            }
+        };
+    }
+
+    LocationSettingsRequest buildLocationSettingsRequest(LocationRequest locationRequest)
+    {
+        if (locationRequest == null)
+        {
+            return null;
+        }
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+        builder.addLocationRequest(mLocationRequest);
+
+        return builder.build();
     }
 
     private boolean isLocationProviderEnabled(Context context)
@@ -330,57 +417,5 @@ public class DailyLocationFactory
         }
 
         return gpsEnabled || networkEnabled;
-    }
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Listener
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private class LocationUpdatesBroadcastReceiver extends BroadcastReceiver
-    {
-        static final String ACTION_PROCESS_UPDATES = "com.twoheart.dailyhotel.PROCESS_UPDATES";
-
-        @Override
-        public void onReceive(Context context, Intent intent)
-        {
-            if (intent == null)
-            {
-                return;
-            }
-
-            final String action = intent.getAction();
-
-            if (ACTION_PROCESS_UPDATES.equals(action))
-            {
-                stopLocationMeasure();
-
-                LocationResult result = LocationResult.extractResult(intent);
-
-                if (result != null)
-                {
-                    List<Location> locations = result.getLocations();
-
-                    if (locations.isEmpty() == true)
-                    {
-                        if (mLocationListener != null)
-                        {
-                            mLocationListener.onLocationChanged(locations.get(locations.size() - 1));
-                        }
-                    } else
-                    {
-                        if (mLocationListener != null)
-                        {
-                            mLocationListener.onFailed();
-                        }
-                    }
-                } else
-                {
-                    if (mLocationListener != null)
-                    {
-                        mLocationListener.onFailed();
-                    }
-                }
-            }
-        }
     }
 }

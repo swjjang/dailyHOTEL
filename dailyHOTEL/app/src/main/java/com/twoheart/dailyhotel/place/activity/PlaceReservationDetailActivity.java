@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceBookingDetail;
@@ -468,6 +469,20 @@ public abstract class PlaceReservationDetailActivity extends BaseActivity
                         }
 
                         mPlaceReservationDetailLayout.changeLocation(location);
+                    }
+
+                    @Override
+                    public void onCheckSetting(ResolvableApiException exception)
+                    {
+                        unLockUI();
+
+                        try
+                        {
+                            exception.startResolutionForResult(PlaceReservationDetailActivity.this, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                        }catch (Exception e)
+                        {
+
+                        }
                     }
                 });
             }
