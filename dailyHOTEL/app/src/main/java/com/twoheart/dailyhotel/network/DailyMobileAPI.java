@@ -887,7 +887,7 @@ public class DailyMobileAPI
         final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/reservations/reviewable-question"//
             : "";
 
-        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestReviewInformation(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API));
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestStayOutboundReviewInformation(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API));
         executorCallbackCall.setTag(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
@@ -942,12 +942,42 @@ public class DailyMobileAPI
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }
 
+    public void requestStayOutboundAddReviewInformation(String tag, int index, JSONObject jsonObject, Object listener)
+    {
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/reservations/{reserveIdx}/review-write"//
+            : "";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{reserveIdx}", Integer.toString(index));
+
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestStayOutboundAddReviewInformation(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams), jsonObject);
+        executorCallbackCall.setTag(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+    }
+
     public void requestAddReviewDetailInformation(String tag, JSONObject jsonObject, Object listener)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/review/add/detail"//
             : "NDUkMzgkMTYkMzckOTAkMjQkNjckNjAkNjUkNjkkODkkODIkODYkNSQ3OCQzMCQ=$RjU4ME0IyMUIyMkJGSNTVCMzMF3MzBSCM0UxMTNFEODLQzNUE4MDUFERjI5NTEB3M0ISyMDOCc3NjE4FMkVDMYzg3NMjc5KQjE3NwR==$";
 
         ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestAddReviewDetailInformation(Crypto.getUrlDecoderEx(URL), jsonObject);
+        executorCallbackCall.setTag(tag);
+        executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
+    }
+
+    public void requestStayOutboundAddReviewDetailInformation(String tag, int index, JSONObject jsonObject, Object listener)
+    {
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/reservations/{reserveIdx}/review-detail-write"//
+            : "";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{reserveIdx}", Integer.toString(index));
+
+        ExecutorCallbackCall executorCallbackCall = (ExecutorCallbackCall) mDailyMobileService.requestAddReviewDetailInformation(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams), jsonObject);
         executorCallbackCall.setTag(tag);
         executorCallbackCall.enqueue((retrofit2.Callback<JSONObject>) listener);
     }

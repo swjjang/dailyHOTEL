@@ -605,7 +605,17 @@ public class ReviewActivity extends BaseActivity
                     mDailyEmoticonImageView[1].startAnimation();
                 }
 
-                mReviewNetworkController.requestAddReviewInformation(jsonObject);
+                switch (reviewItem.serviceType)
+                {
+                    case HOTEL:
+                    case GOURMET:
+                        mReviewNetworkController.requestAddReviewInformation(jsonObject);
+                        break;
+
+                    case OB_STAY:
+                        mReviewNetworkController.requestStayOutboundAddReviewInformation(mReview.reserveIdx, jsonObject);
+                        break;
+                }
 
                 ValueAnimator animation = ValueAnimator.ofFloat(0.83f, 1f);
                 animation.setDuration(200);
@@ -683,7 +693,17 @@ public class ReviewActivity extends BaseActivity
                     mDailyEmoticonImageView[0].startAnimation();
                 }
 
-                mReviewNetworkController.requestAddReviewInformation(jsonObject);
+                switch (reviewItem.serviceType)
+                {
+                    case HOTEL:
+                    case GOURMET:
+                        mReviewNetworkController.requestAddReviewInformation(jsonObject);
+                        break;
+
+                    case OB_STAY:
+                        mReviewNetworkController.requestStayOutboundAddReviewInformation(mReview.reserveIdx, jsonObject);
+                        break;
+                }
 
                 ValueAnimator animation = ValueAnimator.ofFloat(0.83f, 1f);
                 animation.setDuration(200);
@@ -755,21 +775,26 @@ public class ReviewActivity extends BaseActivity
                 }
 
                 mReviewGrade = Review.GRADE_NONE;
-                mReviewNetworkController.requestAddReviewInformation(jsonObject);
 
                 switch (reviewItem.serviceType)
                 {
                     case HOTEL:
+                        mReviewNetworkController.requestAddReviewInformation(jsonObject);
+
                         AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                             , AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP, AnalyticsManager.Label.HOTEL_CLOSE_BUTTON_CLICKED, null);
                         break;
 
                     case GOURMET:
+                        mReviewNetworkController.requestAddReviewInformation(jsonObject);
+
                         AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                             , AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP, AnalyticsManager.Label.GOURMET_CLOSE_BUTTON_CLICKED, null);
                         break;
 
                     case OB_STAY:
+                        mReviewNetworkController.requestStayOutboundAddReviewInformation(mReview.reserveIdx, jsonObject);
+
                         break;
                 }
             }
@@ -968,9 +993,7 @@ public class ReviewActivity extends BaseActivity
             if (jsonObject == null)
             {
                 restartExpiredSession();
-            } else
-            {
-                mReviewNetworkController.requestAddReviewDetailInformation(jsonObject);
+                return;
             }
 
             try
@@ -978,16 +1001,22 @@ public class ReviewActivity extends BaseActivity
                 switch (mReview.getReviewItem().serviceType)
                 {
                     case HOTEL:
+                        mReviewNetworkController.requestAddReviewDetailInformation(jsonObject);
+
                         AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
                             , AnalyticsManager.Action.REVIEW_DETAIL, AnalyticsManager.Label.SUBMIT, Collections.singletonMap("grade", mReviewGrade));
                         break;
 
                     case GOURMET:
+                        mReviewNetworkController.requestAddReviewDetailInformation(jsonObject);
+
                         AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
                             , AnalyticsManager.Action.REVIEW_DETAIL, AnalyticsManager.Label.SUBMIT, Collections.singletonMap("grade", mReviewGrade));
                         break;
 
                     case OB_STAY:
+                        mReviewNetworkController.requestStayOutboundAddReviewDetailInformation(mReview.reserveIdx, jsonObject);
+
                         break;
                 }
             } catch (Exception e)
