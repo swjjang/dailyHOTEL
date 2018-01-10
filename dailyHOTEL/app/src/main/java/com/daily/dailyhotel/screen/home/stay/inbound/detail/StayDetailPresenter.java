@@ -82,7 +82,7 @@ import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function7;
+import io.reactivex.functions.Function6;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -1836,26 +1836,21 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             , mStayRemoteImpl.getDetail(mStayIndex, mStayBookDateTime)//
             , mCalendarImpl.getStayUnavailableCheckInDates(mStayIndex, StayDetailCalendarActivity.DEFAULT_OVERSEAS_CALENDAR_DAY_OF_MAX_COUNT, false)//
             , mStayRemoteImpl.getReviewScores(mStayIndex)//
-            , mStayRemoteImpl.getHasCoupon(mStayIndex, mStayBookDateTime)//
             , mStayRemoteImpl.getTrueVR(mStayIndex)//
             , mCommonRemoteImpl.getCommonDateTime()//
-            , new Function7<Boolean, StayDetail, List<String>, ReviewScores, Boolean, List<TrueVR>, CommonDateTime, StayDetail>()
+            , new Function6<Boolean, StayDetail, List<String>, ReviewScores, List<TrueVR>, CommonDateTime, StayDetail>()
             {
                 @Override
                 public StayDetail apply(@io.reactivex.annotations.NonNull Boolean aBoolean//
                     , @io.reactivex.annotations.NonNull StayDetail stayDetail//
                     , @io.reactivex.annotations.NonNull List<String> unavailableDates//
                     , @io.reactivex.annotations.NonNull ReviewScores reviewScores//
-                    , @io.reactivex.annotations.NonNull Boolean hasCoupon//
                     , @io.reactivex.annotations.NonNull List<TrueVR> trueVRList//
                     , @io.reactivex.annotations.NonNull CommonDateTime commonDateTime) throws Exception
                 {
                     setCommonDateTime(commonDateTime);
                     setReviewScores(reviewScores);
                     setSoldOutDateList(unavailableDates);
-
-                    stayDetail.hasCoupon = hasCoupon;
-
                     setTrueVRList(trueVRList);
                     setStayDetail(stayDetail);
 
