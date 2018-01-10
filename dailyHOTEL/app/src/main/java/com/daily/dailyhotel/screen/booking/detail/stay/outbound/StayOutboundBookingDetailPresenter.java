@@ -610,25 +610,15 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
 
             String userName = DailyUserPreference.getInstance(getActivity()).getName();
 
-            String checkInTime = getString(R.string.label_stay_outbound_payment_hour, mStayOutboundBookingDetail.checkInTime.split(":")[0]);
-            String checkInDate = DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", "yyyy-MM-dd(EEE)");
-
-            String checkOutTime = getString(R.string.label_stay_outbound_payment_hour, mStayOutboundBookingDetail.checkOutTime.split(":")[0]);
-            String checkOutDate = DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkOutDate, "yyyy-MM-dd", "yyyy-MM-dd(EEE)");
-
-            String message = getString(R.string.message_booking_stay_outbound_share_kakao, //
-                userName, mStayOutboundBookingDetail.name, mStayOutboundBookingDetail.guestLastName + " " + mStayOutboundBookingDetail.guestFirstName,//
-                DailyTextUtils.getPriceFormat(getActivity(), mStayOutboundBookingDetail.paymentPrice, false), //
-                mStayOutboundBookingDetail.roomName, checkInDate + " " + checkInTime,//
-                checkOutDate + " " + checkOutTime, //
-                mStayOutboundBookingDetail.address);
-
             int nights = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkOutDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
                 , DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
 
-            KakaoLinkManager.newInstance(getActivity()).shareBookingStayOutbound(message
-                , mStayOutboundBookingDetail.name, mStayOutboundBookingDetail.address, mStayOutboundBookingDetail.stayIndex,//
-                mImageUrl, DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", "yyyyMMdd"), nights);
+            KakaoLinkManager.newInstance(getActivity()).shareBookingStayOutbound(userName //
+                , mStayOutboundBookingDetail.name //
+                , mStayOutboundBookingDetail.stayIndex //
+                , mImageUrl //
+                , DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", "yyyyMMdd") //
+                , nights);
 
             mAnalytics.onEventShareKakaoClick(getActivity());
         } catch (Exception e)

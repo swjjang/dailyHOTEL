@@ -1022,47 +1022,52 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
             // 카카오톡 패키지 설치 여부
             getActivity().getPackageManager().getPackageInfo("com.kakao.talk", PackageManager.GET_META_DATA);
 
+            screenLock(true);
+
             String userName = DailyUserPreference.getInstance(getActivity()).getName();
 
-            String firstTicketName = "";
-            int totalTicketCount = 0;
-            int ticketSize = mGourmetBookingDetail.ticketInfos.size();
+            String urlFormat = "https://mobile.dailyhotel.co.kr/gourmet/%d?reserveDate=%s&utm_source=share&utm_medium=gourmet_booking_kakaotalk";
+            String longUrl = String.format(Locale.KOREA, urlFormat, restaurantInfo.index //
+                , DailyCalendar.convertDateFormatString(guestInfo.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd"));
 
-            for (TicketInfo ticketInfo : mGourmetBookingDetail.ticketInfos)
+            addCompositeDisposable(mCommonRemoteImpl.getShortUrl(longUrl).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<String>()
             {
-                if (DailyTextUtils.isTextEmpty(firstTicketName) == true)
+                @Override
+                public void accept(String shortUrl) throws Exception
                 {
-                    firstTicketName = ticketInfo.name;
+                    unLockAll();
+
+                    KakaoLinkManager.newInstance(getActivity()).shareBookingGourmet(userName //
+                        , restaurantInfo.name //
+                        , restaurantInfo.address //
+                        , restaurantInfo.index //
+                        , mImageUrl //
+                        , shortUrl //
+                        , DailyCalendar.convertDateFormatString(guestInfo.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
                 }
-
-                totalTicketCount += ticketInfo.count;
-            }
-
-            String ticketName;
-            if (ticketSize > 1)
+            }, new Consumer<Throwable>()
             {
-                ticketName = getString(R.string.message_multi_ticket_name_n_count, firstTicketName, ticketSize - 1);
-            } else
-            {
-                ticketName = firstTicketName;
-            }
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    unLockAll();
 
-            String message = getString(R.string.message_booking_gourmet_share_kakao, //
-                userName, restaurantInfo.name, guestInfo.name,//
-                DailyTextUtils.getPriceFormat(getActivity(), paymentInfo.paymentAmount, false), //
-                DailyCalendar.convertDateFormatString(guestInfo.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"),//
-                DailyCalendar.convertDateFormatString(guestInfo.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "HH:mm"), //
-                ticketName, getString(R.string.label_booking_count, totalTicketCount), //
-                restaurantInfo.address);
-
-            KakaoLinkManager.newInstance(getActivity()).shareBookingGourmet(message //
-                , restaurantInfo.name, restaurantInfo.address, restaurantInfo.index,//
-                mImageUrl, DailyCalendar.convertDateFormatString(guestInfo.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
+                    KakaoLinkManager.newInstance(getActivity()).shareBookingGourmet(userName //
+                        , restaurantInfo.name //
+                        , restaurantInfo.address //
+                        , restaurantInfo.index //
+                        , mImageUrl //
+                        , "https://mobile.dailyhotel.co.kr/gourmet/" + restaurantInfo.index //
+                        , DailyCalendar.convertDateFormatString(guestInfo.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd"));
+                }
+            }));
 
             mAnalytics.onEventShareKakaoClick(getActivity());
         } catch (Exception e)
         {
             ExLog.d(e.toString());
+
+            unLockAll();
 
             getViewInterface().showSimpleDialog(null, getString(R.string.dialog_msg_not_installed_kakaotalk)//
                 , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no)//
@@ -1118,7 +1123,7 @@ public class GourmetBookingDetailPresenter extends BaseExceptionPresenter<Gourme
                 ticketName = firstTicketName;
             }
 
-            String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/gourmet/%d?reserveDate=%s"//
+            String longUrl = String.format(Locale.KOREA, "https://mobile.dailyhotel.co.kr/gourmet/%d?reserveDate=%s&utm_source=share&utm_medium=gourmet_booking_moretab"//
                 , restaurantInfo.index //
                 , DailyCalendar.convertDateFormatString(guestInfo.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd"));
 

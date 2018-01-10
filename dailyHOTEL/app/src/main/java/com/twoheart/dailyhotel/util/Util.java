@@ -1649,13 +1649,8 @@ public class Util implements Constants
         return VERIFY_USER;
     }
 
-    public static String getShareName(Context context, String name)
+    public static String getShareName(String name)
     {
-        if (context == null)
-        {
-            return null;
-        }
-
         String shareName = null;
 
         if (DailyTextUtils.isTextEmpty(name) == false)
@@ -1669,11 +1664,11 @@ public class Util implements Constants
                 shareName = name;
             }
         }
-
-        if (DailyTextUtils.isTextEmpty(shareName) == true)
-        {
-            shareName = context.getString(R.string.label_friend);
-        }
+//
+//        if (DailyTextUtils.isTextEmpty(shareName) == true)
+//        {
+//            shareName = defaultName;
+//        }
 
         return shareName;
     }

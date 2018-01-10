@@ -623,36 +623,39 @@ public class GourmetBookingCancelDetailPresenter //
 
             String userName = DailyUserPreference.getInstance(getActivity()).getName();
 
-            String firstTicketName = "";
-            int totalTicketCount = 0;
-            int ticketSize = mGourmetBookingDetail.ticketInfos.size();
+//            String firstTicketName = "";
+//            int totalTicketCount = 0;
+//            int ticketSize = mGourmetBookingDetail.ticketInfos.size();
+//
+//            for (TicketInfo ticketInfo : mGourmetBookingDetail.ticketInfos)
+//            {
+//                if (DailyTextUtils.isTextEmpty(firstTicketName) == true)
+//                {
+//                    firstTicketName = ticketInfo.name;
+//                }
+//
+//                totalTicketCount += ticketInfo.count;
+//            }
+//
+//            String ticketName;
+//            if (ticketSize > 1)
+//            {
+//                ticketName = getString(R.string.message_multi_ticket_name_n_count, firstTicketName, ticketSize - 1);
+//            } else
+//            {
+//                ticketName = firstTicketName;
+//            }
 
-            for (TicketInfo ticketInfo : mGourmetBookingDetail.ticketInfos)
-            {
-                if (DailyTextUtils.isTextEmpty(firstTicketName) == true)
-                {
-                    firstTicketName = ticketInfo.name;
-                }
+            String reserveDate = DailyCalendar.convertDateFormatString(guestInfo.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd");
+            String canceledAt = DailyCalendar.convertDateFormatString(mGourmetBookingDetail.canceledAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
 
-                totalTicketCount += ticketInfo.count;
-            }
-
-            String ticketName;
-            if (ticketSize > 1)
-            {
-                ticketName = getString(R.string.message_multi_ticket_name_n_count, firstTicketName, ticketSize - 1);
-            } else
-            {
-                ticketName = firstTicketName;
-            }
-
-            String message = getString(R.string.message_booking_cancel_gourmet_share_kakao, userName //
-                , restaurantInfo.name, guestInfo.name //
-                , ticketName, getString(R.string.label_booking_count, totalTicketCount) //
-                , DailyCalendar.convertDateFormatString(mGourmetBookingDetail.canceledAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd") //
-                , restaurantInfo.address);
-
-            KakaoLinkManager.newInstance(getActivity()).shareBookingCancelGourmet(message, restaurantInfo.name, restaurantInfo.address, mImageUrl);
+            KakaoLinkManager.newInstance(getActivity()).shareBookingCancelGourmet(userName //
+                , restaurantInfo.name //
+                , restaurantInfo.address //
+                , mImageUrl //
+                ,reserveDate //
+                ,canceledAt //
+            );
 
             mAnalytics.onEventShareKakaoClick(getActivity());
         } catch (Exception e)

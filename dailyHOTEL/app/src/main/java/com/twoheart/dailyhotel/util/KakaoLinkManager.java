@@ -61,7 +61,7 @@ public class KakaoLinkManager implements Constants
     {
         try
         {
-            name = Util.getShareName(mContext, name);
+            name = Util.getShareName(name);
             if (DailyTextUtils.isTextEmpty(name) == true)
             {
                 name = mContext.getString(R.string.label_friend);
@@ -125,7 +125,7 @@ public class KakaoLinkManager implements Constants
     {
         try
         {
-            name = Util.getShareName(mContext, name);
+            name = Util.getShareName(name);
             if (DailyTextUtils.isTextEmpty(name) == true)
             {
                 name = mContext.getString(R.string.label_friend);
@@ -193,7 +193,7 @@ public class KakaoLinkManager implements Constants
 
         try
         {
-            name = Util.getShareName(mContext, name);
+            name = Util.getShareName(name);
             if (DailyTextUtils.isTextEmpty(name) == true)
             {
                 name = mContext.getString(R.string.label_friend);
@@ -257,10 +257,10 @@ public class KakaoLinkManager implements Constants
     {
         try
         {
-            name = Util.getShareName(mContext, name);
+            name = Util.getShareName(name);
             if (DailyTextUtils.isTextEmpty(name) == true)
             {
-                name = mContext.getString(R.string.label_friend);
+                name = mContext.getString(R.string.label_share_customer);
             }
 
             String schemeParams = String.format(Locale.KOREA, "vc=5&v=hd&i=%d&d=%s&n=%d", stayIndex, checkInDate, nights);
@@ -316,11 +316,18 @@ public class KakaoLinkManager implements Constants
         }
     }
 
-    public void shareBookingStayOutbound(String message, String stayName, String address, int stayIndex, String imageUrl, String checkInDate, int nights)
+    public void shareBookingStayOutbound(String name, String stayName, int stayIndex, String imageUrl, String checkInDate, int nights)
     {
         try
         {
+            name = Util.getShareName(name);
+            if (DailyTextUtils.isTextEmpty(name) == true)
+            {
+                name = mContext.getString(R.string.label_share_customer);
+            }
+
             String schemeParams = String.format(Locale.KOREA, "vc=20&v=pd&pt=stayOutbound&i=%d&d=%s&n=%d", stayIndex, checkInDate, nights);
+            String text = mContext.getString(R.string.message_booking_stay_outbound_share_kakao, name);
 
             String kakaoImageUrl = null;
             if (DailyTextUtils.isTextEmpty(imageUrl) == false)
@@ -334,7 +341,7 @@ public class KakaoLinkManager implements Constants
             // https://www.google.com/maps/search/데님호텔/@37.4761828,127.0466549,17z
             // String changePlaceName = englishName.replaceAll(" ", "\\+");
             // ExLog.d("sam : " + hotelName +" , " + changePlaceName);
-            // String locationUrl = "https://www.google.com/maps/search/" + changePlaceName + "/@" + latitude + "," + longitude + ",17z";
+            // String locationUrl = "https://www.google.com/maps/search/" + URLEncoder.encode(stayName, "UTF-8") + "/@" + latitude + "," + longitude + ",17z";
 
             FeedTemplate params = FeedTemplate //
                 .newBuilder(ContentObject.newBuilder(stayName, //
@@ -343,7 +350,7 @@ public class KakaoLinkManager implements Constants
                         .setAndroidExecutionParams(schemeParams) //
                         .setIosExecutionParams(schemeParams) //
                         .build()) //
-                    .setDescrption(message) //
+                    .setDescrption(text) //
                     .build()) //
                 .addButton(new ButtonObject(mContext.getString(R.string.label_kakao_mobile_app), LinkObject.newBuilder() //
                     .setAndroidExecutionParams(schemeParams) //
@@ -370,10 +377,20 @@ public class KakaoLinkManager implements Constants
         }
     }
 
-    public void shareBookingCancelStay(String message, String stayName, String address, String imageUrl)
+    public void shareBookingCancelStay(String name, String stayName, String address //
+        , String imageUrl, String checkInDate, String checkOutDate, int nights)
     {
         try
         {
+            name = Util.getShareName(name);
+            if (DailyTextUtils.isTextEmpty(name) == true)
+            {
+                name = mContext.getString(R.string.label_share_customer);
+            }
+
+            String title = mContext.getString(R.string.title_booking_cancel_share_kakao, stayName, name);
+            String message = mContext.getString(R.string.message_booking_cancel_stay_share_kakao, checkInDate, checkOutDate, nights, nights + 1);
+
             String kakaoImageUrl = null;
             if (DailyTextUtils.isTextEmpty(imageUrl) == false)
             {
@@ -382,14 +399,13 @@ public class KakaoLinkManager implements Constants
                 kakaoImageUrl = imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName);
             }
 
-            LocationTemplate params = LocationTemplate.newBuilder(address, //
-                ContentObject.newBuilder(stayName, //
+            FeedTemplate params = FeedTemplate //
+                .newBuilder(ContentObject.newBuilder(title, //
                     kakaoImageUrl, //
                     LinkObject.newBuilder() //
                         .build()) //
                     .setDescrption(message) //
                     .build()) //
-                .setAddressTitle(stayName) //
                 .build();
 
             mKakaoLinkService.sendDefault(mContext, params, new ResponseCallback<KakaoLinkResponse>()
@@ -412,15 +428,21 @@ public class KakaoLinkManager implements Constants
         }
     }
 
-    public void shareGourmet(String name, String placeName, String address, int index, String imageUrl, GourmetBookingDay gourmetBookingDay)
+    public void shareGourmet(String name, String placeName, String address, int index //
+        , String imageUrl, String mobileWebUrl, GourmetBookingDay gourmetBookingDay)
     {
         try
         {
+            name = Util.getShareName(name);
+            if (DailyTextUtils.isTextEmpty(name) == true)
+            {
+                name = mContext.getString(R.string.label_friend);
+            }
+
             String date = gourmetBookingDay.getVisitDay("yyyyMMdd");
             String schemeParams = String.format(Locale.KOREA, "vc=5&v=gd&i=%d&d=%s", index, date);
 
-            String text = mContext.getString(R.string.kakao_btn_share_fnb, name, placeName//
-                , gourmetBookingDay.getVisitDay("yyyy.MM.dd(EEE)"), address);
+            String text = mContext.getString(R.string.kakao_btn_share_fnb, name, mobileWebUrl);
 
             String kakaoImageUrl = null;
             if (DailyTextUtils.isTextEmpty(imageUrl) == false)
@@ -434,16 +456,16 @@ public class KakaoLinkManager implements Constants
                 ContentObject.newBuilder(placeName, //
                     kakaoImageUrl, //
                     LinkObject.newBuilder() //
-                        .setWebUrl("https://mobile.dailyhotel.co.kr/gourmet/" + index) //
-                        .setMobileWebUrl("https://mobile.dailyhotel.co.kr/gourmet/" + index) //
+                        .setWebUrl(mobileWebUrl) //
+                        .setMobileWebUrl(mobileWebUrl) //
                         .setAndroidExecutionParams(schemeParams) //
                         .setIosExecutionParams(schemeParams) //
                         .build()) //
                     .setDescrption(text) //
                     .build()) //
                 .addButton(new ButtonObject(mContext.getString(R.string.label_kakao_mobile_app), LinkObject.newBuilder() //
-                    .setWebUrl("https://mobile.dailyhotel.co.kr/gourmet/" + index) //
-                    .setMobileWebUrl("https://mobile.dailyhotel.co.kr/gourmet/" + index) //
+                    .setWebUrl(mobileWebUrl) //
+                    .setMobileWebUrl(mobileWebUrl) //
                     .setAndroidExecutionParams(schemeParams) //
                     .setIosExecutionParams(schemeParams) //
                     .build())) //
@@ -470,15 +492,21 @@ public class KakaoLinkManager implements Constants
         }
     }
 
-    public void shareGourmet(String name, String placeName, String address, int index, String imageUrl, GourmetBookDateTime gourmetBookDateTime)
+    public void shareGourmet(String name, String placeName, String address, int index //
+        , String imageUrl, String mobileWebUrl, GourmetBookDateTime gourmetBookDateTime)
     {
         try
         {
+            name = Util.getShareName(name);
+            if (DailyTextUtils.isTextEmpty(name) == true)
+            {
+                name = mContext.getString(R.string.label_friend);
+            }
+
             String date = gourmetBookDateTime.getVisitDateTime("yyyyMMdd");
             String schemeParams = String.format(Locale.KOREA, "vc=5&v=gd&i=%d&d=%s", index, date);
 
-            String text = mContext.getString(R.string.kakao_btn_share_fnb, name, placeName//
-                , gourmetBookDateTime.getVisitDateTime("yyyy.MM.dd(EEE)"), address);
+            String text = mContext.getString(R.string.kakao_btn_share_fnb, name, mobileWebUrl);
 
             String kakaoImageUrl = null;
             if (DailyTextUtils.isTextEmpty(imageUrl) == false)
@@ -492,16 +520,16 @@ public class KakaoLinkManager implements Constants
                 ContentObject.newBuilder(placeName, //
                     kakaoImageUrl, //
                     LinkObject.newBuilder() //
-                        .setWebUrl("https://mobile.dailyhotel.co.kr/gourmet/" + index) //
-                        .setMobileWebUrl("https://mobile.dailyhotel.co.kr/gourmet/" + index) //
+                        .setWebUrl(mobileWebUrl) //
+                        .setMobileWebUrl(mobileWebUrl) //
                         .setAndroidExecutionParams(schemeParams) //
                         .setIosExecutionParams(schemeParams) //
                         .build()) //
                     .setDescrption(text) //
                     .build()) //
                 .addButton(new ButtonObject(mContext.getString(R.string.label_kakao_mobile_app), LinkObject.newBuilder() //
-                    .setWebUrl("https://mobile.dailyhotel.co.kr/gourmet/" + index) //
-                    .setMobileWebUrl("https://mobile.dailyhotel.co.kr/gourmet/" + index) //
+                    .setWebUrl(mobileWebUrl) //
+                    .setMobileWebUrl(mobileWebUrl) //
                     .setAndroidExecutionParams(schemeParams) //
                     .setIosExecutionParams(schemeParams) //
                     .build())) //
@@ -528,11 +556,19 @@ public class KakaoLinkManager implements Constants
         }
     }
 
-    public void shareBookingGourmet(String message, String placeName, String address, int index, String imageUrl, String reservationDate)
+    public void shareBookingGourmet(String name, String placeName, String address, int index, String imageUrl, String mobileWebUrl, String reservationDate)
     {
         try
         {
+            name = Util.getShareName(name);
+            if (DailyTextUtils.isTextEmpty(name) == true)
+            {
+                name = mContext.getString(R.string.label_share_customer);
+            }
+
             String schemeParams = String.format(Locale.KOREA, "vc=5&v=gd&i=%d&d=%s", index, reservationDate);
+            String text = mContext.getString(R.string.message_booking_gourmet_share_kakao, //
+                name, mobileWebUrl);
 
             String kakaoImageUrl = null;
             if (DailyTextUtils.isTextEmpty(imageUrl) == false)
@@ -546,16 +582,16 @@ public class KakaoLinkManager implements Constants
                 ContentObject.newBuilder(placeName, //
                     kakaoImageUrl, //
                     LinkObject.newBuilder() //
-                        .setWebUrl("https://mobile.dailyhotel.co.kr/gourmet/" + index) //
-                        .setMobileWebUrl("https://mobile.dailyhotel.co.kr/gourmet/" + index) //
+                        .setWebUrl(mobileWebUrl) //
+                        .setMobileWebUrl(mobileWebUrl) //
                         .setAndroidExecutionParams(schemeParams) //
                         .setIosExecutionParams(schemeParams) //
                         .build()) //
-                    .setDescrption(message) //
+                    .setDescrption(text) //
                     .build()) //
                 .addButton(new ButtonObject(mContext.getString(R.string.label_kakao_mobile_app), LinkObject.newBuilder() //
-                    .setWebUrl("https://mobile.dailyhotel.co.kr/gourmet/" + index) //
-                    .setMobileWebUrl("https://mobile.dailyhotel.co.kr/gourmet/" + index) //
+                    .setWebUrl(mobileWebUrl) //
+                    .setMobileWebUrl(mobileWebUrl) //
                     .setAndroidExecutionParams(schemeParams) //
                     .setIosExecutionParams(schemeParams) //
                     .build())) //
@@ -582,10 +618,20 @@ public class KakaoLinkManager implements Constants
         }
     }
 
-    public void shareBookingCancelGourmet(String message, String placeName, String address, String imageUrl)
+    public void shareBookingCancelGourmet(String name, String placeName, String address //
+        , String imageUrl, String reserveDate, String canceledAt)
     {
         try
         {
+            name = Util.getShareName(name);
+            if (DailyTextUtils.isTextEmpty(name) == true)
+            {
+                name = mContext.getString(R.string.label_share_customer);
+            }
+
+            String title = mContext.getString(R.string.title_booking_cancel_share_kakao, placeName, name);
+            String message = mContext.getString(R.string.message_booking_cancel_gourmet_share_kakao, reserveDate, canceledAt);
+
             String kakaoImageUrl = null;
             if (DailyTextUtils.isTextEmpty(imageUrl) == false)
             {
@@ -594,14 +640,13 @@ public class KakaoLinkManager implements Constants
                 kakaoImageUrl = imageUrl.substring(0, lastSlash + 1) + URLEncoder.encode(fileName);
             }
 
-            LocationTemplate params = LocationTemplate.newBuilder(address, //
-                ContentObject.newBuilder(placeName, //
+            FeedTemplate params = FeedTemplate //
+                .newBuilder(ContentObject.newBuilder(title, //
                     kakaoImageUrl, //
                     LinkObject.newBuilder() //
                         .build()) //
                     .setDescrption(message) //
                     .build()) //
-                .setAddressTitle(placeName) //
                 .build();
 
             mKakaoLinkService.sendDefault(mContext, params, new ResponseCallback<KakaoLinkResponse>()
