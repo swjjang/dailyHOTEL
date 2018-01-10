@@ -55,6 +55,7 @@ import com.twoheart.dailyhotel.databinding.LayoutStayOutboundBookingDetail02Data
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundBookingDetail03DataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutStayOutboundDetailInformationDataBinding;
 import com.twoheart.dailyhotel.model.MyLocationMarker;
+import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 import com.twoheart.dailyhotel.place.adapter.PlaceNameInfoWindowAdapter;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
@@ -126,6 +127,8 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
         void onMoreShareClick();
 
         void onHiddenReservationClick();
+
+        void onReviewClick(String reviewStatus);
     }
 
     public StayOutboundBookingDetailView(BaseActivity baseActivity, StayOutboundBookingDetailView.OnEventListener listener)
@@ -557,6 +560,45 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
     }
 
     @Override
+    public void setReviewButtonLayout(String reviewStatusType)
+    {
+        if (getContext() == null || getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (DailyTextUtils.isTextEmpty(reviewStatusType) == true)
+        {
+            reviewStatusType = PlaceBookingDetail.ReviewStatusType.NONE;
+        }
+
+        getViewDataBinding().inputReviewView.setTag(reviewStatusType);
+
+        if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatusType) == true)
+        {
+            getViewDataBinding().inputReviewVerticalLine.setVisibility(View.VISIBLE);
+            getViewDataBinding().inputReviewView.setVisibility(View.VISIBLE);
+            getViewDataBinding().inputReviewView.setDrawableVectorTint(R.color.default_background_c454545);
+            getViewDataBinding().inputReviewView.setTextColor(getContext().getResources().getColor(R.color.default_text_c323232));
+        } else if (PlaceBookingDetail.ReviewStatusType.COMPLETE.equalsIgnoreCase(reviewStatusType) == true)
+        {
+            getViewDataBinding().inputReviewVerticalLine.setVisibility(View.VISIBLE);
+            getViewDataBinding().inputReviewView.setVisibility(View.VISIBLE);
+            getViewDataBinding().inputReviewView.setDrawableVectorTint(R.color.default_background_c454545_alpha_20);
+            getViewDataBinding().inputReviewView.setTextColor(getContext().getResources().getColor(R.color.default_text_cc5c5c5));
+            getViewDataBinding().inputReviewView.setText(R.string.label_booking_completed_input_review);
+            getViewDataBinding().inputReviewView.setOnClickListener(null);
+            getViewDataBinding().inputReviewView.setEnabled(false);
+        } else
+        {
+            getViewDataBinding().inputReviewVerticalLine.setVisibility(View.GONE);
+            getViewDataBinding().inputReviewView.setVisibility(View.GONE);
+            getViewDataBinding().inputReviewView.setDrawableVectorTint(R.color.default_background_c454545);
+            getViewDataBinding().inputReviewView.setTextColor(getContext().getResources().getColor(R.color.default_text_c323232));
+        }
+    }
+
+    @Override
     public void setRefundPolicy(StayOutboundBookingDetail stayOutboundBookingDetail)
     {
         if (mBookingDetail03DataBinding == null || stayOutboundBookingDetail == null)
@@ -921,6 +963,24 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
             case R.id.deleteReservationTextView:
                 getEventListener().onHiddenReservationClick();
                 break;
+
+            case R.id.inputReviewView:
+            {
+                if (v.getTag() == null)
+                {
+                    return;
+                }
+
+                if ((v.getTag() instanceof String) == false)
+                {
+                    return;
+                }
+
+                String reviewStatus = (String) v.getTag();
+
+                getEventListener().onReviewClick(reviewStatus);
+                break;
+            }
         }
     }
 
@@ -954,6 +1014,10 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
         getViewDataBinding().viewDetailView.setOnClickListener(this);
         getViewDataBinding().viewMapView.setOnClickListener(this);
         getViewDataBinding().placeNameTextView.setText(stayOutboundBookingDetail.name);
+
+        getViewDataBinding().inputReviewView.setOnClickListener(this);
+
+        setReviewButtonLayout(stayOutboundBookingDetail.reviewStatusType);
     }
 
     private void setImageMapLayout(Context context, double latitude, double longitude, int height, int width)

@@ -37,6 +37,7 @@ public class StayOutboundBookingDetail extends Configurations
 
     public String cancelDateTime; // 취소 일시(취소가 아닐때에는 내려오지 않음)
 
+    public String reviewStatusType;
     public int rewardStickerCount;
 
     public enum PaymentType
