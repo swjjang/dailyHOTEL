@@ -1227,6 +1227,13 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
         }
 
         @Override
+        public void onReviewStayOutbound(Review review)
+        {
+            Intent intent = ReviewActivity.newInstance(MainActivity.this, review);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_STAYOUTBOUND);
+        }
+
+        @Override
         public void onError(Call call, Throwable e, boolean onlyReport)
         {
             mDelayTimeHandler.removeMessages(0);

@@ -18,7 +18,7 @@ public class ReviewItem implements Parcelable
     public int itemIdx;
     public String itemName;
     public String imageUrl;
-    public Constants.PlaceType placeType; // serviceType
+    public Constants.ServiceType serviceType; // serviceType
     public String useEndDate;
     public String useStartDate;
 
@@ -64,15 +64,23 @@ public class ReviewItem implements Parcelable
 
         if (DailyTextUtils.isTextEmpty(serviceType) == false)
         {
-            if ("HOTEL".equalsIgnoreCase(serviceType) == true)
+            switch (serviceType)
             {
-                placeType = Constants.PlaceType.HOTEL;
-            } else if ("GOURMET".equalsIgnoreCase(serviceType) == true)
-            {
-                placeType = Constants.PlaceType.FNB;
-            } else
-            {
-                ExLog.d("unKnown service type");
+                case "HOTEL":
+                    this.serviceType = Constants.ServiceType.HOTEL;
+                    break;
+
+                case "GOURMET":
+                    this.serviceType = Constants.ServiceType.GOURMET;
+                    break;
+
+                case "OUTBOUND":
+                    this.serviceType = Constants.ServiceType.OB_STAY;
+                    break;
+
+                default:
+                    ExLog.d("unKnown service type");
+                    break;
             }
         } else
         {
@@ -86,7 +94,19 @@ public class ReviewItem implements Parcelable
 
     public String getPlaceType()
     {
-        return Constants.PlaceType.FNB.equals(placeType) == true ? "GOURMET" : "HOTEL";
+        switch (serviceType)
+        {
+            case HOTEL:
+                return "HOTEL";
+
+            case GOURMET:
+                return "GOURMET";
+
+            case OB_STAY:
+                return "OUTBOUND";
+        }
+
+        return null;
     }
 
     @Override
@@ -95,7 +115,7 @@ public class ReviewItem implements Parcelable
         dest.writeInt(itemIdx);
         dest.writeString(itemName);
         dest.writeString(imageUrl);
-        dest.writeString(placeType.name());
+        dest.writeString(serviceType.name());
         dest.writeString(useEndDate);
         dest.writeString(useStartDate);
     }
@@ -105,7 +125,7 @@ public class ReviewItem implements Parcelable
         itemIdx = in.readInt();
         itemName = in.readString();
         imageUrl = in.readString();
-        placeType = Constants.PlaceType.valueOf(in.readString());
+        serviceType = Constants.ServiceType.valueOf(in.readString());
         useEndDate = in.readString();
         useStartDate = in.readString();
     }

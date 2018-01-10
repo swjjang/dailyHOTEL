@@ -21,9 +21,9 @@ public class WriteReviewCommentActivity extends BaseActivity
 {
     WriteReviewCommentLayout mLayout;
     private String mOriginText; // 리뷰 페이지로 부터 전달 받은 메세지 - 처음 진입 인지 수정 상태인지 판단 용도!
-    PlaceType mPlaceType;
+    Constants.ServiceType mServiceType;
 
-    public static Intent newInstance(Context context, PlaceType placeType, String text) throws IllegalArgumentException
+    public static Intent newInstance(Context context, ServiceType serviceType, String text) throws IllegalArgumentException
     {
         if (context == null)
         {
@@ -38,7 +38,7 @@ public class WriteReviewCommentActivity extends BaseActivity
         Intent intent = new Intent(context, WriteReviewCommentActivity.class);
 
         intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_REVIEW_COMMENT, text);
-        intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
+        intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_SERVICE_YPE, serviceType.name());
 
         return intent;
     }
@@ -65,12 +65,12 @@ public class WriteReviewCommentActivity extends BaseActivity
                 mOriginText = "";
             }
 
-            String placeTypeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE);
+            String placeTypeName = intent.getStringExtra(NAME_INTENT_EXTRA_DATA_SERVICE_YPE);
             if (DailyTextUtils.isTextEmpty(placeTypeName) == false)
             {
                 try
                 {
-                    mPlaceType = PlaceType.valueOf(placeTypeName);
+                    mServiceType = Constants.ServiceType.valueOf(placeTypeName);
                 } catch (Exception e)
                 {
                     ExLog.d(e.getMessage());
@@ -81,7 +81,7 @@ public class WriteReviewCommentActivity extends BaseActivity
             mOriginText = "";
         }
 
-        mLayout.setData(mPlaceType, mOriginText);
+        mLayout.setData(mServiceType, mOriginText);
     }
 
     @Override
@@ -90,14 +90,17 @@ public class WriteReviewCommentActivity extends BaseActivity
         super.onStart();
 
         // Analytics
-        switch (mPlaceType)
+        switch (mServiceType)
         {
             case HOTEL:
                 AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.DAILYHOTEL_REVIEWWRITE, null);
                 break;
 
-            case FNB:
+            case GOURMET:
                 AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.DAILYGOURMET_REVIEWWRITE, null);
+                break;
+
+            case OB_STAY:
                 break;
         }
     }
@@ -138,16 +141,19 @@ public class WriteReviewCommentActivity extends BaseActivity
 
                             try
                             {
-                                switch (mPlaceType)
+                                switch (mServiceType)
                                 {
                                     case HOTEL:
                                         AnalyticsManager.getInstance(WriteReviewCommentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
                                             , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.CANCEL_, null);
                                         break;
 
-                                    case FNB:
+                                    case GOURMET:
                                         AnalyticsManager.getInstance(WriteReviewCommentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
                                             , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.CANCEL_, null);
+                                        break;
+
+                                    case OB_STAY:
                                         break;
                                 }
                             } catch (Exception e)
@@ -204,16 +210,19 @@ public class WriteReviewCommentActivity extends BaseActivity
 
                             try
                             {
-                                switch (mPlaceType)
+                                switch (mServiceType)
                                 {
                                     case HOTEL:
                                         AnalyticsManager.getInstance(WriteReviewCommentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
                                             , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.CANCEL_, null);
                                         break;
 
-                                    case FNB:
+                                    case GOURMET:
                                         AnalyticsManager.getInstance(WriteReviewCommentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
                                             , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.CANCEL_, null);
+                                        break;
+
+                                    case OB_STAY:
                                         break;
                                 }
                             } catch (Exception e)
@@ -248,16 +257,19 @@ public class WriteReviewCommentActivity extends BaseActivity
 
         try
         {
-            switch (mPlaceType)
+            switch (mServiceType)
             {
                 case HOTEL:
                     AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
                         , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.BACK, null);
                     break;
 
-                case FNB:
+                case GOURMET:
                     AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
                         , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.BACK, null);
+                    break;
+
+                case OB_STAY:
                     break;
             }
         } catch (Exception e)
@@ -281,16 +293,19 @@ public class WriteReviewCommentActivity extends BaseActivity
         {
             try
             {
-                switch (mPlaceType)
+                switch (mServiceType)
                 {
                     case HOTEL:
                         AnalyticsManager.getInstance(WriteReviewCommentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
                             , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.CONFIRM, null);
                         break;
 
-                    case FNB:
+                    case GOURMET:
                         AnalyticsManager.getInstance(WriteReviewCommentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
                             , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.CONFIRM, null);
+                        break;
+
+                    case OB_STAY:
                         break;
                 }
             } catch (Exception e)

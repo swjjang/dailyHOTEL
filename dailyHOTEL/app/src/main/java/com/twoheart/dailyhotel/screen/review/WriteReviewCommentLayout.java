@@ -98,9 +98,9 @@ public class WriteReviewCommentLayout extends BaseLayout
         mScrollView.setOnScrollChangedListener(mScrollChangeListener);
     }
 
-    public void setData(Constants.PlaceType placeType, String text)
+    public void setData(Constants.ServiceType serviceType, String text)
     {
-        updateEditTextView(placeType, text);
+        updateEditTextView(serviceType, text);
         updateCompleteLayout(text);
         updateTextCountLayout(text);
     }
@@ -115,10 +115,25 @@ public class WriteReviewCommentLayout extends BaseLayout
         return mEditTextView.getText().toString();
     }
 
-    private void updateEditTextView(Constants.PlaceType placeType, String text)
+    private void updateEditTextView(Constants.ServiceType serviceType, String text)
     {
-        mEditTextView.setHint(Constants.PlaceType.FNB.equals(placeType) == true //
-            ? R.string.label_write_review_comment_hint_gourmet : R.string.label_write_review_comment_hint_stay);
+        if(serviceType != null)
+        {
+            switch (serviceType)
+            {
+                case HOTEL:
+                    mEditTextView.setHint(R.string.label_write_review_comment_hint_stay);
+                    break;
+
+                case GOURMET:
+                    mEditTextView.setHint(R.string.label_write_review_comment_hint_gourmet);
+                    break;
+
+                case OB_STAY:
+                    mEditTextView.setHint(R.string.label_write_review_comment_hint_stay);
+                    break;
+            }
+        }
 
         mEditTextView.setText(text);
 

@@ -1680,15 +1680,23 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
             reviewItemParcelable.itemName = reviewItem.itemName;
             reviewItemParcelable.imageUrl = reviewItem.imageUrl;
 
-            if ("HOTEL".equalsIgnoreCase(reviewItem.serviceType) == true)
+            switch (reviewItem.serviceType)
             {
-                reviewItemParcelable.placeType = Constants.PlaceType.HOTEL;
-            } else if ("GOURMET".equalsIgnoreCase(reviewItem.serviceType) == true)
-            {
-                reviewItemParcelable.placeType = Constants.PlaceType.FNB;
-            } else
-            {
-                ExLog.d("unKnown service type");
+                case "HOTEL":
+                    reviewItemParcelable.serviceType = Constants.ServiceType.HOTEL;
+                    break;
+
+                case "GOURMET":
+                    reviewItemParcelable.serviceType = Constants.ServiceType.GOURMET;
+                    break;
+
+                case "OUTBOUND":
+                    reviewItemParcelable.serviceType = Constants.ServiceType.OB_STAY;
+                    break;
+
+                default:
+                    ExLog.d("unKnown service type");
+                    break;
             }
 
             reviewItemParcelable.useEndDate = reviewItem.useEndDate;

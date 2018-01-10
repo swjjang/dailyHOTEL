@@ -189,16 +189,19 @@ public class ReviewActivity extends BaseActivity
 
         try
         {
-            switch (mReview.getReviewItem().placeType)
+            switch (mReview.getReviewItem().serviceType)
             {
                 case HOTEL:
                     AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
                         , AnalyticsManager.Action.REVIEW_DETAIL, AnalyticsManager.Label.CLOSE_BUTTON_CLICKED, null);
                     break;
 
-                case FNB:
+                case GOURMET:
                     AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
                         , AnalyticsManager.Action.REVIEW_DETAIL, AnalyticsManager.Label.CLOSE_BUTTON_CLICKED, null);
+                    break;
+
+                case OB_STAY:
                     break;
             }
         } catch (Exception e)
@@ -231,16 +234,19 @@ public class ReviewActivity extends BaseActivity
 
                     try
                     {
-                        switch (mReview.getReviewItem().placeType)
+                        switch (mReview.getReviewItem().serviceType)
                         {
                             case HOTEL:
                                 AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
                                     , AnalyticsManager.Action.REVIEW_POPUP, AnalyticsManager.Label._YES, null);
                                 break;
 
-                            case FNB:
+                            case GOURMET:
                                 AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
                                     , AnalyticsManager.Action.REVIEW_POPUP, AnalyticsManager.Label._YES, null);
+                                break;
+
+                            case OB_STAY:
                                 break;
                         }
                     } catch (Exception e)
@@ -257,16 +263,19 @@ public class ReviewActivity extends BaseActivity
 
                     try
                     {
-                        switch (mReview.getReviewItem().placeType)
+                        switch (mReview.getReviewItem().serviceType)
                         {
                             case HOTEL:
                                 AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
                                     , AnalyticsManager.Action.REVIEW_POPUP, AnalyticsManager.Label._NO, null);
                                 break;
 
-                            case FNB:
+                            case GOURMET:
                                 AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
                                     , AnalyticsManager.Action.REVIEW_POPUP, AnalyticsManager.Label._NO, null);
+                                break;
+
+                            case OB_STAY:
                                 break;
                         }
                     } catch (Exception e)
@@ -328,7 +337,7 @@ public class ReviewActivity extends BaseActivity
             return;
         }
 
-        switch (reviewItem.placeType)
+        switch (reviewItem.serviceType)
         {
             case HOTEL:
             {
@@ -346,7 +355,7 @@ public class ReviewActivity extends BaseActivity
                 break;
             }
 
-            case FNB:
+            case GOURMET:
             {
                 try
                 {
@@ -359,6 +368,20 @@ public class ReviewActivity extends BaseActivity
                 }
                 break;
             }
+
+            case OB_STAY:
+                try
+                {
+                    String periodDate = String.format(Locale.KOREA, "%s - %s"//
+                        , DailyCalendar.convertDateFormatString(reviewItem.useStartDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)")//
+                        , DailyCalendar.convertDateFormatString(reviewItem.useEndDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"));
+
+                    mReviewLayout.setPlaceInformation(reviewItem.itemName, getString(R.string.message_review_date, periodDate), mReviewGrade);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
+                break;
         }
 
         mReviewLayout.setPlaceImageUrl(this, mReview.getReviewItem().imageUrl);
@@ -391,7 +414,7 @@ public class ReviewActivity extends BaseActivity
 
         if (mReview.requiredCommentReview == true)
         {
-            View view = mReviewLayout.getReviewCommentView(this, position++, reviewItem.placeType);
+            View view = mReviewLayout.getReviewCommentView(this, position++, reviewItem.serviceType);
             mReviewLayout.addScrollLayout(view);
         }
 
@@ -400,14 +423,17 @@ public class ReviewActivity extends BaseActivity
         mReviewLayout.setVisibility(false);
 
         // Analytics
-        switch (reviewItem.placeType)
+        switch (reviewItem.serviceType)
         {
             case HOTEL:
                 AnalyticsManager.getInstance(ReviewActivity.this).recordScreen(this, AnalyticsManager.Screen.DAILYHOTEL_REVIEWDETAIL, null);
                 break;
 
-            case FNB:
+            case GOURMET:
                 AnalyticsManager.getInstance(ReviewActivity.this).recordScreen(this, AnalyticsManager.Screen.DAILYGOURMET_REVIEWDETAIL, null);
+                break;
+
+            case OB_STAY:
                 break;
         }
     }
@@ -498,7 +524,7 @@ public class ReviewActivity extends BaseActivity
         try
         {
             // 시간
-            switch (reviewItem.placeType)
+            switch (reviewItem.serviceType)
             {
                 case HOTEL:
                 {
@@ -509,10 +535,19 @@ public class ReviewActivity extends BaseActivity
                     break;
                 }
 
-                case FNB:
+                case GOURMET:
                 {
                     String periodDate = DailyCalendar.convertDateFormatString(reviewItem.useStartDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)");
 
+                    periodTextView.setText(getString(R.string.message_review_date, periodDate));
+                    break;
+                }
+
+                case OB_STAY:
+                {
+                    String periodDate = String.format(Locale.KOREA, "%s - %s"//
+                        , DailyCalendar.convertDateFormatString(reviewItem.useStartDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)")//
+                        , DailyCalendar.convertDateFormatString(reviewItem.useEndDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)"));
                     periodTextView.setText(getString(R.string.message_review_date, periodDate));
                     break;
                 }
@@ -603,7 +638,7 @@ public class ReviewActivity extends BaseActivity
                 params.put(AnalyticsManager.KeyType.NAME, reviewItem.itemName);
                 params.put(AnalyticsManager.KeyType.SATISFACTION_SURVEY, AnalyticsManager.ValueType.SATISFIED);
 
-                switch (reviewItem.placeType)
+                switch (reviewItem.serviceType)
                 {
                     case HOTEL:
                         params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
@@ -612,11 +647,14 @@ public class ReviewActivity extends BaseActivity
                             , AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP, AnalyticsManager.Label.HOTEL_SATISFACTION, params);
                         break;
 
-                    case FNB:
+                    case GOURMET:
                         params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.GOURMET);
 
                         AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                             , AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP, AnalyticsManager.Label.GOURMET_SATISFACTION, params);
+                        break;
+
+                    case OB_STAY:
                         break;
                 }
 
@@ -678,7 +716,7 @@ public class ReviewActivity extends BaseActivity
                 params.put(AnalyticsManager.KeyType.NAME, reviewItem.itemName);
                 params.put(AnalyticsManager.KeyType.SATISFACTION_SURVEY, AnalyticsManager.ValueType.DISSATISFIED);
 
-                switch (reviewItem.placeType)
+                switch (reviewItem.serviceType)
                 {
                     case HOTEL:
                         params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
@@ -687,11 +725,14 @@ public class ReviewActivity extends BaseActivity
                             , AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP, AnalyticsManager.Label.HOTEL_DISSATISFACTION, params);
                         break;
 
-                    case FNB:
+                    case GOURMET:
                         params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.GOURMET);
 
                         AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                             , AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP, AnalyticsManager.Label.GOURMET_DISSATISFACTION, params);
+                        break;
+
+                    case OB_STAY:
                         break;
                 }
 
@@ -716,16 +757,19 @@ public class ReviewActivity extends BaseActivity
                 mReviewGrade = Review.GRADE_NONE;
                 mReviewNetworkController.requestAddReviewInformation(jsonObject);
 
-                switch (reviewItem.placeType)
+                switch (reviewItem.serviceType)
                 {
                     case HOTEL:
                         AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                             , AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP, AnalyticsManager.Label.HOTEL_CLOSE_BUTTON_CLICKED, null);
                         break;
 
-                    case FNB:
+                    case GOURMET:
                         AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                             , AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP, AnalyticsManager.Label.GOURMET_CLOSE_BUTTON_CLICKED, null);
+                        break;
+
+                    case OB_STAY:
                         break;
                 }
             }
@@ -741,14 +785,17 @@ public class ReviewActivity extends BaseActivity
         });
 
         // Analytics
-        switch (reviewItem.placeType)
+        switch (reviewItem.serviceType)
         {
             case HOTEL:
                 AnalyticsManager.getInstance(ReviewActivity.this).recordScreen(this, AnalyticsManager.Screen.DAILYHOTEL_SATISFACTIONEVALUATION, null);
                 break;
 
-            case FNB:
+            case GOURMET:
                 AnalyticsManager.getInstance(ReviewActivity.this).recordScreen(this, AnalyticsManager.Screen.DAILYGOURMET_SATISFACTIONEVALUATION, null);
+                break;
+
+            case OB_STAY:
                 break;
         }
 
@@ -808,16 +855,19 @@ public class ReviewActivity extends BaseActivity
         {
             try
             {
-                switch (mReview.getReviewItem().placeType)
+                switch (mReview.getReviewItem().serviceType)
                 {
                     case HOTEL:
                         AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
                             , AnalyticsManager.Action.REVIEW_DETAIL, AnalyticsManager.Label.REVIEW_WRITE_CLICKED, null);
                         break;
 
-                    case FNB:
+                    case GOURMET:
                         AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
                             , AnalyticsManager.Action.REVIEW_DETAIL, AnalyticsManager.Label.REVIEW_WRITE_CLICKED, null);
+                        break;
+
+                    case OB_STAY:
                         break;
                 }
             } catch (Exception e)
@@ -825,7 +875,7 @@ public class ReviewActivity extends BaseActivity
                 ExLog.d(e.toString());
             }
 
-            Intent intent = WriteReviewCommentActivity.newInstance(ReviewActivity.this, mReview.getReviewItem().placeType, comment);
+            Intent intent = WriteReviewCommentActivity.newInstance(ReviewActivity.this, mReview.getReviewItem().serviceType, comment);
             startActivityForResult(intent, REQUEST_ACTIVITY_WRITE_REVIEW_COMMENT);
         }
 
@@ -925,16 +975,19 @@ public class ReviewActivity extends BaseActivity
 
             try
             {
-                switch (mReview.getReviewItem().placeType)
+                switch (mReview.getReviewItem().serviceType)
                 {
                     case HOTEL:
                         AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
                             , AnalyticsManager.Action.REVIEW_DETAIL, AnalyticsManager.Label.SUBMIT, Collections.singletonMap("grade", mReviewGrade));
                         break;
 
-                    case FNB:
+                    case GOURMET:
                         AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
                             , AnalyticsManager.Action.REVIEW_DETAIL, AnalyticsManager.Label.SUBMIT, Collections.singletonMap("grade", mReviewGrade));
+                        break;
+
+                    case OB_STAY:
                         break;
                 }
             } catch (Exception e)

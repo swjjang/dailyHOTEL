@@ -270,9 +270,9 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
         return reviewPickCardLayout;
     }
 
-    public View getReviewCommentView(Context context, int position, Constants.PlaceType placeType)
+    public View getReviewCommentView(Context context, int position, Constants.ServiceType serviceType)
     {
-        ReviewCommentCardLayout reviewCommentCardLayout = new ReviewCommentCardLayout(mContext, position, placeType);
+        ReviewCommentCardLayout reviewCommentCardLayout = new ReviewCommentCardLayout(mContext, position, serviceType);
         reviewCommentCardLayout.setOnCommentClickListener(new ReviewCommentCardLayout.OnCommentClickListener()
         {
             @Override
