@@ -25,7 +25,6 @@ public class StayDetail extends Configurations
     public String benefit;
     public int wishCount;
     public boolean myWish;
-    public boolean hasCoupon;
     public boolean singleStay;
     public boolean overseas;
     public boolean waitingForBooking;
