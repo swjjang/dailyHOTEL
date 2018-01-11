@@ -40,19 +40,6 @@ public class BankListDialogView extends BaseMultiWindowView<BankListDialogView.O
             return;
         }
 
-        //        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        //
-        //        if (isTabletDevice() == true)
-        //        {
-        //            layoutParams.width = ScreenUtils.getScreenWidth(getContext()) * 10 / 15;
-        //        } else
-        //        {
-        //            layoutParams.width = ScreenUtils.getScreenWidth(getContext()) * 13 / 15;
-        //        }
-        //
-        //        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        //        viewDataBinding.getRoot().setLayoutParams(layoutParams);
-
         viewDataBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mBankListAdapter = new BankListAdapter(getContext(), null);

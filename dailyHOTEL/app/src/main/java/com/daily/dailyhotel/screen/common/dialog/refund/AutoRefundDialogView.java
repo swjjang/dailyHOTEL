@@ -286,13 +286,13 @@ public class AutoRefundDialogView extends BaseMultiWindowView<AutoRefundDialogVi
 
         if (isInMultiWindowMode == true || Configuration.ORIENTATION_LANDSCAPE == orientation)
         {
-//            getViewDataBinding().topWeightView.setVisibility(View.GONE);
-//            getViewDataBinding().bottomWeightView.setVisibility(View.GONE);
+            //            getViewDataBinding().topWeightView.setVisibility(View.GONE);
+            //            getViewDataBinding().bottomWeightView.setVisibility(View.GONE);
             getViewDataBinding().scrollView.setVerticalScrollBarEnabled(true);
         } else
         {
-//            getViewDataBinding().topWeightView.setVisibility(View.VISIBLE);
-//            getViewDataBinding().bottomWeightView.setVisibility(View.VISIBLE);
+            //            getViewDataBinding().topWeightView.setVisibility(View.VISIBLE);
+            //            getViewDataBinding().bottomWeightView.setVisibility(View.VISIBLE);
             getViewDataBinding().scrollView.setVerticalScrollBarEnabled(false);
         }
 

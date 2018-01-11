@@ -272,5 +272,4 @@ public class BankListDialogPresenter extends BaseMultiWindowPresenter<BankListDi
     {
         getViewInterface().setBankList(mSelectedBank, mBankList);
     }
-
 }

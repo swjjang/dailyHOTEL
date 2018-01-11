@@ -1,20 +1,13 @@
 package com.twoheart.dailyhotel.screen.booking.detail.hotel;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.Surface;
 import android.view.View;
-import android.widget.ScrollView;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.VersionUtils;
 import com.daily.dailyhotel.parcel.BankParcel;
 import com.daily.dailyhotel.repository.remote.RefundRemoteImpl;
 import com.daily.dailyhotel.screen.common.dialog.refund.AutoRefundDialogActivity;
@@ -28,7 +21,6 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import io.reactivex.annotations.NonNull;
@@ -52,12 +44,10 @@ public class StayAutoRefundActivity extends BaseActivity
     protected StayAutoRefundNetworkController mStayAutoRefundNetworkController;
     StayBookingDetail mStayBookingDetail;
     String mAggregationId;
-    Dialog mDialog;
 
     int mSelectedCancelReason;
     String mCancelReasonMessage;
     Bank mSelectedBank;
-    List<Bank> mBankList;
 
     public static Intent newInstance(Context context, StayBookingDetail stayBookingDetail, String aggregationId)
     {
@@ -107,34 +97,13 @@ public class StayAutoRefundActivity extends BaseActivity
         // 시작시에 은행 계좌인 경우에는 은행 리스트를 먼저 받아야한다.
         mStayAutoRefundLayout.setPlaceBookingDetail(mStayBookingDetail);
 
-        if (DailyTextUtils.isTextEmpty(mAggregationId) == true)
+        // 계좌 이체인 경우
+        if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mStayBookingDetail.transactionType) == true)
         {
-            // 계좌 이체인 경우
-            if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mStayBookingDetail.transactionType) == true && mStayBookingDetail.bonus == 0)
-            {
-                mStayAutoRefundLayout.setAccountLayoutVisible(true);
-
-                lockUI();
-
-                mStayAutoRefundNetworkController.requestBankList();
-            } else
-            {
-                mStayAutoRefundLayout.setAccountLayoutVisible(false);
-            }
+            mStayAutoRefundLayout.setAccountLayoutVisible(true);
         } else
         {
-            // 계좌 이체인 경우
-            if (PAYMENT_TYPE_VBANK.equalsIgnoreCase(mStayBookingDetail.transactionType) == true)
-            {
-                mStayAutoRefundLayout.setAccountLayoutVisible(true);
-
-                lockUI();
-
-                mStayAutoRefundNetworkController.requestBankList();
-            } else
-            {
-                mStayAutoRefundLayout.setAccountLayoutVisible(false);
-            }
+            mStayAutoRefundLayout.setAccountLayoutVisible(false);
         }
     }
 
@@ -161,12 +130,6 @@ public class StayAutoRefundActivity extends BaseActivity
     @Override
     protected void onDestroy()
     {
-        if (mDialog != null && mDialog.isShowing())
-        {
-            mDialog.dismiss();
-            mDialog = null;
-        }
-
         super.onDestroy();
     }
 
@@ -176,45 +139,6 @@ public class StayAutoRefundActivity extends BaseActivity
         super.finish();
 
         overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
-    }
-
-    @TargetApi(Build.VERSION_CODES.N)
-    @Override
-    public void onConfigurationChanged(Configuration newConfig)
-    {
-        super.onConfigurationChanged(newConfig);
-
-        int orientation;
-        int rotation = getWindowManager().getDefaultDisplay().getRotation();
-        if (Surface.ROTATION_90 == rotation || Surface.ROTATION_270 == rotation)
-        {
-            orientation = Configuration.ORIENTATION_LANDSCAPE;
-        } else
-        {
-            orientation = Configuration.ORIENTATION_PORTRAIT;
-        }
-
-        boolean isInMultiWindowMode = VersionUtils.isOverAPI24() == true && isInMultiWindowMode();
-        setWeightSelectCancelDialog(orientation, isInMultiWindowMode);
-    }
-
-    @Override
-    public void onMultiWindowModeChanged(boolean isInMultiWindowMode)
-    {
-        super.onMultiWindowModeChanged(isInMultiWindowMode);
-
-        int orientation;
-        int rotation = getWindowManager().getDefaultDisplay().getRotation();
-        if (Surface.ROTATION_90 == rotation || Surface.ROTATION_270 == rotation)
-        {
-            orientation = Configuration.ORIENTATION_LANDSCAPE;
-        } else
-        {
-            orientation = Configuration.ORIENTATION_PORTRAIT;
-        }
-
-        //        ExLog.d("isInMultiWindowMode : " + isInMultiWindowMode + " , rotation orientation : " + orientation);
-        setWeightSelectCancelDialog(orientation, isInMultiWindowMode);
     }
 
     @Override
@@ -255,32 +179,6 @@ public class StayAutoRefundActivity extends BaseActivity
         }
     }
 
-    private void setWeightSelectCancelDialog(int orientation, boolean isInMultiWindowMode)
-    {
-        if (mDialog == null)
-        {
-            return;
-        }
-
-        //        ExLog.d("orientation : " + orientation);
-
-        View topView = mDialog.findViewById(R.id.topWeightView);
-        ScrollView scrollView = mDialog.findViewById(R.id.scrollView);
-        View bottomView = mDialog.findViewById(R.id.bottomWeightView);
-
-        if (isInMultiWindowMode == true || Configuration.ORIENTATION_LANDSCAPE == orientation)
-        {
-            topView.setVisibility(View.GONE);
-            bottomView.setVisibility(View.GONE);
-            scrollView.setVerticalScrollBarEnabled(true);
-        } else
-        {
-            topView.setVisibility(View.VISIBLE);
-            bottomView.setVisibility(View.VISIBLE);
-            scrollView.setVerticalScrollBarEnabled(false);
-        }
-    }
-
     void showSelectCancelDialog(int position, String message)
     {
         if (isFinishing())
@@ -292,7 +190,7 @@ public class StayAutoRefundActivity extends BaseActivity
         startActivityForResult(intent, StayAutoRefundActivity.REQUEST_CODE_SELECT_CANCEL_TYPE);
     }
 
-    void showSelectBankListDialog(Bank bank, List<Bank> bankList)
+    void showSelectBankListDialog(Bank bank)
     {
         if (isFinishing())
         {
@@ -310,97 +208,6 @@ public class StayAutoRefundActivity extends BaseActivity
 
         Intent intent = BankListDialogActivity.newInstance(this, bankParcel);
         startActivityForResult(intent, StayAutoRefundActivity.REQUEST_CODE_SELECT_BANK_LIST);
-
-        //        if (mDialog != null)
-        //        {
-        //            if (mDialog.isShowing())
-        //            {
-        //                mDialog.dismiss();
-        //            }
-        //
-        //            mDialog = null;
-        //        }
-        //
-        //        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        //        View dialogView = layoutInflater.inflate(R.layout.view_refund_banklist_dialog_layout, null, false);
-        //
-        //        mDialog = new Dialog(this);
-        //        mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        //        mDialog.setCanceledOnTouchOutside(false);
-        //
-        //        //
-        //        final RecyclerView recyclerView = dialogView.findViewById(R.id.recyclerView);
-        //        final BankListAdapter bankListAdapter = new BankListAdapter(this, bankList);
-        //        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        //        bankListAdapter.setSelectedBank(bank);
-        //
-        //        // 버튼
-        //        View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
-        //
-        //        TextView negativeTextView = buttonLayout.findViewById(R.id.negativeTextView);
-        //        final TextView positiveTextView = buttonLayout.findViewById(R.id.positiveTextView);
-        //        positiveTextView.setEnabled(false);
-        //
-        //        negativeTextView.setOnClickListener(new View.OnClickListener()
-        //        {
-        //            @Override
-        //            public void onClick(View v)
-        //            {
-        //                if (mDialog != null && mDialog.isShowing())
-        //                {
-        //                    mDialog.dismiss();
-        //                }
-        //            }
-        //        });
-        //
-        //        positiveTextView.setOnClickListener(new View.OnClickListener()
-        //        {
-        //            @Override
-        //            public void onClick(View v)
-        //            {
-        //                if (mDialog != null && mDialog.isShowing())
-        //                {
-        //                    mDialog.dismiss();
-        //                }
-        //
-        //                setSelectedBankResult(bankListAdapter.getSelectedBank());
-        //            }
-        //        });
-        //
-        //        recyclerView.setAdapter(bankListAdapter);
-        //        bankListAdapter.setOnItemClickListener(new View.OnClickListener()
-        //        {
-        //            @Override
-        //            public void onClick(View v)
-        //            {
-        //                positiveTextView.setEnabled(true);
-        //            }
-        //        });
-        //
-        //        mDialog.setOnDismissListener(new DialogInterface.OnDismissListener()
-        //        {
-        //            @Override
-        //            public void onDismiss(DialogInterface dialog)
-        //            {
-        //                mDialog = null;
-        //                unLockUI();
-        //            }
-        //        });
-        //
-        //        try
-        //        {
-        //            mDialog.setContentView(dialogView);
-        //
-        //            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, mDialog);
-        //
-        //            mDialog.show();
-        //
-        //            mDialog.getWindow().setAttributes(layoutParams);
-        //        } catch (Exception e)
-        //        {
-        //            ExLog.d(e.toString());
-        //        }
     }
 
     void setCancelReasonResult(String reason)
@@ -516,7 +323,7 @@ public class StayAutoRefundActivity extends BaseActivity
         @Override
         public void showSelectBankListDialog()
         {
-            StayAutoRefundActivity.this.showSelectBankListDialog(mSelectedBank, mBankList);
+            StayAutoRefundActivity.this.showSelectBankListDialog(mSelectedBank);
         }
 
         @Override
@@ -636,14 +443,6 @@ public class StayAutoRefundActivity extends BaseActivity
 
     private StayAutoRefundNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new StayAutoRefundNetworkController.OnNetworkControllerListener()
     {
-        @Override
-        public void onBankList(List<Bank> bankList)
-        {
-            unLockUI();
-
-            mBankList = bankList;
-        }
-
         @Override
         public void onRefundResult(int msgCode, String message, boolean readyForRefund)
         {

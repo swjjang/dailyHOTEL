@@ -17,13 +17,10 @@ import com.twoheart.dailyhotel.R;
 public class BankListDialogActivity extends BaseMultiWindowActivity<BankListDialogPresenter>
 {
     public static final String INTENT_EXTRA_DATA_SELECTED_BANK = "selectedBank";
-//    public static final String INTENT_EXTRA_DATA_BANK_LIST = "bankList";
 
-//    public static Intent newInstance(Context context, BankParcel selectedBank, ArrayList<BankParcel> bankList)
     public static Intent newInstance(Context context, BankParcel selectedBank)
     {
         Intent intent = new Intent(context, BankListDialogActivity.class);
-//        intent.putParcelableArrayListExtra(INTENT_EXTRA_DATA_BANK_LIST, bankList);
         intent.putExtra(INTENT_EXTRA_DATA_SELECTED_BANK, selectedBank);
         return intent;
     }
