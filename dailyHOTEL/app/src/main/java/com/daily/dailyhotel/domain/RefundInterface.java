@@ -1,7 +1,10 @@
 package com.daily.dailyhotel.domain;
 
+import com.daily.dailyhotel.entity.Bank;
 import com.daily.dailyhotel.entity.RefundPolicy;
 import com.daily.dailyhotel.entity.StayOutboundRefundDetail;
+
+import java.util.List;
 
 import io.reactivex.Observable;
 
@@ -21,4 +24,7 @@ public interface RefundInterface
         , String accountHolder, String accountNumber, String bankCode);
 
     Observable<RefundPolicy> getStayRefundPolicy(int reservationIndex, String transactionType);
+
+    // 은행 목록
+    Observable<List<Bank>> getBankList();
 }

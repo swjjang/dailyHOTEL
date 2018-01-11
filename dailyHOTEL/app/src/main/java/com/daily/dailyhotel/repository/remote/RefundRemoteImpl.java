@@ -6,20 +6,25 @@ import android.support.annotation.NonNull;
 import com.daily.base.exception.BaseException;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.RefundInterface;
+import com.daily.dailyhotel.entity.Bank;
 import com.daily.dailyhotel.entity.RefundPolicy;
 import com.daily.dailyhotel.entity.StayOutboundRefundDetail;
+import com.daily.dailyhotel.repository.remote.model.BankData;
 import com.daily.dailyhotel.repository.remote.model.RefundPolicyData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundDetailData;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
+import com.twoheart.dailyhotel.network.dto.BaseListDto;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
@@ -251,5 +256,43 @@ public class RefundRemoteImpl extends BaseRemoteImpl implements RefundInterface
                     return refundPolicy;
                 }
             }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+
+    @Override
+    public Observable<List<Bank>> getBankList()
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v2/payment/bank"//
+            : "NjEkMTIkNzkkNDMkMTgkNjMkMzkkMzgkNDgkMjgkMzMkNjEkNzckNjAkNjEkMjQk$RDlCRUJDNUY0ROUM5MODA1MjDY5REHQzNTAE4RTM2CNWEZGRkUYR4NzQ4MUQxMBRKDY2RDkwQNG0RFNETE2MkU0OTNENFTY3Nzc0Mg==$";
+
+
+        return mDailyMobileService.getBankList(Crypto.getUrlDecoderEx(API)).subscribeOn(Schedulers.io()) //
+            .map(new Function<BaseListDto<BankData>, List<Bank>>()
+            {
+                @Override
+                public List<Bank> apply(BaseListDto<BankData> bankDataBaseListDto) throws Exception
+                {
+                    List<Bank> bankList = new ArrayList<>();
+
+                    if (bankDataBaseListDto != null)
+                    {
+                        if (bankDataBaseListDto.msgCode == 100 && bankDataBaseListDto.data != null)
+                        {
+                            for (BankData bankData : bankDataBaseListDto.data)
+                            {
+                                bankList.add(bankData.getBank());
+                            }
+                        } else
+                        {
+                            throw new BaseException(bankDataBaseListDto.msgCode, bankDataBaseListDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(-1, null);
+                    }
+
+                    return bankList;
+                }
+            });
     }
 }

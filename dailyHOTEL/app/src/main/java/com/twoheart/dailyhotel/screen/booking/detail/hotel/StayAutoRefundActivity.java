@@ -7,25 +7,18 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ScrollView;
-import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
-import com.daily.base.util.ScreenUtils;
 import com.daily.base.util.VersionUtils;
+import com.daily.dailyhotel.parcel.BankParcel;
 import com.daily.dailyhotel.repository.remote.RefundRemoteImpl;
 import com.daily.dailyhotel.screen.common.dialog.refund.AutoRefundDialogActivity;
+import com.daily.dailyhotel.screen.common.dialog.refund.BankListDialogActivity;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Bank;
@@ -51,6 +44,7 @@ public class StayAutoRefundActivity extends BaseActivity
     private static final String PAYMENT_TYPE_VBANK = "VBANK_INICIS";
 
     public static final int REQUEST_CODE_SELECT_CANCEL_TYPE = 10000;
+    public static final int REQUEST_CODE_SELECT_BANK_LIST = 10001;
 
     RefundRemoteImpl mRefundRemoteImpl;
 
@@ -244,6 +238,20 @@ public class StayAutoRefundActivity extends BaseActivity
                     setCancelReasonResult(cancelReasonText);
                 }
             }
+
+            case StayAutoRefundActivity.REQUEST_CODE_SELECT_BANK_LIST:
+            {
+                if (resultCode == Activity.RESULT_OK && data != null)
+                {
+                    BankParcel bankParcel = data.getParcelableExtra(BankListDialogActivity.INTENT_EXTRA_DATA_SELECTED_BANK);
+
+                    if (bankParcel != null)
+                    {
+                        com.daily.dailyhotel.entity.Bank bank = bankParcel.getBank();
+                        setSelectedBankResult(new Bank(bank.getJsonObject()));
+                    }
+                }
+            }
         }
     }
 
@@ -291,96 +299,108 @@ public class StayAutoRefundActivity extends BaseActivity
             return;
         }
 
-        if (mDialog != null)
+        BankParcel bankParcel = null;
+        if (bank != null)
         {
-            if (mDialog.isShowing())
-            {
-                mDialog.dismiss();
-            }
-
-            mDialog = null;
+            com.daily.dailyhotel.entity.Bank entryBank = new com.daily.dailyhotel.entity.Bank();
+            entryBank.code = bank.code;
+            entryBank.name = bank.name;
+            bankParcel = new BankParcel(entryBank);
         }
 
-        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View dialogView = layoutInflater.inflate(R.layout.view_refund_banklist_dialog_layout, null, false);
+        Intent intent = BankListDialogActivity.newInstance(this, bankParcel);
+        startActivityForResult(intent, StayAutoRefundActivity.REQUEST_CODE_SELECT_BANK_LIST);
 
-        mDialog = new Dialog(this);
-        mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        mDialog.setCanceledOnTouchOutside(false);
-
+        //        if (mDialog != null)
+        //        {
+        //            if (mDialog.isShowing())
+        //            {
+        //                mDialog.dismiss();
+        //            }
         //
-        final RecyclerView recyclerView = dialogView.findViewById(R.id.recyclerView);
-        final BankListAdapter bankListAdapter = new BankListAdapter(this, bankList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        bankListAdapter.setSelectedBank(bank);
-
-        // 버튼
-        View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
-
-        TextView negativeTextView = buttonLayout.findViewById(R.id.negativeTextView);
-        final TextView positiveTextView = buttonLayout.findViewById(R.id.positiveTextView);
-        positiveTextView.setEnabled(false);
-
-        negativeTextView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (mDialog != null && mDialog.isShowing())
-                {
-                    mDialog.dismiss();
-                }
-            }
-        });
-
-        positiveTextView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (mDialog != null && mDialog.isShowing())
-                {
-                    mDialog.dismiss();
-                }
-
-                setSelectedBankResult(bankListAdapter.getSelectedBank());
-            }
-        });
-
-        recyclerView.setAdapter(bankListAdapter);
-        bankListAdapter.setOnItemClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                positiveTextView.setEnabled(true);
-            }
-        });
-
-        mDialog.setOnDismissListener(new DialogInterface.OnDismissListener()
-        {
-            @Override
-            public void onDismiss(DialogInterface dialog)
-            {
-                mDialog = null;
-                unLockUI();
-            }
-        });
-
-        try
-        {
-            mDialog.setContentView(dialogView);
-
-            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, mDialog);
-
-            mDialog.show();
-
-            mDialog.getWindow().setAttributes(layoutParams);
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
+        //            mDialog = null;
+        //        }
+        //
+        //        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        //        View dialogView = layoutInflater.inflate(R.layout.view_refund_banklist_dialog_layout, null, false);
+        //
+        //        mDialog = new Dialog(this);
+        //        mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        //        mDialog.setCanceledOnTouchOutside(false);
+        //
+        //        //
+        //        final RecyclerView recyclerView = dialogView.findViewById(R.id.recyclerView);
+        //        final BankListAdapter bankListAdapter = new BankListAdapter(this, bankList);
+        //        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //        bankListAdapter.setSelectedBank(bank);
+        //
+        //        // 버튼
+        //        View buttonLayout = dialogView.findViewById(R.id.buttonLayout);
+        //
+        //        TextView negativeTextView = buttonLayout.findViewById(R.id.negativeTextView);
+        //        final TextView positiveTextView = buttonLayout.findViewById(R.id.positiveTextView);
+        //        positiveTextView.setEnabled(false);
+        //
+        //        negativeTextView.setOnClickListener(new View.OnClickListener()
+        //        {
+        //            @Override
+        //            public void onClick(View v)
+        //            {
+        //                if (mDialog != null && mDialog.isShowing())
+        //                {
+        //                    mDialog.dismiss();
+        //                }
+        //            }
+        //        });
+        //
+        //        positiveTextView.setOnClickListener(new View.OnClickListener()
+        //        {
+        //            @Override
+        //            public void onClick(View v)
+        //            {
+        //                if (mDialog != null && mDialog.isShowing())
+        //                {
+        //                    mDialog.dismiss();
+        //                }
+        //
+        //                setSelectedBankResult(bankListAdapter.getSelectedBank());
+        //            }
+        //        });
+        //
+        //        recyclerView.setAdapter(bankListAdapter);
+        //        bankListAdapter.setOnItemClickListener(new View.OnClickListener()
+        //        {
+        //            @Override
+        //            public void onClick(View v)
+        //            {
+        //                positiveTextView.setEnabled(true);
+        //            }
+        //        });
+        //
+        //        mDialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+        //        {
+        //            @Override
+        //            public void onDismiss(DialogInterface dialog)
+        //            {
+        //                mDialog = null;
+        //                unLockUI();
+        //            }
+        //        });
+        //
+        //        try
+        //        {
+        //            mDialog.setContentView(dialogView);
+        //
+        //            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(this, mDialog);
+        //
+        //            mDialog.show();
+        //
+        //            mDialog.getWindow().setAttributes(layoutParams);
+        //        } catch (Exception e)
+        //        {
+        //            ExLog.d(e.toString());
+        //        }
     }
 
     void setCancelReasonResult(String reason)
