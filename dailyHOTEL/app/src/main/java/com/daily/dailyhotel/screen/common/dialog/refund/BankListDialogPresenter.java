@@ -79,17 +79,6 @@ public class BankListDialogPresenter extends BaseMultiWindowPresenter<BankListDi
         BankParcel bankParcel = intent.getParcelableExtra(BankListDialogActivity.INTENT_EXTRA_DATA_SELECTED_BANK);
         mSelectedBank = bankParcel == null ? null : bankParcel.getBank();
 
-//        ArrayList<BankParcel> parcelList = intent.getParcelableArrayListExtra(BankListDialogActivity.INTENT_EXTRA_DATA_BANK_LIST);
-//        if (parcelList != null && parcelList.size() > 0)
-//        {
-//            mBankList = new ArrayList<>();
-//
-//            for (BankParcel parcel : parcelList)
-//            {
-//                mBankList.add(parcel.getBank());
-//            }
-//        }
-
         return true;
     }
 
