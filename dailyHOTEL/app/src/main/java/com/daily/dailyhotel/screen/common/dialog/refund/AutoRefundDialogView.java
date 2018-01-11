@@ -7,7 +7,6 @@ import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -49,19 +48,6 @@ public class AutoRefundDialogView extends BaseMultiWindowView<AutoRefundDialogVi
         {
             return;
         }
-
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        if (isTabletDevice() == true)
-        {
-            layoutParams.width = ScreenUtils.getScreenWidth(getContext()) * 10 / 15;
-        } else
-        {
-            layoutParams.width = ScreenUtils.getScreenWidth(getContext()) * 13 / 15;
-        }
-
-        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        viewDataBinding.getRoot().setLayoutParams(layoutParams);
 
         viewDataBinding.cancelRefundView01.setTag(1);
         viewDataBinding.cancelRefundView02.setTag(2);
@@ -300,15 +286,35 @@ public class AutoRefundDialogView extends BaseMultiWindowView<AutoRefundDialogVi
 
         if (isInMultiWindowMode == true || Configuration.ORIENTATION_LANDSCAPE == orientation)
         {
-            getViewDataBinding().topWeightView.setVisibility(View.GONE);
-            getViewDataBinding().bottomWeightView.setVisibility(View.GONE);
+//            getViewDataBinding().topWeightView.setVisibility(View.GONE);
+//            getViewDataBinding().bottomWeightView.setVisibility(View.GONE);
             getViewDataBinding().scrollView.setVerticalScrollBarEnabled(true);
         } else
         {
-            getViewDataBinding().topWeightView.setVisibility(View.VISIBLE);
-            getViewDataBinding().bottomWeightView.setVisibility(View.VISIBLE);
+//            getViewDataBinding().topWeightView.setVisibility(View.VISIBLE);
+//            getViewDataBinding().bottomWeightView.setVisibility(View.VISIBLE);
             getViewDataBinding().scrollView.setVerticalScrollBarEnabled(false);
         }
+
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        if (isTabletDevice() == true)
+        {
+            layoutParams.width = ScreenUtils.getScreenWidth(getContext()) * 10 / 15;
+        } else
+        {
+            layoutParams.width = ScreenUtils.getScreenWidth(getContext()) * 13 / 15;
+        }
+
+        if (isInMultiWindowMode == true)
+        {
+            layoutParams.height = FrameLayout.LayoutParams.MATCH_PARENT;
+        } else
+        {
+            layoutParams.height = ScreenUtils.getScreenHeight(getContext()) * 56 / 100;
+        }
+
+        getViewDataBinding().getRoot().setLayoutParams(layoutParams);
     }
 
     @Override
