@@ -356,7 +356,13 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
         setResult(Activity.RESULT_OK, intent);
         finish();
 
-        mAnalytics.onConfirmClick(getActivity(), mStayRegion, mStayFilter, mStayFilterCount.searchCount);
+        try
+        {
+            mAnalytics.onConfirmClick(getActivity(), mStayRegion, mStayFilter, mStayFilterCount == null ? 0 : mStayFilterCount.searchCount);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     @Override

@@ -487,6 +487,30 @@ public class GourmetPaymentView extends BaseDialogView<GourmetPaymentView.OnEven
     }
 
     @Override
+    public void scrollToCheckPriceTitle()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().checkPriceTitleView.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                if (getViewDataBinding() == null)
+                {
+                    return;
+                }
+
+                int top = getViewDataBinding().checkPriceTitleView.getTop();
+                getViewDataBinding().scrollView.smoothScrollTo(0, top);
+            }
+        });
+    }
+
+    @Override
     public void onClick(View v)
     {
         switch (v.getId())
