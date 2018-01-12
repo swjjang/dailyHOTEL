@@ -38,6 +38,7 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -401,7 +402,7 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
                     {
                         return expandGroupWithAnimation(groupPosition, true).subscribeOn(AndroidSchedulers.mainThread());
                     }
-                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                }).observeOn(AndroidSchedulers.mainThread()).delaySubscription(200, TimeUnit.MILLISECONDS).subscribe(new Consumer<Boolean>()
                 {
                     @Override
                     public void accept(Boolean aBoolean) throws Exception
