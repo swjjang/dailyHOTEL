@@ -648,6 +648,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 {
                     mNeedOverwritePrice = false;
                     mRoomPrice = mStayPayment.totalPrice;
+                    getViewInterface().scrollToCheckPriceTitle();
                 }
 
                 if (mCheckChangedPrice == false && mRoomPrice != mStayPayment.totalPrice)

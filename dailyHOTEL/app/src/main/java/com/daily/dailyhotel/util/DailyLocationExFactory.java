@@ -288,8 +288,6 @@ public class DailyLocationExFactory
                 }
 
                 stopLocationMeasure();
-
-                ExLog.d("pinkred - onLocationResult : " + locationResult.getLastLocation());
             }
 
             @Override
@@ -306,8 +304,6 @@ public class DailyLocationExFactory
                         mLocationListener.onFailed();
                     }
                 }
-
-                ExLog.d("pinkred - locationAvailability : " + locationAvailability.isLocationAvailable());
             }
         };
     }

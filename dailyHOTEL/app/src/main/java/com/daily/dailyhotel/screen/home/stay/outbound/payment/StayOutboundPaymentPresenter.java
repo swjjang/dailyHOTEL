@@ -563,6 +563,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 {
                     mNeedOverwritePrice = false;
                     mRoomPrice = mStayOutboundPayment.totalPrice;
+                    getViewInterface().scrollToCheckPriceTitle();
                 }
 
                 // 가격이 변동된 경우
