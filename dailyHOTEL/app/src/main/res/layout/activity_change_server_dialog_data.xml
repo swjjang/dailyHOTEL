@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/popup_bg_white_full"
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="24dp">
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/titleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:gravity="center_horizontal"
+            android:text="서버 선택"
+            android:textColor="@color/default_text_c323232"
+            android:textSize="17dp"
+            dailyFont:style="Medium"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/prodTextView"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/selector_dialog_button01"
+            android:gravity="center"
+            android:text="Prod Server"
+            android:layout_marginTop="20dp"
+            android:textColor="@drawable/selector_dialog_text_color01"
+            android:textSize="14dp"
+            dailyFont:style="Medium"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/stageTextView"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/selector_dialog_button01"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:text="Stage Server"
+            android:textColor="@drawable/selector_dialog_text_color01"
+            android:textSize="14dp"
+            dailyFont:style="Medium"/>
+
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/devTextView"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/selector_dialog_button01"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:text="Dev Server"
+            android:textColor="@drawable/selector_dialog_text_color01"
+            android:textSize="14dp"
+            dailyFont:style="Medium"/>
+    </LinearLayout>
+</layout>
