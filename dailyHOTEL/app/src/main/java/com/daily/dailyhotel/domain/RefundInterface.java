@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.domain;
 
 import com.daily.dailyhotel.entity.Bank;
+import com.daily.dailyhotel.entity.OldRefund;
 import com.daily.dailyhotel.entity.RefundPolicy;
 import com.daily.dailyhotel.entity.StayOutboundRefundDetail;
 
@@ -22,6 +23,11 @@ public interface RefundInterface
     // 계좌이체 환불
     Observable<String> getRefund(String aggregationId, int reservationIndex, String reason, String serviceType//
         , String accountHolder, String accountNumber, String bankCode);
+
+    // 기존 reservationIndex 용 환불 - 계좌이체 포함
+    @Deprecated
+    Observable<OldRefund> getRefund(int hotelIdx, String dateCheckIn, String transactionType, int hotelReservationIdx//
+        , String reasonCancel, String accountHolder, String bankAccount, String bankCode);
 
     Observable<RefundPolicy> getStayRefundPolicy(int reservationIndex, String transactionType);
 

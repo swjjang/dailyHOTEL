@@ -904,6 +904,12 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/TransDialog"/>
+
+        <activity
+            android:name="com.daily.dailyhotel.screen.booking.detail.stay.refund.StayAutoRefundActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
         <!--  com.daily.dailyhotel.... -->
 
         <activity android:name="kr.co.kcp.android.payment.standard.ResultRcvActivity">

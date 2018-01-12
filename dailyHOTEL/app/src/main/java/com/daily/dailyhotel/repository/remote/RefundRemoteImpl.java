@@ -4,12 +4,15 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.daily.base.exception.BaseException;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.RefundInterface;
 import com.daily.dailyhotel.entity.Bank;
+import com.daily.dailyhotel.entity.OldRefund;
 import com.daily.dailyhotel.entity.RefundPolicy;
 import com.daily.dailyhotel.entity.StayOutboundRefundDetail;
 import com.daily.dailyhotel.repository.remote.model.BankData;
+import com.daily.dailyhotel.repository.remote.model.OldRefundData;
 import com.daily.dailyhotel.repository.remote.model.RefundPolicyData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundDetailData;
@@ -214,12 +217,73 @@ public class RefundRemoteImpl extends BaseRemoteImpl implements RefundInterface
     }
 
     @Override
+    public Observable<OldRefund> getRefund(int hotelIdx, String dateCheckIn, String transactionType //
+        , int hotelReservationIdx, String reasonCancel, String accountHolder, String bankAccount, String bankCode)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v2/payment/refund"//
+            : "MTQkNzUkNDMkODUkMzkkNzMkMTQkNjIkMzMkMTYkODIkODkkNzAkMzIkMjkkNDMk$Nzg0NTMxOUNGOUOMFE1RDE2NjRFRTRM1OOThXBOUQ2RNDIhBQ0KEyRjIxMjcwNTMyOTANFQ0ME3RDNBNzFE3MzHRQzNTIC0NjEQ3OA==$";
+
+        return mDailyMobileService.getRefund(Crypto.getUrlDecoderEx(API), hotelIdx, dateCheckIn //
+            , transactionType, hotelReservationIdx, reasonCancel, accountHolder, bankAccount, bankCode) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<OldRefundData>, OldRefund>()
+            {
+                @Override
+                public OldRefund apply(BaseDto<OldRefundData> oldRefundDataBaseDto) throws Exception
+                {
+                    OldRefund oldRefund = null;
+
+                    if (oldRefundDataBaseDto != null)
+                    {
+                        // msgCode 1013: 환불 요청 중 실패한 것으로 messageFromPg를 사용자에게 노출함.
+                        // msgCode 1014: 무료 취소 횟수를 초과한 것으로 msg 내용을 사용자에게 노출함.
+                        // msgCode 1015: 환불 수동 스위치 ON일 경우
+                        switch (oldRefundDataBaseDto.msgCode)
+                        {
+                            case 1014:
+                                oldRefund = new OldRefund();
+                                oldRefund.msgCode = oldRefundDataBaseDto.msgCode;
+                                oldRefund.messageFromPg = oldRefundDataBaseDto.msg;
+                                break;
+
+                            case 1013:
+                            case 1015:
+                            default:
+
+                                if (oldRefundDataBaseDto.data != null)
+                                {
+                                    oldRefund = oldRefundDataBaseDto.data.getOldRefund();
+                                }
+
+                                if (oldRefund == null)
+                                {
+                                    oldRefund = new OldRefund();
+                                }
+
+                                oldRefund.msgCode = oldRefundDataBaseDto.msgCode;
+
+                                if (DailyTextUtils.isTextEmpty(oldRefund.messageFromPg) == true)
+                                {
+                                    oldRefund.messageFromPg = oldRefundDataBaseDto.msg;
+                                }
+                                break;
+                        }
+                    } else
+                    {
+                        throw new BaseException(-1, null);
+                    }
+
+                    return oldRefund;
+                }
+            });
+    }
+
+    @Override
     public Observable<RefundPolicy> getStayRefundPolicy(int reservationIndex, String transactionType)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/reservation/hotel/policy_refund"//
+        final String API = Constants.UNENCRYPTED_URL ? "api/v2/reservation/hotel/policy_refund"//
             : "MTAkMTEzJDkxJDkxJDYwJDckNiQ3MCQxJDcyJDIxJDQ4JDEyNyQxMDYkMzIkNDEk$OMEZGRELUMyRjLlGMTBCNAkUzNTJFRTQTyRUYxMDAT2ODQyOUMZ2QTIzNDkxN0NDRTBPGMzNCOUCSNCOEUxNTRCMUE2RDE3N0VGODXQBGMEIS5OTBGNTM0NUJEM0U1GMTQV0RTc2Njk4RjM3$";
 
-        return mDailyMobileService.getRefundPolicy(Crypto.getUrlDecoderEx(URL), reservationIndex, transactionType) //
+        return mDailyMobileService.getRefundPolicy(Crypto.getUrlDecoderEx(API), reservationIndex, transactionType) //
             .subscribeOn(Schedulers.io()).map(new Function<BaseDto<RefundPolicyData>, RefundPolicy>()
             {
                 @Override
