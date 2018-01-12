@@ -921,7 +921,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
         {
             reviewItemParcelable.itemIdx = reviewItem.itemIdx;
             reviewItemParcelable.itemName = reviewItem.itemName;
-            reviewItemParcelable.imageUrl = reviewItem.imageUrl;
+            reviewItemParcelable.setImageMap(reviewItem.getImageMap());
 
             switch (reviewItem.serviceType)
             {

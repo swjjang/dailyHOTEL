@@ -19,7 +19,13 @@ import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.entity.ImageMap;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.controller.ControllerListener;
+import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.model.ReviewPickQuestion;
@@ -28,6 +34,8 @@ import com.twoheart.dailyhotel.place.base.BaseLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
+
+import java.io.IOException;
 
 public class ReviewLayout extends BaseLayout implements View.OnClickListener, NestedScrollView.OnScrollChangeListener
 {
@@ -122,15 +130,78 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
         });
     }
 
-    public void setPlaceImageUrl(Context context, String imageUrl)
+    public void setPlaceImageUrl(Context context, Constants.ServiceType serviceType, ImageMap imageMap)
     {
-        if (mPlaceImageView == null)
+        if (mPlaceImageView == null || imageMap == null)
         {
             return;
         }
 
         mPlaceImageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder);
-        Util.requestImageResize(context, mPlaceImageView, imageUrl);
+
+        switch (serviceType)
+        {
+            case HOTEL:
+            case GOURMET:
+                Util.requestImageResize(context, mPlaceImageView, imageMap.bigUrl);
+                break;
+
+            case OB_STAY:
+            {
+                String url;
+
+                if (ScreenUtils.getScreenWidth(mContext) >= ScreenUtils.DEFAULT_STAYOUTBOUND_XXHDPI_WIDTH)
+                {
+                    if (DailyTextUtils.isTextEmpty(imageMap.bigUrl) == true)
+                    {
+                        url = imageMap.smallUrl;
+                    } else
+                    {
+                        url = imageMap.bigUrl;
+                    }
+                } else
+                {
+                    if (DailyTextUtils.isTextEmpty(imageMap.mediumUrl) == true)
+                    {
+                        url = imageMap.smallUrl;
+                    } else
+                    {
+                        url = imageMap.mediumUrl;
+                    }
+                }
+
+                ControllerListener controllerListener = new BaseControllerListener<ImageInfo>()
+                {
+                    @Override
+                    public void onFailure(String id, Throwable throwable)
+                    {
+                        if (throwable instanceof IOException == true)
+                        {
+                            if (url.equalsIgnoreCase(imageMap.bigUrl) == true)
+                            {
+                                imageMap.bigUrl = null;
+                            } else if (url.equalsIgnoreCase(imageMap.mediumUrl) == true)
+                            {
+                                imageMap.mediumUrl = null;
+                            } else
+                            {
+                                // 작은 이미지를 로딩했지만 실패하는 경우.
+                                return;
+                            }
+
+                            if (DailyTextUtils.isTextEmpty(imageMap.smallUrl) == false)
+                            {
+                                mPlaceImageView.setImageURI(imageMap.smallUrl);
+                            }
+                        }
+                    }
+                };
+
+                DraweeController draweeController = Fresco.newDraweeControllerBuilder()//
+                    .setControllerListener(controllerListener).setUri(url).build();
+                break;
+            }
+        }
     }
 
     public void setPlaceInformation(String placeName, String period, String reviewGrade)

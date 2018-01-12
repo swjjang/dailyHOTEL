@@ -402,8 +402,6 @@ public class MainNetworkController extends BaseNetworkController
                     {
                         Review review = new Review(responseJSONObject.getJSONObject("data"));
 
-                        review.getReviewItem().serviceType = Constants.ServiceType.OB_STAY;
-
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewStayOutbound(review);
                     } else
                     {

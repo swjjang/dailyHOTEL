@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.entity.ImageMap;
 import com.twoheart.dailyhotel.util.Constants;
 
 import org.json.JSONArray;
@@ -17,10 +18,11 @@ public class ReviewItem implements Parcelable
 {
     public int itemIdx;
     public String itemName;
-    public String imageUrl;
     public Constants.ServiceType serviceType; // serviceType
     public String useEndDate;
     public String useStartDate;
+
+    private ImageMap mImageMap;
 
     public ReviewItem()
     {
@@ -48,7 +50,7 @@ public class ReviewItem implements Parcelable
 
             if (DailyTextUtils.isTextEmpty(serviceType) == false)
             {
-                switch (serviceType)
+                switch (serviceType.toUpperCase())
                 {
                     case "HOTEL":
                     {
@@ -65,7 +67,9 @@ public class ReviewItem implements Parcelable
                             try
                             {
                                 JSONArray pathJSONArray = imageJSONObject.getJSONArray(key);
-                                imageUrl = baseImagePath + key + pathJSONArray.getString(0);
+
+                                mImageMap = new ImageMap();
+                                mImageMap.bigUrl = mImageMap.mediumUrl = mImageMap.smallUrl = baseImagePath + key + pathJSONArray.getString(0);
                                 break;
                             } catch (JSONException e)
                             {
@@ -89,7 +93,9 @@ public class ReviewItem implements Parcelable
                             try
                             {
                                 JSONArray pathJSONArray = imageJSONObject.getJSONArray(key);
-                                imageUrl = baseImagePath + key + pathJSONArray.getString(0);
+
+                                mImageMap = new ImageMap();
+                                mImageMap.bigUrl = mImageMap.mediumUrl = mImageMap.smallUrl = baseImagePath + key + pathJSONArray.getString(0);
                                 break;
                             } catch (JSONException e)
                             {
@@ -100,6 +106,13 @@ public class ReviewItem implements Parcelable
 
                     case "OUTBOUND":
                         this.serviceType = Constants.ServiceType.OB_STAY;
+
+                        JSONObject imageJSONObject = new JSONObject(jsonObject.getString("imageMap"));
+
+                        mImageMap = new ImageMap();
+                        mImageMap.bigUrl = imageJSONObject.getString("big");
+                        mImageMap.mediumUrl = imageJSONObject.getString("medium");
+                        mImageMap.smallUrl = imageJSONObject.getString("small");
                         break;
 
                     default:
@@ -136,12 +149,34 @@ public class ReviewItem implements Parcelable
         return null;
     }
 
+    public void setImageMap(ImageMap imageMap)
+    {
+        mImageMap = imageMap;
+    }
+
+    public ImageMap getImageMap()
+    {
+        return mImageMap;
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
         dest.writeInt(itemIdx);
         dest.writeString(itemName);
-        dest.writeString(imageUrl);
+
+        if (mImageMap == null)
+        {
+            dest.writeInt(0);
+        } else
+        {
+            dest.writeInt(1);
+
+            dest.writeString(mImageMap.bigUrl);
+            dest.writeString(mImageMap.mediumUrl);
+            dest.writeString(mImageMap.smallUrl);
+        }
+
         dest.writeString(serviceType.name());
         dest.writeString(useEndDate);
         dest.writeString(useStartDate);
@@ -151,7 +186,17 @@ public class ReviewItem implements Parcelable
     {
         itemIdx = in.readInt();
         itemName = in.readString();
-        imageUrl = in.readString();
+
+        boolean hasImageMap = in.readInt() == 1;
+
+        if (hasImageMap == true)
+        {
+            mImageMap = new ImageMap();
+            mImageMap.bigUrl = in.readString();
+            mImageMap.mediumUrl = in.readString();
+            mImageMap.smallUrl = in.readString();
+        }
+
         serviceType = Constants.ServiceType.valueOf(in.readString());
         useEndDate = in.readString();
         useStartDate = in.readString();

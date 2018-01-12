@@ -384,7 +384,7 @@ public class ReviewActivity extends BaseActivity
                 break;
         }
 
-        mReviewLayout.setPlaceImageUrl(this, mReview.getReviewItem().imageUrl);
+        mReviewLayout.setPlaceImageUrl(this, mReview.getReviewItem().serviceType, mReview.getReviewItem().getImageMap());
 
         int position = 0;
 

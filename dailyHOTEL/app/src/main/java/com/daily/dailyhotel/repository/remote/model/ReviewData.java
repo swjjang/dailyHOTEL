@@ -3,6 +3,7 @@ package com.daily.dailyhotel.repository.remote.model;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.Review;
 import com.daily.dailyhotel.entity.ReviewAnswerValue;
 import com.daily.dailyhotel.entity.ReviewItem;
@@ -91,6 +92,9 @@ public class ReviewData
         @JsonField(name = "serviceType")
         public String serviceType;
 
+        @JsonField(name = "imageMap")
+        public ImageMapData imageMap;
+
         @JsonField(name = "useEndDate")
         public String useEndDate;
 
@@ -104,23 +108,41 @@ public class ReviewData
 
             try
             {
-                JSONObject imageJSONObject = new JSONObject(itemImagePath);
-
-                Iterator<String> iterator = imageJSONObject.keys();
-                if (iterator.hasNext() == true)
+                switch (serviceType)
                 {
-                    String key = iterator.next();
+                    case "HOTEL":
+                    case "GOURMET":
+                        JSONObject imageJSONObject = new JSONObject(itemImagePath);
 
-                    JSONArray pathJSONArray = imageJSONObject.getJSONArray(key);
-                    reviewItem.imageUrl = baseImagePath + key + pathJSONArray.getString(0);
+                        Iterator<String> iterator = imageJSONObject.keys();
+                        if (iterator.hasNext() == true)
+                        {
+                            String key = iterator.next();
+
+                            JSONArray pathJSONArray = imageJSONObject.getJSONArray(key);
+
+                            ImageMap imageMap = new ImageMap();
+                            imageMap.bigUrl = imageMap.mediumUrl = imageMap.smallUrl = baseImagePath + key + pathJSONArray.getString(0);
+                            reviewItem.setImageMap(imageMap);
+                        }
+                        break;
+
+                    case "OUTBOUND":
+                        if (imageMap != null)
+                        {
+                            reviewItem.setImageMap(imageMap.getImageMap());
+                        }
+                        break;
                 }
+
+
             } catch (Exception e)
             {
                 ExLog.e(e.toString());
             }
 
             reviewItem.itemName = itemName;
-            reviewItem.serviceType = serviceType;
+            reviewItem.serviceType = serviceType.toUpperCase();
             reviewItem.useEndDate = useEndDate;
             reviewItem.useStartDate = useStartDate;
 
@@ -184,6 +206,28 @@ public class ReviewData
 
             return reviewAnswerValue;
         }
+    }
 
+    @JsonObject
+    static class ImageMapData
+    {
+        @JsonField(name = "big")
+        public String big;
+
+        @JsonField(name = "medium")
+        public String medium;
+
+        @JsonField(name = "small")
+        public String small;
+
+        public ImageMap getImageMap()
+        {
+            ImageMap imageMap = new ImageMap();
+            imageMap.bigUrl = big;
+            imageMap.mediumUrl = medium;
+            imageMap.smallUrl = small;
+
+            return imageMap;
+        }
     }
 }
