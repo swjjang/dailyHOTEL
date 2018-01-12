@@ -21,9 +21,9 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="85dp"
-            android:background="@drawable/img_bottom_grey_gradient_rec"
             android:layout_alignBottom="@+id/simpleDraweeView"
-            android:layout_marginBottom="-26dp"/>
+            android:layout_marginBottom="-26dp"
+            android:background="@drawable/img_bottom_grey_gradient_rec"/>
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
@@ -33,7 +33,8 @@
         android:layout_marginTop="97dp"
         android:divider="@null"
         android:overScrollMode="never"
-        android:scrollbars="vertical"/>
+        android:scrollbars="vertical"
+        android:transitionGroup="true"/>
 
     <View
         android:layout_width="match_parent"
@@ -53,18 +54,18 @@
         android:id="@+id/titleBoxLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="15dp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        android:paddingBottom="15dp"
-        android:translationY="-21dp"
-        android:paddingTop="171dp">
+        android:paddingTop="171dp"
+        android:translationY="-21dp">
 
         <RelativeLayout
             android:id="@+id/titleLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:transitionName="@string/transition_layout"
-            android:background="@drawable/home_pick_bg">
+            android:background="@drawable/home_pick_bg"
+            android:transitionName="@string/transition_layout">
 
             <LinearLayout
                 android:id="@+id/subTitleLayout"
