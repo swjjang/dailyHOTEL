@@ -40,6 +40,7 @@ import com.twoheart.dailyhotel.model.Review;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
+import com.twoheart.dailyhotel.screen.common.ChangeServerUrlDialog;
 import com.twoheart.dailyhotel.screen.common.CloseOnBackPressed;
 import com.twoheart.dailyhotel.screen.common.ExitActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
@@ -271,7 +272,11 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
             @Override
             public void onClick(View view)
             {
-
+                // 앱이 데브 서버가 죽어서 안될때.ㅜㅜ
+                if (Constants.DEBUG == true)
+                {
+                    startActivity(ChangeServerUrlDialog.newInstance(MainActivity.this));
+                }
             }
         });
 

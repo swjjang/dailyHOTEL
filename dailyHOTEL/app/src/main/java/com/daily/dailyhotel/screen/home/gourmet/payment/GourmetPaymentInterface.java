@@ -65,4 +65,6 @@ public interface GourmetPaymentInterface extends BaseDialogViewInterface
     void setPersonsPlusEnabled(boolean enabled);
 
     void setPersonsMinusEnabled(boolean enabled);
+
+    void scrollToCheckPriceTitle();
 }
