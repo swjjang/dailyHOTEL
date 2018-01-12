@@ -62,4 +62,6 @@ public interface StayOutboundPaymentInterface extends BaseDialogViewInterface
         , View.OnClickListener onClickListener, DialogInterface.OnCancelListener cancelListener);
 
     void setPaymentTypeDescriptionText(DailyBookingPaymentTypeView.PaymentType paymentType, String text);
+
+    void scrollToCheckPriceTitle();
 }

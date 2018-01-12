@@ -618,6 +618,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                 {
                     mNeedOverwritePrice = false;
                     overwriteGourmetCartPrice(mGourmetPayment, mGourmetCart);
+                    getViewInterface().scrollToCheckPriceTitle();
                 }
 
                 // 가격이 변동된 경우
