@@ -47,6 +47,7 @@ import com.twoheart.dailyhotel.screen.common.LoadingDialog;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyOverScrollViewPager;
 
 import java.util.ArrayList;
@@ -224,6 +225,11 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
 
         mViewPager.setLayoutParams(layoutParams);
         mViewPager.setVisibility(View.INVISIBLE);
+
+        if (Util.isUsedMultiTransition() == true)
+        {
+            mViewPager.setTransitionGroup(true);
+        }
 
         viewGroup.addView(mViewPager);
     }

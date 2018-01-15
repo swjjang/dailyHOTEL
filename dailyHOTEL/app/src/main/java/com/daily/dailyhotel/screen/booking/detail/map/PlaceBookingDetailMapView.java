@@ -19,6 +19,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.databinding.ActivityPlaceBookingDetailMapDataBinding;
 import com.twoheart.dailyhotel.model.Place;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyOverScrollViewPager;
 
 import java.util.ArrayList;
@@ -192,6 +193,11 @@ public abstract class PlaceBookingDetailMapView extends BaseDialogView<PlaceBook
 
         viewPager.setLayoutParams(layoutParams);
         viewPager.setVisibility(View.INVISIBLE);
+
+        if (Util.isUsedMultiTransition() == true)
+        {
+            viewPager.setTransitionGroup(true);
+        }
 
         viewGroup.addView(viewPager);
 

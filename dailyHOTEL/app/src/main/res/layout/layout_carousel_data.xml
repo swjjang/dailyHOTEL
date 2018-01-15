@@ -59,6 +59,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/daily_carousel_show_price_recycler_height"
             android:layout_marginTop="15dp"
+            android:transitionGroup="true"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/titleTextView">

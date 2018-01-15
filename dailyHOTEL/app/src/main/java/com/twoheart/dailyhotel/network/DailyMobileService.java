@@ -434,9 +434,17 @@ public interface DailyMobileService
     Call<JSONObject> requestReviewInformation(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("")
+    Call<JSONObject> requestStayOutboundReviewInformation(@Url String mobileAPI);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @POST("{mobileAPI}")
     Call<JSONObject> requestAddReviewInformation(@Path(value = "mobileAPI", encoded = true) String mobileAPI,//
                                                  @Body JSONObject jsonObject);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST("")
+    Call<JSONObject> requestStayOutboundAddReviewInformation(@Url String mobileAPI, @Body JSONObject jsonObject);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @POST("{mobileAPI}")

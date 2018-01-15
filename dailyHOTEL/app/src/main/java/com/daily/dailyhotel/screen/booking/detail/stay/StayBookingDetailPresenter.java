@@ -39,6 +39,7 @@ import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.GourmetRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RefundRemoteImpl;
+import com.daily.dailyhotel.repository.remote.ReviewRemoteImpl;
 import com.daily.dailyhotel.screen.booking.detail.map.GourmetBookingDetailMapActivity;
 import com.daily.dailyhotel.screen.booking.detail.stay.receipt.StayReceiptActivity;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
@@ -103,6 +104,7 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
     StayBookingDetailAnalyticsInterface mAnalytics;
 
     private CommonRemoteImpl mCommonRemoteImpl;
+    private ReviewRemoteImpl mReviewRemoteImpl;
     BookingRemoteImpl mBookingRemoteImpl;
     private GourmetRemoteImpl mGourmetRemoteImpl;
     private RefundRemoteImpl mRefundRemoteImpl;
@@ -187,6 +189,7 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
         setAnalytics(new StayBookingDetailAnalyticsImpl());
 
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
+        mReviewRemoteImpl = new ReviewRemoteImpl(activity);
         mBookingRemoteImpl = new BookingRemoteImpl(activity);
         mGourmetRemoteImpl = new GourmetRemoteImpl(activity);
         mRefundRemoteImpl = new RefundRemoteImpl(activity);
@@ -1657,7 +1660,7 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
 
         if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true)
         {
-            addCompositeDisposable(mCommonRemoteImpl.getReview("hotel", mReservationIndex) //
+            addCompositeDisposable(mReviewRemoteImpl.getStayReview(mReservationIndex) //
                 .subscribeOn(Schedulers.io()).map(new Function<Review, com.twoheart.dailyhotel.model.Review>()
                 {
                     @Override
@@ -1706,17 +1709,25 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
         {
             reviewItemParcelable.itemIdx = reviewItem.itemIdx;
             reviewItemParcelable.itemName = reviewItem.itemName;
-            reviewItemParcelable.imageUrl = reviewItem.imageUrl;
+            reviewItemParcelable.setImageMap(reviewItem.getImageMap());
 
-            if ("HOTEL".equalsIgnoreCase(reviewItem.serviceType) == true)
+            switch (reviewItem.serviceType)
             {
-                reviewItemParcelable.placeType = Constants.PlaceType.HOTEL;
-            } else if ("GOURMET".equalsIgnoreCase(reviewItem.serviceType) == true)
-            {
-                reviewItemParcelable.placeType = Constants.PlaceType.FNB;
-            } else
-            {
-                ExLog.d("unKnown service type");
+                case "HOTEL":
+                    reviewItemParcelable.serviceType = Constants.ServiceType.HOTEL;
+                    break;
+
+                case "GOURMET":
+                    reviewItemParcelable.serviceType = Constants.ServiceType.GOURMET;
+                    break;
+
+                case "OUTBOUND":
+                    reviewItemParcelable.serviceType = Constants.ServiceType.OB_STAY;
+                    break;
+
+                default:
+                    ExLog.d("unKnown service type");
+                    break;
             }
 
             reviewItemParcelable.useEndDate = reviewItem.useEndDate;

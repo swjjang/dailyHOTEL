@@ -35,9 +35,19 @@ public class ReviewNetworkController extends BaseNetworkController
         DailyMobileAPI.getInstance(mContext).requestAddReviewInformation(mNetworkTag, jsonObject, mAddReviewCallback);
     }
 
+    public void requestStayOutboundAddReviewInformation(int index, JSONObject jsonObject)
+    {
+        DailyMobileAPI.getInstance(mContext).requestStayOutboundAddReviewInformation(mNetworkTag, index, jsonObject, mAddReviewCallback);
+    }
+
     public void requestAddReviewDetailInformation(JSONObject jsonObject)
     {
         DailyMobileAPI.getInstance(mContext).requestAddReviewDetailInformation(mNetworkTag, jsonObject, mAddReviewDetailCallback);
+    }
+
+    public void requestStayOutboundAddReviewDetailInformation(int index, JSONObject jsonObject)
+    {
+        DailyMobileAPI.getInstance(mContext).requestStayOutboundAddReviewDetailInformation(mNetworkTag, index, jsonObject, mAddReviewDetailCallback);
     }
 
     private retrofit2.Callback mAddReviewCallback = new retrofit2.Callback<JSONObject>()

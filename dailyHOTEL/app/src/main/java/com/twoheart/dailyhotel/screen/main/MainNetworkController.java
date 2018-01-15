@@ -15,6 +15,7 @@ import com.twoheart.dailyhotel.network.model.Status;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.base.OnBaseNetworkControllerListener;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -33,6 +34,8 @@ public class MainNetworkController extends BaseNetworkController
         void onReviewGourmet(Review review);
 
         void onReviewStay(Review review);
+
+        void onReviewStayOutbound(Review review);
 
         void onCheckServerResponse(String title, String message);
 
@@ -138,6 +141,12 @@ public class MainNetworkController extends BaseNetworkController
     {
         DailyMobileAPI.getInstance(mContext).requestGourmetReviewInformation(mNetworkTag, mReviewGourmetCallback);
     }
+
+    protected void requestReviewStayOutbound()
+    {
+        DailyMobileAPI.getInstance(mContext).requestStayOutboundReviewInformation(mNetworkTag, mReviewStayOutboundCallback);
+    }
+
 
     public void requestNoticeAgreement()
     {
@@ -316,8 +325,7 @@ public class MainNetworkController extends BaseNetworkController
                         ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewGourmet(review);
                     } else
                     {
-                        // 고메 이벤트까지 없으면 첫구매 이벤트 확인한다.
-                        requestNoticeAgreement();
+                        requestReviewStayOutbound();
                     }
                 } catch (Exception e)
                 {
@@ -358,6 +366,46 @@ public class MainNetworkController extends BaseNetworkController
                     } else
                     {
                         requestReviewGourmet();
+                    }
+                } catch (Exception e)
+                {
+                    ExLog.d(e.toString());
+                }
+            } else
+            {
+
+            }
+        }
+
+        @Override
+        public void onFailure(Call<JSONObject> call, Throwable t)
+        {
+            mOnNetworkControllerListener.onError(call, t, true);
+        }
+    };
+
+    private retrofit2.Callback mReviewStayOutboundCallback = new retrofit2.Callback<JSONObject>()
+    {
+        @Override
+        public void onResponse(Call<JSONObject> call, Response<JSONObject> response)
+        {
+            if (response != null && response.isSuccessful() && response.body() != null)
+            {
+                try
+                {
+                    JSONObject responseJSONObject = response.body();
+
+                    // 리뷰가 존재하지 않는 경우 msgCode : 701
+                    int msgCode = responseJSONObject.getInt("msgCode");
+
+                    if (msgCode == 100 && responseJSONObject.has("data") == true)
+                    {
+                        Review review = new Review(responseJSONObject.getJSONObject("data"));
+
+                        ((OnNetworkControllerListener) mOnNetworkControllerListener).onReviewStayOutbound(review);
+                    } else
+                    {
+                        requestNoticeAgreement();
                     }
                 } catch (Exception e)
                 {

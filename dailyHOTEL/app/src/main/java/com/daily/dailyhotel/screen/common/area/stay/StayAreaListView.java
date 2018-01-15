@@ -11,9 +11,11 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.crashlytics.android.Crashlytics;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
+import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayAreaGroup;
@@ -244,15 +246,24 @@ public class StayAreaListView extends BaseDialogView<StayAreaListView.OnEventLis
             {
                 if (animation == true)
                 {
-                    getViewDataBinding().expandableListView.expandGroupWithAnimation(groupPosition, new DailyAnimatedExpandableListView.OnAnimationListener()
+                    try
                     {
-                        @Override
-                        public void onAnimationEnd()
+                        getViewDataBinding().expandableListView.expandGroupWithAnimation(groupPosition, new DailyAnimatedExpandableListView.OnAnimationListener()
                         {
-                            observer.onNext(true);
-                            observer.onComplete();
-                        }
-                    });
+                            @Override
+                            public void onAnimationEnd()
+                            {
+                                observer.onNext(true);
+                                observer.onComplete();
+                            }
+                        });
+                    } catch (Exception e)
+                    {
+                        Crashlytics.logException(e);
+                        ExLog.e(e.toString());
+
+                        getViewDataBinding().expandableListView.expandGroup(groupPosition);
+                    }
 
                     // 마지막 리스트 목록은 애니메이션으로 안잡힌다.
                     if (groupPosition == mStayAreaListAdapter.getGroupCount() - 1)

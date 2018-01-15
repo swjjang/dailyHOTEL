@@ -23,12 +23,17 @@ import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Booking;
 import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.entity.Review;
+import com.daily.dailyhotel.entity.ReviewAnswerValue;
+import com.daily.dailyhotel.entity.ReviewItem;
+import com.daily.dailyhotel.entity.ReviewQuestionItem;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundBookingDetail;
 import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.BookingRemoteImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.repository.remote.ReviewRemoteImpl;
 import com.daily.dailyhotel.screen.booking.detail.stay.outbound.receipt.StayOutboundReceiptActivity;
 import com.daily.dailyhotel.screen.booking.detail.stay.outbound.refund.StayOutboundRefundActivity;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
@@ -39,10 +44,14 @@ import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.model.PlaceBookingDetail;
+import com.twoheart.dailyhotel.model.ReviewPickQuestion;
+import com.twoheart.dailyhotel.model.ReviewScoreQuestion;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.information.FAQActivity;
+import com.twoheart.dailyhotel.screen.review.ReviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.KakaoLinkManager;
@@ -50,6 +59,8 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
@@ -59,6 +70,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+
+import static io.reactivex.schedulers.Schedulers.io;
 
 /**
  * Created by sheldon
@@ -69,6 +83,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
     StayOutboundBookingAnalyticsInterface mAnalytics;
 
     private CommonRemoteImpl mCommonRemoteImpl;
+    private ReviewRemoteImpl mReviewRemoteImpl;
     BookingRemoteImpl mBookingRemoteImpl;
 
     int mBookingIndex;
@@ -112,6 +127,7 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
         setAnalytics(new StayOutboundBookingDetailAnalyticsImpl());
 
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
+        mReviewRemoteImpl = new ReviewRemoteImpl(activity);
         mBookingRemoteImpl = new BookingRemoteImpl(activity);
 
         setRefresh(true);
@@ -248,6 +264,21 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
                     onBackClick();
                 }
                 break;
+
+            case StayOutboundBookingDetailActivity.REQUEST_CODE_REVIEW:
+            {
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    if (mStayOutboundBookingDetail == null)
+                    {
+                        return;
+                    }
+
+                    mStayOutboundBookingDetail.reviewStatusType = PlaceBookingDetail.ReviewStatusType.COMPLETE;
+                    getViewInterface().setReviewButtonLayout(mStayOutboundBookingDetail.reviewStatusType);
+                }
+                break;
+            }
         }
     }
 
@@ -772,6 +803,45 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
             , AnalyticsManager.Action.BOOKING_HISTORY_DELETE_TRY, "ob_" + mStayOutboundBookingDetail.stayIndex, null);
     }
 
+    @Override
+    public void onReviewClick(String reviewStatus)
+    {
+        if (getActivity() == null || lock() == true)
+        {
+            return;
+        }
+
+        if (PlaceBookingDetail.ReviewStatusType.ADDABLE.equalsIgnoreCase(reviewStatus) == true)
+        {
+            addCompositeDisposable(mReviewRemoteImpl.getStayOutboundReview(mBookingIndex) //
+                .subscribeOn(io()).map(new Function<Review, com.twoheart.dailyhotel.model.Review>()
+                {
+                    @Override
+                    public com.twoheart.dailyhotel.model.Review apply(@io.reactivex.annotations.NonNull Review review) throws Exception
+                    {
+                        return reviewToReviewParcelable(review);
+                    }
+                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<com.twoheart.dailyhotel.model.Review>()
+                {
+                    @Override
+                    public void accept(@io.reactivex.annotations.NonNull com.twoheart.dailyhotel.model.Review review) throws Exception
+                    {
+                        Intent intent = ReviewActivity.newInstance(getActivity(), review);
+                        startActivityForResult(intent, StayOutboundBookingDetailActivity.REQUEST_CODE_REVIEW);
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                    {
+                        onHandleError(throwable);
+                    }
+                }));
+
+            //            mAnalytics.onEventReviewClick(getActivity());
+        }
+    }
+
     void setCommonDateTime(@NonNull CommonDateTime commonDateTime)
     {
         if (commonDateTime == null)
@@ -835,6 +905,121 @@ public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<S
         getViewInterface().setBookingDetail(mStayOutboundBookingDetail);
 
         getViewInterface().setRefundPolicy(mStayOutboundBookingDetail);
+    }
+
+    com.twoheart.dailyhotel.model.Review reviewToReviewParcelable(Review review)
+    {
+        com.twoheart.dailyhotel.model.Review reviewParcelable = new com.twoheart.dailyhotel.model.Review();
+
+        if (review == null)
+        {
+            return reviewParcelable;
+        }
+
+        reviewParcelable.requiredCommentReview = review.requiredCommentReview;
+        reviewParcelable.reserveIdx = review.reserveIdx;
+
+        com.twoheart.dailyhotel.model.ReviewItem reviewItemParcelable = new com.twoheart.dailyhotel.model.ReviewItem();
+
+        ReviewItem reviewItem = review.getReviewItem();
+
+        if (reviewItem != null)
+        {
+            reviewItemParcelable.itemIdx = reviewItem.itemIdx;
+            reviewItemParcelable.itemName = reviewItem.itemName;
+            reviewItemParcelable.setImageMap(reviewItem.getImageMap());
+
+            switch (reviewItem.serviceType)
+            {
+                case "HOTEL":
+                    reviewItemParcelable.serviceType = Constants.ServiceType.HOTEL;
+                    break;
+
+                case "GOURMET":
+                    reviewItemParcelable.serviceType = Constants.ServiceType.GOURMET;
+                    break;
+
+                case "OUTBOUND":
+                    reviewItemParcelable.serviceType = Constants.ServiceType.OB_STAY;
+                    break;
+
+                default:
+                    ExLog.d("unKnown service type");
+                    break;
+            }
+
+            reviewItemParcelable.useEndDate = reviewItem.useEndDate;
+            reviewItemParcelable.useStartDate = reviewItem.useStartDate;
+        }
+
+        reviewParcelable.setReviewItem(reviewItemParcelable);
+
+        //
+        ArrayList<ReviewPickQuestion> reviewPickQuestionListParcelable = new ArrayList<>();
+
+        List<ReviewQuestionItem> reviewPickQuestionList = review.getReviewPickQuestionList();
+
+        if (reviewPickQuestionList != null && reviewPickQuestionList.size() > 0)
+        {
+            for (ReviewQuestionItem reviewQuestionItem : reviewPickQuestionList)
+            {
+                ReviewPickQuestion reviewPickQuestion = new ReviewPickQuestion();
+                reviewPickQuestion.title = reviewQuestionItem.title;
+                reviewPickQuestion.description = reviewQuestionItem.description;
+                reviewPickQuestion.answerCode = reviewQuestionItem.answerCode;
+
+                //
+                ArrayList<com.twoheart.dailyhotel.model.ReviewAnswerValue> reviewAnswerValueListParcelable = new ArrayList<>();
+
+                List<ReviewAnswerValue> reviewAnswerValueList = reviewQuestionItem.getAnswerValueList();
+
+                if (reviewAnswerValueList != null && reviewAnswerValueList.size() > 0)
+                {
+                    for (ReviewAnswerValue reviewAnswerValue : reviewAnswerValueList)
+                    {
+                        com.twoheart.dailyhotel.model.ReviewAnswerValue reviewAnswerValueParcelable = new com.twoheart.dailyhotel.model.ReviewAnswerValue();
+
+                        reviewAnswerValueParcelable.code = reviewAnswerValue.code;
+                        reviewAnswerValueParcelable.description = reviewAnswerValue.description;
+
+                        reviewAnswerValueListParcelable.add(reviewAnswerValueParcelable);
+                    }
+
+                    // 짝수개로 맞춘다.
+                    if (reviewAnswerValueListParcelable.size() % 2 == 1)
+                    {
+                        reviewAnswerValueListParcelable.add(new com.twoheart.dailyhotel.model.ReviewAnswerValue());
+                    }
+                }
+
+                reviewPickQuestion.setAnswerValueList(reviewAnswerValueListParcelable);
+                reviewPickQuestionListParcelable.add(reviewPickQuestion);
+            }
+        }
+
+        reviewParcelable.setReviewPickQuestionList(reviewPickQuestionListParcelable);
+
+        //
+        ArrayList<ReviewScoreQuestion> reviewScoreQuestionListParcelable = new ArrayList<>();
+
+        List<ReviewQuestionItem> reviewScoreQuestionList = review.getReviewScoreQuestionList();
+
+        if (reviewScoreQuestionList != null && reviewScoreQuestionList.size() > 0)
+        {
+            for (ReviewQuestionItem reviewQuestionItem : reviewScoreQuestionList)
+            {
+                ReviewScoreQuestion reviewScoreQuestion = new ReviewScoreQuestion();
+                reviewScoreQuestion.title = reviewQuestionItem.title;
+                reviewScoreQuestion.description = reviewQuestionItem.description;
+                reviewScoreQuestion.answerCode = reviewQuestionItem.answerCode;
+
+                reviewScoreQuestionListParcelable.add(reviewScoreQuestion);
+            }
+        }
+
+        reviewParcelable.setReviewScoreQuestionList(reviewScoreQuestionListParcelable);
+
+        return reviewParcelable;
     }
 
     private Observable<Location> searchMyLocation(Observable locationAnimationObservable)

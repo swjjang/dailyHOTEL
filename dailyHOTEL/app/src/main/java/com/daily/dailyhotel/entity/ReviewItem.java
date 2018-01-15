@@ -7,9 +7,20 @@ package com.daily.dailyhotel.entity;
 public class ReviewItem
 {
     public int itemIdx;
-    public String imageUrl;
     public String itemName;
     public String serviceType;
     public String useEndDate;
     public String useStartDate;
+
+    private ImageMap mImageMap;
+
+    public void setImageMap(ImageMap imageMap)
+    {
+        mImageMap = imageMap;
+    }
+
+    public ImageMap getImageMap()
+    {
+        return mImageMap;
+    }
 }

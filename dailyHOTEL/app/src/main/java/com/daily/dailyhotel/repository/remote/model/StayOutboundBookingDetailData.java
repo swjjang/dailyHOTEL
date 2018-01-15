@@ -2,8 +2,10 @@ package com.daily.dailyhotel.repository.remote.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayOutboundBookingDetail;
+import com.twoheart.dailyhotel.model.PlaceBookingDetail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,6 +100,9 @@ public class StayOutboundBookingDetailData
     @JsonField(name = "configurations")
     public ConfigurationsData configurations;
 
+    @JsonField(name = "reviewStatusType")
+    public String reviewStatusType;
+
     public StayOutboundBookingDetailData()
     {
 
@@ -132,6 +137,14 @@ public class StayOutboundBookingDetailData
         stayOutboundBookingDetail.paymentType = StayOutboundBookingDetail.PaymentType.valueOf(paymentType);
         stayOutboundBookingDetail.paymentDate = paymentDate;
         stayOutboundBookingDetail.cancelDateTime = cancelDateTime;
+
+        if (DailyTextUtils.isTextEmpty(reviewStatusType) == true)
+        {
+            stayOutboundBookingDetail.reviewStatusType = PlaceBookingDetail.ReviewStatusType.NONE;
+        } else
+        {
+            stayOutboundBookingDetail.reviewStatusType = reviewStatusType;
+        }
 
         // 리워드
         if (rewardCard != null)

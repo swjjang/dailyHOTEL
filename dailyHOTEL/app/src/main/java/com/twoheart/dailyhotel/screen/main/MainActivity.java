@@ -408,6 +408,20 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                 break;
 
             case CODE_REQUEST_ACTIVITY_SATISFACTION_GOURMET:
+                mNetworkController.requestReviewStayOutbound();
+
+                if (mMainFragmentManager != null)
+                {
+                    Fragment fragment = mMainFragmentManager.getCurrentFragment();
+
+                    if (fragment instanceof HomeFragment)
+                    {
+                        fragment.onActivityResult(requestCode, resultCode, data);
+                    }
+                }
+                break;
+
+            case CODE_REQUEST_ACTIVITY_SATISFACTION_STAYOUTBOUND:
                 mNetworkController.requestNoticeAgreement();
 
                 if (mMainFragmentManager != null)
@@ -1229,6 +1243,13 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
         {
             Intent intent = ReviewActivity.newInstance(MainActivity.this, review);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_HOTEL);
+        }
+
+        @Override
+        public void onReviewStayOutbound(Review review)
+        {
+            Intent intent = ReviewActivity.newInstance(MainActivity.this, review);
+            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SATISFACTION_STAYOUTBOUND);
         }
 
         @Override

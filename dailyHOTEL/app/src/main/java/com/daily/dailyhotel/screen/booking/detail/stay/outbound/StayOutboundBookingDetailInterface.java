@@ -27,6 +27,8 @@ public interface StayOutboundBookingDetailInterface extends BaseDialogViewInterf
 
     void setMyLocation(Location location);
 
+    void setReviewButtonLayout(String reviewStatusType);
+
     void setRefundPolicy(StayOutboundBookingDetail stayOutboundBookingDetail);
 
     boolean isExpandedMap();

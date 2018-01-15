@@ -37,6 +37,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundSearchResultDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
+import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.widget.DailyOverScrollViewPager;
 
 import java.util.List;
@@ -1138,6 +1139,11 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
 
         viewPager.setLayoutParams(layoutParams);
         viewPager.setVisibility(View.INVISIBLE);
+
+        if (Util.isUsedMultiTransition() == true)
+        {
+            viewPager.setTransitionGroup(true);
+        }
 
         viewGroup.addView(viewPager);
 

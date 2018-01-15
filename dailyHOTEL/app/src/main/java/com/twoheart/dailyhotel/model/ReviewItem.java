@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.entity.ImageMap;
 import com.twoheart.dailyhotel.util.Constants;
 
 import org.json.JSONArray;
@@ -17,10 +18,11 @@ public class ReviewItem implements Parcelable
 {
     public int itemIdx;
     public String itemName;
-    public String imageUrl;
-    public Constants.PlaceType placeType; // serviceType
+    public Constants.ServiceType serviceType; // serviceType
     public String useEndDate;
     public String useStartDate;
+
+    private ImageMap mImageMap;
 
     public ReviewItem()
     {
@@ -42,51 +44,119 @@ public class ReviewItem implements Parcelable
         itemIdx = jsonObject.getInt("itemIdx");
         itemName = jsonObject.getString("itemName");
 
-        String baseImagePath = jsonObject.getString("baseImagePath");
-        JSONObject imageJSONObject = new JSONObject(jsonObject.getString("itemImagePath"));
-
-        Iterator<String> iterator = imageJSONObject.keys();
-        while (iterator.hasNext())
+        if (jsonObject.has("serviceType") == true)
         {
-            String key = iterator.next();
+            String serviceType = jsonObject.getString("serviceType");
 
-            try
+            if (DailyTextUtils.isTextEmpty(serviceType) == false)
             {
-                JSONArray pathJSONArray = imageJSONObject.getJSONArray(key);
-                imageUrl = baseImagePath + key + pathJSONArray.getString(0);
-                break;
-            } catch (JSONException e)
-            {
-            }
-        }
+                switch (serviceType.toUpperCase())
+                {
+                    case "HOTEL":
+                    {
+                        this.serviceType = Constants.ServiceType.HOTEL;
 
-        String serviceType = jsonObject.getString("serviceType");
+                        String baseImagePath = jsonObject.getString("baseImagePath");
+                        JSONObject imageJSONObject = new JSONObject(jsonObject.getString("itemImagePath"));
 
-        if (DailyTextUtils.isTextEmpty(serviceType) == false)
-        {
-            if ("HOTEL".equalsIgnoreCase(serviceType) == true)
-            {
-                placeType = Constants.PlaceType.HOTEL;
-            } else if ("GOURMET".equalsIgnoreCase(serviceType) == true)
-            {
-                placeType = Constants.PlaceType.FNB;
+                        Iterator<String> iterator = imageJSONObject.keys();
+                        while (iterator.hasNext())
+                        {
+                            String key = iterator.next();
+
+                            try
+                            {
+                                JSONArray pathJSONArray = imageJSONObject.getJSONArray(key);
+
+                                mImageMap = new ImageMap();
+                                mImageMap.bigUrl = mImageMap.mediumUrl = mImageMap.smallUrl = baseImagePath + key + pathJSONArray.getString(0);
+                                break;
+                            } catch (JSONException e)
+                            {
+                            }
+                        }
+                        break;
+                    }
+
+                    case "GOURMET":
+                    {
+                        this.serviceType = Constants.ServiceType.GOURMET;
+
+                        String baseImagePath = jsonObject.getString("baseImagePath");
+                        JSONObject imageJSONObject = new JSONObject(jsonObject.getString("itemImagePath"));
+
+                        Iterator<String> iterator = imageJSONObject.keys();
+                        while (iterator.hasNext())
+                        {
+                            String key = iterator.next();
+
+                            try
+                            {
+                                JSONArray pathJSONArray = imageJSONObject.getJSONArray(key);
+
+                                mImageMap = new ImageMap();
+                                mImageMap.bigUrl = mImageMap.mediumUrl = mImageMap.smallUrl = baseImagePath + key + pathJSONArray.getString(0);
+                                break;
+                            } catch (JSONException e)
+                            {
+                            }
+                        }
+                        break;
+                    }
+
+                    case "OUTBOUND":
+                        this.serviceType = Constants.ServiceType.OB_STAY;
+
+                        JSONObject imageJSONObject = new JSONObject(jsonObject.getString("imageMap"));
+
+                        mImageMap = new ImageMap();
+                        mImageMap.bigUrl = imageJSONObject.getString("big");
+                        mImageMap.mediumUrl = imageJSONObject.getString("medium");
+                        mImageMap.smallUrl = imageJSONObject.getString("small");
+                        break;
+
+                    default:
+                        ExLog.d("unKnown service type");
+                        break;
+                }
             } else
             {
-                ExLog.d("unKnown service type");
+                ExLog.d("serviceType is null");
             }
         } else
         {
             ExLog.d("serviceType is null");
         }
 
-
         useStartDate = jsonObject.getString("useStartDate");
         useEndDate = jsonObject.getString("useEndDate");
     }
 
-    public String getPlaceType()
+    public String getServiceType()
     {
-        return Constants.PlaceType.FNB.equals(placeType) == true ? "GOURMET" : "HOTEL";
+        switch (serviceType)
+        {
+            case HOTEL:
+                return "HOTEL";
+
+            case GOURMET:
+                return "GOURMET";
+
+            case OB_STAY:
+                return "OUTBOUND";
+        }
+
+        return null;
+    }
+
+    public void setImageMap(ImageMap imageMap)
+    {
+        mImageMap = imageMap;
+    }
+
+    public ImageMap getImageMap()
+    {
+        return mImageMap;
     }
 
     @Override
@@ -94,8 +164,20 @@ public class ReviewItem implements Parcelable
     {
         dest.writeInt(itemIdx);
         dest.writeString(itemName);
-        dest.writeString(imageUrl);
-        dest.writeString(placeType.name());
+
+        if (mImageMap == null)
+        {
+            dest.writeInt(0);
+        } else
+        {
+            dest.writeInt(1);
+
+            dest.writeString(mImageMap.bigUrl);
+            dest.writeString(mImageMap.mediumUrl);
+            dest.writeString(mImageMap.smallUrl);
+        }
+
+        dest.writeString(serviceType.name());
         dest.writeString(useEndDate);
         dest.writeString(useStartDate);
     }
@@ -104,8 +186,18 @@ public class ReviewItem implements Parcelable
     {
         itemIdx = in.readInt();
         itemName = in.readString();
-        imageUrl = in.readString();
-        placeType = Constants.PlaceType.valueOf(in.readString());
+
+        boolean hasImageMap = in.readInt() == 1;
+
+        if (hasImageMap == true)
+        {
+            mImageMap = new ImageMap();
+            mImageMap.bigUrl = in.readString();
+            mImageMap.mediumUrl = in.readString();
+            mImageMap.smallUrl = in.readString();
+        }
+
+        serviceType = Constants.ServiceType.valueOf(in.readString());
         useEndDate = in.readString();
         useStartDate = in.readString();
     }

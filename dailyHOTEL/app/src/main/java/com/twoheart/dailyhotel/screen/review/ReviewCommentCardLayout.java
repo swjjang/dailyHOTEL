@@ -34,14 +34,14 @@ public class ReviewCommentCardLayout extends ReviewCardLayout implements View.On
         void onClick(ReviewCardLayout reviewCardLayout, String comment);
     }
 
-    public ReviewCommentCardLayout(Context context, int position, Constants.PlaceType placeType)
+    public ReviewCommentCardLayout(Context context, int position, Constants.ServiceType serviceType)
     {
         super(context, position);
 
-        initLayout(context, placeType);
+        initLayout(context, serviceType);
     }
 
-    private void initLayout(Context context, Constants.PlaceType placeType)
+    private void initLayout(Context context, Constants.ServiceType serviceType)
     {
         setBackgroundResource(R.drawable.selector_review_cardlayout_selected);
 
@@ -60,14 +60,18 @@ public class ReviewCommentCardLayout extends ReviewCardLayout implements View.On
 
         mCommentTextView = view.findViewById(R.id.commentTextView);
 
-        switch (placeType)
+        switch (serviceType)
         {
             case HOTEL:
                 mCommentTextView.setHint(R.string.message_review_comment_stay_hint);
                 break;
 
-            case FNB:
+            case GOURMET:
                 mCommentTextView.setHint(R.string.message_review_comment_gourmet_hint);
+                break;
+
+            case OB_STAY:
+                mCommentTextView.setHint(R.string.message_review_comment_stay_hint);
                 break;
         }
 

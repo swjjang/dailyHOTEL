@@ -196,6 +196,7 @@ public interface Constants
     String NAME_INTENT_EXTRA_DATA_PLACEIDX = "placeIdx";
     String NAME_INTENT_EXTRA_DATA_PLACENAME = "placeName";
     String NAME_INTENT_EXTRA_DATA_PLACETYPE = "placeType";
+    String NAME_INTENT_EXTRA_DATA_SERVICE_YPE = "serviceType";
     String NAME_INTENT_EXTRA_DATA_RESULT = "result";
     String NAME_INTENT_EXTRA_DATA_RECOMMENDER = "recommender";
     String NAME_INTENT_EXTRA_DATA_ISDAILYUSER = "isDailyUser";
@@ -319,6 +320,8 @@ public interface Constants
     int CODE_REQUEST_ACTIVITY_REWARD = 80; // 마이 데일리의 데일리리워드
     int CODE_REQUEST_ACTIVITY_DAILY_REWARD = 81; // 더보기의 데일리 리워드
     int CODE_REQUEST_ACTIVITY_REWARD_GUIDE = 82; // 마이 데일리의 데일리리워드 가이드
+
+    int CODE_REQUEST_ACTIVITY_SATISFACTION_STAYOUTBOUND = 83;
 
 
     // Android Activity의 Result Code들이다.
