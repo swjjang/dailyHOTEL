@@ -7,8 +7,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
+import com.daily.dailyhotel.parcel.StayBookingDetailParcel;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.StayBookingDetail;
 
 /**
  * Created by sheldon
@@ -24,10 +24,10 @@ public class StayAutoRefundActivity extends BaseActivity<StayAutoRefundPresenter
     public static final int REQUEST_CODE_SELECT_CANCEL_TYPE = 10000;
     public static final int REQUEST_CODE_SELECT_BANK_LIST = 10001;
 
-    public static Intent newInstance(Context context, StayBookingDetail stayBookingDetail, String aggregationId)
+    public static Intent newInstance(Context context, StayBookingDetailParcel stayBookingDetailParcel , String aggregationId)
     {
         Intent intent = new Intent(context, StayAutoRefundActivity.class);
-        intent.putExtra(INTENT_EXTRA_DATA_BOOKING_DETAIL, stayBookingDetail);
+        intent.putExtra(INTENT_EXTRA_DATA_BOOKING_DETAIL, stayBookingDetailParcel);
         intent.putExtra(INTENT_EXTRA_DATA_AGGREGATION_ID, aggregationId);
 
         return intent;

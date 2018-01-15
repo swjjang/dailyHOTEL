@@ -12,9 +12,9 @@ import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
+import com.daily.dailyhotel.entity.StayBookingDetail;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayAutoRefundDataBinding;
-import com.twoheart.dailyhotel.model.StayBookingDetail;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.widget.CustomFontTypefaceSpan;
 
@@ -136,7 +136,7 @@ public class StayAutoRefundView extends BaseDialogView<StayAutoRefundView.OnEven
 
         try
         {
-            String checkInDateFormat = DailyCalendar.convertDateFormatString(stayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.M.d(EEE) HH시");
+            String checkInDateFormat = DailyCalendar.convertDateFormatString(stayBookingDetail.checkInDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.M.d(EEE) HH시");
             SpannableStringBuilder checkInSpannableStringBuilder = new SpannableStringBuilder(checkInDateFormat);
             checkInSpannableStringBuilder.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(getContext()).getMediumTypeface()),//
                 checkInDateFormat.length() - 3, checkInDateFormat.length(),//
@@ -150,7 +150,7 @@ public class StayAutoRefundView extends BaseDialogView<StayAutoRefundView.OnEven
 
         try
         {
-            String checkOutDateFormat = DailyCalendar.convertDateFormatString(stayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.M.d(EEE) HH시");
+            String checkOutDateFormat = DailyCalendar.convertDateFormatString(stayBookingDetail.checkOutDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.M.d(EEE) HH시");
             SpannableStringBuilder checkOutSpannableStringBuilder = new SpannableStringBuilder(checkOutDateFormat);
             checkOutSpannableStringBuilder.setSpan(new CustomFontTypefaceSpan(FontManager.getInstance(getContext()).getMediumTypeface()),//
                 checkOutDateFormat.length() - 3, checkOutDateFormat.length(),//
@@ -164,8 +164,8 @@ public class StayAutoRefundView extends BaseDialogView<StayAutoRefundView.OnEven
 
         try
         {
-            Date checkInDate = DailyCalendar.convertDate(stayBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT);
-            Date checkOutDate = DailyCalendar.convertDate(stayBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT);
+            Date checkInDate = DailyCalendar.convertDate(stayBookingDetail.checkInDateTime, DailyCalendar.ISO_8601_FORMAT);
+            Date checkOutDate = DailyCalendar.convertDate(stayBookingDetail.checkOutDateTime, DailyCalendar.ISO_8601_FORMAT);
 
             int nights = (int) ((DailyCalendar.clearTField(checkOutDate.getTime()) - DailyCalendar.clearTField(checkInDate.getTime())) / DailyCalendar.DAY_MILLISECOND);
             getViewDataBinding().dateDataBinding.nightsTextView.setText(getString(R.string.label_nights, nights));
@@ -183,9 +183,9 @@ public class StayAutoRefundView extends BaseDialogView<StayAutoRefundView.OnEven
         }
 
         // 예약 장소
-        getViewDataBinding().dateDataBinding.hotelNameTextView.setText(stayBookingDetail.placeName);
+        getViewDataBinding().dateDataBinding.hotelNameTextView.setText(stayBookingDetail.stayName);
         getViewDataBinding().dateDataBinding.roomTypeTextView.setText(stayBookingDetail.roomName);
-        getViewDataBinding().dateDataBinding.addressTextView.setText(stayBookingDetail.address);
+        getViewDataBinding().dateDataBinding.addressTextView.setText(stayBookingDetail.stayAddress);
     }
 
     private void setPaymentInformation(StayBookingDetail stayBookingDetail)
@@ -197,33 +197,33 @@ public class StayAutoRefundView extends BaseDialogView<StayAutoRefundView.OnEven
 
         try
         {
-            getViewDataBinding().paymentDataBinding.paymentDateTextView.setText(DailyCalendar.convertDateFormatString(stayBookingDetail.paymentDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
+            getViewDataBinding().paymentDataBinding.paymentDateTextView.setText(DailyCalendar.convertDateFormatString(stayBookingDetail.paymentDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd"));
         } catch (Exception e)
         {
             ExLog.d(e.toString());
         }
 
-        getViewDataBinding().paymentDataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(getContext(), stayBookingDetail.price, false));
+        getViewDataBinding().paymentDataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(getContext(), stayBookingDetail.discountTotal, false));
 
-        if (stayBookingDetail.bonus > 0)
+        if (stayBookingDetail.bonusAmount > 0)
         {
             getViewDataBinding().paymentDataBinding.bonusLayout.setVisibility(View.VISIBLE);
-            getViewDataBinding().paymentDataBinding.bonusTextView.setText("- " + DailyTextUtils.getPriceFormat(getContext(), stayBookingDetail.bonus, false));
+            getViewDataBinding().paymentDataBinding.bonusTextView.setText("- " + DailyTextUtils.getPriceFormat(getContext(), stayBookingDetail.bonusAmount, false));
         } else
         {
             getViewDataBinding().paymentDataBinding.bonusLayout.setVisibility(View.GONE);
         }
 
-        if (stayBookingDetail.coupon > 0)
+        if (stayBookingDetail.couponAmount > 0)
         {
             getViewDataBinding().paymentDataBinding.couponLayout.setVisibility(View.VISIBLE);
-            getViewDataBinding().paymentDataBinding.couponTextView.setText("- " + DailyTextUtils.getPriceFormat(getContext(), stayBookingDetail.coupon, false));
+            getViewDataBinding().paymentDataBinding.couponTextView.setText("- " + DailyTextUtils.getPriceFormat(getContext(), stayBookingDetail.couponAmount, false));
         } else
         {
             getViewDataBinding().paymentDataBinding.couponLayout.setVisibility(View.GONE);
         }
 
-        getViewDataBinding().paymentDataBinding.totalPriceTextView.setText(DailyTextUtils.getPriceFormat(getContext(), stayBookingDetail.paymentPrice, false));
+        getViewDataBinding().paymentDataBinding.totalPriceTextView.setText(DailyTextUtils.getPriceFormat(getContext(), stayBookingDetail.priceTotal, false));
     }
 
     @Override
@@ -252,6 +252,7 @@ public class StayAutoRefundView extends BaseDialogView<StayAutoRefundView.OnEven
         setPlaceInformation(stayBookingDetail);
         setPaymentInformation(stayBookingDetail);
     }
+
 
     @Override
     public void setCancelReasonText(String reason)

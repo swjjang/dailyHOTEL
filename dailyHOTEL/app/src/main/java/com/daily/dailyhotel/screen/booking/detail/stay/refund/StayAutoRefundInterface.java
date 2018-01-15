@@ -1,7 +1,7 @@
 package com.daily.dailyhotel.screen.booking.detail.stay.refund;
 
 import com.daily.base.BaseDialogViewInterface;
-import com.twoheart.dailyhotel.model.StayBookingDetail;
+import com.daily.dailyhotel.entity.StayBookingDetail;
 
 interface StayAutoRefundInterface extends BaseDialogViewInterface
 {

@@ -13,12 +13,13 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Bank;
 import com.daily.dailyhotel.entity.OldRefund;
+import com.daily.dailyhotel.entity.StayBookingDetail;
 import com.daily.dailyhotel.parcel.BankParcel;
+import com.daily.dailyhotel.parcel.StayBookingDetailParcel;
 import com.daily.dailyhotel.repository.remote.RefundRemoteImpl;
 import com.daily.dailyhotel.screen.common.dialog.refund.AutoRefundDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.refund.BankListDialogActivity;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.StayBookingDetail;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
 
@@ -35,9 +36,9 @@ public class StayAutoRefundPresenter extends BaseExceptionPresenter<StayAutoRefu
 
     private RefundRemoteImpl mRefundRemoteImpl;
 
-    private StayBookingDetail mStayBookingDetail; // TODO : 이건 새로운 StayBookingDetail 로 변경
+    private StayBookingDetail mStayBookingDetail;
     private String mAggregationId;
-    private int mSelectedCancelReason; // TODO : 이건 뺄수 있는지 확인
+    private int mSelectedCancelReason;
     private String mCancelReasonMessage;
     private Bank mSelectedBank;
 
@@ -84,7 +85,9 @@ public class StayAutoRefundPresenter extends BaseExceptionPresenter<StayAutoRefu
             return false;
         }
 
-        mStayBookingDetail = intent.getParcelableExtra(StayAutoRefundActivity.INTENT_EXTRA_DATA_BOOKING_DETAIL);
+        StayBookingDetailParcel stayBookingDetailParcel = intent.getParcelableExtra(StayAutoRefundActivity.INTENT_EXTRA_DATA_BOOKING_DETAIL);
+        mStayBookingDetail = stayBookingDetailParcel == null ? null : stayBookingDetailParcel.getStayBookingDetail();
+
         mAggregationId = intent.getStringExtra(StayAutoRefundActivity.INTENT_EXTRA_DATA_AGGREGATION_ID);
 
         if (mStayBookingDetail == null)
@@ -107,8 +110,6 @@ public class StayAutoRefundPresenter extends BaseExceptionPresenter<StayAutoRefu
         mSelectedCancelReason = -1;
 
         getViewInterface().setRefundButtonEnabled(false);
-
-        // 시작시에 은행 계좌인 경우에는 은행 리스트를 먼저 받아야한다.
         getViewInterface().setPlaceBookingDetail(mStayBookingDetail);
 
         // 계좌 이체인 경우
@@ -203,7 +204,8 @@ public class StayAutoRefundPresenter extends BaseExceptionPresenter<StayAutoRefu
                     if (bankParcel != null)
                     {
                         setSelectedBankResult(bankParcel.getBank());
-                    } else {
+                    } else
+                    {
                         setSelectedBankResult(null);
                     }
                 }
@@ -401,7 +403,7 @@ public class StayAutoRefundPresenter extends BaseExceptionPresenter<StayAutoRefu
                         }
 
                         addCompositeDisposable(mRefundRemoteImpl.getRefund( //
-                            mStayBookingDetail.placeIndex, mStayBookingDetail.checkInDate //
+                            mStayBookingDetail.stayIndex, mStayBookingDetail.checkInDateTime //
                             , mStayBookingDetail.transactionType, mStayBookingDetail.reservationIndex //
                             , cancelMessage, accountName, accountNumber, selectBankCode) //
                             .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<OldRefund>()
@@ -469,7 +471,7 @@ public class StayAutoRefundPresenter extends BaseExceptionPresenter<StayAutoRefu
                     }
 
                     mAnalytics.onRefundPositiveButtonClick(getActivity(), mStayBookingDetail.roomName //
-                        , mStayBookingDetail.price, mStayBookingDetail.isOverseas, getViewInterface().getCancelReasonText());
+                        , mStayBookingDetail.discountTotal, mStayBookingDetail.overseas, getViewInterface().getCancelReasonText());
                 }
             }, null);
     }
