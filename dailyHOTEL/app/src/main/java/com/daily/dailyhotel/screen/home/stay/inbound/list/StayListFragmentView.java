@@ -407,7 +407,7 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
             });
         }
 
-        fragmentManager.beginTransaction().add(getViewDataBinding().mapLayout.getId(), mStayMapFragment).commit();
+        fragmentManager.beginTransaction().add(getViewDataBinding().mapLayout.getId(), mStayMapFragment).commitAllowingStateLoss();
 
         //        getViewDataBinding().mapLayout.setOnTouchListener(new View.OnTouchListener()
         //        {

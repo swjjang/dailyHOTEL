@@ -107,6 +107,11 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
             return;
         }
 
+        if (mFragmentPagerAdapter != null)
+        {
+            mFragmentPagerAdapter.removeAll();
+        }
+
         getViewDataBinding().categoryTabLayout.setOnTabSelectedListener(null);
 
         // 카테고리가 2보다 작으면 전체 하나만 보여주기 때문에 카테고리 탭을 안보이도록 한다.

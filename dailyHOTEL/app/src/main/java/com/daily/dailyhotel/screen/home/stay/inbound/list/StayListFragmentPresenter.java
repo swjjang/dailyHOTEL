@@ -71,6 +71,10 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
     StayRemoteImpl mStayRemoteImpl;
 
     StayTabPresenter.StayViewModel mStayViewModel;
+    Observer mViewTypeObserver;
+    Observer mStayBookDateTimeObserver;
+    Observer mStayRegionObserver;
+    Observer mStayFilterObserver;
 
     Category mCategory;
     int mPage = PAGE_NONE; // 리스트에서 페이지
@@ -273,6 +277,22 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
         if (Util.supportPreview(getActivity()) == true && getViewInterface().isBlurVisible() == true)
         {
             getViewInterface().setBlurVisible(getActivity(), false);
+        }
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+
+        if (mStayViewModel != null)
+        {
+            mStayViewModel.viewType.removeObserver(mViewTypeObserver);
+            mStayViewModel.stayBookDateTime.removeObserver(mStayBookDateTimeObserver);
+            mStayViewModel.stayRegion.removeObserver(mStayRegionObserver);
+            mStayViewModel.stayFilter.removeObserver(mStayFilterObserver);
+
+            mStayViewModel = null;
         }
     }
 
@@ -791,7 +811,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
         mStayViewModel = ViewModelProviders.of(activity).get(StayTabPresenter.StayViewModel.class);
 
-        mStayViewModel.viewType.observe(activity, new Observer<StayTabPresenter.ViewType>()
+        mViewTypeObserver = new Observer<StayTabPresenter.ViewType>()
         {
             @Override
             public void onChanged(@Nullable StayTabPresenter.ViewType viewType)
@@ -803,9 +823,11 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                     setViewType(viewType);
                 }
             }
-        });
+        };
 
-        mStayViewModel.stayBookDateTime.observe(activity, new Observer<StayBookDateTime>()
+        mStayViewModel.viewType.observe(activity, mViewTypeObserver);
+
+        mStayBookDateTimeObserver = new Observer<StayBookDateTime>()
         {
             @Override
             public void onChanged(@Nullable StayBookDateTime stayBookDateTime)
@@ -819,9 +841,11 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
                 }
             }
-        });
+        };
 
-        mStayViewModel.stayRegion.observe(activity, new Observer<StayRegion>()
+        mStayViewModel.stayBookDateTime.observe(activity, mStayBookDateTimeObserver);
+
+        mStayRegionObserver = new Observer<StayRegion>()
         {
             @Override
             public void onChanged(@Nullable StayRegion stayRegion)
@@ -835,9 +859,11 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
                 }
             }
-        });
+        };
 
-        mStayViewModel.stayFilter.observe(activity, new Observer<StayFilter>()
+        mStayViewModel.stayRegion.observe(activity, mStayRegionObserver);
+
+        mStayFilterObserver = new Observer<StayFilter>()
         {
             @Override
             public void onChanged(@Nullable StayFilter stayFilter)
@@ -851,7 +877,9 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
                 }
             }
-        });
+        };
+
+        mStayViewModel.stayFilter.observe(activity, mStayFilterObserver);
     }
 
     boolean isCurrentFragment()
