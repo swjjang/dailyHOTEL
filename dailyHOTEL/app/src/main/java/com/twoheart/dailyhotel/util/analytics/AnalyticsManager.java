@@ -1624,7 +1624,6 @@ public class AnalyticsManager
         public static final String HOTEL = "hotel";
         public static final String STAY = "stay";
         public static final String GOURMET = "gourmet";
-        public static final String OB= "ob";
         public static final String EVENT = "event";
         public static final String CHANGE_LOCATION = "changelocation";
         public static final String ALL_LOCALE_KR = "전체";
