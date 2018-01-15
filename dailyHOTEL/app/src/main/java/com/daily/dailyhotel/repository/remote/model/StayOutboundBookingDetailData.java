@@ -138,13 +138,12 @@ public class StayOutboundBookingDetailData
         stayOutboundBookingDetail.paymentDate = paymentDate;
         stayOutboundBookingDetail.cancelDateTime = cancelDateTime;
 
-        if (DailyTextUtils.isTextEmpty(reviewStatusType) == false)
-        {
-//            stayOutboundBookingDetail.reviewStatusType = reviewStatusType;
-            stayOutboundBookingDetail.reviewStatusType = PlaceBookingDetail.ReviewStatusType.ADDABLE;
-        } else
+        if (DailyTextUtils.isTextEmpty(reviewStatusType) == true)
         {
             stayOutboundBookingDetail.reviewStatusType = PlaceBookingDetail.ReviewStatusType.NONE;
+        } else
+        {
+            stayOutboundBookingDetail.reviewStatusType = reviewStatusType;
         }
 
         // 리워드
