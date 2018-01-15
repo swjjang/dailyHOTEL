@@ -230,7 +230,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
     {
         getViewInterface().setToolbarTitle(getString(R.string.label_daily_hotel));
 
-
+        getViewInterface().setViewType(ViewType.MAP);
     }
 
     @Override
@@ -566,7 +566,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
                 mStayViewModel.viewType.setValue(ViewType.MAP);
 
-                getViewInterface().setViewType(ViewType.MAP);
+                getViewInterface().setViewType(ViewType.LIST);
                 break;
             }
 
@@ -577,7 +577,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
                 clearCompositeDisposable();
 
-                getViewInterface().setViewType(ViewType.LIST);
+                getViewInterface().setViewType(ViewType.MAP);
 
                 unLockAll();
                 break;
