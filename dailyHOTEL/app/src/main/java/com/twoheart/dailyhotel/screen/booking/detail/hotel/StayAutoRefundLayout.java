@@ -258,6 +258,16 @@ public class StayAutoRefundLayout extends BaseLayout implements Constants, View.
         mSelectReasonCancelTextView.setText(reason);
     }
 
+    public String getCancelReasonText()
+    {
+        if (mSelectReasonCancelTextView == null)
+        {
+            return null;
+        }
+
+        return mSelectReasonCancelTextView.getText().toString();
+    }
+
     public void setBankText(String bankName)
     {
         if (mBankNameTextView == null)

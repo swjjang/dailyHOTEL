@@ -202,6 +202,8 @@ public class ReviewActivity extends BaseActivity
                     break;
 
                 case OB_STAY:
+                    AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
+                        , AnalyticsManager.Action.REVIEW_DETAIL_OB, AnalyticsManager.Label.CLOSE_BUTTON_CLICKED, null);
                     break;
             }
         } catch (Exception e)
@@ -247,6 +249,8 @@ public class ReviewActivity extends BaseActivity
                                 break;
 
                             case OB_STAY:
+                                AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
+                                    , AnalyticsManager.Action.REVIEW_POPUP_OB, AnalyticsManager.Label._YES, null);
                                 break;
                         }
                     } catch (Exception e)
@@ -276,6 +280,8 @@ public class ReviewActivity extends BaseActivity
                                 break;
 
                             case OB_STAY:
+                                AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
+                                    , AnalyticsManager.Action.REVIEW_POPUP_OB, AnalyticsManager.Label._NO, null);
                                 break;
                         }
                     } catch (Exception e)
@@ -434,6 +440,7 @@ public class ReviewActivity extends BaseActivity
                 break;
 
             case OB_STAY:
+                AnalyticsManager.getInstance(ReviewActivity.this).recordScreen(this, AnalyticsManager.Screen.DAILYHOTEL_REVIEWDETAIL_OUTBOUND, null);
                 break;
         }
     }
@@ -665,6 +672,10 @@ public class ReviewActivity extends BaseActivity
                         break;
 
                     case OB_STAY:
+                        params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
+
+                        AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
+                            , AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP, AnalyticsManager.Label.OB_SATISFACTION, params);
                         break;
                 }
 
@@ -753,6 +764,10 @@ public class ReviewActivity extends BaseActivity
                         break;
 
                     case OB_STAY:
+                        params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.OB);
+
+                        AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
+                            , AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP, AnalyticsManager.Label.OB_DISSATISFACTION, params);
                         break;
                 }
 
@@ -795,6 +810,8 @@ public class ReviewActivity extends BaseActivity
                     case OB_STAY:
                         mReviewNetworkController.requestStayOutboundAddReviewInformation(mReview.reserveIdx, jsonObject);
 
+                        AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
+                            , AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP, AnalyticsManager.Label.OB_CLOSE_BUTTON_CLICKED, null);
                         break;
                 }
             }
@@ -821,6 +838,7 @@ public class ReviewActivity extends BaseActivity
                 break;
 
             case OB_STAY:
+                AnalyticsManager.getInstance(ReviewActivity.this).recordScreen(this, AnalyticsManager.Screen.DAILYHOTEL_SATISFACTIONEVALUATION_OUTBOUND, null);
                 break;
         }
 
@@ -893,6 +911,8 @@ public class ReviewActivity extends BaseActivity
                         break;
 
                     case OB_STAY:
+                        AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
+                            , AnalyticsManager.Action.REVIEW_DETAIL_OB, AnalyticsManager.Label.REVIEW_WRITE_CLICKED, null);
                         break;
                 }
             } catch (Exception e)
@@ -1017,6 +1037,8 @@ public class ReviewActivity extends BaseActivity
                     case OB_STAY:
                         mReviewNetworkController.requestStayOutboundAddReviewDetailInformation(mReview.reserveIdx, jsonObject);
 
+                        AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
+                            , AnalyticsManager.Action.REVIEW_DETAIL_OB, AnalyticsManager.Label.SUBMIT, Collections.singletonMap("grade", mReviewGrade));
                         break;
                 }
             } catch (Exception e)

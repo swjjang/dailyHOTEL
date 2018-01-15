@@ -451,7 +451,7 @@ public class AppboyManager extends BaseAnalyticsManager
             }
         } else if (AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION.equalsIgnoreCase(category) == true)
         {
-            if (AnalyticsManager.Action.REVIEW_DETAIL.equalsIgnoreCase(action) == true//
+            if ((AnalyticsManager.Action.REVIEW_DETAIL.equalsIgnoreCase(action) == true || AnalyticsManager.Action.REVIEW_DETAIL_OB.equalsIgnoreCase(action) == true)//
                 && AnalyticsManager.Label.SUBMIT.equalsIgnoreCase(label) == true)
             {
                 String grade = params.get("grade");
@@ -628,6 +628,15 @@ public class AppboyManager extends BaseAnalyticsManager
         } else if (AnalyticsManager.Label.GOURMET_CLOSE_BUTTON_CLICKED.equalsIgnoreCase(label) == true)
         {
             eventName = EventName.GOURMET_SATISFACTION_SURVEY;
+            appboyProperties.addProperty(AnalyticsManager.KeyType.POPUP_STATUS, ValueName.CLOSED);
+        } else if (AnalyticsManager.Label.OB_SATISFACTION.equalsIgnoreCase(label) == true)
+        {
+            appboyProperties.addProperty(AnalyticsManager.KeyType.POPUP_STATUS, ValueName.SATISFIED);
+        } else if (AnalyticsManager.Label.OB_DISSATISFACTION.equalsIgnoreCase(label) == true)
+        {
+            appboyProperties.addProperty(AnalyticsManager.KeyType.POPUP_STATUS, ValueName.DISSATISFIED);
+        } else if (AnalyticsManager.Label.OB_CLOSE_BUTTON_CLICKED.equalsIgnoreCase(label) == true)
+        {
             appboyProperties.addProperty(AnalyticsManager.KeyType.POPUP_STATUS, ValueName.CLOSED);
         }
 
