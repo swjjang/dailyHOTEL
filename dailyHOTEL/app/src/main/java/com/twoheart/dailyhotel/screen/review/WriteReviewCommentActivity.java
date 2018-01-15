@@ -101,6 +101,7 @@ public class WriteReviewCommentActivity extends BaseActivity
                 break;
 
             case OB_STAY:
+                AnalyticsManager.getInstance(this).recordScreen(this, AnalyticsManager.Screen.DAILYHOTEL_REVIEWWRITE_OUTBOUND, null);
                 break;
         }
     }
@@ -154,6 +155,8 @@ public class WriteReviewCommentActivity extends BaseActivity
                                         break;
 
                                     case OB_STAY:
+                                        AnalyticsManager.getInstance(WriteReviewCommentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
+                                            , AnalyticsManager.Action.REVIEW_WRITE_OB, AnalyticsManager.Label.CANCEL_, null);
                                         break;
                                 }
                             } catch (Exception e)
@@ -223,6 +226,8 @@ public class WriteReviewCommentActivity extends BaseActivity
                                         break;
 
                                     case OB_STAY:
+                                        AnalyticsManager.getInstance(WriteReviewCommentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
+                                            , AnalyticsManager.Action.REVIEW_WRITE_OB, AnalyticsManager.Label.CANCEL_, null);
                                         break;
                                 }
                             } catch (Exception e)
@@ -270,6 +275,8 @@ public class WriteReviewCommentActivity extends BaseActivity
                     break;
 
                 case OB_STAY:
+                    AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
+                        , AnalyticsManager.Action.REVIEW_WRITE_OB, AnalyticsManager.Label.BACK, null);
                     break;
             }
         } catch (Exception e)
@@ -306,6 +313,8 @@ public class WriteReviewCommentActivity extends BaseActivity
                         break;
 
                     case OB_STAY:
+                        AnalyticsManager.getInstance(WriteReviewCommentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
+                            , AnalyticsManager.Action.REVIEW_WRITE_OB, AnalyticsManager.Label.CONFIRM, null);
                         break;
                 }
             } catch (Exception e)
