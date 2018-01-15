@@ -199,6 +199,8 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
 
                 DraweeController draweeController = Fresco.newDraweeControllerBuilder()//
                     .setControllerListener(controllerListener).setUri(url).build();
+
+                mPlaceImageView.setController(draweeController);
                 break;
             }
         }
