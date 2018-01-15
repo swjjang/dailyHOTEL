@@ -32,6 +32,7 @@ import com.daily.dailyhotel.entity.ReviewAnswerValue;
 import com.daily.dailyhotel.entity.ReviewItem;
 import com.daily.dailyhotel.entity.ReviewQuestionItem;
 import com.daily.dailyhotel.entity.StayBookingDetail;
+import com.daily.dailyhotel.parcel.StayBookingDetailParcel;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.NavigatorAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
@@ -42,6 +43,7 @@ import com.daily.dailyhotel.repository.remote.RefundRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ReviewRemoteImpl;
 import com.daily.dailyhotel.screen.booking.detail.map.GourmetBookingDetailMapActivity;
 import com.daily.dailyhotel.screen.booking.detail.stay.receipt.StayReceiptActivity;
+import com.daily.dailyhotel.screen.booking.detail.stay.refund.StayAutoRefundActivity;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.call.front.FrontCallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.navigator.NavigatorDialogActivity;
@@ -63,7 +65,6 @@ import com.twoheart.dailyhotel.model.ReviewPickQuestion;
 import com.twoheart.dailyhotel.model.ReviewScoreQuestion;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
-import com.twoheart.dailyhotel.screen.booking.detail.hotel.StayAutoRefundActivity;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
@@ -1056,8 +1057,8 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
             {
                 try
                 {
-                    ((ResolvableApiException)throwable).startResolutionForResult(getActivity(), StayBookingDetailActivity.REQUEST_CODE_SETTING_LOCATION);
-                }catch (Exception e)
+                    ((ResolvableApiException) throwable).startResolutionForResult(getActivity(), StayBookingDetailActivity.REQUEST_CODE_SETTING_LOCATION);
+                } catch (Exception e)
                 {
 
                 }
@@ -1810,7 +1811,8 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
         {
             case RefundPolicy.STATUS_NO_CHARGE_REFUND:
             {
-                Intent intent = StayAutoRefundActivity.newInstance(getActivity(), getStayBookingDetail(mStayBookingDetail, mRefundPolicy), mAggregationId);
+                StayBookingDetailParcel parcel = mStayBookingDetail == null ? null : new StayBookingDetailParcel(mStayBookingDetail);
+                Intent intent = StayAutoRefundActivity.newInstance(getActivity(), parcel, mAggregationId);
                 startActivityForResult(intent, StayBookingDetailActivity.REQUEST_CODE_REFUND);
 
                 mAnalytics.onEventRefundClick(getActivity(), true);
@@ -1831,45 +1833,6 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
                 mAnalytics.onEventRefundClick(getActivity(), false);
                 break;
         }
-    }
-
-    private com.twoheart.dailyhotel.model.StayBookingDetail getStayBookingDetail(StayBookingDetail stayBookingDetail, RefundPolicy refundPolicy)
-    {
-        if (stayBookingDetail == null)
-        {
-            return null;
-        }
-
-        com.twoheart.dailyhotel.model.StayBookingDetail oldBookingDetail = new com.twoheart.dailyhotel.model.StayBookingDetail();
-        oldBookingDetail.setData(stayBookingDetail);
-
-        if (refundPolicy != null)
-        {
-            if (refundPolicy.refundManual == true)
-            {
-                if (com.twoheart.dailyhotel.model.StayBookingDetail.STATUS_NRD.equalsIgnoreCase(refundPolicy.refundPolicy) == true)
-                {
-                    oldBookingDetail.refundPolicy = refundPolicy.refundPolicy;
-                    oldBookingDetail.mRefundComment = refundPolicy.comment;
-                } else
-                {
-                    oldBookingDetail.refundPolicy = com.twoheart.dailyhotel.model.StayBookingDetail.STATUS_SURCHARGE_REFUND;
-                    oldBookingDetail.mRefundComment = refundPolicy.message;
-                }
-            } else
-            {
-                if (com.twoheart.dailyhotel.model.StayBookingDetail.STATUS_NONE.equalsIgnoreCase(refundPolicy.refundPolicy) == true)
-                {
-                    oldBookingDetail.isVisibleRefundPolicy = false;
-                } else
-                {
-                    oldBookingDetail.mRefundComment = refundPolicy.comment;
-                }
-
-                oldBookingDetail.refundPolicy = refundPolicy.refundPolicy;
-            }
-        }
-        return oldBookingDetail;
     }
 
     @Override
