@@ -27,9 +27,9 @@ public abstract class BaseFragmentExceptionPresenter<T1 extends BaseFragment, T2
 
     protected abstract void onRefresh(boolean showProgress);
 
-    public BaseFragmentExceptionPresenter(@NonNull T1 activity)
+    public BaseFragmentExceptionPresenter(@NonNull T1 fragment)
     {
-        super(activity);
+        super(fragment);
     }
 
     protected void onHandleError(Throwable throwable)

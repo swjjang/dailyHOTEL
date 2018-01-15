@@ -186,6 +186,8 @@ public class DailyFloatingActionView extends ConstraintLayout
             return;
         }
 
+        mViewOption = viewOption;
+
         switch (viewOption)
         {
             case LIST:

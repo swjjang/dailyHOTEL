@@ -308,8 +308,9 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
             } else
             {
                 getFragment().getFragmentEventListener().setFloatingActionViewVisible(true);
-                getFragment().getFragmentEventListener().setFloatingActionViewTypeMapEnabled(false);
             }
+
+            getFragment().getFragmentEventListener().setFloatingActionViewTypeMapEnabled(false);
         }
     }
 
