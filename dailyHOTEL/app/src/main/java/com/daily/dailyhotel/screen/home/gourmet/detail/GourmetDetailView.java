@@ -58,6 +58,7 @@ import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityGourmetDetailDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding;
+import com.twoheart.dailyhotel.databinding.DialogDailyAwardsDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogShareDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailAmenitiesDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailBenefitContentBinding;
@@ -137,6 +138,8 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         void onVisitTimeClick(String visitTime);
 
         void onBookingClick();
+
+        void onTrueAwardsClick();
     }
 
     public GourmetDetailView(BaseActivity baseActivity, GourmetDetailView.OnEventListener listener)
@@ -255,6 +258,9 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
         // 트루 리뷰
         setTrueReviewView(gourmetDetail.ratingShow, gourmetDetail.ratingValue, gourmetDetail.ratingPersons, trueReviewCount);
+
+        // 트루 어워드
+        setTrueAwardsView("테스트", "테스트입니다");
 
         // 방문일
         setVisitDateView(gourmetBookDateTime.getVisitDateTime("yyyy.MM.dd(EEE)"));
@@ -1041,6 +1047,38 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
     }
 
     @Override
+    public void showTrueAwardsDialog(String imageUrl, String awardsTitle, String awardsDescription, Dialog.OnDismissListener onDismissListener)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        DialogDailyAwardsDataBinding dataBinding = DataBindingUtil.inflate( //
+            LayoutInflater.from(getContext()), R.layout.dialog_daily_awards_data, null, false);
+
+
+        dataBinding.awardImageView.setBackgroundResource(R.color.transparent);
+        dataBinding.awardImageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_INSIDE);
+        dataBinding.awardImageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder); // TODO : 기본 이미지 변경 필요
+        dataBinding.awardImageView.setImageURI(imageUrl);
+
+        dataBinding.awardTitleTextView.setText(awardsTitle);
+        dataBinding.awardDescriptionTextView.setText(awardsDescription);
+
+        dataBinding.confirmTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                hideSimpleDialog();
+            }
+        });
+
+        showSimpleDialog(dataBinding.getRoot(), null, onDismissListener, true);
+    }
+
+    @Override
     public Observable<Boolean> showWishView(boolean myWish)
     {
         if (getViewDataBinding() == null)
@@ -1313,6 +1351,38 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
                 trueReviewView.setTrueReviewCountVisible(false);
             }
         }
+    }
+
+    private void setTrueAwardsView(String awardsName, String awardsCategoryText)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (DailyTextUtils.isTextEmpty(awardsName) == true)
+        {
+            getViewDataBinding().trueAwardsTopLineView.setVisibility(View.GONE);
+            getViewDataBinding().trueAwardsView.setVisibility(View.GONE);
+            getViewDataBinding().trueAwardsView.setOnClickListener(null);
+            return;
+        }
+
+        getViewDataBinding().trueAwardsTopLineView.setVisibility(View.VISIBLE);
+        getViewDataBinding().trueAwardsView.setVisibility(View.VISIBLE);
+        getViewDataBinding().trueAwardsView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                getEventListener().onTrueAwardsClick();
+            }
+        });
+
+        getViewDataBinding().trueAwardsView.setAwardsNameText(awardsName);
+
+        getViewDataBinding().trueAwardsView.setAwardsCategoryText(awardsCategoryText);
+        getViewDataBinding().trueAwardsView.setAwardsCategoryVisible(DailyTextUtils.isTextEmpty(awardsCategoryText) == false);
     }
 
     /**

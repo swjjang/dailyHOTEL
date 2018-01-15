@@ -59,4 +59,6 @@ public interface GourmetDetailViewInterface extends BaseDialogViewInterface
     void setToolbarCartMenusCount(int count);
 
     void performVisitTimeClick(String time);
+
+    void showTrueAwardsDialog(String imageUrl, String awardsTitle, String awardsDescription, Dialog.OnDismissListener onDismissListener);
 }

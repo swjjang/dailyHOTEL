@@ -1378,6 +1378,24 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStaticUrlDailyReward()), StayOutboundDetailActivity.REQUEST_CODE_WEB);
     }
 
+    @Override
+    public void onTrueAwardsClick()
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        getViewInterface().showTrueAwardsDialog("", "", "", new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface)
+            {
+                unLockAll();
+            }
+        });
+    }
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     void startStayOutboundDetail(View view, StayOutbound stayOutbound, android.support.v4.util.Pair[] pairs)
     {
