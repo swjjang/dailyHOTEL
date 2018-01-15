@@ -1639,6 +1639,7 @@ public class AnalyticsManager
         public static final String KAKAO = "kakao";
         public static final String MESSAGE = "message";
         public static final String OVERSEAS = "overseas";
+        public static final String OUTBOUND = "outbound";
         public static final String DOMESTIC = "domestic";
         public static final String PENSION = "pension";
         public static final String LINK_COPY = "link_copy";

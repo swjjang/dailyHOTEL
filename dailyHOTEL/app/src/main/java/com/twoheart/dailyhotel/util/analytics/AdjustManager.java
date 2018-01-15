@@ -541,6 +541,12 @@ public class AdjustManager extends BaseAnalyticsManager
                     event.addPartnerParameter(Key.PLACE_NAME, placeName);
                     event.addPartnerParameter(AnalyticsManager.KeyType.SATISFACTION_SURVEY, satisfaction);
                     event.addPartnerParameter(Key.SERVICE, placeType);
+
+                    if (AnalyticsManager.Label.OB_SATISFACTION.equalsIgnoreCase(label) == true//
+                        || AnalyticsManager.Label.OB_DISSATISFACTION.equalsIgnoreCase(label) == true)
+                    {
+                        event.addPartnerParameter(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.OUTBOUND);
+                    }
                 }
             }
         } else if (AnalyticsManager.Category.SEARCH_.equalsIgnoreCase(category) == true)
