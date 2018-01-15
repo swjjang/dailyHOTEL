@@ -700,8 +700,11 @@ public class AnalyticsManager
 
         // Review
         public static final String DAILYHOTEL_SATISFACTIONEVALUATION = "DailyHotel_SatisfactionEvaluation";
+        public static final String DAILYHOTEL_SATISFACTIONEVALUATION_OUTBOUND = "DailyHotel_SatisfactionEvaluation_outbound";
         public static final String DAILYHOTEL_REVIEWDETAIL = "DailyHotel_ReviewDetail";
+        public static final String DAILYHOTEL_REVIEWDETAIL_OUTBOUND = "ailyHotel_ReviewDetail_outbound";
         public static final String DAILYHOTEL_REVIEWWRITE = "DailyHotel_ReviewWrite";
+        public static final String DAILYHOTEL_REVIEWWRITE_OUTBOUND = "DailyHotel_ReviewWrite_outbound";
         public static final String DAILYHOTEL_REVIEWEDIT = "DailyHotel_ReviewEdit";
         public static final String DAILYGOURMET_SATISFACTIONEVALUATION = "DailyGourmet_SatisfactionEvaluation";
         public static final String DAILYGOURMET_REVIEWDETAIL = "DailyGourmet_ReviewDetail";
@@ -916,8 +919,11 @@ public class AnalyticsManager
 
         // Review
         public static final String REVIEW_DETAIL = "ReviewDetail";
+        public static final String REVIEW_DETAIL_OB = "ReviewDetail_ob";
         public static final String REVIEW_POPUP = "ReviewPopup";
+        public static final String REVIEW_POPUP_OB = "ReviewPopup_ob";
         public static final String REVIEW_WRITE = "ReviewWrite";
+        public static final String REVIEW_WRITE_OB = "ReviewWrite_ob";
 
         // Detail Image List
         public static final String HOTEL_IMAGE_CLICKED = "HotelImageClicked";
@@ -1268,6 +1274,10 @@ public class AnalyticsManager
         public static final String GOURMET_SATISFACTION = "GourmetSatisfaction";
         public static final String GOURMET_DISSATISFACTION = "GourmetDissatisfaction";
         public static final String GOURMET_CLOSE_BUTTON_CLICKED = "GourmetCloseButtonClicked";
+        public static final String OB_SATISFACTION = "ob_satisfaction";
+        public static final String OB_DISSATISFACTION = "ob_dissatisfaction";
+        public static final String OB_CLOSE_BUTTON_CLICKED = "ob_close_button_clicked";
+
         //
         //        public 7static final String MINUS_BUTTON_CLICKED = "MinusButtonClicked";
         //        public static final String PLUS_BUTTON_CLICKED = "PlusButtonClicked";
@@ -1614,6 +1624,7 @@ public class AnalyticsManager
         public static final String HOTEL = "hotel";
         public static final String STAY = "stay";
         public static final String GOURMET = "gourmet";
+        public static final String OB= "ob";
         public static final String EVENT = "event";
         public static final String CHANGE_LOCATION = "changelocation";
         public static final String ALL_LOCALE_KR = "전체";

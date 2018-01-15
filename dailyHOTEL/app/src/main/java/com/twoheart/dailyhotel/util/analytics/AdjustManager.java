@@ -527,9 +527,11 @@ public class AdjustManager extends BaseAnalyticsManager
             if (AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP.equalsIgnoreCase(action) == true)
             {
                 if (AnalyticsManager.Label.HOTEL_SATISFACTION.equalsIgnoreCase(label) == true //
-                    || AnalyticsManager.Label.GOURMET_SATISFACTION.equalsIgnoreCase(label) == true //
                     || AnalyticsManager.Label.HOTEL_DISSATISFACTION.equalsIgnoreCase(label) == true //
-                    || AnalyticsManager.Label.GOURMET_DISSATISFACTION.equalsIgnoreCase(label) == true)
+                    || AnalyticsManager.Label.GOURMET_SATISFACTION.equalsIgnoreCase(label) == true //
+                    || AnalyticsManager.Label.GOURMET_DISSATISFACTION.equalsIgnoreCase(label) == true//
+                    || AnalyticsManager.Label.OB_SATISFACTION.equalsIgnoreCase(label) == true//
+                    || AnalyticsManager.Label.OB_DISSATISFACTION.equalsIgnoreCase(label) == true)
                 {
                     String placeName = params.get(AnalyticsManager.KeyType.NAME);
                     String satisfaction = params.get(AnalyticsManager.KeyType.SATISFACTION_SURVEY);
