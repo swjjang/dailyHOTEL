@@ -539,8 +539,8 @@ public class StayOutboundBookingCancelDetailPresenter //
             int nights = DailyCalendar.compareDateDay(DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkOutDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT)//
                 , DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", DailyCalendar.ISO_8601_FORMAT));
 
-            String checkInDay = DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkInDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
-            String checkOutDay = DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkOutDate, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
+            String checkInDay = DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkInDate, "yyyy-MM-dd", "yyyy.MM.dd");
+            String checkOutDay = DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.checkOutDate, "yyyy-MM-dd", "yyyy.MM.dd");
 
             KakaoLinkManager.newInstance(getActivity()).shareBookingCancelStay(userName //
                 , mStayOutboundBookingDetail.name //
