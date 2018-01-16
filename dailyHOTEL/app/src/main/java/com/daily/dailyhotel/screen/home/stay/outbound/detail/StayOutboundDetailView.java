@@ -927,7 +927,6 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
             return;
         }
 
-        getViewDataBinding().nestedScrollView.smoothScrollTo(0, getViewDataBinding().nestedScrollView.getScrollY());
         getViewDataBinding().nestedScrollView.scrollTo(0, 0);
     }
 

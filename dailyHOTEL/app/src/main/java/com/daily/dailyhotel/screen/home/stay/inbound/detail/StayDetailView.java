@@ -908,7 +908,6 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
             return;
         }
 
-        getViewDataBinding().nestedScrollView.smoothScrollTo(0, getViewDataBinding().nestedScrollView.getScrollY());
         getViewDataBinding().nestedScrollView.scrollTo(0, 0);
     }
 
