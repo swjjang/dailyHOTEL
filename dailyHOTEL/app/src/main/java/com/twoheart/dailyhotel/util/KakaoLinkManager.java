@@ -61,10 +61,9 @@ public class KakaoLinkManager implements Constants
     {
         try
         {
-            name = Util.getShareName(name);
-            if (DailyTextUtils.isTextEmpty(name) == true)
+            if (DailyTextUtils.isTextEmpty(name) == true || name.length() > 5)
             {
-                name = mContext.getString(R.string.label_friend);
+                name = mContext.getString(R.string.label_friend_prefix);
             }
 
             String checkInDay = stayBookingDay.getCheckInDay("yyyyMMdd");
@@ -125,10 +124,9 @@ public class KakaoLinkManager implements Constants
     {
         try
         {
-            name = Util.getShareName(name);
-            if (DailyTextUtils.isTextEmpty(name) == true)
+            if (DailyTextUtils.isTextEmpty(name) == true || name.length() > 5)
             {
-                name = mContext.getString(R.string.label_friend);
+                name = mContext.getString(R.string.label_friend_prefix);
             }
 
             String checkInDay = stayBookDateTime.getCheckInDateTime("yyyyMMdd");
@@ -193,10 +191,9 @@ public class KakaoLinkManager implements Constants
 
         try
         {
-            name = Util.getShareName(name);
-            if (DailyTextUtils.isTextEmpty(name) == true)
+            if (DailyTextUtils.isTextEmpty(name) == true || name.length() > 5)
             {
-                name = mContext.getString(R.string.label_friend);
+                name = mContext.getString(R.string.label_friend_prefix);
             }
 
             String checkInDay = stayBookDateTime.getCheckInDateTime("yyyyMMdd");
@@ -257,8 +254,7 @@ public class KakaoLinkManager implements Constants
     {
         try
         {
-            name = Util.getShareName(name);
-            if (DailyTextUtils.isTextEmpty(name) == true)
+            if (DailyTextUtils.isTextEmpty(name) == true || name.length() > 5)
             {
                 name = mContext.getString(R.string.label_share_customer);
             }
@@ -320,8 +316,7 @@ public class KakaoLinkManager implements Constants
     {
         try
         {
-            name = Util.getShareName(name);
-            if (DailyTextUtils.isTextEmpty(name) == true)
+            if (DailyTextUtils.isTextEmpty(name) == true || name.length() > 5)
             {
                 name = mContext.getString(R.string.label_share_customer);
             }
@@ -382,8 +377,7 @@ public class KakaoLinkManager implements Constants
     {
         try
         {
-            name = Util.getShareName(name);
-            if (DailyTextUtils.isTextEmpty(name) == true)
+            if (DailyTextUtils.isTextEmpty(name) == true || name.length() > 5)
             {
                 name = mContext.getString(R.string.label_share_customer);
             }
@@ -437,10 +431,9 @@ public class KakaoLinkManager implements Constants
     {
         try
         {
-            name = Util.getShareName(name);
-            if (DailyTextUtils.isTextEmpty(name) == true)
+            if (DailyTextUtils.isTextEmpty(name) == true || name.length() > 5)
             {
-                name = mContext.getString(R.string.label_friend);
+                name = mContext.getString(R.string.label_friend_prefix);
             }
 
             String date = gourmetBookingDay.getVisitDay("yyyyMMdd");
@@ -501,10 +494,9 @@ public class KakaoLinkManager implements Constants
     {
         try
         {
-            name = Util.getShareName(name);
-            if (DailyTextUtils.isTextEmpty(name) == true)
+            if (DailyTextUtils.isTextEmpty(name) == true || name.length() > 5)
             {
-                name = mContext.getString(R.string.label_friend);
+                name = mContext.getString(R.string.label_friend_prefix);
             }
 
             String date = gourmetBookDateTime.getVisitDateTime("yyyyMMdd");
@@ -564,8 +556,7 @@ public class KakaoLinkManager implements Constants
     {
         try
         {
-            name = Util.getShareName(name);
-            if (DailyTextUtils.isTextEmpty(name) == true)
+            if (DailyTextUtils.isTextEmpty(name) == true || name.length() > 5)
             {
                 name = mContext.getString(R.string.label_share_customer);
             }
@@ -627,8 +618,7 @@ public class KakaoLinkManager implements Constants
     {
         try
         {
-            name = Util.getShareName(name);
-            if (DailyTextUtils.isTextEmpty(name) == true)
+            if (DailyTextUtils.isTextEmpty(name) == true || name.length() > 5)
             {
                 name = mContext.getString(R.string.label_share_customer);
             }
