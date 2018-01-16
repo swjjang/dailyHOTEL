@@ -756,8 +756,8 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
             return;
         }
 
-        getViewDataBinding().nestedScrollView.smoothScrollTo(0, getViewDataBinding().nestedScrollView.getScrollY());
         getViewDataBinding().nestedScrollView.scrollTo(0, 0);
+        getViewDataBinding().nestedScrollView.smoothScrollTo(0, 0);
     }
 
     @Override
