@@ -446,7 +446,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
         getViewInterface().setPerson(mStayFilter.person, StayFilter.PERSON_COUNT_OF_MAX, StayFilter.PERSON_COUNT_OF_MIN);
         getViewInterface().setBedTypeCheck(mStayFilter.flagBedTypeFilters);
         getViewInterface().setAmenitiesCheck(mStayFilter.flagAmenitiesFilters);
-        getViewInterface().setAmenitiesCheck(mStayFilter.flagRoomAmenitiesFilters);
+        getViewInterface().setRoomAmenitiesCheck(mStayFilter.flagRoomAmenitiesFilters);
     }
 
     void onRefresh(int delay)
