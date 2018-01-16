@@ -1648,28 +1648,4 @@ public class Util implements Constants
 
         return VERIFY_USER;
     }
-
-    public static String getShareName(String name)
-    {
-        String shareName = null;
-
-        if (DailyTextUtils.isTextEmpty(name) == false)
-        {
-            Pattern pattern = Pattern.compile("^[0-9가-힣ㄱ-ㅎㅏ-ㅣ\\s\u318D\u119E\u11A2\u2022\u2025\u00B7\uFE55]+$");
-            int nameMaxLength = pattern.matcher(name).matches() == false ? 5 : 3;
-
-            // 공유 이름이 최대길이 이하일때는 shareName;
-            if (name.length() <= nameMaxLength)
-            {
-                shareName = name;
-            }
-        }
-//
-//        if (DailyTextUtils.isTextEmpty(shareName) == true)
-//        {
-//            shareName = defaultName;
-//        }
-
-        return shareName;
-    }
 }
