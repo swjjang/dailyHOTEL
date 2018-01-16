@@ -41,6 +41,7 @@
     <string name="label_hotel_reservation_phone">스테이 전화 문의(예약 관련)</string>
     <string name="label_hotel_front_phone">스테이 전화 문의(이용 관련)</string>
     <string name="label_friend">친구</string>
+    <string name="label_friend_prefix">친구가</string>
     <string name="label_share_customer">고객</string>
     <string name="label_domestic">국내</string>
     <string name="label_global">해외</string>
