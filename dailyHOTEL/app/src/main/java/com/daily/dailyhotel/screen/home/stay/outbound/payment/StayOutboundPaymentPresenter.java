@@ -356,7 +356,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             mPaymentType = DailyBookingPaymentTypeView.PaymentType.valueOf(savedInstanceState.getString("paymentType"));
         } catch (Exception e)
         {
-            mPaymentType = DailyBookingPaymentTypeView.PaymentType.CARD;
+            mPaymentType = DailyBookingPaymentTypeView.PaymentType.EASY_CARD;
         }
 
         mSaleType = savedInstanceState.getInt("saleType", NONE);
