@@ -227,7 +227,7 @@ dependencies {
     implementation 'com.kakao.sdk:usermgmt:1.7.1'
     implementation 'com.kakao.sdk:kakaolink:1.7.1'
 
-    implementation 'com.appboy:android-sdk-ui:2.2.+'
+    implementation 'com.appboy:android-sdk-ui:2.1.+'
 
     implementation 'com.adjust.sdk:adjust-android:4.11.4'
 
