@@ -43,7 +43,7 @@ public class ReviewRemoteImpl extends BaseRemoteImpl implements ReviewInterface
     public Observable<Review> getStayReview(int reservationIndex)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v4/review/hotel/{reserveIdx}/question"//
-            : "NjEkMTI2JDE2JDkyJDgzJDEyNyQ2MCQxMTQkNzMkOTkkMzEkMTkkMTEzJDY2JDI2JDgzJA==$OThEOEU5OTFDOUExRNTJA0NEYyJNkE4MkZMzQkRFRTcwNEQ3MEUyNTM4MjhFRkFOCNAXkYwMzM3OUGYxRDcGxQURDQSkZEMTA4OUXM4QQjRGOUUyMjc5MRDREMVENDMjQ1NEFFMTJCCRMkQx$";
+            : "MjckOTQkNDMkNTQkNjUkNjUkMTMxJDk3JDQzJDEwOCQ4NiQxMjgkODIkNzkkMjEkMTEk$RkM5NTRBODRMBMTU1NDIxQYURBMjNZBNkMzMzQ2NEJGQkEQZBMEMzQTY5CMjczOERCMTXLlCRDE0NUM0QWjFGXNTVCEMDI5OEI3MDY0IQQzAwNTkwFMEJBQjdBRjlDRUU4OTYA0NUFFONEY1$";
 
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{reserveIdx}", Integer.toString(reservationIndex));
@@ -75,7 +75,7 @@ public class ReviewRemoteImpl extends BaseRemoteImpl implements ReviewInterface
     public Observable<Review> getGourmetReview(int reservationIndex)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v4/review/gourmet/{reserveIdx}/question"//
-            : "NjEkMTI2JDE2JDkyJDgzJDEyNyQ2MCQxMTQkNzMkOTkkMzEkMTkkMTEzJDY2JDI2JDgzJA==$OThEOEU5OTFDOUExRNTJA0NEYyJNkE4MkZMzQkRFRTcwNEQ3MEUyNTM4MjhFRkFOCNAXkYwMzM3OUGYxRDcGxQURDQSkZEMTA4OUXM4QQjRGOUUyMjc5MRDREMVENDMjQ1NEFFMTJCCRMkQx$";
+            : "MTAwJDkwJDY0JDEyMyQxJDU0JDckMTQkMTEkNzUkMzEkNDQkNDAkMjQkMTMzJDM5JA==$NLzY4RDJkzNAkJDAMDYzNEI4JMTI3QUVOGNzA5RTjMKwQTUI2RTJBMzBCRjc1RGjY2RTczN0VDLNTc1QWzU4RUZGQUM4NDRCMkQzOTJM2MTlDQ0VEAMjdFMEJENDEwMUREMjM1NZMTczOUJG$";
 
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{reserveIdx}", Integer.toString(reservationIndex));
@@ -114,7 +114,7 @@ public class ReviewRemoteImpl extends BaseRemoteImpl implements ReviewInterface
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{reserveIdx}", Integer.toString(reservationIndex));
 
-        return mDailyMobileService.getReview(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)) //
+        return mDailyMobileService.getStayOutboundReview(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams)) //
             .subscribeOn(Schedulers.io()).map((reviewDataBaseDto) ->
             {
                 Review review;
