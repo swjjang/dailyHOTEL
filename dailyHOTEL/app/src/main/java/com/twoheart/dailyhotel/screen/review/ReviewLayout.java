@@ -12,13 +12,14 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.widget.NestedScrollView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
+import com.daily.base.widget.DailyScrollView;
 import com.daily.dailyhotel.entity.ImageMap;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.BaseControllerListener;
@@ -37,12 +38,12 @@ import com.twoheart.dailyhotel.util.Util;
 
 import java.io.IOException;
 
-public class ReviewLayout extends BaseLayout implements View.OnClickListener, NestedScrollView.OnScrollChangeListener
+public class ReviewLayout extends BaseLayout implements View.OnClickListener, DailyScrollView.OnScrollChangedListener
 {
     private static final int REQUEST_START_ANIMATION = 1;
 
     private View mToolbar, mImageDimView;
-    private NestedScrollView mNestedScrollView;
+    private DailyScrollView mScrollView;
     private ViewGroup mScrollLayout;
     private SimpleDraweeView mPlaceImageView;
     private TextView mPlaceNameTextView, mPeriodTextView, mThankyouTextView;
@@ -88,8 +89,8 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
     {
         initToolbar(view);
 
-        mNestedScrollView = view.findViewById(R.id.scrollView);
-        mScrollLayout = mNestedScrollView.findViewById(R.id.scrollLayout);
+        mScrollView = view.findViewById(R.id.scrollView);
+        mScrollLayout = mScrollView.findViewById(R.id.scrollLayout);
 
         mImageDimView = view.findViewById(R.id.imageDimView);
         mImageDimView.setAlpha(0.0f);
@@ -104,7 +105,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
         mPeriodTextView = view.findViewById(R.id.periodTextView);
         mThankyouTextView = view.findViewById(R.id.thankyouTextView);
 
-        mNestedScrollView.setOnScrollChangeListener(this);
+        mScrollView.setOnScrollChangedListener(this);
 
         mConfirmTextView = view.findViewById(R.id.confirmTextView);
         mConfirmTextView.setOnClickListener(this);
@@ -275,7 +276,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
                 int cardWidth = ScreenUtils.getScreenWidth(mContext) - ScreenUtils.dpToPx(mContext, 30);
                 final int cardHeight = ScreenUtils.getRatioHeightType4x3(cardWidth);
 
-                mNestedScrollView.smoothScrollTo(0, childReviewCardLayout.getTop() - cardHeight / 2);
+                mScrollView.smoothScrollTo(0, childReviewCardLayout.getTop() - cardHeight / 2);
 
                 hasNext = true;
                 break;
@@ -293,7 +294,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
                     int cardWidth = ScreenUtils.getScreenWidth(mContext) - ScreenUtils.dpToPx(mContext, 30);
                     final int cardHeight = ScreenUtils.getRatioHeightType4x3(cardWidth);
 
-                    mNestedScrollView.smoothScrollTo(0, childReviewCardLayout.getTop() - cardHeight / 2);
+                    mScrollView.smoothScrollTo(0, childReviewCardLayout.getTop() - cardHeight / 2);
 
                     hasNext = true;
                     break;
@@ -452,7 +453,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
             return;
         }
 
-        mNestedScrollView.post(new Runnable()
+        mScrollView.post(new Runnable()
         {
             @Override
             public void run()
@@ -590,7 +591,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
     }
 
     @Override
-    public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY)
+    public void onScrollChanged(ScrollView scrollView, int scrollX, int scrollY, int oldl, int oldt)
     {
         mHandler.removeMessages(REQUEST_START_ANIMATION);
         pauseAnimation();
@@ -671,8 +672,8 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Ne
      */
     void animationInVisible()
     {
-        int scrollY = mNestedScrollView.getScrollY();
-        int height = scrollY + mNestedScrollView.getHeight();
+        int scrollY = mScrollView.getScrollY();
+        int height = scrollY + mScrollView.getHeight();
 
         int count = mScrollLayout.getChildCount();
 
