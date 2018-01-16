@@ -764,7 +764,7 @@ public class ReviewActivity extends BaseActivity
                         break;
 
                     case OB_STAY:
-                        params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.OB);
+                        params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
 
                         AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
                             , AnalyticsManager.Action.SATISFACTION_EVALUATION_POPPEDUP, AnalyticsManager.Label.OB_DISSATISFACTION, params);
