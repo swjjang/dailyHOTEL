@@ -350,7 +350,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             mPaymentType = DailyBookingPaymentTypeView.PaymentType.valueOf(savedInstanceState.getString("paymentType"));
         } catch (Exception e)
         {
-            mPaymentType = DailyBookingPaymentTypeView.PaymentType.CARD;
+            mPaymentType = DailyBookingPaymentTypeView.PaymentType.EASY_CARD;
         }
 
         mSaleType = savedInstanceState.getInt("saleType", NONE);
@@ -1431,6 +1431,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
             if (paymentPrice <= 0)
             {
+                setPaymentType(DailyBookingPaymentTypeView.PaymentType.FREE);
                 getViewInterface().setPaymentType(DailyBookingPaymentTypeView.PaymentType.FREE);
             } else
             {
@@ -1488,19 +1489,13 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 //                    vBankEnabled = false;
                 //                }
 
-                if (paymentPrice <= 0)
+                if (paymentPrice > 0 && paymentPrice < CARD_MIN_PRICE)
                 {
-                    getViewInterface().setPaymentType(DailyBookingPaymentTypeView.PaymentType.FREE);
-                } else
+                    easyCardEnabled = false;
+                    cardEnabled = false;
+                } else if (paymentPrice > PHONE_MAX_PRICE)
                 {
-                    if (paymentPrice > 0 && paymentPrice < CARD_MIN_PRICE)
-                    {
-                        easyCardEnabled = false;
-                        cardEnabled = false;
-                    } else if (paymentPrice > PHONE_MAX_PRICE)
-                    {
-                        phoneEnabled = false;
-                    }
+                    phoneEnabled = false;
                 }
 
                 getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.EASY_CARD, easyCardEnabled);
@@ -1508,33 +1503,53 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.PHONE, phoneEnabled);
                 //                getViewInterface().setPaymentTypeEnabled(DailyBookingPaymentTypeView.PaymentType.VBANK, vBankEnabled);
 
-                if (easyCardEnabled == true)
+                if (mPaymentType == DailyBookingPaymentTypeView.PaymentType.EASY_CARD && easyCardEnabled == true)
                 {
                     setPaymentType(DailyBookingPaymentTypeView.PaymentType.EASY_CARD);
                     getViewInterface().setPaymentType(DailyBookingPaymentTypeView.PaymentType.EASY_CARD);
-                } else if (cardEnabled == true)
+                } else if (mPaymentType == DailyBookingPaymentTypeView.PaymentType.CARD && cardEnabled == true)
                 {
                     setPaymentType(DailyBookingPaymentTypeView.PaymentType.CARD);
                     getViewInterface().setPaymentType(DailyBookingPaymentTypeView.PaymentType.CARD);
-                } else if (phoneEnabled == true)
+                } else if (mPaymentType == DailyBookingPaymentTypeView.PaymentType.PHONE && phoneEnabled == true)
                 {
                     setPaymentType(DailyBookingPaymentTypeView.PaymentType.PHONE);
                     getViewInterface().setPaymentType(DailyBookingPaymentTypeView.PaymentType.PHONE);
-                    //                }
-                    //                else if (vBankEnabled == true)
+                    //                } else if (mPaymentType == DailyBookingPaymentTypeView.PaymentType.VBANK && vBankEnabled == true)
                     //                {
+                    //                    setPaymentType(DailyBookingPaymentTypeView.PaymentType.VBANK);
                     //                    getViewInterface().setPaymentType(DailyBookingPaymentTypeView.PaymentType.VBANK);
                 } else
                 {
-                    getViewInterface().showSimpleDialog(null, getString(R.string.message_payment_none_payment_type)//
-                        , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
-                        {
-                            @Override
-                            public void onDismiss(DialogInterface dialog)
+                    if (easyCardEnabled == true)
+                    {
+                        setPaymentType(DailyBookingPaymentTypeView.PaymentType.EASY_CARD);
+                        getViewInterface().setPaymentType(DailyBookingPaymentTypeView.PaymentType.EASY_CARD);
+                    } else if (cardEnabled == true)
+                    {
+                        setPaymentType(DailyBookingPaymentTypeView.PaymentType.CARD);
+                        getViewInterface().setPaymentType(DailyBookingPaymentTypeView.PaymentType.CARD);
+                    } else if (phoneEnabled == true)
+                    {
+                        setPaymentType(DailyBookingPaymentTypeView.PaymentType.PHONE);
+                        getViewInterface().setPaymentType(DailyBookingPaymentTypeView.PaymentType.PHONE);
+                        //                }
+                        //                else if (vBankEnabled == true)
+                        //                {
+                        //                    setPaymentType(DailyBookingPaymentTypeView.PaymentType.VBANK);
+                        //                    getViewInterface().setPaymentType(DailyBookingPaymentTypeView.PaymentType.VBANK);
+                    } else
+                    {
+                        getViewInterface().showSimpleDialog(null, getString(R.string.message_payment_none_payment_type)//
+                            , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
                             {
-                                finish();
-                            }
-                        });
+                                @Override
+                                public void onDismiss(DialogInterface dialog)
+                                {
+                                    finish();
+                                }
+                            });
+                    }
                 }
             }
         } catch (Exception e)
