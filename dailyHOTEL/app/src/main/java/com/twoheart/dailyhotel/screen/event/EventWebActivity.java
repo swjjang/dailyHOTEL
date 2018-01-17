@@ -21,6 +21,7 @@ import com.daily.dailyhotel.entity.Suggest;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
+import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.StayOutboundListActivity;
 import com.daily.dailyhotel.screen.mydaily.reward.RewardActivity;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
@@ -341,62 +342,11 @@ public class EventWebActivity extends WebViewActivity implements Constants
         {
             if (dailyDeepLink.isExternalDeepLink() == true)
             {
-                //                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
-                //
-                //                // 신규 타입의 화면이동
-                //                int hotelIndex = Integer.parseInt(externalDeepLink.getIndex());
-                //                int nights = 1;
-                //
-                //                try
-                //                {
-                //                    nights = Integer.parseInt(externalDeepLink.getNights());
-                //                } catch (Exception e)
-                //                {
-                //                    ExLog.d(e.toString());
-                //                } finally
-                //                {
-                //                    if (nights <= 0)
-                //                    {
-                //                        nights = 1;
-                //                    }
-                //                }
-                //
-                //                String date = externalDeepLink.getDate();
-                //                int datePlus = externalDeepLink.getDatePlus();
-                //                boolean isShowCalendar = externalDeepLink.isShowCalendar();
-                //                boolean isShowVR = externalDeepLink.isShowVR();
-                //                int ticketIndex = externalDeepLink.getOpenTicketIndex();
-                //                boolean overseas = externalDeepLink.getIsOverseas();
-                //
-                //                StayBookingDay stayBookingDay = new StayBookingDay();
-                //
-                //                if (DailyTextUtils.isTextEmpty(date) == false)
-                //                {
-                //                    Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
-                //                    stayBookingDay.setCheckInDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
-                //                } else if (datePlus >= 0)
-                //                {
-                //                    stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime, datePlus);
-                //                } else
-                //                {
-                //                    stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime);
-                //                }
-                //
-                //                stayBookingDay.setCheckOutDay(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), nights);
-
-                //                Intent intent = StayDetailActivity.newInstance(EventWebActivity.this, stayBookingDay, overseas, hotelIndex, ticketIndex, isShowCalendar, isShowVR, false);
-                //
                 Intent intent = StayDetailActivity.newInstance(EventWebActivity.this, dailyDeepLink.getDeepLink());
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAY_DETAIL);
 
                 overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-                //
-                //                if (isShowCalendar == true)
-                //                {
-                //                    AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-                //                        , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.Label.EVENT, null);
-                //                }
             } else
             {
 
@@ -424,44 +374,11 @@ public class EventWebActivity extends WebViewActivity implements Constants
         {
             if (dailyDeepLink.isExternalDeepLink() == true)
             {
-                //                DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
-                //
-                //                int gourmetIndex = Integer.parseInt(externalDeepLink.getIndex());
-                //
-                //                String date = externalDeepLink.getDate();
-                //                int datePlus = externalDeepLink.getDatePlus();
-                //                boolean isShowCalendar = externalDeepLink.isShowCalendar();
-                //                boolean isShowVR = externalDeepLink.isShowVR();
-                //                int ticketIndex = externalDeepLink.getOpenTicketIndex();
-                //
-                //                GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
-                //
-                //                if (DailyTextUtils.isTextEmpty(date) == false)
-                //                {
-                //                    Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
-                //                    gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
-                //                } else if (datePlus >= 0)
-                //                {
-                //                    gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime, datePlus);
-                //                } else
-                //                {
-                //                    gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime);
-                //                }
-                //
-                //                Intent intent = GourmetDetailActivity.newInstance(EventWebActivity.this,//
-                //                    gourmetBookingDay, gourmetIndex, isShowCalendar, isShowVR, false);
-
                 Intent intent = GourmetDetailActivity.newInstance(EventWebActivity.this, dailyDeepLink.getDeepLink());
 
                 startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMET_DETAIL);
 
                 overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-                //
-                //                if (isShowCalendar == true)
-                //                {
-                //                    AnalyticsManager.getInstance(EventWebActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-                //                        , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED, AnalyticsManager.Label.EVENT, null);
-                //                }
             } else
             {
 
@@ -836,6 +753,34 @@ public class EventWebActivity extends WebViewActivity implements Constants
         return true;
     }
 
+    boolean moveDeepLinkStayOutboundDetail(DailyDeepLink dailyDeepLink)
+    {
+        if (dailyDeepLink == null)
+        {
+            return false;
+        }
+
+        try
+        {
+            if (dailyDeepLink.isExternalDeepLink() == true)
+            {
+                startActivity(StayOutboundDetailActivity.newInstance(EventWebActivity.this, dailyDeepLink.getDeepLink()));
+            } else
+            {
+
+            }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+            return false;
+        } finally
+        {
+            dailyDeepLink.clear();
+        }
+
+        return true;
+    }
+
     void startLogin()
     {
         showSimpleDialog(null, getString(R.string.message_eventweb_do_login_download_coupon), getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
@@ -1068,6 +1013,12 @@ public class EventWebActivity extends WebViewActivity implements Constants
                             } else if (externalDeepLink.isStayOutboundSearchResultView() == true)
                             {
                                 if (moveDeepLinkStayOutboundSearchResult(mTodayDateTime, externalDeepLink) == true)
+                                {
+                                    return;
+                                }
+                            } else if (externalDeepLink.isPlaceDetailView() == true && DailyDeepLink.STAY_OUTBOUND.equalsIgnoreCase(externalDeepLink.getPlaceType()) == true)
+                            {
+                                if (moveDeepLinkStayOutboundDetail(externalDeepLink) == true)
                                 {
                                     return;
                                 }
