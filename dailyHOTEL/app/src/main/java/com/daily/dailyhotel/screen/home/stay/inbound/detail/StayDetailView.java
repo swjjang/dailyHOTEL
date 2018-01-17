@@ -1151,11 +1151,16 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         DialogDailyAwardsDataBinding dataBinding = DataBindingUtil.inflate( //
             LayoutInflater.from(getContext()), R.layout.dialog_daily_awards_data, null, false);
 
-
         dataBinding.awardImageView.setBackgroundResource(R.color.transparent);
         dataBinding.awardImageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_INSIDE);
-        dataBinding.awardImageView.getHierarchy().setPlaceholderImage(R.drawable.layerlist_placeholder); // TODO : 기본 이미지 변경 필요
-        dataBinding.awardImageView.setImageURI(imageUrl);
+
+        if (DailyTextUtils.isTextEmpty(imageUrl) == false)
+        {
+            dataBinding.awardImageView.setImageURI(Uri.parse(imageUrl));
+        }
+
+        dataBinding.awardImageView.getHierarchy().setPlaceholderImage(R.drawable.vector_img_popup_detail_trueawards);
+        dataBinding.awardImageView.getHierarchy().setFailureImage(R.drawable.vector_img_popup_detail_trueawards);
 
         dataBinding.awardTitleTextView.setText(awardsTitle);
         dataBinding.awardDescriptionTextView.setText(awardsDescription);
