@@ -4,6 +4,7 @@ package com.daily.dailyhotel.screen.home.stay.inbound.list;
 import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -18,6 +19,10 @@ import android.view.ViewGroup;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.exception.DuplicateRunException;
+import com.daily.base.exception.PermissionException;
+import com.daily.base.exception.ProviderException;
+import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BasePagerFragmentPresenter;
 import com.daily.dailyhotel.entity.Area;
 import com.daily.dailyhotel.entity.Category;
@@ -34,9 +39,12 @@ import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
+import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -54,6 +62,8 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -93,6 +103,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
     //
     int mWishPosition;
     boolean mEmptyList; // 목록, 맵이 비어있는지 확인
+    DailyLocationExFactory mDailyLocationExFactory;
 
     public interface StayListFragmentAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -218,6 +229,24 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                         break;
                 }
                 break;
+
+            case StayTabActivity.REQUEST_CODE_PERMISSION_MANAGER:
+            {
+                switch (resultCode)
+                {
+                    case Activity.RESULT_OK:
+                        onMyLocationClick();
+                        break;
+
+                    default:
+                        break;
+                }
+                break;
+            }
+
+            case StayTabActivity.REQUEST_CODE_SETTING_LOCATION:
+                onMyLocationClick();
+                break;
         }
     }
 
@@ -330,6 +359,33 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
     public void scrollTop()
     {
 
+    }
+
+    @Override
+    public boolean onBackPressed()
+    {
+        if (isCurrentFragment() == false)
+        {
+            return false;
+        }
+
+        switch (mViewType)
+        {
+            case LIST:
+                return false;
+
+            case MAP:
+                if (getViewInterface().isMapViewPagerVisible() == true)
+                {
+                    onMapClick();
+                } else
+                {
+                    mStayViewModel.viewType.setValue(StayTabPresenter.ViewType.LIST);
+                }
+                return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -645,6 +701,8 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                     getFragment().getFragmentEventListener().setFloatingActionViewTypeMapEnabled(false);
 
                     getViewInterface().setEmptyViewVisible(true, notDefaultFilter);
+
+                    unLockAll();
                 } else
                 {
                     mEmptyList = false;
@@ -655,8 +713,6 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
                     getViewInterface().setMapList(stays.getStayList(), true, true, false);
                 }
-
-                unLockAll();
             }
         }, new Consumer<Throwable>()
         {
@@ -717,19 +773,59 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
     @Override
     public void onMarkersCompleted()
     {
-
+        unLockAll();
     }
 
     @Override
     public void onMapClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
+        getViewInterface().setMapViewPagerVisible(false);
+
+        unLockAll();
     }
 
     @Override
     public void onMyLocationClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
+        screenLock(true);
+        Observable<Long> locationAnimationObservable = null;
+
+        if (mViewType == StayTabPresenter.ViewType.MAP)
+        {
+            locationAnimationObservable = getViewInterface().getLocationAnimation();
+        }
+
+        Observable observable = searchMyLocation(locationAnimationObservable);
+
+        if (observable != null)
+        {
+            addCompositeDisposable(observable.subscribe(new Consumer<Location>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull Location location) throws Exception
+                {
+                    getViewInterface().setMyLocation(location);
+                    unLockAll();
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+                {
+                    unLockAll();
+                }
+            }));
+        }
     }
 
     @Override
@@ -1112,5 +1208,181 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
         queryMap.put("details", true);
 
         return queryMap;
+    }
+
+    private Observable<Location> searchMyLocation(Observable locationAnimationObservable)
+    {
+        if (mDailyLocationExFactory == null)
+        {
+            mDailyLocationExFactory = new DailyLocationExFactory(getActivity());
+        }
+
+        if (mDailyLocationExFactory.measuringLocation() == true)
+        {
+            return null;
+        }
+
+        Disposable locationAnimationDisposable;
+
+        if (locationAnimationObservable != null)
+        {
+            locationAnimationDisposable = locationAnimationObservable.subscribe();
+        } else
+        {
+            locationAnimationDisposable = null;
+        }
+
+        return new Observable<Location>()
+        {
+            @Override
+            protected void subscribeActual(io.reactivex.Observer<? super Location> observer)
+            {
+                mDailyLocationExFactory.checkLocationMeasure(new DailyLocationExFactory.OnCheckLocationListener()
+                {
+                    @Override
+                    public void onRequirePermission()
+                    {
+                        observer.onError(new PermissionException());
+                    }
+
+                    @Override
+                    public void onFailed()
+                    {
+                        observer.onError(new Exception());
+                    }
+
+                    @Override
+                    public void onProviderDisabled()
+                    {
+                        observer.onError(new ProviderException());
+                    }
+
+                    @Override
+                    public void onProviderEnabled()
+                    {
+                        mDailyLocationExFactory.startLocationMeasure(new DailyLocationExFactory.OnLocationListener()
+                        {
+                            @Override
+                            public void onFailed()
+                            {
+                                observer.onError(new Exception());
+                            }
+
+                            @Override
+                            public void onAlreadyRun()
+                            {
+                                observer.onError(new DuplicateRunException());
+                            }
+
+                            @Override
+                            public void onLocationChanged(Location location)
+                            {
+                                unLockAll();
+
+                                mDailyLocationExFactory.stopLocationMeasure();
+
+                                if (location == null)
+                                {
+                                    observer.onError(new NullPointerException());
+                                } else
+                                {
+                                    observer.onNext(location);
+                                    observer.onComplete();
+                                }
+                            }
+
+                            @Override
+                            public void onCheckSetting(ResolvableApiException exception)
+                            {
+                                observer.onError(exception);
+                            }
+                        });
+                    }
+                });
+            }
+        }.doOnComplete(new Action()
+        {
+            @Override
+            public void run() throws Exception
+            {
+                if (locationAnimationDisposable != null)
+                {
+                    locationAnimationDisposable.dispose();
+                }
+            }
+        }).doOnDispose(new Action()
+        {
+            @Override
+            public void run() throws Exception
+            {
+                if (locationAnimationDisposable != null)
+                {
+                    locationAnimationDisposable.dispose();
+                }
+            }
+        }).doOnError(new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull Throwable throwable) throws Exception
+            {
+                unLockAll();
+
+                if (locationAnimationDisposable != null)
+                {
+                    locationAnimationDisposable.dispose();
+                }
+
+                if (throwable instanceof PermissionException)
+                {
+                    Intent intent = PermissionManagerActivity.newInstance(getActivity(), PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+                    startActivityForResult(intent, StayTabActivity.REQUEST_CODE_PERMISSION_MANAGER);
+                } else if (throwable instanceof ProviderException)
+                {
+                    // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
+                    getViewInterface().showSimpleDialog(//
+                        getString(R.string.dialog_title_used_gps), getString(R.string.dialog_msg_used_gps), //
+                        getString(R.string.dialog_btn_text_dosetting), //
+                        getString(R.string.dialog_btn_text_cancel), //
+                        new View.OnClickListener()//
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                startActivityForResult(intent, StayTabActivity.REQUEST_CODE_SETTING_LOCATION);
+                            }
+                        }, new View.OnClickListener()//
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                getViewInterface().showToast(R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
+                            }
+                        }, new DialogInterface.OnCancelListener()
+                        {
+                            @Override
+                            public void onCancel(DialogInterface dialog)
+                            {
+                                getViewInterface().showToast(R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
+                            }
+                        }, null, true);
+                } else if (throwable instanceof DuplicateRunException)
+                {
+
+                } else if (throwable instanceof ResolvableApiException)
+                {
+                    try
+                    {
+                        ((ResolvableApiException) throwable).startResolutionForResult(getActivity(), StayTabActivity.REQUEST_CODE_SETTING_LOCATION);
+                    } catch (Exception e)
+                    {
+                        getViewInterface().showToast(R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
+                    }
+                } else
+                {
+                    getViewInterface().showToast(R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
+                }
+            }
+        });
     }
 }

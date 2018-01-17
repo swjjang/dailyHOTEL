@@ -4,6 +4,7 @@ package com.daily.dailyhotel.screen.home.stay.inbound.list;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.location.Location;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -27,6 +28,8 @@ import com.twoheart.dailyhotel.databinding.FragmentStayListDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
 
 import java.util.List;
+
+import io.reactivex.Observable;
 
 /**
  * Created by sheldon
@@ -297,6 +300,17 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
     }
 
     @Override
+    public boolean isMapViewPagerVisible()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return false;
+        }
+
+        return getViewDataBinding().mapViewPager.getVisibility() == View.VISIBLE;
+    }
+
+    @Override
     public void setSwipeRefreshing(boolean refreshing)
     {
         if (getViewDataBinding() == null)
@@ -407,19 +421,19 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
                 @Override
                 public void onMarkersCompleted()
                 {
-
+                    getEventListener().onMarkersCompleted();
                 }
 
                 @Override
                 public void onMapClick()
                 {
-
+                    getEventListener().onMapClick();
                 }
 
                 @Override
                 public void onMyLocationClick()
                 {
-
+                    getEventListener().onMyLocationClick();
                 }
 
                 @Override
@@ -537,6 +551,28 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
         getViewDataBinding().recyclerView.scrollToPosition(0);
     }
 
+    @Override
+    public Observable<Long> getLocationAnimation()
+    {
+        if (getViewDataBinding() == null || mStayMapFragment == null)
+        {
+            return null;
+        }
+
+        return mStayMapFragment.getLocationAnimation();
+    }
+
+    @Override
+    public void setMyLocation(Location location)
+    {
+        if (getViewDataBinding() == null || mStayMapFragment == null)
+        {
+            return;
+        }
+
+        mStayMapFragment.setMyLocation(new LatLng(location.getLatitude(), location.getLongitude()), true);
+    }
+
     private void initListLayout(FragmentStayListDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
@@ -615,7 +651,17 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
             {
+                if (mViewPagerAdapter == null || mViewPagerAdapter.getCount() <= position)
+                {
+                    return;
+                }
 
+                Stay stay = mViewPagerAdapter.getItem(position);
+
+                if (stay != null)
+                {
+                    mStayMapFragment.setSelectedMarker(stay);
+                }
             }
 
             @Override

@@ -356,6 +356,17 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
     }
 
     @Override
+    public boolean onFragmentBackPressed()
+    {
+        if (getViewDataBinding() == null || mFragmentPagerAdapter == null)
+        {
+            return false;
+        }
+
+        return  mFragmentPagerAdapter.getItem(getViewDataBinding().viewPager.getCurrentItem()).onBackPressed();
+    }
+
+    @Override
     public void onRegionClick()
     {
         if (getViewDataBinding() == null)

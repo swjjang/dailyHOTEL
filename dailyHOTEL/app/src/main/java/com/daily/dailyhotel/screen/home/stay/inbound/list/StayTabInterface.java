@@ -28,4 +28,6 @@ public interface StayTabInterface extends BaseDialogViewInterface
     void scrollTopCurrentCategory();
 
     void showPreviewGuide();
+
+    boolean onFragmentBackPressed();
 }

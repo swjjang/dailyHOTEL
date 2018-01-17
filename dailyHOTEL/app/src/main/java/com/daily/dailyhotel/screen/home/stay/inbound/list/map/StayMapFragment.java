@@ -609,8 +609,6 @@ public class StayMapFragment extends com.google.android.gms.maps.SupportMapFragm
                 {
                     mOnEventListener.onMarkersCompleted();
                 }
-
-                ExLog.d("pinkred - marker count : " + mClusterManager.getAlgorithm().getItems().size());
             }
         }, new Consumer<Throwable>()
         {

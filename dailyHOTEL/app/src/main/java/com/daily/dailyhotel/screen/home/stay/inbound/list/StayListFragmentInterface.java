@@ -2,6 +2,7 @@ package com.daily.dailyhotel.screen.home.stay.inbound.list;
 
 
 import android.content.Context;
+import android.location.Location;
 import android.support.v4.app.FragmentManager;
 
 import com.daily.dailyhotel.base.BaseBlurFragmentViewInterface;
@@ -9,6 +10,8 @@ import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.Stay;
 
 import java.util.List;
+
+import io.reactivex.Observable;
 
 /**
  * Created by sheldon
@@ -26,6 +29,8 @@ public interface StayListFragmentInterface extends BaseBlurFragmentViewInterface
 
     void setMapViewPagerVisible(boolean visible);
 
+    boolean isMapViewPagerVisible();
+
     void setSwipeRefreshing(boolean refreshing);
 
     void setEmptyViewVisible(boolean visible, boolean applyFilter);
@@ -42,4 +47,8 @@ public interface StayListFragmentInterface extends BaseBlurFragmentViewInterface
     void setWish(int position, boolean wish);
 
     void scrollTop();
+
+    Observable<Long> getLocationAnimation();
+
+    void setMyLocation(Location location);
 }

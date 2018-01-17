@@ -290,7 +290,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
     @Override
     public boolean onBackPressed()
     {
-        return super.onBackPressed();
+        return getViewInterface().onFragmentBackPressed();
     }
 
     @Override

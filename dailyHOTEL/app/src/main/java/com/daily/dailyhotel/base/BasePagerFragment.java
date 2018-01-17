@@ -51,4 +51,14 @@ public abstract class BasePagerFragment<T1 extends BasePagerFragmentPresenter, T
             mPresenter.scrollTop();
         }
     }
+
+    public boolean onBackPressed()
+    {
+        if(mPresenter != null)
+        {
+            return mPresenter.onBackPressed();
+        }
+
+        return false;
+    }
 }

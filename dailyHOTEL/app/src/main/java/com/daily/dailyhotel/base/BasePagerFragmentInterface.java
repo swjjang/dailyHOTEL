@@ -17,4 +17,6 @@ public interface BasePagerFragmentInterface extends BaseFragmentInterface
     void onRefresh();
 
     void scrollTop();
+
+    boolean onBackPressed();
 }
