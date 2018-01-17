@@ -55,6 +55,8 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         void startTermsNPolicy();
 
         void onDailyRewardClick();
+
+        void onDailyTrueAwardsClick();
     }
 
     public InformationLayout(Context context, OnEventListener listener)
@@ -85,6 +87,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         View aboutLayout = view.findViewById(R.id.aboutLayout);
         View lifeStyleLayout = view.findViewById(R.id.lifeStyleLayout);
         View dailyRewardLayout = view.findViewById(R.id.dailyRewardLayout);
+        View dailyTrueAwardsLayout = view.findViewById(R.id.dailyTrueAwardsLayout);
         View snsLayout = view.findViewById(R.id.snsLayout);
         View eventLayout = view.findViewById(R.id.eventLayout);
         View noticeLayout = view.findViewById(R.id.noticeLayout);
@@ -95,6 +98,7 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
         aboutLayout.setOnClickListener(this);
         lifeStyleLayout.setOnClickListener(this);
         dailyRewardLayout.setOnClickListener(this);
+        dailyTrueAwardsLayout.setOnClickListener(this);
         snsLayout.setOnClickListener(this);
         eventLayout.setOnClickListener(this);
         noticeLayout.setOnClickListener(this);
@@ -262,6 +266,10 @@ public class InformationLayout extends BaseLayout implements View.OnClickListene
 
             case R.id.dailyRewardLayout:
                 ((OnEventListener) mOnEventListener).onDailyRewardClick();
+                break;
+
+            case R.id.dailyTrueAwardsLayout:
+                ((OnEventListener) mOnEventListener).onDailyTrueAwardsClick();
                 break;
 
             case R.id.snsLayout:

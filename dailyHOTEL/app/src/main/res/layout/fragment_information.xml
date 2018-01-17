@@ -119,6 +119,32 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/dailyTrueAwardsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="41dp"
+                android:background="@color/white"
+                android:visibility="gone">
+
+                <com.daily.base.widget.DailyTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/label_daily_reward"
+                    android:textColor="@color/information_title"
+                    android:textSize="15dp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@color/default_line_cdcdcdd"/>
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/snsLayout"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"

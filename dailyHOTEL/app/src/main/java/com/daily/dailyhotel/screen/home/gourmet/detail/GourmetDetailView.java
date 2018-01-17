@@ -51,6 +51,7 @@ import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.view.DailyDetailEmptyView;
 import com.daily.dailyhotel.view.DailyDetailTitleInformationView;
+import com.daily.dailyhotel.view.DailyDetailTrueAwardsView;
 import com.daily.dailyhotel.view.DailyDetailTrueReviewView;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.facebook.drawee.drawable.ScalingUtils;
@@ -1370,10 +1371,10 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
         getViewDataBinding().trueAwardsTopLineView.setVisibility(View.VISIBLE);
         getViewDataBinding().trueAwardsView.setVisibility(View.VISIBLE);
-        getViewDataBinding().trueAwardsView.setOnClickListener(new View.OnClickListener()
+        getViewDataBinding().trueAwardsView.setListener(new DailyDetailTrueAwardsView.OnDailyDetailTrueAwardsListener()
         {
             @Override
-            public void onClick(View view)
+            public void onQuestionClick()
             {
                 getEventListener().onTrueAwardsClick();
             }
@@ -1381,8 +1382,8 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
 
         getViewDataBinding().trueAwardsView.setAwardsNameText(awardsName);
 
-        getViewDataBinding().trueAwardsView.setAwardsCategoryText(awardsCategoryText);
-        getViewDataBinding().trueAwardsView.setAwardsCategoryVisible(DailyTextUtils.isTextEmpty(awardsCategoryText) == false);
+        getViewDataBinding().trueAwardsView.setAwardsDetailText(awardsCategoryText);
+        getViewDataBinding().trueAwardsView.setAwardsDetailLayoutVisible(DailyTextUtils.isTextEmpty(awardsCategoryText) == false);
     }
 
     /**

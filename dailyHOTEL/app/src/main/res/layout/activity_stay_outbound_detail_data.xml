@@ -134,10 +134,10 @@
                     android:background="@drawable/layerlist_divider"
                     android:visibility="gone"/>
 
-                <com.daily.dailyhotel.view.DailyDetailTrueAwardView
+                <com.daily.dailyhotel.view.DailyDetailTrueAwardsView
                     android:id="@+id/trueAwardsView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="52dp"
                     android:visibility="gone"/>
 
                 <View
