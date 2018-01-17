@@ -654,6 +654,12 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         setRefresh(false);
         screenLock(showProgress);
 
+        if (mStayBookDateTime == null)
+        {
+            Util.restartApp(getActivity());
+            return;
+        }
+
         mSelectedRoom = null;
 
         onRefresh(new Observable<Boolean>()

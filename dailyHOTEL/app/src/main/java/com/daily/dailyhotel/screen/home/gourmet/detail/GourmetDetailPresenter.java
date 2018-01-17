@@ -683,6 +683,12 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         setRefresh(false);
         screenLock(showProgress);
 
+        if (mGourmetBookDateTime == null)
+        {
+            Util.restartApp(getActivity());
+            return;
+        }
+
         onRefresh(new Observable<Boolean>()
         {
             @Override
