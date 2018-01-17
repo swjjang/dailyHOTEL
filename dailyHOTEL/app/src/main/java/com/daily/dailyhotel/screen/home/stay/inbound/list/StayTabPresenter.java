@@ -903,9 +903,17 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
             case com.daily.base.BaseActivity.RESULT_CODE_START_AROUND_SEARCH:
             {
-                // 검색 결과 화면으로 이동한다.
-                //                        startAroundSearchResult(this, mTodayDateTime, mStayCuration.getStayBookingDay()//
-                //                            , null, AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC);
+                try
+                {
+                    startActivityForResult(StaySearchResultActivity.newInstance(getActivity()//
+                        , mStayViewModel.commonDateTime.getValue().getTodayDateTime()//
+                        , mStayViewModel.stayBookDateTime.getValue().getStayBookingDay()//
+                        , null, AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC)//
+                        , StayTabActivity.REQUEST_CODE_SEARCH_RESULT);
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+                }
                 break;
             }
         }

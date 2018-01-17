@@ -20,6 +20,7 @@ import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.list.map.StayMapFragment;
 import com.daily.dailyhotel.screen.home.stay.inbound.list.map.StayMapViewPagerAdapter;
+import com.daily.dailyhotel.view.DailyFloatingActionView;
 import com.daily.dailyhotel.view.DailyStayCardView;
 import com.daily.dailyhotel.view.DailyStayMapCardView;
 import com.google.android.gms.maps.model.LatLng;
@@ -50,7 +51,7 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
 
     ValueAnimator mValueAnimator;
 
-    private View mFloatingActionView;
+    private DailyFloatingActionView mFloatingActionView;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -225,17 +226,6 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
         mStayListAdapter.setTrueVREnabled(supportTrueVR);
         mStayListAdapter.addAll(objectItemList);
         mStayListAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void setStayMakeMarker(List<Stay> stayList, boolean clear)
-    {
-        if (mStayMapFragment == null || stayList == null)
-        {
-            return;
-        }
-
-        mStayMapFragment.setStayList(stayList, true, clear);
     }
 
     @Override
@@ -571,6 +561,28 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
         }
 
         mStayMapFragment.setMyLocation(new LatLng(location.getLatitude(), location.getLongitude()), true);
+    }
+
+    @Override
+    public void setFloatingActionViewVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null || mFloatingActionView == null)
+        {
+            return;
+        }
+
+        mFloatingActionView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    @Override
+    public void setFloatingActionViewTypeMapEnabled(boolean enabled)
+    {
+        if (getViewDataBinding() == null || mFloatingActionView == null)
+        {
+            return;
+        }
+
+        mFloatingActionView.setViewOptionMapEnabled(enabled);
     }
 
     private void initListLayout(FragmentStayListDataBinding viewDataBinding)

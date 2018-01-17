@@ -315,26 +315,34 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
         if (mEmptyList == false)
         {
-            getFragment().getFragmentEventListener().setFloatingActionViewVisible(true);
-            getFragment().getFragmentEventListener().setFloatingActionViewTypeMapEnabled(true);
+            getViewInterface().setFloatingActionViewVisible(true);
+            getViewInterface().setFloatingActionViewTypeMapEnabled(true);
         } else
         {
             if (mStayViewModel.stayFilter.getValue().isDefaultFilter() == true)
             {
-                getFragment().getFragmentEventListener().setFloatingActionViewVisible(false);
+                getViewInterface().setFloatingActionViewVisible(false);
             } else
             {
-                getFragment().getFragmentEventListener().setFloatingActionViewVisible(true);
+                getViewInterface().setFloatingActionViewVisible(true);
             }
 
-            getFragment().getFragmentEventListener().setFloatingActionViewTypeMapEnabled(false);
+            getViewInterface().setFloatingActionViewTypeMapEnabled(false);
         }
     }
 
     @Override
     public void onUnselected()
     {
+        switch (mViewType)
+        {
+            case LIST:
+                break;
 
+            case MAP:
+                onMapClick();
+                break;
+        }
     }
 
     @Override
@@ -358,7 +366,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
     @Override
     public void scrollTop()
     {
-
+        getViewInterface().scrollTop();
     }
 
     @Override
@@ -438,16 +446,16 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                     mEmptyList = true;
                     mPage = PAGE_NONE;
 
-                    getFragment().getFragmentEventListener().setFloatingActionViewVisible(notDefaultFilter);
-                    getFragment().getFragmentEventListener().setFloatingActionViewTypeMapEnabled(false);
+                    getViewInterface().setFloatingActionViewVisible(notDefaultFilter);
+                    getViewInterface().setFloatingActionViewTypeMapEnabled(false);
 
                     getViewInterface().setEmptyViewVisible(true, notDefaultFilter);
                 } else
                 {
                     mEmptyList = false;
 
-                    getFragment().getFragmentEventListener().setFloatingActionViewVisible(true);
-                    getFragment().getFragmentEventListener().setFloatingActionViewTypeMapEnabled(true);
+                    getViewInterface().setFloatingActionViewVisible(true);
+                    getViewInterface().setFloatingActionViewTypeMapEnabled(true);
 
                     if (listSize < MAXIMUM_NUMBER_PER_PAGE)
                     {
@@ -697,8 +705,8 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                 {
                     mEmptyList = true;
 
-                    getFragment().getFragmentEventListener().setFloatingActionViewVisible(notDefaultFilter);
-                    getFragment().getFragmentEventListener().setFloatingActionViewTypeMapEnabled(false);
+                    getViewInterface().setFloatingActionViewVisible(notDefaultFilter);
+                    getViewInterface().setFloatingActionViewTypeMapEnabled(false);
 
                     getViewInterface().setEmptyViewVisible(true, notDefaultFilter);
 
@@ -706,8 +714,8 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                 } else
                 {
                     mEmptyList = false;
-                    getFragment().getFragmentEventListener().setFloatingActionViewVisible(true);
-                    getFragment().getFragmentEventListener().setFloatingActionViewTypeMapEnabled(true);
+                    getViewInterface().setFloatingActionViewVisible(true);
+                    getViewInterface().setFloatingActionViewTypeMapEnabled(true);
 
                     getViewInterface().setEmptyViewVisible(false, notDefaultFilter);
 

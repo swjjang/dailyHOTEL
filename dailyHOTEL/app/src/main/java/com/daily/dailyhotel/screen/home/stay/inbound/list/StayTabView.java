@@ -363,7 +363,7 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
             return false;
         }
 
-        return  mFragmentPagerAdapter.getItem(getViewDataBinding().viewPager.getCurrentItem()).onBackPressed();
+        return mFragmentPagerAdapter.getItem(getViewDataBinding().viewPager.getCurrentItem()).onBackPressed();
     }
 
     @Override
@@ -397,39 +397,6 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
         }
 
         getEventListener().onFilterClick();
-    }
-
-    @Override
-    public void setFloatingActionViewVisible(boolean visible)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        getViewDataBinding().floatingActionView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
-    }
-
-    @Override
-    public void setFloatingActionViewTypeMapEnabled(boolean enabled)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        getViewDataBinding().floatingActionView.setViewOptionMapEnabled(enabled);
-    }
-
-    @Override
-    public void setFloatingActionViewTranslationY(float translationY)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        getViewDataBinding().floatingActionView.setTranslationY(translationY);
     }
 
     private void initToolbar(ActivityStayTabDataBinding viewDataBinding)

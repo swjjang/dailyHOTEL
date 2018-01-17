@@ -20,12 +20,6 @@ public class StayListFragment extends BasePagerFragment<StayListFragmentPresente
         void onCalendarClick();
 
         void onFilterClick();
-
-        void setFloatingActionViewVisible(boolean visible);
-
-        void setFloatingActionViewTypeMapEnabled(boolean enabled);
-
-        void setFloatingActionViewTranslationY(float translationY);
     }
 
     @NonNull

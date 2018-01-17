@@ -23,8 +23,6 @@ public interface StayListFragmentInterface extends BaseBlurFragmentViewInterface
 
     void addList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean nightsEnabled, boolean rewardEnabled, boolean supportTrueVR);
 
-    void setStayMakeMarker(List<Stay> stayList, boolean clear);
-
     void setStayMapViewPagerList(Context context, List<Stay> stayList, boolean nightsEnabled, boolean rewardEnabled);
 
     void setMapViewPagerVisible(boolean visible);
@@ -51,4 +49,8 @@ public interface StayListFragmentInterface extends BaseBlurFragmentViewInterface
     Observable<Long> getLocationAnimation();
 
     void setMyLocation(Location location);
+
+    void setFloatingActionViewVisible(boolean visible);
+
+    void setFloatingActionViewTypeMapEnabled(boolean enabled);
 }

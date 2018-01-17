@@ -1,5 +1,6 @@
 package com.daily.dailyhotel.entity;
 
+import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import java.util.Calendar;
@@ -81,6 +82,15 @@ public class StayBookDateTime extends PlaceBookDateTime
         }
 
         return true;
+    }
+
+    public StayBookingDay getStayBookingDay() throws Exception
+    {
+        StayBookingDay stayBookingDay = new StayBookingDay();
+        stayBookingDay.setCheckInDay(getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT));
+        stayBookingDay.setCheckOutDay(getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
+
+        return stayBookingDay;
     }
 
     //    public void verifyCommonDateTime(@NonNull CommonDateTime commonDateTime) throws Exception
