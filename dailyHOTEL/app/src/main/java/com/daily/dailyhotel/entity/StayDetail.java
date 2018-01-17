@@ -31,6 +31,7 @@ public class StayDetail extends Configurations
     public int couponPrice;
     public boolean provideRewardSticker;
     public int rewardStickerCount;
+    public TrueAwards awards;
 
     private List<DetailImageInformation> mDetailImageInformationList;
     private List<LinkedHashMap<String, List<String>>> mDescriptionMap;

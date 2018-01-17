@@ -1464,12 +1464,12 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     @Override
     public void onTrueAwardsClick()
     {
-        if (lock() == true)
+        if (mGourmetDetail == null || lock() == true)
         {
             return;
         }
 
-        getViewInterface().showTrueAwardsDialog("", "", "", new DialogInterface.OnDismissListener()
+        getViewInterface().showTrueAwardsDialog(mGourmetDetail.awards, new DialogInterface.OnDismissListener()
         {
             @Override
             public void onDismiss(DialogInterface dialogInterface)

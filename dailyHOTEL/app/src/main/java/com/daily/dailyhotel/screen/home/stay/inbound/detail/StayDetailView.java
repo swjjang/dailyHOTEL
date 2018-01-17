@@ -45,6 +45,7 @@ import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayDetail;
 import com.daily.dailyhotel.entity.StayRoom;
+import com.daily.dailyhotel.entity.TrueAwards;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.view.DailyDetailEmptyView;
@@ -453,7 +454,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         setTrueReviewView(stayDetail.ratingShow, stayDetail.ratingValue, stayDetail.ratingPersons, trueReviewCount);
 
         // 트루 어워드
-        setTrueAwardsView("테스트", "테스트입니다");
+        setTrueAwardsView(stayDetail.awards);
 
         // 체크인/체크아웃
         setCheckDateView(stayBookDateTime);
@@ -1141,9 +1142,9 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
     }
 
     @Override
-    public void showTrueAwardsDialog(String imageUrl, String awardsTitle, String awardsDescription, Dialog.OnDismissListener onDismissListener)
+    public void showTrueAwardsDialog(TrueAwards trueAwards, Dialog.OnDismissListener onDismissListener)
     {
-        if (getViewDataBinding() == null)
+        if (getViewDataBinding() == null || getContext() == null || trueAwards == null)
         {
             return;
         }
@@ -1154,16 +1155,16 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         dataBinding.awardImageView.setBackgroundResource(R.color.transparent);
         dataBinding.awardImageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_INSIDE);
 
-        if (DailyTextUtils.isTextEmpty(imageUrl) == false)
+        if (DailyTextUtils.isTextEmpty(trueAwards.imageUrl) == false)
         {
-            dataBinding.awardImageView.setImageURI(Uri.parse(imageUrl));
+            dataBinding.awardImageView.setImageURI(Uri.parse(trueAwards.imageUrl));
         }
 
         dataBinding.awardImageView.getHierarchy().setPlaceholderImage(R.drawable.vector_img_popup_detail_trueawards);
         dataBinding.awardImageView.getHierarchy().setFailureImage(R.drawable.vector_img_popup_detail_trueawards);
 
-        dataBinding.awardTitleTextView.setText(awardsTitle);
-        dataBinding.awardDescriptionTextView.setText(awardsDescription);
+        dataBinding.awardTitleTextView.setText(getContext().getString(R.string.label_daily_true_awards_popup_title_formet, trueAwards.title));
+        dataBinding.awardDescriptionTextView.setText(trueAwards.description);
 
         dataBinding.confirmTextView.setOnClickListener(new View.OnClickListener()
         {
@@ -1406,14 +1407,14 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         }
     }
 
-    private void setTrueAwardsView(String awardsName, String awardsCategoryText)
+    private void setTrueAwardsView(TrueAwards trueAwards)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        if (DailyTextUtils.isTextEmpty(awardsName) == true)
+        if (trueAwards == null || DailyTextUtils.isTextEmpty(trueAwards.title) == true)
         {
             getViewDataBinding().trueAwardsTopLineView.setVisibility(View.GONE);
             getViewDataBinding().trueAwardsView.setVisibility(View.GONE);
@@ -1432,10 +1433,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
             }
         });
 
-        getViewDataBinding().trueAwardsView.setAwardsNameText(awardsName);
-
-        getViewDataBinding().trueAwardsView.setAwardsDetailText(awardsCategoryText);
-        getViewDataBinding().trueAwardsView.setAwardsDetailLayoutVisible(DailyTextUtils.isTextEmpty(awardsCategoryText) == false);
+        getViewDataBinding().trueAwardsView.setAwardsDetailText(trueAwards.title);
     }
 
     /**

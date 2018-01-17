@@ -1453,12 +1453,12 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     @Override
     public void onTrueAwardsClick()
     {
-        if (lock() == true)
+        if (mStayDetail == null || lock() == true)
         {
             return;
         }
 
-        getViewInterface().showTrueAwardsDialog("", "", "", new DialogInterface.OnDismissListener()
+        getViewInterface().showTrueAwardsDialog(mStayDetail.awards, new DialogInterface.OnDismissListener()
         {
             @Override
             public void onDismiss(DialogInterface dialogInterface)
