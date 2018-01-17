@@ -346,6 +346,11 @@ public class ImageListView extends BaseDialogView<ImageListView.OnEventListener,
                 @Override
                 public void onFailure(String id, Throwable throwable)
                 {
+                    if (DailyTextUtils.isTextEmpty(url) == true)
+                    {
+                        return;
+                    }
+
                     if (throwable instanceof IOException == true)
                     {
                         if (url.equalsIgnoreCase(imageMap.bigUrl) == true)
