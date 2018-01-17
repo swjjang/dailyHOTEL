@@ -1457,6 +1457,24 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     }
 
     @Override
+    public void onTrueAwardsClick()
+    {
+        if (mStayDetail == null || lock() == true)
+        {
+            return;
+        }
+
+        getViewInterface().showTrueAwardsDialog(mStayDetail.awards, new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface)
+            {
+                unLockAll();
+            }
+        });
+    }
+
+    @Override
     public void onPriceTypeClick(PriceType priceType)
     {
         getViewInterface().setPriceType(priceType);

@@ -310,6 +310,22 @@ public class InformationFragment extends BaseMenuNavigationFragment implements C
         }
 
         @Override
+        public void onDailyTrueAwardsClick()
+        {
+            if (isLockUiComponent() == true || mIsAttach == false)
+            {
+                return;
+            }
+
+            lockUiComponent();
+
+            BaseActivity baseActivity = (BaseActivity) getActivity();
+
+            baseActivity.startActivityForResult(DailyWebActivity.newInstance(baseActivity, getString(R.string.label_daily_true_awards)//
+                , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStaticUrlDailyTrueAwards()), Constants.CODE_REQUEST_ACTIVITY_DAILY_AWARDS);
+        }
+
+        @Override
         public void finish()
         {
             //do nothing.

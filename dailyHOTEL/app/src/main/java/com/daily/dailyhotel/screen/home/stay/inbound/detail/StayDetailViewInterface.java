@@ -7,6 +7,7 @@ import android.widget.CheckBox;
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayDetail;
+import com.daily.dailyhotel.entity.TrueAwards;
 
 import io.reactivex.Observable;
 
@@ -61,4 +62,6 @@ public interface StayDetailViewInterface extends BaseDialogViewInterface
     void startCampaignStickerAnimation();
 
     void stopCampaignStickerAnimation();
+
+    void showTrueAwardsDialog(TrueAwards trueAwards, Dialog.OnDismissListener onDismissListener);
 }

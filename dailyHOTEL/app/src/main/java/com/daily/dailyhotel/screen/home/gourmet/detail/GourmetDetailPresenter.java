@@ -1467,6 +1467,24 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         }));
     }
 
+    @Override
+    public void onTrueAwardsClick()
+    {
+        if (mGourmetDetail == null || lock() == true)
+        {
+            return;
+        }
+
+        getViewInterface().showTrueAwardsDialog(mGourmetDetail.awards, new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface)
+            {
+                unLockAll();
+            }
+        });
+    }
+
     private void setStatus(int status)
     {
         mStatus = status;
