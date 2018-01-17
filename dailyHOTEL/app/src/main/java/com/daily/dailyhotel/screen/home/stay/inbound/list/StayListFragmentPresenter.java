@@ -5,12 +5,12 @@ import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
-import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +44,8 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +56,7 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by sheldon
@@ -93,41 +96,6 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
     public interface StayListFragmentAnalyticsInterface extends BaseAnalyticsInterface
     {
-    }
-
-    public interface OnStayListFragmentListener
-    {
-        // 왜 onActivityCreated 했을까?
-        // http://blog.saltfactory.net/android/implement-layout-using-with-fragment.html
-        void onActivityCreated(StayListFragmentPresenter stayListFragment);
-
-        void onScrolled(RecyclerView recyclerView, int dx, int dy);
-
-        void onScrollStateChanged(RecyclerView recyclerView, int newState);
-
-        void onShowMenuBar();
-
-        void onBottomOptionVisible(boolean visible);
-
-        void onUpdateFilterEnabled(boolean isShowFilterEnabled);
-
-        void onUpdateViewTypeEnabled(boolean isShowViewTypeEnabled);
-
-        void onFilterClick();
-
-        void onShowActivityEmptyView(boolean isShow);
-
-        void onSearchCountUpdate(int searchCount, int searchMaxCount);
-
-        void onStayClick(View view, ObjectItem objectItem, int listCount);
-
-        void onStayLongClick(View view, ObjectItem objectItem, int listCount);
-
-        void onRegionClick();
-
-        void onCalendarClick();
-
-        void onRecordAnalytics(Constants.ViewType viewType);
     }
 
     public StayListFragmentPresenter(@NonNull StayListFragment fragment)
@@ -199,7 +167,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                             @Override
                             public void subscribe(ObservableEmitter<Object> e) throws Exception
                             {
-                                onStayClick(mWishPosition, mPairsByLongPress, mStayByLongPress, mListCountByLongPress);
+                                onStayClick(mWishPosition, mStayByLongPress, mListCountByLongPress, mPairsByLongPress, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
                             }
                         }).subscribeOn(AndroidSchedulers.mainThread()).subscribe();
                         break;
@@ -542,7 +510,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
     }
 
     @Override
-    public void onStayClick(int position, android.support.v4.util.Pair[] pairs, Stay stay, int listCount)
+    public void onStayClick(int position, Stay stay, int listCount, android.support.v4.util.Pair[] pairs, int gradientType)
     {
         if (mStayViewModel == null || stay == null || lock() == true)
         {
@@ -588,7 +556,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                 , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
                 , mStayViewModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayViewModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , true, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST, analyticsParam);
+                , true, gradientType, analyticsParam);
 
             startActivityForResult(intent, StayTabActivity.REQUEST_CODE_DETAIL, optionsCompat.toBundle());
         } else
@@ -606,7 +574,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
     }
 
     @Override
-    public void onStayLongClick(int position, android.support.v4.util.Pair[] pairs, Stay stay, int listCount)
+    public void onStayLongClick(int position, Stay stay, int listCount, android.support.v4.util.Pair[] pairs)
     {
         if (mStayViewModel == null || stay == null || lock() == true)
         {
@@ -702,9 +670,48 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
     }
 
     @Override
-    public void onMarkerClick(Stay stay)
+    public void onMarkerClick(Stay stay, List<Stay> stayList)
     {
+        if (stay == null || stayList == null || lock() == true)
+        {
+            return;
+        }
 
+        addCompositeDisposable(Observable.just(stay).subscribeOn(Schedulers.io()).map(new Function<Stay, List<Stay>>()
+        {
+            @Override
+            public List<Stay> apply(@io.reactivex.annotations.NonNull Stay stay) throws Exception
+            {
+                Comparator<Stay> comparator = new Comparator<Stay>()
+                {
+                    public int compare(Stay stay1, Stay stay2)
+                    {
+                        float[] results1 = new float[3];
+                        Location.distanceBetween(stay.latitude, stay.longitude, stay1.latitude, stay1.longitude, results1);
+
+                        float[] results2 = new float[3];
+                        Location.distanceBetween(stay.latitude, stay.longitude, stay2.latitude, stay2.longitude, results2);
+
+                        return Float.compare(results1[0], results2[0]);
+                    }
+                };
+
+                Collections.sort(stayList, comparator);
+
+                return stayList;
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<Stay>>()
+        {
+            @Override
+            public void accept(@io.reactivex.annotations.NonNull List<Stay> stayList) throws Exception
+            {
+                getViewInterface().setStayMapViewPagerList(getActivity(), stayList, mStayViewModel.stayBookDateTime.getValue().getNights() > 1//
+                    , DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerEnabled());
+                getViewInterface().setMapViewPagerVisible(true);
+
+                unLockAll();
+            }
+        }));
     }
 
     @Override

@@ -12,10 +12,15 @@
             android:layout_height="match_parent"
             android:visibility="gone"/>
 
-        <com.daily.dailyhotel.view.DailyStayListEmptyView
-            android:id="@+id/emptyView"
+        <com.twoheart.dailyhotel.widget.DailyOverScrollViewPager
+            android:id="@+id/mapViewPager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="115dp"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/toolbar_height"
+            android:paddingBottom="15dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:visibility="gone"/>
 
         <android.support.v4.widget.SwipeRefreshLayout
@@ -32,5 +37,11 @@
                 android:scrollbars="vertical"
                 app:layoutManager="android.support.v7.widget.LinearLayoutManager"/>
         </android.support.v4.widget.SwipeRefreshLayout>
+
+        <com.daily.dailyhotel.view.DailyStayListEmptyView
+            android:id="@+id/emptyView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
     </FrameLayout>
 </layout>

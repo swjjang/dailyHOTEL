@@ -304,7 +304,6 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
                         } else
                         {
                             View simpleDraweeView = view.findViewById(R.id.imageView);
-                            View nameTextView = view.findViewById(R.id.nameTextView);
                             View gradientTopView = view.findViewById(R.id.gradientTopView);
                             View gradientBottomView = view.findViewById(R.id.gradientView);
 

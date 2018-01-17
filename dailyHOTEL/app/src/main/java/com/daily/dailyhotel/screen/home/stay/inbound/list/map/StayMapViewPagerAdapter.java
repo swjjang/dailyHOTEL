@@ -95,6 +95,8 @@ public class StayMapViewPagerAdapter extends PagerAdapter
             }
         });
 
+        container.addView(stayMapCardView);
+
         return stayMapCardView;
     }
 

@@ -1,9 +1,9 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.list;
 
 
+import android.content.Context;
 import android.support.v4.app.FragmentManager;
 
-import com.daily.base.BaseFragmentDialogViewInterface;
 import com.daily.dailyhotel.base.BaseBlurFragmentViewInterface;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.Stay;
@@ -16,9 +16,15 @@ import java.util.List;
  */
 public interface StayListFragmentInterface extends BaseBlurFragmentViewInterface
 {
-    void setList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean isNights, boolean rewardEnabled, boolean supportTrueVR);
+    void setList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean nightsEnabled, boolean rewardEnabled, boolean supportTrueVR);
 
-    void addList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean isNights, boolean rewardEnabled, boolean supportTrueVR);
+    void addList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean nightsEnabled, boolean rewardEnabled, boolean supportTrueVR);
+
+    void setStayMakeMarker(List<Stay> stayList, boolean clear);
+
+    void setStayMapViewPagerList(Context context, List<Stay> stayList, boolean nightsEnabled, boolean rewardEnabled);
+
+    void setMapViewPagerVisible(boolean visible);
 
     void setSwipeRefreshing(boolean refreshing);
 

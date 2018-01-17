@@ -1,30 +1,30 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.list;
 
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.base.BaseBlurFragmentView;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.Stay;
+import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.list.map.StayMapFragment;
 import com.daily.dailyhotel.screen.home.stay.inbound.list.map.StayMapViewPagerAdapter;
 import com.daily.dailyhotel.view.DailyStayCardView;
+import com.daily.dailyhotel.view.DailyStayMapCardView;
 import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.FragmentStayListDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
-import com.twoheart.dailyhotel.widget.DailyOverScrollViewPager;
 
 import java.util.List;
 
@@ -36,9 +36,7 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
     implements StayListFragmentInterface
 {
     private static final int ANIMATION_DELAY = 200;
-    private static final int VIEWPAGER_HEIGHT_DP = 125;
-    private static final int VIEWPAGER_TOP_PADDING_DP = 10;
-    private static final int VIEWPAGER_OTHER_PADDING_DP = 15;
+    private static final int VIEWPAGER_HEIGHT_DP = 115;
     private static final int VIEWPAGER_PAGE_MARGIN_DP = 5;
 
     private StayListAdapter mStayListAdapter;
@@ -47,7 +45,9 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
 
     private StayMapViewPagerAdapter mViewPagerAdapter;
 
-    DailyOverScrollViewPager mViewPager;
+    ValueAnimator mValueAnimator;
+
+    private View mFloatingActionView;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -55,16 +55,16 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
 
         void onMoreRefreshing();
 
-        void onStayClick(int position, android.support.v4.util.Pair[] pairs, Stay stay, int listCount);
+        void onStayClick(int position, Stay stay, int listCount, android.support.v4.util.Pair[] pairs, int gradientType);
 
-        void onStayLongClick(int position, android.support.v4.util.Pair[] pairs, Stay stay, int listCount);
+        void onStayLongClick(int position, Stay stay, int listCount, android.support.v4.util.Pair[] pairs);
 
         void onViewPagerClose();
 
         // Map Event
         void onMapReady();
 
-        void onMarkerClick(Stay stay);
+        void onMarkerClick(Stay stay, List<Stay> stayList);
 
         void onMarkersCompleted();
 
@@ -95,63 +95,14 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
     @Override
     protected void setContentView(FragmentStayListDataBinding viewDataBinding)
     {
-        viewDataBinding.swipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
-        viewDataBinding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
-        {
-            @Override
-            public void onRefresh()
-            {
-                getEventListener().onSwipeRefreshing();
-            }
-        });
+        mFloatingActionView = getWindow().findViewById(R.id.floatingActionView);
 
-        viewDataBinding.recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
-        {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
-            {
-                if (getViewDataBinding().swipeRefreshLayout.isRefreshing() == true)
-                {
-                    return;
-                }
-
-                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-
-                // SwipeRefreshLayout
-                if (dy <= 0)
-                {
-                    int firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition();
-
-                    if (firstVisibleItem == 0)
-                    {
-                        getViewDataBinding().swipeRefreshLayout.setEnabled(true);
-                    } else
-                    {
-                        getViewDataBinding().swipeRefreshLayout.setEnabled(false);
-                    }
-                } else
-                {
-                    int lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
-                    int itemCount = linearLayoutManager.getItemCount();
-
-                    if (lastVisibleItemPosition > itemCount * 2 / 3)
-                    {
-                        getEventListener().onMoreRefreshing();
-                    }
-                }
-            }
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
-            {
-            }
-        });
-
-        EdgeEffectColor.setEdgeGlowColor(viewDataBinding.recyclerView, getColor(R.color.default_over_scroll_edge));
+        initListLayout(viewDataBinding);
+        initMapLayout(viewDataBinding);
     }
 
     @Override
-    public void setList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean isNights, boolean rewardEnabled, boolean supportTrueVR)
+    public void setList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean nightsEnabled, boolean rewardEnabled, boolean supportTrueVR)
     {
         if (getViewDataBinding() == null || objectItemList == null || objectItemList.size() == 0)
         {
@@ -178,7 +129,7 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
                     {
                         if (view instanceof DailyStayCardView == true)
                         {
-                            getEventListener().onStayClick(position, ((DailyStayCardView) view).getOptionsCompat(), objectItem.getItem(), mStayListAdapter.getItemCount());
+                            getEventListener().onStayClick(position, objectItem.getItem(), mStayListAdapter.getItemCount(), ((DailyStayCardView) view).getOptionsCompat(), StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST);
                         } else
                         {
 
@@ -200,7 +151,7 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
 
                     if (objectItem.mType == objectItem.TYPE_ENTRY)
                     {
-                        getEventListener().onStayLongClick(position, ((DailyStayCardView) view).getOptionsCompat(), objectItem.getItem(), mStayListAdapter.getItemCount());
+                        getEventListener().onStayLongClick(position, objectItem.getItem(), mStayListAdapter.getItemCount(), ((DailyStayCardView) view).getOptionsCompat());
                     }
 
                     return true;
@@ -236,7 +187,7 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
         }
 
         mStayListAdapter.setDistanceEnabled(isSortByDistance);
-        mStayListAdapter.setNightsEnabled(isNights);
+        mStayListAdapter.setNightsEnabled(nightsEnabled);
         mStayListAdapter.setRewardEnabled(rewardEnabled);
         mStayListAdapter.setTrueVREnabled(supportTrueVR);
         mStayListAdapter.setAll(objectItemList);
@@ -244,7 +195,7 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
     }
 
     @Override
-    public void addList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean isNights, boolean rewardEnabled, boolean supportTrueVR)
+    public void addList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean nightsEnabled, boolean rewardEnabled, boolean supportTrueVR)
     {
         if (getViewDataBinding() == null || objectItemList == null || objectItemList.size() == 0)
         {
@@ -266,11 +217,83 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
         }
 
         mStayListAdapter.setDistanceEnabled(isSortByDistance);
-        mStayListAdapter.setNightsEnabled(isNights);
+        mStayListAdapter.setNightsEnabled(nightsEnabled);
         mStayListAdapter.setRewardEnabled(rewardEnabled);
         mStayListAdapter.setTrueVREnabled(supportTrueVR);
         mStayListAdapter.addAll(objectItemList);
         mStayListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setStayMakeMarker(List<Stay> stayList, boolean clear)
+    {
+        if (mStayMapFragment == null || stayList == null)
+        {
+            return;
+        }
+
+        mStayMapFragment.setStayList(stayList, true, clear);
+    }
+
+    @Override
+    public void setStayMapViewPagerList(Context context, List<Stay> stayList, boolean nightsEnabled, boolean rewardEnabled)
+    {
+        if (context == null)
+        {
+            return;
+        }
+
+        if (mViewPagerAdapter == null)
+        {
+            mViewPagerAdapter = new StayMapViewPagerAdapter(context);
+            mViewPagerAdapter.setOnPlaceMapViewPagerAdapterListener(new StayMapViewPagerAdapter.OnPlaceMapViewPagerAdapterListener()
+            {
+                @Override
+                public void onStayClick(View view, Stay stay)
+                {
+                    if (view instanceof DailyStayMapCardView)
+                    {
+                        getEventListener().onStayClick(-1, stay, getViewDataBinding().mapViewPager.getChildCount(), ((DailyStayMapCardView) view).getOptionsCompat(), StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_MAP);
+                    }
+                }
+
+                @Override
+                public void onCloseClick()
+                {
+                    getEventListener().onMapClick();
+                }
+            });
+        }
+
+        getViewDataBinding().mapViewPager.setAdapter(mViewPagerAdapter);
+
+        mViewPagerAdapter.clear();
+        mViewPagerAdapter.setData(stayList);
+        mViewPagerAdapter.setNightsEnabled(nightsEnabled);
+        mViewPagerAdapter.setRewardEnabled(rewardEnabled);
+        mViewPagerAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setMapViewPagerVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (visible == true && getViewDataBinding().mapViewPager.getVisibility() != View.VISIBLE)
+        {
+            showViewPagerAnimation();
+        } else if (visible == false && getViewDataBinding().mapViewPager.getVisibility() == View.VISIBLE)
+        {
+            hideViewPagerAnimation();
+
+            if (mStayMapFragment != null)
+            {
+                mStayMapFragment.hideSelectedMarker();
+            }
+        }
     }
 
     @Override
@@ -378,7 +401,7 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
                 @Override
                 public void onMarkerClick(Stay stay, List<Stay> stayList)
                 {
-
+                    getEventListener().onMarkerClick(stay, stayList);
                 }
 
                 @Override
@@ -430,8 +453,6 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
         //                return false;
         //            }
         //        });
-
-        mViewPager = addMapViewPager(getContext(), getViewDataBinding().mapLayout);
     }
 
     @Override
@@ -448,22 +469,19 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
             mViewPagerAdapter = null;
         }
 
-        if (mViewPager != null)
-        {
-            mViewPager.removeAllViews();
-            mViewPager = null;
-        }
+        getViewDataBinding().mapViewPager.removeAllViews();
+        getViewDataBinding().mapViewPager.setAdapter(null);
+        getViewDataBinding().mapViewPager.setVisibility(View.GONE);
 
         fragmentManager.beginTransaction().remove(mStayMapFragment).commitAllowingStateLoss();
 
         getViewDataBinding().mapLayout.removeAllViews();
         getViewDataBinding().mapLayout.setVisibility(View.GONE);
 
-        //        setMapProgressBarVisible(false);
-
         mStayMapFragment = null;
 
-        //        resetMenuBarLayoutTranslation();
+        mFloatingActionView.setTranslationY(0);
+        getViewDataBinding().mapViewPager.setTranslationY(0);
     }
 
     @Override
@@ -519,25 +537,80 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
         getViewDataBinding().recyclerView.scrollToPosition(0);
     }
 
-    private DailyOverScrollViewPager addMapViewPager(Context context, ViewGroup viewGroup)
+    private void initListLayout(FragmentStayListDataBinding viewDataBinding)
     {
-        if (context == null || viewGroup == null)
+        if (viewDataBinding == null)
         {
-            return null;
+            return;
         }
 
-        int paddingOther = ScreenUtils.dpToPx(context, VIEWPAGER_OTHER_PADDING_DP);
-        int paddingTop = ScreenUtils.dpToPx(context, VIEWPAGER_TOP_PADDING_DP);
+        viewDataBinding.swipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
+        viewDataBinding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+        {
+            @Override
+            public void onRefresh()
+            {
+                getEventListener().onSwipeRefreshing();
+            }
+        });
 
-        DailyOverScrollViewPager viewPager = new DailyOverScrollViewPager(context);
-        viewPager.setOffscreenPageLimit(2);
-        viewPager.setClipToPadding(false);
-        viewPager.setPageMargin(ScreenUtils.dpToPx(context, VIEWPAGER_PAGE_MARGIN_DP));
-        viewPager.setPadding(paddingOther, paddingTop, paddingOther, paddingOther);
-        viewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        viewDataBinding.recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener()
+        {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            {
+                if (getViewDataBinding().swipeRefreshLayout.isRefreshing() == true)
+                {
+                    return;
+                }
 
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(context, VIEWPAGER_HEIGHT_DP));
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener()
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+
+                // SwipeRefreshLayout
+                if (dy <= 0)
+                {
+                    int firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition();
+
+                    if (firstVisibleItem == 0)
+                    {
+                        getViewDataBinding().swipeRefreshLayout.setEnabled(true);
+                    } else
+                    {
+                        getViewDataBinding().swipeRefreshLayout.setEnabled(false);
+                    }
+                } else
+                {
+                    int lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
+                    int itemCount = linearLayoutManager.getItemCount();
+
+                    if (lastVisibleItemPosition > itemCount * 2 / 3)
+                    {
+                        getEventListener().onMoreRefreshing();
+                    }
+                }
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+            {
+            }
+        });
+
+        EdgeEffectColor.setEdgeGlowColor(viewDataBinding.recyclerView, getColor(R.color.default_over_scroll_edge));
+    }
+
+    private void initMapLayout(FragmentStayListDataBinding viewDataBinding)
+    {
+        if (viewDataBinding == null)
+        {
+            return;
+        }
+
+        viewDataBinding.mapViewPager.setOffscreenPageLimit(2);
+        viewDataBinding.mapViewPager.setClipToPadding(false);
+        viewDataBinding.mapViewPager.setPageMargin(ScreenUtils.dpToPx(getContext(), VIEWPAGER_PAGE_MARGIN_DP));
+        viewDataBinding.mapViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        viewDataBinding.mapViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener()
         {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
@@ -558,13 +631,141 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
             }
         });
 
-        layoutParams.gravity = Gravity.BOTTOM;
+        viewDataBinding.mapViewPager.setVisibility(View.GONE);
+    }
 
-        viewPager.setLayoutParams(layoutParams);
-        viewPager.setVisibility(View.INVISIBLE);
+    private void showViewPagerAnimation()
+    {
+        if (mValueAnimator != null && mValueAnimator.isRunning() == true)
+        {
+            return;
+        }
 
-        viewGroup.addView(viewPager);
+        if (getViewDataBinding().mapViewPager.getVisibility() == View.VISIBLE)
+        {
+            return;
+        }
 
-        return viewPager;
+        mValueAnimator = ValueAnimator.ofInt(0, 100);
+        mValueAnimator.setDuration(ANIMATION_DELAY);
+        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation)
+            {
+                int value = (Integer) animation.getAnimatedValue();
+                int height = ScreenUtils.dpToPx(getContext(), VIEWPAGER_HEIGHT_DP);
+                float translationY = height - height * value / 100;
+
+                mFloatingActionView.setTranslationY(translationY - ScreenUtils.dpToPx(getContext(), VIEWPAGER_HEIGHT_DP));
+                getViewDataBinding().mapViewPager.setTranslationY(translationY);
+            }
+        });
+
+        mValueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                mFloatingActionView.setTranslationY(0);
+                getViewDataBinding().mapViewPager.setTranslationY(ScreenUtils.dpToPx(getContext(), VIEWPAGER_HEIGHT_DP));
+
+                getViewDataBinding().mapViewPager.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                if (mValueAnimator != null)
+                {
+                    mValueAnimator.removeAllListeners();
+                    mValueAnimator.removeAllUpdateListeners();
+                    mValueAnimator = null;
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        mValueAnimator.start();
+    }
+
+    private void hideViewPagerAnimation()
+    {
+        if (mValueAnimator != null && mValueAnimator.isRunning() == true)
+        {
+            return;
+        }
+
+        if (getViewDataBinding().mapViewPager.getVisibility() != View.VISIBLE)
+        {
+            return;
+        }
+
+        mValueAnimator = ValueAnimator.ofInt(0, 100);
+        mValueAnimator.setDuration(ANIMATION_DELAY);
+        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation)
+            {
+                int value = (Integer) animation.getAnimatedValue();
+                int height = ScreenUtils.dpToPx(getContext(), VIEWPAGER_HEIGHT_DP);
+                float translationY = height * value / 100;
+
+                mFloatingActionView.setTranslationY(translationY - ScreenUtils.dpToPx(getContext(), VIEWPAGER_HEIGHT_DP));
+                getViewDataBinding().mapViewPager.setTranslationY(translationY);
+            }
+        });
+
+        mValueAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                //                mFloatingActionView.setTranslationY(0);
+                //                getViewDataBinding().mapViewPager.setTranslationY(0);
+
+                //                setMenuBarLayoutEnabled(false);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                if (mValueAnimator != null)
+                {
+                    mValueAnimator.removeAllListeners();
+                    mValueAnimator.removeAllUpdateListeners();
+                    mValueAnimator = null;
+                }
+
+                getViewDataBinding().mapViewPager.setVisibility(View.GONE);
+
+                mFloatingActionView.setTranslationY(0);
+                getViewDataBinding().mapViewPager.setTranslationY(0);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+
+            }
+        });
+
+        mValueAnimator.start();
     }
 }
