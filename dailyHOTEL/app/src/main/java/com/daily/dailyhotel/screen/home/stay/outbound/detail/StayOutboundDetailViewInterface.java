@@ -61,6 +61,4 @@ public interface StayOutboundDetailViewInterface extends BaseBlurViewInterface
     void startCampaignStickerAnimation();
 
     void stopCampaignStickerAnimation();
-
-    void showTrueAwardsDialog(String imageUrl, String awardsTitle, String awardsDescription, Dialog.OnDismissListener onDismissListener);
 }

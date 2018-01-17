@@ -141,8 +141,6 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
         void onRewardClick();
 
         void onRewardGuideClick();
-
-        void onTrueAwardsClick();
     }
 
     public StayOutboundDetailView(BaseActivity baseActivity, StayOutboundDetailView.OnEventListener listener)
@@ -1155,43 +1153,6 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
         getViewDataBinding().rewardCardView.stopCampaignStickerAnimation();
     }
 
-    @Override
-    public void showTrueAwardsDialog(String imageUrl, String awardsTitle, String awardsDescription, Dialog.OnDismissListener onDismissListener)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        DialogDailyAwardsDataBinding dataBinding = DataBindingUtil.inflate( //
-            LayoutInflater.from(getContext()), R.layout.dialog_daily_awards_data, null, false);
-
-        dataBinding.awardImageView.setBackgroundResource(R.color.transparent);
-        dataBinding.awardImageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_INSIDE);
-
-        if (DailyTextUtils.isTextEmpty(imageUrl) == false)
-        {
-            dataBinding.awardImageView.setImageURI(Uri.parse(imageUrl));
-        }
-
-        dataBinding.awardImageView.getHierarchy().setPlaceholderImage(R.drawable.vector_img_popup_detail_trueawards);
-        dataBinding.awardImageView.getHierarchy().setFailureImage(R.drawable.vector_img_popup_detail_trueawards);
-
-        dataBinding.awardTitleTextView.setText(awardsTitle);
-        dataBinding.awardDescriptionTextView.setText(awardsDescription);
-
-        dataBinding.confirmTextView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                hideSimpleDialog();
-            }
-        });
-
-        showSimpleDialog(dataBinding.getRoot(), null, onDismissListener, true);
-    }
-
     private void initToolbar(ActivityStayOutboundDetailDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
@@ -1423,17 +1384,6 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
             getViewDataBinding().trueAwardsView.setOnClickListener(null);
             return;
         }
-
-        getViewDataBinding().trueAwardsTopLineView.setVisibility(View.VISIBLE);
-        getViewDataBinding().trueAwardsView.setVisibility(View.VISIBLE);
-        getViewDataBinding().trueAwardsView.setListener(new DailyDetailTrueAwardsView.OnDailyDetailTrueAwardsListener()
-        {
-            @Override
-            public void onQuestionClick()
-            {
-                getEventListener().onTrueAwardsClick();
-            }
-        });
 
         getViewDataBinding().trueAwardsView.setAwardsNameText(awardsName);
 
