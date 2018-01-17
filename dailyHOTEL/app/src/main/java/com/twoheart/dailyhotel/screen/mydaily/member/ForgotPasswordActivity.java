@@ -1,6 +1,5 @@
 package com.twoheart.dailyhotel.screen.mydaily.member;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -155,35 +154,6 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
         }
     }
 
-    void onChangePassword(boolean isSuccess, String message)
-    {
-        unLockUI();
-
-        if (isSuccess == true)
-        {
-            mEmailEditText.setText(null);
-
-            showSimpleDialog(null, getString(R.string.dialog_msg_sent_email), getString(R.string.dialog_btn_text_confirm), new OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    finish();
-                }
-            }, new DialogInterface.OnCancelListener()
-            {
-                @Override
-                public void onCancel(DialogInterface dialog)
-                {
-                    finish();
-                }
-            });
-        } else
-        {
-            showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
-        }
-    }
-
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Listener
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -202,11 +172,13 @@ public class ForgotPasswordActivity extends BaseActivity implements Constants, O
             {
                 BaseDto baseDto = response.body();
 
-                onChangePassword(baseDto.msgCode == 100, baseDto.msg);
+                showSimpleDialog(null, baseDto.msg, getString(R.string.dialog_btn_text_confirm), null);
             } else
             {
                 ForgotPasswordActivity.this.onErrorResponse(call, response);
             }
+
+            unLockUI();
         }
 
         @Override
