@@ -923,6 +923,12 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                 {
                 } else
                 {
+                    // 이전 타입이 맵이고 리스트로 이동하는 경우 리스트를 재 호출 한다.
+                    if (mViewType == StayTabPresenter.ViewType.MAP && viewType == StayTabPresenter.ViewType.LIST)
+                    {
+                        mNeedToRefresh = true;
+                    }
+
                     setViewType(viewType);
                 }
             }
@@ -1000,7 +1006,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
         mViewType = viewType;
 
-        switch (mViewType)
+        switch (viewType)
         {
             case LIST:
                 getViewInterface().setListLayoutVisible(true);

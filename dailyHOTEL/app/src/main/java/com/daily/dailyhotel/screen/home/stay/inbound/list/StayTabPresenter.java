@@ -229,8 +229,6 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
     public void onPostCreate()
     {
         getViewInterface().setToolbarTitle(getString(R.string.label_daily_hotel));
-
-        getViewInterface().setViewType(ViewType.MAP);
     }
 
     @Override
@@ -565,8 +563,6 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                 screenLock(true);
 
                 mStayViewModel.viewType.setValue(ViewType.MAP);
-
-                getViewInterface().setViewType(ViewType.LIST);
                 break;
             }
 
@@ -576,8 +572,6 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                 mStayViewModel.viewType.setValue(ViewType.LIST);
 
                 clearCompositeDisposable();
-
-                getViewInterface().setViewType(ViewType.MAP);
 
                 unLockAll();
                 break;
@@ -593,6 +587,24 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         }
 
         mStayViewModel = ViewModelProviders.of(activity, new StayViewModelFactory(getActivity())).get(StayViewModel.class);
+
+        mStayViewModel.viewType.observe(activity, new Observer<ViewType>()
+        {
+            @Override
+            public void onChanged(@Nullable ViewType viewType)
+            {
+                switch (viewType)
+                {
+                    case LIST:
+                        getViewInterface().setViewType(ViewType.MAP);
+                        break;
+
+                    case MAP:
+                        getViewInterface().setViewType(ViewType.LIST);
+                        break;
+                }
+            }
+        });
 
         mStayViewModel.selectedCategory.observe(activity, new Observer<Category>()
         {
