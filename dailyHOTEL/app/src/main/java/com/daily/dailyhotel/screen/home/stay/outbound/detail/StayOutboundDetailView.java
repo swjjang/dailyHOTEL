@@ -51,7 +51,6 @@ import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.view.DailyDetailEmptyView;
 import com.daily.dailyhotel.view.DailyDetailTitleInformationView;
-import com.daily.dailyhotel.view.DailyDetailTrueAwardsView;
 import com.daily.dailyhotel.view.DailyDetailTrueReviewView;
 import com.daily.dailyhotel.view.DailyRewardCardView;
 import com.daily.dailyhotel.view.DailyToolbarView;
@@ -61,7 +60,6 @@ import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundDetailDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding;
-import com.twoheart.dailyhotel.databinding.DialogDailyAwardsDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogShareDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailAmenitiesDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailConciergeDataBinding;
@@ -460,9 +458,6 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
 
         // 트루 리뷰
         setTrueReviewView(stayOutboundDetail.tripAdvisorRating);
-
-        // 트루 어워드
-        setTrueAwardsView("테스트", "테스트입니다");
 
         //
         setCheckDateView(stayBookDateTime, people);
@@ -1368,27 +1363,6 @@ public class StayOutboundDetailView extends BaseBlurView<StayOutboundDetailView.
             // 만족도
             trueReviewView.setTripAdvisorRating(tripAdvisorRating);
         }
-    }
-
-    private void setTrueAwardsView(String awardsName, String awardsCategoryText)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        if (DailyTextUtils.isTextEmpty(awardsName) == true)
-        {
-            getViewDataBinding().trueAwardsTopLineView.setVisibility(View.GONE);
-            getViewDataBinding().trueAwardsView.setVisibility(View.GONE);
-            getViewDataBinding().trueAwardsView.setOnClickListener(null);
-            return;
-        }
-
-        getViewDataBinding().trueAwardsView.setAwardsNameText(awardsName);
-
-        getViewDataBinding().trueAwardsView.setAwardsDetailText(awardsCategoryText);
-        getViewDataBinding().trueAwardsView.setAwardsDetailLayoutVisible(DailyTextUtils.isTextEmpty(awardsCategoryText) == false);
     }
 
     private void setCheckDateView(StayBookDateTime stayBookDateTime, People people)
