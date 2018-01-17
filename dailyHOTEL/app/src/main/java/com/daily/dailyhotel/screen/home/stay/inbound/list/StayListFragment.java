@@ -3,7 +3,6 @@ package com.daily.dailyhotel.screen.home.stay.inbound.list;
 
 import android.support.annotation.NonNull;
 
-import com.daily.base.BaseFragment;
 import com.daily.base.OnBaseFragmentEventListener;
 import com.daily.dailyhotel.base.BasePagerFragment;
 

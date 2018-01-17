@@ -63,8 +63,6 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
 
         void onStayLongClick(int position, Stay stay, int listCount, android.support.v4.util.Pair[] pairs);
 
-        void onViewPagerClose();
-
         // Map Event
         void onMapReady();
 
@@ -75,10 +73,6 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
         void onMapClick();
 
         void onMyLocationClick();
-
-        void onRetryClick();
-
-        void onResearchClick();
 
         void onCallClick();
 

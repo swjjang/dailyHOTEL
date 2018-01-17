@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.BaseFragmentPagerAdapter;
-import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
@@ -24,27 +23,12 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, ActivityStayTabDataBinding> //
-    implements StayTabInterface, StayListFragment.OnEventListener
+public class StayTabView extends BaseDialogView<StayTabInterface.OnEventListener, ActivityStayTabDataBinding> //
+    implements StayTabInterface.ViewInterface, StayListFragment.OnEventListener
 {
     private BaseFragmentPagerAdapter<StayListFragment> mFragmentPagerAdapter;
 
-    public interface OnEventListener extends OnBaseEventListener
-    {
-        void onCategoryTabSelected(TabLayout.Tab tab);
-
-        void onCategoryTabReselected(TabLayout.Tab tab);
-
-        void onRegionClick();
-
-        void onCalendarClick();
-
-        void onFilterClick();
-
-        void onViewTypeClick();
-    }
-
-    public StayTabView(BaseActivity baseActivity, StayTabView.OnEventListener listener)
+    public StayTabView(BaseActivity baseActivity, StayTabInterface.OnEventListener listener)
     {
         super(baseActivity, listener);
     }
@@ -189,17 +173,12 @@ public class StayTabView extends BaseDialogView<StayTabView.OnEventListener, Act
                     {
                         isScrolling = false;
 
-                        //                            onAnalyticsCategoryFlicking(mCategoryTabLayout.getTabAt(position).getText().toString());
-                    } else
-                    {
-                        //                            onAnalyticsCategoryClick(mCategoryTabLayout.getTabAt(position).getText().toString());
+                        getEventListener().onCategoryFlicking(position);
                     }
                 } else
                 {
                     isScrolling = false;
                 }
-
-                //                    getEventListener().onPageSelected(mFragmentPagerAdapter.getItem(position), mFragmentPagerAdapter.getItem(prevPosition));
 
                 prevPosition = position;
             }

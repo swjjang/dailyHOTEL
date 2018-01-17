@@ -296,7 +296,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
     @Override
     public void onBackClick()
     {
-
+        // 사용하지 않음.
     }
 
     @Override
@@ -340,7 +340,10 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                 break;
 
             case MAP:
-                onMapClick();
+                if (getViewInterface().isMapViewPagerVisible() == true)
+                {
+                    onMapClick();
+                }
                 break;
         }
     }

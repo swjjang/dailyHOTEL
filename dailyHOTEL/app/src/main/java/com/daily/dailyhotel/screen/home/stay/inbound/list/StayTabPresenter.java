@@ -71,12 +71,12 @@ import io.reactivex.functions.Function;
  * Created by sheldon
  * Clean Architecture
  */
-public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, StayTabInterface> implements StayTabView.OnEventListener
+public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, StayTabInterface.ViewInterface> implements StayTabInterface.OnEventListener
 {
     private static final int DAYS_OF_MAXCOUNT = 60;
     private static final int NIGHTS_OF_MAXCOUNT = 60;
 
-    private StayTabAnalyticsInterface mAnalytics;
+    private StayTabInterface.AnalyticsInterface mAnalytics;
 
     CommonRemoteImpl mCommonRemoteImpl;
     StayRemoteImpl mStayRemoteImpl;
@@ -101,9 +101,6 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         MutableLiveData<Category> selectedCategory = new MutableLiveData<>();
         MutableLiveData<Location> location = new MutableLiveData<>();
         MutableLiveData<ViewType> viewType = new MutableLiveData<>();
-
-        //        // 화면 갱신
-        //        MutableLiveData<Boolean> notifyRefreshFragment = new MutableLiveData<>();
     }
 
     class StayViewModelFactory implements ViewModelProvider.Factory
@@ -141,14 +138,8 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                 }
             }
 
-            //            stayViewModel.notifyRefreshFragment.setValue(false);
-
             return stayViewModel;
         }
-    }
-
-    public interface StayTabAnalyticsInterface extends BaseAnalyticsInterface
-    {
     }
 
     public StayTabPresenter(@NonNull StayTabActivity activity)
@@ -158,7 +149,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
     @NonNull
     @Override
-    protected StayTabInterface createInstanceViewInterface()
+    protected StayTabInterface.ViewInterface createInstanceViewInterface()
     {
         return new StayTabView(getActivity(), this);
     }
@@ -181,7 +172,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
     @Override
     public void setAnalytics(BaseAnalyticsInterface analytics)
     {
-        mAnalytics = (StayTabAnalyticsInterface) analytics;
+        mAnalytics = (StayTabInterface.AnalyticsInterface) analytics;
     }
 
     @Override
@@ -324,8 +315,14 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                 onFilterActivityResult(resultCode, data);
                 break;
 
+            // 딥링크로 진입한 경우이다.
             case StayTabActivity.REQUEST_CODE_DETAIL:
-                setRefresh(true);
+            case StayTabActivity.REQUEST_CODE_SEARCH:
+            case StayTabActivity.REQUEST_CODE_SEARCH_RESULT:
+                if (mHasDeepLink == true)
+                {
+                    setRefresh(true);
+                }
                 break;
         }
 
@@ -409,6 +406,8 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                         notifyCategoryChanged();
                     }
                 }
+
+                unLockAll();
             }
         }, new Consumer<Throwable>()
         {
@@ -577,6 +576,12 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                 break;
             }
         }
+    }
+
+    @Override
+    public void onCategoryFlicking(int position)
+    {
+
     }
 
     private void initViewModel(BaseActivity activity)
@@ -996,13 +1001,9 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             if (externalDeepLink.isHotelSearchView() == true //
                 || externalDeepLink.isCampaignTagListView() == true)
             {
-                //                unLockAll();
-
                 return moveDeepLinkSearch(commonDateTime, dailyDeepLink);
             } else if (externalDeepLink.isHotelSearchResultView() == true)
             {
-                //                unLockAll();
-
                 return moveDeepLinkSearchResult(commonDateTime, dailyDeepLink);
             } else
             {
@@ -1033,8 +1034,6 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
             if (externalDeepLink.isHotelListView() == true)
             {
-                //                unLockAll();
-
                 return moveDeepLinkStayList(stayDistrictList, commonDateTime, externalDeepLink);
             } else
             {
@@ -1406,5 +1405,4 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
         return true;
     }
-
 }
