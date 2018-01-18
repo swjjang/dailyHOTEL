@@ -1091,34 +1091,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             {
                 unLockAll();
 
-                // 가격이 변동된 경우
-                if (mCheckChangedPrice == false && checkChangedPrice(gourmetPayment, mGourmetCart) == true)
-                {
-                    mCheckChangedPrice = true;
-                    setResult(BaseActivity.RESULT_CODE_REFRESH);
-
-                    addCompositeDisposable(mCartLocalImpl.clearGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
-                    {
-                        @Override
-                        public void accept(Boolean aBoolean) throws Exception
-                        {
-                            getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_payment_changed_price)//
-                                , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
-                                {
-                                    @Override
-                                    public void onDismiss(DialogInterface dialogInterface)
-                                    {
-                                        onBackClick();
-                                    }
-                                });
-                        }
-                    }));
-
-                    mAnalytics.onEventChangedPrice(getActivity(), mGourmetCart.gourmetName);
-                } else
-                {
-                    showAgreementPopup();
-                }
+                showAgreementPopup();
             }
         }, new Consumer<Throwable>()
         {
