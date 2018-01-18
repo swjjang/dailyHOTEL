@@ -855,7 +855,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
             return;
         }
 
-        startActivity(CallDialogActivity.newInstance(getActivity()));
+        startActivityForResult(CallDialogActivity.newInstance(getActivity()), StayTabActivity.REQUEST_CODE_CALL);
     }
 
     @Override

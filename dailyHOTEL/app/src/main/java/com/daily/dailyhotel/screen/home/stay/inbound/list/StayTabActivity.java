@@ -26,6 +26,7 @@ public class StayTabActivity extends BaseActivity<StayTabPresenter>
     static final int REQUEST_CODE_PERMISSION_MANAGER = 10007;
     static final int REQUEST_CODE_SETTING_LOCATION = 10008;
     static final int REQUEST_CODE_WISH_DIALOG = 10009;
+    static final int REQUEST_CODE_CALL = 10010;
 
     public static Intent newInstance(Context context, String deepLink)
     {

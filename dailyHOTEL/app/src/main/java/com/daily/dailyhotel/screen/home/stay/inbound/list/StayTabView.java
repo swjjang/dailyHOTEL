@@ -92,6 +92,8 @@ public class StayTabView extends BaseDialogView<StayTabInterface.OnEventListener
             return;
         }
 
+        getViewDataBinding().viewPager.setAdapter(null);
+
         if (mFragmentPagerAdapter != null)
         {
             mFragmentPagerAdapter.removeAll();

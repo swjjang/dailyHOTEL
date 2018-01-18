@@ -2,6 +2,7 @@ package com.daily.dailyhotel.view;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +41,8 @@ public class DailyStayListEmptyView extends ScrollView
         setFillViewport(true);
 
         mViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_stay_list_empty_data, this, true);
+
+        mViewDataBinding.callTextView.setPaintFlags(mViewDataBinding.callTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     }
 
     public void setMessageTextView(String message01, String message02)
