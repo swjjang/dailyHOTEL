@@ -37,7 +37,8 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/awardImageView"
-            app:layout_goneMarginTop="0dp"/>
+            app:layout_goneMarginTop="0dp"
+            dailyFont:style="Medium"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/awardDescriptionTextView"
