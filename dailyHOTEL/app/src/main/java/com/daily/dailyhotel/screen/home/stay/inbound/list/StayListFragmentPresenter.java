@@ -358,6 +358,11 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                 break;
 
             case MAP:
+                if (getViewInterface().isMapViewPagerVisible() == true)
+                {
+                    onMapClick();
+                }
+
                 onMapReady();
                 break;
         }

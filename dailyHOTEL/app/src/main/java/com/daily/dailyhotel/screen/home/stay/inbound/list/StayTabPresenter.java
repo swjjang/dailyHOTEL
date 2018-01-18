@@ -118,7 +118,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         {
             StayViewModel stayViewModel = new StayViewModel();
 
-            stayViewModel.stayFilter.setValue(new StayFilter());
+            stayViewModel.stayFilter.setValue(new StayFilter().resetFilter());
             stayViewModel.viewType.setValue(ViewType.LIST);
 
             if (mContext == null)
@@ -522,9 +522,9 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             radius = 0;
         }
 
-        Intent intent = StayFilterActivity.newInstance(getActivity(), checkInDateTime, checkOutDateTime//
-            , mStayViewModel.viewType.getValue(), mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue(), categoryList, location, radius, null);
-        startActivityForResult(intent, StayTabActivity.REQUEST_CODE_FILTER);
+        startActivityForResult(StayFilterActivity.newInstance(getActivity(), checkInDateTime, checkOutDateTime//
+            , mStayViewModel.viewType.getValue(), mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue()//
+            , categoryList, location, radius, null), StayTabActivity.REQUEST_CODE_FILTER);
 
         mAnalytics.onFilterClick(getActivity(), mStayViewModel.viewType.getValue());
     }
@@ -707,6 +707,8 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         {
             mStayViewModel.stayBookDateTime.getValue().setCheckInDateTime(checkInDateTime);
             mStayViewModel.stayBookDateTime.getValue().setCheckOutDateTime(checkOutDateTime);
+
+            mStayViewModel.stayBookDateTime.setValue(mStayViewModel.stayBookDateTime.getValue());
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -729,6 +731,8 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         {
             mStayViewModel.stayBookDateTime.getValue().setCheckInDateTime(checkInDateTime);
             mStayViewModel.stayBookDateTime.getValue().setCheckOutDateTime(checkInDateTime, afterDay);
+
+            mStayViewModel.stayBookDateTime.setValue(mStayViewModel.stayBookDateTime.getValue());
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -905,7 +909,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                     mStayViewModel.stayRegion.setValue(region);
 
                     // 지역이 수정 되면 필터가 초기화 된다.
-                    mStayViewModel.stayFilter.getValue().resetFilter();
+                    mStayViewModel.stayFilter.setValue(mStayViewModel.stayFilter.getValue().resetFilter());
                     mStayViewModel.selectedCategory.setValue(Category.ALL);
 
                     setRefresh(true);
@@ -966,8 +970,6 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                             return;
                         }
 
-                        mStayViewModel.stayFilter.setValue(stayFilter);
-
                         if (stayFilter.sortType == StayFilter.SortType.DISTANCE)
                         {
                             Location location = data.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_LOCATION);
@@ -980,9 +982,14 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                                 mStayViewModel.stayFilter.getValue().sortType = StayFilter.SortType.DEFAULT;
                             }
 
+                            mStayViewModel.stayFilter.setValue(stayFilter);
+
                             getViewInterface().refreshCurrentCategory();
                         } else
                         {
+
+                            mStayViewModel.stayFilter.setValue(stayFilter);
+
                             getViewInterface().refreshCurrentCategory();
                         }
                     } catch (Exception e)
@@ -992,7 +999,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                         Crashlytics.logException(e);
 
                         // 지역이 수정 되면 필터가 초기화 된다.
-                        mStayViewModel.stayFilter.getValue().resetFilter();
+                        mStayViewModel.stayFilter.setValue(mStayViewModel.stayFilter.getValue().resetFilter());
                         mStayViewModel.selectedCategory.setValue(Category.ALL);
 
                         setRefresh(true);
@@ -1287,13 +1294,10 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                 String date = externalDeepLink.getDate();
                 int datePlus = externalDeepLink.getDatePlus();
 
-                if (mStayViewModel.stayFilter.getValue() == null)
-                {
-                    mStayViewModel.stayFilter.setValue(new StayFilter());
-                    mStayViewModel.stayFilter.getValue().resetFilter();
-                }
+                StayFilter stayFilter = mStayViewModel.stayFilter.getValue() == null ? new StayFilter().resetFilter() : mStayViewModel.stayFilter.getValue();
+                stayFilter.sortType = StayFilter.SortType.valueOf(externalDeepLink.getSorting().name());
+                mStayViewModel.stayFilter.setValue(stayFilter);
 
-                mStayViewModel.stayFilter.getValue().sortType = StayFilter.SortType.valueOf(externalDeepLink.getSorting().name());
                 getViewInterface().setOptionFilterSelected(mStayViewModel.stayFilter.getValue().isDefaultFilter() == false);
 
                 int nights = 1;
