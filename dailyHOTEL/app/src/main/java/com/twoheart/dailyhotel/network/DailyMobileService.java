@@ -833,7 +833,7 @@ public interface DailyMobileService
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
     Observable<BaseDto<GourmetOldWaitingDepositData>> getGourmetOldWaitingDeposit( //
-        @Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("tid") String tid);
+                                                                                   @Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("tid") String tid);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET()

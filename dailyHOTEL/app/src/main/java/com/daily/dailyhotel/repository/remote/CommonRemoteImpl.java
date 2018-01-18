@@ -10,19 +10,13 @@ import com.daily.dailyhotel.domain.CommonInterface;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.Configurations;
 import com.daily.dailyhotel.entity.Notification;
-import com.daily.dailyhotel.entity.Review;
 import com.daily.dailyhotel.repository.remote.model.NotificationData;
-import com.daily.dailyhotel.storage.preference.DailyPreference;
-import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;

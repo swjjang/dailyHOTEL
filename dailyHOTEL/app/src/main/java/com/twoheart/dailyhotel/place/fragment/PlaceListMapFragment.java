@@ -1190,7 +1190,7 @@ public abstract class PlaceListMapFragment extends com.google.android.gms.maps.S
                         try
                         {
                             exception.startResolutionForResult(getActivity(), Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
-                        }catch (Exception e)
+                        } catch (Exception e)
                         {
 
                         }
