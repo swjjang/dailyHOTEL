@@ -6,6 +6,7 @@ import com.daily.base.BaseDialogViewInterface;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetDetail;
 import com.daily.dailyhotel.entity.GourmetMenu;
+import com.daily.dailyhotel.entity.TrueAwards;
 
 import java.util.List;
 
@@ -59,4 +60,6 @@ public interface GourmetDetailViewInterface extends BaseDialogViewInterface
     void setToolbarCartMenusCount(int count);
 
     void performVisitTimeClick(String time);
+
+    void showTrueAwardsDialog(TrueAwards trueAwards, Dialog.OnDismissListener onDismissListener);
 }

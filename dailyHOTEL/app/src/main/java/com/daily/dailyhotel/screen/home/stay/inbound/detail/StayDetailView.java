@@ -45,10 +45,12 @@ import com.daily.dailyhotel.entity.ImageMap;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayDetail;
 import com.daily.dailyhotel.entity.StayRoom;
+import com.daily.dailyhotel.entity.TrueAwards;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.view.DailyDetailEmptyView;
 import com.daily.dailyhotel.view.DailyDetailTitleInformationView;
+import com.daily.dailyhotel.view.DailyDetailTrueAwardsView;
 import com.daily.dailyhotel.view.DailyDetailTrueReviewView;
 import com.daily.dailyhotel.view.DailyRewardCardView;
 import com.daily.dailyhotel.view.DailyToolbarView;
@@ -57,6 +59,7 @@ import com.facebook.drawee.view.DraweeTransition;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayDetailDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding;
+import com.twoheart.dailyhotel.databinding.DialogDailyAwardsDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogShareDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailAmenitiesDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutGourmetDetailBenefitContentBinding;
@@ -141,6 +144,8 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         void onRewardClick();
 
         void onRewardGuideClick();
+
+        void onTrueAwardsClick();
     }
 
     public StayDetailView(BaseActivity baseActivity, StayDetailView.OnEventListener listener)
@@ -447,6 +452,9 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
 
         // 트루 리뷰
         setTrueReviewView(stayDetail.ratingShow, stayDetail.ratingValue, stayDetail.ratingPersons, trueReviewCount);
+
+        // 트루 어워드
+        setTrueAwardsView(stayDetail.awards);
 
         // 체크인/체크아웃
         setCheckDateView(stayBookDateTime);
@@ -1133,6 +1141,43 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         getViewDataBinding().rewardCardView.stopCampaignStickerAnimation();
     }
 
+    @Override
+    public void showTrueAwardsDialog(TrueAwards trueAwards, Dialog.OnDismissListener onDismissListener)
+    {
+        if (getViewDataBinding() == null || getContext() == null || trueAwards == null)
+        {
+            return;
+        }
+
+        DialogDailyAwardsDataBinding dataBinding = DataBindingUtil.inflate( //
+            LayoutInflater.from(getContext()), R.layout.dialog_daily_awards_data, null, false);
+
+        dataBinding.awardImageView.setBackgroundResource(R.color.transparent);
+        dataBinding.awardImageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_INSIDE);
+
+        if (DailyTextUtils.isTextEmpty(trueAwards.imageUrl) == false)
+        {
+            dataBinding.awardImageView.setImageURI(Uri.parse(trueAwards.imageUrl));
+        }
+
+        dataBinding.awardImageView.getHierarchy().setPlaceholderImage(R.drawable.vector_img_popup_detail_trueawards);
+        dataBinding.awardImageView.getHierarchy().setFailureImage(R.drawable.vector_img_popup_detail_trueawards);
+
+        dataBinding.awardTitleTextView.setText(getContext().getString(R.string.label_daily_true_awards_popup_title_formet, trueAwards.title));
+        dataBinding.awardDescriptionTextView.setText(trueAwards.description);
+
+        dataBinding.confirmTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                hideSimpleDialog();
+            }
+        });
+
+        showSimpleDialog(dataBinding.getRoot(), null, onDismissListener, true);
+    }
+
     private void initToolbar(ActivityStayDetailDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
@@ -1360,6 +1405,35 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
                 trueReviewView.setTrueReviewCountVisible(false);
             }
         }
+    }
+
+    private void setTrueAwardsView(TrueAwards trueAwards)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (trueAwards == null || DailyTextUtils.isTextEmpty(trueAwards.title) == true)
+        {
+            getViewDataBinding().trueAwardsTopLineView.setVisibility(View.GONE);
+            getViewDataBinding().trueAwardsView.setVisibility(View.GONE);
+            getViewDataBinding().trueAwardsView.setOnClickListener(null);
+            return;
+        }
+
+        getViewDataBinding().trueAwardsTopLineView.setVisibility(View.VISIBLE);
+        getViewDataBinding().trueAwardsView.setVisibility(View.VISIBLE);
+        getViewDataBinding().trueAwardsView.setListener(new DailyDetailTrueAwardsView.OnDailyDetailTrueAwardsListener()
+        {
+            @Override
+            public void onQuestionClick()
+            {
+                getEventListener().onTrueAwardsClick();
+            }
+        });
+
+        getViewDataBinding().trueAwardsView.setAwardsDetailText(trueAwards.title);
     }
 
     /**

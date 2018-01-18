@@ -640,6 +640,12 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                 {
                     boolean wish = data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false);
 
+                    if (mStayOutboundDetail == null)
+                    {
+                        Util.restartApp(getActivity());
+                        return;
+                    }
+
                     mStayOutboundDetail.myWish = wish;
                     mStayOutboundDetail.wishCount = wish ? mStayOutboundDetail.wishCount + 1 : mStayOutboundDetail.wishCount - 1;
 

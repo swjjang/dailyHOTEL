@@ -103,6 +103,8 @@ public class GourmetDetailData
     @JsonField(name = "couponDiscount")
     public int couponDiscount;
 
+    @JsonField(name = "awards")
+    public TrueAwardsData awards;
 
     public GourmetDetailData()
     {
@@ -214,6 +216,11 @@ public class GourmetDetailData
 
         // 상세
         gourmetDetail.setDescriptionList(details);
+
+        if (awards != null)
+        {
+            gourmetDetail.awards = awards.getTrueAwards();
+        }
 
         return gourmetDetail;
     }

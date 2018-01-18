@@ -547,6 +547,7 @@ public class DailyRemoteConfig
             String dailyReward = jsonObject.getString("dailyReward");
             String dailyRewardTerms = jsonObject.getString("dailyRewardTerms");
             String dailyRewardCouponTerms = jsonObject.getString("dailyRewardCouponTerms");
+            String dailyTrueAwards = jsonObject.getString("dailyTrueAwards");
 
             DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlPrivacy(privacyUrl);
             DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlTerms(termsUrl);
@@ -565,6 +566,7 @@ public class DailyRemoteConfig
             DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlDailyReward(dailyReward);
             DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlDailyRewardTerms(dailyRewardTerms);
             DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlDailyRewardCouponTerms(dailyRewardCouponTerms);
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigStaticUrlDailyTrueAwards(dailyTrueAwards);
         } catch (Exception e)
         {
             ExLog.e(e.toString());

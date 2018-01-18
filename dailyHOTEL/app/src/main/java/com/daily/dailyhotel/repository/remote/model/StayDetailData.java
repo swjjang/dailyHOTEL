@@ -125,6 +125,9 @@ public class StayDetailData
     @JsonField(name = "configurations")
     public ConfigurationsData configurations;
 
+    @JsonField(name = "awards")
+    public TrueAwardsData awards;
+
     public StayDetailData()
     {
 
@@ -298,6 +301,11 @@ public class StayDetailData
         if (configurations != null)
         {
             stayDetail.activeReward = configurations.activeReward;
+        }
+
+        if (awards != null)
+        {
+            stayDetail.awards = awards.getTrueAwards();
         }
 
         return stayDetail;
