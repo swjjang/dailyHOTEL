@@ -376,7 +376,18 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
             screenLock(true);
 
-            addCompositeDisposable(searchMyLocation().subscribe(new Consumer<Location>()
+            // https://fabric.io/daily/android/apps/com.twoheart.dailyhotel/issues/5a5f14458cb3c2fa63ff8597?time=last-seven-days
+            Observable<Location> observable = searchMyLocation();
+
+            if (observable == null)
+            {
+                unLockAll();
+
+                finish();
+                return;
+            }
+
+            addCompositeDisposable(observable.subscribe(new Consumer<Location>()
             {
                 @Override
                 public void accept(@io.reactivex.annotations.NonNull Location location) throws Exception
