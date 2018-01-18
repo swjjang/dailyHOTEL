@@ -32,7 +32,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by sheldon
  * Clean Architecture
  */
-public class StayOutboundCalendarPresenter extends PlaceCalendarPresenter<StayOutboundCalendarActivity, StayOutboundCalendarViewInterface> implements StayOutboundCalendarView.OnEventListener
+public class StayOutboundCalendarPresenter extends BaseCalendarPresenter<StayOutboundCalendarActivity, StayOutboundCalendarViewInterface> implements StayOutboundCalendarView.OnEventListener
 {
     private StayOutboundCalendarPresenterAnalyticsInterface mAnalytics;
 
@@ -114,6 +114,12 @@ public class StayOutboundCalendarPresenter extends PlaceCalendarPresenter<StayOu
         }
 
         return true;
+    }
+
+    @Override
+    public void onNewIntent(Intent intent)
+    {
+
     }
 
     @Override

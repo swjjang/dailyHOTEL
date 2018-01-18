@@ -86,6 +86,12 @@ public class NavigatorDialogPresenter extends BaseExceptionPresenter<NavigatorDi
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
         if (mOverseas == true)

@@ -9,10 +9,13 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Rect;
 import android.support.annotation.Keep;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewConfigurationCompat;
 import android.support.v4.view.ViewPager;
+import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -39,11 +42,12 @@ public class DailyOverScrollViewPager extends ViewPager
     private int mActivePointerId;
     int mScrollPosition;
     float mScrollPositionOffset;
-    private final int mTouchSlop; // Touch Event 가 Scroll Event로 인정받기위한 최소간격!
+    private int mTouchSlop; // Touch Event 가 Scroll Event로 인정받기위한 최소간격!
 
     private int mOverScrollTranslation;
     int mOverScrollAnimationDuration;
     private Rect mTempRect = new Rect();
+
 
     private class OverScrollEffect
     {
@@ -137,6 +141,18 @@ public class DailyOverScrollViewPager extends ViewPager
     {
         super(context);
 
+        initLayout(context);
+    }
+
+    public DailyOverScrollViewPager(@NonNull Context context, @Nullable AttributeSet attrs)
+    {
+        super(context, attrs);
+
+        initLayout(context);
+    }
+
+    private void initLayout(Context context)
+    {
         setStaticTransformationsEnabled(true);
         final ViewConfiguration configuration = ViewConfiguration.get(context);
         mTouchSlop = ViewConfigurationCompat.getScaledPagingTouchSlop(configuration);

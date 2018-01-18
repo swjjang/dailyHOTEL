@@ -69,6 +69,12 @@ public class EmailDialogPresenter extends BaseExceptionPresenter<EmailDialogActi
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
     }

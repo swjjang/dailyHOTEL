@@ -61,13 +61,15 @@ public class StayFilter
             && flagRoomAmenitiesFilters == FLAG_ROOM_AMENITIES_NONE);
     }
 
-    public void resetFilter()
+    public StayFilter resetFilter()
     {
         person = PERSON_COUNT_OF_DEFAULT;
         flagBedTypeFilters = FLAG_BED_NONE;
         flagAmenitiesFilters = FLAG_AMENITIES_NONE;
         flagRoomAmenitiesFilters = FLAG_ROOM_AMENITIES_NONE;
         sortType = SortType.DEFAULT;
+
+        return this;
     }
 
     public List<String> getBedTypeList()

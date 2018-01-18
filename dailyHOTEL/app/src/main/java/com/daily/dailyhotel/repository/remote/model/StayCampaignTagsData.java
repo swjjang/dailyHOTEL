@@ -2,8 +2,8 @@ package com.daily.dailyhotel.repository.remote.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.entity.StayCampaignTags;
-import com.twoheart.dailyhotel.model.Stay;
 
 import java.util.ArrayList;
 
@@ -20,7 +20,7 @@ public class StayCampaignTagsData
     public String imageUrl;
 
     @JsonField(name = "saleRecords")
-    public ArrayList<StaySalesData> saleRecords;
+    public ArrayList<StayData> saleRecords;
 
     @JsonField(name = "configurations")
     public ConfigurationsData configurations;
@@ -45,11 +45,9 @@ public class StayCampaignTagsData
     {
         ArrayList<Stay> stayList = new ArrayList<>();
 
-        for (StaySalesData staySalesData : saleRecords)
+        for (StayData staySalesData : saleRecords)
         {
-            Stay stay = staySalesData.getStay();
-
-            stay.imageUrl = imageUrl + stay.imageUrl;
+            Stay stay = staySalesData.getStay(imageUrl);
 
             stayList.add(stay);
         }

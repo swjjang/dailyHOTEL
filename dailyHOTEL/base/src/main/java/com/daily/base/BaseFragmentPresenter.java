@@ -2,13 +2,19 @@ package com.daily.base;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
-public abstract class BaseFragmentPresenter<T1 extends Fragment, T2 extends BaseDialogViewInterface> implements BaseFragmentInterface
+public abstract class BaseFragmentPresenter<T1 extends BaseFragment, T2 extends BaseFragmentDialogViewInterface> implements BaseFragmentInterface
 {
     private T1 mFragment;
 
@@ -21,15 +27,20 @@ public abstract class BaseFragmentPresenter<T1 extends Fragment, T2 extends Base
         mFragment = fragment;
 
         mOnViewInterface = createInstanceViewInterface();
-
-        constructorInitialize();
     }
 
-    protected abstract
-    @NonNull
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState)
+    {
+        mOnViewInterface.setActivity(getActivity());
+
+        constructorInitialize(getActivity());
+    }
+
+    protected abstract @NonNull
     T2 createInstanceViewInterface();
 
-    public abstract void constructorInitialize();
+    public abstract void constructorInitialize(BaseActivity baseActivity);
 
     public abstract void setAnalytics(BaseAnalyticsInterface analytics);
 
@@ -38,9 +49,14 @@ public abstract class BaseFragmentPresenter<T1 extends Fragment, T2 extends Base
         return (BaseActivity) mFragment.getActivity();
     }
 
+    public T1 getFragment()
+    {
+        return mFragment;
+    }
+
     public BasePresenter getActivityPresenter()
     {
-        return getActivity().getPresenter();
+        return getActivity() == null ? null : getActivity().getPresenter();
     }
 
     protected String getString(int resId)
@@ -53,8 +69,7 @@ public abstract class BaseFragmentPresenter<T1 extends Fragment, T2 extends Base
         return mFragment.getString(resId, formatArgs);
     }
 
-    public
-    @NonNull
+    public @NonNull
     T2 getViewInterface()
     {
         if (mOnViewInterface == null)
@@ -85,11 +100,9 @@ public abstract class BaseFragmentPresenter<T1 extends Fragment, T2 extends Base
     @Override
     public void onDestroy()
     {
-        getActivityPresenter().clearLock();
-
         getViewInterface().hideSimpleDialog();
 
-        clearCompositeDisposable();
+        disposeCompositeDisposable();
     }
 
     protected void startActivity(Intent intent)
@@ -102,13 +115,28 @@ public abstract class BaseFragmentPresenter<T1 extends Fragment, T2 extends Base
         mFragment.startActivityForResult(intent, requestCode);
     }
 
+    protected void startActivityForResult(Intent intent, int requestCode, Bundle options)
+    {
+        mFragment.startActivityForResult(intent, requestCode, options);
+    }
+
     protected void startActivity(Activity activity, Intent intent)
     {
+        if (activity == null)
+        {
+            return;
+        }
+
         activity.startActivity(intent);
     }
 
     protected void startActivityForResult(Activity activity, Intent intent, int requestCode)
     {
+        if (activity == null)
+        {
+            return;
+        }
+
         activity.startActivityForResult(intent, requestCode);
     }
 
@@ -135,6 +163,11 @@ public abstract class BaseFragmentPresenter<T1 extends Fragment, T2 extends Base
     protected void clearCompositeDisposable()
     {
         mCompositeDisposable.clear();
+    }
+
+    private void disposeCompositeDisposable()
+    {
+        mCompositeDisposable.dispose();
     }
 
     protected void onHandleError(Throwable throwable)

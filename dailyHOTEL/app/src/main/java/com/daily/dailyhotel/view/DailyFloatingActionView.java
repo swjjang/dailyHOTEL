@@ -14,6 +14,15 @@ import com.twoheart.dailyhotel.databinding.DailyViewFloatingActionDataBinding;
 public class DailyFloatingActionView extends ConstraintLayout
 {
     private DailyViewFloatingActionDataBinding mViewDataBinding;
+    private boolean mViewOptionMapEnabled;
+    private boolean mViewOptionListEnabled;
+    private ViewOption mViewOption;
+
+    public enum ViewOption
+    {
+        LIST,
+        MAP,
+    }
 
     public DailyFloatingActionView(Context context)
     {
@@ -41,6 +50,10 @@ public class DailyFloatingActionView extends ConstraintLayout
         mViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_floating_action_data, this, true);
 
         setBackgroundResource(R.drawable.fab);
+
+        setViewOptionEnabled(true);
+
+        setViewOption(ViewOption.LIST);
     }
 
     public void setOnViewOptionClickListener(OnClickListener listener)
@@ -63,15 +76,34 @@ public class DailyFloatingActionView extends ConstraintLayout
         mViewDataBinding.filterActionTextView.setOnClickListener(listener);
     }
 
-    public void setViewOptionEnable(boolean enable)
+    public void setViewOptionEnabled(boolean enabled)
     {
         if (mViewDataBinding == null)
         {
             return;
         }
 
-        mViewDataBinding.viewActionTextView.setEnabled(enable);
-        mViewDataBinding.viewActionTextView.setAlpha(enable ? 1.0f : 0.2f);
+        mViewOptionListEnabled = enabled;
+        mViewOptionMapEnabled = enabled;
+
+        mViewDataBinding.viewActionTextView.setEnabled(enabled);
+        mViewDataBinding.viewActionTextView.setAlpha(enabled ? 1.0f : 0.2f);
+    }
+
+    public void setViewOptionMapEnabled(boolean enabled)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewOptionMapEnabled = enabled;
+
+        if (mViewOption == ViewOption.MAP)
+        {
+            mViewDataBinding.viewActionTextView.setEnabled(enabled);
+            mViewDataBinding.viewActionTextView.setAlpha(enabled ? 1.0f : 0.2f);
+        }
     }
 
     public void setViewOptionVisible(boolean visible)
@@ -115,26 +147,65 @@ public class DailyFloatingActionView extends ConstraintLayout
         mViewDataBinding.filterOnView.setAlpha(alpha);
     }
 
-    public void setViewOptionListSelected()
+    //    public void setViewOptionListSelected()
+    //    {
+    //        if (mViewDataBinding == null)
+    //        {
+    //            return;
+    //        }
+    //
+    //        mViewType = StayTabPresenter.ViewType.LIST;
+    //
+    //        mViewDataBinding.viewActionTextView.setText(R.string.label_list);
+    //        mViewDataBinding.viewActionTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ic_fab_02_list, 0, 0, 0);
+    //
+    //        mViewDataBinding.viewActionTextView.setEnabled(mViewOptionListEnabled);
+    //        mViewDataBinding.viewActionTextView.setAlpha(mViewOptionListEnabled ? 1.0f : 0.2f);
+    //    }
+    //
+    //    public void setViewOptionMapSelected()
+    //    {
+    //        if (mViewDataBinding == null)
+    //        {
+    //            return;
+    //        }
+    //
+    //        mViewType = StayTabPresenter.ViewType.MAP;
+    //
+    //        mViewDataBinding.viewActionTextView.setText(R.string.label_map);
+    //        mViewDataBinding.viewActionTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ic_fab_01_map, 0, 0, 0);
+    //
+    //        mViewDataBinding.viewActionTextView.setEnabled(mViewOptionMapEnabled);
+    //        mViewDataBinding.viewActionTextView.setAlpha(mViewOptionMapEnabled ? 1.0f : 0.2f);
+    //    }
+
+    public void setViewOption(ViewOption viewOption)
     {
-        if (mViewDataBinding == null)
+        if (viewOption == null)
         {
             return;
         }
 
-        mViewDataBinding.viewActionTextView.setText(R.string.label_list);
-        mViewDataBinding.viewActionTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ic_fab_02_list, 0, 0, 0);
-    }
+        mViewOption = viewOption;
 
-    public void setViewOptionMapSelected()
-    {
-        if (mViewDataBinding == null)
+        switch (viewOption)
         {
-            return;
-        }
+            case LIST:
+                mViewDataBinding.viewActionTextView.setText(R.string.label_list);
+                mViewDataBinding.viewActionTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ic_fab_02_list, 0, 0, 0);
 
-        mViewDataBinding.viewActionTextView.setText(R.string.label_map);
-        mViewDataBinding.viewActionTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ic_fab_01_map, 0, 0, 0);
+                mViewDataBinding.viewActionTextView.setEnabled(mViewOptionListEnabled);
+                mViewDataBinding.viewActionTextView.setAlpha(mViewOptionListEnabled ? 1.0f : 0.2f);
+                break;
+
+            case MAP:
+                mViewDataBinding.viewActionTextView.setText(R.string.label_map);
+                mViewDataBinding.viewActionTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ic_fab_01_map, 0, 0, 0);
+
+                mViewDataBinding.viewActionTextView.setEnabled(mViewOptionMapEnabled);
+                mViewDataBinding.viewActionTextView.setAlpha(mViewOptionMapEnabled ? 1.0f : 0.2f);
+                break;
+        }
     }
 
     public void setFilterOptionSelected(boolean selected)

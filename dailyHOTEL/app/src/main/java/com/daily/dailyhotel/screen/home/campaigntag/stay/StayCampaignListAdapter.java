@@ -12,12 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.view.DailyStayCardView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.LayoutFooterDataBinding;
 import com.twoheart.dailyhotel.databinding.ViewEmptyCampaignTagListBinding;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
@@ -178,11 +178,11 @@ public class StayCampaignListAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         holder.stayCardView.setImage(stay.imageUrl);
 
-        holder.stayCardView.setGradeText(stay.getGrade().getName(mContext));
-        holder.stayCardView.setVRVisible(stay.truevr && mTrueVREnabled);
+        holder.stayCardView.setGradeText(stay.grade.getName(mContext));
+        holder.stayCardView.setVRVisible(stay.trueVR && mTrueVREnabled);
         holder.stayCardView.setReviewText(stay.satisfaction, stay.reviewCount);
 
-        holder.stayCardView.setNewVisible(stay.newItem);
+        holder.stayCardView.setNewVisible(stay.newStay);
 
         holder.stayCardView.setStayNameText(stay.name);
         holder.stayCardView.setDistanceVisible(false);

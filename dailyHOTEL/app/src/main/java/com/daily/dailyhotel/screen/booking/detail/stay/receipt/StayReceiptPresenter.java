@@ -103,6 +103,12 @@ public class StayReceiptPresenter extends BaseExceptionPresenter<StayReceiptActi
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
         if (getViewInterface() == null)

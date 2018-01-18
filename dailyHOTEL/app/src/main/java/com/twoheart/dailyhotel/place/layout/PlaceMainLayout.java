@@ -230,11 +230,11 @@ public abstract class PlaceMainLayout extends BaseBlurLayout
         switch (viewType)
         {
             case LIST:
-                mFloatingActionView.setViewOptionMapSelected();
+                mFloatingActionView.setViewOption(DailyFloatingActionView.ViewOption.LIST);
                 break;
 
             case MAP:
-                mFloatingActionView.setViewOptionListSelected();
+                mFloatingActionView.setViewOption(DailyFloatingActionView.ViewOption.MAP);
                 break;
         }
     }
@@ -467,7 +467,7 @@ public abstract class PlaceMainLayout extends BaseBlurLayout
             return;
         }
 
-        mFloatingActionView.setViewOptionEnable(enabled);
+        mFloatingActionView.setViewOptionEnabled(enabled);
     }
 
     public void setOptionFilterEnabled(boolean enabled)

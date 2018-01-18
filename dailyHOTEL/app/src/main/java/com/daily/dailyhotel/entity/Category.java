@@ -7,6 +7,8 @@ import android.os.Parcel;
  */
 public class Category extends com.twoheart.dailyhotel.model.Category
 {
+    public static final Category ALL = new Category("all", "전체");
+
     public Category(String code, String name)
     {
         super(name, code);
@@ -17,7 +19,7 @@ public class Category extends com.twoheart.dailyhotel.model.Category
         super(in);
     }
 
-    //    public static final Category ALL = new Category("all", "전체");
+
     //
     //    public String name;
     //    public String code;

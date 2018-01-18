@@ -72,6 +72,12 @@ public class RestaurantCallDialogPresenter extends BaseExceptionPresenter<Restau
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
     }

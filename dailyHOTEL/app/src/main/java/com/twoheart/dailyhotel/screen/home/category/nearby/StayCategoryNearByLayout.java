@@ -307,11 +307,11 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
         switch (viewType)
         {
             case LIST:
-                mFloatingActionView.setViewOptionMapSelected();
+                mFloatingActionView.setViewOption(DailyFloatingActionView.ViewOption.LIST);
                 break;
 
             case MAP:
-                mFloatingActionView.setViewOptionListSelected();
+                mFloatingActionView.setViewOption(DailyFloatingActionView.ViewOption.MAP);
                 break;
         }
     }
@@ -323,7 +323,7 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
             return;
         }
 
-        mFloatingActionView.setViewOptionEnable(enabled);
+        mFloatingActionView.setViewOptionEnabled(enabled);
     }
 
     public void setOptionFilterEnabled(boolean enabled)

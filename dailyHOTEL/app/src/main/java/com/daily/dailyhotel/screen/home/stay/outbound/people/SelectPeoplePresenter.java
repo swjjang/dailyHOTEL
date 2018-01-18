@@ -77,6 +77,12 @@ public class SelectPeoplePresenter extends BaseExceptionPresenter<SelectPeopleAc
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
         getViewInterface().setPeople(mPeople, People.ADULT_MIN_COUNT, People.ADULT_MAX_COUNT, People.CHILD_MIN_COUNT, People.CHILD_MAX_COUNT);

@@ -96,6 +96,12 @@ public class WishDialogPresenter extends BaseExceptionPresenter<WishDialogActivi
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
         if (DailyHotel.isLogin() == false)

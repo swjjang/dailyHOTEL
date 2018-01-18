@@ -82,6 +82,12 @@ public class CallDialogPresenter extends BaseExceptionPresenter<CallDialogActivi
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
     }

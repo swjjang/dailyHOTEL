@@ -111,6 +111,12 @@ public class StayTrueReviewPresenter extends BaseExceptionPresenter<StayTrueRevi
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
         mPage = 1;

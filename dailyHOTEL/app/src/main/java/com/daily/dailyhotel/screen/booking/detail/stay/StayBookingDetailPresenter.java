@@ -233,6 +233,12 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
     }

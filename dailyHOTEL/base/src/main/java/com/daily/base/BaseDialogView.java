@@ -179,6 +179,49 @@ public abstract class BaseDialogView<T1 extends OnBaseEventListener, T2 extends 
     }
 
     @Override
+    public void showSimpleDialog(View view, DialogInterface.OnCancelListener cancelListener//
+        , DialogInterface.OnDismissListener dismissListener, boolean cancelable)
+    {
+        if (getActivity().isFinishing() == true | view == null)
+        {
+            return;
+        }
+
+        hideSimpleDialog();
+
+        LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        mDialog = new Dialog(getActivity());
+        mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        mDialog.setCanceledOnTouchOutside(cancelable);
+
+        if (cancelListener != null)
+        {
+            mDialog.setOnCancelListener(cancelListener);
+        }
+
+        if (dismissListener != null)
+        {
+            mDialog.setOnDismissListener(dismissListener);
+        }
+
+        try
+        {
+            mDialog.setContentView(view);
+
+            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(getActivity(), mDialog);
+
+            mDialog.show();
+
+            mDialog.getWindow().setAttributes(layoutParams);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+    }
+
+    @Override
     public void showToast(String message, int duration)
     {
         DailyToast.showToast(getContext(), message, duration);
@@ -283,47 +326,5 @@ public abstract class BaseDialogView<T1 extends OnBaseEventListener, T2 extends 
         }
 
         showSimpleDialog(dataBinding.getRoot(), cancelListener, dismissListener, cancelable);
-    }
-
-    protected void showSimpleDialog(View view, DialogInterface.OnCancelListener cancelListener//
-        , DialogInterface.OnDismissListener dismissListener, boolean cancelable)
-    {
-        if (getActivity().isFinishing() == true | view == null)
-        {
-            return;
-        }
-
-        hideSimpleDialog();
-
-        LayoutInflater layoutInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        mDialog = new Dialog(getActivity());
-        mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        mDialog.setCanceledOnTouchOutside(cancelable);
-
-        if (cancelListener != null)
-        {
-            mDialog.setOnCancelListener(cancelListener);
-        }
-
-        if (dismissListener != null)
-        {
-            mDialog.setOnDismissListener(dismissListener);
-        }
-
-        try
-        {
-            mDialog.setContentView(view);
-
-            WindowManager.LayoutParams layoutParams = ScreenUtils.getDialogWidthLayoutParams(getActivity(), mDialog);
-
-            mDialog.show();
-
-            mDialog.getWindow().setAttributes(layoutParams);
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
     }
 }

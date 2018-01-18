@@ -83,6 +83,12 @@ public class BankListDialogPresenter extends BaseMultiWindowPresenter<BankListDi
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
     }

@@ -62,11 +62,7 @@ public class StayDetailCalendarActivity extends StayCalendarActivity
         , int dayOfMaxCount, int hotelIndex, String screen, ArrayList<Integer> soldOutList, boolean isSelected//
         , boolean isAnimation, boolean isSingleDay) throws Exception
     {
-        TodayDateTime todayDateTime = new TodayDateTime();
-        todayDateTime.dailyDateTime = commonDateTime.dailyDateTime;
-        todayDateTime.closeDateTime = commonDateTime.closeDateTime;
-        todayDateTime.openDateTime = commonDateTime.openDateTime;
-        todayDateTime.currentDateTime = commonDateTime.currentDateTime;
+        TodayDateTime todayDateTime = commonDateTime.getTodayDateTime();
 
         StayBookingDay stayBookingDay = new StayBookingDay();
         stayBookingDay.setCheckInDay(checkInDateTime);

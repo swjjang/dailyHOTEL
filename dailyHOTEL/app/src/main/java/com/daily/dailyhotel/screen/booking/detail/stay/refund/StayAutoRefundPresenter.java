@@ -100,6 +100,12 @@ public class StayAutoRefundPresenter extends BaseExceptionPresenter<StayAutoRefu
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
         if (getViewInterface() == null)

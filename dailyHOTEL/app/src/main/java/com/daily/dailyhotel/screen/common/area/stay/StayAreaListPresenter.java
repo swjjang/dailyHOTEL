@@ -148,6 +148,12 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
         if (mDailyCategoryType != null)

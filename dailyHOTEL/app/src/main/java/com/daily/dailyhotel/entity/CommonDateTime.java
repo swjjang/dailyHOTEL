@@ -1,5 +1,7 @@
 package com.daily.dailyhotel.entity;
 
+import com.twoheart.dailyhotel.network.model.TodayDateTime;
+
 public class CommonDateTime
 {
     public String openDateTime; // ISO-8601
@@ -27,5 +29,16 @@ public class CommonDateTime
         this.closeDateTime = closeDateTime;
         this.currentDateTime = currentDateTime;
         this.dailyDateTime = dailyDateTime;
+    }
+
+    public TodayDateTime getTodayDateTime()
+    {
+        TodayDateTime todayDateTime = new TodayDateTime();
+        todayDateTime.openDateTime = openDateTime;
+        todayDateTime.closeDateTime = closeDateTime;
+        todayDateTime.currentDateTime = currentDateTime;
+        todayDateTime.dailyDateTime = dailyDateTime;
+
+        return todayDateTime;
     }
 }

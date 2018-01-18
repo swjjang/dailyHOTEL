@@ -86,6 +86,12 @@ public class RewardHistoryPresenter extends BaseExceptionPresenter<RewardHistory
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
         getViewInterface().setToolbarTitle(getString(R.string.label_reward_reward_history));
