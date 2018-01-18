@@ -279,7 +279,14 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
     @Override
     public boolean onBackPressed()
     {
-        return getViewInterface().onFragmentBackPressed();
+        boolean backPressed = getViewInterface().onFragmentBackPressed();
+
+        if (backPressed == false)
+        {
+            mAnalytics.onBackClick(getActivity());
+        }
+
+        return backPressed;
     }
 
     @Override
@@ -465,16 +472,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                 , checkInDateTime, checkOutDateTime, DailyCategoryType.STAY_ALL//
                 , mStayViewModel.selectedCategory.getValue().code), StayTabActivity.REQUEST_CODE_REGION);
 
-            //            switch (mViewType)
-            //            {
-            //                case LIST:
-            //                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label._HOTEL_LIST, null);
-            //                    break;
-            //
-            //                case MAP:
-            //                    AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_, AnalyticsManager.Action.CHANGE_LOCATION, AnalyticsManager.Label._HOTEL_MAP, null);
-            //                    break;
-            //            }
+            mAnalytics.onViewTypeClick(getActivity(), mStayViewModel.viewType.getValue());
         } catch (Exception e)
         {
             Crashlytics.logException(e);
@@ -493,9 +491,8 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
         }
 
         startCalendar(AnalyticsManager.ValueType.LIST);
-        //
-        //        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-        //            , AnalyticsManager.Action.HOTEL_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.LIST, null);
+
+        mAnalytics.onCalendarClick(getActivity());
     }
 
     @Override
@@ -529,21 +526,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             , mStayViewModel.viewType.getValue(), mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue(), categoryList, location, radius, null);
         startActivityForResult(intent, StayTabActivity.REQUEST_CODE_FILTER);
 
-        //        String viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
-        //
-        //        switch (mViewType)
-        //        {
-        //            case LIST:
-        //                viewType = AnalyticsManager.Label.VIEWTYPE_LIST;
-        //                break;
-        //
-        //            case MAP:
-        //                viewType = AnalyticsManager.Label.VIEWTYPE_MAP;
-        //                break;
-        //        }
-        //
-        //        AnalyticsManager.getInstance(StayMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION_//
-        //            , AnalyticsManager.Action.HOTEL_SORT_FILTER_BUTTON_CLICKED, viewType, null);
+        mAnalytics.onFilterClick(getActivity(), mStayViewModel.viewType.getValue());
     }
 
     @Override
@@ -576,12 +559,41 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                 break;
             }
         }
+
+        mAnalytics.onViewTypeClick(getActivity(), mStayViewModel.viewType.getValue());
     }
 
     @Override
-    public void onCategoryFlicking(int position)
+    public void onSearchClick()
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        try
+        {
+            startActivityForResult(SearchActivity.newInstance(getActivity(), Constants.PlaceType.HOTEL//
+                , mStayViewModel.stayBookDateTime.getValue().getStayBookingDay()), StayTabActivity.REQUEST_CODE_SEARCH);
+
+            mAnalytics.onSearchClick(getActivity(), mStayViewModel.viewType.getValue());
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+    }
+
+    @Override
+    public void onCategoryFlicking(String categoryName)
     {
 
+        mAnalytics.onCategoryFlicking(getActivity(), categoryName);
+    }
+
+    @Override
+    public void onCategoryClick(String categoryName)
+    {
+        mAnalytics.onCategoryClick(getActivity(), categoryName);
     }
 
     private void initViewModel(BaseActivity activity)
@@ -897,6 +909,13 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                     mStayViewModel.selectedCategory.setValue(Category.ALL);
 
                     setRefresh(true);
+
+                    boolean changedAreaGroup = data.getBooleanExtra(StayAreaListActivity.INTENT_EXTRA_DATA_CHANGED_AREA_GROUP, false);
+
+                    if (changedAreaGroup == true)
+                    {
+                        mAnalytics.onRegionChanged(getActivity(), region.getAreaGroupName());
+                    }
                 }
 
                 if (resultCode == com.daily.base.BaseActivity.RESULT_CODE_START_CALENDAR)

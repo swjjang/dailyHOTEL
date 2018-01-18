@@ -16,6 +16,7 @@ import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.Category;
 import com.daily.dailyhotel.view.DailyFloatingActionView;
+import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayTabDataBinding;
 
@@ -173,7 +174,10 @@ public class StayTabView extends BaseDialogView<StayTabInterface.OnEventListener
                     {
                         isScrolling = false;
 
-                        getEventListener().onCategoryFlicking(position);
+                        getEventListener().onCategoryFlicking(getViewDataBinding().categoryTabLayout.getTabAt(position).getText().toString());
+                    } else
+                    {
+                        getEventListener().onCategoryClick(getViewDataBinding().categoryTabLayout.getTabAt(position).getText().toString());
                     }
                 } else
                 {
@@ -386,6 +390,17 @@ public class StayTabView extends BaseDialogView<StayTabInterface.OnEventListener
         }
 
         viewDataBinding.toolbarView.setOnBackClickListener(v -> getEventListener().onBackClick());
+
+        viewDataBinding.toolbarView.clearMenuItem();
+
+        viewDataBinding.toolbarView.addMenuItem(DailyToolbarView.MenuItem.SEARCH, null, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onSearchClick();
+            }
+        });
     }
 
     public void setCategoryTabLayoutVisibility(int visibility)

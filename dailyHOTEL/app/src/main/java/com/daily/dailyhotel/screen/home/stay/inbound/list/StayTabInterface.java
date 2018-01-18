@@ -1,5 +1,6 @@
 package com.daily.dailyhotel.screen.home.stay.inbound.list;
 
+import android.app.Activity;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 
@@ -51,10 +52,33 @@ public interface StayTabInterface
 
         void onViewTypeClick();
 
-        void onCategoryFlicking(int position);
+        void onSearchClick();
+
+        // by Analytics
+        void onCategoryFlicking(String categoryName);
+
+        // by Analytics
+        void onCategoryClick(String categoryName);
     }
 
     interface AnalyticsInterface extends BaseAnalyticsInterface
     {
+        void onBackClick(Activity activity);
+
+        void onRegionChanged(Activity activity, String areaName);
+
+        void onCalendarClick(Activity activity);
+
+        void onViewTypeClick(Activity activity, StayTabPresenter.ViewType viewType);
+
+        void onRegionClick(Activity activity, StayTabPresenter.ViewType viewType);
+
+        void onSearchClick(Activity activity, StayTabPresenter.ViewType viewType);
+
+        void onFilterClick(Activity activity, StayTabPresenter.ViewType viewType);
+
+        void onCategoryFlicking(Activity activity, String categoryName);
+
+        void onCategoryClick(Activity activity, String categoryName);
     }
 }

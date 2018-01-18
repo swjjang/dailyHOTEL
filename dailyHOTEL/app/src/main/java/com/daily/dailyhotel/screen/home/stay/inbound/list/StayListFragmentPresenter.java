@@ -35,6 +35,7 @@ import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.entity.Stays;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
+import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
@@ -72,14 +73,14 @@ import io.reactivex.schedulers.Schedulers;
  * Created by sheldon
  * Clean Architecture
  */
-public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayListFragment, StayListFragmentInterface>//
-    implements StayListFragmentView.OnEventListener
+public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayListFragment, StayListFragmentInterface.ViewInterface>//
+    implements StayListFragmentInterface.OnEventListener
 {
     static final int MAXIMUM_NUMBER_PER_PAGE = Constants.PAGENATION_LIST_SIZE;
     static final int PAGE_NONE = -1;
     static final int PAGE_FINISH = Integer.MAX_VALUE;
 
-    private StayListFragmentAnalyticsInterface mAnalytics;
+    private StayListFragmentInterface.AnalyticsInterface mAnalytics;
 
     StayRemoteImpl mStayRemoteImpl;
 
@@ -105,10 +106,6 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
     boolean mEmptyList; // 목록, 맵이 비어있는지 확인
     DailyLocationExFactory mDailyLocationExFactory;
 
-    public interface StayListFragmentAnalyticsInterface extends BaseAnalyticsInterface
-    {
-    }
-
     public StayListFragmentPresenter(@NonNull StayListFragment fragment)
     {
         super(fragment);
@@ -132,7 +129,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
     @NonNull
     @Override
-    protected StayListFragmentInterface createInstanceViewInterface()
+    protected StayListFragmentInterface.ViewInterface createInstanceViewInterface()
     {
         return new StayListFragmentView(this);
     }
@@ -152,7 +149,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
     @Override
     public void setAnalytics(BaseAnalyticsInterface analytics)
     {
-        mAnalytics = (StayListFragmentAnalyticsInterface) analytics;
+        mAnalytics = (StayListFragmentInterface.AnalyticsInterface) analytics;
     }
 
     @Override
@@ -453,6 +450,8 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                     getViewInterface().setFloatingActionViewTypeMapEnabled(false);
 
                     getViewInterface().setEmptyViewVisible(true, notDefaultFilter);
+
+                    mAnalytics.onScreen(getActivity(), null, mStayViewModel.stayBookDateTime.getValue(), mCategory.code, mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue());
                 } else
                 {
                     mEmptyList = false;
@@ -475,6 +474,8 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                     getViewInterface().setList(pair.second, mStayViewModel.stayFilter.getValue().sortType == StayFilter.SortType.DISTANCE//
                         , mStayViewModel.stayBookDateTime.getValue().getNights() > 1, pair.first//
                         , DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0);
+
+                    mAnalytics.onScreen(getActivity(), mViewType, mStayViewModel.stayBookDateTime.getValue(), mCategory.code, mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue());
                 }
 
                 mMoreRefreshing = false;
@@ -638,6 +639,8 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
             getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
         }
+
+        mAnalytics.onStayClick(getActivity(), mViewType, stay);
     }
 
     @Override
@@ -662,12 +665,6 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
             , stay.index, stay.name, stay.discountPrice, stay.grade.name());
 
         startActivityForResult(intent, StayTabActivity.REQUEST_CODE_PREVIEW);
-    }
-
-    @Override
-    public void onViewPagerClose()
-    {
-
     }
 
     @Override
@@ -714,6 +711,8 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                     getViewInterface().setEmptyViewVisible(true, notDefaultFilter);
 
                     unLockAll();
+
+                    mAnalytics.onScreen(getActivity(), null, mStayViewModel.stayBookDateTime.getValue(), mCategory.code, mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue());
                 } else
                 {
                     mEmptyList = false;
@@ -723,6 +722,8 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                     getViewInterface().setEmptyViewVisible(false, notDefaultFilter);
 
                     getViewInterface().setMapList(stays.getStayList(), true, true, false);
+
+                    mAnalytics.onScreen(getActivity(), mStayViewModel.viewType.getValue(), mStayViewModel.stayBookDateTime.getValue(), mCategory.code, mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue());
                 }
             }
         }, new Consumer<Throwable>()
@@ -779,6 +780,8 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                 unLockAll();
             }
         }));
+
+        mAnalytics.onMarkerClick(getActivity(), stay.name);
     }
 
     @Override
@@ -840,21 +843,14 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
     }
 
     @Override
-    public void onRetryClick()
-    {
-
-    }
-
-    @Override
-    public void onResearchClick()
-    {
-
-    }
-
-    @Override
     public void onCallClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
+        startActivity(CallDialogActivity.newInstance(getActivity()));
     }
 
     @Override
@@ -910,8 +906,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
         startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.HOTEL//
             , stay.index, !currentWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), StayTabActivity.REQUEST_CODE_WISH_DIALOG);
 
-        //        AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
-        //            , AnalyticsManager.Action.WISH_STAY, !currentWish ? AnalyticsManager.Label.ON.toLowerCase() : AnalyticsManager.Label.OFF.toLowerCase(), null);
+        mAnalytics.onWishClick(getActivity(), !currentWish);
     }
 
     private void initViewModel(BaseActivity activity)

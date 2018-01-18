@@ -12,7 +12,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.base.BaseBlurFragmentView;
 import com.daily.dailyhotel.entity.ObjectItem;
@@ -36,8 +35,8 @@ import io.reactivex.Observable;
  * Created by sheldon
  * Clean Architecture
  */
-public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentView.OnEventListener, FragmentStayListDataBinding>//
-    implements StayListFragmentInterface
+public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentInterface.OnEventListener, FragmentStayListDataBinding>//
+    implements StayListFragmentInterface.ViewInterface
 {
     private static final int ANIMATION_DELAY = 200;
     private static final int VIEWPAGER_HEIGHT_DP = 115;
@@ -53,39 +52,7 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentV
 
     private DailyFloatingActionView mFloatingActionView;
 
-    public interface OnEventListener extends OnBaseEventListener
-    {
-        void onSwipeRefreshing();
-
-        void onMoreRefreshing();
-
-        void onStayClick(int position, Stay stay, int listCount, android.support.v4.util.Pair[] pairs, int gradientType);
-
-        void onStayLongClick(int position, Stay stay, int listCount, android.support.v4.util.Pair[] pairs);
-
-        // Map Event
-        void onMapReady();
-
-        void onMarkerClick(Stay stay, List<Stay> stayList);
-
-        void onMarkersCompleted();
-
-        void onMapClick();
-
-        void onMyLocationClick();
-
-        void onCallClick();
-
-        void onFilterClick();
-
-        void onRegionClick();
-
-        void onCalendarClick();
-
-        void onWishClick(int position, Stay stay);
-    }
-
-    public StayListFragmentView(OnEventListener listener)
+    public StayListFragmentView(StayListFragmentInterface.OnEventListener listener)
     {
         super(listener);
     }
