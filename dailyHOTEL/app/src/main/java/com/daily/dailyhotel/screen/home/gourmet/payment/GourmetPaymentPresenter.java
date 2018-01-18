@@ -619,6 +619,16 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                     mNeedOverwritePrice = false;
                     overwriteGourmetCartPrice(mGourmetPayment, mGourmetCart);
                     getViewInterface().scrollToCheckPriceTitle();
+
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
+                    addCompositeDisposable(mCartLocalImpl.clearGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                    {
+                        @Override
+                        public void accept(Boolean aBoolean) throws Exception
+                        {
+                            // do nothing!
+                        }
+                    }));
                 }
 
                 // 가격이 변동된 경우

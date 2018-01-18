@@ -649,11 +649,13 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                     mNeedOverwritePrice = false;
                     mRoomPrice = mStayPayment.totalPrice;
                     getViewInterface().scrollToCheckPriceTitle();
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
                 }
 
                 if (mCheckChangedPrice == false && mRoomPrice != mStayPayment.totalPrice)
                 {
                     mCheckChangedPrice = true;
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
                     // 가격이 변동된 경우
                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_payment_changed_price)//
                         , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
@@ -661,7 +663,6 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                             @Override
                             public void onDismiss(DialogInterface dialogInterface)
                             {
-                                setResult(BaseActivity.RESULT_CODE_REFRESH);
                                 onBackClick();
                             }
                         });
