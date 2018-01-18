@@ -4,19 +4,9 @@ import android.content.Context;
 
 import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.ReviewInterface;
-import com.daily.dailyhotel.domain.RewardInterface;
 import com.daily.dailyhotel.entity.Review;
-import com.daily.dailyhotel.entity.RewardCardHistoryDetail;
-import com.daily.dailyhotel.entity.RewardDetail;
-import com.daily.dailyhotel.entity.RewardHistoryDetail;
-import com.daily.dailyhotel.entity.RewardInformation;
-import com.daily.dailyhotel.repository.remote.model.RewardCardHistoryDetailData;
-import com.daily.dailyhotel.repository.remote.model.RewardDetailData;
-import com.daily.dailyhotel.repository.remote.model.RewardHistoryDetailData;
-import com.daily.dailyhotel.repository.remote.model.RewardInformationData;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.Setting;
-import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
 
@@ -25,7 +15,6 @@ import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**

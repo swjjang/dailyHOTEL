@@ -10,7 +10,6 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 
-import com.daily.base.util.ExLog;
 import com.daily.base.util.VersionUtils;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.google.android.gms.common.api.ApiException;

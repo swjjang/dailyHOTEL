@@ -438,7 +438,7 @@ public abstract class PlaceCurationActivity extends BaseActivity implements View
                             try
                             {
                                 exception.startResolutionForResult(PlaceCurationActivity.this, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
-                            }catch (Exception e)
+                            } catch (Exception e)
                             {
 
                             }

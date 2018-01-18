@@ -535,7 +535,7 @@ public abstract class PlaceSearchFragment extends BaseFragment
                         try
                         {
                             exception.startResolutionForResult(mBaseActivity, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
-                        }catch (Exception e)
+                        } catch (Exception e)
                         {
 
                         }
