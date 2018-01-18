@@ -323,6 +323,9 @@ public class InformationFragment extends BaseMenuNavigationFragment implements C
 
             baseActivity.startActivityForResult(DailyWebActivity.newInstance(baseActivity, getString(R.string.label_daily_true_awards)//
                 , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStaticUrlDailyTrueAwards()), Constants.CODE_REQUEST_ACTIVITY_DAILY_AWARDS);
+
+            AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.TRUE_AWARDS //
+                , AnalyticsManager.Action.SEE_MORE, null, null);
         }
 
         @Override

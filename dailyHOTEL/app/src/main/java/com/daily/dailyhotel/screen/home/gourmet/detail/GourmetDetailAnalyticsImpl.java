@@ -548,4 +548,28 @@ public class GourmetDetailAnalyticsImpl implements GourmetDetailPresenter.Gourme
 
         return analyticsParam;
     }
+
+    @Override
+    public void onEventTrueAwards(Activity activity, int stayIndex)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.TRUE_AWARDS, //
+            AnalyticsManager.Action.DETAIL_PAGE, Integer.toString(stayIndex), null);
+    }
+
+    @Override
+    public void onEventTrueAwardsClick(Activity activity, int stayIndex)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.TRUE_AWARDS, //
+            AnalyticsManager.Action.QUESTION_MARK, Integer.toString(stayIndex), null);
+    }
 }

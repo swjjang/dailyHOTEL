@@ -1151,6 +1151,11 @@ public class AnalyticsManager
         public static final String POPUP_DIFFERENT_SHOP = "popup_different_shop";
         public static final String POPUP_DIFFERENT_TIME = "popup_different_time";
         public static final String POPUP_DIFFERENT_DAY = "popup_different_day";
+
+        // true awards
+        public static final String DETAIL_PAGE = "detail_page";
+        public static final String QUESTION_MARK = "question_mark";
+        public static final String SEE_MORE = "see_more";
     }
 
     public static class Category
@@ -1237,6 +1242,8 @@ public class AnalyticsManager
         public static final String REWARD = "reward";
         public static final String REGISTRATION = "registration";
         public static final String DEVICE_INFO = "device_info";
+
+        public static final String TRUE_AWARDS = "true_awards";
     }
 
     public static class Label

@@ -194,6 +194,10 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
         void onEventShowTrueReview(Activity activity, int stayIndex);
 
         void onEventShowCoupon(Activity activity, int stayIndex);
+
+        void onEventTrueAwards(Activity activity, int stayIndex);
+
+        void onEventTrueAwardsClick(Activity activity, int stayIndex);
     }
 
     public StayDetailPresenter(@NonNull StayDetailActivity activity)
@@ -1472,6 +1476,8 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 unLockAll();
             }
         });
+
+        mAnalytics.onEventTrueAwardsClick(getActivity(), mStayDetail.index);
     }
 
     @Override
@@ -1909,6 +1915,11 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                 if (stayDetail.couponPrice > 0)
                 {
                     mAnalytics.onEventShowCoupon(getActivity(), stayDetail.index);
+                }
+
+                if (stayDetail.awards != null && DailyTextUtils.isTextEmpty(stayDetail.awards.title) == false)
+                {
+                    mAnalytics.onEventTrueAwards(getActivity(), stayDetail.index);
                 }
             }
         }, new Consumer<Throwable>()

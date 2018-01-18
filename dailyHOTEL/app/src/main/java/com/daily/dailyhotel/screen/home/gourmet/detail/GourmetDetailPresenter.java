@@ -204,6 +204,10 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         void onEventVisitTimeClick(Activity activity, String visitTime);
 
         void onEventToolbarBookingClick(Activity activity, int gourmetIndex);
+
+        void onEventTrueAwards(Activity activity, int gourmetIndex);
+
+        void onEventTrueAwardsClick(Activity activity, int gourmetIndex);
     }
 
     public GourmetDetailPresenter(@NonNull GourmetDetailActivity activity)
@@ -1483,6 +1487,8 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 unLockAll();
             }
         });
+
+        mAnalytics.onEventTrueAwardsClick(getActivity(), mGourmetDetail.index);
     }
 
     private void setStatus(int status)
@@ -1974,6 +1980,11 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 if (mGourmetDetail.couponPrice > 0)
                 {
                     mAnalytics.onEventShowCoupon(getActivity(), mGourmetIndex);
+                }
+
+                if (mGourmetDetail.awards != null && DailyTextUtils.isTextEmpty(mGourmetDetail.awards.title) == false)
+                {
+                    mAnalytics.onEventTrueAwards(getActivity(), mGourmetDetail.index);
                 }
             }
         }, new Consumer<Throwable>()
