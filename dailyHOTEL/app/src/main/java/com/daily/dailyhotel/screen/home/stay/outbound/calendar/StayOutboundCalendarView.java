@@ -15,13 +15,13 @@ import java.util.List;
 
 import io.reactivex.Observable;
 
-public class StayOutboundCalendarView extends PlaceCalendarView<StayOutboundCalendarView.OnEventListener, ActivityCalendarDataBinding> implements StayOutboundCalendarViewInterface
+public class StayOutboundCalendarView extends BaseCalendarView<StayOutboundCalendarView.OnEventListener, ActivityCalendarDataBinding> implements StayOutboundCalendarViewInterface
 {
     private StayOutboundCalendarAdapter mCalendarAdapter;
 
-    public interface OnEventListener extends PlaceCalendarView.OnEventListener
+    public interface OnEventListener extends BaseCalendarView.OnEventListener
     {
-        void onDayClick(PlaceCalendarPresenter.Day day);
+        void onDayClick(BaseCalendarPresenter.Day day);
 
         void onConfirmClick();
     }
@@ -40,8 +40,6 @@ public class StayOutboundCalendarView extends PlaceCalendarView<StayOutboundCale
         }
 
         super.setContentView(viewDataBinding);
-
-
     }
 
     @Override
@@ -65,7 +63,7 @@ public class StayOutboundCalendarView extends PlaceCalendarView<StayOutboundCale
                 break;
 
             default:
-                getEventListener().onDayClick((PlaceCalendarPresenter.Day) v.getTag());
+                getEventListener().onDayClick((BaseCalendarPresenter.Day) v.getTag());
                 break;
         }
     }
@@ -81,7 +79,7 @@ public class StayOutboundCalendarView extends PlaceCalendarView<StayOutboundCale
         if (mCalendarAdapter == null)
         {
             mCalendarAdapter = new StayOutboundCalendarAdapter(getContext(), calendarList);
-            mCalendarAdapter.setOnClickListener(view -> getEventListener().onDayClick((PlaceCalendarPresenter.Day) view.getTag()));
+            mCalendarAdapter.setOnClickListener(view -> getEventListener().onDayClick((BaseCalendarPresenter.Day) view.getTag()));
 
 
             getViewDataBinding().calendarRecyclerView.setAdapter(mCalendarAdapter);

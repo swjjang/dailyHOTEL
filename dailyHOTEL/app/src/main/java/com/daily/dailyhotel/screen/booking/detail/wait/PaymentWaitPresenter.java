@@ -120,6 +120,12 @@ public class PaymentWaitPresenter extends BaseExceptionPresenter<PaymentWaitActi
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
     }

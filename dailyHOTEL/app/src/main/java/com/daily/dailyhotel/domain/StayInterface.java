@@ -5,6 +5,7 @@ import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayDetail;
 import com.daily.dailyhotel.entity.StayFilterCount;
+import com.daily.dailyhotel.entity.Stays;
 import com.daily.dailyhotel.entity.TrueReviews;
 import com.daily.dailyhotel.entity.TrueVR;
 import com.daily.dailyhotel.entity.WishResult;
@@ -17,6 +18,8 @@ import io.reactivex.Observable;
 
 public interface StayInterface
 {
+    Observable<Stays> getList(Map<String, Object> queryMap, String abTestType);
+
     Observable<StayFilterCount> getListCountByFilter(Map<String, Object> queryMap, String abTestType);
 
     Observable<StayDetail> getDetail(int stayIndex, StayBookDateTime stayBookDateTime);

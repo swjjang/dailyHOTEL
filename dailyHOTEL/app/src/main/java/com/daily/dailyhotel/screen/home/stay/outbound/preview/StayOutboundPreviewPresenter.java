@@ -118,6 +118,12 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
         getViewInterface().setStayName(mStayName);

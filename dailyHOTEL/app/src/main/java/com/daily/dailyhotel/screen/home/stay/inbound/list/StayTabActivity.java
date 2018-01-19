@@ -14,11 +14,23 @@ import com.twoheart.dailyhotel.R;
  * Created by sheldon
  * Clean Architecture
  */
-public class StayListActivity extends BaseActivity<StayListPresenter>
+public class StayTabActivity extends BaseActivity<StayTabPresenter>
 {
+    static final int REQUEST_CODE_CALENDAR = 10000;
+    static final int REQUEST_CODE_FILTER = 10001;
+    static final int REQUEST_CODE_SEARCH = 10002;
+    static final int REQUEST_CODE_SEARCH_RESULT = 10003;
+    static final int REQUEST_CODE_REGION = 10004;
+    static final int REQUEST_CODE_DETAIL = 10005;
+    static final int REQUEST_CODE_PREVIEW = 10006;
+    static final int REQUEST_CODE_PERMISSION_MANAGER = 10007;
+    static final int REQUEST_CODE_SETTING_LOCATION = 10008;
+    static final int REQUEST_CODE_WISH_DIALOG = 10009;
+    static final int REQUEST_CODE_CALL = 10010;
+
     public static Intent newInstance(Context context, String deepLink)
     {
-        Intent intent = new Intent(context, StayListActivity.class);
+        Intent intent = new Intent(context, StayTabActivity.class);
 
         if (DailyTextUtils.isTextEmpty(deepLink) == false)
         {
@@ -38,9 +50,9 @@ public class StayListActivity extends BaseActivity<StayListPresenter>
 
     @NonNull
     @Override
-    protected StayListPresenter createInstancePresenter()
+    protected StayTabPresenter createInstancePresenter()
     {
-        return new StayListPresenter(this);
+        return new StayTabPresenter(this);
     }
 
     @Override

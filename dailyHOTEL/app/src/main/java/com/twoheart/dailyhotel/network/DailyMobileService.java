@@ -36,7 +36,7 @@ import com.daily.dailyhotel.repository.remote.model.StayBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.StayDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayFilterCountData;
-import com.daily.dailyhotel.repository.remote.model.StayListData;
+import com.daily.dailyhotel.repository.remote.model.StaysData;
 import com.daily.dailyhotel.repository.remote.model.StayOldWaitingDepositData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundDetailData;
@@ -722,6 +722,10 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET()
+    Observable<BaseDto<StaysData>> getStayList(@Url String url);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET()
     Observable<BaseDto<StayFilterCountData>> getStayListCountByFilter(@Url String url);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
@@ -756,7 +760,7 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET()
-    Observable<BaseDto<StayOutboundsData>> getStayOutboundWishList(@Url String mobileAPI, @Query("maxCount") int maxCount);
+    Observable<BaseDto<StayOutboundsData>> getStayOutboundWishList(@Url String mobileAPI, @Query("searchMaxCount") int maxCount);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @POST()
@@ -953,7 +957,7 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
-    Observable<BaseDto<StayListData>> getStayInboundList(@Path(value = "mobileAPI", encoded = true) String mobileAPI//
+    Observable<BaseDto<StaysData>> getStayInboundList(@Path(value = "mobileAPI", encoded = true) String mobileAPI//
         , @QueryMap Map<String, Object> queryMap//
         , @Query("bedType") List<String> bedTypeList//
         , @Query("luxury") List<String> luxuryList//

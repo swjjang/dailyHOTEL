@@ -110,7 +110,7 @@ public class StayOutboundCalendarAdapter extends RecyclerView.Adapter<RecyclerVi
 
             if (objectItem.mType == ObjectItem.TYPE_MONTH_VIEW)
             {
-                PlaceCalendarPresenter.Month monthItem = objectItem.getItem();
+                BaseCalendarPresenter.Month monthItem = objectItem.getItem();
 
                 if (monthItem.year == year && monthItem.month == month)
                 {
@@ -208,7 +208,7 @@ public class StayOutboundCalendarAdapter extends RecyclerView.Adapter<RecyclerVi
 
     }
 
-    private void onBindViewHolder(MonthViewHolder holder, PlaceCalendarPresenter.Month month, int position)
+    private void onBindViewHolder(MonthViewHolder holder, BaseCalendarPresenter.Month month, int position)
     {
         if (holder == null || month == null)
         {
@@ -218,7 +218,7 @@ public class StayOutboundCalendarAdapter extends RecyclerView.Adapter<RecyclerVi
         holder.dataBinding.monthTextView.setText(String.format(Locale.KOREA, "%4d.%02d", month.year, month.month));
     }
 
-    private void onBindViewHolder(WeekViewHolder holder, PlaceCalendarPresenter.Day[] week, int position)
+    private void onBindViewHolder(WeekViewHolder holder, BaseCalendarPresenter.Day[] week, int position)
     {
         if (holder == null || week == null)
         {
@@ -247,7 +247,7 @@ public class StayOutboundCalendarAdapter extends RecyclerView.Adapter<RecyclerVi
         setDayView(holder.dataBinding.saturdayLayout, week[6], Calendar.SATURDAY);
     }
 
-    private void setDayView(LayoutCalendarDayDataBinding dayDataBinding, PlaceCalendarPresenter.Day day, int dayOfWeek)
+    private void setDayView(LayoutCalendarDayDataBinding dayDataBinding, BaseCalendarPresenter.Day day, int dayOfWeek)
     {
         if (dayDataBinding == null)
         {

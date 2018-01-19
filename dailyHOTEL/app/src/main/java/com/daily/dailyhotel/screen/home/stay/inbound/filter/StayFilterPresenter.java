@@ -169,6 +169,12 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
         getViewInterface().setToolbarTitle(getString(R.string.activity_curation_title));

@@ -72,6 +72,12 @@ public class AutoRefundDialogPresenter extends BaseMultiWindowPresenter<AutoRefu
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
         getViewInterface().setCancelType(mCancelType);

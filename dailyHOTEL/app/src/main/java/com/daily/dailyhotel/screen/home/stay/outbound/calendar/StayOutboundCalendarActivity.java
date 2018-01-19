@@ -20,8 +20,6 @@ public class StayOutboundCalendarActivity extends BaseActivity<StayOutboundCalen
     static final String INTENT_EXTRA_DATA_MARGIN_TOP = "marginTop";
     static final String INTENT_EXTRA_DATA_ISANIMATION = "isAnimation";
 
-    protected PlaceBookingDay mPlaceBookingDay;
-
     public static Intent newInstance(Context context, String checkInDateTime, String checkOutDateTime//
         , String startDateTime, String endDateTime, int nightsOfMaxCount//
         , String callByScreen, boolean isSelected, int marginTop, boolean isAnimation)

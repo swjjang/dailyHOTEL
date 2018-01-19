@@ -151,6 +151,12 @@ public class GourmetBookingCancelDetailPresenter //
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
         getViewInterface().setToolbarTitle(getString(R.string.actionbar_title_booking_cancel_list_activity));

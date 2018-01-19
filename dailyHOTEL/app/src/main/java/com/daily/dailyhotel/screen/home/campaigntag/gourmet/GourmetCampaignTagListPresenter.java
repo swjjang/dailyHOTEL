@@ -143,6 +143,12 @@ public class GourmetCampaignTagListPresenter //
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
         getViewInterface().setToolbarTitle(mTitle);

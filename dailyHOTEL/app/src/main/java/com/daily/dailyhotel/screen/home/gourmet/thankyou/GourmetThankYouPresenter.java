@@ -128,6 +128,12 @@ public class GourmetThankYouPresenter extends BaseExceptionPresenter<GourmetThan
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
         getViewInterface().setToolbarTitle(getString(R.string.label_completed_payment));

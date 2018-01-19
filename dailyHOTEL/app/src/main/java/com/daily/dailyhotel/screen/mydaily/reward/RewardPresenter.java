@@ -104,6 +104,12 @@ public class RewardPresenter extends BaseExceptionPresenter<RewardActivity, Rewa
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
         getViewInterface().setToolbarTitle(getString(R.string.label_daily_reward));

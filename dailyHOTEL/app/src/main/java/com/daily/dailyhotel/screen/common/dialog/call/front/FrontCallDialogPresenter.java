@@ -74,6 +74,12 @@ public class FrontCallDialogPresenter extends BaseExceptionPresenter<FrontCallDi
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
     }

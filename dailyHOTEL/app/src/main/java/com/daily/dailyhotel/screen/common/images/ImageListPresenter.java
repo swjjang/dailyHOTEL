@@ -108,6 +108,12 @@ public class ImageListPresenter extends BaseExceptionPresenter<ImageListActivity
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
         getViewInterface().setToolbarTitle(mTitle);

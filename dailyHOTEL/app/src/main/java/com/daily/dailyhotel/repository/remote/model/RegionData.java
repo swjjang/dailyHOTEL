@@ -112,10 +112,10 @@ public class RegionData
             stayAreaGroup.index = index;
             stayAreaGroup.name = name;
 
+            List<Category> categoryList = new ArrayList<>();
+
             if (categories != null && categories.size() > 0)
             {
-                List<Category> categoryList = new ArrayList<>();
-
                 for (LinkedHashMap<String, String> linkedHashMap : categories)
                 {
                     Iterator<Map.Entry<String, String>> iterator = linkedHashMap.entrySet().iterator();
@@ -127,9 +127,12 @@ public class RegionData
                         categoryList.add(new Category(entry.getKey(), entry.getValue()));
                     }
                 }
-
-                stayAreaGroup.setCategoryList(categoryList);
+            } else
+            {
+                categoryList.add(Category.ALL);
             }
+
+            stayAreaGroup.setCategoryList(categoryList);
 
             return stayAreaGroup;
         }
@@ -165,10 +168,10 @@ public class RegionData
             stayArea.index = index;
             stayArea.name = name;
 
+            List<Category> categoryList = new ArrayList<>();
+
             if (categories != null && categories.size() > 0)
             {
-                List<Category> categoryList = new ArrayList<>();
-
                 for (LinkedHashMap<String, String> linkedHashMap : categories)
                 {
                     Iterator<Map.Entry<String, String>> iterator = linkedHashMap.entrySet().iterator();
@@ -180,9 +183,12 @@ public class RegionData
                         categoryList.add(new Category(entry.getKey(), entry.getValue()));
                     }
                 }
-
-                stayArea.setCategoryList(categoryList);
+            } else
+            {
+                categoryList.add(Category.ALL);
             }
+
+            stayArea.setCategoryList(categoryList);
 
             return stayArea;
         }

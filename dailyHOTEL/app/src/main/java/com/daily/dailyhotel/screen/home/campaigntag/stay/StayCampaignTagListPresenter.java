@@ -18,6 +18,7 @@ import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.CommonDateTime;
+import com.daily.dailyhotel.entity.Stay;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayCampaignTags;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
@@ -32,7 +33,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
@@ -147,6 +147,12 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         mStayBookDateTime = stayBookDateTime;
 
         return true;
+    }
+
+    @Override
+    public void onNewIntent(Intent intent)
+    {
+
     }
 
     @Override
@@ -696,8 +702,8 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         analyticsParam.setRegion(null);
         analyticsParam.entryPosition = stay.entryPosition;
         analyticsParam.totalListCount = count;
-        analyticsParam.isDailyChoice = stay.isDailyChoice;
-        analyticsParam.gradeName = stay.getGrade().getName(getActivity());
+        analyticsParam.isDailyChoice = stay.dailyChoice;
+        analyticsParam.gradeName = stay.grade.getName(getActivity());
 
         if (Util.isUsedMultiTransition() == true)
         {
@@ -742,7 +748,7 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
         }
 
         mAnalytics.onEventStayClickOption(getActivity(), stay.index, DailyTextUtils.isTextEmpty(stay.couponDiscountText) == false//
-            , stay.reviewCount > 0, stay.truevr == true//
+            , stay.reviewCount > 0, stay.trueVR == true//
             , DailyRemoteConfigPreference.getInstance(getActivity()).isKeyRemoteConfigRewardStickerEnabled() && stay.provideRewardSticker//
             , stay.discountRate > 0);
     }
@@ -768,7 +774,8 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
 
         Intent intent = StayPreviewActivity.newInstance(getActivity() //
             , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT) //
-            , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT), stay);
+            , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , stay.index, stay.name, stay.discountPrice, stay.grade.name());
 
         startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_PREVIEW);
     }

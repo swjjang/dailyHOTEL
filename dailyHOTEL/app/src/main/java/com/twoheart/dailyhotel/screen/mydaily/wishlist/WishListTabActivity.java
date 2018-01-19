@@ -346,11 +346,7 @@ public class WishListTabActivity extends BaseActivity
             {
                 if (mFragmentList != null)
                 {
-                    TodayDateTime todayDateTime = new TodayDateTime();
-                    todayDateTime.openDateTime = commonDateTime.openDateTime;
-                    todayDateTime.closeDateTime = commonDateTime.closeDateTime;
-                    todayDateTime.currentDateTime = commonDateTime.currentDateTime;
-                    todayDateTime.dailyDateTime = commonDateTime.dailyDateTime;
+                    TodayDateTime todayDateTime = commonDateTime.getTodayDateTime();
 
                     for (PlaceWishListFragment fragment : mFragmentList)
                     {

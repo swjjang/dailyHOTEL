@@ -9,17 +9,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public abstract class BaseFragment<T1 extends BaseFragmentPresenter> extends Fragment
+public abstract class BaseFragment<T1 extends BaseFragmentPresenter, T2 extends OnBaseFragmentEventListener> extends Fragment
 {
-    private BaseFragmentPresenter mPresenter;
+    protected T1 mPresenter;
+    private T2 mOnFragmentEventListener;
 
     public BaseFragment()
     {
         mPresenter = createInstancePresenter();
     }
 
-    protected abstract
-    @NonNull
+    protected abstract @NonNull
     T1 createInstancePresenter();
 
     @Nullable
@@ -93,5 +93,15 @@ public abstract class BaseFragment<T1 extends BaseFragmentPresenter> extends Fra
         {
             mPresenter.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    protected T2 getFragmentEventListener()
+    {
+        return mOnFragmentEventListener;
+    }
+
+    public void setOnFragmentEventListener(T2 listener)
+    {
+        mOnFragmentEventListener = listener;
     }
 }

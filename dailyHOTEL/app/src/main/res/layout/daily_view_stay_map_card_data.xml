@@ -2,16 +2,17 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-        xmlns:fresco="http://schemas.android.com/apk/res-auto">
+        xmlns:fresco="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
-    <!--<merge-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="100dp"-->
-    <!--tools:parentTag="android.support.constraint.ConstraintLayout">-->
-
-    <android.support.constraint.ConstraintLayout
+    <merge
         android:layout_width="match_parent"
-        android:layout_height="100dp">
+        android:layout_height="100dp"
+        tools:parentTag="android.support.constraint.ConstraintLayout">
+
+        <!--<android.support.constraint.ConstraintLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="100dp">-->
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/simpleDraweeView"
@@ -192,6 +193,6 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/closeImageView"
             app:layout_constraintTop_toTopOf="parent"/>
-    </android.support.constraint.ConstraintLayout>
-    <!--</merge>-->
+        <!--</android.support.constraint.ConstraintLayout>-->
+    </merge>
 </layout>

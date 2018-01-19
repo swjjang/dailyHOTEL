@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.outbound.calendar;
+package com.daily.dailyhotel.screen.home.stay.inbound.calendar;
 
 
 import android.support.annotation.NonNull;
@@ -21,12 +21,12 @@ import java.util.Locale;
  * Created by sheldon
  * Clean Architecture
  */
-public abstract class PlaceCalendarPresenter<T1 extends BaseActivity, T2 extends BaseDialogViewInterface> extends BaseExceptionPresenter<T1, T2>
+public abstract class BaseCalendarPresenter<T1 extends BaseActivity, T2 extends BaseDialogViewInterface> extends BaseExceptionPresenter<T1, T2>
 {
     final int MONTH_OF_YEAR = 12;
     final int WEEK = 7;
 
-    public PlaceCalendarPresenter(@NonNull T1 activity)
+    public BaseCalendarPresenter(@NonNull T1 activity)
     {
         super(activity);
     }

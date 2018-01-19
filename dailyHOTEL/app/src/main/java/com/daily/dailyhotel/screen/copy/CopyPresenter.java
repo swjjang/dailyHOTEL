@@ -61,6 +61,12 @@ public class CopyPresenter extends BaseExceptionPresenter<CopyActivity, CopyInte
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
     }

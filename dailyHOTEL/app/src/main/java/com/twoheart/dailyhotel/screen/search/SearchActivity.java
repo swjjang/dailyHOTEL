@@ -102,6 +102,53 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         return intent;
     }
 
+    public static Intent newInstance(Context context, PlaceType placeType, String checkInDateTime, String checkOutDateTime, int campaignTagIndex)
+    {
+        Intent intent = new Intent(context, SearchActivity.class);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
+
+        try
+        {
+            StayBookingDay stayBookingDay = new StayBookingDay();
+            stayBookingDay.setCheckInDay(checkInDateTime);
+            stayBookingDay.setCheckOutDay(checkOutDateTime);
+
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
+        intent.putExtra(INTENT_EXTRA_DATA_INDEX, campaignTagIndex);
+
+        return intent;
+    }
+
+    public static Intent newInstance(Context context, PlaceType placeType, String checkInDateTime, String checkOutDateTime, String word)
+    {
+        Intent intent = new Intent(context, SearchActivity.class);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
+
+        try
+        {
+            StayBookingDay stayBookingDay = new StayBookingDay();
+            stayBookingDay.setCheckInDay(checkInDateTime);
+            stayBookingDay.setCheckOutDay(checkOutDateTime);
+
+            intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
+        if (DailyTextUtils.isTextEmpty(word) == false)
+        {
+            intent.putExtra(INTENT_EXTRA_DATA_WORD, word);
+        }
+
+        return intent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {

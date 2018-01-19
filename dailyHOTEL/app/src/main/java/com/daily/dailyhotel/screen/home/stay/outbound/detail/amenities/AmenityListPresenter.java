@@ -65,6 +65,12 @@ public class AmenityListPresenter extends BaseExceptionPresenter<AmenityListActi
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
         getViewInterface().setToolbarTitle(getString(R.string.label_stay_outbound_amenities));

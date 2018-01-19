@@ -83,6 +83,12 @@ public class StayOutboundReceiptPresenter extends BaseExceptionPresenter<StayOut
     }
 
     @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
+    @Override
     public void onPostCreate()
     {
         getViewInterface().setToolbarTitle(getString(R.string.frag_issuing_receipt));

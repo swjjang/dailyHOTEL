@@ -51,11 +51,7 @@ public class GourmetDetailCalendarActivity extends GourmetCalendarActivity
         , String visitDateTime, int gourmetIndex, int dayOfMaxCount, String screen //
         , ArrayList<Integer> soldOutList, boolean selected, boolean animation) throws Exception
     {
-        TodayDateTime todayDateTime = new TodayDateTime();
-        todayDateTime.dailyDateTime = commonDateTime.dailyDateTime;
-        todayDateTime.closeDateTime = commonDateTime.closeDateTime;
-        todayDateTime.openDateTime = commonDateTime.openDateTime;
-        todayDateTime.currentDateTime = commonDateTime.currentDateTime;
+        TodayDateTime todayDateTime = commonDateTime.getTodayDateTime();
 
         GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
         gourmetBookingDay.setVisitDay(visitDateTime);

@@ -31,6 +31,7 @@ import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.map.StayOutboundMapFragment;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.map.StayOutboundMapViewPagerAdapter;
+import com.daily.dailyhotel.view.DailyFloatingActionView;
 import com.daily.dailyhotel.view.DailyStayOutboundCardView;
 import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.R;
@@ -303,7 +304,6 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
                         } else
                         {
                             View simpleDraweeView = view.findViewById(R.id.imageView);
-                            View nameTextView = view.findViewById(R.id.nameTextView);
                             View gradientTopView = view.findViewById(R.id.gradientTopView);
                             View gradientBottomView = view.findViewById(R.id.gradientView);
 
@@ -488,11 +488,11 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         switch (viewState)
         {
             case LIST:
-                getViewDataBinding().floatingActionView.setViewOptionMapSelected();
+                getViewDataBinding().floatingActionView.setViewOption(DailyFloatingActionView.ViewOption.LIST);
                 break;
 
             case MAP:
-                getViewDataBinding().floatingActionView.setViewOptionListSelected();
+                getViewDataBinding().floatingActionView.setViewOption(DailyFloatingActionView.ViewOption.MAP);
                 break;
         }
     }

@@ -3,7 +3,7 @@ package com.daily.dailyhotel.repository.remote.model;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.daily.base.util.DailyTextUtils;
-import com.twoheart.dailyhotel.model.Stay;
+import com.daily.dailyhotel.entity.Stay;
 
 import java.util.Iterator;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.Map;
  * Created by android_sam on 2017. 6. 15..
  */
 @JsonObject
-public class StaySalesData
+public class StayData
 {
     @JsonField(name = "hotelIdx")
     public int index;
@@ -73,7 +73,7 @@ public class StaySalesData
     public int distance;
 
     @JsonField(name = "overseas")
-    public boolean isOverseas;
+    public boolean overseas;
 
     @JsonField(name = "isSoldOut")
     public boolean isSoldOut;
@@ -102,12 +102,12 @@ public class StaySalesData
     @JsonField(name = "provideRewardSticker")
     public boolean provideRewardSticker;
 
-    public Stay getStay()
+    public Stay getStay(String imageUrl)
     {
         Stay stay = new Stay();
 
         stay.index = index;
-        stay.imageUrl = getImageUrl(imgPathMain);
+        stay.imageUrl = imageUrl + getImagePath(imgPathMain);
         stay.name = name;
         stay.price = price;
         stay.discountPrice = discount;
@@ -125,34 +125,25 @@ public class StaySalesData
         }
 
         stay.addressSummary = addrSummary;
-
         stay.latitude = latitude;
         stay.longitude = longitude;
-        stay.isDailyChoice = isDailyChoice;
-        stay.isSoldOut = isSoldOut;
+        stay.dailyChoice = isDailyChoice;
+        stay.soldOut = isSoldOut;
         stay.satisfaction = rating;
         stay.districtName = districtName;
-        //        stay.entryPosition;
-        stay.truevr = isTrueVr;
-        //        stay.stickerUrl;
-        //        stay.stickerIndex;
-
+        stay.trueVR = isTrueVr;
         stay.dBenefitText = benefit;
         stay.distance = distance; // 정렬시에 보여주는 내용
         stay.categoryCode = categoryCode;
-        //        stay.isLocalPlus;
-
-        stay.setGrade(getStayGrade(grade));
+        stay.grade = getStayGrade(grade);
         stay.displayText = displayText;
         stay.roomIndex = roomIndex;
         stay.regionName = regionName;
-        stay.sday = sday;
-        stay.isOverseas = isOverseas;
+        stay.overseas = overseas;
         stay.availableRooms = availableRooms;
-
         stay.reviewCount = reviewCount;
         stay.discountRate = discountRate;
-        stay.newItem = newItem;
+        stay.newStay = newItem;
         stay.myWish = myWish;
         stay.couponDiscountText = couponDiscountText;
         stay.provideRewardSticker = provideRewardSticker;
@@ -174,7 +165,7 @@ public class StaySalesData
         return stayGrade;
     }
 
-    private String getImageUrl(Map<String, Object> imgPathMain)
+    private String getImagePath(Map<String, Object> imgPathMain)
     {
         if (imgPathMain == null || imgPathMain.size() == 0)
         {
@@ -188,7 +179,7 @@ public class StaySalesData
             return null;
         }
 
-        String imageUrl = null;
+        String imagePath = null;
 
         while (iterator.hasNext())
         {
@@ -202,12 +193,12 @@ public class StaySalesData
 
                 if (list.size() > 0)
                 {
-                    imageUrl = entry.getKey() + ((List) value).get(0);
+                    imagePath = entry.getKey() + ((List) value).get(0);
                     break;
                 }
             }
         }
 
-        return imageUrl;
+        return imagePath;
     }
 }

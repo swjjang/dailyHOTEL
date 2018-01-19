@@ -33,6 +33,12 @@ public class GourmetBookingDetailMapPresenter extends PlaceBookingDetailMapPrese
 {
     private GourmetBookingDetailMapAnalyticsInterface mAnalytics;
 
+    @Override
+    public void onNewIntent(Intent intent)
+    {
+
+    }
+
     public interface GourmetBookingDetailMapAnalyticsInterface extends BaseAnalyticsInterface
     {
         void onItemClick(Activity activity, Gourmet gourmet, boolean isCallByThankYou);

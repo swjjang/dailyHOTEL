@@ -301,11 +301,11 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         switch (viewType)
         {
             case LIST:
-                mFloatingActionView.setViewOptionMapSelected();
+                mFloatingActionView.setViewOption(DailyFloatingActionView.ViewOption.LIST);
                 break;
 
             case MAP:
-                mFloatingActionView.setViewOptionListSelected();
+                mFloatingActionView.setViewOption(DailyFloatingActionView.ViewOption.MAP);
                 break;
         }
     }
@@ -317,7 +317,7 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
             return;
         }
 
-        mFloatingActionView.setViewOptionEnable(enabled);
+        mFloatingActionView.setViewOptionEnabled(enabled);
     }
 
     public void setOptionFilterEnabled(boolean enabled)
