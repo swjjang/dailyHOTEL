@@ -610,7 +610,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
                     mOnEventListener.onMarkersCompleted();
                 }
 
-//                ExLog.d("pinkred - marker count : " + mClusterManager.getAlgorithm().getItems().size());
+                //                ExLog.d("pinkred - marker count : " + mClusterManager.getAlgorithm().getItems().size());
             }
         }, new Consumer<Throwable>()
         {
@@ -668,7 +668,7 @@ public class StayOutboundMapFragment extends com.google.android.gms.maps.Support
                 }
             }
 
-//            ExLog.d("pinkred - remove size : " + (beforeSize - ((List<StayOutboundClusterItem>) mClusterManager.getAlgorithm().getItems()).size()));
+            //            ExLog.d("pinkred - remove size : " + (beforeSize - ((List<StayOutboundClusterItem>) mClusterManager.getAlgorithm().getItems()).size()));
         }
     }
 

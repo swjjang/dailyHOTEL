@@ -8,10 +8,8 @@ import com.twoheart.dailyhotel.util.DailyCalendar;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.Locale;
 
 /**
  * Created by sheldon
@@ -233,6 +231,19 @@ public class GourmetCart
         }
 
         return counts;
+    }
+
+    public int[] getDiscountPrices()
+    {
+        int[] discountPrices = new int[getMenuCount()];
+        int i = 0;
+
+        for (GourmetCartMenu gourmetCartMenu : mOrderMenuMap.values())
+        {
+            discountPrices[i++] = gourmetCartMenu.discountPrice;
+        }
+
+        return discountPrices;
     }
 
     public boolean equalsDay(String visitDay) throws Exception

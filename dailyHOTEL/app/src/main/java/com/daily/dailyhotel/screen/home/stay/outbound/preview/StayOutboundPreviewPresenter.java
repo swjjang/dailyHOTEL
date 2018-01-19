@@ -52,6 +52,7 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
 
     public interface StayOutboundPreviewAnalyticsInterface extends BaseAnalyticsInterface
     {
+        void onEventWishClick(Activity activity, int stayIndex, boolean isWish);
     }
 
     public StayOutboundPreviewPresenter(@NonNull StayOutboundPreviewActivity activity)
@@ -192,20 +193,22 @@ public class StayOutboundPreviewPresenter extends BaseExceptionPresenter<StayOut
                     case BaseActivity.RESULT_CODE_ERROR:
                         if (data != null)
                         {
-                            boolean wish = data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false);
+                            boolean isWish = data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false);
 
-                            if (mStayOutboundDetail.myWish == wish)
+                            if (mStayOutboundDetail.myWish == isWish)
                             {
-                                getViewInterface().setWish(wish, mStayOutboundDetail.wishCount);
+                                getViewInterface().setWish(isWish, mStayOutboundDetail.wishCount);
                             } else
                             {
-                                getViewInterface().setWish(wish, mStayOutboundDetail.wishCount + (wish ? 1 : -1));
+                                getViewInterface().setWish(isWish, mStayOutboundDetail.wishCount + (isWish ? 1 : -1));
                             }
 
                             Intent intent = new Intent();
-                            intent.putExtra(StayOutboundPreviewActivity.INTENT_EXTRA_DATA_MY_WISH, wish);
+                            intent.putExtra(StayOutboundPreviewActivity.INTENT_EXTRA_DATA_MY_WISH, isWish);
                             intent.putExtra(StayOutboundPreviewActivity.INTENT_EXTRA_DATA_STAY_POSITION, mPosition);
                             setResult(BaseActivity.RESULT_CODE_DATA_CHANGED, intent);
+
+                            mAnalytics.onEventWishClick(getActivity(), mStayOutboundDetail.index, isWish);
                         } else
                         {
                             setResult(BaseActivity.RESULT_CODE_REFRESH);

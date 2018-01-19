@@ -491,7 +491,7 @@ public class ZoomMapActivity extends BaseActivity
                         try
                         {
                             exception.startResolutionForResult(ZoomMapActivity.this, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
-                        }catch (Exception e)
+                        } catch (Exception e)
                         {
 
                         }

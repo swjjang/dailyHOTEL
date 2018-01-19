@@ -531,8 +531,8 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
 
                             try
                             {
-                                exception.startResolutionForResult( PlaceSearchResultActivity.this, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
-                            }catch (Exception e)
+                                exception.startResolutionForResult(PlaceSearchResultActivity.this, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
+                            } catch (Exception e)
                             {
 
                             }

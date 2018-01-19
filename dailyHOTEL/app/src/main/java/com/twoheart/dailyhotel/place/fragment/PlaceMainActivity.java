@@ -522,7 +522,7 @@ public abstract class PlaceMainActivity extends BaseActivity
                         try
                         {
                             exception.startResolutionForResult(PlaceMainActivity.this, Constants.CODE_RESULT_ACTIVITY_SETTING_LOCATION);
-                        }catch (Exception e)
+                        } catch (Exception e)
                         {
 
                         }

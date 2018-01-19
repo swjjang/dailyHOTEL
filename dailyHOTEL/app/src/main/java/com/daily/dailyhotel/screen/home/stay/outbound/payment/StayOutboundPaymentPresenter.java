@@ -564,12 +564,14 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     mNeedOverwritePrice = false;
                     mRoomPrice = mStayOutboundPayment.totalPrice;
                     getViewInterface().scrollToCheckPriceTitle();
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
                 }
 
                 // 가격이 변동된 경우
                 if (mCheckChangedPrice == false && mRoomPrice > 0 && mRoomPrice != mStayOutboundPayment.totalPrice)
                 {
                     mCheckChangedPrice = true;
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
 
                     getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_stay_payment_changed_price)//
                         , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
@@ -577,7 +579,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                             @Override
                             public void onDismiss(DialogInterface dialogInterface)
                             {
-                                setResult(BaseActivity.RESULT_CODE_REFRESH);
+                                onBackClick();
                             }
                         });
                 } else if (mStayOutboundPayment.availableRooms == 0) // 솔드 아웃인 경우

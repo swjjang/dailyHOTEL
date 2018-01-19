@@ -24,7 +24,7 @@ public class StayAutoRefundActivity extends BaseActivity<StayAutoRefundPresenter
     public static final int REQUEST_CODE_SELECT_CANCEL_TYPE = 10000;
     public static final int REQUEST_CODE_SELECT_BANK_LIST = 10001;
 
-    public static Intent newInstance(Context context, StayBookingDetailParcel stayBookingDetailParcel , String aggregationId)
+    public static Intent newInstance(Context context, StayBookingDetailParcel stayBookingDetailParcel, String aggregationId)
     {
         Intent intent = new Intent(context, StayAutoRefundActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_BOOKING_DETAIL, stayBookingDetailParcel);

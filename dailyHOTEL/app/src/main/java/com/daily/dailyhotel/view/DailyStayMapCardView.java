@@ -14,8 +14,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.DailyViewStayMapCardDataBinding;
 import com.twoheart.dailyhotel.util.Util;
 
-import java.text.DecimalFormat;
-
 public class DailyStayMapCardView extends ConstraintLayout
 {
     private DailyViewStayMapCardDataBinding mViewDataBinding;

@@ -84,7 +84,7 @@ public class ImageListPresenter extends BaseExceptionPresenter<ImageListActivity
         mTitle = intent.getStringExtra(ImageListActivity.INTENT_EXTRA_DATA_TITLE);
         mImageUrl = intent.getStringExtra(ImageListActivity.INTENT_EXTRA_DATA_BASE_IMAGE_URL);
 
-        if(DailyTextUtils.isTextEmpty(mImageUrl) == true)
+        if (DailyTextUtils.isTextEmpty(mImageUrl) == true)
         {
             mImageUrl = "";
         }

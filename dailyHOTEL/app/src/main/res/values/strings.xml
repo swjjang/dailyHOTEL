@@ -797,9 +797,9 @@
     <string name="message_booking_cancel_stay_share_kakao">체크인 : %1$s\n체크아웃 : %2$s (%3$d박 %4$d일)</string>
     <string name="message_booking_cancel_gourmet_share_kakao">방문일 : %1$s\n취소일 : %2$s</string>
 
-    <string name="message_booking_stay_share_sms">[데일리호텔] %1$s님이 예약하신 스테이\n\n%2$s\n예약자명: %3$s\n결제금액: %4$s\n객실: %5$s\n체크인: %6$s\n체크아웃: %7$s\n주소: %8$s\n\n예약 스테이 확인\n</string>
-    <string name="message_booking_stay_outbound_share_sms">[데일리호텔] %1$s님이 예약하신 스테이\n\n%2$s\n예약자명: %3$s\n결제금액: %4$s\n객실: %5$s\n체크인: %6$s\n체크아웃: %7$s\n주소: %8$s</string>
-    <string name="message_booking_gourmet_share_sms">[데일리호텔] %1$s님이 예약하신 고메\n\n%2$s\n예약자명: %3$s\n결제금액: %4$s\n방문일: %5$s\n방문시간: %6$s\n상품: %7$s\n수량: %8$s\n주소: %9$s\n\n예약 고메 확인\n</string>
+    <string name="message_booking_stay_share_sms">[데일리호텔] %1$s님이 예약한 스테이\n\n%2$s\n예약자명: %3$s\n결제금액: %4$s\n객실: %5$s\n체크인: %6$s\n체크아웃: %7$s\n주소: %8$s\n\n예약 스테이 확인\n</string>
+    <string name="message_booking_stay_outbound_share_sms">[데일리호텔] %1$s님이 예약한 스테이\n\n%2$s\n예약자명: %3$s\n결제금액: %4$s\n객실: %5$s\n체크인: %6$s\n체크아웃: %7$s\n주소: %8$s</string>
+    <string name="message_booking_gourmet_share_sms">[데일리호텔] %1$s님이 예약한 고메\n\n%2$s\n예약자명: %3$s\n결제금액: %4$s\n방문일: %5$s\n방문시간: %6$s\n상품: %7$s\n수량: %8$s\n주소: %9$s\n\n예약 고메 확인\n</string>
     <string name="message_booking_cancel_stay_share_sms">[데일리호텔]%1$s님의 취소내역입니다.\n\n%2$s\n예약자명: %3$s\n객실: %4$s\n취소일: %5$s\n주소: %6$s</string>
     <string name="message_booking_cancel_gourmet_share_sms">[데일리호텔]%1$s님의 취소내역입니다.\n\n%2$s\n예약자명: %3$s\n상품: %4$s\n수량: %5$s\n취소일: %6$s\n주소: %7$s</string>
 
@@ -1635,7 +1635,7 @@
 
     <!-- 데일리 트루 어워즈 -->
     <string name="label_daily_true_awards">데일리 트루어워즈</string>
-    <string name="label_daily_true_awards_popup_title_formet">데일리 트루어워즈\n\'%1$s\' 부문 수상</string>
+    <string name="label_daily_true_awards_popup_title_formet">데일리 트루어워즈\n\'%1$s\' 부문 선정</string>
 
     <string-array name="coupon_sort_array">
         <item>전체 쿠폰 보기</item>

@@ -2,7 +2,6 @@ package com.daily.dailyhotel.screen.home.gourmet.payment;
 
 import android.app.Activity;
 
-import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.GourmetCart;
 import com.daily.dailyhotel.entity.GourmetPayment;

@@ -203,14 +203,17 @@ public class StayOutboundDetailAnalyticsImpl implements StayOutboundDetailPresen
     }
 
     @Override
-    public void onEventWishClick(Activity activity)
+    public void onEventWishClick(Activity activity, int stayIndex, boolean isWish)
     {
         if (activity == null)
         {
             return;
         }
 
+        String action = isWish ? AnalyticsManager.Action.WISHLIST_ON_DETAIL : AnalyticsManager.Action.WISHLIST_OFF_DETAIL;
 
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION_ //
+            , action, Integer.toString(stayIndex), null);
     }
 
     @Override

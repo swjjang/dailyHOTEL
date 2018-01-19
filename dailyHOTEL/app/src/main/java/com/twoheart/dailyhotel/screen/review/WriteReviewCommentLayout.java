@@ -117,7 +117,7 @@ public class WriteReviewCommentLayout extends BaseLayout
 
     private void updateEditTextView(Constants.ServiceType serviceType, String text)
     {
-        if(serviceType != null)
+        if (serviceType != null)
         {
             switch (serviceType)
             {

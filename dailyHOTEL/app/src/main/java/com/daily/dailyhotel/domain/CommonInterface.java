@@ -3,7 +3,6 @@ package com.daily.dailyhotel.domain;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.Configurations;
 import com.daily.dailyhotel.entity.Notification;
-import com.daily.dailyhotel.entity.Review;
 
 import io.reactivex.Observable;
 

@@ -619,6 +619,16 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                     mNeedOverwritePrice = false;
                     overwriteGourmetCartPrice(mGourmetPayment, mGourmetCart);
                     getViewInterface().scrollToCheckPriceTitle();
+
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
+                    addCompositeDisposable(mCartLocalImpl.clearGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                    {
+                        @Override
+                        public void accept(Boolean aBoolean) throws Exception
+                        {
+                            // do nothing!
+                        }
+                    }));
                 }
 
                 // 가격이 변동된 경우
@@ -1091,34 +1101,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             {
                 unLockAll();
 
-                // 가격이 변동된 경우
-                if (mCheckChangedPrice == false && checkChangedPrice(gourmetPayment, mGourmetCart) == true)
-                {
-                    mCheckChangedPrice = true;
-                    setResult(BaseActivity.RESULT_CODE_REFRESH);
-
-                    addCompositeDisposable(mCartLocalImpl.clearGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
-                    {
-                        @Override
-                        public void accept(Boolean aBoolean) throws Exception
-                        {
-                            getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_payment_changed_price)//
-                                , getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
-                                {
-                                    @Override
-                                    public void onDismiss(DialogInterface dialogInterface)
-                                    {
-                                        onBackClick();
-                                    }
-                                });
-                        }
-                    }));
-
-                    mAnalytics.onEventChangedPrice(getActivity(), mGourmetCart.gourmetName);
-                } else
-                {
-                    showAgreementPopup();
-                }
+                showAgreementPopup();
             }
         }, new Consumer<Throwable>()
         {
@@ -1434,12 +1417,14 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
             int[] menuSaleIndexes = gourmetCart.getMenuSaleIndexes();
             int[] countPerMenu = gourmetCart.getCountPerMenu();
+            int[] discountPrices = gourmetCart.getDiscountPrices();
 
             for (int i = 0; i < menuCount; i++)
             {
                 JSONObject bookingItem = new JSONObject();
                 bookingItem.put("saleRecoIdx", menuSaleIndexes[i]);
                 bookingItem.put("count", countPerMenu[i]);
+                bookingItem.put("discount", discountPrices[i]);
 
                 bookingItemsJSONArray.put(bookingItem);
             }
