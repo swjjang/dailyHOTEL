@@ -906,6 +906,12 @@ public class AnalyticsManager
         public static final String WISHLIST_TAB_CHANGE = "WishListTabChange";
         public static final String WISHLIST_ON = "WishListOn";
         public static final String WISHLIST_OFF = "WishListOff";
+        public static final String WISHLIST_ON_DETAIL = "WishListOn_detail";
+        public static final String WISHLIST_OFF_DETAIL = "WishListOff_detail";
+        public static final String WISHLIST_ON_LIST = "WishListOn_list";
+        public static final String WISHLIST_OFF_LIST = "WishListOff_list";
+        public static final String WISHLIST_ON_PREVIEW = "WishListOn_preview";
+        public static final String WISHLIST_OFF_PREVIEW = "WishListOff_preview";
         public static final String WISHLIST_LOGIN_CLICKED = "WishListLoginClicked";
 
         public static final String REFERRAL_CODE = "ReferralCode";

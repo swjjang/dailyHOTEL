@@ -105,7 +105,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     boolean mMoreResultsAvailable, mMoreEnabled;
 
     private ViewState mViewState = ViewState.LIST;
-    protected int mWishPosition;
+    private int mWishPosition;
+    private int mWishStayIndex;
 
     StayOutbound mStayOutboundByLongPress;
     android.support.v4.util.Pair[] mPairsByLongPress;
@@ -141,7 +142,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         void onEventList(Activity activity, String suggest, int size);
 
-        void onEventWishClick(Activity activity, boolean wish);
+        void onEventWishClick(Activity activity, int stayIndex, boolean isWish);
 
         void onEventMapClick(Activity activity);
 
@@ -634,7 +635,11 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                     case BaseActivity.RESULT_CODE_ERROR:
                         if (data != null)
                         {
-                            onChangedWish(mWishPosition, data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false));
+                            boolean isWish = data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false);
+
+                            onChangedWish(mWishPosition, isWish);
+
+                            mAnalytics.onEventWishClick(getActivity(), mWishStayIndex, isWish);
                         }
                         break;
 
@@ -1137,6 +1142,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         }
 
         mWishPosition = position;
+        mWishStayIndex = stayOutbound.index;
 
         boolean currentWish = stayOutbound.myWish;
 
@@ -1147,8 +1153,6 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.OB_STAY//
             , stayOutbound.index, !currentWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), StayOutboundListActivity.REQUEST_CODE_WISH_DIALOG);
-
-        mAnalytics.onEventWishClick(getActivity(), !currentWish);
     }
 
     @Override

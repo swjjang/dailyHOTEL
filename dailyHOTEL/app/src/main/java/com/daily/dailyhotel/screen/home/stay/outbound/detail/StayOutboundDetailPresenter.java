@@ -170,7 +170,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
         void onEventBookingClick(Activity activity, int stayIndex, String stayName, String roomName //
             , int discountPrice, boolean provideRewardSticker, String checkInDate, int nights);
 
-        void onEventWishClick(Activity activity);
+        void onEventWishClick(Activity activity, int stayIndex, boolean isWish);
 
         void onEventShareKakaoClick(Activity activity);
 
@@ -632,7 +632,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             case StayOutboundDetailActivity.REQUEST_CODE_WISH_DIALOG:
                 if (data != null)
                 {
-                    boolean wish = data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false);
+                    boolean isWish = data.getBooleanExtra(WishDialogActivity.INTENT_EXTRA_DATA_WISH, false);
 
                     if (mStayOutboundDetail == null)
                     {
@@ -640,12 +640,14 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                         return;
                     }
 
-                    mStayOutboundDetail.myWish = wish;
-                    mStayOutboundDetail.wishCount = wish ? mStayOutboundDetail.wishCount + 1 : mStayOutboundDetail.wishCount - 1;
+                    mStayOutboundDetail.myWish = isWish;
+                    mStayOutboundDetail.wishCount = isWish ? mStayOutboundDetail.wishCount + 1 : mStayOutboundDetail.wishCount - 1;
 
                     notifyWishChanged();
 
                     setResult(BaseActivity.RESULT_CODE_DATA_CHANGED);
+
+                    mAnalytics.onEventWishClick(getActivity(), mStayOutboundDetail.index, isWish);
                 }
                 break;
         }
@@ -797,8 +799,6 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
             startActivityForResult(WishDialogActivity.newInstance(getActivity(), Constants.ServiceType.OB_STAY//
                 , mStayOutboundDetail.index, wish, -1, AnalyticsManager.Screen.DAILYHOTEL_LIST), StayOutboundDetailActivity.REQUEST_CODE_WISH_DIALOG);
-
-            mAnalytics.onEventWishClick(getActivity());
         }
     }
 
