@@ -233,6 +233,19 @@ public class GourmetCart
         return counts;
     }
 
+    public int[] getDiscountPrices()
+    {
+        int[] discountPrices = new int[getMenuCount()];
+        int i = 0;
+
+        for (GourmetCartMenu gourmetCartMenu : mOrderMenuMap.values())
+        {
+            discountPrices[i++] = gourmetCartMenu.discountPrice;
+        }
+
+        return discountPrices;
+    }
+
     public boolean equalsDay(String visitDay) throws Exception
     {
         return mGourmetBookDateTime != null ? DailyCalendar.compareDateDay(mGourmetBookDateTime.getVisitDateTime(DailyCalendar.ISO_8601_FORMAT), visitDay) == 0 : false;

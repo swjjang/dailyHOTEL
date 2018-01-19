@@ -1417,12 +1417,14 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
 
             int[] menuSaleIndexes = gourmetCart.getMenuSaleIndexes();
             int[] countPerMenu = gourmetCart.getCountPerMenu();
+            int[] discountPrices = gourmetCart.getDiscountPrices();
 
             for (int i = 0; i < menuCount; i++)
             {
                 JSONObject bookingItem = new JSONObject();
                 bookingItem.put("saleRecoIdx", menuSaleIndexes[i]);
                 bookingItem.put("count", countPerMenu[i]);
+                bookingItem.put("discount", discountPrices[i]);
 
                 bookingItemsJSONArray.put(bookingItem);
             }
