@@ -32,15 +32,15 @@ import io.reactivex.functions.Consumer;
  */
 public class StayAutoRefundPresenter extends BaseExceptionPresenter<StayAutoRefundActivity, StayAutoRefundInterface> implements StayAutoRefundView.OnEventListener
 {
-    private StayAutoRefundAnalyticsInterface mAnalytics;
+    StayAutoRefundAnalyticsInterface mAnalytics;
 
-    private RefundRemoteImpl mRefundRemoteImpl;
+    RefundRemoteImpl mRefundRemoteImpl;
 
-    private StayBookingDetail mStayBookingDetail;
-    private String mAggregationId;
-    private int mSelectedCancelReason;
-    private String mCancelReasonMessage;
-    private Bank mSelectedBank;
+    StayBookingDetail mStayBookingDetail;
+    String mAggregationId;
+    int mSelectedCancelReason;
+    String mCancelReasonMessage;
+    Bank mSelectedBank;
 
     public interface StayAutoRefundAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -259,7 +259,7 @@ public class StayAutoRefundPresenter extends BaseExceptionPresenter<StayAutoRefu
         return true;
     }
 
-    private void onRefundResult(int msgCode, String message, boolean readyForRefund)
+    void onRefundResult(int msgCode, String message, boolean readyForRefund)
     {
         if (readyForRefund == true)
         {

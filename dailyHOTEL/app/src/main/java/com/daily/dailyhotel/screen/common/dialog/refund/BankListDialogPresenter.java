@@ -263,12 +263,12 @@ public class BankListDialogPresenter extends BaseMultiWindowPresenter<BankListDi
         getViewInterface().onConfigurationChange(orientation, isInMultiWindowMode);
     }
 
-    private void setBankList(List<Bank> bankList)
+    void setBankList(List<Bank> bankList)
     {
         mBankList = bankList;
     }
 
-    private void notifyBankList()
+    void notifyBankList()
     {
         getViewInterface().setBankList(mSelectedBank, mBankList);
     }

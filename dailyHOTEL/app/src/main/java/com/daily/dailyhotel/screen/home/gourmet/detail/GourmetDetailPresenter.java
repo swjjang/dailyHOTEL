@@ -71,7 +71,6 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -1557,18 +1556,10 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
             for (GourmetMenu gourmetMenu : gourmetMenuList)
             {
-                for (String time : gourmetMenu.getOperationTimeList())
-                {
-                    visitTimeSet.add(time);
-                }
+                visitTimeSet.addAll(gourmetMenu.getOperationTimeList());
             }
 
-            Iterator<String> integerIterator = visitTimeSet.iterator();
-
-            while (integerIterator.hasNext())
-            {
-                mOperationTimeList.add(integerIterator.next());
-            }
+            mOperationTimeList.addAll(visitTimeSet);
         } catch (Exception e)
         {
             ExLog.e(e.toString());

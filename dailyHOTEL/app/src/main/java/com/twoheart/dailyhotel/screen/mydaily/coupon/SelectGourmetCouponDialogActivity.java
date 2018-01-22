@@ -55,7 +55,7 @@ public class SelectGourmetCouponDialogActivity extends BaseActivity
     String mVisitDay;
     private String mGourmetName;
     String mCallByScreen;
-    private int mMaxCouponAmount;
+    int mMaxCouponAmount;
 
     public static Intent newInstance(Context context, String visitDay, int gourmetIndex, String gourmetName//
         , int[] ticketIndexes, int[] ticketCounts)

@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,7 +30,6 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyToast;
-import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -45,10 +43,6 @@ import java.net.URISyntaxException;
 
 import kr.co.kcp.android.payment.standard.ResultRcvActivity;
 import kr.co.kcp.util.PackageState;
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * Created by android_sam on 2017. 3. 17..
@@ -1317,87 +1311,4 @@ public abstract class BasePaymentWebActivity extends BaseActivity implements Con
     }
 
     public abstract void onPaymentResult(String jsonString);
-
-    protected class WebViewPostAsyncTask extends AsyncTask<String, Void, String>
-    {
-        private WebView mWebView;
-        private FormBody.Builder mBuilder;
-        private String mUrl;
-
-        public WebViewPostAsyncTask(WebView webView, FormBody.Builder builder)
-        {
-            mWebView = webView;
-            mBuilder = builder;
-        }
-
-        @Override
-        protected String doInBackground(String... params)
-        {
-            mUrl = params[0];
-
-            try
-            {
-                OkHttpClient okHttpClient = new OkHttpClient();
-                Request request = new Request.Builder()//
-                    .url(mUrl)//
-                    .addHeader("Os-Type", "android")//
-                    .addHeader("App-Version", DailyHotel.VERSION)//
-                    .addHeader("App-VersionCode", DailyHotel.VERSION_CODE)//
-                    .addHeader("Authorization", DailyHotel.AUTHORIZATION)//
-                    .addHeader("ga-id", DailyHotel.GOOGLE_ANALYTICS_CLIENT_ID)//
-                    .post(mBuilder.build()).build();
-
-                Response response = okHttpClient.newCall(request).execute();
-
-                // 세션이 만료된 경우
-                if (response.code() == 401)
-                {
-                    return "401";
-                }
-
-                return response.body().string();
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String data)
-        {
-            if (DailyTextUtils.isTextEmpty(data) == true)
-            {
-                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
-                finish();
-                return;
-            } else if ("401".equalsIgnoreCase(data) == true)
-            {
-                setResult(CODE_RESULT_ACTIVITY_PAYMENT_INVALID_SESSION);
-                finish();
-                return;
-            }
-
-            if (data.contains("payment_kcp") || data.contains("approval_key"))
-            {
-                mPgType = PgType.KCP;
-            } else if (data.contains("inipay") || data.contains("inicis"))
-            {
-                mPgType = PgType.INICIS;
-            } else
-            {
-                mPgType = PgType.ETC;
-            }
-
-            try
-            {
-                mWebView.loadDataWithBaseURL(mUrl, data, "text/html", "utf-8", null);
-            } catch (Exception e)
-            {
-                setResult(CODE_RESULT_ACTIVITY_PAYMENT_FAIL);
-                finish();
-            }
-        }
-    }
 }
