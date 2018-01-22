@@ -1871,6 +1871,12 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             return;
         }
 
+        if (mGourmetBookDateTime == null)
+        {
+            Util.restartApp(getActivity());
+            return;
+        }
+
         addCompositeDisposable(Observable.zip(observable//
             , mGourmetRemoteImpl.getDetail(mGourmetIndex, mGourmetBookDateTime)//
             , mCalendarImpl.getGourmetUnavailableDates(mGourmetIndex, GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT, false)//
