@@ -13,16 +13,13 @@
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/awardImageView"
-            android:layout_width="114dp"
-            android:layout_height="92dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="19dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            fresco:actualImageScaleType="centerInside"
-            fresco:failureImage="@drawable/vector_img_popup_detail_trueawards"
-            fresco:placeholderImage="@drawable/vector_img_popup_detail_trueawards"
-            />
+            fresco:actualImageScaleType="centerInside"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/awardTitleTextView"
