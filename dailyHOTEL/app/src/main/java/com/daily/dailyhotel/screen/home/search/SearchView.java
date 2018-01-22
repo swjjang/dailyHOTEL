@@ -16,9 +16,9 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
 {
     SearchFragmentPagerAdapter mSearchFragmentPagerAdapter;
 
-    SearchStayFragment mSearchStayFragment;
-    SearchGourmetFragment mSearchGourmetFragment;
-    SearchStayOutboundFragment SearchStayOutboundFragment;
+//    SearchStayFragment mSearchStayFragment;
+//    SearchGourmetFragment mSearchGourmetFragment;
+//    SearchStayOutboundFragment SearchStayOutboundFragment;
 
     public SearchView(BaseActivity baseActivity, SearchInterface.OnEventListener listener)
     {
@@ -60,19 +60,19 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         viewDataBinding.gourmetCalendarTextView.setOnClickListener(v -> getEventListener().onGourmetCalendarClick());
         viewDataBinding.searchGourmetTextView.setOnClickListener(v -> getEventListener().onGourmetDoSearchClick());
 
-        mSearchFragmentPagerAdapter = new SearchFragmentPagerAdapter(getFragmentManager());
-
-        List<BaseFragment> list = new ArrayList<>();
-
-        mSearchStayFragment = new SearchStayFragment();
-        SearchStayOutboundFragment = new SearchStayOutboundFragment();
-        mSearchGourmetFragment = new SearchGourmetFragment();
-
-        mSearchFragmentPagerAdapter.add(mSearchStayFragment);
-        mSearchFragmentPagerAdapter.add(SearchStayOutboundFragment);
-        mSearchFragmentPagerAdapter.add(mSearchGourmetFragment);
-
-        getViewDataBinding().viewPager.setAdapter(mSearchFragmentPagerAdapter);
+//        mSearchFragmentPagerAdapter = new SearchFragmentPagerAdapter(getFragmentManager());
+//
+//        List<BaseFragment> list = new ArrayList<>();
+//
+//        mSearchStayFragment = new SearchStayFragment();
+//        SearchStayOutboundFragment = new SearchStayOutboundFragment();
+//        mSearchGourmetFragment = new SearchGourmetFragment();
+//
+//        mSearchFragmentPagerAdapter.add(mSearchStayFragment);
+//        mSearchFragmentPagerAdapter.add(SearchStayOutboundFragment);
+//        mSearchFragmentPagerAdapter.add(mSearchGourmetFragment);
+//
+//        getViewDataBinding().viewPager.setAdapter(mSearchFragmentPagerAdapter);
     }
 
     @Override
