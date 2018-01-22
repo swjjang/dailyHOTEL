@@ -191,12 +191,7 @@ public abstract class BaseFragment extends Fragment implements Constants
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
-        if (baseActivity == null)
-        {
-            return true;
-        }
-
-        return baseActivity.isLockUiComponent();
+        return baseActivity == null || baseActivity.isLockUiComponent();
     }
 
     /**
@@ -218,12 +213,7 @@ public abstract class BaseFragment extends Fragment implements Constants
     {
         BaseActivity baseActivity = (BaseActivity) getActivity();
 
-        if (baseActivity == null)
-        {
-            return true;
-        }
-
-        return baseActivity.lockUiComponentAndIsLockUiComponent();
+        return baseActivity == null || baseActivity.lockUiComponentAndIsLockUiComponent();
     }
 
     /**

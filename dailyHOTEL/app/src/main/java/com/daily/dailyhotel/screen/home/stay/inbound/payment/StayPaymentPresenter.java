@@ -2638,7 +2638,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             }, false);
     }
 
-    private void getMaxCouponAmount(int stayIndex, int roomIndex, StayBookDateTime stayBookDateTime)
+    void getMaxCouponAmount(int stayIndex, int roomIndex, StayBookDateTime stayBookDateTime)
     {
         if (stayBookDateTime == null)
         {
@@ -2664,7 +2664,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             }));
     }
 
-    private void setMaxCouponAmount(int maxCouponAmount, boolean isError)
+    void setMaxCouponAmount(int maxCouponAmount, boolean isError)
     {
         mMaxCouponAmount = maxCouponAmount;
 

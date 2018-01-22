@@ -112,7 +112,7 @@ public class StayBookingDetailPresenter extends BaseExceptionPresenter<StayBooki
 
     int mReservationIndex;
     String mAggregationId;
-    private String mImageUrl;
+    String mImageUrl;
     private boolean mIsDeepLink; // 딱히 쓰지는 않음
     int mBookingState;
     CommonDateTime mCommonDateTime;

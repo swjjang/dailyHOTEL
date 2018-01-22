@@ -1862,6 +1862,12 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
             return;
         }
 
+        if (mStayBookDateTime == null)
+        {
+            Util.restartApp(getActivity());
+            return;
+        }
+
         addCompositeDisposable(Observable.zip(observable//
             , mStayRemoteImpl.getDetail(mStayIndex, mStayBookDateTime)//
             , mCalendarImpl.getStayUnavailableCheckInDates(mStayIndex, StayDetailCalendarActivity.DEFAULT_OVERSEAS_CALENDAR_DAY_OF_MAX_COUNT, false)//

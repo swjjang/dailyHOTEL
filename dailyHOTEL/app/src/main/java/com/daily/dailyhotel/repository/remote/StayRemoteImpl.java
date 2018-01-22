@@ -42,8 +42,8 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
         final String API = Constants.UNENCRYPTED_URL ? "api/v3/hotels/sales"//
             : "NzEkOSQ1MyQ1MiQ2OCQ3MyQ3MSQ4MCQ4MCQ4OSQ3MiQ3NiQyJDUwJDM1JDEwJA==$ODWg1NUYzOPWTg1ODczQzU2ODM0N0M5RDVDNDDRBNTNCMjAzOTVEQNDYUyPRDAxNjc2QkI4RPDBGQDNVPjkM1RJMUE0RTYzNNTdCQg==$";
 
-        StringBuffer stringBuffer = new StringBuffer(1024);
-        stringBuffer.append('?');
+        StringBuilder stringBuilder = new StringBuilder(1024);
+        stringBuilder.append('?');
 
         for (Map.Entry<String, Object> entry : queryMap.entrySet())
         {
@@ -70,14 +70,14 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
                         continue;
                     }
 
-                    if (stringBuffer.length() > 1)
+                    if (stringBuilder.length() > 1)
                     {
-                        stringBuffer.append('&');
+                        stringBuilder.append('&');
                     }
 
-                    stringBuffer.append(entryKey);
-                    stringBuffer.append("=");
-                    stringBuffer.append(convertedEntryValue);
+                    stringBuilder.append(entryKey);
+                    stringBuilder.append("=");
+                    stringBuilder.append(convertedEntryValue);
                 }
             } else
             {
@@ -88,27 +88,27 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
                     continue;
                 }
 
-                if (stringBuffer.length() > 1)
+                if (stringBuilder.length() > 1)
                 {
-                    stringBuffer.append('&');
+                    stringBuilder.append('&');
                 }
 
-                stringBuffer.append(entryKey);
-                stringBuffer.append("=");
-                stringBuffer.append(convertedEntryValue);
+                stringBuilder.append(entryKey);
+                stringBuilder.append("=");
+                stringBuilder.append(convertedEntryValue);
             }
         }
 
         if (DailyTextUtils.isTextEmpty(abTestType) == false)
         {
-            if (stringBuffer.length() > 1)
+            if (stringBuilder.length() > 1)
             {
-                stringBuffer.append('&');
+                stringBuilder.append('&');
             }
 
-            stringBuffer.append("abtest");
-            stringBuffer.append("=");
-            stringBuffer.append(abTestType);
+            stringBuilder.append("abtest");
+            stringBuilder.append("=");
+            stringBuilder.append(abTestType);
         }
 
         String baseUrl;
@@ -121,7 +121,7 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
             baseUrl = Crypto.getUrlDecoderEx(Setting.getServerUrl());
         }
 
-        return mDailyMobileService.getStayListCountByFilter(baseUrl + Crypto.getUrlDecoderEx(API) + stringBuffer.toString()) //
+        return mDailyMobileService.getStayListCountByFilter(baseUrl + Crypto.getUrlDecoderEx(API) + stringBuilder.toString()) //
             .subscribeOn(Schedulers.io()).map(baseDto ->
             {
                 StayFilterCount stayFilterCount;

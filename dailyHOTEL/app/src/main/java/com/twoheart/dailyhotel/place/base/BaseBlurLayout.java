@@ -30,12 +30,7 @@ public abstract class BaseBlurLayout extends BaseLayout
 
     public boolean getBlurVisibility()
     {
-        if (mBlurImageView == null)
-        {
-            return false;
-        }
-
-        return mBlurImageView.getVisibility() == View.VISIBLE;
+        return mBlurImageView != null && mBlurImageView.getVisibility() == View.VISIBLE;
     }
 
     public void setBlurVisibility(BaseActivity activity, boolean visible)

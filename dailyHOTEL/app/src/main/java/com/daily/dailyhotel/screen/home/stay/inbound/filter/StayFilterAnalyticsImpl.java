@@ -49,27 +49,27 @@ public class StayFilterAnalyticsImpl implements StayFilterPresenter.StayFilterAn
                 eventParams.put(AnalyticsManager.KeyType.DISTRICT, area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name);
             }
 
-            StringBuffer stringBuffer = new StringBuffer();
+            StringBuilder stringBuilder = new StringBuilder();
 
             String filterSortString = getFilterSortString(stayFilter.sortType);
-            stringBuffer.append(filterSortString);
-            stringBuffer.append('-');
-            stringBuffer.append(stayFilter.person);
-            stringBuffer.append('-');
+            stringBuilder.append(filterSortString);
+            stringBuilder.append('-');
+            stringBuilder.append(stayFilter.person);
+            stringBuilder.append('-');
 
             String filterBedTypeString = getFilterBedType(stayFilter.flagBedTypeFilters);
-            stringBuffer.append(filterBedTypeString);
-            stringBuffer.append('-');
+            stringBuilder.append(filterBedTypeString);
+            stringBuilder.append('-');
 
             String filterAmenityString = getFilterAmenityString(stayFilter.flagAmenitiesFilters);
-            stringBuffer.append(filterAmenityString);
-            stringBuffer.append('-');
+            stringBuilder.append(filterAmenityString);
+            stringBuilder.append('-');
 
             String filterRoomAmenityString = getFilterRoomAmenityString(stayFilter.flagRoomAmenitiesFilters);
-            stringBuffer.append(filterRoomAmenityString);
+            stringBuilder.append(filterRoomAmenityString);
 
             AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.POPUP_BOXES//
-                , AnalyticsManager.Action.HOTEL_SORT_FILTER_APPLY_BUTTON_CLICKED, stringBuffer.toString(), eventParams);
+                , AnalyticsManager.Action.HOTEL_SORT_FILTER_APPLY_BUTTON_CLICKED, stringBuilder.toString(), eventParams);
 
             // 추가 항목
             AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SORT_FLITER//
@@ -89,7 +89,7 @@ public class StayFilterAnalyticsImpl implements StayFilterPresenter.StayFilterAn
 
             if (Constants.DEBUG == true)
             {
-                ExLog.d(stringBuffer.toString());
+                ExLog.d(stringBuilder.toString());
             }
         } catch (Exception e)
         {

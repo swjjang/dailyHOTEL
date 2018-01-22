@@ -61,8 +61,8 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     private SuggestLocalImpl mSuggestLocalImpl;
     private SuggestRemoteImpl mSuggestRemoteImpl;
 
-    private CommonDateTime mCommonDateTime;
-    private StayBookDateTime mStayBookDateTime;
+    CommonDateTime mCommonDateTime;
+    StayBookDateTime mStayBookDateTime;
 
     Suggest mSuggest;
     private String mKeyword;
@@ -71,7 +71,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     private boolean mIsSuggestChanged;
     boolean mIsShowCalendar;
 
-    private DailyDeepLink mDailyDeepLink;
+    DailyDeepLink mDailyDeepLink;
 
     public interface StayOutboundSearchAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -576,7 +576,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         mAnalytics.onEventPopularSuggestClick(getActivity(), suggest.display);
     }
 
-    private void setCommonDateTime(CommonDateTime commonDateTime)
+    void setCommonDateTime(CommonDateTime commonDateTime)
     {
         mCommonDateTime = commonDateTime;
     }
@@ -586,7 +586,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
      *
      * @param commonDateTime
      */
-    private void setStayBookDefaultDateTime(CommonDateTime commonDateTime)
+    void setStayBookDefaultDateTime(CommonDateTime commonDateTime)
     {
         if (commonDateTime == null)
         {
@@ -600,7 +600,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
      * @param checkInDateTime  ISO-8601
      * @param checkOutDateTime ISO-8601
      */
-    private void setStayBookDateTime(String checkInDateTime, int checkInAfterDay, String checkOutDateTime, int checkOutAfterDay)
+    void setStayBookDateTime(String checkInDateTime, int checkInAfterDay, String checkOutDateTime, int checkOutAfterDay)
     {
         if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
         {
@@ -668,7 +668,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         mPeople = new People(jsonObject);
     }
 
-    private void notifyStayBookDateTimeChanged()
+    void notifyStayBookDateTimeChanged()
     {
         if (mStayBookDateTime == null)
         {
@@ -746,7 +746,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         return false;
     }
 
-    private boolean processDeepLinkAfterCommonDateTime(DailyDeepLink dailyDeepLink, CommonDateTime commonDateTime)
+    boolean processDeepLinkAfterCommonDateTime(DailyDeepLink dailyDeepLink, CommonDateTime commonDateTime)
     {
         if (dailyDeepLink == null || commonDateTime == null)
         {

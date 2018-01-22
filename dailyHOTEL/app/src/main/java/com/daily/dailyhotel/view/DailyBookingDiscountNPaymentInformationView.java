@@ -93,12 +93,7 @@ public class DailyBookingDiscountNPaymentInformationView extends ConstraintLayou
 
     public boolean isBonusEnabled()
     {
-        if (mViewDataBinding == null)
-        {
-            return false;
-        }
-
-        return mViewDataBinding.bonusLayout.isEnabled();
+        return mViewDataBinding != null && mViewDataBinding.bonusLayout.isEnabled();
     }
 
     public void setBonusSelected(boolean selected)
@@ -113,12 +108,7 @@ public class DailyBookingDiscountNPaymentInformationView extends ConstraintLayou
 
     public boolean isBonusSelected()
     {
-        if (mViewDataBinding == null)
-        {
-            return false;
-        }
-
-        return mViewDataBinding.bonusLayout.isSelected();
+        return mViewDataBinding != null && mViewDataBinding.bonusLayout.isSelected();
     }
 
     public void setOnBonusClickListener(View.OnClickListener listener)
@@ -214,12 +204,7 @@ public class DailyBookingDiscountNPaymentInformationView extends ConstraintLayou
 
     public boolean isCouponEnabled()
     {
-        if (mViewDataBinding == null)
-        {
-            return false;
-        }
-
-        return mViewDataBinding.couponLayout.isEnabled();
+        return mViewDataBinding != null && mViewDataBinding.couponLayout.isEnabled();
     }
 
     public void setCouponSelected(boolean selected)
@@ -234,12 +219,7 @@ public class DailyBookingDiscountNPaymentInformationView extends ConstraintLayou
 
     public boolean isCouponSelected()
     {
-        if (mViewDataBinding == null)
-        {
-            return false;
-        }
-
-        return mViewDataBinding.couponLayout.isSelected();
+        return mViewDataBinding != null && mViewDataBinding.couponLayout.isSelected();
     }
 
     public void setMaxCouponAmount(int maxCouponAmount)
@@ -307,12 +287,7 @@ public class DailyBookingDiscountNPaymentInformationView extends ConstraintLayou
 
     public boolean isDepositStickerEnabled()
     {
-        if (mViewDataBinding == null)
-        {
-            return false;
-        }
-
-        return mViewDataBinding.depositStickerLayout.isEnabled();
+        return mViewDataBinding != null && mViewDataBinding.depositStickerLayout.isEnabled();
     }
 
     public void setRewardStickerEnabled(boolean enabled)
@@ -327,12 +302,8 @@ public class DailyBookingDiscountNPaymentInformationView extends ConstraintLayou
 
     public boolean isDepositStickerSelected()
     {
-        if (mViewDataBinding == null)
-        {
-            return false;
-        }
+        return mViewDataBinding != null && mViewDataBinding.depositStickerLayout.isSelected();
 
-        return mViewDataBinding.depositStickerLayout.isSelected();
     }
 
     public void setDepositStickerSelected(boolean selected)

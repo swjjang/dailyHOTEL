@@ -275,7 +275,7 @@ public class EditProfilePhoneActivity extends BaseActivity
         }
     };
 
-    private EditProfilePhoneNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new EditProfilePhoneNetworkController.OnNetworkControllerListener()
+    EditProfilePhoneNetworkController.OnNetworkControllerListener mOnNetworkControllerListener = new EditProfilePhoneNetworkController.OnNetworkControllerListener()
     {
         @Override
         public void onVerification(String message)

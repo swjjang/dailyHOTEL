@@ -229,12 +229,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Constant
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev)
     {
-        if (mScreenTouchEnabled == false)
-        {
-            return true;
-        }
-
-        return super.dispatchTouchEvent(ev);
+        return mScreenTouchEnabled == false || super.dispatchTouchEvent(ev);
     }
 
     @Override
