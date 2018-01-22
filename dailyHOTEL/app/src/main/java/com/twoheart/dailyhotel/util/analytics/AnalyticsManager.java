@@ -702,7 +702,7 @@ public class AnalyticsManager
         public static final String DAILYHOTEL_SATISFACTIONEVALUATION = "DailyHotel_SatisfactionEvaluation";
         public static final String DAILYHOTEL_SATISFACTIONEVALUATION_OUTBOUND = "DailyHotel_SatisfactionEvaluation_outbound";
         public static final String DAILYHOTEL_REVIEWDETAIL = "DailyHotel_ReviewDetail";
-        public static final String DAILYHOTEL_REVIEWDETAIL_OUTBOUND = "ailyHotel_ReviewDetail_outbound";
+        public static final String DAILYHOTEL_REVIEWDETAIL_OUTBOUND = "DailyHotel_ReviewDetail_outbound";
         public static final String DAILYHOTEL_REVIEWWRITE = "DailyHotel_ReviewWrite";
         public static final String DAILYHOTEL_REVIEWWRITE_OUTBOUND = "DailyHotel_ReviewWrite_outbound";
         public static final String DAILYHOTEL_REVIEWEDIT = "DailyHotel_ReviewEdit";

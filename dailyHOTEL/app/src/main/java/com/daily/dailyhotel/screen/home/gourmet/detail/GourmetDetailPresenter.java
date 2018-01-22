@@ -1032,7 +1032,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
             final String message = getString(R.string.message_detail_gourmet_share_sms//
                 , name, mGourmetDetail.name//
-                , mGourmetBookDateTime.getVisitDateTime("yyyy.MM.dd (EEE)")//
+                , mGourmetBookDateTime.getVisitDateTime("yyyy.MM.dd(EEE)")//
                 , mGourmetDetail.address);
 
             addCompositeDisposable(mCommonRemoteImpl.getShortUrl(longUrl).subscribe(new Consumer<String>()

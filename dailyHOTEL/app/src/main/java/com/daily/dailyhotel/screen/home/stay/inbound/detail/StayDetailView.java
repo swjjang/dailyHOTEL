@@ -10,12 +10,14 @@ import android.databinding.DataBindingUtil;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.graphics.Typeface;
+import android.graphics.drawable.Animatable;
 import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.IdRes;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Html;
@@ -54,8 +56,13 @@ import com.daily.dailyhotel.view.DailyDetailTrueAwardsView;
 import com.daily.dailyhotel.view.DailyDetailTrueReviewView;
 import com.daily.dailyhotel.view.DailyRewardCardView;
 import com.daily.dailyhotel.view.DailyToolbarView;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.DraweeTransition;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayDetailDataBinding;
 import com.twoheart.dailyhotel.databinding.DialogConciergeDataBinding;
@@ -1152,16 +1159,28 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         DialogDailyAwardsDataBinding dataBinding = DataBindingUtil.inflate( //
             LayoutInflater.from(getContext()), R.layout.dialog_daily_awards_data, null, false);
 
-        dataBinding.awardImageView.setBackgroundResource(R.color.transparent);
-        dataBinding.awardImageView.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_INSIDE);
+        dataBinding.awardImageView.setImageResource(R.drawable.vector_img_popup_detail_trueawards);
 
-        if (DailyTextUtils.isTextEmpty(trueAwards.imageUrl) == false)
-        {
-            dataBinding.awardImageView.setImageURI(Uri.parse(trueAwards.imageUrl));
-        }
+        ControllerListener controllerListener = new BaseControllerListener<ImageInfo>() {
+            @Override
+            public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable)
+            {
+                super.onFinalImageSet(id, imageInfo, animatable);
+            }
 
-        dataBinding.awardImageView.getHierarchy().setPlaceholderImage(R.drawable.vector_img_popup_detail_trueawards);
-        dataBinding.awardImageView.getHierarchy().setFailureImage(R.drawable.vector_img_popup_detail_trueawards);
+            @Override
+            public void onFailure(String id, Throwable throwable)
+            {
+                super.onFailure(id, throwable);
+
+                dataBinding.awardImageView.setImageResource(R.drawable.vector_img_popup_detail_trueawards);
+            }
+        };
+
+        DraweeController draweeController = Fresco.newDraweeControllerBuilder()//
+            .setControllerListener(controllerListener).setUri(Uri.parse(trueAwards.imageUrl)).build();
+
+        dataBinding.awardImageView.setController(draweeController);
 
         dataBinding.awardTitleTextView.setText(getContext().getString(R.string.label_daily_true_awards_popup_title_formet, trueAwards.title));
         dataBinding.awardDescriptionTextView.setText(trueAwards.description);

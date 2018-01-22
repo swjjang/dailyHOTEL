@@ -46,7 +46,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -189,21 +188,24 @@ public class ReviewActivity extends BaseActivity
 
         try
         {
+            Map<String, String> params = new HashMap<>();
+            params.put(AnalyticsManager.KeyType.NAME, mReview.getReviewItem().itemName);
+
             switch (mReview.getReviewItem().serviceType)
             {
                 case HOTEL:
                     AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
-                        , AnalyticsManager.Action.REVIEW_DETAIL, AnalyticsManager.Label.CLOSE_BUTTON_CLICKED, null);
+                        , AnalyticsManager.Action.REVIEW_DETAIL, AnalyticsManager.Label.CLOSE_BUTTON_CLICKED, params);
                     break;
 
                 case GOURMET:
                     AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
-                        , AnalyticsManager.Action.REVIEW_DETAIL, AnalyticsManager.Label.CLOSE_BUTTON_CLICKED, null);
+                        , AnalyticsManager.Action.REVIEW_DETAIL, AnalyticsManager.Label.CLOSE_BUTTON_CLICKED, params);
                     break;
 
                 case OB_STAY:
                     AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
-                        , AnalyticsManager.Action.REVIEW_DETAIL_OB, AnalyticsManager.Label.CLOSE_BUTTON_CLICKED, null);
+                        , AnalyticsManager.Action.REVIEW_DETAIL_OB, AnalyticsManager.Label.CLOSE_BUTTON_CLICKED, params);
                     break;
             }
         } catch (Exception e)
@@ -236,21 +238,24 @@ public class ReviewActivity extends BaseActivity
 
                     try
                     {
+                        Map<String, String> params = new HashMap<>();
+                        params.put(AnalyticsManager.KeyType.NAME, mReview.getReviewItem().itemName);
+
                         switch (mReview.getReviewItem().serviceType)
                         {
                             case HOTEL:
                                 AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
-                                    , AnalyticsManager.Action.REVIEW_POPUP, AnalyticsManager.Label._YES, null);
+                                    , AnalyticsManager.Action.REVIEW_POPUP, AnalyticsManager.Label._YES, params);
                                 break;
 
                             case GOURMET:
                                 AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
-                                    , AnalyticsManager.Action.REVIEW_POPUP, AnalyticsManager.Label._YES, null);
+                                    , AnalyticsManager.Action.REVIEW_POPUP, AnalyticsManager.Label._YES, params);
                                 break;
 
                             case OB_STAY:
                                 AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
-                                    , AnalyticsManager.Action.REVIEW_POPUP_OB, AnalyticsManager.Label._YES, null);
+                                    , AnalyticsManager.Action.REVIEW_POPUP_OB, AnalyticsManager.Label._YES, params);
                                 break;
                         }
                     } catch (Exception e)
@@ -267,21 +272,24 @@ public class ReviewActivity extends BaseActivity
 
                     try
                     {
+                        Map<String, String> params = new HashMap<>();
+                        params.put(AnalyticsManager.KeyType.NAME, mReview.getReviewItem().itemName);
+
                         switch (mReview.getReviewItem().serviceType)
                         {
                             case HOTEL:
                                 AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
-                                    , AnalyticsManager.Action.REVIEW_POPUP, AnalyticsManager.Label._NO, null);
+                                    , AnalyticsManager.Action.REVIEW_POPUP, AnalyticsManager.Label._NO, params);
                                 break;
 
                             case GOURMET:
                                 AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
-                                    , AnalyticsManager.Action.REVIEW_POPUP, AnalyticsManager.Label._NO, null);
+                                    , AnalyticsManager.Action.REVIEW_POPUP, AnalyticsManager.Label._NO, params);
                                 break;
 
                             case OB_STAY:
                                 AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
-                                    , AnalyticsManager.Action.REVIEW_POPUP_OB, AnalyticsManager.Label._NO, null);
+                                    , AnalyticsManager.Action.REVIEW_POPUP_OB, AnalyticsManager.Label._NO, params);
                                 break;
                         }
                     } catch (Exception e)
@@ -898,21 +906,24 @@ public class ReviewActivity extends BaseActivity
         {
             try
             {
+                Map<String, String> params = new HashMap<>();
+                params.put(AnalyticsManager.KeyType.NAME, mReview.getReviewItem().itemName);
+
                 switch (mReview.getReviewItem().serviceType)
                 {
                     case HOTEL:
                         AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
-                            , AnalyticsManager.Action.REVIEW_DETAIL, AnalyticsManager.Label.REVIEW_WRITE_CLICKED, null);
+                            , AnalyticsManager.Action.REVIEW_DETAIL, AnalyticsManager.Label.REVIEW_WRITE_CLICKED, params);
                         break;
 
                     case GOURMET:
                         AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
-                            , AnalyticsManager.Action.REVIEW_DETAIL, AnalyticsManager.Label.REVIEW_WRITE_CLICKED, null);
+                            , AnalyticsManager.Action.REVIEW_DETAIL, AnalyticsManager.Label.REVIEW_WRITE_CLICKED, params);
                         break;
 
                     case OB_STAY:
                         AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
-                            , AnalyticsManager.Action.REVIEW_DETAIL_OB, AnalyticsManager.Label.REVIEW_WRITE_CLICKED, null);
+                            , AnalyticsManager.Action.REVIEW_DETAIL_OB, AnalyticsManager.Label.REVIEW_WRITE_CLICKED, params);
                         break;
                 }
             } catch (Exception e)
@@ -920,7 +931,7 @@ public class ReviewActivity extends BaseActivity
                 ExLog.d(e.toString());
             }
 
-            Intent intent = WriteReviewCommentActivity.newInstance(ReviewActivity.this, mReview.getReviewItem().serviceType, comment);
+            Intent intent = WriteReviewCommentActivity.newInstance(ReviewActivity.this, mReview.getReviewItem().serviceType, mReview.getReviewItem().itemName, comment);
             startActivityForResult(intent, REQUEST_ACTIVITY_WRITE_REVIEW_COMMENT);
         }
 
@@ -1018,27 +1029,31 @@ public class ReviewActivity extends BaseActivity
 
             try
             {
+                Map<String, String> params = new HashMap<>();
+                params.put(AnalyticsManager.KeyType.NAME, mReview.getReviewItem().itemName);
+                params.put(AnalyticsManager.KeyType.GRADE, mReviewGrade);
+
                 switch (mReview.getReviewItem().serviceType)
                 {
                     case HOTEL:
                         mReviewNetworkController.requestAddReviewDetailInformation(jsonObject);
 
                         AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
-                            , AnalyticsManager.Action.REVIEW_DETAIL, AnalyticsManager.Label.SUBMIT, Collections.singletonMap("grade", mReviewGrade));
+                            , AnalyticsManager.Action.REVIEW_DETAIL, AnalyticsManager.Label.SUBMIT, params);
                         break;
 
                     case GOURMET:
                         mReviewNetworkController.requestAddReviewDetailInformation(jsonObject);
 
                         AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
-                            , AnalyticsManager.Action.REVIEW_DETAIL, AnalyticsManager.Label.SUBMIT, Collections.singletonMap("grade", mReviewGrade));
+                            , AnalyticsManager.Action.REVIEW_DETAIL, AnalyticsManager.Label.SUBMIT, params);
                         break;
 
                     case OB_STAY:
                         mReviewNetworkController.requestStayOutboundAddReviewDetailInformation(mReview.reserveIdx, jsonObject);
 
                         AnalyticsManager.getInstance(ReviewActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
-                            , AnalyticsManager.Action.REVIEW_DETAIL_OB, AnalyticsManager.Label.SUBMIT, Collections.singletonMap("grade", mReviewGrade));
+                            , AnalyticsManager.Action.REVIEW_DETAIL_OB, AnalyticsManager.Label.SUBMIT, params);
                         break;
                 }
             } catch (Exception e)
