@@ -600,20 +600,6 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             @Override
             public void accept(@io.reactivex.annotations.NonNull Pair<CommonDateTime, User> pair) throws Exception
             {
-                onBookingInformation(mGourmetPayment, mGourmetCart);
-
-                int[] menuIndexes = mGourmetCart.getMenuSaleIndexes();
-                int[] menuCounts = mGourmetCart.getCountPerMenu();
-                getMaxCouponAmount(menuIndexes, menuCounts);
-
-                notifyUserInformationChanged();
-
-                notifyCardEventChanged(pair.first);
-                notifyBonusEnabledChanged();
-                notifyPaymentTypeChanged();
-                notifyEasyCardChanged();
-                notifyGourmetPaymentChanged();
-
                 if (mNeedOverwritePrice == true)
                 {
                     mNeedOverwritePrice = false;
@@ -630,6 +616,20 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                         }
                     }));
                 }
+
+                onBookingInformation(mGourmetPayment, mGourmetCart);
+
+                int[] menuIndexes = mGourmetCart.getMenuSaleIndexes();
+                int[] menuCounts = mGourmetCart.getCountPerMenu();
+                getMaxCouponAmount(menuIndexes, menuCounts);
+
+                notifyUserInformationChanged();
+
+                notifyCardEventChanged(pair.first);
+                notifyBonusEnabledChanged();
+                notifyPaymentTypeChanged();
+                notifyEasyCardChanged();
+                notifyGourmetPaymentChanged();
 
                 // 가격이 변동된 경우
                 if (mCheckChangedPrice == false && checkChangedPrice(mGourmetPayment, mGourmetCart) == true)
