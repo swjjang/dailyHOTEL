@@ -53,7 +53,7 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 {
     private static final int CLICK_FILTER_DELAY_TIME = 500;
 
-    private StayFilterAnalyticsInterface mAnalytics;
+    StayFilterAnalyticsInterface mAnalytics;
 
     StayRemoteImpl mStayRemoteImpl;
 

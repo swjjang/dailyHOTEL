@@ -48,7 +48,7 @@ public class GourmetPreviewActivity extends BaseActivity
 
     protected GourmetPreviewLayout mPreviewLayout;
     protected GourmetPreviewNetworkController mNetworkController;
-    private CommonRemoteImpl mCommonRemoteImpl;
+    CommonRemoteImpl mCommonRemoteImpl;
 
     GourmetBookingDay mPlaceBookingDay;
     GourmetDetail mPlaceDetail;

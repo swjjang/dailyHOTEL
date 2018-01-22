@@ -33,11 +33,11 @@ public class StayReceiptPresenter extends BaseExceptionPresenter<StayReceiptActi
 {
     private StayReceiptAnalyticsInterface mAnalytics;
 
-    private ReceiptRemoteImpl mReceiptRemoteImpl;
+    ReceiptRemoteImpl mReceiptRemoteImpl;
 
     private int mBookingState;
     private String mAggregationId;
-    private int mReservationIndex;
+    int mReservationIndex;
     boolean mIsFullScreenMode;
 
     public interface StayReceiptAnalyticsInterface extends BaseAnalyticsInterface

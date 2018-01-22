@@ -35,7 +35,7 @@ import io.reactivex.functions.Function;
 public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<StayOutboundSearchSuggestActivity, StayOutboundSearchSuggestViewInterface> implements StayOutboundSearchSuggestView.OnEventListener
 {
     StayOutboundSearchSuggestAnalyticsInterface mAnalytics;
-    private SuggestRemoteImpl mSuggestRemoteImpl;
+    SuggestRemoteImpl mSuggestRemoteImpl;
     private SuggestLocalImpl mSuggestLocalImpl;
 
     String mKeyword;

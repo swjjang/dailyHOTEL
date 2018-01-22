@@ -627,6 +627,15 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             @Override
             public void accept(StayRefundPolicy stayRefundPolicy) throws Exception
             {
+
+                if (mNeedOverwritePrice == true)
+                {
+                    mNeedOverwritePrice = false;
+                    mRoomPrice = mStayPayment.totalPrice;
+                    getViewInterface().scrollToCheckPriceTitle();
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
+                }
+
                 getMaxCouponAmount(mStayIndex, mRoomIndex, mStayBookDateTime);
 
                 setStayRefundPolicy(stayRefundPolicy);
@@ -649,14 +658,6 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
 
                 // 위의 리워드 스티커 여부와 정책 여부에 따라서 순서 및 단어가 바뀐다.
                 notifyRefundPolicyChanged();
-
-                if (mNeedOverwritePrice == true)
-                {
-                    mNeedOverwritePrice = false;
-                    mRoomPrice = mStayPayment.totalPrice;
-                    getViewInterface().scrollToCheckPriceTitle();
-                    setResult(BaseActivity.RESULT_CODE_REFRESH);
-                }
 
                 if (mCheckChangedPrice == false && mRoomPrice != mStayPayment.totalPrice)
                 {
@@ -2643,7 +2644,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             }, false);
     }
 
-    private void getMaxCouponAmount(int stayIndex, int roomIndex, StayBookDateTime stayBookDateTime)
+    void getMaxCouponAmount(int stayIndex, int roomIndex, StayBookDateTime stayBookDateTime)
     {
         if (stayBookDateTime == null)
         {
@@ -2669,7 +2670,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
             }));
     }
 
-    private void setMaxCouponAmount(int maxCouponAmount, boolean isError)
+    void setMaxCouponAmount(int maxCouponAmount, boolean isError)
     {
         mMaxCouponAmount = maxCouponAmount;
 

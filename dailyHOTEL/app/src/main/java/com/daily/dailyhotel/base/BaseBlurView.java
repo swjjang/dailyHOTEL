@@ -33,12 +33,7 @@ public abstract class BaseBlurView<T1 extends OnBaseEventListener, T2 extends Vi
     @Override
     public boolean isBlurVisible()
     {
-        if (mBlurImageView == null)
-        {
-            return false;
-        }
-
-        return mBlurImageView.getVisibility() == View.VISIBLE;
+        return mBlurImageView != null && mBlurImageView.getVisibility() == View.VISIBLE;
     }
 
     @Override

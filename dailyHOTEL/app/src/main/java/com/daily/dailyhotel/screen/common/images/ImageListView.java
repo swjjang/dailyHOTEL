@@ -270,7 +270,7 @@ public class ImageListView extends BaseDialogView<ImageListView.OnEventListener,
     private class ImageDetailListAdapter extends ArrayAdapter<DetailImageInformation>
     {
         private Context mContext;
-        private String mImageUrl;
+        String mImageUrl;
 
         public ImageDetailListAdapter(Context context, int resourceId, String imageUrl)
         {

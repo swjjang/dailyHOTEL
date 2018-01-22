@@ -32,11 +32,11 @@ public class GourmetReceiptPresenter extends BaseExceptionPresenter<GourmetRecei
 {
     private GourmetReceiptAnalyticsInterface mAnalytics;
 
-    private ReceiptRemoteImpl mReceiptRemoteImpl;
+    ReceiptRemoteImpl mReceiptRemoteImpl;
 
-    private boolean mIsFullScreenMode;
-    private String mAggregationId;
-    private int mReservationIndex;
+    boolean mIsFullScreenMode;
+    String mAggregationId;
+    int mReservationIndex;
 
     public interface GourmetReceiptAnalyticsInterface extends BaseAnalyticsInterface
     {

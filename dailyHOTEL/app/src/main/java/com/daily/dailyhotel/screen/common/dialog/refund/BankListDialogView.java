@@ -16,7 +16,7 @@ import java.util.List;
 
 public class BankListDialogView extends BaseMultiWindowView<BankListDialogView.OnEventListener, DialogRefundBankListDataBinding> implements BankListDialogInterface
 {
-    private BankListAdapter mBankListAdapter;
+    BankListAdapter mBankListAdapter;
 
     public interface OnEventListener extends OnBaseEventListener
     {

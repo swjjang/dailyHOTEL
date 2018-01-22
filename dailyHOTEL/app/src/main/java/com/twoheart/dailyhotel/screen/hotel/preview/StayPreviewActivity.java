@@ -49,7 +49,7 @@ public class StayPreviewActivity extends BaseActivity
 
     protected StayPreviewLayout mPreviewLayout;
     protected StayPreviewNetworkController mNetworkController;
-    private CommonRemoteImpl mCommonRemoteImpl;
+    CommonRemoteImpl mCommonRemoteImpl;
 
 
     StayBookingDay mPlaceBookingDay;

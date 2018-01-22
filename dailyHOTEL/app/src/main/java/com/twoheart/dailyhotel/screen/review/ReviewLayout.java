@@ -45,7 +45,7 @@ public class ReviewLayout extends BaseLayout implements View.OnClickListener, Da
     private View mToolbar, mImageDimView;
     private DailyScrollView mScrollView;
     private ViewGroup mScrollLayout;
-    private SimpleDraweeView mPlaceImageView;
+    SimpleDraweeView mPlaceImageView;
     private TextView mPlaceNameTextView, mPeriodTextView, mThankyouTextView;
     private TextView mToolbarTitle, mToolbarSubTitle;
     private TextView mConfirmTextView;

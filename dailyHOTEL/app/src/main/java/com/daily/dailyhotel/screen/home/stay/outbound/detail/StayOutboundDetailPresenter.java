@@ -1800,6 +1800,12 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
             return;
         }
 
+        if (mStayBookDateTime == null)
+        {
+            Util.restartApp(getActivity());
+            return;
+        }
+
         addCompositeDisposable(Observable.zip(observable, mCommonRemoteImpl.getCommonDateTime() //
             , mStayOutboundRemoteImpl.getDetail(mStayIndex, mStayBookDateTime, mPeople) //
             , mStayOutboundRemoteImpl.getRecommendAroundList(mStayIndex, mStayBookDateTime, mPeople) //

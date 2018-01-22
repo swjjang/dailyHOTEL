@@ -124,8 +124,8 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
     GourmetCart mGourmetCart;
     int mPersons;
     private int mMaxCouponAmount;
-    private boolean mCheckChangedPrice;
-    private boolean mNeedOverwritePrice;
+    boolean mCheckChangedPrice;
+    boolean mNeedOverwritePrice;
 
     // ***************************************************************** //
     // ************** 변수 선언시에 onSaveInstanceState 에 꼭 등록해야하는지 판단한다.
@@ -606,20 +606,6 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             @Override
             public void accept(@io.reactivex.annotations.NonNull Pair<CommonDateTime, User> pair) throws Exception
             {
-                onBookingInformation(mGourmetPayment, mGourmetCart);
-
-                int[] menuIndexes = mGourmetCart.getMenuSaleIndexes();
-                int[] menuCounts = mGourmetCart.getCountPerMenu();
-                getMaxCouponAmount(menuIndexes, menuCounts);
-
-                notifyUserInformationChanged();
-
-                notifyCardEventChanged(pair.first);
-                notifyBonusEnabledChanged();
-                notifyPaymentTypeChanged();
-                notifyEasyCardChanged();
-                notifyGourmetPaymentChanged();
-
                 if (mNeedOverwritePrice == true)
                 {
                     mNeedOverwritePrice = false;
@@ -636,6 +622,20 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
                         }
                     }));
                 }
+
+                onBookingInformation(mGourmetPayment, mGourmetCart);
+
+                int[] menuIndexes = mGourmetCart.getMenuSaleIndexes();
+                int[] menuCounts = mGourmetCart.getCountPerMenu();
+                getMaxCouponAmount(menuIndexes, menuCounts);
+
+                notifyUserInformationChanged();
+
+                notifyCardEventChanged(pair.first);
+                notifyBonusEnabledChanged();
+                notifyPaymentTypeChanged();
+                notifyEasyCardChanged();
+                notifyGourmetPaymentChanged();
 
                 // 가격이 변동된 경우
                 if (mCheckChangedPrice == false && checkChangedPrice(mGourmetPayment, mGourmetCart) == true)
@@ -2331,7 +2331,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         return false;
     }
 
-    private void overwriteGourmetCartPrice(GourmetPayment gourmetPayment, GourmetCart gourmetCart)
+    void overwriteGourmetCartPrice(GourmetPayment gourmetPayment, GourmetCart gourmetCart)
     {
         if (gourmetPayment == null || gourmetCart == null)
         {
@@ -2351,7 +2351,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         }
     }
 
-    private void getMaxCouponAmount(int[] ticketSaleIndexes, int[] ticketCount)
+    void getMaxCouponAmount(int[] ticketSaleIndexes, int[] ticketCount)
     {
         if (ticketSaleIndexes == null || ticketCount == null)
         {
@@ -2376,7 +2376,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
             }));
     }
 
-    private void setMaxCouponAmount(int maxCouponAmount, boolean isError)
+    void setMaxCouponAmount(int maxCouponAmount, boolean isError)
     {
         mMaxCouponAmount = maxCouponAmount;
 

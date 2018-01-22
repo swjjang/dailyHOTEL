@@ -407,8 +407,8 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
 
     private String makeListQueryParams(Map<String, Object> queryMap, String abTestType)
     {
-        StringBuffer stringBuffer = new StringBuffer(1024);
-        stringBuffer.append('?');
+        StringBuilder stringBuilder = new StringBuilder(1024);
+        stringBuilder.append('?');
 
         for (Map.Entry<String, Object> entry : queryMap.entrySet())
         {
@@ -435,14 +435,14 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
                         continue;
                     }
 
-                    if (stringBuffer.length() > 1)
+                    if (stringBuilder.length() > 1)
                     {
-                        stringBuffer.append('&');
+                        stringBuilder.append('&');
                     }
 
-                    stringBuffer.append(entryKey);
-                    stringBuffer.append("=");
-                    stringBuffer.append(convertedEntryValue);
+                    stringBuilder.append(entryKey);
+                    stringBuilder.append("=");
+                    stringBuilder.append(convertedEntryValue);
                 }
             } else
             {
@@ -453,29 +453,29 @@ public class StayRemoteImpl extends BaseRemoteImpl implements StayInterface
                     continue;
                 }
 
-                if (stringBuffer.length() > 1)
+                if (stringBuilder.length() > 1)
                 {
-                    stringBuffer.append('&');
+                    stringBuilder.append('&');
                 }
 
-                stringBuffer.append(entryKey);
-                stringBuffer.append("=");
-                stringBuffer.append(convertedEntryValue);
+                stringBuilder.append(entryKey);
+                stringBuilder.append("=");
+                stringBuilder.append(convertedEntryValue);
             }
         }
 
         if (DailyTextUtils.isTextEmpty(abTestType) == false)
         {
-            if (stringBuffer.length() > 1)
+            if (stringBuilder.length() > 1)
             {
-                stringBuffer.append('&');
+                stringBuilder.append('&');
             }
 
-            stringBuffer.append("abtest");
-            stringBuffer.append("=");
-            stringBuffer.append(abTestType);
+            stringBuilder.append("abtest");
+            stringBuilder.append("=");
+            stringBuilder.append(abTestType);
         }
 
-        return stringBuffer.toString();
+        return stringBuilder.toString();
     }
 }

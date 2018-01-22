@@ -552,6 +552,14 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             @Override
             public void accept(@io.reactivex.annotations.NonNull CommonDateTime commonDateTime) throws Exception
             {
+                if (mNeedOverwritePrice == true)
+                {
+                    mNeedOverwritePrice = false;
+                    mRoomPrice = mStayOutboundPayment.totalPrice;
+                    getViewInterface().scrollToCheckPriceTitle();
+                    setResult(BaseActivity.RESULT_CODE_REFRESH);
+                }
+
                 onBookingInformation(mStayOutboundPayment, mStayBookDateTime);
                 onRewardStickerInformation(mStayOutboundPayment, mStayBookDateTime);
 
@@ -564,14 +572,6 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
                 // 위의 리워드 스티커 여부와 정책 여부에 따라서 순서 및 단어가 바뀐다.
                 notifyRefundPolicyChanged();
-
-                if (mNeedOverwritePrice == true)
-                {
-                    mNeedOverwritePrice = false;
-                    mRoomPrice = mStayOutboundPayment.totalPrice;
-                    getViewInterface().scrollToCheckPriceTitle();
-                    setResult(BaseActivity.RESULT_CODE_REFRESH);
-                }
 
                 // 가격이 변동된 경우
                 if (mCheckChangedPrice == false && mRoomPrice > 0 && mRoomPrice != mStayOutboundPayment.totalPrice)

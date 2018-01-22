@@ -88,14 +88,14 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     private static final int NIGHTS_OF_MAXCOUNT = 28;
 
     private StayOutboundListAnalyticsInterface mAnalytics;
-    private StayOutboundRemoteImpl mStayOutboundRemoteImpl;
+    StayOutboundRemoteImpl mStayOutboundRemoteImpl;
     private CommonRemoteImpl mCommonRemoteImpl;
 
     private CommonDateTime mCommonDateTime;
     StayBookDateTime mStayBookDateTime;
 
     private Suggest mSuggest;
-    private People mPeople;
+    People mPeople;
     StayOutboundFilters mStayOutboundFilters;
     List<StayOutbound> mStayOutboundList;
     DailyLocationExFactory mDailyLocationExFactory;

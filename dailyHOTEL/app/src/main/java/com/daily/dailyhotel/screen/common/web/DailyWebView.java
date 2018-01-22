@@ -116,12 +116,7 @@ public class DailyWebView extends BaseDialogView<DailyWebView.OnEventListener, A
     @Override
     public boolean canGoBack()
     {
-        if (getViewDataBinding() == null)
-        {
-            return false;
-        }
-
-        return getViewDataBinding().webView.canGoBack();
+        return getViewDataBinding() != null && getViewDataBinding().webView.canGoBack();
     }
 
     @Override

@@ -46,10 +46,10 @@ import io.reactivex.functions.Function;
  */
 public class PaymentWaitPresenter extends BaseExceptionPresenter<PaymentWaitActivity, PaymentWaitInterface> implements PaymentWaitView.OnEventListener
 {
-    private PaymentWaitAnalyticsInterface mAnalytics;
+    PaymentWaitAnalyticsInterface mAnalytics;
 
-    private BookingRemoteImpl mBookingRemoteImpl;
-    private Booking mBooking;
+    BookingRemoteImpl mBookingRemoteImpl;
+    Booking mBooking;
 
     public interface PaymentWaitAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -280,7 +280,7 @@ public class PaymentWaitPresenter extends BaseExceptionPresenter<PaymentWaitActi
         }));
     }
 
-    private WaitingDeposit getWaitingDeposit(StayOldWaitingDeposit stayOldWaitingDeposit)
+    WaitingDeposit getWaitingDeposit(StayOldWaitingDeposit stayOldWaitingDeposit)
     {
         if (stayOldWaitingDeposit == null)
         {
@@ -312,7 +312,7 @@ public class PaymentWaitPresenter extends BaseExceptionPresenter<PaymentWaitActi
         return waitingDeposit;
     }
 
-    private WaitingDeposit getWaitingDeposit(GourmetOldWaitingDeposit gourmetOldWaitingDeposit)
+    WaitingDeposit getWaitingDeposit(GourmetOldWaitingDeposit gourmetOldWaitingDeposit)
     {
         if (gourmetOldWaitingDeposit == null)
         {

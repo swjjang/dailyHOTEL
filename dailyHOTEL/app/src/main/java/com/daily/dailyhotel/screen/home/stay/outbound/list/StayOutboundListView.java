@@ -296,7 +296,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
 
                     ObjectItem objectItem = mStayOutboundListAdapter.getItem(position);
 
-                    if (objectItem.mType == objectItem.TYPE_ENTRY)
+                    if (objectItem.mType == ObjectItem.TYPE_ENTRY)
                     {
                         if (view instanceof DailyStayOutboundCardView == true)
                         {
@@ -329,7 +329,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
 
                     ObjectItem objectItem = mStayOutboundListAdapter.getItem(position);
 
-                    if (objectItem.mType == objectItem.TYPE_ENTRY)
+                    if (objectItem.mType == ObjectItem.TYPE_ENTRY)
                     {
                         if (view instanceof DailyStayOutboundCardView == true)
                         {
