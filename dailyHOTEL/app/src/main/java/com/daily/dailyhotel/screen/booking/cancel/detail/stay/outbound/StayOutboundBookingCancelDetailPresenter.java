@@ -582,7 +582,7 @@ public class StayOutboundBookingCancelDetailPresenter //
 
             final String message = getString(R.string.message_booking_cancel_stay_share_sms, userName //
                 , mStayOutboundBookingDetail.name, mStayOutboundBookingDetail.guestLastName + " " + mStayOutboundBookingDetail.guestFirstName, mStayOutboundBookingDetail.roomName //
-                , DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.cancelDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd") //
+                , DailyCalendar.convertDateFormatString(mStayOutboundBookingDetail.cancelDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)") //
                 , mStayOutboundBookingDetail.address);
 
             Intent intent = new Intent(android.content.Intent.ACTION_SEND);
