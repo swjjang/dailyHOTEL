@@ -91,6 +91,8 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         void onSearchRecentlyPlace(RecentlyPlace place);
 
         void onChangeAutoCompleteScrollView(boolean isShow);
+
+        void onVoiceSearchClick();
     }
 
     protected abstract String getAroundPlaceText();
@@ -136,6 +138,10 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
         final View deleteView = view.findViewById(R.id.deleteView);
         deleteView.setOnClickListener(this);
         deleteView.setVisibility(View.GONE);
+
+        final View voiceSearchView = view.findViewById(R.id.voiceSearchView);
+        voiceSearchView.setOnClickListener(this);
+        voiceSearchView.setVisibility(View.VISIBLE);
 
         mSearchEditText.setOnTouchListener(new View.OnTouchListener()
         {
@@ -205,6 +211,8 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
                     deleteView.setVisibility(View.GONE);
                     ((OnEventListener) mOnEventListener).onSearchEnabled(false);
 
+                    voiceSearchView.setVisibility(View.VISIBLE);
+
                     hideAutoCompleteScrollView();
 
                     updateAutoCompleteLayout(mAutoCompleteLayout, null, null);
@@ -227,6 +235,8 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
 
                     deleteView.setVisibility(View.VISIBLE);
                     ((OnEventListener) mOnEventListener).onSearchEnabled(true);
+
+                    voiceSearchView.setVisibility(View.GONE);
 
                     showAutoCompleteScrollView();
 
@@ -686,6 +696,12 @@ public abstract class PlaceSearchLayout extends BaseLayout implements View.OnCli
             case R.id.deleteView:
             {
                 ((OnEventListener) mOnEventListener).onResetKeyword();
+                break;
+            }
+
+            case R.id.voiceSearchView:
+            {
+                ((OnEventListener) mOnEventListener).onVoiceSearchClick();
                 break;
             }
         }
