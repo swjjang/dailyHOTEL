@@ -1779,8 +1779,8 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
 //            mBaseActivity.startActivityForResult(SearchActivity.newInstance(mBaseActivity, mPlaceType, stayBookingDay), Constants.CODE_REQUEST_ACTIVITY_SEARCH);
 
-
-            mBaseActivity.startActivityForResult(com.daily.dailyhotel.screen.home.search.SearchActivity.newInstance(mBaseActivity, mPlaceType, stayBookingDay), Constants.CODE_REQUEST_ACTIVITY_SEARCH);
+            mBaseActivity.startActivityForResult(com.daily.dailyhotel.screen.home.search.SearchActivity.newInstance(mBaseActivity, mTodayDateTime.openDateTime//
+                , mTodayDateTime.closeDateTime, mTodayDateTime.currentDateTime, mTodayDateTime.dailyDateTime, ServiceType.HOTEL), Constants.CODE_REQUEST_ACTIVITY_SEARCH);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                 AnalyticsManager.Category.SEARCH, AnalyticsManager.Action.SEARCH_BUTTON_CLICK,//
