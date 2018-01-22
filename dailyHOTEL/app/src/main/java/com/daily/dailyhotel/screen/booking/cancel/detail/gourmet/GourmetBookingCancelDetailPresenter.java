@@ -653,7 +653,7 @@ public class GourmetBookingCancelDetailPresenter //
             //                ticketName = firstTicketName;
             //            }
 
-            String reserveDate = DailyCalendar.convertDateFormatString(guestInfo.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy-MM-dd");
+            String reserveDate = DailyCalendar.convertDateFormatString(guestInfo.arrivalDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
             String canceledAt = DailyCalendar.convertDateFormatString(mGourmetBookingDetail.canceledAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd");
 
             KakaoLinkManager.newInstance(getActivity()).shareBookingCancelGourmet(userName //
@@ -725,7 +725,7 @@ public class GourmetBookingCancelDetailPresenter //
             final String message = getString(R.string.message_booking_cancel_gourmet_share_sms, userName //
                 , restaurantInfo.name, guestInfo.name //
                 , ticketName, getString(R.string.label_booking_count, totalTicketCount) //
-                , DailyCalendar.convertDateFormatString(mGourmetBookingDetail.canceledAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd") //
+                , DailyCalendar.convertDateFormatString(mGourmetBookingDetail.canceledAt, DailyCalendar.ISO_8601_FORMAT, "yyyy.MM.dd(EEE)") //
                 , restaurantInfo.address);
 
             Intent intent = new Intent(android.content.Intent.ACTION_SEND);
