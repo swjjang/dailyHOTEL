@@ -1,24 +1,23 @@
 package com.daily.dailyhotel.screen.home.search;
 
 import android.support.design.widget.AppBarLayout;
+import android.util.TypedValue;
 import android.view.View;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
-import com.daily.base.OnBaseEventListener;
+import com.daily.base.util.ExLog;
+import com.daily.base.util.ScreenUtils;
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivitySearchDataBinding;
-import com.twoheart.dailyhotel.place.base.BaseFragment;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, ActivitySearchDataBinding> implements SearchInterface.ViewInterface
 {
     SearchFragmentPagerAdapter mSearchFragmentPagerAdapter;
 
-//    SearchStayFragment mSearchStayFragment;
-//    SearchGourmetFragment mSearchGourmetFragment;
-//    SearchStayOutboundFragment SearchStayOutboundFragment;
+    //    SearchStayFragment mSearchStayFragment;
+    //    SearchGourmetFragment mSearchGourmetFragment;
+    //    SearchStayOutboundFragment SearchStayOutboundFragment;
 
     public SearchView(BaseActivity baseActivity, SearchInterface.OnEventListener listener)
     {
@@ -40,7 +39,7 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset)
             {
-                getViewDataBinding().dailyTitleTextView.setAlpha(Math.abs((float)verticalOffset) / (float)getViewDataBinding().categoryLayout.getHeight());
+                getViewDataBinding().dailyTitleTextView.setAlpha(Math.abs((float) verticalOffset) / (float) getViewDataBinding().categoryLayout.getHeight());
             }
         });
 
@@ -60,19 +59,80 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         viewDataBinding.gourmetCalendarTextView.setOnClickListener(v -> getEventListener().onGourmetCalendarClick());
         viewDataBinding.searchGourmetTextView.setOnClickListener(v -> getEventListener().onGourmetDoSearchClick());
 
-//        mSearchFragmentPagerAdapter = new SearchFragmentPagerAdapter(getFragmentManager());
-//
-//        List<BaseFragment> list = new ArrayList<>();
-//
-//        mSearchStayFragment = new SearchStayFragment();
-//        SearchStayOutboundFragment = new SearchStayOutboundFragment();
-//        mSearchGourmetFragment = new SearchGourmetFragment();
-//
-//        mSearchFragmentPagerAdapter.add(mSearchStayFragment);
-//        mSearchFragmentPagerAdapter.add(SearchStayOutboundFragment);
-//        mSearchFragmentPagerAdapter.add(mSearchGourmetFragment);
-//
-//        getViewDataBinding().viewPager.setAdapter(mSearchFragmentPagerAdapter);
+        viewDataBinding.staySearchFakeTextView.bringToFront();
+        viewDataBinding.getRoot().invalidate();
+
+        viewDataBinding.appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener()
+        {
+            boolean mMove = false;
+            float x, y;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset)
+            {
+                if (ScreenUtils.dpToPx(getContext(), 150) - getDimensionPixelSize(R.dimen.toolbar_height) + verticalOffset < 0)
+                {
+                    int totalHeight = ScreenUtils.dpToPx(getContext(), 100);
+                    int value = Math.abs(ScreenUtils.dpToPx(getContext(), 150) - getDimensionPixelSize(R.dimen.toolbar_height) + verticalOffset);
+                    float vector = (float)value / totalHeight;
+
+                    getViewDataBinding().toolbarLayout.setAlpha(vector);
+                    getViewDataBinding().staySearchTextView.setAlpha(1.0f - vector);
+                    getViewDataBinding().stayOutboundSearchTextView.setAlpha(1.0f - vector);
+                    getViewDataBinding().gourmetSearchTextView.setAlpha(1.0f - vector);
+
+                    int paddingValue = (int)(ScreenUtils.dpToPx(getContext(), 15) * (1 - vector));
+                    getViewDataBinding().appBarLayout.setPadding(paddingValue, 0, paddingValue, 0);
+
+
+                    getViewDataBinding().staySearchFakeTextView.setAlpha(1.0f);
+                    getViewDataBinding().staySearchFakeTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10 + 8 * vector);
+
+                    if(mMove == false)
+                    {
+                        mMove = true;
+
+                        x = getViewDataBinding().dailyTitleTextView.getX() - getViewDataBinding().staySearchFakeTextView.getX();
+                        y = getViewDataBinding().dailyTitleTextView.getY() - getViewDataBinding().staySearchFakeTextView.getY();
+                    }
+
+                    if(mMove == true)
+                    {
+                        getViewDataBinding().staySearchFakeTextView.setTranslationX(x * value);
+                        getViewDataBinding().staySearchFakeTextView.setTranslationY(y * value);
+                    }
+
+                } else if(getViewDataBinding().toolbarLayout.getAlpha() != 0.0f)
+                {
+                    getViewDataBinding().toolbarLayout.setAlpha(0.0f);
+                    getViewDataBinding().staySearchTextView.setAlpha(1.0f);
+                    getViewDataBinding().stayOutboundSearchTextView.setAlpha(1.0f);
+                    getViewDataBinding().gourmetSearchTextView.setAlpha(1.0f);
+                    getViewDataBinding().appBarLayout.setPadding(ScreenUtils.dpToPx(getContext(), 15), 0, ScreenUtils.dpToPx(getContext(), 15), 0);
+
+
+                    getViewDataBinding().staySearchFakeTextView.setAlpha(0.0f);
+                    getViewDataBinding().staySearchFakeTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10);
+
+                    mMove = false;
+
+                }
+            }
+        });
+
+        //        mSearchFragmentPagerAdapter = new SearchFragmentPagerAdapter(getFragmentManager());
+        //
+        //        List<BaseFragment> list = new ArrayList<>();
+        //
+        //        mSearchStayFragment = new SearchStayFragment();
+        //        SearchStayOutboundFragment = new SearchStayOutboundFragment();
+        //        mSearchGourmetFragment = new SearchGourmetFragment();
+        //
+        //        mSearchFragmentPagerAdapter.add(mSearchStayFragment);
+        //        mSearchFragmentPagerAdapter.add(SearchStayOutboundFragment);
+        //        mSearchFragmentPagerAdapter.add(mSearchGourmetFragment);
+        //
+        //        getViewDataBinding().viewPager.setAdapter(mSearchFragmentPagerAdapter);
     }
 
     @Override

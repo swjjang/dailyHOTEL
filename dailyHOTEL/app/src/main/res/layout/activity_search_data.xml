@@ -43,62 +43,46 @@
             app:layout_constraintRight_toRightOf="@+id/simpleDraweeView"
             app:layout_constraintTop_toBottomOf="@+id/fakeBackImageView"/>
 
-        <LinearLayout
-            android:id="@+id/toolbarLayout"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/toolbar_height"
-            android:background="@color/white"
-            android:elevation="2dp"
-            android:orientation="horizontal"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <com.daily.base.widget.DailyImageView
-                android:id="@+id/daily_titleImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                app:srcCompat="@drawable/navibar_ic_back_01_black"/>
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/daily_titleTextView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="12dp"
-                android:gravity="center_vertical"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:textColor="@color/default_text_c323232"
-                android:textSize="18dp"/>
-        </LinearLayout>
-
         <android.support.design.widget.CoordinatorLayout
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:elevation="2dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbarLayout">
+            app:layout_constraintTop_toTopOf="parent">
 
             <android.support.design.widget.AppBarLayout
                 android:id="@+id/appBarLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:background="@drawable/home_pick_bg"
-                android:elevation="2dp"
+                android:background="@color/transparent"
                 android:orientation="vertical"
-                app:elevation="2dp">
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp">
 
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/categoryLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_scrollFlags="scroll|snap|enterAlwaysCollapsed">
+                    android:minHeight="@dimen/toolbar_height"
+                    app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
+
+                    <View
+                        android:id="@+id/emptyTopView"
+                        android:layout_width="0dp"
+                        android:layout_height="150dp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                    <View
+                        android:id="@+id/backgroundTopView"
+                        android:layout_width="0dp"
+                        android:layout_height="100dp"
+                        android:background="@color/white"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/emptyTopView"/>
 
                     <com.daily.base.widget.DailyTextView
                         android:id="@+id/staySearchTextView"
@@ -113,9 +97,21 @@
                         android:textColor="@color/default_text_c323232"
                         android:textSize="10dp"
                         app:layout_constraintHorizontal_chainStyle="packed"
-                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintLeft_toLeftOf="@+id/backgroundTopView"
                         app:layout_constraintRight_toLeftOf="@+id/stayOutboundSearchTextView"
-                        app:layout_constraintTop_toBottomOf="@+id/titleTextView"/>
+                        app:layout_constraintTop_toTopOf="@+id/backgroundTopView"/>
+
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/staySearchFakeTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:text="국내 스테이"
+                        android:textColor="@color/default_text_c323232"
+                        android:textSize="10dp"
+                        app:layout_constraintLeft_toLeftOf="@+id/staySearchTextView"
+                        app:layout_constraintRight_toRightOf="@+id/staySearchTextView"
+                        app:layout_constraintBottom_toBottomOf="@+id/staySearchTextView"/>
 
                     <com.daily.base.widget.DailyTextView
                         android:id="@+id/stayOutboundSearchTextView"
@@ -132,7 +128,7 @@
                         android:textSize="10dp"
                         app:layout_constraintLeft_toRightOf="@+id/staySearchTextView"
                         app:layout_constraintRight_toLeftOf="@+id/gourmetSearchTextView"
-                        app:layout_constraintTop_toBottomOf="@+id/titleTextView"/>
+                        app:layout_constraintTop_toTopOf="@+id/backgroundTopView"/>
 
                     <com.daily.base.widget.DailyTextView
                         android:id="@+id/gourmetSearchTextView"
@@ -147,16 +143,17 @@
                         android:textColor="@color/default_text_c323232"
                         android:textSize="10dp"
                         app:layout_constraintLeft_toRightOf="@+id/stayOutboundSearchTextView"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/titleTextView"/>
+                        app:layout_constraintRight_toRightOf="@+id/backgroundTopView"
+                        app:layout_constraintTop_toTopOf="@+id/backgroundTopView"/>
                 </android.support.constraint.ConstraintLayout>
 
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/stayLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:visibility="gone">
+                    android:background="@color/white"
+                    android:paddingTop="15dp"
+                    android:visibility="visible">
 
                     <View
                         android:id="@+id/staySuggestBackgroundView"
@@ -246,7 +243,8 @@
                     android:id="@+id/stayOutboundLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
+                    android:background="@color/white"
+                    android:paddingTop="15dp"
                     android:visibility="gone">
 
                     <View
@@ -367,7 +365,8 @@
                     android:id="@+id/gourmetLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
+                    android:background="@color/white"
+                    android:paddingTop="15dp"
                     android:visibility="gone">
 
                     <View
@@ -443,17 +442,67 @@
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/gourmetCalendarBackgroundView"/>
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="15dp"
-                        android:background="@color/default_line_ce7e7e7"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/searchGourmetTextView"/>
                 </android.support.constraint.ConstraintLayout>
             </android.support.design.widget.AppBarLayout>
+
+            <android.support.v4.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/appBarLayout"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"/>
+
+
+                </LinearLayout>
+            </android.support.v4.widget.NestedScrollView>
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/viewPager"
@@ -462,7 +511,40 @@
                 android:layout_below="@+id/appBarLayout"
                 android:background="@color/white"
                 android:elevation="0dp"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+                android:visibility="gone"/>
+            <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"/>-->
         </android.support.design.widget.CoordinatorLayout>
+
+        <LinearLayout
+            android:id="@+id/toolbarLayout"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/toolbar_height"
+            android:alpha="0"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.daily.base.widget.DailyImageView
+                android:id="@+id/daily_titleImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                app:srcCompat="@drawable/navibar_ic_back_01_black"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/daily_titleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="@color/default_text_c323232"
+                android:textSize="18dp"/>
+        </LinearLayout>
+
     </android.support.constraint.ConstraintLayout>
 </layout>
