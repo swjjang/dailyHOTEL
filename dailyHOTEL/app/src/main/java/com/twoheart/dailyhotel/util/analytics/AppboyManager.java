@@ -458,6 +458,7 @@ public class AppboyManager extends BaseAnalyticsManager
 
                 AppboyProperties appboyProperties = new AppboyProperties();
                 appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+                appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_NAME, params.get(AnalyticsManager.KeyType.NAME));
 
                 if (Review.GRADE_GOOD.equalsIgnoreCase(grade) == true)
                 {
@@ -476,6 +477,7 @@ public class AppboyManager extends BaseAnalyticsManager
 
                 AppboyProperties appboyProperties = new AppboyProperties();
                 appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+                appboyProperties.addProperty(AnalyticsManager.KeyType.RESTAURANT_NAME, params.get(AnalyticsManager.KeyType.NAME));
 
                 if (Review.GRADE_GOOD.equalsIgnoreCase(grade) == true)
                 {
@@ -1188,7 +1190,7 @@ public class AppboyManager extends BaseAnalyticsManager
         public static final String REGISTER_COMPLETED = "register_completed";
         public static final String REGISTER_COMPLETED_BEFORE_BOOKING = "register_completed_before_booking";
         public static final String STAY_SATISFACTION_SURVEY = "stay_satisfaction_survey";
-        public static final String STAY_SATISFACTION_DETAIL_RESPONSE = "stay_satisfaction_detail_response\t";
+        public static final String STAY_SATISFACTION_DETAIL_RESPONSE = "stay_satisfaction_detail_response";
         public static final String STAY_DISSATISFACTION_DETAIL_RESPONSE = "stay_dissatisfaction_detail_response";
         public static final String GOURMET_SATISFACTION_SURVEY = "gourmet_satisfaction_survey";
         public static final String GOURMET_SATISFACTION_DETAIL_RESPONSE = "gourmet_satisfaction_detail_response";
