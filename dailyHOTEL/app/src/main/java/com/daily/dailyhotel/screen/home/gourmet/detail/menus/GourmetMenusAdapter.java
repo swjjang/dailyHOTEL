@@ -391,10 +391,10 @@ public class GourmetMenusAdapter extends RecyclerView.Adapter<GourmetMenusAdapte
 
         if (menuOrderCount >= maximumOrderQuantity || menuOrderCount >= saleOrderQuantity)
         {
-            gourmetMenuViewHolder.dataBinding.orderCountPlusView.setSelected(false);
+            gourmetMenuViewHolder.dataBinding.orderCountPlusView.setEnabled(false);
         } else
         {
-            gourmetMenuViewHolder.dataBinding.orderCountPlusView.setSelected(true);
+            gourmetMenuViewHolder.dataBinding.orderCountPlusView.setEnabled(true);
         }
 
         gourmetMenuViewHolder.dataBinding.orderCountTextView.setText(Integer.toString(menuOrderCount));
