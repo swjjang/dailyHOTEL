@@ -366,7 +366,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
             getViewDataBinding().operationTimesGridLayout.addView(dailyTextView, layoutParams);
         }
 
-        getViewDataBinding().operationTimesGridLayout.setVisibility(View.INVISIBLE);
+        getViewDataBinding().operationTimesScrollView.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -458,7 +458,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
                     @Override
                     public void onAnimationStart(Animator animation)
                     {
-                        getViewDataBinding().operationTimesGridLayout.setVisibility(View.VISIBLE);
+                        getViewDataBinding().operationTimesScrollView.setVisibility(View.VISIBLE);
                         getViewDataBinding().operationTimesBackgroundView.setAlpha(0.0f);
                         getViewDataBinding().operationTimesBackgroundView.setVisibility(View.VISIBLE);
                     }
@@ -549,7 +549,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
 
                         getViewDataBinding().arrowImageView.setRotation(0);
                         getViewDataBinding().operationTimesGridLayout.setTranslationY(-getViewDataBinding().operationTimesGridLayout.getHeight());
-                        getViewDataBinding().operationTimesGridLayout.setVisibility(View.INVISIBLE);
+                        getViewDataBinding().operationTimesScrollView.setVisibility(View.INVISIBLE);
                         getViewDataBinding().operationTimesBackgroundView.setVisibility(View.GONE);
 
                         observer.onNext(true);

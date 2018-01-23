@@ -52,6 +52,7 @@
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <com.daily.base.widget.DailyNestedScrollView
+                android:id="@+id/operationTimesScrollView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintLeft_toLeftOf="parent"
