@@ -13,6 +13,9 @@ import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by android_sam on 2016. 12. 2..
  */
@@ -22,8 +25,9 @@ public class WriteReviewCommentActivity extends BaseActivity
     WriteReviewCommentLayout mLayout;
     private String mOriginText; // 리뷰 페이지로 부터 전달 받은 메세지 - 처음 진입 인지 수정 상태인지 판단 용도!
     Constants.ServiceType mServiceType;
+    String mPlaceName;
 
-    public static Intent newInstance(Context context, ServiceType serviceType, String text) throws IllegalArgumentException
+    public static Intent newInstance(Context context, ServiceType serviceType, String placeName, String text) throws IllegalArgumentException
     {
         if (context == null)
         {
@@ -38,6 +42,7 @@ public class WriteReviewCommentActivity extends BaseActivity
         Intent intent = new Intent(context, WriteReviewCommentActivity.class);
 
         intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_REVIEW_COMMENT, text);
+        intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACENAME, placeName);
         intent.putExtra(Constants.NAME_INTENT_EXTRA_DATA_SERVICE_YPE, serviceType.name());
 
         return intent;
@@ -76,6 +81,8 @@ public class WriteReviewCommentActivity extends BaseActivity
                     ExLog.d(e.getMessage());
                 }
             }
+
+            mPlaceName = intent.getStringExtra(Constants.NAME_INTENT_EXTRA_DATA_PLACENAME);
         } else
         {
             mOriginText = "";
@@ -142,21 +149,24 @@ public class WriteReviewCommentActivity extends BaseActivity
 
                             try
                             {
+                                Map<String, String> params = new HashMap<>();
+                                params.put(AnalyticsManager.KeyType.NAME, mPlaceName);
+
                                 switch (mServiceType)
                                 {
                                     case HOTEL:
                                         AnalyticsManager.getInstance(WriteReviewCommentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
-                                            , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.CANCEL_, null);
+                                            , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.CANCEL_, params);
                                         break;
 
                                     case GOURMET:
                                         AnalyticsManager.getInstance(WriteReviewCommentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
-                                            , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.CANCEL_, null);
+                                            , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.CANCEL_, params);
                                         break;
 
                                     case OB_STAY:
                                         AnalyticsManager.getInstance(WriteReviewCommentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
-                                            , AnalyticsManager.Action.REVIEW_WRITE_OB, AnalyticsManager.Label.CANCEL_, null);
+                                            , AnalyticsManager.Action.REVIEW_WRITE_OB, AnalyticsManager.Label.CANCEL_, params);
                                         break;
                                 }
                             } catch (Exception e)
@@ -213,21 +223,24 @@ public class WriteReviewCommentActivity extends BaseActivity
 
                             try
                             {
+                                Map<String, String> params = new HashMap<>();
+                                params.put(AnalyticsManager.KeyType.NAME, mPlaceName);
+
                                 switch (mServiceType)
                                 {
                                     case HOTEL:
                                         AnalyticsManager.getInstance(WriteReviewCommentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
-                                            , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.CANCEL_, null);
+                                            , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.CANCEL_, params);
                                         break;
 
                                     case GOURMET:
                                         AnalyticsManager.getInstance(WriteReviewCommentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
-                                            , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.CANCEL_, null);
+                                            , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.CANCEL_, params);
                                         break;
 
                                     case OB_STAY:
                                         AnalyticsManager.getInstance(WriteReviewCommentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
-                                            , AnalyticsManager.Action.REVIEW_WRITE_OB, AnalyticsManager.Label.CANCEL_, null);
+                                            , AnalyticsManager.Action.REVIEW_WRITE_OB, AnalyticsManager.Label.CANCEL_, params);
                                         break;
                                 }
                             } catch (Exception e)
@@ -262,21 +275,24 @@ public class WriteReviewCommentActivity extends BaseActivity
 
         try
         {
+            Map<String, String> params = new HashMap<>();
+            params.put(AnalyticsManager.KeyType.NAME, mPlaceName);
+
             switch (mServiceType)
             {
                 case HOTEL:
                     AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
-                        , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.BACK, null);
+                        , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.BACK, params);
                     break;
 
                 case GOURMET:
                     AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
-                        , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.BACK, null);
+                        , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.BACK, params);
                     break;
 
                 case OB_STAY:
                     AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
-                        , AnalyticsManager.Action.REVIEW_WRITE_OB, AnalyticsManager.Label.BACK, null);
+                        , AnalyticsManager.Action.REVIEW_WRITE_OB, AnalyticsManager.Label.BACK, params);
                     break;
             }
         } catch (Exception e)
@@ -300,21 +316,24 @@ public class WriteReviewCommentActivity extends BaseActivity
         {
             try
             {
+                Map<String, String> params = new HashMap<>();
+                params.put(AnalyticsManager.KeyType.NAME, mPlaceName);
+
                 switch (mServiceType)
                 {
                     case HOTEL:
                         AnalyticsManager.getInstance(WriteReviewCommentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
-                            , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.CONFIRM, null);
+                            , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.CONFIRM, params);
                         break;
 
                     case GOURMET:
                         AnalyticsManager.getInstance(WriteReviewCommentActivity.this).recordEvent(AnalyticsManager.Category.GOURMET_SATISFACTIONEVALUATION//
-                            , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.CONFIRM, null);
+                            , AnalyticsManager.Action.REVIEW_WRITE, AnalyticsManager.Label.CONFIRM, params);
                         break;
 
                     case OB_STAY:
                         AnalyticsManager.getInstance(WriteReviewCommentActivity.this).recordEvent(AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION//
-                            , AnalyticsManager.Action.REVIEW_WRITE_OB, AnalyticsManager.Label.CONFIRM, null);
+                            , AnalyticsManager.Action.REVIEW_WRITE_OB, AnalyticsManager.Label.CONFIRM, params);
                         break;
                 }
             } catch (Exception e)
