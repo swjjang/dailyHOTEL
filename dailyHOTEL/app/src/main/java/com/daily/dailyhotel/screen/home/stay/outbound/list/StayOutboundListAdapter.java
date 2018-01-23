@@ -18,12 +18,14 @@ import com.daily.dailyhotel.view.DailyStayOutboundCardView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.LayoutFooterDataBinding;
 import com.twoheart.dailyhotel.databinding.LayoutListLoadingDataBinding;
+import com.twoheart.dailyhotel.databinding.LayoutSectionDataBinding;
+import com.twoheart.dailyhotel.widget.PinnedSectionRecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements PinnedSectionRecyclerView.PinnedSectionListAdapter
 {
     Context mContext;
     private List<ObjectItem> mList;
@@ -143,10 +145,23 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     @Override
+    public boolean isItemViewTypePinned(int viewType)
+    {
+        return viewType == ObjectItem.TYPE_SECTION;
+    }
+
+    @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         switch (viewType)
         {
+            case ObjectItem.TYPE_SECTION:
+            {
+                LayoutSectionDataBinding viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_section_data, parent, false);
+
+                return new SectionViewHolder(viewDataBinding);
+            }
+
             case ObjectItem.TYPE_ENTRY:
             {
                 DailyStayOutboundCardView stayOutboundCardView = new DailyStayOutboundCardView(mContext);
@@ -187,13 +202,27 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         switch (item.mType)
         {
             case ObjectItem.TYPE_ENTRY:
-                onBindViewHolder((StayViewHolder) holder, item);
+                onBindViewHolder((StayViewHolder) holder, item, position);
+                break;
+
+            case ObjectItem.TYPE_SECTION:
+                onBindViewHolder((SectionViewHolder) holder, item);
                 break;
         }
     }
 
+    protected void onBindViewHolder(SectionViewHolder holder, ObjectItem objectItem)
+    {
+        if (holder == null || objectItem == null)
+        {
+            return;
+        }
+
+        holder.dataBinding.sectionTextView.setText(objectItem.<String>getItem());
+    }
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void onBindViewHolder(StayViewHolder holder, ObjectItem objectItem)
+    private void onBindViewHolder(StayViewHolder holder, ObjectItem objectItem, int position)
     {
         if (holder == null || objectItem == null)
         {
@@ -245,7 +274,14 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
 
         holder.stayOutboundCardView.setBenefitText(null);
-        holder.stayOutboundCardView.setDividerVisible(true);
+
+        if (position == 0 || getItem(position - 1).mType != ObjectItem.TYPE_SECTION)
+        {
+            holder.stayOutboundCardView.setDividerVisible(true);
+        } else
+        {
+            holder.stayOutboundCardView.setDividerVisible(false);
+        }
     }
 
     protected class StayViewHolder extends RecyclerView.ViewHolder
@@ -284,6 +320,18 @@ public class StayOutboundListAdapter extends RecyclerView.Adapter<RecyclerView.V
                     mOnWishClickListener.onClick(stayOutboundCardView);
                 }
             });
+        }
+    }
+
+    protected class SectionViewHolder extends RecyclerView.ViewHolder
+    {
+        public LayoutSectionDataBinding dataBinding;
+
+        public SectionViewHolder(LayoutSectionDataBinding dataBinding)
+        {
+            super(dataBinding.getRoot());
+
+            this.dataBinding = dataBinding;
         }
     }
 

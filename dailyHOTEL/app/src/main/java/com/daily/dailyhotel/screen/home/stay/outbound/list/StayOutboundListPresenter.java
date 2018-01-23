@@ -1394,9 +1394,45 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 // Android 에서는 forEach를 사용하면 런타임시에 문제가 발생할수 있음.
                 //                stayOutbounds.getStayOutbound().forEach((stayOutbound) -> listItemList.add(new ListItem(ListItem.TYPE_ENTRY, stayOutbound)));
 
-                for (StayOutbound stayOutbound : stayOutbounds.getStayOutbound())
+                List<StayOutbound> stayOutboundList = stayOutbounds.getStayOutbound();
+                if (stayOutboundList == null || stayOutboundList.size() == 0)
                 {
-                    objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, stayOutbound));
+                    return objectItemList;
+                }
+
+                boolean isDefaultSortType = mStayOutboundFilters == null ? true : mStayOutboundFilters.sortType == StayOutboundFilters.SortType.RECOMMENDATION;
+                boolean hasDailyChoice = stayOutboundList.get(0).dailyChoice == true;
+                if (isDefaultSortType == true && hasDailyChoice == true)
+                {
+                    boolean addAllSection = false;
+                    boolean addDailyChoiceSection = false;
+
+                    for (StayOutbound stayOutbound : stayOutboundList)
+                    {
+                        if (stayOutbound.dailyChoice == true)
+                        {
+                            if (addDailyChoiceSection == false)
+                            {
+                                addDailyChoiceSection = true;
+                                objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, getString(R.string.label_dailychoice)));
+                            }
+                        } else
+                        {
+                            if (addAllSection == false)
+                            {
+                                addAllSection = true;
+                                objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, getString(R.string.label_all)));
+                            }
+                        }
+
+                        objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, stayOutbound));
+                    }
+                } else
+                {
+                    for (StayOutbound stayOutbound : stayOutboundList)
+                    {
+                        objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, stayOutbound));
+                    }
                 }
 
                 if (DailyTextUtils.isTextEmpty(stayOutbounds.cacheKey, stayOutbounds.cacheLocation, stayOutbounds.customerSessionId) == true)
