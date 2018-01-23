@@ -1069,6 +1069,24 @@
     <string name="label_map_searchmap">지도앱에서 길찾기</string>
     <string name="label_googlemap">구글 지도</string>
 
+    <!-- New Search -->
+    <string name="label_search_stay">국내 스테이</string>
+    <string name="label_search_search_stay">국내 스테이 검색</string>
+    <string name="label_search_stay_suggest_hint">국내 스테이명 또는 지역명 입력</string>
+
+
+    <string name="label_search_stayoutbound">해외 스테이</string>
+    <string name="label_search_search_stayoutbound">해외 스테이 검색</string>
+    <string name="label_search_stayoutbound_suggest_hint">해외 스테이명 또는 지역명 입력</string>
+
+
+    <string name="label_search_gourmet">고메</string>
+    <string name="label_search_search_gourmet">고메 검색</string>
+    <string name="label_search_gourmet_suggest_hint">국내 레스토랑명 또는 지역명 입력</string>
+
+
+
+
     <!-- Coupon -->
     <string name="coupon_notice_text">할인쿠폰\n상세정보</string>
     <string name="coupon_duedate_text">(%1$d일 남음)</string>

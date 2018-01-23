@@ -1,5 +1,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:dailyToolbar="http://schemas.android.com/apk/res-auto"
         xmlns:fresco="http://schemas.android.com/apk/res-auto">
 
     <android.support.constraint.ConstraintLayout
@@ -44,6 +45,7 @@
             app:layout_constraintTop_toBottomOf="@+id/fakeBackImageView"/>
 
         <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/coordinatorLayout"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -57,13 +59,15 @@
                 android:layout_height="wrap_content"
                 android:background="@color/transparent"
                 android:orientation="vertical"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp">
+                app:elevation="0dp">
 
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/categoryLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="250dp"
+                    android:background="@color/transparent"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
                     android:minHeight="@dimen/toolbar_height"
                     app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
 
@@ -91,9 +95,9 @@
                         android:layout_marginRight="20dp"
                         android:layout_marginTop="20dp"
                         android:drawablePadding="6dp"
-                        android:drawableTop="@drawable/stay_active"
+                        android:drawableTop="@drawable/selector_search_stay_icon"
                         android:gravity="center_horizontal"
-                        android:text="국내 스테이"
+                        android:text="@string/label_search_stay"
                         android:textColor="@color/default_text_c323232"
                         android:textSize="10dp"
                         app:layout_constraintHorizontal_chainStyle="packed"
@@ -109,9 +113,9 @@
                         android:layout_marginRight="20dp"
                         android:layout_marginTop="20dp"
                         android:drawablePadding="6dp"
-                        android:drawableTop="@drawable/ob_inactive"
+                        android:drawableTop="@drawable/selector_search_stayoutbound_icon"
                         android:gravity="center_horizontal"
-                        android:text="해외 스테이"
+                        android:text="@string/label_search_stayoutbound"
                         android:textColor="@color/default_text_c323232"
                         android:textSize="10dp"
                         app:layout_constraintLeft_toRightOf="@+id/staySearchTextView"
@@ -125,9 +129,9 @@
                         android:layout_marginLeft="20dp"
                         android:layout_marginTop="20dp"
                         android:drawablePadding="6dp"
-                        android:drawableTop="@drawable/gourmet_inactive"
+                        android:drawableTop="@drawable/selector_search_gourmet_icon"
                         android:gravity="center_horizontal"
-                        android:text="고메"
+                        android:text="@string/label_search_gourmet"
                         android:textColor="@color/default_text_c323232"
                         android:textSize="10dp"
                         app:layout_constraintLeft_toRightOf="@+id/stayOutboundSearchTextView"
@@ -140,6 +144,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
                     android:paddingTop="15dp"
                     android:visibility="visible">
 
@@ -162,7 +168,7 @@
                         android:layout_marginRight="12dp"
                         android:drawablePadding="17dp"
                         android:gravity="center_vertical"
-                        android:hint="국내 스테이명 또는 지역명 입력"
+                        android:hint="@string/label_search_stay_suggest_hint"
                         android:textColor="@color/default_text_c323232"
                         android:textColorHint="@color/black_a50"
                         android:textSize="14dp"
@@ -254,7 +260,7 @@
                         android:layout_marginRight="12dp"
                         android:drawablePadding="17dp"
                         android:gravity="center_vertical"
-                        android:hint="해외 스테이명 또는 지역명 입력"
+                        android:hint="@string/label_search_stayoutbound_suggest_hint"
                         android:textColor="@color/default_text_c323232"
                         android:textColorHint="@color/black_a50"
                         android:textSize="14dp"
@@ -376,7 +382,7 @@
                         android:layout_marginRight="12dp"
                         android:drawablePadding="17dp"
                         android:gravity="center_vertical"
-                        android:hint="국내 레스토랑명 또는 지역명 입력"
+                        android:hint="@string/label_search_gourmet_suggest_hint"
                         android:textColor="@color/default_text_c323232"
                         android:textColorHint="@color/black_a50"
                         android:textSize="14dp"
@@ -498,40 +504,18 @@
                 android:layout_height="match_parent"
                 android:layout_below="@+id/appBarLayout"
                 android:background="@color/white"
-                android:elevation="0dp"
                 android:visibility="gone"/>
             <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"/>-->
         </android.support.design.widget.CoordinatorLayout>
 
-        <LinearLayout
-            android:id="@+id/toolbarLayout"
+        <com.daily.dailyhotel.view.DailyToolbarView
+            android:id="@+id/toolbarView"
             android:layout_width="0dp"
             android:layout_height="@dimen/toolbar_height"
-            android:alpha="0"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
+            android:background="@color/white"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <com.daily.base.widget.DailyImageView
-                android:id="@+id/daily_titleImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                app:srcCompat="@drawable/navibar_ic_back_01_black"/>
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/daily_titleTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:textColor="@color/default_text_c323232"
-                android:textSize="18dp"/>
-        </LinearLayout>
-
+            app:layout_constraintTop_toTopOf="parent"
+            dailyToolbar:underLineHeight="1dp"/>
     </android.support.constraint.ConstraintLayout>
 </layout>
