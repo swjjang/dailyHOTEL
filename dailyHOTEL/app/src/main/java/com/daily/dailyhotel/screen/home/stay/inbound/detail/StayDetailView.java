@@ -10,14 +10,12 @@ import android.databinding.DataBindingUtil;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.graphics.Typeface;
-import android.graphics.drawable.Animatable;
 import android.graphics.drawable.PaintDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.IdRes;
-import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Html;
@@ -1161,13 +1159,8 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
 
         dataBinding.awardImageView.setImageResource(R.drawable.vector_img_popup_detail_trueawards);
 
-        ControllerListener controllerListener = new BaseControllerListener<ImageInfo>() {
-            @Override
-            public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable)
-            {
-                super.onFinalImageSet(id, imageInfo, animatable);
-            }
-
+        ControllerListener controllerListener = new BaseControllerListener<ImageInfo>()
+        {
             @Override
             public void onFailure(String id, Throwable throwable)
             {
@@ -1178,7 +1171,7 @@ public class StayDetailView extends BaseDialogView<StayDetailView.OnEventListene
         };
 
         DraweeController draweeController = Fresco.newDraweeControllerBuilder()//
-            .setControllerListener(controllerListener).setUri(Uri.parse(trueAwards.imageUrl)).build();
+            .setControllerListener(controllerListener).setUri(trueAwards.imageUrl).build();
 
         dataBinding.awardImageView.setController(draweeController);
 
