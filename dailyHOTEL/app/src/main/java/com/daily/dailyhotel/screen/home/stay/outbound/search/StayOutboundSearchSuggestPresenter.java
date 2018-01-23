@@ -2,13 +2,16 @@ package com.daily.dailyhotel.screen.home.stay.outbound.search;
 
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Suggest;
 import com.daily.dailyhotel.parcel.SuggestParcel;
@@ -19,6 +22,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
@@ -174,6 +178,16 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
 
         switch (requestCode)
         {
+            case StayOutboundSearchSuggestActivity.REQUEST_CODE_SPEECH_INPUT:
+            {
+                if (resultCode == Activity.RESULT_OK && null != data)
+                {
+                    ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    ExLog.d("sam : " + result.get(0));
+                    getViewInterface().setKeywordEditText(result.get(0));
+                }
+                break;
+            }
         }
     }
 
@@ -447,6 +461,12 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
             }));
     }
 
+    @Override
+    public void onVoiceSearchClick()
+    {
+        promptSpeechInput();
+    }
+
     void onSuggestList(List<Suggest> suggestList)
     {
         getViewInterface().setProgressBarVisible(false);
@@ -466,5 +486,24 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
         }
 
         getViewInterface().setSuggests(suggestList);
+    }
+
+    /**
+     * Showing google speech input dialog
+     * */
+    protected void promptSpeechInput() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+            "검색어를 말씀하세요!");
+        try {
+            startActivityForResult(intent, StayOutboundSearchSuggestActivity.REQUEST_CODE_SPEECH_INPUT);
+        } catch (ActivityNotFoundException a) {
+            DailyToast.showToast(getActivity(),
+                "이기기는 음성검색을 지원하지 않습니다.",
+                DailyToast.LENGTH_SHORT);
+        }
     }
 }
