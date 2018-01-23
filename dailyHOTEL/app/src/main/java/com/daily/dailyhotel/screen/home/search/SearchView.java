@@ -1,12 +1,10 @@
 package com.daily.dailyhotel.screen.home.search;
 
 import android.support.design.widget.AppBarLayout;
-import android.util.TypedValue;
 import android.view.View;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
-import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivitySearchDataBinding;
@@ -59,14 +57,8 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         viewDataBinding.gourmetCalendarTextView.setOnClickListener(v -> getEventListener().onGourmetCalendarClick());
         viewDataBinding.searchGourmetTextView.setOnClickListener(v -> getEventListener().onGourmetDoSearchClick());
 
-        viewDataBinding.staySearchFakeTextView.bringToFront();
-        viewDataBinding.getRoot().invalidate();
-
         viewDataBinding.appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener()
         {
-            boolean mMove = false;
-            float x, y;
-
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset)
             {
@@ -74,49 +66,32 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
                 {
                     int totalHeight = ScreenUtils.dpToPx(getContext(), 100);
                     int value = Math.abs(ScreenUtils.dpToPx(getContext(), 150) - getDimensionPixelSize(R.dimen.toolbar_height) + verticalOffset);
-                    float vector = (float)value / totalHeight;
+                    float vector = (float) value / totalHeight * 2;
+                    float backVector = 1.0f - vector;
+
+                    if (backVector < 0.0f)
+                    {
+                        backVector = 0.0f;
+                    }
 
                     getViewDataBinding().toolbarLayout.setAlpha(vector);
-                    getViewDataBinding().staySearchTextView.setAlpha(1.0f - vector);
-                    getViewDataBinding().stayOutboundSearchTextView.setAlpha(1.0f - vector);
-                    getViewDataBinding().gourmetSearchTextView.setAlpha(1.0f - vector);
+                    getViewDataBinding().staySearchTextView.setAlpha(backVector);
+                    getViewDataBinding().stayOutboundSearchTextView.setAlpha(backVector);
+                    getViewDataBinding().gourmetSearchTextView.setAlpha(backVector);
 
-                    int paddingValue = (int)(ScreenUtils.dpToPx(getContext(), 15) * (1 - vector));
+                    int paddingValue = (int) (ScreenUtils.dpToPx(getContext(), 15) * backVector);
                     getViewDataBinding().appBarLayout.setPadding(paddingValue, 0, paddingValue, 0);
-
-
-                    getViewDataBinding().staySearchFakeTextView.setAlpha(1.0f);
-                    getViewDataBinding().staySearchFakeTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10 + 8 * vector);
-
-                    if(mMove == false)
-                    {
-                        mMove = true;
-
-                        x = getViewDataBinding().dailyTitleTextView.getX() - getViewDataBinding().staySearchFakeTextView.getX();
-                        y = getViewDataBinding().dailyTitleTextView.getY() - getViewDataBinding().staySearchFakeTextView.getY();
-                    }
-
-                    if(mMove == true)
-                    {
-                        getViewDataBinding().staySearchFakeTextView.setTranslationX(x * value);
-                        getViewDataBinding().staySearchFakeTextView.setTranslationY(y * value);
-                    }
-
-                } else if(getViewDataBinding().toolbarLayout.getAlpha() != 0.0f)
+                } else if (getViewDataBinding().toolbarLayout.getAlpha() != 0.0f)
                 {
                     getViewDataBinding().toolbarLayout.setAlpha(0.0f);
                     getViewDataBinding().staySearchTextView.setAlpha(1.0f);
                     getViewDataBinding().stayOutboundSearchTextView.setAlpha(1.0f);
                     getViewDataBinding().gourmetSearchTextView.setAlpha(1.0f);
                     getViewDataBinding().appBarLayout.setPadding(ScreenUtils.dpToPx(getContext(), 15), 0, ScreenUtils.dpToPx(getContext(), 15), 0);
-
-
-                    getViewDataBinding().staySearchFakeTextView.setAlpha(0.0f);
-                    getViewDataBinding().staySearchFakeTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10);
-
-                    mMove = false;
-
                 }
+
+                getViewDataBinding().searchTitleTextView.setTranslationX(verticalOffset / 2);
+                getViewDataBinding().simpleDraweeView.setTranslationY(verticalOffset / 2);
             }
         });
 
@@ -174,7 +149,7 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
 
         getViewDataBinding().viewPager.setCurrentItem(0, false);
 
-        setToolbarTitle("국내 스테이");
+        setToolbarTitle("국내 스테이 검색");
     }
 
     @Override
@@ -228,7 +203,7 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
 
         getViewDataBinding().viewPager.setCurrentItem(1, false);
 
-        setToolbarTitle("해외 스테이");
+        setToolbarTitle("해외 스테이 검색");
     }
 
     @Override
@@ -293,7 +268,7 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
 
         getViewDataBinding().viewPager.setCurrentItem(2, false);
 
-        setToolbarTitle("고 메");
+        setToolbarTitle("고메 검색");
     }
 
     @Override

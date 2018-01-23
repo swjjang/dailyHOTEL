@@ -102,18 +102,6 @@
                         app:layout_constraintTop_toTopOf="@+id/backgroundTopView"/>
 
                     <com.daily.base.widget.DailyTextView
-                        android:id="@+id/staySearchFakeTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
-                        android:text="국내 스테이"
-                        android:textColor="@color/default_text_c323232"
-                        android:textSize="10dp"
-                        app:layout_constraintLeft_toLeftOf="@+id/staySearchTextView"
-                        app:layout_constraintRight_toRightOf="@+id/staySearchTextView"
-                        app:layout_constraintBottom_toBottomOf="@+id/staySearchTextView"/>
-
-                    <com.daily.base.widget.DailyTextView
                         android:id="@+id/stayOutboundSearchTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -520,7 +508,6 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/toolbar_height"
             android:alpha="0"
-            android:background="@color/white"
             android:orientation="horizontal"
             android:gravity="center_vertical"
             app:layout_constraintLeft_toLeftOf="parent"
