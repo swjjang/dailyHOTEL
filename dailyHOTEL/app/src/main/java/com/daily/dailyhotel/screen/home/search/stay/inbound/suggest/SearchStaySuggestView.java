@@ -1,20 +1,34 @@
 package com.daily.dailyhotel.screen.home.search.stay.inbound.suggest;
 
+import android.content.Context;
+import android.graphics.PorterDuff;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.Suggest;
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivitySearchStaySuggestDataBinding;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 
-public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.OnEventListener, ActivitySearchStaySuggestDataBinding> implements SearchStaySuggestInterface
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+
+public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.OnEventListener, ActivitySearchStaySuggestDataBinding> //
+    implements SearchStaySuggestInterface, View.OnClickListener
 {
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -74,11 +88,193 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
         });
 
         viewDataBinding.keywordEditText.addTextChangedListener(mTextWatcher);
+
+        viewDataBinding.deleteTextView.setVisibility(View.INVISIBLE);
+        viewDataBinding.deleteTextView.setOnClickListener(this);
+
+        viewDataBinding.suggestsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        EdgeEffectColor.setEdgeGlowColor(viewDataBinding.suggestsRecyclerView, getColor(R.color.default_over_scroll_edge));
+
+        viewDataBinding.suggestsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
+        {
+            private int mDistance;
+            private boolean mIsHide;
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+            {
+                if (newState != RecyclerView.SCROLL_STATE_DRAGGING)
+                {
+                    mDistance = 0;
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            {
+                if (mIsHide == true)
+                {
+                    mDistance = 0;
+                    return;
+                }
+
+                int defaultValue = ScreenUtils.dpToPx(getContext(), 41);
+
+                mDistance += dy;
+
+                if (mDistance > defaultValue == true)
+                {
+                    mDistance = 0;
+                    mIsHide = true;
+
+                    InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(recyclerView.getWindowToken(), 0);
+
+                    Observable.just(false).delaySubscription(1, TimeUnit.SECONDS).subscribe(isHide -> mIsHide = isHide);
+                }
+            }
+        });
+
+        viewDataBinding.recentlySuggestRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        EdgeEffectColor.setEdgeGlowColor(viewDataBinding.recentlySuggestRecyclerView, getColor(R.color.default_over_scroll_edge));
+        viewDataBinding.recentlySuggestRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
+        {
+            private int mDistance;
+            private boolean mIsHide;
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+            {
+                if (newState != RecyclerView.SCROLL_STATE_DRAGGING)
+                {
+                    mDistance = 0;
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            {
+                if (mIsHide == true)
+                {
+                    mDistance = 0;
+                    return;
+                }
+
+                int defaultValue = ScreenUtils.dpToPx(getContext(), 41);
+
+                mDistance += dy;
+
+                if (mDistance > defaultValue == true)
+                {
+                    mDistance = 0;
+                    mIsHide = true;
+
+                    InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(recyclerView.getWindowToken(), 0);
+
+                    Observable.just(false).delaySubscription(1, TimeUnit.SECONDS).subscribe(isHide -> mIsHide = isHide);
+                }
+            }
+        });
+
+        viewDataBinding.deleteRecentlySuggestLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                getEventListener().onDeleteAllRecentlySuggest();
+            }
+        });
+
+        viewDataBinding.progressBar.getIndeterminateDrawable().setColorFilter(getColor(R.color.default_probressbar), PorterDuff.Mode.SRC_IN);
+        setProgressBarVisible(false);
     }
 
     @Override
     public void setToolbarTitle(String title)
     {
+    }
+
+    @Override
+    public void setSuggestsVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (visible == true)
+        {
+            getViewDataBinding().suggestsRecyclerView.setVisibility(View.VISIBLE);
+        } else
+        {
+            getViewDataBinding().suggestsRecyclerView.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void setSuggests(List<Suggest> suggestList)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+
+    }
+
+    @Override
+    public void setSuggest(String suggest)
+    {
+
+    }
+
+    @Override
+    public void showKeyboard()
+    {
+
+    }
+
+    @Override
+    public void hideKeyboard()
+    {
+
+    }
+
+    @Override
+    public void setEmptySuggestsVisible(boolean visible)
+    {
+
+    }
+
+    @Override
+    public void setProgressBarVisible(boolean visible)
+    {
+
+    }
+
+    @Override
+    public void setRecentlySuggests(List<Suggest> suggestList)
+    {
+
+    }
+
+    @Override
+    public void setPopularAreaSuggests(List<Suggest> suggestList)
+    {
+
+    }
+
+    @Override
+    public void setKeywordEditText(String text)
+    {
+
+    }
+
+    @Override
+    public void onClick(View view)
+    {
+
     }
 
     private TextWatcher mTextWatcher = new TextWatcher()

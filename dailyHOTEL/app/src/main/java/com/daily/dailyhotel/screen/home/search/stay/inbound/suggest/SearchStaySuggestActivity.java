@@ -15,9 +15,15 @@ import com.twoheart.dailyhotel.R;
  */
 public class SearchStaySuggestActivity extends BaseActivity<SearchStaySuggestPresenter>
 {
-    public static Intent newInstance(Context context)
+    public static final String INTENT_EXTRA_DATA_CHECK_IN_DATE = "checkInDate";
+    public static final String INTENT_EXTRA_DATA_CHECK_OUT_DATE = "checkOutDate";
+
+    public static Intent newInstance(Context context, String checkInDate, String checkOutDate)
     {
         Intent intent = new Intent(context, SearchStaySuggestActivity.class);
+
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE, checkInDate);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE, checkOutDate);
 
         return intent;
     }

@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.Suggest;
 import com.twoheart.dailyhotel.R;
 
@@ -17,6 +19,8 @@ import com.twoheart.dailyhotel.R;
 public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchStaySuggestActivity, SearchStaySuggestInterface> implements SearchStaySuggestView.OnEventListener
 {
     private SearchStaySuggestAnalyticsInterface mAnalytics;
+
+    private StayBookDateTime mStayBookDateTime;
 
     public interface SearchStaySuggestAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -56,6 +60,25 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
         if (intent == null)
         {
             return true;
+        }
+
+        String checkInDate = intent.getStringExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE);
+        String checkOutDate = intent.getStringExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE);
+
+        if (DailyTextUtils.isTextEmpty(checkInDate, checkOutDate) == true)
+        {
+            return false;
+        }
+
+        try
+        {
+            mStayBookDateTime = new StayBookDateTime();
+
+            mStayBookDateTime.setCheckInDateTime(checkInDate);
+            mStayBookDateTime.getCheckOutDateTime(checkOutDate);
+        } catch (Exception e)
+        {
+            return false;
         }
 
         return true;
