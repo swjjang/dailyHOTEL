@@ -6,11 +6,11 @@ import android.support.annotation.NonNull;
 
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 
-public class SuggestParcel implements Parcelable
+public class StayOutboundSuggestParcel implements Parcelable
 {
     private StayOutboundSuggest mStayOutboundSuggest;
 
-    public SuggestParcel(@NonNull StayOutboundSuggest stayOutboundSuggest)
+    public StayOutboundSuggestParcel(@NonNull StayOutboundSuggest stayOutboundSuggest)
     {
         if (stayOutboundSuggest == null)
         {
@@ -20,7 +20,7 @@ public class SuggestParcel implements Parcelable
         mStayOutboundSuggest = stayOutboundSuggest;
     }
 
-    public SuggestParcel(Parcel in)
+    public StayOutboundSuggestParcel(Parcel in)
     {
         readFromParcel(in);
     }
@@ -67,15 +67,15 @@ public class SuggestParcel implements Parcelable
 
     public static final Creator CREATOR = new Creator()
     {
-        public SuggestParcel createFromParcel(Parcel in)
+        public StayOutboundSuggestParcel createFromParcel(Parcel in)
         {
-            return new SuggestParcel(in);
+            return new StayOutboundSuggestParcel(in);
         }
 
         @Override
-        public SuggestParcel[] newArray(int size)
+        public StayOutboundSuggestParcel[] newArray(int size)
         {
-            return new SuggestParcel[size];
+            return new StayOutboundSuggestParcel[size];
         }
 
     };

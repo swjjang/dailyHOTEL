@@ -9,7 +9,7 @@ import android.support.annotation.NonNull;
 import com.daily.base.BaseActivity;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
-import com.daily.dailyhotel.parcel.SuggestParcel;
+import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
 import com.twoheart.dailyhotel.R;
 
@@ -53,7 +53,7 @@ public class StayOutboundListActivity extends BaseActivity<StayOutboundListPrese
         , int numberOfAdults, ArrayList<Integer> childAgeList, StayOutboundListAnalyticsParam analyticsParam)
     {
         Intent intent = new Intent(context, StayOutboundListActivity.class);
-        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new SuggestParcel(stayOutboundSuggest));
+        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new StayOutboundSuggestParcel(stayOutboundSuggest));
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, numberOfAdults);

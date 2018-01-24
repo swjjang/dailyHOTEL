@@ -11,7 +11,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
-import com.daily.dailyhotel.parcel.SuggestParcel;
+import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
 import com.daily.dailyhotel.repository.local.SuggestLocalImpl;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
 import com.twoheart.dailyhotel.R;
@@ -404,7 +404,7 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
     void startFinishAction(StayOutboundSuggest stayOutboundSuggest, String keyword, String analyticsClickType)
     {
         Intent intent = new Intent();
-        intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new SuggestParcel(stayOutboundSuggest));
+        intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new StayOutboundSuggestParcel(stayOutboundSuggest));
         intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
         intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_CLICK_TYPE, DailyTextUtils.isTextEmpty(analyticsClickType) ? "" : analyticsClickType);
 

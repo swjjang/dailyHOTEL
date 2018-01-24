@@ -31,7 +31,7 @@ import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutboundFilters;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StayOutbounds;
-import com.daily.dailyhotel.parcel.SuggestParcel;
+import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
@@ -202,11 +202,11 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         {
         } else if (intent.hasExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_SUGGEST) == true)
         {
-            SuggestParcel suggestParcel = intent.getParcelableExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_SUGGEST);
+            StayOutboundSuggestParcel stayOutboundSuggestParcel = intent.getParcelableExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_SUGGEST);
 
-            if (suggestParcel != null)
+            if (stayOutboundSuggestParcel != null)
             {
-                setSuggest(suggestParcel.getSuggest());
+                setSuggest(stayOutboundSuggestParcel.getSuggest());
             }
 
             String checkInDateTime = intent.getStringExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME);

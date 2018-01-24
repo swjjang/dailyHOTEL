@@ -17,7 +17,7 @@ import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
-import com.daily.dailyhotel.parcel.SuggestParcel;
+import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
 import com.daily.dailyhotel.repository.local.SuggestLocalImpl;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
@@ -277,13 +277,13 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                 {
                     if (data.hasExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST) == true)
                     {
-                        SuggestParcel suggestParcel = data.getParcelableExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
+                        StayOutboundSuggestParcel stayOutboundSuggestParcel = data.getParcelableExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
                         String keyword = data.getStringExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
                         String clickType = data.getStringExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_CLICK_TYPE);
 
-                        if (suggestParcel != null)
+                        if (stayOutboundSuggestParcel != null)
                         {
-                            addCompositeDisposable(setSuggestAndKeyword(suggestParcel.getSuggest(), keyword, clickType).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer()
+                            addCompositeDisposable(setSuggestAndKeyword(stayOutboundSuggestParcel.getSuggest(), keyword, clickType).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer()
                             {
                                 @Override
                                 public void accept(Object o) throws Exception
