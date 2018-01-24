@@ -16,7 +16,7 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.entity.Suggest;
+import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.parcel.SuggestParcel;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
 import com.daily.dailyhotel.repository.local.SuggestLocalImpl;
@@ -64,7 +64,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     CommonDateTime mCommonDateTime;
     StayBookDateTime mStayBookDateTime;
 
-    Suggest mSuggest;
+    StayOutboundSuggest mStayOutboundSuggest;
     private String mKeyword;
     private String mAnalyticsClickType;
     private People mPeople;
@@ -109,12 +109,12 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         mSuggestLocalImpl = new SuggestLocalImpl(activity);
         mSuggestRemoteImpl = new SuggestRemoteImpl(activity);
 
-        addCompositeDisposable(mSuggestLocalImpl.getRecentlySuggest().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Suggest>()
+        addCompositeDisposable(mSuggestLocalImpl.getRecentlySuggest().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayOutboundSuggest>()
         {
             @Override
-            public void accept(Suggest suggest) throws Exception
+            public void accept(StayOutboundSuggest stayOutboundSuggest) throws Exception
             {
-                if (suggest == null)
+                if (stayOutboundSuggest == null)
                 {
                     mIsShowCalendar = true;
                 } else
@@ -122,7 +122,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                     mIsShowCalendar = false;
                 }
 
-                mSuggest = suggest;
+                mStayOutboundSuggest = stayOutboundSuggest;
                 notifySuggestsChanged();
 
                 onAfterGetRecentlySuggest();
@@ -133,7 +133,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
             public void accept(Throwable throwable) throws Exception
             {
                 mIsShowCalendar = true;
-                mSuggest = null;
+                mStayOutboundSuggest = null;
                 notifySuggestsChanged();
 
                 onAfterGetRecentlySuggest();
@@ -422,18 +422,18 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
             }
         }));
 
-        addCompositeDisposable(mSuggestRemoteImpl.getPopularRegionSuggestsByStayOutbound().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<Suggest>>()
+        addCompositeDisposable(mSuggestRemoteImpl.getPopularRegionSuggestsByStayOutbound().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<StayOutboundSuggest>>()
         {
             @Override
-            public void accept(List<Suggest> suggests) throws Exception
+            public void accept(List<StayOutboundSuggest> stayOutboundSuggests) throws Exception
             {
-                if (suggests == null || suggests.size() == 0)
+                if (stayOutboundSuggests == null || stayOutboundSuggests.size() == 0)
                 {
                     getViewInterface().setPopularAreaVisible(false);
                 } else
                 {
                     getViewInterface().setPopularAreaVisible(true);
-                    getViewInterface().setPopularAreaList(suggests);
+                    getViewInterface().setPopularAreaList(stayOutboundSuggests);
                 }
             }
         }, new Consumer<Throwable>()
@@ -472,17 +472,17 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     @Override
     public void onSearchKeyword()
     {
-        if (mSuggest == null || mPeople == null || mStayBookDateTime == null)
+        if (mStayOutboundSuggest == null || mPeople == null || mStayBookDateTime == null)
         {
             return;
         }
 
         Intent intent;
 
-        //        if (mSuggest.id == 0)
+        //        if (mStayOutboundSuggest.id == 0)
         //        {
         // 키워드 검색인 경우
-        //            intent = StayOutboundListActivity.newInstance(getActivity(), mSuggest.city//
+        //            intent = StayOutboundListActivity.newInstance(getActivity(), mStayOutboundSuggest.city//
         //                , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
         //                , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
         //                , mPeople.numberOfAdults, mPeople.getChildAgeList());
@@ -493,7 +493,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         analyticsParam.analyticsClickType = mAnalyticsClickType;
 
         // Suggest검색인 경우
-        intent = StayOutboundListActivity.newInstance(getActivity(), mSuggest//
+        intent = StayOutboundListActivity.newInstance(getActivity(), mStayOutboundSuggest//
             , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mPeople.numberOfAdults, mPeople.getChildAgeList(), analyticsParam);
@@ -561,14 +561,14 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
     }
 
     @Override
-    public void onPopularAreaClick(Suggest suggest)
+    public void onPopularAreaClick(StayOutboundSuggest stayOutboundSuggest)
     {
-        if (suggest == null || lock() == true)
+        if (stayOutboundSuggest == null || lock() == true)
         {
             return;
         }
 
-        addCompositeDisposable(setSuggestAndKeyword(suggest, suggest.display, AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECOMMEND).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer()
+        addCompositeDisposable(setSuggestAndKeyword(stayOutboundSuggest, stayOutboundSuggest.display, AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECOMMEND).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer()
         {
             @Override
             public void accept(Object o) throws Exception
@@ -579,7 +579,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
             }
         }));
 
-        mAnalytics.onEventPopularSuggestClick(getActivity(), suggest.display);
+        mAnalytics.onEventPopularSuggestClick(getActivity(), stayOutboundSuggest.display);
     }
 
     void setCommonDateTime(CommonDateTime commonDateTime)
@@ -646,13 +646,13 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         }
     }
 
-    private Observable setSuggestAndKeyword(Suggest suggest, String keyword, String analyticsClickType)
+    private Observable setSuggestAndKeyword(StayOutboundSuggest stayOutboundSuggest, String keyword, String analyticsClickType)
     {
-        mSuggest = suggest;
+        mStayOutboundSuggest = stayOutboundSuggest;
         mKeyword = keyword;
         mAnalyticsClickType = analyticsClickType;
 
-        return mSuggestLocalImpl.addSuggestDb(suggest, keyword);
+        return mSuggestLocalImpl.addSuggestDb(stayOutboundSuggest, keyword);
     }
 
     private void setPeople(int numberOfAdults, ArrayList<Integer> childAgeList)
@@ -694,13 +694,13 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
     void notifySuggestsChanged()
     {
-        if (mSuggest != null)
+        if (mStayOutboundSuggest != null)
         {
             setSuggestChanged(true);
 
-            getViewInterface().setSuggest(mSuggest.display);
+            getViewInterface().setSuggest(mStayOutboundSuggest.display);
 
-            if (mSuggest.id != 0)
+            if (mStayOutboundSuggest.id != 0)
             {
                 getViewInterface().setSearchEnable(true);
             }
@@ -772,12 +772,12 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
 
                 if (externalDeepLink.isStayOutboundSearchResultView() == true)
                 {
-                    Suggest suggest = new Suggest();
-                    suggest.id = Long.parseLong(externalDeepLink.getIndex());
-                    suggest.categoryKey = externalDeepLink.getCategoryKey();
-                    suggest.display = externalDeepLink.getTitle();
+                    StayOutboundSuggest stayOutboundSuggest = new StayOutboundSuggest();
+                    stayOutboundSuggest.id = Long.parseLong(externalDeepLink.getIndex());
+                    stayOutboundSuggest.categoryKey = externalDeepLink.getCategoryKey();
+                    stayOutboundSuggest.display = externalDeepLink.getTitle();
 
-                    addCompositeDisposable(setSuggestAndKeyword(suggest, null, AnalyticsManager.Category.OB_SEARCH_ORIGIN_ETC).observeOn(AndroidSchedulers.mainThread()).subscribe());
+                    addCompositeDisposable(setSuggestAndKeyword(stayOutboundSuggest, null, AnalyticsManager.Category.OB_SEARCH_ORIGIN_ETC).observeOn(AndroidSchedulers.mainThread()).subscribe());
 
                     String date = externalDeepLink.getDate();
                     int datePlus = externalDeepLink.getDatePlus();

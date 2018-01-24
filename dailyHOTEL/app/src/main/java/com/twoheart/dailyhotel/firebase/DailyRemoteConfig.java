@@ -231,7 +231,7 @@ public class DailyRemoteConfig
         // 카드 이벤트 업체
         writePaymentCardEvent(mContext, androidPaymentCardEvent);
 
-        // 검색 Suggest 힌트
+        // 검색 StayOutboundSuggest 힌트
         writeSearch(mContext, androidSearch);
 
         if (listener != null)

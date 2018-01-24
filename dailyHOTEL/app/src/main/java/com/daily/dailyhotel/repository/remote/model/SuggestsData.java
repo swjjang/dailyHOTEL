@@ -5,7 +5,7 @@ import android.content.Context;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.daily.base.util.DailyTextUtils;
-import com.daily.dailyhotel.entity.Suggest;
+import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.twoheart.dailyhotel.R;
 
 import java.util.ArrayList;
@@ -34,46 +34,46 @@ public class SuggestsData
 
     }
 
-    public List<Suggest> getSuggestList(Context context)
+    public List<StayOutboundSuggest> getSuggestList(Context context)
     {
         final int SUGGEST_MAX_COUNT = 5;
 
-        List<Suggest> list = new ArrayList<>();
+        List<StayOutboundSuggest> list = new ArrayList<>();
 
         if (context == null)
         {
             return list;
         }
 
-        List<Suggest> regionList = getSuggestList(context.getString(R.string.label_stay_outbound_suggest_region), regionSuggestDataList, SUGGEST_MAX_COUNT);
+        List<StayOutboundSuggest> regionList = getSuggestList(context.getString(R.string.label_stay_outbound_suggest_region), regionSuggestDataList, SUGGEST_MAX_COUNT);
 
         if (regionList != null)
         {
             list.addAll(regionList);
         }
 
-        List<Suggest> hotelList = getSuggestList(context.getString(R.string.label_stay_outbound_suggest_hotel), hotelSuggestDataList, SUGGEST_MAX_COUNT);
+        List<StayOutboundSuggest> hotelList = getSuggestList(context.getString(R.string.label_stay_outbound_suggest_hotel), hotelSuggestDataList, SUGGEST_MAX_COUNT);
 
         if (hotelList != null)
         {
             list.addAll(hotelList);
         }
 
-        List<Suggest> pointList = getSuggestList(context.getString(R.string.label_stay_outbound_suggest_point), pointSuggestDataList, SUGGEST_MAX_COUNT);
+        List<StayOutboundSuggest> pointList = getSuggestList(context.getString(R.string.label_stay_outbound_suggest_point), pointSuggestDataList, SUGGEST_MAX_COUNT);
 
         if (pointList != null)
         {
             list.addAll(pointList);
         }
 
-        List<Suggest> airportList = getSuggestList(context.getString(R.string.label_stay_outbound_suggest_airport), airportSuggestDataList, SUGGEST_MAX_COUNT);
+        List<StayOutboundSuggest> airportList = getSuggestList(context.getString(R.string.label_stay_outbound_suggest_airport), airportSuggestDataList, SUGGEST_MAX_COUNT);
 
         if (airportList != null)
         {
             list.addAll(airportList);
         }
 
-        List<Suggest> stationList = getSuggestList(context.getString(R.string.label_stay_outbound_suggest_station), stationSuggestDataList, SUGGEST_MAX_COUNT);
+        List<StayOutboundSuggest> stationList = getSuggestList(context.getString(R.string.label_stay_outbound_suggest_station), stationSuggestDataList, SUGGEST_MAX_COUNT);
 
         if (stationList != null)
         {
@@ -83,35 +83,35 @@ public class SuggestsData
         return list;
     }
 
-    public List<Suggest> getRegionSuggestList(Context context)
+    public List<StayOutboundSuggest> getRegionSuggestList(Context context)
     {
-        List<Suggest> regionSuggestList = new ArrayList<>();
+        List<StayOutboundSuggest> regionStayOutboundSuggestList = new ArrayList<>();
 
         if (regionSuggestDataList == null || regionSuggestDataList.size() == 0)
         {
-            return regionSuggestList;
+            return regionStayOutboundSuggestList;
         }
 
         int count = regionSuggestDataList.size();
 
         for (SuggestData suggestData : regionSuggestDataList)
         {
-            regionSuggestList.add(suggestData.getSuggests());
+            regionStayOutboundSuggestList.add(suggestData.getSuggests());
         }
 
-        return regionSuggestList;
+        return regionStayOutboundSuggestList;
     }
 
-    private List<Suggest> getSuggestList(String title, List<SuggestData> suggestDataList, int maxCount)
+    private List<StayOutboundSuggest> getSuggestList(String title, List<SuggestData> suggestDataList, int maxCount)
     {
         if (suggestDataList == null || suggestDataList.size() == 0 || DailyTextUtils.isTextEmpty(title) == true)
         {
             return null;
         }
 
-        List<Suggest> list = new ArrayList<>();
+        List<StayOutboundSuggest> list = new ArrayList<>();
 
-        list.add(new Suggest(0, title));
+        list.add(new StayOutboundSuggest(0, title));
 
         int size = Math.min(suggestDataList.size(), maxCount);
 

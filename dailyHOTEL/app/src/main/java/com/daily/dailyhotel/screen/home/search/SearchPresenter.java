@@ -21,7 +21,7 @@ import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.entity.Suggest;
+import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.suggest.SearchStaySuggestActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.calendar.StayOutboundCalendarActivity;
@@ -68,7 +68,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
         // Stayoutbound
         public MutableLiveData<StayBookDateTime> stayOutboundBookDateTime = new MutableLiveData<>();
-        public MutableLiveData<Suggest> stayOutboundSuggest = new MutableLiveData<>();
+        public MutableLiveData<StayOutboundSuggest> stayOutboundSuggest = new MutableLiveData<>();
         public MutableLiveData<People> stayOutboundPeople = new MutableLiveData<>();
 
         // Gourmet
@@ -693,14 +693,14 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             }
         });
 
-        mSearchModel.stayOutboundSuggest.observe(activity, new Observer<Suggest>()
+        mSearchModel.stayOutboundSuggest.observe(activity, new Observer<StayOutboundSuggest>()
         {
             @Override
-            public void onChanged(@Nullable Suggest suggest)
+            public void onChanged(@Nullable StayOutboundSuggest stayOutboundSuggest)
             {
-                getViewInterface().setSearchStayOutboundSuggestText(suggest.display);
+                getViewInterface().setSearchStayOutboundSuggestText(stayOutboundSuggest.display);
 
-                getViewInterface().setSearchStayOutboundButtonEnabled(suggest != null);
+                getViewInterface().setSearchStayOutboundButtonEnabled(stayOutboundSuggest != null);
             }
         });
 

@@ -2,7 +2,7 @@ package com.daily.dailyhotel.entity;
 
 import com.daily.base.util.DailyTextUtils;
 
-public class Suggest
+public class StayOutboundSuggest
 {
     public static final String CATEGORY_AIRPORT = "airport";
     public static final String CATEGORY_HOTEL = "hotel";
@@ -20,19 +20,19 @@ public class Suggest
     public double latitude;
     public double longitude;
 
-    public Suggest()
+    public StayOutboundSuggest()
     {
 
     }
 
-    public Suggest(long id, String name)
+    public StayOutboundSuggest(long id, String name)
     {
         this.id = id;
         this.name = name;
         this.display = name;
     }
 
-    public Suggest(long id, String name, String city, String country, String countryCode //
+    public StayOutboundSuggest(long id, String name, String city, String country, String countryCode //
         , String categoryKey, String display, double latitude, double longitude)
     {
         this.id = id;
@@ -46,45 +46,45 @@ public class Suggest
         this.longitude = longitude;
     }
 
-    public Suggest getClone()
+    public StayOutboundSuggest getClone()
     {
-        Suggest suggest = new Suggest();
+        StayOutboundSuggest stayOutboundSuggest = new StayOutboundSuggest();
 
-        suggest.id = id;
+        stayOutboundSuggest.id = id;
 
         if (DailyTextUtils.isTextEmpty(name) == false)
         {
-            suggest.name = name;
+            stayOutboundSuggest.name = name;
         }
 
         if (DailyTextUtils.isTextEmpty(city) == false)
         {
-            suggest.city = city;
+            stayOutboundSuggest.city = city;
         }
 
         if (DailyTextUtils.isTextEmpty(country) == false)
         {
-            suggest.country = country;
+            stayOutboundSuggest.country = country;
         }
 
         if (DailyTextUtils.isTextEmpty(countryCode) == false)
         {
-            suggest.countryCode = countryCode;
+            stayOutboundSuggest.countryCode = countryCode;
         }
 
         if (DailyTextUtils.isTextEmpty(categoryKey) == false)
         {
-            suggest.categoryKey = categoryKey;
+            stayOutboundSuggest.categoryKey = categoryKey;
         }
 
         if (DailyTextUtils.isTextEmpty(display) == false)
         {
-            suggest.display = display;
+            stayOutboundSuggest.display = display;
         }
 
-        suggest.latitude = latitude;
-        suggest.longitude = longitude;
+        stayOutboundSuggest.latitude = latitude;
+        stayOutboundSuggest.longitude = longitude;
 
-        return suggest;
+        return stayOutboundSuggest;
     }
 }

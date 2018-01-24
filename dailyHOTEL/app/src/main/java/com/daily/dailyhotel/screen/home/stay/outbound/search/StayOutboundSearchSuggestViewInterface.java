@@ -1,7 +1,7 @@
 package com.daily.dailyhotel.screen.home.stay.outbound.search;
 
 import com.daily.base.BaseDialogViewInterface;
-import com.daily.dailyhotel.entity.Suggest;
+import com.daily.dailyhotel.entity.StayOutboundSuggest;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ public interface StayOutboundSearchSuggestViewInterface extends BaseDialogViewIn
 {
     void setSuggestsVisible(boolean visible);
 
-    void setSuggests(List<Suggest> suggestList);
+    void setSuggests(List<StayOutboundSuggest> stayOutboundSuggestList);
 
     void setSuggest(String suggest);
 
@@ -21,9 +21,9 @@ public interface StayOutboundSearchSuggestViewInterface extends BaseDialogViewIn
 
     void setProgressBarVisible(boolean visible);
 
-    void setRecentlySuggests(List<Suggest> suggestList);
+    void setRecentlySuggests(List<StayOutboundSuggest> stayOutboundSuggestList);
 
-    void setPopularAreaSuggests(List<Suggest> suggestList);
+    void setPopularAreaSuggests(List<StayOutboundSuggest> stayOutboundSuggestList);
 
     void setKeywordEditText(String text);
 }

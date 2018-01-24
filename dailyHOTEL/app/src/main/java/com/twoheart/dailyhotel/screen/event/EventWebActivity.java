@@ -17,7 +17,7 @@ import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.People;
-import com.daily.dailyhotel.entity.Suggest;
+import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
@@ -692,10 +692,10 @@ public class EventWebActivity extends WebViewActivity implements Constants
             {
                 DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
 
-                Suggest suggest = new Suggest();
-                suggest.id = Long.parseLong(externalDeepLink.getIndex());
-                suggest.categoryKey = externalDeepLink.getCategoryKey();
-                suggest.display = externalDeepLink.getTitle();
+                StayOutboundSuggest stayOutboundSuggest = new StayOutboundSuggest();
+                stayOutboundSuggest.id = Long.parseLong(externalDeepLink.getIndex());
+                stayOutboundSuggest.categoryKey = externalDeepLink.getCategoryKey();
+                stayOutboundSuggest.display = externalDeepLink.getTitle();
 
                 String date = externalDeepLink.getDate();
                 int datePlus = externalDeepLink.getDatePlus();
@@ -733,7 +733,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
 
                 People people = new People(People.DEFAULT_ADULTS, null);
 
-                startActivity(StayOutboundListActivity.newInstance(EventWebActivity.this, suggest//
+                startActivity(StayOutboundListActivity.newInstance(EventWebActivity.this, stayOutboundSuggest//
                     , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
                     , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
                     , people.numberOfAdults, people.getChildAgeList(), new StayOutboundListAnalyticsParam()));

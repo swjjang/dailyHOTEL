@@ -29,8 +29,8 @@ import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutboundFilters;
+import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StayOutbounds;
-import com.daily.dailyhotel.entity.Suggest;
 import com.daily.dailyhotel.parcel.SuggestParcel;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
@@ -94,7 +94,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     private CommonDateTime mCommonDateTime;
     StayBookDateTime mStayBookDateTime;
 
-    private Suggest mSuggest;
+    private StayOutboundSuggest mStayOutboundSuggest;
     People mPeople;
     StayOutboundFilters mStayOutboundFilters;
     List<StayOutbound> mStayOutboundList;
@@ -239,14 +239,14 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     @Override
     public void onPostCreate()
     {
-        if (mSuggest.id == 0)
+        if (mStayOutboundSuggest.id == 0)
         {
             // 키워드 검색인 경우
-            getViewInterface().setToolbarTitle(mSuggest.city);
+            getViewInterface().setToolbarTitle(mStayOutboundSuggest.city);
         } else
         {
-            // Suggest 검색인 경우
-            getViewInterface().setToolbarTitle(mSuggest.display);
+            // StayOutboundSuggest 검색인 경우
+            getViewInterface().setToolbarTitle(mStayOutboundSuggest.display);
         }
 
         notifyStayBookDateTimeChanged();
@@ -670,7 +670,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         setScreenVisible(ScreenType.DEFAULT, mStayOutboundFilters);
 
         addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime()//
-            , mStayOutboundRemoteImpl.getList(mStayBookDateTime, mSuggest.id, mSuggest.categoryKey//
+            , mStayOutboundRemoteImpl.getList(mStayBookDateTime, mStayOutboundSuggest.id, mStayOutboundSuggest.categoryKey//
                 , mPeople, mStayOutboundFilters, mCacheKey, mCacheLocation, mCustomerSessionId)//
             , (commonDateTime, stayOutbounds) ->
             {
@@ -681,7 +681,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 return stayOutbounds;
             }).subscribe(stayOutbounds ->
         {
-            mAnalytics.onEventList(getActivity(), mSuggest.display, stayOutbounds.getStayOutbound().size());
+            mAnalytics.onEventList(getActivity(), mStayOutboundSuggest.display, stayOutbounds.getStayOutbound().size());
 
             onStayOutbounds(stayOutbounds);
 
@@ -968,7 +968,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         {
             mMoreEnabled = false;
 
-            addCompositeDisposable(mStayOutboundRemoteImpl.getList(mStayBookDateTime, mSuggest.id, mSuggest.categoryKey//
+            addCompositeDisposable(mStayOutboundRemoteImpl.getList(mStayBookDateTime, mStayOutboundSuggest.id, mStayOutboundSuggest.categoryKey//
                 , mPeople, mStayOutboundFilters, mCacheKey, mCacheLocation, mCustomerSessionId).subscribe(stayOutbounds ->
             {
                 onStayOutbounds(stayOutbounds);
@@ -1278,9 +1278,9 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         }
     }
 
-    private void setSuggest(Suggest suggest)
+    private void setSuggest(StayOutboundSuggest stayOutboundSuggest)
     {
-        mSuggest = suggest;
+        mStayOutboundSuggest = stayOutboundSuggest;
     }
 
     private void setFilter(StayOutboundFilters.SortType sortType, int rating)

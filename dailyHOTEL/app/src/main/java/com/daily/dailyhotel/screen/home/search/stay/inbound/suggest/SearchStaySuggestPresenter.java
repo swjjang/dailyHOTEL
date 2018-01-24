@@ -9,7 +9,7 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.entity.Suggest;
+import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.twoheart.dailyhotel.R;
 
 /**
@@ -181,19 +181,19 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
     }
 
     @Override
-    public void onSuggestClick(Suggest suggest)
+    public void onSuggestClick(StayOutboundSuggest stayOutboundSuggest)
     {
 
     }
 
     @Override
-    public void onRecentlySuggestClick(Suggest suggest)
+    public void onRecentlySuggestClick(StayOutboundSuggest stayOutboundSuggest)
     {
 
     }
 
     @Override
-    public void onPopularSuggestClick(Suggest suggest)
+    public void onPopularSuggestClick(StayOutboundSuggest stayOutboundSuggest)
     {
 
     }

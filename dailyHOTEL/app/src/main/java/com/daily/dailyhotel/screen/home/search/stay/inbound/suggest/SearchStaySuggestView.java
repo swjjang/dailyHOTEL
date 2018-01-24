@@ -17,7 +17,7 @@ import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
-import com.daily.dailyhotel.entity.Suggest;
+import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivitySearchStaySuggestDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
@@ -34,11 +34,11 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
     {
         void onSearchSuggest(String keyword);
 
-        void onSuggestClick(Suggest suggest);
+        void onSuggestClick(StayOutboundSuggest stayOutboundSuggest);
 
-        void onRecentlySuggestClick(Suggest suggest);
+        void onRecentlySuggestClick(StayOutboundSuggest stayOutboundSuggest);
 
-        void onPopularSuggestClick(Suggest suggest);
+        void onPopularSuggestClick(StayOutboundSuggest stayOutboundSuggest);
 
         void onDeleteAllRecentlySuggest();
     }
@@ -213,7 +213,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
     }
 
     @Override
-    public void setSuggests(List<Suggest> suggestList)
+    public void setSuggests(List<StayOutboundSuggest> stayOutboundSuggestList)
     {
         if (getViewDataBinding() == null)
         {
@@ -254,13 +254,13 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
     }
 
     @Override
-    public void setRecentlySuggests(List<Suggest> suggestList)
+    public void setRecentlySuggests(List<StayOutboundSuggest> stayOutboundSuggestList)
     {
 
     }
 
     @Override
-    public void setPopularAreaSuggests(List<Suggest> suggestList)
+    public void setPopularAreaSuggests(List<StayOutboundSuggest> stayOutboundSuggestList)
     {
 
     }

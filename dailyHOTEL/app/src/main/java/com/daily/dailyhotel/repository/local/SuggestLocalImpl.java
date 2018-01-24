@@ -8,7 +8,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.StayObRecentlySuggestColumns;
 import com.daily.dailyhotel.domain.SuggestLocalInterface;
-import com.daily.dailyhotel.entity.Suggest;
+import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.storage.database.DailyDb;
 import com.daily.dailyhotel.storage.database.DailyDbHelper;
 
@@ -33,23 +33,23 @@ public class SuggestLocalImpl implements SuggestLocalInterface
     }
 
     @Override
-    public Observable addSuggestDb(Suggest suggest, String keyword)
+    public Observable addSuggestDb(StayOutboundSuggest stayOutboundSuggest, String keyword)
     {
         return Observable.defer(new Callable<ObservableSource<Boolean>>()
         {
             @Override
             public ObservableSource<Boolean> call() throws Exception
             {
-                if (suggest == null)
+                if (stayOutboundSuggest == null)
                 {
                     return Observable.just(false);
                 }
 
                 DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
 
-                dailyDb.addStayObRecentlySuggest(suggest.id, suggest.name, suggest.city, suggest.country //
-                    , suggest.countryCode, suggest.categoryKey, suggest.display, suggest.latitude //
-                    , suggest.longitude, keyword, true);
+                dailyDb.addStayObRecentlySuggest(stayOutboundSuggest.id, stayOutboundSuggest.name, stayOutboundSuggest.city, stayOutboundSuggest.country //
+                    , stayOutboundSuggest.countryCode, stayOutboundSuggest.categoryKey, stayOutboundSuggest.display, stayOutboundSuggest.latitude //
+                    , stayOutboundSuggest.longitude, keyword, true);
 
                 DailyDbHelper.getInstance().close();
 
@@ -60,16 +60,16 @@ public class SuggestLocalImpl implements SuggestLocalInterface
     }
 
     @Override
-    public Observable<Suggest> getRecentlySuggest()
+    public Observable<StayOutboundSuggest> getRecentlySuggest()
     {
-        return Observable.defer(new Callable<ObservableSource<Suggest>>()
+        return Observable.defer(new Callable<ObservableSource<StayOutboundSuggest>>()
         {
             @Override
-            public ObservableSource<Suggest> call() throws Exception
+            public ObservableSource<StayOutboundSuggest> call() throws Exception
             {
                 DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
 
-                Suggest suggest = null;
+                StayOutboundSuggest stayOutboundSuggest = null;
                 Cursor cursor = null;
 
                 try
@@ -90,14 +90,14 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                         double latitude = cursor.getDouble(cursor.getColumnIndex(StayObRecentlySuggestColumns.LATITUDE));
                         double longitude = cursor.getDouble(cursor.getColumnIndex(StayObRecentlySuggestColumns.LONGITUDE));
 
-                        suggest = new Suggest(id, name, city, country, countryCode, categoryKey, display, latitude, longitude);
+                        stayOutboundSuggest = new StayOutboundSuggest(id, name, city, country, countryCode, categoryKey, display, latitude, longitude);
                     }
 
                 } catch (Exception e)
                 {
                     ExLog.e(e.toString());
 
-                    suggest = null;
+                    stayOutboundSuggest = null;
                 } finally
                 {
                     try
@@ -113,22 +113,22 @@ public class SuggestLocalImpl implements SuggestLocalInterface
 
                 DailyDbHelper.getInstance().close();
 
-                return Observable.just(suggest);
+                return Observable.just(stayOutboundSuggest);
             }
         }).subscribeOn(Schedulers.io());
     }
 
     @Override
-    public Observable<List<Suggest>> getRecentlySuggestList()
+    public Observable<List<StayOutboundSuggest>> getRecentlySuggestList()
     {
-        return Observable.defer(new Callable<ObservableSource<List<Suggest>>>()
+        return Observable.defer(new Callable<ObservableSource<List<StayOutboundSuggest>>>()
         {
             @Override
-            public ObservableSource<List<Suggest>> call() throws Exception
+            public ObservableSource<List<StayOutboundSuggest>> call() throws Exception
             {
                 DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
 
-                ArrayList<Suggest> suggestList = null;
+                ArrayList<StayOutboundSuggest> stayOutboundSuggestList = null;
                 Cursor cursor = null;
                 try
                 {
@@ -145,7 +145,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                         return Observable.just(new ArrayList<>());
                     }
 
-                    suggestList = new ArrayList<>();
+                    stayOutboundSuggestList = new ArrayList<>();
 
                     for (int i = 0; i < size; i++)
                     {
@@ -161,7 +161,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                         double latitude = cursor.getDouble(cursor.getColumnIndex(StayObRecentlySuggestColumns.LATITUDE));
                         double longitude = cursor.getDouble(cursor.getColumnIndex(StayObRecentlySuggestColumns.LONGITUDE));
 
-                        suggestList.add(new Suggest(id, name, city, country, countryCode, categoryKey, display, latitude, longitude));
+                        stayOutboundSuggestList.add(new StayOutboundSuggest(id, name, city, country, countryCode, categoryKey, display, latitude, longitude));
                     }
 
                 } catch (Exception e)
@@ -182,12 +182,12 @@ public class SuggestLocalImpl implements SuggestLocalInterface
 
                 DailyDbHelper.getInstance().close();
 
-                if (suggestList == null)
+                if (stayOutboundSuggestList == null)
                 {
-                    suggestList = new ArrayList<>();
+                    stayOutboundSuggestList = new ArrayList<>();
                 }
 
-                return Observable.just(suggestList);
+                return Observable.just(stayOutboundSuggestList);
             }
         }).subscribeOn(Schedulers.io());
     }

@@ -4,20 +4,20 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-import com.daily.dailyhotel.entity.Suggest;
+import com.daily.dailyhotel.entity.StayOutboundSuggest;
 
 public class SuggestParcel implements Parcelable
 {
-    private Suggest mSuggest;
+    private StayOutboundSuggest mStayOutboundSuggest;
 
-    public SuggestParcel(@NonNull Suggest suggest)
+    public SuggestParcel(@NonNull StayOutboundSuggest stayOutboundSuggest)
     {
-        if (suggest == null)
+        if (stayOutboundSuggest == null)
         {
-            throw new NullPointerException("suggest == null");
+            throw new NullPointerException("stayOutboundSuggest == null");
         }
 
-        mSuggest = suggest;
+        mStayOutboundSuggest = stayOutboundSuggest;
     }
 
     public SuggestParcel(Parcel in)
@@ -25,38 +25,38 @@ public class SuggestParcel implements Parcelable
         readFromParcel(in);
     }
 
-    public Suggest getSuggest()
+    public StayOutboundSuggest getSuggest()
     {
-        return mSuggest;
+        return mStayOutboundSuggest;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
-        dest.writeLong(mSuggest.id);
-        dest.writeString(mSuggest.name);
-        dest.writeString(mSuggest.city);
-        dest.writeString(mSuggest.country);
-        dest.writeString(mSuggest.countryCode);
-        dest.writeString(mSuggest.categoryKey);
-        dest.writeString(mSuggest.display);
-        dest.writeDouble(mSuggest.latitude);
-        dest.writeDouble(mSuggest.longitude);
+        dest.writeLong(mStayOutboundSuggest.id);
+        dest.writeString(mStayOutboundSuggest.name);
+        dest.writeString(mStayOutboundSuggest.city);
+        dest.writeString(mStayOutboundSuggest.country);
+        dest.writeString(mStayOutboundSuggest.countryCode);
+        dest.writeString(mStayOutboundSuggest.categoryKey);
+        dest.writeString(mStayOutboundSuggest.display);
+        dest.writeDouble(mStayOutboundSuggest.latitude);
+        dest.writeDouble(mStayOutboundSuggest.longitude);
     }
 
     private void readFromParcel(Parcel in)
     {
-        mSuggest = new Suggest();
+        mStayOutboundSuggest = new StayOutboundSuggest();
 
-        mSuggest.id = in.readLong();
-        mSuggest.name = in.readString();
-        mSuggest.city = in.readString();
-        mSuggest.country = in.readString();
-        mSuggest.countryCode = in.readString();
-        mSuggest.categoryKey = in.readString();
-        mSuggest.display = in.readString();
-        mSuggest.latitude = in.readDouble();
-        mSuggest.longitude = in.readDouble();
+        mStayOutboundSuggest.id = in.readLong();
+        mStayOutboundSuggest.name = in.readString();
+        mStayOutboundSuggest.city = in.readString();
+        mStayOutboundSuggest.country = in.readString();
+        mStayOutboundSuggest.countryCode = in.readString();
+        mStayOutboundSuggest.categoryKey = in.readString();
+        mStayOutboundSuggest.display = in.readString();
+        mStayOutboundSuggest.latitude = in.readDouble();
+        mStayOutboundSuggest.longitude = in.readDouble();
     }
 
     @Override
