@@ -12,9 +12,20 @@ import android.view.ViewGroup;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.dailyhotel.base.BasePagerFragmentPresenter;
+import com.daily.dailyhotel.entity.CampaignTag;
+import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
+import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
+import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
+import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
 import com.daily.dailyhotel.screen.home.search.SearchPresenter;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
+
+import java.util.ArrayList;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by sheldon
@@ -24,6 +35,9 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
     implements SearchStayFragmentInterface.OnEventListener
 {
     private SearchStayFragmentInterface.AnalyticsInterface mAnalytics;
+
+    RecentlyLocalImpl mRecentlyLocalImpl;
+    CampaignTagRemoteImpl mCampaignTagRemoteImpl;
 
     SearchPresenter.SearchModel mSearchModel;
 
@@ -50,6 +64,9 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
     public void constructorInitialize(BaseActivity activity)
     {
         setAnalytics(new SearchStayFragmentAnalyticsImpl());
+
+        mRecentlyLocalImpl = new RecentlyLocalImpl(activity);
+        mCampaignTagRemoteImpl = new CampaignTagRemoteImpl(activity);
 
         initViewModel(activity);
 
@@ -155,6 +172,39 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
             return;
         }
 
+        // 최근 검색결과
+        addCompositeDisposable(mRecentlyLocalImpl.getRecentlyTypeList().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<RecentlyDbPlace>>()
+        {
+            @Override
+            public void accept(ArrayList<RecentlyDbPlace> recentlyDbPlaces) throws Exception
+            {
+
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+
+            }
+        }));
+
+        // 국내스테이 인기검색 태그
+        addCompositeDisposable(mCampaignTagRemoteImpl.getCampaignTagList(Constants.ServiceType.HOTEL.name()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<CampaignTag>>()
+        {
+            @Override
+            public void accept(ArrayList<CampaignTag> campaignTags) throws Exception
+            {
+
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+
+            }
+        }));
     }
 
 

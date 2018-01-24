@@ -1071,10 +1071,15 @@
 
     <!-- New Search -->
     <string name="label_search_do_search">검색하기</string>
+    <string name="label_search_stay_title">국내 스테이를\n검색하시겠어요?</string>
+    <string name="label_search_stayoutbound_title">해외 스테이를\n검색하시겠어요?</string>
+    <string name="label_search_gourmet_title">고메를\n검색하시겠어요?</string>
+    <string name="label_search_recently_search_result">최근 검색결과</string>
 
     <string name="label_search_stay">국내 스테이</string>
     <string name="label_search_search_stay">국내 스테이 검색</string>
     <string name="label_search_stay_suggest_hint">국내 스테이명 또는 지역명 입력</string>
+    <string name="label_search_stay_popular_search_tag">국내스테이 인기검색 태그</string>
 
 
     <string name="label_search_stayoutbound">해외 스테이</string>
@@ -1085,7 +1090,6 @@
     <string name="label_search_gourmet">고메</string>
     <string name="label_search_search_gourmet">고메 검색</string>
     <string name="label_search_gourmet_suggest_hint">국내 레스토랑명 또는 지역명 입력</string>
-
 
 
 
