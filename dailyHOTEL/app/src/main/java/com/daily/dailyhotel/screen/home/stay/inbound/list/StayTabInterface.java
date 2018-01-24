@@ -19,7 +19,7 @@ public interface StayTabInterface
 
         void setToolbarRegionText(String text);
 
-        void setCategoryTabLayout(FragmentManager fragmentManager, List<Category> categoryList, Category selectedCategory);
+        void setCategoryTabLayout(List<Category> categoryList, Category selectedCategory);
 
         void setOptionFilterSelected(boolean selected);
 

@@ -769,7 +769,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             return;
         }
 
-        getViewInterface().setCategoryTabLayout(getSupportFragmentManager(), mStayViewModel.stayRegion.getValue().getArea().getCategoryList(), mStayViewModel.selectedCategory.getValue());
+        getViewInterface().setCategoryTabLayout(mStayViewModel.stayRegion.getValue().getArea().getCategoryList(), mStayViewModel.selectedCategory.getValue());
     }
 
     StayRegion searchRegion(List<StayAreaGroup> areaGroupList, Pair<String, String> namePair)
