@@ -190,7 +190,7 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
             return;
         }
 
-        addCompositeDisposable(mSuggestLocalImpl.getRecentlySuggestList() //
+        addCompositeDisposable(mSuggestLocalImpl.getRecentlyStayOutboundSuggestList() //
             .observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<List<StayOutboundSuggest>, ObservableSource<List<StayOutboundSuggest>>>()
             {
                 @Override
@@ -320,7 +320,7 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
             return;
         }
 
-        addCompositeDisposable(mSuggestLocalImpl.getRecentlySuggestKeyword(stayOutboundSuggest.id) //
+        addCompositeDisposable(mSuggestLocalImpl.getRecentlyStayOutboundSuggestKeyword(stayOutboundSuggest.id) //
             .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<String>()
             {
                 @Override
@@ -367,7 +367,7 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
             return;
         }
 
-        addCompositeDisposable(mSuggestLocalImpl.getRecentlySuggestKeyword(stayOutboundSuggest.id) //
+        addCompositeDisposable(mSuggestLocalImpl.getRecentlyStayOutboundSuggestKeyword(stayOutboundSuggest.id) //
             .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<String>()
             {
                 @Override
@@ -422,7 +422,7 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
 
         getViewInterface().setRecentlySuggests(null);
 
-        addCompositeDisposable(mSuggestLocalImpl.deleteAllRecentlySuggest() //
+        addCompositeDisposable(mSuggestLocalImpl.deleteAllRecentlyStayOutboundSuggest() //
             .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer()
             {
                 @Override

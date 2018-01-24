@@ -12,13 +12,13 @@ import io.reactivex.Observable;
 
 public interface SuggestLocalInterface
 {
-    Observable addSuggestDb(StayOutboundSuggest stayOutboundSuggest, String keyword);
+    Observable addStayOutboundSuggestDb(StayOutboundSuggest stayOutboundSuggest, String keyword);
 
-    Observable<StayOutboundSuggest> getRecentlySuggest();
+    Observable<StayOutboundSuggest> getRecentlyStayOutboundSuggest();
 
-    Observable<List<StayOutboundSuggest>> getRecentlySuggestList();
+    Observable<List<StayOutboundSuggest>> getRecentlyStayOutboundSuggestList();
 
-    Observable<String> getRecentlySuggestKeyword(final long id);
+    Observable<String> getRecentlyStayOutboundSuggestKeyword(final long id);
 
-    Observable deleteAllRecentlySuggest();
+    Observable deleteAllRecentlyStayOutboundSuggest();
 }

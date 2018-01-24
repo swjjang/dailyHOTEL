@@ -33,7 +33,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
     }
 
     @Override
-    public Observable addSuggestDb(StayOutboundSuggest stayOutboundSuggest, String keyword)
+    public Observable addStayOutboundSuggestDb(StayOutboundSuggest stayOutboundSuggest, String keyword)
     {
         return Observable.defer(new Callable<ObservableSource<Boolean>>()
         {
@@ -60,7 +60,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
     }
 
     @Override
-    public Observable<StayOutboundSuggest> getRecentlySuggest()
+    public Observable<StayOutboundSuggest> getRecentlyStayOutboundSuggest()
     {
         return Observable.defer(new Callable<ObservableSource<StayOutboundSuggest>>()
         {
@@ -119,7 +119,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
     }
 
     @Override
-    public Observable<List<StayOutboundSuggest>> getRecentlySuggestList()
+    public Observable<List<StayOutboundSuggest>> getRecentlyStayOutboundSuggestList()
     {
         return Observable.defer(new Callable<ObservableSource<List<StayOutboundSuggest>>>()
         {
@@ -193,7 +193,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
     }
 
     @Override
-    public Observable<String> getRecentlySuggestKeyword(final long id)
+    public Observable<String> getRecentlyStayOutboundSuggestKeyword(final long id)
     {
         return Observable.defer(new Callable<ObservableSource<String>>()
         {
@@ -230,7 +230,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
     }
 
     @Override
-    public Observable deleteAllRecentlySuggest()
+    public Observable deleteAllRecentlyStayOutboundSuggest()
     {
         return Observable.defer(new Callable<ObservableSource<Boolean>>()
         {

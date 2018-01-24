@@ -109,7 +109,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         mSuggestLocalImpl = new SuggestLocalImpl(activity);
         mSuggestRemoteImpl = new SuggestRemoteImpl(activity);
 
-        addCompositeDisposable(mSuggestLocalImpl.getRecentlySuggest().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayOutboundSuggest>()
+        addCompositeDisposable(mSuggestLocalImpl.getRecentlyStayOutboundSuggest().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayOutboundSuggest>()
         {
             @Override
             public void accept(StayOutboundSuggest stayOutboundSuggest) throws Exception
@@ -652,7 +652,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
         mKeyword = keyword;
         mAnalyticsClickType = analyticsClickType;
 
-        return mSuggestLocalImpl.addSuggestDb(stayOutboundSuggest, keyword);
+        return mSuggestLocalImpl.addStayOutboundSuggestDb(stayOutboundSuggest, keyword);
     }
 
     private void setPeople(int numberOfAdults, ArrayList<Integer> childAgeList)
