@@ -39,7 +39,7 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
 
         initToolbar(viewDataBinding);
 
-        viewDataBinding.staySearchTextView.setOnClickListener(v -> getEventListener().onSearchStayClick(false));
+        viewDataBinding.staySearchTextView.setOnClickListener(v -> getEventListener().onStayClick());
         viewDataBinding.staySuggestTextView.setOnClickListener(v -> getEventListener().onStaySuggestClick());
         viewDataBinding.stayCalendarTextView.setOnClickListener(v -> getEventListener().onStayCalendarClick());
         viewDataBinding.searchStayTextView.setOnClickListener(v -> getEventListener().onStayDoSearchClick());

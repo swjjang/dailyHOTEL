@@ -364,49 +364,36 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
     }
 
     @Override
-    public void onSearchStayClick(boolean force)
+    public void onStayClick()
     {
-        if(mSearchModel == null || mSearchModel.serviceType.getValue() == Constants.ServiceType.HOTEL || lock() == true)
+        if (mSearchModel == null || mSearchModel.serviceType.getValue() == Constants.ServiceType.HOTEL || lock() == true)
         {
             return;
         }
 
         mSearchModel.serviceType.setValue(Constants.ServiceType.HOTEL);
-
-
-        getViewInterface().setSearchStaySuggestText(mSearchModel.staySuggest.getValue());
-
-        getViewInterface().setSearchStayCalendarText(String.format(Locale.KOREA, "%s - %s, %d박"//
-            , mSearchModel.stayBookDateTime.getValue().getCheckInDateTime("yyyy.MM.dd(EEE)")//
-            , mSearchModel.stayBookDateTime.getValue().getCheckOutDateTime("yyyy.MM.dd(EEE)")//
-            , mSearchModel.stayBookDateTime.getValue().getNights()));
-
-        getViewInterface().showSearchStay();
-
-        getViewInterface().setSearchStayButtonEnabled(DailyTextUtils.isTextEmpty(mSearchModel.staySuggest.getValue()) == false);
     }
 
     @Override
     public void onStayOutboundClick()
     {
-        getViewInterface().setSearchStayOutboundSuggestText(null);
+        if (mSearchModel == null || mSearchModel.serviceType.getValue() == Constants.ServiceType.OB_STAY || lock() == true)
+        {
+            return;
+        }
 
-        getViewInterface().setSearchStayOutboundCalendarText(String.format(Locale.KOREA, "%s - %s, %d박"//
-            , mSearchModel.stayOutboundBookDateTime.getValue().getCheckInDateTime("yyyy.MM.dd(EEE)")//
-            , mSearchModel.stayOutboundBookDateTime.getValue().getCheckOutDateTime("yyyy.MM.dd(EEE)")//
-            , mSearchModel.stayOutboundBookDateTime.getValue().getNights()));
-
-        getViewInterface().showSearchStayOutbound();
+        mSearchModel.serviceType.setValue(Constants.ServiceType.OB_STAY);
     }
 
     @Override
     public void onGourmetClick()
     {
-        getViewInterface().setSearchGourmetSuggestText(null);
+        if (mSearchModel == null || mSearchModel.serviceType.getValue() == Constants.ServiceType.GOURMET || lock() == true)
+        {
+            return;
+        }
 
-        getViewInterface().setSearchGourmetCalendarText(mSearchModel.gourmetBookDateTime.getValue().getVisitDateTime("yyyy.MM.dd(EEE)"));
-
-        getViewInterface().showSearchGourmet();
+        mSearchModel.serviceType.setValue(Constants.ServiceType.GOURMET);
     }
 
     @Override
@@ -667,17 +654,19 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                         switch (serviceType)
                         {
                             case HOTEL:
-                                onSearchStayClick(true);
+                                showSearchStay();
                                 break;
 
                             case GOURMET:
-                                onGourmetClick();
+                                showSearchGourmet();
                                 break;
 
                             case OB_STAY:
-                                onStayOutboundClick();
+                                showSearchStayOutbound();
                                 break;
                         }
+
+                        unLockAll();
                     }
                 }));
             }
@@ -727,5 +716,40 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         mSearchModel.stayOutboundPeople.getValue().numberOfAdults = numberOfAdults;
         mSearchModel.stayOutboundPeople.getValue().setChildAgeList(childAgeList);
         mSearchModel.stayOutboundPeople.setValue(mSearchModel.stayOutboundPeople.getValue());
+    }
+
+    private void showSearchStay()
+    {
+        getViewInterface().setSearchStaySuggestText(mSearchModel.staySuggest.getValue());
+
+        getViewInterface().setSearchStayCalendarText(String.format(Locale.KOREA, "%s - %s, %d박"//
+            , mSearchModel.stayBookDateTime.getValue().getCheckInDateTime("yyyy.MM.dd(EEE)")//
+            , mSearchModel.stayBookDateTime.getValue().getCheckOutDateTime("yyyy.MM.dd(EEE)")//
+            , mSearchModel.stayBookDateTime.getValue().getNights()));
+
+        getViewInterface().showSearchStay();
+
+        getViewInterface().setSearchStayButtonEnabled(DailyTextUtils.isTextEmpty(mSearchModel.staySuggest.getValue()) == false);
+    }
+
+    private void showSearchStayOutbound()
+    {
+        getViewInterface().setSearchStayOutboundSuggestText(mSearchModel.stayOutboundSuggest.getValue() == null ? null : mSearchModel.stayOutboundSuggest.getValue().display);
+
+        getViewInterface().setSearchStayOutboundCalendarText(String.format(Locale.KOREA, "%s - %s, %d박"//
+            , mSearchModel.stayOutboundBookDateTime.getValue().getCheckInDateTime("yyyy.MM.dd(EEE)")//
+            , mSearchModel.stayOutboundBookDateTime.getValue().getCheckOutDateTime("yyyy.MM.dd(EEE)")//
+            , mSearchModel.stayOutboundBookDateTime.getValue().getNights()));
+
+        getViewInterface().showSearchStayOutbound();
+    }
+
+    private void showSearchGourmet()
+    {
+        getViewInterface().setSearchGourmetSuggestText(mSearchModel.gourmetSuggest.getValue());
+
+        getViewInterface().setSearchGourmetCalendarText(mSearchModel.gourmetBookDateTime.getValue().getVisitDateTime("yyyy.MM.dd(EEE)"));
+
+        getViewInterface().showSearchGourmet();
     }
 }

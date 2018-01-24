@@ -38,7 +38,7 @@ public interface SearchInterface
 
     interface OnEventListener extends OnBaseEventListener
     {
-        void onSearchStayClick(boolean force);
+        void onStayClick();
 
         void onStaySuggestClick();
 
