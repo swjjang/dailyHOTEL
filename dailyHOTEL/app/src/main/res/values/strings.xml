@@ -113,6 +113,7 @@
     <string name="label_include_tax">(세금/봉사료 포함)</string>
     <string name="label_download_coupon_price">%1$s 할인쿠폰 다운받기</string>
     <string name="label_event">EVENT</string>
+    <string name="label_delete">삭제</string>
 
     <string name="label_count_stay">%1$d개 스테이</string>
     <string name="label_count_gourmet">%1$d개 고메</string>
@@ -1055,6 +1056,9 @@
     <string name="label_search_no_address">주소지 없음</string>
     <string name="message_search_agree_termsoflocation">고객님 주변에 위치한 업체 검색을 위해\n위치 정보 이용에 동의해주세요.\n이용약관 상세보기</string>
     <string name="message_search_tooltip">혹시 해외호텔 찾으세요? 해외호텔 검색은 여기서!</string>
+
+    <string name="label_search_nearby_title">현재 위치 사용</string>
+    <string name="label_search_nearby_description">위치서비스 약관 동의 필요</string>
     //
     <string name="label_searchresult_resultcount">결과 %1$d건</string>
     <string name="label_searchresult_over_resultcount">결과 %1$d건 이상</string>

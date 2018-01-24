@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.Suggest;
 import com.twoheart.dailyhotel.R;
 
 /**
@@ -36,7 +37,7 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
     @Override
     public void constructorInitialize(SearchStaySuggestActivity activity)
     {
-        setContentView(R.layout.activity_copy_data);
+        setContentView(R.layout.activity_search_stay_suggest_data);
 
         setAnalytics(new SearchStaySuggestAnalyticsImpl());
 
@@ -146,6 +147,38 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
     public void onBackClick()
     {
         getActivity().onBackPressed();
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    @Override
+    public void onSearchSuggest(String keyword)
+    {
+
+    }
+
+    @Override
+    public void onSuggestClick(Suggest suggest)
+    {
+
+    }
+
+    @Override
+    public void onRecentlySuggestClick(Suggest suggest)
+    {
+
+    }
+
+    @Override
+    public void onPopularSuggestClick(Suggest suggest)
+    {
+
+    }
+
+    @Override
+    public void onDeleteAllRecentlySuggest()
+    {
+
     }
 
 }
