@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
@@ -55,19 +56,23 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
     SearchModel mSearchModel;
 
-    class SearchModel extends ViewModel
+    public class SearchModel extends ViewModel
     {
-        MutableLiveData<CommonDateTime> commonDateTime = new MutableLiveData<>();
+        public MutableLiveData<CommonDateTime> commonDateTime = new MutableLiveData<>();
+        public MutableLiveData<Constants.ServiceType> serviceType = new MutableLiveData<>();
 
-        MutableLiveData<StayBookDateTime> stayBookDateTime = new MutableLiveData<>();
-        MutableLiveData<StayBookDateTime> stayOutboundBookDateTime = new MutableLiveData<>();
-        MutableLiveData<GourmetBookDateTime> gourmetBookDateTime = new MutableLiveData<>();
+        // Stay
+        public MutableLiveData<StayBookDateTime> stayBookDateTime = new MutableLiveData<>();
+        public MutableLiveData<String> staySuggest = new MutableLiveData<>();
 
-        MutableLiveData<String> staySuggest = new MutableLiveData<>();
-        MutableLiveData<Suggest> stayOutboundSuggest = new MutableLiveData<>();
-        MutableLiveData<String> gourmetSuggest = new MutableLiveData<>();
+        // Stayoutbound
+        public MutableLiveData<StayBookDateTime> stayOutboundBookDateTime = new MutableLiveData<>();
+        public MutableLiveData<Suggest> stayOutboundSuggest = new MutableLiveData<>();
+        public MutableLiveData<People> stayOutboundPeople = new MutableLiveData<>();
 
-        MutableLiveData<People> stayOutboundPeople = new MutableLiveData<>();
+        // Gourmet
+        public MutableLiveData<GourmetBookDateTime> gourmetBookDateTime = new MutableLiveData<>();
+        public MutableLiveData<String> gourmetSuggest = new MutableLiveData<>();
     }
 
     class SearchViewModelFactory implements ViewModelProvider.Factory
@@ -106,40 +111,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
         setAnalytics(new SearchAnalyticsImpl());
 
-        mSearchModel = ViewModelProviders.of(activity, new SearchViewModelFactory()).get(SearchModel.class);
-
-        mSearchModel.staySuggest.observe(activity, new Observer<String>()
-        {
-            @Override
-            public void onChanged(@Nullable String suggest)
-            {
-                getViewInterface().setSearchStaySuggestText(suggest);
-
-                getViewInterface().setSearchStayButtonEnabled(DailyTextUtils.isTextEmpty(suggest) == false);
-            }
-        });
-
-        mSearchModel.stayOutboundPeople.observe(activity, new Observer<People>()
-        {
-            @Override
-            public void onChanged(@Nullable People people)
-            {
-                getViewInterface().setSearchStayOutboundPeopleText(people.toString(getActivity()));
-            }
-        });
-
-        mSearchModel.stayOutboundSuggest.observe(activity, new Observer<Suggest>()
-        {
-            @Override
-            public void onChanged(@Nullable Suggest suggest)
-            {
-                getViewInterface().setSearchStayOutboundSuggestText(suggest.display);
-
-                getViewInterface().setSearchStayOutboundButtonEnabled(suggest != null);
-            }
-        });
-
-        mSearchModel.stayOutboundPeople.setValue(new People(People.DEFAULT_ADULTS, null));
+        initViewModel(activity);
 
         setRefresh(false);
     }
@@ -181,27 +153,13 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
             Constants.ServiceType serviceType = Constants.ServiceType.valueOf(intent.getStringExtra(SearchActivity.INTENT_EXTRA_DATA_SERVICE_TYPE));
 
-            addCompositeDisposable(io.reactivex.Observable.just(serviceType).subscribeOn(AndroidSchedulers.mainThread()).delaySubscription(200, TimeUnit.MILLISECONDS).subscribe(new Consumer<Constants.ServiceType>()
+            if (serviceType != null)
             {
-                @Override
-                public void accept(Constants.ServiceType serviceType) throws Exception
-                {
-                    switch (serviceType)
-                    {
-                        case HOTEL:
-                            onStaySearchClick(true);
-                            break;
-
-                        case GOURMET:
-                            onGourmetSearchClick();
-                            break;
-
-                        case OB_STAY:
-                            onStayOutboundSearchClick();
-                            break;
-                    }
-                }
-            }));
+                mSearchModel.serviceType.setValue(serviceType);
+            } else
+            {
+                mSearchModel.serviceType.setValue(Constants.ServiceType.HOTEL);
+            }
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -406,8 +364,16 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
     }
 
     @Override
-    public void onStaySearchClick(boolean force)
+    public void onSearchStayClick(boolean force)
     {
+        if(mSearchModel == null || mSearchModel.serviceType.getValue() == Constants.ServiceType.HOTEL || lock() == true)
+        {
+            return;
+        }
+
+        mSearchModel.serviceType.setValue(Constants.ServiceType.HOTEL);
+
+
         getViewInterface().setSearchStaySuggestText(mSearchModel.staySuggest.getValue());
 
         getViewInterface().setSearchStayCalendarText(String.format(Locale.KOREA, "%s - %s, %d박"//
@@ -415,13 +381,13 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             , mSearchModel.stayBookDateTime.getValue().getCheckOutDateTime("yyyy.MM.dd(EEE)")//
             , mSearchModel.stayBookDateTime.getValue().getNights()));
 
-        getViewInterface().showSearchStay(force);
+        getViewInterface().showSearchStay();
 
         getViewInterface().setSearchStayButtonEnabled(DailyTextUtils.isTextEmpty(mSearchModel.staySuggest.getValue()) == false);
     }
 
     @Override
-    public void onStayOutboundSearchClick()
+    public void onStayOutboundClick()
     {
         getViewInterface().setSearchStayOutboundSuggestText(null);
 
@@ -434,7 +400,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
     }
 
     @Override
-    public void onGourmetSearchClick()
+    public void onGourmetClick()
     {
         getViewInterface().setSearchGourmetSuggestText(null);
 
@@ -677,6 +643,78 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
     public void onGourmetDoSearchClick()
     {
 
+    }
+
+    private void initViewModel(BaseActivity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        mSearchModel = ViewModelProviders.of(activity, new SearchViewModelFactory()).get(SearchModel.class);
+
+        mSearchModel.serviceType.observe(activity, new Observer<Constants.ServiceType>()
+        {
+            @Override
+            public void onChanged(@Nullable Constants.ServiceType serviceType)
+            {
+                addCompositeDisposable(io.reactivex.Observable.just(serviceType).subscribeOn(AndroidSchedulers.mainThread()).delaySubscription(200, TimeUnit.MILLISECONDS).subscribe(new Consumer<Constants.ServiceType>()
+                {
+                    @Override
+                    public void accept(Constants.ServiceType serviceType) throws Exception
+                    {
+                        switch (serviceType)
+                        {
+                            case HOTEL:
+                                onSearchStayClick(true);
+                                break;
+
+                            case GOURMET:
+                                onGourmetClick();
+                                break;
+
+                            case OB_STAY:
+                                onStayOutboundClick();
+                                break;
+                        }
+                    }
+                }));
+            }
+        });
+
+        mSearchModel.staySuggest.observe(activity, new Observer<String>()
+        {
+            @Override
+            public void onChanged(@Nullable String suggest)
+            {
+                getViewInterface().setSearchStaySuggestText(suggest);
+
+                getViewInterface().setSearchStayButtonEnabled(DailyTextUtils.isTextEmpty(suggest) == false);
+            }
+        });
+
+        mSearchModel.stayOutboundPeople.observe(activity, new Observer<People>()
+        {
+            @Override
+            public void onChanged(@Nullable People people)
+            {
+                getViewInterface().setSearchStayOutboundPeopleText(people.toString(getActivity()));
+            }
+        });
+
+        mSearchModel.stayOutboundSuggest.observe(activity, new Observer<Suggest>()
+        {
+            @Override
+            public void onChanged(@Nullable Suggest suggest)
+            {
+                getViewInterface().setSearchStayOutboundSuggestText(suggest.display);
+
+                getViewInterface().setSearchStayOutboundButtonEnabled(suggest != null);
+            }
+        });
+
+        mSearchModel.stayOutboundPeople.setValue(new People(People.DEFAULT_ADULTS, null));
     }
 
     private void setPeople(int numberOfAdults, ArrayList<Integer> childAgeList)

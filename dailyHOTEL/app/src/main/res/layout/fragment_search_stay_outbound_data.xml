@@ -1,0 +1,380 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@color/default_background"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/default_line_cf0f0f0"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="17dp"
+                android:text="최근 검색 내용"
+                android:textColor="@color/default_text_cc5c5c5"
+                android:textSize="14dp"/>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/recently01Layout"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_marginLeft="21dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="12dp">
+
+                <ImageView
+                    android:id="@+id/recentlyIcon01ImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/search_ic_01_search"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/recentlyStayName01TextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="23dp"
+                    android:text="다낭"
+                    android:textColor="@color/default_text_c323232"
+                    android:textSize="13dp"
+                    app:layout_constraintBottom_toTopOf="@+id/recentlyStayDate01TextView"
+                    app:layout_constraintLeft_toRightOf="@+id/recentlyIcon01ImageView"
+                    app:layout_constraintRight_toLeftOf="@+id/recentlyClose01ImageView"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/recentlyStayDate01TextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="23dp"
+                    android:layout_marginTop="2dp"
+                    android:text="2017.12.31(목) - 2018.01.02(토), 2박"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="12dp"
+                    app:layout_constraintBottom_toTopOf="@+id/recentlyStayPeople01TextView"
+                    app:layout_constraintLeft_toRightOf="@+id/recentlyIcon01ImageView"
+                    app:layout_constraintRight_toLeftOf="@+id/recentlyClose01ImageView"
+                    app:layout_constraintTop_toBottomOf="@+id/recentlyStayName01TextView"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/recentlyStayPeople01TextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="23dp"
+                    android:layout_marginTop="2dp"
+                    android:text="성인2, 아동 1"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="12dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/recentlyIcon01ImageView"
+                    app:layout_constraintRight_toLeftOf="@+id/recentlyClose01ImageView"
+                    app:layout_constraintTop_toBottomOf="@+id/recentlyStayDate01TextView"/>
+
+                <ImageView
+                    android:id="@+id/recentlyClose01ImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:paddingLeft="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/search_ic_01_delete"/>
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/recently02Layout"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_marginLeft="21dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="12dp">
+
+                <ImageView
+                    android:id="@+id/recentlyIcon02ImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/search_ic_01_search"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/recentlyStayName02TextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="23dp"
+                    android:text="리츠 칼튼 홍콩"
+                    android:textColor="@color/default_text_c323232"
+                    android:textSize="13dp"
+                    app:layout_constraintBottom_toTopOf="@+id/recentlyStayDate02TextView"
+                    app:layout_constraintLeft_toRightOf="@+id/recentlyIcon02ImageView"
+                    app:layout_constraintRight_toLeftOf="@+id/recentlyClose02ImageView"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/recentlyStayDate02TextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="23dp"
+                    android:layout_marginTop="2dp"
+                    android:text="2017.12.28(화) - 2018.12.29(수), 1박"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="12dp"
+                    app:layout_constraintBottom_toTopOf="@+id/recentlyStayPeople02TextView"
+                    app:layout_constraintLeft_toRightOf="@+id/recentlyIcon02ImageView"
+                    app:layout_constraintRight_toLeftOf="@+id/recentlyClose02ImageView"
+                    app:layout_constraintTop_toBottomOf="@+id/recentlyStayName02TextView"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/recentlyStayPeople02TextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="23dp"
+                    android:layout_marginTop="2dp"
+                    android:text="성인2, 아동 0"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="12dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/recentlyIcon02ImageView"
+                    app:layout_constraintRight_toLeftOf="@+id/recentlyClose02ImageView"
+                    app:layout_constraintTop_toBottomOf="@+id/recentlyStayDate02TextView"/>
+
+                <ImageView
+                    android:id="@+id/recentlyClose02ImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:paddingLeft="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/search_ic_01_delete"/>
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/recently03Layout"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_marginLeft="21dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="12dp">
+
+                <ImageView
+                    android:id="@+id/recentlyIcon03ImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/search_ic_01_search"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/recentlyStayName03TextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="23dp"
+                    android:text="홍콩"
+                    android:textColor="@color/default_text_c323232"
+                    android:textSize="13dp"
+                    app:layout_constraintBottom_toTopOf="@+id/recentlyStayDate03TextView"
+                    app:layout_constraintLeft_toRightOf="@+id/recentlyIcon03ImageView"
+                    app:layout_constraintRight_toLeftOf="@+id/recentlyClose03ImageView"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/recentlyStayDate03TextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="23dp"
+                    android:layout_marginTop="2dp"
+                    android:text="2017.12.31(목) - 2018.01.02(토), 2박"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="12dp"
+                    app:layout_constraintBottom_toTopOf="@+id/recentlyStayPeople03TextView"
+                    app:layout_constraintLeft_toRightOf="@+id/recentlyIcon03ImageView"
+                    app:layout_constraintRight_toLeftOf="@+id/recentlyClose03ImageView"
+                    app:layout_constraintTop_toBottomOf="@+id/recentlyStayName03TextView"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/recentlyStayPeople03TextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="23dp"
+                    android:layout_marginTop="2dp"
+                    android:text="성인2, 아동 0"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="12dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/recentlyIcon03ImageView"
+                    app:layout_constraintRight_toLeftOf="@+id/recentlyClose03ImageView"
+                    app:layout_constraintTop_toBottomOf="@+id/recentlyStayDate03TextView"/>
+
+                <ImageView
+                    android:id="@+id/recentlyClose03ImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:paddingLeft="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/search_ic_01_delete"/>
+            </android.support.constraint.ConstraintLayout>
+
+            <com.daily.base.widget.DailyTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="17dp"
+                android:text="해외 인기 지역"
+                android:textColor="@color/default_text_cc5c5c5"
+                android:textSize="14dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                android:paddingBottom="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:orientation="horizontal">
+
+                    <com.daily.base.widget.DailyTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:text="1."
+                        android:textColor="@color/dh_theme_color"
+                        android:textSize="13dp"/>
+
+                    <com.daily.base.widget.DailyTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="24dp"
+                        android:gravity="center_vertical"
+                        android:text="오사카(및 인근 지역), 일본"
+                        android:textColor="@color/default_text_c323232"
+                        android:textSize="13dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:orientation="horizontal">
+
+                    <com.daily.base.widget.DailyTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:text="2."
+                        android:textColor="@color/dh_theme_color"
+                        android:textSize="13dp"/>
+
+                    <com.daily.base.widget.DailyTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="24dp"
+                        android:gravity="center_vertical"
+                        android:text="남바, 오사카, 일본"
+                        android:textColor="@color/default_text_c323232"
+                        android:textSize="13dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:orientation="horizontal">
+
+                    <com.daily.base.widget.DailyTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:text="3."
+                        android:textColor="@color/dh_theme_color"
+                        android:textSize="13dp"/>
+
+                    <com.daily.base.widget.DailyTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="24dp"
+                        android:gravity="center_vertical"
+                        android:text="홍콩, 홍콩"
+                        android:textColor="@color/default_text_c323232"
+                        android:textSize="13dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:orientation="horizontal">
+
+                    <com.daily.base.widget.DailyTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:text="4."
+                        android:textColor="@color/default_text_c323232"
+                        android:textSize="13dp"/>
+
+                    <com.daily.base.widget.DailyTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="24dp"
+                        android:gravity="center_vertical"
+                        android:text="후쿠오카(및 인근 지역), 일본"
+                        android:textColor="@color/default_text_c323232"
+                        android:textSize="13dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:orientation="horizontal">
+
+                    <com.daily.base.widget.DailyTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:text="5."
+                        android:textColor="@color/default_text_c323232"
+                        android:textSize="13dp"/>
+
+                    <com.daily.base.widget.DailyTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="24dp"
+                        android:gravity="center_vertical"
+                        android:text="오키나와, 일본"
+                        android:textColor="@color/default_text_c323232"
+                        android:textSize="13dp"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+</layout>

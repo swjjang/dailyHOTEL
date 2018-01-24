@@ -1070,6 +1070,8 @@
     <string name="label_googlemap">구글 지도</string>
 
     <!-- New Search -->
+    <string name="label_search_do_search">검색하기</string>
+
     <string name="label_search_stay">국내 스테이</string>
     <string name="label_search_search_stay">국내 스테이 검색</string>
     <string name="label_search_stay_suggest_hint">국내 스테이명 또는 지역명 입력</string>

@@ -85,7 +85,7 @@ public class StayTabView extends BaseDialogView<StayTabInterface.OnEventListener
     }
 
     @Override
-    public void setCategoryTabLayout(FragmentManager fragmentManager, List<Category> categoryList, Category selectedCategory)
+    public void setCategoryTabLayout(List<Category> categoryList, Category selectedCategory)
     {
         if (getViewDataBinding() == null)
         {
@@ -136,7 +136,7 @@ public class StayTabView extends BaseDialogView<StayTabInterface.OnEventListener
             }
         }
 
-        mFragmentPagerAdapter = createFragmentPagerAdapter(fragmentManager, categoryList);
+        mFragmentPagerAdapter = createFragmentPagerAdapter(getSupportFragmentManager(), categoryList);
 
         getViewDataBinding().viewPager.removeAllViews();
         getViewDataBinding().viewPager.setOffscreenPageLimit(size);

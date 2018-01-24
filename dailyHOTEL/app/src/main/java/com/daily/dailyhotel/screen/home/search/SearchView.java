@@ -5,17 +5,24 @@ import android.view.View;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
+import com.daily.base.BaseFragment;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.screen.home.search.gourmet.SearchGourmetFragment;
+import com.daily.dailyhotel.screen.home.search.stay.inbound.SearchStayFragment;
+import com.daily.dailyhotel.screen.home.search.stay.outbound.SearchStayOutboundFragment;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivitySearchDataBinding;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, ActivitySearchDataBinding> implements SearchInterface.ViewInterface
 {
     SearchFragmentPagerAdapter mSearchFragmentPagerAdapter;
 
-    //    SearchStayFragment mSearchStayFragment;
-    //    SearchGourmetFragment mSearchGourmetFragment;
-    //    SearchStayOutboundFragment SearchStayOutboundFragment;
+    SearchStayFragment mSearchStayFragment;
+    SearchGourmetFragment mSearchGourmetFragment;
+    SearchStayOutboundFragment SearchStayOutboundFragment;
 
     public SearchView(BaseActivity baseActivity, SearchInterface.OnEventListener listener)
     {
@@ -32,18 +39,18 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
 
         initToolbar(viewDataBinding);
 
-        viewDataBinding.staySearchTextView.setOnClickListener(v -> getEventListener().onStaySearchClick(false));
+        viewDataBinding.staySearchTextView.setOnClickListener(v -> getEventListener().onSearchStayClick(false));
         viewDataBinding.staySuggestTextView.setOnClickListener(v -> getEventListener().onStaySuggestClick());
         viewDataBinding.stayCalendarTextView.setOnClickListener(v -> getEventListener().onStayCalendarClick());
         viewDataBinding.searchStayTextView.setOnClickListener(v -> getEventListener().onStayDoSearchClick());
 
-        viewDataBinding.stayOutboundSearchTextView.setOnClickListener(v -> getEventListener().onStayOutboundSearchClick());
+        viewDataBinding.stayOutboundSearchTextView.setOnClickListener(v -> getEventListener().onStayOutboundClick());
         viewDataBinding.stayOutboundSuggestTextView.setOnClickListener(v -> getEventListener().onStayOutboundSuggestClick());
         viewDataBinding.stayOutboundCalendarTextView.setOnClickListener(v -> getEventListener().onStayOutboundCalendarClick());
         viewDataBinding.peopleBackgroundView.setOnClickListener(v -> getEventListener().onStayOutboundPeopleClick());
         viewDataBinding.searchStayOutboundTextView.setOnClickListener(v -> getEventListener().onStayOutboundDoSearchClick());
 
-        viewDataBinding.gourmetSearchTextView.setOnClickListener(v -> getEventListener().onGourmetSearchClick());
+        viewDataBinding.gourmetSearchTextView.setOnClickListener(v -> getEventListener().onGourmetClick());
         viewDataBinding.gourmetSuggestTextView.setOnClickListener(v -> getEventListener().onGourmetSuggestClick());
         viewDataBinding.gourmetCalendarTextView.setOnClickListener(v -> getEventListener().onGourmetCalendarClick());
         viewDataBinding.searchGourmetTextView.setOnClickListener(v -> getEventListener().onGourmetDoSearchClick());
@@ -71,13 +78,13 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
 
                     int paddingValue = (int) (ScreenUtils.dpToPx(getContext(), 15) * backVector);
                     getViewDataBinding().categoryLayout.setPadding(paddingValue, 0, paddingValue, 0);
-                    ((AppBarLayout.LayoutParams)getViewDataBinding().stayLayout.getLayoutParams()).leftMargin = paddingValue;
-                    ((AppBarLayout.LayoutParams)getViewDataBinding().stayLayout.getLayoutParams()).rightMargin = paddingValue;
+                    ((AppBarLayout.LayoutParams) getViewDataBinding().stayLayout.getLayoutParams()).leftMargin = paddingValue;
+                    ((AppBarLayout.LayoutParams) getViewDataBinding().stayLayout.getLayoutParams()).rightMargin = paddingValue;
                     getViewDataBinding().stayLayout.requestLayout();
 
 
-//                    getViewDataBinding().toolbarView.setElevation(2 + ScreenUtils.dpToPx(getContext(), 18) * vector);
-//                    getViewDataBinding().appBarLayout.setElevation(ScreenUtils.dpToPx(getContext(), 10) * vector);
+                    //                    getViewDataBinding().toolbarView.setElevation(2 + ScreenUtils.dpToPx(getContext(), 18) * vector);
+                    //                    getViewDataBinding().appBarLayout.setElevation(ScreenUtils.dpToPx(getContext(), 10) * vector);
 
                 } else if (getViewDataBinding().toolbarView.getAlpha() != 0.0f)
                 {
@@ -86,12 +93,12 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
                     getViewDataBinding().gourmetSearchTextView.setAlpha(1.0f);
                     getViewDataBinding().categoryLayout.setPadding(ScreenUtils.dpToPx(getContext(), 15), 0, ScreenUtils.dpToPx(getContext(), 15), 0);
 
-                    ((AppBarLayout.LayoutParams)getViewDataBinding().stayLayout.getLayoutParams()).leftMargin = ScreenUtils.dpToPx(getContext(), 15);
-                    ((AppBarLayout.LayoutParams)getViewDataBinding().stayLayout.getLayoutParams()).rightMargin = ScreenUtils.dpToPx(getContext(), 15);
+                    ((AppBarLayout.LayoutParams) getViewDataBinding().stayLayout.getLayoutParams()).leftMargin = ScreenUtils.dpToPx(getContext(), 15);
+                    ((AppBarLayout.LayoutParams) getViewDataBinding().stayLayout.getLayoutParams()).rightMargin = ScreenUtils.dpToPx(getContext(), 15);
                     getViewDataBinding().stayLayout.requestLayout();
 
-//                    getViewDataBinding().toolbarView.setElevation(ScreenUtils.dpToPx(getContext(), 20));
-//                    getViewDataBinding().appBarLayout.setElevation(ScreenUtils.dpToPx(getContext(), 10));
+                    //                    getViewDataBinding().toolbarView.setElevation(ScreenUtils.dpToPx(getContext(), 20));
+                    //                    getViewDataBinding().appBarLayout.setElevation(ScreenUtils.dpToPx(getContext(), 10));
                 }
 
                 // getViewDataBinding().searchTitleTextView 의 상단 마진
@@ -99,7 +106,7 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
 
                 if (DP_20 + verticalOffset > 0)
                 {
-                    float vector = (float)-verticalOffset / DP_20;
+                    float vector = (float) -verticalOffset / DP_20;
                     getViewDataBinding().toolbarView.setAlpha(vector);
                 } else
                 {
@@ -111,19 +118,19 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
             }
         });
 
-        //        mSearchFragmentPagerAdapter = new SearchFragmentPagerAdapter(getFragmentManager());
-        //
-        //        List<BaseFragment> list = new ArrayList<>();
-        //
-        //        mSearchStayFragment = new SearchStayFragment();
-        //        SearchStayOutboundFragment = new SearchStayOutboundFragment();
-        //        mSearchGourmetFragment = new SearchGourmetFragment();
-        //
-        //        mSearchFragmentPagerAdapter.add(mSearchStayFragment);
-        //        mSearchFragmentPagerAdapter.add(SearchStayOutboundFragment);
-        //        mSearchFragmentPagerAdapter.add(mSearchGourmetFragment);
-        //
-        //        getViewDataBinding().viewPager.setAdapter(mSearchFragmentPagerAdapter);
+        mSearchFragmentPagerAdapter = new SearchFragmentPagerAdapter(getSupportFragmentManager());
+
+        List<BaseFragment> list = new ArrayList<>();
+
+        mSearchStayFragment = new SearchStayFragment();
+        SearchStayOutboundFragment = new SearchStayOutboundFragment();
+        mSearchGourmetFragment = new SearchGourmetFragment();
+
+        mSearchFragmentPagerAdapter.add(mSearchStayFragment);
+        mSearchFragmentPagerAdapter.add(SearchStayOutboundFragment);
+        mSearchFragmentPagerAdapter.add(mSearchGourmetFragment);
+
+        getViewDataBinding().viewPager.setAdapter(mSearchFragmentPagerAdapter);
     }
 
     @Override
@@ -148,9 +155,9 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
     }
 
     @Override
-    public void showSearchStay(boolean force)
+    public void showSearchStay()
     {
-        if (force == false && (getViewDataBinding() == null || getViewDataBinding().viewPager.getCurrentItem() == 0))
+        if (getViewDataBinding() == null)
         {
             return;
         }
@@ -204,7 +211,7 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
     @Override
     public void showSearchStayOutbound()
     {
-        if (getViewDataBinding() == null || getViewDataBinding().viewPager.getCurrentItem() == 1)
+        if (getViewDataBinding() == null)
         {
             return;
         }
@@ -269,7 +276,7 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
     @Override
     public void showSearchGourmet()
     {
-        if (getViewDataBinding() == null || getViewDataBinding().viewPager.getCurrentItem() == 2)
+        if (getViewDataBinding() == null)
         {
             return;
         }

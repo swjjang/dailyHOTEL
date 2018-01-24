@@ -8,7 +8,7 @@ public interface SearchInterface
 {
     interface ViewInterface extends BaseDialogViewInterface
     {
-        void showSearchStay(boolean force);
+        void showSearchStay();
 
         void setSearchStaySuggestText(String text);
 
@@ -38,7 +38,7 @@ public interface SearchInterface
 
     interface OnEventListener extends OnBaseEventListener
     {
-        void onStaySearchClick(boolean force);
+        void onSearchStayClick(boolean force);
 
         void onStaySuggestClick();
 
@@ -47,7 +47,7 @@ public interface SearchInterface
         void onStayDoSearchClick();
 
 
-        void onStayOutboundSearchClick();
+        void onStayOutboundClick();
 
         void onStayOutboundSuggestClick();
 
@@ -58,7 +58,7 @@ public interface SearchInterface
         void onStayOutboundDoSearchClick();
 
 
-        void onGourmetSearchClick();
+        void onGourmetClick();
 
         void onGourmetSuggestClick();
 
