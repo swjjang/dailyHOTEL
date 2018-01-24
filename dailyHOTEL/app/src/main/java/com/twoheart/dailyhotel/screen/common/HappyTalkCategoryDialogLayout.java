@@ -215,7 +215,7 @@ public class HappyTalkCategoryDialogLayout extends BaseLayout implements View.On
         }
     }
 
-    private class `CategoryArrayAdapter extends ArrayAdapter<Pair<String, String>>
+    private class CategoryArrayAdapter extends ArrayAdapter<Pair<String, String>>
     {
         private int mSelectedPosition;
 
