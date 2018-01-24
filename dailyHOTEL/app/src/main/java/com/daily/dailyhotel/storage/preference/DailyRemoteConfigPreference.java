@@ -148,6 +148,11 @@ public class DailyRemoteConfigPreference
     // Payment Card Event
     private static final String KEY_REMOTE_CONFIG_PAYMENT_CARD_EVENT = "431";
 
+    // Search
+    private static final String KEY_REMOTE_CONFIG_SEARCH_STAY_SUGGEST_HINT = "440";
+    private static final String KEY_REMOTE_CONFIG_SEARCH_STAYOUTBOUND_SUGGEST_HINT = "441";
+    private static final String KEY_REMOTE_CONFIG_SEARCH_GOURMET_SUGGEST_HINT = "442";
+
     // A/B Test
     private static final String KEY_REMOTE_CONFIG_STAY_RANK_TEST_NAME = "1000";
     private static final String KEY_REMOTE_CONFIG_STAY_RANK_TEST_TYPE = "1001";
@@ -1183,5 +1188,35 @@ public class DailyRemoteConfigPreference
     public String getKeyRemoteConfigPaymentCardEvent()
     {
         return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_PAYMENT_CARD_EVENT, null);
+    }
+
+    public void setKeyRemoteConfigSearchStaySuggestHint(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_SEARCH_STAY_SUGGEST_HINT, value);
+    }
+
+    public String getKeyRemoteConfigSearchStaySuggestHint()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_SEARCH_STAY_SUGGEST_HINT, null);
+    }
+
+    public void setKeyRemoteConfigSearchStayOutboundSuggestHint(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_SEARCH_STAYOUTBOUND_SUGGEST_HINT, value);
+    }
+
+    public String getKeyRemoteConfigSearchStayOutboundSuggestHint()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_SEARCH_STAYOUTBOUND_SUGGEST_HINT, null);
+    }
+
+    public void setKeyRemoteConfigSearchGourmetSuggestHint(String value)
+    {
+        setValue(mRemoteConfigEditor, KEY_REMOTE_CONFIG_SEARCH_GOURMET_SUGGEST_HINT, value);
+    }
+
+    public String getKeyRemoteConfigSearchGourmetSuggestHint()
+    {
+        return getValue(mRemoteConfigPreferences, KEY_REMOTE_CONFIG_SEARCH_GOURMET_SUGGEST_HINT, null);
     }
 }

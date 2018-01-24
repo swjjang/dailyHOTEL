@@ -114,6 +114,7 @@ public class DailyRemoteConfig
         String androidAppResearch = mFirebaseRemoteConfig.getString("androidAppResearch");
         String androidGourmetSearchKeyword = mFirebaseRemoteConfig.getString("androidGourmetSearchKeyword");
         String androidPaymentCardEvent = mFirebaseRemoteConfig.getString("androidPaymentCardEvent");
+        String androidSearch = mFirebaseRemoteConfig.getString("androidSearch");
 
         if (Constants.DEBUG == true)
         {
@@ -156,6 +157,7 @@ public class DailyRemoteConfig
                 ExLog.d("androidAppResearch : " + androidAppResearch);
                 ExLog.d("androidGourmetSearchKeyword : " + androidGourmetSearchKeyword);
                 ExLog.d("androidPaymentCardEvent : " + androidPaymentCardEvent);
+                ExLog.d("androidSearch : " + androidSearch);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -228,6 +230,9 @@ public class DailyRemoteConfig
 
         // 카드 이벤트 업체
         writePaymentCardEvent(mContext, androidPaymentCardEvent);
+
+        // 검색 Suggest 힌트
+        writeSearch(mContext, androidSearch);
 
         if (listener != null)
         {
@@ -802,6 +807,43 @@ public class DailyRemoteConfig
                 {
                     DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigPaymentCardEvent(jsonArray.toString());
                 }
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
+        }
+    }
+
+    private void writeSearch(Context context, String jsonString)
+    {
+        if (context == null)
+        {
+            return;
+        }
+
+        if (DailyTextUtils.isTextEmpty(jsonString) == true)
+        {
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigSearchStaySuggestHint(null);
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigSearchStayOutboundSuggestHint(null);
+            DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigSearchGourmetSuggestHint(null);
+        } else
+        {
+            try
+            {
+                JSONObject jsonObject = new JSONObject(jsonString);
+
+                if (Constants.DEBUG == true)
+                {
+                    ExLog.d("pinkred - " + jsonObject);
+                }
+
+                String stayHint = jsonObject.getJSONObject("stay").getJSONObject("suggest").getString("hint");
+                String stayOutboundHint = jsonObject.getJSONObject("stayOutbound").getJSONObject("suggest").getString("hint");
+                String gourmetHint = jsonObject.getJSONObject("gourmet").getJSONObject("suggest").getString("hint");
+
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigSearchStaySuggestHint(stayHint);
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigSearchStayOutboundSuggestHint(stayOutboundHint);
+                DailyRemoteConfigPreference.getInstance(context).setKeyRemoteConfigSearchGourmetSuggestHint(gourmetHint);
             } catch (Exception e)
             {
                 ExLog.e(e.toString());
