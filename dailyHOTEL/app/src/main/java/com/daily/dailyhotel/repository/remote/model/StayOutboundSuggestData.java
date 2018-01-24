@@ -5,7 +5,7 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 
 @JsonObject
-public class SuggestData
+public class StayOutboundSuggestData
 {
     @JsonField(name = "id")
     public long id;
@@ -37,7 +37,7 @@ public class SuggestData
     @JsonField(name = "lng")
     public double lng;
 
-    public SuggestData()
+    public StayOutboundSuggestData()
     {
 
     }

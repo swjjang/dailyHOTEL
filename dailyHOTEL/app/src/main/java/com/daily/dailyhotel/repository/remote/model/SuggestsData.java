@@ -15,19 +15,19 @@ import java.util.List;
 public class SuggestsData
 {
     @JsonField(name = "station")
-    public List<SuggestData> stationSuggestDataList;
+    public List<StayOutboundSuggestData> stationSuggestDataList;
 
     @JsonField(name = "hotel")
-    public List<SuggestData> hotelSuggestDataList;
+    public List<StayOutboundSuggestData> hotelSuggestDataList;
 
     @JsonField(name = "region")
-    public List<SuggestData> regionSuggestDataList;
+    public List<StayOutboundSuggestData> regionSuggestDataList;
 
     @JsonField(name = "point")
-    public List<SuggestData> pointSuggestDataList;
+    public List<StayOutboundSuggestData> pointSuggestDataList;
 
     @JsonField(name = "airport")
-    public List<SuggestData> airportSuggestDataList;
+    public List<StayOutboundSuggestData> airportSuggestDataList;
 
     public SuggestsData()
     {
@@ -94,17 +94,17 @@ public class SuggestsData
 
         int count = regionSuggestDataList.size();
 
-        for (SuggestData suggestData : regionSuggestDataList)
+        for (StayOutboundSuggestData stayOutboundSuggestData : regionSuggestDataList)
         {
-            regionStayOutboundSuggestList.add(suggestData.getSuggests());
+            regionStayOutboundSuggestList.add(stayOutboundSuggestData.getSuggests());
         }
 
         return regionStayOutboundSuggestList;
     }
 
-    private List<StayOutboundSuggest> getSuggestList(String title, List<SuggestData> suggestDataList, int maxCount)
+    private List<StayOutboundSuggest> getSuggestList(String title, List<StayOutboundSuggestData> stayOutboundSuggestDataList, int maxCount)
     {
-        if (suggestDataList == null || suggestDataList.size() == 0 || DailyTextUtils.isTextEmpty(title) == true)
+        if (stayOutboundSuggestDataList == null || stayOutboundSuggestDataList.size() == 0 || DailyTextUtils.isTextEmpty(title) == true)
         {
             return null;
         }
@@ -113,11 +113,11 @@ public class SuggestsData
 
         list.add(new StayOutboundSuggest(0, title));
 
-        int size = Math.min(suggestDataList.size(), maxCount);
+        int size = Math.min(stayOutboundSuggestDataList.size(), maxCount);
 
         for (int i = 0; i < size; i++)
         {
-            list.add(suggestDataList.get(i).getSuggests());
+            list.add(stayOutboundSuggestDataList.get(i).getSuggests());
         }
 
         return list;
