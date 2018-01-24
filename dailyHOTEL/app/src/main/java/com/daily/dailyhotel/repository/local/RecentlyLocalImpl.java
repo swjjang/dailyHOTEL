@@ -49,7 +49,7 @@ public class RecentlyLocalImpl implements RecentlyLocalInterface
     }
 
     @Override
-    public Observable addRecentlyItem(Constants.ServiceType serviceType, int index //
+    public Observable<Boolean> addRecentlyItem(Constants.ServiceType serviceType, int index //
         , String name, String englishName, String imageUrl, boolean isUpdateDate)
     {
         return Observable.defer(new Callable<ObservableSource<Boolean>>()
@@ -73,7 +73,7 @@ public class RecentlyLocalImpl implements RecentlyLocalInterface
     }
 
     @Override
-    public Observable deleteRecentlyItem(Constants.ServiceType serviceType, int index)
+    public Observable<Boolean> deleteRecentlyItem(Constants.ServiceType serviceType, int index)
     {
         return Observable.defer(new Callable<ObservableSource<Boolean>>()
         {

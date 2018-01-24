@@ -11,21 +11,22 @@ import android.view.ViewGroup;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BasePagerFragmentPresenter;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
-import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
 import com.daily.dailyhotel.screen.home.search.SearchPresenter;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
 
-import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 /**
  * Created by sheldon
@@ -134,6 +135,7 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
     @Override
     public void onSelected()
     {
+        onRefresh();
     }
 
     @Override
@@ -144,6 +146,8 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
     @Override
     public void onRefresh()
     {
+        setRefresh(true);
+        onRefresh(false);
     }
 
     @Override
@@ -172,20 +176,31 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
             return;
         }
 
+        setRefresh(false);
+
         // 최근 검색결과
-        addCompositeDisposable(mRecentlyLocalImpl.getRecentlyTypeList().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<RecentlyDbPlace>>()
+        addCompositeDisposable(mRecentlyLocalImpl.getRecentlyTypeList(Constants.ServiceType.HOTEL).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<RecentlyDbPlace>>()
         {
             @Override
             public void accept(ArrayList<RecentlyDbPlace> recentlyDbPlaces) throws Exception
             {
-
+                if (recentlyDbPlaces.size() == 0)
+                {
+                    getViewInterface().setRecentlySearchResultVisible(false);
+                } else
+                {
+                    getViewInterface().setRecentlySearchResultVisible(true);
+                    getViewInterface().setRecentlySearchResultList(recentlyDbPlaces);
+                }
             }
         }, new Consumer<Throwable>()
         {
             @Override
             public void accept(Throwable throwable) throws Exception
             {
+                getViewInterface().setRecentlySearchResultVisible(false);
 
+                ExLog.e(throwable.toString());
             }
         }));
 
@@ -195,18 +210,69 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
             @Override
             public void accept(ArrayList<CampaignTag> campaignTags) throws Exception
             {
-
+                if (campaignTags.size() == 0)
+                {
+                    getViewInterface().setPopularSearchTagVisible(false);
+                } else
+                {
+                    getViewInterface().setPopularSearchTagVisible(true);
+                    getViewInterface().setPopularSearchTagList(campaignTags);
+                }
             }
         }, new Consumer<Throwable>()
         {
             @Override
             public void accept(Throwable throwable) throws Exception
             {
+                getViewInterface().setPopularSearchTagVisible(false);
 
+                ExLog.e(throwable.toString());
             }
         }));
     }
 
+    @Override
+    public void onRecentlySearchResultDeleteClick(int index)
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        addCompositeDisposable(mRecentlyLocalImpl.deleteRecentlyItem(Constants.ServiceType.HOTEL, index).observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<Boolean, ObservableSource<ArrayList<RecentlyDbPlace>>>()
+        {
+            @Override
+            public ObservableSource<ArrayList<RecentlyDbPlace>> apply(Boolean aBoolean) throws Exception
+            {
+                return mRecentlyLocalImpl.getRecentlyTypeList(Constants.ServiceType.HOTEL);
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<RecentlyDbPlace>>()
+        {
+            @Override
+            public void accept(ArrayList<RecentlyDbPlace> recentlyDbPlaces) throws Exception
+            {
+                if (recentlyDbPlaces.size() == 0)
+                {
+                    getViewInterface().setRecentlySearchResultVisible(false);
+                } else
+                {
+                    getViewInterface().setRecentlySearchResultVisible(true);
+                    getViewInterface().setRecentlySearchResultList(recentlyDbPlaces);
+                }
+
+                unLockAll();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                getViewInterface().setRecentlySearchResultVisible(false);
+
+                unLockAll();
+            }
+        }));
+    }
 
     private void initViewModel(BaseActivity activity)
     {

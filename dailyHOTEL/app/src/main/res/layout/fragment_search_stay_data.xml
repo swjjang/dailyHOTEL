@@ -1,5 +1,4 @@
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    >
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
@@ -54,14 +53,12 @@
                 android:textColor="@color/default_text_cc5c5c5"
                 android:textSize="14dp"/>
 
-            <GridView
-                android:id="@+id/stayTagGridView"
+            <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/stayTagFlexboxLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:numColumns="auto_fit"
-                android:verticalSpacing="10dp"
-                android:horizontalSpacing="10dp"
-                android:stretchMode="none"/>
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"/>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </layout>

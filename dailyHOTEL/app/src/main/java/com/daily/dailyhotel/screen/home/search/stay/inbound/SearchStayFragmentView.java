@@ -1,23 +1,23 @@
 package com.daily.dailyhotel.screen.home.search.stay.inbound;
 
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 
 import com.daily.base.BaseFragmentDialogView;
 import com.daily.base.util.ScreenUtils;
 import com.daily.base.widget.DailyTextView;
+import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.view.DailySearchRecentlyCardView;
+import com.google.android.flexbox.FlexDirection;
+import com.google.android.flexbox.FlexWrap;
+import com.google.android.flexbox.FlexboxLayout;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.FragmentSearchStayDataBinding;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,8 +27,6 @@ import java.util.List;
 public class SearchStayFragmentView extends BaseFragmentDialogView<SearchStayFragmentInterface.OnEventListener, FragmentSearchStayDataBinding>//
     implements SearchStayFragmentInterface.ViewInterface
 {
-    TagAdapter mTagAdapter;
-
     public SearchStayFragmentView(SearchStayFragmentInterface.OnEventListener listener)
     {
         super(listener);
@@ -37,7 +35,40 @@ public class SearchStayFragmentView extends BaseFragmentDialogView<SearchStayFra
     @Override
     protected void setContentView(FragmentSearchStayDataBinding viewDataBinding)
     {
+        setRecentlySearchResultVisible(false);
+        setPopularSearchTagVisible(false);
 
+        getViewDataBinding().stayTagFlexboxLayout.setFlexDirection(FlexDirection.ROW);
+        getViewDataBinding().stayTagFlexboxLayout.setFlexWrap(FlexWrap.WRAP);
+
+        getViewDataBinding().recently01View.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+
+            }
+        });
+
+
+        getViewDataBinding().recently02View.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+
+            }
+        });
+
+
+        getViewDataBinding().recently03View.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+
+            }
+        });
     }
 
     @Override
@@ -55,7 +86,7 @@ public class SearchStayFragmentView extends BaseFragmentDialogView<SearchStayFra
         // 총 3개의 목록만 보여준다
         for (int i = 0; i < MAX_COUNT; i++)
         {
-            if (recentlyList != null && recentlyList.size() > 0)
+            if (recentlyList != null && recentlyList.size() > i)
             {
                 recentlyCardView[i].setVisibility(View.VISIBLE);
 
@@ -64,7 +95,7 @@ public class SearchStayFragmentView extends BaseFragmentDialogView<SearchStayFra
                 recentlyCardView[i].setIcon(R.drawable.search_ic_01_search);
                 recentlyCardView[i].setNameText(recentlyDbPlace.name);
                 recentlyCardView[i].setDateText(null);
-                recentlyCardView[i].setOnDeleteClickListener(v -> getEventListener().onRecentlySearchResultDeleteClickListener(recentlyDbPlace.index));
+                recentlyCardView[i].setOnDeleteClickListener(v -> getEventListener().onRecentlySearchResultDeleteClick(recentlyDbPlace.index));
             } else
             {
                 recentlyCardView[i].setVisibility(View.GONE);
@@ -73,22 +104,19 @@ public class SearchStayFragmentView extends BaseFragmentDialogView<SearchStayFra
     }
 
     @Override
-    public void setPopularSearchTagList(List<String> tagList)
+    public void setPopularSearchTagList(List<CampaignTag> tagList)
     {
         if (getViewDataBinding() == null || tagList == null || tagList.size() == 0)
         {
             return;
         }
 
-        if (mTagAdapter == null)
+        getViewDataBinding().stayTagFlexboxLayout.removeAllViews();
+
+        for (CampaignTag campaignTag : tagList)
         {
-            mTagAdapter = new TagAdapter(getContext(), 0);
-
-            getViewDataBinding().stayTagGridView.setAdapter(mTagAdapter);
+            getViewDataBinding().stayTagFlexboxLayout.addView(getTagView(campaignTag));
         }
-
-        mTagAdapter.setData(tagList);
-        mTagAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -102,7 +130,7 @@ public class SearchStayFragmentView extends BaseFragmentDialogView<SearchStayFra
         int flag = visible ? View.VISIBLE : View.GONE;
 
         getViewDataBinding().stayPopularSearchTagTextView.setVisibility(flag);
-        getViewDataBinding().stayTagGridView.setVisibility(flag);
+        getViewDataBinding().stayTagFlexboxLayout.setVisibility(flag);
     }
 
     @Override
@@ -121,54 +149,25 @@ public class SearchStayFragmentView extends BaseFragmentDialogView<SearchStayFra
         getViewDataBinding().recently03View.setVisibility(flag);
     }
 
-
-    class TagAdapter extends ArrayAdapter<String>
+    private View getTagView(CampaignTag campaignTag)
     {
-        List<String> mTagList;
+        final int DP_12 = ScreenUtils.dpToPx(getContext(), 12);
+        final int DP_5 = ScreenUtils.dpToPx(getContext(), 5);
 
-        public TagAdapter(@NonNull Context context, int resource)
-        {
-            super(context, resource);
+        DailyTextView dailyTextView = new DailyTextView(getContext());
+        dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
+        dailyTextView.setTextColor(getColor(R.color.default_text_c323232));
+        dailyTextView.setPadding(DP_12, 0, DP_12, 0);
+        dailyTextView.setBackgroundResource(R.color.default_background_cf4f4f6);
+        dailyTextView.setGravity(Gravity.CENTER_VERTICAL);
 
-            mTagList = new ArrayList<>();
-        }
+        FlexboxLayout.LayoutParams layoutParams = new FlexboxLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ScreenUtils.dpToPx(getContext(), 29));
+        layoutParams.setMargins(DP_5, DP_5, DP_5, DP_5);
 
-        public void setData(List<String> tagList)
-        {
-            if (tagList == null || tagList.size() == 0)
-            {
-                return;
-            }
+        dailyTextView.setLayoutParams(layoutParams);
+        dailyTextView.setText("#" + campaignTag.campaignTag);
+        dailyTextView.setTag(campaignTag);
 
-            mTagList.clear();
-            mTagList.addAll(tagList);
-        }
-
-        @NonNull
-        @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent)
-        {
-            DailyTextView dailyTextView;
-
-            if (convertView == null)
-            {
-                final int DP_12 = ScreenUtils.dpToPx(parent.getContext(), 12);
-
-                dailyTextView = new DailyTextView(parent.getContext());
-                dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
-                dailyTextView.setTextColor(getColor(R.color.default_text_c666666));
-                dailyTextView.setPadding(DP_12, 0, DP_12, 0);
-                dailyTextView.setBackgroundResource(R.color.default_background_cf4f4f6);
-                dailyTextView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ScreenUtils.dpToPx(parent.getContext(), 30)));
-            } else
-            {
-                dailyTextView = (DailyTextView) convertView;
-            }
-
-
-            dailyTextView.setText(mTagList.get(position));
-
-            return dailyTextView;
-        }
+        return dailyTextView;
     }
 }

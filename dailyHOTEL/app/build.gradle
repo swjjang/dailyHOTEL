@@ -213,6 +213,7 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation "android.arch.lifecycle:extensions:1.+"
     implementation "android.arch.lifecycle:common-java8:1.+"
+    implementation 'com.google.android:flexbox:0.3.2'
 
     implementation 'com.squareup.okhttp3:okhttp:3.9.1'
     implementation 'com.squareup.okhttp3:okhttp-urlconnection:3.9.1'
