@@ -36,6 +36,7 @@ import com.daily.dailyhotel.repository.remote.model.StayBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.StayDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayFilterCountData;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundSuggestsData;
 import com.daily.dailyhotel.repository.remote.model.StaysData;
 import com.daily.dailyhotel.repository.remote.model.StayOldWaitingDepositData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundBookingDetailData;
@@ -51,7 +52,6 @@ import com.daily.dailyhotel.repository.remote.model.StayPaymentData;
 import com.daily.dailyhotel.repository.remote.model.StayReceiptData;
 import com.daily.dailyhotel.repository.remote.model.StayRefundPolicyData;
 import com.daily.dailyhotel.repository.remote.model.StayRegionData;
-import com.daily.dailyhotel.repository.remote.model.SuggestsData;
 import com.daily.dailyhotel.repository.remote.model.TrueReviewsData;
 import com.daily.dailyhotel.repository.remote.model.TrueVRData;
 import com.daily.dailyhotel.repository.remote.model.UserBenefitData;
@@ -570,11 +570,11 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET()
-    Observable<BaseDto<SuggestsData>> getSuggestsByStayOutbound(@Url String mobileAPI, @Query(value = "keyword") String keyword);
+    Observable<BaseDto<StayOutboundSuggestsData>> getSuggestsByStayOutbound(@Url String mobileAPI, @Query(value = "keyword") String keyword);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET()
-    Observable<BaseDto<SuggestsData>> getPopularAreaSuggestsByStayOutbound(@Url String mobileAPI);
+    Observable<BaseDto<StayOutboundSuggestsData>> getPopularAreaSuggestsByStayOutbound(@Url String mobileAPI);
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////

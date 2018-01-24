@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @JsonObject
-public class SuggestsData
+public class StayOutboundSuggestsData
 {
     @JsonField(name = "station")
     public List<StayOutboundSuggestData> stationSuggestDataList;
@@ -29,7 +29,7 @@ public class SuggestsData
     @JsonField(name = "airport")
     public List<StayOutboundSuggestData> airportSuggestDataList;
 
-    public SuggestsData()
+    public StayOutboundSuggestsData()
     {
 
     }
