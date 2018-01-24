@@ -937,6 +937,12 @@
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
+
+        <activity
+            android:name="com.daily.dailyhotel.screen.home.search.stay.inbound.suggest.SearchStaySuggestActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
         <!--  com.daily.dailyhotel.... -->
 
         <activity android:name="kr.co.kcp.android.payment.standard.ResultRcvActivity">

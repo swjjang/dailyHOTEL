@@ -24,7 +24,7 @@ import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.ObjectItem;
-import com.daily.dailyhotel.entity.Suggest;
+import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundSearchSuggestDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowStayOutboundSuggestEntryDataBinding;
@@ -47,11 +47,11 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
     {
         void onSearchSuggest(String keyword);
 
-        void onSuggestClick(Suggest suggest);
+        void onSuggestClick(StayOutboundSuggest stayOutboundSuggest);
 
-        void onRecentlySuggestClick(Suggest suggest);
+        void onRecentlySuggestClick(StayOutboundSuggest stayOutboundSuggest);
 
-        void onPopularSuggestClick(Suggest suggest);
+        void onPopularSuggestClick(StayOutboundSuggest stayOutboundSuggest);
 
         void onDeleteAllRecentlySuggest();
     }
@@ -216,7 +216,7 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
     }
 
     @Override
-    public void setSuggests(List<Suggest> suggestList)
+    public void setSuggests(List<StayOutboundSuggest> stayOutboundSuggestList)
     {
         if (getViewDataBinding() == null)
         {
@@ -230,11 +230,11 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
                 @Override
                 public void onClick(View v)
                 {
-                    Suggest suggest = (Suggest) v.getTag();
+                    StayOutboundSuggest stayOutboundSuggest = (StayOutboundSuggest) v.getTag();
 
-                    if (suggest != null)
+                    if (stayOutboundSuggest != null)
                     {
-                        getEventListener().onSuggestClick(suggest);
+                        getEventListener().onSuggestClick(stayOutboundSuggest);
                     }
                 }
             });
@@ -242,27 +242,27 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
             getViewDataBinding().suggestsRecyclerView.setAdapter(mSuggestListAdapter);
         }
 
-        if (suggestList == null || suggestList.size() == 0)
+        if (stayOutboundSuggestList == null || stayOutboundSuggestList.size() == 0)
         {
             mSuggestListAdapter.setAll(null, null);
             mSuggestListAdapter.notifyDataSetChanged();
         } else
         {
-            List<ObjectItem> objectItemList = new ArrayList<>(suggestList.size());
+            List<ObjectItem> objectItemList = new ArrayList<>(stayOutboundSuggestList.size());
 
-            for (Suggest suggest : suggestList)
+            for (StayOutboundSuggest stayOutboundSuggest : stayOutboundSuggestList)
             {
-                if (suggest.id == 0)
+                if (stayOutboundSuggest.id == 0)
                 {
-                    objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, suggest));
+                    objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, stayOutboundSuggest));
                 } else
                 {
-                    objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, suggest));
+                    objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, stayOutboundSuggest));
                 }
             }
 
             // 마지막줄
-            objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, new Suggest(0, null)));
+            objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, new StayOutboundSuggest(0, null)));
 
             mSuggestListAdapter.setAll(getViewDataBinding().keywordEditText.getText().toString(), objectItemList);
             mSuggestListAdapter.notifyDataSetChanged();
@@ -296,14 +296,14 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
             case R.id.textView:
                 Object object = v.getTag();
 
-                if (object == null || object instanceof Suggest == false)
+                if (object == null || object instanceof StayOutboundSuggest == false)
                 {
                     return;
                 }
 
-                Suggest suggest = (Suggest) object;
+                StayOutboundSuggest stayOutboundSuggest = (StayOutboundSuggest) object;
 
-                getEventListener().onSuggestClick(suggest);
+                getEventListener().onSuggestClick(stayOutboundSuggest);
                 break;
 
             case R.id.deleteImageView:
@@ -384,7 +384,7 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
     }
 
     @Override
-    public void setRecentlySuggests(List<Suggest> suggestList)
+    public void setRecentlySuggests(List<StayOutboundSuggest> stayOutboundSuggestList)
     {
         if (getViewDataBinding() == null)
         {
@@ -398,11 +398,11 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
                 @Override
                 public void onClick(View v)
                 {
-                    Suggest suggest = (Suggest) v.getTag();
+                    StayOutboundSuggest stayOutboundSuggest = (StayOutboundSuggest) v.getTag();
 
-                    if (suggest != null)
+                    if (stayOutboundSuggest != null)
                     {
-                        getEventListener().onRecentlySuggestClick(suggest);
+                        getEventListener().onRecentlySuggestClick(stayOutboundSuggest);
                     }
                 }
             });
@@ -410,7 +410,7 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
 
         getViewDataBinding().recentlySuggestRecyclerView.setAdapter(mRecentlySuggestListAdapter);
 
-        if (suggestList == null || suggestList.size() == 0)
+        if (stayOutboundSuggestList == null || stayOutboundSuggestList.size() == 0)
         {
             getViewDataBinding().recentlySuggestLayout.setVisibility(View.GONE);
             mRecentlySuggestListAdapter.setAll(null);
@@ -424,9 +424,9 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
 
         List<ObjectItem> objectItemList = new ArrayList<>();
 
-        for (Suggest suggest : suggestList)
+        for (StayOutboundSuggest stayOutboundSuggest : stayOutboundSuggestList)
         {
-            objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, suggest));
+            objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, stayOutboundSuggest));
         }
 
         objectItemList.add(new ObjectItem(ObjectItem.TYPE_FOOTER_VIEW, null));
@@ -436,7 +436,7 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
     }
 
     @Override
-    public void setPopularAreaSuggests(List<Suggest> suggestList)
+    public void setPopularAreaSuggests(List<StayOutboundSuggest> stayOutboundSuggestList)
     {
         if (getViewDataBinding() == null)
         {
@@ -450,11 +450,11 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
                 @Override
                 public void onClick(View v)
                 {
-                    Suggest suggest = (Suggest) v.getTag();
+                    StayOutboundSuggest stayOutboundSuggest = (StayOutboundSuggest) v.getTag();
 
-                    if (suggest != null)
+                    if (stayOutboundSuggest != null)
                     {
-                        getEventListener().onPopularSuggestClick(suggest);
+                        getEventListener().onPopularSuggestClick(stayOutboundSuggest);
                     }
                 }
             });
@@ -462,7 +462,7 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
 
         getViewDataBinding().recentlySuggestRecyclerView.setAdapter(mPopularSuggestListAdapter);
 
-        if (suggestList == null || suggestList.size() == 0)
+        if (stayOutboundSuggestList == null || stayOutboundSuggestList.size() == 0)
         {
             getViewDataBinding().recentlySuggestLayout.setVisibility(View.GONE);
             mPopularSuggestListAdapter.setAll(null);
@@ -476,9 +476,9 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
 
         List<ObjectItem> objectItemList = new ArrayList<>();
 
-        for (Suggest suggest : suggestList)
+        for (StayOutboundSuggest stayOutboundSuggest : stayOutboundSuggestList)
         {
-            objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, suggest));
+            objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, stayOutboundSuggest));
         }
 
         objectItemList.add(new ObjectItem(ObjectItem.TYPE_FOOTER_VIEW, null));
@@ -671,9 +671,9 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
                 holder.dataBinding.dividerView.setVisibility(View.VISIBLE);
             }
 
-            Suggest suggest = item.getItem();
+            StayOutboundSuggest stayOutboundSuggest = item.getItem();
 
-            if (DailyTextUtils.isTextEmpty(suggest.name) == true)
+            if (DailyTextUtils.isTextEmpty(stayOutboundSuggest.name) == true)
             {
                 holder.dataBinding.titleTextView.setVisibility(View.GONE);
             } else
@@ -681,28 +681,28 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
                 holder.dataBinding.titleTextView.setVisibility(View.VISIBLE);
             }
 
-            holder.dataBinding.titleTextView.setText(suggest.display);
+            holder.dataBinding.titleTextView.setText(stayOutboundSuggest.display);
         }
 
         private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)
         {
-            Suggest suggest = item.getItem();
+            StayOutboundSuggest stayOutboundSuggest = item.getItem();
 
-            holder.itemView.getRootView().setTag(suggest);
+            holder.itemView.getRootView().setTag(stayOutboundSuggest);
 
-            if (DailyTextUtils.isTextEmpty(suggest.display) == true)
+            if (DailyTextUtils.isTextEmpty(stayOutboundSuggest.display) == true)
             {
                 holder.dataBinding.textView.setText(null);
             } else
             {
-                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(suggest.display);
+                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(stayOutboundSuggest.display);
 
                 if (DailyTextUtils.isTextEmpty(mKeyword) == false)
                 {
                     int fromIndex = 0;
                     do
                     {
-                        int startIndex = suggest.display.indexOf(mKeyword, fromIndex);
+                        int startIndex = stayOutboundSuggest.display.indexOf(mKeyword, fromIndex);
 
                         if (startIndex < 0)
                         {
@@ -720,25 +720,25 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
                 holder.dataBinding.textView.setText(spannableStringBuilder);
             }
 
-            switch (suggest.categoryKey)
+            switch (stayOutboundSuggest.categoryKey)
             {
-                case Suggest.CATEGORY_AIRPORT:
+                case StayOutboundSuggest.CATEGORY_AIRPORT:
                     holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_04_airport, 0, 0, 0);
                     break;
 
-                case Suggest.CATEGORY_HOTEL:
+                case StayOutboundSuggest.CATEGORY_HOTEL:
                     holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_02_hotel, 0, 0, 0);
                     break;
 
-                case Suggest.CATEGORY_POINT:
+                case StayOutboundSuggest.CATEGORY_POINT:
                     holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_03_landmark, 0, 0, 0);
                     break;
 
-                case Suggest.CATEGORY_REGION:
+                case StayOutboundSuggest.CATEGORY_REGION:
                     holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_01_region, 0, 0, 0);
                     break;
 
-                case Suggest.CATEGORY_STATION:
+                case StayOutboundSuggest.CATEGORY_STATION:
                     holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_05_train, 0, 0, 0);
                     break;
 
@@ -885,31 +885,31 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
 
         private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)
         {
-            Suggest suggest = item.getItem();
+            StayOutboundSuggest stayOutboundSuggest = item.getItem();
 
-            holder.itemView.getRootView().setTag(suggest);
+            holder.itemView.getRootView().setTag(stayOutboundSuggest);
 
-            holder.dataBinding.textView.setText(suggest.display);
+            holder.dataBinding.textView.setText(stayOutboundSuggest.display);
 
-            switch (suggest.categoryKey)
+            switch (stayOutboundSuggest.categoryKey)
             {
-                case Suggest.CATEGORY_AIRPORT:
+                case StayOutboundSuggest.CATEGORY_AIRPORT:
                     holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_04_airport, 0, 0, 0);
                     break;
 
-                case Suggest.CATEGORY_HOTEL:
+                case StayOutboundSuggest.CATEGORY_HOTEL:
                     holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_02_hotel, 0, 0, 0);
                     break;
 
-                case Suggest.CATEGORY_POINT:
+                case StayOutboundSuggest.CATEGORY_POINT:
                     holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_03_landmark, 0, 0, 0);
                     break;
 
-                case Suggest.CATEGORY_REGION:
+                case StayOutboundSuggest.CATEGORY_REGION:
                     holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_01_region, 0, 0, 0);
                     break;
 
-                case Suggest.CATEGORY_STATION:
+                case StayOutboundSuggest.CATEGORY_STATION:
                     holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_05_train, 0, 0, 0);
                     break;
 

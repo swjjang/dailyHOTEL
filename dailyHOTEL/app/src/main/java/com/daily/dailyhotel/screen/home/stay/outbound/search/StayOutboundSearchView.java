@@ -8,7 +8,7 @@ import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
-import com.daily.dailyhotel.entity.Suggest;
+import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityStayOutboundSearchDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
@@ -31,7 +31,7 @@ public class StayOutboundSearchView extends BaseDialogView<StayOutboundSearchVie
 
         void onPeopleClick();
 
-        void onPopularAreaClick(Suggest suggest);
+        void onPopularAreaClick(StayOutboundSuggest stayOutboundSuggest);
     }
 
     public StayOutboundSearchView(BaseActivity baseActivity, StayOutboundSearchView.OnEventListener listener)
@@ -144,9 +144,9 @@ public class StayOutboundSearchView extends BaseDialogView<StayOutboundSearchVie
     }
 
     @Override
-    public void setPopularAreaList(List<Suggest> suggestList)
+    public void setPopularAreaList(List<StayOutboundSuggest> stayOutboundSuggestList)
     {
-        if (getViewDataBinding() == null || suggestList == null || suggestList.size() == 0)
+        if (getViewDataBinding() == null || stayOutboundSuggestList == null || stayOutboundSuggestList.size() == 0)
         {
             return;
         }
@@ -158,14 +158,14 @@ public class StayOutboundSearchView extends BaseDialogView<StayOutboundSearchVie
                 @Override
                 public void onClick(View view)
                 {
-                    getEventListener().onPopularAreaClick((Suggest) view.getTag());
+                    getEventListener().onPopularAreaClick((StayOutboundSuggest) view.getTag());
                 }
             });
 
             getViewDataBinding().popularRecyclerView.setAdapter(mPopularAreaListAdapter);
         }
 
-        mPopularAreaListAdapter.setData(suggestList);
+        mPopularAreaListAdapter.setData(stayOutboundSuggestList);
         mPopularAreaListAdapter.notifyDataSetChanged();
     }
 

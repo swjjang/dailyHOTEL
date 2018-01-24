@@ -21,6 +21,7 @@
 
     <dimen name="toolbar_height">52dp</dimen>
     <dimen name="menubar_height">51dp</dimen>
+    <dimen name="search_suggest_toolbar_height">97dp</dimen>
 
     <dimen name="signature_height">160dp</dimen>
 

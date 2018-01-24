@@ -1,7 +1,7 @@
 package com.daily.dailyhotel.screen.home.stay.outbound.search;
 
 import com.daily.base.BaseDialogViewInterface;
-import com.daily.dailyhotel.entity.Suggest;
+import com.daily.dailyhotel.entity.StayOutboundSuggest;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public interface StayOutboundSearchViewInterface extends BaseDialogViewInterface
 
     void setPeopleText(String peopleText);
 
-    void setPopularAreaList(List<Suggest> suggestList);
+    void setPopularAreaList(List<StayOutboundSuggest> stayOutboundSuggestList);
 
     void setPopularAreaVisible(boolean visible);
 }

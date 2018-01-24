@@ -1,6 +1,6 @@
 package com.daily.dailyhotel.domain;
 
-import com.daily.dailyhotel.entity.Suggest;
+import com.daily.dailyhotel.entity.StayOutboundSuggest;
 
 import java.util.List;
 
@@ -12,13 +12,13 @@ import io.reactivex.Observable;
 
 public interface SuggestLocalInterface
 {
-    Observable addSuggestDb(Suggest suggest, String keyword);
+    Observable addStayOutboundSuggestDb(StayOutboundSuggest stayOutboundSuggest, String keyword);
 
-    Observable<Suggest> getRecentlySuggest();
+    Observable<StayOutboundSuggest> getRecentlyStayOutboundSuggest();
 
-    Observable<List<Suggest>> getRecentlySuggestList();
+    Observable<List<StayOutboundSuggest>> getRecentlyStayOutboundSuggestList();
 
-    Observable<String> getRecentlySuggestKeyword(final long id);
+    Observable<String> getRecentlyStayOutboundSuggestKeyword(final long id);
 
-    Observable deleteAllRecentlySuggest();
+    Observable deleteAllRecentlyStayOutboundSuggest();
 }

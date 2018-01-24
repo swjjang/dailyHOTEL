@@ -6,7 +6,7 @@ import android.support.v4.util.Pair;
 
 import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.SuggestInterface;
-import com.daily.dailyhotel.entity.Suggest;
+import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
@@ -32,7 +32,7 @@ public class SuggestRemoteImpl extends BaseRemoteImpl implements SuggestInterfac
     }
 
     @Override
-    public Observable<List<Suggest>> getSuggestsByStayOutbound(String keyword)
+    public Observable<List<StayOutboundSuggest>> getSuggestsByStayOutbound(String keyword)
     {
         final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
@@ -42,7 +42,7 @@ public class SuggestRemoteImpl extends BaseRemoteImpl implements SuggestInterfac
         return mDailyMobileService.getSuggestsByStayOutbound(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API), keyword)//
             .subscribeOn(Schedulers.io()).map((suggestsDataBaseDto) ->
             {
-                List<Suggest> list;
+                List<StayOutboundSuggest> list;
 
                 if (suggestsDataBaseDto != null)
                 {
@@ -144,7 +144,7 @@ public class SuggestRemoteImpl extends BaseRemoteImpl implements SuggestInterfac
     }
 
     @Override
-    public Observable<List<Suggest>> getPopularRegionSuggestsByStayOutbound()
+    public Observable<List<StayOutboundSuggest>> getPopularRegionSuggestsByStayOutbound()
     {
         final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
@@ -154,7 +154,7 @@ public class SuggestRemoteImpl extends BaseRemoteImpl implements SuggestInterfac
         return mDailyMobileService.getPopularAreaSuggestsByStayOutbound(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API))//
             .subscribeOn(Schedulers.io()).map((suggestsDataBaseDto) ->
             {
-                List<Suggest> list;
+                List<StayOutboundSuggest> list;
 
                 if (suggestsDataBaseDto != null)
                 {

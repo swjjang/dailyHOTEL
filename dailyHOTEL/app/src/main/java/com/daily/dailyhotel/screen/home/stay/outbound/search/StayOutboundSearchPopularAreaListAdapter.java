@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.daily.dailyhotel.entity.Suggest;
+import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowSearchCardItemBinding;
 
@@ -18,7 +18,7 @@ public class StayOutboundSearchPopularAreaListAdapter extends RecyclerView.Adapt
 {
     private Context mContext;
     View.OnClickListener mOnClickListener;
-    private List<Suggest> mSuggestList;
+    private List<StayOutboundSuggest> mStayOutboundSuggestList;
 
     public StayOutboundSearchPopularAreaListAdapter(Context context, View.OnClickListener onClickListener)
     {
@@ -36,55 +36,55 @@ public class StayOutboundSearchPopularAreaListAdapter extends RecyclerView.Adapt
     @Override
     public void onBindViewHolder(ItemViewHolder holder, int position)
     {
-        Suggest suggest = getItem(position);
+        StayOutboundSuggest stayOutboundSuggest = getItem(position);
 
-        holder.itemView.setTag(suggest);
+        holder.itemView.setTag(stayOutboundSuggest);
 
         holder.dataBinding.iconImageView.setImageResource(R.drawable.vector_ob_search_ic_01_region);
-        holder.dataBinding.itemTextView.setText(suggest.display);
+        holder.dataBinding.itemTextView.setText(stayOutboundSuggest.display);
     }
 
-    public void setData(List<Suggest> suggestList)
+    public void setData(List<StayOutboundSuggest> stayOutboundSuggestList)
     {
-        if (mSuggestList == null)
+        if (mStayOutboundSuggestList == null)
         {
-            mSuggestList = new ArrayList<>();
+            mStayOutboundSuggestList = new ArrayList<>();
         }
 
         clear();
 
-        if (suggestList == null || suggestList.size() == 0)
+        if (stayOutboundSuggestList == null || stayOutboundSuggestList.size() == 0)
         {
             return;
         }
 
-        mSuggestList.addAll(suggestList);
+        mStayOutboundSuggestList.addAll(stayOutboundSuggestList);
     }
 
     public void clear()
     {
-        if (mSuggestList == null)
+        if (mStayOutboundSuggestList == null)
         {
             return;
         }
 
-        mSuggestList.clear();
+        mStayOutboundSuggestList.clear();
     }
 
-    public Suggest getItem(int position)
+    public StayOutboundSuggest getItem(int position)
     {
-        if (position < 0 || mSuggestList.size() <= position)
+        if (position < 0 || mStayOutboundSuggestList.size() <= position)
         {
             return null;
         }
 
-        return mSuggestList.get(position);
+        return mStayOutboundSuggestList.get(position);
     }
 
     @Override
     public int getItemCount()
     {
-        return mSuggestList == null ? 0 : mSuggestList.size();
+        return mStayOutboundSuggestList == null ? 0 : mStayOutboundSuggestList.size();
     }
 
     protected class ItemViewHolder extends RecyclerView.ViewHolder

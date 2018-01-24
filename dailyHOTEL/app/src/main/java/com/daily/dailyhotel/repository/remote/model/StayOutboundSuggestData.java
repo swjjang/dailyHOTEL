@@ -2,10 +2,10 @@ package com.daily.dailyhotel.repository.remote.model;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.daily.dailyhotel.entity.Suggest;
+import com.daily.dailyhotel.entity.StayOutboundSuggest;
 
 @JsonObject
-public class SuggestData
+public class StayOutboundSuggestData
 {
     @JsonField(name = "id")
     public long id;
@@ -37,24 +37,24 @@ public class SuggestData
     @JsonField(name = "lng")
     public double lng;
 
-    public SuggestData()
+    public StayOutboundSuggestData()
     {
 
     }
 
-    public Suggest getSuggests()
+    public StayOutboundSuggest getSuggests()
     {
-        Suggest suggest = new Suggest();
-        suggest.id = id;
-        suggest.name = name;
-        suggest.city = city;
-        suggest.country = country;
-        suggest.countryCode = countryCode;
-        suggest.categoryKey = categoryKey;
-        suggest.display = display;
-        suggest.latitude = lat;
-        suggest.longitude = lng;
+        StayOutboundSuggest stayOutboundSuggest = new StayOutboundSuggest();
+        stayOutboundSuggest.id = id;
+        stayOutboundSuggest.name = name;
+        stayOutboundSuggest.city = city;
+        stayOutboundSuggest.country = country;
+        stayOutboundSuggest.countryCode = countryCode;
+        stayOutboundSuggest.categoryKey = categoryKey;
+        stayOutboundSuggest.display = display;
+        stayOutboundSuggest.latitude = lat;
+        stayOutboundSuggest.longitude = lng;
 
-        return suggest;
+        return stayOutboundSuggest;
     }
 }
