@@ -132,6 +132,7 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         mSearchFragmentPagerAdapter.addFragment(mSearchStayOutboundFragment);
         mSearchFragmentPagerAdapter.addFragment(mSearchGourmetFragment);
 
+        getViewDataBinding().viewPager.setOffscreenPageLimit(3);
         getViewDataBinding().viewPager.setPagingEnabled(false);
         getViewDataBinding().viewPager.setAdapter(mSearchFragmentPagerAdapter);
     }
