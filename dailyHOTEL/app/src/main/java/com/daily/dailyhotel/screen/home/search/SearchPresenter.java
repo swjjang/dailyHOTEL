@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.home.search;
 
 
+import android.app.Activity;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
@@ -239,111 +240,114 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
     {
         unLockAll();
 
-        //        switch (requestCode)
-        //        {
-        //            case SearchActivity.REQUEST_CODE_STAY_SUGGEST:
-        //                if (resultCode == Activity.RESULT_OK && data != null)
-        //                {
-        //                    mSearchModel.staySuggest.setValue(data.getStringExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST));
-        //                }
-        //                break;
-        //
-        //            case SearchActivity.REQUEST_CODE_STAY_CALENDAR:
-        //                if (resultCode == Activity.RESULT_OK && data != null)
-        //                {
-        //                    try
-        //                    {
-        //                        String checkInDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE);
-        //                        String checkOutDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE);
-        //
-        //                        mSearchModel.stayBookDateTime.getValue().setCheckInDateTime(checkInDateTime);
-        //                        mSearchModel.stayBookDateTime.getValue().setCheckOutDateTime(checkOutDateTime);
-        //
-        //                        getViewInterface().setSearchStayCalendarText(String.format(Locale.KOREA, "%s - %s, %d박"//
-        //                            , mSearchModel.stayBookDateTime.getValue().getCheckInDateTime("yyyy.MM.dd(EEE)")//
-        //                            , mSearchModel.stayBookDateTime.getValue().getCheckOutDateTime("yyyy.MM.dd(EEE)")//
-        //                            , mSearchModel.stayBookDateTime.getValue().getNights()));
-        //                    } catch (Exception e)
-        //                    {
-        //                        ExLog.d(e.toString());
-        //                    }
-        //                }
-        //                break;
-        //
-        //            case SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT:
-        //                switch (resultCode)
-        //                {
-        //                    case 50001:
-        //                        getViewInterface().showSearchStayOutbound();
-        //                        break;
-        //
-        //                    case 50002:
-        //                        getViewInterface().showSearchGourmet();
-        //                        break;
-        //                }
-        //                break;
-        //
-        //            case SearchActivity.REQUEST_CODE_STAY_OUTBOUND_SUGGEST:
-        //                if (resultCode == Activity.RESULT_OK && data != null)
-        //                {
-        //                    if (data.hasExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST) == true)
-        //                    {
-        //                        StayOutboundSuggestParcel suggestParcel = data.getParcelableExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
-        //                        String keyword = data.getStringExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
-        //                        String clickType = data.getStringExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_CLICK_TYPE);
-        //
-        //                        if (suggestParcel != null)
-        //                        {
-        //                            mSearchModel.stayOutboundSuggest.setValue(suggestParcel.getSuggest());
-        //                        }
-        //                    }
-        //                }
-        //                break;
-        //
-        //            case SearchActivity.REQUEST_CODE_STAY_OUTBOUND_CALENDAR:
-        //                if (resultCode == Activity.RESULT_OK && data != null)
-        //                {
-        //                    try
-        //                    {
-        //                        String checkInDateTime = data.getStringExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
-        //                        String checkOutDateTime = data.getStringExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
-        //
-        //                        mSearchModel.stayOutboundBookDateTime.getValue().setCheckInDateTime(checkInDateTime);
-        //                        mSearchModel.stayOutboundBookDateTime.getValue().setCheckOutDateTime(checkOutDateTime);
-        //
-        //                        getViewInterface().setSearchStayOutboundCalendarText(String.format(Locale.KOREA, "%s - %s, %d박"//
-        //                            , mSearchModel.stayOutboundBookDateTime.getValue().getCheckInDateTime("yyyy.MM.dd(EEE)")//
-        //                            , mSearchModel.stayOutboundBookDateTime.getValue().getCheckOutDateTime("yyyy.MM.dd(EEE)")//
-        //                            , mSearchModel.stayOutboundBookDateTime.getValue().getNights()));
-        //                    } catch (Exception e)
-        //                    {
-        //                        ExLog.d(e.toString());
-        //                    }
-        //                }
-        //                break;
-        //
-        //            case SearchActivity.REQUEST_CODE_GOURMET_SUGGEST:
-        //                if (resultCode == Activity.RESULT_OK && data != null)
-        //                {
-        //
-        //                }
-        //                break;
-        //
-        //            case SearchActivity.REQUEST_CODE_STAY_OUTBOUND_PEOPLE:
-        //            {
-        //                if (resultCode == Activity.RESULT_OK && data != null)
-        //                {
-        //                    if (data.hasExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS) == true && data.hasExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST) == true)
-        //                    {
-        //                        int numberOfAdults = data.getIntExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, People.DEFAULT_ADULTS);
-        //                        ArrayList<Integer> arrayList = data.getIntegerArrayListExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST);
-        //
-        //                        setPeople(numberOfAdults, arrayList);
-        //                    }
-        //                }
-        //                break;
-        //            }
-        //        }
+        switch (requestCode)
+        {
+            case SearchActivity.REQUEST_CODE_STAY_SUGGEST:
+                if (resultCode == Activity.RESULT_OK && data != null)
+                {
+                    //                    mSearchModel.staySuggest.setValue(data.getStringExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST));
+                }
+                break;
+
+            case SearchActivity.REQUEST_CODE_STAY_CALENDAR:
+                if (resultCode == Activity.RESULT_OK && data != null)
+                {
+                    try
+                    {
+                        String checkInDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE);
+                        String checkOutDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE);
+
+                        mSearchModel.stayBookDateTime.setValue(new StayBookDateTime(checkInDateTime, checkOutDateTime));
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                    }
+                }
+                break;
+
+            case SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT:
+                switch (resultCode)
+                {
+                    case 50001:
+                        getViewInterface().showSearchStayOutbound();
+                        break;
+
+                    case 50002:
+                        getViewInterface().showSearchGourmet();
+                        break;
+                }
+                break;
+
+            case SearchActivity.REQUEST_CODE_STAY_OUTBOUND_SUGGEST:
+                if (resultCode == Activity.RESULT_OK && data != null)
+                {
+                    //                    if (data.hasExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST) == true)
+                    //                    {
+                    //                        StayOutboundSuggestParcel suggestParcel = data.getParcelableExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
+                    //                        String keyword = data.getStringExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
+                    //                        String clickType = data.getStringExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_CLICK_TYPE);
+                    //
+                    //                        if (suggestParcel != null)
+                    //                        {
+                    //                            mSearchModel.stayOutboundSuggest.setValue(suggestParcel.getSuggest());
+                    //                        }
+                    //                    }
+                }
+                break;
+
+            case SearchActivity.REQUEST_CODE_STAY_OUTBOUND_CALENDAR:
+                if (resultCode == Activity.RESULT_OK && data != null)
+                {
+                    try
+                    {
+                        String checkInDateTime = data.getStringExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_CHECKIN_DATETIME);
+                        String checkOutDateTime = data.getStringExtra(StayOutboundCalendarActivity.INTENT_EXTRA_DATA_CHECKOUT_DATETIME);
+
+                        mSearchModel.stayOutboundBookDateTime.setValue(new StayBookDateTime(checkInDateTime, checkOutDateTime));
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                    }
+                }
+                break;
+
+            case SearchActivity.REQUEST_CODE_GOURMET_SUGGEST:
+                if (resultCode == Activity.RESULT_OK && data != null)
+                {
+
+                }
+                break;
+
+            case SearchActivity.REQUEST_CODE_GOURMET_CALENDAR:
+                if (resultCode == Activity.RESULT_OK && data != null)
+                {
+                    try
+                    {
+                        String visitDate = data.getStringExtra(GourmetCalendarActivity.INTENT_EXTRA_DATA_VISIT_DATE);
+
+                        mSearchModel.gourmetBookDateTime.setValue(new GourmetBookDateTime(visitDate));
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                    }
+                }
+                break;
+
+            case SearchActivity.REQUEST_CODE_STAY_OUTBOUND_PEOPLE:
+            {
+                if (resultCode == Activity.RESULT_OK && data != null)
+                {
+                    if (data.hasExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS) == true && data.hasExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST) == true)
+                    {
+                        int numberOfAdults = data.getIntExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, People.DEFAULT_ADULTS);
+                        ArrayList<Integer> arrayList = data.getIntegerArrayListExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST);
+
+                        setPeople(numberOfAdults, arrayList);
+                    }
+                }
+                break;
+            }
+        }
     }
 
     @Override
@@ -673,6 +677,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             }
         });
 
+        // Stay
         mSearchModel.staySuggest.observe(activity, new Observer<String>()
         {
             @Override
@@ -684,6 +689,19 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             }
         });
 
+        mSearchModel.stayBookDateTime.observe(activity, new Observer<StayBookDateTime>()
+        {
+            @Override
+            public void onChanged(@Nullable StayBookDateTime stayBookDateTime)
+            {
+                getViewInterface().setSearchStayCalendarText(String.format(Locale.KOREA, "%s - %s, %d박"//
+                    , stayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)")//
+                    , stayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)")//
+                    , stayBookDateTime.getNights()));
+            }
+        });
+
+        // StayOutbound
         mSearchModel.stayOutboundPeople.observe(activity, new Observer<People>()
         {
             @Override
@@ -704,7 +722,40 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             }
         });
 
+        mSearchModel.stayOutboundBookDateTime.observe(activity, new Observer<StayBookDateTime>()
+        {
+            @Override
+            public void onChanged(@Nullable StayBookDateTime stayBookDateTime)
+            {
+                getViewInterface().setSearchStayOutboundCalendarText(String.format(Locale.KOREA, "%s - %s, %d박"//
+                    , stayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)")//
+                    , stayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)")//
+                    , stayBookDateTime.getNights()));
+            }
+        });
+
         mSearchModel.stayOutboundPeople.setValue(new People(People.DEFAULT_ADULTS, null));
+
+        // Gourmet
+        mSearchModel.gourmetSuggest.observe(activity, new Observer<String>()
+        {
+            @Override
+            public void onChanged(@Nullable String suggest)
+            {
+                getViewInterface().setSearchGourmetSuggestText(suggest);
+
+                getViewInterface().setSearchGourmetButtonEnabled(DailyTextUtils.isTextEmpty(suggest) == false);
+            }
+        });
+
+        mSearchModel.gourmetBookDateTime.observe(activity, new Observer<GourmetBookDateTime>()
+        {
+            @Override
+            public void onChanged(@Nullable GourmetBookDateTime gourmetBookDateTime)
+            {
+                getViewInterface().setSearchGourmetCalendarText(gourmetBookDateTime.getVisitDateTime("yyyy.MM.dd(EEE)"));
+            }
+        });
     }
 
     private void setPeople(int numberOfAdults, ArrayList<Integer> childAgeList)

@@ -38,37 +38,12 @@ public class SearchStayFragmentView extends BaseFragmentDialogView<SearchStayFra
         setRecentlySearchResultVisible(false);
         setPopularSearchTagVisible(false);
 
-        getViewDataBinding().stayTagFlexboxLayout.setFlexDirection(FlexDirection.ROW);
-        getViewDataBinding().stayTagFlexboxLayout.setFlexWrap(FlexWrap.WRAP);
+        getViewDataBinding().tagFlexboxLayout.setFlexDirection(FlexDirection.ROW);
+        getViewDataBinding().tagFlexboxLayout.setFlexWrap(FlexWrap.WRAP);
 
-        getViewDataBinding().recently01View.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-
-            }
-        });
-
-
-        getViewDataBinding().recently02View.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-
-            }
-        });
-
-
-        getViewDataBinding().recently03View.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-
-            }
-        });
+        getViewDataBinding().recently01View.setOnClickListener(v -> getEventListener().onRecentlySearchResultClick((RecentlyDbPlace)v.getTag()));
+        getViewDataBinding().recently02View.setOnClickListener(v -> getEventListener().onRecentlySearchResultClick((RecentlyDbPlace)v.getTag()));
+        getViewDataBinding().recently03View.setOnClickListener(v -> getEventListener().onRecentlySearchResultClick((RecentlyDbPlace)v.getTag()));
     }
 
     @Override
@@ -92,6 +67,7 @@ public class SearchStayFragmentView extends BaseFragmentDialogView<SearchStayFra
 
                 RecentlyDbPlace recentlyDbPlace = recentlyList.get(i);
 
+                recentlyCardView[i].setTag(recentlyDbPlace);
                 recentlyCardView[i].setIcon(R.drawable.search_ic_01_search);
                 recentlyCardView[i].setNameText(recentlyDbPlace.name);
                 recentlyCardView[i].setDateText(null);
@@ -111,11 +87,11 @@ public class SearchStayFragmentView extends BaseFragmentDialogView<SearchStayFra
             return;
         }
 
-        getViewDataBinding().stayTagFlexboxLayout.removeAllViews();
+        getViewDataBinding().tagFlexboxLayout.removeAllViews();
 
         for (CampaignTag campaignTag : tagList)
         {
-            getViewDataBinding().stayTagFlexboxLayout.addView(getTagView(campaignTag));
+            getViewDataBinding().tagFlexboxLayout.addView(getTagView(campaignTag));
         }
     }
 
@@ -129,8 +105,8 @@ public class SearchStayFragmentView extends BaseFragmentDialogView<SearchStayFra
 
         int flag = visible ? View.VISIBLE : View.GONE;
 
-        getViewDataBinding().stayPopularSearchTagTextView.setVisibility(flag);
-        getViewDataBinding().stayTagFlexboxLayout.setVisibility(flag);
+        getViewDataBinding().popularSearchTagTextView.setVisibility(flag);
+        getViewDataBinding().tagFlexboxLayout.setVisibility(flag);
     }
 
     @Override

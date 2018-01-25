@@ -13,6 +13,12 @@ public class StayBookDateTime extends PlaceBookDateTime
     {
     }
 
+    public StayBookDateTime(String checkInDateTime, String checkOutDateTime) throws Exception
+    {
+        setCheckInDateTime(checkInDateTime);
+        setCheckOutDateTime(checkOutDateTime);
+    }
+
     /**
      * @param dateTime ISO-8601
      */

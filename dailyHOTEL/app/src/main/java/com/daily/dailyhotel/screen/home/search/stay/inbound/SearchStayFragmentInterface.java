@@ -29,6 +29,8 @@ public interface SearchStayFragmentInterface
     interface OnEventListener extends OnBaseEventListener
     {
         void onRecentlySearchResultDeleteClick(int index);
+
+        void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace);
     }
 
     interface AnalyticsInterface extends BaseAnalyticsInterface

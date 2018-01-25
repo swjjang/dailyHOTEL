@@ -34,6 +34,8 @@ public interface SearchInterface
         void setSearchGourmetSuggestText(String text);
 
         void setSearchGourmetCalendarText(String text);
+
+        void setSearchGourmetButtonEnabled(boolean enabled);
     }
 
     interface OnEventListener extends OnBaseEventListener

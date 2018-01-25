@@ -43,7 +43,7 @@
                 android:layout_marginRight="15dp"/>
 
             <com.daily.base.widget.DailyTextView
-                android:id="@+id/stayPopularSearchTagTextView"
+                android:id="@+id/popularSearchTagTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
@@ -54,7 +54,7 @@
                 android:textSize="14dp"/>
 
             <com.google.android.flexbox.FlexboxLayout
-                android:id="@+id/stayTagFlexboxLayout"
+                android:id="@+id/tagFlexboxLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"

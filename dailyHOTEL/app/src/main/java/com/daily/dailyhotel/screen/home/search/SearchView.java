@@ -328,4 +328,14 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         getViewDataBinding().gourmetCalendarTextView.setText(text);
     }
 
+    @Override
+    public void setSearchGourmetButtonEnabled(boolean enabled)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().searchGourmetTextView.setEnabled(enabled);
+    }
 }

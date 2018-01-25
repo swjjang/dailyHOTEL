@@ -6,6 +6,11 @@ public class GourmetBookDateTime extends PlaceBookDateTime
     {
     }
 
+    public GourmetBookDateTime(String visitDateTime) throws Exception
+    {
+        setVisitDateTime(visitDateTime);
+    }
+
     /**
      * @param dateTime ISO-8601
      */
