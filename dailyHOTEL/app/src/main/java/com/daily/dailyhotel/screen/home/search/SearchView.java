@@ -22,7 +22,7 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
 
     SearchStayFragment mSearchStayFragment;
     SearchGourmetFragment mSearchGourmetFragment;
-    SearchStayOutboundFragment SearchStayOutboundFragment;
+    SearchStayOutboundFragment mSearchStayOutboundFragment;
 
     public SearchView(BaseActivity baseActivity, SearchInterface.OnEventListener listener)
     {
@@ -123,11 +123,11 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         List<BaseFragment> list = new ArrayList<>();
 
         mSearchStayFragment = new SearchStayFragment();
-        SearchStayOutboundFragment = new SearchStayOutboundFragment();
+        mSearchStayOutboundFragment = new SearchStayOutboundFragment();
         mSearchGourmetFragment = new SearchGourmetFragment();
 
         mSearchFragmentPagerAdapter.add(mSearchStayFragment);
-        mSearchFragmentPagerAdapter.add(SearchStayOutboundFragment);
+        mSearchFragmentPagerAdapter.add(mSearchStayOutboundFragment);
         mSearchFragmentPagerAdapter.add(mSearchGourmetFragment);
 
         getViewDataBinding().viewPager.setAdapter(mSearchFragmentPagerAdapter);
@@ -173,6 +173,10 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         getViewDataBinding().viewPager.setCurrentItem(0, false);
 
         setToolbarTitle(getString(R.string.label_search_search_stay));
+
+        mSearchStayFragment.onSelected();
+        mSearchStayOutboundFragment.onUnselected();
+        mSearchGourmetFragment.onUnselected();
     }
 
     @Override
@@ -227,6 +231,10 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         getViewDataBinding().viewPager.setCurrentItem(1, false);
 
         setToolbarTitle(getString(R.string.label_search_search_stayoutbound));
+
+        mSearchStayFragment.onUnselected();
+        mSearchStayOutboundFragment.onSelected();
+        mSearchGourmetFragment.onUnselected();
     }
 
     @Override
@@ -292,6 +300,10 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         getViewDataBinding().viewPager.setCurrentItem(2, false);
 
         setToolbarTitle(getString(R.string.label_search_search_gourmet));
+
+        mSearchStayFragment.onUnselected();
+        mSearchStayOutboundFragment.onUnselected();
+        mSearchGourmetFragment.onSelected();
     }
 
     @Override
@@ -316,4 +328,14 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         getViewDataBinding().gourmetCalendarTextView.setText(text);
     }
 
+    @Override
+    public void setSearchGourmetButtonEnabled(boolean enabled)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().searchGourmetTextView.setEnabled(enabled);
+    }
 }
