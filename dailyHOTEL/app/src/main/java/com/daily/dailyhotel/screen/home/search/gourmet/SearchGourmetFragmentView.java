@@ -143,6 +143,7 @@ public class SearchGourmetFragmentView extends BaseFragmentDialogView<SearchGour
         dailyTextView.setLayoutParams(layoutParams);
         dailyTextView.setText("#" + campaignTag.campaignTag);
         dailyTextView.setTag(campaignTag);
+        dailyTextView.setOnClickListener(v -> getEventListener().onPopularTagClick((CampaignTag) v.getTag()));
 
         return dailyTextView;
     }

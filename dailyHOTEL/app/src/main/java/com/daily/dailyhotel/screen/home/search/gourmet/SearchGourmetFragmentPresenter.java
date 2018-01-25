@@ -18,6 +18,7 @@ import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
+import com.daily.dailyhotel.screen.home.campaigntag.gourmet.GourmetCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
 import com.daily.dailyhotel.screen.home.search.SearchPresenter;
@@ -254,6 +255,20 @@ public class SearchGourmetFragmentPresenter extends BasePagerFragmentPresenter<S
             , analyticsParam), SearchActivity.REQUEST_CODE_GOURMET_DETAIL);
 
         getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+    }
+
+    @Override
+    public void onPopularTagClick(CampaignTag campaignTag)
+    {
+        if (campaignTag == null || lock() == true)
+        {
+            return;
+        }
+
+        startActivityForResult(GourmetCampaignTagListActivity.newInstance(getActivity() //
+            , campaignTag.index, campaignTag.campaignTag//
+            , mSearchModel.gourmetBookDateTime.getValue().getVisitDateTime(DailyCalendar.ISO_8601_FORMAT))//
+            , SearchActivity.REQUEST_CODE_GOURMET_SEARCH_RESULT);
     }
 
     private void initViewModel(BaseActivity activity)

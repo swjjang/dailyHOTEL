@@ -11,10 +11,26 @@ import android.view.ViewGroup;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BasePagerFragmentPresenter;
+import com.daily.dailyhotel.entity.StayOutboundSuggest;
+import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
+import com.daily.dailyhotel.repository.local.SuggestLocalImpl;
+import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
+import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
+import com.daily.dailyhotel.screen.home.search.SearchActivity;
 import com.daily.dailyhotel.screen.home.search.SearchPresenter;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 /**
  * Created by sheldon
@@ -24,6 +40,10 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
     implements SearchStayOutboundFragmentInterface.OnEventListener
 {
     private SearchStayOutboundFragmentInterface.AnalyticsInterface mAnalytics;
+
+    RecentlyLocalImpl mRecentlyLocalImpl;
+    SuggestRemoteImpl mSuggestRemoteImpl;
+    SuggestLocalImpl mSuggestLocalImpl;
 
     SearchPresenter.SearchModel mSearchModel;
 
@@ -51,6 +71,10 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
     {
         setAnalytics(new SearchStayOutboundFragmentAnalyticsImpl());
 
+        mRecentlyLocalImpl = new RecentlyLocalImpl(activity);
+        mSuggestRemoteImpl = new SuggestRemoteImpl(activity);
+        mSuggestLocalImpl = new SuggestLocalImpl(activity);
+
         initViewModel(activity);
 
         setRefresh(false);
@@ -76,6 +100,9 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
 
         switch (requestCode)
         {
+            case SearchActivity.REQUEST_CODE_STAY_OUTBOUND_DETAIL:
+                onRecentlyRefresh();
+                break;
         }
     }
 
@@ -117,6 +144,7 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
     @Override
     public void onSelected()
     {
+        onRefresh();
     }
 
     @Override
@@ -127,6 +155,8 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
     @Override
     public void onRefresh()
     {
+        setRefresh(true);
+        onRefresh(false);
     }
 
     @Override
@@ -155,6 +185,85 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
             return;
         }
 
+        setRefresh(false);
+
+        // 최근 검색결과
+        onRecentlyRefresh();
+
+        // 해외 인기지역
+        onPopularAreaRefresh();
+    }
+
+    @Override
+    public void onRecentlySearchResultDeleteClick(int index)
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        addCompositeDisposable(mRecentlyLocalImpl.deleteRecentlyItem(Constants.ServiceType.OB_STAY, index).observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<Boolean, ObservableSource<ArrayList<RecentlyDbPlace>>>()
+        {
+            @Override
+            public ObservableSource<ArrayList<RecentlyDbPlace>> apply(Boolean aBoolean) throws Exception
+            {
+                return mRecentlyLocalImpl.getRecentlyTypeList(Constants.ServiceType.OB_STAY);
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<RecentlyDbPlace>>()
+        {
+            @Override
+            public void accept(ArrayList<RecentlyDbPlace> recentlyDbPlaces) throws Exception
+            {
+                if (recentlyDbPlaces.size() == 0)
+                {
+                    getViewInterface().setRecentlySearchResultVisible(false);
+                } else
+                {
+                    getViewInterface().setRecentlySearchResultVisible(true);
+                    getViewInterface().setRecentlySearchResultList(recentlyDbPlaces);
+                }
+
+                unLockAll();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                getViewInterface().setRecentlySearchResultVisible(false);
+
+                unLockAll();
+            }
+        }));
+    }
+
+    @Override
+    public void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
+    {
+        if (recentlyDbPlace == null || lock() == true)
+        {
+            return;
+        }
+    }
+
+    @Override
+    public void onPopularAreaClick(StayOutboundSuggest stayOutboundSuggest)
+    {
+        if (stayOutboundSuggest == null || lock() == true)
+        {
+            return;
+        }
+
+        addCompositeDisposable(mSuggestLocalImpl.addStayOutboundSuggestDb(stayOutboundSuggest, stayOutboundSuggest.display).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+        {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception
+            {
+                mSearchModel.stayOutboundSuggest.setValue(stayOutboundSuggest);
+
+                unLockAll();
+            }
+        }));
     }
 
     private void initViewModel(BaseActivity activity)
@@ -170,5 +279,59 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
     boolean isCurrentFragment()
     {
         return (mSearchModel.serviceType.getValue() != null && Constants.ServiceType.OB_STAY == mSearchModel.serviceType.getValue());
+    }
+
+    void onRecentlyRefresh()
+    {
+        addCompositeDisposable(mRecentlyLocalImpl.getRecentlyTypeList(Constants.ServiceType.OB_STAY).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<RecentlyDbPlace>>()
+        {
+            @Override
+            public void accept(ArrayList<RecentlyDbPlace> recentlyDbPlaces) throws Exception
+            {
+                if (recentlyDbPlaces.size() == 0)
+                {
+                    getViewInterface().setRecentlySearchResultVisible(false);
+                } else
+                {
+                    getViewInterface().setRecentlySearchResultVisible(true);
+                    getViewInterface().setRecentlySearchResultList(recentlyDbPlaces);
+                }
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                getViewInterface().setRecentlySearchResultVisible(false);
+
+                ExLog.e(throwable.toString());
+            }
+        }));
+    }
+
+    void onPopularAreaRefresh()
+    {
+        addCompositeDisposable(mSuggestRemoteImpl.getPopularRegionSuggestsByStayOutbound().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<StayOutboundSuggest>>()
+        {
+            @Override
+            public void accept(List<StayOutboundSuggest> stayOutboundSuggests) throws Exception
+            {
+                if (stayOutboundSuggests == null || stayOutboundSuggests.size() == 0)
+                {
+                    getViewInterface().setPopularAreaVisible(false);
+                } else
+                {
+                    getViewInterface().setPopularAreaVisible(true);
+                    getViewInterface().setPopularAreaList(stayOutboundSuggests);
+                }
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                getViewInterface().setPopularAreaVisible(false);
+            }
+        }));
     }
 }

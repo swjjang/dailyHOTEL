@@ -24,10 +24,12 @@ public class SearchActivity extends BaseActivity<SearchPresenter>
     public static final int REQUEST_CODE_STAY_OUTBOUND_SUGGEST = 10010;
     public static final int REQUEST_CODE_STAY_OUTBOUND_CALENDAR = 10011;
     public static final int REQUEST_CODE_STAY_OUTBOUND_PEOPLE = 10012;
+    public static final int REQUEST_CODE_STAY_OUTBOUND_DETAIL = 10013;
 
     public static final int REQUEST_CODE_GOURMET_SUGGEST = 10020;
     public static final int REQUEST_CODE_GOURMET_CALENDAR = 10021;
-    public static final int REQUEST_CODE_GOURMET_DETAIL = 10022;
+    public static final int REQUEST_CODE_GOURMET_SEARCH_RESULT = 10022;
+    public static final int REQUEST_CODE_GOURMET_DETAIL = 10023;
 
 
     static final String INTENT_EXTRA_DATA_OPEN_DATE_TIME = "openDateTime";

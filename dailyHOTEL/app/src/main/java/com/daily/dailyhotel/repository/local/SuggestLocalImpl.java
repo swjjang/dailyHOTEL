@@ -33,7 +33,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
     }
 
     @Override
-    public Observable addStayOutboundSuggestDb(StayOutboundSuggest stayOutboundSuggest, String keyword)
+    public Observable<Boolean> addStayOutboundSuggestDb(StayOutboundSuggest stayOutboundSuggest, String keyword)
     {
         return Observable.defer(new Callable<ObservableSource<Boolean>>()
         {

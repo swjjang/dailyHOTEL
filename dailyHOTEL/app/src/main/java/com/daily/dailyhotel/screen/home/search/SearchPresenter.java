@@ -702,15 +702,6 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         });
 
         // StayOutbound
-        mSearchModel.stayOutboundPeople.observe(activity, new Observer<People>()
-        {
-            @Override
-            public void onChanged(@Nullable People people)
-            {
-                getViewInterface().setSearchStayOutboundPeopleText(people.toString(getActivity()));
-            }
-        });
-
         mSearchModel.stayOutboundSuggest.observe(activity, new Observer<StayOutboundSuggest>()
         {
             @Override
@@ -731,6 +722,15 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                     , stayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)")//
                     , stayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)")//
                     , stayBookDateTime.getNights()));
+            }
+        });
+
+        mSearchModel.stayOutboundPeople.observe(activity, new Observer<People>()
+        {
+            @Override
+            public void onChanged(@Nullable People people)
+            {
+                getViewInterface().setSearchStayOutboundPeopleText(people.toString(getActivity()));
             }
         });
 

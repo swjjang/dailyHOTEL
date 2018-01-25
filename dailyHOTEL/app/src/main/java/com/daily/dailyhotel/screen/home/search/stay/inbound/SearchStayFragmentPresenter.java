@@ -18,6 +18,7 @@ import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
+import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
 import com.daily.dailyhotel.screen.home.search.SearchPresenter;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
@@ -54,7 +55,6 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-
         return getViewInterface().getContentView(inflater, R.layout.fragment_search_stay_data, container);
     }
 
@@ -254,6 +254,21 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
             , SearchActivity.REQUEST_CODE_STAY_DETAIL);
 
         getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+    }
+
+    @Override
+    public void onPopularTagClick(CampaignTag campaignTag)
+    {
+        if (campaignTag == null || lock() == true)
+        {
+            return;
+        }
+
+        startActivityForResult(StayCampaignTagListActivity.newInstance(getActivity() //
+            , campaignTag.index, campaignTag.campaignTag//
+            , mSearchModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT) //
+            , mSearchModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT))//
+            , SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT);
     }
 
     private void initViewModel(BaseActivity activity)

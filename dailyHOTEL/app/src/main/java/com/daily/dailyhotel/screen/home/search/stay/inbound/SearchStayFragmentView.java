@@ -41,9 +41,9 @@ public class SearchStayFragmentView extends BaseFragmentDialogView<SearchStayFra
         getViewDataBinding().tagFlexboxLayout.setFlexDirection(FlexDirection.ROW);
         getViewDataBinding().tagFlexboxLayout.setFlexWrap(FlexWrap.WRAP);
 
-        getViewDataBinding().recently01View.setOnClickListener(v -> getEventListener().onRecentlySearchResultClick((RecentlyDbPlace)v.getTag()));
-        getViewDataBinding().recently02View.setOnClickListener(v -> getEventListener().onRecentlySearchResultClick((RecentlyDbPlace)v.getTag()));
-        getViewDataBinding().recently03View.setOnClickListener(v -> getEventListener().onRecentlySearchResultClick((RecentlyDbPlace)v.getTag()));
+        getViewDataBinding().recently01View.setOnClickListener(v -> getEventListener().onRecentlySearchResultClick((RecentlyDbPlace) v.getTag()));
+        getViewDataBinding().recently02View.setOnClickListener(v -> getEventListener().onRecentlySearchResultClick((RecentlyDbPlace) v.getTag()));
+        getViewDataBinding().recently03View.setOnClickListener(v -> getEventListener().onRecentlySearchResultClick((RecentlyDbPlace) v.getTag()));
     }
 
     @Override
@@ -91,7 +91,12 @@ public class SearchStayFragmentView extends BaseFragmentDialogView<SearchStayFra
 
         for (CampaignTag campaignTag : tagList)
         {
-            getViewDataBinding().tagFlexboxLayout.addView(getTagView(campaignTag));
+            View view = getTagView(campaignTag);
+
+            if (view != null)
+            {
+                getViewDataBinding().tagFlexboxLayout.addView(view);
+            }
         }
     }
 
@@ -127,6 +132,11 @@ public class SearchStayFragmentView extends BaseFragmentDialogView<SearchStayFra
 
     private View getTagView(CampaignTag campaignTag)
     {
+        if (campaignTag == null)
+        {
+            return null;
+        }
+
         final int DP_12 = ScreenUtils.dpToPx(getContext(), 12);
         final int DP_5 = ScreenUtils.dpToPx(getContext(), 5);
 
@@ -143,6 +153,7 @@ public class SearchStayFragmentView extends BaseFragmentDialogView<SearchStayFra
         dailyTextView.setLayoutParams(layoutParams);
         dailyTextView.setText("#" + campaignTag.campaignTag);
         dailyTextView.setTag(campaignTag);
+        dailyTextView.setOnClickListener(v -> getEventListener().onPopularTagClick((CampaignTag) v.getTag()));
 
         return dailyTextView;
     }

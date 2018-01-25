@@ -31,6 +31,8 @@ public interface SearchGourmetFragmentInterface
         void onRecentlySearchResultDeleteClick(int index);
 
         void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace);
+
+        void onPopularTagClick(CampaignTag campaignTag);
     }
 
     interface AnalyticsInterface extends BaseAnalyticsInterface
