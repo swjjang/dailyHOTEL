@@ -342,6 +342,17 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentI
     }
 
     @Override
+    public void setMapLayoutVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().mapLayout.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    @Override
     public void showMapLayout(FragmentManager fragmentManager, boolean hide)
     {
         if (getViewDataBinding() == null || fragmentManager == null)

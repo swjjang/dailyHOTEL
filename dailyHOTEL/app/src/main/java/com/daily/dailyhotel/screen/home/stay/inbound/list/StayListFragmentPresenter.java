@@ -475,6 +475,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                     }
 
                     getViewInterface().setEmptyViewVisible(false, mStayViewModel.stayFilter.getValue().isDefaultFilter() == false);
+                    getViewInterface().setListLayoutVisible(true);
 
                     getViewInterface().setList(pair.second, mStayViewModel.stayFilter.getValue().sortType == StayFilter.SortType.DISTANCE//
                         , mStayViewModel.stayBookDateTime.getValue().getNights() > 1, pair.first//
@@ -725,6 +726,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                     getViewInterface().setFloatingActionViewTypeMapEnabled(true);
 
                     getViewInterface().setEmptyViewVisible(false, notDefaultFilter);
+                    getViewInterface().setMapLayoutVisible(true);
 
                     getViewInterface().setMapList(stays.getStayList(), true, true, false);
 
