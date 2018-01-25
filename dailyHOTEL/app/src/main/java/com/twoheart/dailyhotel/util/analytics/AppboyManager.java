@@ -448,6 +448,20 @@ public class AppboyManager extends BaseAnalyticsManager
                 {
                     ExLog.d(TAG + " : " + EventName.STAY_BOOKING_CANCELED + ", " + appboyProperties.forJsonPut().toString());
                 }
+            } else if (AnalyticsManager.Action.STAY_OUTBOUND_CANCELED.equalsIgnoreCase(action) == true)
+            {
+                AppboyProperties appboyProperties = new AppboyProperties();
+
+                appboyProperties.addProperty(AnalyticsManager.KeyType.STAY_NAME, params.get(AnalyticsManager.KeyType.STAY_NAME));
+                appboyProperties.addProperty(AnalyticsManager.KeyType.CANCEL_TYPE, params.get(AnalyticsManager.KeyType.CANCEL_TYPE));
+
+                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+                mAppboy.logCustomEvent(EventName.STAY_OUTBOUND_CANCELED, appboyProperties);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + " : " + EventName.STAY_OUTBOUND_CANCELED + ", " + appboyProperties.forJsonPut().toString());
+                }
             }
         } else if (AnalyticsManager.Category.HOTEL_SATISFACTIONEVALUATION.equalsIgnoreCase(category) == true)
         {
@@ -1223,6 +1237,7 @@ public class AppboyManager extends BaseAnalyticsManager
         public static final String HOME_RECOMMEND_CLICKED = "home_recommend_clicked";
         public static final String HOME_RECOMMEND_ITEM_CLICKED = "home_recommend_item_clicked";
         public static final String TAG_SEARCH_TERM = "tag_search_term";
+        public static final String STAY_OUTBOUND_CANCELED = "stay_outbound_canceled";
     }
 
     private static final class ValueName

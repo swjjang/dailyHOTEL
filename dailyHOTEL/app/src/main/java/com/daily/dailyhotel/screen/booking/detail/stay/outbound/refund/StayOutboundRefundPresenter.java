@@ -17,6 +17,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.StayOutboundBookingDetail;
 import com.daily.dailyhotel.entity.StayOutboundRefundDetail;
 import com.daily.dailyhotel.repository.remote.RefundRemoteImpl;
 import com.twoheart.dailyhotel.R;
@@ -44,6 +45,7 @@ public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutb
 
     public interface StayOutboundRefundAnalyticsInterface extends BaseAnalyticsInterface
     {
+        void onCompletedRefund(Activity activity, String stayName, StayOutboundBookingDetail.RefundType refundType, String cancelMessage);
     }
 
     public StayOutboundRefundPresenter(@NonNull StayOutboundRefundActivity activity)
@@ -239,6 +241,8 @@ public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutb
                                             {
                                                 setResult(Activity.RESULT_OK);
                                                 onBackClick();
+
+                                                mAnalytics.onCompletedRefund(getActivity(), mStayOutboundRefundDetail.name, StayOutboundBookingDetail.RefundType.FULL, mCancelMessage);
                                             }
                                         });
 
@@ -307,6 +311,8 @@ public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutb
                                             {
                                                 setResult(Activity.RESULT_OK);
                                                 onBackClick();
+
+                                                mAnalytics.onCompletedRefund(getActivity(), mStayOutboundRefundDetail.name, StayOutboundBookingDetail.RefundType.PARTIAL, mCancelMessage);
                                             }
                                         });
 

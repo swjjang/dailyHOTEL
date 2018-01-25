@@ -954,6 +954,7 @@ public class AnalyticsManager
         public static final String STAY_CANCEL_SHARE = "stay_cancel_share";
         public static final String GOURMET_CANCEL_SHARE = "gourmet_cancel_share";
         public static final String OB_CANCEL_SHARE = "ob_cancel_share";
+        public static final String STAY_OUTBOUND_CANCELED = "stay_outbound_canceled";
 
         public static final String WAYTOVISIT_OPEN = "waytovisit_open";
         public static final String WAYTOVISIT_CLOSE = "waytovisit_close";
@@ -1618,6 +1619,7 @@ public class AnalyticsManager
         public static final String TAG = "tag";
         public static final String AGGREGATION_ID = "aggregation_id";
         public static final String LABEL = "label";
+        public static final String CANCEL_TYPE = "cancel_type";
     }
 
     public static class ValueType
@@ -1657,5 +1659,7 @@ public class AnalyticsManager
         public static final String PENSION = "pension";
         public static final String LINK_COPY = "link_copy";
         public static final String ETC = "etc";
+        public static final String FREE_CANCEL = "free_cancel";
+        public static final String CANCEL_FEE = "cancel_fee";
     }
 }
