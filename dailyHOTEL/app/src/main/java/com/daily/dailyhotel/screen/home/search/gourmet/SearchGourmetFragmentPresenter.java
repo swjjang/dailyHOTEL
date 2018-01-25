@@ -47,6 +47,8 @@ public class SearchGourmetFragmentPresenter extends BasePagerFragmentPresenter<S
 
     SearchPresenter.SearchModel mSearchModel;
 
+    boolean mHasPopularTag;
+
     public SearchGourmetFragmentPresenter(@NonNull SearchGourmetFragment fragment)
     {
         super(fragment);
@@ -189,8 +191,13 @@ public class SearchGourmetFragmentPresenter extends BasePagerFragmentPresenter<S
         // 최근 검색결과
         onRecentlyRefresh();
 
-        // 국내스테이 인기검색 태그
-        onCampaignTagRefresh();
+        // 고메 인기검색 태그
+        if (mHasPopularTag == false)
+        {
+            mHasPopularTag = true;
+
+            onCampaignTagRefresh();
+        }
     }
 
     @Override

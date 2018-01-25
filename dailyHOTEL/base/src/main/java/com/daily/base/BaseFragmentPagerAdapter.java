@@ -1,6 +1,5 @@
 package com.daily.base;
 
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
@@ -71,6 +70,16 @@ public class BaseFragmentPagerAdapter<T extends BaseFragment> extends FragmentSt
 
         mFragmentList.clear();
         addListFragment(fragmentList);
+    }
+
+    public void addFragment(T fragment)
+    {
+        if (mFragmentList == null || fragment == null)
+        {
+            return;
+        }
+
+        mFragmentList.add(fragment);
     }
 
     public void addListFragment(List<T> fragmentList)

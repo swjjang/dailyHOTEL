@@ -794,6 +794,8 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             , mSearchModel.stayOutboundBookDateTime.getValue().getNights()));
 
         getViewInterface().showSearchStayOutbound();
+
+        getViewInterface().setSearchStayOutboundButtonEnabled(DailyTextUtils.isTextEmpty(mSearchModel.stayOutboundSuggest.getValue() == null ? null : mSearchModel.stayOutboundSuggest.getValue().display) == false);
     }
 
     private void showSearchGourmet()
@@ -803,5 +805,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         getViewInterface().setSearchGourmetCalendarText(mSearchModel.gourmetBookDateTime.getValue().getVisitDateTime("yyyy.MM.dd(EEE)"));
 
         getViewInterface().showSearchGourmet();
+
+        getViewInterface().setSearchGourmetButtonEnabled(DailyTextUtils.isTextEmpty(mSearchModel.gourmetSuggest.getValue()) == false);
     }
 }
