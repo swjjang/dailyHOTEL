@@ -27,7 +27,7 @@ public class GourmetSearchResultLayout extends PlaceSearchResultLayout
             return;
         }
 
-        setCalendarText(gourmetBookingDay.getVisitDay("yyyy.MM.dd(EEE)"));
+        setCalendarText(gourmetBookingDay.getVisitDay("MM.dd(EEE)"));
     }
 
     @Override

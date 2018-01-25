@@ -21,7 +21,6 @@ import android.widget.TextView;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
-import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.view.DailyFloatingActionView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
@@ -40,8 +39,6 @@ import java.util.List;
 
 public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements View.OnClickListener
 {
-    private static final int ANIMATION_DELAY = 200;
-
     private View mToolbar;
     protected TextView mCalendarTextView;
     private View mEmptyLayout, mSearchLocationLayout;
@@ -50,11 +47,12 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
     protected DailyFloatingActionView mFloatingActionView;
 
     protected TabLayout mCategoryTabLayout;
-    private View mCalendarUnderlineView;
+    //    private View mCalendarUnderlineView;
     protected ViewPager mViewPager;
     protected PlaceListFragmentPagerAdapter mFragmentPagerAdapter;
 
     protected Spinner mDistanceFilterSpinner;
+    protected View mDistanceVerticalView;
     DistanceFilterAdapter mDistanceFilterAdapter;
 
     Constants.ANIMATION_STATUS mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
@@ -88,6 +86,8 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         void onPageScroll();
 
         void onPageSelected(int changedPosition, int prevPosition);
+
+        void onResearchClick();
     }
 
     protected abstract int getEmptyIconResourceId();
@@ -134,21 +134,18 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
             }
         });
 
-        View searchCancelView = mToolbar.findViewById(R.id.searchCancelView);
-        searchCancelView.setOnClickListener(new View.OnClickListener()
+        View titleBackgroundView = view.findViewById(R.id.titleBackgroundView);
+        titleBackgroundView.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).finish(Constants.CODE_RESULT_ACTIVITY_HOME);
+                ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).onResearchClick();
             }
         });
 
-        View calendarLayout = view.findViewById(R.id.calendarLayout);
-        calendarLayout.setOnClickListener(this);
-
         mCalendarTextView = view.findViewById(R.id.calendarTextView);
-
+        mDistanceVerticalView = view.findViewById(R.id.verticalLineView);
         mDistanceFilterSpinner = view.findViewById(R.id.distanceSpinner);
 
         CharSequence[] strings = mContext.getResources().getTextArray(R.array.search_result_distance_array);
@@ -156,7 +153,6 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
 
         mDistanceFilterAdapter.setDropDownViewResource(R.layout.list_row_search_result_sort_dropdown_item);
         mDistanceFilterSpinner.setAdapter(mDistanceFilterAdapter);
-
         mDistanceFilterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             @Override
@@ -178,7 +174,7 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
     private void initCategoryTabLayout(View view)
     {
         mCategoryTabLayout = view.findViewById(R.id.categoryTabLayout);
-        mCalendarUnderlineView = view.findViewById(R.id.calendarUnderLine);
+        //        mCalendarUnderlineView = view.findViewById(R.id.calendarUnderLine);
         mViewPager = view.findViewById(R.id.viewPager);
     }
 
@@ -344,18 +340,18 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
     {
         ((View) mCategoryTabLayout.getParent()).setVisibility(visibility);
 
-        ViewGroup.LayoutParams layoutParams = mCalendarUnderlineView.getLayoutParams();
-
-        if (layoutParams != null)
-        {
-            if (visibility == View.VISIBLE)
-            {
-                mCalendarUnderlineView.getLayoutParams().height = 1;
-            } else
-            {
-                mCalendarUnderlineView.getLayoutParams().height = ScreenUtils.dpToPx(mContext, 1);
-            }
-        }
+        //        ViewGroup.LayoutParams layoutParams = mCalendarUnderlineView.getLayoutParams();
+        //
+        //        if (layoutParams != null)
+        //        {
+        //            if (visibility == View.VISIBLE)
+        //            {
+        //                mCalendarUnderlineView.getLayoutParams().height = 1;
+        //            } else
+        //            {
+        //                mCalendarUnderlineView.getLayoutParams().height = ScreenUtils.dpToPx(mContext, 1);
+        //            }
+        //        }
     }
 
     public int getCategoryTabCount()
@@ -656,10 +652,19 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         return mFragmentPagerAdapter.getFragmentList();
     }
 
-    public void setSpinnerVisible(boolean isVisible)
+    public void setSpinnerVisible(boolean visible)
     {
-        mDistanceFilterSpinner.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        mDistanceFilterSpinner.setEnabled(isVisible);
+        if (mDistanceVerticalView == null || mDistanceFilterSpinner == null)
+        {
+            return;
+        }
+
+        int flag = visible ? View.VISIBLE : View.GONE;
+
+        mDistanceVerticalView.setVisibility(flag);
+        mDistanceFilterSpinner.setVisibility(flag);
+        mDistanceFilterSpinner.setEnabled(visible);
+
     }
 
     double getSpinnerRadiusValue(int spinnerPosition)

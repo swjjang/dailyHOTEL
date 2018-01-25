@@ -754,6 +754,12 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         {
 
         }
+
+        @Override
+        public void onResearchClick()
+        {
+
+        }
     };
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

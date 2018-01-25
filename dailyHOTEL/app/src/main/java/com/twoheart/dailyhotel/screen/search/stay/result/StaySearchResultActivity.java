@@ -902,6 +902,12 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 }
             }
         }
+
+        @Override
+        public void onResearchClick()
+        {
+
+        }
     };
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
