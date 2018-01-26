@@ -44,7 +44,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 dailyFont:style="Medium"/>
 
-
             <com.daily.base.widget.DailyEditText
                 android:id="@+id/keywordEditText"
                 android:layout_width="0dp"
@@ -72,61 +71,61 @@
                 app:layout_constraintRight_toRightOf="parent"/>
         </android.support.constraint.ConstraintLayout>
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/nearByLayout"
-            android:layout_width="0dp"
-            android:layout_height="58dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbarView">
+        <!--<android.support.constraint.ConstraintLayout-->
+            <!--android:id="@+id/nearByLayout"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="58dp"-->
+            <!--app:layout_constraintLeft_toLeftOf="parent"-->
+            <!--app:layout_constraintRight_toRightOf="parent"-->
+            <!--app:layout_constraintTop_toBottomOf="@+id/toolbarView">-->
 
-            <ImageView
-                android:id="@+id/nearByImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/vector_ic_nearby"/>
+            <!--<ImageView-->
+                <!--android:id="@+id/nearByImageView"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="15dp"-->
+                <!--app:layout_constraintBottom_toBottomOf="parent"-->
+                <!--app:layout_constraintLeft_toLeftOf="parent"-->
+                <!--app:layout_constraintTop_toTopOf="parent"-->
+                <!--app:srcCompat="@drawable/vector_ic_nearby"/>-->
 
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/nearByTitleView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:text="@string/label_search_nearby_title"
-                android:textColor="@color/default_text_c323232"
-                android:textSize="13dp"
-                app:layout_constraintBottom_toTopOf="@+id/nearByDescriptionView"
-                app:layout_constraintLeft_toRightOf="@+id/nearByImageView"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_chainStyle="packed"/>
+            <!--<com.daily.base.widget.DailyTextView-->
+                <!--android:id="@+id/nearByTitleView"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="15dp"-->
+                <!--android:text="@string/label_search_nearby_title"-->
+                <!--android:textColor="@color/default_text_c323232"-->
+                <!--android:textSize="13dp"-->
+                <!--app:layout_constraintBottom_toTopOf="@+id/nearByDescriptionView"-->
+                <!--app:layout_constraintLeft_toRightOf="@+id/nearByImageView"-->
+                <!--app:layout_constraintTop_toTopOf="parent"-->
+                <!--app:layout_constraintVertical_chainStyle="packed"/>-->
 
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/nearByDescriptionView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="2dp"
-                android:text="@string/label_search_nearby_description"
-                android:textColor="@color/default_text_cc5c5c5"
-                android:textSize="13dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/nearByImageView"
-                app:layout_constraintTop_toBottomOf="@+id/nearByTitleView"/>
+            <!--<com.daily.base.widget.DailyTextView-->
+                <!--android:id="@+id/nearByDescriptionView"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="15dp"-->
+                <!--android:layout_marginTop="2dp"-->
+                <!--android:text="@string/label_search_nearby_description"-->
+                <!--android:textColor="@color/default_text_cc5c5c5"-->
+                <!--android:textSize="13dp"-->
+                <!--app:layout_constraintBottom_toBottomOf="parent"-->
+                <!--app:layout_constraintLeft_toRightOf="@+id/nearByImageView"-->
+                <!--app:layout_constraintTop_toBottomOf="@+id/nearByTitleView"/>-->
 
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_marginLeft="15dp"
-                android:background="@color/default_line_cf0f0f0"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"/>
+            <!--<View-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="1dp"-->
+                <!--android:layout_marginLeft="15dp"-->
+                <!--android:background="@color/default_line_cf0f0f0"-->
+                <!--app:layout_constraintBottom_toBottomOf="parent"-->
+                <!--app:layout_constraintLeft_toLeftOf="parent"-->
+                <!--app:layout_constraintRight_toRightOf="parent"/>-->
 
-        </android.support.constraint.ConstraintLayout>
+        <!--</android.support.constraint.ConstraintLayout>-->
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/recentlySuggestLayout"
@@ -136,22 +135,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nearByLayout">
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/recentlySuggestTitleView"
-                android:layout_width="0dp"
-                android:layout_height="36dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="10dp"
-                android:gravity="center_vertical"
-                android:text="@string/label_search_recentsearches"
-                android:textColor="@color/default_text_cc5c5c5"
-                android:textSize="14dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@+id/toolbarView">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recentlySuggestRecyclerView"
@@ -161,7 +145,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/deleteRecentlySuggestLayout"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/recentlySuggestTitleView"/>
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <FrameLayout
                 android:id="@+id/deleteRecentlySuggestLayout"

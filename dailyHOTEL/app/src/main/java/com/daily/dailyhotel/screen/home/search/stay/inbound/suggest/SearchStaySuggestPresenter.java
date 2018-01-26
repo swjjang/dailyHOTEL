@@ -120,7 +120,7 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
             mStayBookDateTime = new StayBookDateTime();
 
             mStayBookDateTime.setCheckInDateTime(checkInDate);
-            mStayBookDateTime.getCheckOutDateTime(checkOutDate);
+            mStayBookDateTime.setCheckOutDateTime(checkOutDate);
         } catch (Exception e)
         {
             return false;
@@ -419,7 +419,7 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
                             staySuggestList.add(staySuggest);
                         }
 
-                        return null;
+                        return staySuggestList;
                     }
                 }).subscribe(new Consumer<List<StaySuggest>>()
                 {

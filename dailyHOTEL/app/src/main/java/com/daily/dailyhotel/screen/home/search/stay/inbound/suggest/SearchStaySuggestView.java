@@ -230,7 +230,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
         if (mSuggestListAdapter == null)
         {
-            mSuggestListAdapter = new SearchStaySuggestView.SuggestListAdapter(getContext(), new View.OnClickListener()
+            mSuggestListAdapter = new SuggestListAdapter(getContext(), new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -366,7 +366,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
         if (mRecentlySuggestListAdapter == null)
         {
-            mRecentlySuggestListAdapter = new SearchStaySuggestView.RecentlySuggestListAdapter(getContext(), new View.OnClickListener()
+            mRecentlySuggestListAdapter = new RecentlySuggestListAdapter(getContext(), new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -392,7 +392,6 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
         }
 
         getViewDataBinding().recentlySuggestLayout.setVisibility(View.VISIBLE);
-        getViewDataBinding().recentlySuggestTitleView.setText(R.string.label_search_recentsearches);
         getViewDataBinding().deleteRecentlySuggestLayout.setVisibility(View.VISIBLE);
 
         List<ObjectItem> objectItemList = new ArrayList<>();
@@ -424,7 +423,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
         if (mPopularSuggestListAdapter == null)
         {
-            mPopularSuggestListAdapter = new SearchStaySuggestView.RecentlySuggestListAdapter(getContext(), new View.OnClickListener()
+            mPopularSuggestListAdapter = new RecentlySuggestListAdapter(getContext(), new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -450,7 +449,6 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
         }
 
         getViewDataBinding().recentlySuggestLayout.setVisibility(View.VISIBLE);
-        getViewDataBinding().recentlySuggestTitleView.setText(R.string.label_stay_outbound_suggest_popular_area);
         getViewDataBinding().deleteRecentlySuggestLayout.setVisibility(View.GONE);
 
         List<ObjectItem> objectItemList = new ArrayList<>();
@@ -587,7 +585,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
                         = DataBindingUtil.inflate(LayoutInflater.from(mContext) //
                         , R.layout.list_row_stay_outbound_suggest_title_data, parent, false);
 
-                    SearchStaySuggestView.SuggestListAdapter.TitleViewHolder titleViewHolder = new SearchStaySuggestView.SuggestListAdapter.TitleViewHolder(dataBinding);
+                    SuggestListAdapter.TitleViewHolder titleViewHolder = new TitleViewHolder(dataBinding);
 
                     return titleViewHolder;
                 }
@@ -598,7 +596,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
                         = DataBindingUtil.inflate(LayoutInflater.from(mContext) //
                         , R.layout.list_row_stay_outbound_suggest_entry_data, parent, false);
 
-                    SearchStaySuggestView.SuggestListAdapter.EntryViewHolder entryViewHolder = new SearchStaySuggestView.SuggestListAdapter.EntryViewHolder(dataBinding);
+                    SuggestListAdapter.EntryViewHolder entryViewHolder = new EntryViewHolder(dataBinding);
 
                     return entryViewHolder;
                 }
@@ -620,11 +618,11 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
             switch (item.mType)
             {
                 case ObjectItem.TYPE_SECTION:
-                    onBindViewHolder((SearchStaySuggestView.SuggestListAdapter.TitleViewHolder) holder, item, position);
+                    onBindViewHolder((TitleViewHolder) holder, item, position);
                     break;
 
                 case ObjectItem.TYPE_ENTRY:
-                    onBindViewHolder((SearchStaySuggestView.SuggestListAdapter.EntryViewHolder) holder, item, position);
+                    onBindViewHolder((EntryViewHolder) holder, item, position);
                     break;
             }
         }
@@ -853,12 +851,13 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
             {
                 case ObjectItem.TYPE_SECTION:
                     onBindViewHolder((TitleViewHolder) holder, item, position);
+                    break;
 
                 case ObjectItem.TYPE_FOOTER_VIEW:
                     break;
 
                 case ObjectItem.TYPE_ENTRY:
-                    onBindViewHolder((SearchStaySuggestView.RecentlySuggestListAdapter.EntryViewHolder) holder, item, position);
+                    onBindViewHolder((EntryViewHolder) holder, item, position);
                     break;
             }
         }
