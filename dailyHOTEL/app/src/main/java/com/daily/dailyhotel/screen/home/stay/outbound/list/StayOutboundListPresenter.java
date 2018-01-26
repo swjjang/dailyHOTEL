@@ -239,18 +239,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     @Override
     public void onPostCreate()
     {
-        if (mStayOutboundSuggest.id == 0)
-        {
-            // 키워드 검색인 경우
-            getViewInterface().setToolbarTitle(mStayOutboundSuggest.city);
-        } else
-        {
-            // StayOutboundSuggest 검색인 경우
-            getViewInterface().setToolbarTitle(mStayOutboundSuggest.display);
-        }
-
-        notifyStayBookDateTimeChanged();
-        notifyPeopleChanged();
+        notifyToolbarChanged();
     }
 
     @Override
@@ -438,7 +427,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                         }
 
                         setStayBookDateTime(checkInDateTime, checkOutDateTime);
-                        notifyStayBookDateTimeChanged();
+                        notifyToolbarChanged();
 
                         if (mStayOutboundFilters != null && mStayOutboundFilters.sortType == StayOutboundFilters.SortType.DISTANCE)
                         {
@@ -489,7 +478,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                         ArrayList<Integer> childAgeList = data.getIntegerArrayListExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST);
 
                         setPeople(numberOfAdults, childAgeList);
-                        notifyPeopleChanged();
+                        notifyToolbarChanged();
 
                         if (mStayOutboundFilters != null && mStayOutboundFilters.sortType == StayOutboundFilters.SortType.DISTANCE)
                         {
@@ -989,12 +978,6 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     }
 
     @Override
-    public void onViewPagerClose()
-    {
-
-    }
-
-    @Override
     public void onMapReady()
     {
         getViewInterface().setStayOutboundMakeMarker(mStayOutboundList, true, true);
@@ -1114,7 +1097,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     }
 
     @Override
-    public void onResearchClick()
+    public void onSearchClick()
     {
         if (lock() == true)
         {
@@ -1126,6 +1109,12 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         setResult(Activity.RESULT_OK, intent);
         finish();
+    }
+
+    @Override
+    public void onResearchClick()
+    {
+
     }
 
     @Override
@@ -1469,16 +1458,6 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         }));
     }
 
-    private void notifyPeopleChanged()
-    {
-        if (mPeople == null)
-        {
-            return;
-        }
-
-        getViewInterface().setPeopleText(mPeople.toShortString(getActivity()));
-    }
-
     void notifyFilterChanged()
     {
         if (mStayOutboundFilters == null)
@@ -1505,18 +1484,20 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         return (stayOutboundFilters.sortType == StayOutboundFilters.SortType.RECOMMENDATION && stayOutboundFilters.rating == -1);
     }
 
-    private void notifyStayBookDateTimeChanged()
+    private void notifyToolbarChanged()
     {
         if (mStayBookDateTime == null)
         {
             return;
         }
 
+        String title = mStayOutboundSuggest.id == 0 ? mStayOutboundSuggest.city : mStayOutboundSuggest.display;
+
         try
         {
-            getViewInterface().setCalendarText(String.format(Locale.KOREA, "%s - %s"//
+            getViewInterface().setToolbarTitle(title, String.format(Locale.KOREA, "%s - %s, %s"//
                 , mStayBookDateTime.getCheckInDateTime("M.d(EEE)")//
-                , mStayBookDateTime.getCheckOutDateTime("M.d(EEE)")));
+                , mStayBookDateTime.getCheckOutDateTime("M.d(EEE)"), mPeople.toShortString(getActivity())));
         } catch (Exception e)
         {
             ExLog.e(e.toString());

@@ -22,9 +22,9 @@ public interface StayOutboundListViewInterface extends BaseBlurViewInterface
 
     void setToolbarTitle(String title);
 
-    void setCalendarText(String calendarText);
+    void setToolbarTitle(String titleText, String subTitleText);
 
-    void setPeopleText(String peopleText);
+    void setCalendarText(String calendarText);
 
     void setStayOutboundList(List<ObjectItem> objectItemList, boolean isSortByDistance, boolean isNights, boolean rewardEnabled);
 
