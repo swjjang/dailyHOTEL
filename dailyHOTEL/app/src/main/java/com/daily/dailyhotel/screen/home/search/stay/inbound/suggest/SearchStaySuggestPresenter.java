@@ -27,7 +27,6 @@ import com.twoheart.dailyhotel.network.model.StayKeyword;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyRecentSearches;
 import com.twoheart.dailyhotel.util.Util;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import org.json.JSONObject;
 
@@ -427,6 +426,8 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
                     public void accept(List<StaySuggest> staySuggestList) throws Exception
                     {
                         SearchStaySuggestPresenter.this.onSuggestList(staySuggestList);
+
+                        unLockAll();
                     }
                 }, new Consumer<Throwable>()
                 {
@@ -434,6 +435,8 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
                     public void accept(Throwable throwable) throws Exception
                     {
                         SearchStaySuggestPresenter.this.onSuggestList(null);
+
+                        unLockAll();
                     }
                 }));
         }
@@ -459,8 +462,8 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
         //        {
         //            ExLog.d(e.getMessage());
         //        }
-
-        startFinishAction(staySuggest, mKeyword, AnalyticsManager.Category.OB_SEARCH_ORIGIN_AUTO);
+        getViewInterface().setKeywordEditText(staySuggest.displayName);
+        startFinishAction(staySuggest, mKeyword, null);
     }
 
     @Override
@@ -477,6 +480,8 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
         }
 
         // TODO : 최근 본 업장 및 최근 검색어 클릭시 처리
+        getViewInterface().setKeywordEditText(staySuggest.displayName);
+        startFinishAction(staySuggest, mKeyword, null);
 
         //        addCompositeDisposable(mSuggestLocalImpl.getRecentlyStayOutboundSuggestKeyword(staySuggest.id) //
         //            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<String>()

@@ -23,6 +23,7 @@ import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
+import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.suggest.SearchStaySuggestActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.calendar.StayOutboundCalendarActivity;
@@ -245,7 +246,14 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             case SearchActivity.REQUEST_CODE_STAY_SUGGEST:
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
-                    //                    mSearchModel.staySuggest.setValue(data.getStringExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST));
+                    try
+                    {
+                        StaySuggestParcel staySuggestParcel = data.getParcelableExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
+                        mSearchModel.staySuggest.setValue(staySuggestParcel.getSuggest().displayName);
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                    }
                 }
                 break;
 

@@ -498,7 +498,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
                 getEventListener().onSuggestClick(staySuggest);
                 break;
 
-            case R.id.deleteImageView:
+            case R.id.deleteTextView:
                 setSuggest(null);
                 setSuggests(null);
                 setSuggestsVisible(false);
