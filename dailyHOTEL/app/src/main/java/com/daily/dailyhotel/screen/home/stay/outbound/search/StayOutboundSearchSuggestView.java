@@ -54,6 +54,8 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
         void onPopularSuggestClick(StayOutboundSuggest stayOutboundSuggest);
 
         void onDeleteAllRecentlySuggest();
+
+        void onVoiceSearchClick();
     }
 
     public StayOutboundSearchSuggestView(BaseActivity baseActivity, StayOutboundSearchSuggestView.OnEventListener listener)
@@ -189,6 +191,9 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
             }
         });
 
+        viewDataBinding.voiceSearchView.setOnClickListener(this);
+        viewDataBinding.voiceSearchView.setVisibility(View.VISIBLE);
+
         viewDataBinding.progressBar.getIndeterminateDrawable().setColorFilter(getColor(R.color.default_probressbar), PorterDuff.Mode.SRC_IN);
         setProgressBarVisible(false);
     }
@@ -312,6 +317,12 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
                 setSuggestsVisible(false);
                 setEmptySuggestsVisible(false);
                 break;
+
+            case R.id.voiceSearchView:
+            {
+                getEventListener().onVoiceSearchClick();
+                break;
+            }
         }
     }
 
@@ -523,6 +534,8 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
             if (length == 0)
             {
                 getViewDataBinding().deleteImageView.setVisibility(View.INVISIBLE);
+
+                getViewDataBinding().voiceSearchView.setVisibility(View.VISIBLE);
             } else
             {
                 if (length == 1 && editable.charAt(0) == ' ')
@@ -541,6 +554,8 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
                 }
 
                 getViewDataBinding().deleteImageView.setVisibility(View.VISIBLE);
+
+                getViewDataBinding().voiceSearchView.setVisibility(View.GONE);
             }
 
             getEventListener().onSearchSuggest(editable.toString());

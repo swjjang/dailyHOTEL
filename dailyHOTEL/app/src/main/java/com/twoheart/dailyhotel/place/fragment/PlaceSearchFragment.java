@@ -1,15 +1,18 @@
 package com.twoheart.dailyhotel.place.fragment;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.CommonDateTime;
@@ -34,6 +37,7 @@ import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -50,6 +54,7 @@ public abstract class PlaceSearchFragment extends BaseFragment
 
     protected static final int REQUEST_CODE_STAY_CAMPAIGN_TAG_LIST = 10002;
     protected static final int REQUEST_CODE_GOURMET_CAMPAIGN_TAG_LIST = 10003;
+    protected static final int REQUEST_CODE_SPEECH_INPUT = 10004;
 
     protected DailyRecentSearches mDailyRecentSearches;
     protected PlaceSearchLayout mPlaceSearchLayout;
@@ -362,6 +367,18 @@ public abstract class PlaceSearchFragment extends BaseFragment
                 }
                 break;
             }
+
+            case REQUEST_CODE_SPEECH_INPUT:
+            {
+                if (resultCode == Activity.RESULT_OK && null != data)
+                {
+                    ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    ExLog.d("sam : " + result.get(0));
+                    setSearchWord(result.get(0));
+                    showSearchKeyboard();
+                }
+                break;
+            }
         }
     }
 
@@ -543,5 +560,24 @@ public abstract class PlaceSearchFragment extends BaseFragment
                 });
             }
         });
+    }
+
+    /**
+     * Showing google speech input dialog
+     * */
+    protected void promptSpeechInput() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+            "검색어를 말씀하세요!");
+        try {
+            startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT);
+        } catch (ActivityNotFoundException a) {
+            DailyToast.showToast(getActivity(),
+                "이기기는 음성검색을 지원하지 않습니다.",
+                DailyToast.LENGTH_SHORT);
+        }
     }
 }

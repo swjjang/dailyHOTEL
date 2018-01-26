@@ -745,6 +745,12 @@ public class GourmetSearchFragment extends PlaceSearchFragment
         }
 
         @Override
+        public void onVoiceSearchClick()
+        {
+            promptSpeechInput();
+        }
+
+        @Override
         public void finish()
         {
             mBaseActivity.finish();

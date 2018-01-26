@@ -39,6 +39,17 @@
                 android:textSize="18dp"
                 android:theme="@style/EditTextTheme" />
 
+            <ImageView
+                android:id="@+id/voiceSearchView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="6dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                app:srcCompat="@drawable/search_ic_01_surrounding"
+                android:visibility="gone"/>
+
             <com.daily.base.widget.DailyImageView
                 android:id="@+id/deleteImageView"
                 android:layout_width="wrap_content"
