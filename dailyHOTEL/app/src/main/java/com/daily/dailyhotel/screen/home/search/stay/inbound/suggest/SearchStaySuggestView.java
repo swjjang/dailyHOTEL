@@ -247,13 +247,21 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
             getViewDataBinding().suggestsRecyclerView.setAdapter(mSuggestListAdapter);
         }
 
+        List<ObjectItem> objectItemList = new ArrayList<>();
+
+        String keyword = getViewDataBinding().keywordEditText.getText().toString();
+
+        if (DailyTextUtils.isTextEmpty(keyword) == false)
+        {
+            objectItemList.add(new ObjectItem(ObjectItem.TYPE_HEADER_VIEW, new StaySuggest(StaySuggest.CATEGORY_DIRECT, keyword)));
+        }
+
         if (staySuggestList == null || staySuggestList.size() == 0)
         {
-            mSuggestListAdapter.setAll(null, null);
-            mSuggestListAdapter.notifyDataSetChanged();
+            //            mSuggestListAdapter.setAll(keyword, objectItemList);
+            //            mSuggestListAdapter.notifyDataSetChanged();
         } else
         {
-            List<ObjectItem> objectItemList = new ArrayList<>(staySuggestList.size());
 
             for (StaySuggest staySuggest : staySuggestList)
             {
@@ -269,9 +277,12 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
             // 마지막줄
             objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, new StaySuggest(null, null)));
 
-            mSuggestListAdapter.setAll(getViewDataBinding().keywordEditText.getText().toString(), objectItemList);
+            mSuggestListAdapter.setAll(keyword, objectItemList);
             mSuggestListAdapter.notifyDataSetChanged();
         }
+
+        //        mSuggestListAdapter.setAll(keyword, objectItemList);
+        //        mSuggestListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -579,6 +590,24 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
         {
             switch (viewType)
             {
+                case ObjectItem.TYPE_LOCATION_VIEW:
+                {
+                    // TODO : 현재 위지 검색
+
+                    return null;
+                }
+
+                case ObjectItem.TYPE_HEADER_VIEW:
+                {
+                    // TODO : 직접 검색
+
+                    ListRowStayOutboundSuggestEntryDataBinding dataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.list_row_stay_outbound_suggest_entry_data, parent, false);
+
+                    DirectViewHolder entryViewHolder = new DirectViewHolder(dataBinding);
+
+                    return entryViewHolder;
+                }
+
                 case ObjectItem.TYPE_SECTION:
                 {
                     ListRowStayOutboundSuggestTitleDataBinding dataBinding //
@@ -617,6 +646,15 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
             switch (item.mType)
             {
+                case ObjectItem.TYPE_LOCATION_VIEW:
+                    // TODO : 현재 위치 검색
+                    break;
+
+                case ObjectItem.TYPE_HEADER_VIEW:
+                    // TODO : 직접 검색
+                    onBindViewHolder((DirectViewHolder) holder, item, position);
+                    break;
+
                 case ObjectItem.TYPE_SECTION:
                     onBindViewHolder((TitleViewHolder) holder, item, position);
                     break;
@@ -670,6 +708,22 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
             }
 
             return mSuggestList.get(position);
+        }
+
+        private void onBindViewHolder(DirectViewHolder holder, ObjectItem item, int position)
+        {
+            StaySuggest staySuggest = item.getItem();
+
+            holder.itemView.getRootView().setTag(staySuggest);
+
+            if (DailyTextUtils.isTextEmpty(staySuggest.displayName) == true)
+            {
+                holder.dataBinding.textView.setText(null);
+            } else
+            {
+                holder.dataBinding.textView.setText(getString(R.string.label_search_suggest_direct_search_format, staySuggest.displayName));
+                holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_01_region, 0, 0, 0);
+            }
         }
 
         private void onBindViewHolder(TitleViewHolder holder, ObjectItem item, int position)
@@ -755,6 +809,20 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
             }
         }
 
+        class DirectViewHolder extends RecyclerView.ViewHolder
+        {
+            ListRowStayOutboundSuggestEntryDataBinding dataBinding;
+
+            public DirectViewHolder(ListRowStayOutboundSuggestEntryDataBinding dataBinding)
+            {
+                super(dataBinding.getRoot());
+
+                this.dataBinding = dataBinding;
+
+                dataBinding.getRoot().setOnClickListener(mOnClickListener);
+            }
+        }
+
         class TitleViewHolder extends RecyclerView.ViewHolder
         {
             ListRowStayOutboundSuggestTitleDataBinding dataBinding;
@@ -802,6 +870,13 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
         {
             switch (viewType)
             {
+                case ObjectItem.TYPE_LOCATION_VIEW:
+                {
+                    // TODO : 현재 위지 검색
+
+                    return null;
+                }
+
                 case ObjectItem.TYPE_SECTION:
                 {
                     ListRowStayOutboundSuggestTitleDataBinding dataBinding //
@@ -849,6 +924,10 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
             switch (item.mType)
             {
+                case ObjectItem.TYPE_LOCATION_VIEW:
+                    // TODO : 현재 위치 검색
+                    break;
+
                 case ObjectItem.TYPE_SECTION:
                     onBindViewHolder((TitleViewHolder) holder, item, position);
                     break;

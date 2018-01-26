@@ -11,6 +11,7 @@ public class ObjectItem
     public static final int TYPE_HEADER_VIEW = 6;
     public static final int TYPE_MONTH_VIEW = 7;
     public static final int TYPE_WEEK_VIEW = 8;
+    public static final int TYPE_LOCATION_VIEW = 9;
 
     public int mType;
     private Object mItem;

@@ -456,14 +456,6 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
             return;
         }
 
-        //        try
-        //        {
-        //            mAnalytics.onEventSuggestClick(getActivity(), staySuggest.displayName, mKeyword);
-        //        } catch (Exception e)
-        //        {
-        //            ExLog.d(e.getMessage());
-        //        }
-
         addRecentSearches(staySuggest);
 
         getViewInterface().setKeywordEditText(staySuggest.displayName);
@@ -487,39 +479,6 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
 
         getViewInterface().setKeywordEditText(staySuggest.displayName);
         startFinishAction(staySuggest, mKeyword, null);
-
-        //        addCompositeDisposable(mSuggestLocalImpl.getRecentlyStayOutboundSuggestKeyword(staySuggest.id) //
-        //            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<String>()
-        //            {
-        //                @Override
-        //                public void accept(String keyword) throws Exception
-        //                {
-        //                    try
-        //                    {
-        //                        mAnalytics.onEventRecentlySuggestClick(getActivity(), staySuggest.display, mKeyword);
-        //                    } catch (Exception e)
-        //                    {
-        //                        ExLog.d(e.getMessage());
-        //                    }
-        //
-        //                    startFinishAction(stayOutboundSuggest, keyword, AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECENT);
-        //                }
-        //            }, new Consumer<Throwable>()
-        //            {
-        //                @Override
-        //                public void accept(Throwable throwable) throws Exception
-        //                {
-        //                    try
-        //                    {
-        ////                        mAnalytics.onEventRecentlySuggestClick(getActivity(), staySuggest.display, mKeyword);
-        //                    } catch (Exception e)
-        //                    {
-        //                        ExLog.d(e.getMessage());
-        //                    }
-        //
-        //                    startFinishAction(staySuggest, "", AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECENT);
-        //                }
-        //            }));
     }
 
     @Override

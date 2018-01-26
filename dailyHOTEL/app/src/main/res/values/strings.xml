@@ -1100,6 +1100,7 @@
     <string name="label_search_suggest_type_stay">스테이</string>
     <string name="label_search_suggest_type_region">도시/지역</string>
     <string name="label_search_suggest_recently_search">최근검색어</string>
+    <string name="label_search_suggest_direct_search_format">\‘%1$s\’ 검색하기</string>
 
     <!-- Coupon -->
     <string name="coupon_notice_text">할인쿠폰\n상세정보</string>
