@@ -140,8 +140,8 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
         View backView = mToolbar.findViewById(R.id.backImageView);
         backView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).finish(Activity.RESULT_CANCELED));
 
-        View searchCancelView = mToolbar.findViewById(R.id.searchCancelView);
-        searchCancelView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).finish(Constants.CODE_RESULT_ACTIVITY_HOME));
+//        View searchCancelView = mToolbar.findViewById(R.id.searchCancelView);
+//        searchCancelView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).finish(Constants.CODE_RESULT_ACTIVITY_HOME));
 
         View calendarLayout = view.findViewById(R.id.calendarLayout);
         calendarLayout.setOnClickListener(this);
@@ -177,7 +177,7 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
     private void initCategoryTabLayout(View view)
     {
         mCategoryTabLayout = view.findViewById(R.id.categoryTabLayout);
-        mCalendarUnderlineView = view.findViewById(R.id.calendarUnderLine);
+//        mCalendarUnderlineView = view.findViewById(R.id.calendarUnderLine);
         mViewPager = view.findViewById(R.id.viewPager);
     }
 

@@ -1456,8 +1456,8 @@
     <!-- Stay Out Bound Search -->
     <string name="label_stay_outbound_search">데일리 해외호텔 검색</string>
     <string name="label_stay_outbound_search_keyword_hint">호텔명 또는 지역명 입력</string>
-    <string name="label_stay_outbound_search_adult_count">성인 %1$d명</string>
-    <string name="label_stay_outbound_search_child_count">아동 %1$d명</string>
+    <string name="label_stay_outbound_search_adult_count">성인 %1$d</string>
+    <string name="label_stay_outbound_search_child_count">아동 %1$d</string>
     <string name="label_stay_outbound_search_children_age">(만 %1$s)</string>
     <string name="label_stay_outbound_search_child_age">%1$d세</string>
     <string name="label_stay_outbound_search_under_of_1_age">1세 미만</string>

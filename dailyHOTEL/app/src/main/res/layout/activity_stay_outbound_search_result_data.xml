@@ -1,67 +1,105 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-        xmlns:dailyToolbar="http://schemas.android.com/apk/res-auto">
+    >
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.daily.dailyhotel.view.DailyToolbarView
-            android:id="@+id/toolbarView"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/toolbar_height"
-            android:background="@color/white"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            dailyToolbar:underLineHeight="1px"/>
-
-        <LinearLayout
-            android:id="@+id/subToolbarLayout"
-            android:layout_width="0dp"
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/toolbarLayout"
+            android:layout_width="match_parent"
             android:layout_height="52dp"
-            android:background="@color/white"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbarView">
+            android:background="@color/white">
+
+            <com.daily.base.widget.DailyImageView
+                android:id="@+id/backImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/navibar_ic_back_01_black"/>
+
+            <View
+                android:id="@+id/titleBackgroundView"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginRight="12dp"
+                android:background="@color/default_background_cf7f7f8"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/backImageView"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <ImageView
+                android:id="@+id/titleIconImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="@+id/titleBackgroundView"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/search_ic_01_search"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/titleView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="@color/default_text_c323232"
+                android:textSize="12dp"
+                app:layout_constraintBottom_toTopOf="@+id/calendarTextView"
+                app:layout_constraintLeft_toRightOf="@+id/titleIconImageView"
+                app:layout_constraintRight_toLeftOf="@+id/verticalLineView"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed"/>
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/calendarTextView"
                 android:layout_width="0dp"
-                android:layout_height="36dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="4dp"
-                android:layout_weight="1"
-                android:background="@drawable/shape_fillrect_leeeef0_bf8f8f9"
-                android:drawablePadding="6dp"
-                android:gravity="center_vertical"
-                android:paddingLeft="9dp"
-                android:paddingRight="9dp"
-                android:textColor="@color/default_text_c323232"
-                android:textSize="13dp"
-                app:drawableCompatLeft="@drawable/search_ic_01_date"
-                app:drawableCompatRight="@drawable/navibar_m_ic_v"/>
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="12dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/titleIconImageView"
+                app:layout_constraintRight_toLeftOf="@+id/verticalLineView"
+                app:layout_constraintTop_toBottomOf="@+id/titleView"/>
 
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/peopleTextView"
-                android:layout_width="0dp"
-                android:layout_height="36dp"
-                android:layout_marginLeft="4dp"
-                android:layout_marginRight="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/shape_fillrect_leeeef0_bf8f8f9"
-                android:drawablePadding="6dp"
-                android:gravity="center_vertical"
-                android:paddingLeft="9dp"
-                android:paddingRight="9dp"
-                android:textColor="@color/default_text_c323232"
-                android:textSize="13dp"
-                app:drawableCompatLeft="@drawable/vector_search_ic_02_people"
-                app:drawableCompatRight="@drawable/navibar_m_ic_v"/>
-        </LinearLayout>
+            <View
+                android:id="@+id/verticalLineView"
+                android:layout_width="1dp"
+                android:layout_height="18dp"
+                android:layout_marginRight="11dp"
+                android:background="@color/default_line_cd2d2d2"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/titleBackgroundView"
+                app:layout_constraintRight_toLeftOf="@+id/distanceSpinner"
+                app:layout_constraintTop_toTopOf="@+id/titleBackgroundView"/>
+
+            <Spinner
+                android:id="@+id/distanceSpinner"
+                android:layout_width="69dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:background="@color/default_background_cf4f4f6"
+                android:dropDownWidth="66dp"
+                android:spinnerMode="dropdown"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/titleBackgroundView"
+                app:layout_constraintRight_toRightOf="@+id/titleBackgroundView"
+                app:layout_constraintTop_toTopOf="@+id/titleBackgroundView"/>
+        </android.support.constraint.ConstraintLayout>
 
         <View
             android:id="@+id/underLineView"
@@ -70,7 +108,7 @@
             android:background="@color/default_line_ce7e7e7"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/subToolbarLayout"/>
+            app:layout_constraintTop_toBottomOf="@+id/toolbarLayout"/>
 
         <FrameLayout
             android:id="@+id/resultLayout"

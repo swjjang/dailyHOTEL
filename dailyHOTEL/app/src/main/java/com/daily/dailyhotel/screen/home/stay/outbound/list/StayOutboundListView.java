@@ -81,8 +81,6 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
 
         void onScrollList(int listSize, int lastVisibleItemPosition);
 
-        void onViewPagerClose();
-
         // Map Event
         void onMapReady();
 
@@ -95,6 +93,8 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         void onMyLocationClick();
 
         void onRetryClick();
+
+        void onSearchClick();
 
         void onResearchClick();
 
@@ -122,8 +122,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
 
         initToolbar(viewDataBinding);
 
-        viewDataBinding.calendarTextView.setOnClickListener(this);
-        viewDataBinding.peopleTextView.setOnClickListener(this);
+        viewDataBinding.titleBackgroundView.setOnClickListener(v -> getEventListener().onResearchClick());
 
         viewDataBinding.swipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
         viewDataBinding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
@@ -201,7 +200,18 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
             return;
         }
 
-        getViewDataBinding().toolbarView.setTitleText(title);
+    }
+
+    @Override
+    public void setToolbarTitle(String titleText, String subTitleText)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().titleView.setText(titleText);
+        getViewDataBinding().calendarTextView.setText(subTitleText);
     }
 
     @Override
@@ -252,17 +262,6 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
                 }
             }
         });
-    }
-
-    @Override
-    public void setPeopleText(String peopleText)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        getViewDataBinding().peopleTextView.setText(peopleText);
     }
 
     @Override
@@ -823,7 +822,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
                 break;
 
             case R.id.researchView:
-                getEventListener().onResearchClick();
+                getEventListener().onSearchClick();
                 break;
 
             case R.id.retryTextView:
@@ -1073,14 +1072,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
             return;
         }
 
-        viewDataBinding.toolbarView.setOnBackClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                getEventListener().onBackClick();
-            }
-        });
+        viewDataBinding.backImageView.setOnClickListener(v -> getEventListener().onBackClick());
     }
 
     public void setMenuBarLayoutTranslationY(float dy)

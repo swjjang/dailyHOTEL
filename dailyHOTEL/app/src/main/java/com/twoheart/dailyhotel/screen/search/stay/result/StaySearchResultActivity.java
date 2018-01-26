@@ -17,7 +17,6 @@ import android.widget.Toast;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
-import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
@@ -320,12 +319,19 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             mNetworkController.requestAddress(location);
             mStaySearchCuration.setLocation(location);
 
-            mPlaceSearchResultLayout.clearCategoryTab();
+            if (mPlaceSearchResultLayout.getCategoryTabCount() > 0)
+            {
+                refreshCurrentFragment(true);
+            } else
+            {
+                mPlaceSearchResultLayout.clearCategoryTab();
 
-            // 기본적으로 시작시에 전체 카테고리를 넣는다.
-            mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
-            mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
-            mPlaceSearchResultLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
+                // 기본적으로 시작시에 전체 카테고리를 넣는다.
+                mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+                mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
+                mPlaceSearchResultLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
+            }
+
 
             //            // 만약 sort type이 거리가 아니라면 다른 곳에서 변경 작업이 일어났음으로 갱신하지 않음
             //            if (mStaySearchCuration.getCurationOption().getSortType() == SortType.DISTANCE)
@@ -901,6 +907,12 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                     changeViewType();
                 }
             }
+        }
+
+        @Override
+        public void onResearchClick()
+        {
+
         }
     };
 

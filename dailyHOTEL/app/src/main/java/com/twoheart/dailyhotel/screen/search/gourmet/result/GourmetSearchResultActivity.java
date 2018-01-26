@@ -291,12 +291,29 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             mNetworkController.requestAddress(location);
             mGourmetSearchCuration.setLocation(location);
 
-            mPlaceSearchResultLayout.clearCategoryTab();
+            if (mPlaceSearchResultLayout.getCategoryTabCount() > 0)
+            {
+                refreshCurrentFragment(true);
+            } else
+            {
+                mPlaceSearchResultLayout.clearCategoryTab();
 
-            // 기본적으로 시작시에 전체 카테고리를 넣는다.
-            mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
-            mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
-            mPlaceSearchResultLayout.setCategoryTabLayout(getSupportFragmentManager(), new ArrayList<Category>(), null, mOnGourmetListFragmentListener);
+                // 기본적으로 시작시에 전체 카테고리를 넣는다.
+                mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
+                mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
+                mPlaceSearchResultLayout.setCategoryTabLayout(getSupportFragmentManager(), new ArrayList<Category>(), null, mOnGourmetListFragmentListener);
+            }
+
+
+            //            mNetworkController.requestAddress(location);
+            //            mGourmetSearchCuration.setLocation(location);
+            //
+            //            mPlaceSearchResultLayout.clearCategoryTab();
+            //
+            //            // 기본적으로 시작시에 전체 카테고리를 넣는다.
+            //            mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
+            //            mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
+            //            mPlaceSearchResultLayout.setCategoryTabLayout(getSupportFragmentManager(), new ArrayList<Category>(), null, mOnGourmetListFragmentListener);
 
             // 만약 sort type이 거리가 아니라면 다른 곳에서 변경 작업이 일어났음으로 갱신하지 않음
             //            if (mGourmetSearchCuration.getCurationOption().getSortType() == SortType.DISTANCE)
@@ -751,6 +768,12 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
         @Override
         public void onPageSelected(int changedPosition, int prevPosition)
+        {
+
+        }
+
+        @Override
+        public void onResearchClick()
         {
 
         }
