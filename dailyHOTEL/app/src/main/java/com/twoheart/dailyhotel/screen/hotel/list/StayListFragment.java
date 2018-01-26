@@ -252,6 +252,9 @@ public class StayListFragment extends PlaceListFragment
                 if (size == 0)
                 {
                     setVisibility(mViewType, EmptyStatus.EMPTY, true);
+                } else
+                {
+                    mOnPlaceListFragmentListener.onShowMenuBar();
                 }
 
                 Category category = mStayCuration.getCategory();
@@ -271,6 +274,9 @@ public class StayListFragment extends PlaceListFragment
                 if (mapSize == 0)
                 {
                     setVisibility(mViewType, EmptyStatus.EMPTY, true);
+                } else
+                {
+                    mOnPlaceListFragmentListener.onShowMenuBar();
                 }
 
                 Category category = mStayCuration.getCategory();

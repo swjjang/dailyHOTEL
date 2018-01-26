@@ -22,7 +22,6 @@ import com.daily.dailyhotel.screen.home.search.SearchActivity;
 import com.daily.dailyhotel.screen.home.search.SearchPresenter;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +45,8 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
     SuggestLocalImpl mSuggestLocalImpl;
 
     SearchPresenter.SearchModel mSearchModel;
+
+    boolean mHasPopularArea;
 
     public SearchStayOutboundFragmentPresenter(@NonNull SearchStayOutboundFragment fragment)
     {
@@ -191,7 +192,12 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
         onRecentlyRefresh();
 
         // 해외 인기지역
-        onPopularAreaRefresh();
+        if (mHasPopularArea == false)
+        {
+            mHasPopularArea = true;
+
+            onPopularAreaRefresh();
+        }
     }
 
     @Override

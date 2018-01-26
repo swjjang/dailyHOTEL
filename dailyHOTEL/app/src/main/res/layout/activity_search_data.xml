@@ -319,8 +319,10 @@
                         android:layout_marginLeft="12dp"
                         android:layout_marginRight="12dp"
                         android:drawablePadding="17dp"
+                        android:ellipsize="end"
                         android:gravity="center_vertical"
-                        android:text="성인 2명, 아동 0명"
+                        android:maxLines="1"
+                        android:singleLine="true"
                         android:textColor="@color/default_text_c323232"
                         android:textColorHint="@color/black_a50"
                         android:textSize="14dp"
@@ -440,7 +442,7 @@
                 </android.support.constraint.ConstraintLayout>
             </android.support.design.widget.AppBarLayout>
 
-            <android.support.v4.view.ViewPager
+            <com.daily.base.widget.DailyViewPager
                 android:id="@+id/viewPager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

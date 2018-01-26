@@ -47,6 +47,8 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
 
     SearchPresenter.SearchModel mSearchModel;
 
+    boolean mHasPopularTag;
+
     public SearchStayFragmentPresenter(@NonNull SearchStayFragment fragment)
     {
         super(fragment);
@@ -189,7 +191,12 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
         onRecentlyRefresh();
 
         // 국내스테이 인기검색 태그
-        onCampaignTagRefresh();
+        if (mHasPopularTag == false)
+        {
+            mHasPopularTag = true;
+
+            onCampaignTagRefresh();
+        }
     }
 
     @Override

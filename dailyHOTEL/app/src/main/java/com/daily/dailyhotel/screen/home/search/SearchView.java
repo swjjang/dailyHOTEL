@@ -1,12 +1,14 @@
 package com.daily.dailyhotel.screen.home.search;
 
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
-import com.daily.base.BaseFragment;
+import com.daily.base.BaseFragmentPagerAdapter;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.base.BasePagerFragment;
 import com.daily.dailyhotel.screen.home.search.gourmet.SearchGourmetFragment;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.SearchStayFragment;
 import com.daily.dailyhotel.screen.home.search.stay.outbound.SearchStayOutboundFragment;
@@ -18,7 +20,7 @@ import java.util.List;
 
 public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, ActivitySearchDataBinding> implements SearchInterface.ViewInterface
 {
-    SearchFragmentPagerAdapter mSearchFragmentPagerAdapter;
+    BaseFragmentPagerAdapter mSearchFragmentPagerAdapter;
 
     SearchStayFragment mSearchStayFragment;
     SearchGourmetFragment mSearchGourmetFragment;
@@ -118,18 +120,20 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
             }
         });
 
-        mSearchFragmentPagerAdapter = new SearchFragmentPagerAdapter(getSupportFragmentManager());
+        mSearchFragmentPagerAdapter = new BaseFragmentPagerAdapter<BasePagerFragment>(getSupportFragmentManager());
 
-        List<BaseFragment> list = new ArrayList<>();
+        List<BasePagerFragment> list = new ArrayList<>();
 
         mSearchStayFragment = new SearchStayFragment();
         mSearchStayOutboundFragment = new SearchStayOutboundFragment();
         mSearchGourmetFragment = new SearchGourmetFragment();
 
-        mSearchFragmentPagerAdapter.add(mSearchStayFragment);
-        mSearchFragmentPagerAdapter.add(mSearchStayOutboundFragment);
-        mSearchFragmentPagerAdapter.add(mSearchGourmetFragment);
+        mSearchFragmentPagerAdapter.addFragment(mSearchStayFragment);
+        mSearchFragmentPagerAdapter.addFragment(mSearchStayOutboundFragment);
+        mSearchFragmentPagerAdapter.addFragment(mSearchGourmetFragment);
 
+        getViewDataBinding().viewPager.setOffscreenPageLimit(3);
+        getViewDataBinding().viewPager.setPagingEnabled(false);
         getViewDataBinding().viewPager.setAdapter(mSearchFragmentPagerAdapter);
     }
 
