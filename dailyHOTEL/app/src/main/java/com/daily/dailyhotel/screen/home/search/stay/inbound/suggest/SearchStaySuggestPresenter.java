@@ -57,6 +57,7 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
     private RecentlyRemoteImpl mRecentlyRemoteImpl;
     private RecentlyLocalImpl mRecentlyLocalImpl;
 
+    private DailyRecentSearches mDailyRecentSearches;
     private StayBookDateTime mStayBookDateTime;
     private String mKeyword;
 
@@ -262,8 +263,8 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
                         });
                     }
 
-                    DailyRecentSearches recentSearches = new DailyRecentSearches(DailyPreference.getInstance(getActivity()).getHotelRecentSearches());
-                    List<Keyword> keywordList = recentSearches.getList();
+                    mDailyRecentSearches = new DailyRecentSearches(DailyPreference.getInstance(getActivity()).getHotelRecentSearches());
+                    List<Keyword> keywordList = mDailyRecentSearches.getList();
 
                     ArrayList<StaySuggest> staySuggestList = new ArrayList<>();
 
@@ -462,6 +463,9 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
         //        {
         //            ExLog.d(e.getMessage());
         //        }
+
+        addRecentSearches(staySuggest);
+
         getViewInterface().setKeywordEditText(staySuggest.displayName);
         startFinishAction(staySuggest, mKeyword, null);
     }
@@ -479,7 +483,8 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
             return;
         }
 
-        // TODO : 최근 본 업장 및 최근 검색어 클릭시 처리
+        addRecentSearches(staySuggest);
+
         getViewInterface().setKeywordEditText(staySuggest.displayName);
         startFinishAction(staySuggest, mKeyword, null);
 
@@ -562,6 +567,19 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
         //                    startFinishAction(staySuggest, "", AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECOMMEND);
         //                }
         //            }));
+    }
+
+    private void addRecentSearches(StaySuggest staySuggest)
+    {
+        if (getActivity() == null || staySuggest == null)
+        {
+            return;
+        }
+
+        int icon = StaySuggest.CATEGORY_STAY.equalsIgnoreCase(staySuggest.categoryKey) ? Keyword.HOTEL_ICON : Keyword.DEFAULT_ICON;
+
+        mDailyRecentSearches.addString(new Keyword(icon, staySuggest.displayName));
+        DailyPreference.getInstance(getActivity()).setHotelRecentSearches(mDailyRecentSearches.toString());
     }
 
     private void startFinishAction(StaySuggest staySuggest, String keyword, String analyticsClickType)
