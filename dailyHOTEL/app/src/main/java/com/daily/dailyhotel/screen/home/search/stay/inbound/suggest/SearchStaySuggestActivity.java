@@ -17,13 +17,16 @@ public class SearchStaySuggestActivity extends BaseActivity<SearchStaySuggestPre
 {
     public static final String INTENT_EXTRA_DATA_CHECK_IN_DATE = "checkInDate";
     public static final String INTENT_EXTRA_DATA_CHECK_OUT_DATE = "checkOutDate";
+    public static final String INTENT_EXTRA_DATA_KEYWORD = "keyword";
+    public static final String INTENT_EXTRA_DATA_SUGGEST = "suggest";
 
-    public static Intent newInstance(Context context, String checkInDate, String checkOutDate)
+    public static Intent newInstance(Context context, String keyword, String checkInDate, String checkOutDate)
     {
         Intent intent = new Intent(context, SearchStaySuggestActivity.class);
 
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE, checkInDate);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE, checkOutDate);
+        intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, keyword);
 
         return intent;
     }

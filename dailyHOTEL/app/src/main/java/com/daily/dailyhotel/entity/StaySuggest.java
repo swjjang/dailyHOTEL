@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.entity;
 
 import com.daily.base.util.DailyTextUtils;
+import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.network.model.StayKeyword;
 
 /**
@@ -9,10 +10,13 @@ import com.twoheart.dailyhotel.network.model.StayKeyword;
 
 public class StaySuggest
 {
-    public static final String CATEGORY_STAY = "stay";
-    public static final String CATEGORY_STATION = "station";
-    public static final String CATEGORY_POINT = "point";
-    public static final String CATEGORY_REGION = "region";
+    public static final String CATEGORY_REGION = "region"; // default - 지역검색
+    public static final String CATEGORY_STAY = "stay"; // 호텔검색
+    public static final String CATEGORY_STATION = "station"; // 역검색
+    public static final String CATEGORY_LOCATION = "location"; // 위치검색
+    public static final String CATEGORY_DIRECT = "direct"; // 직접검색
+
+    private static final String SEARCH_SEPARATOR = " > ";
 
     public int stayIndex;
     public String stayName;
@@ -27,6 +31,12 @@ public class StaySuggest
 
     public StaySuggest()
     {
+    }
+
+    public StaySuggest(String categoryKey, String displayName)
+    {
+        this.categoryKey = categoryKey;
+        this.displayName = displayName;
     }
 
     public StaySuggest(StayKeyword stayKeyword)
@@ -49,12 +59,54 @@ public class StaySuggest
 
             regionName = splitArray[0];
             stayName = splitArray[1];
-        } else {
+        } else
+        {
             categoryKey = CATEGORY_REGION;
 
             regionName = splitArray[0];
             provinceName = splitArray[1];
         }
+    }
+
+    public StaySuggest(Keyword keyword)
+    {
+        if (keyword == null)
+        {
+            return;
+        }
+
+        displayName = keyword.name;
+
+        String[] splitArray = splitRightAngleBracket(keyword.name);
+
+        if (keyword.icon == 1)
+        {
+            categoryKey = CATEGORY_STAY;
+
+            regionName = splitArray[0];
+            stayName = splitArray[1];
+        } else
+        {
+            categoryKey = DailyTextUtils.isTextEmpty(splitArray[1]) ? CATEGORY_DIRECT : CATEGORY_REGION;
+
+            regionName = splitArray[0];
+            provinceName = splitArray[1];
+        }
+    }
+
+    public StaySuggest(RecentlyPlace recentlyPlace)
+    {
+        if (recentlyPlace == null)
+        {
+            return;
+        }
+
+        displayName = recentlyPlace.regionName + SEARCH_SEPARATOR + recentlyPlace.title;
+
+        categoryKey = CATEGORY_STAY;
+        regionName = recentlyPlace.regionName;
+        stayName = recentlyPlace.title;
+        stayIndex = recentlyPlace.index;
     }
 
     private String[] splitRightAngleBracket(String displayName)
@@ -66,9 +118,7 @@ public class StaySuggest
             return splitString;
         }
 
-        String separator = " > ";
-
-        int index = displayName.indexOf(separator);
+        int index = displayName.indexOf(SEARCH_SEPARATOR);
         if (index < 0)
         {
             splitString[0] = displayName;
@@ -76,7 +126,7 @@ public class StaySuggest
         }
 
         splitString[0] = displayName.substring(0, index);
-        splitString[1] = displayName.substring(index + separator.length(), displayName.length());
+        splitString[1] = displayName.substring(index + SEARCH_SEPARATOR.length(), displayName.length());
 
         return splitString;
     }

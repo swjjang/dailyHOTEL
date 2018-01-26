@@ -1057,8 +1057,6 @@
     <string name="message_search_agree_termsoflocation">고객님 주변에 위치한 업체 검색을 위해\n위치 정보 이용에 동의해주세요.\n이용약관 상세보기</string>
     <string name="message_search_tooltip">혹시 해외호텔 찾으세요? 해외호텔 검색은 여기서!</string>
 
-    <string name="label_search_nearby_title">현재 위치 사용</string>
-    <string name="label_search_nearby_description">위치서비스 약관 동의 필요</string>
     //
     <string name="label_searchresult_resultcount">결과 %1$d건</string>
     <string name="label_searchresult_over_resultcount">결과 %1$d건 이상</string>
@@ -1096,8 +1094,12 @@
     <string name="label_search_gourmet_suggest_hint">국내 레스토랑명 또는 지역명 입력</string>
     <string name="label_search_gourmet_popular_search_tag">고메 인기검색 태그</string>
 
-
-
+    <!--New Search Suggest -->
+    <string name="label_search_nearby_title">현재 위치 사용</string>
+    <string name="label_search_nearby_description">위치서비스 약관 동의 필요</string>
+    <string name="label_search_suggest_type_stay">스테이</string>
+    <string name="label_search_suggest_type_region">도시/지역</string>
+    <string name="label_search_suggest_recently_search">최근검색어</string>
 
     <!-- Coupon -->
     <string name="coupon_notice_text">할인쿠폰\n상세정보</string>
