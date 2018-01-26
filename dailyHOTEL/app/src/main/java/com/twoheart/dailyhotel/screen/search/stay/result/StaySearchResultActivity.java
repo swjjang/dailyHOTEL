@@ -1294,13 +1294,23 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onShowMenuBar()
         {
+            if (mPlaceSearchResultLayout == null)
+            {
+                return;
+            }
 
+            mPlaceSearchResultLayout.showBottomLayout();
         }
 
         @Override
         public void onBottomOptionVisible(boolean visible)
         {
+            if (mPlaceSearchResultLayout == null)
+            {
+                return;
+            }
 
+            mPlaceSearchResultLayout.setBottomOptionVisible(visible);
         }
 
         @Override

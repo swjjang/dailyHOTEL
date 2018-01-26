@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.CompoundButton;
 
+import com.crashlytics.android.Crashlytics;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
@@ -280,16 +281,26 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
                         DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) mDailyDeepLink;
 
-                        mStayIndex = Integer.parseInt(externalDeepLink.getIndex());
-
                         int nights = 1;
+
+                        try
+                        {
+                            mStayIndex = Integer.parseInt(externalDeepLink.getIndex());
+                        } catch (Exception e)
+                        {
+                            Crashlytics.log(externalDeepLink.getDeepLink());
+                            Crashlytics.logException(e);
+                            finish();
+                            return;
+                        }
 
                         try
                         {
                             nights = Integer.parseInt(externalDeepLink.getNights());
                         } catch (Exception e)
                         {
-                            ExLog.d(e.toString());
+                            Crashlytics.log(externalDeepLink.getDeepLink());
+                            Crashlytics.logException(e);
                         } finally
                         {
                             if (nights <= 0)

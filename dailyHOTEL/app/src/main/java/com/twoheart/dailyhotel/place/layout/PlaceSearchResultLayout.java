@@ -786,16 +786,6 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         }
     }
 
-    public void setMenuBarLayoutVisible(boolean visible)
-    {
-        if (mFloatingActionView == null)
-        {
-            return;
-        }
-
-        mFloatingActionView.setVisibility(visible ? View.VISIBLE : View.GONE);
-    }
-
     public synchronized void showBottomLayout()
     {
         if (mFloatingActionView == null)
