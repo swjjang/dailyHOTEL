@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 
+import com.crashlytics.android.Crashlytics;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
@@ -285,7 +286,17 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
                         DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) mDailyDeepLink;
 
-                        mGourmetIndex = Integer.parseInt(externalDeepLink.getIndex());
+                        try
+                        {
+                            mGourmetIndex = Integer.parseInt(externalDeepLink.getIndex());
+                        } catch (Exception e)
+                        {
+                            Crashlytics.log(externalDeepLink.getDeepLink());
+                            Crashlytics.logException(e);
+                            finish();
+                            return;
+                        }
+
 
                         String date = externalDeepLink.getDate();
                         int datePlus = externalDeepLink.getDatePlus();
