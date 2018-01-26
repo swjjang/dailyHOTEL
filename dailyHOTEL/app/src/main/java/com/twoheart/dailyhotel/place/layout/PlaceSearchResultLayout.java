@@ -285,7 +285,7 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         mFloatingActionView.post(() -> mFloatingActionView.setTag(mViewPager.getBottom() - mFloatingActionView.getTop()));
 
         // 기본 설정
-        setOptionViewTypeView(Constants.ViewType.LIST);
+        setOptionViewTypeView(Constants.ViewType.MAP);
 
         setOptionViewTypeEnabled(true);
         setOptionFilterEnabled(true);
