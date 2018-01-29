@@ -1095,12 +1095,13 @@
     <string name="label_search_gourmet_popular_search_tag">고메 인기검색 태그</string>
 
     <!--New Search Suggest -->
-    <string name="label_search_nearby_title">현재 위치 사용</string>
+    <string name="label_search_nearby_title">현재 위치로 설정</string>
     <string name="label_search_nearby_description">위치서비스 약관 동의 필요</string>
     <string name="label_search_suggest_type_stay">스테이</string>
     <string name="label_search_suggest_type_region">도시/지역</string>
     <string name="label_search_suggest_recently_search">최근검색어</string>
     <string name="label_search_suggest_direct_search_format">\‘%1$s\’ 검색하기</string>
+    <string name="label_search_suggest_delete_all">기록 전체 삭제</string>
 
     <!-- Coupon -->
     <string name="coupon_notice_text">할인쿠폰\n상세정보</string>

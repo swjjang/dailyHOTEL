@@ -295,7 +295,7 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
             @Override
             public void accept(List<StaySuggest> staySuggests) throws Exception
             {
-                getViewInterface().setRecentlySuggests(staySuggests);
+                getViewInterface().setRecentlySuggests(staySuggests, null);
 
                 if (staySuggests.size() == 0)
                 {
@@ -309,7 +309,7 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
             @Override
             public void accept(Throwable throwable) throws Exception
             {
-                getViewInterface().setRecentlySuggests(null);
+                getViewInterface().setRecentlySuggests(null, null);
 
                 getViewInterface().setPopularAreaSuggests(new ArrayList<>()); // 최근 본 업장 과 최근 검색어가 없을때 노출
 
@@ -564,7 +564,7 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
             return;
         }
 
-        getViewInterface().setRecentlySuggests(null);
+        getViewInterface().setRecentlySuggests(null, null);
 
         // TODO : 최근 본 업장 , 최근 검색어 초기화
 
@@ -591,6 +591,12 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
         //                    unLockAll();
         //                }
         //            }));
+    }
+
+    @Override
+    public void onDeleteRecentlySuggest(StaySuggest staySuggest)
+    {
+        // TODO : 아이템 삭제 이벤트 처리
     }
 
     private void onSuggestList(List<StaySuggest> staySuggestList)
