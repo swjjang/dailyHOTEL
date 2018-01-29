@@ -28,4 +28,6 @@ public interface SearchStaySuggestInterface extends BaseDialogViewInterface
     void setPopularAreaSuggests(List<StaySuggest> staySuggestList);
 
     void setKeywordEditText(String text);
+
+    void setVoiceSearchEnabled(boolean enabled);
 }

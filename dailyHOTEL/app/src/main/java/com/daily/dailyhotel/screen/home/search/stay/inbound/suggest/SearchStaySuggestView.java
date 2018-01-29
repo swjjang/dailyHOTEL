@@ -61,6 +61,10 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
         void onDeleteAllRecentlySuggest();
 
         void onDeleteRecentlySuggest(StaySuggest staySuggest);
+
+        void onVoiceSearchClick();
+
+        void onCheckVoiceSearchEnabled();
     }
 
     public SearchStaySuggestView(BaseActivity baseActivity, SearchStaySuggestView.OnEventListener listener)
@@ -99,6 +103,16 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
         });
 
         viewDataBinding.backImageView.setOnClickListener(this);
+
+        setVoiceSearchEnabled(false);
+        viewDataBinding.voiceSearchView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                getEventListener().onVoiceSearchClick();
+            }
+        });
 
         viewDataBinding.keywordEditText.addTextChangedListener(mTextWatcher);
 
@@ -467,7 +481,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
                         getEventListener().onPopularSuggestClick(staySuggest);
                     }
                 }
-            },  new View.OnClickListener()
+            }, new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -476,7 +490,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
                     if (staySuggest != null)
                     {
-                       // TODO : 아이템 삭제 처리
+                        // TODO : 아이템 삭제 처리
                     }
                 }
             });
@@ -517,6 +531,18 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
         }
 
         getViewDataBinding().keywordEditText.setText(text);
+        getViewDataBinding().keywordEditText.setSelection(getViewDataBinding().keywordEditText.length());
+    }
+
+    @Override
+    public void setVoiceSearchEnabled(boolean enabled)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().voiceSearchView.setVisibility(enabled ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -547,6 +573,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
                 setSuggests(null);
                 setSuggestsVisible(false);
                 setEmptySuggestsVisible(false);
+                getEventListener().onCheckVoiceSearchEnabled();
                 break;
         }
     }
@@ -576,6 +603,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
             if (length == 0)
             {
                 getViewDataBinding().deleteTextView.setVisibility(View.INVISIBLE);
+                getViewDataBinding().voiceSearchView.setVisibility(View.VISIBLE);
             } else
             {
                 if (length == 1 && editable.charAt(0) == ' ')
@@ -594,6 +622,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
                 }
 
                 getViewDataBinding().deleteTextView.setVisibility(View.VISIBLE);
+                getViewDataBinding().voiceSearchView.setVisibility(View.GONE);
             }
 
             getEventListener().onSearchSuggest(editable.toString());

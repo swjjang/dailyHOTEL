@@ -2,14 +2,18 @@ package com.daily.dailyhotel.screen.home.search.stay.inbound.suggest;
 
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.StayBookDateTime;
@@ -34,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
@@ -144,6 +149,8 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
             //            return;
         }
 
+        onCheckVoiceSearchEnabled();
+
         getViewInterface().showKeyboard();
     }
 
@@ -207,6 +214,16 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
 
         switch (requestCode)
         {
+            case SearchStaySuggestActivity.REQUEST_CODE_SPEECH_INPUT:
+            {
+                if (resultCode == Activity.RESULT_OK && null != data)
+                {
+                    ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    mKeyword = result.get(0);
+                    getViewInterface().setKeywordEditText(mKeyword);
+                }
+                break;
+            }
         }
     }
 
@@ -536,8 +553,7 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
         }
 
         int icon = Keyword.DEFAULT_ICON;
-        if (StaySuggest.CATEGORY_STAY.equalsIgnoreCase(staySuggest.categoryKey)
-            || StaySuggest.CATEGORY_RECENTLY.equalsIgnoreCase(staySuggest.categoryKey))
+        if (StaySuggest.CATEGORY_STAY.equalsIgnoreCase(staySuggest.categoryKey) || StaySuggest.CATEGORY_RECENTLY.equalsIgnoreCase(staySuggest.categoryKey))
         {
             icon = Keyword.HOTEL_ICON;
         }
@@ -597,6 +613,53 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
     public void onDeleteRecentlySuggest(StaySuggest staySuggest)
     {
         // TODO : 아이템 삭제 이벤트 처리
+    }
+
+    @Override
+    public void onVoiceSearchClick()
+    {
+        if (getViewInterface() == null || isVoiceSearchEnabled() == false)
+        {
+            return;
+        }
+
+        getViewInterface().hideKeyboard();
+
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getString(R.string.label_search_suggest_voice_search_title));
+
+        try
+        {
+            startActivityForResult(intent, SearchStaySuggestActivity.REQUEST_CODE_SPEECH_INPUT);
+        } catch (ActivityNotFoundException a)
+        {
+            DailyToast.showToast(getActivity(), R.string.message_search_suggest_voice_search_error, DailyToast.LENGTH_SHORT);
+        }
+    }
+
+    @Override
+    public void onCheckVoiceSearchEnabled()
+    {
+        if (getViewInterface() == null)
+        {
+            return;
+        }
+
+        getViewInterface().setVoiceSearchEnabled(isVoiceSearchEnabled());
+    }
+
+    private boolean isVoiceSearchEnabled()
+    {
+        if (getActivity() == null)
+        {
+            return false;
+        }
+
+        List<ResolveInfo> activities = getActivity().getPackageManager().queryIntentActivities(new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH), 0);
+
+        return activities.size() > 0;
     }
 
     private void onSuggestList(List<StaySuggest> staySuggestList)

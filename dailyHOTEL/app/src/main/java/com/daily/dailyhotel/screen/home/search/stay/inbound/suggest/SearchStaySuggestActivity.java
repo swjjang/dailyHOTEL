@@ -20,6 +20,8 @@ public class SearchStaySuggestActivity extends BaseActivity<SearchStaySuggestPre
     public static final String INTENT_EXTRA_DATA_KEYWORD = "keyword";
     public static final String INTENT_EXTRA_DATA_SUGGEST = "suggest";
 
+    public static final int REQUEST_CODE_SPEECH_INPUT = 10000;
+
     public static Intent newInstance(Context context, String keyword, String checkInDate, String checkOutDate)
     {
         Intent intent = new Intent(context, SearchStaySuggestActivity.class);
