@@ -28,6 +28,7 @@ import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutbounds;
 import com.daily.dailyhotel.entity.StayRegion;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
@@ -1750,7 +1751,9 @@ public class HomeFragment extends BaseMenuNavigationFragment
             stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
             stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
 
-            Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, stayBookingDay, null, AnalyticsManager.Screen.HOME);
+            StaySuggest staySuggest = new StaySuggest(StaySuggest.CATEGORY_LOCATION, null);
+
+            Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, stayBookingDay, null, staySuggest, AnalyticsManager.Screen.HOME);
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
         } catch (Exception e)
         {

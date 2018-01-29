@@ -323,7 +323,8 @@ public interface Constants
     int CODE_REQUEST_ACTIVITY_REWARD_GUIDE = 82; // 마이 데일리의 데일리리워드 가이드
     int CODE_REQUEST_ACTIVITY_DAILY_AWARDS = 83; // 마이 데일리의 데일리 어워즈
 
-    int CODE_REQUEST_ACTIVITY_SATISFACTION_STAYOUTBOUND = 83;
+    int CODE_REQUEST_ACTIVITY_SATISFACTION_STAYOUTBOUND = 84;
+    int CODE_REQUEST_ACTIVITY_RESEARCH = 85;
 
 
     // Android Activity의 Result Code들이다.

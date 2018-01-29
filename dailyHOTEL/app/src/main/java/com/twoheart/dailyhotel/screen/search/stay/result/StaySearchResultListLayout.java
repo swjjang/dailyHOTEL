@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class StaySearchResultListLayout extends StayListLayout
 {
     private TextView mResultTextView;
-    private Constants.SearchType mSearchType;
+    private boolean mLocationSearchType;
 
     public StaySearchResultListLayout(Context context, OnEventListener eventListener)
     {
@@ -148,9 +148,9 @@ public class StaySearchResultListLayout extends StayListLayout
         mPlaceListMapFragment.setMyLocation(location, isVisible);
     }
 
-    public void setSearchType(Constants.SearchType searchType)
+    public void setLocationSearchType(boolean searchType)
     {
-        mSearchType = searchType;
+        mLocationSearchType = searchType;
     }
 
     public void updateResultCount(Constants.ViewType viewType, int count, int maxCount)
@@ -187,10 +187,7 @@ public class StaySearchResultListLayout extends StayListLayout
     public void addResultList(FragmentManager fragmentManager, Constants.ViewType viewType//
         , ArrayList<PlaceViewItem> list, Constants.SortType sortType, PlaceBookingDay placeBookingDay, boolean rewardEnabled)
     {
-        if (mSearchType == Constants.SearchType.LOCATION)
-        {
-            mPlaceListAdapter.setShowDistanceIgnoreSort(true);
-        }
+        mPlaceListAdapter.setShowDistanceIgnoreSort(mLocationSearchType);
 
         super.addResultList(fragmentManager, viewType, list, sortType, placeBookingDay, rewardEnabled);
     }

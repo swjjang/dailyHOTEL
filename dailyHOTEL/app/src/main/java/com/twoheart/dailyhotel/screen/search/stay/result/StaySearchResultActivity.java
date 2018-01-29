@@ -19,18 +19,19 @@ import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayRegion;
+import com.daily.dailyhotel.entity.StaySuggest;
+import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
+import com.daily.dailyhotel.screen.home.search.stay.inbound.research.ResearchStayActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.daily.dailyhotel.view.DailyStayCardView;
 import com.daily.dailyhotel.view.DailyStayMapCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
-import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
@@ -67,82 +68,106 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     String mInputText;
     String mAddress;
 
-    SearchType mSearchType;
     StaySearchCuration mStaySearchCuration;
 
     private PlaceSearchResultNetworkController mNetworkController;
 
-    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay, String inputText, Keyword keyword, SearchType searchType)
+    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay, String inputText, StaySuggest staySuggest, String callByScreen)
     {
         Intent intent = new Intent(context, StaySearchResultActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, keyword);
-        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, searchType.name());
         intent.putExtra(INTENT_EXTRA_DATA_INPUTTEXT, inputText);
-
-        return intent;
-    }
-
-    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay, LatLng latLng, double radius, boolean isDeepLink)
-    {
-        Intent intent = new Intent(context, StaySearchResultActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_LATLNG, latLng);
-        intent.putExtra(INTENT_EXTRA_DATA_RADIUS, radius);
-        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SearchType.LOCATION.name());
-        intent.putExtra(INTENT_EXTRA_DATA_IS_DEEPLINK, isDeepLink);
-
-        return intent;
-    }
-
-    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay, Keyword keyword, SearchType searchType)
-    {
-        return newInstance(context, todayDateTime, stayBookingDay, null, keyword, searchType);
-    }
-
-    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay, String text)
-    {
-        return newInstance(context, todayDateTime, stayBookingDay, null, new Keyword(0, text), SearchType.SEARCHES);
-    }
-
-    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay, Location location, String callByScreen)
-    {
-        Intent intent = new Intent(context, StaySearchResultActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_LOCATION, location);
-        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SearchType.LOCATION.name());
+        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(staySuggest));
         intent.putExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
 
         return intent;
     }
 
-    public static Intent newInstance(Context context, String checkInDateTime, String checkOutDateTime, LatLng latLng, double radius, boolean isDeepLink)
+    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay, StaySuggest staySuggest, double radius, boolean isDeepLink)
     {
         Intent intent = new Intent(context, StaySearchResultActivity.class);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_LATLNG, latLng);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(staySuggest));
         intent.putExtra(INTENT_EXTRA_DATA_RADIUS, radius);
-        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SearchType.LOCATION.name());
         intent.putExtra(INTENT_EXTRA_DATA_IS_DEEPLINK, isDeepLink);
 
         return intent;
     }
 
-    public static Intent newInstance(Context context, String checkInDateTime, String checkOutDateTime, String inputText, Keyword keyword, SearchType searchType)
-    {
-        Intent intent = new Intent(context, StaySearchResultActivity.class);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, keyword);
-        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, searchType.name());
-        intent.putExtra(INTENT_EXTRA_DATA_INPUTTEXT, inputText);
+    //
+    //    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay, String inputText, Keyword keyword, SearchType searchType)
+    //    {
+    //        Intent intent = new Intent(context, StaySearchResultActivity.class);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
+    //        intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, keyword);
+    //        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, searchType.name());
+    //        intent.putExtra(INTENT_EXTRA_DATA_INPUTTEXT, inputText);
+    //
+    //        return intent;
+    //    }
 
-        return intent;
-    }
+    //    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay, LatLng latLng, double radius, boolean isDeepLink)
+    //    {
+    //        Intent intent = new Intent(context, StaySearchResultActivity.class);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
+    //        intent.putExtra(INTENT_EXTRA_DATA_LATLNG, latLng);
+    //        intent.putExtra(INTENT_EXTRA_DATA_RADIUS, radius);
+    //        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SearchType.LOCATION.name());
+    //        intent.putExtra(INTENT_EXTRA_DATA_IS_DEEPLINK, isDeepLink);
+    //
+    //        return intent;
+    //    }
+
+    //    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay, Keyword keyword, SearchType searchType)
+    //    {
+    //        return newInstance(context, todayDateTime, stayBookingDay, null, keyword, searchType);
+    //    }
+    //
+    //    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay, String text)
+    //    {
+    //        return newInstance(context, todayDateTime, stayBookingDay, null, new Keyword(0, text), SearchType.SEARCHES);
+    //    }
+    //
+    //    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay, Location location, String callByScreen)
+    //    {
+    //        Intent intent = new Intent(context, StaySearchResultActivity.class);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
+    //        intent.putExtra(INTENT_EXTRA_DATA_LOCATION, location);
+    //        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SearchType.LOCATION.name());
+    //        intent.putExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
+    //
+    //        return intent;
+    //    }
+    //
+    //    public static Intent newInstance(Context context, String checkInDateTime, String checkOutDateTime, LatLng latLng, double radius, boolean isDeepLink)
+    //    {
+    //        Intent intent = new Intent(context, StaySearchResultActivity.class);
+    //        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
+    //        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
+    //        intent.putExtra(INTENT_EXTRA_DATA_LATLNG, latLng);
+    //        intent.putExtra(INTENT_EXTRA_DATA_RADIUS, radius);
+    //        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SearchType.LOCATION.name());
+    //        intent.putExtra(INTENT_EXTRA_DATA_IS_DEEPLINK, isDeepLink);
+    //
+    //        return intent;
+    //    }
+    //
+    //    public static Intent newInstance(Context context, String checkInDateTime, String checkOutDateTime, String inputText, Keyword keyword, SearchType searchType)
+    //    {
+    //        Intent intent = new Intent(context, StaySearchResultActivity.class);
+    //        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
+    //        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
+    //        intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, keyword);
+    //        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, searchType.name());
+    //        intent.putExtra(INTENT_EXTRA_DATA_INPUTTEXT, inputText);
+    //
+    //        return intent;
+    //    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -153,34 +178,37 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
         mNetworkController = new PlaceSearchResultNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
 
-        if (mSearchType == SearchType.LOCATION)
+        switch (mStaySearchCuration.getSuggest().categoryKey)
         {
-            try
-            {
-                if (mStaySearchCuration.getCurationOption().getSortType() == SortType.DISTANCE && mStaySearchCuration.getLocation() == null)
+            case StaySuggest.CATEGORY_LOCATION:
+                try
                 {
-                    unLockUI();
+                    if (mStaySearchCuration.getCurationOption().getSortType() == SortType.DISTANCE && mStaySearchCuration.getLocation() == null)
+                    {
+                        unLockUI();
 
-                    searchMyLocation();
-                } else
+                        searchMyLocation();
+                    } else
+                    {
+                        // 기본적으로 시작시에 전체 카테고리를 넣는다.
+                        mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+                        mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
+                        mPlaceSearchResultLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
+
+                        mNetworkController.requestAddress(mStaySearchCuration.getLocation());
+                    }
+                } catch (Exception e)
                 {
-                    // 기본적으로 시작시에 전체 카테고리를 넣는다.
-                    mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
-                    mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
-                    mPlaceSearchResultLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
-
-                    mNetworkController.requestAddress(mStaySearchCuration.getLocation());
+                    ExLog.e(e.toString());
                 }
-            } catch (Exception e)
-            {
-                ExLog.e(e.toString());
-            }
-        } else
-        {
-            // 기본적으로 시작시에 전체 카테고리를 넣는다.
-            mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
-            mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
-            mPlaceSearchResultLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
+                break;
+
+            default:
+                // 기본적으로 시작시에 전체 카테고리를 넣는다.
+                mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+                mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
+                mPlaceSearchResultLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
+                break;
         }
     }
 
@@ -215,7 +243,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
             mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
 
-            if (mSearchType == SearchType.LOCATION && mStaySearchCuration.getCurationOption().getSortType() == SortType.DISTANCE//
+            if (StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStaySearchCuration.getSuggest().categoryKey)//
+                && mStaySearchCuration.getCurationOption().getSortType() == SortType.DISTANCE//
                 && mStaySearchCuration.getLocation() == null)
             {
                 searchMyLocation();
@@ -292,18 +321,21 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected void onLocationProviderDisabled()
     {
-        if (mSearchType == SearchType.LOCATION)
+        switch (mStaySearchCuration.getSuggest().categoryKey)
         {
-            mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
-            mPlaceSearchResultLayout.setScreenVisible(ScreenType.EMPTY);
-        } else
-        {
-            StayCurationOption stayCurationOption = (StayCurationOption) mStaySearchCuration.getCurationOption();
+            case StaySuggest.CATEGORY_LOCATION:
+                mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+                mPlaceSearchResultLayout.setScreenVisible(ScreenType.EMPTY);
+                break;
 
-            stayCurationOption.setSortType(SortType.DEFAULT);
-            mPlaceSearchResultLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
+            default:
+                StayCurationOption stayCurationOption = (StayCurationOption) mStaySearchCuration.getCurationOption();
 
-            refreshCurrentFragment(true);
+                stayCurationOption.setSortType(SortType.DEFAULT);
+                mPlaceSearchResultLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
+
+                refreshCurrentFragment(true);
+                break;
         }
     }
 
@@ -344,6 +376,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected void initIntent(Intent intent)
     {
+        mStaySearchCuration = new StaySearchCuration();
+
         StayBookingDay stayBookingDay;
 
         try
@@ -362,63 +396,110 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             return;
         }
 
-        Location location = null;
-        Keyword keyword = null;
-        double radius = DEFAULT_SEARCH_RADIUS;
+        mStaySearchCuration.setStayBookingDay(stayBookingDay);
 
-        mStaySearchCuration = new StaySearchCuration();
+        StaySuggestParcel staySuggestParcel = intent.getParcelableExtra(INTENT_EXTRA_DATA_SUGGEST);
 
-        if (intent.hasExtra(INTENT_EXTRA_DATA_KEYWORD) == true)
-        {
-            keyword = intent.getParcelableExtra(INTENT_EXTRA_DATA_KEYWORD);
-        } else if (intent.hasExtra(INTENT_EXTRA_DATA_LOCATION) == true)
-        {
-            location = intent.getParcelableExtra(INTENT_EXTRA_DATA_LOCATION);
-
-            if (intent.hasExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN) == true)
-            {
-                mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN);
-            }
-
-            mStaySearchCuration.getCurationOption().setDefaultSortType(SortType.DISTANCE);
-        } else if (intent.hasExtra(INTENT_EXTRA_DATA_LATLNG) == true)
-        {
-            LatLng latLng = intent.getParcelableExtra(INTENT_EXTRA_DATA_LATLNG);
-
-            if (intent.hasExtra(INTENT_EXTRA_DATA_RADIUS) == true)
-            {
-                radius = intent.getDoubleExtra(INTENT_EXTRA_DATA_RADIUS, DEFAULT_SEARCH_RADIUS);
-            }
-
-            mIsDeepLink = intent.getBooleanExtra(INTENT_EXTRA_DATA_IS_DEEPLINK, false);
-
-            location = new Location((String) null);
-            location.setLatitude(latLng.latitude);
-            location.setLongitude(latLng.longitude);
-
-            // 고정 위치로 진입한 경우
-            mIsFixedLocation = true;
-            mStaySearchCuration.getCurationOption().setDefaultSortType(SortType.DISTANCE);
-        } else
+        if (staySuggestParcel == null)
         {
             finish();
             return;
         }
 
-        mSearchType = SearchType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_SEARCHTYPE));
+        mStaySearchCuration.setSuggest(staySuggestParcel.getSuggest());
         mInputText = intent.getStringExtra(INTENT_EXTRA_DATA_INPUTTEXT);
 
-        mStaySearchCuration.setKeyword(keyword);
-
-        // 내주변 위치 검색으로 시작하는 경우에는 특정 반경과 거리순으로 시작해야한다.
-        if (mSearchType == SearchType.LOCATION)
+        switch (mStaySearchCuration.getSuggest().categoryKey)
         {
-            mStaySearchCuration.getCurationOption().setSortType(SortType.DISTANCE);
-            mStaySearchCuration.setRadius(radius);
+            case StaySuggest.CATEGORY_STAY:
+            case StaySuggest.CATEGORY_DIRECT:
+                break;
+
+            case StaySuggest.CATEGORY_LOCATION:
+            {
+                if (mStaySearchCuration.getSuggest().latitude != 0.0d && mStaySearchCuration.getSuggest().longitude != 0.0d)
+                {
+                    Location location = new Location("provider");
+                    location.setLatitude(mStaySearchCuration.getSuggest().latitude);
+                    location.setLongitude(mStaySearchCuration.getSuggest().longitude);
+
+                    mStaySearchCuration.setLocation(location);
+                }
+
+                mStaySearchCuration.getCurationOption().setDefaultSortType(SortType.DISTANCE);
+                mStaySearchCuration.getCurationOption().setSortType(SortType.DISTANCE);
+
+                if (intent.hasExtra(INTENT_EXTRA_DATA_RADIUS) == true)
+                {
+                    double radius = intent.getDoubleExtra(INTENT_EXTRA_DATA_RADIUS, DEFAULT_SEARCH_RADIUS);
+
+                    mStaySearchCuration.setRadius(radius);
+
+                    searchMyLocation();
+                }
+                break;
+            }
         }
 
-        mStaySearchCuration.setLocation(location);
-        mStaySearchCuration.setStayBookingDay(stayBookingDay);
+        mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN);
+
+        //        Location location = null;
+        //        Keyword keyword = null;
+        //        double radius = DEFAULT_SEARCH_RADIUS;
+        //
+        //        mStaySearchCuration = new StaySearchCuration();
+        //
+        //        if (intent.hasExtra(INTENT_EXTRA_DATA_KEYWORD) == true)
+        //        {
+        //            keyword = intent.getParcelableExtra(INTENT_EXTRA_DATA_KEYWORD);
+        //        } else if (intent.hasExtra(INTENT_EXTRA_DATA_LOCATION) == true)
+        //        {
+        //            location = intent.getParcelableExtra(INTENT_EXTRA_DATA_LOCATION);
+        //
+        //            if (intent.hasExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN) == true)
+        //            {
+        //                mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN);
+        //            }
+        //
+        //            mStaySearchCuration.getCurationOption().setDefaultSortType(SortType.DISTANCE);
+        //        } else if (intent.hasExtra(INTENT_EXTRA_DATA_LATLNG) == true)
+        //        {
+        //            LatLng latLng = intent.getParcelableExtra(INTENT_EXTRA_DATA_LATLNG);
+        //
+        //            if (intent.hasExtra(INTENT_EXTRA_DATA_RADIUS) == true)
+        //            {
+        //                radius = intent.getDoubleExtra(INTENT_EXTRA_DATA_RADIUS, DEFAULT_SEARCH_RADIUS);
+        //            }
+        //
+        //            mIsDeepLink = intent.getBooleanExtra(INTENT_EXTRA_DATA_IS_DEEPLINK, false);
+        //
+        //            location = new Location((String) null);
+        //            location.setLatitude(latLng.latitude);
+        //            location.setLongitude(latLng.longitude);
+        //
+        //            // 고정 위치로 진입한 경우
+        //            mIsFixedLocation = true;
+        //            mStaySearchCuration.getCurationOption().setDefaultSortType(SortType.DISTANCE);
+        //        } else
+        //        {
+        //            finish();
+        //            return;
+        //        }
+        //
+        //        mSearchType = SearchType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_SEARCHTYPE));
+        //        mInputText = intent.getStringExtra(INTENT_EXTRA_DATA_INPUTTEXT);
+        //
+        //        mStaySearchCuration.setKeyword(keyword);
+        //
+        //        // 내주변 위치 검색으로 시작하는 경우에는 특정 반경과 거리순으로 시작해야한다.
+        //        if (mSearchType == SearchType.LOCATION)
+        //        {
+        //            mStaySearchCuration.getCurationOption().setSortType(SortType.DISTANCE);
+        //            mStaySearchCuration.setRadius(radius);
+        //        }
+        //
+        //        mStaySearchCuration.setLocation(location);
+        //        mStaySearchCuration.setStayBookingDay(stayBookingDay);
     }
 
     @Override
@@ -439,16 +520,19 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
         try
         {
-            if (mSearchType == SearchType.LOCATION)
+            switch (mStaySearchCuration.getSuggest().categoryKey)
             {
-                mPlaceSearchResultLayout.setToolbarTitle("");
+                case StaySuggest.CATEGORY_LOCATION:
+                    mPlaceSearchResultLayout.setToolbarTitle("");
 
-                mPlaceSearchResultLayout.setSpinnerVisible(true);
-            } else
-            {
-                mPlaceSearchResultLayout.setToolbarTitle(mStaySearchCuration.getKeyword().name);
+                    mPlaceSearchResultLayout.setSpinnerVisible(true);
+                    break;
 
-                mPlaceSearchResultLayout.setSpinnerVisible(false);
+                default:
+                    mPlaceSearchResultLayout.setToolbarTitle(mStaySearchCuration.getSuggest().displayName);
+
+                    mPlaceSearchResultLayout.setSpinnerVisible(false);
+                    break;
             }
 
             mPlaceSearchResultLayout.setSelectionSpinner(mStaySearchCuration.getRadius());
@@ -459,17 +543,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         {
             ExLog.e(e.toString());
         }
-    }
-
-    @Override
-    protected Keyword getKeyword()
-    {
-        if (mStaySearchCuration == null)
-        {
-            return null;
-        }
-
-        return mStaySearchCuration.getKeyword();
     }
 
     @Override
@@ -493,6 +566,28 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     protected void onResume()
     {
         super.onResume();
+    }
+
+    @Override
+    protected void finish(int resultCode)
+    {
+        if (mPlaceSearchResultLayout != null && mPlaceSearchResultLayout.isEmptyLayout() == false//
+            && mStaySearchCuration.getSuggest() != null)
+        {
+            Intent intent = new Intent();
+            intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(mStaySearchCuration.getSuggest()));
+            setResult(resultCode, intent);
+        } else
+        {
+            setResult(resultCode);
+        }
+
+        if (resultCode == RESULT_CANCELED || resultCode == CODE_RESULT_ACTIVITY_GO_SEARCH)
+        {
+            requestAnalyticsByCanceled();
+        }
+
+        finish();
     }
 
     void recordScreenSearchResult(String screen)
@@ -612,7 +707,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected void requestAnalyticsByCanceled()
     {
-        if (AnalyticsManager.Screen.HOME.equalsIgnoreCase(mCallByScreen) == true && SearchType.LOCATION == mSearchType)
+        if (AnalyticsManager.Screen.HOME.equalsIgnoreCase(mCallByScreen) == true && StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStaySearchCuration.getSuggest().categoryKey) == true)
         {
             AnalyticsManager.getInstance(this).recordEvent( //
                 AnalyticsManager.Category.NAVIGATION, AnalyticsManager.Action.STAY_BACK_BUTTON_CLICK //
@@ -753,7 +848,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             }
 
             Intent intent = StaySearchResultCurationActivity.newInstance(StaySearchResultActivity.this,//
-                mViewType, mSearchType, mStaySearchCuration, mIsFixedLocation);
+                mViewType, mStaySearchCuration, mIsFixedLocation);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
 
             AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent( //
@@ -831,8 +926,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                     action = AnalyticsManager.Action.NEARBY_DISTANCE_05; // 0.5km
                 }
 
-                String label = mSearchType == SearchType.LOCATION //
-                    ? mAddress : mStaySearchCuration.getKeyword().name;
+                String label = StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStaySearchCuration.getSuggest().categoryKey) == true //
+                    ? mAddress : mStaySearchCuration.getSuggest().displayName;
                 AnalyticsManager.getInstance(StaySearchResultActivity.this) //
                     .recordEvent(AnalyticsManager.Category.NAVIGATION, action, label, null);
             } catch (Exception e)
@@ -843,7 +938,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 }
             }
 
-            if (mSearchType == SearchType.LOCATION && mStaySearchCuration.getCurationOption().getSortType() == SortType.DISTANCE//
+            if (StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStaySearchCuration.getSuggest().categoryKey) == true//
+                && mStaySearchCuration.getCurationOption().getSortType() == SortType.DISTANCE//
                 && mStaySearchCuration.getLocation() == null)
             {
                 searchMyLocation();
@@ -912,7 +1008,16 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onResearchClick()
         {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
 
+            startActivityForResult(ResearchStayActivity.newInstance(StaySearchResultActivity.this, mTodayDateTime.openDateTime, mTodayDateTime.closeDateTime//
+                , mTodayDateTime.currentDateTime, mTodayDateTime.dailyDateTime//
+                , mStaySearchCuration.getStayBookingDay().getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                , mStaySearchCuration.getStayBookingDay().getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+                , mStaySearchCuration.getSuggest()), CODE_REQUEST_ACTIVITY_RESEARCH);
         }
     };
 
@@ -933,7 +1038,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             mAddress = address;
             mPlaceSearchResultLayout.setToolbarTitle(address);
 
-            if (SearchType.LOCATION != mSearchType)
+            if (StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStaySearchCuration.getSuggest().categoryKey) == false)
             {
                 return;
             }
@@ -1144,30 +1249,49 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
                 , AnalyticsManager.Action.STAY_ITEM_CLICK, String.format(Locale.KOREA, "%d_%d", stay.entryPosition, stay.index), null);
 
-            if (stay.availableRooms == 0)
+            if (stay.availableRooms == 0 && DailyTextUtils.isTextEmpty(mStaySearchCuration.getSuggest().categoryKey) == false)
             {
-                switch (mSearchType)
+                switch (mStaySearchCuration.getSuggest().categoryKey)
                 {
-                    case AUTOCOMPLETE:
-                        AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_STAY_ITEM_CLICK//
-                            , AnalyticsManager.Action.AUTO_SEARCH, Integer.toString(stay.index), null);
-                        break;
-
-                    case LOCATION:
+                    case StaySuggest.CATEGORY_LOCATION:
                         AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_STAY_ITEM_CLICK//
                             , AnalyticsManager.Action.NEARBY, Integer.toString(stay.index), null);
                         break;
 
-                    case RECENTLY_KEYWORD:
+                    case StaySuggest.CATEGORY_STAY:
+                    case StaySuggest.CATEGORY_REGION:
                         AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_STAY_ITEM_CLICK//
-                            , AnalyticsManager.Action.RECENT, Integer.toString(stay.index), null);
+                            , AnalyticsManager.Action.AUTO_SEARCH, Integer.toString(stay.index), null);
                         break;
 
-                    case SEARCHES:
+                    case StaySuggest.CATEGORY_DIRECT:
                         AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_STAY_ITEM_CLICK//
                             , AnalyticsManager.Action.KEYWORD, Integer.toString(stay.index), null);
                         break;
                 }
+
+                //                switch (mSearchType)
+                //                {
+                //                    case AUTOCOMPLETE:
+                //                        AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_STAY_ITEM_CLICK//
+                //                            , AnalyticsManager.Action.AUTO_SEARCH, Integer.toString(stay.index), null);
+                //                        break;
+                //
+                //                    case LOCATION:
+                //                        AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_STAY_ITEM_CLICK//
+                //                            , AnalyticsManager.Action.NEARBY, Integer.toString(stay.index), null);
+                //                        break;
+                //
+                //                    case RECENTLY_KEYWORD:
+                //                        AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_STAY_ITEM_CLICK//
+                //                            , AnalyticsManager.Action.RECENT, Integer.toString(stay.index), null);
+                //                        break;
+                //
+                //                    case SEARCHES:
+                //                        AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_STAY_ITEM_CLICK//
+                //                            , AnalyticsManager.Action.KEYWORD, Integer.toString(stay.index), null);
+                //                        break;
+                //                }
             }
         }
 
@@ -1225,7 +1349,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         {
             try
             {
-                AnalyticsManager.getInstance(StaySearchResultActivity.this).onSearch(mStaySearchCuration.getKeyword().name, null, "stay", count);
+                AnalyticsManager.getInstance(StaySearchResultActivity.this).onSearch(mStaySearchCuration.getSuggest().displayName, null, "stay", count);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
@@ -1245,7 +1369,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             {
                 currentPlaceListFragment.setVisibility(mViewType, Constants.EmptyStatus.NOT_EMPTY, true);
                 currentPlaceListFragment.setPlaceCuration(mStaySearchCuration);
-                ((StaySearchResultListFragment) currentPlaceListFragment).setSearchType(mSearchType);
                 currentPlaceListFragment.refreshList(true);
             } else
             {
@@ -1328,7 +1451,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             }
 
             Intent intent = StaySearchResultCurationActivity.newInstance(StaySearchResultActivity.this, //
-                mViewType, mSearchType, mStaySearchCuration, mIsFixedLocation);
+                mViewType, mStaySearchCuration, mIsFixedLocation);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_STAYCURATION);
         }
 
@@ -1410,30 +1533,34 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
             }
 
-            Keyword keyword = mStaySearchCuration.getKeyword();
-
-            if (mSearchType == SearchType.LOCATION)
+            switch (mStaySearchCuration.getSuggest().categoryKey)
             {
-                synchronized (StaySearchResultActivity.this)
-                {
-                    if (mReceiveDataFlag == 0)
+                case StaySuggest.CATEGORY_LOCATION:
+                    synchronized (StaySearchResultActivity.this)
                     {
-                        mReceiveDataFlag = 1;
-                    } else if (mReceiveDataFlag == 1)
-                    {
-                        recordEventSearchResultByLocation(mAddress, isShow, params);
-                        mReceiveDataFlag = 2;
+                        if (mReceiveDataFlag == 0)
+                        {
+                            mReceiveDataFlag = 1;
+                        } else if (mReceiveDataFlag == 1)
+                        {
+                            recordEventSearchResultByLocation(mAddress, isShow, params);
+                            mReceiveDataFlag = 2;
+                        }
                     }
-                }
-            } else if (mSearchType == SearchType.RECENTLY_KEYWORD)
-            {
-                recordEventSearchResultByRecentKeyword(keyword, isShow, params);
-            } else if (mSearchType == SearchType.AUTOCOMPLETE)
-            {
-                recordEventSearchResultByAutoSearch(keyword, mInputText, isShow, params);
-            } else
-            {
-                recordEventSearchResultByKeyword(keyword, isShow, params);
+                    break;
+
+                case StaySuggest.CATEGORY_STAY:
+                case StaySuggest.CATEGORY_REGION:
+                    recordEventSearchResultByAutoSearch(mStaySearchCuration.getSuggest().displayName, mInputText, isShow, params);
+                    break;
+
+                case StaySuggest.CATEGORY_DIRECT:
+                    recordEventSearchResultByRecentKeyword(mStaySearchCuration.getSuggest().displayName, isShow, params);
+                    break;
+
+                default:
+                    recordEventSearchResultByKeyword(mStaySearchCuration.getSuggest().displayName, isShow, params);
+                    break;
             }
         }
 

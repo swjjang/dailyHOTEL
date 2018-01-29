@@ -30,6 +30,7 @@ import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StayRegion;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.StayFilterParcel;
 import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
@@ -42,7 +43,6 @@ import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
-import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
@@ -933,10 +933,12 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             {
                 try
                 {
+                    StaySuggest staySuggest = new StaySuggest(StaySuggest.CATEGORY_LOCATION, null);
+
                     startActivityForResult(StaySearchResultActivity.newInstance(getActivity()//
                         , mStayViewModel.commonDateTime.getValue().getTodayDateTime()//
                         , mStayViewModel.stayBookDateTime.getValue().getStayBookingDay()//
-                        , null, AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC)//
+                        , null, staySuggest, AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC)//
                         , StayTabActivity.REQUEST_CODE_SEARCH_RESULT);
                 } catch (Exception e)
                 {
@@ -1229,10 +1231,13 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                         {
                             if (latLng != null)
                             {
+                                StaySuggest staySuggest = new StaySuggest(StaySuggest.CATEGORY_LOCATION, null);
+                                staySuggest.latitude = latLng.latitude;
+                                staySuggest.longitude = latLng.longitude;
+
                                 startActivityForResult(StaySearchResultActivity.newInstance(getActivity()//
-                                    , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                                    , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                                    , latLng, radius, true), StayTabActivity.REQUEST_CODE_SEARCH_RESULT);
+                                    , commonDateTime.getTodayDateTime(), stayBookDateTime.getStayBookingDay()//
+                                    , staySuggest, radius, true), StayTabActivity.REQUEST_CODE_SEARCH_RESULT);
                             } else
                             {
                                 return false;
@@ -1243,10 +1248,11 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                         default:
                             if (DailyTextUtils.isTextEmpty(word) == false)
                             {
+                                StaySuggest staySuggest = new StaySuggest(StaySuggest.CATEGORY_DIRECT, word);
+
                                 startActivityForResult(StaySearchResultActivity.newInstance(getActivity()//
-                                    , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                                    , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                                    , null, new Keyword(0, word), Constants.SearchType.SEARCHES), StayTabActivity.REQUEST_CODE_SEARCH_RESULT);
+                                    , commonDateTime.getTodayDateTime(), stayBookDateTime.getStayBookingDay()//
+                                    , word, staySuggest, null), StayTabActivity.REQUEST_CODE_SEARCH_RESULT);
                             } else
                             {
                                 return false;

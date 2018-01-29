@@ -1,0 +1,148 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:id="@+id/toolbarLayout"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/toolbar_height"
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.daily.base.widget.DailyImageView
+                android:id="@+id/daily_titleImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                app:srcCompat="@drawable/navibar_ic_x"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/daily_titleTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="12dp"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="국내 스테이"
+                android:textColor="@color/default_text_c323232"
+                android:textSize="18dp"/>
+        </LinearLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/stayLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="15dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbarLayout">
+
+            <View
+                android:id="@+id/staySuggestBackgroundView"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@color/default_background_cf7f7f8"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/staySuggestTextView"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:drawablePadding="17dp"
+                android:gravity="center_vertical"
+                android:hint="@string/label_search_stay_suggest_hint"
+                android:textColor="@color/default_text_c323232"
+                android:textColorHint="@color/black_a50"
+                android:textSize="14dp"
+                app:drawableCompatLeft="@drawable/search_ic_01_search"
+                app:layout_constraintBottom_toBottomOf="@+id/staySuggestBackgroundView"
+                app:layout_constraintLeft_toLeftOf="@+id/staySuggestBackgroundView"
+                app:layout_constraintRight_toRightOf="@+id/staySuggestBackgroundView"
+                app:layout_constraintTop_toTopOf="@+id/staySuggestBackgroundView"/>
+
+            <View
+                android:id="@+id/stayCalendarBackgroundView"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="14dp"
+                android:background="@color/default_background_cf7f7f8"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/staySuggestBackgroundView"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/stayCalendarTextView"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:drawablePadding="17dp"
+                android:gravity="center_vertical"
+                android:textColor="@color/default_text_c323232"
+                android:textSize="14dp"
+                app:drawableCompatLeft="@drawable/search_ic_01_date"
+                app:layout_constraintBottom_toBottomOf="@+id/stayCalendarBackgroundView"
+                app:layout_constraintLeft_toLeftOf="@+id/stayCalendarBackgroundView"
+                app:layout_constraintRight_toRightOf="@+id/stayCalendarBackgroundView"
+                app:layout_constraintTop_toTopOf="@+id/stayCalendarBackgroundView"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/searchStayTextView"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/selector_button_default_background"
+                android:gravity="center"
+                android:text="@string/label_search_do_search"
+                android:textColor="@drawable/selector_button_default_text_color"
+                android:textSize="17dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/stayCalendarBackgroundView"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/default_line_ce7e7e7"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/searchStayTextView"/>
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/nestedScrollView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/stayLayout">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+    </android.support.constraint.ConstraintLayout>
+</layout>

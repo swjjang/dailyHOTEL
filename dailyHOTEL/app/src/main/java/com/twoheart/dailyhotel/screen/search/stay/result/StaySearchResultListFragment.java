@@ -1,5 +1,6 @@
 package com.twoheart.dailyhotel.screen.search.stay.result;
 
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
@@ -26,7 +27,6 @@ public class StaySearchResultListFragment extends StayListFragment
 {
     boolean mResetCategory = true;
     boolean mIsDeepLink;
-    SearchType mSearchType;
 
     public interface OnStaySearchResultListFragmentListener extends OnStayListFragmentListener
     {
@@ -58,11 +58,6 @@ public class StaySearchResultListFragment extends StayListFragment
         return mPlaceListLayout;
     }
 
-    public void setSearchType(SearchType searchType)
-    {
-        mSearchType = searchType;
-    }
-
     @Override
     public void setPlaceCuration(PlaceCuration curation)
     {
@@ -73,7 +68,7 @@ public class StaySearchResultListFragment extends StayListFragment
 
         super.setPlaceCuration(curation);
 
-        ((StaySearchResultListLayout) mPlaceListLayout).setSearchType(mSearchType);
+        ((StaySearchResultListLayout) mPlaceListLayout).setLocationSearchType(StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(((StaySearchCuration) curation).getSuggest().categoryKey));
     }
 
     @Override
@@ -141,26 +136,33 @@ public class StaySearchResultListFragment extends StayListFragment
                                 }
                             }
 
-                            switch (mSearchType)
+                            StaySearchCuration staySearchCuration = ((StaySearchCuration) mStayCuration);
+
+                            switch (staySearchCuration.getSuggest().categoryKey)
                             {
-                                case AUTOCOMPLETE:
+                                //                                case AUTOCOMPLETE:
+                                case StaySuggest.CATEGORY_STAY:
+                                case StaySuggest.CATEGORY_REGION:
                                     AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.AUTO_SEARCH_RESULT//
-                                        , ((StaySearchCuration) mStayCuration).getKeyword().name, integer.toString(), soldOutCount, null);
+                                        , staySearchCuration.getSuggest().displayName, integer.toString(), soldOutCount, null);
                                     break;
 
-                                case LOCATION:
+
+                                //                                case LOCATION:
+                                case StaySuggest.CATEGORY_LOCATION:
                                     //                                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NEARBY_SEARCH_RESULT//
                                     //                                        , ((StaySearchCuration) mStayCuration).getKeyword().name, integer.toString(), soldOutCount, null);
                                     break;
 
-                                case RECENTLY_KEYWORD:
-                                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.RECENT_SEARCH_RESULT//
-                                        , ((StaySearchCuration) mStayCuration).getKeyword().name, integer.toString(), soldOutCount, null);
-                                    break;
+                                //                                case RECENTLY_KEYWORD:
+                                //                                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.RECENT_SEARCH_RESULT//
+                                //                                        , ((StaySearchCuration) mStayCuration).getKeyword().name, integer.toString(), soldOutCount, null);
+                                //                                    break;
 
-                                case SEARCHES:
+                                //                                case SEARCHES:
+                                case StaySuggest.CATEGORY_DIRECT:
                                     AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.KEYWORD_SEARCH_RESULT//
-                                        , ((StaySearchCuration) mStayCuration).getKeyword().name, integer.toString(), soldOutCount, null);
+                                        , staySearchCuration.getSuggest().displayName, integer.toString(), soldOutCount, null);
                                     break;
                             }
                         }
