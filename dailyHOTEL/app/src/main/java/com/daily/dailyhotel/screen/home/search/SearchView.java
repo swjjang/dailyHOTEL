@@ -1,7 +1,6 @@
 package com.daily.dailyhotel.screen.home.search;
 
 import android.support.design.widget.AppBarLayout;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 
 import com.daily.base.BaseActivity;
@@ -59,13 +58,20 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
 
         viewDataBinding.appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener()
         {
+            final int DP_24 = ScreenUtils.dpToPx(getContext(), 24);
+            final int DP_126 = ScreenUtils.dpToPx(getContext(), 126);
+            final int DP_18 = ScreenUtils.dpToPx(getContext(), 18);
+            final int DP_15 = ScreenUtils.dpToPx(getContext(), 15);
+            final int DP_3 = ScreenUtils.dpToPx(getContext(), 3);
+            final int DP_100 = ScreenUtils.dpToPx(getContext(), 100);
+
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset)
             {
-                if (ScreenUtils.dpToPx(getContext(), 150) - getDimensionPixelSize(R.dimen.toolbar_height) + verticalOffset < 0)
+                if (DP_126 - getDimensionPixelSize(R.dimen.toolbar_height) + verticalOffset < 0)
                 {
-                    int totalHeight = ScreenUtils.dpToPx(getContext(), 100);
-                    int value = Math.abs(ScreenUtils.dpToPx(getContext(), 150) - getDimensionPixelSize(R.dimen.toolbar_height) + verticalOffset);
+                    int totalHeight = DP_100;
+                    int value = Math.abs(DP_126 - getDimensionPixelSize(R.dimen.toolbar_height) + verticalOffset);
                     float vector = (float) value / totalHeight;
                     float backVector = 1.0f - vector;
 
@@ -78,45 +84,43 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
                     getViewDataBinding().stayOutboundSearchTextView.setAlpha(backVector);
                     getViewDataBinding().gourmetSearchTextView.setAlpha(backVector);
 
-                    int paddingValue = (int) (ScreenUtils.dpToPx(getContext(), 15) * backVector);
-                    getViewDataBinding().categoryLayout.setPadding(paddingValue, 0, paddingValue, 0);
-                    ((AppBarLayout.LayoutParams) getViewDataBinding().stayLayout.getLayoutParams()).leftMargin = paddingValue;
-                    ((AppBarLayout.LayoutParams) getViewDataBinding().stayLayout.getLayoutParams()).rightMargin = paddingValue;
-                    getViewDataBinding().stayLayout.requestLayout();
+                    final int layoutWidth = (int) (ScreenUtils.getScreenWidth(getContext()) + DP_24 * vector);
 
+                    getViewDataBinding().categoryLayout.getLayoutParams().width = layoutWidth;
+                    getViewDataBinding().stayLayout.getLayoutParams().width = layoutWidth;
+                    getViewDataBinding().stayOutboundLayout.getLayoutParams().width = layoutWidth;
+                    getViewDataBinding().gourmetLayout.getLayoutParams().width = layoutWidth;
+                    getViewDataBinding().searchBoxShadowImageView.getLayoutParams().height = (int)(DP_3 + DP_15 * backVector);
 
-                    //                    getViewDataBinding().toolbarView.setElevation(2 + ScreenUtils.dpToPx(getContext(), 18) * vector);
-                    //                    getViewDataBinding().appBarLayout.setElevation(ScreenUtils.dpToPx(getContext(), 10) * vector);
+                    getViewDataBinding().appBarLayout.requestLayout();
 
                 } else if (getViewDataBinding().toolbarView.getAlpha() != 0.0f)
                 {
                     getViewDataBinding().staySearchTextView.setAlpha(1.0f);
                     getViewDataBinding().stayOutboundSearchTextView.setAlpha(1.0f);
                     getViewDataBinding().gourmetSearchTextView.setAlpha(1.0f);
-                    getViewDataBinding().categoryLayout.setPadding(ScreenUtils.dpToPx(getContext(), 15), 0, ScreenUtils.dpToPx(getContext(), 15), 0);
 
-                    ((AppBarLayout.LayoutParams) getViewDataBinding().stayLayout.getLayoutParams()).leftMargin = ScreenUtils.dpToPx(getContext(), 15);
-                    ((AppBarLayout.LayoutParams) getViewDataBinding().stayLayout.getLayoutParams()).rightMargin = ScreenUtils.dpToPx(getContext(), 15);
-                    getViewDataBinding().stayLayout.requestLayout();
+                    getViewDataBinding().categoryLayout.getLayoutParams().width = AppBarLayout.LayoutParams.MATCH_PARENT;
+                    getViewDataBinding().stayLayout.getLayoutParams().width = AppBarLayout.LayoutParams.MATCH_PARENT;
+                    getViewDataBinding().stayOutboundLayout.getLayoutParams().width = AppBarLayout.LayoutParams.MATCH_PARENT;
+                    getViewDataBinding().gourmetLayout.getLayoutParams().width = AppBarLayout.LayoutParams.MATCH_PARENT;
+                    getViewDataBinding().searchBoxShadowImageView.getLayoutParams().height = DP_18;
 
-                    //                    getViewDataBinding().toolbarView.setElevation(ScreenUtils.dpToPx(getContext(), 20));
-                    //                    getViewDataBinding().appBarLayout.setElevation(ScreenUtils.dpToPx(getContext(), 10));
+                    getViewDataBinding().appBarLayout.requestLayout();
                 }
 
                 // getViewDataBinding().searchTitleTextView 의 상단 마진
-                final int DP_20 = ScreenUtils.dpToPx(getContext(), 20);
-
-                if (DP_20 + verticalOffset > 0)
+                if (getDimensionPixelSize(R.dimen.toolbar_height) + verticalOffset > 0)
                 {
-                    float vector = (float) -verticalOffset / DP_20;
+                    float vector = (float) -verticalOffset / getDimensionPixelSize(R.dimen.toolbar_height);
                     getViewDataBinding().toolbarView.setAlpha(vector);
                 } else
                 {
                     getViewDataBinding().toolbarView.setAlpha(1.0f);
                 }
 
-                getViewDataBinding().searchTitleTextView.setTranslationY(verticalOffset / 2);
-                getViewDataBinding().simpleDraweeView.setTranslationY(verticalOffset / 2);
+//                getViewDataBinding().searchTitleTextView.setTranslationY(verticalOffset / 2);
+//                getViewDataBinding().topImageView.setTranslationY(verticalOffset / 2);
             }
         });
 

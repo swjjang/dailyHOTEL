@@ -19,13 +19,13 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/search_ic_01_search"/>
+            app:srcCompat="@drawable/vector_search_ic_08_history"/>
 
         <com.daily.base.widget.DailyTextView
             android:id="@+id/nameTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="23dp"
+            android:layout_marginLeft="15dp"
             android:textColor="@color/default_text_c323232"
             android:textSize="13dp"
             app:layout_constraintBottom_toTopOf="@+id/dateTextView"
@@ -38,8 +38,8 @@
             android:id="@+id/dateTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="23dp"
-            android:layout_marginTop="2dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="1px"
             android:textColor="@color/default_text_c929292"
             android:textSize="12dp"
             android:visibility="gone"
@@ -51,8 +51,9 @@
         <ImageView
             android:id="@+id/deleteImageView"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:paddingLeft="10dp"
+            android:paddingRight="3dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"

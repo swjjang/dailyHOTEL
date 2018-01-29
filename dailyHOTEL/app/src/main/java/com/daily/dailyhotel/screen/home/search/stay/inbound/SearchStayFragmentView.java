@@ -142,9 +142,9 @@ public class SearchStayFragmentView extends BaseFragmentDialogView<SearchStayFra
 
         DailyTextView dailyTextView = new DailyTextView(getContext());
         dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
-        dailyTextView.setTextColor(getColor(R.color.default_text_c323232));
+        dailyTextView.setTextColor(getColor(R.color.default_text_c666666));
         dailyTextView.setPadding(DP_12, 0, DP_12, 0);
-        dailyTextView.setBackgroundResource(R.color.default_background_cf4f4f6);
+        dailyTextView.setBackgroundResource(R.drawable.shape_fillrect_le7e7e7_bffffff_r50);
         dailyTextView.setGravity(Gravity.CENTER_VERTICAL);
 
         FlexboxLayout.LayoutParams layoutParams = new FlexboxLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ScreenUtils.dpToPx(getContext(), 29));
