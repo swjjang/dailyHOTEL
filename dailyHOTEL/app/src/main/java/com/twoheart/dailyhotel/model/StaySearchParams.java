@@ -73,7 +73,7 @@ public class StaySearchParams extends StayParams
 
         setSortType(mSort);
 
-        term = staySearchCuration.getKeyword() == null ? null : staySearchCuration.getKeyword().name;
+        term = staySearchCuration.getSuggest() == null ? null : staySearchCuration.getSuggest().displayName;
         radius = staySearchCuration.getRadius();
 
         Location location = staySearchCuration.getLocation();

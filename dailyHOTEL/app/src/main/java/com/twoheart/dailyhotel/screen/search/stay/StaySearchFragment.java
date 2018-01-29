@@ -11,6 +11,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.RecentlyPlace;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
@@ -244,7 +245,9 @@ public class StaySearchFragment extends PlaceSearchFragment
 
         lockUI();
 
-        Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, location, AnalyticsManager.Screen.SEARCH_MAIN);
+        StaySuggest staySuggest = new StaySuggest(StaySuggest.CATEGORY_LOCATION, null);
+
+        Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, null, staySuggest, AnalyticsManager.Screen.SEARCH_MAIN);
         startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
     }
 
@@ -269,7 +272,9 @@ public class StaySearchFragment extends PlaceSearchFragment
             return;
         }
 
-        Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, text);
+        StaySuggest staySuggest = new StaySuggest(StaySuggest.CATEGORY_DIRECT, text);
+
+        Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, text, staySuggest, null);
         startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
     }
 
@@ -906,7 +911,9 @@ public class StaySearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, text);
+            StaySuggest staySuggest = new StaySuggest(StaySuggest.CATEGORY_DIRECT, text);
+
+            Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, text, staySuggest, null);
             startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
         }
 
@@ -935,12 +942,14 @@ public class StaySearchFragment extends PlaceSearchFragment
 
             if (keyword instanceof StayKeyword)
             {
-                Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, text, keyword, Constants.SearchType.AUTOCOMPLETE);
+                StaySuggest staySuggest = new StaySuggest(StaySuggest.CATEGORY_STAY, keyword.name);
+
+                Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, text, staySuggest, null);
                 startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
             } else
             {
-                Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, keyword, Constants.SearchType.RECENTLY_KEYWORD);
-                startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
+                //                Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, keyword, Constants.SearchType.RECENTLY_KEYWORD);
+                //                startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
             }
         }
 

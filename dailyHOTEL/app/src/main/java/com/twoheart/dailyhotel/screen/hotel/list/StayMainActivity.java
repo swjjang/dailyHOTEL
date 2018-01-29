@@ -24,6 +24,7 @@ import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayAreaGroup;
 import com.daily.dailyhotel.entity.StayFilter;
 import com.daily.dailyhotel.entity.StayRegion;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.StayFilterParcel;
 import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
@@ -42,7 +43,6 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
-import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
@@ -408,7 +408,12 @@ public class StayMainActivity extends PlaceMainActivity
 
         lockUI();
 
-        Intent intent = StaySearchResultActivity.newInstance(context, todayDateTime, stayBookingDay, location, callByScreen);
+        StaySuggest staySuggest = new StaySuggest();
+        staySuggest.categoryKey = StaySuggest.CATEGORY_LOCATION;
+        staySuggest.latitude = location.getLatitude();
+        staySuggest.longitude = location.getLongitude();
+
+        Intent intent = StaySearchResultActivity.newInstance(context, todayDateTime, stayBookingDay, null, staySuggest, callByScreen);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
     }
 
@@ -1659,7 +1664,11 @@ public class StayMainActivity extends PlaceMainActivity
                         {
                             if (latLng != null)
                             {
-                                Intent intent = StaySearchResultActivity.newInstance(baseActivity, todayDateTime, stayBookingDay, latLng, radius, true);
+                                StaySuggest staySuggest = new StaySuggest(StaySuggest.CATEGORY_LOCATION, null);
+                                staySuggest.latitude = latLng.latitude;
+                                staySuggest.longitude = latLng.longitude;
+
+                                Intent intent = StaySearchResultActivity.newInstance(baseActivity, todayDateTime, stayBookingDay, staySuggest, radius, true);
                                 baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
                             } else
                             {
@@ -1671,7 +1680,9 @@ public class StayMainActivity extends PlaceMainActivity
                         default:
                             if (DailyTextUtils.isTextEmpty(word) == false)
                             {
-                                Intent intent = StaySearchResultActivity.newInstance(baseActivity, todayDateTime, stayBookingDay, new Keyword(0, word), SearchType.SEARCHES);
+                                StaySuggest staySuggest = new StaySuggest(StaySuggest.CATEGORY_DIRECT, word);
+
+                                Intent intent = StaySearchResultActivity.newInstance(baseActivity, todayDateTime, stayBookingDay, word, staySuggest, null);
                                 baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
                             } else
                             {

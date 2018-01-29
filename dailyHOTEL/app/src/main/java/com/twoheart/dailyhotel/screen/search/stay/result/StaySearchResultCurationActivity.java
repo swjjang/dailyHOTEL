@@ -9,11 +9,13 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.StayCuration;
 import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.model.StayFilter;
+import com.twoheart.dailyhotel.model.StaySearchCuration;
 import com.twoheart.dailyhotel.model.StaySearchParams;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCurationActivity;
@@ -24,16 +26,12 @@ import retrofit2.Response;
 
 public class StaySearchResultCurationActivity extends StayCurationActivity
 {
-    private static final String INTENT_EXTRA_DATA_SEARCHTYPE = "searchType";
     private static final String INTENT_EXTRA_DATA_IS_FIXED_LOCATION = "isFixedLocation";
 
-    private SearchType mSearchType;
-
-    public static Intent newInstance(Context context, ViewType viewType, SearchType searchType, StayCuration stayCuration, boolean isFixedLocation)
+    public static Intent newInstance(Context context, ViewType viewType, StaySearchCuration stayCuration, boolean isFixedLocation)
     {
         Intent intent = new Intent(context, StaySearchResultCurationActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType.name());
-        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, searchType.name());
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, stayCuration);
         intent.putExtra(INTENT_EXTRA_DATA_IS_FIXED_LOCATION, isFixedLocation);
 
@@ -45,7 +43,6 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
     {
         super.initIntent(intent);
 
-        mSearchType = SearchType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_SEARCHTYPE));
         mIsFixedLocation = intent.getBooleanExtra(INTENT_EXTRA_DATA_IS_FIXED_LOCATION, false);
     }
 
@@ -78,7 +75,7 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
         RadioButton radioButton = mSortRadioGroup.findViewById(R.id.regionCheckView);
         RadioButton emptyCheckView = mSortRadioGroup.findViewById(R.id.emptyCheckView);
 
-        if (mSearchType == SearchType.LOCATION)
+        if (StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(((StaySearchCuration) mStayCuration).getSuggest().categoryKey) == true)
         {
             radioButton.setVisibility(View.GONE);
             emptyCheckView.setVisibility(View.INVISIBLE);
@@ -133,7 +130,7 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
         {
             mSortRadioGroup.setOnCheckedChangeListener(null);
 
-            if (mSearchType == SearchType.LOCATION)
+            if (StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(((StaySearchCuration) mStayCuration).getSuggest().categoryKey) == true)
             {
                 mSortRadioGroup.check(R.id.distanceCheckView);
             } else

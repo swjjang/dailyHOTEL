@@ -18,6 +18,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
@@ -453,7 +454,9 @@ public class EventWebActivity extends WebViewActivity implements Constants
                     {
                         if (latLng != null)
                         {
-                            Intent intent = StaySearchResultActivity.newInstance(context, todayDateTime, stayBookingDay, latLng, radius, true);
+                            StaySuggest staySuggest = new StaySuggest(StaySuggest.CATEGORY_LOCATION, null);
+
+                            Intent intent = StaySearchResultActivity.newInstance(context, todayDateTime, stayBookingDay, staySuggest, radius, true);
                             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
                         } else
                         {
@@ -466,7 +469,9 @@ public class EventWebActivity extends WebViewActivity implements Constants
                     {
                         if (DailyTextUtils.isTextEmpty(word) == false)
                         {
-                            Intent intent = StaySearchResultActivity.newInstance(context, todayDateTime, stayBookingDay, new Keyword(0, word), SearchType.SEARCHES);
+                            StaySuggest staySuggest = new StaySuggest(StaySuggest.CATEGORY_DIRECT, word);
+
+                            Intent intent = StaySearchResultActivity.newInstance(context, todayDateTime, stayBookingDay, word, staySuggest, null);
                             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
                         } else
                         {

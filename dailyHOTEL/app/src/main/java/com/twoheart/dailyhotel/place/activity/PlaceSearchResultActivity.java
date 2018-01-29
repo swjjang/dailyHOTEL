@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -35,6 +36,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 public abstract class PlaceSearchResultActivity extends BaseActivity
 {
     public static final String INTENT_EXTRA_DATA_KEYWORD = "keyword";
+    public static final String INTENT_EXTRA_DATA_SUGGEST = "suggest";
     public static final String INTENT_EXTRA_DATA_LOCATION = "location";
     public static final String INTENT_EXTRA_DATA_SEARCHTYPE = "searchType";
     public static final String INTENT_EXTRA_DATA_INPUTTEXT = "inputText";
@@ -90,8 +92,6 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
 
     protected abstract void initLayout();
 
-    protected abstract Keyword getKeyword();
-
     protected abstract PlaceCuration getPlaceCuration();
 
     protected abstract void onPlaceDetailClickByLongPress(View view, PlaceViewItem placeViewItem, int listCount);
@@ -99,6 +99,8 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
     protected abstract void requestAnalyticsByCanceled();
 
     protected abstract void changeViewType();
+
+    protected abstract void finish(int resultCode);
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -179,29 +181,6 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
         super.finish();
 
         overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
-    }
-
-    protected void finish(int resultCode)
-    {
-        Keyword keyword = getKeyword();
-
-        if (mPlaceSearchResultLayout != null && mPlaceSearchResultLayout.isEmptyLayout() == false//
-            && keyword != null)
-        {
-            Intent intent = new Intent();
-            intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, getKeyword());
-            setResult(resultCode, intent);
-        } else
-        {
-            setResult(resultCode);
-        }
-
-        if (resultCode == RESULT_CANCELED || resultCode == CODE_RESULT_ACTIVITY_GO_SEARCH)
-        {
-            requestAnalyticsByCanceled();
-        }
-
-        finish();
     }
 
     @Override
@@ -570,38 +549,38 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
         }
     }
 
-    protected void recordEventSearchResultByRecentKeyword(Keyword keyword, boolean isEmpty, Map<String, String> params)
+    protected void recordEventSearchResultByRecentKeyword(String displayName, boolean isEmpty, Map<String, String> params)
     {
         String action = (isEmpty == true) ? AnalyticsManager.Action.RECENT_KEYWORD_NOT_FOUND : AnalyticsManager.Action.RECENT_KEYWORD;
         params.put(AnalyticsManager.KeyType.SEARCH_PATH, AnalyticsManager.ValueType.RECENT);
-        params.put(AnalyticsManager.KeyType.SEARCH_WORD, keyword.name);
-        params.put(AnalyticsManager.KeyType.SEARCH_RESULT, keyword.name);
+        params.put(AnalyticsManager.KeyType.SEARCH_WORD, displayName);
+        params.put(AnalyticsManager.KeyType.SEARCH_RESULT, displayName);
 
         AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
-            , action, keyword.name, params);
+            , action, displayName, params);
     }
 
-    protected void recordEventSearchResultByKeyword(Keyword keyword, boolean isEmpty, Map<String, String> params)
+    protected void recordEventSearchResultByKeyword(String displayName, boolean isEmpty, Map<String, String> params)
     {
         String action = (isEmpty == true) ? AnalyticsManager.Action.KEYWORD_NOT_FOUND : AnalyticsManager.Action.KEYWORD_;
 
         params.put(AnalyticsManager.KeyType.SEARCH_PATH, AnalyticsManager.ValueType.DIRECT);
-        params.put(AnalyticsManager.KeyType.SEARCH_WORD, keyword.name);
-        params.put(AnalyticsManager.KeyType.SEARCH_RESULT, keyword.name);
+        params.put(AnalyticsManager.KeyType.SEARCH_WORD, displayName);
+        params.put(AnalyticsManager.KeyType.SEARCH_RESULT, displayName);
 
         AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
-            , action, keyword.name, params);
+            , action, displayName, params);
     }
 
-    protected void recordEventSearchResultByAutoSearch(Keyword keyword, String inputText, boolean isEmpty, Map<String, String> params)
+    protected void recordEventSearchResultByAutoSearch(String displayName, String inputText, boolean isEmpty, Map<String, String> params)
     {
         String category = (isEmpty == true) ? AnalyticsManager.Category.AUTO_SEARCH_NOT_FOUND : AnalyticsManager.Category.AUTO_SEARCH;
 
         params.put(AnalyticsManager.KeyType.SEARCH_PATH, AnalyticsManager.ValueType.AUTO);
         params.put(AnalyticsManager.KeyType.SEARCH_WORD, inputText);
-        params.put(AnalyticsManager.KeyType.SEARCH_RESULT, keyword.name);
+        params.put(AnalyticsManager.KeyType.SEARCH_RESULT, displayName);
 
         AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(category//
-            , keyword.name, inputText, params);
+            , displayName, inputText, params);
     }
 }

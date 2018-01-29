@@ -428,7 +428,6 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         ((GourmetSearchResultLayout) mPlaceSearchResultLayout).setCalendarText(mGourmetSearchCuration.getGourmetBookingDay());
     }
 
-    @Override
     protected Keyword getKeyword()
     {
         if (mGourmetSearchCuration == null)
@@ -460,6 +459,30 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     protected void onResume()
     {
         super.onResume();
+    }
+
+    @Override
+    protected void finish(int resultCode)
+    {
+        Keyword keyword = getKeyword();
+
+        if (mPlaceSearchResultLayout != null && mPlaceSearchResultLayout.isEmptyLayout() == false//
+            && keyword != null)
+        {
+            Intent intent = new Intent();
+            intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, getKeyword());
+            setResult(resultCode, intent);
+        } else
+        {
+            setResult(resultCode);
+        }
+
+        if (resultCode == RESULT_CANCELED || resultCode == CODE_RESULT_ACTIVITY_GO_SEARCH)
+        {
+            requestAnalyticsByCanceled();
+        }
+
+        finish();
     }
 
     void recordScreenSearchResult(String screen)
@@ -1260,13 +1283,13 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 }
             } else if (mSearchType == SearchType.RECENTLY_KEYWORD)
             {
-                recordEventSearchResultByRecentKeyword(keyword, isShow, params);
+                recordEventSearchResultByRecentKeyword(keyword.name, isShow, params);
             } else if (mSearchType == SearchType.AUTOCOMPLETE)
             {
-                recordEventSearchResultByAutoSearch(keyword, mInputText, isShow, params);
+                recordEventSearchResultByAutoSearch(keyword.name, mInputText, isShow, params);
             } else
             {
-                recordEventSearchResultByKeyword(keyword, isShow, params);
+                recordEventSearchResultByKeyword(keyword.name, isShow, params);
             }
         }
 

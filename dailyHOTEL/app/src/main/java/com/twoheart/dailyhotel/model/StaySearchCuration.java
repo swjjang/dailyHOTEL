@@ -2,9 +2,12 @@ package com.twoheart.dailyhotel.model;
 
 import android.os.Parcel;
 
+import com.daily.dailyhotel.entity.StaySuggest;
+import com.daily.dailyhotel.parcel.StaySuggestParcel;
+
 public class StaySearchCuration extends StayCuration
 {
-    private Keyword mKeyword;
+    private StaySuggest mSuggest;
     private double mRadius;
 
     public StaySearchCuration()
@@ -20,14 +23,14 @@ public class StaySearchCuration extends StayCuration
         return mStayCurationOption;
     }
 
-    public Keyword getKeyword()
+    public StaySuggest getSuggest()
     {
-        return mKeyword;
+        return mSuggest;
     }
 
-    public void setKeyword(Keyword keyword)
+    public void setSuggest(StaySuggest suggest)
     {
-        this.mKeyword = keyword;
+        this.mSuggest = suggest;
     }
 
     public double getRadius()
@@ -54,7 +57,7 @@ public class StaySearchCuration extends StayCuration
     {
         super.clear();
 
-        mKeyword = null;
+        mSuggest = null;
         mRadius = 0d;
     }
 
@@ -74,7 +77,7 @@ public class StaySearchCuration extends StayCuration
     {
         super.writeToParcel(dest, flags);
 
-        dest.writeParcelable(mKeyword, flags);
+        dest.writeParcelable(new StaySuggestParcel(mSuggest), flags);
         dest.writeDouble(mRadius);
     }
 
@@ -82,7 +85,13 @@ public class StaySearchCuration extends StayCuration
     {
         super.readFromParcel(in);
 
-        mKeyword = in.readParcelable(Keyword.class.getClassLoader());
+        StaySuggestParcel staySuggestParcel = in.readParcelable(Keyword.class.getClassLoader());
+
+        if (staySuggestParcel != null)
+        {
+            mSuggest = staySuggestParcel.getSuggest();
+        }
+
         mRadius = in.readDouble();
     }
 

@@ -23,14 +23,13 @@ import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.StaySuggestParcel;
-import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.suggest.SearchStaySuggestActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.calendar.StayOutboundCalendarActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.StayOutboundListActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchSuggestActivity;
-import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
@@ -66,16 +65,19 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
         // Stay
         public MutableLiveData<StayBookDateTime> stayBookDateTime = new MutableLiveData<>();
-        public MutableLiveData<String> staySuggest = new MutableLiveData<>();
+        public MutableLiveData<StaySuggest> staySuggest = new MutableLiveData<>();
+        public String stayInputString;
 
         // Stayoutbound
         public MutableLiveData<StayBookDateTime> stayOutboundBookDateTime = new MutableLiveData<>();
         public MutableLiveData<StayOutboundSuggest> stayOutboundSuggest = new MutableLiveData<>();
         public MutableLiveData<People> stayOutboundPeople = new MutableLiveData<>();
+        public String stayOutboundInputString;
 
         // Gourmet
         public MutableLiveData<GourmetBookDateTime> gourmetBookDateTime = new MutableLiveData<>();
         public MutableLiveData<String> gourmetSuggest = new MutableLiveData<>();
+        public String gourmetInputString;
     }
 
     class SearchViewModelFactory implements ViewModelProvider.Factory
@@ -249,7 +251,9 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                     try
                     {
                         StaySuggestParcel staySuggestParcel = data.getParcelableExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
-                        mSearchModel.staySuggest.setValue(staySuggestParcel.getSuggest().displayName);
+                        mSearchModel.staySuggest.setValue(staySuggestParcel.getSuggest());
+
+
                     } catch (Exception e)
                     {
                         ExLog.d(e.toString());
@@ -459,90 +463,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             stayBookingDay.setCheckInDay(mSearchModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT));
             stayBookingDay.setCheckOutDay(mSearchModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
 
-            switch (mSearchModel.staySuggest.getValue())
-            {
-                case "#특급호텔":
-                {
-                    int index = 134;
-
-                    startActivityForResult(StayCampaignTagListActivity.newInstance(getActivity() //
-                        , index, "특급호텔", mSearchModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT) //
-                        , mSearchModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)), SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT);
-                    break;
-                }
-
-                case "#DAILY단독특가":
-                {
-                    int index = 135;
-
-                    startActivityForResult(StayCampaignTagListActivity.newInstance(getActivity() //
-                        , index, "DAILY단독특가", mSearchModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT) //
-                        , mSearchModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)), SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT);
-                    break;
-                }
-
-                case "#히노끼탕":
-                {
-                    int index = 141;
-
-                    startActivityForResult(StayCampaignTagListActivity.newInstance(getActivity() //
-                        , index, "히노끼탕", mSearchModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT) //
-                        , mSearchModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)), SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT);
-                    break;
-                }
-
-                case "#스키장부근":
-                {
-                    int index = 136;
-
-                    startActivityForResult(StayCampaignTagListActivity.newInstance(getActivity() //
-                        , index, "스키장부근", mSearchModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT) //
-                        , mSearchModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)), SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT);
-                    break;
-                }
-
-                case "#1인패키지":
-                {
-                    int index = 137;
-
-                    startActivityForResult(StayCampaignTagListActivity.newInstance(getActivity() //
-                        , index, "1인패키지", mSearchModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT) //
-                        , mSearchModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)), SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT);
-                    break;
-                }
-
-                case "#캐릭터룸":
-                {
-                    int index = 138;
-
-                    startActivityForResult(StayCampaignTagListActivity.newInstance(getActivity() //
-                        , index, "캐릭터룸", mSearchModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT) //
-                        , mSearchModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)), SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT);
-                    break;
-                }
-
-                case "#부산여행":
-                {
-                    int index = 104;
-
-                    startActivityForResult(StayCampaignTagListActivity.newInstance(getActivity() //
-                        , index, "부산여행", mSearchModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT) //
-                        , mSearchModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)), SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT);
-                    break;
-                }
-
-                case "역삼동 (위치서비스 사용)":
-                {
-                    startActivityForResult(StaySearchResultActivity.newInstance(getActivity()//
-                        , todayDateTime, stayBookingDay, new LatLng(37.498337, 127.034512), 10.0f, false)//
-                        , SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT);
-                    break;
-                }
-
-                default:
-                    startActivityForResult(StaySearchResultActivity.newInstance(getActivity(), todayDateTime, stayBookingDay, mSearchModel.staySuggest.getValue()), SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT);
-                    break;
-            }
+//            startActivityForResult(StaySearchResultActivity.newInstance(getActivity(), todayDateTime, stayBookingDay, mSearchModel.stayInputString, mSearchModel.staySuggest.getValue()), SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -687,14 +608,14 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         });
 
         // Stay
-        mSearchModel.staySuggest.observe(activity, new Observer<String>()
+        mSearchModel.staySuggest.observe(activity, new Observer<StaySuggest>()
         {
             @Override
-            public void onChanged(@Nullable String suggest)
+            public void onChanged(@Nullable StaySuggest staySuggest)
             {
-                getViewInterface().setSearchStaySuggestText(suggest);
+                getViewInterface().setSearchStaySuggestText(staySuggest.displayName);
 
-                getViewInterface().setSearchStayButtonEnabled(DailyTextUtils.isTextEmpty(suggest) == false);
+                getViewInterface().setSearchStayButtonEnabled(DailyTextUtils.isTextEmpty(staySuggest.displayName) == false);
             }
         });
 
@@ -781,7 +702,15 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
     private void showSearchStay()
     {
-        getViewInterface().setSearchStaySuggestText(mSearchModel.staySuggest.getValue());
+        if(mSearchModel.staySuggest.getValue() == null || DailyTextUtils.isTextEmpty(mSearchModel.staySuggest.getValue().displayName) == true)
+        {
+            getViewInterface().setSearchStaySuggestText(null);
+            getViewInterface().setSearchStayButtonEnabled(false);
+        } else
+        {
+            getViewInterface().setSearchStaySuggestText(mSearchModel.staySuggest.getValue().displayName);
+            getViewInterface().setSearchStayButtonEnabled(true);
+        }
 
         getViewInterface().setSearchStayCalendarText(String.format(Locale.KOREA, "%s - %s, %d박"//
             , mSearchModel.stayBookDateTime.getValue().getCheckInDateTime("yyyy.MM.dd(EEE)")//
@@ -789,13 +718,19 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             , mSearchModel.stayBookDateTime.getValue().getNights()));
 
         getViewInterface().showSearchStay();
-
-        getViewInterface().setSearchStayButtonEnabled(DailyTextUtils.isTextEmpty(mSearchModel.staySuggest.getValue()) == false);
     }
 
     private void showSearchStayOutbound()
     {
-        getViewInterface().setSearchStayOutboundSuggestText(mSearchModel.stayOutboundSuggest.getValue() == null ? null : mSearchModel.stayOutboundSuggest.getValue().display);
+        if(mSearchModel.stayOutboundSuggest.getValue() == null || DailyTextUtils.isTextEmpty(mSearchModel.stayOutboundSuggest.getValue().display) == true)
+        {
+            getViewInterface().setSearchStayOutboundSuggestText(null);
+            getViewInterface().setSearchStayOutboundButtonEnabled(false);
+        } else
+        {
+            getViewInterface().setSearchStayOutboundSuggestText(mSearchModel.stayOutboundSuggest.getValue().display);
+            getViewInterface().setSearchStayOutboundButtonEnabled(true);
+        }
 
         getViewInterface().setSearchStayOutboundCalendarText(String.format(Locale.KOREA, "%s - %s, %d박"//
             , mSearchModel.stayOutboundBookDateTime.getValue().getCheckInDateTime("yyyy.MM.dd(EEE)")//
@@ -803,8 +738,6 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             , mSearchModel.stayOutboundBookDateTime.getValue().getNights()));
 
         getViewInterface().showSearchStayOutbound();
-
-        getViewInterface().setSearchStayOutboundButtonEnabled(DailyTextUtils.isTextEmpty(mSearchModel.stayOutboundSuggest.getValue() == null ? null : mSearchModel.stayOutboundSuggest.getValue().display) == false);
     }
 
     private void showSearchGourmet()
