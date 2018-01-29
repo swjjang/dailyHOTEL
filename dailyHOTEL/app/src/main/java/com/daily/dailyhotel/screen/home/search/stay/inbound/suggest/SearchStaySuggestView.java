@@ -788,6 +788,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
             switch (staySuggest.categoryKey)
             {
                 case StaySuggest.CATEGORY_STAY:
+                case StaySuggest.CATEGORY_RECENTLY:
                     holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_02_hotel, 0, 0, 0);
                     break;
 
@@ -1018,6 +1019,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
             switch (staySuggest.categoryKey)
             {
                 case StaySuggest.CATEGORY_STAY:
+                case StaySuggest.CATEGORY_RECENTLY:
                     holder.dataBinding.textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_ob_search_ic_02_hotel, 0, 0, 0);
                     break;
 

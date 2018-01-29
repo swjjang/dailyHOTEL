@@ -11,7 +11,8 @@ import com.twoheart.dailyhotel.network.model.StayKeyword;
 public class StaySuggest
 {
     public static final String CATEGORY_REGION = "region"; // default - 지역검색
-    public static final String CATEGORY_STAY = "stay"; // 호텔검색, 최근 본 업장
+    public static final String CATEGORY_STAY = "stay"; // 호텔검색
+    public static final String CATEGORY_RECENTLY = "recently"; // 최근 본 업장
     public static final String CATEGORY_STATION = "station"; // 역검색
     public static final String CATEGORY_LOCATION = "location"; // 위치검색
     public static final String CATEGORY_DIRECT = "direct"; // 직접검색
@@ -103,7 +104,7 @@ public class StaySuggest
 
         displayName = recentlyPlace.regionName + SEARCH_SEPARATOR + recentlyPlace.title;
 
-        categoryKey = CATEGORY_STAY;
+        categoryKey = CATEGORY_RECENTLY;
         regionName = recentlyPlace.regionName;
         stayName = recentlyPlace.title;
         stayIndex = recentlyPlace.index;

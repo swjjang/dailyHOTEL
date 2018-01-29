@@ -535,7 +535,12 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
             return;
         }
 
-        int icon = StaySuggest.CATEGORY_STAY.equalsIgnoreCase(staySuggest.categoryKey) ? Keyword.HOTEL_ICON : Keyword.DEFAULT_ICON;
+        int icon = Keyword.DEFAULT_ICON;
+        if (StaySuggest.CATEGORY_STAY.equalsIgnoreCase(staySuggest.categoryKey)
+            || StaySuggest.CATEGORY_RECENTLY.equalsIgnoreCase(staySuggest.categoryKey))
+        {
+            icon = Keyword.HOTEL_ICON;
+        }
 
         mDailyRecentSearches.addString(new Keyword(icon, staySuggest.displayName));
         DailyPreference.getInstance(getActivity()).setHotelRecentSearches(mDailyRecentSearches.toString());
