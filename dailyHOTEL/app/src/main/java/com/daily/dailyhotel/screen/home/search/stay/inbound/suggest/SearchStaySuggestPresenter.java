@@ -636,6 +636,7 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
         } catch (ActivityNotFoundException a)
         {
             DailyToast.showToast(getActivity(), R.string.message_search_suggest_voice_search_error, DailyToast.LENGTH_SHORT);
+            getViewInterface().setVoiceSearchEnabled(false);
         }
     }
 
