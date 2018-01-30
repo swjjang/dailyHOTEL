@@ -6,6 +6,7 @@ import android.view.View;
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.BaseFragmentPagerAdapter;
+import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.base.BasePagerFragment;
 import com.daily.dailyhotel.screen.home.search.gourmet.SearchGourmetFragment;
@@ -114,11 +115,11 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
                     getViewDataBinding().appBarLayout.requestLayout();
                 }
 
-                // getViewDataBinding().searchTitleTextView 의 상단 마진
-                if (verticalOffset < 0 && getViewDataBinding().toolbarView.getAlpha() == 0.0f)
+                if (ANIMATION_HEIGHT - verticalOffset > 0)
                 {
-                    getViewDataBinding().toolbarView.setAlpha(1.0f);
-                } else if (verticalOffset == 0 && getViewDataBinding().toolbarView.getAlpha() == 1.0f)
+                    float vector = (float) -verticalOffset / ANIMATION_HEIGHT;
+                    getViewDataBinding().toolbarView.setAlpha(vector);
+                } else if (getViewDataBinding().toolbarView.getAlpha() != 0.0f)
                 {
                     getViewDataBinding().toolbarView.setAlpha(0f);
                 }
@@ -189,6 +190,10 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         mSearchStayFragment.onSelected();
         mSearchStayOutboundFragment.onUnselected();
         mSearchGourmetFragment.onUnselected();
+
+        getViewDataBinding().staySearchTextView.setTypeface(FontManager.getInstance(getContext()).getBoldTypeface());
+        getViewDataBinding().stayOutboundSearchTextView.setTypeface(FontManager.getInstance(getContext()).getMediumTypeface());
+        getViewDataBinding().gourmetSearchTextView.setTypeface(FontManager.getInstance(getContext()).getMediumTypeface());
     }
 
     @Override
@@ -247,6 +252,10 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         mSearchStayFragment.onUnselected();
         mSearchStayOutboundFragment.onSelected();
         mSearchGourmetFragment.onUnselected();
+
+        getViewDataBinding().staySearchTextView.setTypeface(FontManager.getInstance(getContext()).getMediumTypeface());
+        getViewDataBinding().stayOutboundSearchTextView.setTypeface(FontManager.getInstance(getContext()).getBoldTypeface());
+        getViewDataBinding().gourmetSearchTextView.setTypeface(FontManager.getInstance(getContext()).getMediumTypeface());
     }
 
     @Override
@@ -316,6 +325,10 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         mSearchStayFragment.onUnselected();
         mSearchStayOutboundFragment.onUnselected();
         mSearchGourmetFragment.onSelected();
+
+        getViewDataBinding().staySearchTextView.setTypeface(FontManager.getInstance(getContext()).getMediumTypeface());
+        getViewDataBinding().stayOutboundSearchTextView.setTypeface(FontManager.getInstance(getContext()).getMediumTypeface());
+        getViewDataBinding().gourmetSearchTextView.setTypeface(FontManager.getInstance(getContext()).getBoldTypeface());
     }
 
     @Override
