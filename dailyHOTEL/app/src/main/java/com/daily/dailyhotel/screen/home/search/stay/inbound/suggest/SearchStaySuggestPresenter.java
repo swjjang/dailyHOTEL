@@ -545,6 +545,23 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
         //            }));
     }
 
+    private Keyword getKeyword(StaySuggest staySuggest)
+    {
+        if (getActivity() == null || staySuggest == null)
+        {
+            return null;
+        }
+
+        int icon = Keyword.DEFAULT_ICON;
+        if (StaySuggest.CATEGORY_STAY.equalsIgnoreCase(staySuggest.categoryKey) //
+            || StaySuggest.CATEGORY_RECENTLY.equalsIgnoreCase(staySuggest.categoryKey))
+        {
+            icon = Keyword.HOTEL_ICON;
+        }
+
+        return new Keyword(icon, staySuggest.displayName);
+    }
+
     private void addRecentSearches(StaySuggest staySuggest)
     {
         if (getActivity() == null || staySuggest == null)
@@ -552,13 +569,14 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
             return;
         }
 
-        int icon = Keyword.DEFAULT_ICON;
-        if (StaySuggest.CATEGORY_STAY.equalsIgnoreCase(staySuggest.categoryKey) || StaySuggest.CATEGORY_RECENTLY.equalsIgnoreCase(staySuggest.categoryKey))
+        Keyword keyword = getKeyword(staySuggest);
+
+        if (keyword == null)
         {
-            icon = Keyword.HOTEL_ICON;
+            return;
         }
 
-        mDailyRecentSearches.addString(new Keyword(icon, staySuggest.displayName));
+        mDailyRecentSearches.addString(keyword);
         DailyPreference.getInstance(getActivity()).setHotelRecentSearches(mDailyRecentSearches.toString());
     }
 
@@ -610,9 +628,28 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
     }
 
     @Override
-    public void onDeleteRecentlySuggest(StaySuggest staySuggest)
+    public void onDeleteRecentlySuggest(int position, StaySuggest staySuggest)
     {
-        // TODO : 아이템 삭제 이벤트 처리
+        if (getViewInterface() == null || staySuggest == null || position < 0)
+        {
+            return;
+        }
+
+        getViewInterface().removeRecentlyItem(position);
+
+        if (StaySuggest.CATEGORY_RECENTLY.equalsIgnoreCase(staySuggest.categoryKey)) {
+            // TODO : 최근 본 업장 삭제
+        } else {
+            Keyword keyword = getKeyword(staySuggest);
+
+            if (keyword == null)
+            {
+                return;
+            }
+
+            mDailyRecentSearches.remove(keyword);
+            DailyPreference.getInstance(getActivity()).setHotelRecentSearches(mDailyRecentSearches.toString());
+        }
     }
 
     @Override

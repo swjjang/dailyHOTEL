@@ -81,7 +81,7 @@ public class DailyRecentSearches
         return result.toString();
     }
 
-    private boolean remove(Keyword recentKeyword)
+    public boolean remove(Keyword recentKeyword)
     {
         if (recentKeyword == null || DailyTextUtils.isTextEmpty(recentKeyword.name) == true)
         {

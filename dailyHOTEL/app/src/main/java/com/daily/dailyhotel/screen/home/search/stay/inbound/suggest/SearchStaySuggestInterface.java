@@ -30,4 +30,6 @@ public interface SearchStaySuggestInterface extends BaseDialogViewInterface
     void setKeywordEditText(String text);
 
     void setVoiceSearchEnabled(boolean enabled);
+
+    void removeRecentlyItem(int position);
 }

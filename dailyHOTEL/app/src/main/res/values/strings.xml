@@ -1104,6 +1104,9 @@
     <string name="label_search_suggest_delete_all">기록 전체 삭제</string>
     <string name="label_search_suggest_voice_search_title">검색어를 말씀하세요.</string>
     <string name="message_search_suggest_voice_search_error">이기기는 음성검색을 지원하지 않습니다.</string>
+    <string name="label_search_suggest_recently_empty_title">이렇게도 검색해보세요.</string>
+    <string name="label_search_suggest_recently_empty_description_type_stay">수영장 있는 호텔\n애견동반 양평 펜션\n주차가능한 파티룸</string>
+    <string name="label_search_suggest_recently_empty_description_type_gourmet">주차가능한 뷔페\n코르키지가 되는 일식집\n단체 예약이 가능한 프라이빗룸</string>
 
     <!-- Coupon -->
     <string name="coupon_notice_text">할인쿠폰\n상세정보</string>
