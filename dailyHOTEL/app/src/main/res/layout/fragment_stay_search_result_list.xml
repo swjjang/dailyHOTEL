@@ -49,8 +49,8 @@
             android:transitionGroup="true"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <com.daily.dailyhotel.view.DailyStayListEmptyView
-        android:id="@+id/emptyView"
+    <include
+        layout="@layout/view_empty_hotel_list"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="gone"
