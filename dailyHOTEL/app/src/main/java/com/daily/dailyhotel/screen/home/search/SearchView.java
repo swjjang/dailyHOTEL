@@ -59,11 +59,13 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
 
         viewDataBinding.appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener()
         {
-            private final int DP_24 = ScreenUtils.dpToPx(getContext(), 24);
+            private final int DP_32 = ScreenUtils.dpToPx(getContext(), 32);
             private final int DP_173 = ScreenUtils.dpToPx(getContext(), 173);
             private final int DP_18 = ScreenUtils.dpToPx(getContext(), 18);
             private final int DP_14 = ScreenUtils.dpToPx(getContext(), 14);
+            private final int DP_15 = ScreenUtils.dpToPx(getContext(), 15);
             private final int DP_4 = ScreenUtils.dpToPx(getContext(), 4);
+            private final int DP_27 = ScreenUtils.dpToPx(getContext(), 27);
             private final int TOOLBAR_HEIGHT = getDimensionPixelSize(R.dimen.toolbar_height);
             private final int ANIMATION_HEIGHT = TOOLBAR_HEIGHT / 2;
 
@@ -91,13 +93,22 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
                     getViewDataBinding().stayOutboundSearchTextView.setAlpha(vector);
                     getViewDataBinding().gourmetSearchTextView.setAlpha(vector);
 
-                    final int layoutWidth = (int) (ScreenUtils.getScreenWidth(getContext()) + DP_24 * backVector);
+                    final int layoutWidth = (int) (ScreenUtils.getScreenWidth(getContext()) + DP_32 * backVector);
+                    final int paddingWidth = DP_27 + (int) (DP_4 * backVector);
 
                     getViewDataBinding().categoryLayout.getLayoutParams().width = layoutWidth;
+
                     getViewDataBinding().stayLayout.getLayoutParams().width = layoutWidth;
+                    getViewDataBinding().stayLayout.setPadding(paddingWidth, DP_14, paddingWidth, DP_15);
+
                     getViewDataBinding().stayOutboundLayout.getLayoutParams().width = layoutWidth;
+                    getViewDataBinding().stayOutboundLayout.setPadding(paddingWidth, DP_14, paddingWidth, DP_15);
+
                     getViewDataBinding().gourmetLayout.getLayoutParams().width = layoutWidth;
-                    getViewDataBinding().searchBoxShadowImageView.getLayoutParams().height = (int) (DP_4 + DP_14 * vector);
+                    getViewDataBinding().gourmetLayout.setPadding(paddingWidth, DP_14, paddingWidth, DP_15);
+
+                    getViewDataBinding().searchBoxShadowView.getLayoutParams().width = layoutWidth;
+                    getViewDataBinding().searchBoxShadowView.getLayoutParams().height = (int) (DP_4 + DP_14 * vector);
 
                     getViewDataBinding().appBarLayout.requestLayout();
                 } else if (DP_173 + verticalOffset > ANIMATION_HEIGHT && getViewDataBinding().staySearchTextView.getAlpha() != 1.0f)
@@ -107,10 +118,18 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
                     getViewDataBinding().gourmetSearchTextView.setAlpha(1.0f);
 
                     getViewDataBinding().categoryLayout.getLayoutParams().width = AppBarLayout.LayoutParams.MATCH_PARENT;
+
                     getViewDataBinding().stayLayout.getLayoutParams().width = AppBarLayout.LayoutParams.MATCH_PARENT;
+                    getViewDataBinding().stayLayout.setPadding(DP_27, DP_14, DP_27, DP_15);
+
                     getViewDataBinding().stayOutboundLayout.getLayoutParams().width = AppBarLayout.LayoutParams.MATCH_PARENT;
+                    getViewDataBinding().stayOutboundLayout.setPadding(DP_27, DP_14, DP_27, DP_15);
+
                     getViewDataBinding().gourmetLayout.getLayoutParams().width = AppBarLayout.LayoutParams.MATCH_PARENT;
-                    getViewDataBinding().searchBoxShadowImageView.getLayoutParams().height = DP_18;
+                    getViewDataBinding().gourmetLayout.setPadding(DP_27, DP_14, DP_27, DP_15);
+
+                    getViewDataBinding().searchBoxShadowView.getLayoutParams().width = AppBarLayout.LayoutParams.MATCH_PARENT;
+                    getViewDataBinding().searchBoxShadowView.getLayoutParams().height = DP_18;
 
                     getViewDataBinding().appBarLayout.requestLayout();
                 }
