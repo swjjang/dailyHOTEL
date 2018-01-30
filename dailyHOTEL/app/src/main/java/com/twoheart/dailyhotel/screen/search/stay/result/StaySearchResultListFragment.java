@@ -107,6 +107,11 @@ public class StaySearchResultListFragment extends StayListFragment
         mIsDeepLink = isDeepLink;
     }
 
+
+    /////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////   Listener   //////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////
+
     private StaySearchResultListNetworkController.OnNetworkControllerListener onNetworkControllerListener = new StaySearchResultListNetworkController.OnNetworkControllerListener()
     {
         @Override
@@ -177,9 +182,15 @@ public class StaySearchResultListFragment extends StayListFragment
                 }
 
                 ((OnStaySearchResultListFragmentListener) mOnPlaceListFragmentListener).onStayListCount(totalCount);
-            }
 
-            StaySearchResultListFragment.this.onStayList(list, page, false, activeReward);
+                if (categoryList != null && categoryList.size() > 0)
+                {
+                    StaySearchResultListFragment.this.onStayList(list, page, false, activeReward);
+                }
+            } else
+            {
+                StaySearchResultListFragment.this.onStayList(list, page, false, activeReward);
+            }
 
             if (mViewType == ViewType.MAP)
             {

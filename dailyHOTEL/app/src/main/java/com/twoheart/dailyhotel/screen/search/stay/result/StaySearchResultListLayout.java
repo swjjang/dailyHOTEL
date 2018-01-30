@@ -12,6 +12,7 @@ import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
+import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListLayout;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListMapFragment;
 import com.twoheart.dailyhotel.util.Constants;
@@ -23,7 +24,7 @@ public class StaySearchResultListLayout extends StayListLayout
     private TextView mResultTextView;
     private boolean mLocationSearchType;
 
-    public StaySearchResultListLayout(Context context, OnEventListener eventListener)
+    public StaySearchResultListLayout(Context context, PlaceListLayout.OnEventListener eventListener)
     {
         super(context, eventListener);
     }
@@ -34,8 +35,6 @@ public class StaySearchResultListLayout extends StayListLayout
         super.initLayout(view);
 
         mResultTextView = view.findViewById(R.id.resultCountTextView);
-
-        //        setBannerVisibility(false);
     }
 
     @Override

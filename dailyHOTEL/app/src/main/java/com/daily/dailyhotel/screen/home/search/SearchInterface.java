@@ -4,6 +4,8 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.base.OnBaseEventListener;
 
+import io.reactivex.Observable;
+
 public interface SearchInterface
 {
     interface ViewInterface extends BaseDialogViewInterface
@@ -36,6 +38,8 @@ public interface SearchInterface
         void setSearchGourmetCalendarText(String text);
 
         void setSearchGourmetButtonEnabled(boolean enabled);
+
+        Observable<Boolean> getCompleteCreatedFragment();
     }
 
     interface OnEventListener extends OnBaseEventListener

@@ -36,7 +36,7 @@ public class SearchStaySuggestActivity extends BaseActivity<SearchStaySuggestPre
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+        overridePendingTransition(R.anim.slide_in_bottom, R.anim.hold);
 
         super.onCreate(savedInstanceState);
     }
@@ -53,6 +53,6 @@ public class SearchStaySuggestActivity extends BaseActivity<SearchStaySuggestPre
     {
         super.finish();
 
-        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_bottom);
     }
 }

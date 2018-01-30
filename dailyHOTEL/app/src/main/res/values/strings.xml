@@ -1095,6 +1095,16 @@
     <string name="label_search_gourmet_suggest_hint">국내 레스토랑명 또는 지역명 입력</string>
     <string name="label_search_gourmet_popular_search_tag">고메 인기검색 태그</string>
 
+    <!-- New Search Result -->
+    <string name="label_searchresult_search_stayoutbound">해외스테이 검색</string>
+    <string name="label_searchresult_search_gourmet">고메 검색</string>
+    <string name="label_searchresult_search_stay">국내스테이 검색</string>
+
+    <string name="message_searchresult_search_other_category">다른 항목으로 검색해보시겠어요?</string>
+    <string name="message_searchresult_empty_title">검색어와 일치하는 결과가 없습니다.</string>
+
+    <string name="message_searchresult_stay_empty_subtitle">검색어를 변경하여 검색해보세요.\n더 구체적인 단어로도 검색이 가능해요.\n(예: 수영장 있는 호텔, 파티룸)</string>
+
     <!--New Search Suggest -->
     <string name="label_search_nearby_title">현재 위치로 설정</string>
     <string name="label_search_nearby_description">위치서비스 약관 동의 필요</string>
@@ -1203,7 +1213,7 @@
     <string name="label_detail_view_price_option">가격 보기 옵션</string>
     <string name="label_detail_view_average_price">1박 평균 가격</string>
     <string name="label_detail_view_total_price">총가격</string>
-    <string name="label_detail_view_review_go">%1$s개의 트루리뷰 보기</string>
+    <string name="label_detail_view_review_go">%1$s개 트루리뷰 보기</string>
     <string name="label_gourmet_detail_full_time_menu">전체시간 메뉴</string>
 
     <string name="stay_detail_calender_dialog_message">선택한 일정으로 예약할 수 있는\n객실이 없습니다.\n다른 날짜를 선택해주세요.</string>

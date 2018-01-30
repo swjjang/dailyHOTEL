@@ -3,7 +3,9 @@ package com.twoheart.dailyhotel.screen.search.gourmet.result;
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
+import android.widget.ScrollView;
 
+import com.daily.dailyhotel.entity.CampaignTag;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.place.adapter.PlaceListFragmentPagerAdapter;
@@ -12,6 +14,7 @@ import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.place.layout.PlaceSearchResultLayout;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GourmetSearchResultLayout extends PlaceSearchResultLayout
 {
@@ -28,6 +31,12 @@ public class GourmetSearchResultLayout extends PlaceSearchResultLayout
         }
 
         setCalendarText(gourmetBookingDay.getVisitDay("MM.dd(EEE)"));
+    }
+
+    @Override
+    protected void initEmptyLayout(ScrollView scrollView)
+    {
+
     }
 
     @Override
@@ -66,5 +75,23 @@ public class GourmetSearchResultLayout extends PlaceSearchResultLayout
     protected void onAnalyticsCategoryClick(String category)
     {
 
+    }
+
+    @Override
+    public void setCampaignTagVisible(boolean visible)
+    {
+
+    }
+
+    @Override
+    public void setCampaignTagList(List<CampaignTag> campaignTagList)
+    {
+
+    }
+
+    @Override
+    public boolean hasCampaignTag()
+    {
+        return false;
     }
 }

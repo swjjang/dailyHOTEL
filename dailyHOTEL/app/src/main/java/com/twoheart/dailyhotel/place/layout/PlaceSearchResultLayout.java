@@ -15,12 +15,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
+import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.view.DailyFloatingActionView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
@@ -30,6 +32,7 @@ import com.twoheart.dailyhotel.place.base.BaseBlurLayout;
 import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.EdgeEffectColor;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -41,7 +44,8 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
 {
     private View mToolbar;
     protected TextView mCalendarTextView;
-    private View mEmptyLayout, mSearchLocationLayout;
+    private ScrollView mEmptyScrollView;
+    private View mSearchLocationLayout;
     private View mResultLayout;
 
     protected DailyFloatingActionView mFloatingActionView;
@@ -52,7 +56,6 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
     protected PlaceListFragmentPagerAdapter mFragmentPagerAdapter;
 
     protected Spinner mDistanceFilterSpinner;
-    protected View mDistanceVerticalView;
     DistanceFilterAdapter mDistanceFilterAdapter;
 
     Constants.ANIMATION_STATUS mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
@@ -90,6 +93,8 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         void onResearchClick();
     }
 
+    protected abstract void initEmptyLayout(ScrollView scrollView);
+
     protected abstract int getEmptyIconResourceId();
 
     protected abstract PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, int count, View bottomOptionLayout, PlaceListFragment.OnPlaceListFragmentListener listener);
@@ -97,6 +102,12 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
     protected abstract void onAnalyticsCategoryFlicking(String category);
 
     protected abstract void onAnalyticsCategoryClick(String category);
+
+    public abstract void setCampaignTagVisible(boolean visible);
+
+    public abstract void setCampaignTagList(List<CampaignTag> campaignTagList);
+
+    public abstract boolean hasCampaignTag();
 
     public PlaceSearchResultLayout(Context context, String callByScreen, OnBaseEventListener listener)
     {
@@ -110,11 +121,11 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
     {
         initToolbarLayout(view);
 
-        mEmptyLayout = view.findViewById(R.id.emptyLayout);
+        mEmptyScrollView = view.findViewById(R.id.emptyScrollView);
         mSearchLocationLayout = view.findViewById(R.id.searchLocationLayout);
         mResultLayout = view.findViewById(R.id.resultLayout);
 
-        initEmptyLayout(mEmptyLayout);
+        initEmptyLayout(mEmptyScrollView);
         initSearchLocationLayout(mSearchLocationLayout);
         initCategoryTabLayout(view);
         initOptionLayout(view);
@@ -145,7 +156,6 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         });
 
         mCalendarTextView = view.findViewById(R.id.calendarTextView);
-        mDistanceVerticalView = view.findViewById(R.id.verticalLineView);
         mDistanceFilterSpinner = view.findViewById(R.id.distanceSpinner);
 
         CharSequence[] strings = mContext.getResources().getTextArray(R.array.search_result_distance_array);
@@ -203,6 +213,14 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
 
     private void initEmptyLayout(View view)
     {
+        if (view == null)
+        {
+            return;
+        }
+
+        EdgeEffectColor.setEdgeGlowColor((ScrollView) view, mContext.getResources().getColor(R.color.default_over_scroll_edge));
+
+
         ImageView emptyIconImageView = view.findViewById(R.id.emptyIconImageView);
         View changeDateView = view.findViewById(R.id.changeDateView);
         TextView researchView = view.findViewById(R.id.researchView);
@@ -281,7 +299,7 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         mFloatingActionView.post(() -> mFloatingActionView.setTag(mViewPager.getBottom() - mFloatingActionView.getTop()));
 
         // 기본 설정
-        setOptionViewTypeView(Constants.ViewType.MAP);
+        setOptionViewTypeView(Constants.ViewType.LIST);
 
         setOptionViewTypeEnabled(true);
         setOptionFilterEnabled(true);
@@ -297,11 +315,11 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         switch (viewType)
         {
             case LIST:
-                mFloatingActionView.setViewOption(DailyFloatingActionView.ViewOption.LIST);
+                mFloatingActionView.setViewOption(DailyFloatingActionView.ViewOption.MAP);
                 break;
 
             case MAP:
-                mFloatingActionView.setViewOption(DailyFloatingActionView.ViewOption.MAP);
+                mFloatingActionView.setViewOption(DailyFloatingActionView.ViewOption.LIST);
                 break;
         }
     }
@@ -654,14 +672,13 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
 
     public void setSpinnerVisible(boolean visible)
     {
-        if (mDistanceVerticalView == null || mDistanceFilterSpinner == null)
+        if (mDistanceFilterSpinner == null)
         {
             return;
         }
 
         int flag = visible ? View.VISIBLE : View.GONE;
 
-        mDistanceVerticalView.setVisibility(flag);
         mDistanceFilterSpinner.setVisibility(flag);
         mDistanceFilterSpinner.setEnabled(visible);
 
@@ -745,25 +762,25 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         switch (screenType)
         {
             case NONE:
-                mEmptyLayout.setVisibility(View.GONE);
+                mEmptyScrollView.setVisibility(View.GONE);
                 mResultLayout.setVisibility(View.INVISIBLE);
                 mSearchLocationLayout.setVisibility(View.GONE);
                 break;
 
             case EMPTY:
-                mEmptyLayout.setVisibility(View.VISIBLE);
+                mEmptyScrollView.setVisibility(View.VISIBLE);
                 mResultLayout.setVisibility(View.INVISIBLE);
                 mSearchLocationLayout.setVisibility(View.GONE);
                 break;
 
             case SEARCH_LOCATION:
-                mEmptyLayout.setVisibility(View.GONE);
+                mEmptyScrollView.setVisibility(View.GONE);
                 mResultLayout.setVisibility(View.INVISIBLE);
                 mSearchLocationLayout.setVisibility(View.VISIBLE);
                 break;
 
             case LIST:
-                mEmptyLayout.setVisibility(View.GONE);
+                mEmptyScrollView.setVisibility(View.GONE);
                 mResultLayout.setVisibility(View.VISIBLE);
                 mSearchLocationLayout.setVisibility(View.GONE);
                 break;
