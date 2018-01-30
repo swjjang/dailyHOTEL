@@ -17,11 +17,14 @@ import android.widget.Toast;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayRegion;
 import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
+import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
+import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.research.ResearchStayActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
@@ -58,6 +61,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -69,6 +74,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     String mAddress;
 
     StaySearchCuration mStaySearchCuration;
+
+    CampaignTagRemoteImpl mCampaignTagRemoteImpl;
 
     private PlaceSearchResultNetworkController mNetworkController;
 
@@ -176,6 +183,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
         lockUI();
 
+        mCampaignTagRemoteImpl = new CampaignTagRemoteImpl(this);
         mNetworkController = new PlaceSearchResultNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
 
         switch (mStaySearchCuration.getSuggest().categoryKey)
@@ -300,22 +308,18 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected void onLocationFailed()
     {
-        mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
-        mPlaceSearchResultLayout.setScreenVisible(ScreenType.EMPTY);
+        if (StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStaySearchCuration.getSuggest().categoryKey) == true)
+        {
+            showEmptyLayout();
+        } else
+        {
+            StayCurationOption stayCurationOption = (StayCurationOption) mStaySearchCuration.getCurationOption();
 
-        //        if (mSearchType == SearchType.LOCATION)
-        //        {
-        //            mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
-        //            mPlaceSearchResultLayout.setScreenVisible(ScreenType.EMPTY);
-        //        } else
-        //        {
-        //            StayCurationOption stayCurationOption = (StayCurationOption) mStaySearchCuration.getCurationOption();
-        //
-        //            stayCurationOption.setSortType(SortType.DEFAULT);
-        //            mPlaceSearchResultLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
-        //
-        //            refreshCurrentFragment(true);
-        //        }
+            stayCurationOption.setSortType(SortType.DEFAULT);
+            mPlaceSearchResultLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
+
+            refreshCurrentFragment(true);
+        }
     }
 
     @Override
@@ -324,8 +328,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         switch (mStaySearchCuration.getSuggest().categoryKey)
         {
             case StaySuggest.CATEGORY_LOCATION:
-                mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
-                mPlaceSearchResultLayout.setScreenVisible(ScreenType.EMPTY);
+                showEmptyLayout();
                 break;
 
             default:
@@ -344,8 +347,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     {
         if (location == null)
         {
-            mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
-            mPlaceSearchResultLayout.setScreenVisible(ScreenType.EMPTY);
+            showEmptyLayout();
         } else
         {
             mNetworkController.requestAddress(location);
@@ -590,6 +592,48 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         finish();
     }
 
+    private void showEmptyLayout()
+    {
+        if (mPlaceSearchResultLayout == null)
+        {
+            return;
+        }
+
+        unLockUI();
+
+        mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+        mPlaceSearchResultLayout.setScreenVisible(ScreenType.EMPTY);
+        mPlaceSearchResultLayout.setSpinnerVisible(StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStaySearchCuration.getSuggest().categoryKey) == true);
+
+        if (mPlaceSearchResultLayout.hasCampaignTag() == false)
+        {
+            addCompositeDisposable(mCampaignTagRemoteImpl.getCampaignTagList(ServiceType.HOTEL.name()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<CampaignTag>>()
+            {
+                @Override
+                public void accept(ArrayList<CampaignTag> campaignTagList) throws Exception
+                {
+                    if (campaignTagList == null || campaignTagList.size() == 0)
+                    {
+                        mPlaceSearchResultLayout.setCampaignTagVisible(false);
+                        return;
+                    }
+
+                    mPlaceSearchResultLayout.setCampaignTagVisible(true);
+                    mPlaceSearchResultLayout.setCampaignTagList(campaignTagList);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    ExLog.e(throwable.toString());
+
+                    mPlaceSearchResultLayout.setCampaignTagVisible(false);
+                }
+            }));
+        }
+    }
+
     void recordScreenSearchResult(String screen)
     {
         if (AnalyticsManager.Screen.SEARCH_RESULT.equalsIgnoreCase(screen) == false //
@@ -779,7 +823,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     // mOnEventListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    PlaceSearchResultLayout.OnEventListener mOnEventListener = new PlaceSearchResultLayout.OnEventListener()
+    StaySearchResultLayout.OnEventListener mOnEventListener = new StaySearchResultLayout.OnEventListener()
     {
         @Override
         public void finish()
@@ -1018,6 +1062,44 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 , mStaySearchCuration.getStayBookingDay().getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
                 , mStaySearchCuration.getStayBookingDay().getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
                 , mStaySearchCuration.getSuggest()), CODE_REQUEST_ACTIVITY_RESEARCH);
+        }
+
+        @Override
+        public void onSearchStayOutboundClick()
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            finish(Constants.CODE_RESULT_ACTIVITY_SEARCH_STAYOUTBOUND);
+        }
+
+        @Override
+        public void onSearchGourmetClick()
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            finish(Constants.CODE_RESULT_ACTIVITY_SEARCH_GOURMET);
+        }
+
+        @Override
+        public void onSearchPopularTag(CampaignTag campaignTag)
+        {
+            if (mStaySearchCuration == null || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            startActivity(StayCampaignTagListActivity.newInstance(StaySearchResultActivity.this //
+                , campaignTag.index, campaignTag.campaignTag//
+                , mStaySearchCuration.getStayBookingDay().getCheckInDay(DailyCalendar.ISO_8601_FORMAT) //
+                , mStaySearchCuration.getStayBookingDay().getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)));
+
+            finish();
         }
     };
 
@@ -1339,8 +1421,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 ((StaySearchResultLayout) mPlaceSearchResultLayout).addCategoryTabLayout(categoryList, mOnStayListFragmentListener);
             } else
             {
-                mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
-                mPlaceSearchResultLayout.setScreenVisible(ScreenType.EMPTY);
+                showEmptyLayout();
             }
         }
 
@@ -1487,8 +1568,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
             if (isShow == true)
             {
-                mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
-                mPlaceSearchResultLayout.setScreenVisible(ScreenType.EMPTY);
+                showEmptyLayout();
 
                 recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT_EMPTY);
             } else

@@ -90,7 +90,6 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
     public void onActivityCreated(Bundle savedInstanceState)
     {
         super.onActivityCreated(savedInstanceState);
-
     }
 
     @Override

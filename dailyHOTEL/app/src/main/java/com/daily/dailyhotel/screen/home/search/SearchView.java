@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
+import com.daily.base.BaseFragment;
 import com.daily.base.BaseFragmentPagerAdapter;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
@@ -18,7 +19,11 @@ import com.twoheart.dailyhotel.databinding.ActivitySearchDataBinding;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, ActivitySearchDataBinding> implements SearchInterface.ViewInterface
+import io.reactivex.Observable;
+import io.reactivex.functions.Function3;
+
+public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, ActivitySearchDataBinding>//
+    implements SearchInterface.ViewInterface, SearchStayFragment.OnEventListener
 {
     BaseFragmentPagerAdapter mSearchFragmentPagerAdapter;
 
@@ -381,5 +386,19 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         }
 
         getViewDataBinding().searchGourmetTextView.setEnabled(enabled);
+    }
+
+    @Override
+    public Observable getCompleteCreatedFragment()
+    {
+        return Observable.zip(mSearchStayFragment.getCompleteCreatedObservable(), mSearchStayOutboundFragment.getCompleteCreatedObservable()//
+            , mSearchGourmetFragment.getCompleteCreatedObservable(), new Function3<Object, Object, Object, Boolean>()
+            {
+                @Override
+                public Boolean apply(Object o, Object o2, Object o3) throws Exception
+                {
+                    return true;
+                }
+            });
     }
 }

@@ -146,6 +146,8 @@ public class SearchStayFragmentView extends BaseFragmentDialogView<SearchStayFra
         dailyTextView.setPadding(DP_12, 0, DP_12, 0);
         dailyTextView.setBackgroundResource(R.drawable.shape_fillrect_le7e7e7_bffffff_r50);
         dailyTextView.setGravity(Gravity.CENTER_VERTICAL);
+        dailyTextView.setMaxLines(1);
+        dailyTextView.setSingleLine();
 
         FlexboxLayout.LayoutParams layoutParams = new FlexboxLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ScreenUtils.dpToPx(getContext(), 29));
         layoutParams.setMargins(DP_5, DP_5, DP_5, DP_5);

@@ -9,13 +9,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.subjects.PublishSubject;
+
 public abstract class BaseFragment<T1 extends BaseFragmentPresenter, T2 extends OnBaseFragmentEventListener> extends Fragment
 {
     protected T1 mPresenter;
     private T2 mOnFragmentEventListener;
 
+    private PublishSubject<Boolean> mCompleteCreatedSubject;
+
     public BaseFragment()
     {
+        mCompleteCreatedSubject = PublishSubject.create();
         mPresenter = createInstancePresenter();
     }
 
@@ -82,6 +89,12 @@ public abstract class BaseFragment<T1 extends BaseFragmentPresenter, T2 extends 
         {
             mPresenter.onActivityCreated(savedInstanceState);
         }
+
+        if (mCompleteCreatedSubject != null)
+        {
+            mCompleteCreatedSubject.onNext(true);
+            mCompleteCreatedSubject.onComplete();
+        }
     }
 
     @Override
@@ -103,5 +116,10 @@ public abstract class BaseFragment<T1 extends BaseFragmentPresenter, T2 extends 
     public void setOnFragmentEventListener(T2 listener)
     {
         mOnFragmentEventListener = listener;
+    }
+
+    public Observable getCompleteCreatedObservable()
+    {
+        return Observable.just(mCompleteCreatedSubject).subscribeOn(AndroidSchedulers.mainThread());
     }
 }

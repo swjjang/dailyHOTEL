@@ -43,7 +43,6 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
@@ -158,13 +157,20 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
             Constants.ServiceType serviceType = Constants.ServiceType.valueOf(intent.getStringExtra(SearchActivity.INTENT_EXTRA_DATA_SERVICE_TYPE));
 
-            if (serviceType != null)
+            addCompositeDisposable(getViewInterface().getCompleteCreatedFragment().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
             {
-                mSearchModel.serviceType.setValue(serviceType);
-            } else
-            {
-                mSearchModel.serviceType.setValue(Constants.ServiceType.HOTEL);
-            }
+                @Override
+                public void accept(Boolean aBoolean) throws Exception
+                {
+                    if (serviceType != null)
+                    {
+                        mSearchModel.serviceType.setValue(serviceType);
+                    } else
+                    {
+                        mSearchModel.serviceType.setValue(Constants.ServiceType.HOTEL);
+                    }
+                }
+            }));
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -279,12 +285,12 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             case SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT:
                 switch (resultCode)
                 {
-                    case 50001:
-                        getViewInterface().showSearchStayOutbound();
+                    case Constants.CODE_RESULT_ACTIVITY_SEARCH_STAYOUTBOUND:
+                        mSearchModel.serviceType.setValue(Constants.ServiceType.OB_STAY);
                         break;
 
-                    case 50002:
-                        getViewInterface().showSearchGourmet();
+                    case Constants.CODE_RESULT_ACTIVITY_SEARCH_GOURMET:
+                        mSearchModel.serviceType.setValue(Constants.ServiceType.GOURMET);
                         break;
                 }
                 break;
@@ -587,29 +593,22 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             @Override
             public void onChanged(@Nullable Constants.ServiceType serviceType)
             {
-                addCompositeDisposable(io.reactivex.Observable.just(serviceType).subscribeOn(AndroidSchedulers.mainThread()).delaySubscription(200, TimeUnit.MILLISECONDS).subscribe(new Consumer<Constants.ServiceType>()
+                switch (serviceType)
                 {
-                    @Override
-                    public void accept(Constants.ServiceType serviceType) throws Exception
-                    {
-                        switch (serviceType)
-                        {
-                            case HOTEL:
-                                showSearchStay();
-                                break;
+                    case HOTEL:
+                        showSearchStay();
+                        break;
 
-                            case GOURMET:
-                                showSearchGourmet();
-                                break;
+                    case GOURMET:
+                        showSearchGourmet();
+                        break;
 
-                            case OB_STAY:
-                                showSearchStayOutbound();
-                                break;
-                        }
+                    case OB_STAY:
+                        showSearchStayOutbound();
+                        break;
+                }
 
-                        unLockAll();
-                    }
-                }));
+                unLockAll();
             }
         });
 
@@ -645,7 +644,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             {
                 getViewInterface().setSearchStayOutboundSuggestText(stayOutboundSuggest.display);
 
-                getViewInterface().setSearchStayOutboundButtonEnabled(stayOutboundSuggest != null);
+                getViewInterface().setSearchStayOutboundButtonEnabled(DailyTextUtils.isTextEmpty(stayOutboundSuggest.display) == false);
             }
         });
 
