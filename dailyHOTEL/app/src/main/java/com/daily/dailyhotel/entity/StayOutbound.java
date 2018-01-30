@@ -25,6 +25,7 @@ public class StayOutbound
     public int discountRate;
     public boolean myWish;
     public String createdWishDateTime; // ISO-8601
+    public boolean dailyChoice;
 
     public StayOutbound()
     {

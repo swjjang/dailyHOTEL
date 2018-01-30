@@ -69,6 +69,9 @@ public class StayOutboundData
     @JsonField(name = "createdAt")
     public String createdAt; // 위시 목록일때만 내려옴.
 
+    @JsonField(name = "dailyChoice")
+    public boolean dailyChoice; // 2.1.9 신규
+
     public StayOutboundData()
     {
 
@@ -104,6 +107,7 @@ public class StayOutboundData
         stayOutbound.provideRewardSticker = provideRewardSticker;
         stayOutbound.myWish = myWish;
         stayOutbound.createdWishDateTime = createdAt;
+        stayOutbound.dailyChoice = dailyChoice;
 
         return stayOutbound;
     }
