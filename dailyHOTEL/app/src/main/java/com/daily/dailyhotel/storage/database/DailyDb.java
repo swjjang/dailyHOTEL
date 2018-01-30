@@ -536,6 +536,41 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         mContext.getContentResolver().notifyChange(RecentlyList.NOTIFICATION_URI, null);
     }
 
+    public void deleteAllRecentlyItem(Constants.ServiceType serviceType)
+    {
+        if (serviceType == null)
+        {
+            return;
+        }
+
+        SQLiteDatabase db = getDb();
+        if (db == null)
+        {
+            // db를 사용할 수 없는 상태이므로 migration 실패로 판단
+            return;
+        }
+
+        try
+        {
+            db.beginTransaction();
+            db.delete(T_RECENTLY, RecentlyList.SERVICE_TYPE + " = '" + serviceType.name() + "'", null);
+            db.setTransactionSuccessful();
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        } finally
+        {
+            try
+            {
+                db.endTransaction();
+            } catch (Exception e)
+            {
+            }
+        }
+
+        mContext.getContentResolver().notifyChange(RecentlyList.NOTIFICATION_URI, null);
+    }
+
     private ContentValues convertContentValues(RecentlyPlace recentlyPlace, long savingTime)
     {
         if (recentlyPlace == null)

@@ -96,6 +96,29 @@ public class RecentlyLocalImpl implements RecentlyLocalInterface
     }
 
     @Override
+    public Observable<Boolean> clearRecentlyItems(Constants.ServiceType serviceType)
+    {
+        return Observable.defer(new Callable<ObservableSource<Boolean>>()
+        {
+            @Override
+            public ObservableSource<Boolean> call() throws Exception
+            {
+                if (serviceType == null)
+                {
+                    return Observable.just(false);
+                }
+
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+                dailyDb.deleteAllRecentlyItem(serviceType);
+
+                DailyDbHelper.getInstance().close();
+
+                return Observable.just(true);
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
+    @Override
     public Observable<ArrayList<RecentlyDbPlace>> getRecentlyTypeList(Constants.ServiceType... serviceTypes)
     {
         return Observable.defer(new Callable<ObservableSource<? extends ArrayList<RecentlyDbPlace>>>()

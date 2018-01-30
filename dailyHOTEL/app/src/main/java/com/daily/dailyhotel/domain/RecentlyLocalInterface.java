@@ -19,7 +19,9 @@ public interface RecentlyLocalInterface
     Observable addRecentlyItem(Constants.ServiceType serviceType, int index //
         , String name, String englishName, String imageUrl, boolean isUpdateDate);
 
-    Observable deleteRecentlyItem(Constants.ServiceType serviceType, int index);
+    Observable<Boolean> deleteRecentlyItem(Constants.ServiceType serviceType, int index);
+
+    Observable<Boolean> clearRecentlyItems(Constants.ServiceType serviceType);
 
     Observable<ArrayList<RecentlyDbPlace>> getRecentlyTypeList(Constants.ServiceType... serviceTypes);
 

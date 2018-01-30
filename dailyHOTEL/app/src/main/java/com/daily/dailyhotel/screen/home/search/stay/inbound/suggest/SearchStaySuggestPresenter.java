@@ -601,31 +601,27 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
 
         getViewInterface().setRecentlySuggests(null, null);
 
-        // TODO : 최근 본 업장 , 최근 검색어 초기화
+        Observable<Boolean> recentlySearchObservable = Observable.defer(new Callable<ObservableSource<Boolean>>()
+        {
+            @Override
+            public ObservableSource<Boolean> call() throws Exception
+            {
+                mDailyRecentSearches.clear();
+                DailyPreference.getInstance(getActivity()).setHotelRecentSearches("");
 
-        //        addCompositeDisposable(mSuggestLocalImpl.deleteAllRecentlyStayOutboundSuggest() //
-        //            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer()
-        //            {
-        //                @Override
-        //                public void accept(Object o) throws Exception
-        //                {
-        //                    mAnalytics.onEventDeleteAllRecentlySuggestClick(getActivity());
-        //
-        //                    unLockAll();
-        //
-        //                    setRefresh(true);
-        //                    onRefresh(true);
-        //                }
-        //            }, new Consumer<Throwable>()
-        //            {
-        //                @Override
-        //                public void accept(Throwable throwable) throws Exception
-        //                {
-        //                    mAnalytics.onEventDeleteAllRecentlySuggestClick(getActivity());
-        //
-        //                    unLockAll();
-        //                }
-        //            }));
+                return Observable.just(true);
+            }
+        }).subscribeOn(Schedulers.io());
+
+        addCompositeDisposable(Observable.zip(mRecentlyLocalImpl.clearRecentlyItems(Constants.ServiceType.HOTEL) //
+            , recentlySearchObservable, new BiFunction<Boolean, Boolean, Boolean>()
+            {
+                @Override
+                public Boolean apply(Boolean t1, Boolean t2) throws Exception
+                {
+                    return true;
+                }
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe());
     }
 
     @Override
@@ -638,9 +634,13 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
 
         getViewInterface().removeRecentlyItem(position);
 
-        if (StaySuggest.MENU_TYPE_RECENTLY_STAY == staySuggest.menuType) {
-            // TODO : 최근 본 업장 삭제
-        } else {
+        if (StaySuggest.MENU_TYPE_RECENTLY_STAY == staySuggest.menuType)
+        {
+            // 최근 본 업장
+            addCompositeDisposable(mRecentlyLocalImpl.deleteRecentlyItem(Constants.ServiceType.HOTEL, staySuggest.stayIndex) //
+                .observeOn(AndroidSchedulers.mainThread()).subscribe());
+        } else
+        {
             // 최근 검색어
             Keyword keyword = getKeyword(staySuggest);
 
