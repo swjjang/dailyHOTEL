@@ -13,13 +13,13 @@
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/recentlySearchResultTextView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="36dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="17dp"
+                android:gravity="center_vertical"
                 android:text="@string/label_search_recently_search_result"
                 android:textColor="@color/default_text_cc5c5c5"
-                android:textSize="14dp"/>
+                android:textSize="13dp"/>
 
             <com.daily.dailyhotel.view.DailySearchRecentlyCardView
                 android:id="@+id/recently01View"
@@ -45,20 +45,21 @@
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/popularAreaTextView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="36dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="17dp"
+                android:layout_marginTop="28dp"
+                android:gravity="center_vertical"
                 android:text="@string/label_search_stayoutbound_popular_area"
                 android:textColor="@color/default_text_cc5c5c5"
-                android:textSize="14dp"/>
+                android:textSize="13dp"/>
 
             <LinearLayout
                 android:id="@+id/popularAreaLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
                 android:orientation="vertical"/>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
