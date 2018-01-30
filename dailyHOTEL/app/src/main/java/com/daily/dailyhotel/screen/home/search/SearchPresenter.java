@@ -252,8 +252,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                     {
                         StaySuggestParcel staySuggestParcel = data.getParcelableExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
                         mSearchModel.staySuggest.setValue(staySuggestParcel.getSuggest());
-
-
+                        mSearchModel.stayInputString = data.getStringExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
                     } catch (Exception e)
                     {
                         ExLog.d(e.toString());
@@ -463,7 +462,14 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             stayBookingDay.setCheckInDay(mSearchModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT));
             stayBookingDay.setCheckOutDay(mSearchModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
 
-//            startActivityForResult(StaySearchResultActivity.newInstance(getActivity(), todayDateTime, stayBookingDay, mSearchModel.stayInputString, mSearchModel.staySuggest.getValue()), SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT);
+            // 테스트 코드
+            {
+                mSearchModel.staySuggest.getValue().displayName = "ㅇ너밂ㄴㅇ";
+            }
+
+            startActivityForResult(StaySearchResultActivity.newInstance(getActivity(), todayDateTime//
+                , stayBookingDay, mSearchModel.stayInputString, mSearchModel.staySuggest.getValue(), AnalyticsManager.Screen.SEARCH_MAIN)//
+                , SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -702,7 +708,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
     private void showSearchStay()
     {
-        if(mSearchModel.staySuggest.getValue() == null || DailyTextUtils.isTextEmpty(mSearchModel.staySuggest.getValue().displayName) == true)
+        if (mSearchModel.staySuggest.getValue() == null || DailyTextUtils.isTextEmpty(mSearchModel.staySuggest.getValue().displayName) == true)
         {
             getViewInterface().setSearchStaySuggestText(null);
             getViewInterface().setSearchStayButtonEnabled(false);
@@ -722,7 +728,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
     private void showSearchStayOutbound()
     {
-        if(mSearchModel.stayOutboundSuggest.getValue() == null || DailyTextUtils.isTextEmpty(mSearchModel.stayOutboundSuggest.getValue().display) == true)
+        if (mSearchModel.stayOutboundSuggest.getValue() == null || DailyTextUtils.isTextEmpty(mSearchModel.stayOutboundSuggest.getValue().display) == true)
         {
             getViewInterface().setSearchStayOutboundSuggestText(null);
             getViewInterface().setSearchStayOutboundButtonEnabled(false);
