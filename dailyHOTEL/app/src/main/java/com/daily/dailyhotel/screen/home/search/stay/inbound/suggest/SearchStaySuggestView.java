@@ -28,6 +28,7 @@ import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.StaySuggest;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivitySearchStaySuggestDataBinding;
+import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeEmptyDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeEntryDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeNearbyDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeSectionDataBinding;
@@ -45,7 +46,6 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 {
     private SuggestListAdapter mSuggestListAdapter;
     private RecentlySuggestListAdapter mRecentlySuggestListAdapter;
-    private RecentlySuggestListAdapter mPopularSuggestListAdapter;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -55,8 +55,6 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
         void onRecentlySuggestClick(StaySuggest staySuggest);
 
-        void onPopularSuggestClick(StaySuggest staySuggest);
-
         void onDeleteAllRecentlySuggest();
 
         void onDeleteRecentlySuggest(int position, StaySuggest staySuggest);
@@ -64,6 +62,8 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
         void onVoiceSearchClick();
 
         void onCheckVoiceSearchEnabled();
+
+        void onNearbyClick(StaySuggest staySuggest);
     }
 
     public SearchStaySuggestView(BaseActivity baseActivity, SearchStaySuggestView.OnEventListener listener)
@@ -78,6 +78,8 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
         {
             return;
         }
+
+        initRecentlySuggestEmptyLayout(viewDataBinding);
 
         viewDataBinding.keywordEditText.setBackgroundDrawable(null);
         viewDataBinding.keywordEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
@@ -216,6 +218,31 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
         setProgressBarVisible(false);
     }
 
+    private void initRecentlySuggestEmptyLayout(final ActivitySearchStaySuggestDataBinding viewDataBinding)
+    {
+        if (viewDataBinding == null)
+        {
+            return;
+        }
+
+        viewDataBinding.emptyLayout.setVisibility(View.GONE);
+        viewDataBinding.nearbyDataBinding.descriptionTextView.setText(R.string.label_search_nearby_description);
+        viewDataBinding.nearbyDataBinding.bottomDivider.setVisibility(View.VISIBLE);
+
+        viewDataBinding.nearbyDataBinding.nearbyLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                StaySuggest staySuggest = (StaySuggest) view.getTag();
+
+                getEventListener().onNearbyClick(staySuggest);
+            }
+        });
+
+        viewDataBinding.descriptionTextView.setText(R.string.label_search_suggest_recently_empty_description_type_stay);
+    }
+
     @Override
     public void setToolbarTitle(String title)
     {
@@ -352,7 +379,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
     }
 
     @Override
-    public void setEmptySuggestsVisible(boolean visible)
+    public void setEmptyRecentlySuggestsVisible(boolean visible)
     {
         if (getViewDataBinding() == null)
         {
@@ -408,19 +435,21 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
                 {
                     getEventListener().onDeleteRecentlySuggest(position, staySuggest);
                 }
+
+                @Override
+                public void onNearbyClick(StaySuggest staySuggest)
+                {
+                    getEventListener().onNearbyClick(staySuggest);
+                }
             });
         }
 
         getViewDataBinding().recentlySuggestRecyclerView.setAdapter(mRecentlySuggestListAdapter);
 
-        List<ObjectItem> objectItemList = new ArrayList<>();
-
-        // TODO : 현재 위치 적용
-        objectItemList.add(new ObjectItem(ObjectItem.TYPE_LOCATION_VIEW, new StaySuggest()));
-
         if (staySuggestList == null || staySuggestList.size() == 0)
         {
             getViewDataBinding().recentlySuggestLayout.setVisibility(View.GONE);
+
             mRecentlySuggestListAdapter.setAll(null);
             mRecentlySuggestListAdapter.notifyDataSetChanged();
             return;
@@ -429,6 +458,10 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
         getViewDataBinding().recentlySuggestLayout.setVisibility(View.VISIBLE);
         getViewDataBinding().deleteRecentlySuggestLayout.setVisibility(View.VISIBLE);
 
+        List<ObjectItem> objectItemList = new ArrayList<>();
+
+        // 현재 위치 검색 추가
+        objectItemList.add(new ObjectItem(ObjectItem.TYPE_LOCATION_VIEW, new StaySuggest()));
 
         for (StaySuggest staySuggest : staySuggestList)
         {
@@ -445,58 +478,6 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
         mRecentlySuggestListAdapter.setAll(objectItemList);
         mRecentlySuggestListAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void setPopularAreaSuggests(List<StaySuggest> staySuggestList)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        if (mPopularSuggestListAdapter == null)
-        {
-            mPopularSuggestListAdapter = new RecentlySuggestListAdapter(getContext(), new OnRecentlySuggestListener()
-            {
-                @Override
-                public void onItemClick(int position, StaySuggest staySuggest)
-                {
-                    getEventListener().onPopularSuggestClick(staySuggest);
-                }
-
-                @Override
-                public void onDeleteClick(int position, StaySuggest staySuggest)
-                {
-                    getEventListener().onDeleteRecentlySuggest(position, staySuggest);
-                }
-            });
-        }
-
-        getViewDataBinding().recentlySuggestRecyclerView.setAdapter(mPopularSuggestListAdapter);
-
-        if (staySuggestList == null || staySuggestList.size() == 0)
-        {
-            getViewDataBinding().recentlySuggestLayout.setVisibility(View.GONE);
-            mPopularSuggestListAdapter.setAll(null);
-            mPopularSuggestListAdapter.notifyDataSetChanged();
-            return;
-        }
-
-        getViewDataBinding().recentlySuggestLayout.setVisibility(View.VISIBLE);
-        getViewDataBinding().deleteRecentlySuggestLayout.setVisibility(View.GONE);
-
-        List<ObjectItem> objectItemList = new ArrayList<>();
-
-        for (StaySuggest staySuggest : staySuggestList)
-        {
-            objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, staySuggest));
-        }
-
-        objectItemList.add(new ObjectItem(ObjectItem.TYPE_FOOTER_VIEW, null));
-
-        mPopularSuggestListAdapter.setAll(objectItemList);
-        mPopularSuggestListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -561,7 +542,6 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
                 setSuggest(null);
                 setSuggests(null);
                 setSuggestsVisible(false);
-                setEmptySuggestsVisible(false);
                 getEventListener().onCheckVoiceSearchEnabled();
                 break;
         }
@@ -948,6 +928,8 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
         void onItemClick(int position, StaySuggest staySuggest);
 
         void onDeleteClick(int position, StaySuggest staySuggest);
+
+        void onNearbyClick(StaySuggest staySuggest);
     }
 
     private class RecentlySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
@@ -976,9 +958,9 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
                         = DataBindingUtil.inflate(LayoutInflater.from(mContext) //
                         , R.layout.list_row_search_suggest_type_nearby_data, parent, false);
 
-                    NearByViewHolder nearByViewHolder = new NearByViewHolder(dataBinding);
+                    LocationViewHolder locationViewHolder = new LocationViewHolder(dataBinding);
 
-                    return nearByViewHolder;
+                    return locationViewHolder;
                 }
 
                 case ObjectItem.TYPE_SECTION:
@@ -1001,6 +983,17 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
                     FooterViewHolder footerViewHolder = new FooterViewHolder(view);
 
                     return footerViewHolder;
+                }
+
+                case ObjectItem.TYPE_FOOTER_GUIDE_VIEW:
+                {
+                    ListRowSearchSuggestTypeEmptyDataBinding dataBinding//
+                        = DataBindingUtil.inflate(LayoutInflater.from(mContext) //
+                        , R.layout.list_row_search_suggest_type_empty_data, parent, false);
+
+                    FooterGuideViewHolder footerGuideViewHolder = new FooterGuideViewHolder(dataBinding);
+
+                    return footerGuideViewHolder;
                 }
 
                 case ObjectItem.TYPE_ENTRY:
@@ -1031,7 +1024,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
             switch (item.mType)
             {
                 case ObjectItem.TYPE_LOCATION_VIEW:
-                    onBindViewHolder((NearByViewHolder) holder, item);
+                    onBindViewHolder((LocationViewHolder) holder, item);
                     break;
 
                 case ObjectItem.TYPE_SECTION:
@@ -1039,6 +1032,10 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
                     break;
 
                 case ObjectItem.TYPE_FOOTER_VIEW:
+                    break;
+
+                case ObjectItem.TYPE_FOOTER_GUIDE_VIEW:
+                    onBindViewHolder((FooterGuideViewHolder) holder);
                     break;
 
                 case ObjectItem.TYPE_ENTRY:
@@ -1112,20 +1109,33 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
             return staySuggest;
         }
 
-        private void onBindViewHolder(NearByViewHolder holder, ObjectItem item)
+        private void onBindViewHolder(LocationViewHolder holder, ObjectItem item)
         {
             StaySuggest staySuggest = item.getItem();
 
             holder.itemView.getRootView().setTag(staySuggest);
+            holder.itemView.getRootView().setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    if (mListener == null)
+                    {
+                        return;
+                    }
+
+                    mListener.onNearbyClick(staySuggest);
+                }
+            });
 
             holder.dataBinding.bottomDivider.setVisibility(View.VISIBLE);
 
-            if (staySuggest.latitude != 0 && staySuggest.longitude != 0)
-            {
-                holder.dataBinding.descriptionTextView.setText(staySuggest.displayName);
-            } else
+            if (staySuggest.latitude == 0 && staySuggest.longitude == 0)
             {
                 holder.dataBinding.descriptionTextView.setText(R.string.label_search_nearby_description);
+            } else
+            {
+                holder.dataBinding.descriptionTextView.setText(staySuggest.displayName);
             }
         }
 
@@ -1142,6 +1152,11 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
             }
 
             holder.dataBinding.titleTextView.setText(staySuggest.displayName);
+        }
+
+        private void onBindViewHolder(FooterGuideViewHolder holder)
+        {
+            holder.dataBinding.descriptionTextView.setText(R.string.label_search_suggest_recently_empty_description_type_stay);
         }
 
         private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)
@@ -1208,11 +1223,11 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
             }
         }
 
-        class NearByViewHolder extends RecyclerView.ViewHolder
+        class LocationViewHolder extends RecyclerView.ViewHolder
         {
             ListRowSearchSuggestTypeNearbyDataBinding dataBinding;
 
-            public NearByViewHolder(ListRowSearchSuggestTypeNearbyDataBinding dataBinding)
+            public LocationViewHolder(ListRowSearchSuggestTypeNearbyDataBinding dataBinding)
             {
                 super(dataBinding.getRoot());
 
@@ -1225,6 +1240,18 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
             public FooterViewHolder(View itemView)
             {
                 super(itemView);
+            }
+        }
+
+        class FooterGuideViewHolder extends RecyclerView.ViewHolder
+        {
+            ListRowSearchSuggestTypeEmptyDataBinding dataBinding;
+
+            public FooterGuideViewHolder(ListRowSearchSuggestTypeEmptyDataBinding dataBinding)
+            {
+                super(dataBinding.getRoot());
+
+                this.dataBinding = dataBinding;
             }
         }
 

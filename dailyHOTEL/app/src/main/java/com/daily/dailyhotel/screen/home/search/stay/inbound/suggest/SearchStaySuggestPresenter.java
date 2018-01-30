@@ -316,10 +316,8 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
             {
                 getViewInterface().setRecentlySuggests(staySuggests, null);
 
-                if (staySuggests.size() == 0)
-                {
-                    getViewInterface().setPopularAreaSuggests(new ArrayList<>());  // 최근 본 업장 과 최근 검색어가 없을때 노출
-                }
+                boolean isEmpty = staySuggests == null || staySuggests.size() == 0;
+                getViewInterface().setEmptyRecentlySuggestsVisible(isEmpty);
 
                 unLockAll();
             }
@@ -329,8 +327,7 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
             public void accept(Throwable throwable) throws Exception
             {
                 getViewInterface().setRecentlySuggests(null, null);
-
-                getViewInterface().setPopularAreaSuggests(new ArrayList<>()); // 최근 본 업장 과 최근 검색어가 없을때 노출
+                getViewInterface().setEmptyRecentlySuggestsVisible(true);
 
                 unLockAll();
             }
@@ -390,7 +387,6 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
 
         mKeyword = keyword;
 
-        getViewInterface().setEmptySuggestsVisible(false);
         getViewInterface().setProgressBarVisible(true);
 
         if (DailyTextUtils.isTextEmpty(keyword) == true)
@@ -500,53 +496,6 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
         startFinishAction(staySuggest, mKeyword, null);
     }
 
-    @Override
-    public void onPopularSuggestClick(StaySuggest staySuggest)
-    {
-        //        if (staySuggest == null)
-        //        {
-        //            return;
-        //        }
-        //
-        //        if (lock() == true)
-        //        {
-        //            return;
-        //        }
-        //
-        //        addCompositeDisposable(mSuggestLocalImpl.getRecentlyStayOutboundSuggestKeyword(staySuggest.id) //
-        //            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<String>()
-        //            {
-        //                @Override
-        //                public void accept(String keyword) throws Exception
-        //                {
-        //                    try
-        //                    {
-        //                        mAnalytics.onEventPopularSuggestClick(getActivity(), staySuggest.display);
-        //                    } catch (Exception e)
-        //                    {
-        //                        ExLog.d(e.getMessage());
-        //                    }
-        //
-        //                    startFinishAction(staySuggest, keyword, AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECOMMEND);
-        //                }
-        //            }, new Consumer<Throwable>()
-        //            {
-        //                @Override
-        //                public void accept(Throwable throwable) throws Exception
-        //                {
-        //                    try
-        //                    {
-        //                        mAnalytics.onEventPopularSuggestClick(getActivity(), staySuggest.display);
-        //                    } catch (Exception e)
-        //                    {
-        //                        ExLog.d(e.getMessage());
-        //                    }
-        //
-        //                    startFinishAction(staySuggest, "", AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECOMMEND);
-        //                }
-        //            }));
-    }
-
     private Keyword getKeyword(StaySuggest staySuggest)
     {
         if (getActivity() == null || staySuggest == null)
@@ -600,6 +549,7 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
         }
 
         getViewInterface().setRecentlySuggests(null, null);
+        getViewInterface().setEmptyRecentlySuggestsVisible(true);
 
         Observable<Boolean> recentlySearchObservable = Observable.defer(new Callable<ObservableSource<Boolean>>()
         {
@@ -690,6 +640,12 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
         getViewInterface().setVoiceSearchEnabled(isVoiceSearchEnabled());
     }
 
+    @Override
+    public void onNearbyClick(StaySuggest staySuggest)
+    {
+        // TODO : 현위치 기반 검색
+    }
+
     private boolean isVoiceSearchEnabled()
     {
         if (getActivity() == null)
@@ -706,19 +662,8 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
     {
         getViewInterface().setProgressBarVisible(false);
 
-        if (staySuggestList == null || staySuggestList.size() == 0)
-        {
-            getViewInterface().setSuggestsVisible(false);
-
-            boolean isShowEmpty = DailyTextUtils.isTextEmpty(mKeyword) == false;
-            getViewInterface().setEmptySuggestsVisible(isShowEmpty);
-
-            //            mAnalytics.onEventSuggestEmpty(getActivity(), mKeyword);
-        } else
-        {
-            getViewInterface().setSuggestsVisible(true);
-            getViewInterface().setEmptySuggestsVisible(false);
-        }
+        boolean hasKeyword = DailyTextUtils.isTextEmpty(mKeyword) == false;
+        getViewInterface().setSuggestsVisible(hasKeyword);
 
         getViewInterface().setSuggests(staySuggestList);
     }

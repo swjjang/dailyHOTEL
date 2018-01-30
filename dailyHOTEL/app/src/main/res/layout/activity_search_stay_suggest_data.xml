@@ -191,28 +191,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical|right"
+                    android:drawablePadding="5dp"
                     android:gravity="center_vertical|right"
+                    android:paddingLeft="17dp"
+                    android:paddingRight="17dp"
                     android:text="@string/label_search_suggest_delete_all"
                     android:textColor="@color/default_text_cc5c5c5"
-                    android:drawablePadding="5dp"
-                    app:drawableCompatRight="@drawable/vector_ic_list_trash"
-                    android:paddingRight="17dp"
-                    android:paddingLeft="17dp"
-                    android:textSize="13dp"/>
+                    android:textSize="13dp"
+                    app:drawableCompatRight="@drawable/vector_ic_list_trash"/>
             </FrameLayout>
 
         </android.support.constraint.ConstraintLayout>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/suggestsRecyclerView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@color/white"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbarView"/>
 
         <ScrollView
             android:id="@+id/emptyLayout"
@@ -226,53 +215,59 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbarView">
 
-            <FrameLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <LinearLayout
+                <include
+                    android:id="@+id/nearbyDataBinding"
+                    layout="@layout/list_row_search_suggest_type_nearby_data"/>
+
+                <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:orientation="vertical">
+                    android:layout_height="match_parent">
 
-                    <ImageView
-                        android:id="@+id/imageView"
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/titleTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        app:srcCompat="@drawable/no_hotel_ic"/>
+                        android:paddingTop="20dp"
+                        android:text="@string/label_search_suggest_recently_empty_title"
+                        android:textColor="@color/default_text_c323232"
+                        android:textSize="14dp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        dailyFont:style="Medium"/>
 
-                    <LinearLayout
-                        android:id="@+id/textLayout"
-                        android:layout_width="match_parent"
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/descriptionTextView"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:gravity="center"
-                        android:orientation="vertical">
+                        android:gravity="center_horizontal"
+                        android:paddingBottom="11dp"
+                        android:paddingTop="11dp"
+                        android:textColor="@color/default_text_c929292"
+                        android:textSize="13dp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/titleTextView"/>
 
-                        <com.daily.base.widget.DailyTextView
-                            android:id="@+id/messageTextView01"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/label_searchresult_empty"
-                            android:textColor="@color/default_text_c323232"
-                            android:textSize="18dp"
-                            dailyFont:style="Medium"/>
-
-                        <com.daily.base.widget.DailyTextView
-                            android:id="@+id/messageTextView02"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="13dp"
-                            android:gravity="center"
-                            android:text="@string/message_stay_outbound_suggest_empty_suggest"
-                            android:textColor="@color/default_text_c929292"
-                            android:textSize="14dp"/>
-                    </LinearLayout>
-                </LinearLayout>
-            </FrameLayout>
+                </android.support.constraint.ConstraintLayout>
+            </LinearLayout>
         </ScrollView>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/suggestsRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/white"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbarView"/>
 
         <ScrollView
             android:id="@+id/progressBarScrollView"
