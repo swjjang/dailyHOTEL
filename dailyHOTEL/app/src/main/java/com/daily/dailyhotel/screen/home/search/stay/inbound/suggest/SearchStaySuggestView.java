@@ -852,20 +852,26 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
             switch (staySuggest.categoryKey)
             {
                 case StaySuggest.CATEGORY_STAY:
-                case StaySuggest.CATEGORY_RECENTLY:
                     holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_02_hotel);
 
-                    holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
-                    if (staySuggest.discountAveragePrice > 0)
+                    if (StaySuggest.MENU_TYPE_RECENTLY_STAY == staySuggest.menuType)
                     {
-
-                        DecimalFormat decimalFormat = new DecimalFormat("###,##0");
-                        String priceText = decimalFormat.format(staySuggest.discountAveragePrice) + getContext().getString(R.string.currency);
-
-                        holder.dataBinding.priceTextView.setText(priceText);
+                        holder.dataBinding.priceTextView.setVisibility(View.GONE);
                     } else
                     {
-                        holder.dataBinding.priceTextView.setText(R.string.label_soldout);
+
+                        holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
+                        if (staySuggest.discountAveragePrice > 0)
+                        {
+
+                            DecimalFormat decimalFormat = new DecimalFormat("###,##0");
+                            String priceText = decimalFormat.format(staySuggest.discountAveragePrice) + getContext().getString(R.string.currency);
+
+                            holder.dataBinding.priceTextView.setText(priceText);
+                        } else
+                        {
+                            holder.dataBinding.priceTextView.setText(R.string.label_soldout);
+                        }
                     }
 
                     break;
@@ -1181,7 +1187,6 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
             switch (staySuggest.categoryKey)
             {
                 case StaySuggest.CATEGORY_STAY:
-                case StaySuggest.CATEGORY_RECENTLY:
                     holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_02_hotel);
                     break;
 

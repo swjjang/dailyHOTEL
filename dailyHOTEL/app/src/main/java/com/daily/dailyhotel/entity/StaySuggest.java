@@ -10,21 +10,17 @@ import com.twoheart.dailyhotel.network.model.StayKeyword;
 
 public class StaySuggest
 {
-    public static final String CATEGORY_REGION = "region"; // default - 지역검색
-    public static final String CATEGORY_STAY = "stay"; // 호텔검색
-    public static final String CATEGORY_STATION = "station"; // 역검색
-    public static final String CATEGORY_LOCATION = "location"; // 위치검색
-    public static final String CATEGORY_DIRECT = "direct"; // 직접검색
-    public static final String CATEGORY_RECENTLY = "recently"; // 최근 본 업장 <-- 종류 삭제 예정
+    public static final String CATEGORY_REGION = "region"; // default - 지역
+    public static final String CATEGORY_STAY = "stay"; // 호텔
+    public static final String CATEGORY_STATION = "station"; // 역
+    public static final String CATEGORY_LOCATION = "location"; // 위치
+    public static final String CATEGORY_DIRECT = "direct"; // 검색어 - 직접 입력
 
     public static final int MENU_TYPE_DIRECT = 1;
     public static final int MENU_TYPE_LOCATION = 2;
     public static final int MENU_TYPE_RECENTLY_SEARCH = 3;
     public static final int MENU_TYPE_RECENTLY_STAY = 4;
     public static final int MENU_TYPE_SUGGEST = 5;
-
-
-
 
     private static final String SEARCH_SEPARATOR = " > ";
 
@@ -78,6 +74,8 @@ public class StaySuggest
             regionName = splitArray[0];
             provinceName = splitArray[1];
         }
+
+        menuType = MENU_TYPE_SUGGEST;
     }
 
     public StaySuggest(Keyword keyword)
@@ -104,6 +102,8 @@ public class StaySuggest
             regionName = splitArray[0];
             provinceName = splitArray[1];
         }
+
+        menuType = MENU_TYPE_RECENTLY_SEARCH;
     }
 
     public StaySuggest(RecentlyPlace recentlyPlace)
@@ -115,10 +115,11 @@ public class StaySuggest
 
         displayName = recentlyPlace.regionName + SEARCH_SEPARATOR + recentlyPlace.title;
 
-        categoryKey = CATEGORY_RECENTLY;
+        categoryKey = CATEGORY_STAY;
         regionName = recentlyPlace.regionName;
         stayName = recentlyPlace.title;
         stayIndex = recentlyPlace.index;
+        menuType = MENU_TYPE_RECENTLY_STAY;
     }
 
     private String[] splitRightAngleBracket(String displayName)

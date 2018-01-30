@@ -555,8 +555,7 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
         }
 
         int icon = Keyword.DEFAULT_ICON;
-        if (StaySuggest.CATEGORY_STAY.equalsIgnoreCase(staySuggest.categoryKey) //
-            || StaySuggest.CATEGORY_RECENTLY.equalsIgnoreCase(staySuggest.categoryKey))
+        if (StaySuggest.CATEGORY_STAY.equalsIgnoreCase(staySuggest.categoryKey))
         {
             icon = Keyword.HOTEL_ICON;
         }
@@ -639,9 +638,10 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
 
         getViewInterface().removeRecentlyItem(position);
 
-        if (StaySuggest.CATEGORY_RECENTLY.equalsIgnoreCase(staySuggest.categoryKey)) {
+        if (StaySuggest.MENU_TYPE_RECENTLY_STAY == staySuggest.menuType) {
             // TODO : 최근 본 업장 삭제
         } else {
+            // 최근 검색어
             Keyword keyword = getKeyword(staySuggest);
 
             if (keyword == null)
