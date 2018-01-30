@@ -1751,7 +1751,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
             stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
             stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
 
-            StaySuggest staySuggest = new StaySuggest(StaySuggest.CATEGORY_LOCATION, null);
+            StaySuggest staySuggest = new StaySuggest(StaySuggest.MENU_TYPE_LOCATION, StaySuggest.CATEGORY_LOCATION, null);
 
             Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, stayBookingDay, null, staySuggest, AnalyticsManager.Screen.HOME);
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_SEARCH_RESULT);

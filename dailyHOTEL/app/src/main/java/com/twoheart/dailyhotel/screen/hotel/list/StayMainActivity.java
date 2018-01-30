@@ -1664,7 +1664,7 @@ public class StayMainActivity extends PlaceMainActivity
                         {
                             if (latLng != null)
                             {
-                                StaySuggest staySuggest = new StaySuggest(StaySuggest.CATEGORY_LOCATION, null);
+                                StaySuggest staySuggest = new StaySuggest(StaySuggest.MENU_TYPE_LOCATION, StaySuggest.CATEGORY_LOCATION, null);
                                 staySuggest.latitude = latLng.latitude;
                                 staySuggest.longitude = latLng.longitude;
 
@@ -1680,7 +1680,7 @@ public class StayMainActivity extends PlaceMainActivity
                         default:
                             if (DailyTextUtils.isTextEmpty(word) == false)
                             {
-                                StaySuggest staySuggest = new StaySuggest(StaySuggest.CATEGORY_DIRECT, word);
+                                StaySuggest staySuggest = new StaySuggest(StaySuggest.MENU_TYPE_DIRECT, StaySuggest.CATEGORY_DIRECT, word);
 
                                 Intent intent = StaySearchResultActivity.newInstance(baseActivity, todayDateTime, stayBookingDay, word, staySuggest, null);
                                 baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);

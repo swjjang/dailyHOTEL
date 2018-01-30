@@ -933,7 +933,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
             {
                 try
                 {
-                    StaySuggest staySuggest = new StaySuggest(StaySuggest.CATEGORY_LOCATION, null);
+                    StaySuggest staySuggest = new StaySuggest(StaySuggest.MENU_TYPE_LOCATION, StaySuggest.CATEGORY_LOCATION, null);
 
                     startActivityForResult(StaySearchResultActivity.newInstance(getActivity()//
                         , mStayViewModel.commonDateTime.getValue().getTodayDateTime()//
@@ -1231,7 +1231,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                         {
                             if (latLng != null)
                             {
-                                StaySuggest staySuggest = new StaySuggest(StaySuggest.CATEGORY_LOCATION, null);
+                                StaySuggest staySuggest = new StaySuggest(StaySuggest.MENU_TYPE_LOCATION, StaySuggest.CATEGORY_LOCATION, null);
                                 staySuggest.latitude = latLng.latitude;
                                 staySuggest.longitude = latLng.longitude;
 
@@ -1248,7 +1248,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                         default:
                             if (DailyTextUtils.isTextEmpty(word) == false)
                             {
-                                StaySuggest staySuggest = new StaySuggest(StaySuggest.CATEGORY_DIRECT, word);
+                                StaySuggest staySuggest = new StaySuggest(StaySuggest.MENU_TYPE_DIRECT, StaySuggest.CATEGORY_DIRECT, word);
 
                                 startActivityForResult(StaySearchResultActivity.newInstance(getActivity()//
                                     , commonDateTime.getTodayDateTime(), stayBookDateTime.getStayBookingDay()//

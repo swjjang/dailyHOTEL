@@ -245,7 +245,7 @@ public class StaySearchFragment extends PlaceSearchFragment
 
         lockUI();
 
-        StaySuggest staySuggest = new StaySuggest(StaySuggest.CATEGORY_LOCATION, null);
+        StaySuggest staySuggest = new StaySuggest(StaySuggest.MENU_TYPE_LOCATION, StaySuggest.CATEGORY_LOCATION, null);
 
         Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, null, staySuggest, AnalyticsManager.Screen.SEARCH_MAIN);
         startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
@@ -272,7 +272,7 @@ public class StaySearchFragment extends PlaceSearchFragment
             return;
         }
 
-        StaySuggest staySuggest = new StaySuggest(StaySuggest.CATEGORY_DIRECT, text);
+        StaySuggest staySuggest = new StaySuggest(StaySuggest.MENU_TYPE_DIRECT, StaySuggest.CATEGORY_DIRECT, text);
 
         Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, text, staySuggest, null);
         startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
@@ -911,7 +911,7 @@ public class StaySearchFragment extends PlaceSearchFragment
                 return;
             }
 
-            StaySuggest staySuggest = new StaySuggest(StaySuggest.CATEGORY_DIRECT, text);
+            StaySuggest staySuggest = new StaySuggest(StaySuggest.MENU_TYPE_DIRECT, StaySuggest.CATEGORY_DIRECT, text);
 
             Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, text, staySuggest, null);
             startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
@@ -942,7 +942,7 @@ public class StaySearchFragment extends PlaceSearchFragment
 
             if (keyword instanceof StayKeyword)
             {
-                StaySuggest staySuggest = new StaySuggest(StaySuggest.CATEGORY_STAY, keyword.name);
+                StaySuggest staySuggest = new StaySuggest(StaySuggest.MENU_TYPE_SUGGEST, StaySuggest.CATEGORY_STAY, keyword.name);
 
                 Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mStayBookingDay, text, staySuggest, null);
                 startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);

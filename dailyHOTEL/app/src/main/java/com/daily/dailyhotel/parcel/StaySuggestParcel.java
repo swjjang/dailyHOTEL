@@ -47,6 +47,7 @@ public class StaySuggestParcel implements Parcelable
         dest.writeDouble(mStaySuggest.latitude);
         dest.writeDouble(mStaySuggest.longitude);
         dest.writeString(mStaySuggest.categoryKey);
+        dest.writeInt(mStaySuggest.menuType);
     }
 
     private void readFromParcel(Parcel in)
@@ -63,6 +64,7 @@ public class StaySuggestParcel implements Parcelable
         mStaySuggest.latitude = in.readDouble();
         mStaySuggest.longitude = in.readDouble();
         mStaySuggest.categoryKey = in.readString();
+        mStaySuggest.menuType = in.readInt();
     }
 
     @Override

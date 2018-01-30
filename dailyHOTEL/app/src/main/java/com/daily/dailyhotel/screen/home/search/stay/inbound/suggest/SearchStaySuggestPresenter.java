@@ -287,7 +287,8 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
 
                     if (keywordList != null && keywordList.size() > 0)
                     {
-                        staySuggestList.add(new StaySuggest(null, getString(R.string.label_search_suggest_recently_search)));
+                        staySuggestList.add(new StaySuggest(StaySuggest.MENU_TYPE_RECENTLY_SEARCH //
+                            , null, getString(R.string.label_search_suggest_recently_search)));
 
                         for (Keyword keyword : keywordList)
                         {
@@ -297,7 +298,8 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
 
                     if (stayList != null && stayList.size() > 0)
                     {
-                        staySuggestList.add(new StaySuggest(null, getString(R.string.label_recently_stay)));
+                        staySuggestList.add(new StaySuggest(StaySuggest.MENU_TYPE_RECENTLY_STAY //
+                            , null, getString(R.string.label_recently_stay)));
 
                         for (RecentlyPlace recentlyPlace : stayList)
                         {
@@ -410,26 +412,26 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
                             return staySuggestList;
                         }
 
-                        String categoryKey = null;
+                        String oldCategoryKey = null;
 
                         for (StayKeyword stayKeyword : keywordList)
                         {
                             StaySuggest staySuggest = new StaySuggest(stayKeyword);
 
-                            if (DailyTextUtils.isTextEmpty(categoryKey) || categoryKey.equalsIgnoreCase(staySuggest.categoryKey) == false)
+                            if (DailyTextUtils.isTextEmpty(oldCategoryKey) || oldCategoryKey.equalsIgnoreCase(staySuggest.categoryKey) == false)
                             {
                                 int resId;
                                 if (StaySuggest.CATEGORY_STAY.equalsIgnoreCase(staySuggest.categoryKey))
                                 {
                                     resId = R.string.label_search_suggest_type_stay;
-                                    categoryKey = staySuggest.categoryKey;
+                                    oldCategoryKey = staySuggest.categoryKey;
                                 } else
                                 {
                                     resId = R.string.label_search_suggest_type_region;
-                                    categoryKey = StaySuggest.CATEGORY_REGION;
+                                    oldCategoryKey = StaySuggest.CATEGORY_REGION;
                                 }
 
-                                staySuggestList.add(new StaySuggest(null, getString(resId)));
+                                staySuggestList.add(new StaySuggest(StaySuggest.MENU_TYPE_SUGGEST, null, getString(resId)));
 
                             }
 

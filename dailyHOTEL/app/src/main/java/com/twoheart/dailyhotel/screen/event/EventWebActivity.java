@@ -454,7 +454,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
                     {
                         if (latLng != null)
                         {
-                            StaySuggest staySuggest = new StaySuggest(StaySuggest.CATEGORY_LOCATION, null);
+                            StaySuggest staySuggest = new StaySuggest(StaySuggest.MENU_TYPE_LOCATION, StaySuggest.CATEGORY_LOCATION, null);
 
                             Intent intent = StaySearchResultActivity.newInstance(context, todayDateTime, stayBookingDay, staySuggest, radius, true);
                             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
@@ -469,7 +469,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
                     {
                         if (DailyTextUtils.isTextEmpty(word) == false)
                         {
-                            StaySuggest staySuggest = new StaySuggest(StaySuggest.CATEGORY_DIRECT, word);
+                            StaySuggest staySuggest = new StaySuggest(StaySuggest.MENU_TYPE_DIRECT, StaySuggest.CATEGORY_DIRECT, word);
 
                             Intent intent = StaySearchResultActivity.newInstance(context, todayDateTime, stayBookingDay, word, staySuggest, null);
                             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);

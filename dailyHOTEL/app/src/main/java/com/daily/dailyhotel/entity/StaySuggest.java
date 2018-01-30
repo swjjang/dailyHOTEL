@@ -12,10 +12,19 @@ public class StaySuggest
 {
     public static final String CATEGORY_REGION = "region"; // default - 지역검색
     public static final String CATEGORY_STAY = "stay"; // 호텔검색
-    public static final String CATEGORY_RECENTLY = "recently"; // 최근 본 업장
     public static final String CATEGORY_STATION = "station"; // 역검색
     public static final String CATEGORY_LOCATION = "location"; // 위치검색
     public static final String CATEGORY_DIRECT = "direct"; // 직접검색
+    public static final String CATEGORY_RECENTLY = "recently"; // 최근 본 업장 <-- 종류 삭제 예정
+
+    public static final int MENU_TYPE_DIRECT = 1;
+    public static final int MENU_TYPE_LOCATION = 2;
+    public static final int MENU_TYPE_RECENTLY_SEARCH = 3;
+    public static final int MENU_TYPE_RECENTLY_STAY = 4;
+    public static final int MENU_TYPE_SUGGEST = 5;
+
+
+
 
     private static final String SEARCH_SEPARATOR = " > ";
 
@@ -29,13 +38,15 @@ public class StaySuggest
     public double latitude;
     public double longitude;
     public String categoryKey;
+    public int menuType;
 
     public StaySuggest()
     {
     }
 
-    public StaySuggest(String categoryKey, String displayName)
+    public StaySuggest(int menuType, String categoryKey, String displayName)
     {
+        this.menuType = menuType;
         this.categoryKey = categoryKey;
         this.displayName = displayName;
     }
