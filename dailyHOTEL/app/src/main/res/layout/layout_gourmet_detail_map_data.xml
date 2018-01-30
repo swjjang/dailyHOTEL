@@ -102,6 +102,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
+                android:drawablePadding="4dp"
                 android:freezesText="true"
                 android:gravity="center"
                 android:maxLines="1"
@@ -109,7 +110,7 @@
                 android:text="@string/label_navigator"
                 android:textColor="@color/hoteldetail_title_text"
                 android:textSize="13dp"
-                app:drawableCompatLeft="@drawable/detail_ic_copy"/>
+                app:drawableCompatLeft="@drawable/detail_ic_directions"/>
         </FrameLayout>
 
         <View
