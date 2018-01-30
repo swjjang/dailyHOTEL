@@ -307,11 +307,11 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
         switch (viewType)
         {
             case LIST:
-                mFloatingActionView.setViewOption(DailyFloatingActionView.ViewOption.LIST);
+                mFloatingActionView.setViewOption(DailyFloatingActionView.ViewOption.MAP);
                 break;
 
             case MAP:
-                mFloatingActionView.setViewOption(DailyFloatingActionView.ViewOption.MAP);
+                mFloatingActionView.setViewOption(DailyFloatingActionView.ViewOption.LIST);
                 break;
         }
     }

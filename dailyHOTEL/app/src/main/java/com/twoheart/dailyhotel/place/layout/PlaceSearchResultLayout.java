@@ -299,7 +299,7 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         mFloatingActionView.post(() -> mFloatingActionView.setTag(mViewPager.getBottom() - mFloatingActionView.getTop()));
 
         // 기본 설정
-        setOptionViewTypeView(Constants.ViewType.MAP);
+        setOptionViewTypeView(Constants.ViewType.LIST);
 
         setOptionViewTypeEnabled(true);
         setOptionFilterEnabled(true);
@@ -315,11 +315,11 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         switch (viewType)
         {
             case LIST:
-                mFloatingActionView.setViewOption(DailyFloatingActionView.ViewOption.LIST);
+                mFloatingActionView.setViewOption(DailyFloatingActionView.ViewOption.MAP);
                 break;
 
             case MAP:
-                mFloatingActionView.setViewOption(DailyFloatingActionView.ViewOption.MAP);
+                mFloatingActionView.setViewOption(DailyFloatingActionView.ViewOption.LIST);
                 break;
         }
     }
