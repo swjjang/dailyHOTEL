@@ -468,11 +468,6 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             stayBookingDay.setCheckInDay(mSearchModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT));
             stayBookingDay.setCheckOutDay(mSearchModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
 
-            // 테스트 코드
-            {
-                mSearchModel.staySuggest.getValue().displayName = "ㅇ너밂ㄴㅇ";
-            }
-
             startActivityForResult(StaySearchResultActivity.newInstance(getActivity(), todayDateTime//
                 , stayBookingDay, mSearchModel.stayInputString, mSearchModel.staySuggest.getValue(), AnalyticsManager.Screen.SEARCH_MAIN)//
                 , SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT);
