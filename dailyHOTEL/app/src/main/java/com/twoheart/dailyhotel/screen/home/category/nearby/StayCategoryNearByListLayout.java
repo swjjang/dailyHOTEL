@@ -14,6 +14,7 @@ import com.twoheart.dailyhotel.model.StayCategoryNearByCuration;
 import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
+import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListLayout;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListMapFragment;
 import com.twoheart.dailyhotel.util.Constants;
@@ -46,6 +47,12 @@ public class StayCategoryNearByListLayout extends StayListLayout
         super.initLayout(view);
 
         mResultTextView = view.findViewById(R.id.resultCountTextView);
+    }
+
+    @Override
+    protected PlaceListAdapter getPlaceListAdapter(Context context, ArrayList<PlaceViewItem> arrayList)
+    {
+        return new StayCategoryNearByAdapter(context, arrayList, mOnItemClickListener, null);
     }
 
     @Override

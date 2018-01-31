@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.search.stay.result;
+package com.twoheart.dailyhotel.screen.home.category.nearby;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -12,9 +12,9 @@ import com.twoheart.dailyhotel.util.Constants;
 
 import java.util.ArrayList;
 
-public class StaySearchResultListAdapter extends StayListAdapter
+public class StayCategoryNearByAdapter extends StayListAdapter
 {
-    public StaySearchResultListAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener, View.OnClickListener eventBannerListener)
+    public StayCategoryNearByAdapter(Context context, ArrayList<PlaceViewItem> arrayList, View.OnClickListener listener, View.OnClickListener eventBannerListener)
     {
         super(context, arrayList, listener, eventBannerListener);
     }
