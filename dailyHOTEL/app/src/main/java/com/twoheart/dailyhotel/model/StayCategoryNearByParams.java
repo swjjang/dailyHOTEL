@@ -72,7 +72,7 @@ public class StayCategoryNearByParams extends StayCategoryParams
 
         setSortType(mSort);
 
-        term = stayCategoryNearByCuration.getKeyword() == null ? null : stayCategoryNearByCuration.getKeyword().name;
+        term = null;
         radius = stayCategoryNearByCuration.getRadius();
 
         Location location = stayCategoryNearByCuration.getLocation();

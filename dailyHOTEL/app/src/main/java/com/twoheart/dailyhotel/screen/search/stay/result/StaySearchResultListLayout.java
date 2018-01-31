@@ -269,7 +269,7 @@ public class StaySearchResultListLayout extends StayListLayout
         researchView.setText(R.string.label_searchresult_research);
         changeDateView.setVisibility(View.GONE);
 
-        researchView.setOnClickListener(v -> ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onResearchClick());
+        researchView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onResearchClick());
 
         TextView callTextView = view.findViewById(R.id.callTextView);
         callTextView.setPaintFlags(callTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -279,7 +279,7 @@ public class StaySearchResultListLayout extends StayListLayout
             @Override
             public void onClick(View v)
             {
-                ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onShowCallDialog();
+                ((OnEventListener) mOnEventListener).onShowCallDialog();
             }
         });
     }
@@ -299,7 +299,6 @@ public class StaySearchResultListLayout extends StayListLayout
 
         View changeRegionView = view.findViewById(R.id.changeRegionView);
         View changeDateView = view.findViewById(R.id.changeDateView);
-
 
         changeRegionView.setVisibility(View.GONE);
         changeDateView.setVisibility(View.GONE);

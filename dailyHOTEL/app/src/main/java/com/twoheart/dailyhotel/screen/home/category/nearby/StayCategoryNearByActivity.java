@@ -21,6 +21,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayRegion;
+import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
@@ -33,7 +34,6 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
-import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
@@ -76,6 +76,7 @@ public class StayCategoryNearByActivity extends BaseActivity
     public static final String INTENT_EXTRA_DATA_KEYWORD = "keyword";
     public static final String INTENT_EXTRA_DATA_LOCATION = "location";
     public static final String INTENT_EXTRA_DATA_CALL_BY_SCREEN = "callByScreen";
+    public static final String INTENT_EXTRA_DATA_SUGGEST = "suggest";
 
     protected static final double DEFAULT_SEARCH_RADIUS = 10d;
 
@@ -223,12 +224,7 @@ public class StayCategoryNearByActivity extends BaseActivity
 
     protected void finish(int resultCode)
     {
-        if (mStayCategoryNearByLayout != null && mStayCategoryNearByLayout.isEmptyLayout() == false)
-        {
-            Intent intent = new Intent();
-            intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, getKeyword());
-            setResult(resultCode, intent);
-        } else if (Constants.CODE_RESULT_ACTIVITY_GO_REGION_LIST == resultCode)
+        if (Constants.CODE_RESULT_ACTIVITY_GO_REGION_LIST == resultCode)
         {
             Intent intent = new Intent();
             intent.putExtra(NAME_INTENT_EXTRA_DATA_DAILY_CATEGORY_TYPE, (Parcelable) mDailyCategoryType);
@@ -549,11 +545,6 @@ public class StayCategoryNearByActivity extends BaseActivity
         {
             ExLog.e(e.toString());
         }
-    }
-
-    protected Keyword getKeyword()
-    {
-        return mStayCategoryNearByCuration.getKeyword();
     }
 
     protected PlaceCuration getPlaceCuration()
@@ -1379,6 +1370,11 @@ public class StayCategoryNearByActivity extends BaseActivity
         @Override
         public void onCalendarClick()
         {
+            if(lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
             mOnEventListener.onDateClick();
         }
 
@@ -1394,6 +1390,25 @@ public class StayCategoryNearByActivity extends BaseActivity
                 mStayCategoryNearByLayout.setCategoryTabLayoutVisibility(View.GONE);
                 mStayCategoryNearByLayout.setScreenVisible(ScreenType.EMPTY);
             }
+        }
+
+        @Override
+        public void onStayListCount(int count)
+        {
+
+        }
+
+        @Override
+        public void onRadiusClick()
+        {
+            if(lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            mStayCategoryNearByLayout.showSpinner();
+
+            unLockUI();
         }
 
         @Override

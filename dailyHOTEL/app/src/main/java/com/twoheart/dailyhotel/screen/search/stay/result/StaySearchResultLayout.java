@@ -118,37 +118,7 @@ public class StaySearchResultLayout extends PlaceSearchResultLayout
                 , stayBookingDay.getCheckInDay(dateFormat)//
                 , stayBookingDay.getCheckOutDay(dateFormat), nights);
 
-            if (DailyTextUtils.isTextEmpty(date) == true)
-            {
-                setCalendarText(date);
-                return;
-            }
-
-            mCalendarTextView.post(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    int width = mCalendarTextView.getWidth() - mCalendarTextView.getPaddingLeft() - mCalendarTextView.getPaddingRight();
-                    int textSize = date.length();
-
-                    Paint paint = mCalendarTextView.getPaint();
-                    int endPosition = paint.breakText(date, true, width, null);
-
-                    if (textSize > endPosition)
-                    {
-                        String newDateFormat = "yyyy.MM.dd";
-                        String newDate = String.format(Locale.KOREA, "%s - %s, %d박"//
-                            , stayBookingDay.getCheckInDay(newDateFormat)//
-                            , stayBookingDay.getCheckOutDay(newDateFormat), nights);
-
-                        setCalendarText(newDate);
-                    } else
-                    {
-                        setCalendarText(date);
-                    }
-                }
-            });
+            setCalendarText(date);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
