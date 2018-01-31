@@ -436,8 +436,9 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                     double radius = intent.getDoubleExtra(INTENT_EXTRA_DATA_RADIUS, DEFAULT_SEARCH_RADIUS);
 
                     mStaySearchCuration.setRadius(radius);
-
-                    searchMyLocation();
+                } else
+                {
+                    mStaySearchCuration.setRadius(DEFAULT_SEARCH_RADIUS);
                 }
                 break;
             }
@@ -598,6 +599,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         {
             return;
         }
+
+        mReceiveDataFlag = 2;
 
         unLockUI();
 
@@ -1435,6 +1438,18 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             {
                 ExLog.d(e.toString());
             }
+        }
+
+        @Override
+        public void onResearchClick()
+        {
+            mOnEventListener.onResearchClick();
+        }
+
+        @Override
+        public void onRadiusClick()
+        {
+            mPlaceSearchResultLayout.showSpinner();
         }
 
         @Override

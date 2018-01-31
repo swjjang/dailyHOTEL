@@ -211,75 +211,6 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         titleView.setText(title);
     }
 
-    private void initEmptyLayout(View view)
-    {
-        if (view == null)
-        {
-            return;
-        }
-
-        EdgeEffectColor.setEdgeGlowColor((ScrollView) view, mContext.getResources().getColor(R.color.default_over_scroll_edge));
-
-
-        ImageView emptyIconImageView = view.findViewById(R.id.emptyIconImageView);
-        View changeDateView = view.findViewById(R.id.changeDateView);
-        TextView researchView = view.findViewById(R.id.researchView);
-        TextView callTextView = view.findViewById(R.id.callTextView);
-
-        emptyIconImageView.setImageResource(getEmptyIconResourceId());
-
-        changeDateView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).onDateClick();
-            }
-        });
-
-        int researchResId;
-        if (AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC.equalsIgnoreCase(mCallByScreen) == true//
-            || AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC.equalsIgnoreCase(mCallByScreen) == true//
-            || AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL.equalsIgnoreCase(mCallByScreen) == true)
-        {
-            researchResId = R.string.label_searchresult_change_region;
-        } else
-        {
-            researchResId = R.string.label_searchresult_research;
-        }
-
-        researchView.setText(researchResId);
-        researchView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                int resultCode;
-                if (AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC.equalsIgnoreCase(mCallByScreen) == true//
-                    || AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC.equalsIgnoreCase(mCallByScreen) == true//
-                    || AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL.equalsIgnoreCase(mCallByScreen) == true)
-                {
-                    resultCode = Constants.CODE_RESULT_ACTIVITY_GO_REGION_LIST;
-                } else
-                {
-                    resultCode = Constants.CODE_RESULT_ACTIVITY_GO_SEARCH;
-                }
-
-                ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).research(resultCode);
-            }
-        });
-
-        callTextView.setPaintFlags(callTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        callTextView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).onShowCallDialog();
-            }
-        });
-    }
-
     private void initSearchLocationLayout(View view)
     {
         if (view == null)
@@ -682,6 +613,16 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         mDistanceFilterSpinner.setVisibility(flag);
         mDistanceFilterSpinner.setEnabled(visible);
 
+    }
+
+    public void showSpinner()
+    {
+        if (mDistanceFilterSpinner == null)
+        {
+            return;
+        }
+
+        mDistanceFilterSpinner.performClick();
     }
 
     double getSpinnerRadiusValue(int spinnerPosition)

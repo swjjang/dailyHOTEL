@@ -1,16 +1,21 @@
 package com.twoheart.dailyhotel.screen.search.stay.result;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.location.Location;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.StayCurationOption;
+import com.twoheart.dailyhotel.model.StaySearchCuration;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
+import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListLayout;
@@ -23,6 +28,13 @@ public class StaySearchResultListLayout extends StayListLayout
 {
     private TextView mResultTextView;
     private boolean mLocationSearchType;
+
+    public interface OnEventListener extends StayListLayout.OnEventListener
+    {
+        void onResearchClick();
+
+        void onRadiusClick();
+    }
 
     public StaySearchResultListLayout(Context context, PlaceListLayout.OnEventListener eventListener)
     {
@@ -52,16 +64,37 @@ public class StaySearchResultListLayout extends StayListLayout
                 ? new StayCurationOption() //
                 : (StayCurationOption) mStayCuration.getCurationOption();
 
-            if (stayCurationOption.isDefaultFilter() == true)
+            if (StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(((StaySearchCuration) mStayCuration).getSuggest().categoryKey) == true)
             {
-                mEmptyView.setVisibility(View.VISIBLE);
-                mFilterEmptyView.setVisibility(View.GONE);
-                ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(false);
+                if((stayCurationOption.isDefaultFilter() == true && ((StaySearchCuration) mStayCuration).getRadius() == PlaceSearchResultActivity.DEFAULT_SEARCH_RADIUS))
+                {
+                    mEmptyView.setVisibility(View.VISIBLE);
+                    mFilterEmptyView.setVisibility(View.GONE);
+                    ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onBottomOptionVisible(false);
+                } else if(stayCurationOption.isDefaultFilter() == true)
+                {
+                    mEmptyView.setVisibility(View.GONE);
+                    mFilterEmptyView.setVisibility(View.VISIBLE);
+                    ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onBottomOptionVisible(false);
+                } else
+                {
+                    mEmptyView.setVisibility(View.GONE);
+                    mFilterEmptyView.setVisibility(View.VISIBLE);
+                    ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
+                }
             } else
             {
-                mEmptyView.setVisibility(View.GONE);
-                mFilterEmptyView.setVisibility(View.VISIBLE);
-                ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
+                if(stayCurationOption.isDefaultFilter() == true)
+                {
+                    mEmptyView.setVisibility(View.VISIBLE);
+                    mFilterEmptyView.setVisibility(View.GONE);
+                    ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onBottomOptionVisible(false);
+                } else
+                {
+                    mEmptyView.setVisibility(View.GONE);
+                    mFilterEmptyView.setVisibility(View.VISIBLE);
+                    ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
+                }
             }
 
             mMapLayout.setVisibility(View.GONE);
@@ -189,5 +222,137 @@ public class StaySearchResultListLayout extends StayListLayout
         mPlaceListAdapter.setShowDistanceIgnoreSort(mLocationSearchType);
 
         super.addResultList(fragmentManager, viewType, list, sortType, placeBookingDay, rewardEnabled);
+    }
+
+    /**
+     * 검색 방식에 따라서 빈화면의 내용이 다르다.
+     *
+     * @param categoryKey
+     */
+    public void setEmptyType(String categoryKey)
+    {
+        if (DailyTextUtils.isTextEmpty(categoryKey) == true || mEmptyView == null || mFilterEmptyView == null)
+        {
+            return;
+        }
+
+        switch (categoryKey)
+        {
+            case StaySuggest.CATEGORY_LOCATION:
+                setLocationTypeEmptyView(mEmptyView);
+                setLocationTypeFilterEmptyView(mFilterEmptyView);
+                break;
+
+            default:
+                setDefaultTypeEmptyView(mEmptyView);
+                setDefaultTypeFilterEmptyView(mFilterEmptyView);
+                break;
+        }
+    }
+
+    private void setLocationTypeEmptyView(View view)
+    {
+        if (view == null)
+        {
+            return;
+        }
+
+        TextView messageTextView01 = view.findViewById(R.id.messageTextView01);
+        TextView messageTextView02 = view.findViewById(R.id.messageTextView02);
+
+        messageTextView01.setText(R.string.message_searchresult_stay_empty_message01);
+        messageTextView02.setText(R.string.message_searchresult_stay_empty_message02);
+
+        TextView researchView = view.findViewById(R.id.changeRegionView);
+        View changeDateView = view.findViewById(R.id.changeDateView);
+
+        researchView.setText(R.string.label_searchresult_research);
+        changeDateView.setVisibility(View.GONE);
+
+        researchView.setOnClickListener(v -> ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onResearchClick());
+
+        TextView callTextView = view.findViewById(R.id.callTextView);
+        callTextView.setPaintFlags(callTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+        callTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onShowCallDialog();
+            }
+        });
+    }
+
+    private void setDefaultTypeEmptyView(View view)
+    {
+        if (view == null)
+        {
+            return;
+        }
+
+        TextView messageTextView01 = view.findViewById(R.id.messageTextView01);
+        TextView messageTextView02 = view.findViewById(R.id.messageTextView02);
+
+        messageTextView01.setText(R.string.message_not_exist_filters);
+        messageTextView02.setText(R.string.message_changing_option);
+
+        View changeRegionView = view.findViewById(R.id.changeRegionView);
+        View changeDateView = view.findViewById(R.id.changeDateView);
+
+
+        changeRegionView.setVisibility(View.GONE);
+        changeDateView.setVisibility(View.GONE);
+
+        TextView callTextView = view.findViewById(R.id.callTextView);
+        callTextView.setPaintFlags(callTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+        callTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((StayListLayout.OnEventListener) mOnEventListener).onShowCallDialog();
+            }
+        });
+    }
+
+    private void setLocationTypeFilterEmptyView(View view)
+    {
+        if (view == null)
+        {
+            return;
+        }
+
+
+        TextView filterMessageTextView01 = view.findViewById(R.id.filterMessageTextView01);
+        TextView filterMessageTextView02 = view.findViewById(R.id.filterMessageTextView02);
+
+        filterMessageTextView01.setText(R.string.message_searchresult_stay_filter_empty_message01);
+        filterMessageTextView02.setText(R.string.message_searchresult_stay_filter_empty_message02);
+
+        TextView buttonView = view.findViewById(R.id.buttonView);
+        buttonView.setText(R.string.label_searchresult_change_radius);
+
+        buttonView.setOnClickListener(v -> ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onRadiusClick());
+    }
+
+    private void setDefaultTypeFilterEmptyView(View view)
+    {
+        if (view == null)
+        {
+            return;
+        }
+
+        TextView filterMessageTextView01 = view.findViewById(R.id.filterMessageTextView01);
+        TextView filterMessageTextView02 = view.findViewById(R.id.filterMessageTextView02);
+
+        filterMessageTextView01.setText(R.string.message_not_exist_filters);
+        filterMessageTextView02.setText(R.string.message_changing_filter_option);
+
+        TextView buttonView = view.findViewById(R.id.buttonView);
+        buttonView.setText(R.string.label_hotel_list_changing_filter);
+
+        buttonView.setOnClickListener(v -> ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onFilterClick());
     }
 }
