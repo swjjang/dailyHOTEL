@@ -340,7 +340,7 @@ public class GourmetWishListFragment extends PlaceWishListFragment
                 ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mBaseActivity, ((DailyGourmetCardView) view).getOptionsCompat());
 
                 Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
-                    , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
+                    , gourmet.index, gourmet.name, gourmet.imageUrl, GourmetDetailActivity.NONE_PRICE//
                     , ((GourmetBookingDay) mPlaceBookingDay).getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
                     , gourmet.category, gourmet.isSoldOut, false, false, true//
                     , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST//
@@ -350,7 +350,7 @@ public class GourmetWishListFragment extends PlaceWishListFragment
             } else
             {
                 Intent intent = GourmetDetailActivity.newInstance(mBaseActivity //
-                    , gourmet.index, gourmet.name, gourmet.imageUrl, gourmet.discountPrice//
+                    , gourmet.index, gourmet.name, gourmet.imageUrl, GourmetDetailActivity.NONE_PRICE//
                     , ((GourmetBookingDay) mPlaceBookingDay).getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
                     , gourmet.category, gourmet.isSoldOut, false, false, false//
                     , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
