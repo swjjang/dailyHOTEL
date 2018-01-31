@@ -19,7 +19,7 @@ import com.daily.dailyhotel.repository.local.SuggestLocalImpl;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
-import com.daily.dailyhotel.screen.home.search.SearchPresenter;
+import com.daily.dailyhotel.screen.home.search.SearchViewModel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 
@@ -44,7 +44,7 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
     SuggestRemoteImpl mSuggestRemoteImpl;
     SuggestLocalImpl mSuggestLocalImpl;
 
-    SearchPresenter.SearchModel mSearchModel;
+    SearchViewModel.SearchStayOutboundViewModel mSearchModel;
 
     boolean mHasPopularArea;
 
@@ -168,12 +168,6 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
     @Override
     public boolean onBackPressed()
     {
-        if (isCurrentFragment() == false)
-        {
-            return false;
-        }
-
-
         return false;
     }
 
@@ -265,7 +259,7 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
             @Override
             public void accept(Boolean aBoolean) throws Exception
             {
-                mSearchModel.stayOutboundSuggest.setValue(stayOutboundSuggest);
+                mSearchModel.suggest.setValue(stayOutboundSuggest);
 
                 unLockAll();
             }
@@ -279,12 +273,7 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
             return;
         }
 
-        mSearchModel = ViewModelProviders.of(activity).get(SearchPresenter.SearchModel.class);
-    }
-
-    boolean isCurrentFragment()
-    {
-        return (mSearchModel.serviceType.getValue() != null && Constants.ServiceType.OB_STAY == mSearchModel.serviceType.getValue());
+        mSearchModel = ViewModelProviders.of(activity).get(SearchViewModel.SearchStayOutboundViewModel.class);
     }
 
     void onRecentlyRefresh()

@@ -238,6 +238,12 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     }
 
     @Override
+    protected void onResearchActivityResult(int resultCode, Intent data)
+    {
+
+    }
+
+    @Override
     protected void onLocationFailed()
     {
         mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);

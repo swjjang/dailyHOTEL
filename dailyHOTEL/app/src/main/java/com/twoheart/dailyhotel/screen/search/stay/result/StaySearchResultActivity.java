@@ -252,9 +252,11 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
 
             if (StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStaySearchCuration.getSuggest().categoryKey)//
-                && mStaySearchCuration.getCurationOption().getSortType() == SortType.DISTANCE//
                 && mStaySearchCuration.getLocation() == null)
             {
+                mStaySearchCuration.getCurationOption().setSortType(SortType.DISTANCE);
+                mStaySearchCuration.setRadius(DEFAULT_SEARCH_RADIUS);
+
                 searchMyLocation();
             } else
             {
@@ -302,6 +304,74 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         {
             setResult(resultCode);
             finish();
+        }
+    }
+
+    @Override
+    protected void onResearchActivityResult(int resultCode, Intent data)
+    {
+        if (resultCode == Activity.RESULT_OK && data != null)
+        {
+            try
+            {
+                StayBookingDay stayBookingDay = new StayBookingDay();
+                stayBookingDay.setCheckInDay(data.getStringExtra(ResearchStayActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME));
+                stayBookingDay.setCheckOutDay(data.getStringExtra(ResearchStayActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME));
+
+                StaySuggestParcel staySuggestParcel = data.getParcelableExtra(ResearchStayActivity.INTENT_EXTRA_DATA_SUGGEST);
+
+                if (staySuggestParcel == null)
+                {
+                    return;
+                }
+
+                StaySuggest staySuggest = staySuggestParcel.getSuggest();
+
+                if (staySuggest == null)
+                {
+                    return;
+                }
+
+                mStaySearchCuration.setSuggest(staySuggest);
+                mStaySearchCuration.setStayBookingDay(stayBookingDay);
+
+                // 검색이 바뀌면 전체탭으로 이동하고 다시 재로딩.
+                mStaySearchCuration.getCurationOption().clear();
+                mStaySearchCuration.setCategory(Category.ALL);
+
+                mPlaceSearchResultLayout.setOptionFilterSelected(false);
+                mPlaceSearchResultLayout.clearCategoryTab();
+                mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+                mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
+
+                if (StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(staySuggest.categoryKey) == true)
+                {
+                    mStaySearchCuration.getCurationOption().setSortType(SortType.DISTANCE);
+                    mStaySearchCuration.setRadius(DEFAULT_SEARCH_RADIUS);
+
+                    if (staySuggest.latitude != 0.0d && staySuggest.longitude != 0.0d)
+                    {
+                        Location location = new Location("provider");
+                        location.setLatitude(staySuggest.latitude);
+                        location.setLongitude(staySuggest.longitude);
+
+                        mStaySearchCuration.setLocation(location);
+
+                        onLocationChanged(mStaySearchCuration.getLocation());
+                    } else
+                    {
+                        searchMyLocation();
+                    }
+                } else
+                {
+                    mPlaceSearchResultLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
+                }
+
+                initLayout();
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
         }
     }
 
@@ -1064,7 +1134,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 , mTodayDateTime.currentDateTime, mTodayDateTime.dailyDateTime//
                 , mStaySearchCuration.getStayBookingDay().getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
                 , mStaySearchCuration.getStayBookingDay().getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
-                , mStaySearchCuration.getSuggest()), CODE_REQUEST_ACTIVITY_RESEARCH);
+                , mStaySearchCuration.getSuggest()), CODE_REQUEST_ACTIVITY_STAY_RESEARCH);
         }
 
         @Override

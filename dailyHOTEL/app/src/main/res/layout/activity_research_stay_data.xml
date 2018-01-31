@@ -108,73 +108,14 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/stayLayout"/>
 
-        <android.support.v4.widget.NestedScrollView
-            android:id="@+id/nestedScrollView"
+        <fragment
+            android:id="@+id/searchStayFragment"
+            android:name="com.daily.dailyhotel.screen.home.search.stay.inbound.SearchStayFragment"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/stayLayout">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/recentlySearchResultTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="36dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/label_search_recently_search_result"
-                    android:textColor="@color/default_text_cc5c5c5"
-                    android:textSize="13dp"/>
-
-                <com.daily.dailyhotel.view.DailySearchRecentlyCardView
-                    android:id="@+id/recently01View"
-                    android:layout_width="match_parent"
-                    android:layout_height="58dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"/>
-
-                <com.daily.dailyhotel.view.DailySearchRecentlyCardView
-                    android:id="@+id/recently02View"
-                    android:layout_width="match_parent"
-                    android:layout_height="58dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"/>
-
-                <com.daily.dailyhotel.view.DailySearchRecentlyCardView
-                    android:id="@+id/recently03View"
-                    android:layout_width="match_parent"
-                    android:layout_height="58dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"/>
-
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/popularSearchTagTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="36dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginTop="15dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/label_search_stay_popular_search_tag"
-                    android:textColor="@color/default_text_cc5c5c5"
-                    android:textSize="13dp"/>
-
-                <com.google.android.flexbox.FlexboxLayout
-                    android:id="@+id/tagFlexboxLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="5dp"
-                    android:paddingBottom="25dp"/>
-            </LinearLayout>
-        </android.support.v4.widget.NestedScrollView>
+            app:layout_constraintTop_toBottomOf="@+id/stayLayout"/>
     </android.support.constraint.ConstraintLayout>
 </layout>

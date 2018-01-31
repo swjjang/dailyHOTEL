@@ -22,6 +22,7 @@ import com.daily.dailyhotel.screen.home.campaigntag.gourmet.GourmetCampaignTagLi
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
 import com.daily.dailyhotel.screen.home.search.SearchPresenter;
+import com.daily.dailyhotel.screen.home.search.SearchViewModel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -45,7 +46,7 @@ public class SearchGourmetFragmentPresenter extends BasePagerFragmentPresenter<S
     RecentlyLocalImpl mRecentlyLocalImpl;
     CampaignTagRemoteImpl mCampaignTagRemoteImpl;
 
-    SearchPresenter.SearchModel mSearchModel;
+    SearchViewModel.SearchGourmetViewModel mSearchModel;
 
     boolean mHasPopularTag;
 
@@ -168,12 +169,6 @@ public class SearchGourmetFragmentPresenter extends BasePagerFragmentPresenter<S
     @Override
     public boolean onBackPressed()
     {
-        if (isCurrentFragment() == false)
-        {
-            return false;
-        }
-
-
         return false;
     }
 
@@ -256,7 +251,7 @@ public class SearchGourmetFragmentPresenter extends BasePagerFragmentPresenter<S
         startActivityForResult(GourmetDetailActivity.newInstance(getActivity() //
             , recentlyDbPlace.index, null, recentlyDbPlace.imageUrl//
             , GourmetDetailActivity.NONE_PRICE//
-            , mSearchModel.gourmetBookDateTime.getValue().getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , mSearchModel.bookDateTime.getValue().getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , null, false, false, false, false//
             , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
             , analyticsParam), SearchActivity.REQUEST_CODE_GOURMET_DETAIL);
@@ -274,7 +269,7 @@ public class SearchGourmetFragmentPresenter extends BasePagerFragmentPresenter<S
 
         startActivityForResult(GourmetCampaignTagListActivity.newInstance(getActivity() //
             , campaignTag.index, campaignTag.campaignTag//
-            , mSearchModel.gourmetBookDateTime.getValue().getVisitDateTime(DailyCalendar.ISO_8601_FORMAT))//
+            , mSearchModel.bookDateTime.getValue().getVisitDateTime(DailyCalendar.ISO_8601_FORMAT))//
             , SearchActivity.REQUEST_CODE_GOURMET_SEARCH_RESULT);
     }
 
@@ -285,12 +280,7 @@ public class SearchGourmetFragmentPresenter extends BasePagerFragmentPresenter<S
             return;
         }
 
-        mSearchModel = ViewModelProviders.of(activity).get(SearchPresenter.SearchModel.class);
-    }
-
-    boolean isCurrentFragment()
-    {
-        return (mSearchModel.serviceType.getValue() != null && Constants.ServiceType.GOURMET == mSearchModel.serviceType.getValue());
+        mSearchModel = ViewModelProviders.of(activity).get(SearchViewModel.SearchGourmetViewModel.class);
     }
 
     void onRecentlyRefresh()

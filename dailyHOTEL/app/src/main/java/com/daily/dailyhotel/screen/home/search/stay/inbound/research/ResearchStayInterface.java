@@ -1,10 +1,38 @@
 package com.daily.dailyhotel.screen.home.search.stay.inbound.research;
 
+import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BaseDialogViewInterface;
+import com.daily.base.OnBaseEventListener;
 
-public interface ResearchStayInterface extends BaseDialogViewInterface
+import io.reactivex.Observable;
+
+public interface ResearchStayInterface
 {
-    void setSearchStaySuggestText(String text);
+    interface ViewInterface extends BaseDialogViewInterface
+    {
+        void showSearchStay();
 
-    void setSearchStayCalendarText(String text);
+        void setSearchStaySuggestText(String text);
+
+        void setSearchStayCalendarText(String text);
+
+        void setSearchStayButtonEnabled(boolean enabled);
+
+        Observable getCompleteCreatedFragment();
+    }
+
+    interface OnEventListener extends OnBaseEventListener
+    {
+        void onStaySuggestClick();
+
+        void onStayCalendarClick();
+
+        void onStayDoSearchClick();
+    }
+
+    interface AnalyticsInterface extends BaseAnalyticsInterface
+    {
+    }
 }
+
+
