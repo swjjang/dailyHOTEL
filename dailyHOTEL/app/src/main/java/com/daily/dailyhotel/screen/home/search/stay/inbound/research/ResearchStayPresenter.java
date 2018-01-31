@@ -226,6 +226,7 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
 
         setRefresh(false);
         screenLock(showProgress);
+
     }
 
     @Override
