@@ -51,7 +51,6 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout
     protected DailyFloatingActionView mFloatingActionView;
 
     protected TabLayout mCategoryTabLayout;
-    //    private View mCalendarUnderlineView;
     protected ViewPager mViewPager;
     protected PlaceListFragmentPagerAdapter mFragmentPagerAdapter;
 

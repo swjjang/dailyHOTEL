@@ -49,14 +49,12 @@ public class StayCategoryNearByLayout extends BaseBlurLayout
 
     private View mToolbar;
     TextView mCalendarTextView;
-    private ScrollView mEmptyScrollView;
     private View mSearchLocationLayout;
     private View mResultLayout;
 
     DailyFloatingActionView mFloatingActionView;
 
     protected TabLayout mCategoryTabLayout;
-    private View mCalendarUnderlineView;
     protected ViewPager mViewPager;
     protected PlaceListFragmentPagerAdapter mFragmentPagerAdapter;
 
@@ -118,8 +116,8 @@ public class StayCategoryNearByLayout extends BaseBlurLayout
     {
         initToolbarLayout(view);
 
-        mEmptyScrollView = view.findViewById(R.id.emptyScrollView);
-        mEmptyScrollView.setVisibility(View.GONE);
+        ScrollView emptyScrollView = view.findViewById(R.id.emptyScrollView);
+        emptyScrollView.setVisibility(View.GONE);
 
         mSearchLocationLayout = view.findViewById(R.id.searchLocationLayout);
         mResultLayout = view.findViewById(R.id.resultLayout);
@@ -547,7 +545,6 @@ public class StayCategoryNearByLayout extends BaseBlurLayout
         switch (screenType)
         {
             case NONE:
-                mEmptyScrollView.setVisibility(View.GONE);
                 mResultLayout.setVisibility(View.INVISIBLE);
                 mSearchLocationLayout.setVisibility(View.GONE);
                 break;
