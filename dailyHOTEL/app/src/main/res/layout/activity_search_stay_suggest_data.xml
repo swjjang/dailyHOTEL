@@ -95,121 +95,12 @@
                 app:layout_constraintRight_toRightOf="parent"/>
         </android.support.constraint.ConstraintLayout>
 
-        <!--<android.support.constraint.ConstraintLayout-->
-        <!--android:id="@+id/nearByLayout"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="58dp"-->
-        <!--app:layout_constraintLeft_toLeftOf="parent"-->
-        <!--app:layout_constraintRight_toRightOf="parent"-->
-        <!--app:layout_constraintTop_toBottomOf="@+id/toolbarView">-->
-
-        <!--<ImageView-->
-        <!--android:id="@+id/nearByImageView"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginLeft="15dp"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintLeft_toLeftOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="parent"-->
-        <!--app:srcCompat="@drawable/vector_ic_nearby"/>-->
-
-        <!--<com.daily.base.widget.DailyTextView-->
-        <!--android:id="@+id/nearByTitleView"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginLeft="15dp"-->
-        <!--android:text="@string/label_search_nearby_title"-->
-        <!--android:textColor="@color/default_text_c323232"-->
-        <!--android:textSize="13dp"-->
-        <!--app:layout_constraintBottom_toTopOf="@+id/nearByDescriptionView"-->
-        <!--app:layout_constraintLeft_toRightOf="@+id/nearByImageView"-->
-        <!--app:layout_constraintTop_toTopOf="parent"-->
-        <!--app:layout_constraintVertical_chainStyle="packed"/>-->
-
-        <!--<com.daily.base.widget.DailyTextView-->
-        <!--android:id="@+id/nearByDescriptionView"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginLeft="15dp"-->
-        <!--android:layout_marginTop="2dp"-->
-        <!--android:text="@string/label_search_nearby_description"-->
-        <!--android:textColor="@color/default_text_cc5c5c5"-->
-        <!--android:textSize="13dp"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintLeft_toRightOf="@+id/nearByImageView"-->
-        <!--app:layout_constraintTop_toBottomOf="@+id/nearByTitleView"/>-->
-
-
-        <!--<View-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="1dp"-->
-        <!--android:layout_marginLeft="15dp"-->
-        <!--android:background="@color/default_line_cf0f0f0"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintLeft_toLeftOf="parent"-->
-        <!--app:layout_constraintRight_toRightOf="parent"/>-->
-
-        <!--</android.support.constraint.ConstraintLayout>-->
-
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/recentlySuggestLayout"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbarView">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recentlySuggestRecyclerView"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:background="@color/white"
-                app:layout_constraintBottom_toTopOf="@+id/deleteRecentlySuggestLayout"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-            <FrameLayout
-                android:id="@+id/deleteRecentlySuggestLayout"
-                android:layout_width="0dp"
-                android:layout_height="36dp"
-                android:background="@color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent">
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:background="@color/default_line_ce7e7e7"/>
-
-                <com.daily.base.widget.DailyTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical|right"
-                    android:drawablePadding="5dp"
-                    android:gravity="center_vertical|right"
-                    android:paddingLeft="17dp"
-                    android:paddingRight="17dp"
-                    android:text="@string/label_search_suggest_delete_all"
-                    android:textColor="@color/default_text_cc5c5c5"
-                    android:textSize="13dp"
-                    app:drawableCompatRight="@drawable/vector_ic_list_trash"/>
-            </FrameLayout>
-
-        </android.support.constraint.ConstraintLayout>
-
         <ScrollView
-            android:id="@+id/emptyLayout"
+            android:id="@+id/scrollLayout"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@color/white"
             android:fillViewport="true"
-            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -257,6 +148,17 @@
                 </android.support.constraint.ConstraintLayout>
             </LinearLayout>
         </ScrollView>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recentlySuggestRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/white"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbarView"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/suggestsRecyclerView"

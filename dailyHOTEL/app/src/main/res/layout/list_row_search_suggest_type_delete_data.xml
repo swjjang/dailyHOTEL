@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:background="@color/white">
+
+        <FrameLayout
+            android:id="@+id/deleteLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@color/default_line_ce7e7e7"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/deleteTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical|right"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical|right"
+                android:paddingLeft="17dp"
+                android:paddingRight="17dp"
+                android:text="@string/label_search_suggest_delete_all"
+                android:textColor="@color/default_text_cc5c5c5"
+                android:textSize="13dp"
+                app:drawableCompatRight="@drawable/vector_ic_list_trash"/>
+        </FrameLayout>
+    </FrameLayout>
+</layout>
