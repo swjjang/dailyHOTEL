@@ -48,7 +48,7 @@
                 android:layout_height="36dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginTop="28dp"
+                android:layout_marginTop="15dp"
                 android:gravity="center_vertical"
                 android:text="@string/label_search_stayoutbound_popular_area"
                 android:textColor="@color/default_text_cc5c5c5"

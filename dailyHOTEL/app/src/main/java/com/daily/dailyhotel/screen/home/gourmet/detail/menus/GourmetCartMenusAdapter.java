@@ -212,6 +212,8 @@ public class GourmetCartMenusAdapter extends RecyclerView.Adapter<GourmetCartMen
                 }
             }
         });
+
+        holder.dataBinding.bottomLineView.setVisibility(getItemCount() - 1 == position ? View.INVISIBLE : View.VISIBLE);
     }
 
     public void setMenuOrderCount(RecyclerView.ViewHolder viewHolder, int position, int menuOrderCount, int minimumOrderQuantity, int maximumOrderQuantity, int saleOrderQuantity)
@@ -235,13 +237,25 @@ public class GourmetCartMenusAdapter extends RecyclerView.Adapter<GourmetCartMen
 
         if (menuOrderCount >= maximumOrderQuantity || menuOrderCount >= saleOrderQuantity)
         {
-            gourmetCartMenuViewHolder.dataBinding.menuCountPlusView.setSelected(false);
+            gourmetCartMenuViewHolder.dataBinding.menuCountPlusView.setEnabled(false);
         } else
         {
-            gourmetCartMenuViewHolder.dataBinding.menuCountPlusView.setSelected(true);
+            gourmetCartMenuViewHolder.dataBinding.menuCountPlusView.setEnabled(true);
         }
 
         gourmetCartMenuViewHolder.dataBinding.menuCountTextView.setText(Integer.toString(menuOrderCount));
+
+        final int SHOW_QUANTITY_LEFT = 5;
+
+        if (saleOrderQuantity - menuOrderCount <= SHOW_QUANTITY_LEFT)
+        {
+            gourmetCartMenuViewHolder.dataBinding.leftQuantityTextView.setSelected(true);
+            gourmetCartMenuViewHolder.dataBinding.leftQuantityTextView.setVisibility(View.VISIBLE);
+            gourmetCartMenuViewHolder.dataBinding.leftQuantityTextView.setText(mContext.getString(R.string.label_gourmet_product_detail_quantity_lefts, saleOrderQuantity - menuOrderCount));
+        } else
+        {
+            gourmetCartMenuViewHolder.dataBinding.leftQuantityTextView.setVisibility(View.GONE);
+        }
     }
 
     static class GourmetCartMenuViewHolder extends RecyclerView.ViewHolder

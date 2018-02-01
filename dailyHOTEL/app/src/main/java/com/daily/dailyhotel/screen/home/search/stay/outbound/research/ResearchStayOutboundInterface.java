@@ -1,14 +1,14 @@
-package com.daily.dailyhotel.screen.home.search.stay.inbound.research;
+package com.daily.dailyhotel.screen.home.search.stay.outbound.research;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.base.OnBaseEventListener;
-import com.daily.dailyhotel.entity.CampaignTag;
+import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 
 import io.reactivex.Observable;
 
-public interface ResearchStayInterface
+public interface ResearchStayOutboundInterface
 {
     interface ViewInterface extends BaseDialogViewInterface
     {
@@ -17,6 +17,8 @@ public interface ResearchStayInterface
         void setSearchSuggestText(String text);
 
         void setSearchCalendarText(String text);
+
+        void setSearchPeopleText(String text);
 
         void setSearchButtonEnabled(boolean enabled);
 
@@ -29,11 +31,13 @@ public interface ResearchStayInterface
 
         void onCalendarClick();
 
+        void onPeopleClick();
+
         void onDoSearchClick();
 
         void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace);
 
-        void onPopularTagClick(CampaignTag campaignTag);
+        void onPopularAreaClick(StayOutboundSuggest stayOutboundSuggest);
     }
 
     interface AnalyticsInterface extends BaseAnalyticsInterface

@@ -20,8 +20,10 @@ import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
 import com.daily.dailyhotel.screen.home.search.SearchViewModel;
+import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -240,28 +242,18 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
     @Override
     public void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
     {
-        if (recentlyDbPlace == null || lock() == true)
-        {
-            return;
-        }
+        getFragment().getFragmentEventListener().onRecentlySearchResultClick(recentlyDbPlace);
     }
 
     @Override
     public void onPopularAreaClick(StayOutboundSuggest stayOutboundSuggest)
     {
-        if (stayOutboundSuggest == null || lock() == true)
-        {
-            return;
-        }
-
         addCompositeDisposable(mSuggestLocalImpl.addStayOutboundSuggestDb(stayOutboundSuggest, stayOutboundSuggest.display).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
         {
             @Override
             public void accept(Boolean aBoolean) throws Exception
             {
-                mSearchModel.suggest.setValue(stayOutboundSuggest);
-
-                unLockAll();
+                getFragment().getFragmentEventListener().onPopularAreaClick(stayOutboundSuggest);
             }
         }));
     }

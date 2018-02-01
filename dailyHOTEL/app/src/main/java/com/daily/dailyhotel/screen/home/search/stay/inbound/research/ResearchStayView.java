@@ -2,6 +2,8 @@ package com.daily.dailyhotel.screen.home.search.stay.inbound.research;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
+import com.daily.dailyhotel.entity.CampaignTag;
+import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.SearchStayFragment;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityResearchStayDataBinding;
@@ -11,7 +13,6 @@ import io.reactivex.Observable;
 public class ResearchStayView extends BaseDialogView<ResearchStayInterface.OnEventListener, ActivityResearchStayDataBinding> implements ResearchStayInterface.ViewInterface
 {
     SearchStayFragment mSearchStayFragment;
-
 
     public ResearchStayView(BaseActivity baseActivity, ResearchStayInterface.OnEventListener listener)
     {
@@ -28,11 +29,25 @@ public class ResearchStayView extends BaseDialogView<ResearchStayInterface.OnEve
 
         initToolbar(viewDataBinding);
 
-        viewDataBinding.staySuggestTextView.setOnClickListener(v -> getEventListener().onStaySuggestClick());
-        viewDataBinding.stayCalendarTextView.setOnClickListener(v -> getEventListener().onStayCalendarClick());
-        viewDataBinding.searchStayTextView.setOnClickListener(v -> getEventListener().onStayDoSearchClick());
+        viewDataBinding.staySuggestTextView.setOnClickListener(v -> getEventListener().onSuggestClick());
+        viewDataBinding.stayCalendarTextView.setOnClickListener(v -> getEventListener().onCalendarClick());
+        viewDataBinding.searchStayTextView.setOnClickListener(v -> getEventListener().onDoSearchClick());
 
         mSearchStayFragment = (SearchStayFragment) getSupportFragmentManager().findFragmentById(R.id.searchStayFragment);
+        mSearchStayFragment.setOnFragmentEventListener(new SearchStayFragment.OnEventListener()
+        {
+            @Override
+            public void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
+            {
+                getEventListener().onRecentlySearchResultClick(recentlyDbPlace);
+            }
+
+            @Override
+            public void onPopularTagClick(CampaignTag campaignTag)
+            {
+                getEventListener().onPopularTagClick(campaignTag);
+            }
+        });
     }
 
     @Override
@@ -58,7 +73,7 @@ public class ResearchStayView extends BaseDialogView<ResearchStayInterface.OnEve
     }
 
     @Override
-    public void showSearchStay()
+    public void showSearch()
     {
         if (getViewDataBinding() == null || mSearchStayFragment == null)
         {
@@ -69,7 +84,7 @@ public class ResearchStayView extends BaseDialogView<ResearchStayInterface.OnEve
     }
 
     @Override
-    public void setSearchStaySuggestText(String text)
+    public void setSearchSuggestText(String text)
     {
         if (getViewDataBinding() == null)
         {
@@ -80,7 +95,7 @@ public class ResearchStayView extends BaseDialogView<ResearchStayInterface.OnEve
     }
 
     @Override
-    public void setSearchStayCalendarText(String text)
+    public void setSearchCalendarText(String text)
     {
         if (getViewDataBinding() == null)
         {
@@ -91,7 +106,7 @@ public class ResearchStayView extends BaseDialogView<ResearchStayInterface.OnEve
     }
 
     @Override
-    public void setSearchStayButtonEnabled(boolean enabled)
+    public void setSearchButtonEnabled(boolean enabled)
     {
         if (getViewDataBinding() == null)
         {

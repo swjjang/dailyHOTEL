@@ -30,13 +30,14 @@ public class StayOutboundListActivity extends BaseActivity<StayOutboundListPrese
     static final int REQUEST_CODE_CALL = 10006;
     static final int REQUEST_CODE_PREVIEW = 10007;
     static final int REQUEST_CODE_WISH_DIALOG = 10008;
+    static final int REQUEST_CODE_RESEARCH = 10009;
 
-    static final String INTENT_EXTRA_DATA_SUGGEST = "suggest";
-    static final String INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME = "checkInDateTime";
-    static final String INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME = "checkOutDateTime";
-    static final String INTENT_EXTRA_DATA_KEYWORD = "keyword";
-    static final String INTENT_EXTRA_DATA_NUMBER_OF_ADULTS = "numberOfAdults";
-    static final String INTENT_EXTRA_DATA_CHILD_LIST = "childList";
+    public static final String INTENT_EXTRA_DATA_SUGGEST = "suggest";
+    public static final String INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME = "checkInDateTime";
+    public static final String INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME = "checkOutDateTime";
+    public static final String INTENT_EXTRA_DATA_KEYWORD = "keyword";
+    public static final String INTENT_EXTRA_DATA_NUMBER_OF_ADULTS = "numberOfAdults";
+    public static final String INTENT_EXTRA_DATA_CHILD_LIST = "childList";
     public static final String INTENT_EXTRA_DATA_RESEARCH = "research";
 
 

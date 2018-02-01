@@ -813,7 +813,7 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
         getViewDataBinding().cartMenusTotalPriceTextView.setText(DailyTextUtils.getPriceFormat(getContext(), gourmetCart.getTotalPrice(), false));
 
         //
-        final int ITEM_HEIGHT = ScreenUtils.dpToPx(getContext(), 88) + 1;
+        final int ITEM_HEIGHT = ScreenUtils.dpToPx(getContext(), 88);
         final int VIEW_COUNT = 3;
 
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) getViewDataBinding().cartMenusRecyclerViewLayout.getLayoutParams();

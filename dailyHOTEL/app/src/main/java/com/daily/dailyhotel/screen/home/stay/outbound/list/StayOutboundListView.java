@@ -3,24 +3,27 @@ package com.daily.dailyhotel.screen.home.stay.outbound.list;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.location.Location;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ScaleXSpan;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.OnBaseEventListener;
@@ -29,9 +32,11 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.base.BaseBlurView;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.StayOutbound;
+import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.map.StayOutboundMapFragment;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.map.StayOutboundMapViewPagerAdapter;
 import com.daily.dailyhotel.view.DailyFloatingActionView;
+import com.daily.dailyhotel.view.DailySearchStayOutboundAreaCardView;
 import com.daily.dailyhotel.view.DailyStayOutboundCardView;
 import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.R;
@@ -55,9 +60,9 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
 
     StayOutboundListAdapter mStayOutboundListAdapter;
 
-    private StayOutboundMapFragment mStayOutboundMapFragment;
+    StayOutboundMapFragment mStayOutboundMapFragment;
     DailyOverScrollViewPager mViewPager;
-    private StayOutboundMapViewPagerAdapter mViewPagerAdapter;
+    StayOutboundMapViewPagerAdapter mViewPagerAdapter;
 
     ValueAnimator mValueAnimator;
 
@@ -94,8 +99,6 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
 
         void onRetryClick();
 
-        void onSearchClick();
-
         void onResearchClick();
 
         void onCallClick();
@@ -105,6 +108,14 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         void onChangedLocation(LatLng latLng, float radius, float zoom);
 
         void onClearChangedLocation();
+
+        void onRadiusClick();
+
+        void onChangedRadius(float radius);
+
+        void onSearchStayClick();
+
+        void onSearchGourmetClick();
     }
 
     public StayOutboundListView(BaseActivity baseActivity, StayOutboundListView.OnEventListener listener)
@@ -122,17 +133,14 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
 
         initToolbar(viewDataBinding);
 
-        viewDataBinding.titleBackgroundView.setOnClickListener(v -> getEventListener().onResearchClick());
+        // 빈화면 설정
+        viewDataBinding.retryTextView.setOnClickListener(v -> getEventListener().onRetryClick());
+        viewDataBinding.searchLeftLayout.setOnClickListener(v -> getEventListener().onSearchStayClick());
+        viewDataBinding.searchRightLayout.setOnClickListener(v -> getEventListener().onSearchGourmetClick());
 
+        //
         viewDataBinding.swipeRefreshLayout.setColorSchemeResources(R.color.dh_theme_color);
-        viewDataBinding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
-        {
-            @Override
-            public void onRefresh()
-            {
-                getEventListener().onRefreshAll(false);
-            }
-        });
+        viewDataBinding.swipeRefreshLayout.setOnRefreshListener(() -> getEventListener().onRefreshAll(false));
 
         viewDataBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.recyclerView, getColor(R.color.default_over_scroll_edge));
@@ -173,22 +181,8 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
 
         viewDataBinding.floatingActionView.setOnViewOptionClickListener(v -> getEventListener().onViewTypeClick());
         viewDataBinding.floatingActionView.setOnFilterOptionClickListener(v -> getEventListener().onFilterClick());
-        viewDataBinding.researchView.setOnClickListener(this);
-        viewDataBinding.filterView.setOnClickListener(this);
-        viewDataBinding.retryTextView.setOnClickListener(this);
-
-        viewDataBinding.callTextView.setPaintFlags(viewDataBinding.callTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        viewDataBinding.callTextView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                getEventListener().onCallClick();
-            }
-        });
 
         viewDataBinding.progressBar.getIndeterminateDrawable().setColorFilter(getColor(R.color.location_progressbar_cc8c8c8), PorterDuff.Mode.SRC_IN);
-
         viewDataBinding.mapProgressBar.getIndeterminateDrawable().setColorFilter(getColor(R.color.dh_theme_color), android.graphics.PorterDuff.Mode.SRC_IN);
     }
 
@@ -212,6 +206,44 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
 
         getViewDataBinding().titleView.setText(titleText);
         getViewDataBinding().calendarTextView.setText(subTitleText);
+    }
+
+    @Override
+    public void setRadius(float radius)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        int position;
+
+        if (radius == 10.0f)
+        {
+            position = 3;
+        } else if (radius == 7.0f)
+        {
+            position = 2;
+        } else if (radius == 5.0f)
+        {
+            position = 1;
+        } else
+        {
+            position = 0; // 1km
+        }
+
+        getViewDataBinding().distanceSpinner.setSelection(position);
+    }
+
+    @Override
+    public void setRadiusVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().distanceSpinner.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -403,7 +435,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
             return;
         }
 
-        setEmptyScreenVisible(false);
+        hideEmptyScreen();
         setErrorScreenVisible(false);
         setSearchLocationScreenVisible(false);
         setListScreenVisible(true);
@@ -669,17 +701,6 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
     }
 
     @Override
-    public void setEmptyScreenVisible(boolean visible)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        getViewDataBinding().emptyLayout.setVisibility(visible == true ? View.VISIBLE : View.GONE);
-    }
-
-    @Override
     public void setSearchLocationScreenVisible(boolean visible)
     {
         if (getViewDataBinding() == null)
@@ -702,7 +723,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
     }
 
     @Override
-    public void setEmptyScreenType(EmptyScreenType emptyScreenType)
+    public void showEmptyScreen(EmptyScreenType emptyScreenType)
     {
         if (getViewDataBinding() == null || emptyScreenType == null)
         {
@@ -711,22 +732,59 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
 
         switch (emptyScreenType)
         {
-            case FILTER_ON:
-            {
-                getViewDataBinding().messageTextView02.setText(R.string.label_stay_outbound_research_filter_on);
-                getViewDataBinding().filterView.setVisibility(View.VISIBLE);
-                getViewDataBinding().callLayout.setVisibility(View.INVISIBLE);
+            case SEARCH_SUGGEST_DEFAULT:
+                getViewDataBinding().errorLayout.setVisibility(View.GONE);
+                getViewDataBinding().emptyScrollView.setVisibility(View.VISIBLE);
+                getViewDataBinding().emptyView.setVisibility(View.GONE);
                 break;
-            }
 
-            case DEFAULT:
-            {
-                getViewDataBinding().messageTextView02.setText(R.string.label_searchresult_text01);
-                getViewDataBinding().filterView.setVisibility(View.GONE);
-                getViewDataBinding().callLayout.setVisibility(View.VISIBLE);
+            case SEARCH_SUGGEST_FILTER_ON:
+                getViewDataBinding().errorLayout.setVisibility(View.GONE);
+                getViewDataBinding().emptyScrollView.setVisibility(View.GONE);
+                getViewDataBinding().emptyView.setVisibility(View.VISIBLE);
+
+                getViewDataBinding().emptyView.setMessageTextView(getString(R.string.message_searchresult_stay_filter_empty_message01), getString(R.string.message_changing_filter_option));
+                getViewDataBinding().emptyView.setButton01(true, getString(R.string.label_hotel_list_changing_filter), v -> getEventListener().onFilterClick());
+                getViewDataBinding().emptyView.setButton02(false, null, null);
+                getViewDataBinding().emptyView.setBottomMessageVisible(false);
                 break;
-            }
+
+            case LOCATION_DEFAULT:
+                getViewDataBinding().errorLayout.setVisibility(View.GONE);
+                getViewDataBinding().emptyScrollView.setVisibility(View.GONE);
+                getViewDataBinding().emptyView.setVisibility(View.VISIBLE);
+
+                getViewDataBinding().emptyView.setMessageTextView(getString(R.string.message_searchresult_stay_empty_message01), getString(R.string.message_changing_option));
+                getViewDataBinding().emptyView.setButton01(true, getString(R.string.label_searchresult_research), v -> getEventListener().onResearchClick());
+                getViewDataBinding().emptyView.setButton02(false, null, null);
+                getViewDataBinding().emptyView.setBottomMessageVisible(true);
+                getViewDataBinding().emptyView.setOnCallClickListener(v -> getEventListener().onCallClick());
+                break;
+
+            case LOCATOIN_FILTER_ON:
+                getViewDataBinding().errorLayout.setVisibility(View.GONE);
+                getViewDataBinding().emptyScrollView.setVisibility(View.GONE);
+                getViewDataBinding().emptyView.setVisibility(View.VISIBLE);
+
+                getViewDataBinding().emptyView.setMessageTextView(getString(R.string.message_searchresult_stay_filter_empty_message01), getString(R.string.message_searchresult_stay_filter_empty_message02));
+                getViewDataBinding().emptyView.setButton01(true, getString(R.string.label_searchresult_change_radius), v -> getEventListener().onRadiusClick());
+                getViewDataBinding().emptyView.setButton02(false, null, null);
+                getViewDataBinding().emptyView.setBottomMessageVisible(false);
+                break;
         }
+    }
+
+    @Override
+    public void hideEmptyScreen()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().errorLayout.setVisibility(View.GONE);
+        getViewDataBinding().emptyScrollView.setVisibility(View.GONE);
+        getViewDataBinding().emptyView.setVisibility(View.GONE);
     }
 
     @Override
@@ -739,19 +797,22 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
 
         switch (emptyScreenType)
         {
-            case FILTER_ON:
-            {
+            case SEARCH_SUGGEST_DEFAULT:
+                break;
+
+            case SEARCH_SUGGEST_FILTER_ON:
                 getViewDataBinding().floatingActionView.setViewOptionVisible(false);
                 getViewDataBinding().floatingActionView.setFilterOptionEnable(true);
                 break;
-            }
 
-            case DEFAULT:
-            {
-                getViewDataBinding().floatingActionView.setViewOptionVisible(true);
+            case LOCATION_DEFAULT:
+                setBottomLayoutVisible(false);
+                break;
+
+            case LOCATOIN_FILTER_ON:
+                getViewDataBinding().floatingActionView.setViewOptionVisible(false);
                 getViewDataBinding().floatingActionView.setFilterOptionEnable(true);
                 break;
-            }
         }
     }
 
@@ -815,18 +876,6 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
 
             case R.id.peopleTextView:
                 getEventListener().onPeopleClick();
-                break;
-
-            case R.id.filterView:
-                getEventListener().onFilterClick();
-                break;
-
-            case R.id.researchView:
-                getEventListener().onSearchClick();
-                break;
-
-            case R.id.retryTextView:
-                getEventListener().onRetryClick();
                 break;
         }
     }
@@ -935,6 +984,53 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         }
 
         getViewDataBinding().mapProgressBar.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setPopularAreaList(List<StayOutboundSuggest> popularAreaList)
+    {
+        if (getViewDataBinding() == null || popularAreaList == null || popularAreaList.size() == 0)
+        {
+            return;
+        }
+
+        getViewDataBinding().popularAreaLayout.removeAllViews();
+
+        final int DP_58 = ScreenUtils.dpToPx(getContext(), 58);
+
+        int size = popularAreaList.size();
+
+        for (int i = 0; i < size; i++)
+        {
+            View view = getAreaView(i + 1, popularAreaList.get(i));
+
+            if (view != null)
+            {
+                getViewDataBinding().popularAreaLayout.addView(view, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DP_58));
+            }
+        }
+    }
+
+    @Override
+    public void setPopularAreaVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().popularAreasLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void showRadiusPopup()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().distanceSpinner.performClick();
     }
 
     private void showViewPagerAnimation()
@@ -1073,9 +1169,32 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         }
 
         viewDataBinding.backImageView.setOnClickListener(v -> getEventListener().onBackClick());
+        viewDataBinding.titleBackgroundView.setOnClickListener(v -> getEventListener().onResearchClick());
+
+        CharSequence[] strings = getContext().getResources().getTextArray(R.array.search_result_stayoutbound_distance_array);
+        RadiusArrayAdapter radiusArrayAdapter = new RadiusArrayAdapter(getContext(), R.layout.list_row_search_result_spinner, strings);
+
+        radiusArrayAdapter.setDropDownViewResource(R.layout.list_row_search_result_sort_dropdown_item);
+        viewDataBinding.distanceSpinner.setAdapter(radiusArrayAdapter);
+        viewDataBinding.distanceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                radiusArrayAdapter.setSelection(position);
+
+                getEventListener().onChangedRadius(getSpinnerRadiusValue(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+
+            }
+        });
     }
 
-    public void setMenuBarLayoutTranslationY(float dy)
+    private void setMenuBarLayoutTranslationY(float dy)
     {
         if (getViewDataBinding() == null)
         {
@@ -1090,7 +1209,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         }
     }
 
-    public void resetMenuBarLayoutTranslation()
+    private void resetMenuBarLayoutTranslation()
     {
         if (getViewDataBinding() == null)
         {
@@ -1104,6 +1223,56 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
             mViewPager.setVisibility(View.INVISIBLE);
             mViewPager.setTranslationY(0);
         }
+    }
+
+    private float getSpinnerRadiusValue(int spinnerPosition)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return 0.0f;
+        }
+
+        float radius;
+
+        switch (spinnerPosition)
+        {
+            case 3:
+                radius = 10.0f;
+                break;
+
+            case 2:
+                radius = 7.0f;
+                break;
+
+            case 1:
+                radius = 5.0f;
+                break;
+
+            case 0:
+                radius = 2.0f;
+                break;
+
+            default:
+                radius = StayOutboundListPresenter.DEFAULT_RADIUS;
+                break;
+        }
+
+        return radius;
+    }
+
+    private View getAreaView(int index, StayOutboundSuggest stayOutboundSuggest)
+    {
+        if (stayOutboundSuggest == null)
+        {
+            return null;
+        }
+
+        DailySearchStayOutboundAreaCardView areaCardView = new DailySearchStayOutboundAreaCardView(getContext());
+
+        areaCardView.setTitleText(stayOutboundSuggest.display);
+        areaCardView.setSubTitleText(stayOutboundSuggest.country);
+
+        return areaCardView;
     }
 
     private DailyOverScrollViewPager addMapViewPager(Context context, ViewGroup viewGroup)
@@ -1139,5 +1308,43 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         viewGroup.addView(viewPager);
 
         return viewPager;
+    }
+
+    private class RadiusArrayAdapter extends ArrayAdapter<CharSequence>
+    {
+        private int mSelectedPosition;
+
+        public RadiusArrayAdapter(Context context, int resourceId, CharSequence[] list)
+        {
+            super(context, resourceId, list);
+        }
+
+        public void setSelection(int position)
+        {
+            mSelectedPosition = position;
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent)
+        {
+            View view = super.getDropDownView(position, convertView, parent);
+
+            if (view != null)
+            {
+                TextView textView = (TextView) view;
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
+                textView.setSelected(mSelectedPosition == position);
+
+                if (mSelectedPosition == position)
+                {
+                    textView.setTextColor(getColor(R.color.default_text_cb70038));
+                } else
+                {
+                    textView.setTextColor(getColor(R.color.default_text_c323232));
+                }
+            }
+
+            return view;
+        }
     }
 }

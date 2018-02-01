@@ -1,24 +1,20 @@
 package com.daily.dailyhotel.screen.home.search.stay.outbound;
 
 
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.daily.base.BaseFragmentDialogView;
 import com.daily.base.util.ScreenUtils;
-import com.daily.base.widget.DailyTextView;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.view.DailySearchRecentlyCardView;
+import com.daily.dailyhotel.view.DailySearchStayOutboundAreaCardView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.FragmentSearchStayOutboundDataBinding;
 
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by sheldon
@@ -66,7 +62,7 @@ public class SearchStayOutboundFragmentView extends BaseFragmentDialogView<Searc
                 RecentlyDbPlace recentlyDbPlace = recentlyList.get(i);
 
                 recentlyCardView[i].setTag(recentlyDbPlace);
-                recentlyCardView[i].setIcon(R.drawable.search_ic_01_search);
+                recentlyCardView[i].setIcon(R.drawable.vector_search_ic_08_history);
                 recentlyCardView[i].setNameText(recentlyDbPlace.name);
                 recentlyCardView[i].setDateText(null);
                 recentlyCardView[i].setOnDeleteClickListener(v -> getEventListener().onRecentlySearchResultDeleteClick(recentlyDbPlace.index));
@@ -85,20 +81,20 @@ public class SearchStayOutboundFragmentView extends BaseFragmentDialogView<Searc
             return;
         }
 
-        final int MAX_COUNT_OF_BEST_AREA = 3;
-
         getViewDataBinding().popularAreaLayout.removeAllViews();
+
+        final int DP_58 = ScreenUtils.dpToPx(getContext(), 58);
 
         int size = popularAreaList.size();
 
         for (int i = 0; i < size; i++)
         {
-
-            View view = getAreaView(i + 1, popularAreaList.get(i), i < MAX_COUNT_OF_BEST_AREA);
+            View view = getAreaView(i + 1, popularAreaList.get(i));
 
             if (view != null)
             {
-                getViewDataBinding().popularAreaLayout.addView(view);
+                view.setOnClickListener(v -> getEventListener().onPopularAreaClick((StayOutboundSuggest) v.getTag()));
+                getViewDataBinding().popularAreaLayout.addView(view, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DP_58));
             }
         }
     }
@@ -133,44 +129,18 @@ public class SearchStayOutboundFragmentView extends BaseFragmentDialogView<Searc
         getViewDataBinding().recently03View.setVisibility(flag);
     }
 
-    public View getAreaView(int index, StayOutboundSuggest stayOutboundSuggest, boolean bestArea)
+    private View getAreaView(int index, StayOutboundSuggest stayOutboundSuggest)
     {
         if (stayOutboundSuggest == null)
         {
             return null;
         }
 
-        FrameLayout frameLayout = new FrameLayout(getContext());
-        frameLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(getContext(), 48)));
-        frameLayout.setTag(stayOutboundSuggest);
-        frameLayout.setOnClickListener(v -> getEventListener().onPopularAreaClick((StayOutboundSuggest) v.getTag()));
+        DailySearchStayOutboundAreaCardView areaCardView = new DailySearchStayOutboundAreaCardView(getContext());
+        areaCardView.setTitleText(stayOutboundSuggest.display);
+        areaCardView.setSubTitleText(stayOutboundSuggest.country);
+        areaCardView.setTag(stayOutboundSuggest);
 
-        // Number
-        DailyTextView numberTextView = new DailyTextView(getContext());
-
-        if (bestArea == true)
-        {
-            numberTextView.setTextColor(getColor(R.color.dh_theme_color));
-        } else
-        {
-            numberTextView.setTextColor(getColor(R.color.default_background_c454545));
-        }
-
-        numberTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
-        numberTextView.setText(String.format(Locale.KOREA, "%d.", index));
-        numberTextView.setGravity(Gravity.CENTER_VERTICAL);
-        numberTextView.setPadding(ScreenUtils.dpToPx(getContext(), 10), 0, 0, 0);
-        frameLayout.addView(numberTextView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
-
-        // Area
-        DailyTextView areaTextView = new DailyTextView(getContext());
-        areaTextView.setText(stayOutboundSuggest.display);
-        areaTextView.setTextColor(getColor(R.color.default_text_c323232));
-        areaTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
-        areaTextView.setGravity(Gravity.CENTER_VERTICAL);
-        areaTextView.setPadding(ScreenUtils.dpToPx(getContext(), 45), 0, 0, 0);
-        frameLayout.addView(areaTextView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
-
-        return frameLayout;
+        return areaCardView;
     }
 }

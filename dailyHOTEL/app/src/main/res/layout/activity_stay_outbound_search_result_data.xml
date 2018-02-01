@@ -1,7 +1,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-    >
+        xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -29,13 +28,13 @@
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginRight="12dp"
-                android:background="@color/default_background_cf7f7f8"
+                android:background="@drawable/shape_fillrect_bf8f8f9_r4"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@+id/backImageView"
-                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/distanceSpinner"
                 app:layout_constraintTop_toTopOf="parent"/>
 
-            <ImageView
+            <com.daily.base.widget.DailyImageView
                 android:id="@+id/titleIconImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -57,8 +56,8 @@
                 android:textSize="12dp"
                 app:layout_constraintBottom_toTopOf="@+id/calendarTextView"
                 app:layout_constraintLeft_toRightOf="@+id/titleIconImageView"
-                app:layout_constraintRight_toLeftOf="@+id/verticalLineView"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toRightOf="@+id/titleBackgroundView"
+                app:layout_constraintTop_toTopOf="@+id/titleBackgroundView"
                 app:layout_constraintVertical_chainStyle="packed"/>
 
             <com.daily.base.widget.DailyTextView
@@ -66,39 +65,30 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
+                android:layout_marginRight="8dp"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:singleLine="true"
                 android:textColor="@color/default_text_c929292"
                 android:textSize="12dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/titleIconImageView"
-                app:layout_constraintRight_toLeftOf="@+id/verticalLineView"
-                app:layout_constraintTop_toBottomOf="@+id/titleView"/>
-
-            <View
-                android:id="@+id/verticalLineView"
-                android:layout_width="1dp"
-                android:layout_height="18dp"
-                android:layout_marginRight="11dp"
-                android:background="@color/default_line_cd2d2d2"
-                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/titleBackgroundView"
-                app:layout_constraintRight_toLeftOf="@+id/distanceSpinner"
-                app:layout_constraintTop_toTopOf="@+id/titleBackgroundView"/>
+                app:layout_constraintLeft_toRightOf="@+id/titleIconImageView"
+                app:layout_constraintRight_toRightOf="@+id/titleBackgroundView"
+                app:layout_constraintTop_toBottomOf="@+id/titleView"
+                app:layout_goneMarginRight="12dp"/>
 
             <Spinner
                 android:id="@+id/distanceSpinner"
-                android:layout_width="69dp"
-                android:layout_height="wrap_content"
+                android:layout_width="44dp"
+                android:layout_height="40dp"
                 android:layout_centerVertical="true"
-                android:background="@color/default_background_cf4f4f6"
+                android:layout_marginRight="12dp"
+                android:background="@drawable/shape_fillrect_bf8f8f9_r4"
                 android:dropDownWidth="66dp"
                 android:spinnerMode="dropdown"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@+id/titleBackgroundView"
-                app:layout_constraintRight_toRightOf="@+id/titleBackgroundView"
-                app:layout_constraintTop_toTopOf="@+id/titleBackgroundView"/>
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
         </android.support.constraint.ConstraintLayout>
 
         <View
@@ -181,118 +171,16 @@
                 android:textSize="12dp"/>
         </RelativeLayout>
 
-        <ScrollView
-            android:id="@+id/emptyLayout"
+        <!--내주변 검색 및 필터 실패, 키워드 검색 필터 실패-->
+        <com.daily.dailyhotel.view.DailyStayListEmptyView
+            android:id="@+id/emptyView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:fillViewport="true"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/underLineView">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/emptyIconImageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_weight="1"
-                    android:minHeight="110dp"
-                    android:scaleType="fitEnd"
-                    app:srcCompat="@drawable/no_hotel_ic"/>
-
-                <LinearLayout
-                    android:id="@+id/textLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/messageTextView01"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/label_searchresult_empty"
-                        android:textColor="@color/default_text_c323232"
-                        android:textSize="18dp"
-                        dailyFont:style="Medium"/>
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/messageTextView02"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="13dp"
-                        android:gravity="center"
-                        android:text="@string/label_searchresult_text01"
-                        android:textColor="@color/default_text_c929292"
-                        android:textSize="14dp"/>
-                </LinearLayout>
-
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/researchView"
-                    android:layout_width="180dp"
-                    android:layout_height="38dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="20dp"
-                    android:background="@drawable/shape_button_common_background"
-                    android:gravity="center"
-                    android:text="@string/label_searchresult_research"
-                    android:textColor="@color/white"
-                    android:textSize="14dp"
-                    dailyFont:style="Medium"/>
-
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/filterView"
-                    android:layout_width="180dp"
-                    android:layout_height="38dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/shape_button_common_background"
-                    android:gravity="center"
-                    android:text="@string/label_hotel_list_changing_filter"
-                    android:textColor="@color/white"
-                    android:textSize="14dp"
-                    dailyFont:style="Medium"/>
-
-                <LinearLayout
-                    android:id="@+id/callLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="25dp"
-                    android:layout_weight="1"
-                    android:gravity="bottom"
-                    android:minHeight="60dp"
-                    android:orientation="vertical">
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/callUnderTextView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
-                        android:text="@string/message_stay_outbound_search_empty"
-                        android:textColor="@color/default_text_cc5c5c5"
-                        android:textSize="12dp"/>
-
-                    <com.daily.base.widget.DailyTextView
-                        android:id="@+id/callTextView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="1dp"
-                        android:gravity="center_horizontal"
-                        android:paddingBottom="15dp"
-                        android:text="@string/label_searchresult_call_customercenter"
-                        android:textColor="@color/default_text_c323232"
-                        android:textSize="12dp"/>
-                </LinearLayout>
-            </LinearLayout>
-        </ScrollView>
+            app:layout_constraintTop_toBottomOf="@+id/underLineView"/>
 
         <com.daily.dailyhotel.view.DailyFloatingActionView
             android:id="@+id/floatingActionView"
@@ -303,6 +191,164 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
+
+        <!--키워드 검색 실패-->
+        <ScrollView
+            android:id="@+id/emptyScrollView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/white"
+            android:fillViewport="true"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/underLineView">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.daily.base.widget.DailyImageView
+                    android:id="@+id/emptyIconImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="44dp"
+                    android:scaleType="centerCrop"
+                    app:srcCompat="@drawable/no_hotel_ic"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/messageTextView01"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/message_searchresult_empty_title"
+                    android:textColor="@color/default_text_c323232"
+                    android:textSize="18dp"
+                    dailyFont:style="Medium"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/messageTextView02"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="44dp"
+                    android:layout_marginTop="13dp"
+                    android:gravity="center"
+                    android:text="@string/message_searchresult_stay_outbound_empty_subtitle"
+                    android:textColor="@color/default_text_c929292"
+                    android:textSize="14dp"/>
+
+                <LinearLayout
+                    android:id="@+id/popularAreasLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:orientation="vertical">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:background="@color/default_line_cf0f0f0"/>
+
+                    <com.daily.base.widget.DailyTextView
+                        android:id="@+id/popularAreaTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginTop="15dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/label_search_stayoutbound_popular_area"
+                        android:textColor="@color/default_text_cc5c5c5"
+                        android:textSize="13dp"/>
+
+                    <LinearLayout
+                        android:id="@+id/popularAreaLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:orientation="vertical"
+                        android:paddingBottom="15dp"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="17dp"
+                    android:background="@drawable/layerlist_divider"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/searchOtherCategoryTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/message_searchresult_search_other_category"
+                    android:textColor="@color/default_text_cc5c5c5"
+                    android:textSize="13dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
+
+                    <FrameLayout
+                        android:id="@+id/searchLeftLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="38dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape_fillrect_ldcdcdd_bffffff_r2">
+
+                        <com.daily.base.widget.DailyTextView
+                            android:id="@+id/searchLeftTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:drawablePadding="4dp"
+                            android:gravity="center"
+                            android:text="@string/label_searchresult_search_stay"
+                            android:textColor="@color/default_text_c323232"
+                            android:textSize="13dp"
+                            app:drawableCompatLeft="@drawable/vector_search_shortcut_01_stay"
+                            dailyFont:style="Medium"/>
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/searchRightLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="38dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/shape_fillrect_ldcdcdd_bffffff_r2">
+
+                        <com.daily.base.widget.DailyTextView
+                            android:id="@+id/searchRightTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:drawablePadding="4dp"
+                            android:gravity="center"
+                            android:text="@string/label_searchresult_search_gourmet"
+                            android:textColor="@color/default_text_c323232"
+                            android:textSize="13dp"
+                            app:drawableCompatLeft="@drawable/vector_search_shortcut_03_gourmet"
+                            dailyFont:style="Medium"/>
+                    </FrameLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
 
         <RelativeLayout
             android:id="@+id/errorLayout"

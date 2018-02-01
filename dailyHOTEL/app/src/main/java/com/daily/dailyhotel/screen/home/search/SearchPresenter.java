@@ -15,6 +15,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetSuggest;
@@ -23,10 +24,16 @@ import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
+import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
 import com.daily.dailyhotel.parcel.StaySuggestParcel;
+import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
+import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
+import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.search.gourmet.suggest.SearchGourmetSuggestActivity;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.suggest.SearchStaySuggestActivity;
+import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.calendar.StayOutboundCalendarActivity;
+import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.StayOutboundListActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchSuggestActivity;
@@ -218,8 +225,8 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                 {
                     try
                     {
-                        StaySuggestParcel staySuggestParcel = data.getParcelableExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
-                        mSearchModel.stayViewModel.suggest.setValue(staySuggestParcel.getSuggest());
+                        StaySuggestParcel suggestParcel = data.getParcelableExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
+                        mSearchModel.stayViewModel.suggest.setValue(suggestParcel.getSuggest());
                         mSearchModel.stayViewModel.inputString = data.getStringExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
                     } catch (Exception e)
                     {
@@ -245,6 +252,29 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                 break;
 
             case SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT:
+                if (data != null)
+                {
+                    try
+                    {
+                        StaySuggestParcel suggestParcel = data.getParcelableExtra(PlaceSearchResultActivity.INTENT_EXTRA_DATA_SUGGEST);
+
+                        if (suggestParcel != null)
+                        {
+                            mSearchModel.stayViewModel.suggest.setValue(suggestParcel.getSuggest());
+                        }
+
+                        String checkInDateTime = data.getStringExtra(PlaceSearchResultActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME);
+                        String checkOutDateTime = data.getStringExtra(PlaceSearchResultActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME);
+
+                        mSearchModel.stayViewModel.bookDateTime.setValue(new StayBookDateTime(checkInDateTime, checkOutDateTime));
+                    } catch (Exception e)
+                    {
+                        ExLog.e(e.toString());
+                    }
+                }
+
+                getViewInterface().refreshStay();
+
                 switch (resultCode)
                 {
                     case Constants.CODE_RESULT_ACTIVITY_SEARCH_STAYOUTBOUND:
@@ -256,15 +286,6 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                         break;
 
                     default:
-                        if (data != null && data.hasExtra(PlaceSearchResultActivity.INTENT_EXTRA_DATA_SUGGEST) == true)
-                        {
-                            StaySuggestParcel staySuggestParcel = data.getParcelableExtra(PlaceSearchResultActivity.INTENT_EXTRA_DATA_SUGGEST);
-
-                            if (staySuggestParcel != null)
-                            {
-                                mSearchModel.stayViewModel.suggest.setValue(staySuggestParcel.getSuggest());
-                            }
-                        }
                         break;
                 }
                 break;
@@ -272,17 +293,17 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             case SearchActivity.REQUEST_CODE_STAY_OUTBOUND_SUGGEST:
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
-                    //                    if (data.hasExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST) == true)
-                    //                    {
-                    //                        StayOutboundSuggestParcel suggestParcel = data.getParcelableExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
-                    //                        String keyword = data.getStringExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
-                    //                        String clickType = data.getStringExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_CLICK_TYPE);
-                    //
-                    //                        if (suggestParcel != null)
-                    //                        {
-                    //                            mSearchModel.stayOutboundSuggest.setValue(suggestParcel.getSuggest());
-                    //                        }
-                    //                    }
+                    if (data.hasExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST) == true)
+                    {
+                        StayOutboundSuggestParcel suggestParcel = data.getParcelableExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
+                        String keyword = data.getStringExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
+                        String clickType = data.getStringExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_CLICK_TYPE);
+
+                        if (suggestParcel != null)
+                        {
+                            mSearchModel.stayOutboundViewModel.suggest.setValue(suggestParcel.getSuggest());
+                        }
+                    }
                 }
                 break;
 
@@ -297,8 +318,67 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                         mSearchModel.stayOutboundViewModel.bookDateTime.setValue(new StayBookDateTime(checkInDateTime, checkOutDateTime));
                     } catch (Exception e)
                     {
-                        ExLog.d(e.toString());
+                        ExLog.e(e.toString());
                     }
+                }
+                break;
+
+            case SearchActivity.REQUEST_CODE_STAY_OUTBOUND_PEOPLE:
+            {
+                if (resultCode == Activity.RESULT_OK && data != null)
+                {
+                    if (data.hasExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS) == true && data.hasExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST) == true)
+                    {
+                        int numberOfAdults = data.getIntExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, People.DEFAULT_ADULTS);
+                        ArrayList<Integer> arrayList = data.getIntegerArrayListExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST);
+
+                        setPeople(numberOfAdults, arrayList);
+                    }
+                }
+                break;
+            }
+
+            case SearchActivity.REQUEST_CODE_STAY_OUTBOUND_SEARCH_RESULT:
+                if (data != null)
+                {
+                    try
+                    {
+                        StayOutboundSuggestParcel suggestParcel = data.getParcelableExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_SUGGEST);
+
+                        if (suggestParcel != null)
+                        {
+                            mSearchModel.stayOutboundViewModel.suggest.setValue(suggestParcel.getSuggest());
+                        }
+
+                        String checkInDateTime = data.getStringExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME);
+                        String checkOutDateTime = data.getStringExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME);
+
+                        mSearchModel.stayOutboundViewModel.bookDateTime.setValue(new StayBookDateTime(checkInDateTime, checkOutDateTime));
+
+                        int numberOfAdults = data.getIntExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, People.DEFAULT_ADULTS);
+                        ArrayList<Integer> arrayList = data.getIntegerArrayListExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHILD_LIST);
+
+                        setPeople(numberOfAdults, arrayList);
+                    } catch (Exception e)
+                    {
+                        ExLog.e(e.toString());
+                    }
+                }
+
+                getViewInterface().refreshStayOutbound();
+
+                switch (resultCode)
+                {
+                    case Constants.CODE_RESULT_ACTIVITY_SEARCH_STAY:
+                        mSearchModel.serviceType.setValue(Constants.ServiceType.HOTEL);
+                        break;
+
+                    case Constants.CODE_RESULT_ACTIVITY_SEARCH_GOURMET:
+                        mSearchModel.serviceType.setValue(Constants.ServiceType.GOURMET);
+                        break;
+
+                    default:
+                        break;
                 }
                 break;
 
@@ -332,20 +412,33 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                 }
                 break;
 
-            case SearchActivity.REQUEST_CODE_STAY_OUTBOUND_PEOPLE:
-            {
-                if (resultCode == Activity.RESULT_OK && data != null)
+            case SearchActivity.REQUEST_CODE_GOURMET_SEARCH_RESULT:
+                if (data != null)
                 {
-                    if (data.hasExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS) == true && data.hasExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST) == true)
+                    try
                     {
-                        int numberOfAdults = data.getIntExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, People.DEFAULT_ADULTS);
-                        ArrayList<Integer> arrayList = data.getIntegerArrayListExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST);
-
-                        setPeople(numberOfAdults, arrayList);
+                    } catch (Exception e)
+                    {
+                        ExLog.e(e.toString());
                     }
                 }
+
+                getViewInterface().refreshGourmet();
+
+                switch (resultCode)
+                {
+                    case Constants.CODE_RESULT_ACTIVITY_SEARCH_STAY:
+                        mSearchModel.serviceType.setValue(Constants.ServiceType.HOTEL);
+                        break;
+
+                    case Constants.CODE_RESULT_ACTIVITY_SEARCH_STAYOUTBOUND:
+                        mSearchModel.serviceType.setValue(Constants.ServiceType.OB_STAY);
+                        break;
+
+                    default:
+                        break;
+                }
                 break;
-            }
         }
     }
 
@@ -460,6 +553,42 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
     }
 
     @Override
+    public void onStayRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
+    {
+        if (recentlyDbPlace == null || lock() == true)
+        {
+            return;
+        }
+
+        StayDetailAnalyticsParam analyticsParam = new StayDetailAnalyticsParam();
+
+        startActivityForResult(StayDetailActivity.newInstance(getActivity() //
+            , recentlyDbPlace.index, null, recentlyDbPlace.imageUrl//
+            , StayDetailActivity.NONE_PRICE//
+            , mSearchModel.stayViewModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , mSearchModel.stayViewModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam)//
+            , SearchActivity.REQUEST_CODE_STAY_DETAIL);
+
+        getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+    }
+
+    @Override
+    public void onStayPopularTagClick(CampaignTag campaignTag)
+    {
+        if (campaignTag == null || lock() == true)
+        {
+            return;
+        }
+
+        startActivityForResult(StayCampaignTagListActivity.newInstance(getActivity() //
+            , campaignTag.index, campaignTag.campaignTag//
+            , mSearchModel.stayViewModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT) //
+            , mSearchModel.stayViewModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT))//
+            , SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT);
+    }
+
+    @Override
     public void onStayOutboundSuggestClick()
     {
         startActivityForResult(StayOutboundSearchSuggestActivity.newInstance(getActivity(), ""), SearchActivity.REQUEST_CODE_STAY_OUTBOUND_SUGGEST);
@@ -519,10 +648,44 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
     @Override
     public void onStayOutboundDoSearchClick()
     {
-        startActivity(StayOutboundListActivity.newInstance(getActivity(), mSearchModel.stayOutboundViewModel.suggest.getValue()//
+        startActivityForResult(StayOutboundListActivity.newInstance(getActivity(), mSearchModel.stayOutboundViewModel.suggest.getValue()//
             , mSearchModel.stayOutboundViewModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mSearchModel.stayOutboundViewModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , mSearchModel.stayOutboundViewModel.people.getValue().numberOfAdults, mSearchModel.stayOutboundViewModel.people.getValue().getChildAgeList(), null));
+            , mSearchModel.stayOutboundViewModel.people.getValue().numberOfAdults//
+            , mSearchModel.stayOutboundViewModel.people.getValue().getChildAgeList(), null)//
+            , SearchActivity.REQUEST_CODE_STAY_OUTBOUND_SEARCH_RESULT);
+    }
+
+    @Override
+    public void onStayOutboundRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
+    {
+        if (recentlyDbPlace == null || lock() == true)
+        {
+            return;
+        }
+
+        startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), recentlyDbPlace.index, recentlyDbPlace.name//
+            , recentlyDbPlace.englishName, recentlyDbPlace.imageUrl, StayOutboundDetailActivity.NONE_PRICE//
+            , mSearchModel.stayOutboundViewModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , mSearchModel.stayOutboundViewModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , mSearchModel.stayOutboundViewModel.people.getValue().numberOfAdults, mSearchModel.stayOutboundViewModel.people.getValue().getChildAgeList()//
+            , false, StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, null)//
+            , SearchActivity.REQUEST_CODE_STAY_OUTBOUND_DETAIL);
+
+        getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+    }
+
+    @Override
+    public void onStayOutboundPopularAreaClick(StayOutboundSuggest stayOutboundSuggest)
+    {
+        if (stayOutboundSuggest == null || lock() == true)
+        {
+            return;
+        }
+
+        mSearchModel.stayOutboundViewModel.suggest.setValue(stayOutboundSuggest);
+
+        unLockAll();
     }
 
     @Override
@@ -561,6 +724,18 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
     @Override
     public void onGourmetDoSearchClick()
+    {
+
+    }
+
+    @Override
+    public void onGourmetRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
+    {
+
+    }
+
+    @Override
+    public void onGourmetPopularTagClick(CampaignTag campaignTag)
     {
 
     }

@@ -3,6 +3,9 @@ package com.daily.dailyhotel.screen.home.search;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.base.OnBaseEventListener;
+import com.daily.dailyhotel.entity.CampaignTag;
+import com.daily.dailyhotel.entity.StayOutboundSuggest;
+import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 
 import io.reactivex.Observable;
 
@@ -11,6 +14,8 @@ public interface SearchInterface
     interface ViewInterface extends BaseDialogViewInterface
     {
         void showSearchStay();
+
+        void refreshStay();
 
         void setSearchStaySuggestText(String text);
 
@@ -22,6 +27,8 @@ public interface SearchInterface
 
         void showSearchStayOutbound();
 
+        void refreshStayOutbound();
+
         void setSearchStayOutboundSuggestText(String text);
 
         void setSearchStayOutboundCalendarText(String text);
@@ -32,6 +39,8 @@ public interface SearchInterface
 
 
         void showSearchGourmet();
+
+        void refreshGourmet();
 
         void setSearchGourmetSuggestText(String text);
 
@@ -52,6 +61,10 @@ public interface SearchInterface
 
         void onStayDoSearchClick();
 
+        void onStayRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace);
+
+        void onStayPopularTagClick(CampaignTag campaignTag);
+
 
         void onStayOutboundClick();
 
@@ -63,6 +76,10 @@ public interface SearchInterface
 
         void onStayOutboundDoSearchClick();
 
+        void onStayOutboundRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace);
+
+        void onStayOutboundPopularAreaClick(StayOutboundSuggest stayOutboundSuggest);
+
 
         void onGourmetClick();
 
@@ -71,6 +88,10 @@ public interface SearchInterface
         void onGourmetCalendarClick();
 
         void onGourmetDoSearchClick();
+
+        void onGourmetRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace);
+
+        void onGourmetPopularTagClick(CampaignTag campaignTag);
     }
 
     interface AnalyticsInterface extends BaseAnalyticsInterface

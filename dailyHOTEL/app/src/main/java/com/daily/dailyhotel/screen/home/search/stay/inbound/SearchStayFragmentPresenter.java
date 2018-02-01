@@ -239,37 +239,13 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
     @Override
     public void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
     {
-        if (recentlyDbPlace == null || lock() == true)
-        {
-            return;
-        }
-
-        StayDetailAnalyticsParam analyticsParam = new StayDetailAnalyticsParam();
-
-        startActivityForResult(StayDetailActivity.newInstance(getActivity() //
-            , recentlyDbPlace.index, null, recentlyDbPlace.imageUrl//
-            , StayDetailActivity.NONE_PRICE//
-            , mSearchModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , mSearchModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam)//
-            , SearchActivity.REQUEST_CODE_STAY_DETAIL);
-
-        getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+        getFragment().getFragmentEventListener().onRecentlySearchResultClick(recentlyDbPlace);
     }
 
     @Override
     public void onPopularTagClick(CampaignTag campaignTag)
     {
-        if (campaignTag == null || lock() == true)
-        {
-            return;
-        }
-
-        startActivityForResult(StayCampaignTagListActivity.newInstance(getActivity() //
-            , campaignTag.index, campaignTag.campaignTag//
-            , mSearchModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT) //
-            , mSearchModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT))//
-            , SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT);
+        getFragment().getFragmentEventListener().onPopularTagClick(campaignTag);
     }
 
     private void initViewModel(BaseActivity activity)
