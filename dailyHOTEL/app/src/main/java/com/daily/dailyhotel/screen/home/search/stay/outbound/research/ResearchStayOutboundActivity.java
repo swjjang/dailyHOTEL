@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.search.stay.inbound.research;
+package com.daily.dailyhotel.screen.home.search.stay.outbound.research;
 
 
 import android.content.Context;
@@ -7,19 +7,23 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
+import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StaySuggest;
+import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
 import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.twoheart.dailyhotel.R;
+
+import java.util.ArrayList;
 
 /**
  * Created by sheldon
  * Clean Architecture
  */
-public class ResearchStayActivity extends BaseActivity<ResearchStayPresenter>
+public class ResearchStayOutboundActivity extends BaseActivity<ResearchStayOutboundPresenter>
 {
     static final int REQUEST_CODE_SUGGEST = 10000;
     static final int REQUEST_CODE_CALENDAR = 10001;
-
+    static final int REQUEST_CODE_PEOPLE = 10002;
 
     static final String INTENT_EXTRA_DATA_OPEN_DATE_TIME = "openDateTime";
     static final String INTENT_EXTRA_DATA_CLOSE_DATE_TIME = "closeDateTime";
@@ -29,11 +33,13 @@ public class ResearchStayActivity extends BaseActivity<ResearchStayPresenter>
     public static final String INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME = "checkInDateTime";
     public static final String INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME = "checkOutDateTime";
     public static final String INTENT_EXTRA_DATA_SUGGEST = "suggest";
+    public static final String INTENT_EXTRA_DATA_NUMBER_OF_ADULTS = "numberOfAdults";
+    public static final String INTENT_EXTRA_DATA_CHILD_LIST = "childList";
 
     public static Intent newInstance(Context context, String openDateTime, String closeDateTime, String currentDateTime, String dailyDateTime//
-    , String checkInDateTime, String checkOutDateTime, StaySuggest suggest)
+    , String checkInDateTime, String checkOutDateTime, StayOutboundSuggest suggest, int numberOfAdults, ArrayList<Integer> childList)
     {
-        Intent intent = new Intent(context, ResearchStayActivity.class);
+        Intent intent = new Intent(context, ResearchStayOutboundActivity.class);
 
         intent.putExtra(INTENT_EXTRA_DATA_OPEN_DATE_TIME, openDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_CLOSE_DATE_TIME, closeDateTime);
@@ -41,7 +47,9 @@ public class ResearchStayActivity extends BaseActivity<ResearchStayPresenter>
         intent.putExtra(INTENT_EXTRA_DATA_DAILY_DATE_TIME, dailyDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(suggest));
+        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new StayOutboundSuggestParcel(suggest));
+        intent.putExtra(INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, numberOfAdults);
+        intent.putExtra(INTENT_EXTRA_DATA_CHILD_LIST, childList);
 
         return intent;
     }
@@ -56,9 +64,9 @@ public class ResearchStayActivity extends BaseActivity<ResearchStayPresenter>
 
     @NonNull
     @Override
-    protected ResearchStayPresenter createInstancePresenter()
+    protected ResearchStayOutboundPresenter createInstancePresenter()
     {
-        return new ResearchStayPresenter(this);
+        return new ResearchStayOutboundPresenter(this);
     }
 
     @Override

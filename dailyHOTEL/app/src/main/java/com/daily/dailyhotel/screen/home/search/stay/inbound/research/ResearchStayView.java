@@ -28,9 +28,9 @@ public class ResearchStayView extends BaseDialogView<ResearchStayInterface.OnEve
 
         initToolbar(viewDataBinding);
 
-        viewDataBinding.staySuggestTextView.setOnClickListener(v -> getEventListener().onStaySuggestClick());
-        viewDataBinding.stayCalendarTextView.setOnClickListener(v -> getEventListener().onStayCalendarClick());
-        viewDataBinding.searchStayTextView.setOnClickListener(v -> getEventListener().onStayDoSearchClick());
+        viewDataBinding.staySuggestTextView.setOnClickListener(v -> getEventListener().onSuggestClick());
+        viewDataBinding.stayCalendarTextView.setOnClickListener(v -> getEventListener().onCalendarClick());
+        viewDataBinding.searchStayTextView.setOnClickListener(v -> getEventListener().onDoSearchClick());
 
         mSearchStayFragment = (SearchStayFragment) getSupportFragmentManager().findFragmentById(R.id.searchStayFragment);
     }
@@ -58,7 +58,7 @@ public class ResearchStayView extends BaseDialogView<ResearchStayInterface.OnEve
     }
 
     @Override
-    public void showSearchStay()
+    public void showSearch()
     {
         if (getViewDataBinding() == null || mSearchStayFragment == null)
         {
@@ -69,7 +69,7 @@ public class ResearchStayView extends BaseDialogView<ResearchStayInterface.OnEve
     }
 
     @Override
-    public void setSearchStaySuggestText(String text)
+    public void setSearchSuggestText(String text)
     {
         if (getViewDataBinding() == null)
         {
@@ -80,7 +80,7 @@ public class ResearchStayView extends BaseDialogView<ResearchStayInterface.OnEve
     }
 
     @Override
-    public void setSearchStayCalendarText(String text)
+    public void setSearchCalendarText(String text)
     {
         if (getViewDataBinding() == null)
         {
@@ -91,7 +91,7 @@ public class ResearchStayView extends BaseDialogView<ResearchStayInterface.OnEve
     }
 
     @Override
-    public void setSearchStayButtonEnabled(boolean enabled)
+    public void setSearchButtonEnabled(boolean enabled)
     {
         if (getViewDataBinding() == null)
         {

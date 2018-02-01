@@ -38,6 +38,7 @@ import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
+import com.daily.dailyhotel.screen.home.search.stay.outbound.research.ResearchStayOutboundActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.calendar.StayOutboundCalendarActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.filter.StayOutboundFilterActivity;
@@ -645,6 +646,9 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                         break;
                 }
                 break;
+
+            case StayOutboundListActivity.REQUEST_CODE_RESEARCH:
+                break;
         }
     }
 
@@ -1116,7 +1120,16 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     @Override
     public void onResearchClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
 
+        startActivityForResult(ResearchStayOutboundActivity.newInstance(getActivity(), mCommonDateTime.openDateTime, mCommonDateTime.closeDateTime//
+            , mCommonDateTime.currentDateTime, mCommonDateTime.dailyDateTime//
+            , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , mStayOutboundSuggest, mPeople.numberOfAdults, mPeople.getChildAgeList()), StayOutboundListActivity.REQUEST_CODE_RESEARCH);
     }
 
     @Override

@@ -21,6 +21,7 @@ import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StaySuggest;
+import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
 import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.suggest.SearchStaySuggestActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.calendar.StayOutboundCalendarActivity;
@@ -269,17 +270,17 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             case SearchActivity.REQUEST_CODE_STAY_OUTBOUND_SUGGEST:
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
-                    //                    if (data.hasExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST) == true)
-                    //                    {
-                    //                        StayOutboundSuggestParcel suggestParcel = data.getParcelableExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
-                    //                        String keyword = data.getStringExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
-                    //                        String clickType = data.getStringExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_CLICK_TYPE);
-                    //
-                    //                        if (suggestParcel != null)
-                    //                        {
-                    //                            mSearchModel.stayOutboundSuggest.setValue(suggestParcel.getSuggest());
-                    //                        }
-                    //                    }
+                    if (data.hasExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST) == true)
+                    {
+                        StayOutboundSuggestParcel suggestParcel = data.getParcelableExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
+                        String keyword = data.getStringExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
+                        String clickType = data.getStringExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_CLICK_TYPE);
+
+                        if (suggestParcel != null)
+                        {
+                            mSearchModel.stayOutboundViewModel.suggest.setValue(suggestParcel.getSuggest());
+                        }
+                    }
                 }
                 break;
 
