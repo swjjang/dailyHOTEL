@@ -17,11 +17,11 @@ public interface SearchStaySuggestInterface extends BaseDialogViewInterface
 
     void hideKeyboard();
 
-    void setEmptyRecentlySuggestsVisible(boolean visible);
-
     void setProgressBarVisible(boolean visible);
 
-    void setRecentlySuggests(List<StaySuggest> staySuggestList, StaySuggest nearbyStaySuggest);
+    void setRecentlySuggestVisible(boolean visible);
+
+    void setRecentlySuggests(List<StaySuggest> staySuggestList);
 
     void setKeywordEditText(String text);
 

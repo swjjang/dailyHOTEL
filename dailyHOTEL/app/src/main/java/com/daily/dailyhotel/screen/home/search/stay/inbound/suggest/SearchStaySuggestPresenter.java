@@ -77,7 +77,6 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
     private DailyRecentSearches mDailyRecentSearches;
     private StayBookDateTime mStayBookDateTime;
     private String mKeyword;
-    private StaySuggest mLocationStaySuggest;
 
     private DailyLocationExFactory mDailyLocationExFactory;
 
@@ -283,8 +282,6 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
         setRefresh(false);
         screenLock(showProgress);
 
-        startSearchMayLocation(false);
-
         Observable<ArrayList<RecentlyPlace>> ibObservable = mRecentlyLocalImpl.getRecentlyJSONObject(DailyDb.MAX_RECENT_PLACE_COUNT, Constants.ServiceType.HOTEL) //
             .observeOn(Schedulers.io()).flatMap(new Function<JSONObject, ObservableSource<ArrayList<RecentlyPlace>>>()
             {
@@ -356,12 +353,11 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
             @Override
             public void accept(List<StaySuggest> staySuggests) throws Exception
             {
-                ExLog.d("sam - mLocationStaySuggest : " + mLocationStaySuggest.displayName + " , lat : " + mLocationStaySuggest.latitude + " , long : " + mLocationStaySuggest.longitude);
+                boolean visible = staySuggests != null && staySuggests.size() > 0;
+                getViewInterface().setRecentlySuggests(staySuggests);
+                getViewInterface().setRecentlySuggestVisible(visible);
 
-                getViewInterface().setRecentlySuggests(staySuggests, mLocationStaySuggest);
-
-                boolean isEmpty = staySuggests == null || staySuggests.size() == 0;
-                getViewInterface().setEmptyRecentlySuggestsVisible(isEmpty);
+                startSearchMayLocation(false);
 
                 unLockAll();
             }
@@ -370,8 +366,10 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
             @Override
             public void accept(Throwable throwable) throws Exception
             {
-                getViewInterface().setRecentlySuggests(null, mLocationStaySuggest);
-                getViewInterface().setEmptyRecentlySuggestsVisible(true);
+                getViewInterface().setRecentlySuggests(null);
+                getViewInterface().setRecentlySuggestVisible(false);
+
+                startSearchMayLocation(false);
 
                 unLockAll();
             }
@@ -592,8 +590,8 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
             return;
         }
 
-        getViewInterface().setRecentlySuggests(null, mLocationStaySuggest);
-        getViewInterface().setEmptyRecentlySuggestsVisible(true);
+        getViewInterface().setRecentlySuggests(null);
+        getViewInterface().setRecentlySuggestVisible(false);
 
         Observable<Boolean> recentlySearchObservable = Observable.defer(new Callable<ObservableSource<Boolean>>()
         {
@@ -735,21 +733,18 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
             @Override
             public void accept(Location location) throws Exception
             {
-                ExLog.d("sam - location : lat : " + location.getLatitude() + " , long : " + location.getLongitude() + " , toString : " + location.toString());
-
-                mLocationStaySuggest = new StaySuggest(StaySuggest.MENU_TYPE_LOCATION, StaySuggest.CATEGORY_LOCATION, null);
-                mLocationStaySuggest.latitude = location.getLatitude();
-                mLocationStaySuggest.longitude = location.getLongitude();
+                StaySuggest locationStaySuggest = new StaySuggest(StaySuggest.MENU_TYPE_LOCATION, StaySuggest.CATEGORY_LOCATION, null);
+                locationStaySuggest.latitude = location.getLatitude();
+                locationStaySuggest.longitude = location.getLongitude();
 
                 addCompositeDisposable(mGoogleAddressRemoteImpl.getLocationAddress(location.getLatitude(), location.getLongitude()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<String>()
                 {
                     @Override
                     public void accept(String address) throws Exception
                     {
-                        mLocationStaySuggest.displayName = address;
+                        locationStaySuggest.displayName = address;
 
-                        ExLog.d("sam - mLocationStaySuggest : " + mLocationStaySuggest.displayName + " , lat : " + mLocationStaySuggest.latitude + " , long : " + mLocationStaySuggest.longitude);
-                        getViewInterface().setNearbyStaySuggest(true, mLocationStaySuggest);
+                        getViewInterface().setNearbyStaySuggest(true, locationStaySuggest);
 
                         if (isUserClick == false)
                         {
@@ -758,15 +753,15 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
 
                         unLockAll();
 
-                        getViewInterface().setKeywordEditText(mLocationStaySuggest.displayName);
-                        startFinishAction(mLocationStaySuggest, mKeyword, null);
+                        getViewInterface().setKeywordEditText(locationStaySuggest.displayName);
+                        startFinishAction(locationStaySuggest, mKeyword, null);
                     }
                 }, new Consumer<Throwable>()
                 {
                     @Override
                     public void accept(Throwable throwable) throws Exception
                     {
-                        getViewInterface().setNearbyStaySuggest(true, mLocationStaySuggest);
+                        getViewInterface().setNearbyStaySuggest(true, locationStaySuggest);
 
                         if (isUserClick == false)
                         {
@@ -775,10 +770,10 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
 
                         unLockAll();
 
-                        mLocationStaySuggest.displayName = getString(R.string.label_search_nearby_empty_address);
+                        locationStaySuggest.displayName = getString(R.string.label_search_nearby_empty_address);
 
-                        getViewInterface().setKeywordEditText(mLocationStaySuggest.displayName);
-                        startFinishAction(mLocationStaySuggest, mKeyword, null);
+                        getViewInterface().setKeywordEditText(locationStaySuggest.displayName);
+                        startFinishAction(locationStaySuggest, mKeyword, null);
                     }
                 }));
 
@@ -788,8 +783,6 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
             @Override
             public void accept(Throwable throwable) throws Exception
             {
-                ExLog.d("sam - " + throwable.getMessage());
-
                 boolean isAgreePermission = true;
                 String displayName = null;
 
@@ -799,9 +792,9 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
                     isAgreePermission = false;
                 }
 
-                mLocationStaySuggest = new StaySuggest(StaySuggest.MENU_TYPE_LOCATION, StaySuggest.CATEGORY_LOCATION, displayName);
+                StaySuggest locationStaySuggest = new StaySuggest(StaySuggest.MENU_TYPE_LOCATION, StaySuggest.CATEGORY_LOCATION, displayName);
 
-                getViewInterface().setNearbyStaySuggest(isAgreePermission, mLocationStaySuggest);
+                getViewInterface().setNearbyStaySuggest(isAgreePermission, locationStaySuggest);
 
                 if (isUserClick == false)
                 {
