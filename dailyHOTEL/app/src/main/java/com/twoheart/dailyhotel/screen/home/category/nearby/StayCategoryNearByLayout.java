@@ -1,7 +1,5 @@
 package com.twoheart.dailyhotel.screen.home.category.nearby;
 
-import android.animation.Animator;
-import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.PorterDuff;
@@ -45,8 +43,6 @@ import java.util.Locale;
 
 public class StayCategoryNearByLayout extends BaseBlurLayout
 {
-    private static final int ANIMATION_DELAY = 200;
-
     private View mToolbar;
     TextView mCalendarTextView;
     private View mSearchLocationLayout;
@@ -60,11 +56,6 @@ public class StayCategoryNearByLayout extends BaseBlurLayout
 
     protected Spinner mDistanceFilterSpinner;
     DistanceFilterAdapter mDistanceFilterAdapter;
-
-    Constants.ANIMATION_STATUS mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
-    Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
-    private boolean mUpScrolling;
-    ValueAnimator mValueAnimator;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -224,8 +215,6 @@ public class StayCategoryNearByLayout extends BaseBlurLayout
         mFloatingActionView.setOnViewOptionClickListener(v -> ((OnEventListener) mOnEventListener).onViewTypeClick());
         mFloatingActionView.setOnFilterOptionClickListener(v -> ((OnEventListener) mOnEventListener).onFilterClick());
         mFloatingActionView.post(() -> mFloatingActionView.setTag(mViewPager.getBottom() - mFloatingActionView.getTop()));
-
-        setViewTypeVisibility(true);
 
         // 기본 설정
         setOptionViewTypeView(Constants.ViewType.LIST);
@@ -591,262 +580,35 @@ public class StayCategoryNearByLayout extends BaseBlurLayout
         mFloatingActionView.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
-    public void calculationMenuBarLayoutTranslationY(int dy)
-    {
-        Object tag = mFloatingActionView.getTag();
-
-        if (tag == null || tag instanceof Integer == false)
-        {
-            return;
-        }
-
-        int height = (Integer) tag;
-        float translationY = dy + mFloatingActionView.getTranslationY();
-
-        if (translationY >= height)
-        {
-            translationY = height;
-        } else if (translationY <= 0)
-        {
-            translationY = 0;
-        }
-
-        if (dy > 0)
-        {
-            mUpScrolling = true;
-        } else if (dy < 0)
-        {
-            mUpScrolling = false;
-        }
-
-        // 움직이는 동안에는 터치가 불가능 하다.
-        if (translationY == 0 || translationY == height)
-        {
-            setOptionViewTypeEnabled(true);
-            setOptionFilterEnabled(true);
-        } else
-        {
-            setOptionViewTypeEnabled(false);
-            setOptionFilterEnabled(false);
-        }
-
-        setMenuBarLayoutTranslationY(translationY);
-    }
-
-    public void animationMenuBarLayout()
-    {
-        Object tag = mFloatingActionView.getTag();
-
-        if (tag == null || tag instanceof Integer == false)
-        {
-            return;
-        }
-
-        int height = (Integer) tag;
-        float translationY = mFloatingActionView.getTranslationY();
-
-        if (translationY == 0 || translationY == height)
-        {
-            return;
-        }
-
-        mFloatingActionView.setTag(mFloatingActionView.getId(), translationY);
-
-        if (mUpScrolling == true)
-        {
-            if (translationY >= mFloatingActionView.getHeight() / 2)
-            {
-                hideBottomLayout(true);
-            } else
-            {
-                showBottomLayout(true);
-            }
-        } else
-        {
-            if (translationY <= mFloatingActionView.getHeight() / 2)
-            {
-                showBottomLayout(true);
-            } else
-            {
-                hideBottomLayout(true);
-            }
-        }
-    }
-
-    public synchronized void showBottomLayout(boolean isAnimation)
-    {
-        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.SHOW)
-        {
-            return;
-        }
-
-        if (mValueAnimator != null && mValueAnimator.isRunning() == true)
-        {
-            mValueAnimator.cancel();
-        }
-
-        if (isAnimation == true)
-        {
-            mValueAnimator = ValueAnimator.ofInt(0, 100);
-            mValueAnimator.setDuration(ANIMATION_DELAY);
-            mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-            {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation)
-                {
-                    int value = (Integer) animation.getAnimatedValue();
-                    float prevTranslationY = (Float) mFloatingActionView.getTag(mFloatingActionView.getId());
-                    float translationY = prevTranslationY * value / 100;
-
-                    setMenuBarLayoutTranslationY(prevTranslationY - translationY);
-                }
-            });
-
-            mValueAnimator.addListener(new Animator.AnimatorListener()
-            {
-                @Override
-                public void onAnimationStart(Animator animation)
-                {
-                    setOptionViewTypeEnabled(false);
-                    setOptionFilterEnabled(false);
-
-                    mAnimationState = Constants.ANIMATION_STATE.START;
-                    mAnimationStatus = Constants.ANIMATION_STATUS.SHOW;
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation)
-                {
-                    if (mValueAnimator != null)
-                    {
-                        mValueAnimator.removeAllListeners();
-                        mValueAnimator.removeAllUpdateListeners();
-                        mValueAnimator = null;
-                    }
-
-                    if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
-                    {
-                        mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
-                        mAnimationState = Constants.ANIMATION_STATE.END;
-                    }
-
-                    setOptionViewTypeEnabled(true);
-                    setOptionFilterEnabled(true);
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation)
-                {
-                    mAnimationState = Constants.ANIMATION_STATE.CANCEL;
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation)
-                {
-
-                }
-            });
-
-            mValueAnimator.start();
-        } else
-        {
-            setMenuBarLayoutTranslationY(0);
-
-            setOptionViewTypeEnabled(true);
-            setOptionFilterEnabled(true);
-        }
-    }
-
-    public void hideBottomLayout(boolean isAnimation)
-    {
-        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.HIDE)
-        {
-            return;
-        }
-
-        if (mValueAnimator != null && mValueAnimator.isRunning() == true)
-        {
-            mValueAnimator.cancel();
-        }
-
-        if (isAnimation == true)
-        {
-            mValueAnimator = ValueAnimator.ofInt(0, 100);
-            mValueAnimator.setDuration(ANIMATION_DELAY);
-            mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-            {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation)
-                {
-                    int value = (Integer) animation.getAnimatedValue();
-                    float prevTranslationY = (Float) mFloatingActionView.getTag(mFloatingActionView.getId());
-                    float height = (Integer) mFloatingActionView.getTag() - prevTranslationY;
-                    float translationY = height * value / 100;
-
-                    setMenuBarLayoutTranslationY(prevTranslationY + translationY);
-                }
-            });
-
-            mValueAnimator.addListener(new Animator.AnimatorListener()
-            {
-                @Override
-                public void onAnimationStart(Animator animation)
-                {
-                    mAnimationState = Constants.ANIMATION_STATE.START;
-                    mAnimationStatus = Constants.ANIMATION_STATUS.HIDE;
-
-                    setOptionViewTypeEnabled(false);
-                    setOptionFilterEnabled(false);
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation)
-                {
-                    if (mValueAnimator != null)
-                    {
-                        mValueAnimator.removeAllListeners();
-                        mValueAnimator.removeAllUpdateListeners();
-                        mValueAnimator = null;
-                    }
-
-                    if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
-                    {
-                        mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
-                        mAnimationState = Constants.ANIMATION_STATE.END;
-                    }
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation)
-                {
-                    mAnimationState = Constants.ANIMATION_STATE.CANCEL;
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation)
-                {
-
-                }
-            });
-
-            mValueAnimator.start();
-        } else
-        {
-            setMenuBarLayoutTranslationY((Integer) mFloatingActionView.getTag());
-
-            setOptionViewTypeEnabled(false);
-            setOptionFilterEnabled(false);
-        }
-    }
-
-    public void setViewTypeVisibility(boolean visible)
+    public synchronized void showBottomLayout()
     {
         if (mFloatingActionView == null)
         {
             return;
         }
 
-        mFloatingActionView.setViewOptionVisible(visible);
+        setBottomOptionVisible(true);
+        mFloatingActionView.setTranslationY(0);
+    }
+
+    public void hideBottomLayout()
+    {
+        if (mFloatingActionView == null)
+        {
+            return;
+        }
+
+        setBottomOptionVisible(false);
+    }
+
+    public void setBottomOptionVisible(boolean visible)
+    {
+        if (mFloatingActionView == null)
+        {
+            return;
+        }
+
+        mFloatingActionView.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -21,7 +21,6 @@ import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.StayArea;
 import com.daily.dailyhotel.entity.StayRegion;
-import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
@@ -147,8 +146,6 @@ public class StayCategoryNearByActivity extends BaseActivity
         lockUI();
 
         mNetworkController = new StayCategoryNearByNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
-
-        mStayCategoryNearByLayout.setViewTypeVisibility(true);
 
         if (mStayCategoryNearByCuration == null)
         {
@@ -900,7 +897,7 @@ public class StayCategoryNearByActivity extends BaseActivity
             mStayCategoryNearByCuration.setCategory(category);
 
             mStayCategoryNearByLayout.setCurrentItem(tab.getPosition());
-            mStayCategoryNearByLayout.showBottomLayout(false);
+            mStayCategoryNearByLayout.showBottomLayout();
 
             refreshCurrentFragment(false);
         }
@@ -1370,7 +1367,7 @@ public class StayCategoryNearByActivity extends BaseActivity
         @Override
         public void onCalendarClick()
         {
-            if(lockUiComponentAndIsLockUiComponent() == true)
+            if (lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }
@@ -1401,7 +1398,7 @@ public class StayCategoryNearByActivity extends BaseActivity
         @Override
         public void onRadiusClick()
         {
-            if(lockUiComponentAndIsLockUiComponent() == true)
+            if (lockUiComponentAndIsLockUiComponent() == true)
             {
                 return;
             }
@@ -1434,7 +1431,6 @@ public class StayCategoryNearByActivity extends BaseActivity
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy)
         {
-            mStayCategoryNearByLayout.calculationMenuBarLayoutTranslationY(dy);
         }
 
         @Override
@@ -1444,10 +1440,6 @@ public class StayCategoryNearByActivity extends BaseActivity
             {
                 case RecyclerView.SCROLL_STATE_IDLE:
                 {
-                    mStayCategoryNearByLayout.animationMenuBarLayout();
-
-                    //                    ExLog.d("offset : " + recyclerView.computeVerticalScrollOffset() + ", " + recyclerView.computeVerticalScrollExtent() + ", " + recyclerView.computeVerticalScrollRange());
-
                     if (recyclerView.computeVerticalScrollOffset() + recyclerView.computeVerticalScrollExtent() >= recyclerView.computeVerticalScrollRange())
                     {
                         StayListAdapter stayListAdapter = (StayListAdapter) recyclerView.getAdapter();
@@ -1464,7 +1456,7 @@ public class StayCategoryNearByActivity extends BaseActivity
 
                                 if (placeViewItem != null && placeViewItem.mType == PlaceViewItem.TYPE_FOOTER_VIEW)
                                 {
-                                    mStayCategoryNearByLayout.showBottomLayout(false);
+                                    mStayCategoryNearByLayout.showBottomLayout();
                                 }
                             }
                         }
@@ -1483,12 +1475,23 @@ public class StayCategoryNearByActivity extends BaseActivity
         @Override
         public void onShowMenuBar()
         {
+            if (mStayCategoryNearByLayout == null)
+            {
+                return;
+            }
 
+            mStayCategoryNearByLayout.showBottomLayout();
         }
 
         @Override
         public void onBottomOptionVisible(boolean visible)
         {
+            if (mStayCategoryNearByLayout == null)
+            {
+                return;
+            }
+
+            mStayCategoryNearByLayout.setBottomOptionVisible(visible);
         }
 
         @Override
