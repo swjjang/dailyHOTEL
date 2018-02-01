@@ -68,7 +68,7 @@ public class SearchGourmetFragmentView extends BaseFragmentDialogView<SearchGour
                 RecentlyDbPlace recentlyDbPlace = recentlyList.get(i);
 
                 recentlyCardView[i].setTag(recentlyDbPlace);
-                recentlyCardView[i].setIcon(R.drawable.search_ic_01_search);
+                recentlyCardView[i].setIcon(R.drawable.vector_search_ic_08_history);
                 recentlyCardView[i].setNameText(recentlyDbPlace.name);
                 recentlyCardView[i].setDateText(null);
                 recentlyCardView[i].setOnDeleteClickListener(v -> getEventListener().onRecentlySearchResultDeleteClick(recentlyDbPlace.index));
@@ -91,7 +91,12 @@ public class SearchGourmetFragmentView extends BaseFragmentDialogView<SearchGour
 
         for (CampaignTag campaignTag : tagList)
         {
-            getViewDataBinding().tagFlexboxLayout.addView(getTagView(campaignTag));
+            View view = getTagView(campaignTag);
+
+            if (view != null)
+            {
+                getViewDataBinding().tagFlexboxLayout.addView(view);
+            }
         }
     }
 
@@ -127,15 +132,22 @@ public class SearchGourmetFragmentView extends BaseFragmentDialogView<SearchGour
 
     private View getTagView(CampaignTag campaignTag)
     {
+        if (campaignTag == null)
+        {
+            return null;
+        }
+
         final int DP_12 = ScreenUtils.dpToPx(getContext(), 12);
         final int DP_5 = ScreenUtils.dpToPx(getContext(), 5);
 
         DailyTextView dailyTextView = new DailyTextView(getContext());
         dailyTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
-        dailyTextView.setTextColor(getColor(R.color.default_text_c323232));
+        dailyTextView.setTextColor(getColor(R.color.default_text_c666666));
         dailyTextView.setPadding(DP_12, 0, DP_12, 0);
-        dailyTextView.setBackgroundResource(R.color.default_background_cf4f4f6);
+        dailyTextView.setBackgroundResource(R.drawable.shape_fillrect_le7e7e7_bffffff_r50);
         dailyTextView.setGravity(Gravity.CENTER_VERTICAL);
+        dailyTextView.setMaxLines(1);
+        dailyTextView.setSingleLine();
 
         FlexboxLayout.LayoutParams layoutParams = new FlexboxLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ScreenUtils.dpToPx(getContext(), 29));
         layoutParams.setMargins(DP_5, DP_5, DP_5, DP_5);
