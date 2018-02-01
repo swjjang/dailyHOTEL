@@ -1,7 +1,6 @@
 package com.twoheart.dailyhotel.screen.search.stay.result;
 
 import android.content.Context;
-import android.graphics.Paint;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.util.TypedValue;
@@ -11,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;

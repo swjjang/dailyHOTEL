@@ -3,6 +3,8 @@ package com.daily.dailyhotel.screen.home.search.stay.inbound.research;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.base.OnBaseEventListener;
+import com.daily.dailyhotel.entity.CampaignTag;
+import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 
 import io.reactivex.Observable;
 
@@ -28,6 +30,10 @@ public interface ResearchStayInterface
         void onCalendarClick();
 
         void onDoSearchClick();
+
+        void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace);
+
+        void onPopularTagClick(CampaignTag campaignTag);
     }
 
     interface AnalyticsInterface extends BaseAnalyticsInterface

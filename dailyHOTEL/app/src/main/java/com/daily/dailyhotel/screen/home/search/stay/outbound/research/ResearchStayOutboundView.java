@@ -2,6 +2,8 @@ package com.daily.dailyhotel.screen.home.search.stay.outbound.research;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
+import com.daily.dailyhotel.entity.StayOutboundSuggest;
+import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.screen.home.search.stay.outbound.SearchStayOutboundFragment;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityResearchStayOutboundDataBinding;
@@ -34,6 +36,20 @@ public class ResearchStayOutboundView extends BaseDialogView<ResearchStayOutboun
         viewDataBinding.searchStayOutboundTextView.setOnClickListener(v -> getEventListener().onDoSearchClick());
 
         mSearchStayOutboundFragment = (SearchStayOutboundFragment) getSupportFragmentManager().findFragmentById(R.id.searchStayFragment);
+        mSearchStayOutboundFragment.setOnFragmentEventListener(new SearchStayOutboundFragment.OnEventListener()
+        {
+            @Override
+            public void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
+            {
+                getEventListener().onRecentlySearchResultClick(recentlyDbPlace);
+            }
+
+            @Override
+            public void onPopularAreaClick(StayOutboundSuggest stayOutboundSuggest)
+            {
+                getEventListener().onPopularAreaClick(stayOutboundSuggest);
+            }
+        });
     }
 
     @Override

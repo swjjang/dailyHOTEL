@@ -2,6 +2,8 @@ package com.daily.dailyhotel.screen.home.search.stay.inbound.research;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
+import com.daily.dailyhotel.entity.CampaignTag;
+import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.SearchStayFragment;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityResearchStayDataBinding;
@@ -11,7 +13,6 @@ import io.reactivex.Observable;
 public class ResearchStayView extends BaseDialogView<ResearchStayInterface.OnEventListener, ActivityResearchStayDataBinding> implements ResearchStayInterface.ViewInterface
 {
     SearchStayFragment mSearchStayFragment;
-
 
     public ResearchStayView(BaseActivity baseActivity, ResearchStayInterface.OnEventListener listener)
     {
@@ -33,6 +34,20 @@ public class ResearchStayView extends BaseDialogView<ResearchStayInterface.OnEve
         viewDataBinding.searchStayTextView.setOnClickListener(v -> getEventListener().onDoSearchClick());
 
         mSearchStayFragment = (SearchStayFragment) getSupportFragmentManager().findFragmentById(R.id.searchStayFragment);
+        mSearchStayFragment.setOnFragmentEventListener(new SearchStayFragment.OnEventListener()
+        {
+            @Override
+            public void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
+            {
+                getEventListener().onRecentlySearchResultClick(recentlyDbPlace);
+            }
+
+            @Override
+            public void onPopularTagClick(CampaignTag campaignTag)
+            {
+                getEventListener().onPopularTagClick(campaignTag);
+            }
+        });
     }
 
     @Override

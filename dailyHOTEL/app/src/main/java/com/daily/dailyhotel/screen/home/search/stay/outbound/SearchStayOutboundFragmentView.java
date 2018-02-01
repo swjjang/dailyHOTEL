@@ -93,6 +93,7 @@ public class SearchStayOutboundFragmentView extends BaseFragmentDialogView<Searc
 
             if (view != null)
             {
+                view.setOnClickListener(v -> getEventListener().onPopularAreaClick((StayOutboundSuggest) v.getTag()));
                 getViewDataBinding().popularAreaLayout.addView(view, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DP_58));
             }
         }
@@ -128,7 +129,7 @@ public class SearchStayOutboundFragmentView extends BaseFragmentDialogView<Searc
         getViewDataBinding().recently03View.setVisibility(flag);
     }
 
-    public View getAreaView(int index, StayOutboundSuggest stayOutboundSuggest)
+    private View getAreaView(int index, StayOutboundSuggest stayOutboundSuggest)
     {
         if (stayOutboundSuggest == null)
         {
@@ -136,9 +137,9 @@ public class SearchStayOutboundFragmentView extends BaseFragmentDialogView<Searc
         }
 
         DailySearchStayOutboundAreaCardView areaCardView = new DailySearchStayOutboundAreaCardView(getContext());
-
         areaCardView.setTitleText(stayOutboundSuggest.display);
         areaCardView.setSubTitleText(stayOutboundSuggest.country);
+        areaCardView.setTag(stayOutboundSuggest);
 
         return areaCardView;
     }

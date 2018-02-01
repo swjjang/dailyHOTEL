@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
+import com.daily.base.BaseActivity;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
@@ -334,7 +335,16 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
                 mStaySearchCuration.setSuggest(staySuggest);
                 mStaySearchCuration.setStayBookingDay(stayBookingDay);
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
+        }
 
+        switch (resultCode)
+        {
+            case Activity.RESULT_OK:
+            {
                 // 검색이 바뀌면 전체탭으로 이동하고 다시 재로딩.
                 mStaySearchCuration.getCurationOption().clear();
                 mStaySearchCuration.setCategory(Category.ALL);
@@ -344,16 +354,16 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
                 mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
 
-                if (StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(staySuggest.categoryKey) == true)
+                if (StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStaySearchCuration.getSuggest().categoryKey) == true)
                 {
                     mStaySearchCuration.getCurationOption().setSortType(SortType.DISTANCE);
                     mStaySearchCuration.setRadius(DEFAULT_SEARCH_RADIUS);
 
-                    if (staySuggest.latitude != 0.0d && staySuggest.longitude != 0.0d)
+                    if (mStaySearchCuration.getSuggest().latitude != 0.0d && mStaySearchCuration.getSuggest().longitude != 0.0d)
                     {
                         Location location = new Location("provider");
-                        location.setLatitude(staySuggest.latitude);
-                        location.setLongitude(staySuggest.longitude);
+                        location.setLatitude(mStaySearchCuration.getSuggest().latitude);
+                        location.setLongitude(mStaySearchCuration.getSuggest().longitude);
 
                         mStaySearchCuration.setLocation(location);
 
@@ -368,10 +378,12 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 }
 
                 initLayout();
-            } catch (Exception e)
-            {
-                ExLog.e(e.toString());
+                break;
             }
+
+            case BaseActivity.RESULT_CODE_BACK:
+                finish(Activity.RESULT_CANCELED);
+                break;
         }
     }
 

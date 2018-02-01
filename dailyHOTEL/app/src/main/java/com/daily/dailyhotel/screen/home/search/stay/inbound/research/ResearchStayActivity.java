@@ -19,6 +19,8 @@ public class ResearchStayActivity extends BaseActivity<ResearchStayPresenter>
 {
     static final int REQUEST_CODE_SUGGEST = 10000;
     static final int REQUEST_CODE_CALENDAR = 10001;
+    static final int REQUEST_CODE_DETAIL = 10002;
+    static final int REQUEST_CODE_SEARCH_RESULT = 10003;
 
 
     static final String INTENT_EXTRA_DATA_OPEN_DATE_TIME = "openDateTime";

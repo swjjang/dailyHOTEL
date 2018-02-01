@@ -3,6 +3,8 @@ package com.daily.dailyhotel.screen.home.search.stay.outbound.research;
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.base.OnBaseEventListener;
+import com.daily.dailyhotel.entity.StayOutboundSuggest;
+import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 
 import io.reactivex.Observable;
 
@@ -32,6 +34,10 @@ public interface ResearchStayOutboundInterface
         void onPeopleClick();
 
         void onDoSearchClick();
+
+        void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace);
+
+        void onPopularAreaClick(StayOutboundSuggest stayOutboundSuggest);
     }
 
     interface AnalyticsInterface extends BaseAnalyticsInterface

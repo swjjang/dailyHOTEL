@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import com.daily.dailyhotel.base.BaseBlurViewInterface;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.StayOutbound;
+import com.daily.dailyhotel.entity.StayOutboundSuggest;
 
 import java.util.List;
 
@@ -16,13 +17,20 @@ public interface StayOutboundListViewInterface extends BaseBlurViewInterface
 {
     enum EmptyScreenType
     {
-        DEFAULT,
-        FILTER_ON,
+        NONE,
+        SEARCH_SUGGEST_DEFAULT,
+        SEARCH_SUGGEST_FILTER_ON,
+        LOCATION_DEFAULT,
+        LOCATOIN_FILTER_ON
     }
 
     void setToolbarTitle(String title);
 
     void setToolbarTitle(String titleText, String subTitleText);
+
+    void setRadius(float radius);
+
+    void setRadiusVisible(boolean visible);
 
     void setCalendarText(String calendarText);
 
@@ -55,13 +63,13 @@ public interface StayOutboundListViewInterface extends BaseBlurViewInterface
 
     void setErrorScreenVisible(boolean visible);
 
-    void setEmptyScreenVisible(boolean visible);
-
     void setSearchLocationScreenVisible(boolean visible);
 
     void setListScreenVisible(boolean visible);
 
-    void setEmptyScreenType(EmptyScreenType emptyScreenType);
+    void showEmptyScreen(EmptyScreenType emptyScreenType);
+
+    void hideEmptyScreen();
 
     void setBottomLayoutType(EmptyScreenType emptyScreenType);
 
@@ -76,4 +84,10 @@ public interface StayOutboundListViewInterface extends BaseBlurViewInterface
     ObjectItem getObjectItem(int position);
 
     void setMapProgressBarVisible(boolean visible);
+
+    void setPopularAreaList(List<StayOutboundSuggest> popularAreaList);
+
+    void setPopularAreaVisible(boolean visible);
+
+    void showRadiusPopup();
 }

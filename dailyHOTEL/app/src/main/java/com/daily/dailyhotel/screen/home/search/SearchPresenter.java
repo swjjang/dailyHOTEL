@@ -15,6 +15,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.People;
@@ -23,8 +24,13 @@ import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
 import com.daily.dailyhotel.parcel.StaySuggestParcel;
+import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
+import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
+import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.suggest.SearchStaySuggestActivity;
+import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.calendar.StayOutboundCalendarActivity;
+import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.StayOutboundListActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchSuggestActivity;
@@ -536,6 +542,42 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
     }
 
     @Override
+    public void onStayRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
+    {
+        if (recentlyDbPlace == null || lock() == true)
+        {
+            return;
+        }
+
+        StayDetailAnalyticsParam analyticsParam = new StayDetailAnalyticsParam();
+
+        startActivityForResult(StayDetailActivity.newInstance(getActivity() //
+            , recentlyDbPlace.index, null, recentlyDbPlace.imageUrl//
+            , StayDetailActivity.NONE_PRICE//
+            , mSearchModel.stayViewModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , mSearchModel.stayViewModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam)//
+            , SearchActivity.REQUEST_CODE_STAY_DETAIL);
+
+        getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+    }
+
+    @Override
+    public void onStayPopularTagClick(CampaignTag campaignTag)
+    {
+        if (campaignTag == null || lock() == true)
+        {
+            return;
+        }
+
+        startActivityForResult(StayCampaignTagListActivity.newInstance(getActivity() //
+            , campaignTag.index, campaignTag.campaignTag//
+            , mSearchModel.stayViewModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT) //
+            , mSearchModel.stayViewModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT))//
+            , SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT);
+    }
+
+    @Override
     public void onStayOutboundSuggestClick()
     {
         startActivityForResult(StayOutboundSearchSuggestActivity.newInstance(getActivity(), ""), SearchActivity.REQUEST_CODE_STAY_OUTBOUND_SUGGEST);
@@ -595,10 +637,44 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
     @Override
     public void onStayOutboundDoSearchClick()
     {
-        startActivity(StayOutboundListActivity.newInstance(getActivity(), mSearchModel.stayOutboundViewModel.suggest.getValue()//
+        startActivityForResult(StayOutboundListActivity.newInstance(getActivity(), mSearchModel.stayOutboundViewModel.suggest.getValue()//
             , mSearchModel.stayOutboundViewModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mSearchModel.stayOutboundViewModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , mSearchModel.stayOutboundViewModel.people.getValue().numberOfAdults, mSearchModel.stayOutboundViewModel.people.getValue().getChildAgeList(), null));
+            , mSearchModel.stayOutboundViewModel.people.getValue().numberOfAdults//
+            , mSearchModel.stayOutboundViewModel.people.getValue().getChildAgeList(), null)//
+            , SearchActivity.REQUEST_CODE_STAY_OUTBOUND_SEARCH_RESULT);
+    }
+
+    @Override
+    public void onStayOutboundRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
+    {
+        if (recentlyDbPlace == null || lock() == true)
+        {
+            return;
+        }
+
+        startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), recentlyDbPlace.index, recentlyDbPlace.name//
+            , recentlyDbPlace.englishName, recentlyDbPlace.imageUrl, StayOutboundDetailActivity.NONE_PRICE//
+            , mSearchModel.stayOutboundViewModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , mSearchModel.stayOutboundViewModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , mSearchModel.stayOutboundViewModel.people.getValue().numberOfAdults, mSearchModel.stayOutboundViewModel.people.getValue().getChildAgeList()//
+            , false, StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, null)//
+            , SearchActivity.REQUEST_CODE_STAY_OUTBOUND_DETAIL);
+
+        getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+    }
+
+    @Override
+    public void onStayOutboundPopularAreaClick(StayOutboundSuggest stayOutboundSuggest)
+    {
+        if (stayOutboundSuggest == null || lock() == true)
+        {
+            return;
+        }
+
+        mSearchModel.stayOutboundViewModel.suggest.setValue(stayOutboundSuggest);
+
+        unLockAll();
     }
 
     @Override
@@ -628,6 +704,18 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
     @Override
     public void onGourmetDoSearchClick()
+    {
+
+    }
+
+    @Override
+    public void onGourmetRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
+    {
+
+    }
+
+    @Override
+    public void onGourmetPopularTagClick(CampaignTag campaignTag)
     {
 
     }

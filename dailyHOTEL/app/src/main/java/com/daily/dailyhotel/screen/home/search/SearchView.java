@@ -5,11 +5,13 @@ import android.view.View;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
-import com.daily.base.BaseFragment;
 import com.daily.base.BaseFragmentPagerAdapter;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.base.BasePagerFragment;
+import com.daily.dailyhotel.entity.CampaignTag;
+import com.daily.dailyhotel.entity.StayOutboundSuggest;
+import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.screen.home.search.gourmet.SearchGourmetFragment;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.SearchStayFragment;
 import com.daily.dailyhotel.screen.home.search.stay.outbound.SearchStayOutboundFragment;
@@ -23,7 +25,7 @@ import io.reactivex.Observable;
 import io.reactivex.functions.Function3;
 
 public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, ActivitySearchDataBinding>//
-    implements SearchInterface.ViewInterface, SearchStayFragment.OnEventListener
+    implements SearchInterface.ViewInterface
 {
     BaseFragmentPagerAdapter mSearchFragmentPagerAdapter;
 
@@ -158,8 +160,52 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         List<BasePagerFragment> list = new ArrayList<>();
 
         mSearchStayFragment = new SearchStayFragment();
+        mSearchStayFragment.setOnFragmentEventListener(new SearchStayFragment.OnEventListener()
+        {
+            @Override
+            public void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
+            {
+                getEventListener().onStayRecentlySearchResultClick(recentlyDbPlace);
+            }
+
+            @Override
+            public void onPopularTagClick(CampaignTag campaignTag)
+            {
+                getEventListener().onStayPopularTagClick(campaignTag);
+            }
+        });
+
         mSearchStayOutboundFragment = new SearchStayOutboundFragment();
+        mSearchStayOutboundFragment.setOnFragmentEventListener(new SearchStayOutboundFragment.OnEventListener()
+        {
+            @Override
+            public void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
+            {
+                getEventListener().onStayOutboundRecentlySearchResultClick(recentlyDbPlace);
+            }
+
+            @Override
+            public void onPopularAreaClick(StayOutboundSuggest stayOutboundSuggest)
+            {
+                getEventListener().onStayOutboundPopularAreaClick(stayOutboundSuggest);
+            }
+        });
+
         mSearchGourmetFragment = new SearchGourmetFragment();
+        mSearchGourmetFragment.setOnFragmentEventListener(new SearchGourmetFragment.OnEventListener()
+        {
+            @Override
+            public void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
+            {
+                getEventListener().onGourmetRecentlySearchResultClick(recentlyDbPlace);
+            }
+
+            @Override
+            public void onPopularTagClick(CampaignTag campaignTag)
+            {
+                getEventListener().onGourmetPopularTagClick(campaignTag);
+            }
+        });
 
         mSearchFragmentPagerAdapter.addFragment(mSearchStayFragment);
         mSearchFragmentPagerAdapter.addFragment(mSearchStayOutboundFragment);
@@ -223,7 +269,7 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
     @Override
     public void refreshStay()
     {
-        if(mSearchStayFragment == null)
+        if (mSearchStayFragment == null)
         {
             return;
         }
@@ -296,7 +342,7 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
     @Override
     public void refreshStayOutbound()
     {
-        if(mSearchStayOutboundFragment == null)
+        if (mSearchStayOutboundFragment == null)
         {
             return;
         }
@@ -380,7 +426,7 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
     @Override
     public void refreshGourmet()
     {
-        if(mSearchGourmetFragment == null)
+        if (mSearchGourmetFragment == null)
         {
             return;
         }

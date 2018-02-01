@@ -36,6 +36,7 @@ import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayOutboundRemoteImpl;
+import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.screen.home.search.stay.outbound.research.ResearchStayOutboundActivity;
@@ -87,10 +88,12 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 {
     private static final int DAYS_OF_MAXCOUNT = 365;
     private static final int NIGHTS_OF_MAXCOUNT = 28;
+    static final float DEFAULT_RADIUS = 10.0f;
 
     private StayOutboundListAnalyticsInterface mAnalytics;
     StayOutboundRemoteImpl mStayOutboundRemoteImpl;
-    private CommonRemoteImpl mCommonRemoteImpl;
+    CommonRemoteImpl mCommonRemoteImpl;
+    SuggestRemoteImpl mSuggestRemoteImpl;
 
     private CommonDateTime mCommonDateTime;
     StayBookDateTime mStayBookDateTime;
@@ -98,6 +101,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     private StayOutboundSuggest mStayOutboundSuggest;
     People mPeople;
     StayOutboundFilters mStayOutboundFilters;
+    float mRadius = DEFAULT_RADIUS;
     List<StayOutbound> mStayOutboundList;
     DailyLocationExFactory mDailyLocationExFactory;
 
@@ -113,6 +117,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     android.support.v4.util.Pair[] mPairsByLongPress;
 
     private Disposable mChangedLocationDisposable;
+
+    boolean searchLocation = false;
 
     enum ViewState
     {
@@ -179,6 +185,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         mStayOutboundRemoteImpl = new StayOutboundRemoteImpl(activity);
         mCommonRemoteImpl = new CommonRemoteImpl(activity);
+        mSuggestRemoteImpl = new SuggestRemoteImpl(activity);
 
         setFilter(StayOutboundFilters.SortType.RECOMMENDATION, -1);
 
@@ -243,6 +250,15 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         notifyToolbarChanged();
 
         getViewInterface().setViewTypeOptionImage(ViewState.MAP);
+
+        if (searchLocation == true)
+        {
+            getViewInterface().setRadiusVisible(true);
+            getViewInterface().setRadius(mRadius);
+        } else
+        {
+            getViewInterface().setRadiusVisible(false);
+        }
     }
 
     @Override
@@ -317,6 +333,15 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     @Override
     public boolean onBackPressed()
     {
+        Intent intent = new Intent();
+        intent.putExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_SUGGEST, new StayOutboundSuggestParcel(mStayOutboundSuggest));
+        intent.putExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT));
+        intent.putExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
+        intent.putExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, mPeople.numberOfAdults);
+        intent.putExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHILD_LIST, mPeople.getChildAgeList());
+
+        setResult(Activity.RESULT_CANCELED, intent);
+
         // 빈 리스트인 경우 종료한다.
         if (mStayOutboundList == null || mStayOutboundList.size() == 0)
         {
@@ -648,6 +673,45 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 break;
 
             case StayOutboundListActivity.REQUEST_CODE_RESEARCH:
+                if (resultCode == Activity.RESULT_OK && data != null)
+                {
+                    try
+                    {
+                        StayOutboundSuggestParcel suggestParcel = data.getParcelableExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_SUGGEST);
+
+                        if (suggestParcel != null)
+                        {
+                            mStayOutboundSuggest = suggestParcel.getSuggest();
+                        }
+
+                        String checkInDateTime = data.getStringExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME);
+                        String checkOutDateTime = data.getStringExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME);
+
+                        mStayBookDateTime.setCheckInDateTime(checkInDateTime);
+                        mStayBookDateTime.setCheckOutDateTime(checkOutDateTime);
+
+                        int numberOfAdults = data.getIntExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, People.DEFAULT_ADULTS);
+                        ArrayList<Integer> arrayList = data.getIntegerArrayListExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHILD_LIST);
+
+                        setPeople(numberOfAdults, arrayList);
+                    } catch (Exception e)
+                    {
+                        ExLog.e(e.toString());
+                    }
+                }
+
+                switch (resultCode)
+                {
+                    case Activity.RESULT_OK:
+                        notifyToolbarChanged();
+
+                        setRefresh(true);
+                        break;
+
+                    case BaseActivity.RESULT_CODE_BACK:
+                        finish(Activity.RESULT_CANCELED);
+                        break;
+                }
                 break;
         }
     }
@@ -1103,21 +1167,6 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     }
 
     @Override
-    public void onSearchClick()
-    {
-        if (lock() == true)
-        {
-            return;
-        }
-
-        Intent intent = new Intent();
-        intent.putExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_RESEARCH, true);
-
-        setResult(Activity.RESULT_OK, intent);
-        finish();
-    }
-
-    @Override
     public void onResearchClick()
     {
         if (lock() == true)
@@ -1232,6 +1281,65 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         }
 
         unLockAll();
+    }
+
+    @Override
+    public void onRadiusClick()
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        getViewInterface().showRadiusPopup();
+
+        unLockAll();
+    }
+
+    @Override
+    public void onChangedRadius(float radius)
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        onRefreshAll(true);
+    }
+
+    @Override
+    public void onSearchStayClick()
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        finish(Constants.CODE_RESULT_ACTIVITY_SEARCH_STAY);
+    }
+
+    @Override
+    public void onSearchGourmetClick()
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        finish(Constants.CODE_RESULT_ACTIVITY_SEARCH_GOURMET);
+    }
+
+    private void finish(int resultCode)
+    {
+        Intent intent = new Intent();
+        intent.putExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_SUGGEST, new StayOutboundSuggestParcel(mStayOutboundSuggest));
+        intent.putExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT));
+        intent.putExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
+        intent.putExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, mPeople.numberOfAdults);
+        intent.putExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHILD_LIST, mPeople.getChildAgeList());
+
+        setResult(resultCode, intent);
+        onBackClick();
     }
 
     private void setPeople(int numberOfAdults, ArrayList<Integer> childAgeList)
@@ -1492,6 +1600,31 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                     if (objectItemList == null || objectItemList.size() == 0)
                     {
                         setScreenVisible(ScreenType.EMPTY, mStayOutboundFilters);
+
+                        if (searchLocation == false)
+                        {
+                            getViewInterface().setPopularAreaVisible(false);
+
+                            addCompositeDisposable(mSuggestRemoteImpl.getPopularRegionSuggestsByStayOutbound().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<StayOutboundSuggest>>()
+                            {
+                                @Override
+                                public void accept(List<StayOutboundSuggest> stayOutboundSuggests) throws Exception
+                                {
+                                    if (stayOutboundSuggests != null && stayOutboundSuggests.size() > 0)
+                                    {
+                                        getViewInterface().setPopularAreaVisible(true);
+                                        getViewInterface().setPopularAreaList(stayOutboundSuggests);
+                                    }
+                                }
+                            }, new Consumer<Throwable>()
+                            {
+                                @Override
+                                public void accept(Throwable throwable) throws Exception
+                                {
+
+                                }
+                            }));
+                        }
                     } else
                     {
                         setScreenVisible(ScreenType.LIST, mStayOutboundFilters);
@@ -1586,53 +1719,65 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 break;
 
             case NONE:
-                getViewInterface().setEmptyScreenVisible(false);
+                getViewInterface().hideEmptyScreen();
                 getViewInterface().setErrorScreenVisible(false);
                 getViewInterface().setSearchLocationScreenVisible(false);
                 getViewInterface().setListScreenVisible(false);
                 break;
 
             case EMPTY:
-                getViewInterface().setEmptyScreenVisible(true);
                 getViewInterface().setErrorScreenVisible(false);
                 getViewInterface().setSearchLocationScreenVisible(false);
                 getViewInterface().setListScreenVisible(false);
 
-                if (isDefaultFilter(filters) == true)
+                if (searchLocation == true)
                 {
-                    getViewInterface().setBottomLayoutVisible(false);
-                    getViewInterface().setEmptyScreenType(StayOutboundListViewInterface.EmptyScreenType.DEFAULT);
+                    if (isDefaultFilter(filters) == true && mRadius == DEFAULT_RADIUS)
+                    {
+                        getViewInterface().showEmptyScreen(StayOutboundListViewInterface.EmptyScreenType.LOCATION_DEFAULT);
+                        getViewInterface().setBottomLayoutVisible(false);
+                    } else
+                    {
+                        getViewInterface().showEmptyScreen(StayOutboundListViewInterface.EmptyScreenType.LOCATOIN_FILTER_ON);
+                        getViewInterface().setBottomLayoutVisible(true);
+                        getViewInterface().setBottomLayoutType(StayOutboundListViewInterface.EmptyScreenType.LOCATOIN_FILTER_ON);
+                    }
                 } else
                 {
-                    getViewInterface().setBottomLayoutVisible(true);
-                    getViewInterface().setBottomLayoutType(StayOutboundListViewInterface.EmptyScreenType.FILTER_ON);
-                    getViewInterface().setEmptyScreenType(StayOutboundListViewInterface.EmptyScreenType.FILTER_ON);
+                    if (isDefaultFilter(filters) == true)
+                    {
+                        getViewInterface().showEmptyScreen(StayOutboundListViewInterface.EmptyScreenType.SEARCH_SUGGEST_DEFAULT);
+                        getViewInterface().setBottomLayoutVisible(false);
+                    } else
+                    {
+                        getViewInterface().showEmptyScreen(StayOutboundListViewInterface.EmptyScreenType.SEARCH_SUGGEST_FILTER_ON);
+                        getViewInterface().setBottomLayoutVisible(true);
+                        getViewInterface().setBottomLayoutType(StayOutboundListViewInterface.EmptyScreenType.SEARCH_SUGGEST_FILTER_ON);
+                    }
                 }
                 break;
 
             case ERROR:
-                getViewInterface().setEmptyScreenVisible(false);
+                getViewInterface().hideEmptyScreen();
                 getViewInterface().setErrorScreenVisible(true);
                 getViewInterface().setSearchLocationScreenVisible(false);
                 getViewInterface().setListScreenVisible(false);
                 break;
 
             case SEARCH_LOCATION:
-                getViewInterface().setEmptyScreenVisible(false);
+                getViewInterface().hideEmptyScreen();
                 getViewInterface().setErrorScreenVisible(false);
                 getViewInterface().setSearchLocationScreenVisible(true);
                 getViewInterface().setListScreenVisible(false);
+                getViewInterface().setBottomLayoutVisible(true);
                 break;
 
             case LIST:
-                getViewInterface().setEmptyScreenVisible(false);
+                getViewInterface().hideEmptyScreen();
                 getViewInterface().setErrorScreenVisible(false);
                 getViewInterface().setSearchLocationScreenVisible(false);
                 getViewInterface().setListScreenVisible(true);
-
                 getViewInterface().setBottomLayoutVisible(true);
-                getViewInterface().setBottomLayoutType(StayOutboundListViewInterface.EmptyScreenType.DEFAULT);
-                getViewInterface().setEmptyScreenType(StayOutboundListViewInterface.EmptyScreenType.DEFAULT);
                 break;
         }
     }

@@ -14,12 +14,17 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.StaySuggestParcel;
+import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
+import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
+import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.search.SearchViewModel;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.suggest.SearchStaySuggestActivity;
+import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
@@ -304,6 +309,48 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
         {
             ExLog.e(e.toString());
         }
+    }
+
+    @Override
+    public void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
+    {
+        if (recentlyDbPlace == null || lock() == true)
+        {
+            return;
+        }
+
+        StayDetailAnalyticsParam analyticsParam = new StayDetailAnalyticsParam();
+
+        startActivityForResult(StayDetailActivity.newInstance(getActivity() //
+            , recentlyDbPlace.index, null, recentlyDbPlace.imageUrl//
+            , StayDetailActivity.NONE_PRICE//
+            , mSearchModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , mSearchModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam)//
+            , ResearchStayActivity.REQUEST_CODE_DETAIL);
+
+        getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
+        setResult(BaseActivity.RESULT_CODE_BACK);
+        onBackClick();
+    }
+
+    @Override
+    public void onPopularTagClick(CampaignTag campaignTag)
+    {
+        if (campaignTag == null || lock() == true)
+        {
+            return;
+        }
+
+        startActivityForResult(StayCampaignTagListActivity.newInstance(getActivity() //
+            , campaignTag.index, campaignTag.campaignTag//
+            , mSearchModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT) //
+            , mSearchModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT))//
+            , ResearchStayActivity.REQUEST_CODE_SEARCH_RESULT);
+
+        setResult(BaseActivity.RESULT_CODE_BACK);
+        onBackClick();
     }
 
     private void initViewModel(BaseActivity activity)

@@ -20,8 +20,10 @@ import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
+import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.screen.home.search.SearchViewModel;
 import com.daily.dailyhotel.screen.home.stay.outbound.calendar.StayOutboundCalendarActivity;
+import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchSuggestActivity;
 import com.twoheart.dailyhotel.R;
@@ -367,6 +369,41 @@ public class ResearchStayOutboundPresenter extends BaseExceptionPresenter<Resear
         {
             ExLog.e(e.toString());
         }
+    }
+
+    @Override
+    public void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
+    {
+        if (recentlyDbPlace == null || lock() == true)
+        {
+            return;
+        }
+
+        startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), recentlyDbPlace.index, recentlyDbPlace.name//
+            , recentlyDbPlace.englishName, recentlyDbPlace.imageUrl, StayOutboundDetailActivity.NONE_PRICE//
+            , mSearchModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , mSearchModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , mSearchModel.people.getValue().numberOfAdults, mSearchModel.people.getValue().getChildAgeList()//
+            , false, StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, null)//
+            , ResearchStayOutboundActivity.REQUEST_CODE_DETAIL);
+
+        getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+
+        setResult(BaseActivity.RESULT_CODE_BACK);
+        onBackClick();
+    }
+
+    @Override
+    public void onPopularAreaClick(StayOutboundSuggest stayOutboundSuggest)
+    {
+        if (stayOutboundSuggest == null || lock() == true)
+        {
+            return;
+        }
+
+        mSearchModel.suggest.setValue(stayOutboundSuggest);
+
+        unLockAll();
     }
 
     private void initViewModel(BaseActivity activity)

@@ -24,6 +24,7 @@ public class ResearchStayOutboundActivity extends BaseActivity<ResearchStayOutbo
     static final int REQUEST_CODE_SUGGEST = 10000;
     static final int REQUEST_CODE_CALENDAR = 10001;
     static final int REQUEST_CODE_PEOPLE = 10002;
+    static final int REQUEST_CODE_DETAIL = 10003;
 
     static final String INTENT_EXTRA_DATA_OPEN_DATE_TIME = "openDateTime";
     static final String INTENT_EXTRA_DATA_CLOSE_DATE_TIME = "closeDateTime";
