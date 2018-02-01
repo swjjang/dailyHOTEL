@@ -282,15 +282,6 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
             }
         });
 
-        viewDataBinding.deleteRecentlySuggestLayout.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                getEventListener().onDeleteAllRecentlySuggest(false);
-            }
-        });
-
         setRecentlySuggestListAdapter();
     }
 
@@ -320,6 +311,12 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
                 public void onDeleteClick(int position, StaySuggest staySuggest)
                 {
                     getEventListener().onDeleteRecentlySuggest(position, staySuggest);
+                }
+
+                @Override
+                public void onDeleteAllClick()
+                {
+                    getEventListener().onDeleteAllRecentlySuggest(false);
                 }
 
                 @Override
@@ -470,12 +467,10 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
         if (visible == true)
         {
-            getViewDataBinding().recentlySuggestLayout.setVisibility(View.VISIBLE);
-            getViewDataBinding().deleteRecentlySuggestLayout.setVisibility(View.VISIBLE);
+            getViewDataBinding().recentlySuggestRecyclerView.setVisibility(View.VISIBLE);
         } else
         {
-            getViewDataBinding().recentlySuggestLayout.setVisibility(View.GONE);
-            getViewDataBinding().deleteRecentlySuggestLayout.setVisibility(View.GONE);
+            getViewDataBinding().recentlySuggestRecyclerView.setVisibility(View.GONE);
         }
     }
 

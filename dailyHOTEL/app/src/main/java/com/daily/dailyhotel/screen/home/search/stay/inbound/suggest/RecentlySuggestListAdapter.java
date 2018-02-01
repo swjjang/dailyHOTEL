@@ -8,11 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.StaySuggest;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeEmptyDataBinding;
+import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeDeleteDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeEntryDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeNearbyDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeSectionDataBinding;
@@ -31,6 +30,8 @@ public class RecentlySuggestListAdapter extends RecyclerView.Adapter<RecyclerVie
         void onItemClick(int position, StaySuggest staySuggest);
 
         void onDeleteClick(int position, StaySuggest staySuggest);
+
+        void onDeleteAllClick();
 
         void onNearbyClick(StaySuggest staySuggest);
     }
@@ -77,24 +78,13 @@ public class RecentlySuggestListAdapter extends RecyclerView.Adapter<RecyclerVie
 
             case ObjectItem.TYPE_FOOTER_VIEW:
             {
-                View view = new View(mContext);
-                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(mContext, 10d));
-                view.setLayoutParams(params);
+                ListRowSearchSuggestTypeDeleteDataBinding dataBinding //
+                    = DataBindingUtil.inflate(LayoutInflater.from(mContext) //
+                    , R.layout.list_row_search_suggest_type_delete_data, parent, false);
 
-                FooterViewHolder footerViewHolder = new FooterViewHolder(view);
+                FooterViewHolder footerViewHolder = new FooterViewHolder(dataBinding);
 
                 return footerViewHolder;
-            }
-
-            case ObjectItem.TYPE_FOOTER_GUIDE_VIEW:
-            {
-                ListRowSearchSuggestTypeEmptyDataBinding dataBinding//
-                    = DataBindingUtil.inflate(LayoutInflater.from(mContext) //
-                    , R.layout.list_row_search_suggest_type_empty_data, parent, false);
-
-                FooterGuideViewHolder footerGuideViewHolder = new FooterGuideViewHolder(dataBinding);
-
-                return footerGuideViewHolder;
             }
 
             case ObjectItem.TYPE_ENTRY:
@@ -133,10 +123,7 @@ public class RecentlySuggestListAdapter extends RecyclerView.Adapter<RecyclerVie
                 break;
 
             case ObjectItem.TYPE_FOOTER_VIEW:
-                break;
-
-            case ObjectItem.TYPE_FOOTER_GUIDE_VIEW:
-                onBindViewHolder((FooterGuideViewHolder) holder);
+                onBindViewHolder((FooterViewHolder) holder);
                 break;
 
             case ObjectItem.TYPE_ENTRY:
@@ -338,9 +325,30 @@ public class RecentlySuggestListAdapter extends RecyclerView.Adapter<RecyclerVie
         holder.dataBinding.titleTextView.setText(staySuggest.displayName);
     }
 
-    private void onBindViewHolder(FooterGuideViewHolder holder)
+    private void onBindViewHolder(FooterViewHolder holder)
     {
-        holder.dataBinding.descriptionTextView.setText(R.string.label_search_suggest_recently_empty_description_type_stay);
+        int count = getEntryCount();
+        if (count >= 2)
+        {
+            holder.dataBinding.deleteLayout.setVisibility(View.VISIBLE);
+            holder.dataBinding.deleteTextView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    if (mListener == null)
+                    {
+                        return;
+                    }
+
+                    mListener.onDeleteAllClick();
+                }
+            });
+        } else
+        {
+            holder.dataBinding.deleteLayout.setVisibility(View.GONE);
+            holder.dataBinding.deleteTextView.setOnClickListener(null);
+        }
     }
 
     private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)
@@ -421,17 +429,9 @@ public class RecentlySuggestListAdapter extends RecyclerView.Adapter<RecyclerVie
 
     class FooterViewHolder extends RecyclerView.ViewHolder
     {
-        public FooterViewHolder(View itemView)
-        {
-            super(itemView);
-        }
-    }
+        ListRowSearchSuggestTypeDeleteDataBinding dataBinding;
 
-    class FooterGuideViewHolder extends RecyclerView.ViewHolder
-    {
-        ListRowSearchSuggestTypeEmptyDataBinding dataBinding;
-
-        public FooterGuideViewHolder(ListRowSearchSuggestTypeEmptyDataBinding dataBinding)
+        public FooterViewHolder(ListRowSearchSuggestTypeDeleteDataBinding dataBinding)
         {
             super(dataBinding.getRoot());
 
