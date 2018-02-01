@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.search.stay.inbound.suggest;
+package com.daily.dailyhotel.screen.home.search.gourmet.suggest;
 
 
 import android.app.Activity;
@@ -21,10 +21,10 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.GourmetBookDateTime;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.RecentlyPlace;
-import com.daily.dailyhotel.entity.StayBookDateTime;
-import com.daily.dailyhotel.entity.StaySuggest;
-import com.daily.dailyhotel.parcel.StaySuggestParcel;
+import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.remote.GoogleAddressRemoteImpl;
@@ -36,7 +36,7 @@ import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
-import com.twoheart.dailyhotel.network.model.StayKeyword;
+import com.twoheart.dailyhotel.network.model.GourmetKeyword;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyRecentSearches;
@@ -65,9 +65,9 @@ import io.reactivex.schedulers.Schedulers;
  * Created by sheldon
  * Clean Architecture
  */
-public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchStaySuggestActivity, SearchStaySuggestInterface> implements SearchStaySuggestView.OnEventListener
+public class SearchGourmetSuggestPresenter extends BaseExceptionPresenter<SearchGourmetSuggestActivity, SearchGourmetSuggestInterface> implements SearchGourmetSuggestView.OnEventListener
 {
-    private SearchStaySuggestAnalyticsInterface mAnalytics;
+    private SearchGourmetSuggestAnalyticsInterface mAnalytics;
 
     private SuggestRemoteImpl mSuggestRemoteImpl;
     private RecentlyRemoteImpl mRecentlyRemoteImpl;
@@ -75,33 +75,33 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
     private GoogleAddressRemoteImpl mGoogleAddressRemoteImpl;
 
     private DailyRecentSearches mDailyRecentSearches;
-    private StayBookDateTime mStayBookDateTime;
+    private GourmetBookDateTime mGourmetBookDateTime;
     private String mKeyword;
 
     private DailyLocationExFactory mDailyLocationExFactory;
 
-    public interface SearchStaySuggestAnalyticsInterface extends BaseAnalyticsInterface
+    public interface SearchGourmetSuggestAnalyticsInterface extends BaseAnalyticsInterface
     {
     }
 
-    public SearchStaySuggestPresenter(@NonNull SearchStaySuggestActivity activity)
+    public SearchGourmetSuggestPresenter(@NonNull SearchGourmetSuggestActivity activity)
     {
         super(activity);
     }
 
     @NonNull
     @Override
-    protected SearchStaySuggestInterface createInstanceViewInterface()
+    protected SearchGourmetSuggestInterface createInstanceViewInterface()
     {
-        return new SearchStaySuggestView(getActivity(), this);
+        return new SearchGourmetSuggestView(getActivity(), this);
     }
 
     @Override
-    public void constructorInitialize(SearchStaySuggestActivity activity)
+    public void constructorInitialize(SearchGourmetSuggestActivity activity)
     {
-        setContentView(R.layout.activity_search_stay_suggest_data);
+        setContentView(R.layout.activity_search_gourmet_suggest_data);
 
-        setAnalytics(new SearchStaySuggestAnalyticsImpl());
+        setAnalytics(new SearchGourmetSuggestAnalyticsImpl());
 
         mSuggestRemoteImpl = new SuggestRemoteImpl(activity);
         mRecentlyRemoteImpl = new RecentlyRemoteImpl(activity);
@@ -114,7 +114,7 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
     @Override
     public void setAnalytics(BaseAnalyticsInterface analytics)
     {
-        mAnalytics = (SearchStaySuggestAnalyticsInterface) analytics;
+        mAnalytics = (SearchGourmetSuggestAnalyticsInterface) analytics;
     }
 
     @Override
@@ -125,22 +125,20 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
             return true;
         }
 
-        mKeyword = intent.getStringExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
+        mKeyword = intent.getStringExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
 
-        String checkInDate = intent.getStringExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE);
-        String checkOutDate = intent.getStringExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE);
+        String visitDate = intent.getStringExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_VISIT_DATE);
 
-        if (DailyTextUtils.isTextEmpty(checkInDate, checkOutDate) == true)
+        if (DailyTextUtils.isTextEmpty(visitDate) == true)
         {
             return false;
         }
 
         try
         {
-            mStayBookDateTime = new StayBookDateTime();
+            mGourmetBookDateTime = new GourmetBookDateTime();
 
-            mStayBookDateTime.setCheckInDateTime(checkInDate);
-            mStayBookDateTime.setCheckOutDateTime(checkOutDate);
+            mGourmetBookDateTime.setVisitDateTime(visitDate);
         } catch (Exception e)
         {
             return false;
@@ -234,7 +232,7 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
 
         switch (requestCode)
         {
-            case SearchStaySuggestActivity.REQUEST_CODE_SPEECH_INPUT:
+            case SearchGourmetSuggestActivity.REQUEST_CODE_SPEECH_INPUT:
             {
                 if (resultCode == Activity.RESULT_OK && null != data)
                 {
@@ -245,7 +243,7 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
                 break;
             }
 
-            case SearchStaySuggestActivity.REQUEST_CODE_PERMISSION_MANAGER:
+            case SearchGourmetSuggestActivity.REQUEST_CODE_PERMISSION_MANAGER:
             {
                 switch (resultCode)
                 {
@@ -260,7 +258,7 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
                 break;
             }
 
-            case SearchStaySuggestActivity.REQUEST_CODE_SETTING_LOCATION:
+            case SearchGourmetSuggestActivity.REQUEST_CODE_SETTING_LOCATION:
                 startSearchMyLocation(true);
                 break;
         }
@@ -282,7 +280,7 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
         setRefresh(false);
         screenLock(showProgress);
 
-        Observable<ArrayList<RecentlyPlace>> ibObservable = mRecentlyLocalImpl.getRecentlyJSONObject(DailyDb.MAX_RECENT_PLACE_COUNT, Constants.ServiceType.HOTEL) //
+        Observable<ArrayList<RecentlyPlace>> ibObservable = mRecentlyLocalImpl.getRecentlyJSONObject(DailyDb.MAX_RECENT_PLACE_COUNT, Constants.ServiceType.GOURMET) //
             .observeOn(Schedulers.io()).flatMap(new Function<JSONObject, ObservableSource<ArrayList<RecentlyPlace>>>()
             {
                 @Override
@@ -298,15 +296,15 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
             });
 
         addCompositeDisposable(Observable.zip(ibObservable //
-            , mRecentlyLocalImpl.getRecentlyIndexList(Constants.ServiceType.HOTEL) //
-            , new BiFunction<ArrayList<RecentlyPlace>, ArrayList<Integer>, List<StaySuggest>>()
+            , mRecentlyLocalImpl.getRecentlyIndexList(Constants.ServiceType.GOURMET) //
+            , new BiFunction<ArrayList<RecentlyPlace>, ArrayList<Integer>, List<GourmetSuggest>>()
             {
                 @Override
-                public List<StaySuggest> apply(ArrayList<RecentlyPlace> stayList, ArrayList<Integer> expectedList) throws Exception
+                public List<GourmetSuggest> apply(ArrayList<RecentlyPlace> gourmetList, ArrayList<Integer> expectedList) throws Exception
                 {
                     if (expectedList != null && expectedList.size() > 0)
                     {
-                        Collections.sort(stayList, new Comparator<RecentlyPlace>()
+                        Collections.sort(gourmetList, new Comparator<RecentlyPlace>()
                         {
                             @Override
                             public int compare(RecentlyPlace o1, RecentlyPlace o2)
@@ -319,42 +317,42 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
                         });
                     }
 
-                    mDailyRecentSearches = new DailyRecentSearches(DailyPreference.getInstance(getActivity()).getHotelRecentSearches());
+                    mDailyRecentSearches = new DailyRecentSearches(DailyPreference.getInstance(getActivity()).getGourmetRecentSearches());
                     List<Keyword> keywordList = mDailyRecentSearches.getList();
 
-                    ArrayList<StaySuggest> staySuggestList = new ArrayList<>();
+                    ArrayList<GourmetSuggest> gourmetSuggestList = new ArrayList<>();
 
                     if (keywordList != null && keywordList.size() > 0)
                     {
-                        staySuggestList.add(new StaySuggest(StaySuggest.MENU_TYPE_RECENTLY_SEARCH //
+                        gourmetSuggestList.add(new GourmetSuggest(GourmetSuggest.MENU_TYPE_RECENTLY_SEARCH //
                             , null, getString(R.string.label_search_suggest_recently_search)));
 
                         for (Keyword keyword : keywordList)
                         {
-                            staySuggestList.add(new StaySuggest(keyword));
+                            gourmetSuggestList.add(new GourmetSuggest(keyword));
                         }
                     }
 
-                    if (stayList != null && stayList.size() > 0)
+                    if (gourmetList != null && gourmetList.size() > 0)
                     {
-                        staySuggestList.add(new StaySuggest(StaySuggest.MENU_TYPE_RECENTLY_STAY //
-                            , null, getString(R.string.label_recently_stay)));
+                        gourmetSuggestList.add(new GourmetSuggest(GourmetSuggest.MENU_TYPE_RECENTLY_GOURMET //
+                            , null, getString(R.string.label_recently_gourmet)));
 
-                        for (RecentlyPlace recentlyPlace : stayList)
+                        for (RecentlyPlace recentlyPlace : gourmetList)
                         {
-                            staySuggestList.add(new StaySuggest(recentlyPlace));
+                            gourmetSuggestList.add(new GourmetSuggest(recentlyPlace));
                         }
                     }
 
-                    return staySuggestList;
+                    return gourmetSuggestList;
                 }
-            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<StaySuggest>>()
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<GourmetSuggest>>()
         {
             @Override
-            public void accept(List<StaySuggest> staySuggests) throws Exception
+            public void accept(List<GourmetSuggest> gourmetSuggests) throws Exception
             {
-                boolean visible = staySuggests != null && staySuggests.size() > 0;
-                getViewInterface().setRecentlySuggests(staySuggests);
+                boolean visible = gourmetSuggests != null && gourmetSuggests.size() > 0;
+                getViewInterface().setRecentlySuggests(gourmetSuggests);
                 getViewInterface().setRecentlySuggestVisible(visible);
 
                 startSearchMyLocation(false);
@@ -408,19 +406,17 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
     {
         clearCompositeDisposable();
 
-        if (mStayBookDateTime == null)
+        if (mGourmetBookDateTime == null)
         {
             Util.restartApp(getActivity());
             return;
         }
 
-        String checkInDate;
-        int nights;
+        String visitDate;
 
         try
         {
-            checkInDate = mStayBookDateTime.getCheckInDateTime("yyyy-MM-dd");
-            nights = mStayBookDateTime.getNights();
+            visitDate = mGourmetBookDateTime.getVisitDateTime("yyyy-MM-dd");
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -436,54 +432,54 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
             onSuggestList(null);
         } else
         {
-            addCompositeDisposable(mSuggestRemoteImpl.getSuggestsByStayInbound(checkInDate, nights, keyword)//
-                .delaySubscription(500, TimeUnit.MILLISECONDS).map(new Function<Pair<String, ArrayList<StayKeyword>>, List<StaySuggest>>()
+            addCompositeDisposable(mSuggestRemoteImpl.getSuggestsByGourmet(visitDate, keyword)//
+                .delaySubscription(500, TimeUnit.MILLISECONDS).map(new Function<Pair<String, ArrayList<GourmetKeyword>>, List<GourmetSuggest>>()
                 {
                     @Override
-                    public List<StaySuggest> apply(Pair<String, ArrayList<StayKeyword>> stringArrayListPair) throws Exception
+                    public List<GourmetSuggest> apply(Pair<String, ArrayList<GourmetKeyword>> stringArrayListPair) throws Exception
                     {
-                        ArrayList<StayKeyword> keywordList = stringArrayListPair.second;
-                        ArrayList<StaySuggest> staySuggestList = new ArrayList<>();
+                        ArrayList<GourmetKeyword> keywordList = stringArrayListPair.second;
+                        ArrayList<GourmetSuggest> gourmetSuggestList = new ArrayList<>();
 
                         if (keywordList == null || keywordList.size() == 0)
                         {
-                            return staySuggestList;
+                            return gourmetSuggestList;
                         }
 
                         String oldCategoryKey = null;
 
-                        for (StayKeyword stayKeyword : keywordList)
+                        for (GourmetKeyword gourmetKeyword : keywordList)
                         {
-                            StaySuggest staySuggest = new StaySuggest(stayKeyword);
+                            GourmetSuggest gourmetSuggest = new GourmetSuggest(gourmetKeyword);
 
-                            if (DailyTextUtils.isTextEmpty(oldCategoryKey) || oldCategoryKey.equalsIgnoreCase(staySuggest.categoryKey) == false)
+                            if (DailyTextUtils.isTextEmpty(oldCategoryKey) || oldCategoryKey.equalsIgnoreCase(gourmetSuggest.categoryKey) == false)
                             {
                                 int resId;
-                                if (StaySuggest.CATEGORY_STAY.equalsIgnoreCase(staySuggest.categoryKey))
+                                if (GourmetSuggest.CATEGORY_GOURMET.equalsIgnoreCase(gourmetSuggest.categoryKey))
                                 {
-                                    resId = R.string.label_search_suggest_type_stay;
-                                    oldCategoryKey = staySuggest.categoryKey;
+                                    resId = R.string.label_search_suggest_type_gourmet;
+                                    oldCategoryKey = gourmetSuggest.categoryKey;
                                 } else
                                 {
                                     resId = R.string.label_search_suggest_type_region;
-                                    oldCategoryKey = StaySuggest.CATEGORY_REGION;
+                                    oldCategoryKey = GourmetSuggest.CATEGORY_REGION;
                                 }
 
-                                staySuggestList.add(new StaySuggest(StaySuggest.MENU_TYPE_SUGGEST, null, getString(resId)));
+                                gourmetSuggestList.add(new GourmetSuggest(GourmetSuggest.MENU_TYPE_SUGGEST, null, getString(resId)));
 
                             }
 
-                            staySuggestList.add(staySuggest);
+                            gourmetSuggestList.add(gourmetSuggest);
                         }
 
-                        return staySuggestList;
+                        return gourmetSuggestList;
                     }
-                }).subscribe(new Consumer<List<StaySuggest>>()
+                }).subscribe(new Consumer<List<GourmetSuggest>>()
                 {
                     @Override
-                    public void accept(List<StaySuggest> staySuggestList) throws Exception
+                    public void accept(List<GourmetSuggest> gourmetSuggestList) throws Exception
                     {
-                        SearchStaySuggestPresenter.this.onSuggestList(staySuggestList);
+                        SearchGourmetSuggestPresenter.this.onSuggestList(gourmetSuggestList);
 
                         unLockAll();
                     }
@@ -492,7 +488,7 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
                     @Override
                     public void accept(Throwable throwable) throws Exception
                     {
-                        SearchStaySuggestPresenter.this.onSuggestList(null);
+                        SearchGourmetSuggestPresenter.this.onSuggestList(null);
 
                         unLockAll();
                     }
@@ -501,9 +497,9 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
     }
 
     @Override
-    public void onSuggestClick(StaySuggest staySuggest)
+    public void onSuggestClick(GourmetSuggest gourmetSuggest)
     {
-        if (staySuggest == null)
+        if (gourmetSuggest == null)
         {
             return;
         }
@@ -513,16 +509,16 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
             return;
         }
 
-        addRecentSearches(staySuggest);
+        addRecentSearches(gourmetSuggest);
 
-        getViewInterface().setKeywordEditText(staySuggest.displayName);
-        startFinishAction(staySuggest, mKeyword, null);
+        getViewInterface().setKeywordEditText(gourmetSuggest.displayName);
+        startFinishAction(gourmetSuggest, mKeyword, null);
     }
 
     @Override
-    public void onRecentlySuggestClick(StaySuggest staySuggest)
+    public void onRecentlySuggestClick(GourmetSuggest gourmetSuggest)
     {
-        if (staySuggest == null)
+        if (gourmetSuggest == null)
         {
             return;
         }
@@ -532,36 +528,36 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
             return;
         }
 
-        addRecentSearches(staySuggest);
+        addRecentSearches(gourmetSuggest);
 
-        getViewInterface().setKeywordEditText(staySuggest.displayName);
-        startFinishAction(staySuggest, mKeyword, null);
+        getViewInterface().setKeywordEditText(gourmetSuggest.displayName);
+        startFinishAction(gourmetSuggest, mKeyword, null);
     }
 
-    private Keyword getKeyword(StaySuggest staySuggest)
+    private Keyword getKeyword(GourmetSuggest gourmetSuggest)
     {
-        if (getActivity() == null || staySuggest == null)
+        if (getActivity() == null || gourmetSuggest == null)
         {
             return null;
         }
 
         int icon = Keyword.DEFAULT_ICON;
-        if (StaySuggest.CATEGORY_STAY.equalsIgnoreCase(staySuggest.categoryKey))
+        if (GourmetSuggest.CATEGORY_GOURMET.equalsIgnoreCase(gourmetSuggest.categoryKey))
         {
-            icon = Keyword.HOTEL_ICON;
+            icon = Keyword.GOURMET_ICON;
         }
 
-        return new Keyword(icon, staySuggest.displayName);
+        return new Keyword(icon, gourmetSuggest.displayName);
     }
 
-    private void addRecentSearches(StaySuggest staySuggest)
+    private void addRecentSearches(GourmetSuggest gourmetSuggest)
     {
-        if (getActivity() == null || staySuggest == null)
+        if (getActivity() == null || gourmetSuggest == null)
         {
             return;
         }
 
-        Keyword keyword = getKeyword(staySuggest);
+        Keyword keyword = getKeyword(gourmetSuggest);
 
         if (keyword == null)
         {
@@ -569,14 +565,14 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
         }
 
         mDailyRecentSearches.addString(keyword);
-        DailyPreference.getInstance(getActivity()).setHotelRecentSearches(mDailyRecentSearches.toString());
+        DailyPreference.getInstance(getActivity()).setGourmetRecentSearches(mDailyRecentSearches.toString());
     }
 
-    private void startFinishAction(StaySuggest staySuggest, String keyword, String analyticsClickType)
+    private void startFinishAction(GourmetSuggest gourmetSuggest, String keyword, String analyticsClickType)
     {
         Intent intent = new Intent();
-        intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(staySuggest));
-        intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
+        intent.putExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcel(gourmetSuggest));
+        intent.putExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
 
         setResult(Activity.RESULT_OK, intent);
         finish();
@@ -599,13 +595,13 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
             public ObservableSource<Boolean> call() throws Exception
             {
                 mDailyRecentSearches.clear();
-                DailyPreference.getInstance(getActivity()).setHotelRecentSearches("");
+                DailyPreference.getInstance(getActivity()).setGourmetRecentSearches("");
 
                 return Observable.just(true);
             }
         }).subscribeOn(Schedulers.io());
 
-        addCompositeDisposable(Observable.zip(mRecentlyLocalImpl.clearRecentlyItems(Constants.ServiceType.HOTEL) //
+        addCompositeDisposable(Observable.zip(mRecentlyLocalImpl.clearRecentlyItems(Constants.ServiceType.GOURMET) //
             , recentlySearchObservable, new BiFunction<Boolean, Boolean, Boolean>()
             {
                 @Override
@@ -631,9 +627,9 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
     }
 
     @Override
-    public void onDeleteRecentlySuggest(int position, StaySuggest staySuggest)
+    public void onDeleteRecentlySuggest(int position, GourmetSuggest gourmetSuggest)
     {
-        if (getViewInterface() == null || staySuggest == null || position < 0)
+        if (getViewInterface() == null || gourmetSuggest == null || position < 0)
         {
             return;
         }
@@ -651,15 +647,15 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
             return;
         }
 
-        if (StaySuggest.MENU_TYPE_RECENTLY_STAY == staySuggest.menuType)
+        if (GourmetSuggest.MENU_TYPE_RECENTLY_GOURMET == gourmetSuggest.menuType)
         {
-            addCompositeDisposable(mRecentlyLocalImpl.deleteRecentlyItem(Constants.ServiceType.HOTEL, staySuggest.stayIndex) //
+            addCompositeDisposable(mRecentlyLocalImpl.deleteRecentlyItem(Constants.ServiceType.GOURMET, gourmetSuggest.gourmetIndex) //
                 .flatMap(new Function<Boolean, ObservableSource<ArrayList<RecentlyDbPlace>>>()
                 {
                     @Override
                     public ObservableSource<ArrayList<RecentlyDbPlace>> apply(Boolean aBoolean) throws Exception
                     {
-                        return mRecentlyLocalImpl.getRecentlyTypeList(Constants.ServiceType.HOTEL);
+                        return mRecentlyLocalImpl.getRecentlyTypeList(Constants.ServiceType.GOURMET);
                     }
                 }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<RecentlyDbPlace>>()
                 {
@@ -668,7 +664,7 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
                     {
                         if (recentlyDbPlaces.size() == 0)
                         {
-                            getViewInterface().removeRecentlySection(StaySuggest.MENU_TYPE_RECENTLY_STAY);
+                            getViewInterface().removeRecentlySection(GourmetSuggest.MENU_TYPE_RECENTLY_GOURMET);
                         }
 
                         unLockAll();
@@ -684,7 +680,7 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
         } else
         {
             // 최근 검색어
-            Keyword keyword = getKeyword(staySuggest);
+            Keyword keyword = getKeyword(gourmetSuggest);
             if (keyword == null)
             {
                 unLockAll();
@@ -694,10 +690,10 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
             mDailyRecentSearches.remove(keyword);
             if (mDailyRecentSearches.size() == 0)
             {
-                getViewInterface().removeRecentlySection(StaySuggest.MENU_TYPE_RECENTLY_SEARCH);
+                getViewInterface().removeRecentlySection(GourmetSuggest.MENU_TYPE_RECENTLY_SEARCH);
             }
 
-            DailyPreference.getInstance(getActivity()).setHotelRecentSearches(mDailyRecentSearches.toString());
+            DailyPreference.getInstance(getActivity()).setGourmetRecentSearches(mDailyRecentSearches.toString());
 
             unLockAll();
         }
@@ -720,7 +716,7 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
 
         try
         {
-            startActivityForResult(intent, SearchStaySuggestActivity.REQUEST_CODE_SPEECH_INPUT);
+            startActivityForResult(intent, SearchGourmetSuggestActivity.REQUEST_CODE_SPEECH_INPUT);
         } catch (ActivityNotFoundException a)
         {
             DailyToast.showToast(getActivity(), R.string.message_search_suggest_voice_search_error, DailyToast.LENGTH_SHORT);
@@ -740,7 +736,7 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
     }
 
     @Override
-    public void onNearbyClick(StaySuggest staySuggest)
+    public void onNearbyClick(GourmetSuggest gourmetSuggest)
     {
         startSearchMyLocation(true);
     }
@@ -758,14 +754,14 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
         return activities.size() > 0;
     }
 
-    private void onSuggestList(List<StaySuggest> staySuggestList)
+    private void onSuggestList(List<GourmetSuggest> gourmetSuggestList)
     {
         getViewInterface().setProgressBarVisible(false);
 
         boolean hasKeyword = DailyTextUtils.isTextEmpty(mKeyword) == false;
         getViewInterface().setSuggestsVisible(hasKeyword);
 
-        getViewInterface().setSuggests(staySuggestList);
+        getViewInterface().setSuggests(gourmetSuggestList);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -790,18 +786,18 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
             @Override
             public void accept(Location location) throws Exception
             {
-                StaySuggest locationStaySuggest = new StaySuggest(StaySuggest.MENU_TYPE_LOCATION, StaySuggest.CATEGORY_LOCATION, null);
-                locationStaySuggest.latitude = location.getLatitude();
-                locationStaySuggest.longitude = location.getLongitude();
+                GourmetSuggest locationGourmetSuggest = new GourmetSuggest(GourmetSuggest.MENU_TYPE_LOCATION, GourmetSuggest.CATEGORY_LOCATION, null);
+                locationGourmetSuggest.latitude = location.getLatitude();
+                locationGourmetSuggest.longitude = location.getLongitude();
 
                 addCompositeDisposable(mGoogleAddressRemoteImpl.getLocationAddress(location.getLatitude(), location.getLongitude()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<String>()
                 {
                     @Override
                     public void accept(String address) throws Exception
                     {
-                        locationStaySuggest.displayName = address;
+                        locationGourmetSuggest.displayName = address;
 
-                        getViewInterface().setNearbyStaySuggest(true, locationStaySuggest);
+                        getViewInterface().setNearbyGourmetSuggest(true, locationGourmetSuggest);
 
                         if (isUserClick == false)
                         {
@@ -810,15 +806,15 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
 
                         unLockAll();
 
-                        getViewInterface().setKeywordEditText(locationStaySuggest.displayName);
-                        startFinishAction(locationStaySuggest, mKeyword, null);
+                        getViewInterface().setKeywordEditText(locationGourmetSuggest.displayName);
+                        startFinishAction(locationGourmetSuggest, mKeyword, null);
                     }
                 }, new Consumer<Throwable>()
                 {
                     @Override
                     public void accept(Throwable throwable) throws Exception
                     {
-                        getViewInterface().setNearbyStaySuggest(true, locationStaySuggest);
+                        getViewInterface().setNearbyGourmetSuggest(true, locationGourmetSuggest);
 
                         if (isUserClick == false)
                         {
@@ -827,10 +823,10 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
 
                         unLockAll();
 
-                        locationStaySuggest.displayName = getString(R.string.label_search_nearby_empty_address);
+                        locationGourmetSuggest.displayName = getString(R.string.label_search_nearby_empty_address);
 
-                        getViewInterface().setKeywordEditText(locationStaySuggest.displayName);
-                        startFinishAction(locationStaySuggest, mKeyword, null);
+                        getViewInterface().setKeywordEditText(locationGourmetSuggest.displayName);
+                        startFinishAction(locationGourmetSuggest, mKeyword, null);
                     }
                 }));
 
@@ -849,9 +845,9 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
                     isAgreePermission = false;
                 }
 
-                StaySuggest locationStaySuggest = new StaySuggest(StaySuggest.MENU_TYPE_LOCATION, StaySuggest.CATEGORY_LOCATION, displayName);
+                GourmetSuggest locationGourmetSuggest = new GourmetSuggest(GourmetSuggest.MENU_TYPE_LOCATION, GourmetSuggest.CATEGORY_LOCATION, displayName);
 
-                getViewInterface().setNearbyStaySuggest(isAgreePermission, locationStaySuggest);
+                getViewInterface().setNearbyGourmetSuggest(isAgreePermission, locationGourmetSuggest);
 
                 if (isUserClick == false)
                 {
@@ -959,7 +955,7 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
             if (throwable instanceof PermissionException)
             {
                 Intent intent = PermissionManagerActivity.newInstance(getActivity(), PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
-                startActivityForResult(intent, SearchStaySuggestActivity.REQUEST_CODE_PERMISSION_MANAGER);
+                startActivityForResult(intent, SearchGourmetSuggestActivity.REQUEST_CODE_PERMISSION_MANAGER);
             } else if (throwable instanceof ProviderException)
             {
                 // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
@@ -969,7 +965,7 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
                     public void onClick(View v)
                     {
                         Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivityForResult(intent, SearchStaySuggestActivity.REQUEST_CODE_SETTING_LOCATION);
+                        startActivityForResult(intent, SearchGourmetSuggestActivity.REQUEST_CODE_SETTING_LOCATION);
                     }
                 };
 
@@ -1003,7 +999,7 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
             {
                 try
                 {
-                    ((ResolvableApiException) throwable).startResolutionForResult(getActivity(), SearchStaySuggestActivity.REQUEST_CODE_SETTING_LOCATION);
+                    ((ResolvableApiException) throwable).startResolutionForResult(getActivity(), SearchGourmetSuggestActivity.REQUEST_CODE_SETTING_LOCATION);
                 } catch (Exception e)
                 {
                     getViewInterface().showToast(R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);

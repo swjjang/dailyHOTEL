@@ -17,11 +17,14 @@ import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StaySuggest;
+import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
 import com.daily.dailyhotel.parcel.StaySuggestParcel;
+import com.daily.dailyhotel.screen.home.search.gourmet.suggest.SearchGourmetSuggestActivity;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.suggest.SearchStaySuggestActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.calendar.StayOutboundCalendarActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.StayOutboundListActivity;
@@ -302,7 +305,15 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             case SearchActivity.REQUEST_CODE_GOURMET_SUGGEST:
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
-
+                    try
+                    {
+                        GourmetSuggestParcel gourmetSuggestParcel = data.getParcelableExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
+                        mSearchModel.gourmetViewModel.suggest.setValue(gourmetSuggestParcel.getSuggest());
+                        mSearchModel.gourmetViewModel.inputString = data.getStringExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                    }
                 }
                 break;
 
@@ -517,7 +528,16 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
     @Override
     public void onGourmetSuggestClick()
     {
-
+        try
+        {
+            startActivityForResult(SearchGourmetSuggestActivity.newInstance(getActivity()//
+                , null //
+                , mSearchModel.gourmetViewModel.bookDateTime.getValue().getVisitDateTime(DailyCalendar.ISO_8601_FORMAT))//
+                , SearchActivity.REQUEST_CODE_GOURMET_SUGGEST);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     @Override
@@ -641,14 +661,14 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         mSearchModel.stayOutboundViewModel.people.setValue(new People(People.DEFAULT_ADULTS, null));
 
         // Gourmet
-        mSearchModel.gourmetViewModel.suggest.observe(activity, new Observer<String>()
+        mSearchModel.gourmetViewModel.suggest.observe(activity, new Observer<GourmetSuggest>()
         {
             @Override
-            public void onChanged(@Nullable String suggest)
+            public void onChanged(@Nullable GourmetSuggest suggest)
             {
-                getViewInterface().setSearchGourmetSuggestText(suggest);
+                getViewInterface().setSearchGourmetSuggestText(suggest.displayName);
 
-                getViewInterface().setSearchGourmetButtonEnabled(DailyTextUtils.isTextEmpty(suggest) == false);
+                getViewInterface().setSearchGourmetButtonEnabled(DailyTextUtils.isTextEmpty(suggest.displayName) == false);
             }
         });
 
@@ -716,12 +736,18 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
     private void showSearchGourmet()
     {
-        getViewInterface().setSearchGourmetSuggestText(mSearchModel.gourmetViewModel.suggest.getValue());
+        if (mSearchModel.gourmetViewModel.suggest.getValue() == null || DailyTextUtils.isTextEmpty(mSearchModel.gourmetViewModel.suggest.getValue().displayName) == true)
+        {
+            getViewInterface().setSearchGourmetSuggestText(null);
+            getViewInterface().setSearchGourmetButtonEnabled(false);
+        } else
+        {
+            getViewInterface().setSearchGourmetSuggestText(mSearchModel.gourmetViewModel.suggest.getValue().displayName);
+            getViewInterface().setSearchGourmetButtonEnabled(true);
+        }
 
         getViewInterface().setSearchGourmetCalendarText(mSearchModel.gourmetViewModel.bookDateTime.getValue().getVisitDateTime("yyyy.MM.dd(EEE)"));
 
         getViewInterface().showSearchGourmet();
-
-        getViewInterface().setSearchGourmetButtonEnabled(DailyTextUtils.isTextEmpty(mSearchModel.gourmetViewModel.suggest.getValue()) == false);
     }
 }

@@ -1118,6 +1118,7 @@
     <string name="label_search_nearby_description">위치서비스 약관 동의 필요</string>
     <string name="label_search_nearby_empty_address">현재 위치 주변</string>
     <string name="label_search_suggest_type_stay">스테이</string>
+    <string name="label_search_suggest_type_gourmet">레스토랑</string>
     <string name="label_search_suggest_type_region">도시/지역</string>
     <string name="label_search_suggest_recently_search">최근검색어</string>
     <string name="label_search_suggest_direct_search_format">\‘%1$s\’ 검색하기</string>

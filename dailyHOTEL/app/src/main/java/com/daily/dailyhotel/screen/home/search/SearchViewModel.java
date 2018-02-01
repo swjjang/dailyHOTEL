@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
@@ -98,7 +99,7 @@ public class SearchViewModel extends ViewModel
     public static class SearchGourmetViewModel extends ViewModel
     {
         public MutableLiveData<GourmetBookDateTime> bookDateTime = new MutableLiveData<>();
-        public MutableLiveData<String> suggest = new MutableLiveData<>();
+        public MutableLiveData<GourmetSuggest> suggest = new MutableLiveData<>();
         public String inputString;
 
         public static class SearchGourmetViewModelFactory implements ViewModelProvider.Factory
