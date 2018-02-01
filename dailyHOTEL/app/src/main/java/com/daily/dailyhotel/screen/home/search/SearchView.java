@@ -221,6 +221,17 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
     }
 
     @Override
+    public void refreshStay()
+    {
+        if(mSearchStayFragment == null)
+        {
+            return;
+        }
+
+        mSearchStayFragment.onRefresh();
+    }
+
+    @Override
     public void setSearchStaySuggestText(String text)
     {
         if (getViewDataBinding() == null)
@@ -280,6 +291,17 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         getViewDataBinding().staySearchTextView.setTypeface(FontManager.getInstance(getContext()).getMediumTypeface());
         getViewDataBinding().stayOutboundSearchTextView.setTypeface(FontManager.getInstance(getContext()).getBoldTypeface());
         getViewDataBinding().gourmetSearchTextView.setTypeface(FontManager.getInstance(getContext()).getMediumTypeface());
+    }
+
+    @Override
+    public void refreshStayOutbound()
+    {
+        if(mSearchStayOutboundFragment == null)
+        {
+            return;
+        }
+
+        mSearchStayOutboundFragment.onRefresh();
     }
 
     @Override
@@ -353,6 +375,17 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         getViewDataBinding().staySearchTextView.setTypeface(FontManager.getInstance(getContext()).getMediumTypeface());
         getViewDataBinding().stayOutboundSearchTextView.setTypeface(FontManager.getInstance(getContext()).getMediumTypeface());
         getViewDataBinding().gourmetSearchTextView.setTypeface(FontManager.getInstance(getContext()).getBoldTypeface());
+    }
+
+    @Override
+    public void refreshGourmet()
+    {
+        if(mSearchGourmetFragment == null)
+        {
+            return;
+        }
+
+        mSearchGourmetFragment.onRefresh();
     }
 
     @Override

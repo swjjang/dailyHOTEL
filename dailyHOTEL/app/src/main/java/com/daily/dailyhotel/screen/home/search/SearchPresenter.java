@@ -216,8 +216,8 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                 {
                     try
                     {
-                        StaySuggestParcel staySuggestParcel = data.getParcelableExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
-                        mSearchModel.stayViewModel.suggest.setValue(staySuggestParcel.getSuggest());
+                        StaySuggestParcel suggestParcel = data.getParcelableExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
+                        mSearchModel.stayViewModel.suggest.setValue(suggestParcel.getSuggest());
                         mSearchModel.stayViewModel.inputString = data.getStringExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
                     } catch (Exception e)
                     {
@@ -243,6 +243,29 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                 break;
 
             case SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT:
+                if (data != null)
+                {
+                    try
+                    {
+                        StaySuggestParcel suggestParcel = data.getParcelableExtra(PlaceSearchResultActivity.INTENT_EXTRA_DATA_SUGGEST);
+
+                        if (suggestParcel != null)
+                        {
+                            mSearchModel.stayViewModel.suggest.setValue(suggestParcel.getSuggest());
+                        }
+
+                        String checkInDateTime = data.getStringExtra(PlaceSearchResultActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME);
+                        String checkOutDateTime = data.getStringExtra(PlaceSearchResultActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME);
+
+                        mSearchModel.stayViewModel.bookDateTime.setValue(new StayBookDateTime(checkInDateTime, checkOutDateTime));
+                    } catch (Exception e)
+                    {
+                        ExLog.e(e.toString());
+                    }
+                }
+
+                getViewInterface().refreshStay();
+
                 switch (resultCode)
                 {
                     case Constants.CODE_RESULT_ACTIVITY_SEARCH_STAYOUTBOUND:
@@ -254,15 +277,6 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                         break;
 
                     default:
-                        if (data != null && data.hasExtra(PlaceSearchResultActivity.INTENT_EXTRA_DATA_SUGGEST) == true)
-                        {
-                            StaySuggestParcel staySuggestParcel = data.getParcelableExtra(PlaceSearchResultActivity.INTENT_EXTRA_DATA_SUGGEST);
-
-                            if (staySuggestParcel != null)
-                            {
-                                mSearchModel.stayViewModel.suggest.setValue(staySuggestParcel.getSuggest());
-                            }
-                        }
                         break;
                 }
                 break;
@@ -295,8 +309,67 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                         mSearchModel.stayOutboundViewModel.bookDateTime.setValue(new StayBookDateTime(checkInDateTime, checkOutDateTime));
                     } catch (Exception e)
                     {
-                        ExLog.d(e.toString());
+                        ExLog.e(e.toString());
                     }
+                }
+                break;
+
+            case SearchActivity.REQUEST_CODE_STAY_OUTBOUND_PEOPLE:
+            {
+                if (resultCode == Activity.RESULT_OK && data != null)
+                {
+                    if (data.hasExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS) == true && data.hasExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST) == true)
+                    {
+                        int numberOfAdults = data.getIntExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, People.DEFAULT_ADULTS);
+                        ArrayList<Integer> arrayList = data.getIntegerArrayListExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST);
+
+                        setPeople(numberOfAdults, arrayList);
+                    }
+                }
+                break;
+            }
+
+            case SearchActivity.REQUEST_CODE_STAY_OUTBOUND_SEARCH_RESULT:
+                if (data != null)
+                {
+                    try
+                    {
+                        StayOutboundSuggestParcel suggestParcel = data.getParcelableExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_SUGGEST);
+
+                        if (suggestParcel != null)
+                        {
+                            mSearchModel.stayOutboundViewModel.suggest.setValue(suggestParcel.getSuggest());
+                        }
+
+                        String checkInDateTime = data.getStringExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME);
+                        String checkOutDateTime = data.getStringExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME);
+
+                        mSearchModel.stayOutboundViewModel.bookDateTime.setValue(new StayBookDateTime(checkInDateTime, checkOutDateTime));
+
+                        int numberOfAdults = data.getIntExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, People.DEFAULT_ADULTS);
+                        ArrayList<Integer> arrayList = data.getIntegerArrayListExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHILD_LIST);
+
+                        setPeople(numberOfAdults, arrayList);
+                    } catch (Exception e)
+                    {
+                        ExLog.e(e.toString());
+                    }
+                }
+
+                getViewInterface().refreshStayOutbound();
+
+                switch (resultCode)
+                {
+                    case Constants.CODE_RESULT_ACTIVITY_SEARCH_STAY:
+                        mSearchModel.serviceType.setValue(Constants.ServiceType.HOTEL);
+                        break;
+
+                    case Constants.CODE_RESULT_ACTIVITY_SEARCH_GOURMET:
+                        mSearchModel.serviceType.setValue(Constants.ServiceType.GOURMET);
+                        break;
+
+                    default:
+                        break;
                 }
                 break;
 
@@ -322,20 +395,33 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                 }
                 break;
 
-            case SearchActivity.REQUEST_CODE_STAY_OUTBOUND_PEOPLE:
-            {
-                if (resultCode == Activity.RESULT_OK && data != null)
+            case SearchActivity.REQUEST_CODE_GOURMET_SEARCH_RESULT:
+                if (data != null)
                 {
-                    if (data.hasExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS) == true && data.hasExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST) == true)
+                    try
                     {
-                        int numberOfAdults = data.getIntExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, People.DEFAULT_ADULTS);
-                        ArrayList<Integer> arrayList = data.getIntegerArrayListExtra(SelectPeopleActivity.INTENT_EXTRA_DATA_CHILD_LIST);
-
-                        setPeople(numberOfAdults, arrayList);
+                    } catch (Exception e)
+                    {
+                        ExLog.e(e.toString());
                     }
                 }
+
+                getViewInterface().refreshGourmet();
+
+                switch (resultCode)
+                {
+                    case Constants.CODE_RESULT_ACTIVITY_SEARCH_STAY:
+                        mSearchModel.serviceType.setValue(Constants.ServiceType.HOTEL);
+                        break;
+
+                    case Constants.CODE_RESULT_ACTIVITY_SEARCH_STAYOUTBOUND:
+                        mSearchModel.serviceType.setValue(Constants.ServiceType.OB_STAY);
+                        break;
+
+                    default:
+                        break;
+                }
                 break;
-            }
         }
     }
 

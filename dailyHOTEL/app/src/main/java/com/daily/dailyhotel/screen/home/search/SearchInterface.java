@@ -12,6 +12,8 @@ public interface SearchInterface
     {
         void showSearchStay();
 
+        void refreshStay();
+
         void setSearchStaySuggestText(String text);
 
         void setSearchStayCalendarText(String text);
@@ -21,6 +23,8 @@ public interface SearchInterface
 
 
         void showSearchStayOutbound();
+
+        void refreshStayOutbound();
 
         void setSearchStayOutboundSuggestText(String text);
 
@@ -32,6 +36,8 @@ public interface SearchInterface
 
 
         void showSearchGourmet();
+
+        void refreshGourmet();
 
         void setSearchGourmetSuggestText(String text);
 

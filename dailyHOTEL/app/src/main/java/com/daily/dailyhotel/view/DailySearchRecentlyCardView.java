@@ -1,22 +1,18 @@
 package com.daily.dailyhotel.view;
 
-import android.animation.AnimatorSet;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.DailySearchRecentlyCardDataBinding;
+import com.twoheart.dailyhotel.databinding.DailyViewSearchRecentlyCardDataBinding;
 
 public class DailySearchRecentlyCardView extends ConstraintLayout
 {
-    private DailySearchRecentlyCardDataBinding mViewDataBinding;
-
-    AnimatorSet mStickerAnimatorSet;
+    private DailyViewSearchRecentlyCardDataBinding mViewDataBinding;
 
     public DailySearchRecentlyCardView(Context context)
     {
@@ -41,7 +37,7 @@ public class DailySearchRecentlyCardView extends ConstraintLayout
 
     private void initLayout(Context context)
     {
-        mViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_search_recently_card_data, this, true);
+        mViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.daily_view_search_recently_card_data, this, true);
     }
 
     public void setIcon(int resId)

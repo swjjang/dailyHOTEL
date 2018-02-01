@@ -649,16 +649,12 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected void finish(int resultCode)
     {
-        if (mPlaceSearchResultLayout != null && mPlaceSearchResultLayout.isEmptyLayout() == false//
-            && mStaySearchCuration.getSuggest() != null)
-        {
-            Intent intent = new Intent();
-            intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(mStaySearchCuration.getSuggest()));
-            setResult(resultCode, intent);
-        } else
-        {
-            setResult(resultCode);
-        }
+        Intent intent = new Intent();
+        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(mStaySearchCuration.getSuggest()));
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, mStaySearchCuration.getStayBookingDay().getCheckInDay(DailyCalendar.ISO_8601_FORMAT));
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, mStaySearchCuration.getStayBookingDay().getCheckOutDay(DailyCalendar.ISO_8601_FORMAT));
+
+        setResult(resultCode, intent);
 
         if (resultCode == RESULT_CANCELED || resultCode == CODE_RESULT_ACTIVITY_GO_SEARCH)
         {
