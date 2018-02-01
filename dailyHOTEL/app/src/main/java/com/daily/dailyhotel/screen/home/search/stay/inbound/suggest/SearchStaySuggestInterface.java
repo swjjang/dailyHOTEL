@@ -23,11 +23,15 @@ public interface SearchStaySuggestInterface extends BaseDialogViewInterface
 
     void setRecentlySuggests(List<StaySuggest> staySuggestList);
 
+    int getRecentlySuggestEntryCount();
+
     void setKeywordEditText(String text);
 
     void setVoiceSearchEnabled(boolean enabled);
 
     void removeRecentlyItem(int position);
+
+    void removeRecentlySection(int menuType);
 
     void setNearbyStaySuggest(boolean isAgreePermission, StaySuggest nearbyStaySuggest);
 }

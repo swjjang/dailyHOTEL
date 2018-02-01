@@ -55,7 +55,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
         void onRecentlySuggestClick(StaySuggest staySuggest);
 
-        void onDeleteAllRecentlySuggest();
+        void onDeleteAllRecentlySuggest(boolean skipLock);
 
         void onDeleteRecentlySuggest(int position, StaySuggest staySuggest);
 
@@ -298,7 +298,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
             @Override
             public void onClick(View v)
             {
-                getEventListener().onDeleteAllRecentlySuggest();
+                getEventListener().onDeleteAllRecentlySuggest(false);
             }
         });
 
@@ -528,6 +528,17 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
     }
 
     @Override
+    public int getRecentlySuggestEntryCount()
+    {
+        if (mRecentlySuggestListAdapter == null)
+        {
+            return 0;
+        }
+
+        return mRecentlySuggestListAdapter.getEntryCount();
+    }
+
+    @Override
     public void setKeywordEditText(String text)
     {
         if (getViewDataBinding() == null)
@@ -559,6 +570,18 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
         }
 
         mRecentlySuggestListAdapter.removeItem(position);
+        mRecentlySuggestListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void removeRecentlySection(int menuType)
+    {
+        if (mRecentlySuggestListAdapter == null)
+        {
+            return;
+        }
+
+        mRecentlySuggestListAdapter.removeSection(menuType);
         mRecentlySuggestListAdapter.notifyDataSetChanged();
     }
 
@@ -1135,6 +1158,25 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
             return mSuggestList.get(position).mType;
         }
 
+        public int getEntryCount()
+        {
+            if (mSuggestList == null || mSuggestList.size() == 0)
+            {
+                return 0;
+            }
+
+            int count = 0;
+            for (ObjectItem item : mSuggestList)
+            {
+                if (ObjectItem.TYPE_ENTRY == item.mType)
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
         public void setAll(List<ObjectItem> objectItemList)
         {
             if (mSuggestList == null)
@@ -1167,6 +1209,11 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
                 return null;
             }
 
+            if (position < 0 || position > mSuggestList.size() - 1)
+            {
+                return null;
+            }
+
             ObjectItem removeItem = mSuggestList.remove(position);
 
             if (mSuggestList.size() == 1)
@@ -1180,6 +1227,40 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
             StaySuggest staySuggest = removeItem.getItem();
             return staySuggest;
+        }
+
+        public void removeSection(int menuType)
+        {
+            if (mSuggestList == null || mSuggestList.size() == 0)
+            {
+                return;
+            }
+
+            for (int i = 0; i < mSuggestList.size(); i++)
+            {
+                ObjectItem item = mSuggestList.get(i);
+                if (ObjectItem.TYPE_SECTION != item.mType)
+                {
+                    continue;
+                }
+
+                StaySuggest staySuggest = item.getItem();
+                if (staySuggest == null || menuType != staySuggest.menuType)
+                {
+                    continue;
+                }
+
+                mSuggestList.remove(i);
+            }
+
+            if (mSuggestList.size() == 1)
+            {
+                ObjectItem checkItem = mSuggestList.get(0);
+                if (checkItem.mType == ObjectItem.TYPE_FOOTER_VIEW)
+                {
+                    mSuggestList.remove(0);
+                }
+            }
         }
 
         public void setNearByStaySuggest(StaySuggest nearByStaySuggest)

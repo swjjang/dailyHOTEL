@@ -26,6 +26,7 @@ import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
+import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.remote.GoogleAddressRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
@@ -583,9 +584,9 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
     }
 
     @Override
-    public void onDeleteAllRecentlySuggest()
+    public void onDeleteAllRecentlySuggest(boolean skipLocked)
     {
-        if (lock() == true)
+        if (skipLocked == false && lock() == true)
         {
             return;
         }
@@ -613,7 +614,21 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
                 {
                     return true;
                 }
-            }).observeOn(AndroidSchedulers.mainThread()).subscribe());
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+        {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception
+            {
+                unLockAll();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                unLockAll();
+            }
+        }));
     }
 
     @Override
@@ -624,25 +639,68 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
             return;
         }
 
+        if (lock() == true)
+        {
+            return;
+        }
+
         getViewInterface().removeRecentlyItem(position);
+
+        if (getViewInterface().getRecentlySuggestEntryCount() == 0)
+        {
+            onDeleteAllRecentlySuggest(true);
+            return;
+        }
 
         if (StaySuggest.MENU_TYPE_RECENTLY_STAY == staySuggest.menuType)
         {
-            // 최근 본 업장
             addCompositeDisposable(mRecentlyLocalImpl.deleteRecentlyItem(Constants.ServiceType.HOTEL, staySuggest.stayIndex) //
-                .observeOn(AndroidSchedulers.mainThread()).subscribe());
+                .flatMap(new Function<Boolean, ObservableSource<ArrayList<RecentlyDbPlace>>>()
+                {
+                    @Override
+                    public ObservableSource<ArrayList<RecentlyDbPlace>> apply(Boolean aBoolean) throws Exception
+                    {
+                        return mRecentlyLocalImpl.getRecentlyTypeList(Constants.ServiceType.HOTEL);
+                    }
+                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<RecentlyDbPlace>>()
+                {
+                    @Override
+                    public void accept(ArrayList<RecentlyDbPlace> recentlyDbPlaces) throws Exception
+                    {
+                        if (recentlyDbPlaces.size() == 0)
+                        {
+                            getViewInterface().removeRecentlySection(StaySuggest.MENU_TYPE_RECENTLY_STAY);
+                        }
+
+                        unLockAll();
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        unLockAll();
+                    }
+                }));
         } else
         {
             // 최근 검색어
             Keyword keyword = getKeyword(staySuggest);
-
             if (keyword == null)
             {
+                unLockAll();
                 return;
             }
 
             mDailyRecentSearches.remove(keyword);
+            if (mDailyRecentSearches.size() == 0)
+            {
+                getViewInterface().removeRecentlySection(StaySuggest.MENU_TYPE_RECENTLY_SEARCH);
+            }
+
             DailyPreference.getInstance(getActivity()).setHotelRecentSearches(mDailyRecentSearches.toString());
+
+            unLockAll();
         }
     }
 
