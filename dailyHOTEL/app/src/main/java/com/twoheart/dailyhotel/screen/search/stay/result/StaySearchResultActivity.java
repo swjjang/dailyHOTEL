@@ -516,6 +516,11 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
         mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN);
 
+        if (intent.hasExtra(INTENT_EXTRA_DATA_IS_DEEPLINK) == true)
+        {
+            mIsDeepLink = intent.getBooleanExtra(INTENT_EXTRA_DATA_IS_DEEPLINK, false);
+        }
+
         //        Location location = null;
         //        Keyword keyword = null;
         //        double radius = DEFAULT_SEARCH_RADIUS;
