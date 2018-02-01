@@ -22,6 +22,7 @@
             android:id="@+id/stayLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:elevation="2dp"
             android:padding="15dp"
             app:layout_constraintLeft_toLeftOf="parent"
