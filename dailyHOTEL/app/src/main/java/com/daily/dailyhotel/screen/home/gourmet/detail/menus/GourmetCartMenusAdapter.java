@@ -247,7 +247,7 @@ public class GourmetCartMenusAdapter extends RecyclerView.Adapter<GourmetCartMen
 
         final int SHOW_QUANTITY_LEFT = 5;
 
-        if (saleOrderQuantity <= SHOW_QUANTITY_LEFT)
+        if (saleOrderQuantity - menuOrderCount <= SHOW_QUANTITY_LEFT)
         {
             gourmetCartMenuViewHolder.dataBinding.leftQuantityTextView.setSelected(true);
             gourmetCartMenuViewHolder.dataBinding.leftQuantityTextView.setVisibility(View.VISIBLE);
