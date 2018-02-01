@@ -3,7 +3,6 @@ package com.daily.dailyhotel.screen.home.search.stay.inbound.suggest;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.PorterDuff;
-import android.location.Location;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -23,6 +22,7 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.StaySuggest;
@@ -61,7 +61,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
         void onVoiceSearchClick();
 
-        void onCheckVoiceSearchEnabled();
+        void setCheckVoiceSearchEnabled();
 
         void onNearbyClick(StaySuggest staySuggest);
     }
@@ -413,7 +413,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
     }
 
     @Override
-    public void setRecentlySuggests(List<StaySuggest> staySuggestList, Location location)
+    public void setRecentlySuggests(List<StaySuggest> staySuggestList, StaySuggest nearbyStaySuggest)
     {
         if (getViewDataBinding() == null)
         {
@@ -461,7 +461,13 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
         List<ObjectItem> objectItemList = new ArrayList<>();
 
         // 현재 위치 검색 추가
-        objectItemList.add(new ObjectItem(ObjectItem.TYPE_LOCATION_VIEW, new StaySuggest()));
+        if (nearbyStaySuggest == null)
+        {
+            nearbyStaySuggest = new StaySuggest(StaySuggest.MENU_TYPE_LOCATION //
+                , StaySuggest.CATEGORY_LOCATION, getString(R.string.label_search_nearby_description));
+        }
+
+        objectItemList.add(new ObjectItem(ObjectItem.TYPE_LOCATION_VIEW, nearbyStaySuggest));
 
         for (StaySuggest staySuggest : staySuggestList)
         {
@@ -516,6 +522,34 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
     }
 
     @Override
+    public void setNearbyStaySuggest(boolean isAgreePermission, StaySuggest nearbyStaySuggest)
+    {
+        String descriptionText = null;
+        if (isAgreePermission == false)
+        {
+            descriptionText = getString(R.string.label_search_nearby_description);
+        } else
+        {
+            descriptionText = nearbyStaySuggest != null ? nearbyStaySuggest.displayName : null;
+        }
+
+        ExLog.d("sam : setNearbyStaySuggest ? " + (mRecentlySuggestListAdapter != null));
+
+        if (mRecentlySuggestListAdapter != null)
+        {
+            mRecentlySuggestListAdapter.setNearByStaySuggest(nearbyStaySuggest);
+            mRecentlySuggestListAdapter.notifyDataSetChanged();
+        }
+
+        if (getViewDataBinding() != null)
+        {
+            getViewDataBinding().nearbyDataBinding.nearbyLayout.setTag(nearbyStaySuggest);
+            getViewDataBinding().nearbyDataBinding.descriptionTextView.setText(descriptionText);
+            getViewDataBinding().nearbyDataBinding.descriptionTextView.setVisibility(DailyTextUtils.isTextEmpty(descriptionText) ? View.GONE : View.VISIBLE);
+        }
+    }
+
+    @Override
     public void onClick(View view)
     {
         switch (view.getId())
@@ -542,7 +576,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
                 setSuggest(null);
                 setSuggests(null);
                 setSuggestsVisible(false);
-                getEventListener().onCheckVoiceSearchEnabled();
+                getEventListener().setCheckVoiceSearchEnabled();
                 break;
         }
     }
@@ -1109,6 +1143,31 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
             return staySuggest;
         }
 
+        public void setNearByStaySuggest(StaySuggest nearByStaySuggest)
+        {
+            if (mSuggestList != null || mSuggestList.size() == 0 || nearByStaySuggest == null)
+            {
+                return;
+            }
+
+            String descriptionText = mContext.getString(R.string.label_search_nearby_description);
+
+            for (ObjectItem item : mSuggestList)
+            {
+                if (ObjectItem.TYPE_LOCATION_VIEW == item.mType)
+                {
+                    StaySuggest staySuggest = item.getItem();
+
+                    staySuggest.displayName = nearByStaySuggest != null ? nearByStaySuggest.displayName : descriptionText;
+                    staySuggest.latitude = nearByStaySuggest.latitude;
+                    staySuggest.longitude = nearByStaySuggest.longitude;
+                    staySuggest.categoryKey = nearByStaySuggest.categoryKey;
+                    staySuggest.menuType = nearByStaySuggest.menuType;
+                    break;
+                }
+            }
+        }
+
         private void onBindViewHolder(LocationViewHolder holder, ObjectItem item)
         {
             StaySuggest staySuggest = item.getItem();
@@ -1128,14 +1187,14 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
                 }
             });
 
-            holder.dataBinding.bottomDivider.setVisibility(View.VISIBLE);
+            holder.dataBinding.descriptionTextView.setText(staySuggest.displayName);
 
-            if (staySuggest.latitude == 0 && staySuggest.longitude == 0)
+            if (DailyTextUtils.isTextEmpty(staySuggest.displayName) == true)
             {
-                holder.dataBinding.descriptionTextView.setText(R.string.label_search_nearby_description);
+                holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
             } else
             {
-                holder.dataBinding.descriptionTextView.setText(staySuggest.displayName);
+                holder.dataBinding.descriptionTextView.setVisibility(View.VISIBLE);
             }
         }
 

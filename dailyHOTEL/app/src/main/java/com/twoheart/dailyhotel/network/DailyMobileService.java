@@ -11,6 +11,7 @@ import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
 import com.daily.dailyhotel.repository.remote.model.ConfigurationsData;
 import com.daily.dailyhotel.repository.remote.model.CouponsData;
 import com.daily.dailyhotel.repository.remote.model.ExistCouponsData;
+import com.daily.dailyhotel.repository.remote.model.GoogleAddressData;
 import com.daily.dailyhotel.repository.remote.model.GourmetBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.GourmetCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.GourmetDetailData;
@@ -36,8 +37,6 @@ import com.daily.dailyhotel.repository.remote.model.StayBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayCampaignTagsData;
 import com.daily.dailyhotel.repository.remote.model.StayDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayFilterCountData;
-import com.daily.dailyhotel.repository.remote.model.StayOutboundSuggestsData;
-import com.daily.dailyhotel.repository.remote.model.StaysData;
 import com.daily.dailyhotel.repository.remote.model.StayOldWaitingDepositData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundBookingDetailData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundDetailData;
@@ -46,12 +45,14 @@ import com.daily.dailyhotel.repository.remote.model.StayOutboundPaymentData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundReceiptData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundRefundDetailData;
+import com.daily.dailyhotel.repository.remote.model.StayOutboundSuggestsData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundWishCountData;
 import com.daily.dailyhotel.repository.remote.model.StayOutboundsData;
 import com.daily.dailyhotel.repository.remote.model.StayPaymentData;
 import com.daily.dailyhotel.repository.remote.model.StayReceiptData;
 import com.daily.dailyhotel.repository.remote.model.StayRefundPolicyData;
 import com.daily.dailyhotel.repository.remote.model.StayRegionData;
+import com.daily.dailyhotel.repository.remote.model.StaysData;
 import com.daily.dailyhotel.repository.remote.model.TrueReviewsData;
 import com.daily.dailyhotel.repository.remote.model.TrueVRData;
 import com.daily.dailyhotel.repository.remote.model.UserBenefitData;
@@ -62,6 +63,7 @@ import com.daily.dailyhotel.repository.remote.model.WaitingDepositData;
 import com.daily.dailyhotel.repository.remote.model.WishCountData;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.network.dto.BaseListDto;
+import com.twoheart.dailyhotel.network.dto.GoogleMapListDto;
 import com.twoheart.dailyhotel.network.model.Event;
 import com.twoheart.dailyhotel.network.model.GourmetDetailParams;
 import com.twoheart.dailyhotel.network.model.GourmetKeyword;
@@ -540,6 +542,11 @@ public interface DailyMobileService
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
     Observable<BaseDto<ConfigurationsData>> getConfigurations(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
+
+    @Headers({"Content-type: application/json"})
+    @GET()
+    Observable<GoogleMapListDto<GoogleAddressData>> getSearchAddress(@Url String mobileAPI);
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // ProfileRemoteImpl

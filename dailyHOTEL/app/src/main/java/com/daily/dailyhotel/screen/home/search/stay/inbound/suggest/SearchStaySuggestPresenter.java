@@ -3,14 +3,20 @@ package com.daily.dailyhotel.screen.home.search.stay.inbound.suggest;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
+import android.location.Location;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
+import android.view.View;
 
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.exception.DuplicateRunException;
+import com.daily.base.exception.PermissionException;
+import com.daily.base.exception.ProviderException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
@@ -20,14 +26,18 @@ import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
+import com.daily.dailyhotel.repository.remote.GoogleAddressRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
 import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchSuggestActivity;
 import com.daily.dailyhotel.storage.database.DailyDb;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.daily.dailyhotel.util.DailyLocationExFactory;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.network.model.StayKeyword;
+import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyRecentSearches;
 import com.twoheart.dailyhotel.util.Util;
@@ -44,6 +54,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
@@ -61,10 +72,14 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
     private SuggestRemoteImpl mSuggestRemoteImpl;
     private RecentlyRemoteImpl mRecentlyRemoteImpl;
     private RecentlyLocalImpl mRecentlyLocalImpl;
+    private GoogleAddressRemoteImpl mGoogleAddressRemoteImpl;
 
     private DailyRecentSearches mDailyRecentSearches;
     private StayBookDateTime mStayBookDateTime;
     private String mKeyword;
+    private StaySuggest mLocationStaySuggest;
+
+    private DailyLocationExFactory mDailyLocationExFactory;
 
     public interface SearchStaySuggestAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -92,6 +107,7 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
         mSuggestRemoteImpl = new SuggestRemoteImpl(activity);
         mRecentlyRemoteImpl = new RecentlyRemoteImpl(activity);
         mRecentlyLocalImpl = new RecentlyLocalImpl(activity);
+        mGoogleAddressRemoteImpl = new GoogleAddressRemoteImpl(activity);
 
         setRefresh(true);
     }
@@ -143,13 +159,18 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
     @Override
     public void onPostCreate()
     {
+        if (getViewInterface() == null)
+        {
+            return;
+        }
+
         if (DailyTextUtils.isTextEmpty(mKeyword) == false)
         {
             getViewInterface().setKeywordEditText(mKeyword);
             //            return;
         }
 
-        onCheckVoiceSearchEnabled();
+        setCheckVoiceSearchEnabled();
 
         getViewInterface().showKeyboard();
     }
@@ -224,6 +245,25 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
                 }
                 break;
             }
+
+            case SearchStaySuggestActivity.REQUEST_CODE_PERMISSION_MANAGER:
+            {
+                switch (resultCode)
+                {
+                    case Activity.RESULT_OK:
+                        startSearchMayLocation(true);
+                        break;
+
+                    default:
+                        // 권한 설정을 하지 않았을때 아무것도 하지 않음
+                        break;
+                }
+                break;
+            }
+
+            case SearchStaySuggestActivity.REQUEST_CODE_SETTING_LOCATION:
+                startSearchMayLocation(true);
+                break;
         }
     }
 
@@ -242,6 +282,8 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
 
         setRefresh(false);
         screenLock(showProgress);
+
+        startSearchMayLocation(false);
 
         Observable<ArrayList<RecentlyPlace>> ibObservable = mRecentlyLocalImpl.getRecentlyJSONObject(DailyDb.MAX_RECENT_PLACE_COUNT, Constants.ServiceType.HOTEL) //
             .observeOn(Schedulers.io()).flatMap(new Function<JSONObject, ObservableSource<ArrayList<RecentlyPlace>>>()
@@ -314,7 +356,9 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
             @Override
             public void accept(List<StaySuggest> staySuggests) throws Exception
             {
-                getViewInterface().setRecentlySuggests(staySuggests, null);
+                ExLog.d("sam - mLocationStaySuggest : " + mLocationStaySuggest.displayName + " , lat : " + mLocationStaySuggest.latitude + " , long : " + mLocationStaySuggest.longitude);
+
+                getViewInterface().setRecentlySuggests(staySuggests, mLocationStaySuggest);
 
                 boolean isEmpty = staySuggests == null || staySuggests.size() == 0;
                 getViewInterface().setEmptyRecentlySuggestsVisible(isEmpty);
@@ -326,7 +370,7 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
             @Override
             public void accept(Throwable throwable) throws Exception
             {
-                getViewInterface().setRecentlySuggests(null, null);
+                getViewInterface().setRecentlySuggests(null, mLocationStaySuggest);
                 getViewInterface().setEmptyRecentlySuggestsVisible(true);
 
                 unLockAll();
@@ -548,7 +592,7 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
             return;
         }
 
-        getViewInterface().setRecentlySuggests(null, null);
+        getViewInterface().setRecentlySuggests(null, mLocationStaySuggest);
         getViewInterface().setEmptyRecentlySuggestsVisible(true);
 
         Observable<Boolean> recentlySearchObservable = Observable.defer(new Callable<ObservableSource<Boolean>>()
@@ -630,7 +674,7 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
     }
 
     @Override
-    public void onCheckVoiceSearchEnabled()
+    public void setCheckVoiceSearchEnabled()
     {
         if (getViewInterface() == null)
         {
@@ -643,7 +687,7 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
     @Override
     public void onNearbyClick(StaySuggest staySuggest)
     {
-        // TODO : 현위치 기반 검색
+        startSearchMayLocation(true);
     }
 
     private boolean isVoiceSearchEnabled()
@@ -653,7 +697,8 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
             return false;
         }
 
-        List<ResolveInfo> activities = getActivity().getPackageManager().queryIntentActivities(new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH), 0);
+        List<ResolveInfo> activities = getActivity().getPackageManager() //
+            .queryIntentActivities(new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH), 0);
 
         return activities.size() > 0;
     }
@@ -668,4 +713,255 @@ public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchSta
         getViewInterface().setSuggests(staySuggestList);
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void startSearchMayLocation(boolean isUserClick)
+    {
+        Observable<Location> observable = searchMyLocation(isUserClick);
+
+        if (observable == null)
+        {
+            ExLog.e("sam - observable is null");
+            return;
+        }
+
+        if (isUserClick == true)
+        {
+            screenLock(true);
+        }
+
+        addCompositeDisposable(observable.subscribe(new Consumer<Location>()
+        {
+            @Override
+            public void accept(Location location) throws Exception
+            {
+                ExLog.d("sam - location : lat : " + location.getLatitude() + " , long : " + location.getLongitude() + " , toString : " + location.toString());
+
+                mLocationStaySuggest = new StaySuggest(StaySuggest.MENU_TYPE_LOCATION, StaySuggest.CATEGORY_LOCATION, null);
+                mLocationStaySuggest.latitude = location.getLatitude();
+                mLocationStaySuggest.longitude = location.getLongitude();
+
+                addCompositeDisposable(mGoogleAddressRemoteImpl.getLocationAddress(location.getLatitude(), location.getLongitude()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<String>()
+                {
+                    @Override
+                    public void accept(String address) throws Exception
+                    {
+                        mLocationStaySuggest.displayName = address;
+
+                        ExLog.d("sam - mLocationStaySuggest : " + mLocationStaySuggest.displayName + " , lat : " + mLocationStaySuggest.latitude + " , long : " + mLocationStaySuggest.longitude);
+                        getViewInterface().setNearbyStaySuggest(true, mLocationStaySuggest);
+
+                        if (isUserClick == false)
+                        {
+                            return;
+                        }
+
+                        unLockAll();
+
+                        getViewInterface().setKeywordEditText(mLocationStaySuggest.displayName);
+                        startFinishAction(mLocationStaySuggest, mKeyword, null);
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        getViewInterface().setNearbyStaySuggest(true, mLocationStaySuggest);
+
+                        if (isUserClick == false)
+                        {
+                            return;
+                        }
+
+                        unLockAll();
+
+                        mLocationStaySuggest.displayName = getString(R.string.label_search_nearby_empty_address);
+
+                        getViewInterface().setKeywordEditText(mLocationStaySuggest.displayName);
+                        startFinishAction(mLocationStaySuggest, mKeyword, null);
+                    }
+                }));
+
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                ExLog.d("sam - " + throwable.getMessage());
+
+                boolean isAgreePermission = true;
+                String displayName = null;
+
+                if (throwable instanceof PermissionException)
+                {
+                    displayName = getString(R.string.label_search_nearby_description);
+                    isAgreePermission = false;
+                }
+
+                mLocationStaySuggest = new StaySuggest(StaySuggest.MENU_TYPE_LOCATION, StaySuggest.CATEGORY_LOCATION, displayName);
+
+                getViewInterface().setNearbyStaySuggest(isAgreePermission, mLocationStaySuggest);
+
+                if (isUserClick == false)
+                {
+                    return;
+                }
+
+                unLockAll();
+            }
+        }));
+    }
+
+    private Observable<Location> searchMyLocation(boolean isUserClick)
+    {
+        if (mDailyLocationExFactory == null)
+        {
+            mDailyLocationExFactory = new DailyLocationExFactory(getActivity());
+        }
+
+        if (mDailyLocationExFactory.measuringLocation() == true)
+        {
+            // 이미 동작 하고 있음
+            return null;
+        }
+
+        return new Observable<Location>()
+        {
+            @Override
+            protected void subscribeActual(Observer<? super Location> observer)
+            {
+                mDailyLocationExFactory.checkLocationMeasure(new DailyLocationExFactory.OnCheckLocationListener()
+                {
+                    @Override
+                    public void onRequirePermission()
+                    {
+                        observer.onError(new PermissionException());
+                    }
+
+                    @Override
+                    public void onFailed()
+                    {
+                        observer.onError(new Exception());
+                    }
+
+                    @Override
+                    public void onProviderEnabled()
+                    {
+                        mDailyLocationExFactory.startLocationMeasure(new DailyLocationExFactory.OnLocationListener()
+                        {
+                            @Override
+                            public void onFailed()
+                            {
+                                observer.onError(new Exception());
+                            }
+
+                            @Override
+                            public void onAlreadyRun()
+                            {
+                                observer.onError(new DuplicateRunException());
+                            }
+
+                            @Override
+                            public void onLocationChanged(Location location)
+                            {
+                                //                                unLockAll();
+
+                                mDailyLocationExFactory.stopLocationMeasure();
+
+                                if (location == null)
+                                {
+                                    observer.onError(new NullPointerException());
+                                } else
+                                {
+                                    observer.onNext(location);
+                                    observer.onComplete();
+                                }
+                            }
+
+                            @Override
+                            public void onCheckSetting(ResolvableApiException exception)
+                            {
+                                observer.onError(exception);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onProviderDisabled()
+                    {
+                        observer.onError(new ProviderException());
+                    }
+                });
+            }
+        }.doOnError(throwable ->
+        {
+            //            unLockAll();
+            if (isUserClick == false)
+            {
+                // 화면 진입 시 처리 임
+                return;
+            }
+
+            unLockAll();
+
+
+            if (throwable instanceof PermissionException)
+            {
+                Intent intent = PermissionManagerActivity.newInstance(getActivity(), PermissionManagerActivity.PermissionType.ACCESS_FINE_LOCATION);
+                startActivityForResult(intent, SearchStaySuggestActivity.REQUEST_CODE_PERMISSION_MANAGER);
+            } else if (throwable instanceof ProviderException)
+            {
+                // 현재 GPS 설정이 꺼져있습니다 설정에서 바꾸어 주세요.
+                View.OnClickListener positiveListener = new View.OnClickListener()//
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivityForResult(intent, SearchStaySuggestActivity.REQUEST_CODE_SETTING_LOCATION);
+                    }
+                };
+
+                View.OnClickListener negativeListener = new View.OnClickListener()//
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        getViewInterface().showToast(R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
+                    }
+                };
+
+                DialogInterface.OnCancelListener cancelListener = new DialogInterface.OnCancelListener()
+                {
+                    @Override
+                    public void onCancel(DialogInterface dialog)
+                    {
+                        getViewInterface().showToast(R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
+                    }
+                };
+
+                getViewInterface().showSimpleDialog(//
+                    getString(R.string.dialog_title_used_gps), getString(R.string.dialog_msg_used_gps), //
+                    getString(R.string.dialog_btn_text_dosetting), //
+                    getString(R.string.dialog_btn_text_cancel), //
+                    positiveListener, negativeListener, cancelListener, null, true);
+            } else if (throwable instanceof DuplicateRunException)
+            {
+
+            } else if (throwable instanceof ResolvableApiException)
+            {
+                try
+                {
+                    ((ResolvableApiException) throwable).startResolutionForResult(getActivity(), SearchStaySuggestActivity.REQUEST_CODE_SETTING_LOCATION);
+                } catch (Exception e)
+                {
+                    getViewInterface().showToast(R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
+                }
+            } else
+            {
+                getViewInterface().showToast(R.string.message_failed_mylocation, DailyToast.LENGTH_SHORT);
+            }
+        });
+    }
 }
