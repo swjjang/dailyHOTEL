@@ -26,13 +26,13 @@
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_marginRight="12dp"
-            android:background="@color/default_background_cf7f7f8"
+            android:background="@drawable/shape_fillrect_bf8f8f9_r4"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/backImageView"
             app:layout_constraintRight_toLeftOf="@+id/distanceSpinner"
             app:layout_constraintTop_toTopOf="parent"/>
 
-        <ImageView
+        <com.daily.base.widget.DailyImageView
             android:id="@+id/titleIconImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -81,7 +81,7 @@
             android:layout_height="40dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="12dp"
-            android:background="@color/default_background_cf7f7f8"
+            android:background="@drawable/shape_fillrect_bf8f8f9_r4"
             android:dropDownWidth="66dp"
             android:spinnerMode="dropdown"
             app:layout_constraintBottom_toBottomOf="parent"

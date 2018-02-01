@@ -8,12 +8,10 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.daily.base.util.ExLog;
-import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
@@ -47,7 +45,7 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
     public static final String INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME = "checkInDateTime";
     public static final String INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME = "checkOutDateTime";
 
-    protected static final double DEFAULT_SEARCH_RADIUS = 10d;
+    public static final double DEFAULT_SEARCH_RADIUS = 10d;
 
     protected ViewType mViewType = ViewType.LIST;
 
@@ -81,6 +79,8 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
     protected abstract void onCalendarActivityResult(int resultCode, Intent data);
 
     protected abstract void onCurationActivityResult(int resultCode, Intent data);
+
+    protected abstract void onResearchActivityResult(int resultCode, Intent data);
 
     protected abstract void onLocationFailed();
 
@@ -339,6 +339,11 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
                 {
                     onActivityCurrentFragmentResult(requestCode, resultCode, data);
                 }
+                break;
+
+            case Constants.CODE_REQUEST_ACTIVITY_STAY_RESEARCH:
+            case Constants.CODE_REQUEST_ACTIVITY_GOURMET_RESEARCH:
+                onResearchActivityResult(resultCode, data);
                 break;
         }
     }

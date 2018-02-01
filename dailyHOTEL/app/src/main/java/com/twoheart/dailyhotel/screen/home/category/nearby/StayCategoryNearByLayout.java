@@ -1,10 +1,7 @@
 package com.twoheart.dailyhotel.screen.home.category.nearby;
 
-import android.animation.Animator;
-import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
@@ -14,15 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
+import com.daily.base.widget.DailyImageView;
 import com.daily.dailyhotel.view.DailyFloatingActionView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
@@ -44,29 +41,21 @@ import java.util.Locale;
  * Created by android_sam on 2017. 5. 19..
  */
 
-public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnClickListener
+public class StayCategoryNearByLayout extends BaseBlurLayout
 {
-    private static final int ANIMATION_DELAY = 200;
-
     private View mToolbar;
     TextView mCalendarTextView;
-    private View mEmptyLayout, mSearchLocationLayout;
+    private View mSearchLocationLayout;
     private View mResultLayout;
 
     DailyFloatingActionView mFloatingActionView;
 
     protected TabLayout mCategoryTabLayout;
-    private View mCalendarUnderlineView;
     protected ViewPager mViewPager;
     protected PlaceListFragmentPagerAdapter mFragmentPagerAdapter;
 
     protected Spinner mDistanceFilterSpinner;
     DistanceFilterAdapter mDistanceFilterAdapter;
-
-    Constants.ANIMATION_STATUS mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
-    Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
-    private boolean mUpScrolling;
-    ValueAnimator mValueAnimator;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -96,11 +85,6 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
         super(context, listener);
     }
 
-    protected int getEmptyIconResourceId()
-    {
-        return R.drawable.no_hotel_ic;
-    }
-
     private synchronized PlaceListFragmentPagerAdapter getPlaceListFragmentPagerAdapter(FragmentManager fragmentManager, View bottomOptionLayout //
         , PlaceListFragment.OnPlaceListFragmentListener listener)
     {
@@ -123,11 +107,12 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
     {
         initToolbarLayout(view);
 
-        mEmptyLayout = view.findViewById(R.id.emptyLayout);
+        ScrollView emptyScrollView = view.findViewById(R.id.emptyScrollView);
+        emptyScrollView.setVisibility(View.GONE);
+
         mSearchLocationLayout = view.findViewById(R.id.searchLocationLayout);
         mResultLayout = view.findViewById(R.id.resultLayout);
 
-        initEmptyLayout(mEmptyLayout);
         initSearchLocationLayout(mSearchLocationLayout);
         initCategoryTabLayout(view);
         initOptionLayout(view);
@@ -140,14 +125,13 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
         View backView = mToolbar.findViewById(R.id.backImageView);
         backView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).finish(Activity.RESULT_CANCELED));
 
-//        View searchCancelView = mToolbar.findViewById(R.id.searchCancelView);
-//        searchCancelView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).finish(Constants.CODE_RESULT_ACTIVITY_HOME));
+        View titleBackgroundView = view.findViewById(R.id.titleBackgroundView);
+        titleBackgroundView.setOnClickListener(v -> ((StayCategoryNearByLayout.OnEventListener) mOnEventListener).onDateClick());
 
-        View calendarLayout = view.findViewById(R.id.calendarLayout);
-        calendarLayout.setOnClickListener(this);
+        DailyImageView titleIconImageView = view.findViewById(R.id.titleIconImageView);
+        titleIconImageView.setVectorImageResource(R.drawable.search_ic_01_date);
 
         mCalendarTextView = view.findViewById(R.id.calendarTextView);
-
         mDistanceFilterSpinner = view.findViewById(R.id.distanceSpinner);
 
         CharSequence[] strings = mContext.getResources().getTextArray(R.array.search_result_distance_array);
@@ -155,7 +139,6 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
 
         mDistanceFilterAdapter.setDropDownViewResource(R.layout.list_row_search_result_sort_dropdown_item);
         mDistanceFilterSpinner.setAdapter(mDistanceFilterAdapter);
-
         mDistanceFilterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             @Override
@@ -177,11 +160,10 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
     private void initCategoryTabLayout(View view)
     {
         mCategoryTabLayout = view.findViewById(R.id.categoryTabLayout);
-//        mCalendarUnderlineView = view.findViewById(R.id.calendarUnderLine);
         mViewPager = view.findViewById(R.id.viewPager);
     }
 
-    protected void setCalendarText(StayBookingDay stayBookingDay)
+    void setCalendarText(StayBookingDay stayBookingDay)
     {
         if (stayBookingDay == null)
         {
@@ -191,41 +173,12 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
         try
         {
             int nights = stayBookingDay.getNights();
-            String dateFormat = ScreenUtils.getScreenWidth(mContext) < 720 ? "yyyy.MM.dd" : "yyyy.MM.dd(EEE)";
+            String dateFormat = ScreenUtils.getScreenWidth(mContext) < 720 ? "MM.dd" : "MM.dd(EEE)";
             String date = String.format(Locale.KOREA, "%s - %s, %d박"//
                 , stayBookingDay.getCheckInDay(dateFormat)//
                 , stayBookingDay.getCheckOutDay(dateFormat), nights);
 
-            if (DailyTextUtils.isTextEmpty(date) == true)
-            {
-                return;
-            }
-
-            mCalendarTextView.post(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    int width = mCalendarTextView.getWidth() - mCalendarTextView.getPaddingLeft() - mCalendarTextView.getPaddingRight();
-                    int textSize = date.length();
-
-                    Paint paint = mCalendarTextView.getPaint();
-                    int endPosition = paint.breakText(date, true, width, null);
-
-                    if (textSize > endPosition)
-                    {
-                        String newDateFormat = "yyyy.MM.dd";
-                        String newDate = String.format(Locale.KOREA, "%s - %s, %d박"//
-                            , stayBookingDay.getCheckInDay(newDateFormat)//
-                            , stayBookingDay.getCheckOutDay(newDateFormat), nights);
-
-                        mCalendarTextView.setText(newDate);
-                    } else
-                    {
-                        mCalendarTextView.setText(date);
-                    }
-                }
-            });
+            mCalendarTextView.setText(date);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -245,31 +198,6 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
         titleView.setText(title);
     }
 
-    private void initEmptyLayout(View view)
-    {
-        ImageView emptyIconImageView = view.findViewById(R.id.emptyIconImageView);
-        View changeDateView = view.findViewById(R.id.changeDateView);
-        TextView researchView = view.findViewById(R.id.researchView);
-        TextView callTextView = view.findViewById(R.id.callTextView);
-
-        emptyIconImageView.setImageResource(getEmptyIconResourceId());
-
-        changeDateView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onDateClick());
-
-        researchView.setText(R.string.label_searchresult_change_region);
-        researchView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ((OnEventListener) mOnEventListener).research();
-            }
-        });
-
-        callTextView.setPaintFlags(callTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        callTextView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onShowCallDialog());
-    }
-
     private void initSearchLocationLayout(View view)
     {
         if (view == null)
@@ -287,8 +215,6 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
         mFloatingActionView.setOnViewOptionClickListener(v -> ((OnEventListener) mOnEventListener).onViewTypeClick());
         mFloatingActionView.setOnFilterOptionClickListener(v -> ((OnEventListener) mOnEventListener).onFilterClick());
         mFloatingActionView.post(() -> mFloatingActionView.setTag(mViewPager.getBottom() - mFloatingActionView.getTop()));
-
-        setViewTypeVisibility(true);
 
         // 기본 설정
         setOptionViewTypeView(Constants.ViewType.LIST);
@@ -349,19 +275,6 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
     public void setCategoryTabLayoutVisibility(int visibility)
     {
         ((View) mCategoryTabLayout.getParent()).setVisibility(visibility);
-
-        ViewGroup.LayoutParams layoutParams = mCalendarUnderlineView.getLayoutParams();
-
-        if (layoutParams != null)
-        {
-            if (visibility == View.VISIBLE)
-            {
-                mCalendarUnderlineView.getLayoutParams().height = 1;
-            } else
-            {
-                mCalendarUnderlineView.getLayoutParams().height = ScreenUtils.dpToPx(mContext, 1);
-            }
-        }
     }
 
     public int getCategoryTabCount()
@@ -520,10 +433,27 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
         return mFragmentPagerAdapter.getFragmentList();
     }
 
-    public void setSpinnerVisible(boolean isVisible)
+    public void setSpinnerVisible(boolean visible)
     {
-        mDistanceFilterSpinner.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        mDistanceFilterSpinner.setEnabled(isVisible);
+        if (mDistanceFilterSpinner == null)
+        {
+            return;
+        }
+
+        int flag = visible ? View.VISIBLE : View.GONE;
+
+        mDistanceFilterSpinner.setVisibility(flag);
+        mDistanceFilterSpinner.setEnabled(visible);
+    }
+
+    public void showSpinner()
+    {
+        if (mDistanceFilterSpinner == null)
+        {
+            return;
+        }
+
+        mDistanceFilterSpinner.performClick();
     }
 
     double getSpinnerRadiusValue(int spinnerPosition)
@@ -604,25 +534,21 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
         switch (screenType)
         {
             case NONE:
-                mEmptyLayout.setVisibility(View.GONE);
                 mResultLayout.setVisibility(View.INVISIBLE);
                 mSearchLocationLayout.setVisibility(View.GONE);
                 break;
 
             case EMPTY:
-                mEmptyLayout.setVisibility(View.VISIBLE);
-                mResultLayout.setVisibility(View.INVISIBLE);
+                mResultLayout.setVisibility(View.VISIBLE);
                 mSearchLocationLayout.setVisibility(View.GONE);
                 break;
 
             case SEARCH_LOCATION:
-                mEmptyLayout.setVisibility(View.GONE);
                 mResultLayout.setVisibility(View.INVISIBLE);
                 mSearchLocationLayout.setVisibility(View.VISIBLE);
                 break;
 
             case LIST:
-                mEmptyLayout.setVisibility(View.GONE);
                 mResultLayout.setVisibility(View.VISIBLE);
                 mSearchLocationLayout.setVisibility(View.GONE);
                 break;
@@ -632,17 +558,6 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
     public boolean isEmptyLayout()
     {
         return mResultLayout.getVisibility() != View.VISIBLE;
-    }
-
-    @Override
-    public void onClick(View v)
-    {
-        switch (v.getId())
-        {
-            case R.id.calendarLayout:
-                ((StayCategoryNearByLayout.OnEventListener) mOnEventListener).onDateClick();
-                break;
-        }
     }
 
     void setMenuBarLayoutTranslationY(float dy)
@@ -665,262 +580,35 @@ public class StayCategoryNearByLayout extends BaseBlurLayout implements View.OnC
         mFloatingActionView.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
-    public void calculationMenuBarLayoutTranslationY(int dy)
-    {
-        Object tag = mFloatingActionView.getTag();
-
-        if (tag == null || tag instanceof Integer == false)
-        {
-            return;
-        }
-
-        int height = (Integer) tag;
-        float translationY = dy + mFloatingActionView.getTranslationY();
-
-        if (translationY >= height)
-        {
-            translationY = height;
-        } else if (translationY <= 0)
-        {
-            translationY = 0;
-        }
-
-        if (dy > 0)
-        {
-            mUpScrolling = true;
-        } else if (dy < 0)
-        {
-            mUpScrolling = false;
-        }
-
-        // 움직이는 동안에는 터치가 불가능 하다.
-        if (translationY == 0 || translationY == height)
-        {
-            setOptionViewTypeEnabled(true);
-            setOptionFilterEnabled(true);
-        } else
-        {
-            setOptionViewTypeEnabled(false);
-            setOptionFilterEnabled(false);
-        }
-
-        setMenuBarLayoutTranslationY(translationY);
-    }
-
-    public void animationMenuBarLayout()
-    {
-        Object tag = mFloatingActionView.getTag();
-
-        if (tag == null || tag instanceof Integer == false)
-        {
-            return;
-        }
-
-        int height = (Integer) tag;
-        float translationY = mFloatingActionView.getTranslationY();
-
-        if (translationY == 0 || translationY == height)
-        {
-            return;
-        }
-
-        mFloatingActionView.setTag(mFloatingActionView.getId(), translationY);
-
-        if (mUpScrolling == true)
-        {
-            if (translationY >= mFloatingActionView.getHeight() / 2)
-            {
-                hideBottomLayout(true);
-            } else
-            {
-                showBottomLayout(true);
-            }
-        } else
-        {
-            if (translationY <= mFloatingActionView.getHeight() / 2)
-            {
-                showBottomLayout(true);
-            } else
-            {
-                hideBottomLayout(true);
-            }
-        }
-    }
-
-    public synchronized void showBottomLayout(boolean isAnimation)
-    {
-        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.SHOW)
-        {
-            return;
-        }
-
-        if (mValueAnimator != null && mValueAnimator.isRunning() == true)
-        {
-            mValueAnimator.cancel();
-        }
-
-        if (isAnimation == true)
-        {
-            mValueAnimator = ValueAnimator.ofInt(0, 100);
-            mValueAnimator.setDuration(ANIMATION_DELAY);
-            mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-            {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation)
-                {
-                    int value = (Integer) animation.getAnimatedValue();
-                    float prevTranslationY = (Float) mFloatingActionView.getTag(mFloatingActionView.getId());
-                    float translationY = prevTranslationY * value / 100;
-
-                    setMenuBarLayoutTranslationY(prevTranslationY - translationY);
-                }
-            });
-
-            mValueAnimator.addListener(new Animator.AnimatorListener()
-            {
-                @Override
-                public void onAnimationStart(Animator animation)
-                {
-                    setOptionViewTypeEnabled(false);
-                    setOptionFilterEnabled(false);
-
-                    mAnimationState = Constants.ANIMATION_STATE.START;
-                    mAnimationStatus = Constants.ANIMATION_STATUS.SHOW;
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation)
-                {
-                    if (mValueAnimator != null)
-                    {
-                        mValueAnimator.removeAllListeners();
-                        mValueAnimator.removeAllUpdateListeners();
-                        mValueAnimator = null;
-                    }
-
-                    if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
-                    {
-                        mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
-                        mAnimationState = Constants.ANIMATION_STATE.END;
-                    }
-
-                    setOptionViewTypeEnabled(true);
-                    setOptionFilterEnabled(true);
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation)
-                {
-                    mAnimationState = Constants.ANIMATION_STATE.CANCEL;
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation)
-                {
-
-                }
-            });
-
-            mValueAnimator.start();
-        } else
-        {
-            setMenuBarLayoutTranslationY(0);
-
-            setOptionViewTypeEnabled(true);
-            setOptionFilterEnabled(true);
-        }
-    }
-
-    public void hideBottomLayout(boolean isAnimation)
-    {
-        if (mAnimationState == Constants.ANIMATION_STATE.START && mAnimationStatus == Constants.ANIMATION_STATUS.HIDE)
-        {
-            return;
-        }
-
-        if (mValueAnimator != null && mValueAnimator.isRunning() == true)
-        {
-            mValueAnimator.cancel();
-        }
-
-        if (isAnimation == true)
-        {
-            mValueAnimator = ValueAnimator.ofInt(0, 100);
-            mValueAnimator.setDuration(ANIMATION_DELAY);
-            mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
-            {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation)
-                {
-                    int value = (Integer) animation.getAnimatedValue();
-                    float prevTranslationY = (Float) mFloatingActionView.getTag(mFloatingActionView.getId());
-                    float height = (Integer) mFloatingActionView.getTag() - prevTranslationY;
-                    float translationY = height * value / 100;
-
-                    setMenuBarLayoutTranslationY(prevTranslationY + translationY);
-                }
-            });
-
-            mValueAnimator.addListener(new Animator.AnimatorListener()
-            {
-                @Override
-                public void onAnimationStart(Animator animation)
-                {
-                    mAnimationState = Constants.ANIMATION_STATE.START;
-                    mAnimationStatus = Constants.ANIMATION_STATUS.HIDE;
-
-                    setOptionViewTypeEnabled(false);
-                    setOptionFilterEnabled(false);
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation)
-                {
-                    if (mValueAnimator != null)
-                    {
-                        mValueAnimator.removeAllListeners();
-                        mValueAnimator.removeAllUpdateListeners();
-                        mValueAnimator = null;
-                    }
-
-                    if (mAnimationState != Constants.ANIMATION_STATE.CANCEL)
-                    {
-                        mAnimationStatus = Constants.ANIMATION_STATUS.HIDE_END;
-                        mAnimationState = Constants.ANIMATION_STATE.END;
-                    }
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation)
-                {
-                    mAnimationState = Constants.ANIMATION_STATE.CANCEL;
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation)
-                {
-
-                }
-            });
-
-            mValueAnimator.start();
-        } else
-        {
-            setMenuBarLayoutTranslationY((Integer) mFloatingActionView.getTag());
-
-            setOptionViewTypeEnabled(false);
-            setOptionFilterEnabled(false);
-        }
-    }
-
-    public void setViewTypeVisibility(boolean visible)
+    public synchronized void showBottomLayout()
     {
         if (mFloatingActionView == null)
         {
             return;
         }
 
-        mFloatingActionView.setViewOptionVisible(visible);
+        setBottomOptionVisible(true);
+        mFloatingActionView.setTranslationY(0);
+    }
+
+    public void hideBottomLayout()
+    {
+        if (mFloatingActionView == null)
+        {
+            return;
+        }
+
+        setBottomOptionVisible(false);
+    }
+
+    public void setBottomOptionVisible(boolean visible)
+    {
+        if (mFloatingActionView == null)
+        {
+            return;
+        }
+
+        mFloatingActionView.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////

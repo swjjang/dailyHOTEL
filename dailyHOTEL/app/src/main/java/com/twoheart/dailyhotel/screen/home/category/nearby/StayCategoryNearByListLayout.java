@@ -1,6 +1,7 @@
 package com.twoheart.dailyhotel.screen.home.category.nearby;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.location.Location;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
@@ -9,8 +10,11 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
+import com.twoheart.dailyhotel.model.StayCategoryNearByCuration;
 import com.twoheart.dailyhotel.model.StayCurationOption;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
+import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
+import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListLayout;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListMapFragment;
 import com.twoheart.dailyhotel.util.Constants;
@@ -24,6 +28,13 @@ import java.util.ArrayList;
 public class StayCategoryNearByListLayout extends StayListLayout
 {
     private TextView mResultTextView;
+
+    public interface OnEventListener extends StayListLayout.OnEventListener
+    {
+        void onRadiusClick();
+
+        void onCalendarClick();
+    }
 
     public StayCategoryNearByListLayout(Context context, OnEventListener eventListener)
     {
@@ -39,6 +50,12 @@ public class StayCategoryNearByListLayout extends StayListLayout
     }
 
     @Override
+    protected PlaceListAdapter getPlaceListAdapter(Context context, ArrayList<PlaceViewItem> arrayList)
+    {
+        return new StayCategoryNearByAdapter(context, arrayList, mOnItemClickListener, null);
+    }
+
+    @Override
     public void setVisibility(FragmentManager fragmentManager, Constants.ViewType viewType, Constants.EmptyStatus emptyStatus, boolean isCurrentPage)
     {
         if (emptyStatus == Constants.EmptyStatus.EMPTY)
@@ -47,18 +64,27 @@ public class StayCategoryNearByListLayout extends StayListLayout
                 ? new StayCurationOption() //
                 : (StayCurationOption) mStayCuration.getCurationOption();
 
-            if (stayCurationOption.isDefaultFilter() == true)
+            if ((stayCurationOption.isDefaultFilter() == true && ((StayCategoryNearByCuration) mStayCuration).getRadius() == PlaceSearchResultActivity.DEFAULT_SEARCH_RADIUS))
             {
-                setScreenVisible(ScreenType.EMPTY);
+                mEmptyView.setVisibility(View.VISIBLE);
                 mFilterEmptyView.setVisibility(View.GONE);
-                ((StayCategoryNearByListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(false);
+                ((StayCategoryNearByListLayout.OnEventListener) mOnEventListener).onBottomOptionVisible(false);
+            } else if (stayCurationOption.isDefaultFilter() == true)
+            {
+                mEmptyView.setVisibility(View.GONE);
+                mFilterEmptyView.setVisibility(View.VISIBLE);
+                ((StayCategoryNearByListLayout.OnEventListener) mOnEventListener).onBottomOptionVisible(false);
             } else
             {
-                setScreenVisible(ScreenType.FILTER_EMPTY);
+                mEmptyView.setVisibility(View.GONE);
+                mFilterEmptyView.setVisibility(View.VISIBLE);
                 ((StayCategoryNearByListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
             }
 
+            mMapLayout.setVisibility(View.GONE);
             mResultTextView.setVisibility(View.GONE);
+
+            mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
 
             if (viewType == Constants.ViewType.LIST)
             {
@@ -72,7 +98,9 @@ public class StayCategoryNearByListLayout extends StayListLayout
             switch (viewType)
             {
                 case LIST:
-                    setScreenVisible(ScreenType.LIST);
+                    mEmptyView.setVisibility(View.GONE);
+                    mMapLayout.setVisibility(View.GONE);
+                    mFilterEmptyView.setVisibility(View.GONE);
                     mResultTextView.setVisibility(View.VISIBLE);
 
                     if (mPlaceListMapFragment != null)
@@ -83,6 +111,8 @@ public class StayCategoryNearByListLayout extends StayListLayout
                         mPlaceListMapFragment = null;
                     }
 
+                    mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+
                     ((StayCategoryNearByListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
 
                     if (emptyStatus != Constants.EmptyStatus.NONE)
@@ -92,8 +122,10 @@ public class StayCategoryNearByListLayout extends StayListLayout
                     break;
 
                 case MAP:
-                    setScreenVisible(ScreenType.MAP);
                     mResultTextView.setVisibility(View.GONE);
+                    mEmptyView.setVisibility(View.GONE);
+                    mMapLayout.setVisibility(View.VISIBLE);
+                    mFilterEmptyView.setVisibility(View.GONE);
 
                     if (isCurrentPage == true && mPlaceListMapFragment == null)
                     {
@@ -169,5 +201,73 @@ public class StayCategoryNearByListLayout extends StayListLayout
         mPlaceListAdapter.setShowDistanceIgnoreSort(true);
 
         super.addResultList(fragmentManager, viewType, list, sortType, placeBookingDay, rewardEnabled);
+    }
+
+
+    /**
+     * 검색 방식에 따라서 빈화면의 내용이 다르다.
+     */
+    public void setEmptyType()
+    {
+        if (mEmptyView == null || mFilterEmptyView == null)
+        {
+            return;
+        }
+
+        setLocationTypeEmptyView(mEmptyView);
+        setLocationTypeFilterEmptyView(mFilterEmptyView);
+    }
+
+    private void setLocationTypeEmptyView(View view)
+    {
+        if (view == null)
+        {
+            return;
+        }
+
+        TextView messageTextView01 = view.findViewById(R.id.messageTextView01);
+        TextView messageTextView02 = view.findViewById(R.id.messageTextView02);
+
+        messageTextView01.setText(R.string.message_searchresult_stay_empty_message01);
+        messageTextView02.setText(R.string.message_searchresult_stay_empty_message02);
+
+        TextView researchView = view.findViewById(R.id.changeRegionView);
+        View changeDateView = view.findViewById(R.id.changeDateView);
+
+        researchView.setVisibility(View.GONE);
+
+        changeDateView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onCalendarClick());
+
+        TextView callTextView = view.findViewById(R.id.callTextView);
+        callTextView.setPaintFlags(callTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+        callTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).onShowCallDialog();
+            }
+        });
+    }
+
+    private void setLocationTypeFilterEmptyView(View view)
+    {
+        if (view == null)
+        {
+            return;
+        }
+
+
+        TextView filterMessageTextView01 = view.findViewById(R.id.filterMessageTextView01);
+        TextView filterMessageTextView02 = view.findViewById(R.id.filterMessageTextView02);
+
+        filterMessageTextView01.setText(R.string.message_searchresult_stay_filter_empty_message01);
+        filterMessageTextView02.setText(R.string.message_searchresult_stay_filter_empty_message02);
+
+        TextView buttonView = view.findViewById(R.id.buttonView);
+        buttonView.setText(R.string.label_searchresult_change_radius);
+
+        buttonView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onRadiusClick());
     }
 }

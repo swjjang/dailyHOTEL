@@ -2,21 +2,18 @@ package com.daily.dailyhotel.screen.home.search.stay.inbound.research;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
-import com.daily.base.OnBaseEventListener;
+import com.daily.dailyhotel.screen.home.search.stay.inbound.SearchStayFragment;
+import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityResearchStayDataBinding;
 
-public class ResearchStayView extends BaseDialogView<ResearchStayView.OnEventListener, ActivityResearchStayDataBinding> implements ResearchStayInterface
+import io.reactivex.Observable;
+
+public class ResearchStayView extends BaseDialogView<ResearchStayInterface.OnEventListener, ActivityResearchStayDataBinding> implements ResearchStayInterface.ViewInterface
 {
-    public interface OnEventListener extends OnBaseEventListener
-    {
-        void onStaySuggestClick();
+    SearchStayFragment mSearchStayFragment;
 
-        void onStayCalendarClick();
 
-        void onStayDoSearchClick();
-    }
-
-    public ResearchStayView(BaseActivity baseActivity, OnEventListener listener)
+    public ResearchStayView(BaseActivity baseActivity, ResearchStayInterface.OnEventListener listener)
     {
         super(baseActivity, listener);
     }
@@ -34,6 +31,8 @@ public class ResearchStayView extends BaseDialogView<ResearchStayView.OnEventLis
         viewDataBinding.staySuggestTextView.setOnClickListener(v -> getEventListener().onStaySuggestClick());
         viewDataBinding.stayCalendarTextView.setOnClickListener(v -> getEventListener().onStayCalendarClick());
         viewDataBinding.searchStayTextView.setOnClickListener(v -> getEventListener().onStayDoSearchClick());
+
+        mSearchStayFragment = (SearchStayFragment) getSupportFragmentManager().findFragmentById(R.id.searchStayFragment);
     }
 
     @Override
@@ -44,7 +43,7 @@ public class ResearchStayView extends BaseDialogView<ResearchStayView.OnEventLis
             return;
         }
 
-        getViewDataBinding().dailyTitleTextView.setText(title);
+        getViewDataBinding().toolbarView.setTitleText(title);
     }
 
     private void initToolbar(ActivityResearchStayDataBinding viewDataBinding)
@@ -54,7 +53,19 @@ public class ResearchStayView extends BaseDialogView<ResearchStayView.OnEventLis
             return;
         }
 
-        viewDataBinding.dailyTitleImageView.setOnClickListener(v -> getEventListener().onBackClick());
+        viewDataBinding.toolbarView.setBackImageResource(R.drawable.navibar_ic_x);
+        viewDataBinding.toolbarView.setOnBackClickListener(v -> getEventListener().onBackClick());
+    }
+
+    @Override
+    public void showSearchStay()
+    {
+        if (getViewDataBinding() == null || mSearchStayFragment == null)
+        {
+            return;
+        }
+
+        mSearchStayFragment.onSelected();
     }
 
     @Override
@@ -77,5 +88,27 @@ public class ResearchStayView extends BaseDialogView<ResearchStayView.OnEventLis
         }
 
         getViewDataBinding().stayCalendarTextView.setText(text);
+    }
+
+    @Override
+    public void setSearchStayButtonEnabled(boolean enabled)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().searchStayTextView.setEnabled(enabled);
+    }
+
+    @Override
+    public Observable getCompleteCreatedFragment()
+    {
+        if (getViewDataBinding() == null || mSearchStayFragment == null)
+        {
+            return null;
+        }
+
+        return mSearchStayFragment.getCompleteCreatedObservable();
     }
 }

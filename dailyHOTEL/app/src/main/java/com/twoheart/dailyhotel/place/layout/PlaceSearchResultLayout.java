@@ -40,7 +40,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements View.OnClickListener
+public abstract class PlaceSearchResultLayout extends BaseBlurLayout
 {
     private View mToolbar;
     protected TextView mCalendarTextView;
@@ -51,7 +51,6 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
     protected DailyFloatingActionView mFloatingActionView;
 
     protected TabLayout mCategoryTabLayout;
-    //    private View mCalendarUnderlineView;
     protected ViewPager mViewPager;
     protected PlaceListFragmentPagerAdapter mFragmentPagerAdapter;
 
@@ -136,24 +135,10 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         mToolbar = view.findViewById(R.id.toolbar);
 
         View backView = mToolbar.findViewById(R.id.backImageView);
-        backView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).finish(Activity.RESULT_CANCELED);
-            }
-        });
+        backView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).finish(Activity.RESULT_CANCELED));
 
         View titleBackgroundView = view.findViewById(R.id.titleBackgroundView);
-        titleBackgroundView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).onResearchClick();
-            }
-        });
+        titleBackgroundView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onResearchClick());
 
         mCalendarTextView = view.findViewById(R.id.calendarTextView);
         mDistanceFilterSpinner = view.findViewById(R.id.distanceSpinner);
@@ -184,13 +169,12 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
     private void initCategoryTabLayout(View view)
     {
         mCategoryTabLayout = view.findViewById(R.id.categoryTabLayout);
-        //        mCalendarUnderlineView = view.findViewById(R.id.calendarUnderLine);
         mViewPager = view.findViewById(R.id.viewPager);
     }
 
     public void setCalendarText(String date)
     {
-        if (DailyTextUtils.isTextEmpty(date) == true)
+        if (DailyTextUtils.isTextEmpty(date) == true || mCalendarTextView == null)
         {
             return;
         }
@@ -209,75 +193,6 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
         }
 
         titleView.setText(title);
-    }
-
-    private void initEmptyLayout(View view)
-    {
-        if (view == null)
-        {
-            return;
-        }
-
-        EdgeEffectColor.setEdgeGlowColor((ScrollView) view, mContext.getResources().getColor(R.color.default_over_scroll_edge));
-
-
-        ImageView emptyIconImageView = view.findViewById(R.id.emptyIconImageView);
-        View changeDateView = view.findViewById(R.id.changeDateView);
-        TextView researchView = view.findViewById(R.id.researchView);
-        TextView callTextView = view.findViewById(R.id.callTextView);
-
-        emptyIconImageView.setImageResource(getEmptyIconResourceId());
-
-        changeDateView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).onDateClick();
-            }
-        });
-
-        int researchResId;
-        if (AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC.equalsIgnoreCase(mCallByScreen) == true//
-            || AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC.equalsIgnoreCase(mCallByScreen) == true//
-            || AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL.equalsIgnoreCase(mCallByScreen) == true)
-        {
-            researchResId = R.string.label_searchresult_change_region;
-        } else
-        {
-            researchResId = R.string.label_searchresult_research;
-        }
-
-        researchView.setText(researchResId);
-        researchView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                int resultCode;
-                if (AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC.equalsIgnoreCase(mCallByScreen) == true//
-                    || AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC.equalsIgnoreCase(mCallByScreen) == true//
-                    || AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL.equalsIgnoreCase(mCallByScreen) == true)
-                {
-                    resultCode = Constants.CODE_RESULT_ACTIVITY_GO_REGION_LIST;
-                } else
-                {
-                    resultCode = Constants.CODE_RESULT_ACTIVITY_GO_SEARCH;
-                }
-
-                ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).research(resultCode);
-            }
-        });
-
-        callTextView.setPaintFlags(callTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        callTextView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).onShowCallDialog();
-            }
-        });
     }
 
     private void initSearchLocationLayout(View view)
@@ -357,19 +272,6 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
     public void setCategoryTabLayoutVisibility(int visibility)
     {
         ((View) mCategoryTabLayout.getParent()).setVisibility(visibility);
-
-        //        ViewGroup.LayoutParams layoutParams = mCalendarUnderlineView.getLayoutParams();
-        //
-        //        if (layoutParams != null)
-        //        {
-        //            if (visibility == View.VISIBLE)
-        //            {
-        //                mCalendarUnderlineView.getLayoutParams().height = 1;
-        //            } else
-        //            {
-        //                mCalendarUnderlineView.getLayoutParams().height = ScreenUtils.dpToPx(mContext, 1);
-        //            }
-        //        }
     }
 
     public int getCategoryTabCount()
@@ -684,6 +586,16 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
 
     }
 
+    public void showSpinner()
+    {
+        if (mDistanceFilterSpinner == null)
+        {
+            return;
+        }
+
+        mDistanceFilterSpinner.performClick();
+    }
+
     double getSpinnerRadiusValue(int spinnerPosition)
     {
         if (mDistanceFilterSpinner == null)
@@ -790,17 +702,6 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout implements 
     public boolean isEmptyLayout()
     {
         return mResultLayout.getVisibility() != View.VISIBLE;
-    }
-
-    @Override
-    public void onClick(View v)
-    {
-        switch (v.getId())
-        {
-            case R.id.calendarLayout:
-                ((PlaceSearchResultLayout.OnEventListener) mOnEventListener).onDateClick();
-                break;
-        }
     }
 
     public synchronized void showBottomLayout()

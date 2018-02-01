@@ -859,6 +859,7 @@
     <string name="label_hotel_list_changing_filter">필터 다시 적용하기</string>
     <string name="message_not_exist_filters">해당 조건에 일치하는 업체가 없습니다.</string>
     <string name="message_changing_filter_option">필터링 설정 조건을 변경하여 검색해보세요!</string>
+    <string name="message_changing_option">검색조건을 변경해서 다시 검색해보세요.</string>
     <string name="message_stay_empty_message01">조건에 맞는 스테이가 없습니다.</string>
     <string name="message_stay_empty_message02">지역이나 날짜를 변경해보세요.</string>
     <string name="message_gourmet_empty_message01">조건에 맞는 레스토랑이 없습니다.</string>
@@ -1099,9 +1100,16 @@
     <string name="label_searchresult_search_stayoutbound">해외스테이 검색</string>
     <string name="label_searchresult_search_gourmet">고메 검색</string>
     <string name="label_searchresult_search_stay">국내스테이 검색</string>
+    <string name="label_searchresult_change_radius">반경 범위 변경하기</string>
 
     <string name="message_searchresult_search_other_category">다른 항목으로 검색해보시겠어요?</string>
     <string name="message_searchresult_empty_title">검색어와 일치하는 결과가 없습니다.</string>
+
+    <string name="message_searchresult_stay_empty_message01">내 주변 스테이가 없습니다.</string>
+    <string name="message_searchresult_stay_empty_message02">날짜나 지역을 변경하여 검색해 보세요.</string>
+
+    <string name="message_searchresult_stay_filter_empty_message01">해당 조건에 일치하는 업체가 없습니다.</string>
+    <string name="message_searchresult_stay_filter_empty_message02">반경 범위를 변경하거나\n필터 설정 조건을 변경하여 검색해보세요.</string>
 
     <string name="message_searchresult_stay_empty_subtitle">검색어를 변경하여 검색해보세요.\n더 구체적인 단어로도 검색이 가능해요.\n(예: 수영장 있는 호텔, 파티룸)</string>
 

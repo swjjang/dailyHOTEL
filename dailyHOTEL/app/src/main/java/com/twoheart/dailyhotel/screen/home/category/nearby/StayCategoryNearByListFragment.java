@@ -1,6 +1,13 @@
 package com.twoheart.dailyhotel.screen.home.category.nearby;
 
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+
+import com.daily.dailyhotel.entity.StaySuggest;
+import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
+import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
+import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.PlaceCuration;
@@ -11,7 +18,9 @@ import com.twoheart.dailyhotel.model.StayCategoryNearByParams;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListLayout;
+import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Util;
+import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +39,10 @@ public class StayCategoryNearByListFragment extends StayListFragment
     public interface OnStayCategoryNearByListFragmentListener extends OnStayListFragmentListener
     {
         void onCategoryList(List<Category> categoryList);
+
+        void onStayListCount(int count);
+
+        void onRadiusClick();
     }
 
     @Override
@@ -59,6 +72,8 @@ public class StayCategoryNearByListFragment extends StayListFragment
     public void setPlaceCuration(PlaceCuration curation)
     {
         super.setPlaceCuration(curation);
+
+        ((StayCategoryNearByListLayout) mStayListLayout).setEmptyType();
     }
 
     @Override
@@ -135,9 +150,12 @@ public class StayCategoryNearByListFragment extends StayListFragment
                 if (size == 0)
                 {
                     setVisibility(mViewType, EmptyStatus.EMPTY, true);
+                } else
+                {
+                    mOnPlaceListFragmentListener.onShowMenuBar();
                 }
 
-                mEventListener.onShowActivityEmptyView(size == 0);
+                mEventListener.onShowActivityEmptyView(false);
                 break;
             }
 
@@ -150,9 +168,12 @@ public class StayCategoryNearByListFragment extends StayListFragment
                 if (mapSize == 0)
                 {
                     setVisibility(mViewType, EmptyStatus.EMPTY, true);
+                } else
+                {
+                    mOnPlaceListFragmentListener.onShowMenuBar();
                 }
 
-                mEventListener.onShowActivityEmptyView(mapSize == 0);
+                mEventListener.onShowActivityEmptyView(false);
                 break;
             }
 
@@ -163,6 +184,149 @@ public class StayCategoryNearByListFragment extends StayListFragment
         unLockUI();
         mPlaceListLayout.setSwipeRefreshing(false);
     }
+
+    /////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////   Listener   //////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////
+
+    protected StayCategoryNearByListLayout.OnEventListener mEventListener = new StayCategoryNearByListLayout.OnEventListener()
+    {
+        @Override
+        public void onPlaceClick(int position, View view, PlaceViewItem placeViewItem)
+        {
+            mWishPosition = position;
+
+            ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onStayClick(view, placeViewItem, getPlaceCount());
+        }
+
+        public void onPlaceLongClick(int position, View view, PlaceViewItem placeViewItem)
+        {
+            mWishPosition = position;
+
+            ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onStayLongClick(view, placeViewItem, getPlaceCount());
+        }
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+        {
+            mOnPlaceListFragmentListener.onScrolled(recyclerView, dx, dy);
+        }
+
+        @Override
+        public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+        {
+            mOnPlaceListFragmentListener.onScrollStateChanged(recyclerView, newState);
+        }
+
+        @Override
+        public void onRefreshAll(boolean isShowProgress)
+        {
+            refreshList(isShowProgress, 1);
+
+            mOnPlaceListFragmentListener.onShowMenuBar();
+        }
+
+        @Override
+        public void onLoadMoreList()
+        {
+            addList(false);
+        }
+
+        @Override
+        public void onFilterClick()
+        {
+            mOnPlaceListFragmentListener.onFilterClick();
+        }
+
+        @Override
+        public void onUpdateFilterEnabled(boolean isEnabled)
+        {
+            mOnPlaceListFragmentListener.onUpdateFilterEnabled(isEnabled);
+        }
+
+        @Override
+        public void onBottomOptionVisible(boolean visible)
+        {
+            mOnPlaceListFragmentListener.onBottomOptionVisible(visible);
+        }
+
+        @Override
+        public void onUpdateViewTypeEnabled(boolean isEnabled)
+        {
+            mOnPlaceListFragmentListener.onUpdateViewTypeEnabled(isEnabled);
+        }
+
+        @Override
+        public void onShowActivityEmptyView(boolean isShow)
+        {
+            mOnPlaceListFragmentListener.onShowActivityEmptyView(isShow);
+        }
+
+        @Override
+        public void onRecordAnalytics(ViewType viewType)
+        {
+            mOnPlaceListFragmentListener.onRecordAnalytics(viewType);
+        }
+
+        @Override
+        public void onShowCallDialog()
+        {
+            startActivity(CallDialogActivity.newInstance(getActivity()));
+        }
+
+        @Override
+        public void onRegionClick()
+        {
+            ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onRegionClick();
+        }
+
+        @Override
+        public void onCalendarClick()
+        {
+            ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onCalendarClick();
+        }
+
+        @Override
+        public void onWishClick(int position, PlaceViewItem placeViewItem)
+        {
+            if (placeViewItem == null || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            Stay stay = placeViewItem.getItem();
+
+            mWishPosition = position;
+
+            boolean currentWish = stay.myWish;
+
+            if (DailyHotel.isLogin() == true)
+            {
+                onChangedWish(position, !currentWish);
+            }
+
+            mBaseActivity.startActivityForResult(WishDialogActivity.newInstance(mBaseActivity, ServiceType.HOTEL//
+                , stay.index, !currentWish, position, AnalyticsManager.Screen.DAILYHOTEL_LIST), Constants.CODE_REQUEST_ACTIVITY_WISH_DIALOG);
+
+            AnalyticsManager.getInstance(getActivity()).recordEvent(AnalyticsManager.Category.PRODUCT_LIST//
+                , AnalyticsManager.Action.WISH_STAY, !currentWish ? AnalyticsManager.Label.ON.toLowerCase() : AnalyticsManager.Label.OFF.toLowerCase(), null);
+        }
+
+        @Override
+        public void finish()
+        {
+            if (mBaseActivity != null)
+            {
+                mBaseActivity.finish();
+            }
+        }
+
+        @Override
+        public void onRadiusClick()
+        {
+            ((OnStayCategoryNearByListFragmentListener) mOnPlaceListFragmentListener).onRadiusClick();
+        }
+    };
 
     private StayCategoryNearByListNetworkController.OnNetworkControllerListener onNetworkControllerListener = new StayCategoryNearByListNetworkController.OnNetworkControllerListener()
     {

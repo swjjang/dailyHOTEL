@@ -2,19 +2,24 @@ package com.daily.dailyhotel.screen.home.search.stay.inbound.research;
 
 
 import android.app.Activity;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
+import com.daily.base.BaseActivity;
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.StaySuggestParcel;
-import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
-import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
+import com.daily.dailyhotel.screen.home.search.SearchViewModel;
+import com.daily.dailyhotel.screen.home.search.stay.inbound.suggest.SearchStaySuggestActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.network.model.TodayDateTime;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
@@ -23,24 +28,21 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.Locale;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+
 /**
  * Created by sheldon
  * Clean Architecture
  */
-public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayActivity, ResearchStayInterface> implements ResearchStayView.OnEventListener
+public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayActivity, ResearchStayInterface.ViewInterface> implements ResearchStayInterface.OnEventListener
 {
-    private ResearchStayAnalyticsInterface mAnalytics;
+    private ResearchStayInterface.AnalyticsInterface mAnalytics;
 
-    RecentlyLocalImpl mRecentlyLocalImpl;
-    CampaignTagRemoteImpl mCampaignTagRemoteImpl;
+    SearchViewModel.SearchStayViewModel mSearchModel;
 
     CommonDateTime mCommonDateTime;
-    StayBookDateTime mStayBookDateTime;
-    StaySuggest mSuggest;
 
-    public interface ResearchStayAnalyticsInterface extends BaseAnalyticsInterface
-    {
-    }
 
     public ResearchStayPresenter(@NonNull ResearchStayActivity activity)
     {
@@ -49,7 +51,7 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
 
     @NonNull
     @Override
-    protected ResearchStayInterface createInstanceViewInterface()
+    protected ResearchStayInterface.ViewInterface createInstanceViewInterface()
     {
         return new ResearchStayView(getActivity(), this);
     }
@@ -61,8 +63,7 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
 
         setAnalytics(new ResearchStayAnalyticsImpl());
 
-        mRecentlyLocalImpl = new RecentlyLocalImpl(activity);
-        mCampaignTagRemoteImpl = new CampaignTagRemoteImpl(activity);
+        initViewModel(activity);
 
         setRefresh(false);
     }
@@ -70,7 +71,7 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
     @Override
     public void setAnalytics(BaseAnalyticsInterface analytics)
     {
-        mAnalytics = (ResearchStayAnalyticsInterface) analytics;
+        mAnalytics = (ResearchStayInterface.AnalyticsInterface) analytics;
     }
 
     @Override
@@ -88,9 +89,7 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
 
         try
         {
-            mStayBookDateTime = new StayBookDateTime();
-            mStayBookDateTime.setCheckInDateTime(intent.getStringExtra(ResearchStayActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME));
-            mStayBookDateTime.setCheckOutDateTime(intent.getStringExtra(ResearchStayActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME));
+            mSearchModel.bookDateTime.setValue(new StayBookDateTime(intent.getStringExtra(ResearchStayActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME), intent.getStringExtra(ResearchStayActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME)));
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -100,7 +99,7 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
 
         if (staySuggestParcel != null)
         {
-            mSuggest = staySuggestParcel.getSuggest();
+            mSearchModel.suggest.setValue(staySuggestParcel.getSuggest());
         }
 
         return true;
@@ -115,12 +114,31 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
     @Override
     public void onPostCreate()
     {
-        getViewInterface().setSearchStaySuggestText(mSuggest.displayName);
+        getViewInterface().setToolbarTitle(getString(R.string.label_search_stay));
+
+        if (mSearchModel.suggest.getValue() == null || DailyTextUtils.isTextEmpty(mSearchModel.suggest.getValue().displayName) == true)
+        {
+            getViewInterface().setSearchStaySuggestText(null);
+            getViewInterface().setSearchStayButtonEnabled(false);
+        } else
+        {
+            getViewInterface().setSearchStaySuggestText(mSearchModel.suggest.getValue().displayName);
+            getViewInterface().setSearchStayButtonEnabled(true);
+        }
 
         getViewInterface().setSearchStayCalendarText(String.format(Locale.KOREA, "%s - %s, %d박"//
-            , mStayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)")//
-            , mStayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)")//
-            , mStayBookDateTime.getNights()));
+            , mSearchModel.bookDateTime.getValue().getCheckInDateTime("yyyy.MM.dd(EEE)")//
+            , mSearchModel.bookDateTime.getValue().getCheckOutDateTime("yyyy.MM.dd(EEE)")//
+            , mSearchModel.bookDateTime.getValue().getNights()));
+
+        addCompositeDisposable(getViewInterface().getCompleteCreatedFragment().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer()
+        {
+            @Override
+            public void accept(Object o) throws Exception
+            {
+                getViewInterface().showSearchStay();
+            }
+        }));
     }
 
     @Override
@@ -186,9 +204,15 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
             case ResearchStayActivity.REQUEST_CODE_STAY_SUGGEST:
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
-                    //                    mSuggest = data.getStringExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
-                    //
-                    //                    getViewInterface().setSearchStaySuggestText(mSuggest);
+                    try
+                    {
+                        StaySuggestParcel staySuggestParcel = data.getParcelableExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
+                        mSearchModel.suggest.setValue(staySuggestParcel.getSuggest());
+                        mSearchModel.inputString = data.getStringExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.toString());
+                    }
                 }
                 break;
 
@@ -200,13 +224,7 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
                         String checkInDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE);
                         String checkOutDateTime = data.getStringExtra(StayCalendarActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE);
 
-                        mStayBookDateTime.setCheckInDateTime(checkInDateTime);
-                        mStayBookDateTime.setCheckOutDateTime(checkOutDateTime);
-
-                        getViewInterface().setSearchStayCalendarText(String.format(Locale.KOREA, "%s - %s, %d박"//
-                            , mStayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)")//
-                            , mStayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)")//
-                            , mStayBookDateTime.getNights()));
+                        mSearchModel.bookDateTime.setValue(new StayBookDateTime(checkInDateTime, checkOutDateTime));
                     } catch (Exception e)
                     {
                         ExLog.d(e.toString());
@@ -226,6 +244,7 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
 
         setRefresh(false);
         screenLock(showProgress);
+
     }
 
     @Override
@@ -237,15 +256,16 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
     @Override
     public void onStaySuggestClick()
     {
-        //        try
-        //        {
-        //            startActivityForResult(SearchStaySuggestActivity.newInstance(getActivity()//
-        //                , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-        //                , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)), ResearchStayActivity.REQUEST_CODE_STAY_SUGGEST);
-        //        } catch (Exception e)
-        //        {
-        //            ExLog.e(e.toString());
-        //        }
+        try
+        {
+            startActivityForResult(SearchStaySuggestActivity.newInstance(getActivity()//
+                , null //
+                , mSearchModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+                , mSearchModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)), ResearchStayActivity.REQUEST_CODE_STAY_SUGGEST);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     @Override
@@ -263,8 +283,8 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
         todayDateTime.dailyDateTime = mCommonDateTime.dailyDateTime;
 
         startActivityForResult(StayCalendarActivity.newInstance(getActivity(), todayDateTime//
-            , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT) //
+            , mSearchModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , mSearchModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT) //
             , StayCalendarActivity.DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT, AnalyticsManager.ValueType.SEARCH, true, true), ResearchStayActivity.REQUEST_CODE_STAY_CALENDAR);
     }
 
@@ -274,9 +294,9 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
         try
         {
             Intent intent = new Intent();
-            intent.putExtra(ResearchStayActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT));
-            intent.putExtra(ResearchStayActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
-            intent.putExtra(ResearchStayActivity.INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(mSuggest));
+            intent.putExtra(ResearchStayActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, mSearchModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT));
+            intent.putExtra(ResearchStayActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, mSearchModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
+            intent.putExtra(ResearchStayActivity.INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(mSearchModel.suggest.getValue()));
 
             setResult(Activity.RESULT_OK, intent);
             onBackClick();
@@ -284,5 +304,39 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
         {
             ExLog.e(e.toString());
         }
+    }
+
+    private void initViewModel(BaseActivity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        mSearchModel = ViewModelProviders.of(activity, new SearchViewModel.SearchStayViewModel.SearchStayViewModelFactory()).get(SearchViewModel.SearchStayViewModel.class);
+
+        // Stay
+        mSearchModel.suggest.observe(activity, new Observer<StaySuggest>()
+        {
+            @Override
+            public void onChanged(@Nullable StaySuggest staySuggest)
+            {
+                getViewInterface().setSearchStaySuggestText(staySuggest.displayName);
+
+                getViewInterface().setSearchStayButtonEnabled(DailyTextUtils.isTextEmpty(staySuggest.displayName) == false);
+            }
+        });
+
+        mSearchModel.bookDateTime.observe(activity, new Observer<StayBookDateTime>()
+        {
+            @Override
+            public void onChanged(@Nullable StayBookDateTime stayBookDateTime)
+            {
+                getViewInterface().setSearchStayCalendarText(String.format(Locale.KOREA, "%s - %s, %d박"//
+                    , stayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)")//
+                    , stayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)")//
+                    , stayBookDateTime.getNights()));
+            }
+        });
     }
 }

@@ -333,7 +333,7 @@ public class StayWishListFragment extends PlaceWishListFragment
             ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), ((DailyStayCardView) view).getOptionsCompat());
 
             Intent intent = StayDetailActivity.newInstance(getActivity() //
-                , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
+                , stay.index, stay.name, stay.imageUrl, StayDetailActivity.NONE_PRICE//
                 , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
                 , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
                 , true, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST, analyticsParam);
@@ -342,7 +342,7 @@ public class StayWishListFragment extends PlaceWishListFragment
         } else
         {
             Intent intent = StayDetailActivity.newInstance(getActivity() //
-                , stay.index, stay.name, stay.imageUrl, stay.discountPrice//
+                , stay.index, stay.name, stay.imageUrl, StayDetailActivity.NONE_PRICE//
                 , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
                 , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
                 , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam);
@@ -458,7 +458,7 @@ public class StayWishListFragment extends PlaceWishListFragment
             ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), ((DailyStayOutboundCardView) view).getOptionsCompat());
 
             startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
-                , stayOutbound.name, stayOutbound.nameEng, imageUrl, stayOutbound.total//
+                , stayOutbound.name, stayOutbound.nameEng, imageUrl, StayOutboundDetailActivity.NONE_PRICE//
                 , checkInDateTime, checkOutDateTime, People.DEFAULT_ADULTS, null, true//
                 , StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_LIST//
                 , analyticsParam)//
@@ -466,7 +466,7 @@ public class StayWishListFragment extends PlaceWishListFragment
         } else
         {
             startActivityForResult(StayOutboundDetailActivity.newInstance(getActivity(), stayOutbound.index//
-                , stayOutbound.name, stayOutbound.nameEng, imageUrl, stayOutbound.total//
+                , stayOutbound.name, stayOutbound.nameEng, imageUrl, StayOutboundDetailActivity.NONE_PRICE//
                 , checkInDateTime, checkOutDateTime, People.DEFAULT_ADULTS, null, false//
                 , StayOutboundDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam)//
                 , CODE_REQUEST_ACTIVITY_STAY_DETAIL);

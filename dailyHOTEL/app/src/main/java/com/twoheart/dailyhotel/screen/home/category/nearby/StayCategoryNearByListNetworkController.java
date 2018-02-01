@@ -85,6 +85,32 @@ public class StayCategoryNearByListNetworkController extends BaseNetworkControll
                         int page;
                         String imageUrl;
 
+                        // 카테고리 목록을 만든다
+                        if (hotelJSONArray != null && hotelJSONArray.length() > 0)
+                        {
+                            JSONArray categoryJSONArray = null;
+
+                            if (dataJSONObject.isNull("categories") == false)
+                            {
+                                categoryJSONArray = dataJSONObject.getJSONArray("categories");
+                            }
+
+                            if (categoryJSONArray != null && categoryJSONArray.length() != 0)
+                            {
+                                int length = categoryJSONArray.length();
+                                JSONObject categoryJSONObject;
+
+                                for (int i = 0; i < length; i++)
+                                {
+                                    categoryJSONObject = categoryJSONArray.getJSONObject(i);
+
+                                    int count = categoryJSONObject.getInt("count");
+
+                                    totalCount += count;
+                                }
+                            }
+                        }
+
                         // 스테이 목록을 만든다.
                         ArrayList<Stay> stayList;
 

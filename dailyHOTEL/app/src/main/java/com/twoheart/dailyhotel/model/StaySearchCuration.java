@@ -17,6 +17,11 @@ public class StaySearchCuration extends StayCuration
         clear();
     }
 
+    public StaySearchCuration(Parcel in)
+    {
+        readFromParcel(in);
+    }
+
     @Override
     public PlaceCurationOption getCurationOption()
     {
@@ -59,11 +64,6 @@ public class StaySearchCuration extends StayCuration
 
         mSuggest = null;
         mRadius = 0d;
-    }
-
-    public StaySearchCuration(Parcel in)
-    {
-        readFromParcel(in);
     }
 
     @Override

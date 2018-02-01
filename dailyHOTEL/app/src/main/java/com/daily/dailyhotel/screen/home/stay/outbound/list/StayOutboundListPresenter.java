@@ -240,6 +240,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     public void onPostCreate()
     {
         notifyToolbarChanged();
+
+        getViewInterface().setViewTypeOptionImage(ViewState.MAP);
     }
 
     @Override
@@ -821,7 +823,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
                 getViewInterface().showMapLayout(getActivity().getSupportFragmentManager());
 
-                getViewInterface().setViewTypeOptionImage(ViewState.MAP);
+                getViewInterface().setViewTypeOptionImage(ViewState.LIST);
 
                 mAnalytics.onEventMapClick(getActivity());
                 break;
@@ -836,7 +838,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
                 getViewInterface().hideMapLayout(getActivity().getSupportFragmentManager());
 
-                getViewInterface().setViewTypeOptionImage(ViewState.LIST);
+                getViewInterface().setViewTypeOptionImage(ViewState.MAP);
 
                 unLockAll();
                 break;

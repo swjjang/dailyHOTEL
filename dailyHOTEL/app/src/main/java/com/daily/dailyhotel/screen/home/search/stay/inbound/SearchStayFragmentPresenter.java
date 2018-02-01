@@ -21,6 +21,7 @@ import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
 import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
 import com.daily.dailyhotel.screen.home.search.SearchPresenter;
+import com.daily.dailyhotel.screen.home.search.SearchViewModel;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
@@ -45,7 +46,7 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
     RecentlyLocalImpl mRecentlyLocalImpl;
     CampaignTagRemoteImpl mCampaignTagRemoteImpl;
 
-    SearchPresenter.SearchModel mSearchModel;
+    SearchViewModel.SearchStayViewModel mSearchModel;
 
     boolean mHasPopularTag;
 
@@ -166,12 +167,6 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
     @Override
     public boolean onBackPressed()
     {
-        if (isCurrentFragment() == false)
-        {
-            return false;
-        }
-
-
         return false;
     }
 
@@ -254,8 +249,8 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
         startActivityForResult(StayDetailActivity.newInstance(getActivity() //
             , recentlyDbPlace.index, null, recentlyDbPlace.imageUrl//
             , StayDetailActivity.NONE_PRICE//
-            , mSearchModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , mSearchModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , mSearchModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , mSearchModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , false, StayDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE, analyticsParam)//
             , SearchActivity.REQUEST_CODE_STAY_DETAIL);
 
@@ -272,8 +267,8 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
 
         startActivityForResult(StayCampaignTagListActivity.newInstance(getActivity() //
             , campaignTag.index, campaignTag.campaignTag//
-            , mSearchModel.stayBookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT) //
-            , mSearchModel.stayBookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT))//
+            , mSearchModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT) //
+            , mSearchModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT))//
             , SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT);
     }
 
@@ -284,12 +279,7 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
             return;
         }
 
-        mSearchModel = ViewModelProviders.of(activity).get(SearchPresenter.SearchModel.class);
-    }
-
-    boolean isCurrentFragment()
-    {
-        return (mSearchModel.serviceType.getValue() != null && Constants.ServiceType.HOTEL == mSearchModel.serviceType.getValue());
+        mSearchModel = ViewModelProviders.of(activity).get(SearchViewModel.SearchStayViewModel.class);
     }
 
     void onRecentlyRefresh()

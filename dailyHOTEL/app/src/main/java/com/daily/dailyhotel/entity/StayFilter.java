@@ -6,7 +6,7 @@ import java.util.List;
 public class StayFilter
 {
     public static final int PERSON_COUNT_OF_MIN = 1;
-    public static final int PERSON_COUNT_OF_DEFAULT = 2;
+    public static final int PERSON_COUNT_OF_DEFAULT = 1;
     public static final int PERSON_COUNT_OF_MAX = 10;
 
     public static final int FLAG_BED_NONE = 0x00;
