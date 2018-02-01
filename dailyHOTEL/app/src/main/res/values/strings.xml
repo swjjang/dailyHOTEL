@@ -1422,6 +1422,7 @@
     <string name="label_gourmet_product_detail_booking_total_price">총 %1$s 예약하기</string>
     <string name="label_gourmet_product_detail_total_cart_price">총 상품 금액</string>
     <string name="label_gourmet_product_detail_check_the_menus">선택 메뉴 확인하기</string>
+    <string name="label_gourmet_product_detail_quantity_lefts">%d개 남음</string>
 
     <string name="message_gourmet_product_detail_time_picker_popup_message">방문시간은 하나만 선택할 수 있습니다.\n선택한 시간에 예약할 수 있는 메뉴만 노출됩니다.</string>
     <string name="message_gourmet_product_detail_add_menu_after_initialization">다른 방문시간을 선택하시면\n기존 메뉴는 모두 삭제됩니다.\n삭제하고 새로 추가하시겠어요?</string>

@@ -161,6 +161,19 @@
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"/>
 
+                <ImageView
+                    android:id="@+id/topLineView"
+                    android:layout_width="0dp"
+                    android:layout_height="1px"
+                    android:background="@color/white"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:scaleType="fitXY"
+                    android:src="@color/default_line_cdcdcdd"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cartMenusVisitTimeTextView"/>
+
                 <!--원래는 cartMenusRecyclerView 만 넣었는데 내부적으로 높이를 수정해야하는 이슈가 있어 RecyclerView 내부의
                  폭이 제대로 반영되지 않는 경우가 발생하여 한번 감쌌더니 되더라 ㅜㅜ -->
                 <FrameLayout
@@ -170,7 +183,7 @@
                     android:background="@color/white"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/cartMenusVisitTimeTextView">
+                    app:layout_constraintTop_toBottomOf="@+id/topLineView">
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/cartMenusRecyclerView"
