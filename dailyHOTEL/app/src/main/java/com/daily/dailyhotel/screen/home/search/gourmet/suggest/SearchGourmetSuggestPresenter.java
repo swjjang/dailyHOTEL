@@ -32,6 +32,7 @@ import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
 import com.daily.dailyhotel.storage.database.DailyDb;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.R;
@@ -165,6 +166,12 @@ public class SearchGourmetSuggestPresenter extends BaseExceptionPresenter<Search
         {
             getViewInterface().setKeywordEditText(mKeyword);
             //            return;
+        }
+
+        String searchKeywordEditHint = DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigSearchGourmetSuggestHint();
+        if (DailyTextUtils.isTextEmpty(searchKeywordEditHint) == false)
+        {
+            getViewInterface().setKeywordEditHint(searchKeywordEditHint);
         }
 
         setCheckVoiceSearchEnabled();

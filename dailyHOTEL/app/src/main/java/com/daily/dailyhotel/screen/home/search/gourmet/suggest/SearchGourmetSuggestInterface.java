@@ -25,6 +25,8 @@ public interface SearchGourmetSuggestInterface extends BaseDialogViewInterface
 
     int getRecentlySuggestEntryCount();
 
+    void setKeywordEditHint(String hint);
+
     void setKeywordEditText(String text);
 
     void setVoiceSearchEnabled(boolean enabled);

@@ -47,7 +47,7 @@
                 android:layout_marginTop="6dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
-                app:srcCompat="@drawable/search_ic_01_surrounding"
+                app:srcCompat="@drawable/vector_navibar_ic_voice"
                 android:visibility="gone"/>
 
             <com.daily.base.widget.DailyImageView

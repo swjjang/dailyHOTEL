@@ -37,7 +37,9 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 
-public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSearchSuggestView.OnEventListener, ActivityStayOutboundSearchSuggestDataBinding> implements StayOutboundSearchSuggestViewInterface, View.OnClickListener
+public class StayOutboundSearchSuggestView //
+    extends BaseDialogView<StayOutboundSearchSuggestView.OnEventListener, ActivityStayOutboundSearchSuggestDataBinding> //
+    implements StayOutboundSearchSuggestViewInterface, View.OnClickListener
 {
     private SuggestListAdapter mSuggestListAdapter;
     private RecentlySuggestListAdapter mRecentlySuggestListAdapter;
@@ -496,6 +498,17 @@ public class StayOutboundSearchSuggestView extends BaseDialogView<StayOutboundSe
 
         mPopularSuggestListAdapter.setAll(objectItemList);
         mPopularSuggestListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setKeywordEditHint(String hint)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().keywordEditText.setHint(hint);
     }
 
     @Override

@@ -17,6 +17,7 @@ import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
 import com.daily.dailyhotel.repository.local.SuggestLocalImpl;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
+import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -116,6 +117,12 @@ public class StayOutboundSearchSuggestPresenter extends BaseExceptionPresenter<S
         {
             getViewInterface().setKeywordEditText(mKeyword);
             //            return;
+        }
+
+        String searchKeywordEditHint = DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigSearchStayOutboundSuggestHint();
+        if (DailyTextUtils.isTextEmpty(searchKeywordEditHint) == false)
+        {
+            getViewInterface().setKeywordEditHint(searchKeywordEditHint);
         }
 
         getViewInterface().showKeyboard();
