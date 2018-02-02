@@ -947,6 +947,11 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
     @Override
     public Observable<Boolean> closeCartMenus(int gourmetMenuCount)
     {
+        if (getViewDataBinding() == null || getViewDataBinding().cartMenusLayout.getVisibility() != View.VISIBLE)
+        {
+            return null;
+        }
+
         final int height = getViewDataBinding().cartMenusLayout.getHeight();
 
         getViewDataBinding().cartMenusBackgroundView.setEnabled(false);
