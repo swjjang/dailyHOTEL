@@ -511,7 +511,10 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
         clearCompositeDisposable();
 
-        onRefresh();
+        mNeedToRefresh = false;
+
+        setRefresh(true);
+        onRefresh(false);
     }
 
     @Override
