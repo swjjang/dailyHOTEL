@@ -19,6 +19,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.entity.GourmetCart;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.local.CartLocalImpl;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
@@ -35,7 +36,6 @@ import com.twoheart.dailyhotel.model.DailyCategoryType;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
-import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
@@ -393,7 +393,12 @@ public class GourmetMainActivity extends PlaceMainActivity
 
         lockUI();
 
-        Intent intent = GourmetSearchResultActivity.newInstance(this, todayDateTime, gourmetBookingDay, location, callByScreen);
+        GourmetSuggest gourmetSuggest = new GourmetSuggest();
+        gourmetSuggest.categoryKey = GourmetSuggest.CATEGORY_LOCATION;
+        gourmetSuggest.latitude = location.getLatitude();
+        gourmetSuggest.longitude = location.getLongitude();
+
+        Intent intent = GourmetSearchResultActivity.newInstance(context, todayDateTime, gourmetBookingDay, null, gourmetSuggest, callByScreen);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
     }
 
@@ -1546,7 +1551,11 @@ public class GourmetMainActivity extends PlaceMainActivity
                     {
                         if (latLng != null)
                         {
-                            Intent intent = GourmetSearchResultActivity.newInstance(baseActivity, todayDateTime, gourmetBookingDay, latLng, radius, true);
+                            GourmetSuggest gourmetSuggest = new GourmetSuggest(GourmetSuggest.MENU_TYPE_LOCATION, GourmetSuggest.CATEGORY_LOCATION, null);
+                            gourmetSuggest.latitude = latLng.latitude;
+                            gourmetSuggest.longitude = latLng.longitude;
+
+                            Intent intent = GourmetSearchResultActivity.newInstance(baseActivity, todayDateTime, gourmetBookingDay, gourmetSuggest, radius, true);
                             baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
                         } else
                         {
@@ -1558,7 +1567,9 @@ public class GourmetMainActivity extends PlaceMainActivity
                     default:
                         if (DailyTextUtils.isTextEmpty(word) == false)
                         {
-                            Intent intent = GourmetSearchResultActivity.newInstance(baseActivity, todayDateTime, gourmetBookingDay, new Keyword(0, word), SearchType.SEARCHES);
+                            GourmetSuggest gourmetSuggest = new GourmetSuggest(GourmetSuggest.MENU_TYPE_DIRECT, GourmetSuggest.CATEGORY_DIRECT, word);
+
+                            Intent intent = GourmetSearchResultActivity.newInstance(baseActivity, todayDateTime, gourmetBookingDay, word, gourmetSuggest, null);
                             baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
                         } else
                         {

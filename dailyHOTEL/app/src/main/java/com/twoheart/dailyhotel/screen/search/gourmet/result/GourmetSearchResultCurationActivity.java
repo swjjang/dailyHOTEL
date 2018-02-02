@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.RadioButton;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
@@ -21,17 +22,12 @@ import retrofit2.Response;
 
 public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
 {
-    private static final String INTENT_EXTRA_DATA_SEARCHTYPE = "searchType";
     private static final String INTENT_EXTRA_DATA_IS_FIXED_LOCATION = "isFixedLocation";
 
-    private SearchType mSearchType;
-    protected BaseNetworkController mNetworkController;
-
-    public static Intent newInstance(Context context, ViewType viewType, SearchType searchType, GourmetSearchCuration gourmetCuration, boolean isFixedLocation)
+    public static Intent newInstance(Context context, ViewType viewType, GourmetSearchCuration gourmetCuration, boolean isFixedLocation)
     {
         Intent intent = new Intent(context, GourmetSearchResultCurationActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_VIEWTYPE, viewType.name());
-        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, searchType.name());
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACECURATION, gourmetCuration);
         intent.putExtra(INTENT_EXTRA_DATA_IS_FIXED_LOCATION, isFixedLocation);
 
@@ -43,9 +39,6 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
     {
         super.initIntent(intent);
 
-        mNetworkController = getNetworkController(this);
-
-        mSearchType = SearchType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_SEARCHTYPE));
         mIsFixedLocation = intent.getBooleanExtra(INTENT_EXTRA_DATA_IS_FIXED_LOCATION, false);
     }
 
@@ -57,7 +50,7 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
         RadioButton radioButton = mSortRadioGroup.findViewById(R.id.regionCheckView);
         RadioButton emptyCheckView = mSortRadioGroup.findViewById(R.id.emptyCheckView);
 
-        if (mSearchType == SearchType.LOCATION)
+        if (GourmetSuggest.CATEGORY_LOCATION.equalsIgnoreCase(((GourmetSearchCuration) mGourmetCuration).getSuggest().categoryKey) == true)
         {
             radioButton.setVisibility(View.GONE);
             emptyCheckView.setVisibility(View.INVISIBLE);
@@ -112,7 +105,7 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
         {
             mSortRadioGroup.setOnCheckedChangeListener(null);
 
-            if (mSearchType == SearchType.LOCATION)
+            if (GourmetSuggest.CATEGORY_LOCATION.equalsIgnoreCase(((GourmetSearchCuration) mGourmetCuration).getSuggest().categoryKey) == true)
             {
                 mSortRadioGroup.check(R.id.distanceCheckView);
             } else

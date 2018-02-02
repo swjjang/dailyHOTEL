@@ -48,7 +48,6 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
 
     CommonDateTime mCommonDateTime;
 
-
     public ResearchStayPresenter(@NonNull ResearchStayActivity activity)
     {
         super(activity);
@@ -281,13 +280,7 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
             return;
         }
 
-        TodayDateTime todayDateTime = new TodayDateTime();
-        todayDateTime.openDateTime = mCommonDateTime.openDateTime;
-        todayDateTime.closeDateTime = mCommonDateTime.closeDateTime;
-        todayDateTime.currentDateTime = mCommonDateTime.currentDateTime;
-        todayDateTime.dailyDateTime = mCommonDateTime.dailyDateTime;
-
-        startActivityForResult(StayCalendarActivity.newInstance(getActivity(), todayDateTime//
+        startActivityForResult(StayCalendarActivity.newInstance(getActivity(), mCommonDateTime.getTodayDateTime()//
             , mSearchModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mSearchModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT) //
             , StayCalendarActivity.DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT, AnalyticsManager.ValueType.SEARCH, true, true), ResearchStayActivity.REQUEST_CODE_CALENDAR);
@@ -322,7 +315,7 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
         StayDetailAnalyticsParam analyticsParam = new StayDetailAnalyticsParam();
 
         startActivityForResult(StayDetailActivity.newInstance(getActivity() //
-            , recentlyDbPlace.index, null, recentlyDbPlace.imageUrl//
+            , recentlyDbPlace.index, recentlyDbPlace.name, recentlyDbPlace.imageUrl//
             , StayDetailActivity.NONE_PRICE//
             , mSearchModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mSearchModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
@@ -331,7 +324,6 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
 
         getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
 
-        setResult(BaseActivity.RESULT_CODE_BACK);
         onBackClick();
     }
 
@@ -349,7 +341,6 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
             , mSearchModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT))//
             , ResearchStayActivity.REQUEST_CODE_SEARCH_RESULT);
 
-        setResult(BaseActivity.RESULT_CODE_BACK);
         onBackClick();
     }
 

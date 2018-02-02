@@ -14,7 +14,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
-import com.daily.base.BaseActivity;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
@@ -380,10 +379,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 initLayout();
                 break;
             }
-
-            case BaseActivity.RESULT_CODE_BACK:
-                finish(Activity.RESULT_CANCELED);
-                break;
         }
     }
 
@@ -407,6 +402,11 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected void onLocationProviderDisabled()
     {
+        if (mStaySearchCuration == null)
+        {
+            return;
+        }
+
         switch (mStaySearchCuration.getSuggest().categoryKey)
         {
             case StaySuggest.CATEGORY_LOCATION:

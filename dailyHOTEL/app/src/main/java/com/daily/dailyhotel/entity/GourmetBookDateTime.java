@@ -1,5 +1,8 @@
 package com.daily.dailyhotel.entity;
 
+import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
+import com.twoheart.dailyhotel.util.DailyCalendar;
+
 public class GourmetBookDateTime extends PlaceBookDateTime
 {
     public GourmetBookDateTime()
@@ -30,5 +33,13 @@ public class GourmetBookDateTime extends PlaceBookDateTime
     public String getVisitDateTime(String format)
     {
         return getString(format);
+    }
+
+    public GourmetBookingDay getGourmetBookingDay() throws Exception
+    {
+        GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+        gourmetBookingDay.setVisitDay(getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
+
+        return gourmetBookingDay;
     }
 }

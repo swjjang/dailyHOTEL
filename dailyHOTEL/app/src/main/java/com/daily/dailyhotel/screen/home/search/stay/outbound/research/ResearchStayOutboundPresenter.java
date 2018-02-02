@@ -389,7 +389,6 @@ public class ResearchStayOutboundPresenter extends BaseExceptionPresenter<Resear
 
         getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
 
-        setResult(BaseActivity.RESULT_CODE_BACK);
         onBackClick();
     }
 

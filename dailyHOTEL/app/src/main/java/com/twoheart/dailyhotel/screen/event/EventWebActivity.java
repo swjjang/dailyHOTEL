@@ -16,6 +16,7 @@ import android.webkit.WebView;
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.People;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StaySuggest;
@@ -32,7 +33,6 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.LauncherActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.Setting;
-import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.network.DailyMobileAPI;
@@ -537,7 +537,9 @@ public class EventWebActivity extends WebViewActivity implements Constants
                     {
                         if (latLng != null)
                         {
-                            Intent intent = GourmetSearchResultActivity.newInstance(context, todayDateTime, gourmetBookingDay, latLng, radius, true);
+                            GourmetSuggest gourmetSuggest = new GourmetSuggest(GourmetSuggest.MENU_TYPE_LOCATION, GourmetSuggest.CATEGORY_LOCATION, null);
+
+                            Intent intent = GourmetSearchResultActivity.newInstance(context, todayDateTime, gourmetBookingDay, gourmetSuggest, radius, true);
                             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
                         } else
                         {
@@ -549,7 +551,9 @@ public class EventWebActivity extends WebViewActivity implements Constants
                     default:
                         if (DailyTextUtils.isTextEmpty(word) == false)
                         {
-                            Intent intent = GourmetSearchResultActivity.newInstance(context, todayDateTime, gourmetBookingDay, new Keyword(0, word), SearchType.SEARCHES);
+                            GourmetSuggest gourmetSuggest = new GourmetSuggest(GourmetSuggest.MENU_TYPE_DIRECT, GourmetSuggest.CATEGORY_DIRECT, word);
+
+                            Intent intent = GourmetSearchResultActivity.newInstance(context, todayDateTime, gourmetBookingDay, word, gourmetSuggest, null);
                             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
                         } else
                         {

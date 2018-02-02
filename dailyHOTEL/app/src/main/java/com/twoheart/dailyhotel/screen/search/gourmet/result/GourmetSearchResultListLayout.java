@@ -1,16 +1,21 @@
 package com.twoheart.dailyhotel.screen.search.gourmet.result;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.location.Location;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
+import com.twoheart.dailyhotel.model.GourmetSearchCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
+import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
 import com.twoheart.dailyhotel.place.adapter.PlaceListAdapter;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListLayout;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListMapFragment;
@@ -21,7 +26,14 @@ import java.util.ArrayList;
 public class GourmetSearchResultListLayout extends GourmetListLayout
 {
     private TextView mResultTextView;
-    private Constants.SearchType mSearchType;
+    private boolean mLocationSearchType;
+
+    public interface OnEventListener extends GourmetListLayout.OnEventListener
+    {
+        void onResearchClick();
+
+        void onRadiusClick();
+    }
 
     public GourmetSearchResultListLayout(Context context, OnEventListener eventListener)
     {
@@ -34,8 +46,6 @@ public class GourmetSearchResultListLayout extends GourmetListLayout
         super.initLayout(view);
 
         mResultTextView = view.findViewById(R.id.resultCountTextView);
-
-        //        setBannerVisibility(false);
     }
 
     @Override
@@ -53,20 +63,51 @@ public class GourmetSearchResultListLayout extends GourmetListLayout
                 ? new GourmetCurationOption() //
                 : (GourmetCurationOption) mGourmetCuration.getCurationOption();
 
-            if (GourmetCurationOption.isDefaultFilter() == true)
+            if (GourmetSuggest.CATEGORY_LOCATION.equalsIgnoreCase(((GourmetSearchCuration) mGourmetCuration).getSuggest().categoryKey) == true)
             {
-                mEmptyView.setVisibility(View.VISIBLE);
-                mFilterEmptyView.setVisibility(View.GONE);
+                if((GourmetCurationOption.isDefaultFilter() == true && ((GourmetSearchCuration) mGourmetCuration).getRadius() == PlaceSearchResultActivity.DEFAULT_SEARCH_RADIUS))
+                {
+                    mEmptyView.setVisibility(View.VISIBLE);
+                    mFilterEmptyView.setVisibility(View.GONE);
+                    ((OnEventListener) mOnEventListener).onBottomOptionVisible(false);
+                } else if(GourmetCurationOption.isDefaultFilter() == true)
+                {
+                    mEmptyView.setVisibility(View.GONE);
+                    mFilterEmptyView.setVisibility(View.VISIBLE);
+                    ((OnEventListener) mOnEventListener).onBottomOptionVisible(false);
+                } else
+                {
+                    mEmptyView.setVisibility(View.GONE);
+                    mFilterEmptyView.setVisibility(View.VISIBLE);
+                    ((OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
+                }
             } else
             {
-                mEmptyView.setVisibility(View.GONE);
-                mFilterEmptyView.setVisibility(View.VISIBLE);
+                if(GourmetCurationOption.isDefaultFilter() == true)
+                {
+                    mEmptyView.setVisibility(View.VISIBLE);
+                    mFilterEmptyView.setVisibility(View.GONE);
+                    ((OnEventListener) mOnEventListener).onBottomOptionVisible(false);
+                } else
+                {
+                    mEmptyView.setVisibility(View.GONE);
+                    mFilterEmptyView.setVisibility(View.VISIBLE);
+                    ((OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
+                }
             }
 
             mMapLayout.setVisibility(View.GONE);
             mResultTextView.setVisibility(View.GONE);
 
             mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
+
+            if (viewType == Constants.ViewType.LIST)
+            {
+                ((OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(false);
+            } else
+            {
+                ((OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
+            }
         } else
         {
             switch (viewType)
@@ -86,6 +127,13 @@ public class GourmetSearchResultListLayout extends GourmetListLayout
                     }
 
                     mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+
+                    ((OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
+
+                    if (emptyStatus != Constants.EmptyStatus.NONE)
+                    {
+                        ((OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
+                    }
                     break;
 
                 case MAP:
@@ -109,6 +157,13 @@ public class GourmetSearchResultListLayout extends GourmetListLayout
                     }
 
                     mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
+
+                    ((OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
+
+                    if (emptyStatus != Constants.EmptyStatus.NONE)
+                    {
+                        ((OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
+                    }
                     break;
             }
         }
@@ -124,9 +179,9 @@ public class GourmetSearchResultListLayout extends GourmetListLayout
         mPlaceListMapFragment.setMyLocation(location, isVisible);
     }
 
-    public void setSearchType(Constants.SearchType searchType)
+    public void setLocationSearchType(boolean searchType)
     {
-        mSearchType = searchType;
+        mLocationSearchType = searchType;
     }
 
     public void updateResultCount(Constants.ViewType viewType, int count, int maxCount)
@@ -163,11 +218,139 @@ public class GourmetSearchResultListLayout extends GourmetListLayout
     public void addResultList(FragmentManager fragmentManager, Constants.ViewType viewType//
         , ArrayList<PlaceViewItem> list, Constants.SortType sortType, PlaceBookingDay placeBookingDay, boolean rewardEnabled)
     {
-        if (mSearchType == Constants.SearchType.LOCATION)
-        {
-            mPlaceListAdapter.setShowDistanceIgnoreSort(true);
-        }
+        mPlaceListAdapter.setShowDistanceIgnoreSort(mLocationSearchType);
 
         super.addResultList(fragmentManager, viewType, list, sortType, placeBookingDay, rewardEnabled);
+    }
+
+    /**
+     * 검색 방식에 따라서 빈화면의 내용이 다르다.
+     *
+     * @param categoryKey
+     */
+    public void setEmptyType(String categoryKey)
+    {
+        if (DailyTextUtils.isTextEmpty(categoryKey) == true || mEmptyView == null || mFilterEmptyView == null)
+        {
+            return;
+        }
+
+        switch (categoryKey)
+        {
+            case GourmetSuggest.CATEGORY_LOCATION:
+                setLocationTypeEmptyView(mEmptyView);
+                setLocationTypeFilterEmptyView(mFilterEmptyView);
+                break;
+
+            default:
+                setDefaultTypeEmptyView(mEmptyView);
+                setDefaultTypeFilterEmptyView(mFilterEmptyView);
+                break;
+        }
+    }
+
+    private void setLocationTypeEmptyView(View view)
+    {
+        if (view == null)
+        {
+            return;
+        }
+
+        TextView messageTextView01 = view.findViewById(R.id.messageTextView01);
+        TextView messageTextView02 = view.findViewById(R.id.messageTextView02);
+
+        messageTextView01.setText(R.string.message_searchresult_stay_empty_message01);
+        messageTextView02.setText(R.string.message_searchresult_stay_empty_message02);
+
+        TextView researchView = view.findViewById(R.id.changeRegionView);
+        View changeDateView = view.findViewById(R.id.changeDateView);
+
+        researchView.setText(R.string.label_searchresult_research);
+        changeDateView.setVisibility(View.GONE);
+
+        researchView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onResearchClick());
+
+        TextView callTextView = view.findViewById(R.id.callTextView);
+        callTextView.setPaintFlags(callTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+        callTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).onShowCallDialog();
+            }
+        });
+    }
+
+    private void setDefaultTypeEmptyView(View view)
+    {
+        if (view == null)
+        {
+            return;
+        }
+
+        TextView messageTextView01 = view.findViewById(R.id.messageTextView01);
+        TextView messageTextView02 = view.findViewById(R.id.messageTextView02);
+
+        messageTextView01.setText(R.string.message_not_exist_filters);
+        messageTextView02.setText(R.string.message_changing_option);
+
+        View changeRegionView = view.findViewById(R.id.changeRegionView);
+        View changeDateView = view.findViewById(R.id.changeDateView);
+
+        changeRegionView.setVisibility(View.GONE);
+        changeDateView.setVisibility(View.GONE);
+
+        TextView callTextView = view.findViewById(R.id.callTextView);
+        callTextView.setPaintFlags(callTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+        callTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ((OnEventListener) mOnEventListener).onShowCallDialog();
+            }
+        });
+    }
+
+    private void setLocationTypeFilterEmptyView(View view)
+    {
+        if (view == null)
+        {
+            return;
+        }
+
+
+        TextView filterMessageTextView01 = view.findViewById(R.id.filterMessageTextView01);
+        TextView filterMessageTextView02 = view.findViewById(R.id.filterMessageTextView02);
+
+        filterMessageTextView01.setText(R.string.message_searchresult_stay_filter_empty_message01);
+        filterMessageTextView02.setText(R.string.message_searchresult_stay_filter_empty_message02);
+
+        TextView buttonView = view.findViewById(R.id.buttonView);
+        buttonView.setText(R.string.label_searchresult_change_radius);
+
+        buttonView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onRadiusClick());
+    }
+
+    private void setDefaultTypeFilterEmptyView(View view)
+    {
+        if (view == null)
+        {
+            return;
+        }
+
+        TextView filterMessageTextView01 = view.findViewById(R.id.filterMessageTextView01);
+        TextView filterMessageTextView02 = view.findViewById(R.id.filterMessageTextView02);
+
+        filterMessageTextView01.setText(R.string.message_not_exist_filters);
+        filterMessageTextView02.setText(R.string.message_changing_filter_option);
+
+        TextView buttonView = view.findViewById(R.id.buttonView);
+        buttonView.setText(R.string.label_hotel_list_changing_filter);
+
+        buttonView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onFilterClick());
     }
 }

@@ -2,9 +2,12 @@ package com.twoheart.dailyhotel.model;
 
 import android.os.Parcel;
 
+import com.daily.dailyhotel.entity.GourmetSuggest;
+import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
+
 public class GourmetSearchCuration extends GourmetCuration
 {
-    private Keyword mKeyword;
+    private GourmetSuggest mSuggest;
     private double mRadius;
 
     public GourmetSearchCuration()
@@ -20,14 +23,14 @@ public class GourmetSearchCuration extends GourmetCuration
         return mGourmetCurationOption;
     }
 
-    public Keyword getKeyword()
+    public GourmetSuggest getSuggest()
     {
-        return mKeyword;
+        return mSuggest;
     }
 
-    public void setKeyword(Keyword keyword)
+    public void setSuggest(GourmetSuggest suggest)
     {
-        this.mKeyword = keyword;
+        mSuggest = suggest;
     }
 
     public double getRadius()
@@ -54,7 +57,7 @@ public class GourmetSearchCuration extends GourmetCuration
     {
         super.clear();
 
-        mKeyword = null;
+        mSuggest = null;
         mRadius = 0d;
     }
 
@@ -74,7 +77,7 @@ public class GourmetSearchCuration extends GourmetCuration
     {
         super.writeToParcel(dest, flags);
 
-        dest.writeParcelable(mKeyword, flags);
+        dest.writeParcelable(new GourmetSuggestParcel(mSuggest), flags);
         dest.writeDouble(mRadius);
     }
 
@@ -82,7 +85,13 @@ public class GourmetSearchCuration extends GourmetCuration
     {
         super.readFromParcel(in);
 
-        mKeyword = in.readParcelable(Keyword.class.getClassLoader());
+        GourmetSuggestParcel gourmetSuggestParcel = in.readParcelable(GourmetSuggestParcel.class.getClassLoader());
+
+        if (gourmetSuggestParcel != null)
+        {
+            mSuggest = gourmetSuggestParcel.getSuggest();
+        }
+
         mRadius = in.readDouble();
     }
 

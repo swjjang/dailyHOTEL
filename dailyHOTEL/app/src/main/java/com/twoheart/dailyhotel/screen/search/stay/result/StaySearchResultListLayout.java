@@ -70,17 +70,17 @@ public class StaySearchResultListLayout extends StayListLayout
                 {
                     mEmptyView.setVisibility(View.VISIBLE);
                     mFilterEmptyView.setVisibility(View.GONE);
-                    ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onBottomOptionVisible(false);
+                    ((OnEventListener) mOnEventListener).onBottomOptionVisible(false);
                 } else if(stayCurationOption.isDefaultFilter() == true)
                 {
                     mEmptyView.setVisibility(View.GONE);
                     mFilterEmptyView.setVisibility(View.VISIBLE);
-                    ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onBottomOptionVisible(false);
+                    ((OnEventListener) mOnEventListener).onBottomOptionVisible(false);
                 } else
                 {
                     mEmptyView.setVisibility(View.GONE);
                     mFilterEmptyView.setVisibility(View.VISIBLE);
-                    ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
+                    ((OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
                 }
             } else
             {
@@ -88,12 +88,12 @@ public class StaySearchResultListLayout extends StayListLayout
                 {
                     mEmptyView.setVisibility(View.VISIBLE);
                     mFilterEmptyView.setVisibility(View.GONE);
-                    ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onBottomOptionVisible(false);
+                    ((OnEventListener) mOnEventListener).onBottomOptionVisible(false);
                 } else
                 {
                     mEmptyView.setVisibility(View.GONE);
                     mFilterEmptyView.setVisibility(View.VISIBLE);
-                    ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
+                    ((OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
                 }
             }
 
@@ -104,10 +104,10 @@ public class StaySearchResultListLayout extends StayListLayout
 
             if (viewType == Constants.ViewType.LIST)
             {
-                ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(false);
+                ((OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(false);
             } else
             {
-                ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
+                ((OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
             }
         } else
         {
@@ -129,11 +129,11 @@ public class StaySearchResultListLayout extends StayListLayout
 
                     mSwipeRefreshLayout.setVisibility(View.VISIBLE);
 
-                    ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
+                    ((OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
 
                     if (emptyStatus != Constants.EmptyStatus.NONE)
                     {
-                        ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
+                        ((OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
                     }
                     break;
 
@@ -159,11 +159,11 @@ public class StaySearchResultListLayout extends StayListLayout
 
                     mSwipeRefreshLayout.setVisibility(View.INVISIBLE);
 
-                    ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
+                    ((OnEventListener) mOnEventListener).onUpdateFilterEnabled(true);
 
                     if (emptyStatus != Constants.EmptyStatus.NONE)
                     {
-                        ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
+                        ((OnEventListener) mOnEventListener).onUpdateViewTypeEnabled(true);
                     }
                     break;
             }
@@ -311,7 +311,7 @@ public class StaySearchResultListLayout extends StayListLayout
             @Override
             public void onClick(View v)
             {
-                ((StayListLayout.OnEventListener) mOnEventListener).onShowCallDialog();
+                ((OnEventListener) mOnEventListener).onShowCallDialog();
             }
         });
     }
@@ -333,7 +333,7 @@ public class StaySearchResultListLayout extends StayListLayout
         TextView buttonView = view.findViewById(R.id.buttonView);
         buttonView.setText(R.string.label_searchresult_change_radius);
 
-        buttonView.setOnClickListener(v -> ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onRadiusClick());
+        buttonView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onRadiusClick());
     }
 
     private void setDefaultTypeFilterEmptyView(View view)
@@ -352,6 +352,6 @@ public class StaySearchResultListLayout extends StayListLayout
         TextView buttonView = view.findViewById(R.id.buttonView);
         buttonView.setText(R.string.label_hotel_list_changing_filter);
 
-        buttonView.setOnClickListener(v -> ((StaySearchResultListLayout.OnEventListener) mOnEventListener).onFilterClick());
+        buttonView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onFilterClick());
     }
 }

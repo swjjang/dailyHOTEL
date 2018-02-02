@@ -236,6 +236,7 @@ public class StaySearchResultListFragment extends StayListFragment
             ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onStayClick(view, placeViewItem, getPlaceCount());
         }
 
+        @Override
         public void onPlaceLongClick(int position, View view, PlaceViewItem placeViewItem)
         {
             mWishPosition = position;
@@ -414,8 +415,8 @@ public class StaySearchResultListFragment extends StayListFragment
 
                                 //                                case LOCATION:
                                 case StaySuggest.CATEGORY_LOCATION:
-                                    //                                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NEARBY_SEARCH_RESULT//
-                                    //                                        , ((StaySearchCuration) mStayCuration).getKeyword().name, integer.toString(), soldOutCount, null);
+                                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NEARBY_SEARCH_RESULT//
+                                        , ((StaySearchCuration) mStayCuration).getSuggest().displayName, integer.toString(), soldOutCount, null);
                                     break;
 
                                 //                                case RECENTLY_KEYWORD:
@@ -443,9 +444,10 @@ public class StaySearchResultListFragment extends StayListFragment
                 ((OnStaySearchResultListFragmentListener) mOnPlaceListFragmentListener).onStayListCount(totalCount);
 
                 // 카테고리 개수가 실제로 존재하거나 혹은 주변 검색인데 필터, 반경이 디폴트 값이 아닌 경우
-                if ((categoryList != null && categoryList.size() > 0//
-                    || (StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(((StaySearchCuration) mStayCuration).getSuggest().categoryKey) == true//
-                    && (mStayCuration.getCurationOption().isDefaultFilter() == false || ((StaySearchCuration) mStayCuration).getRadius() != PlaceSearchResultActivity.DEFAULT_SEARCH_RADIUS))))
+                if ((categoryList != null && categoryList.size() > 0)//
+                    || ((StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(((StaySearchCuration) mStayCuration).getSuggest().categoryKey) == true//
+                    && (mStayCuration.getCurationOption().isDefaultFilter() == false
+                    || ((StaySearchCuration) mStayCuration).getRadius() != PlaceSearchResultActivity.DEFAULT_SEARCH_RADIUS))))
                 {
                     StaySearchResultListFragment.this.onStayList(list, page, false, activeReward);
                 }

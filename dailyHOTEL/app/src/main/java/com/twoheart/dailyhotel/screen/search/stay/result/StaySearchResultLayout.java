@@ -111,7 +111,7 @@ public class StaySearchResultLayout extends PlaceSearchResultLayout
         try
         {
             int nights = stayBookingDay.getNights();
-            String dateFormat = ScreenUtils.getScreenWidth(mContext) < 720 ? "MM.dd" : "MM.dd(EEE)";
+            final String dateFormat = ScreenUtils.getScreenWidth(mContext) < 720 ? "MM.dd" : "MM.dd(EEE)";
             String date = String.format(Locale.KOREA, "%s - %s, %d박"//
                 , stayBookingDay.getCheckInDay(dateFormat)//
                 , stayBookingDay.getCheckOutDay(dateFormat), nights);
