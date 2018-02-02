@@ -25,5 +25,7 @@ public interface StayOutboundSearchSuggestViewInterface extends BaseDialogViewIn
 
     void setPopularAreaSuggests(List<StayOutboundSuggest> stayOutboundSuggestList);
 
+    void setKeywordEditHint(String hint);
+
     void setKeywordEditText(String text);
 }

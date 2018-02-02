@@ -523,6 +523,17 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
     }
 
     @Override
+    public void setKeywordEditHint(String hint)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().keywordEditText.setHint(hint);
+    }
+
+    @Override
     public void setKeywordEditText(String text)
     {
         if (getViewDataBinding() == null)
