@@ -253,6 +253,8 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
             return;
         }
 
+        setRefresh(false);
+
         addCompositeDisposable(mCartLocalImpl.getGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GourmetCart>()
         {
             @Override
@@ -288,6 +290,8 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
                         }
                     }
                 }
+
+                unLockAll();
             }
         }, new Consumer<Throwable>()
         {
@@ -302,6 +306,8 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
                 notifyOperationTimeChanged(mPosition);
 
                 onScrolled(mPosition, false);
+
+                unLockAll();
             }
         }));
     }
