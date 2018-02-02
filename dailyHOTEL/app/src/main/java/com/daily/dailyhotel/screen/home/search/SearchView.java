@@ -150,7 +150,6 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
                     getViewDataBinding().toolbarView.setAlpha(0f);
                 }
 
-                getViewDataBinding().searchTitleTextView.setTranslationY(verticalOffset / 2);
                 getViewDataBinding().topImageView.setTranslationY(verticalOffset / 2);
             }
         });
@@ -245,6 +244,8 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
             return;
         }
 
+        getViewDataBinding().topImageView.setImageResource(R.drawable.search_bg_stay);
+
         getViewDataBinding().stayLayout.setVisibility(View.VISIBLE);
         getViewDataBinding().stayOutboundLayout.setVisibility(View.GONE);
         getViewDataBinding().gourmetLayout.setVisibility(View.GONE);
@@ -317,6 +318,8 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         {
             return;
         }
+
+        getViewDataBinding().topImageView.setImageResource(R.drawable.search_bg_ob);
 
         getViewDataBinding().stayLayout.setVisibility(View.GONE);
         getViewDataBinding().stayOutboundLayout.setVisibility(View.VISIBLE);
@@ -401,6 +404,8 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         {
             return;
         }
+
+        getViewDataBinding().topImageView.setImageResource(R.drawable.search_bg_gourmet);
 
         getViewDataBinding().stayLayout.setVisibility(View.GONE);
         getViewDataBinding().stayOutboundLayout.setVisibility(View.GONE);
