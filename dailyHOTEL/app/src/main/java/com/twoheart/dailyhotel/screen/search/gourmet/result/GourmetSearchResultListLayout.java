@@ -259,7 +259,7 @@ public class GourmetSearchResultListLayout extends GourmetListLayout
         TextView messageTextView01 = view.findViewById(R.id.messageTextView01);
         TextView messageTextView02 = view.findViewById(R.id.messageTextView02);
 
-        messageTextView01.setText(R.string.message_searchresult_stay_empty_message01);
+        messageTextView01.setText(R.string.message_searchresult_gourmet_empty_message01);
         messageTextView02.setText(R.string.message_searchresult_stay_empty_message02);
 
         TextView researchView = view.findViewById(R.id.changeRegionView);
