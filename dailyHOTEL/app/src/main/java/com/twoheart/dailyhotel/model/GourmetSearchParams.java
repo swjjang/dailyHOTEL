@@ -56,7 +56,7 @@ public class GourmetSearchParams extends GourmetParams
         mSort = gourmetCurationOption.getSortType();
         setSortType(mSort);
 
-        term = gourmetSearchCuration.getKeyword() == null ? null : gourmetSearchCuration.getKeyword().name;
+        term = gourmetSearchCuration.getSuggest() == null ? null : gourmetSearchCuration.getSuggest().displayName;
         radius = gourmetSearchCuration.getRadius();
 
         Location location = gourmetSearchCuration.getLocation();

@@ -35,7 +35,7 @@ public class StaySearchCuration extends StayCuration
 
     public void setSuggest(StaySuggest suggest)
     {
-        this.mSuggest = suggest;
+        mSuggest = suggest;
     }
 
     public double getRadius()
@@ -85,7 +85,7 @@ public class StaySearchCuration extends StayCuration
     {
         super.readFromParcel(in);
 
-        StaySuggestParcel staySuggestParcel = in.readParcelable(Keyword.class.getClassLoader());
+        StaySuggestParcel staySuggestParcel = in.readParcelable(StaySuggestParcel.class.getClassLoader());
 
         if (staySuggestParcel != null)
         {

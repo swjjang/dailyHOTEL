@@ -236,6 +236,7 @@ public class StaySearchResultListFragment extends StayListFragment
             ((OnStayListFragmentListener) mOnPlaceListFragmentListener).onStayClick(view, placeViewItem, getPlaceCount());
         }
 
+        @Override
         public void onPlaceLongClick(int position, View view, PlaceViewItem placeViewItem)
         {
             mWishPosition = position;
@@ -414,8 +415,8 @@ public class StaySearchResultListFragment extends StayListFragment
 
                                 //                                case LOCATION:
                                 case StaySuggest.CATEGORY_LOCATION:
-                                    //                                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NEARBY_SEARCH_RESULT//
-                                    //                                        , ((StaySearchCuration) mStayCuration).getKeyword().name, integer.toString(), soldOutCount, null);
+                                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NEARBY_SEARCH_RESULT//
+                                        , ((StaySearchCuration) mStayCuration).getSuggest().displayName, integer.toString(), soldOutCount, null);
                                     break;
 
                                 //                                case RECENTLY_KEYWORD:

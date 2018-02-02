@@ -17,11 +17,16 @@ import android.widget.Toast;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
+import com.daily.dailyhotel.entity.CampaignTag;
+import com.daily.dailyhotel.entity.GourmetSuggest;
+import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
+import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
+import com.daily.dailyhotel.screen.home.campaigntag.gourmet.GourmetCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.daily.dailyhotel.screen.home.search.gourmet.research.ResearchGourmetActivity;
 import com.daily.dailyhotel.view.DailyGourmetCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
 import com.twoheart.dailyhotel.model.Category;
@@ -29,7 +34,6 @@ import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetCuration;
 import com.twoheart.dailyhotel.model.GourmetCurationOption;
 import com.twoheart.dailyhotel.model.GourmetSearchCuration;
-import com.twoheart.dailyhotel.model.Keyword;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Province;
@@ -53,6 +57,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -63,57 +69,57 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     String mInputText;
     String mAddress;
 
-    SearchType mSearchType;
     GourmetSearchCuration mGourmetSearchCuration;
+
+    CampaignTagRemoteImpl mCampaignTagRemoteImpl;
 
     private PlaceSearchResultNetworkController mNetworkController;
 
-    public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, String inputText, Keyword keyword, SearchType searchType)
+    public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, String inputText, GourmetSuggest gourmetSuggest, String callByScreen)
     {
         Intent intent = new Intent(context, GourmetSearchResultActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
-        intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, keyword);
-        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, searchType.name());
         intent.putExtra(INTENT_EXTRA_DATA_INPUTTEXT, inputText);
+        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcel(gourmetSuggest));
+        intent.putExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
 
         return intent;
     }
 
-    public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, LatLng latLng, double radius, boolean isDeepLink)
+    public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, GourmetSuggest gourmetSuggest, double radius, boolean isDeepLink)
     {
         Intent intent = new Intent(context, GourmetSearchResultActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
-        intent.putExtra(INTENT_EXTRA_DATA_LATLNG, latLng);
+        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcel(gourmetSuggest));
         intent.putExtra(INTENT_EXTRA_DATA_RADIUS, radius);
-        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SearchType.LOCATION.name());
         intent.putExtra(INTENT_EXTRA_DATA_IS_DEEPLINK, isDeepLink);
 
         return intent;
     }
 
-    public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, Keyword keyword, SearchType searchType)
-    {
-        return newInstance(context, todayDateTime, gourmetBookingDay, null, keyword, searchType);
-    }
-
-    public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, String text)
-    {
-        return newInstance(context, todayDateTime, gourmetBookingDay, null, new Keyword(0, text), SearchType.SEARCHES);
-    }
-
-    public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, Location location, String callByScreen)
-    {
-        Intent intent = new Intent(context, GourmetSearchResultActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
-        intent.putExtra(INTENT_EXTRA_DATA_LOCATION, location);
-        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SearchType.LOCATION.name());
-        intent.putExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
-
-        return intent;
-    }
+    //    public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, Keyword keyword, SearchType searchType)
+    //    {
+    //        return newInstance(context, todayDateTime, gourmetBookingDay, null, keyword, searchType);
+    //    }
+    //
+    //    public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, String text)
+    //    {
+    //        return newInstance(context, todayDateTime, gourmetBookingDay, null, new Keyword(0, text), SearchType.SEARCHES);
+    //    }
+    //
+    //    public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, Location location, String callByScreen)
+    //    {
+    //        Intent intent = new Intent(context, GourmetSearchResultActivity.class);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
+    //        intent.putExtra(INTENT_EXTRA_DATA_LOCATION, location);
+    //        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SearchType.LOCATION.name());
+    //        intent.putExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
+    //
+    //        return intent;
+    //    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -122,35 +128,40 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
         lockUI();
 
+        mCampaignTagRemoteImpl = new CampaignTagRemoteImpl(this);
         mNetworkController = new PlaceSearchResultNetworkController(this, mNetworkTag, mOnNetworkControllerListener);
 
-        if (mSearchType == SearchType.LOCATION)
+        switch (mGourmetSearchCuration.getSuggest().categoryKey)
         {
-            try
-            {
-                if (mGourmetSearchCuration.getCurationOption().getSortType() == SortType.DISTANCE && mGourmetSearchCuration.getLocation() == null)
+            case GourmetSuggest.CATEGORY_LOCATION:
+                try
                 {
-                    unLockUI();
+                    if (mGourmetSearchCuration.getCurationOption().getSortType() == SortType.DISTANCE && mGourmetSearchCuration.getLocation() == null)
+                    {
+                        unLockUI();
 
-                    searchMyLocation();
-                } else
+                        searchMyLocation();
+                    } else
+                    {
+                        // 기본적으로 시작시에 전체 카테고리를 넣는다.
+                        mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+                        mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
+                        mPlaceSearchResultLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnGourmetListFragmentListener);
+
+                        mNetworkController.requestAddress(mGourmetSearchCuration.getLocation());
+                    }
+                } catch (Exception e)
                 {
-                    // 기본적으로 시작시에 전체 카테고리를 넣는다.
-                    mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
-                    mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
-                    mPlaceSearchResultLayout.setCategoryTabLayout(getSupportFragmentManager(), new ArrayList<Category>(), null, mOnGourmetListFragmentListener);
-
-                    mNetworkController.requestAddress(mGourmetSearchCuration.getLocation());
+                    ExLog.e(e.toString());
                 }
-            } catch (Exception e)
-            {
-                ExLog.e(e.toString());
-            }
-        } else
-        {
-            mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
-            mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
-            mPlaceSearchResultLayout.setCategoryTabLayout(getSupportFragmentManager(), new ArrayList<Category>(), null, mOnGourmetListFragmentListener);
+                break;
+
+            default:
+                // 기본적으로 시작시에 전체 카테고리를 넣는다.
+                mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+                mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
+                mPlaceSearchResultLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnGourmetListFragmentListener);
+                break;
         }
     }
 
@@ -184,9 +195,12 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
             mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
 
-            if (mSearchType == SearchType.LOCATION && mGourmetSearchCuration.getCurationOption().getSortType() == SortType.DISTANCE//
+            if (GourmetSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mGourmetSearchCuration.getSuggest().categoryKey)//
                 && mGourmetSearchCuration.getLocation() == null)
             {
+                mGourmetSearchCuration.getCurationOption().setSortType(SortType.DISTANCE);
+                mGourmetSearchCuration.setRadius(DEFAULT_SEARCH_RADIUS);
+
                 searchMyLocation();
             } else
             {
@@ -240,14 +254,95 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected void onResearchActivityResult(int resultCode, Intent data)
     {
+        if (resultCode == Activity.RESULT_OK && data != null)
+        {
+            try
+            {
+                GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
+                gourmetBookingDay.setVisitDay(data.getStringExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME));
 
+                GourmetSuggestParcel gourmetSuggestParcel = data.getParcelableExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_SUGGEST);
+
+                if (gourmetSuggestParcel == null)
+                {
+                    return;
+                }
+
+                GourmetSuggest gourmetSuggest = gourmetSuggestParcel.getSuggest();
+
+                if (gourmetSuggest == null)
+                {
+                    return;
+                }
+
+                mGourmetSearchCuration.setSuggest(gourmetSuggest);
+                mGourmetSearchCuration.setGourmetBookingDay(gourmetBookingDay);
+            } catch (Exception e)
+            {
+                ExLog.e(e.toString());
+            }
+        }
+
+        switch (resultCode)
+        {
+            case Activity.RESULT_OK:
+            {
+                // 검색이 바뀌면 전체탭으로 이동하고 다시 재로딩.
+                mGourmetSearchCuration.getCurationOption().clear();
+
+                mPlaceSearchResultLayout.setOptionFilterSelected(false);
+                mPlaceSearchResultLayout.clearCategoryTab();
+                mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+                mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
+
+                if (GourmetSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mGourmetSearchCuration.getSuggest().categoryKey) == true)
+                {
+                    mGourmetSearchCuration.getCurationOption().setSortType(SortType.DISTANCE);
+                    mGourmetSearchCuration.setRadius(DEFAULT_SEARCH_RADIUS);
+
+                    if (mGourmetSearchCuration.getSuggest().latitude != 0.0d && mGourmetSearchCuration.getSuggest().longitude != 0.0d)
+                    {
+                        Location location = new Location("provider");
+                        location.setLatitude(mGourmetSearchCuration.getSuggest().latitude);
+                        location.setLongitude(mGourmetSearchCuration.getSuggest().longitude);
+
+                        mGourmetSearchCuration.setLocation(location);
+
+                        onLocationChanged(mGourmetSearchCuration.getLocation());
+                    } else
+                    {
+                        searchMyLocation();
+                    }
+                } else
+                {
+                    mPlaceSearchResultLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnGourmetListFragmentListener);
+                }
+
+                initLayout();
+                break;
+            }
+        }
     }
 
     @Override
     protected void onLocationFailed()
     {
-        mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
-        mPlaceSearchResultLayout.setScreenVisible(ScreenType.EMPTY);
+        if (GourmetSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mGourmetSearchCuration.getSuggest().categoryKey) == true)
+        {
+            showEmptyLayout();
+        } else
+        {
+            GourmetCurationOption stayCurationOption = (GourmetCurationOption) mGourmetSearchCuration.getCurationOption();
+
+            stayCurationOption.setSortType(SortType.DEFAULT);
+            mPlaceSearchResultLayout.setOptionFilterSelected(stayCurationOption.isDefaultFilter() == false);
+
+            refreshCurrentFragment(true);
+        }
+
+
+        //        mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+        //        mPlaceSearchResultLayout.setScreenVisible(ScreenType.EMPTY);
 
         //        if (mSearchType == SearchType.LOCATION)
         //        {
@@ -267,8 +362,29 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected void onLocationProviderDisabled()
     {
-        mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
-        mPlaceSearchResultLayout.setScreenVisible(ScreenType.EMPTY);
+        if (mGourmetSearchCuration == null)
+        {
+            return;
+        }
+
+        switch (mGourmetSearchCuration.getSuggest().categoryKey)
+        {
+            case GourmetSuggest.CATEGORY_LOCATION:
+                showEmptyLayout();
+                break;
+
+            default:
+                GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) mGourmetSearchCuration.getCurationOption();
+
+                gourmetCurationOption.setSortType(SortType.DEFAULT);
+                mPlaceSearchResultLayout.setOptionFilterSelected(gourmetCurationOption.isDefaultFilter() == false);
+
+                refreshCurrentFragment(true);
+                break;
+        }
+
+        //        mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+        //        mPlaceSearchResultLayout.setScreenVisible(ScreenType.EMPTY);
 
         //        if (mSearchType == SearchType.LOCATION)
         //        {
@@ -290,8 +406,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     {
         if (location == null)
         {
-            mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
-            mPlaceSearchResultLayout.setScreenVisible(ScreenType.EMPTY);
+            showEmptyLayout();
         } else
         {
             mNetworkController.requestAddress(location);
@@ -332,6 +447,8 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected void initIntent(Intent intent)
     {
+        mGourmetSearchCuration = new GourmetSearchCuration();
+
         GourmetBookingDay gourmetBookingDay;
 
         try
@@ -350,62 +467,115 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             return;
         }
 
-        Location location = null;
-        Keyword keyword = null;
-        double radius = DEFAULT_SEARCH_RADIUS;
-        mGourmetSearchCuration = new GourmetSearchCuration();
+        mGourmetSearchCuration.setGourmetBookingDay(gourmetBookingDay);
 
-        if (intent.hasExtra(INTENT_EXTRA_DATA_KEYWORD) == true)
-        {
-            keyword = intent.getParcelableExtra(INTENT_EXTRA_DATA_KEYWORD);
-        } else if (intent.hasExtra(INTENT_EXTRA_DATA_LOCATION) == true)
-        {
-            location = intent.getParcelableExtra(INTENT_EXTRA_DATA_LOCATION);
+        GourmetSuggestParcel gourmetSuggestParcel = intent.getParcelableExtra(INTENT_EXTRA_DATA_SUGGEST);
 
-            if (intent.hasExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN) == true)
-            {
-                mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN);
-            }
-
-            mGourmetSearchCuration.getCurationOption().setDefaultSortType(SortType.DISTANCE);
-        } else if (intent.hasExtra(INTENT_EXTRA_DATA_LATLNG) == true)
-        {
-            LatLng latLng = intent.getParcelableExtra(INTENT_EXTRA_DATA_LATLNG);
-
-            if (intent.hasExtra(INTENT_EXTRA_DATA_RADIUS) == true)
-            {
-                radius = intent.getDoubleExtra(INTENT_EXTRA_DATA_RADIUS, DEFAULT_SEARCH_RADIUS);
-            }
-
-            mIsDeepLink = intent.getBooleanExtra(INTENT_EXTRA_DATA_IS_DEEPLINK, false);
-
-            location = new Location((String) null);
-            location.setLatitude(latLng.latitude);
-            location.setLongitude(latLng.longitude);
-
-            // 고정 위치로 진입한 경우
-            mIsFixedLocation = true;
-            mGourmetSearchCuration.getCurationOption().setDefaultSortType(SortType.DISTANCE);
-        } else
+        if (gourmetSuggestParcel == null)
         {
             finish();
             return;
         }
 
-        mSearchType = SearchType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_SEARCHTYPE));
+        mGourmetSearchCuration.setSuggest(gourmetSuggestParcel.getSuggest());
         mInputText = intent.getStringExtra(INTENT_EXTRA_DATA_INPUTTEXT);
 
-        mGourmetSearchCuration.setKeyword(keyword);
-
-        // 내주변 위치 검색으로 시작하는 경우에는 특정 반경과 거리순으로 시작해야한다.
-        if (mSearchType == SearchType.LOCATION)
+        switch (mGourmetSearchCuration.getSuggest().categoryKey)
         {
-            mGourmetSearchCuration.getCurationOption().setSortType(SortType.DISTANCE);
-            mGourmetSearchCuration.setRadius(radius);
+            case GourmetSuggest.CATEGORY_GOURMET:
+            case GourmetSuggest.CATEGORY_DIRECT:
+                break;
+
+            case GourmetSuggest.CATEGORY_LOCATION:
+            {
+                if (mGourmetSearchCuration.getSuggest().latitude != 0.0d && mGourmetSearchCuration.getSuggest().longitude != 0.0d)
+                {
+                    Location location = new Location("provider");
+                    location.setLatitude(mGourmetSearchCuration.getSuggest().latitude);
+                    location.setLongitude(mGourmetSearchCuration.getSuggest().longitude);
+
+                    mGourmetSearchCuration.setLocation(location);
+                }
+
+                mGourmetSearchCuration.getCurationOption().setDefaultSortType(SortType.DISTANCE);
+                mGourmetSearchCuration.getCurationOption().setSortType(SortType.DISTANCE);
+
+                if (intent.hasExtra(INTENT_EXTRA_DATA_RADIUS) == true)
+                {
+                    double radius = intent.getDoubleExtra(INTENT_EXTRA_DATA_RADIUS, DEFAULT_SEARCH_RADIUS);
+
+                    mGourmetSearchCuration.setRadius(radius);
+                } else
+                {
+                    mGourmetSearchCuration.setRadius(DEFAULT_SEARCH_RADIUS);
+                }
+                break;
+            }
         }
 
-        mGourmetSearchCuration.setLocation(location);
-        mGourmetSearchCuration.setGourmetBookingDay(gourmetBookingDay);
+        mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN);
+
+        if (intent.hasExtra(INTENT_EXTRA_DATA_IS_DEEPLINK) == true)
+        {
+            mIsDeepLink = intent.getBooleanExtra(INTENT_EXTRA_DATA_IS_DEEPLINK, false);
+        }
+
+        //
+        //        Location location = null;
+        //        Keyword keyword = null;
+        //        double radius = DEFAULT_SEARCH_RADIUS;
+        //
+        //        if (intent.hasExtra(INTENT_EXTRA_DATA_KEYWORD) == true)
+        //        {
+        //            keyword = intent.getParcelableExtra(INTENT_EXTRA_DATA_KEYWORD);
+        //        } else if (intent.hasExtra(INTENT_EXTRA_DATA_LOCATION) == true)
+        //        {
+        //            location = intent.getParcelableExtra(INTENT_EXTRA_DATA_LOCATION);
+        //
+        //            if (intent.hasExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN) == true)
+        //            {
+        //                mCallByScreen = intent.getStringExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN);
+        //            }
+        //
+        //            mGourmetSearchCuration.getCurationOption().setDefaultSortType(SortType.DISTANCE);
+        //        } else if (intent.hasExtra(INTENT_EXTRA_DATA_LATLNG) == true)
+        //        {
+        //            LatLng latLng = intent.getParcelableExtra(INTENT_EXTRA_DATA_LATLNG);
+        //
+        //            if (intent.hasExtra(INTENT_EXTRA_DATA_RADIUS) == true)
+        //            {
+        //                radius = intent.getDoubleExtra(INTENT_EXTRA_DATA_RADIUS, DEFAULT_SEARCH_RADIUS);
+        //            }
+        //
+        //            mIsDeepLink = intent.getBooleanExtra(INTENT_EXTRA_DATA_IS_DEEPLINK, false);
+        //
+        //            location = new Location((String) null);
+        //            location.setLatitude(latLng.latitude);
+        //            location.setLongitude(latLng.longitude);
+        //
+        //            // 고정 위치로 진입한 경우
+        //            mIsFixedLocation = true;
+        //            mGourmetSearchCuration.getCurationOption().setDefaultSortType(SortType.DISTANCE);
+        //        } else
+        //        {
+        //            finish();
+        //            return;
+        //        }
+        //
+        //        mSearchType = SearchType.valueOf(intent.getStringExtra(INTENT_EXTRA_DATA_SEARCHTYPE));
+        //        mInputText = intent.getStringExtra(INTENT_EXTRA_DATA_INPUTTEXT);
+        //
+        //        mGourmetSearchCuration.setKeyword(keyword);
+        //
+        //        // 내주변 위치 검색으로 시작하는 경우에는 특정 반경과 거리순으로 시작해야한다.
+        //        if (mSearchType == SearchType.LOCATION)
+        //        {
+        //            mGourmetSearchCuration.getCurationOption().setSortType(SortType.DISTANCE);
+        //            mGourmetSearchCuration.setRadius(radius);
+        //        }
+        //
+        //        mGourmetSearchCuration.setLocation(location);
+        //        mGourmetSearchCuration.setGourmetBookingDay(gourmetBookingDay);
     }
 
     @Override
@@ -417,31 +587,38 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             return;
         }
 
-        if (mSearchType == SearchType.LOCATION)
-        {
-            mPlaceSearchResultLayout.setToolbarTitle("");
+        GourmetBookingDay gourmetBookingDay = mGourmetSearchCuration.getGourmetBookingDay();
 
-            mPlaceSearchResultLayout.setSpinnerVisible(true);
-        } else
+        if (gourmetBookingDay == null)
         {
-            mPlaceSearchResultLayout.setToolbarTitle(mGourmetSearchCuration.getKeyword().name);
-
-            mPlaceSearchResultLayout.setSpinnerVisible(false);
+            return;
         }
 
-        mPlaceSearchResultLayout.setSelectionSpinner(mGourmetSearchCuration.getRadius());
-
-        ((GourmetSearchResultLayout) mPlaceSearchResultLayout).setCalendarText(mGourmetSearchCuration.getGourmetBookingDay());
-    }
-
-    protected Keyword getKeyword()
-    {
-        if (mGourmetSearchCuration == null)
+        try
         {
-            return null;
-        }
+            switch (mGourmetSearchCuration.getSuggest().categoryKey)
+            {
+                case GourmetSuggest.CATEGORY_LOCATION:
+                    mPlaceSearchResultLayout.setToolbarTitle("");
 
-        return mGourmetSearchCuration.getKeyword();
+                    mPlaceSearchResultLayout.setSpinnerVisible(true);
+                    break;
+
+                default:
+                    mPlaceSearchResultLayout.setToolbarTitle(mGourmetSearchCuration.getSuggest().displayName);
+
+                    mPlaceSearchResultLayout.setSpinnerVisible(false);
+                    break;
+            }
+
+            mPlaceSearchResultLayout.setSelectionSpinner(mGourmetSearchCuration.getRadius());
+
+            ((GourmetSearchResultLayout) mPlaceSearchResultLayout).setCalendarText(gourmetBookingDay);
+
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
     }
 
     @Override
@@ -470,18 +647,11 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     @Override
     protected void finish(int resultCode)
     {
-        Keyword keyword = getKeyword();
+        Intent intent = new Intent();
+        intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcel(mGourmetSearchCuration.getSuggest()));
+        intent.putExtra(INTENT_EXTRA_DATA_VISIT_DATE_TIME, mGourmetSearchCuration.getGourmetBookingDay().getVisitDay(DailyCalendar.ISO_8601_FORMAT));
 
-        if (mPlaceSearchResultLayout != null && mPlaceSearchResultLayout.isEmptyLayout() == false//
-            && keyword != null)
-        {
-            Intent intent = new Intent();
-            intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, getKeyword());
-            setResult(resultCode, intent);
-        } else
-        {
-            setResult(resultCode);
-        }
+        setResult(resultCode, intent);
 
         if (resultCode == RESULT_CANCELED || resultCode == CODE_RESULT_ACTIVITY_GO_SEARCH)
         {
@@ -489,6 +659,50 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         }
 
         finish();
+    }
+
+    private void showEmptyLayout()
+    {
+        if (mPlaceSearchResultLayout == null)
+        {
+            return;
+        }
+
+        mReceiveDataFlag = 2;
+
+        unLockUI();
+
+        mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
+        mPlaceSearchResultLayout.setScreenVisible(ScreenType.EMPTY);
+        mPlaceSearchResultLayout.setSpinnerVisible(GourmetSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mGourmetSearchCuration.getSuggest().categoryKey) == true);
+
+        if (mPlaceSearchResultLayout.hasCampaignTag() == false)
+        {
+            addCompositeDisposable(mCampaignTagRemoteImpl.getCampaignTagList(ServiceType.HOTEL.name()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<CampaignTag>>()
+            {
+                @Override
+                public void accept(ArrayList<CampaignTag> campaignTagList) throws Exception
+                {
+                    if (campaignTagList == null || campaignTagList.size() == 0)
+                    {
+                        mPlaceSearchResultLayout.setCampaignTagVisible(false);
+                        return;
+                    }
+
+                    mPlaceSearchResultLayout.setCampaignTagVisible(true);
+                    mPlaceSearchResultLayout.setCampaignTagList(campaignTagList);
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
+                {
+                    ExLog.e(throwable.toString());
+
+                    mPlaceSearchResultLayout.setCampaignTagVisible(false);
+                }
+            }));
+        }
     }
 
     void recordScreenSearchResult(String screen)
@@ -505,7 +719,6 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             Map<String, String> params = new HashMap<>();
 
             params.put(AnalyticsManager.KeyType.CHECK_IN, gourmetBookingDay.getVisitDay("yyyy-MM-dd"));
-
             params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.GOURMET);
             params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.GOURMET);
 
@@ -634,7 +847,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
     // mOnEventListener
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    PlaceSearchResultLayout.OnEventListener mOnEventListener = new PlaceSearchResultLayout.OnEventListener()
+    GourmetSearchResultLayout.OnEventListener mOnEventListener = new GourmetSearchResultLayout.OnEventListener()
     {
         @Override
         public void finish()
@@ -698,7 +911,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             }
 
             Intent intent = GourmetSearchResultCurationActivity.newInstance(GourmetSearchResultActivity.this,//
-                mViewType, mSearchType, mGourmetSearchCuration, mIsFixedLocation);
+                mViewType, mGourmetSearchCuration, mIsFixedLocation);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMETCURATION);
 
             AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent( //
@@ -750,30 +963,46 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
             mGourmetSearchCuration.setRadius(radius);
 
-            String action;
-            if (radius > 5)
+            if (mReceiveDataFlag < 2)
             {
-                action = AnalyticsManager.Action.NEARBY_DISTANCE_10; // 10km
-            } else if (radius > 3)
-            {
-                action = AnalyticsManager.Action.NEARBY_DISTANCE_5; // 5km
-            } else if (radius > 1)
-            {
-                action = AnalyticsManager.Action.NEARBY_DISTANCE_3; // 3km
-            } else if (radius > 0.5)
-            {
-                action = AnalyticsManager.Action.NEARBY_DISTANCE_1; // 1km
-            } else
-            {
-                action = AnalyticsManager.Action.NEARBY_DISTANCE_05; // 0.5km
+                // 초기 로딩이 끝나지 않았음으로 리턴
+                return;
             }
 
-            String label = mSearchType == SearchType.LOCATION //
-                ? mAddress : mGourmetSearchCuration.getKeyword().name;
-            AnalyticsManager.getInstance(GourmetSearchResultActivity.this) //
-                .recordEvent(AnalyticsManager.Category.NAVIGATION, action, label, null);
+            try
+            {
+                String action;
+                if (radius > 5)
+                {
+                    action = AnalyticsManager.Action.NEARBY_DISTANCE_10; // 10km
+                } else if (radius > 3)
+                {
+                    action = AnalyticsManager.Action.NEARBY_DISTANCE_5; // 5km
+                } else if (radius > 1)
+                {
+                    action = AnalyticsManager.Action.NEARBY_DISTANCE_3; // 3km
+                } else if (radius > 0.5)
+                {
+                    action = AnalyticsManager.Action.NEARBY_DISTANCE_1; // 1km
+                } else
+                {
+                    action = AnalyticsManager.Action.NEARBY_DISTANCE_05; // 0.5km
+                }
 
-            if (mSearchType == SearchType.LOCATION && mGourmetSearchCuration.getCurationOption().getSortType() == SortType.DISTANCE//
+                String label = GourmetSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mGourmetSearchCuration.getSuggest().categoryKey) == true //
+                    ? mAddress : mGourmetSearchCuration.getSuggest().displayName;
+                AnalyticsManager.getInstance(GourmetSearchResultActivity.this) //
+                    .recordEvent(AnalyticsManager.Category.NAVIGATION, action, label, null);
+            } catch (Exception e)
+            {
+                if (Constants.DEBUG == true)
+                {
+                    ExLog.d(e.getMessage());
+                }
+            }
+
+            if (GourmetSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mGourmetSearchCuration.getSuggest().categoryKey) == true//
+                && mGourmetSearchCuration.getCurationOption().getSortType() == SortType.DISTANCE//
                 && mGourmetSearchCuration.getLocation() == null)
             {
                 searchMyLocation();
@@ -804,7 +1033,52 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onResearchClick()
         {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
 
+            startActivityForResult(ResearchGourmetActivity.newInstance(GourmetSearchResultActivity.this, mTodayDateTime.openDateTime, mTodayDateTime.closeDateTime//
+                , mTodayDateTime.currentDateTime, mTodayDateTime.dailyDateTime//
+                , mGourmetSearchCuration.getGourmetBookingDay().getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
+                , mGourmetSearchCuration.getSuggest()), CODE_REQUEST_ACTIVITY_GOURMET_RESEARCH);
+        }
+
+        @Override
+        public void onSearchStayClick()
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            finish(Constants.CODE_RESULT_ACTIVITY_SEARCH_STAY);
+        }
+
+        @Override
+        public void onSearchStayOutboundClick()
+        {
+            if (lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            finish(Constants.CODE_RESULT_ACTIVITY_SEARCH_STAYOUTBOUND);
+        }
+
+        @Override
+        public void onSearchPopularTag(CampaignTag campaignTag)
+        {
+            if (mGourmetSearchCuration == null || lockUiComponentAndIsLockUiComponent() == true)
+            {
+                return;
+            }
+
+            startActivity(GourmetCampaignTagListActivity.newInstance(GourmetSearchResultActivity.this //
+                , campaignTag.index, campaignTag.campaignTag//
+                , mGourmetSearchCuration.getGourmetBookingDay().getVisitDay(DailyCalendar.ISO_8601_FORMAT)));
+
+            finish();
         }
     };
 
@@ -822,58 +1096,64 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 return;
             }
 
-            if (SearchType.LOCATION == mSearchType)
-            {
-                synchronized (GourmetSearchResultActivity.this)
-                {
-                    if (mReceiveDataFlag == 0)
-                    {
-                        mReceiveDataFlag = 1;
-                    } else if (mReceiveDataFlag == 1)
-                    {
-                        ArrayList<PlaceListFragment> placeListFragmentList = mPlaceSearchResultLayout.getPlaceListFragment();
-                        if (placeListFragmentList != null && placeListFragmentList.size() > 0)
-                        {
-                            GourmetBookingDay gourmetBookingDay = mGourmetSearchCuration.getGourmetBookingDay();
-                            Map<String, String> params = new HashMap<>();
-
-                            try
-                            {
-                                params.put(AnalyticsManager.KeyType.CHECK_IN, gourmetBookingDay.getVisitDay("yyyy-MM-dd"));
-
-                                params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.GOURMET);
-                                params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.GOURMET);
-
-                                Province province = mGourmetSearchCuration.getProvince();
-                                if (province instanceof Area)
-                                {
-                                    Area area = (Area) province;
-                                    params.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
-                                    params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
-                                    params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
-                                } else if (province != null)
-                                {
-                                    params.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
-                                    params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
-                                    params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
-                                }
-
-                                params.put(AnalyticsManager.KeyType.SEARCH_COUNT, Integer.toString(mSearchCount > mSearchMaxCount ? mSearchMaxCount : mSearchCount));
-                            } catch (Exception e)
-                            {
-
-                            }
-
-                            int placeCount = placeListFragmentList.get(0).getPlaceCount();
-                            recordEventSearchResultByLocation(address, placeCount == 0, params);
-                            mReceiveDataFlag = 2;
-                        }
-                    }
-                }
-            }
-
             mAddress = address;
             mPlaceSearchResultLayout.setToolbarTitle(address);
+
+            if (GourmetSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mGourmetSearchCuration.getSuggest().categoryKey) == false)
+            {
+                return;
+            }
+
+            synchronized (GourmetSearchResultActivity.this)
+            {
+                if (mReceiveDataFlag >= 2)
+                {
+                    return;
+                }
+
+                if (mReceiveDataFlag == 0)
+                {
+                    mReceiveDataFlag = 1;
+                    return;
+                }
+
+                ArrayList<PlaceListFragment> placeListFragmentList = mPlaceSearchResultLayout.getPlaceListFragment();
+                if (placeListFragmentList != null && placeListFragmentList.size() > 0)
+                {
+                    GourmetBookingDay gourmetBookingDay = mGourmetSearchCuration.getGourmetBookingDay();
+                    Map<String, String> params = new HashMap<>();
+
+                    try
+                    {
+                        params.put(AnalyticsManager.KeyType.CHECK_IN, gourmetBookingDay.getVisitDay("yyyy-MM-dd"));
+                        params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.GOURMET);
+                        params.put(AnalyticsManager.KeyType.PLACE_HIT_TYPE, AnalyticsManager.ValueType.GOURMET);
+
+                        Province province = mGourmetSearchCuration.getProvince();
+                        if (province instanceof Area)
+                        {
+                            Area area = (Area) province;
+                            params.put(AnalyticsManager.KeyType.COUNTRY, area.getProvince().isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
+                            params.put(AnalyticsManager.KeyType.PROVINCE, area.getProvince().name);
+                            params.put(AnalyticsManager.KeyType.DISTRICT, area.name);
+                        } else if (province != null)
+                        {
+                            params.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
+                            params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
+                            params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
+                        }
+
+                        params.put(AnalyticsManager.KeyType.SEARCH_COUNT, Integer.toString(mSearchCount > mSearchMaxCount ? mSearchMaxCount : mSearchCount));
+                    } catch (Exception e)
+                    {
+
+                    }
+
+                    int placeCount = placeListFragmentList.get(0).getPlaceCount();
+                    recordEventSearchResultByLocation(address, placeCount == 0, params);
+                    mReceiveDataFlag = 2;
+                }
+            }
         }
 
         @Override
@@ -1025,28 +1305,47 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
             if (gourmet.availableTicketNumbers == 0 || gourmet.availableTicketNumbers < gourmet.minimumOrderQuantity || gourmet.expired == true)
             {
-                switch (mSearchType)
+                switch (mGourmetSearchCuration.getSuggest().categoryKey)
                 {
-                    case AUTOCOMPLETE:
-                        AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_GOURMET_ITEM_CLICK//
-                            , AnalyticsManager.Action.AUTO_SEARCH, Integer.toString(gourmet.index), null);
-                        break;
-
-                    case LOCATION:
+                    case GourmetSuggest.CATEGORY_LOCATION:
                         AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_GOURMET_ITEM_CLICK//
                             , AnalyticsManager.Action.NEARBY, Integer.toString(gourmet.index), null);
                         break;
 
-                    case RECENTLY_KEYWORD:
+                    case GourmetSuggest.CATEGORY_GOURMET:
+                    case GourmetSuggest.CATEGORY_REGION:
                         AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_GOURMET_ITEM_CLICK//
-                            , AnalyticsManager.Action.RECENT, Integer.toString(gourmet.index), null);
+                            , AnalyticsManager.Action.AUTO_SEARCH, Integer.toString(gourmet.index), null);
                         break;
 
-                    case SEARCHES:
+                    case GourmetSuggest.CATEGORY_DIRECT:
                         AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_GOURMET_ITEM_CLICK//
                             , AnalyticsManager.Action.KEYWORD, Integer.toString(gourmet.index), null);
                         break;
                 }
+
+//                switch (mSearchType)
+//                {
+//                    case AUTOCOMPLETE:
+//                        AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_GOURMET_ITEM_CLICK//
+//                            , AnalyticsManager.Action.AUTO_SEARCH, Integer.toString(gourmet.index), null);
+//                        break;
+//
+//                    case LOCATION:
+//                        AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_GOURMET_ITEM_CLICK//
+//                            , AnalyticsManager.Action.NEARBY, Integer.toString(gourmet.index), null);
+//                        break;
+//
+//                    case RECENTLY_KEYWORD:
+//                        AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_GOURMET_ITEM_CLICK//
+//                            , AnalyticsManager.Action.RECENT, Integer.toString(gourmet.index), null);
+//                        break;
+//
+//                    case SEARCHES:
+//                        AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_GOURMET_ITEM_CLICK//
+//                            , AnalyticsManager.Action.KEYWORD, Integer.toString(gourmet.index), null);
+//                        break;
+//                }
             }
         }
 
@@ -1093,22 +1392,28 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             mOnEventListener.onDateClick();
         }
 
-        //        @Override
-        //        public void onEventBannerClick(EventBanner eventBanner)
-        //        {
-        //
-        //        }
-
         @Override
         public void onGourmetListCount(int count)
         {
             try
             {
-                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).onSearch(mGourmetSearchCuration.getKeyword().name, null, "gourmet", count);
+                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).onSearch(mGourmetSearchCuration.getSuggest().displayName, null, "gourmet", count);
             } catch (Exception e)
             {
                 ExLog.d(e.toString());
             }
+        }
+
+        @Override
+        public void onResearchClick()
+        {
+            mOnEventListener.onResearchClick();
+        }
+
+        @Override
+        public void onRadiusClick()
+        {
+            mPlaceSearchResultLayout.showSpinner();
         }
 
         @Override
@@ -1120,12 +1425,10 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             }
 
             PlaceListFragment currentPlaceListFragment = mPlaceSearchResultLayout.getCurrentPlaceListFragment();
-
             if (currentPlaceListFragment == placeListFragment)
             {
                 currentPlaceListFragment.setVisibility(mViewType, Constants.EmptyStatus.NOT_EMPTY, true);
                 currentPlaceListFragment.setPlaceCuration(mGourmetSearchCuration);
-                ((GourmetSearchResultListFragment) currentPlaceListFragment).setSearchType(mSearchType);
                 currentPlaceListFragment.refreshList(true);
             } else
             {
@@ -1180,12 +1483,23 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onShowMenuBar()
         {
+            if (mPlaceSearchResultLayout == null)
+            {
+                return;
+            }
+
+            mPlaceSearchResultLayout.showBottomLayout();
         }
 
         @Override
         public void onBottomOptionVisible(boolean visible)
         {
+            if (mPlaceSearchResultLayout == null)
+            {
+                return;
+            }
 
+            mPlaceSearchResultLayout.setBottomOptionVisible(visible);
         }
 
         @Override
@@ -1197,7 +1511,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             }
 
             Intent intent = GourmetSearchResultCurationActivity.newInstance(GourmetSearchResultActivity.this,//
-                mViewType, mSearchType, mGourmetSearchCuration, mIsFixedLocation);
+                mViewType, mGourmetSearchCuration, mIsFixedLocation);
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_GOURMETCURATION);
         }
 
@@ -1233,8 +1547,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
             if (isShow == true)
             {
-                mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
-                mPlaceSearchResultLayout.setScreenVisible(ScreenType.EMPTY);
+                showEmptyLayout();
 
                 recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT_EMPTY);
             } else
@@ -1272,30 +1585,34 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
             }
 
-            Keyword keyword = mGourmetSearchCuration.getKeyword();
-
-            if (mSearchType == SearchType.LOCATION)
+            switch (mGourmetSearchCuration.getSuggest().categoryKey)
             {
-                synchronized (GourmetSearchResultActivity.this)
-                {
-                    if (mReceiveDataFlag == 0)
+                case GourmetSuggest.CATEGORY_LOCATION:
+                    synchronized (GourmetSearchResultActivity.this)
                     {
-                        mReceiveDataFlag = 1;
-                    } else if (mReceiveDataFlag == 1)
-                    {
-                        recordEventSearchResultByLocation(mAddress, isShow, params);
-                        mReceiveDataFlag = 2;
+                        if (mReceiveDataFlag == 0)
+                        {
+                            mReceiveDataFlag = 1;
+                        } else if (mReceiveDataFlag == 1)
+                        {
+                            recordEventSearchResultByLocation(mAddress, isShow, params);
+                            mReceiveDataFlag = 2;
+                        }
                     }
-                }
-            } else if (mSearchType == SearchType.RECENTLY_KEYWORD)
-            {
-                recordEventSearchResultByRecentKeyword(keyword.name, isShow, params);
-            } else if (mSearchType == SearchType.AUTOCOMPLETE)
-            {
-                recordEventSearchResultByAutoSearch(keyword.name, mInputText, isShow, params);
-            } else
-            {
-                recordEventSearchResultByKeyword(keyword.name, isShow, params);
+                    break;
+
+                case GourmetSuggest.CATEGORY_GOURMET:
+                case GourmetSuggest.CATEGORY_REGION:
+                    recordEventSearchResultByAutoSearch(mGourmetSearchCuration.getSuggest().displayName, mInputText, isShow, params);
+                    break;
+
+                case GourmetSuggest.CATEGORY_DIRECT:
+                    recordEventSearchResultByRecentKeyword(mGourmetSearchCuration.getSuggest().displayName, isShow, params);
+                    break;
+
+                default:
+                    recordEventSearchResultByKeyword(mGourmetSearchCuration.getSuggest().displayName, isShow, params);
+                    break;
             }
         }
 

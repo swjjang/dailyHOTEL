@@ -596,6 +596,12 @@
             android:screenOrientation="portrait"/>
 
         <activity
+            android:name="com.daily.dailyhotel.screen.home.search.gourmet.research.ResearchGourmetActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+
+        <activity
             android:name="com.daily.dailyhotel.screen.home.stay.inbound.list.StayTabActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
