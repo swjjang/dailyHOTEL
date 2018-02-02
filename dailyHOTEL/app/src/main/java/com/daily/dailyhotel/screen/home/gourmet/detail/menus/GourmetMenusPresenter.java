@@ -272,6 +272,21 @@ public class GourmetMenusPresenter extends BaseExceptionPresenter<GourmetMenusAc
                 {
                     getViewInterface().setCartVisible(true);
                     getViewInterface().setSummeryCart(getString(R.string.label_gourmet_product_detail_check_the_menus), mGourmetCart.getTotalCount(), mGourmetCart.getTotalPrice());
+
+                    // 서버에서 받은 개수를 새로 넣어준다
+                    for (GourmetCartMenu gourmetCartMenu : mGourmetCart.getMenuList())
+                    {
+                        for (GourmetMenu gourmetMenu : mGourmetMenuList)
+                        {
+                            if (gourmetCartMenu.index == gourmetMenu.index)
+                            {
+                                gourmetCartMenu.minimumOrderQuantity = gourmetMenu.minimumOrderQuantity;
+                                gourmetCartMenu.maximumOrderQuantity = gourmetMenu.maximumOrderQuantity;
+                                gourmetCartMenu.availableTicketNumbers = gourmetMenu.availableTicketNumbers;
+                                break;
+                            }
+                        }
+                    }
                 }
             }
         }, new Consumer<Throwable>()

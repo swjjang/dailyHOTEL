@@ -19,6 +19,7 @@ public class GourmetCartMenu
     public String name;
     public int persons;
 
+    // 저장하지 않고 실시간으로 변경된 내용을 받는다.
     public int minimumOrderQuantity;
     public int maximumOrderQuantity;
     public int availableTicketNumbers;
@@ -45,9 +46,9 @@ public class GourmetCartMenu
             discountPrice = jsonObject.getInt("discountPrice");
             name = jsonObject.getString("name");
             persons = jsonObject.getInt("persons");
-            minimumOrderQuantity = jsonObject.getInt("minimumOrderQuantity");
-            maximumOrderQuantity = jsonObject.getInt("maximumOrderQuantity");
-            availableTicketNumbers = jsonObject.getInt("availableTicketNumbers");
+            //            minimumOrderQuantity = jsonObject.getInt("minimumOrderQuantity");
+            //            maximumOrderQuantity = jsonObject.getInt("maximumOrderQuantity");
+            //            availableTicketNumbers = jsonObject.getInt("availableTicketNumbers");
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -72,9 +73,9 @@ public class GourmetCartMenu
             jsonObject.put("discountPrice", discountPrice);
             jsonObject.put("name", name);
             jsonObject.put("persons", persons);
-            jsonObject.put("minimumOrderQuantity", minimumOrderQuantity);
-            jsonObject.put("maximumOrderQuantity", maximumOrderQuantity);
-            jsonObject.put("availableTicketNumbers", availableTicketNumbers);
+            //            jsonObject.put("minimumOrderQuantity", minimumOrderQuantity);
+            //            jsonObject.put("maximumOrderQuantity", maximumOrderQuantity);
+            //            jsonObject.put("availableTicketNumbers", availableTicketNumbers);
 
         } catch (Exception e)
         {
