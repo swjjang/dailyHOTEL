@@ -66,7 +66,9 @@ import io.reactivex.schedulers.Schedulers;
  * Created by sheldon
  * Clean Architecture
  */
-public class SearchStaySuggestPresenter extends BaseExceptionPresenter<SearchStaySuggestActivity, SearchStaySuggestInterface> implements SearchStaySuggestView.OnEventListener
+public class SearchStaySuggestPresenter //
+    extends BaseExceptionPresenter<SearchStaySuggestActivity, SearchStaySuggestInterface> //
+    implements SearchStaySuggestView.OnEventListener
 {
     private SearchStaySuggestAnalyticsInterface mAnalytics;
 

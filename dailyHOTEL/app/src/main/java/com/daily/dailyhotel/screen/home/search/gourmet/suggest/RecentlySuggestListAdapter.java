@@ -299,6 +299,8 @@ public class RecentlySuggestListAdapter extends RecyclerView.Adapter<RecyclerVie
             }
         });
 
+        holder.dataBinding.bottomDivider.setVisibility(View.VISIBLE);
+
         holder.dataBinding.descriptionTextView.setText(gourmetSuggest.displayName);
 
         if (DailyTextUtils.isTextEmpty(gourmetSuggest.displayName) == true)
