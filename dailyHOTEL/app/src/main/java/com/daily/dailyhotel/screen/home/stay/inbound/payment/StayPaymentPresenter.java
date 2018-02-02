@@ -1608,7 +1608,8 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 getViewInterface().setDepositStickerVisible(true);
                 getViewInterface().setDepositStickerCardVisible(true);
 
-                if (mSaleType == NONE)
+                // 최초 진입시에는 상관이 없지만, 가격 변경후 화면 변경시 mSaleType 의 초기 타입이 None 이기에 결제 타입이 바뀌게 되는 이슈로 수정
+                if (mPaymentType != DailyBookingPaymentTypeView.PaymentType.PHONE && mSaleType == NONE)
                 {
                     setSaleType(STICKER);
                 }
