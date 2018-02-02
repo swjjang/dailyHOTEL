@@ -14,18 +14,13 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BasePagerFragmentPresenter;
 import com.daily.dailyhotel.entity.CampaignTag;
-import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
-import com.daily.dailyhotel.screen.home.campaigntag.gourmet.GourmetCampaignTagListActivity;
-import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
-import com.daily.dailyhotel.screen.home.search.SearchPresenter;
 import com.daily.dailyhotel.screen.home.search.SearchViewModel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import java.util.ArrayList;
 
@@ -241,36 +236,13 @@ public class SearchGourmetFragmentPresenter extends BasePagerFragmentPresenter<S
     @Override
     public void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
     {
-        if (recentlyDbPlace == null || lock() == true)
-        {
-            return;
-        }
-
-        GourmetDetailAnalyticsParam analyticsParam = new GourmetDetailAnalyticsParam();
-
-        startActivityForResult(GourmetDetailActivity.newInstance(getActivity() //
-            , recentlyDbPlace.index, null, recentlyDbPlace.imageUrl//
-            , GourmetDetailActivity.NONE_PRICE//
-            , mSearchModel.bookDateTime.getValue().getVisitDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , null, false, false, false, false//
-            , GourmetDetailActivity.TRANS_GRADIENT_BOTTOM_TYPE_NONE//
-            , analyticsParam), SearchActivity.REQUEST_CODE_GOURMET_DETAIL);
-
-        getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+        getFragment().getFragmentEventListener().onRecentlySearchResultClick(recentlyDbPlace);
     }
 
     @Override
     public void onPopularTagClick(CampaignTag campaignTag)
     {
-        if (campaignTag == null || lock() == true)
-        {
-            return;
-        }
-
-        startActivityForResult(GourmetCampaignTagListActivity.newInstance(getActivity() //
-            , campaignTag.index, campaignTag.campaignTag//
-            , mSearchModel.bookDateTime.getValue().getVisitDateTime(DailyCalendar.ISO_8601_FORMAT))//
-            , SearchActivity.REQUEST_CODE_GOURMET_SEARCH_RESULT);
+        getFragment().getFragmentEventListener().onPopularTagClick(campaignTag);
     }
 
     private void initViewModel(BaseActivity activity)

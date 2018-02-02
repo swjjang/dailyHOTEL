@@ -1324,28 +1324,28 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                         break;
                 }
 
-//                switch (mSearchType)
-//                {
-//                    case AUTOCOMPLETE:
-//                        AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_GOURMET_ITEM_CLICK//
-//                            , AnalyticsManager.Action.AUTO_SEARCH, Integer.toString(gourmet.index), null);
-//                        break;
-//
-//                    case LOCATION:
-//                        AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_GOURMET_ITEM_CLICK//
-//                            , AnalyticsManager.Action.NEARBY, Integer.toString(gourmet.index), null);
-//                        break;
-//
-//                    case RECENTLY_KEYWORD:
-//                        AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_GOURMET_ITEM_CLICK//
-//                            , AnalyticsManager.Action.RECENT, Integer.toString(gourmet.index), null);
-//                        break;
-//
-//                    case SEARCHES:
-//                        AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_GOURMET_ITEM_CLICK//
-//                            , AnalyticsManager.Action.KEYWORD, Integer.toString(gourmet.index), null);
-//                        break;
-//                }
+                //                switch (mSearchType)
+                //                {
+                //                    case AUTOCOMPLETE:
+                //                        AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_GOURMET_ITEM_CLICK//
+                //                            , AnalyticsManager.Action.AUTO_SEARCH, Integer.toString(gourmet.index), null);
+                //                        break;
+                //
+                //                    case LOCATION:
+                //                        AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_GOURMET_ITEM_CLICK//
+                //                            , AnalyticsManager.Action.NEARBY, Integer.toString(gourmet.index), null);
+                //                        break;
+                //
+                //                    case RECENTLY_KEYWORD:
+                //                        AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_GOURMET_ITEM_CLICK//
+                //                            , AnalyticsManager.Action.RECENT, Integer.toString(gourmet.index), null);
+                //                        break;
+                //
+                //                    case SEARCHES:
+                //                        AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SOLDOUT_GOURMET_ITEM_CLICK//
+                //                            , AnalyticsManager.Action.KEYWORD, Integer.toString(gourmet.index), null);
+                //                        break;
+                //                }
             }
         }
 
