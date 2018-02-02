@@ -4,6 +4,7 @@ import android.location.Location;
 import android.os.Parcel;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.twoheart.dailyhotel.model.time.GourmetBookingDay;
 import com.twoheart.dailyhotel.util.Constants;
 
@@ -56,7 +57,14 @@ public class GourmetSearchParams extends GourmetParams
         mSort = gourmetCurationOption.getSortType();
         setSortType(mSort);
 
-        term = gourmetSearchCuration.getSuggest() == null ? null : gourmetSearchCuration.getSuggest().displayName;
+        if (GourmetSuggest.CATEGORY_LOCATION.equalsIgnoreCase(gourmetSearchCuration.getSuggest().categoryKey) == true)
+        {
+            term = null;
+        } else
+        {
+            term = gourmetSearchCuration.getSuggest() == null ? null : gourmetSearchCuration.getSuggest().displayName;
+        }
+
         radius = gourmetSearchCuration.getRadius();
 
         Location location = gourmetSearchCuration.getLocation();

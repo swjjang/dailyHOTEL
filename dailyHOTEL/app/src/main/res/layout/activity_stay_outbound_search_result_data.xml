@@ -17,7 +17,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:paddingLeft="15dp"
-                android:paddingRight="15dp"
+                android:paddingRight="12dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -27,12 +27,13 @@
                 android:id="@+id/titleBackgroundView"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
-                android:layout_marginRight="12dp"
+                android:layout_marginRight="8dp"
                 android:background="@drawable/shape_fillrect_bf8f8f9_r4"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@+id/backImageView"
                 app:layout_constraintRight_toLeftOf="@+id/distanceSpinner"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_goneMarginRight="12dp"/>
 
             <com.daily.base.widget.DailyImageView
                 android:id="@+id/titleIconImageView"
@@ -48,7 +49,7 @@
                 android:id="@+id/titleView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
+                android:layout_marginLeft="7dp"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:singleLine="true"
@@ -64,8 +65,7 @@
                 android:id="@+id/calendarTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="8dp"
+                android:layout_marginLeft="7dp"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:singleLine="true"
@@ -74,8 +74,7 @@
                 app:layout_constraintBottom_toBottomOf="@+id/titleBackgroundView"
                 app:layout_constraintLeft_toRightOf="@+id/titleIconImageView"
                 app:layout_constraintRight_toRightOf="@+id/titleBackgroundView"
-                app:layout_constraintTop_toBottomOf="@+id/titleView"
-                app:layout_goneMarginRight="12dp"/>
+                app:layout_constraintTop_toBottomOf="@+id/titleView"/>
 
             <Spinner
                 android:id="@+id/distanceSpinner"
@@ -246,8 +245,8 @@
                     android:id="@+id/popularAreasLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <View
                         android:layout_width="match_parent"

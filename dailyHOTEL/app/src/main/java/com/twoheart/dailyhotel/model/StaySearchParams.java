@@ -6,6 +6,7 @@ import android.os.Parcelable;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.util.Constants;
 
@@ -73,7 +74,14 @@ public class StaySearchParams extends StayParams
 
         setSortType(mSort);
 
-        term = staySearchCuration.getSuggest() == null ? null : staySearchCuration.getSuggest().displayName;
+        if (StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(staySearchCuration.getSuggest().categoryKey) == true)
+        {
+            term = null;
+        } else
+        {
+            term = staySearchCuration.getSuggest() == null ? null : staySearchCuration.getSuggest().displayName;
+        }
+
         radius = staySearchCuration.getRadius();
 
         Location location = staySearchCuration.getLocation();

@@ -132,7 +132,7 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout
 
     private void initToolbarLayout(View view)
     {
-        mToolbar = view.findViewById(R.id.toolbar);
+        mToolbar = view.findViewById(R.id.toolbarLayout);
 
         View backView = mToolbar.findViewById(R.id.backImageView);
         backView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).finish(Activity.RESULT_CANCELED));

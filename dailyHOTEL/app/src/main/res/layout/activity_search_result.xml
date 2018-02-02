@@ -1,14 +1,17 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:dailyFont="http://schemas.android.com/apk/res-auto"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent">
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
+        android:id="@+id/toolbarLayout"
+        android:layout_width="0dp"
         android:layout_height="52dp"
-        android:background="@color/white">
+        android:background="@color/white"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.daily.base.widget.DailyImageView
             android:id="@+id/backImageView"
@@ -25,12 +28,13 @@
             android:id="@+id/titleBackgroundView"
             android:layout_width="0dp"
             android:layout_height="40dp"
-            android:layout_marginRight="12dp"
+            android:layout_marginRight="8dp"
             android:background="@drawable/shape_fillrect_bf8f8f9_r4"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/backImageView"
             app:layout_constraintRight_toLeftOf="@+id/distanceSpinner"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_goneMarginRight="12dp"/>
 
         <com.daily.base.widget.DailyImageView
             android:id="@+id/titleIconImageView"
@@ -46,7 +50,7 @@
             android:id="@+id/titleView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
+            android:layout_marginLeft="7dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:singleLine="true"
@@ -62,8 +66,7 @@
             android:id="@+id/calendarTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginLeft="7dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:singleLine="true"
@@ -72,8 +75,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/titleBackgroundView"
             app:layout_constraintLeft_toRightOf="@+id/titleIconImageView"
             app:layout_constraintRight_toRightOf="@+id/titleBackgroundView"
-            app:layout_constraintTop_toBottomOf="@+id/titleView"
-            app:layout_goneMarginRight="12dp"/>
+            app:layout_constraintTop_toBottomOf="@+id/titleView"/>
 
         <Spinner
             android:id="@+id/distanceSpinner"
@@ -87,23 +89,26 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:background="@color/default_line_ce7e7e7"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
     </android.support.constraint.ConstraintLayout>
+
+    <View
+        android:id="@+id/underLineView"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/default_line_ce7e7e7"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarLayout"/>
 
     <RelativeLayout
         android:id="@+id/categoryLayout"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="40dp"
-        android:layout_below="@+id/toolbar"
         android:background="@drawable/layerlist_fillrect_ule7e7e7_bffffff"
-        android:visibility="gone">
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/underLineView">
 
         <android.support.design.widget.TabLayout
             android:id="@+id/categoryTabLayout"
@@ -117,16 +122,19 @@
             app:tabSelectedTextColor="@color/default_text_cb70038"
             app:tabTextAppearance="@style/CategoryTabLayoutTextAppearance"
             app:tabTextColor="@color/default_text_c929292"/>
-
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/searchLocationLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_below="@+id/underLineView"
         android:background="@color/default_background"
-        android:visibility="gone">
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/underLineView">
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -150,12 +158,15 @@
 
     <ScrollView
         android:id="@+id/emptyScrollView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="@color/white"
         android:fillViewport="true"
-        android:visibility="gone">
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/underLineView">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -168,8 +179,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="44dp"
-                android:scaleType="centerCrop"
-                app:srcCompat="@drawable/no_hotel_ic"/>
+                android:scaleType="centerCrop"/>
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/messageTextView01"
@@ -177,7 +187,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="16dp"
-                android:text="@string/message_searchresult_empty_title"
                 android:textColor="@color/default_text_c323232"
                 android:textSize="18dp"
                 dailyFont:style="Medium"/>
@@ -190,7 +199,6 @@
                 android:layout_marginBottom="44dp"
                 android:layout_marginTop="13dp"
                 android:gravity="center"
-                android:text="@string/message_searchresult_stay_empty_subtitle"
                 android:textColor="@color/default_text_c929292"
                 android:textSize="14dp"/>
 
@@ -215,7 +223,6 @@
                     android:layout_marginRight="15dp"
                     android:layout_marginTop="15dp"
                     android:gravity="center_vertical"
-                    android:text="@string/label_search_stay_popular_search_tag"
                     android:textColor="@color/default_text_cc5c5c5"
                     android:textSize="13dp"/>
 
@@ -269,7 +276,6 @@
                         android:layout_gravity="center"
                         android:drawablePadding="4dp"
                         android:gravity="center"
-                        android:text="@string/label_searchresult_search_stayoutbound"
                         android:textColor="@color/default_text_c323232"
                         android:textSize="13dp"
                         app:drawableCompatLeft="@drawable/vector_search_shortcut_02_ob"
@@ -291,7 +297,6 @@
                         android:layout_gravity="center"
                         android:drawablePadding="4dp"
                         android:gravity="center"
-                        android:text="@string/label_searchresult_search_gourmet"
                         android:textColor="@color/default_text_c323232"
                         android:textSize="13dp"
                         app:drawableCompatLeft="@drawable/vector_search_shortcut_03_gourmet"
@@ -301,24 +306,32 @@
         </LinearLayout>
     </ScrollView>
 
-    <RelativeLayout
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/resultLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/categoryLayout"
-        android:visibility="gone">
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/categoryLayout">
 
         <android.support.v4.view.ViewPager
             android:id="@+id/viewPager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <com.daily.dailyhotel.view.DailyFloatingActionView
             android:id="@+id/floatingActionView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="12dp"/>
-    </RelativeLayout>
-</RelativeLayout>
+            android:layout_marginBottom="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+    </android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout>
