@@ -444,8 +444,10 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
                 ((OnGourmetSearchResultListFragmentListener) mOnPlaceListFragmentListener).onGourmetListCount(totalCount);
 
                 // 카테고리 개수가 실제로 존재하거나 혹은 주변 검색인데 필터, 반경이 디폴트 값이 아닌 경우
-                if ((GourmetSuggest.CATEGORY_LOCATION.equalsIgnoreCase(((GourmetSearchCuration) mGourmetCuration).getSuggest().categoryKey) == true//
-                    && (mGourmetCuration.getCurationOption().isDefaultFilter() == false || ((GourmetSearchCuration) mGourmetCuration).getRadius() != PlaceSearchResultActivity.DEFAULT_SEARCH_RADIUS)))
+                if ((list != null && list.size() > 0)//
+                    || ((GourmetSuggest.CATEGORY_LOCATION.equalsIgnoreCase(((GourmetSearchCuration) mGourmetCuration).getSuggest().categoryKey) == true//
+                    && (mGourmetCuration.getCurationOption().isDefaultFilter() == false//
+                    || ((GourmetSearchCuration) mGourmetCuration).getRadius() != PlaceSearchResultActivity.DEFAULT_SEARCH_RADIUS))))
                 {
                     GourmetSearchResultListFragment.this.onGourmetList(list, page, totalCount, maxCount, categoryCodeMap, categorySequenceMap, false);
                 }
@@ -453,7 +455,6 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
             {
                 GourmetSearchResultListFragment.this.onGourmetList(list, page, totalCount, maxCount, categoryCodeMap, categorySequenceMap, false);
             }
-
 
             if (mViewType == ViewType.MAP)
             {

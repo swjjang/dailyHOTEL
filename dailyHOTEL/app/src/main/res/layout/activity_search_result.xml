@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:paddingLeft="15dp"
-            android:paddingRight="15dp"
+            android:paddingRight="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -87,6 +87,14 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/default_line_ce7e7e7"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
     </android.support.constraint.ConstraintLayout>
 
     <RelativeLayout
@@ -179,8 +187,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="13dp"
                 android:layout_marginBottom="44dp"
+                android:layout_marginTop="13dp"
                 android:gravity="center"
                 android:text="@string/message_searchresult_stay_empty_subtitle"
                 android:textColor="@color/default_text_c929292"
