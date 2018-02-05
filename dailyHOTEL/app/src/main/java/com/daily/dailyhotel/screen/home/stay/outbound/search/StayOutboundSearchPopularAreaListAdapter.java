@@ -14,6 +14,7 @@ import com.twoheart.dailyhotel.databinding.ListRowSearchCardItemBinding;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class StayOutboundSearchPopularAreaListAdapter extends RecyclerView.Adapter<StayOutboundSearchPopularAreaListAdapter.ItemViewHolder>
 {
     private Context mContext;

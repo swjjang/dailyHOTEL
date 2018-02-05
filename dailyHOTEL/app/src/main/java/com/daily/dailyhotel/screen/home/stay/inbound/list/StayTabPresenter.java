@@ -36,6 +36,7 @@ import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
 import com.daily.dailyhotel.screen.common.area.stay.StayAreaListActivity;
+import com.daily.dailyhotel.screen.home.search.SearchActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.calendar.StayCalendarActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.filter.StayFilterActivity;
@@ -43,7 +44,6 @@ import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.DailyCategoryType;
-import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -573,8 +573,10 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
         try
         {
-            startActivityForResult(SearchActivity.newInstance(getActivity(), Constants.PlaceType.HOTEL//
-                , mStayViewModel.stayBookDateTime.getValue().getStayBookingDay()), StayTabActivity.REQUEST_CODE_SEARCH);
+            startActivityForResult(SearchActivity.newInstance(getActivity(), Constants.ServiceType.HOTEL//
+                , mStayViewModel.stayBookDateTime.getValue().getStayBookingDay().getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                , mStayViewModel.stayBookDateTime.getValue().getStayBookingDay().getCheckOutDay(DailyCalendar.ISO_8601_FORMAT))//
+                , StayTabActivity.REQUEST_CODE_SEARCH);
 
             mAnalytics.onSearchClick(getActivity(), mStayViewModel.viewType.getValue());
         } catch (Exception e)
@@ -1138,18 +1140,23 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
                     if (index != -1)
                     {
-                        startActivityForResult(SearchActivity.newInstance(getActivity(), Constants.PlaceType.HOTEL//
-                            , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                            , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT), index)//
-                            , StayTabActivity.REQUEST_CODE_SEARCH);
+                        // TODO: 2018. 2. 5. 딥링크
+
+//                        startActivityForResult(SearchActivity.newInstance(getActivity(), Constants.ServiceType.HOTEL//
+//                            , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+//                            , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT), index)//
+//                            , StayTabActivity.REQUEST_CODE_SEARCH);
                     }
                 } else
                 {
                     String word = externalDeepLink.getSearchWord();
-                    startActivityForResult(SearchActivity.newInstance(getActivity(), Constants.PlaceType.HOTEL//
-                        , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                        , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT), word)//
-                        , StayTabActivity.REQUEST_CODE_SEARCH);
+
+                    // TODO: 2018. 2. 5. 딥링크
+
+//                    startActivityForResult(SearchActivity.newInstance(getActivity(), Constants.ServiceType.HOTEL//
+//                        , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+//                        , stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT), word)//
+//                        , StayTabActivity.REQUEST_CODE_SEARCH);
                 }
 
                 mHasDeepLink = true;

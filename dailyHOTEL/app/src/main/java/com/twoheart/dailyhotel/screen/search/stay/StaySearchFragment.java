@@ -14,6 +14,7 @@ import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
+import com.daily.dailyhotel.screen.home.search.SearchActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchActivity;
 import com.daily.dailyhotel.storage.database.DailyDb;
@@ -59,6 +60,7 @@ import io.reactivex.functions.Function;
 import io.reactivex.functions.Function3;
 import io.reactivex.schedulers.Schedulers;
 
+@Deprecated
 public class StaySearchFragment extends PlaceSearchFragment
 {
     StayBookingDay mStayBookingDay;
@@ -609,11 +611,11 @@ public class StaySearchFragment extends PlaceSearchFragment
             Intent intent = DailyInternalDeepLink.getStayOutboundSearchSuggestScreenLink(getActivity(), keyword);
             DailyDeepLink dailyDeepLink = DailyDeepLink.getNewInstance(intent.getData());
 
-            startActivity(StayOutboundSearchActivity.newInstance(getContext(), dailyDeepLink == null ? null : dailyDeepLink.getDeepLink()));
+            startActivity(SearchActivity.newInstance(getContext(), dailyDeepLink == null ? null : dailyDeepLink.getDeepLink()));
             return;
         }
 
-        startActivity(StayOutboundSearchActivity.newInstance(getContext()));
+//        startActivity(SearchActivity.newInstance(getContext()));
     }
 
     public void startGourmetSearch(String keyword)

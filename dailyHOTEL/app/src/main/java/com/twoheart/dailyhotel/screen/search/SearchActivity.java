@@ -2,7 +2,6 @@ package com.twoheart.dailyhotel.screen.search;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -35,6 +34,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.subjects.PublishSubject;
 
+@Deprecated
 public class SearchActivity extends BaseActivity implements View.OnClickListener
 {
     private static final int SEARCH_TAB_COUNT = 2;
@@ -54,100 +54,100 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     DailySwitchCompat mSwitchCompat;
     PublishSubject<Boolean> mSwitchChangedSubject;
 
-    public static Intent newInstance(Context context, PlaceType placeType, PlaceBookingDay placeBookingDay, int campaignTagIndex)
-    {
-        Intent intent = new Intent(context, SearchActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, placeBookingDay);
-        intent.putExtra(INTENT_EXTRA_DATA_INDEX, campaignTagIndex);
-
-        return intent;
-    }
-
-    public static Intent newInstance(Context context, PlaceType placeType, PlaceBookingDay placeBookingDay)
-    {
-        return newInstance(context, placeType, placeBookingDay, null);
-    }
-
-    public static Intent newInstance(Context context, PlaceType placeType, PlaceBookingDay placeBookingDay, String word)
-    {
-        Intent intent = new Intent(context, SearchActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, placeBookingDay);
-
-        if (DailyTextUtils.isTextEmpty(word) == false)
-        {
-            intent.putExtra(INTENT_EXTRA_DATA_WORD, word);
-        }
-        return intent;
-    }
-
-    public static Intent newInstance(Context context, PlaceType placeType, String checkInDateTime, String checkOutDateTime)
-    {
-        Intent intent = new Intent(context, SearchActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
-
-        try
-        {
-            StayBookingDay stayBookingDay = new StayBookingDay();
-            stayBookingDay.setCheckInDay(checkInDateTime);
-            stayBookingDay.setCheckOutDay(checkOutDateTime);
-
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
-
-        return intent;
-    }
-
-    public static Intent newInstance(Context context, PlaceType placeType, String checkInDateTime, String checkOutDateTime, int campaignTagIndex)
-    {
-        Intent intent = new Intent(context, SearchActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
-
-        try
-        {
-            StayBookingDay stayBookingDay = new StayBookingDay();
-            stayBookingDay.setCheckInDay(checkInDateTime);
-            stayBookingDay.setCheckOutDay(checkOutDateTime);
-
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
-
-        intent.putExtra(INTENT_EXTRA_DATA_INDEX, campaignTagIndex);
-
-        return intent;
-    }
-
-    public static Intent newInstance(Context context, PlaceType placeType, String checkInDateTime, String checkOutDateTime, String word)
-    {
-        Intent intent = new Intent(context, SearchActivity.class);
-        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
-
-        try
-        {
-            StayBookingDay stayBookingDay = new StayBookingDay();
-            stayBookingDay.setCheckInDay(checkInDateTime);
-            stayBookingDay.setCheckOutDay(checkOutDateTime);
-
-            intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-        } catch (Exception e)
-        {
-            ExLog.e(e.toString());
-        }
-
-        if (DailyTextUtils.isTextEmpty(word) == false)
-        {
-            intent.putExtra(INTENT_EXTRA_DATA_WORD, word);
-        }
-
-        return intent;
-    }
+    //    public static Intent newInstance(Context context, PlaceType placeType, PlaceBookingDay placeBookingDay, int campaignTagIndex)
+    //    {
+    //        Intent intent = new Intent(context, SearchActivity.class);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, placeBookingDay);
+    //        intent.putExtra(INTENT_EXTRA_DATA_INDEX, campaignTagIndex);
+    //
+    //        return intent;
+    //    }
+    //
+    //    public static Intent newInstance(Context context, PlaceType placeType, PlaceBookingDay placeBookingDay)
+    //    {
+    //        return newInstance(context, placeType, placeBookingDay, null);
+    //    }
+    //
+    //    public static Intent newInstance(Context context, PlaceType placeType, PlaceBookingDay placeBookingDay, String word)
+    //    {
+    //        Intent intent = new Intent(context, SearchActivity.class);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, placeBookingDay);
+    //
+    //        if (DailyTextUtils.isTextEmpty(word) == false)
+    //        {
+    //            intent.putExtra(INTENT_EXTRA_DATA_WORD, word);
+    //        }
+    //        return intent;
+    //    }
+    //
+    //    public static Intent newInstance(Context context, PlaceType placeType, String checkInDateTime, String checkOutDateTime)
+    //    {
+    //        Intent intent = new Intent(context, SearchActivity.class);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
+    //
+    //        try
+    //        {
+    //            StayBookingDay stayBookingDay = new StayBookingDay();
+    //            stayBookingDay.setCheckInDay(checkInDateTime);
+    //            stayBookingDay.setCheckOutDay(checkOutDateTime);
+    //
+    //            intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+    //        } catch (Exception e)
+    //        {
+    //            ExLog.e(e.toString());
+    //        }
+    //
+    //        return intent;
+    //    }
+    //
+    //    public static Intent newInstance(Context context, PlaceType placeType, String checkInDateTime, String checkOutDateTime, int campaignTagIndex)
+    //    {
+    //        Intent intent = new Intent(context, SearchActivity.class);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
+    //
+    //        try
+    //        {
+    //            StayBookingDay stayBookingDay = new StayBookingDay();
+    //            stayBookingDay.setCheckInDay(checkInDateTime);
+    //            stayBookingDay.setCheckOutDay(checkOutDateTime);
+    //
+    //            intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+    //        } catch (Exception e)
+    //        {
+    //            ExLog.e(e.toString());
+    //        }
+    //
+    //        intent.putExtra(INTENT_EXTRA_DATA_INDEX, campaignTagIndex);
+    //
+    //        return intent;
+    //    }
+    //
+    //    public static Intent newInstance(Context context, PlaceType placeType, String checkInDateTime, String checkOutDateTime, String word)
+    //    {
+    //        Intent intent = new Intent(context, SearchActivity.class);
+    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACETYPE, placeType.name());
+    //
+    //        try
+    //        {
+    //            StayBookingDay stayBookingDay = new StayBookingDay();
+    //            stayBookingDay.setCheckInDay(checkInDateTime);
+    //            stayBookingDay.setCheckOutDay(checkOutDateTime);
+    //
+    //            intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
+    //        } catch (Exception e)
+    //        {
+    //            ExLog.e(e.toString());
+    //        }
+    //
+    //        if (DailyTextUtils.isTextEmpty(word) == false)
+    //        {
+    //            intent.putExtra(INTENT_EXTRA_DATA_WORD, word);
+    //        }
+    //
+    //        return intent;
+    //    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

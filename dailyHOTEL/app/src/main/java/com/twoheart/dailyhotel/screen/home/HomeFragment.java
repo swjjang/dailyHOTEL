@@ -41,11 +41,11 @@ import com.daily.dailyhotel.repository.remote.WishRemoteImpl;
 import com.daily.dailyhotel.screen.common.area.stay.StayAreaListActivity;
 import com.daily.dailyhotel.screen.common.web.DailyWebActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
+import com.daily.dailyhotel.screen.home.search.SearchActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.list.StayTabActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.preview.StayOutboundPreviewActivity;
-import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchActivity;
 import com.daily.dailyhotel.screen.mydaily.reward.RewardActivity;
 import com.daily.dailyhotel.storage.database.DailyDb;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
@@ -79,7 +79,6 @@ import com.twoheart.dailyhotel.screen.mydaily.member.LoginActivity;
 import com.twoheart.dailyhotel.screen.mydaily.member.SignupStep1Activity;
 import com.twoheart.dailyhotel.screen.mydaily.recentplace.RecentPlacesTabActivity;
 import com.twoheart.dailyhotel.screen.mydaily.wishlist.WishListTabActivity;
-import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -623,7 +622,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
             {
                 try
                 {
-                    Intent intent = StayOutboundSearchActivity.newInstance(mBaseActivity, dailyDeepLink.getDeepLink());
+                    Intent intent = SearchActivity.newInstance(mBaseActivity, dailyDeepLink.getDeepLink());
                     startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_STAY_OUTBOUND_SEARCH);
                 } catch (Exception e)
                 {
@@ -650,7 +649,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                 {
                     try
                     {
-                        Intent intent = StayOutboundSearchActivity.newInstance(mBaseActivity, dailyDeepLink.getDeepLink());
+                        Intent intent = SearchActivity.newInstance(mBaseActivity, dailyDeepLink.getDeepLink());
                         startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_STAY_OUTBOUND_SEARCH);
                     } catch (Exception e)
                     {
@@ -666,7 +665,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
             {
                 try
                 {
-                    Intent intent = StayOutboundSearchActivity.newInstance(mBaseActivity, dailyDeepLink.getDeepLink());
+                    Intent intent = SearchActivity.newInstance(mBaseActivity, dailyDeepLink.getDeepLink());
                     startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_STAY_OUTBOUND_SEARCH);
                 } catch (Exception e)
                 {
@@ -1780,10 +1779,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
             stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
             stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
 
-//            mBaseActivity.startActivityForResult(SearchActivity.newInstance(mBaseActivity, mPlaceType, stayBookingDay), Constants.CODE_REQUEST_ACTIVITY_SEARCH);
-
-            mBaseActivity.startActivityForResult(com.daily.dailyhotel.screen.home.search.SearchActivity.newInstance(mBaseActivity, mTodayDateTime.openDateTime//
-                , mTodayDateTime.closeDateTime, mTodayDateTime.currentDateTime, mTodayDateTime.dailyDateTime, ServiceType.HOTEL), Constants.CODE_REQUEST_ACTIVITY_SEARCH);
+            mBaseActivity.startActivityForResult(com.daily.dailyhotel.screen.home.search.SearchActivity.newInstance(mBaseActivity, ServiceType.HOTEL), Constants.CODE_REQUEST_ACTIVITY_SEARCH);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                 AnalyticsManager.Category.SEARCH, AnalyticsManager.Action.SEARCH_BUTTON_CLICK,//
@@ -2368,7 +2364,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
                 case STAY_OUTBOUND_HOTEL:
                 {
-                    Intent intent = StayOutboundSearchActivity.newInstance(mBaseActivity);
+                    Intent intent = SearchActivity.newInstance(mBaseActivity, ServiceType.OB_STAY);
                     startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_STAY_OUTBOUND_SEARCH);
 
                     AnalyticsManager.getInstance(mBaseActivity).recordEvent(//

@@ -17,6 +17,7 @@ import java.util.List;
  * Created by android_sam on 2017. 8. 10..
  */
 
+@Deprecated
 public class SearchCardViewAdapter extends RecyclerView.Adapter<SearchCardViewAdapter.CardViewHolder>
 {
     public static final int TYPE_STAY = 1;

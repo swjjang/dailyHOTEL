@@ -24,6 +24,7 @@ import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.local.CartLocalImpl;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
 import com.daily.dailyhotel.screen.home.gourmet.payment.GourmetPaymentActivity;
+import com.daily.dailyhotel.screen.home.search.SearchActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.view.DailyGourmetCardView;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -51,7 +52,6 @@ import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCurationActivity;
 import com.twoheart.dailyhotel.screen.gourmet.preview.GourmetPreviewActivity;
 import com.twoheart.dailyhotel.screen.gourmet.region.GourmetRegionListActivity;
-import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.screen.search.gourmet.result.GourmetSearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -594,7 +594,7 @@ public class GourmetMainActivity extends PlaceMainActivity
         @Override
         public void onSearchClick()
         {
-            Intent intent = SearchActivity.newInstance(GourmetMainActivity.this, PlaceType.FNB, mGourmetCuration.getGourmetBookingDay());
+            Intent intent = SearchActivity.newInstance(GourmetMainActivity.this, ServiceType.GOURMET, mGourmetCuration.getGourmetBookingDay().getVisitDay(DailyCalendar.ISO_8601_FORMAT));
             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
 
             switch (mViewType)
@@ -1480,15 +1480,19 @@ public class GourmetMainActivity extends PlaceMainActivity
 
                     if (index != -1)
                     {
-                        Intent intent = SearchActivity.newInstance(baseActivity, PlaceType.FNB, gourmetBookingDay, index);
-                        baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
+                        // TODO: 2018. 2. 5. deep link
+                        //                        Intent intent = SearchActivity.newInstance(baseActivity, todayDateTime.openDateTime, todayDateTime.closeDateTime//
+                        //                            , todayDateTime.currentDateTime, gourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT), index);
+                        //                        baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
                     }
                 } else
                 {
                     String word = externalDeepLink.getSearchWord();
 
-                    Intent intent = SearchActivity.newInstance(baseActivity, PlaceType.FNB, gourmetBookingDay, word);
-                    baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
+                    // TODO: 2018. 2. 5. deep link
+
+                    //                    Intent intent = SearchActivity.newInstance(baseActivity, PlaceType.FNB, gourmetBookingDay, word);
+                    //                    baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
                 }
 
                 mIsDeepLink = true;

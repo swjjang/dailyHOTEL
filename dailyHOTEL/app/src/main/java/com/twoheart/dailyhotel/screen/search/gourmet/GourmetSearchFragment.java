@@ -49,6 +49,7 @@ import io.reactivex.functions.Function;
 import io.reactivex.functions.Function3;
 import io.reactivex.schedulers.Schedulers;
 
+@Deprecated
 public class GourmetSearchFragment extends PlaceSearchFragment
 {
     GourmetBookingDay mGourmetBookingDay;

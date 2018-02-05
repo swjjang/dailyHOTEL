@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
+import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
 
@@ -32,22 +33,49 @@ public class SearchActivity extends BaseActivity<SearchPresenter>
     public static final int REQUEST_CODE_GOURMET_SEARCH_RESULT = 10022;
     public static final int REQUEST_CODE_GOURMET_DETAIL = 10023;
 
-
-    static final String INTENT_EXTRA_DATA_OPEN_DATE_TIME = "openDateTime";
-    static final String INTENT_EXTRA_DATA_CLOSE_DATE_TIME = "closeDateTime";
-    static final String INTENT_EXTRA_DATA_CURRENT_DATE_TIME = "currentDateTime";
-    static final String INTENT_EXTRA_DATA_DAILY_DATE_TIME = "dailyDateTime";
+    static final String INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME = "checkInDateTime";
+    static final String INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME = "checkOutDateTime";
+    static final String INTENT_EXTRA_DATA_VISIT_DATE_TIME = "visitDateTime";
     static final String INTENT_EXTRA_DATA_SERVICE_TYPE = "serviceType";
 
-    public static Intent newInstance(Context context, String openDateTime, String closeDateTime, String currentDateTime, String dailyDateTime, Constants.ServiceType serviceType)
+    public static Intent newInstance(Context context, Constants.ServiceType serviceType)
     {
         Intent intent = new Intent(context, SearchActivity.class);
 
-        intent.putExtra(INTENT_EXTRA_DATA_OPEN_DATE_TIME, openDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_CLOSE_DATE_TIME, closeDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_CURRENT_DATE_TIME, currentDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_DAILY_DATE_TIME, dailyDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_SERVICE_TYPE, serviceType.name());
+
+        return intent;
+    }
+
+    public static Intent newInstance(Context context, Constants.ServiceType serviceType, String checkInDateTime, String checkOutDateTime)
+    {
+        Intent intent = new Intent(context, SearchActivity.class);
+
+        intent.putExtra(INTENT_EXTRA_DATA_SERVICE_TYPE, serviceType.name());
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
+
+        return intent;
+    }
+
+    public static Intent newInstance(Context context, Constants.ServiceType serviceType, String visitDateTime)
+    {
+        Intent intent = new Intent(context, SearchActivity.class);
+
+        intent.putExtra(INTENT_EXTRA_DATA_SERVICE_TYPE, serviceType.name());
+        intent.putExtra(INTENT_EXTRA_DATA_VISIT_DATE_TIME, visitDateTime);
+
+        return intent;
+    }
+
+    public static Intent newInstance(Context context, String deepLink)
+    {
+        Intent intent = new Intent(context, SearchActivity.class);
+
+        if (DailyTextUtils.isTextEmpty(deepLink) == false)
+        {
+            intent.putExtra(INTENT_EXTRA_DATA_DEEPLINK, deepLink);
+        }
 
         return intent;
     }

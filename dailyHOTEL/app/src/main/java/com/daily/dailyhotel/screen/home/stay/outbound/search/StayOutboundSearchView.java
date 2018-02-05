@@ -15,6 +15,7 @@ import com.twoheart.dailyhotel.util.EdgeEffectColor;
 
 import java.util.List;
 
+@Deprecated
 public class StayOutboundSearchView extends BaseDialogView<StayOutboundSearchView.OnEventListener, ActivityStayOutboundSearchDataBinding> implements StayOutboundSearchViewInterface, View.OnClickListener
 {
     private static final float CARD_WIDTH_RATIO = 0.772f; // 270/360 = 0.772222222222222;

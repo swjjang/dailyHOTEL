@@ -23,6 +23,7 @@ import com.twoheart.dailyhotel.screen.search.SearchCardViewAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class StaySearchLayout extends PlaceSearchLayout
 {
     public interface OnEventListener extends PlaceSearchLayout.OnEventListener

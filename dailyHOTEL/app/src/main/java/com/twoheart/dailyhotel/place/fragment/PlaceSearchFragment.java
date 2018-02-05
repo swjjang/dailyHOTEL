@@ -44,6 +44,7 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
+@Deprecated
 public abstract class PlaceSearchFragment extends BaseFragment
 {
     protected BaseActivity mBaseActivity;

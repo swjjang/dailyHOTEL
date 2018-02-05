@@ -29,6 +29,7 @@ import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
+import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.home.campaigntag.gourmet.GourmetCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.gourmet.detail.GourmetDetailActivity;
@@ -54,8 +55,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 /**
  * Created by sheldon
@@ -65,7 +68,11 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 {
     private SearchInterface.AnalyticsInterface mAnalytics;
 
+    CommonRemoteImpl mCommonRemoteImpl;
+
     SearchViewModel mSearchModel;
+
+    Constants.ServiceType mEnterServiceType; // 시작시에 받고 삭제한다.
 
     public SearchPresenter(@NonNull SearchActivity activity)
     {
@@ -86,9 +93,11 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
         setAnalytics(new SearchAnalyticsImpl());
 
+        mCommonRemoteImpl = new CommonRemoteImpl(activity);
+
         initViewModel(activity);
 
-        setRefresh(false);
+        setRefresh(true);
     }
 
     @Override
@@ -105,46 +114,56 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             return true;
         }
 
-        mSearchModel.commonDateTime.setValue(new CommonDateTime(intent.getStringExtra(SearchActivity.INTENT_EXTRA_DATA_OPEN_DATE_TIME)//
-            , intent.getStringExtra(SearchActivity.INTENT_EXTRA_DATA_CLOSE_DATE_TIME)//
-            , intent.getStringExtra(SearchActivity.INTENT_EXTRA_DATA_CURRENT_DATE_TIME)//
-            , intent.getStringExtra(SearchActivity.INTENT_EXTRA_DATA_DAILY_DATE_TIME)));
-
         try
         {
-            StayBookDateTime stayBookDateTime = new StayBookDateTime();
-            stayBookDateTime.setCheckInDateTime(mSearchModel.commonDateTime.getValue().dailyDateTime);
-            stayBookDateTime.setCheckOutDateTime(mSearchModel.commonDateTime.getValue().dailyDateTime, 1);
-            mSearchModel.stayViewModel.bookDateTime.setValue(stayBookDateTime);
+            mEnterServiceType = Constants.ServiceType.valueOf(intent.getStringExtra(SearchActivity.INTENT_EXTRA_DATA_SERVICE_TYPE));
 
-            StayBookDateTime stayOutboundBookDateTime = new StayBookDateTime();
-            stayOutboundBookDateTime.setCheckInDateTime(mSearchModel.commonDateTime.getValue().currentDateTime);
-            stayOutboundBookDateTime.setCheckOutDateTime(mSearchModel.commonDateTime.getValue().currentDateTime, 1);
-            mSearchModel.stayOutboundViewModel.bookDateTime.setValue(stayOutboundBookDateTime);
-
-            GourmetBookDateTime gourmetBookDateTime = new GourmetBookDateTime();
-            gourmetBookDateTime.setVisitDateTime(mSearchModel.commonDateTime.getValue().dailyDateTime);
-            mSearchModel.gourmetViewModel.bookDateTime.setValue(gourmetBookDateTime);
-
-            Constants.ServiceType serviceType = Constants.ServiceType.valueOf(intent.getStringExtra(SearchActivity.INTENT_EXTRA_DATA_SERVICE_TYPE));
-
-            addCompositeDisposable(getViewInterface().getCompleteCreatedFragment().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+            switch (mEnterServiceType)
             {
-                @Override
-                public void accept(Boolean aBoolean) throws Exception
-                {
-                    if (serviceType != null)
+                case HOTEL:
+                    if (intent.hasExtra(SearchActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME) == true//
+                        && intent.hasExtra(SearchActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME) == true)
                     {
-                        mSearchModel.serviceType.setValue(serviceType);
-                    } else
-                    {
-                        mSearchModel.serviceType.setValue(Constants.ServiceType.HOTEL);
+                        StayBookDateTime stayBookDateTime = new StayBookDateTime();
+                        stayBookDateTime.setCheckInDateTime(intent.getStringExtra(SearchActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME));
+                        stayBookDateTime.setCheckOutDateTime(intent.getStringExtra(SearchActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME));
+
+                        mSearchModel.stayViewModel.bookDateTime.setValue(stayBookDateTime);
                     }
-                }
-            }));
+                    break;
+
+                case GOURMET:
+                    if (intent.hasExtra(SearchActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME) == true)
+                    {
+                        GourmetBookDateTime gourmetBookDateTime = new GourmetBookDateTime();
+                        gourmetBookDateTime.setVisitDateTime(intent.getStringExtra(SearchActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME));
+
+                        mSearchModel.gourmetViewModel.bookDateTime.setValue(gourmetBookDateTime);
+                    }
+                    break;
+
+                case OB_STAY:
+                    if (intent.hasExtra(SearchActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME) == true//
+                        && intent.hasExtra(SearchActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME) == true)
+                    {
+                        StayBookDateTime stayOutboundBookDateTime = new StayBookDateTime();
+
+                        stayOutboundBookDateTime.setCheckInDateTime(intent.getStringExtra(SearchActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME));
+                        stayOutboundBookDateTime.setCheckOutDateTime(intent.getStringExtra(SearchActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME));
+
+                        mSearchModel.stayOutboundViewModel.bookDateTime.setValue(stayOutboundBookDateTime);
+                    }
+                    break;
+
+                default:
+                    mEnterServiceType = Constants.ServiceType.HOTEL;
+                    break;
+            }
         } catch (Exception e)
         {
             ExLog.e(e.toString());
+
+            mEnterServiceType = Constants.ServiceType.HOTEL;
         }
 
         return true;
@@ -457,6 +476,59 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
         setRefresh(false);
         screenLock(showProgress);
+
+        addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime().observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<CommonDateTime, ObservableSource<Boolean>>()
+        {
+            @Override
+            public ObservableSource<Boolean> apply(CommonDateTime commonDateTime) throws Exception
+            {
+                mSearchModel.commonDateTime.setValue(commonDateTime);
+
+                if (mSearchModel.stayViewModel.bookDateTime.getValue() == null)
+                {
+                    StayBookDateTime stayBookDateTime = new StayBookDateTime();
+                    stayBookDateTime.setCheckInDateTime(commonDateTime.dailyDateTime);
+                    stayBookDateTime.setCheckOutDateTime(commonDateTime.dailyDateTime, 1);
+                    mSearchModel.stayViewModel.bookDateTime.setValue(stayBookDateTime);
+                }
+
+                if (mSearchModel.stayOutboundViewModel.bookDateTime.getValue() == null)
+                {
+                    StayBookDateTime stayOutboundBookDateTime = new StayBookDateTime();
+                    stayOutboundBookDateTime.setCheckInDateTime(mSearchModel.commonDateTime.getValue().currentDateTime);
+                    stayOutboundBookDateTime.setCheckOutDateTime(mSearchModel.commonDateTime.getValue().currentDateTime, 1);
+                    mSearchModel.stayOutboundViewModel.bookDateTime.setValue(stayOutboundBookDateTime);
+                }
+
+                if (mSearchModel.gourmetViewModel.bookDateTime.getValue() == null)
+                {
+                    GourmetBookDateTime gourmetBookDateTime = new GourmetBookDateTime();
+                    gourmetBookDateTime.setVisitDateTime(mSearchModel.commonDateTime.getValue().dailyDateTime);
+                    mSearchModel.gourmetViewModel.bookDateTime.setValue(gourmetBookDateTime);
+                }
+
+                return getViewInterface().getCompleteCreatedFragment().observeOn(AndroidSchedulers.mainThread());
+            }
+        }).subscribe(new Consumer<Boolean>()
+        {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception
+            {
+                if (mSearchModel.serviceType.getValue() == null && mEnterServiceType != null)
+                {
+                    mSearchModel.serviceType.setValue(mEnterServiceType);
+                }
+
+                unLockAll();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                onHandleErrorAndFinish(throwable);
+            }
+        }));
     }
 
     @Override

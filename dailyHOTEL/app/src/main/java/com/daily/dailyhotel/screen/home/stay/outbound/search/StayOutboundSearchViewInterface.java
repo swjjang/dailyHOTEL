@@ -5,6 +5,7 @@ import com.daily.dailyhotel.entity.StayOutboundSuggest;
 
 import java.util.List;
 
+@Deprecated
 public interface StayOutboundSearchViewInterface extends BaseDialogViewInterface
 {
     void setCalendarText(String calendarText);
