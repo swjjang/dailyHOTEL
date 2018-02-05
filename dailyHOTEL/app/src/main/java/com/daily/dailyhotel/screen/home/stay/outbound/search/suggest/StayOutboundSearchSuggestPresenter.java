@@ -440,16 +440,40 @@ public class StayOutboundSearchSuggestPresenter //
             return;
         }
 
-        try
+        addCompositeDisposable(mSuggestLocalImpl.addStayOutboundSuggestDb(stayOutboundSuggest, mKeyword).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
         {
-            mAnalytics.onEventSuggestClick(getActivity(), stayOutboundSuggest.display, mKeyword);
-        } catch (Exception e)
-        {
-            ExLog.d(e.getMessage());
-        }
+            @Override
+            public void accept(Boolean aBoolean) throws Exception
+            {
+                try
+                {
+                    mAnalytics.onEventSuggestClick(getActivity(), stayOutboundSuggest.display, mKeyword);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.getMessage());
+                }
 
-        getViewInterface().setKeywordEditText(stayOutboundSuggest.display);
-        startFinishAction(stayOutboundSuggest, mKeyword, AnalyticsManager.Category.OB_SEARCH_ORIGIN_AUTO);
+//                getViewInterface().setKeywordEditText(stayOutboundSuggest.display);
+                startFinishAction(stayOutboundSuggest, mKeyword, AnalyticsManager.Category.OB_SEARCH_ORIGIN_AUTO);
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                try
+                {
+                    mAnalytics.onEventSuggestClick(getActivity(), stayOutboundSuggest.display, mKeyword);
+                } catch (Exception e)
+                {
+                    ExLog.d(e.getMessage());
+                }
+
+//                getViewInterface().setKeywordEditText(stayOutboundSuggest.display);
+                startFinishAction(stayOutboundSuggest, mKeyword, AnalyticsManager.Category.OB_SEARCH_ORIGIN_AUTO);
+            }
+        }));
+
     }
 
     @Override
