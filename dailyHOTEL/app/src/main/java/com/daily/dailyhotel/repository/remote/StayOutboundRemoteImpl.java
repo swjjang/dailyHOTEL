@@ -41,12 +41,12 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
 
     @Override
     public Observable<StayOutbounds> getList(StayBookDateTime stayBookDateTime, long geographyId//
-        , String geographyType, People people, StayOutboundFilters stayOutboundFilters, String cacheKey, String cacheLocation, String customerSessionId)
+        , String geographyType, People people, StayOutboundFilters stayOutboundFilters, int numberOfResults//
+        , String cacheKey, String cacheLocation, String customerSessionId)
     {
         JSONObject jsonObject = new JSONObject();
 
         final int NUMBER_OF_ROOMS = 1;
-        final int NUMBER_OF_RESULTS = 20;
 
         /// 디폴트 인자들
         String sort;
@@ -67,7 +67,7 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
             jsonObject.put("geographyType", geographyType);
 
             jsonObject.put("numberOfRooms", NUMBER_OF_ROOMS);
-            jsonObject.put("numberOfResults", NUMBER_OF_RESULTS);
+            jsonObject.put("numberOfResults", numberOfResults);
 
             jsonObject.put("rooms", getRooms(new People[]{people}));
             jsonObject.put("filter", getFilter(stayOutboundFilters));
@@ -125,7 +125,7 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
 
     @Override
     public Observable<StayOutbounds> getList(StayBookDateTime stayBookDateTime, double latitude, double longitude, float radius//
-        , People people, StayOutboundFilters stayOutboundFilters, int numberOfResults)
+        , People people, StayOutboundFilters stayOutboundFilters, int numberOfResults, String cacheKey, String cacheLocation, String customerSessionId)
     {
         JSONObject jsonObject = new JSONObject();
 
@@ -136,6 +136,13 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
 
         try
         {
+            if (DailyTextUtils.isTextEmpty(cacheKey, cacheLocation, customerSessionId) == false)
+            {
+                jsonObject.put("cacheKey", cacheKey);
+                jsonObject.put("cacheLocation", cacheLocation);
+                jsonObject.put("customerSessionId", customerSessionId);
+            }
+
             jsonObject.put("arrivalDate", stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
             jsonObject.put("departureDate", stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd"));
 

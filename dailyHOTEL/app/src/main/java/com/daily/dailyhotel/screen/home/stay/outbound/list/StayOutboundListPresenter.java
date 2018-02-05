@@ -89,6 +89,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     private static final int DAYS_OF_MAXCOUNT = 365;
     private static final int NIGHTS_OF_MAXCOUNT = 28;
     static final float DEFAULT_RADIUS = 10.0f;
+    static final int NUMBER_OF_RESULTS = 20;
 
     private StayOutboundListAnalyticsInterface mAnalytics;
     StayOutboundRemoteImpl mStayOutboundRemoteImpl;
@@ -255,6 +256,9 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         {
             getViewInterface().setRadiusVisible(true);
             getViewInterface().setRadius(mRadius);
+
+            //            setFilter(StayOutboundFilters.SortType.DISTANCE, 33.590029559568684, 130.39415694773197);
+//            setFilter(StayOutboundFilters.SortType.DISTANCE, 37.5081515, 126.81383649999998);
         } else
         {
             getViewInterface().setRadiusVisible(false);
@@ -728,10 +732,19 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         screenLock(showProgress);
         setScreenVisible(ScreenType.DEFAULT, mStayOutboundFilters);
 
+        Observable<StayOutbounds> observable;
+        if (searchLocation == false)
+        {
+            observable = mStayOutboundRemoteImpl.getList(mStayBookDateTime, mStayOutboundSuggest.id, mStayOutboundSuggest.categoryKey//
+                , mPeople, mStayOutboundFilters, NUMBER_OF_RESULTS, mCacheKey, mCacheLocation, mCustomerSessionId);
+        } else
+        {
+            observable = mStayOutboundRemoteImpl.getList(mStayBookDateTime, mStayOutboundFilters.latitude, mStayOutboundFilters.longitude, mRadius//
+                , mPeople, mStayOutboundFilters, NUMBER_OF_RESULTS, mCacheKey, mCacheLocation, mCustomerSessionId);
+        }
+
         addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime()//
-            , mStayOutboundRemoteImpl.getList(mStayBookDateTime, mStayOutboundSuggest.id, mStayOutboundSuggest.categoryKey//
-                , mPeople, mStayOutboundFilters, mCacheKey, mCacheLocation, mCustomerSessionId)//
-            , (commonDateTime, stayOutbounds) ->
+            , observable, (commonDateTime, stayOutbounds) ->
             {
                 setCommonDateTime(commonDateTime);
 
@@ -1027,8 +1040,18 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         {
             mMoreEnabled = false;
 
-            addCompositeDisposable(mStayOutboundRemoteImpl.getList(mStayBookDateTime, mStayOutboundSuggest.id, mStayOutboundSuggest.categoryKey//
-                , mPeople, mStayOutboundFilters, mCacheKey, mCacheLocation, mCustomerSessionId).subscribe(stayOutbounds ->
+            Observable<StayOutbounds> observable;
+            if (searchLocation == false)
+            {
+                observable = mStayOutboundRemoteImpl.getList(mStayBookDateTime, mStayOutboundSuggest.id, mStayOutboundSuggest.categoryKey//
+                    , mPeople, mStayOutboundFilters, NUMBER_OF_RESULTS, mCacheKey, mCacheLocation, mCustomerSessionId);
+            } else
+            {
+                observable = mStayOutboundRemoteImpl.getList(mStayBookDateTime, mStayOutboundFilters.latitude, mStayOutboundFilters.longitude, mRadius//
+                    , mPeople, mStayOutboundFilters, NUMBER_OF_RESULTS, mCacheKey, mCacheLocation, mCustomerSessionId);
+            }
+
+            addCompositeDisposable(observable.subscribe(stayOutbounds ->
             {
                 onStayOutbounds(stayOutbounds);
 
@@ -1240,7 +1263,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 //                ExLog.d("pinkred : " + latLng.latitude + ", " + latLng.longitude + ", " + radius + ", " + zoom);
 
                 return mStayOutboundRemoteImpl.getList(mStayBookDateTime, latLng.latitude, latLng.longitude, radius//
-                    , mPeople, mStayOutboundFilters, numberOfResults);
+                    , mPeople, mStayOutboundFilters, numberOfResults, null, null, null);
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayOutbounds>()
         {
@@ -1303,6 +1326,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         {
             return;
         }
+
+        mRadius = radius;
 
         onRefreshAll(true);
     }
@@ -1547,7 +1572,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                     }
                 }
 
-                if (DailyTextUtils.isTextEmpty(stayOutbounds.cacheKey, stayOutbounds.cacheLocation, stayOutbounds.customerSessionId) == true)
+                if (DailyTextUtils.isTextEmpty(stayOutbounds.cacheKey, stayOutbounds.cacheLocation, stayOutbounds.customerSessionId) == true//
+                    || stayOutboundList.size() < NUMBER_OF_RESULTS)
                 {
                     stayOutbounds.moreResultsAvailable = false;
                 }
@@ -1665,7 +1691,13 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             return true;
         }
 
-        return (stayOutboundFilters.sortType == StayOutboundFilters.SortType.RECOMMENDATION && stayOutboundFilters.rating == -1);
+        if (searchLocation == true)
+        {
+            return (stayOutboundFilters.sortType == StayOutboundFilters.SortType.DISTANCE && stayOutboundFilters.rating == -1);
+        } else
+        {
+            return (stayOutboundFilters.sortType == StayOutboundFilters.SortType.RECOMMENDATION && stayOutboundFilters.rating == -1);
+        }
     }
 
     private void notifyToolbarChanged()
