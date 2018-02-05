@@ -33,6 +33,7 @@ public class GourmetDetailActivity extends BaseActivity<GourmetDetailPresenter>
     static final int REQUEST_CODE_TRUE_VIEW = 10014;
     static final int REQUEST_CODE_MENU = 10015;
     static final int REQUEST_CODE_NAVIGATOR = 10016;
+    static final int REQUEST_CODE_TRUE_VR = 10017;
 
     static final String INTENT_EXTRA_DATA_GOURMET_INDEX = "gourmetIndex";
     static final String INTENT_EXTRA_DATA_GOURMET_NAME = "gourmetName";

@@ -35,7 +35,7 @@ public class GourmetSearchResultListAdapter extends GourmetListAdapter
         holder.gourmetCardView.setImage(gourmet.imageUrl);
 
         holder.gourmetCardView.setGradeText(DailyTextUtils.isTextEmpty(gourmet.subCategory) == false ? gourmet.subCategory : gourmet.category);
-        holder.gourmetCardView.setVRVisible(false);
+        holder.gourmetCardView.setVRVisible(gourmet.truevr && mTrueVREnabled);
         holder.gourmetCardView.setReviewText(gourmet.satisfaction, gourmet.reviewCount);
 
         holder.gourmetCardView.setNewVisible(gourmet.newItem);

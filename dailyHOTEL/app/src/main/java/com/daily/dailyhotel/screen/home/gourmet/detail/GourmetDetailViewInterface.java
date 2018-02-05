@@ -1,6 +1,8 @@
 package com.daily.dailyhotel.screen.home.gourmet.detail;
 
 import android.app.Dialog;
+import android.view.View;
+import android.widget.CheckBox;
 
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
@@ -42,6 +44,10 @@ public interface GourmetDetailViewInterface extends BaseDialogViewInterface
     void hideWishTooltip();
 
     Observable<Boolean> showWishView(boolean myWish);
+
+    void setTrueVRVisible(boolean visible);
+
+    void showTrueVRDialog(CheckBox.OnCheckedChangeListener checkedChangeListener, View.OnClickListener positiveListener, Dialog.OnDismissListener onDismissListener);
 
     void scrollTop();
 

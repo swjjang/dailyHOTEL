@@ -190,12 +190,10 @@ public class Gourmet extends Place
                 distance = jsonObject.getDouble("distance");
             }
 
-            // 추후에 고메가 VR지원되면 보여지도록 한다.
-            //            if (jsonObject.has("truevr") == true)
-            //            {
-            //                truevr = jsonObject.getBoolean("truevr");
-            //            }
-
+            if (jsonObject.has("truevr") == true)
+            {
+                truevr = jsonObject.getBoolean("truevr");
+            }
 
             if (jsonObject.has("stickerIdx") == true && jsonObject.isNull("stickerIdx") == false)
             {
@@ -206,8 +204,6 @@ public class Gourmet extends Place
                     stickerUrl = stringSparseArray.get(stickerIndex);
                 }
             }
-
-            truevr = false;
 
             if (jsonObject.has("availableTicketNumbers") == true)
             {
@@ -294,15 +290,8 @@ public class Gourmet extends Place
             persons = gourmetWishDetails != null ? gourmetWishDetails.persons : 0;
             category = gourmetWishDetails != null ? gourmetWishDetails.category : "";
             subCategory = gourmetWishDetails != null ? gourmetWishDetails.subCategory : "";
-
             satisfaction = gourmetWishItem.rating;
-
-            // 추후에 고메가 VR지원되면 보여지도록 한다.
-            //            if (jsonObject.has("truevr") == true)
-            //            {
-            //                truevr = jsonObject.getBoolean("truevr");
-            //            }
-            truevr = false;
+            truevr = gourmetWishDetails != null ? gourmetWishDetails.truevr : false;
 
             Sticker sticker = gourmetWishDetails != null ? gourmetWishDetails.sticker : null;
             if (sticker != null)

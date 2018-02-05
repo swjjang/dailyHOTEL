@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.widget.CompoundButton;
 
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.BaseActivity;
@@ -26,6 +27,7 @@ import com.daily.dailyhotel.entity.GourmetCartMenu;
 import com.daily.dailyhotel.entity.GourmetDetail;
 import com.daily.dailyhotel.entity.GourmetMenu;
 import com.daily.dailyhotel.entity.ReviewScores;
+import com.daily.dailyhotel.entity.TrueVR;
 import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.entity.WishResult;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
@@ -52,6 +54,7 @@ import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Customer;
 import com.twoheart.dailyhotel.screen.common.HappyTalkCategoryDialog;
+import com.twoheart.dailyhotel.screen.common.TrueVRActivity;
 import com.twoheart.dailyhotel.screen.common.ZoomMapActivity;
 import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;
@@ -85,6 +88,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function6;
+import io.reactivex.functions.Function7;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -135,6 +139,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     private List<Integer> mSoldOutDateList;
     boolean mShowCalendar;
     boolean mShowTrueVR;
+    List<TrueVR> mTrueVRList;
 
     // 멀티 구매
     private String mVisitTime;
@@ -1309,6 +1314,46 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     }
 
     @Override
+    public void onTrueVRClick()
+    {
+        if (mGourmetDetail == null || mTrueVRList == null || mTrueVRList.size() == 0 || lock() == true)
+        {
+            return;
+        }
+
+        if (DailyPreference.getInstance(getActivity()).isTrueVRCheckDataGuide() == false)
+        {
+            getViewInterface().showTrueVRDialog(new CompoundButton.OnCheckedChangeListener()
+            {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean checked)
+                {
+                    DailyPreference.getInstance(getActivity()).setTrueVRCheckDataGuide(checked);
+                }
+            }, new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    startActivityForResult(TrueVRActivity.newInstance(getActivity(), mGourmetDetail.index, mTrueVRList//
+                        , Constants.PlaceType.FNB, mGourmetDetail.category), GourmetDetailActivity.REQUEST_CODE_TRUE_VR);
+                }
+            }, new DialogInterface.OnDismissListener()
+            {
+                @Override
+                public void onDismiss(DialogInterface dialog)
+                {
+                    unLockAll();
+                }
+            });
+        } else
+        {
+            startActivityForResult(TrueVRActivity.newInstance(getActivity(), mGourmetDetail.index, mTrueVRList//
+                , Constants.PlaceType.HOTEL, mGourmetDetail.category), GourmetDetailActivity.REQUEST_CODE_TRUE_VR);
+        }
+    }
+
+    @Override
     public void onDownloadCouponClick()
     {
         if (mGourmetDetail == null || lock() == true)
@@ -1534,6 +1579,11 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         mSoldOutDateList = soldOutList;
     }
 
+    void setTrueVRList(List<TrueVR> trueVRList)
+    {
+        mTrueVRList = trueVRList;
+    }
+
     void setGourmetDetail(GourmetDetail gourmetDetail)
     {
         mGourmetDetail = gourmetDetail;
@@ -1623,19 +1673,19 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             }
         }
 
-        //        if (DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0)
-        //        {
-        //            if (mTrueVRParamsList != null && mTrueVRParamsList.size() > 0)
-        //            {
-        //                showTrueViewMenu();
-        //            } else
-        //            {
-        //                hideTrueViewMenu();
-        //            }
-        //        } else
-        //        {
-        //            hideTrueViewMenu();
-        //        }
+        if (DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0)
+        {
+            if (mTrueVRList != null && mTrueVRList.size() > 0)
+            {
+                getViewInterface().setTrueVRVisible(true);
+            } else
+            {
+                getViewInterface().setTrueVRVisible(false);
+            }
+        } else
+        {
+            getViewInterface().setTrueVRVisible(false);
+        }
 
         if (mShowCalendar == true)
         {
@@ -1649,13 +1699,13 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         {
             mShowTrueVR = false;
 
-            //            if (DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0)
-            //            {
-            //                onTrueViewClick();
-            //            } else
-            //            {
-            //                getViewInterface().showSimpleDialog(null, getString(R.string.message_truevr_not_support_hardware), getString(R.string.dialog_btn_text_confirm), null);
-            //            }
+            if (DailyPreference.getInstance(getActivity()).getTrueVRSupport() > 0)
+            {
+                onTrueVRClick();
+            } else
+            {
+                getViewInterface().showSimpleDialog(null, getString(R.string.message_truevr_not_support_hardware), getString(R.string.dialog_btn_text_confirm), null);
+            }
         }
 
         mIsDeepLink = false;
@@ -1889,21 +1939,24 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             , mGourmetRemoteImpl.getDetail(mGourmetIndex, mGourmetBookDateTime)//
             , mCalendarImpl.getGourmetUnavailableDates(mGourmetIndex, GourmetCalendarActivity.DEFAULT_CALENDAR_DAY_OF_MAX_COUNT, false)//
             , mGourmetRemoteImpl.getReviewScores(mGourmetIndex)//
+            , mGourmetRemoteImpl.getTrueVR(mGourmetIndex)//
             , mCommonRemoteImpl.getCommonDateTime()//
             , mCartLocalImpl.getGourmetCart()//
-            , new Function6<Boolean, GourmetDetail, List<Integer>, ReviewScores, CommonDateTime, GourmetCart, GourmetCart>()
+            , new Function7<Boolean, GourmetDetail, List<Integer>, ReviewScores, List<TrueVR>, CommonDateTime, GourmetCart, GourmetCart>()
             {
                 @Override
                 public GourmetCart apply(@io.reactivex.annotations.NonNull Boolean aBoolean//
                     , @io.reactivex.annotations.NonNull GourmetDetail gourmetDetail//
                     , @io.reactivex.annotations.NonNull List<Integer> unavailableDates//
                     , @io.reactivex.annotations.NonNull ReviewScores reviewScores//
+                    , @io.reactivex.annotations.NonNull List<TrueVR> trueVRList//
                     , @io.reactivex.annotations.NonNull CommonDateTime commonDateTime//
                     , @io.reactivex.annotations.NonNull GourmetCart gourmetCart) throws Exception
                 {
                     setCommonDateTime(commonDateTime);
                     setReviewScores(reviewScores);
                     setSoldOutDateList(unavailableDates);
+                    setTrueVRList(trueVRList);
                     setGourmetDetail(gourmetDetail);
                     setOperationTimes(commonDateTime, mGourmetBookDateTime, gourmetDetail.getGourmetMenuList());
                     setVisitTime(FULL_TIME);
