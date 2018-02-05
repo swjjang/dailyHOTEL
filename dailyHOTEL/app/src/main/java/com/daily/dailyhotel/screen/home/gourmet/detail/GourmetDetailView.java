@@ -29,6 +29,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
@@ -147,6 +148,8 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         void onBookingClick();
 
         void onTrueAwardsClick();
+
+        void onTrueVRClick();
     }
 
     public GourmetDetailView(BaseActivity baseActivity, GourmetDetailView.OnEventListener listener)
@@ -1106,6 +1109,36 @@ public class GourmetDetailView extends BaseDialogView<GourmetDetailView.OnEventL
         }
 
         return myWish ? getViewDataBinding().wishAnimationView.addWishAnimation() : getViewDataBinding().wishAnimationView.removeWishAnimation();
+    }
+
+    @Override
+    public void setTrueVRVisible(boolean visible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        int flag = visible ? View.VISIBLE : View.GONE;
+
+        getViewDataBinding().vrImageView.setVisibility(flag);
+        getViewDataBinding().fakeVRImageView.setVisibility(flag);
+        getViewDataBinding().fakeVRImageView.setOnClickListener(v -> getEventListener().onTrueVRClick());
+    }
+
+    @Override
+    public void showTrueVRDialog(CheckBox.OnCheckedChangeListener checkedChangeListener, View.OnClickListener positiveListener//
+        , Dialog.OnDismissListener onDismissListener)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        showSimpleDialog(null, getString(R.string.message_stay_used_data_guide), getString(R.string.label_dont_again)//
+            , getString(R.string.dialog_btn_do_continue), getString(R.string.dialog_btn_text_close)//
+            , checkedChangeListener, positiveListener//
+            , null, null, onDismissListener, true);
     }
 
     private void initToolbar(ActivityGourmetDetailDataBinding viewDataBinding)

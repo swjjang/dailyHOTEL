@@ -9,7 +9,9 @@ import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetDetail;
 import com.daily.dailyhotel.entity.ReviewScores;
 import com.daily.dailyhotel.entity.TrueReviews;
+import com.daily.dailyhotel.entity.TrueVR;
 import com.daily.dailyhotel.entity.WishResult;
+import com.daily.dailyhotel.repository.remote.model.TrueVRData;
 import com.twoheart.dailyhotel.model.Gourmet;
 import com.twoheart.dailyhotel.model.GourmetParams;
 import com.twoheart.dailyhotel.util.Constants;
@@ -250,6 +252,39 @@ public class GourmetRemoteImpl extends BaseRemoteImpl implements GourmetInterfac
                 }
 
                 return trueReviews;
+            });
+    }
+
+    @Override
+    public Observable<List<TrueVR>> getTrueVR(int gourmetIndex)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/{restaurantIdx}/vr-list"//
+                : "MzckNDckNzgkNTQkNzMkMTAzJDk0JDc2JDExOSQzMCQ2NiQ2NiQ5NyQxMzgkMCQ4NyQ=$IQ0ExNUQ1OTRBNUVDNkY2MjhFNkQ4OTWg0QURCRITk3RkFFNjBQzMTA0ONkFBRkYwRDHZdEODI1OTQg3IODZCBRIDE3QzgzQkYxTMSUQzOUYzMEEZGRkJCRkVFMUJHBQTk5NDQ4N0JEMNENG$";
+
+        Map<String, String> urlParams = new HashMap<>();
+        urlParams.put("{restaurantIdx}", Integer.toString(gourmetIndex));
+
+        return mDailyMobileService.getTrueReviews(Crypto.getUrlDecoderEx(API, urlParams))//
+            .subscribeOn(Schedulers.io()).map(baseListDto ->
+            {
+                List<TrueVR> trueVR = new ArrayList<>();
+
+                if (baseListDto != null)
+                {
+                    if (baseListDto.msgCode == 100 && baseListDto.data != null)
+                    {
+                        for (TrueVRData trueVRData : baseListDto.data)
+                        {
+                            trueVR.add(trueVRData.getTrueVR());
+                        }
+                    } else
+                    {
+                    }
+                } else
+                {
+                }
+
+                return trueVR;
             });
     }
 }

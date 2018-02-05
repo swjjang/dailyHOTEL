@@ -38,7 +38,7 @@ public class GourmetCampaignListAdapter extends RecyclerView.Adapter<RecyclerVie
     private List<PlaceViewItem> mPlaceViewItemList;
 
     OnEventListener mOnEventListener;
-
+    private boolean mTrueVREnabled;
 
     public interface OnEventListener
     {
@@ -68,6 +68,11 @@ public class GourmetCampaignListAdapter extends RecyclerView.Adapter<RecyclerVie
     public void setOnWishClickListener(View.OnClickListener listener)
     {
         mOnWishClickListener = listener;
+    }
+
+    public void setTrueVREnabled(boolean enabled)
+    {
+        mTrueVREnabled = enabled;
     }
 
     @Override
@@ -156,7 +161,7 @@ public class GourmetCampaignListAdapter extends RecyclerView.Adapter<RecyclerVie
         holder.gourmetCardView.setImage(gourmet.imageUrl);
 
         holder.gourmetCardView.setGradeText(DailyTextUtils.isTextEmpty(gourmet.subCategory) == false ? gourmet.subCategory : gourmet.category);
-        holder.gourmetCardView.setVRVisible(false);
+        holder.gourmetCardView.setVRVisible(gourmet.truevr && mTrueVREnabled);
         holder.gourmetCardView.setReviewText(gourmet.satisfaction, gourmet.reviewCount);
 
         holder.gourmetCardView.setNewVisible(gourmet.newItem);

@@ -14,6 +14,7 @@ import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.view.DailyCampaignTagTitleView;
 import com.facebook.imagepipeline.nativecode.NativeBlurFilter;
 import com.twoheart.dailyhotel.R;
@@ -88,10 +89,10 @@ public class GourmetCampaignTagListView //
             mRecyclerAdapter = new GourmetCampaignListAdapter(getContext(), new ArrayList<>(), mOnEventListener);
         }
 
-        //        if (DailyPreference.getInstance(getContext()).getTrueVRSupport() > 0)
-        //        {
-        //            mRecyclerAdapter.setTrueVREnabled(true);
-        //        }
+        if (DailyPreference.getInstance(getContext()).getTrueVRSupport() > 0)
+        {
+            mRecyclerAdapter.setTrueVREnabled(true);
+        }
 
         if (Util.supportPreview(getContext()) == true)
         {

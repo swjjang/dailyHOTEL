@@ -131,7 +131,7 @@ public class CollectionGourmetAdapter extends PlaceListAdapter
         holder.gourmetCardView.setImage(recommendationGourmet.imageUrl);
 
         holder.gourmetCardView.setGradeText(DailyTextUtils.isTextEmpty(recommendationGourmet.categorySub) == false ? recommendationGourmet.categorySub : recommendationGourmet.category);
-        holder.gourmetCardView.setVRVisible(false);
+        holder.gourmetCardView.setVRVisible(recommendationGourmet.truevr && mTrueVREnabled);
         holder.gourmetCardView.setReviewText(recommendationGourmet.rating, recommendationGourmet.reviewCount);
         holder.gourmetCardView.setNewVisible(recommendationGourmet.newItem);
         holder.gourmetCardView.setGourmetNameText(recommendationGourmet.name);

@@ -20,4 +20,7 @@ public class GourmetWishDetails
 
     @JsonField(name = "persons")
     public int persons;
+
+    @JsonField(name = "truevr")
+    public boolean truevr;
 }

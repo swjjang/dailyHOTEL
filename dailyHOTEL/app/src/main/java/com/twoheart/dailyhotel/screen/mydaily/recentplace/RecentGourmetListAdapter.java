@@ -99,7 +99,7 @@ public class RecentGourmetListAdapter extends RecentPlacesListAdapter
         holder.gourmetCardView.setImage(recentlyPlace.imageUrl);
 
         holder.gourmetCardView.setGradeText(DailyTextUtils.isTextEmpty(recentlyPlace.details.subCategory) == false ? recentlyPlace.details.subCategory : recentlyPlace.details.category);
-        holder.gourmetCardView.setVRVisible(false);
+        holder.gourmetCardView.setVRVisible(recentlyPlace.details.isTrueVr && mTrueVREnabled);
         holder.gourmetCardView.setReviewText(recentlyPlace.rating, recentlyPlace.reviewCount);
         holder.gourmetCardView.setNewVisible(recentlyPlace.newItem);
         holder.gourmetCardView.setGourmetNameText(recentlyPlace.title);
