@@ -382,19 +382,7 @@ public class StayOutboundSearchSuggestView //
                 @Override
                 public void onItemClick(int position, StayOutboundSuggest stayOutboundSuggest)
                 {
-                    getEventListener().onRecentlySuggestClick(stayOutboundSuggest);
-                }
-
-                @Override
-                public void onDeleteClick(int position, StayOutboundSuggest stayOutboundSuggest)
-                {
-                    getEventListener().onDeleteRecentlySuggest(position, stayOutboundSuggest);
-                }
-
-                @Override
-                public void onDeleteAllClick()
-                {
-                    getEventListener().onDeleteAllRecentlySuggest(false);
+                    getEventListener().onPopularSuggestClick(stayOutboundSuggest);
                 }
 
                 @Override

@@ -547,7 +547,8 @@ public class StayOutboundSearchSuggestPresenter //
             return;
         }
 
-        addCompositeDisposable(mSuggestLocalImpl.addStayOutboundSuggestDb(stayOutboundSuggest, mKeyword).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+        addCompositeDisposable(mSuggestLocalImpl.addStayOutboundSuggestDb(stayOutboundSuggest, mKeyword) //
+            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
         {
             @Override
             public void accept(Boolean aBoolean) throws Exception
@@ -575,7 +576,7 @@ public class StayOutboundSearchSuggestPresenter //
                     ExLog.d(e.getMessage());
                 }
 
-                startFinishAction(stayOutboundSuggest, "", AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECOMMEND);
+                startFinishAction(stayOutboundSuggest, mKeyword, AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECOMMEND);
             }
         }));
     }
