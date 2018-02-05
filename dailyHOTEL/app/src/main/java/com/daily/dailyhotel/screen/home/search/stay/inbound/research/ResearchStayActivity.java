@@ -33,7 +33,7 @@ public class ResearchStayActivity extends BaseActivity<ResearchStayPresenter>
     public static final String INTENT_EXTRA_DATA_SUGGEST = "suggest";
 
     public static Intent newInstance(Context context, String openDateTime, String closeDateTime, String currentDateTime, String dailyDateTime//
-    , String checkInDateTime, String checkOutDateTime, StaySuggest suggest)
+        , String checkInDateTime, String checkOutDateTime, StaySuggest suggest)
     {
         Intent intent = new Intent(context, ResearchStayActivity.class);
 

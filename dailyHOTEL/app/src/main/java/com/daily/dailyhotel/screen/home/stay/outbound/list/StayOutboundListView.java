@@ -797,11 +797,17 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
 
         switch (emptyScreenType)
         {
+            case NONE:
+                setBottomLayoutVisible(true);
+                getViewDataBinding().floatingActionView.setViewOptionEnabled(true);
+                getViewDataBinding().floatingActionView.setFilterOptionEnable(true);
+                break;
+
             case SEARCH_SUGGEST_DEFAULT:
                 break;
 
             case SEARCH_SUGGEST_FILTER_ON:
-                getViewDataBinding().floatingActionView.setViewOptionVisible(false);
+                getViewDataBinding().floatingActionView.setViewOptionEnabled(false);
                 getViewDataBinding().floatingActionView.setFilterOptionEnable(true);
                 break;
 
@@ -810,7 +816,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
                 break;
 
             case LOCATOIN_FILTER_ON:
-                getViewDataBinding().floatingActionView.setViewOptionVisible(false);
+                getViewDataBinding().floatingActionView.setViewOptionEnabled(false);
                 getViewDataBinding().floatingActionView.setFilterOptionEnable(true);
                 break;
         }

@@ -120,11 +120,8 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
             {
                 super.onScrollStateChanged(recyclerView, newState);
 
-                if (newState == RecyclerView.SCROLL_STATE_IDLE)
-                {
-                    View view = snapHelper.findSnapView(viewDataBinding.recyclerView.getLayoutManager());
-                    getEventListener().onScrolled(viewDataBinding.recyclerView.getChildAdapterPosition(view), true);
-                }
+                View view = snapHelper.findSnapView(viewDataBinding.recyclerView.getLayoutManager());
+                getEventListener().onScrolled(viewDataBinding.recyclerView.getChildAdapterPosition(view), true);
             }
         });
 
@@ -947,6 +944,11 @@ public class GourmetMenusView extends BaseDialogView<GourmetMenusView.OnEventLis
     @Override
     public Observable<Boolean> closeCartMenus(int gourmetMenuCount)
     {
+        if (getViewDataBinding() == null || getViewDataBinding().cartMenusLayout.getVisibility() != View.VISIBLE)
+        {
+            return null;
+        }
+
         final int height = getViewDataBinding().cartMenusLayout.getHeight();
 
         getViewDataBinding().cartMenusBackgroundView.setEnabled(false);

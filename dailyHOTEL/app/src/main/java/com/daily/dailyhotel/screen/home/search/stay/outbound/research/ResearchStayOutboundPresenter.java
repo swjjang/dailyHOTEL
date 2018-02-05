@@ -33,8 +33,11 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 
 /**
@@ -388,8 +391,14 @@ public class ResearchStayOutboundPresenter extends BaseExceptionPresenter<Resear
             , ResearchStayOutboundActivity.REQUEST_CODE_DETAIL);
 
         getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
-
-        onBackClick();
+        addCompositeDisposable(Completable.complete().delay(300, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action()
+        {
+            @Override
+            public void run() throws Exception
+            {
+                finish();
+            }
+        }));
     }
 
     @Override

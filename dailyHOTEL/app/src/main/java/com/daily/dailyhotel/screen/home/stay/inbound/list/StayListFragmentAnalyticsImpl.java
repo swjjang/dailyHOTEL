@@ -115,7 +115,7 @@ public class StayListFragmentAnalyticsImpl implements StayListFragmentInterface.
                         , AnalyticsManager.Action.STAY_ITEM_CLICK, String.format(Locale.KOREA, "%d_%d", stay.entryPosition, stay.index), null);
 
                     AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                        , AnalyticsManager.Action.STAY_DAILYCHOICE_CLICK, stay.dailyChoice ? AnalyticsManager.Label.Y : AnalyticsManager.Label.N, null);
+                        , stay.dailyChoice ? AnalyticsManager.Action.STAY_DAILYCHOICE_CLICK_Y : AnalyticsManager.Action.STAY_DAILYCHOICE_CLICK_N, Integer.toString(stay.index), null);
 
                     // 할인 쿠폰이 보이는 경우
                     if (DailyTextUtils.isTextEmpty(stay.couponDiscountText) == false)

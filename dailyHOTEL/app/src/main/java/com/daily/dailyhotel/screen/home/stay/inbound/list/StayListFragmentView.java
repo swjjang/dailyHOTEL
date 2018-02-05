@@ -147,8 +147,6 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentI
                     }
                 }
             });
-
-            getViewDataBinding().recyclerView.setAdapter(mStayListAdapter);
         }
 
         mStayListAdapter.setDistanceEnabled(isSortByDistance);
@@ -156,7 +154,8 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentI
         mStayListAdapter.setRewardEnabled(rewardEnabled);
         mStayListAdapter.setTrueVREnabled(supportTrueVR);
         mStayListAdapter.setAll(objectItemList);
-        mStayListAdapter.notifyDataSetChanged();
+
+        getViewDataBinding().recyclerView.setAdapter(mStayListAdapter);
     }
 
     @Override

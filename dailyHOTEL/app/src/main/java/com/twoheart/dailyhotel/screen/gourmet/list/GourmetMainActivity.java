@@ -1109,7 +1109,7 @@ public class GourmetMainActivity extends PlaceMainActivity
                             , AnalyticsManager.Action.GOURMET_ITEM_CLICK, Integer.toString(gourmet.index), null);
 
                         AnalyticsManager.getInstance(GourmetMainActivity.this).recordEvent(AnalyticsManager.Category.NAVIGATION//
-                            , AnalyticsManager.Action.GOURMET_DAILYCHOICE_CLICK, gourmet.isDailyChoice ? AnalyticsManager.Label.Y : AnalyticsManager.Label.N, null);
+                            , gourmet.isDailyChoice ? AnalyticsManager.Action.GOURMET_DAILYCHOICE_CLICK_Y : AnalyticsManager.Action.GOURMET_DAILYCHOICE_CLICK_N, Integer.toString(gourmet.index), null);
 
                         // 할인 쿠폰이 보이는 경우
                         if (DailyTextUtils.isTextEmpty(gourmet.couponDiscountText) == false)

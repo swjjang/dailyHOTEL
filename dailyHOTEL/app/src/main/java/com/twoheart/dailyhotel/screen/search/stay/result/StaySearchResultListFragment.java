@@ -445,9 +445,7 @@ public class StaySearchResultListFragment extends StayListFragment
 
                 // 카테고리 개수가 실제로 존재하거나 혹은 주변 검색인데 필터, 반경이 디폴트 값이 아닌 경우
                 if ((categoryList != null && categoryList.size() > 0)//
-                    || ((StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(((StaySearchCuration) mStayCuration).getSuggest().categoryKey) == true//
-                    && (mStayCuration.getCurationOption().isDefaultFilter() == false
-                    || ((StaySearchCuration) mStayCuration).getRadius() != PlaceSearchResultActivity.DEFAULT_SEARCH_RADIUS))))
+                    || StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(((StaySearchCuration) mStayCuration).getSuggest().categoryKey) == true)
                 {
                     StaySearchResultListFragment.this.onStayList(list, page, false, activeReward);
                 }

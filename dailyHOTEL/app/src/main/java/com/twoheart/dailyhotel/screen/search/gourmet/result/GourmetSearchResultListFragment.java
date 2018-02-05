@@ -13,7 +13,6 @@ import com.twoheart.dailyhotel.model.GourmetSearchCuration;
 import com.twoheart.dailyhotel.model.GourmetSearchParams;
 import com.twoheart.dailyhotel.model.PlaceCuration;
 import com.twoheart.dailyhotel.model.PlaceViewItem;
-import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetListFragment;
@@ -443,13 +442,22 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
 
                 ((OnGourmetSearchResultListFragmentListener) mOnPlaceListFragmentListener).onGourmetListCount(totalCount);
 
-                // 카테고리 개수가 실제로 존재하거나 혹은 주변 검색인데 필터, 반경이 디폴트 값이 아닌 경우
-                if ((list != null && list.size() > 0)//
-                    || ((GourmetSuggest.CATEGORY_LOCATION.equalsIgnoreCase(((GourmetSearchCuration) mGourmetCuration).getSuggest().categoryKey) == true//
-                    && (mGourmetCuration.getCurationOption().isDefaultFilter() == false//
-                    || ((GourmetSearchCuration) mGourmetCuration).getRadius() != PlaceSearchResultActivity.DEFAULT_SEARCH_RADIUS))))
+                if (GourmetSuggest.CATEGORY_LOCATION.equalsIgnoreCase(((GourmetSearchCuration) mGourmetCuration).getSuggest().categoryKey) == true)
                 {
+                    ((OnGourmetSearchResultListFragmentListener) mOnPlaceListFragmentListener).onShowActivityEmptyView(false);
+
                     GourmetSearchResultListFragment.this.onGourmetList(list, page, totalCount, maxCount, categoryCodeMap, categorySequenceMap, false);
+                } else
+                {
+                    if (list == null || list.size() == 0)
+                    {
+                        ((OnGourmetSearchResultListFragmentListener) mOnPlaceListFragmentListener).onShowActivityEmptyView(true);
+                    } else
+                    {
+                        ((OnGourmetSearchResultListFragmentListener) mOnPlaceListFragmentListener).onShowActivityEmptyView(false);
+
+                        GourmetSearchResultListFragment.this.onGourmetList(list, page, totalCount, maxCount, categoryCodeMap, categorySequenceMap, false);
+                    }
                 }
             } else
             {

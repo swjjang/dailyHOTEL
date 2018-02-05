@@ -41,9 +41,9 @@ public class SearchGourmetFragmentView extends BaseFragmentDialogView<SearchGour
         getViewDataBinding().tagFlexboxLayout.setFlexDirection(FlexDirection.ROW);
         getViewDataBinding().tagFlexboxLayout.setFlexWrap(FlexWrap.WRAP);
 
-        getViewDataBinding().recently01View.setOnClickListener(v -> getEventListener().onRecentlySearchResultClick((RecentlyDbPlace)v.getTag()));
-        getViewDataBinding().recently02View.setOnClickListener(v -> getEventListener().onRecentlySearchResultClick((RecentlyDbPlace)v.getTag()));
-        getViewDataBinding().recently03View.setOnClickListener(v -> getEventListener().onRecentlySearchResultClick((RecentlyDbPlace)v.getTag()));
+        getViewDataBinding().recently01View.setOnClickListener(v -> getEventListener().onRecentlySearchResultClick((RecentlyDbPlace) v.getTag()));
+        getViewDataBinding().recently02View.setOnClickListener(v -> getEventListener().onRecentlySearchResultClick((RecentlyDbPlace) v.getTag()));
+        getViewDataBinding().recently03View.setOnClickListener(v -> getEventListener().onRecentlySearchResultClick((RecentlyDbPlace) v.getTag()));
     }
 
     @Override

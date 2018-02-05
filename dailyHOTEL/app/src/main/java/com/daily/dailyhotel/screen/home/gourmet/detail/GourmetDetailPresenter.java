@@ -1863,7 +1863,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                         setResult(BaseActivity.RESULT_CODE_REFRESH, intent);
                     }
 
-                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_detail_sold_out)//
+                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_detail_changed_price)//
                         , getString(R.string.dialog_btn_text_confirm), null);
 
                     mAnalytics.onEventChangedPrice(getActivity(), isDeepLink, gourmetDetail.name, false);

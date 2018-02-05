@@ -13,7 +13,6 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/search_bg"
             app:layout_constraintDimensionRatio="H,3:2"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -29,21 +28,6 @@
             app:layout_constraintLeft_toLeftOf="@+id/toolbarView"
             app:layout_constraintTop_toTopOf="@+id/toolbarView"
             app:srcCompat="@drawable/navibar_ic_back_01_black"/>
-
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/searchTitleTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="1dp"
-            android:text="@string/label_search_description"
-            android:textColor="@color/white"
-            android:textSize="20dp"
-            app:layout_constraintLeft_toLeftOf="@+id/topImageView"
-            app:layout_constraintRight_toRightOf="@+id/topImageView"
-            app:layout_constraintTop_toBottomOf="@+id/fakeBackImageView"
-            dailyFont:style="Medium"/>
 
         <android.support.design.widget.CoordinatorLayout
             android:id="@+id/coordinatorLayout"

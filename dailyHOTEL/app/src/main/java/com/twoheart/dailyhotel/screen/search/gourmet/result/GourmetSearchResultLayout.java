@@ -63,11 +63,11 @@ public class GourmetSearchResultLayout extends PlaceSearchResultLayout
 
         // 두번째 메시지
         TextView messageTextView02 = scrollView.findViewById(R.id.messageTextView02);
-        messageTextView02.setText(R.string.message_searchresult_stay_empty_subtitle);
+        messageTextView02.setText(R.string.message_searchresult_gourmet_empty_subtitle);
 
         // 고메 인기 검색 태그
         TextView popularSearchTagTextView = scrollView.findViewById(R.id.popularSearchTagTextView);
-        popularSearchTagTextView.setText(R.string.label_search_stay_popular_search_tag);
+        popularSearchTagTextView.setText(R.string.label_search_gourmet_popular_search_tag);
 
         //
         mPopularSearchTagLayout = scrollView.findViewById(R.id.popularSearchTagLayout);
@@ -86,11 +86,11 @@ public class GourmetSearchResultLayout extends PlaceSearchResultLayout
         DailyTextView searchLeftTextView = searchLeftLayout.findViewById(R.id.searchLeftTextView);
         DailyTextView searchRightTextView = searchRightLayout.findViewById(R.id.searchRightTextView);
 
-        searchLeftTextView.setText(R.string.label_searchresult_search_stayoutbound);
-        searchLeftTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_search_shortcut_02_ob, 0, 0, 0);
+        searchLeftTextView.setText(R.string.label_searchresult_search_stay);
+        searchLeftTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_search_shortcut_01_stay, 0, 0, 0);
 
-        searchRightTextView.setText(R.string.label_searchresult_search_gourmet);
-        searchRightTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_search_shortcut_03_gourmet, 0, 0, 0);
+        searchRightTextView.setText(R.string.label_searchresult_search_stayoutbound);
+        searchRightTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.vector_search_shortcut_02_ob, 0, 0, 0);
     }
 
     protected void setCalendarText(GourmetBookingDay gourmetBookingDay)

@@ -213,7 +213,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
                 switch (resultCode)
                 {
                     case BaseActivity.RESULT_CODE_REFRESH:
-                        if (data.hasExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH) == true)
+                        if (data != null && data.hasExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH) == true)
                         {
                             onChangedWish(mWishPosition, data.getBooleanExtra(StayDetailActivity.INTENT_EXTRA_DATA_WISH, false));
                         } else
@@ -511,7 +511,10 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
         clearCompositeDisposable();
 
-        onRefresh();
+        mNeedToRefresh = false;
+
+        setRefresh(true);
+        onRefresh(false);
     }
 
     @Override

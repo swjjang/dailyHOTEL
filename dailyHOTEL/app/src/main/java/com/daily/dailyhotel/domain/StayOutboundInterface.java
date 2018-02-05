@@ -12,10 +12,10 @@ import io.reactivex.Observable;
 public interface StayOutboundInterface
 {
     Observable<StayOutbounds> getList(StayBookDateTime stayBookDateTime, long geographyId//
-        , String geographyType, People people, StayOutboundFilters stayOutboundFilters, String cacheKey, String cacheLocation, String customerSessionId);
+        , String geographyType, People people, StayOutboundFilters stayOutboundFilters, int numberOfResults, String cacheKey, String cacheLocation, String customerSessionId);
 
     Observable<StayOutbounds> getList(StayBookDateTime stayBookDateTime, double latitude, double longitude, float radius//
-        , People people, StayOutboundFilters stayOutboundFilters, int numberOfResults);
+        , People people, StayOutboundFilters stayOutboundFilters, int numberOfResults, String cacheKey, String cacheLocation, String customerSessionId);
 
     Observable<StayOutboundDetail> getDetail(int index, StayBookDateTime stayBookDateTime, People people);
 
