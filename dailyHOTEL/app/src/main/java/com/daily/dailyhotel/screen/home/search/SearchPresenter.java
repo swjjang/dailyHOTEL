@@ -40,7 +40,7 @@ import com.daily.dailyhotel.screen.home.stay.outbound.calendar.StayOutboundCalen
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.StayOutboundListActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
-import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchSuggestActivity;
+import com.daily.dailyhotel.screen.home.stay.outbound.search.suggest.StayOutboundSearchSuggestActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
 import com.twoheart.dailyhotel.screen.gourmet.filter.GourmetCalendarActivity;

@@ -9,6 +9,14 @@ public class StayOutboundSuggest
     public static final String CATEGORY_POINT = "point";
     public static final String CATEGORY_REGION = "region";
     public static final String CATEGORY_STATION = "station";
+    public static final String CATEGORY_LOCATION = "location";
+
+    public static final int MENU_TYPE_DIRECT = 1;
+    public static final int MENU_TYPE_LOCATION = 2;
+    public static final int MENU_TYPE_RECENTLY_SEARCH = 3;
+    public static final int MENU_TYPE_RECENTLY_STAY = 4;
+    public static final int MENU_TYPE_SUGGEST = 5;
+    public static final int MENU_TYPE_POPULAR_AREA = 6;
 
     public long id;
     public String name;
@@ -19,6 +27,7 @@ public class StayOutboundSuggest
     public String display;
     public double latitude;
     public double longitude;
+    public int menuType;
 
     public StayOutboundSuggest()
     {
@@ -84,6 +93,7 @@ public class StayOutboundSuggest
 
         stayOutboundSuggest.latitude = latitude;
         stayOutboundSuggest.longitude = longitude;
+        stayOutboundSuggest.menuType = menuType;
 
         return stayOutboundSuggest;
     }

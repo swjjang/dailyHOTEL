@@ -20,5 +20,7 @@ public interface SuggestLocalInterface
 
     Observable<String> getRecentlyStayOutboundSuggestKeyword(final long id);
 
-    Observable deleteAllRecentlyStayOutboundSuggest();
+    Observable<Boolean> deleteAllRecentlyStayOutboundSuggest();
+
+    Observable<Boolean> deleteRecentlyStayOutboundSuggest(long id);
 }

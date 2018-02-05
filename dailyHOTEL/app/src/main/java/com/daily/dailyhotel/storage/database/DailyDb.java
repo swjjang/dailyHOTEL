@@ -1004,6 +1004,36 @@ public class DailyDb extends SQLiteOpenHelper implements BaseColumns
         mContext.getContentResolver().notifyChange(StayObRecentlySuggestList.NOTIFICATION_URI, null);
     }
 
+    public void deleteStayObRecentlySuggest(long id)
+    {
+        SQLiteDatabase db = getDb();
+        if (db == null)
+        {
+            // db를 사용할 수 없는 상태이므로 migration 실패로 판단
+            return;
+        }
+
+        try
+        {
+            db.beginTransaction();
+            db.delete(T_STAY_OB_RECENTLY_SUGGEST, StayObRecentlySuggestColumns._ID + " = " + id, null);
+            db.setTransactionSuccessful();
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        } finally
+        {
+            try
+            {
+                db.endTransaction();
+            } catch (Exception e)
+            {
+            }
+        }
+
+        mContext.getContentResolver().notifyChange(StayObRecentlySuggestList.NOTIFICATION_URI, null);
+    }
+
     //    public void exportDatabase(String databaseName)
     //    {
     //        try

@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.outbound.search;
+package com.daily.dailyhotel.screen.home.stay.outbound.search.suggest;
 
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
@@ -21,11 +21,25 @@ public interface StayOutboundSearchSuggestViewInterface extends BaseDialogViewIn
 
     void setProgressBarVisible(boolean visible);
 
+    void setRecentlySuggestsVisible(boolean visible);
+
     void setRecentlySuggests(List<StayOutboundSuggest> stayOutboundSuggestList);
 
+    void setPopularSuggestsVisible(boolean visible);
+
     void setPopularAreaSuggests(List<StayOutboundSuggest> stayOutboundSuggestList);
+
+    int getRecentlySuggestEntryCount();
 
     void setKeywordEditHint(String hint);
 
     void setKeywordEditText(String text);
+
+    void setVoiceSearchEnabled(boolean enabled);
+
+    void removeRecentlyItem(int position);
+
+    void removeRecentlySection(int menuType);
+
+    void setNearbyStaySuggest(boolean isAgreePermission, StayOutboundSuggest nearbyStayOutboundSuggest);
 }

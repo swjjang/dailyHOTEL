@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.search.stay.inbound.suggest;
+package com.daily.dailyhotel.screen.home.stay.outbound.search.suggest;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.ObjectItem;
-import com.daily.dailyhotel.entity.StaySuggest;
+import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeEntryDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeSectionDataBinding;
@@ -21,13 +21,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by android_sam on 2018. 2. 1..
+ * Created by android_sam on 2018. 2. 2..
  */
 
 public class SuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
     private Context mContext;
-    private View.OnClickListener mOnClickListener;
+    View.OnClickListener mOnClickListener;
 
     private String mKeyword;
     private List<ObjectItem> mSuggestList;
@@ -45,17 +45,6 @@ public class SuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     {
         switch (viewType)
         {
-            case ObjectItem.TYPE_HEADER_VIEW:
-            {
-                ListRowSearchSuggestTypeEntryDataBinding dataBinding //
-                    = DataBindingUtil.inflate(LayoutInflater.from(mContext) //
-                    , R.layout.list_row_search_suggest_type_entry_data, parent, false);
-
-                DirectViewHolder entryViewHolder = new DirectViewHolder(dataBinding);
-
-                return entryViewHolder;
-            }
-
             case ObjectItem.TYPE_SECTION:
             {
                 ListRowSearchSuggestTypeSectionDataBinding dataBinding //
@@ -94,10 +83,6 @@ public class SuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         switch (item.mType)
         {
-            case ObjectItem.TYPE_HEADER_VIEW:
-                onBindViewHolder((DirectViewHolder) holder, item, position);
-                break;
-
             case ObjectItem.TYPE_SECTION:
                 onBindViewHolder((SectionViewHolder) holder, item, position);
                 break;
@@ -153,56 +138,11 @@ public class SuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return mSuggestList.get(position);
     }
 
-    private void onBindViewHolder(DirectViewHolder holder, ObjectItem item, int position)
-    {
-        StaySuggest staySuggest = item.getItem();
-
-        holder.itemView.getRootView().setTag(staySuggest);
-
-        holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
-        holder.dataBinding.deleteImageView.setVisibility(View.GONE);
-        holder.dataBinding.priceTextView.setVisibility(View.GONE);
-        holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_07_recent);
-        holder.dataBinding.bottomDivider.setVisibility(View.VISIBLE);
-        holder.dataBinding.deleteImageView.setVisibility(View.GONE);
-
-        if (DailyTextUtils.isTextEmpty(staySuggest.displayName) == true)
-        {
-            holder.dataBinding.titleTextView.setText(null);
-        } else
-        {
-            String text = mContext.getString(R.string.label_search_suggest_direct_search_format, staySuggest.displayName);
-            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(text);
-
-            if (DailyTextUtils.isTextEmpty(mKeyword) == false)
-            {
-                int fromIndex = 0;
-                do
-                {
-                    int startIndex = text.indexOf(mKeyword, fromIndex);
-
-                    if (startIndex < 0)
-                    {
-                        break;
-                    }
-
-                    int endIndex = startIndex + mKeyword.length();
-                    fromIndex = endIndex;
-
-                    spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
-                        startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                } while (true);
-            }
-
-            holder.dataBinding.titleTextView.setText(spannableStringBuilder);
-        }
-    }
-
     private void onBindViewHolder(SectionViewHolder holder, ObjectItem item, int position)
     {
-        StaySuggest staySuggest = item.getItem();
+        StayOutboundSuggest stayOutboundSuggest = item.getItem();
 
-        if (DailyTextUtils.isTextEmpty(staySuggest.displayName) == true)
+        if (DailyTextUtils.isTextEmpty(stayOutboundSuggest.display) == true)
         {
             holder.dataBinding.titleTextView.setVisibility(View.GONE);
         } else
@@ -210,30 +150,30 @@ public class SuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             holder.dataBinding.titleTextView.setVisibility(View.VISIBLE);
         }
 
-        holder.dataBinding.titleTextView.setText(staySuggest.displayName);
+        holder.dataBinding.titleTextView.setText(stayOutboundSuggest.display);
     }
 
     private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)
     {
-        StaySuggest staySuggest = item.getItem();
+        StayOutboundSuggest stayOutboundSuggest = item.getItem();
 
-        holder.itemView.getRootView().setTag(staySuggest);
+        holder.itemView.getRootView().setTag(stayOutboundSuggest);
 
         holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
         holder.dataBinding.bottomDivider.setVisibility(View.GONE);
         holder.dataBinding.deleteImageView.setVisibility(View.GONE);
 
-        if (DailyTextUtils.isTextEmpty(staySuggest.displayName) == true)
+        if (DailyTextUtils.isTextEmpty(stayOutboundSuggest.display) == true)
         {
             holder.dataBinding.titleTextView.setText(null);
         } else
         {
-            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(staySuggest.displayName);
+            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(stayOutboundSuggest.display);
 
             if (DailyTextUtils.isTextEmpty(mKeyword) == false)
             {
                 String keywordUpperCase = mKeyword.toUpperCase();
-                String displayNameUpperCase = DailyTextUtils.isTextEmpty(staySuggest.displayName) ? "" : staySuggest.displayName.toUpperCase();
+                String displayNameUpperCase = DailyTextUtils.isTextEmpty(stayOutboundSuggest.display) ? "" : stayOutboundSuggest.display.toUpperCase();
 
                 int fromIndex = 0;
                 do
@@ -256,64 +196,33 @@ public class SuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             holder.dataBinding.titleTextView.setText(spannableStringBuilder);
         }
 
-        switch (staySuggest.categoryKey)
+        holder.dataBinding.priceTextView.setVisibility(View.GONE);
+
+        switch (stayOutboundSuggest.categoryKey)
         {
-            case StaySuggest.CATEGORY_STAY:
+            case StayOutboundSuggest.CATEGORY_AIRPORT:
+                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_ob_search_ic_04_airport);
+                break;
+
+            case StayOutboundSuggest.CATEGORY_HOTEL:
                 holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_02_hotel);
-
-                if (StaySuggest.MENU_TYPE_RECENTLY_STAY == staySuggest.menuType)
-                {
-                    holder.dataBinding.priceTextView.setVisibility(View.GONE);
-                } else
-                {
-                    holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
-                    if (staySuggest.availableRooms == 0)
-                    {
-                        holder.dataBinding.priceTextView.setText(R.string.label_soldout);
-                    } else {
-                        holder.dataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(mContext, staySuggest.discountAveragePrice, false));
-                    }
-                }
-
                 break;
 
-            case StaySuggest.CATEGORY_LOCATION:
-                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_09_nearby);
-
-                holder.dataBinding.priceTextView.setVisibility(View.GONE);
+            case StayOutboundSuggest.CATEGORY_POINT:
+                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_04_landmark);
                 break;
 
-            case StaySuggest.CATEGORY_REGION:
+            case StayOutboundSuggest.CATEGORY_REGION:
                 holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_01_region);
-
-                holder.dataBinding.priceTextView.setVisibility(View.GONE);
                 break;
 
-            case StaySuggest.CATEGORY_STATION:
+            case StayOutboundSuggest.CATEGORY_STATION:
                 holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_06_train);
-
-                holder.dataBinding.priceTextView.setVisibility(View.GONE);
                 break;
 
             default:
-                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_07_recent);
-
-                holder.dataBinding.priceTextView.setVisibility(View.GONE);
+                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_01_region);
                 break;
-        }
-    }
-
-    class DirectViewHolder extends RecyclerView.ViewHolder
-    {
-        ListRowSearchSuggestTypeEntryDataBinding dataBinding;
-
-        public DirectViewHolder(ListRowSearchSuggestTypeEntryDataBinding dataBinding)
-        {
-            super(dataBinding.getRoot());
-
-            this.dataBinding = dataBinding;
-
-            dataBinding.getRoot().setOnClickListener(mOnClickListener);
         }
     }
 

@@ -1,151 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:dailyFont="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/toolbar_height"
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/toolbarView"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/search_suggest_toolbar_height"
             android:background="@color/white"
-            android:elevation="2dp">
+            android:elevation="2dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <com.daily.base.widget.DailyImageView
-                android:id="@+id/backImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                app:srcCompat="@drawable/navibar_ic_back_01_black" />
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/buttonLayout"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.daily.base.widget.DailyImageView
+                    android:id="@+id/backImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/navibar_ic_x"/>
+
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/deleteTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/label_delete"
+                    android:textColor="@color/default_text_c323232"
+                    android:textSize="15dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    dailyFont:style="Medium"/>
+            </android.support.constraint.ConstraintLayout>
 
             <com.daily.base.widget.DailyEditText
                 android:id="@+id/keywordEditText"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_toLeftOf="@+id/deleteImageView"
-                android:layout_toRightOf="@id/backImageView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
                 android:gravity="center_vertical"
-                android:hint="@string/label_stay_outbound_search_keyword_hint"
+                android:hint="@string/label_search_stayoutbound_suggest_hint"
                 android:maxLines="1"
+                android:paddingTop="14dp"
                 android:singleLine="true"
                 android:textColor="@color/default_text_c323232"
                 android:textColorHint="@color/default_text_cc5c5c5"
                 android:textSize="18dp"
-                android:theme="@style/EditTextTheme" />
+                android:theme="@style/EditTextTheme"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/voiceSearchView"
+                app:layout_constraintTop_toBottomOf="@+id/buttonLayout"
+                app:layout_goneMarginRight="20dp"/>
 
-            <ImageView
+            <com.daily.base.widget.DailyImageView
                 android:id="@+id/voiceSearchView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="6dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                app:srcCompat="@drawable/vector_navibar_ic_voice"
-                android:visibility="gone"/>
-
-            <com.daily.base.widget.DailyImageView
-                android:id="@+id/deleteImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:paddingLeft="10dp"
-                android:paddingRight="15dp"
-                android:tint="@color/cababab"
-                app:srcCompat="@drawable/navibar_ic_x" />
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="1dp"
+                android:padding="10dp"
+                app:layout_constraintLeft_toRightOf="@+id/keywordEditText"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/buttonLayout"
+                app:srcCompat="@drawable/vector_navibar_ic_voice"/>
 
             <View
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="@dimen/gradient_1dp_line_height_under_21"
-                android:layout_alignParentBottom="true"
-                android:background="@color/default_line_ce7e7e7" />
-        </RelativeLayout>
-
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/recentlySuggestLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/toolbar"
-            android:visibility="gone">
-
-            <com.daily.base.widget.DailyTextView
-                android:id="@+id/recentlySuggestTitleView"
-                android:layout_width="0dp"
-                android:layout_height="36dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="10dp"
-                android:gravity="center_vertical"
-                android:text="@string/label_search_recentsearches"
-                android:textColor="@color/default_text_cc5c5c5"
-                android:textSize="14dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recentlySuggestRecyclerView"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:background="@color/white"
-                app:layout_constraintBottom_toTopOf="@+id/deleteRecentlySuggestLayout"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/recentlySuggestTitleView" />
-
-            <FrameLayout
-                android:id="@+id/deleteRecentlySuggestLayout"
-                android:layout_width="0dp"
-                android:layout_height="41dp"
-                android:background="@color/white"
+                android:background="@color/default_line_ce7e7e7"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent">
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:background="@color/default_line_ce7e7e7" />
-
-                <com.daily.base.widget.DailyTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:textColor="@color/default_text_cc5c5c5"
-                    android:textSize="14dp"
-                    android:text="@string/label_search_deleteall" />
-            </FrameLayout>
-
+                app:layout_constraintRight_toRightOf="parent"/>
         </android.support.constraint.ConstraintLayout>
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/suggestsRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/toolbar"
+            android:id="@+id/popularSuggestRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:background="@color/white"
-            android:visibility="gone" />
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbarView"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recentlySuggestRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/white"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbarView"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/suggestsRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/white"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbarView"/>
 
         <ScrollView
             android:id="@+id/emptyLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/toolbar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:background="@color/white"
             android:fillViewport="true"
-            android:visibility="gone">
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbarView">
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
+                <include
+                    android:id="@+id/nearbyDataBinding"
+                    layout="@layout/list_row_search_suggest_type_nearby_data"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -158,7 +159,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        app:srcCompat="@drawable/no_hotel_ic" />
+                        app:srcCompat="@drawable/no_hotel_ic"/>
 
                     <LinearLayout
                         android:id="@+id/textLayout"
@@ -175,7 +176,7 @@
                             android:text="@string/label_searchresult_empty"
                             android:textColor="@color/default_text_c323232"
                             android:textSize="18dp"
-                            dailyFont:style="Medium" />
+                            dailyFont:style="Medium"/>
 
                         <com.daily.base.widget.DailyTextView
                             android:id="@+id/messageTextView02"
@@ -185,7 +186,7 @@
                             android:gravity="center"
                             android:text="@string/message_stay_outbound_suggest_empty_suggest"
                             android:textColor="@color/default_text_c929292"
-                            android:textSize="14dp" />
+                            android:textSize="14dp"/>
                     </LinearLayout>
                 </LinearLayout>
             </FrameLayout>
@@ -193,10 +194,14 @@
 
         <ScrollView
             android:id="@+id/progressBarScrollView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:fillViewport="true"
-            android:visibility="gone">
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -206,8 +211,8 @@
                 <ProgressBar
                     android:id="@+id/progressBar"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"/>
             </LinearLayout>
         </ScrollView>
-    </RelativeLayout>
+    </android.support.constraint.ConstraintLayout>
 </layout>

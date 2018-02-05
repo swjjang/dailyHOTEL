@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.outbound.search;
+package com.daily.dailyhotel.screen.home.stay.outbound.search.suggest;
 
 
 import android.content.Context;
@@ -19,7 +19,9 @@ public class StayOutboundSearchSuggestActivity extends BaseActivity<StayOutbound
     public static final String INTENT_EXTRA_DATA_KEYWORD = "keyword";
     public static final String INTENT_EXTRA_DATA_CLICK_TYPE = "clickType";
 
-    public static final int REQUEST_CODE_SPEECH_INPUT = 10004;
+    public static final int REQUEST_CODE_SPEECH_INPUT = 10000;
+    public static final int REQUEST_CODE_SETTING_LOCATION = 10001;
+    public static final int REQUEST_CODE_PERMISSION_MANAGER = 10002;
 
     public static Intent newInstance(Context context, String keyword)
     {
