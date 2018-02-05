@@ -1762,6 +1762,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 getViewInterface().setErrorScreenVisible(true);
                 getViewInterface().setSearchLocationScreenVisible(false);
                 getViewInterface().setListScreenVisible(false);
+                getViewInterface().setBottomLayoutVisible(false);
                 break;
 
             case SEARCH_LOCATION:
@@ -1769,7 +1770,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 getViewInterface().setErrorScreenVisible(false);
                 getViewInterface().setSearchLocationScreenVisible(true);
                 getViewInterface().setListScreenVisible(false);
-                getViewInterface().setBottomLayoutVisible(true);
+                getViewInterface().setBottomLayoutType(StayOutboundListViewInterface.EmptyScreenType.NONE);
                 break;
 
             case LIST:
@@ -1777,7 +1778,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 getViewInterface().setErrorScreenVisible(false);
                 getViewInterface().setSearchLocationScreenVisible(false);
                 getViewInterface().setListScreenVisible(true);
-                getViewInterface().setBottomLayoutVisible(true);
+                getViewInterface().setBottomLayoutType(StayOutboundListViewInterface.EmptyScreenType.NONE);
                 break;
         }
     }
