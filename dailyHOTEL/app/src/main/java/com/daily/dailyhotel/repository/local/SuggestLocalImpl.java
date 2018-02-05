@@ -91,6 +91,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                         double longitude = cursor.getDouble(cursor.getColumnIndex(StayObRecentlySuggestColumns.LONGITUDE));
 
                         stayOutboundSuggest = new StayOutboundSuggest(id, name, city, country, countryCode, categoryKey, display, latitude, longitude);
+                        stayOutboundSuggest.menuType = StayOutboundSuggest.MENU_TYPE_RECENTLY_SEARCH;
                     }
 
                 } catch (Exception e)
@@ -161,7 +162,10 @@ public class SuggestLocalImpl implements SuggestLocalInterface
                         double latitude = cursor.getDouble(cursor.getColumnIndex(StayObRecentlySuggestColumns.LATITUDE));
                         double longitude = cursor.getDouble(cursor.getColumnIndex(StayObRecentlySuggestColumns.LONGITUDE));
 
-                        stayOutboundSuggestList.add(new StayOutboundSuggest(id, name, city, country, countryCode, categoryKey, display, latitude, longitude));
+                        StayOutboundSuggest stayOutboundSuggest = new StayOutboundSuggest(id, name, city, country, countryCode, categoryKey, display, latitude, longitude);
+                        stayOutboundSuggest.menuType = StayOutboundSuggest.MENU_TYPE_RECENTLY_SEARCH;
+
+                        stayOutboundSuggestList.add(stayOutboundSuggest);
                     }
 
                 } catch (Exception e)
@@ -230,12 +234,37 @@ public class SuggestLocalImpl implements SuggestLocalInterface
     }
 
     @Override
-    public Observable deleteAllRecentlyStayOutboundSuggest()
+    public Observable<Boolean> deleteAllRecentlyStayOutboundSuggest()
     {
         return Observable.defer(new Callable<ObservableSource<Boolean>>()
         {
             @Override
             public ObservableSource<Boolean> call() throws Exception
+            {
+                DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
+
+                try
+                {
+                    dailyDb.deleteAllStayObRecentlySuggest();
+                } catch (Exception e)
+                {
+                    ExLog.e(e.toString());
+                }
+
+                DailyDbHelper.getInstance().close();
+
+                return Observable.just(true);
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
+    @Override
+    public Observable<Boolean> deleteRecentlyStayOutboundSuggest(long id)
+    {
+        return Observable.defer(new Callable<Observable<Boolean>>()
+        {
+            @Override
+            public Observable<Boolean> call() throws Exception
             {
                 DailyDb dailyDb = DailyDbHelper.getInstance().open(mContext);
 

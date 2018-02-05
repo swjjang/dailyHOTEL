@@ -666,7 +666,7 @@
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name="com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchSuggestActivity"
+            android:name="com.daily.dailyhotel.screen.home.stay.outbound.search.suggest.StayOutboundSearchSuggestActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>

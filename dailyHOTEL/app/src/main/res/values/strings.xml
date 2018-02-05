@@ -1129,6 +1129,7 @@
     <string name="label_search_suggest_recently_empty_title">이렇게도 검색해보세요.</string>
     <string name="label_search_suggest_recently_empty_description_type_stay">수영장 있는 호텔\n애견동반 양평 펜션\n주차가능한 파티룸</string>
     <string name="label_search_suggest_recently_empty_description_type_gourmet">주차가능한 뷔페\n코르키지가 되는 일식집\n단체 예약이 가능한 프라이빗룸</string>
+    <string name="label_search_suggest_popular_area">인기지역</string>
 
     <!-- Coupon -->
     <string name="coupon_notice_text">할인쿠폰\n상세정보</string>
@@ -1498,6 +1499,7 @@
     <string name="label_stay_outbound_suggest_station">역</string>
     <string name="label_stay_outbound_suggest_airport">공항</string>
     <string name="label_stay_outbound_suggest_popular_area">인기 지역</string>
+    <string name="label_stay_outbound_suggest_keyword_hint">해외 스테이명 또는 지역명 입력</string>
 
     <string name="message_stay_outbound_suggest_empty_suggest">검색어를 변경하거나 영문으로 검색해 보세요.</string>
 

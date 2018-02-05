@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.outbound.search;
+package com.daily.dailyhotel.screen.home.stay.outbound.search.suggest;
 
 import android.app.Activity;
 
