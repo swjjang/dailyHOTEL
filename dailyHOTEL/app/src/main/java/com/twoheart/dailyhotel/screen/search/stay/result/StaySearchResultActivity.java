@@ -1505,6 +1505,9 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.VISIBLE);
 
                 ((StaySearchResultLayout) mPlaceSearchResultLayout).addCategoryTabLayout(categoryList, mOnStayListFragmentListener);
+            } else if (StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStaySearchCuration.getSuggest().categoryKey) == true)
+            {
+                mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.VISIBLE);
             } else
             {
                 showEmptyLayout();

@@ -66,16 +66,10 @@ public class StaySearchResultListLayout extends StayListLayout
 
             if (StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(((StaySearchCuration) mStayCuration).getSuggest().categoryKey) == true)
             {
-                if((stayCurationOption.isDefaultFilter() == true && ((StaySearchCuration) mStayCuration).getRadius() == PlaceSearchResultActivity.DEFAULT_SEARCH_RADIUS))
+                if ((stayCurationOption.isDefaultFilter() == true && ((StaySearchCuration) mStayCuration).getRadius() == PlaceSearchResultActivity.DEFAULT_SEARCH_RADIUS))
                 {
                     mEmptyView.setVisibility(View.VISIBLE);
                     mFilterEmptyView.setVisibility(View.GONE);
-                    ((OnEventListener) mOnEventListener).onBottomOptionVisible(false);
-                } else if(stayCurationOption.isDefaultFilter() == true)
-                {
-                    mEmptyView.setVisibility(View.GONE);
-                    mFilterEmptyView.setVisibility(View.VISIBLE);
-                    ((OnEventListener) mOnEventListener).onBottomOptionVisible(false);
                 } else
                 {
                     mEmptyView.setVisibility(View.GONE);
@@ -84,7 +78,7 @@ public class StaySearchResultListLayout extends StayListLayout
                 }
             } else
             {
-                if(stayCurationOption.isDefaultFilter() == true)
+                if (stayCurationOption.isDefaultFilter() == true)
                 {
                     mEmptyView.setVisibility(View.VISIBLE);
                     mFilterEmptyView.setVisibility(View.GONE);
