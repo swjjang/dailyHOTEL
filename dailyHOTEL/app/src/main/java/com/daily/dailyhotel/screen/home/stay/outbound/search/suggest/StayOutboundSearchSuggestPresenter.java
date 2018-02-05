@@ -54,6 +54,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.functions.Function3;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -71,6 +72,7 @@ public class StayOutboundSearchSuggestPresenter //
     private RecentlyLocalImpl mRecentlyLocalImpl;
     private GoogleAddressRemoteImpl mGoogleAddressRemoteImpl;
 
+    private List<StayOutboundSuggest> mPopularAreaList;
     private String mKeyword;
 
     private DailyLocationExFactory mDailyLocationExFactory;
@@ -283,68 +285,63 @@ public class StayOutboundSearchSuggestPresenter //
                 }
             });
 
-        addCompositeDisposable(Observable.zip(obObservable //
-            , mSuggestLocalImpl.getRecentlyStayOutboundSuggestList(), new BiFunction<StayOutbounds, List<StayOutboundSuggest>, List<StayOutboundSuggest>>()
-            {
-                @Override
-                public List<StayOutboundSuggest> apply(StayOutbounds stayOutbounds, List<StayOutboundSuggest> stayOutboundSuggestList) throws Exception
-                {
-                    List<StayOutbound> stayOutboundList = stayOutbounds.getStayOutbound();
-                    List<StayOutboundSuggest> mergeList = new ArrayList<>();
-
-                    if (stayOutboundList != null && stayOutboundList.size() > 0)
-                    {
-                        StayOutboundSuggest stayOutboundSuggest = new StayOutboundSuggest(0, getString(R.string.label_recently_stay));
-                        stayOutboundSuggest.menuType = StayOutboundSuggest.MENU_TYPE_RECENTLY_STAY;
-                        mergeList.add(stayOutboundSuggest);
-
-                        for (StayOutbound stayOutbound : stayOutboundList)
-                        {
-                            stayOutboundSuggest = new StayOutboundSuggest();
-                            stayOutboundSuggest.id = stayOutbound.index;
-                            stayOutboundSuggest.name = stayOutbound.name;
-                            stayOutboundSuggest.city = stayOutbound.city;
-                            //                            stayOutboundSuggest.country = stayOutbound.country;
-                            //                            stayOutboundSuggest.countryCode = stayOutbound.countryCode;
-                            stayOutboundSuggest.categoryKey = StayOutboundSuggest.CATEGORY_HOTEL;
-                            stayOutboundSuggest.display = stayOutbound.name;
-                            stayOutboundSuggest.latitude = stayOutbound.latitude;
-                            stayOutboundSuggest.longitude = stayOutbound.longitude;
-                            stayOutboundSuggest.menuType = StayOutboundSuggest.MENU_TYPE_RECENTLY_STAY;
-
-                            mergeList.add(stayOutboundSuggest);
-                        }
-                    }
-
-                    if (stayOutboundSuggestList != null && stayOutboundSuggestList.size() > 0)
-                    {
-                        StayOutboundSuggest stayOutboundSuggest = new StayOutboundSuggest(0, getString(R.string.label_search_suggest_recently_search));
-                        stayOutboundSuggest.menuType = StayOutboundSuggest.MENU_TYPE_RECENTLY_SEARCH;
-                        mergeList.add(stayOutboundSuggest);
-
-                        mergeList.addAll(stayOutboundSuggestList);
-                    }
-
-                    return mergeList;
-                }
-            }).observeOn(AndroidSchedulers.mainThread()).flatMap(new Function<List<StayOutboundSuggest>, ObservableSource<List<StayOutboundSuggest>>>()
+        addCompositeDisposable(Observable.zip(mSuggestLocalImpl.getRecentlyStayOutboundSuggestList() //
+            , mSuggestRemoteImpl.getPopularRegionSuggestsByStayOutbound() //
+            , obObservable, new Function3<List<StayOutboundSuggest>, List<StayOutboundSuggest>, StayOutbounds, List<StayOutboundSuggest>>()
         {
             @Override
-            public ObservableSource<List<StayOutboundSuggest>> apply(List<StayOutboundSuggest> stayOutboundSuggestList) throws Exception
+            public List<StayOutboundSuggest> apply(List<StayOutboundSuggest> stayOutboundSuggestList, List<StayOutboundSuggest> stayOutboundPopularList, StayOutbounds stayOutbounds) throws Exception
             {
-                boolean visible = stayOutboundSuggestList != null && stayOutboundSuggestList.size() > 0;
-                getViewInterface().setRecentlySuggests(stayOutboundSuggestList);
-                getViewInterface().setRecentlySuggestsVisible(visible);
-                getViewInterface().setPopularSuggestsVisible(visible == false);
+                mPopularAreaList = stayOutboundPopularList;
 
-                return visible == false ? mSuggestRemoteImpl.getPopularRegionSuggestsByStayOutbound() : Observable.just(new ArrayList<>());
+                List<StayOutbound> stayOutboundList = stayOutbounds.getStayOutbound();
+                List<StayOutboundSuggest> mergeList = new ArrayList<>();
+
+                if (stayOutboundList != null && stayOutboundList.size() > 0)
+                {
+                    StayOutboundSuggest stayOutboundSuggest = new StayOutboundSuggest(0, getString(R.string.label_recently_stay));
+                    stayOutboundSuggest.menuType = StayOutboundSuggest.MENU_TYPE_RECENTLY_STAY;
+                    mergeList.add(stayOutboundSuggest);
+
+                    for (StayOutbound stayOutbound : stayOutboundList)
+                    {
+                        stayOutboundSuggest = new StayOutboundSuggest();
+                        stayOutboundSuggest.id = stayOutbound.index;
+                        stayOutboundSuggest.name = stayOutbound.name;
+                        stayOutboundSuggest.city = stayOutbound.city;
+                        //                            stayOutboundSuggest.country = stayOutbound.country;
+                        //                            stayOutboundSuggest.countryCode = stayOutbound.countryCode;
+                        stayOutboundSuggest.categoryKey = StayOutboundSuggest.CATEGORY_HOTEL;
+                        stayOutboundSuggest.display = stayOutbound.name;
+                        stayOutboundSuggest.latitude = stayOutbound.latitude;
+                        stayOutboundSuggest.longitude = stayOutbound.longitude;
+                        stayOutboundSuggest.menuType = StayOutboundSuggest.MENU_TYPE_RECENTLY_STAY;
+
+                        mergeList.add(stayOutboundSuggest);
+                    }
+                }
+
+                if (stayOutboundSuggestList != null && stayOutboundSuggestList.size() > 0)
+                {
+                    StayOutboundSuggest stayOutboundSuggest = new StayOutboundSuggest(0, getString(R.string.label_search_suggest_recently_search));
+                    stayOutboundSuggest.menuType = StayOutboundSuggest.MENU_TYPE_RECENTLY_SEARCH;
+                    mergeList.add(stayOutboundSuggest);
+
+                    mergeList.addAll(stayOutboundSuggestList);
+                }
+
+                return mergeList;
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<StayOutboundSuggest>>()
         {
             @Override
             public void accept(List<StayOutboundSuggest> stayOutboundSuggestList) throws Exception
             {
-                getViewInterface().setPopularAreaSuggests(stayOutboundSuggestList);
+                boolean visible = stayOutboundSuggestList != null && stayOutboundSuggestList.size() > 0;
+                getViewInterface().setRecentlySuggests(stayOutboundSuggestList);
+                getViewInterface().setRecentlySuggestsVisible(visible);
+                getViewInterface().setPopularAreaSuggests(mPopularAreaList);
+                getViewInterface().setPopularSuggestsVisible(visible == false);
 
                 startSearchMyLocation(false);
 

@@ -329,28 +329,28 @@ public class PopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
 
     private void onBindViewHolder(FooterViewHolder holder)
     {
-        int count = getEntryCount();
-        if (count >= 2)
-        {
-            holder.dataBinding.deleteLayout.setVisibility(View.VISIBLE);
-            holder.dataBinding.deleteTextView.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View view)
-                {
-                    if (mListener == null)
-                    {
-                        return;
-                    }
-
-                    mListener.onDeleteAllClick();
-                }
-            });
-        } else
-        {
+//        int count = getEntryCount();
+//        if (count >= 2)
+//        {
+//            holder.dataBinding.deleteLayout.setVisibility(View.VISIBLE);
+//            holder.dataBinding.deleteTextView.setOnClickListener(new View.OnClickListener()
+//            {
+//                @Override
+//                public void onClick(View view)
+//                {
+//                    if (mListener == null)
+//                    {
+//                        return;
+//                    }
+//
+//                    mListener.onDeleteAllClick();
+//                }
+//            });
+//        } else
+//        {
             holder.dataBinding.deleteLayout.setVisibility(View.GONE);
             holder.dataBinding.deleteTextView.setOnClickListener(null);
-        }
+//        }
     }
 
     private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)

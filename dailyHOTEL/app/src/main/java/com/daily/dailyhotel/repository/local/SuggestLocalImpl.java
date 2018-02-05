@@ -270,7 +270,7 @@ public class SuggestLocalImpl implements SuggestLocalInterface
 
                 try
                 {
-                    dailyDb.deleteAllStayObRecentlySuggest();
+                    dailyDb.deleteStayObRecentlySuggest(id);
                 } catch (Exception e)
                 {
                     ExLog.e(e.toString());
