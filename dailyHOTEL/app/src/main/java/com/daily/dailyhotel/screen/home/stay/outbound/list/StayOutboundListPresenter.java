@@ -707,6 +707,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                             onViewTypeClick();
                         }
 
+                        setScreenVisible(ScreenType.NONE, mStayOutboundFilters);
+
                         notifyToolbarChanged();
 
                         setRefresh(true);
