@@ -290,6 +290,12 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 // 검색이 바뀌면 전체탭으로 이동하고 다시 재로딩.
                 mGourmetSearchCuration.getCurationOption().clear();
 
+                if (mViewType == ViewType.MAP)
+                {
+                    mViewType = ViewType.LIST;
+                    mPlaceSearchResultLayout.setOptionViewTypeView(mViewType);
+                }
+
                 mPlaceSearchResultLayout.setOptionFilterSelected(false);
                 mPlaceSearchResultLayout.clearCategoryTab();
                 mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
