@@ -146,25 +146,6 @@ public class PopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
         return mSuggestList.get(position).mType;
     }
 
-    public int getEntryCount()
-    {
-        if (mSuggestList == null || mSuggestList.size() == 0)
-        {
-            return 0;
-        }
-
-        int count = 0;
-        for (ObjectItem item : mSuggestList)
-        {
-            if (ObjectItem.TYPE_ENTRY == item.mType)
-            {
-                count++;
-            }
-        }
-
-        return count;
-    }
-
     public void setAll(List<ObjectItem> objectItemList)
     {
         if (mSuggestList == null)
@@ -188,67 +169,6 @@ public class PopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
         }
 
         return mSuggestList.get(position);
-    }
-
-    public StayOutboundSuggest removeItem(int position)
-    {
-        if (mSuggestList == null || mSuggestList.size() == 0)
-        {
-            return null;
-        }
-
-        if (position < 0 || position > mSuggestList.size() - 1)
-        {
-            return null;
-        }
-
-        ObjectItem removeItem = mSuggestList.remove(position);
-
-        if (mSuggestList.size() == 1)
-        {
-            ObjectItem checkItem = mSuggestList.get(0);
-            if (checkItem.mType == ObjectItem.TYPE_FOOTER_VIEW)
-            {
-                mSuggestList.remove(0);
-            }
-        }
-
-        StayOutboundSuggest stayOutboundSuggest = removeItem.getItem();
-        return stayOutboundSuggest;
-    }
-
-    public void removeSection(int menuType)
-    {
-        if (mSuggestList == null || mSuggestList.size() == 0)
-        {
-            return;
-        }
-
-        for (int i = 0; i < mSuggestList.size(); i++)
-        {
-            ObjectItem item = mSuggestList.get(i);
-            if (ObjectItem.TYPE_SECTION != item.mType)
-            {
-                continue;
-            }
-
-            StayOutboundSuggest stayOutboundSuggest = item.getItem();
-            if (stayOutboundSuggest == null || menuType != stayOutboundSuggest.menuType)
-            {
-                continue;
-            }
-
-            mSuggestList.remove(i);
-        }
-
-        if (mSuggestList.size() == 1)
-        {
-            ObjectItem checkItem = mSuggestList.get(0);
-            if (checkItem.mType == ObjectItem.TYPE_FOOTER_VIEW)
-            {
-                mSuggestList.remove(0);
-            }
-        }
     }
 
     public void setNearByStayOutboundSuggest(StayOutboundSuggest nearByStayOutboundSuggest)

@@ -7,8 +7,6 @@ import java.util.List;
 
 public interface StayOutboundSearchSuggestViewInterface extends BaseDialogViewInterface
 {
-    void setSuggestsVisible(boolean visible);
-
     void setSuggests(List<StayOutboundSuggest> stayOutboundSuggestList);
 
     void setSuggest(String suggest);
@@ -21,13 +19,9 @@ public interface StayOutboundSearchSuggestViewInterface extends BaseDialogViewIn
 
     void setProgressBarVisible(boolean visible);
 
-    void setRecentlySuggestsVisible(boolean visible);
+    void setRecentlySuggests(StayOutboundSuggest locationSuggest, List<StayOutboundSuggest> stayOutboundSuggestList);
 
-    void setRecentlySuggests(List<StayOutboundSuggest> stayOutboundSuggestList);
-
-    void setPopularSuggestsVisible(boolean visible);
-
-    void setPopularAreaSuggests(List<StayOutboundSuggest> stayOutboundSuggestList);
+    void setPopularAreaSuggests(StayOutboundSuggest locationSuggest, List<StayOutboundSuggest> stayOutboundSuggestList);
 
     int getRecentlySuggestEntryCount();
 
@@ -41,5 +35,5 @@ public interface StayOutboundSearchSuggestViewInterface extends BaseDialogViewIn
 
     void removeRecentlySection(int menuType);
 
-    void setNearbyStaySuggest(boolean isAgreePermission, StayOutboundSuggest nearbyStayOutboundSuggest);
+    void setNearbyStaySuggest(StayOutboundSuggest nearbyStayOutboundSuggest);
 }
