@@ -396,7 +396,7 @@ public class RecentlySuggestListAdapter extends RecyclerView.Adapter<RecyclerVie
         switch (gourmetSuggest.categoryKey)
         {
             case GourmetSuggest.CATEGORY_GOURMET:
-                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_02_hotel);
+                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_03_gourmet);
                 break;
 
             case GourmetSuggest.CATEGORY_LOCATION:

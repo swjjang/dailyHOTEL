@@ -117,10 +117,12 @@ public class SearchStaySuggestPresenter //
         mRecentlyLocalImpl = new RecentlyLocalImpl(activity);
         mGoogleAddressRemoteImpl = new GoogleAddressRemoteImpl(activity);
 
-        mLocationSuggest = new StaySuggest(StaySuggest.MENU_TYPE_LOCATION //
-            , StaySuggest.CATEGORY_LOCATION, getString(R.string.label_search_nearby_description));
+        boolean isAgreeLocation = DailyPreference.getInstance(activity).isAgreeTermsOfLocation();
 
-        List<StaySuggest> popularList  = new ArrayList<>();
+        mLocationSuggest = new StaySuggest(StaySuggest.MENU_TYPE_LOCATION, StaySuggest.CATEGORY_LOCATION //
+            , isAgreeLocation ? getString(R.string.label_search_nearby_empty_address) : getString(R.string.label_search_nearby_description));
+
+        List<StaySuggest> popularList = new ArrayList<>();
         popularList.add(new StaySuggest(0, "", getString(R.string.label_search_suggest_recently_empty_description_type_stay)));
         setPopularAreaList(popularList);
         notifyDataSetChanged();
@@ -542,7 +544,6 @@ public class SearchStaySuggestPresenter //
                                 }
 
                                 staySuggestList.add(new StaySuggest(StaySuggest.MENU_TYPE_SUGGEST, null, getString(resId)));
-
                             }
 
                             staySuggestList.add(staySuggest);

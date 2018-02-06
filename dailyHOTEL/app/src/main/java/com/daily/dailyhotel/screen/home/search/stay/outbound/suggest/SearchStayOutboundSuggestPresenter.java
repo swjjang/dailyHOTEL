@@ -33,6 +33,7 @@ import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.suggest.SearchStaySuggestActivity;
 import com.daily.dailyhotel.storage.database.DailyDb;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -122,8 +123,10 @@ public class SearchStayOutboundSuggestPresenter //
         mRecentlyLocalImpl = new RecentlyLocalImpl(activity);
         mGoogleAddressRemoteImpl = new GoogleAddressRemoteImpl(activity);
 
+        boolean isAgreeLocation = DailyPreference.getInstance(activity).isAgreeTermsOfLocation();
+
         mLocationSuggest = new StayOutboundSuggest(0, null);
-        mLocationSuggest.display = getString(R.string.label_search_nearby_description);
+        mLocationSuggest.display = isAgreeLocation ? getString(R.string.label_search_nearby_empty_address) : getString(R.string.label_search_nearby_description);
         mLocationSuggest.categoryKey = StayOutboundSuggest.CATEGORY_LOCATION;
         mLocationSuggest.menuType = StayOutboundSuggest.MENU_TYPE_LOCATION;
 
@@ -879,7 +882,7 @@ public class SearchStayOutboundSuggestPresenter //
             screenLock(true);
         }
 
-        addCompositeDisposable(observable.delay(5, TimeUnit.SECONDS).subscribe(new Consumer<Location>()
+        addCompositeDisposable(observable.subscribe(new Consumer<Location>()
         {
             @Override
             public void accept(Location location) throws Exception
