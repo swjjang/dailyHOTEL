@@ -103,79 +103,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         return intent;
     }
 
-    //
-    //    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay, String inputText, Keyword keyword, SearchType searchType)
-    //    {
-    //        Intent intent = new Intent(context, StaySearchResultActivity.class);
-    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
-    //        intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, keyword);
-    //        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, searchType.name());
-    //        intent.putExtra(INTENT_EXTRA_DATA_INPUTTEXT, inputText);
-    //
-    //        return intent;
-    //    }
-
-    //    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay, LatLng latLng, double radius, boolean isDeepLink)
-    //    {
-    //        Intent intent = new Intent(context, StaySearchResultActivity.class);
-    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
-    //        intent.putExtra(INTENT_EXTRA_DATA_LATLNG, latLng);
-    //        intent.putExtra(INTENT_EXTRA_DATA_RADIUS, radius);
-    //        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SearchType.LOCATION.name());
-    //        intent.putExtra(INTENT_EXTRA_DATA_IS_DEEPLINK, isDeepLink);
-    //
-    //        return intent;
-    //    }
-
-    //    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay, Keyword keyword, SearchType searchType)
-    //    {
-    //        return newInstance(context, todayDateTime, stayBookingDay, null, keyword, searchType);
-    //    }
-    //
-    //    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay, String text)
-    //    {
-    //        return newInstance(context, todayDateTime, stayBookingDay, null, new Keyword(0, text), SearchType.SEARCHES);
-    //    }
-    //
-    //    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay, Location location, String callByScreen)
-    //    {
-    //        Intent intent = new Intent(context, StaySearchResultActivity.class);
-    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
-    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
-    //        intent.putExtra(INTENT_EXTRA_DATA_LOCATION, location);
-    //        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SearchType.LOCATION.name());
-    //        intent.putExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
-    //
-    //        return intent;
-    //    }
-    //
-    //    public static Intent newInstance(Context context, String checkInDateTime, String checkOutDateTime, LatLng latLng, double radius, boolean isDeepLink)
-    //    {
-    //        Intent intent = new Intent(context, StaySearchResultActivity.class);
-    //        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
-    //        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
-    //        intent.putExtra(INTENT_EXTRA_DATA_LATLNG, latLng);
-    //        intent.putExtra(INTENT_EXTRA_DATA_RADIUS, radius);
-    //        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SearchType.LOCATION.name());
-    //        intent.putExtra(INTENT_EXTRA_DATA_IS_DEEPLINK, isDeepLink);
-    //
-    //        return intent;
-    //    }
-    //
-    //    public static Intent newInstance(Context context, String checkInDateTime, String checkOutDateTime, String inputText, Keyword keyword, SearchType searchType)
-    //    {
-    //        Intent intent = new Intent(context, StaySearchResultActivity.class);
-    //        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
-    //        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
-    //        intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, keyword);
-    //        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, searchType.name());
-    //        intent.putExtra(INTENT_EXTRA_DATA_INPUTTEXT, inputText);
-    //
-    //        return intent;
-    //    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -347,6 +274,12 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 // 검색이 바뀌면 전체탭으로 이동하고 다시 재로딩.
                 mStaySearchCuration.getCurationOption().clear();
                 mStaySearchCuration.setCategory(Category.ALL);
+
+                if (mViewType == ViewType.MAP)
+                {
+                    mViewType = ViewType.LIST;
+                    mPlaceSearchResultLayout.setOptionViewTypeView(mViewType);
+                }
 
                 mPlaceSearchResultLayout.setOptionFilterSelected(false);
                 mPlaceSearchResultLayout.clearCategoryTab();

@@ -119,8 +119,6 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
     private Disposable mChangedLocationDisposable;
 
-    boolean searchLocation = false;
-
     enum ViewState
     {
         MAP,
@@ -252,16 +250,13 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         getViewInterface().setViewTypeOptionImage(ViewState.MAP);
 
-        if (searchLocation == true)
+        if (StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == false)
+        {
+            getViewInterface().setRadiusVisible(false);
+        } else
         {
             getViewInterface().setRadiusVisible(true);
             getViewInterface().setRadius(mRadius);
-
-            //            setFilter(StayOutboundFilters.SortType.DISTANCE, 33.590029559568684, 130.39415694773197);
-//            setFilter(StayOutboundFilters.SortType.DISTANCE, 37.5081515, 126.81383649999998);
-        } else
-        {
-            getViewInterface().setRadiusVisible(false);
         }
     }
 
@@ -707,13 +702,16 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 switch (resultCode)
                 {
                     case Activity.RESULT_OK:
+                        if (mViewState == ViewState.MAP)
+                        {
+                            onViewTypeClick();
+                        }
+
+                        setScreenVisible(ScreenType.NONE, mStayOutboundFilters);
+
                         notifyToolbarChanged();
 
                         setRefresh(true);
-                        break;
-
-                    case BaseActivity.RESULT_CODE_BACK:
-                        finish(Activity.RESULT_CANCELED);
                         break;
                 }
                 break;
@@ -733,7 +731,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         setScreenVisible(ScreenType.DEFAULT, mStayOutboundFilters);
 
         Observable<StayOutbounds> observable;
-        if (searchLocation == false)
+        if (StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == false)
         {
             observable = mStayOutboundRemoteImpl.getList(mStayBookDateTime, mStayOutboundSuggest.id, mStayOutboundSuggest.categoryKey//
                 , mPeople, mStayOutboundFilters, NUMBER_OF_RESULTS, mCacheKey, mCacheLocation, mCustomerSessionId);
@@ -1041,7 +1039,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             mMoreEnabled = false;
 
             Observable<StayOutbounds> observable;
-            if (searchLocation == false)
+            if (StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == false)
             {
                 observable = mStayOutboundRemoteImpl.getList(mStayBookDateTime, mStayOutboundSuggest.id, mStayOutboundSuggest.categoryKey//
                     , mPeople, mStayOutboundFilters, NUMBER_OF_RESULTS, mCacheKey, mCacheLocation, mCustomerSessionId);
@@ -1627,7 +1625,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                     {
                         setScreenVisible(ScreenType.EMPTY, mStayOutboundFilters);
 
-                        if (searchLocation == false)
+                        if (StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == false)
                         {
                             getViewInterface().setPopularAreaVisible(false);
 
@@ -1691,12 +1689,12 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             return true;
         }
 
-        if (searchLocation == true)
-        {
-            return (stayOutboundFilters.sortType == StayOutboundFilters.SortType.DISTANCE && stayOutboundFilters.rating == -1);
-        } else
+        if (StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == false)
         {
             return (stayOutboundFilters.sortType == StayOutboundFilters.SortType.RECOMMENDATION && stayOutboundFilters.rating == -1);
+        } else
+        {
+            return (stayOutboundFilters.sortType == StayOutboundFilters.SortType.DISTANCE && stayOutboundFilters.rating == -1);
         }
     }
 
@@ -1707,7 +1705,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             return;
         }
 
-        String title = mStayOutboundSuggest.id == 0 ? mStayOutboundSuggest.city : mStayOutboundSuggest.display;
+        String title = mStayOutboundSuggest.id == 0 ? DailyTextUtils.isTextEmpty(mStayOutboundSuggest.city) == true ? mStayOutboundSuggest.display : mStayOutboundSuggest.city : mStayOutboundSuggest.display;
 
         try
         {
@@ -1762,19 +1760,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 getViewInterface().setSearchLocationScreenVisible(false);
                 getViewInterface().setListScreenVisible(false);
 
-                if (searchLocation == true)
-                {
-                    if (isDefaultFilter(filters) == true && mRadius == DEFAULT_RADIUS)
-                    {
-                        getViewInterface().showEmptyScreen(StayOutboundListViewInterface.EmptyScreenType.LOCATION_DEFAULT);
-                        getViewInterface().setBottomLayoutVisible(false);
-                    } else
-                    {
-                        getViewInterface().showEmptyScreen(StayOutboundListViewInterface.EmptyScreenType.LOCATOIN_FILTER_ON);
-                        getViewInterface().setBottomLayoutVisible(true);
-                        getViewInterface().setBottomLayoutType(StayOutboundListViewInterface.EmptyScreenType.LOCATOIN_FILTER_ON);
-                    }
-                } else
+                if (StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == false)
                 {
                     if (isDefaultFilter(filters) == true)
                     {
@@ -1785,6 +1771,19 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                         getViewInterface().showEmptyScreen(StayOutboundListViewInterface.EmptyScreenType.SEARCH_SUGGEST_FILTER_ON);
                         getViewInterface().setBottomLayoutVisible(true);
                         getViewInterface().setBottomLayoutType(StayOutboundListViewInterface.EmptyScreenType.SEARCH_SUGGEST_FILTER_ON);
+                    }
+                } else
+                {
+
+                    if (isDefaultFilter(filters) == true && mRadius == DEFAULT_RADIUS)
+                    {
+                        getViewInterface().showEmptyScreen(StayOutboundListViewInterface.EmptyScreenType.LOCATION_DEFAULT);
+                        getViewInterface().setBottomLayoutVisible(false);
+                    } else
+                    {
+                        getViewInterface().showEmptyScreen(StayOutboundListViewInterface.EmptyScreenType.LOCATOIN_FILTER_ON);
+                        getViewInterface().setBottomLayoutVisible(true);
+                        getViewInterface().setBottomLayoutType(StayOutboundListViewInterface.EmptyScreenType.LOCATOIN_FILTER_ON);
                     }
                 }
                 break;
