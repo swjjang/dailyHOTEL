@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.StayBookDateTime;
+import com.daily.dailyhotel.repository.remote.CouponRemoteImpl;
 import com.twoheart.dailyhotel.R;
 
 /**
@@ -16,6 +18,13 @@ import com.twoheart.dailyhotel.R;
 public class SelectStayOutboundCouponDialogPresenter extends BaseExceptionPresenter<SelectStayOutboundCouponDialogActivity, SelectStayOutboundCouponDialogInterface.ViewInterface> implements SelectStayOutboundCouponDialogInterface.OnEventListener
 {
     private SelectStayOutboundCouponDialogInterface.AnalyticsInterface mAnalytics;
+
+    CouponRemoteImpl mCouponRemoteImpl;
+
+    int mStayIndex;
+    int mStayName;
+    StayBookDateTime mStayBookDateTime;
+    String m
 
     public SelectStayOutboundCouponDialogPresenter(@NonNull SelectStayOutboundCouponDialogActivity activity)
     {
@@ -32,9 +41,11 @@ public class SelectStayOutboundCouponDialogPresenter extends BaseExceptionPresen
     @Override
     public void constructorInitialize(SelectStayOutboundCouponDialogActivity activity)
     {
-        setContentView(R.layout.activity_copy_data);
+        setContentView(R.layout.activity_select_coupon_dialog_data);
 
         setAnalytics(new SelectStayOutboundCouponDialogAnalyticsImpl());
+
+        mCouponRemoteImpl = new CouponRemoteImpl(activity);
 
         setRefresh(true);
     }
@@ -52,6 +63,14 @@ public class SelectStayOutboundCouponDialogPresenter extends BaseExceptionPresen
         {
             return true;
         }
+
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
+        intent.putExtra(INTENT_EXTRA_DATA_STAY_INDEX, stayIndex);
+        intent.putExtra(INTENT_EXTRA_DATA_STAY_NAME, stayName);
+        intent.putExtra(INTENT_EXTRA_DATA_RATE_CODE, rateCode);
+        intent.putExtra(INTENT_EXTRA_DATA_RATE_KEY, rateKey);
+        intent.putExtra(INTENT_EXTRA_DATA_ROOM_TYPE_CODE, roomTypeCode);
 
         return true;
     }
@@ -136,6 +155,8 @@ public class SelectStayOutboundCouponDialogPresenter extends BaseExceptionPresen
 
         setRefresh(false);
         screenLock(showProgress);
+
+        addCompositeDisposable(mCouponRemoteImpl.getStayOutboundCouponListByPayment(m));
     }
 
     @Override

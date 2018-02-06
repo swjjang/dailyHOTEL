@@ -23,6 +23,7 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.Card;
 import com.daily.dailyhotel.entity.CommonDateTime;
 import com.daily.dailyhotel.entity.Coupon;
+import com.daily.dailyhotel.entity.Coupons;
 import com.daily.dailyhotel.entity.OverseasGuest;
 import com.daily.dailyhotel.entity.PaymentResult;
 import com.daily.dailyhotel.entity.People;
@@ -30,6 +31,7 @@ import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutboundPayment;
 import com.daily.dailyhotel.entity.StayOutboundRoom;
 import com.daily.dailyhotel.entity.UserSimpleInformation;
+import com.daily.dailyhotel.parcel.CouponParcel;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundPaymentAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundThankYouAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
@@ -66,6 +68,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function4;
 
@@ -317,7 +320,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         outState.putInt("saleType", mSaleType);
         outState.putBoolean("agreedThirdPartyTerms", mAgreedThirdPartyTerms);
 
-        outState.putParcelable("selectedCoupon", mSelectedCoupon);
+        outState.putParcelable("selectedCoupon", new CouponParcel(mSelectedCoupon));
 
         if (mAnalytics != null)
         {
@@ -372,7 +375,12 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         mSaleType = savedInstanceState.getInt("saleType", NONE);
         mAgreedThirdPartyTerms = savedInstanceState.getBoolean("agreedThirdPartyTerms");
 
-        mSelectedCoupon = savedInstanceState.getParcelable("selectedCoupon");
+        CouponParcel couponParcel = savedInstanceState.getParcelable("selectedCoupon");
+
+        if(couponParcel != null)
+        {
+            mSelectedCoupon = couponParcel.getCoupon();
+        }
 
         if (mAnalytics != null)
         {
@@ -659,7 +667,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             }
         }));
 
-        getMaxCouponAmount(mStayIndex, mRateCode, mRateKey, mRoomBedTypeId, mStayBookDateTime);
+        getMaxCouponAmount(mStayIndex, mRateCode, mRateKey, mRoomTypeCode, mStayBookDateTime);
     }
 
     @Override
@@ -1561,8 +1569,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     break;
 
                 case COUPON:
-                    paymentPrice = mStayPayment.totalPrice - mSelectedCoupon.amount;
-                    discountPrice = paymentPrice < 0 ? mStayPayment.totalPrice : mSelectedCoupon.amount;
+                    paymentPrice = mStayOutboundPayment.totalPrice - mSelectedCoupon.amount;
+                    discountPrice = paymentPrice < 0 ? mStayOutboundPayment.totalPrice : mSelectedCoupon.amount;
 
                     getViewInterface().setBonus(false, mUserSimpleInformation.bonus, 0);
                     getViewInterface().setCoupon(true, mSelectedCoupon.amount, mSelectedCoupon.type == Coupon.Type.REWARD);
@@ -2323,9 +2331,8 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             return;
         }
 
-        Observable.con
-
-        addCompositeDisposable(mCouponRemoteImpl.getStayOutboundCouponListByPayment(stayIndex, roomIndex //
+        addCompositeDisposable(mCouponRemoteImpl.getStayOutboundCouponListByPayment(stayIndex, rateCode
+            , rateKey, roomTypeCode//
             , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)) //
             .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Coupons>()
             {

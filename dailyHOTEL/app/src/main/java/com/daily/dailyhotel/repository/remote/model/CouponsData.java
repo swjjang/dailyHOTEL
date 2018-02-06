@@ -42,6 +42,18 @@ public class CouponsData
 
         result.coupons = this.getCouponList();
         result.serverDate = this.serverDate;
+
+        if (result.coupons != null && result.coupons.size() > 0 && maxCouponAmount == 0)
+        {
+            for (Coupon coupon : result.coupons)
+            {
+                if (maxCouponAmount < coupon.amount)
+                {
+                    maxCouponAmount = coupon.amount;
+                }
+            }
+        }
+
         result.maxCouponAmount = this.maxCouponAmount;
 
         return result;

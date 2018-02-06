@@ -4,8 +4,9 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.databinding.ActivityCopyDataBinding;
+import com.twoheart.dailyhotel.databinding.ActivitySelectCouponDialogDataBinding;
 
-public class SelectStayOutboundCouponDialogView extends BaseDialogView<SelectStayOutboundCouponDialogInterface.OnEventListener, ActivityCopyDataBinding> implements SelectStayOutboundCouponDialogInterface.ViewInterface
+public class SelectStayOutboundCouponDialogView extends BaseDialogView<SelectStayOutboundCouponDialogInterface.OnEventListener, ActivitySelectCouponDialogDataBinding> implements SelectStayOutboundCouponDialogInterface.ViewInterface
 {
 
 
@@ -15,7 +16,7 @@ public class SelectStayOutboundCouponDialogView extends BaseDialogView<SelectSta
     }
 
     @Override
-    protected void setContentView(final ActivityCopyDataBinding viewDataBinding)
+    protected void setContentView(final ActivitySelectCouponDialogDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -33,16 +34,14 @@ public class SelectStayOutboundCouponDialogView extends BaseDialogView<SelectSta
             return;
         }
 
-        getViewDataBinding().toolbarView.setTitleText(title);
     }
 
-    private void initToolbar(ActivityCopyDataBinding viewDataBinding)
+    private void initToolbar(ActivitySelectCouponDialogDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
             return;
         }
 
-        viewDataBinding.toolbarView.setOnBackClickListener(v -> getEventListener().onBackClick());
     }
 }

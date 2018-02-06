@@ -9,7 +9,6 @@ import com.daily.dailyhotel.repository.remote.model.CampaignTagData;
 import com.daily.dailyhotel.repository.remote.model.CardData;
 import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
 import com.daily.dailyhotel.repository.remote.model.ConfigurationsData;
-import com.daily.dailyhotel.repository.remote.model.CouponData;
 import com.daily.dailyhotel.repository.remote.model.CouponsData;
 import com.daily.dailyhotel.repository.remote.model.ExistCouponsData;
 import com.daily.dailyhotel.repository.remote.model.GoogleAddressData;
@@ -1045,10 +1044,11 @@ public interface DailyMobileService
                                                                 @Query("checkIn") String checkIn, @Query("checkOut") String checkOut);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET("{mobileAPI}")
-    Observable<BaseDto<CouponsData>> getStayOutboundCouponListByPayment(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
-                                                                       @Query("hotelIdx") int stayIndex, @Query("roomIdx") int roomIndex, //
-                                                                       @Query("checkIn") String checkIn, @Query("checkOut") String checkOut);
+    @GET()
+    Observable<BaseDto<CouponsData>> getStayOutboundCouponListByPayment(@Url String mobileAPI//
+        , @Query("hotelIdx") int stayIndex, @Query("rateCode") String rateCode//
+        , @Query("rateKey") String rateKey, @Query("roomBedTypId") String roomBedTypId//
+        , @Query("checkIn") String checkInDate, @Query("checkOut") String checkOutDate);
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////

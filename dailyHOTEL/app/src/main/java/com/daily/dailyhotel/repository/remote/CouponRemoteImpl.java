@@ -168,12 +168,12 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
 
     @Override
     public Observable<Coupons> getStayOutboundCouponListByPayment(int stayIndex, String rateCode, String rateKey, String roomBedTypId
-        , String checkInDate, String checkOutDate)
+        , String checkInDateTime, String checkOutDateTime)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v2/outbound/coupons/by-user"//
             : "";
 
-        return mDailyMobileService.getStayCouponListByPayment(Crypto.getUrlDecoderEx(URL), stayIndex, roomIndex, checkIn, checkOut) //
+        return mDailyMobileService.getStayOutboundCouponListByPayment(Crypto.getUrlDecoderEx(URL), stayIndex, rateCode, rateKey, roomBedTypId, checkInDateTime, checkOutDateTime) //
             .subscribeOn(Schedulers.io()).map(new Function<BaseDto<CouponsData>, Coupons>()
             {
                 @Override
