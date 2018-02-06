@@ -29,9 +29,9 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 
-public class StayOutboundSearchSuggestView //
-    extends BaseDialogView<StayOutboundSearchSuggestView.OnEventListener, ActivityStayOutboundSearchSuggestDataBinding> //
-    implements StayOutboundSearchSuggestViewInterface, View.OnClickListener
+public class SearchStayOutboundSuggestView //
+    extends BaseDialogView<SearchStayOutboundSuggestView.OnEventListener, ActivityStayOutboundSearchSuggestDataBinding> //
+    implements SearchStayOutboundSuggestViewInterface, View.OnClickListener
 {
     private SuggestListAdapter mSuggestListAdapter;
     private RecentlySuggestListAdapter mRecentlySuggestListAdapter;
@@ -58,7 +58,7 @@ public class StayOutboundSearchSuggestView //
         void onNearbyClick(StayOutboundSuggest stayOutboundSuggest);
     }
 
-    public StayOutboundSearchSuggestView(BaseActivity baseActivity, StayOutboundSearchSuggestView.OnEventListener listener)
+    public SearchStayOutboundSuggestView(BaseActivity baseActivity, SearchStayOutboundSuggestView.OnEventListener listener)
     {
         super(baseActivity, listener);
     }

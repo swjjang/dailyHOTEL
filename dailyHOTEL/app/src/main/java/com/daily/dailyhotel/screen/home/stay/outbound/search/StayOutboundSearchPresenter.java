@@ -26,7 +26,7 @@ import com.daily.dailyhotel.screen.home.stay.outbound.calendar.StayOutboundCalen
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.list.StayOutboundListActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
-import com.daily.dailyhotel.screen.home.search.stay.outbound.suggest.StayOutboundSearchSuggestActivity;
+import com.daily.dailyhotel.screen.home.search.stay.outbound.suggest.SearchStayOutboundSuggestActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -278,11 +278,11 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
             {
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
-                    if (data.hasExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST) == true)
+                    if (data.hasExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_SUGGEST) == true)
                     {
-                        StayOutboundSuggestParcel stayOutboundSuggestParcel = data.getParcelableExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
-                        String keyword = data.getStringExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
-                        String clickType = data.getStringExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_CLICK_TYPE);
+                        StayOutboundSuggestParcel stayOutboundSuggestParcel = data.getParcelableExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
+                        String keyword = data.getStringExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
+                        String clickType = data.getStringExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_CLICK_TYPE);
 
                         if (stayOutboundSuggestParcel != null)
                         {
@@ -463,7 +463,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
             return;
         }
 
-        Intent intent = StayOutboundSearchSuggestActivity.newInstance(getActivity(), "");
+        Intent intent = SearchStayOutboundSuggestActivity.newInstance(getActivity(), "");
         startActivityForResult(intent, StayOutboundSearchActivity.REQUEST_CODE_SUGGEST);
 
         if (isUserAction == true)
@@ -873,7 +873,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
                 if (internalDeepLink.isStayOutboundSearchSuggestView() == true)
                 {
                     String keyword = internalDeepLink.getKeyword();
-                    Intent intent = StayOutboundSearchSuggestActivity.newInstance(getActivity(), keyword);
+                    Intent intent = SearchStayOutboundSuggestActivity.newInstance(getActivity(), keyword);
                     startActivityForResult(intent, StayOutboundSearchActivity.REQUEST_CODE_SUGGEST);
                     return true;
                 }

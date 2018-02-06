@@ -13,7 +13,7 @@ import com.twoheart.dailyhotel.R;
  * Created by sheldon
  * Clean Architecture
  */
-public class StayOutboundSearchSuggestActivity extends BaseActivity<StayOutboundSearchSuggestPresenter>
+public class SearchStayOutboundSuggestActivity extends BaseActivity<SearchStayOutboundSuggestPresenter>
 {
     public static final String INTENT_EXTRA_DATA_SUGGEST = "suggest";
     public static final String INTENT_EXTRA_DATA_KEYWORD = "keyword";
@@ -25,7 +25,7 @@ public class StayOutboundSearchSuggestActivity extends BaseActivity<StayOutbound
 
     public static Intent newInstance(Context context, String keyword)
     {
-        Intent intent = new Intent(context, StayOutboundSearchSuggestActivity.class);
+        Intent intent = new Intent(context, SearchStayOutboundSuggestActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_KEYWORD, keyword);
         return intent;
     }
@@ -40,9 +40,9 @@ public class StayOutboundSearchSuggestActivity extends BaseActivity<StayOutbound
 
     @NonNull
     @Override
-    protected StayOutboundSearchSuggestPresenter createInstancePresenter()
+    protected SearchStayOutboundSuggestPresenter createInstancePresenter()
     {
-        return new StayOutboundSearchSuggestPresenter(this);
+        return new SearchStayOutboundSuggestPresenter(this);
     }
 
     @Override

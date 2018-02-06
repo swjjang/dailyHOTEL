@@ -62,11 +62,11 @@ import io.reactivex.schedulers.Schedulers;
  * Created by sheldon
  * Clean Architecture
  */
-public class StayOutboundSearchSuggestPresenter //
-    extends BaseExceptionPresenter<StayOutboundSearchSuggestActivity, StayOutboundSearchSuggestViewInterface> //
-    implements StayOutboundSearchSuggestView.OnEventListener
+public class SearchStayOutboundSuggestPresenter //
+    extends BaseExceptionPresenter<SearchStayOutboundSuggestActivity, SearchStayOutboundSuggestViewInterface> //
+    implements SearchStayOutboundSuggestView.OnEventListener
 {
-    private StayOutboundSearchSuggestAnalyticsInterface mAnalytics;
+    private SearchStayOutboundSuggestAnalyticsInterface mAnalytics;
     private SuggestRemoteImpl mSuggestRemoteImpl;
     private SuggestLocalImpl mSuggestLocalImpl;
     private RecentlyRemoteImpl mRecentlyRemoteImpl;
@@ -82,7 +82,7 @@ public class StayOutboundSearchSuggestPresenter //
 
     private DailyLocationExFactory mDailyLocationExFactory;
 
-    public interface StayOutboundSearchSuggestAnalyticsInterface extends BaseAnalyticsInterface
+    public interface SearchStayOutboundSuggestAnalyticsInterface extends BaseAnalyticsInterface
     {
         void onEventSuggestEmpty(Activity activity, String keyword);
 
@@ -97,24 +97,24 @@ public class StayOutboundSearchSuggestPresenter //
         void onEventPopularSuggestClick(Activity activity, String suggestDisplayName);
     }
 
-    public StayOutboundSearchSuggestPresenter(@NonNull StayOutboundSearchSuggestActivity activity)
+    public SearchStayOutboundSuggestPresenter(@NonNull SearchStayOutboundSuggestActivity activity)
     {
         super(activity);
     }
 
     @NonNull
     @Override
-    protected StayOutboundSearchSuggestViewInterface createInstanceViewInterface()
+    protected SearchStayOutboundSuggestViewInterface createInstanceViewInterface()
     {
-        return new StayOutboundSearchSuggestView(getActivity(), this);
+        return new SearchStayOutboundSuggestView(getActivity(), this);
     }
 
     @Override
-    public void constructorInitialize(StayOutboundSearchSuggestActivity activity)
+    public void constructorInitialize(SearchStayOutboundSuggestActivity activity)
     {
         setContentView(R.layout.activity_stay_outbound_search_suggest_data);
 
-        setAnalytics(new StayOutboundSearchSuggestAnalyticsImpl());
+        setAnalytics(new SearchStayOutboundSuggestAnalyticsImpl());
 
         mSuggestRemoteImpl = new SuggestRemoteImpl(activity);
         mSuggestLocalImpl = new SuggestLocalImpl(activity);
@@ -133,7 +133,7 @@ public class StayOutboundSearchSuggestPresenter //
     @Override
     public void setAnalytics(BaseAnalyticsInterface analytics)
     {
-        mAnalytics = (StayOutboundSearchSuggestAnalyticsInterface) analytics;
+        mAnalytics = (SearchStayOutboundSuggestAnalyticsInterface) analytics;
     }
 
     @Override
@@ -144,7 +144,7 @@ public class StayOutboundSearchSuggestPresenter //
             return true;
         }
 
-        mKeyword = intent.getStringExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
+        mKeyword = intent.getStringExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
 
         return true;
     }
@@ -237,7 +237,7 @@ public class StayOutboundSearchSuggestPresenter //
 
         switch (requestCode)
         {
-            case StayOutboundSearchSuggestActivity.REQUEST_CODE_SPEECH_INPUT:
+            case SearchStayOutboundSuggestActivity.REQUEST_CODE_SPEECH_INPUT:
             {
                 if (resultCode == Activity.RESULT_OK && null != data)
                 {
@@ -248,7 +248,7 @@ public class StayOutboundSearchSuggestPresenter //
                 break;
             }
 
-            case StayOutboundSearchSuggestActivity.REQUEST_CODE_PERMISSION_MANAGER:
+            case SearchStayOutboundSuggestActivity.REQUEST_CODE_PERMISSION_MANAGER:
             {
                 switch (resultCode)
                 {
@@ -263,7 +263,7 @@ public class StayOutboundSearchSuggestPresenter //
                 break;
             }
 
-            case StayOutboundSearchSuggestActivity.REQUEST_CODE_SETTING_LOCATION:
+            case SearchStayOutboundSuggestActivity.REQUEST_CODE_SETTING_LOCATION:
                 startSearchMyLocation(true);
                 break;
         }
@@ -676,9 +676,9 @@ public class StayOutboundSearchSuggestPresenter //
     void startFinishAction(StayOutboundSuggest stayOutboundSuggest, String keyword, String analyticsClickType)
     {
         Intent intent = new Intent();
-        intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new StayOutboundSuggestParcel(stayOutboundSuggest));
-        intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
-        intent.putExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_CLICK_TYPE, DailyTextUtils.isTextEmpty(analyticsClickType) ? "" : analyticsClickType);
+        intent.putExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new StayOutboundSuggestParcel(stayOutboundSuggest));
+        intent.putExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
+        intent.putExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_CLICK_TYPE, DailyTextUtils.isTextEmpty(analyticsClickType) ? "" : analyticsClickType);
 
         setResult(Activity.RESULT_OK, intent);
         finish();

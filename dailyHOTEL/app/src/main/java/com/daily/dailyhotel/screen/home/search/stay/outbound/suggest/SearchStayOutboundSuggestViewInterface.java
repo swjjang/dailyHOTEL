@@ -5,7 +5,7 @@ import com.daily.dailyhotel.entity.StayOutboundSuggest;
 
 import java.util.List;
 
-public interface StayOutboundSearchSuggestViewInterface extends BaseDialogViewInterface
+public interface SearchStayOutboundSuggestViewInterface extends BaseDialogViewInterface
 {
     void setSuggests(List<StayOutboundSuggest> stayOutboundSuggestList);
 
