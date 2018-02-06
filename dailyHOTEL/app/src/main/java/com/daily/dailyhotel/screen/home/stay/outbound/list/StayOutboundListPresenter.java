@@ -1702,7 +1702,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             return;
         }
 
-        String title = mStayOutboundSuggest.id == 0 ? mStayOutboundSuggest.city : mStayOutboundSuggest.display;
+        String title = mStayOutboundSuggest.id == 0 ? DailyTextUtils.isTextEmpty(mStayOutboundSuggest.city) == true ? mStayOutboundSuggest.display : mStayOutboundSuggest.city : mStayOutboundSuggest.display;
 
         try
         {
