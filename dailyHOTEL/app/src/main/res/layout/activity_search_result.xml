@@ -187,6 +187,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="16dp"
+                android:text="@string/message_searchresult_empty_title"
                 android:textColor="@color/default_text_c323232"
                 android:textSize="18dp"
                 dailyFont:style="Medium"/>

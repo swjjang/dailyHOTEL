@@ -415,7 +415,11 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             showEmptyLayout();
         } else
         {
-            mNetworkController.requestAddress(location);
+            if (GourmetSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mGourmetSearchCuration.getSuggest().categoryKey) == true)
+            {
+                mNetworkController.requestAddress(location);
+            }
+
             mGourmetSearchCuration.setLocation(location);
 
             if (mPlaceSearchResultLayout.getCategoryTabCount() > 0)
