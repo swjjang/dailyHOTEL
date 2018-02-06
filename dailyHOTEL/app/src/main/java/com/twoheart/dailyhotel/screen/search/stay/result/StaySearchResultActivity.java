@@ -275,6 +275,12 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 mStaySearchCuration.getCurationOption().clear();
                 mStaySearchCuration.setCategory(Category.ALL);
 
+                if (mViewType == ViewType.MAP)
+                {
+                    mViewType = ViewType.LIST;
+                    mPlaceSearchResultLayout.setOptionViewTypeView(mViewType);
+                }
+
                 mPlaceSearchResultLayout.setOptionFilterSelected(false);
                 mPlaceSearchResultLayout.clearCategoryTab();
                 mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);

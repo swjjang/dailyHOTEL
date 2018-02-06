@@ -702,13 +702,14 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 switch (resultCode)
                 {
                     case Activity.RESULT_OK:
+                        if (mViewState == ViewState.MAP)
+                        {
+                            onViewTypeClick();
+                        }
+
                         notifyToolbarChanged();
 
                         setRefresh(true);
-                        break;
-
-                    case BaseActivity.RESULT_CODE_BACK:
-                        finish(Activity.RESULT_CANCELED);
                         break;
                 }
                 break;
