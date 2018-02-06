@@ -207,14 +207,12 @@ public class SearchStayOutboundSuggestView //
         }
         getViewDataBinding().suggestsRecyclerView.setAdapter(mSuggestListAdapter);
 
-        if (stayOutboundSuggestList == null || stayOutboundSuggestList.size() == 0)
-        {
-            mSuggestListAdapter.setAll(null, null);
-            mSuggestListAdapter.notifyDataSetChanged();
-        } else
-        {
-            List<ObjectItem> objectItemList = new ArrayList<>(stayOutboundSuggestList.size());
+        List<ObjectItem> objectItemList = new ArrayList<>();
 
+        String keyword = getViewDataBinding().keywordEditText.getText().toString();
+
+        if (stayOutboundSuggestList != null && stayOutboundSuggestList.size() > 0)
+        {
             for (StayOutboundSuggest stayOutboundSuggest : stayOutboundSuggestList)
             {
                 if (stayOutboundSuggest.id == 0)
@@ -229,9 +227,10 @@ public class SearchStayOutboundSuggestView //
             // 마지막줄
             objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, new StayOutboundSuggest(0, null)));
 
-            mSuggestListAdapter.setAll(getViewDataBinding().keywordEditText.getText().toString(), objectItemList);
-            mSuggestListAdapter.notifyDataSetChanged();
         }
+
+        mSuggestListAdapter.setAll(keyword, objectItemList);
+        mSuggestListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -421,7 +420,6 @@ public class SearchStayOutboundSuggestView //
 
         if (stayOutboundSuggestList != null && stayOutboundSuggestList.size() > 0)
         {
-
             for (StayOutboundSuggest stayOutboundSuggest : stayOutboundSuggestList)
             {
                 if (DailyTextUtils.isTextEmpty(stayOutboundSuggest.categoryKey))

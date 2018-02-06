@@ -488,7 +488,6 @@ public class SearchStayOutboundSuggestPresenter //
             unLockAll();
         } else
         {
-
             mSuggestDisposable = mSuggestRemoteImpl.getSuggestsByStayOutbound(keyword)//
                 .delaySubscription(500, TimeUnit.MILLISECONDS).subscribe(new Consumer<List<StayOutboundSuggest>>()
                 {
@@ -890,7 +889,8 @@ public class SearchStayOutboundSuggestPresenter //
                 mLocationSuggest.latitude = location.getLatitude();
                 mLocationSuggest.longitude = location.getLongitude();
 
-                addCompositeDisposable(mGoogleAddressRemoteImpl.getLocationAddress(location.getLatitude(), location.getLongitude()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<String>()
+                addCompositeDisposable(mGoogleAddressRemoteImpl.getLocationAddress(location.getLatitude(), location.getLongitude()) //
+                    .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<String>()
                 {
                     @Override
                     public void accept(String address) throws Exception

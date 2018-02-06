@@ -403,6 +403,10 @@ public class RecentlySuggestListAdapter extends RecyclerView.Adapter<RecyclerVie
                 holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_02_hotel);
                 break;
 
+            case StayOutboundSuggest.CATEGORY_LOCATION:
+                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_09_nearby);
+                break;
+
             case StayOutboundSuggest.CATEGORY_POINT:
                 holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_04_landmark);
                 break;

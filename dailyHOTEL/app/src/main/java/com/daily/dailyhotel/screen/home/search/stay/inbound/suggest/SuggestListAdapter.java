@@ -267,14 +267,15 @@ public class SuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 } else
                 {
                     holder.dataBinding.priceTextView.setVisibility(View.VISIBLE);
+
                     if (staySuggest.availableRooms == 0)
                     {
                         holder.dataBinding.priceTextView.setText(R.string.label_soldout);
-                    } else {
+                    } else
+                    {
                         holder.dataBinding.priceTextView.setText(DailyTextUtils.getPriceFormat(mContext, staySuggest.discountAveragePrice, false));
                     }
                 }
-
                 break;
 
             case StaySuggest.CATEGORY_LOCATION:
