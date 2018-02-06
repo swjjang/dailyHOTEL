@@ -654,7 +654,7 @@
             android:theme="@style/Theme.AppCompat.Translucent"/>
 
         <activity
-            android:name="com.daily.dailyhotel.screen.home.stay.outbound.search.suggest.StayOutboundSearchSuggestActivity"
+            android:name="com.daily.dailyhotel.screen.home.search.stay.outbound.suggest.StayOutboundSearchSuggestActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>

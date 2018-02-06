@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.outbound.search.suggest;
+package com.daily.dailyhotel.screen.home.search.stay.outbound.suggest;
 
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;

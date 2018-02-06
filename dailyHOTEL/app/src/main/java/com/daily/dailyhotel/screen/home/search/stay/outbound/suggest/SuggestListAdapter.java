@@ -1,8 +1,11 @@
-package com.daily.dailyhotel.screen.home.stay.outbound.search.suggest;
+package com.daily.dailyhotel.screen.home.search.stay.outbound.suggest;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +14,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.twoheart.dailyhotel.R;
-import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeDeleteDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeEntryDataBinding;
-import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeNearbyDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeSectionDataBinding;
 
 import java.util.ArrayList;
@@ -23,26 +24,20 @@ import java.util.List;
  * Created by android_sam on 2018. 2. 2..
  */
 
-public class PopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class SuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
-    public interface OnPopularSuggestListener
-    {
-        void onItemClick(int position, StayOutboundSuggest stayOutboundSuggest);
-
-        void onNearbyClick(StayOutboundSuggest stayOutboundSuggest);
-    }
-
     private Context mContext;
-    private OnPopularSuggestListener mListener;
+    View.OnClickListener mOnClickListener;
 
+    private String mKeyword;
     private List<ObjectItem> mSuggestList;
 
-    public PopularSuggestListAdapter(Context context, OnPopularSuggestListener listener)
+    public SuggestListAdapter(Context context, View.OnClickListener listener)
     {
         mContext = context;
-        this.mListener = listener;
+        mOnClickListener = listener;
 
-        setAll(null);
+        setAll(null, null);
     }
 
     @Override
@@ -50,17 +45,6 @@ public class PopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
     {
         switch (viewType)
         {
-            case ObjectItem.TYPE_LOCATION_VIEW:
-            {
-                ListRowSearchSuggestTypeNearbyDataBinding dataBinding //
-                    = DataBindingUtil.inflate(LayoutInflater.from(mContext) //
-                    , R.layout.list_row_search_suggest_type_nearby_data, parent, false);
-
-                LocationViewHolder locationViewHolder = new LocationViewHolder(dataBinding);
-
-                return locationViewHolder;
-            }
-
             case ObjectItem.TYPE_SECTION:
             {
                 ListRowSearchSuggestTypeSectionDataBinding dataBinding //
@@ -70,17 +54,6 @@ public class PopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
                 SectionViewHolder sectionViewHolder = new SectionViewHolder(dataBinding);
 
                 return sectionViewHolder;
-            }
-
-            case ObjectItem.TYPE_FOOTER_VIEW:
-            {
-                ListRowSearchSuggestTypeDeleteDataBinding dataBinding //
-                    = DataBindingUtil.inflate(LayoutInflater.from(mContext) //
-                    , R.layout.list_row_search_suggest_type_delete_data, parent, false);
-
-                FooterViewHolder footerViewHolder = new FooterViewHolder(dataBinding);
-
-                return footerViewHolder;
             }
 
             case ObjectItem.TYPE_ENTRY:
@@ -110,16 +83,8 @@ public class PopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
 
         switch (item.mType)
         {
-            case ObjectItem.TYPE_LOCATION_VIEW:
-                onBindViewHolder((LocationViewHolder) holder, item);
-                break;
-
             case ObjectItem.TYPE_SECTION:
                 onBindViewHolder((SectionViewHolder) holder, item, position);
-                break;
-
-            case ObjectItem.TYPE_FOOTER_VIEW:
-                onBindViewHolder((FooterViewHolder) holder);
                 break;
 
             case ObjectItem.TYPE_ENTRY:
@@ -146,8 +111,10 @@ public class PopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
         return mSuggestList.get(position).mType;
     }
 
-    public void setAll(List<ObjectItem> objectItemList)
+    public void setAll(String keyword, List<ObjectItem> objectItemList)
     {
+        mKeyword = keyword;
+
         if (mSuggestList == null)
         {
             mSuggestList = new ArrayList<>();
@@ -171,63 +138,6 @@ public class PopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
         return mSuggestList.get(position);
     }
 
-    public void setNearByStayOutboundSuggest(StayOutboundSuggest nearByStayOutboundSuggest)
-    {
-        if (mSuggestList == null || mSuggestList.size() == 0 || nearByStayOutboundSuggest == null)
-        {
-            return;
-        }
-
-        String descriptionText = mContext.getString(R.string.label_search_nearby_description);
-
-        for (ObjectItem item : mSuggestList)
-        {
-            if (ObjectItem.TYPE_LOCATION_VIEW == item.mType)
-            {
-                StayOutboundSuggest stayOutboundSuggest = item.getItem();
-
-                stayOutboundSuggest.display = nearByStayOutboundSuggest != null ? nearByStayOutboundSuggest.display : descriptionText;
-                stayOutboundSuggest.latitude = nearByStayOutboundSuggest.latitude;
-                stayOutboundSuggest.longitude = nearByStayOutboundSuggest.longitude;
-                stayOutboundSuggest.categoryKey = nearByStayOutboundSuggest.categoryKey;
-                stayOutboundSuggest.menuType = nearByStayOutboundSuggest.menuType;
-                break;
-            }
-        }
-    }
-
-    private void onBindViewHolder(LocationViewHolder holder, ObjectItem item)
-    {
-        StayOutboundSuggest stayOutboundSuggest = item.getItem();
-
-        holder.itemView.getRootView().setTag(stayOutboundSuggest);
-        holder.itemView.getRootView().setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                if (mListener == null)
-                {
-                    return;
-                }
-
-                mListener.onNearbyClick(stayOutboundSuggest);
-            }
-        });
-
-        holder.dataBinding.bottomDivider.setVisibility(View.VISIBLE);
-
-        holder.dataBinding.descriptionTextView.setText(stayOutboundSuggest.display);
-
-        if (DailyTextUtils.isTextEmpty(stayOutboundSuggest.display) == true)
-        {
-            holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
-        } else
-        {
-            holder.dataBinding.descriptionTextView.setVisibility(View.VISIBLE);
-        }
-    }
-
     private void onBindViewHolder(SectionViewHolder holder, ObjectItem item, int position)
     {
         StayOutboundSuggest stayOutboundSuggest = item.getItem();
@@ -243,37 +153,50 @@ public class PopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
         holder.dataBinding.titleTextView.setText(stayOutboundSuggest.display);
     }
 
-    private void onBindViewHolder(FooterViewHolder holder)
-    {
-        holder.dataBinding.deleteLayout.setVisibility(View.GONE);
-        holder.dataBinding.deleteTextView.setOnClickListener(null);
-    }
-
     private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)
     {
         StayOutboundSuggest stayOutboundSuggest = item.getItem();
 
         holder.itemView.getRootView().setTag(stayOutboundSuggest);
-        holder.itemView.getRootView().setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                if (mListener == null)
-                {
-                    return;
-                }
-
-                mListener.onItemClick(position, stayOutboundSuggest);
-            }
-        });
-
-        holder.dataBinding.titleTextView.setText(stayOutboundSuggest.display);
 
         holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
-        holder.dataBinding.priceTextView.setVisibility(View.GONE);
         holder.dataBinding.bottomDivider.setVisibility(View.GONE);
         holder.dataBinding.deleteImageView.setVisibility(View.GONE);
+
+        if (DailyTextUtils.isTextEmpty(stayOutboundSuggest.display) == true)
+        {
+            holder.dataBinding.titleTextView.setText(null);
+        } else
+        {
+            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(stayOutboundSuggest.display);
+
+            if (DailyTextUtils.isTextEmpty(mKeyword) == false)
+            {
+                String keywordUpperCase = mKeyword.toUpperCase();
+                String displayNameUpperCase = DailyTextUtils.isTextEmpty(stayOutboundSuggest.display) ? "" : stayOutboundSuggest.display.toUpperCase();
+
+                int fromIndex = 0;
+                do
+                {
+                    int startIndex = displayNameUpperCase.indexOf(keywordUpperCase, fromIndex);
+
+                    if (startIndex < 0)
+                    {
+                        break;
+                    }
+
+                    int endIndex = startIndex + keywordUpperCase.length();
+                    fromIndex = endIndex;
+
+                    spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
+                        startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                } while (true);
+            }
+
+            holder.dataBinding.titleTextView.setText(spannableStringBuilder);
+        }
+
+        holder.dataBinding.priceTextView.setVisibility(View.GONE);
 
         switch (stayOutboundSuggest.categoryKey)
         {
@@ -303,30 +226,6 @@ public class PopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
         }
     }
 
-    class LocationViewHolder extends RecyclerView.ViewHolder
-    {
-        ListRowSearchSuggestTypeNearbyDataBinding dataBinding;
-
-        public LocationViewHolder(ListRowSearchSuggestTypeNearbyDataBinding dataBinding)
-        {
-            super(dataBinding.getRoot());
-
-            this.dataBinding = dataBinding;
-        }
-    }
-
-    class FooterViewHolder extends RecyclerView.ViewHolder
-    {
-        ListRowSearchSuggestTypeDeleteDataBinding dataBinding;
-
-        public FooterViewHolder(ListRowSearchSuggestTypeDeleteDataBinding dataBinding)
-        {
-            super(dataBinding.getRoot());
-
-            this.dataBinding = dataBinding;
-        }
-    }
-
     class SectionViewHolder extends RecyclerView.ViewHolder
     {
         ListRowSearchSuggestTypeSectionDataBinding dataBinding;
@@ -348,6 +247,8 @@ public class PopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
             super(dataBinding.getRoot());
 
             this.dataBinding = dataBinding;
+
+            dataBinding.getRoot().setOnClickListener(mOnClickListener);
         }
     }
 }
