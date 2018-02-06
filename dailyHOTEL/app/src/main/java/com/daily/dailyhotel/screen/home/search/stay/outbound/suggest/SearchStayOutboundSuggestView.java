@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.outbound.search.suggest;
+package com.daily.dailyhotel.screen.home.search.stay.outbound.suggest;
 
 import android.content.Context;
 import android.graphics.PorterDuff;
@@ -16,7 +16,6 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.ObjectItem;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
@@ -30,9 +29,9 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 
-public class StayOutboundSearchSuggestView //
-    extends BaseDialogView<StayOutboundSearchSuggestView.OnEventListener, ActivityStayOutboundSearchSuggestDataBinding> //
-    implements StayOutboundSearchSuggestViewInterface, View.OnClickListener
+public class SearchStayOutboundSuggestView //
+    extends BaseDialogView<SearchStayOutboundSuggestView.OnEventListener, ActivityStayOutboundSearchSuggestDataBinding> //
+    implements SearchStayOutboundSuggestViewInterface, View.OnClickListener
 {
     private SuggestListAdapter mSuggestListAdapter;
     private RecentlySuggestListAdapter mRecentlySuggestListAdapter;
@@ -59,7 +58,7 @@ public class StayOutboundSearchSuggestView //
         void onNearbyClick(StayOutboundSuggest stayOutboundSuggest);
     }
 
-    public StayOutboundSearchSuggestView(BaseActivity baseActivity, StayOutboundSearchSuggestView.OnEventListener listener)
+    public SearchStayOutboundSuggestView(BaseActivity baseActivity, SearchStayOutboundSuggestView.OnEventListener listener)
     {
         super(baseActivity, listener);
     }
@@ -73,9 +72,7 @@ public class StayOutboundSearchSuggestView //
         }
 
         initSearchToolbarLayout(viewDataBinding);
-        initSuggestLayout(viewDataBinding);
-        initRecentlySuggestLayout(viewDataBinding);
-        initPopularSuggestLayout(viewDataBinding);
+        initRecyclerLayout(viewDataBinding);
 
         viewDataBinding.progressBar.getIndeterminateDrawable().setColorFilter(getColor(R.color.default_probressbar), PorterDuff.Mode.SRC_IN);
         setProgressBarVisible(false);
@@ -128,7 +125,7 @@ public class StayOutboundSearchSuggestView //
         viewDataBinding.deleteTextView.setOnClickListener(this);
     }
 
-    private void initSuggestLayout(final ActivityStayOutboundSearchSuggestDataBinding viewDataBinding)
+    private void initRecyclerLayout(final ActivityStayOutboundSearchSuggestDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -177,20 +174,18 @@ public class StayOutboundSearchSuggestView //
                 }
             }
         });
-
-        setSuggestListAdapter();
     }
 
-    private void setSuggestListAdapter()
+    @Override
+    public void setToolbarTitle(String title)
+    {
+    }
+
+    @Override
+    public void setSuggests(List<StayOutboundSuggest> stayOutboundSuggestList)
     {
         if (getViewDataBinding() == null)
         {
-            return;
-        }
-
-        if (getViewDataBinding().suggestsRecyclerView.getAdapter() != null)
-        {
-            ExLog.d("sam : " + getViewDataBinding().suggestsRecyclerView.getAdapter().toString());
             return;
         }
 
@@ -209,224 +204,8 @@ public class StayOutboundSearchSuggestView //
                     }
                 }
             });
-
-            getViewDataBinding().suggestsRecyclerView.setAdapter(mSuggestListAdapter);
         }
-    }
-
-    private void initRecentlySuggestLayout(final ActivityStayOutboundSearchSuggestDataBinding viewDataBinding)
-    {
-        if (viewDataBinding == null)
-        {
-            return;
-        }
-
-        viewDataBinding.recentlySuggestRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        EdgeEffectColor.setEdgeGlowColor(viewDataBinding.recentlySuggestRecyclerView, getColor(R.color.default_over_scroll_edge));
-        viewDataBinding.recentlySuggestRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
-        {
-            private int mDistance;
-            private boolean mIsHide;
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
-            {
-                if (newState != RecyclerView.SCROLL_STATE_DRAGGING)
-                {
-                    mDistance = 0;
-                }
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
-            {
-                if (mIsHide == true)
-                {
-                    mDistance = 0;
-                    return;
-                }
-
-                int defaultValue = ScreenUtils.dpToPx(getContext(), 41);
-
-                mDistance += dy;
-
-                if (mDistance > defaultValue == true)
-                {
-                    mDistance = 0;
-                    mIsHide = true;
-
-                    InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputMethodManager.hideSoftInputFromWindow(recyclerView.getWindowToken(), 0);
-
-                    Observable.just(false).delaySubscription(1, TimeUnit.SECONDS).subscribe(isHide -> mIsHide = isHide);
-                }
-            }
-        });
-
-        setRecentlySuggestListAdapter();
-    }
-
-    private void setRecentlySuggestListAdapter()
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        if (getViewDataBinding().recentlySuggestRecyclerView.getAdapter() != null)
-        {
-            return;
-        }
-
-        if (mRecentlySuggestListAdapter == null)
-        {
-            mRecentlySuggestListAdapter = new RecentlySuggestListAdapter(getContext(), new RecentlySuggestListAdapter.OnRecentlySuggestListener()
-            {
-                @Override
-                public void onItemClick(int position, StayOutboundSuggest stayOutboundSuggest)
-                {
-                    getEventListener().onRecentlySuggestClick(stayOutboundSuggest);
-                }
-
-                @Override
-                public void onDeleteClick(int position, StayOutboundSuggest stayOutboundSuggest)
-                {
-                    getEventListener().onDeleteRecentlySuggest(position, stayOutboundSuggest);
-                }
-
-                @Override
-                public void onDeleteAllClick()
-                {
-                    getEventListener().onDeleteAllRecentlySuggest(false);
-                }
-
-                @Override
-                public void onNearbyClick(StayOutboundSuggest stayOutboundSuggest)
-                {
-                    getEventListener().onNearbyClick(stayOutboundSuggest);
-                }
-            });
-        }
-
-        getViewDataBinding().recentlySuggestRecyclerView.setAdapter(mRecentlySuggestListAdapter);
-    }
-
-    private void initPopularSuggestLayout(final ActivityStayOutboundSearchSuggestDataBinding viewDataBinding)
-    {
-        if (viewDataBinding == null)
-        {
-            return;
-        }
-
-        viewDataBinding.popularSuggestRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        EdgeEffectColor.setEdgeGlowColor(viewDataBinding.recentlySuggestRecyclerView, getColor(R.color.default_over_scroll_edge));
-        viewDataBinding.popularSuggestRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
-        {
-            private int mDistance;
-            private boolean mIsHide;
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
-            {
-                if (newState != RecyclerView.SCROLL_STATE_DRAGGING)
-                {
-                    mDistance = 0;
-                }
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
-            {
-                if (mIsHide == true)
-                {
-                    mDistance = 0;
-                    return;
-                }
-
-                int defaultValue = ScreenUtils.dpToPx(getContext(), 41);
-
-                mDistance += dy;
-
-                if (mDistance > defaultValue == true)
-                {
-                    mDistance = 0;
-                    mIsHide = true;
-
-                    InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputMethodManager.hideSoftInputFromWindow(recyclerView.getWindowToken(), 0);
-
-                    Observable.just(false).delaySubscription(1, TimeUnit.SECONDS).subscribe(isHide -> mIsHide = isHide);
-                }
-            }
-        });
-
-        setPopularSuggestListAdapter();
-    }
-
-    private void setPopularSuggestListAdapter()
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        if (getViewDataBinding().popularSuggestRecyclerView.getAdapter() != null)
-        {
-            return;
-        }
-
-        if (mPopularSuggestListAdapter == null)
-        {
-            mPopularSuggestListAdapter = new PopularSuggestListAdapter(getContext(), new PopularSuggestListAdapter.OnPopularSuggestListener()
-            {
-                @Override
-                public void onItemClick(int position, StayOutboundSuggest stayOutboundSuggest)
-                {
-                    getEventListener().onPopularSuggestClick(stayOutboundSuggest);
-                }
-
-                @Override
-                public void onNearbyClick(StayOutboundSuggest stayOutboundSuggest)
-                {
-                    getEventListener().onNearbyClick(stayOutboundSuggest);
-                }
-            });
-        }
-
-        getViewDataBinding().recentlySuggestRecyclerView.setAdapter(mRecentlySuggestListAdapter);
-    }
-
-    @Override
-    public void setToolbarTitle(String title)
-    {
-    }
-
-    @Override
-    public void setSuggestsVisible(boolean visible)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        if (visible == true)
-        {
-            getViewDataBinding().suggestsRecyclerView.setVisibility(View.VISIBLE);
-        } else
-        {
-            getViewDataBinding().suggestsRecyclerView.setVisibility(View.GONE);
-        }
-    }
-
-    @Override
-    public void setSuggests(List<StayOutboundSuggest> stayOutboundSuggestList)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        setSuggestListAdapter();
+        getViewDataBinding().suggestsRecyclerView.setAdapter(mSuggestListAdapter);
 
         if (stayOutboundSuggestList == null || stayOutboundSuggestList.size() == 0)
         {
@@ -538,42 +317,54 @@ public class StayOutboundSearchSuggestView //
     }
 
     @Override
-    public void setRecentlySuggestsVisible(boolean visible)
+    public void setRecentlySuggests(StayOutboundSuggest locationSuggest, List<StayOutboundSuggest> stayOutboundSuggestList)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        if (visible == true)
+        if (mRecentlySuggestListAdapter == null)
         {
-            getViewDataBinding().recentlySuggestRecyclerView.setVisibility(View.VISIBLE);
-        } else
-        {
-            getViewDataBinding().recentlySuggestRecyclerView.setVisibility(View.GONE);
-        }
-    }
+            mRecentlySuggestListAdapter = new RecentlySuggestListAdapter(getContext(), new RecentlySuggestListAdapter.OnRecentlySuggestListener()
+            {
+                @Override
+                public void onItemClick(int position, StayOutboundSuggest stayOutboundSuggest)
+                {
+                    getEventListener().onRecentlySuggestClick(stayOutboundSuggest);
+                }
 
-    @Override
-    public void setRecentlySuggests(List<StayOutboundSuggest> stayOutboundSuggestList)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
+                @Override
+                public void onDeleteClick(int position, StayOutboundSuggest stayOutboundSuggest)
+                {
+                    getEventListener().onDeleteRecentlySuggest(position, stayOutboundSuggest);
+                }
+
+                @Override
+                public void onDeleteAllClick()
+                {
+                    getEventListener().onDeleteAllRecentlySuggest(false);
+                }
+
+                @Override
+                public void onNearbyClick(StayOutboundSuggest stayOutboundSuggest)
+                {
+                    getEventListener().onNearbyClick(stayOutboundSuggest);
+                }
+            });
         }
 
-        setRecentlySuggestListAdapter();
+        getViewDataBinding().suggestsRecyclerView.setAdapter(mRecentlySuggestListAdapter);
 
         List<ObjectItem> objectItemList = new ArrayList<>();
 
+        if (locationSuggest != null)
+        {
+            objectItemList.add(new ObjectItem(ObjectItem.TYPE_LOCATION_VIEW, locationSuggest));
+        }
+
         if (stayOutboundSuggestList != null && stayOutboundSuggestList.size() > 0)
         {
-            StayOutboundSuggest locationStayOutboundSuggest = new StayOutboundSuggest(0, null);
-            locationStayOutboundSuggest.menuType = StayOutboundSuggest.MENU_TYPE_LOCATION;
-            locationStayOutboundSuggest.categoryKey = StayOutboundSuggest.CATEGORY_LOCATION;
-            objectItemList.add(new ObjectItem(ObjectItem.TYPE_LOCATION_VIEW //
-                , locationStayOutboundSuggest));
-
             for (StayOutboundSuggest stayOutboundSuggest : stayOutboundSuggestList)
             {
                 if (DailyTextUtils.isTextEmpty(stayOutboundSuggest.categoryKey))
@@ -593,43 +384,43 @@ public class StayOutboundSearchSuggestView //
     }
 
     @Override
-    public void setPopularSuggestsVisible(boolean visible)
+    public void setPopularAreaSuggests(StayOutboundSuggest locationSuggest, List<StayOutboundSuggest> stayOutboundSuggestList)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        if (visible == true)
+        if (mPopularSuggestListAdapter == null)
         {
-            getViewDataBinding().popularSuggestRecyclerView.setVisibility(View.VISIBLE);
-        } else
-        {
-            getViewDataBinding().popularSuggestRecyclerView.setVisibility(View.GONE);
+            mPopularSuggestListAdapter = new PopularSuggestListAdapter(getContext(), new PopularSuggestListAdapter.OnPopularSuggestListener()
+            {
+                @Override
+                public void onItemClick(int position, StayOutboundSuggest stayOutboundSuggest)
+                {
+                    getEventListener().onPopularSuggestClick(stayOutboundSuggest);
+                }
+
+                @Override
+                public void onNearbyClick(StayOutboundSuggest stayOutboundSuggest)
+                {
+                    getEventListener().onNearbyClick(stayOutboundSuggest);
+                }
+            });
         }
-    }
 
-    @Override
-    public void setPopularAreaSuggests(List<StayOutboundSuggest> stayOutboundSuggestList)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        setPopularSuggestListAdapter();
-
-        getViewDataBinding().popularSuggestRecyclerView.setAdapter(mPopularSuggestListAdapter);
+        getViewDataBinding().suggestsRecyclerView.setAdapter(mPopularSuggestListAdapter);
 
         List<ObjectItem> objectItemList = new ArrayList<>();
 
+        if (locationSuggest != null)
+        {
+            objectItemList.add(new ObjectItem(ObjectItem.TYPE_LOCATION_VIEW //
+                , locationSuggest));
+        }
+
         if (stayOutboundSuggestList != null && stayOutboundSuggestList.size() > 0)
         {
-            StayOutboundSuggest locationStayOutboundSuggest = new StayOutboundSuggest(0, null);
-            locationStayOutboundSuggest.menuType = StayOutboundSuggest.MENU_TYPE_LOCATION;
-            locationStayOutboundSuggest.categoryKey = StayOutboundSuggest.CATEGORY_LOCATION;
-            objectItemList.add(new ObjectItem(ObjectItem.TYPE_LOCATION_VIEW //
-                , locationStayOutboundSuggest));
 
             for (StayOutboundSuggest stayOutboundSuggest : stayOutboundSuggestList)
             {
@@ -719,34 +510,32 @@ public class StayOutboundSearchSuggestView //
     }
 
     @Override
-    public void setNearbyStaySuggest(boolean isAgreePermission, StayOutboundSuggest nearByStayOutboundSuggest)
+    public void setNearbyStaySuggest(StayOutboundSuggest locationSuggest)
     {
-        String descriptionText = null;
-        if (isAgreePermission == false)
+        if (locationSuggest == null)
         {
-            descriptionText = getString(R.string.label_search_nearby_description);
-        } else
-        {
-            descriptionText = nearByStayOutboundSuggest != null ? nearByStayOutboundSuggest.display : null;
+            return;
         }
 
         if (mRecentlySuggestListAdapter != null)
         {
-            mRecentlySuggestListAdapter.setNearByStayOutboundSuggest(nearByStayOutboundSuggest);
+            mRecentlySuggestListAdapter.setNearByStayOutboundSuggest(locationSuggest);
             mRecentlySuggestListAdapter.notifyDataSetChanged();
         }
 
         if (mPopularSuggestListAdapter != null)
         {
-            mPopularSuggestListAdapter.setNearByStayOutboundSuggest(nearByStayOutboundSuggest);
+            mPopularSuggestListAdapter.setNearByStayOutboundSuggest(locationSuggest);
             mPopularSuggestListAdapter.notifyDataSetChanged();
         }
 
         if (getViewDataBinding() != null)
         {
-            getViewDataBinding().nearbyDataBinding.nearbyLayout.setTag(nearByStayOutboundSuggest);
-            getViewDataBinding().nearbyDataBinding.descriptionTextView.setText(descriptionText);
-            getViewDataBinding().nearbyDataBinding.descriptionTextView.setVisibility(DailyTextUtils.isTextEmpty(descriptionText) ? View.GONE : View.VISIBLE);
+            getViewDataBinding().nearbyDataBinding.nearbyLayout.setTag(locationSuggest);
+            getViewDataBinding().nearbyDataBinding.descriptionTextView.setText(locationSuggest.display);
+            getViewDataBinding().nearbyDataBinding.descriptionTextView.setVisibility( //
+                DailyTextUtils.isTextEmpty(locationSuggest.display) ? View.GONE : View.VISIBLE);
+            getViewDataBinding().nearbyDataBinding.bottomDivider.setVisibility(View.VISIBLE);
         }
     }
 
@@ -774,11 +563,7 @@ public class StayOutboundSearchSuggestView //
                 break;
 
             case R.id.deleteTextView:
-                setSuggest(null);
-                setSuggests(null);
-                setSuggestsVisible(false);
-                setEmptySuggestsVisible(false);
-                getEventListener().setCheckVoiceSearchEnabled();
+                setKeywordEditText(null);
                 break;
         }
     }

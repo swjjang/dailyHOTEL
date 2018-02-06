@@ -25,7 +25,7 @@ import com.daily.dailyhotel.screen.home.search.SearchViewModel;
 import com.daily.dailyhotel.screen.home.stay.outbound.calendar.StayOutboundCalendarActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
-import com.daily.dailyhotel.screen.home.stay.outbound.search.suggest.StayOutboundSearchSuggestActivity;
+import com.daily.dailyhotel.screen.home.search.stay.outbound.suggest.SearchStayOutboundSuggestActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -219,9 +219,9 @@ public class ResearchStayOutboundPresenter extends BaseExceptionPresenter<Resear
                 {
                     try
                     {
-                        StayOutboundSuggestParcel suggestParcel = data.getParcelableExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
+                        StayOutboundSuggestParcel suggestParcel = data.getParcelableExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
                         mSearchModel.suggest.setValue(suggestParcel.getSuggest());
-                        mSearchModel.inputString = data.getStringExtra(StayOutboundSearchSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
+                        mSearchModel.inputString = data.getStringExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
                     } catch (Exception e)
                     {
                         ExLog.d(e.toString());
@@ -289,7 +289,7 @@ public class ResearchStayOutboundPresenter extends BaseExceptionPresenter<Resear
     {
         try
         {
-            startActivityForResult(StayOutboundSearchSuggestActivity.newInstance(getActivity(), null), ResearchStayOutboundActivity.REQUEST_CODE_SUGGEST);
+            startActivityForResult(SearchStayOutboundSuggestActivity.newInstance(getActivity(), null), ResearchStayOutboundActivity.REQUEST_CODE_SUGGEST);
         } catch (Exception e)
         {
             ExLog.e(e.toString());

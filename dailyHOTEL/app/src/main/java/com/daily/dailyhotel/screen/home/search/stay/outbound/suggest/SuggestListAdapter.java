@@ -1,0 +1,254 @@
+package com.daily.dailyhotel.screen.home.search.stay.outbound.suggest;
+
+import android.content.Context;
+import android.databinding.DataBindingUtil;
+import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.daily.base.util.DailyTextUtils;
+import com.daily.dailyhotel.entity.ObjectItem;
+import com.daily.dailyhotel.entity.StayOutboundSuggest;
+import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeEntryDataBinding;
+import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeSectionDataBinding;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by android_sam on 2018. 2. 2..
+ */
+
+public class SuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+{
+    private Context mContext;
+    View.OnClickListener mOnClickListener;
+
+    private String mKeyword;
+    private List<ObjectItem> mSuggestList;
+
+    public SuggestListAdapter(Context context, View.OnClickListener listener)
+    {
+        mContext = context;
+        mOnClickListener = listener;
+
+        setAll(null, null);
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    {
+        switch (viewType)
+        {
+            case ObjectItem.TYPE_SECTION:
+            {
+                ListRowSearchSuggestTypeSectionDataBinding dataBinding //
+                    = DataBindingUtil.inflate(LayoutInflater.from(mContext) //
+                    , R.layout.list_row_search_suggest_type_section_data, parent, false);
+
+                SectionViewHolder sectionViewHolder = new SectionViewHolder(dataBinding);
+
+                return sectionViewHolder;
+            }
+
+            case ObjectItem.TYPE_ENTRY:
+            {
+                ListRowSearchSuggestTypeEntryDataBinding dataBinding //
+                    = DataBindingUtil.inflate(LayoutInflater.from(mContext) //
+                    , R.layout.list_row_search_suggest_type_entry_data, parent, false);
+
+                EntryViewHolder entryViewHolder = new EntryViewHolder(dataBinding);
+
+                return entryViewHolder;
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position)
+    {
+        ObjectItem item = getItem(position);
+
+        if (item == null)
+        {
+            return;
+        }
+
+        switch (item.mType)
+        {
+            case ObjectItem.TYPE_SECTION:
+                onBindViewHolder((SectionViewHolder) holder, item, position);
+                break;
+
+            case ObjectItem.TYPE_ENTRY:
+                onBindViewHolder((EntryViewHolder) holder, item, position);
+                break;
+        }
+    }
+
+    @Override
+    public int getItemCount()
+    {
+        if (mSuggestList == null)
+        {
+            return 0;
+        } else
+        {
+            return mSuggestList.size();
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position)
+    {
+        return mSuggestList.get(position).mType;
+    }
+
+    public void setAll(String keyword, List<ObjectItem> objectItemList)
+    {
+        mKeyword = keyword;
+
+        if (mSuggestList == null)
+        {
+            mSuggestList = new ArrayList<>();
+        }
+
+        mSuggestList.clear();
+
+        if (objectItemList != null && objectItemList.size() > 0)
+        {
+            mSuggestList.addAll(objectItemList);
+        }
+    }
+
+    public ObjectItem getItem(int position)
+    {
+        if (position < 0 || mSuggestList.size() <= position)
+        {
+            return null;
+        }
+
+        return mSuggestList.get(position);
+    }
+
+    private void onBindViewHolder(SectionViewHolder holder, ObjectItem item, int position)
+    {
+        StayOutboundSuggest stayOutboundSuggest = item.getItem();
+
+        if (DailyTextUtils.isTextEmpty(stayOutboundSuggest.display) == true)
+        {
+            holder.dataBinding.titleTextView.setVisibility(View.GONE);
+        } else
+        {
+            holder.dataBinding.titleTextView.setVisibility(View.VISIBLE);
+        }
+
+        holder.dataBinding.titleTextView.setText(stayOutboundSuggest.display);
+    }
+
+    private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)
+    {
+        StayOutboundSuggest stayOutboundSuggest = item.getItem();
+
+        holder.itemView.getRootView().setTag(stayOutboundSuggest);
+
+        holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
+        holder.dataBinding.bottomDivider.setVisibility(View.GONE);
+        holder.dataBinding.deleteImageView.setVisibility(View.GONE);
+
+        if (DailyTextUtils.isTextEmpty(stayOutboundSuggest.display) == true)
+        {
+            holder.dataBinding.titleTextView.setText(null);
+        } else
+        {
+            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(stayOutboundSuggest.display);
+
+            if (DailyTextUtils.isTextEmpty(mKeyword) == false)
+            {
+                String keywordUpperCase = mKeyword.toUpperCase();
+                String displayNameUpperCase = DailyTextUtils.isTextEmpty(stayOutboundSuggest.display) ? "" : stayOutboundSuggest.display.toUpperCase();
+
+                int fromIndex = 0;
+                do
+                {
+                    int startIndex = displayNameUpperCase.indexOf(keywordUpperCase, fromIndex);
+
+                    if (startIndex < 0)
+                    {
+                        break;
+                    }
+
+                    int endIndex = startIndex + keywordUpperCase.length();
+                    fromIndex = endIndex;
+
+                    spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
+                        startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                } while (true);
+            }
+
+            holder.dataBinding.titleTextView.setText(spannableStringBuilder);
+        }
+
+        holder.dataBinding.priceTextView.setVisibility(View.GONE);
+
+        switch (stayOutboundSuggest.categoryKey)
+        {
+            case StayOutboundSuggest.CATEGORY_AIRPORT:
+                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_ob_search_ic_04_airport);
+                break;
+
+            case StayOutboundSuggest.CATEGORY_HOTEL:
+                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_02_hotel);
+                break;
+
+            case StayOutboundSuggest.CATEGORY_POINT:
+                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_04_landmark);
+                break;
+
+            case StayOutboundSuggest.CATEGORY_REGION:
+                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_01_region);
+                break;
+
+            case StayOutboundSuggest.CATEGORY_STATION:
+                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_06_train);
+                break;
+
+            default:
+                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_01_region);
+                break;
+        }
+    }
+
+    class SectionViewHolder extends RecyclerView.ViewHolder
+    {
+        ListRowSearchSuggestTypeSectionDataBinding dataBinding;
+
+        public SectionViewHolder(ListRowSearchSuggestTypeSectionDataBinding dataBinding)
+        {
+            super(dataBinding.getRoot());
+
+            this.dataBinding = dataBinding;
+        }
+    }
+
+    class EntryViewHolder extends RecyclerView.ViewHolder
+    {
+        ListRowSearchSuggestTypeEntryDataBinding dataBinding;
+
+        public EntryViewHolder(ListRowSearchSuggestTypeEntryDataBinding dataBinding)
+        {
+            super(dataBinding.getRoot());
+
+            this.dataBinding = dataBinding;
+
+            dataBinding.getRoot().setOnClickListener(mOnClickListener);
+        }
+    }
+}

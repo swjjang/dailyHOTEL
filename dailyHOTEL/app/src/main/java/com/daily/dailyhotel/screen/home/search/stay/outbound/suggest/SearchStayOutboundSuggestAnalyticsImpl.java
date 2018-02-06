@@ -1,11 +1,11 @@
-package com.daily.dailyhotel.screen.home.stay.outbound.search.suggest;
+package com.daily.dailyhotel.screen.home.search.stay.outbound.suggest;
 
 import android.app.Activity;
 
 import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
-public class StayOutboundSearchSuggestAnalyticsImpl implements StayOutboundSearchSuggestPresenter.StayOutboundSearchSuggestAnalyticsInterface
+public class SearchStayOutboundSuggestAnalyticsImpl implements SearchStayOutboundSuggestPresenter.SearchStayOutboundSuggestAnalyticsInterface
 {
     @Override
     public void onEventSuggestEmpty(Activity activity, String keyword)

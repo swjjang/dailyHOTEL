@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.stay.outbound.search.suggest;
+package com.daily.dailyhotel.screen.home.search.stay.outbound.suggest;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -23,21 +23,25 @@ import java.util.List;
  * Created by android_sam on 2018. 2. 2..
  */
 
-public class PopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class RecentlySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
-    public interface OnPopularSuggestListener
+    public interface OnRecentlySuggestListener
     {
         void onItemClick(int position, StayOutboundSuggest stayOutboundSuggest);
+
+        void onDeleteClick(int position, StayOutboundSuggest stayOutboundSuggest);
+
+        void onDeleteAllClick();
 
         void onNearbyClick(StayOutboundSuggest stayOutboundSuggest);
     }
 
     private Context mContext;
-    private OnPopularSuggestListener mListener;
+    private OnRecentlySuggestListener mListener;
 
     private List<ObjectItem> mSuggestList;
 
-    public PopularSuggestListAdapter(Context context, OnPopularSuggestListener listener)
+    public RecentlySuggestListAdapter(Context context, OnRecentlySuggestListener listener)
     {
         mContext = context;
         this.mListener = listener;
@@ -325,8 +329,28 @@ public class PopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
 
     private void onBindViewHolder(FooterViewHolder holder)
     {
-        holder.dataBinding.deleteLayout.setVisibility(View.GONE);
-        holder.dataBinding.deleteTextView.setOnClickListener(null);
+        int count = getEntryCount();
+        if (count >= 2)
+        {
+            holder.dataBinding.deleteLayout.setVisibility(View.VISIBLE);
+            holder.dataBinding.deleteTextView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    if (mListener == null)
+                    {
+                        return;
+                    }
+
+                    mListener.onDeleteAllClick();
+                }
+            });
+        } else
+        {
+            holder.dataBinding.deleteLayout.setVisibility(View.GONE);
+            holder.dataBinding.deleteTextView.setOnClickListener(null);
+        }
     }
 
     private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)
@@ -353,7 +377,21 @@ public class PopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
         holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
         holder.dataBinding.priceTextView.setVisibility(View.GONE);
         holder.dataBinding.bottomDivider.setVisibility(View.GONE);
-        holder.dataBinding.deleteImageView.setVisibility(View.GONE);
+        holder.dataBinding.deleteImageView.setVisibility(View.VISIBLE);
+
+        holder.dataBinding.deleteImageView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if (mListener == null)
+                {
+                    return;
+                }
+
+                mListener.onDeleteClick(position, stayOutboundSuggest);
+            }
+        });
 
         switch (stayOutboundSuggest.categoryKey)
         {
