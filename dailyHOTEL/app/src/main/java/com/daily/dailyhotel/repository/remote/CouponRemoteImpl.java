@@ -9,6 +9,8 @@ import com.daily.dailyhotel.domain.CouponInterface;
 import com.daily.dailyhotel.entity.Coupon;
 import com.daily.dailyhotel.entity.Coupons;
 import com.daily.dailyhotel.repository.remote.model.CouponsData;
+import com.daily.dailyhotel.storage.preference.DailyPreference;
+import com.twoheart.dailyhotel.Setting;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.Crypto;
@@ -37,10 +39,10 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
     @Override
     public Observable<List<Coupon>> getCouponHistoryList()
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v3/users/coupons/history"//
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/users/coupons/history"//
             : "NTgkMjgkMzMkNTYkNzEkNTYkNDQkODYkMzAkNTAkMjEkMTkkOSQzMCQyOSQyOCQ=$ODlCNTQ1OOTA3NjczNkJVEQCjRBQSjNFOEXOXDMyPMzM5ODE4RTOBEMEZFGRjA1RTFZg5MjXk2QTVGNUJCDMzMzMzI4ODJJCNzY0Mg==$";
 
-        return mDailyMobileService.getCouponHistoryList(Crypto.getUrlDecoderEx(URL)) //
+        return mDailyMobileService.getCouponHistoryList(Crypto.getUrlDecoderEx(API)) //
             .subscribeOn(Schedulers.io()).map(new Function<BaseDto<CouponsData>, List<Coupon>>()
             {
                 @Override
@@ -75,7 +77,7 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
     @Override
     public Observable<Coupons> getGourmetCouponListByPayment(int[] ticketSaleIndexes, int[] ticketCounts)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v5/prebooking/gourmet/coupon/info"//
+        final String API = Constants.UNENCRYPTED_URL ? "api/v5/prebooking/gourmet/coupon/info"//
             : "NTUkMTIxJDE3JDkxJDEwOSQxOSQ1JDMwJDMxJDMyJDE0JDY2JDIyJDExOSQzOCQyMCQ=$OUJEREjQwMDI2NFEQ4MCIzWKA5NkRCRjUNMN5RTSM2RTZGMDA1QjVCMUUyRDQyMDdFCNUSNBMUMzMkUwOENEMkI0QUFFNzRGODVBNKkU5NDAzOTk2QkJDN0IQTxREM0RTZFN0ZGENzBCOTEw$";
 
         JSONArray jsonArray = new JSONArray();
@@ -97,7 +99,7 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
             ExLog.e(e.toString());
         }
 
-        return mDailyMobileService.getGourmetCouponListByPayment(Crypto.getUrlDecoderEx(URL), jsonArray) //
+        return mDailyMobileService.getGourmetCouponListByPayment(Crypto.getUrlDecoderEx(API), jsonArray) //
             .subscribeOn(Schedulers.io()).map(new Function<BaseDto<CouponsData>, Coupons>()
             {
                 @Override
@@ -167,10 +169,11 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
     }
 
     @Override
-    public Observable<Coupons> getStayOutboundCouponListByPayment(int stayIndex, String rateCode, String rateKey, String roomBedTypId
-        , String checkInDateTime, String checkOutDateTime)
+    public Observable<Coupons> getStayOutboundCouponListByPayment(int stayIndex, String rateCode, String rateKey, String roomBedTypId, String checkInDateTime, String checkOutDateTime)
     {
-        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/outbound/coupons/by-user"//
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v2/outbound/coupons/by-user"//
             : "";
 
         return mDailyMobileService.getStayOutboundCouponListByPayment(Crypto.getUrlDecoderEx(URL), stayIndex, rateCode, rateKey, roomBedTypId, checkInDateTime, checkOutDateTime) //
@@ -200,6 +203,35 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
                     }
 
                     return coupons;
+                }
+            }).subscribeOn(Schedulers.io());
+    }
+
+    @Override
+    public Observable<Boolean> getDownloadCoupon(String couponCode)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v3/users/coupons/download"//
+            : "MzMkNTYkMTgkODUkNTMkMzUkOTAkNTQkNyQyMyQxNiQyMCQ4MSQ2MiQ3NCQxMyQ=$QUE2NzVCFMUU5RNEFKCMjSQE3MOjUyRkFBOTVDMGCzlFN0M3QzkzM0VGMTAQO3QVzBMFMTJGMDhFDN0MxMUMHzNDc5RDY4NDLU5YNA==$";
+
+        return mDailyMobileService.getDownloadCoupon(Crypto.getUrlDecoderEx(API), couponCode) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<Object>, Boolean>()
+            {
+                @Override
+                public Boolean apply(@io.reactivex.annotations.NonNull BaseDto<Object> baseDto) throws Exception
+                {
+                    if (baseDto != null)
+                    {
+                        if (baseDto.msgCode == 100)
+                        {
+                            return true;
+                        } else
+                        {
+                            throw new BaseException(baseDto.msgCode, baseDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(-1, null);
+                    }
                 }
             }).subscribeOn(Schedulers.io());
     }

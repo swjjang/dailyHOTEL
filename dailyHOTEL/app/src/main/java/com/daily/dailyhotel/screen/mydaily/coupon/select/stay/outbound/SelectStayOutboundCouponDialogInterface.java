@@ -22,6 +22,9 @@ public interface SelectStayOutboundCouponDialogInterface
 
     interface OnEventListener extends OnBaseEventListener
     {
+        void onConfirm(Coupon coupon);
+
+        void onDownloadCouponClick(Coupon coupon);
     }
 
     interface AnalyticsInterface extends BaseAnalyticsInterface

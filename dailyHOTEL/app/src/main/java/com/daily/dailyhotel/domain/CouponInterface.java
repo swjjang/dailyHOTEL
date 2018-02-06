@@ -21,4 +21,6 @@ public interface CouponInterface
 
     Observable<Coupons> getStayOutboundCouponListByPayment(int stayIndex, String rateCode, String rateKey, String roomBedTypId//
         , String checkInDate, String checkOutDate);
+
+    Observable<Boolean> getDownloadCoupon(String couponCode);
 }

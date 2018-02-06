@@ -1,6 +1,7 @@
 package com.daily.dailyhotel.screen.mydaily.coupon.select.stay.outbound;
 
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,8 +12,10 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.Coupon;
 import com.daily.dailyhotel.entity.Coupons;
 import com.daily.dailyhotel.entity.StayBookDateTime;
+import com.daily.dailyhotel.parcel.CouponParcel;
 import com.daily.dailyhotel.repository.remote.CouponRemoteImpl;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -255,4 +258,45 @@ public class SelectStayOutboundCouponDialogPresenter extends BaseExceptionPresen
         getActivity().onBackPressed();
     }
 
+    @Override
+    public void onConfirm(Coupon coupon)
+    {
+        if (coupon == null || lock() == true)
+        {
+            return;
+        }
+
+        Intent intent = new Intent();
+        intent.putExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_SELECT_COUPON, new CouponParcel(coupon));
+        intent.putExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_MAX_COUPON_AMOUNT, mMaxCouponAmount);
+
+        setResult(Activity.RESULT_OK, intent);
+        onBackClick();
+    }
+
+    @Override
+    public void onDownloadCouponClick(Coupon coupon)
+    {
+        if (coupon == null || lock() == true)
+        {
+            return;
+        }
+
+        // 쿠폰 다운로드 시도!
+        addCompositeDisposable(mCouponRemoteImpl.getDownloadCoupon(coupon.couponCode).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+        {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception
+            {
+
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+
+            }
+        }));
+    }
 }

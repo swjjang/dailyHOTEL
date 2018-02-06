@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.view.Window;
 
 import com.daily.base.BaseActivity;
+import com.twoheart.dailyhotel.R;
 
 /**
  * Created by sheldon
@@ -44,6 +45,8 @@ public class SelectStayOutboundCouponDialogActivity extends BaseActivity<SelectS
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        overridePendingTransition(R.anim.hold, R.anim.hold);
+
         super.onCreate(savedInstanceState);
 
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -60,5 +63,7 @@ public class SelectStayOutboundCouponDialogActivity extends BaseActivity<SelectS
     public void finish()
     {
         super.finish();
+
+        overridePendingTransition(R.anim.hold, R.anim.hold);
     }
 }
