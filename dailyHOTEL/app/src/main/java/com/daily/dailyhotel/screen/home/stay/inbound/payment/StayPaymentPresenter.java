@@ -957,7 +957,6 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 if (selected == true)
                 {
                     setSaleType(STICKER);
-
                     notifyStayPaymentChanged();
                 } else
                 {

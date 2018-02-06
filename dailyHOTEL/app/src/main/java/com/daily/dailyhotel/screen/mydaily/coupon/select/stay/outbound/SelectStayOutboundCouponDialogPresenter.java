@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.copy;
+package com.daily.dailyhotel.screen.mydaily.coupon.select.stay.outbound;
 
 
 import android.content.Intent;
@@ -13,28 +13,28 @@ import com.twoheart.dailyhotel.R;
  * Created by sheldon
  * Clean Architecture
  */
-public class CopyPresenter extends BaseExceptionPresenter<CopyActivity, CopyInterface.ViewInterface> implements CopyInterface.OnEventListener
+public class SelectStayOutboundCouponDialogPresenter extends BaseExceptionPresenter<SelectStayOutboundCouponDialogActivity, SelectStayOutboundCouponDialogInterface.ViewInterface> implements SelectStayOutboundCouponDialogInterface.OnEventListener
 {
-    private CopyInterface.AnalyticsInterface mAnalytics;
+    private SelectStayOutboundCouponDialogInterface.AnalyticsInterface mAnalytics;
 
-    public CopyPresenter(@NonNull CopyActivity activity)
+    public SelectStayOutboundCouponDialogPresenter(@NonNull SelectStayOutboundCouponDialogActivity activity)
     {
         super(activity);
     }
 
     @NonNull
     @Override
-    protected CopyInterface.ViewInterface createInstanceViewInterface()
+    protected SelectStayOutboundCouponDialogInterface.ViewInterface createInstanceViewInterface()
     {
-        return new CopyView(getActivity(), this);
+        return new SelectStayOutboundCouponDialogView(getActivity(), this);
     }
 
     @Override
-    public void constructorInitialize(CopyActivity activity)
+    public void constructorInitialize(SelectStayOutboundCouponDialogActivity activity)
     {
         setContentView(R.layout.activity_copy_data);
 
-        setAnalytics(new CopyAnalyticsImpl());
+        setAnalytics(new SelectStayOutboundCouponDialogAnalyticsImpl());
 
         setRefresh(true);
     }
@@ -42,7 +42,7 @@ public class CopyPresenter extends BaseExceptionPresenter<CopyActivity, CopyInte
     @Override
     public void setAnalytics(BaseAnalyticsInterface analytics)
     {
-        mAnalytics = (CopyInterface.AnalyticsInterface) analytics;
+        mAnalytics = (SelectStayOutboundCouponDialogInterface.AnalyticsInterface) analytics;
     }
 
     @Override

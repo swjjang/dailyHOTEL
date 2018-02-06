@@ -260,7 +260,16 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
                         DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) mDailyDeepLink;
 
-                        mStayIndex = Integer.parseInt(externalDeepLink.getIndex());
+                        try
+                        {
+                            mStayIndex = Integer.parseInt(externalDeepLink.getIndex());
+                        } catch (Exception e)
+                        {
+                            Crashlytics.log(externalDeepLink.getDeepLink());
+                            Crashlytics.logException(e);
+                            finish();
+                            return;
+                        }
 
                         int nights = 1;
 
@@ -269,7 +278,8 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                             nights = Integer.parseInt(externalDeepLink.getNights());
                         } catch (Exception e)
                         {
-                            ExLog.d(e.toString());
+                            Crashlytics.log(externalDeepLink.getDeepLink());
+                            Crashlytics.logException(e);
                         } finally
                         {
                             if (nights <= 0)
@@ -313,6 +323,9 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                     @Override
                     public void accept(Throwable throwable) throws Exception
                     {
+                        Crashlytics.log(mDailyDeepLink.getDeepLink());
+                        Crashlytics.logException(throwable);
+                        
                         onHandleError(throwable);
                     }
                 }));

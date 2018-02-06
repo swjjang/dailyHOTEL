@@ -1,10 +1,10 @@
-package com.daily.dailyhotel.screen.copy;
+package com.daily.dailyhotel.screen.mydaily.coupon.select.stay.outbound;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.base.OnBaseEventListener;
 
-public interface CopyInterface
+public interface SelectStayOutboundCouponDialogInterface
 {
     interface ViewInterface extends BaseDialogViewInterface
     {

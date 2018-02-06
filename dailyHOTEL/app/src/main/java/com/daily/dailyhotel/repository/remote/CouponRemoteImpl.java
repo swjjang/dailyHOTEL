@@ -165,4 +165,42 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
                 }
             }).subscribeOn(Schedulers.io());
     }
+
+    @Override
+    public Observable<Coupons> getStayOutboundCouponListByPayment(int stayIndex, String rateCode, String rateKey, String roomBedTypId
+        , String checkInDate, String checkOutDate)
+    {
+        final String URL = Constants.UNENCRYPTED_URL ? "api/v2/outbound/coupons/by-user"//
+            : "";
+
+        return mDailyMobileService.getStayCouponListByPayment(Crypto.getUrlDecoderEx(URL), stayIndex, roomIndex, checkIn, checkOut) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<CouponsData>, Coupons>()
+            {
+                @Override
+                public Coupons apply(BaseDto<CouponsData> couponsDataBaseDto) throws Exception
+                {
+                    Coupons coupons = new Coupons();
+
+                    if (couponsDataBaseDto != null)
+                    {
+                        if (couponsDataBaseDto.msgCode == 100 && couponsDataBaseDto.data != null)
+                        {
+                            CouponsData couponsData = couponsDataBaseDto.data;
+                            if (couponsData != null)
+                            {
+                                coupons = couponsData.getCoupons();
+                            }
+                        } else
+                        {
+                            throw new BaseException(couponsDataBaseDto.msgCode, couponsDataBaseDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(-1, null);
+                    }
+
+                    return coupons;
+                }
+            }).subscribeOn(Schedulers.io());
+    }
 }

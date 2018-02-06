@@ -32,6 +32,8 @@ public interface StayOutboundPaymentInterface extends BaseDialogViewInterface
 
     void setBonus(boolean selected, int bonus, int discountPrice);
 
+    void setCoupon(boolean selected, int couponPrice, boolean rewardCoupon);
+
     void setDepositSticker(boolean selected);
 
     void setDepositStickerVisible(boolean visible);
@@ -57,6 +59,12 @@ public interface StayOutboundPaymentInterface extends BaseDialogViewInterface
     void setBonusGuideText(String text);
 
     void setBonusEnabled(boolean enabled);
+
+    void setMaxCouponAmountText(int maxCouponAmount);
+
+    void setMaxCouponAmountVisible(boolean isVisible);
+
+    void setCouponEnabled(boolean enabled);
 
     void showAgreeTermDialog(DailyBookingPaymentTypeView.PaymentType paymentType//
         , View.OnClickListener onClickListener, DialogInterface.OnCancelListener cancelListener);

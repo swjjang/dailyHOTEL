@@ -1,12 +1,15 @@
-package com.daily.dailyhotel.screen.copy;
+package com.daily.dailyhotel.screen.mydaily.coupon.select.stay.outbound;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
+import com.daily.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.databinding.ActivityCopyDataBinding;
 
-public class CopyView extends BaseDialogView<CopyInterface.OnEventListener, ActivityCopyDataBinding> implements CopyInterface.ViewInterface
+public class SelectStayOutboundCouponDialogView extends BaseDialogView<SelectStayOutboundCouponDialogInterface.OnEventListener, ActivityCopyDataBinding> implements SelectStayOutboundCouponDialogInterface.ViewInterface
 {
-    public CopyView(BaseActivity baseActivity, CopyInterface.OnEventListener listener)
+
+
+    public SelectStayOutboundCouponDialogView(BaseActivity baseActivity, SelectStayOutboundCouponDialogInterface.OnEventListener listener)
     {
         super(baseActivity, listener);
     }
