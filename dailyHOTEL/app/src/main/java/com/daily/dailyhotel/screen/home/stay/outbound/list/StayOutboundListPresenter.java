@@ -1570,8 +1570,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                     }
                 }
 
-                if (DailyTextUtils.isTextEmpty(stayOutbounds.cacheKey, stayOutbounds.cacheLocation, stayOutbounds.customerSessionId) == true//
-                    || stayOutboundList.size() < NUMBER_OF_RESULTS)
+                if (DailyTextUtils.isTextEmpty(stayOutbounds.cacheKey, stayOutbounds.cacheLocation, stayOutbounds.customerSessionId) == true)
                 {
                     stayOutbounds.moreResultsAvailable = false;
                 }
