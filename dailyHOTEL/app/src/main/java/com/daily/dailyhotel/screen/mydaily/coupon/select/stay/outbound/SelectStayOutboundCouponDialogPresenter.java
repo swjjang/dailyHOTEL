@@ -1,15 +1,24 @@
 package com.daily.dailyhotel.screen.mydaily.coupon.select.stay.outbound;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.View;
 
 import com.daily.base.BaseAnalyticsInterface;
+import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.Coupons;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.repository.remote.CouponRemoteImpl;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.DailyCalendar;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created by sheldon
@@ -22,9 +31,10 @@ public class SelectStayOutboundCouponDialogPresenter extends BaseExceptionPresen
     CouponRemoteImpl mCouponRemoteImpl;
 
     int mStayIndex;
-    int mStayName;
+    String mStayName;
     StayBookDateTime mStayBookDateTime;
-    String m
+    String mRateCode, mRateKey, mRoomTypeCode;
+    int mMaxCouponAmount;
 
     public SelectStayOutboundCouponDialogPresenter(@NonNull SelectStayOutboundCouponDialogActivity activity)
     {
@@ -64,13 +74,34 @@ public class SelectStayOutboundCouponDialogPresenter extends BaseExceptionPresen
             return true;
         }
 
-        intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, checkOutDateTime);
-        intent.putExtra(INTENT_EXTRA_DATA_STAY_INDEX, stayIndex);
-        intent.putExtra(INTENT_EXTRA_DATA_STAY_NAME, stayName);
-        intent.putExtra(INTENT_EXTRA_DATA_RATE_CODE, rateCode);
-        intent.putExtra(INTENT_EXTRA_DATA_RATE_KEY, rateKey);
-        intent.putExtra(INTENT_EXTRA_DATA_ROOM_TYPE_CODE, roomTypeCode);
+        mStayIndex = intent.getIntExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_STAY_INDEX, -1);
+
+        if (mStayIndex <= 0)
+        {
+            return false;
+        }
+
+        mStayName = intent.getStringExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_STAY_NAME);
+
+        try
+        {
+            mStayBookDateTime = new StayBookDateTime(intent.getStringExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME), intent.getStringExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME));
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+
+            return false;
+        }
+
+        mRateCode = intent.getStringExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_RATE_CODE);
+        mRateKey = intent.getStringExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_RATE_KEY);
+        mRoomTypeCode = intent.getStringExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_ROOM_TYPE_CODE);
+
+
+        if (DailyTextUtils.isTextEmpty(mRateCode, mRateKey, mRoomTypeCode) == true)
+        {
+            return false;
+        }
 
         return true;
     }
@@ -156,7 +187,66 @@ public class SelectStayOutboundCouponDialogPresenter extends BaseExceptionPresen
         setRefresh(false);
         screenLock(showProgress);
 
-        addCompositeDisposable(mCouponRemoteImpl.getStayOutboundCouponListByPayment(m));
+        addCompositeDisposable(mCouponRemoteImpl.getStayOutboundCouponListByPayment(mStayIndex, mRateCode, mRateKey, mRoomTypeCode//
+            , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
+            , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Coupons>()
+        {
+            @Override
+            public void accept(Coupons coupons) throws Exception
+            {
+                if (coupons == null || coupons.coupons == null || coupons.coupons.size() == 0)
+                {
+                    getViewInterface().setVisible(false);
+
+                    getViewInterface().showSimpleDialog(getString(R.string.label_booking_select_coupon), getString(R.string.message_select_coupon_empty), //
+                        getString(R.string.dialog_btn_text_confirm), null, new DialogInterface.OnDismissListener()
+                        {
+                            @Override
+                            public void onDismiss(DialogInterface dialog)
+                            {
+                                finish();
+                            }
+                        });
+
+                } else
+                {
+                    mMaxCouponAmount = coupons.maxCouponAmount;
+
+                    getViewInterface().setVisible(true);
+                    getViewInterface().showCouponListDialog(getString(R.string.label_select_coupon), coupons.coupons, new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+
+                        }
+                    }, new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+
+                        }
+                    }, new DialogInterface.OnCancelListener()
+                    {
+                        @Override
+                        public void onCancel(DialogInterface dialog)
+                        {
+
+                        }
+                    });
+                }
+
+                unLockAll();
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                onHandleErrorAndFinish(throwable);
+            }
+        }));
     }
 
     @Override

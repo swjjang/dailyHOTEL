@@ -17,7 +17,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="invisible">
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/titleTextView"
