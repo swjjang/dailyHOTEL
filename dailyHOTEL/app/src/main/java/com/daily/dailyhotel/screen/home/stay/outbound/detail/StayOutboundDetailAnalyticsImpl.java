@@ -7,6 +7,7 @@ import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutboundDetail;
+import com.daily.dailyhotel.entity.StayOutboundRoom;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundPaymentAnalyticsParam;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
@@ -105,8 +106,23 @@ public class StayOutboundDetailAnalyticsImpl implements StayOutboundDetailPresen
             params.put(AnalyticsManager.KeyType.PLACE_COUNT, placeCount);
 
             params.put(AnalyticsManager.KeyType.RATING, DailyTextUtils.isTextEmpty(mAnalyticsParam.rating) == true ? AnalyticsManager.ValueType.EMPTY : mAnalyticsParam.rating);
+            params.put(AnalyticsManager.KeyType.IS_SHOW_ORIGINAL_PRICE, mAnalyticsParam.nightlyBaseRate > 0 ? "y" : "n");
+            params.put(AnalyticsManager.KeyType.DAILYCHOICE, mAnalyticsParam.dailyChoice ? "y" : "n");
             params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(nights));
-            params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.OVERSEAS);
+            params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.OUTBOUND);
+
+            boolean hasNRD = false;
+
+            for (StayOutboundRoom stayOutboundRoom : stayOutboundDetail.getRoomList())
+            {
+                if (stayOutboundRoom.nonRefundable == true)
+                {
+                    hasNRD = true;
+                    break;
+                }
+            }
+
+            params.put(AnalyticsManager.KeyType.NRD, hasNRD ? "y" : "n");
 
             AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_HOTELDETAILVIEW_OUTBOUND, null, params);
         } catch (Exception e)

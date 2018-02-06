@@ -271,6 +271,16 @@ public class AdjustManager extends BaseAnalyticsManager
             {
                 ExLog.d(TAG + "Screen : " + screenName + params.toString());
             }
+        } else if (AnalyticsManager.Screen.DAILYHOTEL_HOTELDETAILVIEW_OUTBOUND.equalsIgnoreCase(screenName) == true)
+        {
+            params.put(Key.SERVICE, AnalyticsManager.ValueType.STAY);
+
+            event = getDetailEvent(EventToken.VIEW_DETAIL, params);
+
+            if (DEBUG == true)
+            {
+                ExLog.d(TAG + "Screen : " + screenName + params.toString());
+            }
         } else if (AnalyticsManager.Screen.DAILYHOTEL_BOOKINGINITIALISE.equalsIgnoreCase(screenName) == true)
         {
             params.put(Key.SERVICE, AnalyticsManager.ValueType.STAY);
@@ -1209,6 +1219,16 @@ public class AdjustManager extends BaseAnalyticsManager
         {
             String checkOut = params.get(AnalyticsManager.KeyType.CHECK_OUT); // check_out_date
             event.addPartnerParameter(AnalyticsManager.KeyType.CHECK_OUT_DATE, checkOut);
+        }
+
+        if (params.containsKey(AnalyticsManager.KeyType.COUNTRY) == true)
+        {
+            event.addPartnerParameter(AnalyticsManager.KeyType.COUNTRY, params.get(AnalyticsManager.KeyType.COUNTRY));
+        }
+
+        if (params.containsKey(AnalyticsManager.KeyType.NRD) == true)
+        {
+            event.addPartnerParameter(AnalyticsManager.KeyType.NRD, params.get(AnalyticsManager.KeyType.NRD));
         }
 
         String service = params.get(Key.SERVICE);
