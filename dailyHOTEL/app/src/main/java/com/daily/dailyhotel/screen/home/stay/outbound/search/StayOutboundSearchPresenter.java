@@ -52,6 +52,8 @@ import io.reactivex.functions.Consumer;
  * Created by sheldon
  * Clean Architecture
  */
+
+@Deprecated
 public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutboundSearchActivity, StayOutboundSearchViewInterface> implements StayOutboundSearchView.OnEventListener
 {
     private static final int DAYS_OF_MAXCOUNT = 365;

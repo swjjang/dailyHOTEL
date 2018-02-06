@@ -14,6 +14,8 @@ import com.twoheart.dailyhotel.R;
  * Created by sheldon
  * Clean Architecture
  */
+
+@Deprecated
 public class StayOutboundSearchActivity extends BaseActivity<StayOutboundSearchPresenter>
 {
     static final int REQUEST_CODE_CALENDAR = 10000;
@@ -22,23 +24,23 @@ public class StayOutboundSearchActivity extends BaseActivity<StayOutboundSearchP
     static final int REQUEST_CODE_LIST = 10003;
     static final int REQUEST_CODE_DETAIL = 10004;
 
-    public static Intent newInstance(Context context)
-    {
-        Intent intent = new Intent(context, StayOutboundSearchActivity.class);
-        return intent;
-    }
-
-    public static Intent newInstance(Context context, String deepLink)
-    {
-        Intent intent = new Intent(context, StayOutboundSearchActivity.class);
-
-        if (DailyTextUtils.isTextEmpty(deepLink) == false)
-        {
-            intent.putExtra(INTENT_EXTRA_DATA_DEEPLINK, deepLink);
-        }
-
-        return intent;
-    }
+//    public static Intent newInstance(Context context)
+//    {
+//        Intent intent = new Intent(context, StayOutboundSearchActivity.class);
+//        return intent;
+//    }
+//
+//    public static Intent newInstance(Context context, String deepLink)
+//    {
+//        Intent intent = new Intent(context, StayOutboundSearchActivity.class);
+//
+//        if (DailyTextUtils.isTextEmpty(deepLink) == false)
+//        {
+//            intent.putExtra(INTENT_EXTRA_DATA_DEEPLINK, deepLink);
+//        }
+//
+//        return intent;
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

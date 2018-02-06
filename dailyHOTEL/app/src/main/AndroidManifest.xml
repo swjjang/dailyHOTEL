@@ -501,12 +501,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent"/>
         <activity
-            android:name=".screen.search.SearchActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
-        <activity
             android:name=".screen.search.stay.result.StaySearchResultActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
@@ -658,12 +652,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent"/>
-
-        <activity
-            android:name="com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchActivity"
-            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
 
         <activity
             android:name="com.daily.dailyhotel.screen.home.stay.outbound.search.suggest.StayOutboundSearchSuggestActivity"

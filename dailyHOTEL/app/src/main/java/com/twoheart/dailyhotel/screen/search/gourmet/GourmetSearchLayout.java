@@ -21,6 +21,7 @@ import com.twoheart.dailyhotel.screen.search.SearchCardViewAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class GourmetSearchLayout extends PlaceSearchLayout
 {
     public GourmetSearchLayout(Context context, OnEventListener mOnEventListener)

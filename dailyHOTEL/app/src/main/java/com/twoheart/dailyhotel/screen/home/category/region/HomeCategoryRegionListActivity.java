@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyViewPager;
+import com.daily.dailyhotel.screen.home.search.SearchActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.DailyHotel;
@@ -20,8 +21,8 @@ import com.twoheart.dailyhotel.model.time.StayBookingDay;
 import com.twoheart.dailyhotel.place.activity.PlaceRegionListActivity;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
-import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyLocationFactory;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -319,8 +320,9 @@ public class HomeCategoryRegionListActivity extends BaseActivity
     void showSearch()
     {
         // 우선 고메가 없음으로 Stay로 고정
-        Intent intent = SearchActivity.newInstance(this, PlaceType.HOTEL, mStayBookingDay);
-        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
+        startActivityForResult(SearchActivity.newInstance(this, ServiceType.HOTEL//
+            , mStayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+            , mStayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)), CODE_REQUEST_ACTIVITY_SEARCH);
 
         String label = "";
         switch (mDailyCategoryType)

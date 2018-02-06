@@ -30,6 +30,7 @@ import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
 import com.daily.dailyhotel.screen.common.area.stay.StayAreaListActivity;
+import com.daily.dailyhotel.screen.home.search.SearchActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.filter.StayFilterActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
@@ -58,7 +59,6 @@ import com.twoheart.dailyhotel.place.layout.PlaceMainLayout;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceMainNetworkController;
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
-import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -702,8 +702,21 @@ public class StayMainActivity extends PlaceMainActivity
         @Override
         public void onSearchClick()
         {
-            Intent intent = SearchActivity.newInstance(StayMainActivity.this, PlaceType.HOTEL, mStayCuration.getStayBookingDay());
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
+            if (mStayCuration == null || mStayCuration.getStayBookingDay() == null)
+            {
+                return;
+            }
+
+            StayBookingDay stayBookingDay = mStayCuration.getStayBookingDay();
+
+            if (stayBookingDay == null)
+            {
+                return;
+            }
+
+            startActivityForResult(SearchActivity.newInstance(StayMainActivity.this, ServiceType.HOTEL//
+                , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)), CODE_REQUEST_ACTIVITY_SEARCH);
 
             switch (mViewType)
             {
@@ -1575,14 +1588,18 @@ public class StayMainActivity extends PlaceMainActivity
 
                     if (index != -1)
                     {
-                        Intent intent = SearchActivity.newInstance(baseActivity, PlaceType.HOTEL, stayBookingDay, index);
-                        baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
+                        // TODO: 2018. 2. 5. deep link
+
+                        //                        Intent intent = SearchActivity.newInstance(baseActivity, PlaceType.HOTEL, stayBookingDay, index);
+                        //                        baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
                     }
                 } else
                 {
                     String word = externalDeepLink.getSearchWord();
-                    Intent intent = SearchActivity.newInstance(baseActivity, PlaceType.HOTEL, stayBookingDay, word);
-                    baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
+
+                    // TODO: 2018. 2. 5. deep link
+                    //                    Intent intent = SearchActivity.newInstance(baseActivity, PlaceType.HOTEL, stayBookingDay, word);
+                    //                    baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
                 }
 
                 mIsDeepLink = true;

@@ -28,6 +28,7 @@ import com.daily.dailyhotel.parcel.StayRegionParcel;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.remote.StayRemoteImpl;
 import com.daily.dailyhotel.screen.common.area.stay.StayAreaListActivity;
+import com.daily.dailyhotel.screen.home.search.SearchActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
@@ -58,7 +59,6 @@ import com.twoheart.dailyhotel.screen.home.category.nearby.StayCategoryNearByAct
 import com.twoheart.dailyhotel.screen.hotel.filter.StayCalendarActivity;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListAdapter;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
-import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.DailyDeepLink;
@@ -773,8 +773,21 @@ public class StayCategoryTabActivity extends PlaceMainActivity
         @Override
         public void onSearchClick()
         {
-            Intent intent = SearchActivity.newInstance(StayCategoryTabActivity.this, PlaceType.HOTEL, mStayCategoryCuration.getStayBookingDay());
-            startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
+            if (mStayCategoryCuration == null || mStayCategoryCuration.getStayBookingDay() == null)
+            {
+                return;
+            }
+
+            StayBookingDay stayBookingDay = mStayCategoryCuration.getStayBookingDay();
+
+            if (stayBookingDay == null)
+            {
+                return;
+            }
+
+            startActivityForResult(SearchActivity.newInstance(StayCategoryTabActivity.this, ServiceType.HOTEL//
+                , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)), CODE_REQUEST_ACTIVITY_SEARCH);
 
             switch (mViewType)
             {

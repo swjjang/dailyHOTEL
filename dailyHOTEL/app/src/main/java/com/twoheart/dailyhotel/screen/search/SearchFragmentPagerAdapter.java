@@ -8,6 +8,7 @@ import com.twoheart.dailyhotel.place.fragment.PlaceSearchFragment;
 
 import java.util.ArrayList;
 
+@Deprecated
 public class SearchFragmentPagerAdapter extends FragmentPagerAdapter
 {
     private ArrayList<PlaceSearchFragment> mFragmentList;

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
+import com.daily.dailyhotel.screen.home.search.SearchActivity;
 import com.daily.dailyhotel.view.DailyToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Area;
@@ -16,8 +17,8 @@ import com.twoheart.dailyhotel.place.adapter.PlaceRegionFragmentPagerAdapter;
 import com.twoheart.dailyhotel.place.fragment.PlaceRegionListFragment;
 import com.twoheart.dailyhotel.place.networkcontroller.PlaceRegionListNetworkController;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
-import com.twoheart.dailyhotel.screen.search.SearchActivity;
 import com.twoheart.dailyhotel.util.Constants;
+import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -127,8 +128,13 @@ public class GourmetRegionListActivity extends PlaceRegionListActivity
     @Override
     protected void showSearch()
     {
-        Intent intent = SearchActivity.newInstance(this, PlaceType.FNB, mGourmetBookingDay);
-        startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH);
+        if (mGourmetBookingDay == null)
+        {
+            return;
+        }
+
+        startActivityForResult(SearchActivity.newInstance(this, ServiceType.GOURMET//
+            , mGourmetBookingDay.getVisitDay(DailyCalendar.ISO_8601_FORMAT)), CODE_REQUEST_ACTIVITY_SEARCH);
 
         AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SEARCH//
             , AnalyticsManager.Action.SEARCH_BUTTON_CLICK, AnalyticsManager.Label.GOURMET_LOCATION_LIST, null);

@@ -20,6 +20,7 @@ import java.util.ArrayList;
  * Created by android_sam on 2017. 8. 10..
  */
 
+@Deprecated
 public class SearchCardItemLayout extends ConstraintLayout
 {
     private Context mContext;

@@ -18,6 +18,7 @@ import java.util.ArrayList;
  * Created by android_sam on 2017. 8. 10..
  */
 
+@Deprecated
 public class SearchCardItemListAdapter extends RecyclerView.Adapter<SearchCardItemListAdapter.ItemViewHolder>
 {
     private Context mContext;

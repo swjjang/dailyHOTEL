@@ -164,6 +164,9 @@ public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.
         analyticsParam.grade = grade;
         analyticsParam.rankingPosition = rankingPosition;
         analyticsParam.listSize = listSize;
+        analyticsParam.dailyChoice = stayOutbound.dailyChoice;
+        analyticsParam.nightlyRate = stayOutbound.nightlyRate;
+        analyticsParam.nightlyBaseRate = stayOutbound.nightlyBaseRate;
 
         return analyticsParam;
     }
