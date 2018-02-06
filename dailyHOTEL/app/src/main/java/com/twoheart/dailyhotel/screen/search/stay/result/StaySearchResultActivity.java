@@ -365,7 +365,11 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             showEmptyLayout();
         } else
         {
-            mNetworkController.requestAddress(location);
+            if (StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStaySearchCuration.getSuggest().categoryKey) == true)
+            {
+                mNetworkController.requestAddress(location);
+            }
+
             mStaySearchCuration.setLocation(location);
 
             if (mPlaceSearchResultLayout.getCategoryTabCount() > 0)
