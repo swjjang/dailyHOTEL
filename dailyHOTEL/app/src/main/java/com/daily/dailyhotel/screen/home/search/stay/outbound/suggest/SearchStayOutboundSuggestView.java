@@ -99,7 +99,7 @@ public class SearchStayOutboundSuggestView //
                         {
                             getEventListener().onSearchSuggest(v.getText().toString());
                         }
-                        return true;
+                        return false;
 
                     default:
                         return false;

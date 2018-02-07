@@ -106,7 +106,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
                         {
                             getEventListener().onSearchSuggest(v.getText().toString());
                         }
-                        return true;
+                        return false;
 
                     default:
                         return false;
