@@ -17,7 +17,7 @@ android {
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 26
+        targetSdkVersion 25
     }
 
     // This enables long timeouts required on slow environments, e.g. Travis
