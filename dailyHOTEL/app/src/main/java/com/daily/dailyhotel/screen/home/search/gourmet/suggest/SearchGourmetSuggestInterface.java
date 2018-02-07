@@ -7,8 +7,6 @@ import java.util.List;
 
 public interface SearchGourmetSuggestInterface extends BaseDialogViewInterface
 {
-    void setSuggestsVisible(boolean visible);
-
     void setSuggests(List<GourmetSuggest> gourmetSuggestList);
 
     void setSuggest(String suggest);
@@ -19,9 +17,9 @@ public interface SearchGourmetSuggestInterface extends BaseDialogViewInterface
 
     void setProgressBarVisible(boolean visible);
 
-    void setRecentlySuggestVisible(boolean visible);
+    void setRecentlySuggests(GourmetSuggest locationSuggest, List<GourmetSuggest> gourmetSuggestList);
 
-    void setRecentlySuggests(List<GourmetSuggest> gourmetSuggestList);
+    void setPopularAreaSuggests(GourmetSuggest locationSuggest, List<GourmetSuggest> gourmetSuggestList);
 
     int getRecentlySuggestEntryCount();
 
@@ -35,5 +33,5 @@ public interface SearchGourmetSuggestInterface extends BaseDialogViewInterface
 
     void removeRecentlySection(int menuType);
 
-    void setNearbyGourmetSuggest(boolean isAgreePermission, GourmetSuggest nearbyGourmetSuggest);
+    void setNearbyGourmetSuggest(GourmetSuggest nearbyGourmetSuggest);
 }

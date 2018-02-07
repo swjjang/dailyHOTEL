@@ -15,6 +15,8 @@ public interface SuggestInterface
 {
     Observable<List<StayOutboundSuggest>> getSuggestsByStayOutbound(String keyword);
 
+    Observable<List<StayOutboundSuggest>> getRegionSuggestsByStayOutbound(String keyword);
+
     Observable<Pair<String, ArrayList<StayKeyword>>> getSuggestsByStayInbound(String checkInDate, int stays, String keyword);
 
     Observable<Pair<String, ArrayList<GourmetKeyword>>> getSuggestsByGourmet(String visitDate, String keyword);

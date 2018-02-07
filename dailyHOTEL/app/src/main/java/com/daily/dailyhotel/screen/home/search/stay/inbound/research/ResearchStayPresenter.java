@@ -120,7 +120,7 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
     @Override
     public void onPostCreate()
     {
-        getViewInterface().setToolbarTitle(getString(R.string.label_search_stay));
+        getViewInterface().setToolbarTitle(getString(R.string.label_search_search_stay));
 
         if (mSearchModel.suggest.getValue() == null || DailyTextUtils.isTextEmpty(mSearchModel.suggest.getValue().displayName) == true)
         {

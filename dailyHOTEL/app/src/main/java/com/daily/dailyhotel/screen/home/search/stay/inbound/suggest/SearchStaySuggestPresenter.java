@@ -21,9 +21,13 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.StayBookDateTime;
+import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StaySuggest;
+import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
+import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
 import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
@@ -37,12 +41,14 @@ import com.daily.dailyhotel.util.DailyLocationExFactory;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Keyword;
+import com.twoheart.dailyhotel.network.model.GourmetKeyword;
 import com.twoheart.dailyhotel.network.model.StayKeyword;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyRecentSearches;
 import com.twoheart.dailyhotel.util.Util;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -84,6 +90,10 @@ public class SearchStaySuggestPresenter //
     private List<StaySuggest> mPopularAreaList; // 일단 형식만 맞추기 위해 - 기본 화면을 대신 적용
     private List<StaySuggest> mRecentlySuggestList;
     private List<StaySuggest> mSuggestList;
+    private List<GourmetSuggest> mGourmetSuggestList;
+    private List<StayOutboundSuggest> mStayOutboundSuggestList;
+    private ArrayList<String> mStayOutboundKeywordList;
+    private ArrayList<String> mGourmetKeywordList;
     private StaySuggest mLocationSuggest;
     private String mKeyword;
 
@@ -117,13 +127,42 @@ public class SearchStaySuggestPresenter //
         mRecentlyLocalImpl = new RecentlyLocalImpl(activity);
         mGoogleAddressRemoteImpl = new GoogleAddressRemoteImpl(activity);
 
-        mLocationSuggest = new StaySuggest(StaySuggest.MENU_TYPE_LOCATION //
-            , StaySuggest.CATEGORY_LOCATION, getString(R.string.label_search_nearby_description));
+        boolean isAgreeLocation = DailyPreference.getInstance(activity).isAgreeTermsOfLocation();
 
-        List<StaySuggest> popularList  = new ArrayList<>();
+        mLocationSuggest = new StaySuggest(StaySuggest.MENU_TYPE_LOCATION, StaySuggest.CATEGORY_LOCATION //
+            , isAgreeLocation ? getString(R.string.label_search_nearby_empty_address) : getString(R.string.label_search_nearby_description));
+
+        List<StaySuggest> popularList = new ArrayList<>();
         popularList.add(new StaySuggest(0, "", getString(R.string.label_search_suggest_recently_empty_description_type_stay)));
         setPopularAreaList(popularList);
         notifyDataSetChanged();
+
+        addCompositeDisposable(Observable.zip(getStayOutboundKeywordList(), getGourmetKeywordList() //
+            , new BiFunction<ArrayList<String>, ArrayList<String>, Boolean>()
+            {
+                @Override
+                public Boolean apply(ArrayList<String> stayOutboundKeywordList, ArrayList<String> gourmetKeywordList) throws Exception
+                {
+                    mStayOutboundKeywordList = stayOutboundKeywordList;
+                    mGourmetKeywordList = gourmetKeywordList;
+                    return true;
+                }
+            }).subscribe(new Consumer<Boolean>()
+        {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception
+            {
+
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                mStayOutboundKeywordList = null;
+                mGourmetKeywordList = null;
+            }
+        }));
 
         setRefresh(true);
     }
@@ -305,7 +344,7 @@ public class SearchStaySuggestPresenter //
         setRefresh(false);
         screenLock(showProgress);
 
-        // 최근 본 없장
+        // 최근 본 업장
         Observable<ArrayList<RecentlyPlace>> ibObservable = mRecentlyLocalImpl.getRecentlyJSONObject(DailyDb.MAX_RECENT_PLACE_COUNT, Constants.ServiceType.HOTEL) //
             .observeOn(Schedulers.io()).flatMap(new Function<JSONObject, ObservableSource<ArrayList<RecentlyPlace>>>()
             {
@@ -423,16 +462,43 @@ public class SearchStaySuggestPresenter //
         mSuggestList = suggestList;
     }
 
+    private void setGourmetSuggestList(List<GourmetSuggest> suggestList)
+    {
+        mGourmetSuggestList = suggestList;
+    }
+
+    private void setStayOutboundSuggestList(List<StayOutboundSuggest> suggestList)
+    {
+        mStayOutboundSuggestList = suggestList;
+    }
+
     private void notifyDataSetChanged()
     {
         if (DailyTextUtils.isTextEmpty(mKeyword) == false)
         {
-            getViewInterface().setSuggests(mSuggestList);
+            if (mSuggestList == null || mSuggestList.size() == 0)
+            {
+                if (mGourmetSuggestList != null && mGourmetSuggestList.size() > 0)
+                {
+                    getViewInterface().setGourmetSuggests(mGourmetSuggestList);
+                    return;
+                }
+
+                if (mStayOutboundSuggestList != null && mStayOutboundSuggestList.size() > 0)
+                {
+                    getViewInterface().setStayOutboundSuggests(mStayOutboundSuggestList);
+                    return;
+                }
+            }
+
+            getViewInterface().setStaySuggests(mSuggestList);
             return;
         }
 
         // 추천 검색어의 경우 검색어가 있을때만 작동 해야 함
         setSuggestList(null);
+        setGourmetSuggestList(null);
+        setStayOutboundSuggestList(null);
 
         if (mRecentlySuggestList != null && mRecentlySuggestList.size() > 0)
         {
@@ -508,74 +574,150 @@ public class SearchStaySuggestPresenter //
             unLockAll();
         } else
         {
-            mSuggestDisposable = mSuggestRemoteImpl.getSuggestsByStayInbound(checkInDate, nights, keyword)//
-                .delaySubscription(500, TimeUnit.MILLISECONDS).map(new Function<Pair<String, ArrayList<StayKeyword>>, List<StaySuggest>>()
+            mSuggestDisposable = getStaySuggestList(checkInDate, nights, keyword).flatMap(new Function<List<StaySuggest>, ObservableSource<List>>()
+            {
+                @Override
+                public ObservableSource<List> apply(List<StaySuggest> staySuggestList) throws Exception
                 {
-                    @Override
-                    public List<StaySuggest> apply(Pair<String, ArrayList<StayKeyword>> stringArrayListPair) throws Exception
+                    if (staySuggestList == null || staySuggestList.size() == 0)
                     {
-                        ArrayList<StayKeyword> keywordList = stringArrayListPair.second;
-                        ArrayList<StaySuggest> staySuggestList = new ArrayList<>();
-
-                        if (keywordList == null || keywordList.size() == 0)
+                        if (mGourmetKeywordList != null && mGourmetKeywordList.size() > 0 && mGourmetKeywordList.contains(keyword))
                         {
-                            return staySuggestList;
+                            return getGourmetSuggestList(checkInDate, keyword);
                         }
 
-                        String oldCategoryKey = null;
-
-                        for (StayKeyword stayKeyword : keywordList)
+                        if (mStayOutboundKeywordList != null && mStayOutboundKeywordList.size() > 0 && mStayOutboundKeywordList.contains(keyword))
                         {
-                            StaySuggest staySuggest = new StaySuggest(stayKeyword);
-
-                            if (DailyTextUtils.isTextEmpty(oldCategoryKey) || oldCategoryKey.equalsIgnoreCase(staySuggest.categoryKey) == false)
-                            {
-                                int resId;
-                                if (StaySuggest.CATEGORY_STAY.equalsIgnoreCase(staySuggest.categoryKey))
-                                {
-                                    resId = R.string.label_search_suggest_type_stay;
-                                    oldCategoryKey = staySuggest.categoryKey;
-                                } else
-                                {
-                                    resId = R.string.label_search_suggest_type_region;
-                                    oldCategoryKey = StaySuggest.CATEGORY_REGION;
-                                }
-
-                                staySuggestList.add(new StaySuggest(StaySuggest.MENU_TYPE_SUGGEST, null, getString(resId)));
-
-                            }
-
-                            staySuggestList.add(staySuggest);
+                            return getStayOutboundSuggestList(keyword);
                         }
-
-                        return staySuggestList;
                     }
-                }).subscribe(new Consumer<List<StaySuggest>>()
+
+                    return Observable.just(staySuggestList);
+                }
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List>()
+            {
+                @Override
+                public void accept(List list) throws Exception
                 {
-                    @Override
-                    public void accept(List<StaySuggest> staySuggestList) throws Exception
+                    if (list != null && list.size() > 0)
                     {
-                        setSuggestList(staySuggestList);
-                        notifyDataSetChanged();
-
-                        getViewInterface().setProgressBarVisible(false);
-                        unLockAll();
+                        if (list.get(0) instanceof StayOutboundSuggest)
+                        {
+                            setStayOutboundSuggestList(list);
+                        } else if (list.get(0) instanceof GourmetSuggest)
+                        {
+                            setGourmetSuggestList(list);
+                        } else
+                        {
+                            setSuggestList(list);
+                        }
+                    } else
+                    {
+                        setSuggestList(list);
                     }
-                }, new Consumer<Throwable>()
+
+                    notifyDataSetChanged();
+
+                    getViewInterface().setProgressBarVisible(false);
+                    unLockAll();
+                }
+            }, new Consumer<Throwable>()
+            {
+                @Override
+                public void accept(Throwable throwable) throws Exception
                 {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception
-                    {
-                        setSuggestList(null);
-                        notifyDataSetChanged();
+                    setSuggestList(null);
+                    notifyDataSetChanged();
 
-                        getViewInterface().setProgressBarVisible(false);
-                        unLockAll();
-                    }
-                });
+                    getViewInterface().setProgressBarVisible(false);
+                    unLockAll();
+                }
+            });
 
             addCompositeDisposable(mSuggestDisposable);
         }
+    }
+
+    private Observable<List<StaySuggest>> getStaySuggestList(String checkInDate, int nights, final String keyword)
+    {
+        return mSuggestRemoteImpl.getSuggestsByStayInbound(checkInDate, nights, keyword)//
+            .delaySubscription(500, TimeUnit.MILLISECONDS).map(new Function<Pair<String, ArrayList<StayKeyword>>, List<StaySuggest>>()
+            {
+                @Override
+                public List<StaySuggest> apply(Pair<String, ArrayList<StayKeyword>> stringArrayListPair) throws Exception
+                {
+                    ArrayList<StayKeyword> keywordList = stringArrayListPair.second;
+                    ArrayList<StaySuggest> staySuggestList = new ArrayList<>();
+
+                    if (keywordList == null || keywordList.size() == 0)
+                    {
+                        return staySuggestList;
+                    }
+
+                    String oldCategoryKey = null;
+
+                    for (StayKeyword stayKeyword : keywordList)
+                    {
+                        StaySuggest staySuggest = new StaySuggest(stayKeyword);
+
+                        if (DailyTextUtils.isTextEmpty(oldCategoryKey) || oldCategoryKey.equalsIgnoreCase(staySuggest.categoryKey) == false)
+                        {
+                            int resId;
+                            if (StaySuggest.CATEGORY_STAY.equalsIgnoreCase(staySuggest.categoryKey))
+                            {
+                                resId = R.string.label_search_suggest_type_stay;
+                                oldCategoryKey = staySuggest.categoryKey;
+                            } else
+                            {
+                                resId = R.string.label_search_suggest_type_region;
+                                oldCategoryKey = StaySuggest.CATEGORY_REGION;
+                            }
+
+                            staySuggestList.add(new StaySuggest(StaySuggest.MENU_TYPE_SUGGEST, null, getString(resId)));
+                        }
+
+                        staySuggestList.add(staySuggest);
+                    }
+
+                    return staySuggestList;
+                }
+            }).observeOn(Schedulers.io());
+    }
+
+    private Observable getGourmetSuggestList(String visitDate, String keyword)
+    {
+        return mSuggestRemoteImpl.getSuggestsByGourmet(visitDate, keyword)//
+            .map(new Function<Pair<String, ArrayList<GourmetKeyword>>, List<GourmetSuggest>>()
+            {
+                @Override
+                public List<GourmetSuggest> apply(Pair<String, ArrayList<GourmetKeyword>> stringArrayListPair) throws Exception
+                {
+                    ArrayList<GourmetKeyword> keywordList = stringArrayListPair.second;
+                    ArrayList<GourmetSuggest> gourmetSuggestList = new ArrayList<>();
+
+                    if (keywordList == null || keywordList.size() == 0)
+                    {
+                        return gourmetSuggestList;
+                    }
+
+                    for (GourmetKeyword gourmetKeyword : keywordList)
+                    {
+                        GourmetSuggest gourmetSuggest = new GourmetSuggest(gourmetKeyword);
+
+                        if (GourmetSuggest.CATEGORY_GOURMET.equalsIgnoreCase(gourmetSuggest.categoryKey))
+                        {
+                            gourmetSuggestList.add(gourmetSuggest);
+                        }
+                    }
+
+                    return gourmetSuggestList;
+                }
+            }).observeOn(Schedulers.io());
+    }
+
+    private Observable getStayOutboundSuggestList(String keyword)
+    {
+        return mSuggestRemoteImpl.getRegionSuggestsByStayOutbound(keyword).observeOn(Schedulers.io());
     }
 
     @Override
@@ -595,6 +737,62 @@ public class SearchStaySuggestPresenter //
 
         getViewInterface().setKeywordEditText(staySuggest.displayName);
         startFinishAction(staySuggest, mKeyword, null);
+    }
+
+    @Override
+    public void onSuggestClick(GourmetSuggest gourmetSuggest)
+    {
+        if (gourmetSuggest == null)
+        {
+            return;
+        }
+
+        if (lock() == true)
+        {
+            return;
+        }
+
+        getViewInterface().setKeywordEditText(gourmetSuggest.displayName);
+
+        if (GourmetSuggest.MENU_TYPE_DIRECT == gourmetSuggest.menuType)
+        {
+            StaySuggest staySuggest = new StaySuggest(StaySuggest.MENU_TYPE_DIRECT, StaySuggest.CATEGORY_DIRECT, gourmetSuggest.displayName);
+            addRecentSearches(staySuggest);
+
+            getViewInterface().setKeywordEditText(staySuggest.displayName);
+            startFinishAction(staySuggest, mKeyword, null);
+            return;
+        }
+
+        startFinishAction(gourmetSuggest, mKeyword, null);
+    }
+
+    @Override
+    public void onSuggestClick(StayOutboundSuggest stayOutboundSuggest)
+    {
+        if (stayOutboundSuggest == null)
+        {
+            return;
+        }
+
+        if (lock() == true)
+        {
+            return;
+        }
+
+        getViewInterface().setKeywordEditText(stayOutboundSuggest.display);
+
+        if (StayOutboundSuggest.MENU_TYPE_DIRECT == stayOutboundSuggest.menuType)
+        {
+            StaySuggest staySuggest = new StaySuggest(StaySuggest.MENU_TYPE_DIRECT, StaySuggest.CATEGORY_DIRECT, stayOutboundSuggest.display);
+            addRecentSearches(staySuggest);
+
+            getViewInterface().setKeywordEditText(staySuggest.displayName);
+            startFinishAction(staySuggest, mKeyword, null);
+            return;
+        }
+
+        startFinishAction(stayOutboundSuggest, mKeyword, null);
     }
 
     @Override
@@ -657,6 +855,26 @@ public class SearchStaySuggestPresenter //
         intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
 
         setResult(Activity.RESULT_OK, intent);
+        finish();
+    }
+
+    private void startFinishAction(GourmetSuggest gourmetSuggest, String keyword, String analyticsClickType)
+    {
+        Intent intent = new Intent();
+        intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcel(gourmetSuggest));
+        intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
+
+        setResult(Constants.CODE_RESULT_ACTIVITY_SEARCH_GOURMET, intent);
+        finish();
+    }
+
+    private void startFinishAction(StayOutboundSuggest stayOutboundSuggest, String keyword, String analyticsClickType)
+    {
+        Intent intent = new Intent();
+        intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new StayOutboundSuggestParcel(stayOutboundSuggest));
+        intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
+
+        setResult(Constants.CODE_RESULT_ACTIVITY_SEARCH_STAYOUTBOUND, intent);
         finish();
     }
 
@@ -834,6 +1052,68 @@ public class SearchStaySuggestPresenter //
             .queryIntentActivities(new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH), 0);
 
         return activities.size() > 0;
+    }
+
+    private Observable<ArrayList<String>> getStayOutboundKeywordList()
+    {
+        if (getActivity() == null)
+        {
+            return null;
+        }
+
+        return Observable.defer(new Callable<ObservableSource<ArrayList<String>>>()
+        {
+            @Override
+            public ObservableSource<ArrayList<String>> call() throws Exception
+            {
+                String prefereceText = DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigObSearchKeyword();
+                if (DailyTextUtils.isTextEmpty(prefereceText) == true)
+                {
+                    return Observable.just(new ArrayList<>());
+                }
+
+                ArrayList<String> arrayList = new ArrayList<>();
+                JSONArray jsonArray = new JSONArray(prefereceText);
+                int length = jsonArray.length();
+                for (int i = 0; i < length; i++)
+                {
+                    arrayList.add(jsonArray.getString(i));
+                }
+
+                return Observable.just(arrayList);
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
+    private Observable<ArrayList<String>> getGourmetKeywordList()
+    {
+        if (getActivity() == null)
+        {
+            return null;
+        }
+
+        return Observable.defer(new Callable<ObservableSource<ArrayList<String>>>()
+        {
+            @Override
+            public ObservableSource<ArrayList<String>> call() throws Exception
+            {
+                String prefereceText = DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigGourmetSearchKeyword();
+                if (DailyTextUtils.isTextEmpty(prefereceText) == true)
+                {
+                    return Observable.just(new ArrayList<>());
+                }
+
+                ArrayList<String> arrayList = new ArrayList<>();
+                JSONArray jsonArray = new JSONArray(prefereceText);
+                int length = jsonArray.length();
+                for (int i = 0; i < length; i++)
+                {
+                    arrayList.add(jsonArray.getString(i));
+                }
+
+                return Observable.just(arrayList);
+            }
+        }).subscribeOn(Schedulers.io());
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

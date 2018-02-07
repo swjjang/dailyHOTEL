@@ -89,7 +89,8 @@ public class GoogleAddressRemoteImpl extends BaseRemoteImpl implements GoogleAdd
 
         String address = null;
 
-        String searchType = "KR".equalsIgnoreCase(countryComponentsData.shortName) ? "sublocality_level_2" : "administrative_area_level_1";
+        boolean isKr = "KR".equalsIgnoreCase(countryComponentsData.shortName);
+        String searchType = isKr ? "sublocality_level_2" : "administrative_area_level_1";
 
         for (GoogleAddressData googleAddressData : googleAddressDataList)
         {
@@ -104,7 +105,10 @@ public class GoogleAddressRemoteImpl extends BaseRemoteImpl implements GoogleAdd
         {
             ExLog.d("sam - origin : " + address + " , country : " + countryComponentsData.longName + " , trim Address : " + address.replace(countryComponentsData.longName, "").trim());
 
-            address = address.replace(countryComponentsData.longName, "").trim();
+            if (isKr)
+            {
+                address = address.replace(countryComponentsData.longName, "").trim();
+            }
         }
 
         return address;

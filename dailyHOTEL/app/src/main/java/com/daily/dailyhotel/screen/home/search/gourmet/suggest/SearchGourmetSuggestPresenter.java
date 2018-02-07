@@ -57,6 +57,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -66,7 +67,9 @@ import io.reactivex.schedulers.Schedulers;
  * Created by sheldon
  * Clean Architecture
  */
-public class SearchGourmetSuggestPresenter extends BaseExceptionPresenter<SearchGourmetSuggestActivity, SearchGourmetSuggestInterface> implements SearchGourmetSuggestView.OnEventListener
+public class SearchGourmetSuggestPresenter //
+    extends BaseExceptionPresenter<SearchGourmetSuggestActivity, SearchGourmetSuggestInterface> //
+    implements SearchGourmetSuggestView.OnEventListener
 {
     private SearchGourmetSuggestAnalyticsInterface mAnalytics;
 
@@ -74,9 +77,14 @@ public class SearchGourmetSuggestPresenter extends BaseExceptionPresenter<Search
     private RecentlyRemoteImpl mRecentlyRemoteImpl;
     private RecentlyLocalImpl mRecentlyLocalImpl;
     private GoogleAddressRemoteImpl mGoogleAddressRemoteImpl;
+    private Disposable mSuggestDisposable;
 
     private DailyRecentSearches mDailyRecentSearches;
     private GourmetBookDateTime mGourmetBookDateTime;
+    private List<GourmetSuggest> mPopularAreaList; // 일단 형식만 맞추기 위해 - 기본 화면을 대신 적용
+    private List<GourmetSuggest> mRecentlySuggestList;
+    private List<GourmetSuggest> mSuggestList;
+    private GourmetSuggest mLocationSuggest;
     private String mKeyword;
 
     private DailyLocationExFactory mDailyLocationExFactory;
@@ -108,6 +116,16 @@ public class SearchGourmetSuggestPresenter extends BaseExceptionPresenter<Search
         mRecentlyRemoteImpl = new RecentlyRemoteImpl(activity);
         mRecentlyLocalImpl = new RecentlyLocalImpl(activity);
         mGoogleAddressRemoteImpl = new GoogleAddressRemoteImpl(activity);
+
+        boolean isAgreeLocation = DailyPreference.getInstance(activity).isAgreeTermsOfLocation();
+
+        mLocationSuggest = new GourmetSuggest(GourmetSuggest.MENU_TYPE_LOCATION, GourmetSuggest.CATEGORY_LOCATION //
+            , isAgreeLocation ? getString(R.string.label_search_nearby_empty_address) : getString(R.string.label_search_nearby_description));
+
+        List<GourmetSuggest> popularList = new ArrayList<>();
+        popularList.add(new GourmetSuggest(0, "", getString(R.string.label_search_suggest_recently_empty_description_type_gourmet)));
+        setPopularAreaList(popularList);
+        notifyDataSetChanged();
 
         setRefresh(true);
     }
@@ -324,43 +342,21 @@ public class SearchGourmetSuggestPresenter extends BaseExceptionPresenter<Search
                         });
                     }
 
+                    // 최근 검색어
                     mDailyRecentSearches = new DailyRecentSearches(DailyPreference.getInstance(getActivity()).getGourmetRecentSearches());
                     List<Keyword> keywordList = mDailyRecentSearches.getList();
 
-                    ArrayList<GourmetSuggest> gourmetSuggestList = new ArrayList<>();
+                    List<GourmetSuggest> recentlySuggestList = getRecentlySuggestList(keywordList, gourmetList);
+                    setRecentlySuggestList(recentlySuggestList);
 
-                    if (keywordList != null && keywordList.size() > 0)
-                    {
-                        gourmetSuggestList.add(new GourmetSuggest(GourmetSuggest.MENU_TYPE_RECENTLY_SEARCH //
-                            , null, getString(R.string.label_search_suggest_recently_search)));
-
-                        for (Keyword keyword : keywordList)
-                        {
-                            gourmetSuggestList.add(new GourmetSuggest(keyword));
-                        }
-                    }
-
-                    if (gourmetList != null && gourmetList.size() > 0)
-                    {
-                        gourmetSuggestList.add(new GourmetSuggest(GourmetSuggest.MENU_TYPE_RECENTLY_GOURMET //
-                            , null, getString(R.string.label_recently_gourmet)));
-
-                        for (RecentlyPlace recentlyPlace : gourmetList)
-                        {
-                            gourmetSuggestList.add(new GourmetSuggest(recentlyPlace));
-                        }
-                    }
-
-                    return gourmetSuggestList;
+                    return recentlySuggestList;
                 }
             }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<GourmetSuggest>>()
         {
             @Override
             public void accept(List<GourmetSuggest> gourmetSuggests) throws Exception
             {
-                boolean visible = gourmetSuggests != null && gourmetSuggests.size() > 0;
-                getViewInterface().setRecentlySuggests(gourmetSuggests);
-                getViewInterface().setRecentlySuggestVisible(visible);
+                notifyDataSetChanged();
 
                 startSearchMyLocation(false);
 
@@ -371,14 +367,79 @@ public class SearchGourmetSuggestPresenter extends BaseExceptionPresenter<Search
             @Override
             public void accept(Throwable throwable) throws Exception
             {
-                getViewInterface().setRecentlySuggests(null);
-                getViewInterface().setRecentlySuggestVisible(false);
+                notifyDataSetChanged();
 
                 startSearchMyLocation(false);
 
                 unLockAll();
             }
         }));
+    }
+
+    private void setPopularAreaList(List<GourmetSuggest> popularAreaList)
+    {
+        mPopularAreaList = popularAreaList;
+    }
+
+    private List<GourmetSuggest> getRecentlySuggestList(List<Keyword> keywordList, List<RecentlyPlace> recentlyPlaceList)
+    {
+        // 최근 검색어
+        ArrayList<GourmetSuggest> recentlySuggestList = new ArrayList<>();
+
+        if (keywordList != null && keywordList.size() > 0)
+        {
+            recentlySuggestList.add(new GourmetSuggest(GourmetSuggest.MENU_TYPE_RECENTLY_SEARCH //
+                , null, getString(R.string.label_search_suggest_recently_search)));
+
+            for (Keyword keyword : keywordList)
+            {
+                recentlySuggestList.add(new GourmetSuggest(keyword));
+            }
+        }
+
+        // 최근 본 업장
+        if (recentlyPlaceList != null && recentlyPlaceList.size() > 0)
+        {
+            recentlySuggestList.add(new GourmetSuggest(GourmetSuggest.MENU_TYPE_RECENTLY_GOURMET //
+                , null, getString(R.string.label_recently_gourmet)));
+
+            for (RecentlyPlace recentlyPlace : recentlyPlaceList)
+            {
+                recentlySuggestList.add(new GourmetSuggest(recentlyPlace));
+            }
+        }
+
+        return recentlySuggestList;
+    }
+
+    private void setRecentlySuggestList(List<GourmetSuggest> recentlySuggestList)
+    {
+        mRecentlySuggestList = recentlySuggestList;
+    }
+
+    private void setSuggestList(List<GourmetSuggest> suggestList)
+    {
+        mSuggestList = suggestList;
+    }
+
+    private void notifyDataSetChanged()
+    {
+        if (DailyTextUtils.isTextEmpty(mKeyword) == false)
+        {
+            getViewInterface().setSuggests(mSuggestList);
+            return;
+        }
+
+        // 추천 검색어의 경우 검색어가 있을때만 작동 해야 함
+        setSuggestList(null);
+
+        if (mRecentlySuggestList != null && mRecentlySuggestList.size() > 0)
+        {
+            getViewInterface().setRecentlySuggests(mLocationSuggest, mRecentlySuggestList);
+            return;
+        }
+
+        getViewInterface().setPopularAreaSuggests(mLocationSuggest, mPopularAreaList);
     }
 
     @Override
@@ -411,7 +472,8 @@ public class SearchGourmetSuggestPresenter extends BaseExceptionPresenter<Search
     @Override
     public void onSearchSuggest(String keyword)
     {
-        clearCompositeDisposable();
+        //        clearCompositeDisposable();
+        removeCompositeDisposable(mSuggestDisposable);
 
         if (mGourmetBookDateTime == null)
         {
@@ -436,10 +498,14 @@ public class SearchGourmetSuggestPresenter extends BaseExceptionPresenter<Search
 
         if (DailyTextUtils.isTextEmpty(keyword) == true)
         {
-            onSuggestList(null);
+            setSuggestList(null);
+            notifyDataSetChanged();
+
+            getViewInterface().setProgressBarVisible(false);
+            unLockAll();
         } else
         {
-            addCompositeDisposable(mSuggestRemoteImpl.getSuggestsByGourmet(visitDate, keyword)//
+            mSuggestDisposable = mSuggestRemoteImpl.getSuggestsByGourmet(visitDate, keyword)//
                 .delaySubscription(500, TimeUnit.MILLISECONDS).map(new Function<Pair<String, ArrayList<GourmetKeyword>>, List<GourmetSuggest>>()
                 {
                     @Override
@@ -473,7 +539,6 @@ public class SearchGourmetSuggestPresenter extends BaseExceptionPresenter<Search
                                 }
 
                                 gourmetSuggestList.add(new GourmetSuggest(GourmetSuggest.MENU_TYPE_SUGGEST, null, getString(resId)));
-
                             }
 
                             gourmetSuggestList.add(gourmetSuggest);
@@ -486,8 +551,10 @@ public class SearchGourmetSuggestPresenter extends BaseExceptionPresenter<Search
                     @Override
                     public void accept(List<GourmetSuggest> gourmetSuggestList) throws Exception
                     {
-                        SearchGourmetSuggestPresenter.this.onSuggestList(gourmetSuggestList);
+                        setSuggestList(gourmetSuggestList);
+                        notifyDataSetChanged();
 
+                        getViewInterface().setProgressBarVisible(false);
                         unLockAll();
                     }
                 }, new Consumer<Throwable>()
@@ -495,11 +562,15 @@ public class SearchGourmetSuggestPresenter extends BaseExceptionPresenter<Search
                     @Override
                     public void accept(Throwable throwable) throws Exception
                     {
-                        SearchGourmetSuggestPresenter.this.onSuggestList(null);
+                        setSuggestList(null);
+                        notifyDataSetChanged();
 
+                        getViewInterface().setProgressBarVisible(false);
                         unLockAll();
                     }
-                }));
+                });
+
+            addCompositeDisposable(mSuggestDisposable);
         }
     }
 
@@ -593,8 +664,8 @@ public class SearchGourmetSuggestPresenter extends BaseExceptionPresenter<Search
             return;
         }
 
-        getViewInterface().setRecentlySuggests(null);
-        getViewInterface().setRecentlySuggestVisible(false);
+        setRecentlySuggestList(null);
+        notifyDataSetChanged();
 
         Observable<Boolean> recentlySearchObservable = Observable.defer(new Callable<ObservableSource<Boolean>>()
         {
@@ -761,16 +832,6 @@ public class SearchGourmetSuggestPresenter extends BaseExceptionPresenter<Search
         return activities.size() > 0;
     }
 
-    private void onSuggestList(List<GourmetSuggest> gourmetSuggestList)
-    {
-        getViewInterface().setProgressBarVisible(false);
-
-        boolean hasKeyword = DailyTextUtils.isTextEmpty(mKeyword) == false;
-        getViewInterface().setSuggestsVisible(hasKeyword);
-
-        getViewInterface().setSuggests(gourmetSuggestList);
-    }
-
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void startSearchMyLocation(boolean isUserClick)
@@ -793,18 +854,18 @@ public class SearchGourmetSuggestPresenter extends BaseExceptionPresenter<Search
             @Override
             public void accept(Location location) throws Exception
             {
-                GourmetSuggest locationGourmetSuggest = new GourmetSuggest(GourmetSuggest.MENU_TYPE_LOCATION, GourmetSuggest.CATEGORY_LOCATION, null);
-                locationGourmetSuggest.latitude = location.getLatitude();
-                locationGourmetSuggest.longitude = location.getLongitude();
+                mLocationSuggest.displayName = getString(R.string.label_search_nearby_empty_address);
+                mLocationSuggest.latitude = location.getLatitude();
+                mLocationSuggest.longitude = location.getLongitude();
 
                 addCompositeDisposable(mGoogleAddressRemoteImpl.getLocationAddress(location.getLatitude(), location.getLongitude()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<String>()
                 {
                     @Override
                     public void accept(String address) throws Exception
                     {
-                        locationGourmetSuggest.displayName = address;
+                        mLocationSuggest.displayName = address;
 
-                        getViewInterface().setNearbyGourmetSuggest(true, locationGourmetSuggest);
+                        getViewInterface().setNearbyGourmetSuggest(mLocationSuggest);
 
                         if (isUserClick == false)
                         {
@@ -813,15 +874,15 @@ public class SearchGourmetSuggestPresenter extends BaseExceptionPresenter<Search
 
                         unLockAll();
 
-                        getViewInterface().setKeywordEditText(locationGourmetSuggest.displayName);
-                        startFinishAction(locationGourmetSuggest, mKeyword, null);
+                        getViewInterface().setKeywordEditText(mLocationSuggest.displayName);
+                        startFinishAction(mLocationSuggest, mKeyword, null);
                     }
                 }, new Consumer<Throwable>()
                 {
                     @Override
                     public void accept(Throwable throwable) throws Exception
                     {
-                        getViewInterface().setNearbyGourmetSuggest(true, locationGourmetSuggest);
+                        getViewInterface().setNearbyGourmetSuggest(mLocationSuggest);
 
                         if (isUserClick == false)
                         {
@@ -830,10 +891,8 @@ public class SearchGourmetSuggestPresenter extends BaseExceptionPresenter<Search
 
                         unLockAll();
 
-                        locationGourmetSuggest.displayName = getString(R.string.label_search_nearby_empty_address);
-
-                        getViewInterface().setKeywordEditText(locationGourmetSuggest.displayName);
-                        startFinishAction(locationGourmetSuggest, mKeyword, null);
+                        getViewInterface().setKeywordEditText(mLocationSuggest.displayName);
+                        startFinishAction(mLocationSuggest, mKeyword, null);
                     }
                 }));
 
@@ -843,18 +902,16 @@ public class SearchGourmetSuggestPresenter extends BaseExceptionPresenter<Search
             @Override
             public void accept(Throwable throwable) throws Exception
             {
-                boolean isAgreePermission = true;
                 String displayName = null;
 
                 if (throwable instanceof PermissionException)
                 {
                     displayName = getString(R.string.label_search_nearby_description);
-                    isAgreePermission = false;
                 }
 
-                GourmetSuggest locationGourmetSuggest = new GourmetSuggest(GourmetSuggest.MENU_TYPE_LOCATION, GourmetSuggest.CATEGORY_LOCATION, displayName);
+                mLocationSuggest.displayName = displayName;
 
-                getViewInterface().setNearbyGourmetSuggest(isAgreePermission, locationGourmetSuggest);
+                getViewInterface().setNearbyGourmetSuggest(mLocationSuggest);
 
                 if (isUserClick == false)
                 {

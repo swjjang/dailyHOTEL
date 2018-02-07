@@ -243,7 +243,7 @@
 
     <!-- Toast Messages -->
     <string name="toast_msg_please_input_guest">투숙자명을 입력해주세요. 예약 확인시 필요한 정보입니다.</string>
-    <string name="toast_msg_please_input_guest_typeoverseas">해외 스테이 예약시에는 투숙자를 영문 성함으로 입력해주세요.</string>
+    <string name="toast_msg_please_input_guest_typeoverseas">해외스테이 예약시에는 투숙자를 영문 성함으로 입력해주세요.</string>
     <string name="toast_msg_please_input_contact">연락처를 입력해주세요.</string>
     <string name="toast_msg_please_input_email">이메일을 입력해주세요.</string>
     <string name="toast_msg_wrong_email_address">이메일 형식을 다시 확인해주세요.</string>
@@ -280,7 +280,7 @@
     <string name="toast_msg_backpressed_has_cart">앱을 종료하시면 추가하신 메뉴가 모두 삭제됩니다. \'뒤로\' 버튼을 한 번 더 누르시면 앱이 종료됩니다.</string>
     <string name="toast_msg_input_error_alphanum">영문, 숫자만 입력할 수 있습니다.</string>
     <string name="toast_msg_input_error_alphanumeric_hangul">영문, 숫자, 한글만 입력할 수 있습니다.</string>
-    <string name="toast_msg_input_error_alphanum_name">해외 스테이 예약시에는 영문 성함만 입력할 수 있습니다.</string>
+    <string name="toast_msg_input_error_alphanum_name">해외스테이 예약시에는 영문 성함만 입력할 수 있습니다.</string>
     <string name="toast_msg_input_error_numeric">숫자만 입력할 수 있습니다.</string>
     <string name="toast_msg_input_error_register_coupon">할인쿠폰 코드를 정확하게 입력했는지 다시 확인해주세요.</string>
     <string name="toast_msg_input_error_write_review">해당 문자는 입력이 불가합니다.</string>
@@ -408,7 +408,7 @@
     <string name="dialog_information">안내</string>
     <string name="dialog_message_none_operating_time"> 특별한 하루의 시작, 데일리입니다.\n아쉽게도 현재 상담시간이 아닙니다.\n상담 가능 시간에 다시 문의 부탁드립니다.\n\n상담시간 : 오전 %1$s시 ~ 익일 새벽%2$s시\n점심시간 : %3$s ~ %4$s</string>
 
-    <string name="dialog_message_check_stayoutbound_search">해외 스테이를 검색 중이세요?</string>
+    <string name="dialog_message_check_stayoutbound_search">해외스테이를 검색 중이세요?</string>
     <string name="dialog_message_check_gourmet_search">데일리고메 레스토랑을 검색 중이세요?</string>
 
     <string name="dialog_message_need_install_gms">Google Play 설치 후 이용해주세요.</string>
@@ -1075,20 +1075,20 @@
     <!-- New Search -->
     <string name="label_search_description">어떤 항목으로\n검색하시겠어요?</string>
     <string name="label_search_do_search">검색하기</string>
-    <string name="label_search_stay_title">국내 스테이를\n검색하시겠어요?</string>
-    <string name="label_search_stayoutbound_title">해외 스테이를\n검색하시겠어요?</string>
+    <string name="label_search_stay_title">국내스테이를\n검색하시겠어요?</string>
+    <string name="label_search_stayoutbound_title">해외스테이를\n검색하시겠어요?</string>
     <string name="label_search_gourmet_title">고메를\n검색하시겠어요?</string>
     <string name="label_search_recently_search_result">최근 확인한 업장</string>
 
-    <string name="label_search_stay">국내 스테이</string>
-    <string name="label_search_search_stay">국내 스테이 검색</string>
-    <string name="label_search_stay_suggest_hint">국내 스테이명 또는 지역명 입력</string>
+    <string name="label_search_stay">국내스테이</string>
+    <string name="label_search_search_stay">국내스테이 검색</string>
+    <string name="label_search_stay_suggest_hint">국내스테이명 또는 지역명 입력</string>
     <string name="label_search_stay_popular_search_tag">국내스테이 인기검색 태그</string>
 
 
-    <string name="label_search_stayoutbound">해외 스테이</string>
-    <string name="label_search_search_stayoutbound">해외 스테이 검색</string>
-    <string name="label_search_stayoutbound_suggest_hint">해외 스테이명 또는 지역명 입력</string>
+    <string name="label_search_stayoutbound">해외스테이</string>
+    <string name="label_search_search_stayoutbound">해외스테이 검색</string>
+    <string name="label_search_stayoutbound_suggest_hint">해외스테이명 또는 지역명 입력</string>
     <string name="label_search_stayoutbound_popular_area">해외스테이 인기지역</string>
 
     <string name="label_search_gourmet">고메</string>
@@ -1133,6 +1133,8 @@
     <string name="label_search_suggest_recently_empty_description_type_stay">수영장 있는 호텔\n애견동반 양평 펜션\n주차가능한 파티룸</string>
     <string name="label_search_suggest_recently_empty_description_type_gourmet">주차가능한 뷔페\n코르키지가 되는 일식집\n단체 예약이 가능한 프라이빗룸</string>
     <string name="label_search_suggest_popular_area">인기지역</string>
+    <string name="label_search_suggest_check_gourmet">혹시 데일리고메에서 검색중이신가요?</string>
+    <string name="label_search_suggest_check_stay_outbound">혹시 해외스테이에서 검색중이신가요?</string>
 
     <!-- Coupon -->
     <string name="coupon_notice_text">할인쿠폰\n상세정보</string>
