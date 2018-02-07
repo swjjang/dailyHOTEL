@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.search.gourmet.suggest;
+package com.daily.dailyhotel.screen.home.search.stay.inbound.suggest;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -8,8 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
-import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.ObjectItem;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeNearbyDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeRecommendDataBinding;
@@ -21,11 +21,11 @@ import java.util.List;
  * Created by android_sam on 2018. 2. 2..
  */
 
-public class PopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class StayPopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
     public interface OnPopularSuggestListener
     {
-        void onNearbyClick(GourmetSuggest gourmetSuggest);
+        void onNearbyClick(StaySuggest staySuggest);
     }
 
     private Context mContext;
@@ -33,7 +33,7 @@ public class PopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
 
     private List<ObjectItem> mSuggestList;
 
-    public PopularSuggestListAdapter(Context context, OnPopularSuggestListener listener)
+    public StayPopularSuggestListAdapter(Context context, OnPopularSuggestListener listener)
     {
         mContext = context;
         this.mListener = listener;
@@ -137,9 +137,9 @@ public class PopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
         return mSuggestList.get(position);
     }
 
-    public void setNearByGourmetSuggest(GourmetSuggest nearByGourmetSuggest)
+    public void setNearByStaySuggest(StaySuggest nearByStaySuggest)
     {
-        if (mSuggestList == null || mSuggestList.size() == 0 || nearByGourmetSuggest == null)
+        if (mSuggestList == null || mSuggestList.size() == 0 || nearByStaySuggest == null)
         {
             return;
         }
@@ -150,13 +150,13 @@ public class PopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
         {
             if (ObjectItem.TYPE_LOCATION_VIEW == item.mType)
             {
-                GourmetSuggest gourmetSuggest = item.getItem();
+                StaySuggest staySuggest = item.getItem();
 
-                gourmetSuggest.displayName = nearByGourmetSuggest != null ? nearByGourmetSuggest.displayName : descriptionText;
-                gourmetSuggest.latitude = nearByGourmetSuggest.latitude;
-                gourmetSuggest.longitude = nearByGourmetSuggest.longitude;
-                gourmetSuggest.categoryKey = nearByGourmetSuggest.categoryKey;
-                gourmetSuggest.menuType = nearByGourmetSuggest.menuType;
+                staySuggest.displayName = nearByStaySuggest != null ? nearByStaySuggest.displayName : descriptionText;
+                staySuggest.latitude = nearByStaySuggest.latitude;
+                staySuggest.longitude = nearByStaySuggest.longitude;
+                staySuggest.categoryKey = nearByStaySuggest.categoryKey;
+                staySuggest.menuType = nearByStaySuggest.menuType;
                 break;
             }
         }
@@ -164,9 +164,9 @@ public class PopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
 
     private void onBindViewHolder(LocationViewHolder holder, ObjectItem item)
     {
-        GourmetSuggest gourmetSuggest = item.getItem();
+        StaySuggest staySuggest = item.getItem();
 
-        holder.itemView.getRootView().setTag(gourmetSuggest);
+        holder.itemView.getRootView().setTag(staySuggest);
         holder.itemView.getRootView().setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -177,15 +177,15 @@ public class PopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
                     return;
                 }
 
-                mListener.onNearbyClick(gourmetSuggest);
+                mListener.onNearbyClick(staySuggest);
             }
         });
 
         holder.dataBinding.bottomDivider.setVisibility(View.VISIBLE);
 
-        holder.dataBinding.descriptionTextView.setText(gourmetSuggest.displayName);
+        holder.dataBinding.descriptionTextView.setText(staySuggest.displayName);
 
-        if (DailyTextUtils.isTextEmpty(gourmetSuggest.displayName) == true)
+        if (DailyTextUtils.isTextEmpty(staySuggest.displayName) == true)
         {
             holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
         } else
@@ -196,11 +196,11 @@ public class PopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
 
     private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)
     {
-        GourmetSuggest gourmetSuggest = item.getItem();
+        StaySuggest staySuggest = item.getItem();
 
-        holder.itemView.getRootView().setTag(gourmetSuggest);
+        holder.itemView.getRootView().setTag(staySuggest);
 
-        holder.dataBinding.descriptionTextView.setText(gourmetSuggest.displayName);
+        holder.dataBinding.descriptionTextView.setText(staySuggest.displayName);
     }
 
     class LocationViewHolder extends RecyclerView.ViewHolder

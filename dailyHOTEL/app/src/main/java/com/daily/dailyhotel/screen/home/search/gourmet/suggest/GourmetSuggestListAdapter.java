@@ -24,7 +24,7 @@ import java.util.List;
  * Created by android_sam on 2018. 2. 1..
  */
 
-public class SuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class GourmetSuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
     private Context mContext;
     private View.OnClickListener mOnClickListener;
@@ -32,7 +32,7 @@ public class SuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private String mKeyword;
     private List<ObjectItem> mSuggestList;
 
-    public SuggestListAdapter(Context context, View.OnClickListener listener)
+    public GourmetSuggestListAdapter(Context context, View.OnClickListener listener)
     {
         mContext = context;
         mOnClickListener = listener;
@@ -213,7 +213,7 @@ public class SuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         holder.dataBinding.titleTextView.setText(gourmetSuggest.displayName);
     }
 
-    private void onBindViewHolder(SuggestListAdapter.EntryViewHolder holder, ObjectItem item, int position)
+    private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)
     {
         GourmetSuggest gourmetSuggest = item.getItem();
 

@@ -33,9 +33,9 @@ public class SearchStayOutboundSuggestView //
     extends BaseDialogView<SearchStayOutboundSuggestView.OnEventListener, ActivityStayOutboundSearchSuggestDataBinding> //
     implements SearchStayOutboundSuggestViewInterface, View.OnClickListener
 {
-    private SuggestListAdapter mSuggestListAdapter;
-    private RecentlySuggestListAdapter mRecentlySuggestListAdapter;
-    private PopularSuggestListAdapter mPopularSuggestListAdapter;
+    private StayOutboundSuggestListAdapter mSuggestListAdapter;
+    private StayOutboundRecentlySuggestListAdapter mRecentlySuggestListAdapter;
+    private StayOutboundPopularSuggestListAdapter mPopularSuggestListAdapter;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -191,7 +191,7 @@ public class SearchStayOutboundSuggestView //
 
         if (mSuggestListAdapter == null)
         {
-            mSuggestListAdapter = new SuggestListAdapter(getContext(), new View.OnClickListener()
+            mSuggestListAdapter = new StayOutboundSuggestListAdapter(getContext(), new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -325,7 +325,7 @@ public class SearchStayOutboundSuggestView //
 
         if (mRecentlySuggestListAdapter == null)
         {
-            mRecentlySuggestListAdapter = new RecentlySuggestListAdapter(getContext(), new RecentlySuggestListAdapter.OnRecentlySuggestListener()
+            mRecentlySuggestListAdapter = new StayOutboundRecentlySuggestListAdapter(getContext(), new StayOutboundRecentlySuggestListAdapter.OnRecentlySuggestListener()
             {
                 @Override
                 public void onItemClick(int position, StayOutboundSuggest stayOutboundSuggest)
@@ -392,7 +392,7 @@ public class SearchStayOutboundSuggestView //
 
         if (mPopularSuggestListAdapter == null)
         {
-            mPopularSuggestListAdapter = new PopularSuggestListAdapter(getContext(), new PopularSuggestListAdapter.OnPopularSuggestListener()
+            mPopularSuggestListAdapter = new StayOutboundPopularSuggestListAdapter(getContext(), new StayOutboundPopularSuggestListAdapter.OnPopularSuggestListener()
             {
                 @Override
                 public void onItemClick(int position, StayOutboundSuggest stayOutboundSuggest)

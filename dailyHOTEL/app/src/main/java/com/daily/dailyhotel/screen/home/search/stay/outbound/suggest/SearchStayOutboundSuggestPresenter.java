@@ -308,6 +308,13 @@ public class SearchStayOutboundSuggestPresenter //
                 public List<StayOutboundSuggest> apply(List<StayOutboundSuggest> stayOutboundRecentlySuggestList //
                     , List<StayOutboundSuggest> stayOutboundPopularList, StayOutbounds stayOutbounds) throws Exception
                 {
+                    if (stayOutboundPopularList != null && stayOutboundPopularList.size() > 0)
+                    {
+                        StayOutboundSuggest stayOutboundSuggest = new StayOutboundSuggest(0, getString(R.string.label_search_suggest_popular_area));
+                        stayOutboundSuggest.menuType = StayOutboundSuggest.MENU_TYPE_POPULAR_AREA;
+                        stayOutboundPopularList.add(0, stayOutboundSuggest);
+                    }
+
                     // 인기지역
                     setPopularAreaList(stayOutboundPopularList);
 
@@ -894,43 +901,42 @@ public class SearchStayOutboundSuggestPresenter //
 
                 addCompositeDisposable(mGoogleAddressRemoteImpl.getLocationAddress(location.getLatitude(), location.getLongitude()) //
                     .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<String>()
-                {
-                    @Override
-                    public void accept(String address) throws Exception
                     {
-                        mLocationSuggest.display = address;
-
-                        getViewInterface().setNearbyStaySuggest(mLocationSuggest);
-
-                        if (isUserClick == false)
+                        @Override
+                        public void accept(String address) throws Exception
                         {
-                            return;
+                            mLocationSuggest.display = address;
+
+                            getViewInterface().setNearbyStaySuggest(mLocationSuggest);
+
+                            if (isUserClick == false)
+                            {
+                                return;
+                            }
+
+                            unLockAll();
+
+                            getViewInterface().setKeywordEditText(mLocationSuggest.display);
+                            startFinishAction(mLocationSuggest, mKeyword, null);
                         }
-
-                        unLockAll();
-
-                        getViewInterface().setKeywordEditText(mLocationSuggest.display);
-                        startFinishAction(mLocationSuggest, mKeyword, null);
-                    }
-                }, new Consumer<Throwable>()
-                {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception
+                    }, new Consumer<Throwable>()
                     {
-                        getViewInterface().setNearbyStaySuggest(mLocationSuggest);
-
-                        if (isUserClick == false)
+                        @Override
+                        public void accept(Throwable throwable) throws Exception
                         {
-                            return;
+                            getViewInterface().setNearbyStaySuggest(mLocationSuggest);
+
+                            if (isUserClick == false)
+                            {
+                                return;
+                            }
+
+                            unLockAll();
+
+                            getViewInterface().setKeywordEditText(mLocationSuggest.display);
+                            startFinishAction(mLocationSuggest, mKeyword, null);
                         }
-
-                        unLockAll();
-
-                        getViewInterface().setKeywordEditText(mLocationSuggest.display);
-                        startFinishAction(mLocationSuggest, mKeyword, null);
-                    }
-                }));
-
+                    }));
             }
         }, new Consumer<Throwable>()
         {

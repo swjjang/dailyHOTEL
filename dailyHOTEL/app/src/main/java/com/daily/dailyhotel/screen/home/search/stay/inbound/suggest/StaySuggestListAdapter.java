@@ -24,7 +24,7 @@ import java.util.List;
  * Created by android_sam on 2018. 2. 1..
  */
 
-public class SuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class StaySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
     private Context mContext;
     private View.OnClickListener mOnClickListener;
@@ -32,7 +32,7 @@ public class SuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private String mKeyword;
     private List<ObjectItem> mSuggestList;
 
-    public SuggestListAdapter(Context context, View.OnClickListener listener)
+    public StaySuggestListAdapter(Context context, View.OnClickListener listener)
     {
         mContext = context;
         mOnClickListener = listener;

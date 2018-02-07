@@ -17,8 +17,12 @@ import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.ObjectItem;
+import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StaySuggest;
+import com.daily.dailyhotel.screen.home.search.gourmet.suggest.GourmetSuggestListAdapter;
+import com.daily.dailyhotel.screen.home.search.stay.outbound.suggest.StayOutboundSuggestListAdapter;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivitySearchStaySuggestDataBinding;
 import com.twoheart.dailyhotel.util.EdgeEffectColor;
@@ -32,15 +36,21 @@ import io.reactivex.Observable;
 public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.OnEventListener, ActivitySearchStaySuggestDataBinding> //
     implements SearchStaySuggestInterface, View.OnClickListener
 {
-    private SuggestListAdapter mSuggestListAdapter;
-    private RecentlySuggestListAdapter mRecentlySuggestListAdapter;
-    private PopularSuggestListAdapter mPopularSuggestListAdapter;
+    private StaySuggestListAdapter mStaySuggestListAdapter;
+    private StayRecentlySuggestListAdapter mRecentlySuggestListAdapter;
+    private StayPopularSuggestListAdapter mPopularSuggestListAdapter;
+    private GourmetSuggestListAdapter mGourmetSuggestListAdapter;
+    private StayOutboundSuggestListAdapter mStayOutboundSuggestListAdapter;
 
     public interface OnEventListener extends OnBaseEventListener
     {
         void onSearchSuggest(String keyword);
 
         void onSuggestClick(StaySuggest staySuggest);
+
+        void onSuggestClick(GourmetSuggest gourmetSuggest);
+
+        void onSuggestClick(StayOutboundSuggest stayOutboundSuggest);
 
         void onRecentlySuggestClick(StaySuggest staySuggest);
 
@@ -179,16 +189,16 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
     }
 
     @Override
-    public void setSuggests(List<StaySuggest> staySuggestList)
+    public void setStaySuggests(List<StaySuggest> staySuggestList)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        if (mSuggestListAdapter == null)
+        if (mStaySuggestListAdapter == null)
         {
-            mSuggestListAdapter = new SuggestListAdapter(getContext(), new View.OnClickListener()
+            mStaySuggestListAdapter = new StaySuggestListAdapter(getContext(), new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -203,7 +213,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
             });
         }
 
-        getViewDataBinding().suggestsRecyclerView.setAdapter(mSuggestListAdapter);
+        getViewDataBinding().suggestsRecyclerView.setAdapter(mStaySuggestListAdapter);
 
         List<ObjectItem> objectItemList = new ArrayList<>();
 
@@ -231,8 +241,134 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
             objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, new StaySuggest(StaySuggest.MENU_TYPE_SUGGEST, null, null)));
         }
 
-        mSuggestListAdapter.setAll(keyword, objectItemList);
-        mSuggestListAdapter.notifyDataSetChanged();
+        mStaySuggestListAdapter.setAll(keyword, objectItemList);
+        mStaySuggestListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setGourmetSuggests(List<GourmetSuggest> gourmetSuggestList)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (mGourmetSuggestListAdapter == null)
+        {
+            mGourmetSuggestListAdapter = new GourmetSuggestListAdapter(getContext(), new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    GourmetSuggest gourmetSuggest = (GourmetSuggest) v.getTag();
+
+                    if (gourmetSuggest != null)
+                    {
+                        getEventListener().onSuggestClick(gourmetSuggest);
+                    }
+                }
+            });
+        }
+
+        getViewDataBinding().suggestsRecyclerView.setAdapter(mGourmetSuggestListAdapter);
+
+        List<ObjectItem> objectItemList = new ArrayList<>();
+
+        String keyword = getViewDataBinding().keywordEditText.getText().toString();
+
+        if (DailyTextUtils.isTextEmpty(keyword) == false)
+        {
+            objectItemList.add(new ObjectItem(ObjectItem.TYPE_HEADER_VIEW //
+                , new GourmetSuggest(GourmetSuggest.MENU_TYPE_DIRECT, GourmetSuggest.CATEGORY_DIRECT, keyword)));
+        }
+
+        if (gourmetSuggestList != null && gourmetSuggestList.size() > 0)
+        {
+            GourmetSuggest sectionSuggest = new GourmetSuggest(GourmetSuggest.MENU_TYPE_SUGGEST //
+                , null, getString(R.string.label_search_suggest_check_gourmet));
+            objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, sectionSuggest));
+
+            for (GourmetSuggest gourmetSuggest : gourmetSuggestList)
+            {
+                if (DailyTextUtils.isTextEmpty(gourmetSuggest.categoryKey) == true)
+                {
+                    objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, gourmetSuggest));
+                } else
+                {
+                    objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, gourmetSuggest));
+                }
+            }
+
+            // 마지막줄
+            objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION //
+                , new GourmetSuggest(GourmetSuggest.MENU_TYPE_SUGGEST, null, null)));
+        }
+
+        mGourmetSuggestListAdapter.setAll(keyword, objectItemList);
+        mGourmetSuggestListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setStayOutboundSuggests(List<StayOutboundSuggest> stayOutboundSuggestList)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (mStayOutboundSuggestListAdapter == null)
+        {
+            mStayOutboundSuggestListAdapter = new StayOutboundSuggestListAdapter(getContext(), new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    StayOutboundSuggest stayOutboundSuggest = (StayOutboundSuggest) v.getTag();
+
+                    if (stayOutboundSuggest != null)
+                    {
+                        getEventListener().onSuggestClick(stayOutboundSuggest);
+                    }
+                }
+            });
+        }
+        getViewDataBinding().suggestsRecyclerView.setAdapter(mStayOutboundSuggestListAdapter);
+
+        List<ObjectItem> objectItemList = new ArrayList<>();
+
+        String keyword = getViewDataBinding().keywordEditText.getText().toString();
+
+        if (DailyTextUtils.isTextEmpty(keyword) == false)
+        {
+            StayOutboundSuggest stayOutboundSuggest = new StayOutboundSuggest(0, keyword);
+            stayOutboundSuggest.menuType = StayOutboundSuggest.MENU_TYPE_DIRECT;
+            stayOutboundSuggest.categoryKey = StayOutboundSuggest.CATEGORY_DIRECT;
+            objectItemList.add(new ObjectItem(ObjectItem.TYPE_HEADER_VIEW, stayOutboundSuggest));
+        }
+
+        if (stayOutboundSuggestList != null && stayOutboundSuggestList.size() > 0)
+        {
+            StayOutboundSuggest sectionSuggest = new StayOutboundSuggest(0, getString(R.string.label_search_suggest_check_stay_outbound));
+            objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, sectionSuggest));
+
+            for (StayOutboundSuggest stayOutboundSuggest : stayOutboundSuggestList)
+            {
+                if (stayOutboundSuggest.id == 0)
+                {
+                    objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, stayOutboundSuggest));
+                } else
+                {
+                    objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, stayOutboundSuggest));
+                }
+            }
+
+            // 마지막줄
+            objectItemList.add(new ObjectItem(ObjectItem.TYPE_SECTION, new StayOutboundSuggest(0, null)));
+
+        }
+
+        mStayOutboundSuggestListAdapter.setAll(keyword, objectItemList);
+        mStayOutboundSuggestListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -310,7 +446,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
         if (mRecentlySuggestListAdapter == null)
         {
-            mRecentlySuggestListAdapter = new RecentlySuggestListAdapter(getContext(), new RecentlySuggestListAdapter.OnRecentlySuggestListener()
+            mRecentlySuggestListAdapter = new StayRecentlySuggestListAdapter(getContext(), new StayRecentlySuggestListAdapter.OnRecentlySuggestListener()
             {
                 @Override
                 public void onItemClick(int position, StaySuggest staySuggest)
@@ -377,7 +513,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
         if (mPopularSuggestListAdapter == null)
         {
-            mPopularSuggestListAdapter = new PopularSuggestListAdapter(getContext(), new PopularSuggestListAdapter.OnPopularSuggestListener()
+            mPopularSuggestListAdapter = new StayPopularSuggestListAdapter(getContext(), new StayPopularSuggestListAdapter.OnPopularSuggestListener()
             {
                 @Override
                 public void onNearbyClick(StaySuggest staySuggest)

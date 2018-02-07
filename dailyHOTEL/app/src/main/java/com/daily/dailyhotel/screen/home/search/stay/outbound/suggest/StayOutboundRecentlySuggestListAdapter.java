@@ -23,21 +23,25 @@ import java.util.List;
  * Created by android_sam on 2018. 2. 2..
  */
 
-public class PopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class StayOutboundRecentlySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
-    public interface OnPopularSuggestListener
+    public interface OnRecentlySuggestListener
     {
         void onItemClick(int position, StayOutboundSuggest stayOutboundSuggest);
+
+        void onDeleteClick(int position, StayOutboundSuggest stayOutboundSuggest);
+
+        void onDeleteAllClick();
 
         void onNearbyClick(StayOutboundSuggest stayOutboundSuggest);
     }
 
     private Context mContext;
-    private OnPopularSuggestListener mListener;
+    private OnRecentlySuggestListener mListener;
 
     private List<ObjectItem> mSuggestList;
 
-    public PopularSuggestListAdapter(Context context, OnPopularSuggestListener listener)
+    public StayOutboundRecentlySuggestListAdapter(Context context, OnRecentlySuggestListener listener)
     {
         mContext = context;
         this.mListener = listener;
@@ -146,6 +150,25 @@ public class PopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
         return mSuggestList.get(position).mType;
     }
 
+    public int getEntryCount()
+    {
+        if (mSuggestList == null || mSuggestList.size() == 0)
+        {
+            return 0;
+        }
+
+        int count = 0;
+        for (ObjectItem item : mSuggestList)
+        {
+            if (ObjectItem.TYPE_ENTRY == item.mType)
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
     public void setAll(List<ObjectItem> objectItemList)
     {
         if (mSuggestList == null)
@@ -169,6 +192,67 @@ public class PopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
         }
 
         return mSuggestList.get(position);
+    }
+
+    public StayOutboundSuggest removeItem(int position)
+    {
+        if (mSuggestList == null || mSuggestList.size() == 0)
+        {
+            return null;
+        }
+
+        if (position < 0 || position > mSuggestList.size() - 1)
+        {
+            return null;
+        }
+
+        ObjectItem removeItem = mSuggestList.remove(position);
+
+        if (mSuggestList.size() == 1)
+        {
+            ObjectItem checkItem = mSuggestList.get(0);
+            if (checkItem.mType == ObjectItem.TYPE_FOOTER_VIEW)
+            {
+                mSuggestList.remove(0);
+            }
+        }
+
+        StayOutboundSuggest stayOutboundSuggest = removeItem.getItem();
+        return stayOutboundSuggest;
+    }
+
+    public void removeSection(int menuType)
+    {
+        if (mSuggestList == null || mSuggestList.size() == 0)
+        {
+            return;
+        }
+
+        for (int i = 0; i < mSuggestList.size(); i++)
+        {
+            ObjectItem item = mSuggestList.get(i);
+            if (ObjectItem.TYPE_SECTION != item.mType)
+            {
+                continue;
+            }
+
+            StayOutboundSuggest stayOutboundSuggest = item.getItem();
+            if (stayOutboundSuggest == null || menuType != stayOutboundSuggest.menuType)
+            {
+                continue;
+            }
+
+            mSuggestList.remove(i);
+        }
+
+        if (mSuggestList.size() == 1)
+        {
+            ObjectItem checkItem = mSuggestList.get(0);
+            if (checkItem.mType == ObjectItem.TYPE_FOOTER_VIEW)
+            {
+                mSuggestList.remove(0);
+            }
+        }
     }
 
     public void setNearByStayOutboundSuggest(StayOutboundSuggest nearByStayOutboundSuggest)
@@ -245,8 +329,28 @@ public class PopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
 
     private void onBindViewHolder(FooterViewHolder holder)
     {
-        holder.dataBinding.deleteLayout.setVisibility(View.GONE);
-        holder.dataBinding.deleteTextView.setOnClickListener(null);
+        int count = getEntryCount();
+        if (count >= 2)
+        {
+            holder.dataBinding.deleteLayout.setVisibility(View.VISIBLE);
+            holder.dataBinding.deleteTextView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    if (mListener == null)
+                    {
+                        return;
+                    }
+
+                    mListener.onDeleteAllClick();
+                }
+            });
+        } else
+        {
+            holder.dataBinding.deleteLayout.setVisibility(View.GONE);
+            holder.dataBinding.deleteTextView.setOnClickListener(null);
+        }
     }
 
     private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)
@@ -273,7 +377,21 @@ public class PopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
         holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
         holder.dataBinding.priceTextView.setVisibility(View.GONE);
         holder.dataBinding.bottomDivider.setVisibility(View.GONE);
-        holder.dataBinding.deleteImageView.setVisibility(View.GONE);
+        holder.dataBinding.deleteImageView.setVisibility(View.VISIBLE);
+
+        holder.dataBinding.deleteImageView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if (mListener == null)
+                {
+                    return;
+                }
+
+                mListener.onDeleteClick(position, stayOutboundSuggest);
+            }
+        });
 
         switch (stayOutboundSuggest.categoryKey)
         {
@@ -283,6 +401,10 @@ public class PopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
 
             case StayOutboundSuggest.CATEGORY_HOTEL:
                 holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_02_hotel);
+                break;
+
+            case StayOutboundSuggest.CATEGORY_LOCATION:
+                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_09_nearby);
                 break;
 
             case StayOutboundSuggest.CATEGORY_POINT:
