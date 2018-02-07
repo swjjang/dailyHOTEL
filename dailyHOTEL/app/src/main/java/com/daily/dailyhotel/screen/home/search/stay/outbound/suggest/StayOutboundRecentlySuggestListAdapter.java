@@ -31,8 +31,6 @@ public class StayOutboundRecentlySuggestListAdapter extends RecyclerView.Adapter
 
         void onDeleteClick(int position, StayOutboundSuggest stayOutboundSuggest);
 
-        void onDeleteAllClick();
-
         void onNearbyClick(StayOutboundSuggest stayOutboundSuggest);
     }
 
@@ -329,28 +327,8 @@ public class StayOutboundRecentlySuggestListAdapter extends RecyclerView.Adapter
 
     private void onBindViewHolder(FooterViewHolder holder)
     {
-        int count = getEntryCount();
-        if (count >= 2)
-        {
-            holder.dataBinding.deleteLayout.setVisibility(View.VISIBLE);
-            holder.dataBinding.deleteTextView.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View view)
-                {
-                    if (mListener == null)
-                    {
-                        return;
-                    }
-
-                    mListener.onDeleteAllClick();
-                }
-            });
-        } else
-        {
-            holder.dataBinding.deleteLayout.setVisibility(View.GONE);
-            holder.dataBinding.deleteTextView.setOnClickListener(null);
-        }
+        holder.dataBinding.deleteLayout.setVisibility(View.GONE);
+        holder.dataBinding.deleteTextView.setOnClickListener(null);
     }
 
     private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)

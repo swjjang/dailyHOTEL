@@ -47,8 +47,6 @@ public class SearchStayOutboundSuggestView //
 
         void onPopularSuggestClick(StayOutboundSuggest stayOutboundSuggest);
 
-        void onDeleteAllRecentlySuggest(boolean skipLock);
-
         void onDeleteRecentlySuggest(int position, StayOutboundSuggest stayOutboundSuggest);
 
         void onVoiceSearchClick();
@@ -337,12 +335,6 @@ public class SearchStayOutboundSuggestView //
                 public void onDeleteClick(int position, StayOutboundSuggest stayOutboundSuggest)
                 {
                     getEventListener().onDeleteRecentlySuggest(position, stayOutboundSuggest);
-                }
-
-                @Override
-                public void onDeleteAllClick()
-                {
-                    getEventListener().onDeleteAllRecentlySuggest(false);
                 }
 
                 @Override

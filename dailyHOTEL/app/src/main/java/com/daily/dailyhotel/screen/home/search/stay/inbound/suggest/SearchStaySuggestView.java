@@ -54,8 +54,6 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
         void onRecentlySuggestClick(StaySuggest staySuggest);
 
-        void onDeleteAllRecentlySuggest(boolean skipLock);
-
         void onDeleteRecentlySuggest(int position, StaySuggest staySuggest);
 
         void onVoiceSearchClick();
@@ -458,12 +456,6 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
                 public void onDeleteClick(int position, StaySuggest staySuggest)
                 {
                     getEventListener().onDeleteRecentlySuggest(position, staySuggest);
-                }
-
-                @Override
-                public void onDeleteAllClick()
-                {
-                    getEventListener().onDeleteAllRecentlySuggest(false);
                 }
 
                 @Override
