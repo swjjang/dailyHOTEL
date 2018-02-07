@@ -120,7 +120,7 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
     @Override
     public void onPostCreate()
     {
-        getViewInterface().setToolbarTitle(getString(R.string.label_search_gourmet));
+        getViewInterface().setToolbarTitle(getString(R.string.label_search_search_gourmet));
 
         if (mSearchModel.suggest.getValue() == null || DailyTextUtils.isTextEmpty(mSearchModel.suggest.getValue().displayName) == true)
         {
