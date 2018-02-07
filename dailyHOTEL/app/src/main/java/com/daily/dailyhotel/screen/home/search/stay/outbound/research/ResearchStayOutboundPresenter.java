@@ -127,7 +127,7 @@ public class ResearchStayOutboundPresenter extends BaseExceptionPresenter<Resear
     @Override
     public void onPostCreate()
     {
-        getViewInterface().setToolbarTitle(getString(R.string.label_search_stayoutbound));
+        getViewInterface().setToolbarTitle(getString(R.string.label_search_search_stayoutbound));
 
         if (mSearchModel.suggest.getValue() == null || DailyTextUtils.isTextEmpty(mSearchModel.suggest.getValue().display) == true)
         {
