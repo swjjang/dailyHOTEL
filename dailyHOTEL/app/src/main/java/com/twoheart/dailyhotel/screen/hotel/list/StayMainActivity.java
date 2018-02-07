@@ -1038,25 +1038,25 @@ public class StayMainActivity extends PlaceMainActivity
             {
                 DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
 
-                if (externalDeepLink.isHotelSearchView() == true //
-                    || externalDeepLink.isCampaignTagListView() == true)
-                {
-                    unLockUI();
-
-                    return moveDeepLinkSearch(baseActivity, todayDateTime, dailyDeepLink);
-                } else if (externalDeepLink.isHotelSearchResultView() == true)
-                {
-                    unLockUI();
-
-                    return moveDeepLinkSearchResult(baseActivity, todayDateTime, dailyDeepLink);
-                } else
-                {
-                    // 더이상 진입은 없다.
-                    if (externalDeepLink.isHotelListView() == false)
-                    {
-                        externalDeepLink.clear();
-                    }
-                }
+//                if (externalDeepLink.isHotelSearchView() == true //
+//                    || externalDeepLink.isCampaignTagListView() == true)
+//                {
+//                    unLockUI();
+//
+//                    return moveDeepLinkSearch(baseActivity, todayDateTime, dailyDeepLink);
+//                } else if (externalDeepLink.isHotelSearchResultView() == true)
+//                {
+//                    unLockUI();
+//
+//                    return moveDeepLinkSearchResult(baseActivity, todayDateTime, dailyDeepLink);
+//                } else
+//                {
+//                    // 더이상 진입은 없다.
+//                    if (externalDeepLink.isHotelListView() == false)
+//                    {
+//                        externalDeepLink.clear();
+//                    }
+//                }
             } else
             {
 

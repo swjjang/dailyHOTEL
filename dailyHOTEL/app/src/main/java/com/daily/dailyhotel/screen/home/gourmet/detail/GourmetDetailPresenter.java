@@ -74,10 +74,8 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 
@@ -87,7 +85,6 @@ import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function6;
 import io.reactivex.functions.Function7;
 import io.reactivex.schedulers.Schedulers;
 
@@ -302,41 +299,10 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                             return;
                         }
 
-
-                        String date = externalDeepLink.getDate();
-                        int datePlus = externalDeepLink.getDatePlus();
-                        String week = externalDeepLink.getWeek();
                         mShowCalendar = externalDeepLink.isShowCalendar();
                         mShowTrueVR = externalDeepLink.isShowVR();
 
-                        if (DailyTextUtils.isTextEmpty(date) == false)
-                        {
-                            if (Integer.parseInt(date) > Integer.parseInt(DailyCalendar.convertDateFormatString(commonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd")))
-                            {
-                                Date visitDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
-                                setGourmetBookDateTime(DailyCalendar.format(visitDate, DailyCalendar.ISO_8601_FORMAT));
-                            } else
-                            {
-                                setGourmetBookDateTime(commonDateTime.dailyDateTime);
-                            }
-                        } else if (DailyTextUtils.isTextEmpty(week) == false)
-                        {
-                            String searchDateTime = DailyCalendar.searchClosedDayOfWeek(commonDateTime.currentDateTime, week.toCharArray());
-
-                            if (DailyTextUtils.isTextEmpty(searchDateTime) == false)
-                            {
-                                setGourmetBookDateTime(searchDateTime);
-                            } else
-                            {
-                                setGourmetBookDateTime(commonDateTime.dailyDateTime);
-                            }
-                        } else if (datePlus >= 0)
-                        {
-                            setGourmetBookDateTime(commonDateTime.dailyDateTime, datePlus);
-                        } else
-                        {
-                            setGourmetBookDateTime(commonDateTime.dailyDateTime);
-                        }
+                        setGourmetBookDateTime(externalDeepLink.getGourmetBookDateTime(commonDateTime, externalDeepLink).getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
 
                         mDailyDeepLink.clear();
                         mDailyDeepLink = null;

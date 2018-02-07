@@ -79,19 +79,22 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
     private PlaceSearchResultNetworkController mNetworkController;
 
-    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay, String inputText, StaySuggest staySuggest, String callByScreen)
+    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay//
+        , String inputText, StaySuggest staySuggest, SortType sortType, String callByScreen)
     {
         Intent intent = new Intent(context, StaySearchResultActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_INPUTTEXT, inputText);
         intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(staySuggest));
+        intent.putExtra(INTENT_EXTRA_DATA_SORT_TYPE, sortType);
         intent.putExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
 
         return intent;
     }
 
-    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay, StaySuggest staySuggest, double radius, boolean isDeepLink)
+    public static Intent newInstance(Context context, TodayDateTime todayDateTime, StayBookingDay stayBookingDay//
+        , StaySuggest staySuggest, double radius, boolean isDeepLink)
     {
         Intent intent = new Intent(context, StaySearchResultActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, stayBookingDay);

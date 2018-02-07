@@ -30,14 +30,14 @@ public class DailyExternalDeepLink extends DailyDeepLink
     private static final String HOTEL_V3_DETAIL = "hd"; // 호텔 상세
     //    private static final String HOTEL_V3_REGION_LIST = "hrl"; // 호텔 지역 리스트 (deprecated)
     //    private static final String HOTEL_V3_EVENT_BANNER_WEB = "hebw"; // 이벤트 배너 웹
-    private static final String HOTEL_V6_SEARCH = "hs"; // 호텔 검색화면
+//    private static final String HOTEL_V6_SEARCH = "hs"; // 호텔 검색화면
     private static final String HOTEL_V6_SEARCH_RESULT = "hsr"; // 호텔 검색 결과 화면
 
     private static final String GOURMET_V3_LIST = "gl"; // 고메 리스트
     private static final String GOURMET_V3_DETAIL = "gd"; // 고메 상세
     //    private static final String GOURMET_V3_REGION_LIST = "grl"; // 고메 지역 리스트 (deprecated)
     //    private static final String GOURMET_V3_EVENT_BANNER_WEB = "gebw"; // 이벤트 배너 웹
-    private static final String GOURMET_V6_SEARCH = "gs"; // 고메 검색화면
+//    private static final String GOURMET_V6_SEARCH = "gs"; // 고메 검색화면
     private static final String GOURMET_V6_SEARCH_RESULT = "gsr"; // 고메 검색 결과 화면
 
     private static final String BONUS_V3 = "b"; // 적립금
@@ -77,6 +77,8 @@ public class DailyExternalDeepLink extends DailyDeepLink
     private static final String PLACE_V20_DETAIL = "pd"; // place detail
 
     private static final String REWARD_V21 = "reward"; // 마이데일리 데일리리워드
+    private static final String SEARCH_HOME_V23 = "searchHome"; // 검색 홈
+
 
     // Param
 
@@ -245,6 +247,15 @@ public class DailyExternalDeepLink extends DailyDeepLink
         }
 
         return value;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    // Version 23
+    ///////////////////////////////////////////////////////////////////////////////////
+
+    public boolean isSearchHomeView()
+    {
+        return equalsView(23, SEARCH_HOME_V23);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -525,20 +536,20 @@ public class DailyExternalDeepLink extends DailyDeepLink
     // Version 6
     ///////////////////////////////////////////////////////////////////////////////////
 
-    public boolean isHotelSearchView()
-    {
-        return equalsView(6, HOTEL_V6_SEARCH);
-    }
+//    public boolean isHotelSearchView()
+//    {
+//        return equalsView(6, HOTEL_V6_SEARCH);
+//    }
 
     public boolean isHotelSearchResultView()
     {
         return equalsView(6, HOTEL_V6_SEARCH_RESULT);
     }
 
-    public boolean isGourmetSearchView()
-    {
-        return equalsView(6, GOURMET_V6_SEARCH);
-    }
+//    public boolean isGourmetSearchView()
+//    {
+//        return equalsView(6, GOURMET_V6_SEARCH);
+//    }
 
     public boolean isGourmetSearchResultView()
     {

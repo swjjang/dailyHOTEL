@@ -75,19 +75,22 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
     private PlaceSearchResultNetworkController mNetworkController;
 
-    public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, String inputText, GourmetSuggest gourmetSuggest, String callByScreen)
+    public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay//
+        , String inputText, GourmetSuggest gourmetSuggest, SortType sortType, String callByScreen)
     {
         Intent intent = new Intent(context, GourmetSearchResultActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
         intent.putExtra(INTENT_EXTRA_DATA_INPUTTEXT, inputText);
         intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcel(gourmetSuggest));
+        intent.putExtra(INTENT_EXTRA_DATA_SORT_TYPE, sortType);
         intent.putExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
 
         return intent;
     }
 
-    public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, GourmetSuggest gourmetSuggest, double radius, boolean isDeepLink)
+    public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay//
+        , GourmetSuggest gourmetSuggest, double radius, boolean isDeepLink)
     {
         Intent intent = new Intent(context, GourmetSearchResultActivity.class);
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
@@ -98,28 +101,6 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
         return intent;
     }
-
-    //    public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, Keyword keyword, SearchType searchType)
-    //    {
-    //        return newInstance(context, todayDateTime, gourmetBookingDay, null, keyword, searchType);
-    //    }
-    //
-    //    public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, String text)
-    //    {
-    //        return newInstance(context, todayDateTime, gourmetBookingDay, null, new Keyword(0, text), SearchType.SEARCHES);
-    //    }
-    //
-    //    public static Intent newInstance(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, Location location, String callByScreen)
-    //    {
-    //        Intent intent = new Intent(context, GourmetSearchResultActivity.class);
-    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
-    //        intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
-    //        intent.putExtra(INTENT_EXTRA_DATA_LOCATION, location);
-    //        intent.putExtra(INTENT_EXTRA_DATA_SEARCHTYPE, SearchType.LOCATION.name());
-    //        intent.putExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
-    //
-    //        return intent;
-    //    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
