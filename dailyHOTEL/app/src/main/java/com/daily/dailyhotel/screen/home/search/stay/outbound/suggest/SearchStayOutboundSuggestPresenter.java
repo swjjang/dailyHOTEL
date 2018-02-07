@@ -32,7 +32,6 @@ import com.daily.dailyhotel.repository.remote.GoogleAddressRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
 import com.daily.dailyhotel.screen.home.search.stay.inbound.suggest.SearchStaySuggestActivity;
-import com.daily.dailyhotel.storage.database.DailyDb;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
@@ -53,7 +52,6 @@ import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Function3;
@@ -289,13 +287,14 @@ public class SearchStayOutboundSuggestPresenter //
         screenLock(showProgress);
 
         // 최근 본 업장
-        Observable<StayOutbounds> obObservable = mRecentlyLocalImpl.getTargetIndices(Constants.ServiceType.OB_STAY, DailyDb.MAX_RECENT_PLACE_COUNT) //
+        Observable<StayOutbounds> obObservable = mRecentlyLocalImpl.getTargetIndices( //
+            Constants.ServiceType.OB_STAY, SearchStayOutboundSuggestActivity.RECENTLY_PLACE_MAX_REQUEST_COUNT) //
             .observeOn(Schedulers.io()).flatMap(new Function<String, ObservableSource<StayOutbounds>>()
             {
                 @Override
                 public ObservableSource<StayOutbounds> apply(@io.reactivex.annotations.NonNull String targetIndices) throws Exception
                 {
-                    return mRecentlyRemoteImpl.getStayOutboundRecentlyList(targetIndices, DailyDb.MAX_RECENT_PLACE_COUNT);
+                    return mRecentlyRemoteImpl.getStayOutboundRecentlyList(targetIndices, SearchStayOutboundSuggestActivity.RECENTLY_PLACE_MAX_REQUEST_COUNT);
                 }
             });
 
@@ -694,46 +693,6 @@ public class SearchStayOutboundSuggestPresenter //
     }
 
     @Override
-    public void onDeleteAllRecentlySuggest(boolean skipLocked)
-    {
-        if (skipLocked == false && lock() == true)
-        {
-            return;
-        }
-
-        setRecentlySuggestList(null);
-        notifyDataSetChanged();
-
-        addCompositeDisposable(Observable.zip(mRecentlyLocalImpl.clearRecentlyItems(Constants.ServiceType.OB_STAY) //
-            , mSuggestLocalImpl.deleteAllRecentlyStayOutboundSuggest(), new BiFunction<Boolean, Boolean, Boolean>()
-            {
-                @Override
-                public Boolean apply(Boolean aBoolean, Boolean aBoolean2) throws Exception
-                {
-                    return true;
-                }
-            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
-        {
-            @Override
-            public void accept(Boolean aBoolean) throws Exception
-            {
-                mAnalytics.onEventDeleteAllRecentlySuggestClick(getActivity());
-
-                unLockAll();
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(Throwable throwable) throws Exception
-            {
-                mAnalytics.onEventDeleteAllRecentlySuggestClick(getActivity());
-
-                unLockAll();
-            }
-        }));
-    }
-
-    @Override
     public void onDeleteRecentlySuggest(int position, StayOutboundSuggest stayOutboundSuggest)
     {
         if (getViewInterface() == null || stayOutboundSuggest == null || position < 0)
@@ -747,12 +706,6 @@ public class SearchStayOutboundSuggestPresenter //
         }
 
         getViewInterface().removeRecentlyItem(position);
-
-        if (getViewInterface().getRecentlySuggestEntryCount() == 0)
-        {
-            onDeleteAllRecentlySuggest(true);
-            return;
-        }
 
         if (StayOutboundSuggest.MENU_TYPE_RECENTLY_STAY == stayOutboundSuggest.menuType)
         {
@@ -769,7 +722,11 @@ public class SearchStayOutboundSuggestPresenter //
                     @Override
                     public void accept(ArrayList<RecentlyDbPlace> recentlyDbPlaces) throws Exception
                     {
-                        if (recentlyDbPlaces.size() == 0)
+                        if (getViewInterface().getRecentlySuggestEntryCount() == 0)
+                        {
+                            setRecentlySuggestList(null);
+                            notifyDataSetChanged();
+                        } else if (recentlyDbPlaces.size() == 0)
                         {
                             getViewInterface().removeRecentlySection(StaySuggest.MENU_TYPE_RECENTLY_STAY);
                         }
@@ -799,7 +756,11 @@ public class SearchStayOutboundSuggestPresenter //
                     @Override
                     public void accept(List<StayOutboundSuggest> stayOutboundSuggestList) throws Exception
                     {
-                        if (stayOutboundSuggestList.size() == 0)
+                        if (getViewInterface().getRecentlySuggestEntryCount() == 0)
+                        {
+                            setRecentlySuggestList(null);
+                            notifyDataSetChanged();
+                        } else if (stayOutboundSuggestList.size() == 0)
                         {
                             getViewInterface().removeRecentlySection(StaySuggest.MENU_TYPE_RECENTLY_SEARCH);
                         }

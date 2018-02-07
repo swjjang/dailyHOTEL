@@ -44,8 +44,6 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
 
         void onRecentlySuggestClick(GourmetSuggest gourmetSuggest);
 
-        void onDeleteAllRecentlySuggest(boolean skipLock);
-
         void onDeleteRecentlySuggest(int position, GourmetSuggest gourmetSuggest);
 
         void onVoiceSearchClick();
@@ -323,12 +321,6 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
                 public void onDeleteClick(int position, GourmetSuggest gourmetSuggest)
                 {
                     getEventListener().onDeleteRecentlySuggest(position, gourmetSuggest);
-                }
-
-                @Override
-                public void onDeleteAllClick()
-                {
-                    getEventListener().onDeleteAllRecentlySuggest(false);
                 }
 
                 @Override

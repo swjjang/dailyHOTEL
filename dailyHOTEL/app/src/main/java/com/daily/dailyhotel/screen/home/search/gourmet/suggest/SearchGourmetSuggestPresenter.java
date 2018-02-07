@@ -30,7 +30,6 @@ import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.remote.GoogleAddressRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
-import com.daily.dailyhotel.storage.database.DailyDb;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.util.DailyLocationExFactory;
@@ -305,7 +304,8 @@ public class SearchGourmetSuggestPresenter //
         setRefresh(false);
         screenLock(showProgress);
 
-        Observable<ArrayList<RecentlyPlace>> ibObservable = mRecentlyLocalImpl.getRecentlyJSONObject(DailyDb.MAX_RECENT_PLACE_COUNT, Constants.ServiceType.GOURMET) //
+        Observable<ArrayList<RecentlyPlace>> ibObservable = mRecentlyLocalImpl.getRecentlyJSONObject( //
+            SearchGourmetSuggestActivity.RECENTLY_PLACE_MAX_REQUEST_COUNT, Constants.ServiceType.GOURMET) //
             .observeOn(Schedulers.io()).flatMap(new Function<JSONObject, ObservableSource<ArrayList<RecentlyPlace>>>()
             {
                 @Override
@@ -657,54 +657,6 @@ public class SearchGourmetSuggestPresenter //
     }
 
     @Override
-    public void onDeleteAllRecentlySuggest(boolean skipLocked)
-    {
-        if (skipLocked == false && lock() == true)
-        {
-            return;
-        }
-
-        setRecentlySuggestList(null);
-        notifyDataSetChanged();
-
-        Observable<Boolean> recentlySearchObservable = Observable.defer(new Callable<ObservableSource<Boolean>>()
-        {
-            @Override
-            public ObservableSource<Boolean> call() throws Exception
-            {
-                mDailyRecentSearches.clear();
-                DailyPreference.getInstance(getActivity()).setGourmetRecentSearches("");
-
-                return Observable.just(true);
-            }
-        }).subscribeOn(Schedulers.io());
-
-        addCompositeDisposable(Observable.zip(mRecentlyLocalImpl.clearRecentlyItems(Constants.ServiceType.GOURMET) //
-            , recentlySearchObservable, new BiFunction<Boolean, Boolean, Boolean>()
-            {
-                @Override
-                public Boolean apply(Boolean t1, Boolean t2) throws Exception
-                {
-                    return true;
-                }
-            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
-        {
-            @Override
-            public void accept(Boolean aBoolean) throws Exception
-            {
-                unLockAll();
-            }
-        }, new Consumer<Throwable>()
-        {
-            @Override
-            public void accept(Throwable throwable) throws Exception
-            {
-                unLockAll();
-            }
-        }));
-    }
-
-    @Override
     public void onDeleteRecentlySuggest(int position, GourmetSuggest gourmetSuggest)
     {
         if (getViewInterface() == null || gourmetSuggest == null || position < 0)
@@ -718,12 +670,6 @@ public class SearchGourmetSuggestPresenter //
         }
 
         getViewInterface().removeRecentlyItem(position);
-
-        if (getViewInterface().getRecentlySuggestEntryCount() == 0)
-        {
-            onDeleteAllRecentlySuggest(true);
-            return;
-        }
 
         if (GourmetSuggest.MENU_TYPE_RECENTLY_GOURMET == gourmetSuggest.menuType)
         {
@@ -740,7 +686,11 @@ public class SearchGourmetSuggestPresenter //
                     @Override
                     public void accept(ArrayList<RecentlyDbPlace> recentlyDbPlaces) throws Exception
                     {
-                        if (recentlyDbPlaces.size() == 0)
+                        if (getViewInterface().getRecentlySuggestEntryCount() == 0)
+                        {
+                            setRecentlySuggestList(null);
+                            notifyDataSetChanged();
+                        } else if (recentlyDbPlaces.size() == 0)
                         {
                             getViewInterface().removeRecentlySection(GourmetSuggest.MENU_TYPE_RECENTLY_GOURMET);
                         }
@@ -766,7 +716,12 @@ public class SearchGourmetSuggestPresenter //
             }
 
             mDailyRecentSearches.remove(keyword);
-            if (mDailyRecentSearches.size() == 0)
+
+            if (getViewInterface().getRecentlySuggestEntryCount() == 0)
+            {
+                setRecentlySuggestList(null);
+                notifyDataSetChanged();
+            } else if (mDailyRecentSearches.size() == 0)
             {
                 getViewInterface().removeRecentlySection(GourmetSuggest.MENU_TYPE_RECENTLY_SEARCH);
             }
