@@ -471,7 +471,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
                         {
                             StaySuggest staySuggest = new StaySuggest(StaySuggest.MENU_TYPE_DIRECT, StaySuggest.CATEGORY_DIRECT, word);
 
-                            Intent intent = StaySearchResultActivity.newInstance(context, todayDateTime, stayBookingDay, word, staySuggest, null);
+                            Intent intent = StaySearchResultActivity.newInstance(context, todayDateTime, stayBookingDay, word, staySuggest, null, null);
                             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
                         } else
                         {
@@ -553,7 +553,7 @@ public class EventWebActivity extends WebViewActivity implements Constants
                         {
                             GourmetSuggest gourmetSuggest = new GourmetSuggest(GourmetSuggest.MENU_TYPE_DIRECT, GourmetSuggest.CATEGORY_DIRECT, word);
 
-                            Intent intent = GourmetSearchResultActivity.newInstance(context, todayDateTime, gourmetBookingDay, word, gourmetSuggest, null);
+                            Intent intent = GourmetSearchResultActivity.newInstance(context, todayDateTime, gourmetBookingDay, word, gourmetSuggest, null, null);
                             startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
                         } else
                         {

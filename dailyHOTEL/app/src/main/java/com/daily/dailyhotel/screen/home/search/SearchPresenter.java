@@ -612,10 +612,13 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                         mDailyDeepLink = null;
                     } else if (externalDeepLink.isHotelSearchResultView() == true)
                     {
+                        moveDeepLinkStaySearchResult(mSearchModel.commonDateTime.getValue(), externalDeepLink);
                     } else if (externalDeepLink.isGourmetSearchResultView() == true)
                     {
+                        moveDeepLinkGourmetSearchResult(mSearchModel.commonDateTime.getValue(), externalDeepLink);
                     } else if (externalDeepLink.isStayOutboundSearchResultView() == true)
                     {
+                        moveDeepLinkStayOutboundSearchResult(mSearchModel.commonDateTime.getValue(), externalDeepLink);
                     }
                 }
             }
@@ -1242,5 +1245,16 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         {
             ExLog.e(e.toString());
         }
+    }
+
+    void moveDeepLinkStayOutboundSearchResult(CommonDateTime commonDateTime, DailyExternalDeepLink externalDeepLink)
+    {
+        if (commonDateTime == null || externalDeepLink == null)
+        {
+            return;
+        }
+
+        startActivityForResult(StayOutboundListActivity.newInstance(getActivity(), externalDeepLink.getDeepLink())//
+            , SearchActivity.REQUEST_CODE_STAY_OUTBOUND_SEARCH_RESULT);
     }
 }

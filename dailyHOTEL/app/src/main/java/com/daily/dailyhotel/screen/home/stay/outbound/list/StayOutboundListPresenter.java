@@ -207,6 +207,69 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         if (intent.hasExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK) == true)
         {
+//            try
+//            {
+//                if (dailyDeepLink.isExternalDeepLink() == true)
+//                {
+//                    DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
+//
+//                    StayOutboundSuggest stayOutboundSuggest = new StayOutboundSuggest();
+//                    stayOutboundSuggest.id = Long.parseLong(externalDeepLink.getIndex());
+//                    stayOutboundSuggest.categoryKey = externalDeepLink.getCategoryKey();
+//                    stayOutboundSuggest.display = externalDeepLink.getTitle();
+//
+//                    String date = externalDeepLink.getDate();
+//                    int datePlus = externalDeepLink.getDatePlus();
+//                    int nights = 1;
+//
+//                    try
+//                    {
+//                        nights = Integer.parseInt(externalDeepLink.getNights());
+//                    } catch (Exception e)
+//                    {
+//                        ExLog.d(e.toString());
+//                    } finally
+//                    {
+//                        if (nights <= 0)
+//                        {
+//                            nights = 1;
+//                        }
+//                    }
+//
+//                    StayBookingDay stayBookingDay = new StayBookingDay();
+//
+//                    if (DailyTextUtils.isTextEmpty(date) == false)
+//                    {
+//                        Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
+//                        stayBookingDay.setCheckInDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
+//                    } else if (datePlus >= 0)
+//                    {
+//                        stayBookingDay.setCheckInDay(todayDateTime.currentDateTime, datePlus);
+//                    } else
+//                    {
+//                        stayBookingDay.setCheckInDay(todayDateTime.currentDateTime);
+//                    }
+//
+//                    stayBookingDay.setCheckOutDay(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), nights);
+//
+//                    People people = new People(People.DEFAULT_ADULTS, null);
+//
+//                    startActivity(StayOutboundListActivity.newInstance(EventWebActivity.this, stayOutboundSuggest//
+//                        , stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+//                        , stayBookingDay.getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+//                        , people.numberOfAdults, people.getChildAgeList(), new StayOutboundListAnalyticsParam()));
+//                } else
+//                {
+//
+//                }
+//            } catch (Exception e)
+//            {
+//                ExLog.e(e.toString());
+//                return false;
+//            } finally
+//            {
+//                dailyDeepLink.clear();
+//            }
         } else if (intent.hasExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_SUGGEST) == true)
         {
             StayOutboundSuggestParcel stayOutboundSuggestParcel = intent.getParcelableExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_SUGGEST);

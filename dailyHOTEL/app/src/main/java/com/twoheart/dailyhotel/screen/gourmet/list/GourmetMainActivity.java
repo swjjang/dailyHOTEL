@@ -397,7 +397,7 @@ public class GourmetMainActivity extends PlaceMainActivity
         gourmetSuggest.latitude = location.getLatitude();
         gourmetSuggest.longitude = location.getLongitude();
 
-        Intent intent = GourmetSearchResultActivity.newInstance(context, todayDateTime, gourmetBookingDay, null, gourmetSuggest, callByScreen);
+        Intent intent = GourmetSearchResultActivity.newInstance(context, todayDateTime, gourmetBookingDay, null, gourmetSuggest, null, callByScreen);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
     }
 

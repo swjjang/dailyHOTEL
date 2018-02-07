@@ -1736,7 +1736,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
             StaySuggest staySuggest = new StaySuggest(StaySuggest.MENU_TYPE_LOCATION, StaySuggest.CATEGORY_LOCATION, null);
 
-            Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, stayBookingDay, null, staySuggest, AnalyticsManager.Screen.HOME);
+            Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, stayBookingDay, null, staySuggest, null, AnalyticsManager.Screen.HOME);
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
         } catch (Exception e)
         {

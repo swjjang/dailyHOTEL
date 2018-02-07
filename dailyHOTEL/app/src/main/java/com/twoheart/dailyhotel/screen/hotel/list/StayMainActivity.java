@@ -413,7 +413,7 @@ public class StayMainActivity extends PlaceMainActivity
         staySuggest.latitude = location.getLatitude();
         staySuggest.longitude = location.getLongitude();
 
-        Intent intent = StaySearchResultActivity.newInstance(context, todayDateTime, stayBookingDay, null, staySuggest, callByScreen);
+        Intent intent = StaySearchResultActivity.newInstance(context, todayDateTime, stayBookingDay, null, staySuggest, null, callByScreen);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
     }
 
@@ -1699,7 +1699,7 @@ public class StayMainActivity extends PlaceMainActivity
                             {
                                 StaySuggest staySuggest = new StaySuggest(StaySuggest.MENU_TYPE_DIRECT, StaySuggest.CATEGORY_DIRECT, word);
 
-                                Intent intent = StaySearchResultActivity.newInstance(baseActivity, todayDateTime, stayBookingDay, word, staySuggest, null);
+                                Intent intent = StaySearchResultActivity.newInstance(baseActivity, todayDateTime, stayBookingDay, word, staySuggest, null, null);
                                 baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
                             } else
                             {
