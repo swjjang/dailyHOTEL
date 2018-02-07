@@ -735,7 +735,7 @@ public class SearchStaySuggestPresenter //
 
         addRecentSearches(staySuggest);
 
-        getViewInterface().setKeywordEditText(staySuggest.displayName);
+        getViewInterface().setSuggest(staySuggest.displayName);
         startFinishAction(staySuggest, mKeyword, null);
     }
 
@@ -752,18 +752,17 @@ public class SearchStaySuggestPresenter //
             return;
         }
 
-        getViewInterface().setKeywordEditText(gourmetSuggest.displayName);
-
         if (GourmetSuggest.MENU_TYPE_DIRECT == gourmetSuggest.menuType)
         {
             StaySuggest staySuggest = new StaySuggest(StaySuggest.MENU_TYPE_DIRECT, StaySuggest.CATEGORY_DIRECT, gourmetSuggest.displayName);
             addRecentSearches(staySuggest);
 
-            getViewInterface().setKeywordEditText(staySuggest.displayName);
+            getViewInterface().setSuggest(staySuggest.displayName);
             startFinishAction(staySuggest, mKeyword, null);
             return;
         }
 
+        getViewInterface().setSuggest(gourmetSuggest.displayName);
         startFinishAction(gourmetSuggest, mKeyword, null);
     }
 
@@ -780,18 +779,17 @@ public class SearchStaySuggestPresenter //
             return;
         }
 
-        getViewInterface().setKeywordEditText(stayOutboundSuggest.display);
-
         if (StayOutboundSuggest.MENU_TYPE_DIRECT == stayOutboundSuggest.menuType)
         {
             StaySuggest staySuggest = new StaySuggest(StaySuggest.MENU_TYPE_DIRECT, StaySuggest.CATEGORY_DIRECT, stayOutboundSuggest.display);
             addRecentSearches(staySuggest);
 
-            getViewInterface().setKeywordEditText(staySuggest.displayName);
+            getViewInterface().setSuggest(staySuggest.displayName);
             startFinishAction(staySuggest, mKeyword, null);
             return;
         }
 
+        getViewInterface().setSuggest(stayOutboundSuggest.display);
         startFinishAction(stayOutboundSuggest, mKeyword, null);
     }
 
@@ -810,7 +808,7 @@ public class SearchStaySuggestPresenter //
 
         addRecentSearches(staySuggest);
 
-        getViewInterface().setKeywordEditText(staySuggest.displayName);
+        getViewInterface().setSuggest(staySuggest.displayName);
         startFinishAction(staySuggest, mKeyword, null);
     }
 
@@ -1114,7 +1112,7 @@ public class SearchStaySuggestPresenter //
 
                             unLockAll();
 
-                            getViewInterface().setKeywordEditText(mLocationSuggest.displayName);
+                            getViewInterface().setSuggest(mLocationSuggest.displayName);
                             startFinishAction(mLocationSuggest, mKeyword, null);
                         }
                     }, new Consumer<Throwable>()
@@ -1131,7 +1129,7 @@ public class SearchStaySuggestPresenter //
 
                             unLockAll();
 
-                            getViewInterface().setKeywordEditText(mLocationSuggest.displayName);
+                            getViewInterface().setSuggest(mLocationSuggest.displayName);
                             startFinishAction(mLocationSuggest, mKeyword, null);
                         }
                     }));

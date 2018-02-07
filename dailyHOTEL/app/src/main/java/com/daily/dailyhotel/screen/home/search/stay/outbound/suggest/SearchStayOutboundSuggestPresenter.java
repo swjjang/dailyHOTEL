@@ -877,7 +877,7 @@ public class SearchStayOutboundSuggestPresenter //
 
                             unLockAll();
 
-                            getViewInterface().setKeywordEditText(mLocationSuggest.display);
+                            getViewInterface().setSuggest(mLocationSuggest.display);
                             startFinishAction(mLocationSuggest, mKeyword, null);
                         }
                     }, new Consumer<Throwable>()
@@ -894,7 +894,7 @@ public class SearchStayOutboundSuggestPresenter //
 
                             unLockAll();
 
-                            getViewInterface().setKeywordEditText(mLocationSuggest.display);
+                            getViewInterface().setSuggest(mLocationSuggest.display);
                             startFinishAction(mLocationSuggest, mKeyword, null);
                         }
                     }));

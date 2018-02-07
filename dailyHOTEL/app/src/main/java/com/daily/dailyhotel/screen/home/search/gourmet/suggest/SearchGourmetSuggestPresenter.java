@@ -589,7 +589,7 @@ public class SearchGourmetSuggestPresenter //
 
         addRecentSearches(gourmetSuggest);
 
-        getViewInterface().setKeywordEditText(gourmetSuggest.displayName);
+        getViewInterface().setSuggest(gourmetSuggest.displayName);
         startFinishAction(gourmetSuggest, mKeyword, null);
     }
 
@@ -608,7 +608,7 @@ public class SearchGourmetSuggestPresenter //
 
         addRecentSearches(gourmetSuggest);
 
-        getViewInterface().setKeywordEditText(gourmetSuggest.displayName);
+        getViewInterface().setSuggest(gourmetSuggest.displayName);
         startFinishAction(gourmetSuggest, mKeyword, null);
     }
 
@@ -829,7 +829,7 @@ public class SearchGourmetSuggestPresenter //
 
                         unLockAll();
 
-                        getViewInterface().setKeywordEditText(mLocationSuggest.displayName);
+                        getViewInterface().setSuggest(mLocationSuggest.displayName);
                         startFinishAction(mLocationSuggest, mKeyword, null);
                     }
                 }, new Consumer<Throwable>()
@@ -846,7 +846,7 @@ public class SearchGourmetSuggestPresenter //
 
                         unLockAll();
 
-                        getViewInterface().setKeywordEditText(mLocationSuggest.displayName);
+                        getViewInterface().setSuggest(mLocationSuggest.displayName);
                         startFinishAction(mLocationSuggest, mKeyword, null);
                     }
                 }));
