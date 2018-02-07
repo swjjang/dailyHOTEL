@@ -1,4 +1,4 @@
-package com.daily.dailyhotel.screen.home.search.stay.outbound.suggest;
+package com.daily.dailyhotel.screen.home.search.stay.inbound.suggest;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.ObjectItem;
-import com.daily.dailyhotel.entity.StayOutboundSuggest;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeDeleteDataBinding;
 import com.twoheart.dailyhotel.databinding.ListRowSearchSuggestTypeEntryDataBinding;
@@ -20,20 +20,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by android_sam on 2018. 2. 2..
+ * Created by android_sam on 2018. 2. 1..
  */
 
-public class RecentlySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class StayRecentlySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
     public interface OnRecentlySuggestListener
     {
-        void onItemClick(int position, StayOutboundSuggest stayOutboundSuggest);
+        void onItemClick(int position, StaySuggest staySuggest);
 
-        void onDeleteClick(int position, StayOutboundSuggest stayOutboundSuggest);
+        void onDeleteClick(int position, StaySuggest staySuggest);
 
-        void onDeleteAllClick();
-
-        void onNearbyClick(StayOutboundSuggest stayOutboundSuggest);
+        void onNearbyClick(StaySuggest staySuggest);
     }
 
     private Context mContext;
@@ -41,10 +39,10 @@ public class RecentlySuggestListAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private List<ObjectItem> mSuggestList;
 
-    public RecentlySuggestListAdapter(Context context, OnRecentlySuggestListener listener)
+    public StayRecentlySuggestListAdapter(Context context, OnRecentlySuggestListener listener)
     {
         mContext = context;
-        this.mListener = listener;
+        mListener = listener;
 
         setAll(null);
     }
@@ -194,7 +192,7 @@ public class RecentlySuggestListAdapter extends RecyclerView.Adapter<RecyclerVie
         return mSuggestList.get(position);
     }
 
-    public StayOutboundSuggest removeItem(int position)
+    public StaySuggest removeItem(int position)
     {
         if (mSuggestList == null || mSuggestList.size() == 0)
         {
@@ -217,8 +215,8 @@ public class RecentlySuggestListAdapter extends RecyclerView.Adapter<RecyclerVie
             }
         }
 
-        StayOutboundSuggest stayOutboundSuggest = removeItem.getItem();
-        return stayOutboundSuggest;
+        StaySuggest staySuggest = removeItem.getItem();
+        return staySuggest;
     }
 
     public void removeSection(int menuType)
@@ -236,8 +234,8 @@ public class RecentlySuggestListAdapter extends RecyclerView.Adapter<RecyclerVie
                 continue;
             }
 
-            StayOutboundSuggest stayOutboundSuggest = item.getItem();
-            if (stayOutboundSuggest == null || menuType != stayOutboundSuggest.menuType)
+            StaySuggest staySuggest = item.getItem();
+            if (staySuggest == null || menuType != staySuggest.menuType)
             {
                 continue;
             }
@@ -255,9 +253,9 @@ public class RecentlySuggestListAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    public void setNearByStayOutboundSuggest(StayOutboundSuggest nearByStayOutboundSuggest)
+    public void setNearByStaySuggest(StaySuggest nearByStaySuggest)
     {
-        if (mSuggestList == null || mSuggestList.size() == 0 || nearByStayOutboundSuggest == null)
+        if (mSuggestList == null || mSuggestList.size() == 0 || nearByStaySuggest == null)
         {
             return;
         }
@@ -268,13 +266,13 @@ public class RecentlySuggestListAdapter extends RecyclerView.Adapter<RecyclerVie
         {
             if (ObjectItem.TYPE_LOCATION_VIEW == item.mType)
             {
-                StayOutboundSuggest stayOutboundSuggest = item.getItem();
+                StaySuggest staySuggest = item.getItem();
 
-                stayOutboundSuggest.display = nearByStayOutboundSuggest != null ? nearByStayOutboundSuggest.display : descriptionText;
-                stayOutboundSuggest.latitude = nearByStayOutboundSuggest.latitude;
-                stayOutboundSuggest.longitude = nearByStayOutboundSuggest.longitude;
-                stayOutboundSuggest.categoryKey = nearByStayOutboundSuggest.categoryKey;
-                stayOutboundSuggest.menuType = nearByStayOutboundSuggest.menuType;
+                staySuggest.displayName = nearByStaySuggest != null ? nearByStaySuggest.displayName : descriptionText;
+                staySuggest.latitude = nearByStaySuggest.latitude;
+                staySuggest.longitude = nearByStaySuggest.longitude;
+                staySuggest.categoryKey = nearByStaySuggest.categoryKey;
+                staySuggest.menuType = nearByStaySuggest.menuType;
                 break;
             }
         }
@@ -282,9 +280,9 @@ public class RecentlySuggestListAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private void onBindViewHolder(LocationViewHolder holder, ObjectItem item)
     {
-        StayOutboundSuggest stayOutboundSuggest = item.getItem();
+        StaySuggest staySuggest = item.getItem();
 
-        holder.itemView.getRootView().setTag(stayOutboundSuggest);
+        holder.itemView.getRootView().setTag(staySuggest);
         holder.itemView.getRootView().setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -295,15 +293,15 @@ public class RecentlySuggestListAdapter extends RecyclerView.Adapter<RecyclerVie
                     return;
                 }
 
-                mListener.onNearbyClick(stayOutboundSuggest);
+                mListener.onNearbyClick(staySuggest);
             }
         });
 
         holder.dataBinding.bottomDivider.setVisibility(View.VISIBLE);
 
-        holder.dataBinding.descriptionTextView.setText(stayOutboundSuggest.display);
+        holder.dataBinding.descriptionTextView.setText(staySuggest.displayName);
 
-        if (DailyTextUtils.isTextEmpty(stayOutboundSuggest.display) == true)
+        if (DailyTextUtils.isTextEmpty(staySuggest.displayName) == true)
         {
             holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
         } else
@@ -314,9 +312,9 @@ public class RecentlySuggestListAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private void onBindViewHolder(SectionViewHolder holder, ObjectItem item, int position)
     {
-        StayOutboundSuggest stayOutboundSuggest = item.getItem();
+        StaySuggest staySuggest = item.getItem();
 
-        if (DailyTextUtils.isTextEmpty(stayOutboundSuggest.display) == true)
+        if (DailyTextUtils.isTextEmpty(staySuggest.displayName) == true)
         {
             holder.dataBinding.titleTextView.setVisibility(View.GONE);
         } else
@@ -324,40 +322,20 @@ public class RecentlySuggestListAdapter extends RecyclerView.Adapter<RecyclerVie
             holder.dataBinding.titleTextView.setVisibility(View.VISIBLE);
         }
 
-        holder.dataBinding.titleTextView.setText(stayOutboundSuggest.display);
+        holder.dataBinding.titleTextView.setText(staySuggest.displayName);
     }
 
     private void onBindViewHolder(FooterViewHolder holder)
     {
-        int count = getEntryCount();
-        if (count >= 2)
-        {
-            holder.dataBinding.deleteLayout.setVisibility(View.VISIBLE);
-            holder.dataBinding.deleteTextView.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View view)
-                {
-                    if (mListener == null)
-                    {
-                        return;
-                    }
-
-                    mListener.onDeleteAllClick();
-                }
-            });
-        } else
-        {
-            holder.dataBinding.deleteLayout.setVisibility(View.GONE);
-            holder.dataBinding.deleteTextView.setOnClickListener(null);
-        }
+        holder.dataBinding.deleteLayout.setVisibility(View.GONE);
+        holder.dataBinding.deleteTextView.setOnClickListener(null);
     }
 
     private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)
     {
-        StayOutboundSuggest stayOutboundSuggest = item.getItem();
+        StaySuggest staySuggest = item.getItem();
 
-        holder.itemView.getRootView().setTag(stayOutboundSuggest);
+        holder.itemView.getRootView().setTag(staySuggest);
         holder.itemView.getRootView().setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -368,11 +346,11 @@ public class RecentlySuggestListAdapter extends RecyclerView.Adapter<RecyclerVie
                     return;
                 }
 
-                mListener.onItemClick(position, stayOutboundSuggest);
+                mListener.onItemClick(position, staySuggest);
             }
         });
 
-        holder.dataBinding.titleTextView.setText(stayOutboundSuggest.display);
+        holder.dataBinding.titleTextView.setText(staySuggest.displayName);
 
         holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
         holder.dataBinding.priceTextView.setVisibility(View.GONE);
@@ -389,38 +367,30 @@ public class RecentlySuggestListAdapter extends RecyclerView.Adapter<RecyclerVie
                     return;
                 }
 
-                mListener.onDeleteClick(position, stayOutboundSuggest);
+                mListener.onDeleteClick(position, staySuggest);
             }
         });
 
-        switch (stayOutboundSuggest.categoryKey)
+        switch (staySuggest.categoryKey)
         {
-            case StayOutboundSuggest.CATEGORY_AIRPORT:
-                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_ob_search_ic_04_airport);
-                break;
-
-            case StayOutboundSuggest.CATEGORY_HOTEL:
+            case StaySuggest.CATEGORY_STAY:
                 holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_02_hotel);
                 break;
 
-            case StayOutboundSuggest.CATEGORY_LOCATION:
+            case StaySuggest.CATEGORY_LOCATION:
                 holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_09_nearby);
                 break;
 
-            case StayOutboundSuggest.CATEGORY_POINT:
-                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_04_landmark);
-                break;
-
-            case StayOutboundSuggest.CATEGORY_REGION:
+            case StaySuggest.CATEGORY_REGION:
                 holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_01_region);
                 break;
 
-            case StayOutboundSuggest.CATEGORY_STATION:
+            case StaySuggest.CATEGORY_STATION:
                 holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_06_train);
                 break;
 
             default:
-                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_01_region);
+                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_07_recent);
                 break;
         }
     }

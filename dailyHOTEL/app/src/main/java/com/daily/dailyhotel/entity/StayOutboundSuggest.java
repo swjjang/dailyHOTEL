@@ -10,6 +10,7 @@ public class StayOutboundSuggest
     public static final String CATEGORY_REGION = "region";
     public static final String CATEGORY_STATION = "station";
     public static final String CATEGORY_LOCATION = "location";
+    public static final String CATEGORY_DIRECT = "direct";
 
     public static final int MENU_TYPE_DIRECT = 1;
     public static final int MENU_TYPE_LOCATION = 2;

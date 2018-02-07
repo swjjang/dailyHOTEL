@@ -23,15 +23,13 @@ import java.util.List;
  * Created by android_sam on 2018. 2. 1..
  */
 
-public class RecentlySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
     public interface OnRecentlySuggestListener
     {
         void onItemClick(int position, GourmetSuggest gourmetSuggest);
 
         void onDeleteClick(int position, GourmetSuggest gourmetSuggest);
-
-        void onDeleteAllClick();
 
         void onNearbyClick(GourmetSuggest gourmetSuggest);
     }
@@ -41,7 +39,7 @@ public class RecentlySuggestListAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private List<ObjectItem> mSuggestList;
 
-    public RecentlySuggestListAdapter(Context context, OnRecentlySuggestListener listener)
+    public GourmetRecentlySuggestListAdapter(Context context, OnRecentlySuggestListener listener)
     {
         mContext = context;
         mListener = listener;
@@ -329,28 +327,8 @@ public class RecentlySuggestListAdapter extends RecyclerView.Adapter<RecyclerVie
 
     private void onBindViewHolder(FooterViewHolder holder)
     {
-        int count = getEntryCount();
-        if (count >= 2)
-        {
-            holder.dataBinding.deleteLayout.setVisibility(View.VISIBLE);
-            holder.dataBinding.deleteTextView.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View view)
-                {
-                    if (mListener == null)
-                    {
-                        return;
-                    }
-
-                    mListener.onDeleteAllClick();
-                }
-            });
-        } else
-        {
-            holder.dataBinding.deleteLayout.setVisibility(View.GONE);
-            holder.dataBinding.deleteTextView.setOnClickListener(null);
-        }
+        holder.dataBinding.deleteLayout.setVisibility(View.GONE);
+        holder.dataBinding.deleteTextView.setOnClickListener(null);
     }
 
     private void onBindViewHolder(EntryViewHolder holder, ObjectItem item, int position)

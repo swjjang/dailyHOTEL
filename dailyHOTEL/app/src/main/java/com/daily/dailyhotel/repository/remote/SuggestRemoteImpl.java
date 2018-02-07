@@ -63,6 +63,37 @@ public class SuggestRemoteImpl extends BaseRemoteImpl implements SuggestInterfac
     }
 
     @Override
+    public Observable<List<StayOutboundSuggest>> getRegionSuggestsByStayOutbound(String keyword)
+    {
+        final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
+
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/suggests"//
+            : "MTEkNDQkMzckNDQkMyQxMiQzOCQ0NCQ3JDQwJDEzJDUyJDIzJDQwJDQ4JDIxJA==$Q0ZUCMzDg1RjYULXwOTcyMMjTI4RkI3NUFEOUNGRjOgSN3BMkPZSFNzXTAQ=$";
+
+        return mDailyMobileService.getSuggestsByStayOutbound(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API), keyword)//
+            .subscribeOn(Schedulers.io()).map((suggestsDataBaseDto) ->
+            {
+                List<StayOutboundSuggest> list;
+
+                if (suggestsDataBaseDto != null)
+                {
+                    if (suggestsDataBaseDto.msgCode == 100 && suggestsDataBaseDto.data != null)
+                    {
+                        list = suggestsDataBaseDto.data.getRegionSuggestList(mContext);
+                    } else
+                    {
+                        throw new BaseException(suggestsDataBaseDto.msgCode, suggestsDataBaseDto.msg);
+                    }
+                } else
+                {
+                    throw new BaseException(-1, null);
+                }
+
+                return list;
+            }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
     public Observable<Pair<String, ArrayList<StayKeyword>>> getSuggestsByStayInbound(String checkInDate, int stays, final String keyword)
     {
         final String URL = Constants.UNENCRYPTED_URL ? "api/v4/hotels/sales/search/suggest"//

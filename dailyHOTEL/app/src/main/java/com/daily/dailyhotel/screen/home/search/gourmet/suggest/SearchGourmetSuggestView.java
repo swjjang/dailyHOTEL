@@ -32,9 +32,9 @@ import io.reactivex.Observable;
 public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSuggestView.OnEventListener, ActivitySearchGourmetSuggestDataBinding> //
     implements SearchGourmetSuggestInterface, View.OnClickListener
 {
-    private SuggestListAdapter mSuggestListAdapter;
-    private RecentlySuggestListAdapter mRecentlySuggestListAdapter;
-    private PopularSuggestListAdapter mPopularSuggestListAdapter;
+    private GourmetSuggestListAdapter mSuggestListAdapter;
+    private GourmetRecentlySuggestListAdapter mRecentlySuggestListAdapter;
+    private GourmetPopularSuggestListAdapter mPopularSuggestListAdapter;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -43,8 +43,6 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
         void onSuggestClick(GourmetSuggest gourmetSuggest);
 
         void onRecentlySuggestClick(GourmetSuggest gourmetSuggest);
-
-        void onDeleteAllRecentlySuggest(boolean skipLock);
 
         void onDeleteRecentlySuggest(int position, GourmetSuggest gourmetSuggest);
 
@@ -96,7 +94,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
                         {
                             getEventListener().onSearchSuggest(v.getText().toString());
                         }
-                        return true;
+                        return false;
 
                     default:
                         return false;
@@ -189,7 +187,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
 
         if (mSuggestListAdapter == null)
         {
-            mSuggestListAdapter = new SuggestListAdapter(getContext(), new View.OnClickListener()
+            mSuggestListAdapter = new GourmetSuggestListAdapter(getContext(), new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -311,7 +309,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
 
         if (mRecentlySuggestListAdapter == null)
         {
-            mRecentlySuggestListAdapter = new RecentlySuggestListAdapter(getContext(), new RecentlySuggestListAdapter.OnRecentlySuggestListener()
+            mRecentlySuggestListAdapter = new GourmetRecentlySuggestListAdapter(getContext(), new GourmetRecentlySuggestListAdapter.OnRecentlySuggestListener()
             {
                 @Override
                 public void onItemClick(int position, GourmetSuggest gourmetSuggest)
@@ -323,12 +321,6 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
                 public void onDeleteClick(int position, GourmetSuggest gourmetSuggest)
                 {
                     getEventListener().onDeleteRecentlySuggest(position, gourmetSuggest);
-                }
-
-                @Override
-                public void onDeleteAllClick()
-                {
-                    getEventListener().onDeleteAllRecentlySuggest(false);
                 }
 
                 @Override
@@ -378,7 +370,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
 
         if (mPopularSuggestListAdapter == null)
         {
-            mPopularSuggestListAdapter = new PopularSuggestListAdapter(getContext(), new PopularSuggestListAdapter.OnPopularSuggestListener()
+            mPopularSuggestListAdapter = new GourmetPopularSuggestListAdapter(getContext(), new GourmetPopularSuggestListAdapter.OnPopularSuggestListener()
             {
                 @Override
                 public void onNearbyClick(GourmetSuggest gourmetSuggest)

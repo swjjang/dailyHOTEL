@@ -1133,6 +1133,8 @@
     <string name="label_search_suggest_recently_empty_description_type_stay">수영장 있는 호텔\n애견동반 양평 펜션\n주차가능한 파티룸</string>
     <string name="label_search_suggest_recently_empty_description_type_gourmet">주차가능한 뷔페\n코르키지가 되는 일식집\n단체 예약이 가능한 프라이빗룸</string>
     <string name="label_search_suggest_popular_area">인기지역</string>
+    <string name="label_search_suggest_check_gourmet">혹시 데일리고메에서 검색중이신가요?</string>
+    <string name="label_search_suggest_check_stay_outbound">혹시 해외스테이에서 검색중이신가요?</string>
 
     <!-- Coupon -->
     <string name="coupon_notice_text">할인쿠폰\n상세정보</string>
