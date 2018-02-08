@@ -1589,26 +1589,9 @@ public class StayCategoryTabActivity extends PlaceMainActivity
                 DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
 
                 String categoryCode = externalDeepLink.getCategoryCode();
-                String date = externalDeepLink.getDate();
-                int datePlus = externalDeepLink.getDatePlus();
 
-                int nights = 1;
                 int provinceIndex;
                 int areaIndex;
-
-                try
-                {
-                    nights = Integer.parseInt(externalDeepLink.getNights());
-                } catch (Exception e)
-                {
-                    ExLog.d(e.toString());
-                } finally
-                {
-                    if (nights <= 0)
-                    {
-                        nights = 1;
-                    }
-                }
 
                 try
                 {
@@ -1636,22 +1619,7 @@ public class StayCategoryTabActivity extends PlaceMainActivity
 
                 mStayCategoryCuration.setRegion(region);
 
-                StayBookingDay stayBookingDay = new StayBookingDay();
-
-                if (DailyTextUtils.isTextEmpty(date) == false)
-                {
-                    Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
-                    stayBookingDay.setCheckInDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
-                } else if (datePlus >= 0)
-                {
-                    stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime, datePlus);
-                } else
-                {
-                    stayBookingDay.setCheckInDay(todayDateTime.dailyDateTime);
-                }
-
-                stayBookingDay.setCheckOutDay(stayBookingDay.getCheckInDay(DailyCalendar.ISO_8601_FORMAT), nights);
-
+                StayBookingDay stayBookingDay = externalDeepLink.getStayBookDateTime(todayDateTime.getCommonDateTime(), externalDeepLink).getStayBookingDay();
                 mStayCategoryCuration.setStayBookingDay(stayBookingDay);
 
                 ((StayCategoryTabLayout) mPlaceMainLayout).setToolbarDateText(stayBookingDay);

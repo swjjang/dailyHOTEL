@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.View;
 
 import java.util.concurrent.TimeUnit;
 
@@ -30,7 +32,7 @@ public abstract class BaseFragmentPresenter<T1 extends BaseFragment, T2 extends 
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState)
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)
     {
         mOnViewInterface.setActivity(getActivity());
 

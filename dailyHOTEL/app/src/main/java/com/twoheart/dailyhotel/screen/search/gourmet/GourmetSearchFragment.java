@@ -210,7 +210,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
 
         GourmetSuggest gourmetSuggest = new GourmetSuggest(GourmetSuggest.MENU_TYPE_LOCATION, GourmetSuggest.CATEGORY_LOCATION, null);
 
-        Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, null, gourmetSuggest, AnalyticsManager.Screen.SEARCH_MAIN);
+        Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, null, gourmetSuggest, null, AnalyticsManager.Screen.SEARCH_MAIN);
         startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
     }
 
@@ -237,7 +237,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
 
         GourmetSuggest gourmetSuggest = new GourmetSuggest(GourmetSuggest.MENU_TYPE_DIRECT, GourmetSuggest.CATEGORY_DIRECT, text);
 
-        Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, text, gourmetSuggest, null);
+        Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, text, gourmetSuggest, null, null);
         startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
     }
 
@@ -607,7 +607,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
 
             GourmetSuggest gourmetSuggest = new GourmetSuggest(GourmetSuggest.MENU_TYPE_DIRECT, GourmetSuggest.CATEGORY_DIRECT, text);
 
-            Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, text, gourmetSuggest, null);
+            Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, text, gourmetSuggest, null, null);
             startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
         }
 
@@ -638,7 +638,7 @@ public class GourmetSearchFragment extends PlaceSearchFragment
             {
                 GourmetSuggest gourmetSuggest = new GourmetSuggest(GourmetSuggest.MENU_TYPE_SUGGEST, GourmetSuggest.CATEGORY_GOURMET, keyword.name);
 
-                Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, text, gourmetSuggest, null);
+                Intent intent = GourmetSearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, mGourmetBookingDay, text, gourmetSuggest, null, null);
                 startActivityForResult(intent, REQUEST_ACTIVITY_SEARCH_RESULT);
             } else
             {

@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -56,6 +57,8 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyDeepLink;
+import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -118,6 +121,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     android.support.v4.util.Pair[] mPairsByLongPress;
 
     private Disposable mChangedLocationDisposable;
+
+    private DailyDeepLink mDailyDeepLink;
 
     enum ViewState
     {
@@ -209,7 +214,79 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         if (intent.hasExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK) == true)
         {
+            mAnalytics.setAnalyticsParam(new StayOutboundListAnalyticsParam());
+
+            try
+            {
+                mDailyDeepLink = DailyDeepLink.getNewInstance(Uri.parse(intent.getStringExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK)));
+            } catch (Exception e)
+            {
+                mDailyDeepLink = null;
+
+                return false;
+            }
+
+            if (mDailyDeepLink != null && mDailyDeepLink.isExternalDeepLink() == true)
+            {
+                setRefresh(false);
+
+                lock();
+
+                addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime().subscribe(new Consumer<CommonDateTime>()
+                {
+                    @Override
+                    public void accept(CommonDateTime commonDateTime) throws Exception
+                    {
+                        DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) mDailyDeepLink;
+
+                        StayOutboundSuggest stayOutboundSuggest = new StayOutboundSuggest();
+                        stayOutboundSuggest.id = Long.parseLong(externalDeepLink.getIndex());
+                        stayOutboundSuggest.categoryKey = externalDeepLink.getCategoryKey();
+                        stayOutboundSuggest.display = externalDeepLink.getTitle();
+                        setSuggest(stayOutboundSuggest);
+
+                        StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime, externalDeepLink);
+                        setStayBookDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
+
+                        setPeople(People.DEFAULT_ADULTS, null);
+
+                        Constants.SortType sortType = externalDeepLink.getSorting();
+
+                        switch (sortType)
+                        {
+                            case HIGH_PRICE:
+                                setFilter(StayOutboundFilters.SortType.HIGH_PRICE, -1);
+                                break;
+
+                            case LOW_PRICE:
+                                setFilter(StayOutboundFilters.SortType.LOW_PRICE, -1);
+                                break;
+
+                            case SATISFACTION:
+                                setFilter(StayOutboundFilters.SortType.SATISFACTION, -1);
+                                break;
+
+                            default:
+                                setFilter(StayOutboundFilters.SortType.RECOMMENDATION, -1);
+                                break;
+                        }
+
+                        notifyFilterChanged();
+                        notifyToolbarChanged();
+
+                        onRefreshAll(true);
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        onHandleErrorAndFinish(throwable);
+                    }
+                }));
+            }
         } else if (intent.hasExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_SUGGEST) == true)
+
         {
             StayOutboundSuggestParcel stayOutboundSuggestParcel = intent.getParcelableExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_SUGGEST);
 
@@ -231,6 +308,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             mAnalytics.setAnalyticsParam(intent.getParcelableExtra(BaseActivity.INTENT_EXTRA_DATA_ANALYTICS));
         } else if (intent.hasExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_KEYWORD) == true)
         {
+
         } else
         {
             return false;
@@ -252,13 +330,16 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         getViewInterface().setViewTypeOptionImage(ViewState.MAP);
 
-        if (StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == false)
+        if (mDailyDeepLink == null)
         {
-            getViewInterface().setRadiusVisible(false);
-        } else
-        {
-            getViewInterface().setRadiusVisible(true);
-            getViewInterface().setRadius(mRadius);
+            if (StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == false)
+            {
+                getViewInterface().setRadiusVisible(false);
+            } else
+            {
+                getViewInterface().setRadiusVisible(true);
+                getViewInterface().setRadius(mRadius);
+            }
         }
     }
 

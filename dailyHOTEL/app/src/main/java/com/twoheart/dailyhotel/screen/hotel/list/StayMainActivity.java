@@ -83,6 +83,7 @@ import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Response;
 
+@Deprecated
 public class StayMainActivity extends PlaceMainActivity
 {
     StayCuration mStayCuration;
@@ -413,7 +414,7 @@ public class StayMainActivity extends PlaceMainActivity
         staySuggest.latitude = location.getLatitude();
         staySuggest.longitude = location.getLongitude();
 
-        Intent intent = StaySearchResultActivity.newInstance(context, todayDateTime, stayBookingDay, null, staySuggest, callByScreen);
+        Intent intent = StaySearchResultActivity.newInstance(context, todayDateTime, stayBookingDay, null, staySuggest, null, callByScreen);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
     }
 
@@ -1038,25 +1039,25 @@ public class StayMainActivity extends PlaceMainActivity
             {
                 DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
 
-                if (externalDeepLink.isHotelSearchView() == true //
-                    || externalDeepLink.isCampaignTagListView() == true)
-                {
-                    unLockUI();
-
-                    return moveDeepLinkSearch(baseActivity, todayDateTime, dailyDeepLink);
-                } else if (externalDeepLink.isHotelSearchResultView() == true)
-                {
-                    unLockUI();
-
-                    return moveDeepLinkSearchResult(baseActivity, todayDateTime, dailyDeepLink);
-                } else
-                {
-                    // 더이상 진입은 없다.
-                    if (externalDeepLink.isHotelListView() == false)
-                    {
-                        externalDeepLink.clear();
-                    }
-                }
+//                if (externalDeepLink.isHotelSearchView() == true //
+//                    || externalDeepLink.isCampaignTagListView() == true)
+//                {
+//                    unLockUI();
+//
+//                    return moveDeepLinkSearch(baseActivity, todayDateTime, dailyDeepLink);
+//                } else if (externalDeepLink.isHotelSearchResultView() == true)
+//                {
+//                    unLockUI();
+//
+//                    return moveDeepLinkSearchResult(baseActivity, todayDateTime, dailyDeepLink);
+//                } else
+//                {
+//                    // 더이상 진입은 없다.
+//                    if (externalDeepLink.isHotelListView() == false)
+//                    {
+//                        externalDeepLink.clear();
+//                    }
+//                }
             } else
             {
 
@@ -1699,7 +1700,7 @@ public class StayMainActivity extends PlaceMainActivity
                             {
                                 StaySuggest staySuggest = new StaySuggest(StaySuggest.MENU_TYPE_DIRECT, StaySuggest.CATEGORY_DIRECT, word);
 
-                                Intent intent = StaySearchResultActivity.newInstance(baseActivity, todayDateTime, stayBookingDay, word, staySuggest, null);
+                                Intent intent = StaySearchResultActivity.newInstance(baseActivity, todayDateTime, stayBookingDay, word, staySuggest, null, null);
                                 baseActivity.startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
                             } else
                             {
