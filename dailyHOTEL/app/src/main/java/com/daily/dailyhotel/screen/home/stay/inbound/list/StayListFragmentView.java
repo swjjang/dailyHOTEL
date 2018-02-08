@@ -290,7 +290,7 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentI
 
             if (applyFilter == true)
             {
-                getViewDataBinding().emptyView.setMessageTextView(getString(R.string.message_not_exist_filters), getString(R.string.message_changing_filter_option));
+                getViewDataBinding().emptyView.setMessageTextView(getString(R.string.message_searchresult_stay_filter_empty_message01), getString(R.string.message_changing_filter_option));
                 getViewDataBinding().emptyView.setButton01(true, getString(R.string.label_hotel_list_changing_filter), new View.OnClickListener()
                 {
                     @Override
