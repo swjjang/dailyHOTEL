@@ -1134,7 +1134,7 @@
     <string name="label_search_suggest_voice_search_title">검색어를 말씀하세요.</string>
     <string name="message_search_suggest_voice_search_error">이기기는 음성검색을 지원하지 않습니다.</string>
     <string name="label_search_suggest_recently_empty_title">이렇게도 검색해보세요.</string>
-    <string name="label_search_suggest_recently_empty_description_type_stay">수영장 있는 호텔\n애견동반 양평 펜션\n주차가능한 파티룸</string>
+    <string name="label_search_suggest_recently_empty_description_type_stay">수영장 있는 호텔\, 애견동반 양평 펜션,\n주차가능한 파티룸</string>
     <string name="label_search_suggest_recently_empty_description_type_gourmet">레스토랑명, 지역명,\n뷔페, 서양식, 일식</string>
     <string name="label_search_suggest_popular_area">인기지역</string>
     <string name="label_search_suggest_check_gourmet">혹시 데일리고메에서 검색중이신가요?</string>
