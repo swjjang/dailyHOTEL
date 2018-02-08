@@ -19,46 +19,23 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <android.support.constraint.ConstraintLayout
-                android:id="@+id/buttonLayout"
-                android:layout_width="0dp"
-                android:layout_height="52dp"
+            <com.daily.base.widget.DailyImageView
+                android:id="@+id/backImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="11dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <com.daily.base.widget.DailyImageView
-                    android:id="@+id/backImageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/navibar_ic_x"/>
-
-                <com.daily.base.widget.DailyTextView
-                    android:id="@+id/deleteTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:text="@string/label_delete"
-                    android:textColor="@color/default_text_c323232"
-                    android:textSize="15dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    dailyFont:style="Medium"/>
-            </android.support.constraint.ConstraintLayout>
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/navibar_ic_x"/>
 
             <com.daily.base.widget.DailyEditText
                 android:id="@+id/keywordEditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
+                android:layout_marginTop="52dp"
                 android:gravity="center_vertical"
                 android:hint="@string/label_search_stay_suggest_hint"
                 android:maxLines="1"
@@ -69,22 +46,36 @@
                 android:textSize="18dp"
                 android:theme="@style/EditTextTheme"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/voiceSearchView"
-                app:layout_constraintTop_toBottomOf="@+id/buttonLayout"
+                app:layout_constraintRight_toLeftOf="@+id/buttonLayout"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_goneMarginRight="20dp"/>
 
-            <com.daily.base.widget.DailyImageView
-                android:id="@+id/voiceSearchView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <FrameLayout
+                android:id="@+id/buttonLayout"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="5dp"
-                android:layout_marginTop="1dp"
-                android:padding="10dp"
+                android:layout_marginTop="53dp"
                 app:layout_constraintLeft_toRightOf="@+id/keywordEditText"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/buttonLayout"
-                app:srcCompat="@drawable/vector_navibar_ic_voice"/>
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.daily.base.widget.DailyImageView
+                    android:id="@+id/deleteImageView"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:scaleType="centerInside"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/vector_ic_delete_circle"/>
+
+                <com.daily.base.widget.DailyImageView
+                    android:id="@+id/voiceSearchView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerInside"
+                    app:srcCompat="@drawable/vector_navibar_ic_voice"/>
+            </FrameLayout>
 
             <View
                 android:layout_width="0dp"
