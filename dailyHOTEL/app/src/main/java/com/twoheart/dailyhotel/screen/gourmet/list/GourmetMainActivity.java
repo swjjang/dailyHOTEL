@@ -243,7 +243,7 @@ public class GourmetMainActivity extends PlaceMainActivity
                 callByScreen = AnalyticsManager.Screen.DAILYGOURMET_LIST_REGION_DOMESTIC;
             }
 
-            startAroundSearchResult(this, mTodayDateTime, mGourmetCuration.getGourmetBookingDay(), null, callByScreen);
+            startAroundSearchResult(this, mTodayDateTime, mGourmetCuration.getGourmetBookingDay(), callByScreen);
         } else if (resultCode == CODE_RESULT_ACTIVITY_GO_HOME)
         {
             setResult(resultCode);
@@ -384,7 +384,7 @@ public class GourmetMainActivity extends PlaceMainActivity
             , AnalyticsManager.Action.GOURMET_BOOKING_CALENDAR_CLICKED, AnalyticsManager.ValueType.LIST, null);
     }
 
-    private void startAroundSearchResult(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, Location location, String callByScreen)
+    private void startAroundSearchResult(Context context, TodayDateTime todayDateTime, GourmetBookingDay gourmetBookingDay, String callByScreen)
     {
         if (todayDateTime == null || gourmetBookingDay == null || isFinishing() == true || lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -395,8 +395,6 @@ public class GourmetMainActivity extends PlaceMainActivity
 
         GourmetSuggest gourmetSuggest = new GourmetSuggest();
         gourmetSuggest.categoryKey = GourmetSuggest.CATEGORY_LOCATION;
-        gourmetSuggest.latitude = location.getLatitude();
-        gourmetSuggest.longitude = location.getLongitude();
 
         Intent intent = GourmetSearchResultActivity.newInstance(context, todayDateTime, gourmetBookingDay, null, gourmetSuggest, callByScreen);
         startActivityForResult(intent, CODE_REQUEST_ACTIVITY_SEARCH_RESULT);

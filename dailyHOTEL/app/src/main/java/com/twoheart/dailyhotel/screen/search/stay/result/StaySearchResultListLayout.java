@@ -288,7 +288,7 @@ public class StaySearchResultListLayout extends StayListLayout
         TextView messageTextView01 = view.findViewById(R.id.messageTextView01);
         TextView messageTextView02 = view.findViewById(R.id.messageTextView02);
 
-        messageTextView01.setText(R.string.message_not_exist_filters);
+        messageTextView01.setText(R.string.message_searchresult_stay_filter_empty_message01);
         messageTextView02.setText(R.string.message_changing_option);
 
         View changeRegionView = view.findViewById(R.id.changeRegionView);
@@ -340,7 +340,7 @@ public class StaySearchResultListLayout extends StayListLayout
         TextView filterMessageTextView01 = view.findViewById(R.id.filterMessageTextView01);
         TextView filterMessageTextView02 = view.findViewById(R.id.filterMessageTextView02);
 
-        filterMessageTextView01.setText(R.string.message_not_exist_filters);
+        filterMessageTextView01.setText(R.string.message_searchresult_stay_filter_empty_message01);
         filterMessageTextView02.setText(R.string.message_changing_filter_option);
 
         TextView buttonView = view.findViewById(R.id.buttonView);
