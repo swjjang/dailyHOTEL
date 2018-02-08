@@ -299,7 +299,7 @@ public class SearchStayOutboundSuggestPresenter //
             });
 
         // 최근 검색어, 인기 지역 , 최근 본 업장 순
-        addCompositeDisposable(Observable.zip(mSuggestLocalImpl.getRecentlyStayOutboundSuggestList() //
+        addCompositeDisposable(Observable.zip(mSuggestLocalImpl.getRecentlyStayOutboundSuggestList(SearchStayOutboundSuggestActivity.RECENTLY_PLACE_MAX_REQUEST_COUNT) //
             , mSuggestRemoteImpl.getPopularRegionSuggestsByStayOutbound() //
             , obObservable, new Function3<List<StayOutboundSuggest>, List<StayOutboundSuggest>, StayOutbounds, List<StayOutboundSuggest>>()
             {
@@ -749,7 +749,7 @@ public class SearchStayOutboundSuggestPresenter //
                     @Override
                     public ObservableSource<List<StayOutboundSuggest>> apply(Boolean aBoolean) throws Exception
                     {
-                        return mSuggestLocalImpl.getRecentlyStayOutboundSuggestList();
+                        return mSuggestLocalImpl.getRecentlyStayOutboundSuggestList(SearchStayOutboundSuggestActivity.RECENTLY_PLACE_MAX_REQUEST_COUNT);
                     }
                 }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<StayOutboundSuggest>>()
                 {
