@@ -554,6 +554,7 @@ public class SearchStayOutboundSuggestView //
 
             case R.id.deleteTextView:
                 setKeywordEditText(null);
+                showKeyboard();
                 break;
         }
     }

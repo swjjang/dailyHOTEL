@@ -652,6 +652,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
             case R.id.deleteTextView:
                 setKeywordEditText(null);
+                showKeyboard();
                 break;
         }
     }

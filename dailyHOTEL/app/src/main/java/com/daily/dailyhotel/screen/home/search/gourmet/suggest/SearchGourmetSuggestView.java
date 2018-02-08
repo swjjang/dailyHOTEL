@@ -517,6 +517,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
 
             case R.id.deleteTextView:
                 setKeywordEditText(null);
+                showKeyboard();
                 break;
         }
     }
