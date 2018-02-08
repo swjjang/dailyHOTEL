@@ -286,7 +286,6 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 }));
             }
         } else if (intent.hasExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_SUGGEST) == true)
-
         {
             StayOutboundSuggestParcel stayOutboundSuggestParcel = intent.getParcelableExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_SUGGEST);
 
@@ -304,6 +303,11 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             ArrayList<Integer> childAgeList = intent.getIntegerArrayListExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHILD_LIST);
 
             setPeople(numberOfAdults, childAgeList);
+
+            if (mStayOutboundSuggest != null && StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == true)
+            {
+                setFilter(StayOutboundFilters.SortType.DISTANCE, 0, 0);
+            }
 
             mAnalytics.setAnalyticsParam(intent.getParcelableExtra(BaseActivity.INTENT_EXTRA_DATA_ANALYTICS));
         } else if (intent.hasExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_KEYWORD) == true)
@@ -1864,7 +1868,6 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                     }
                 } else
                 {
-
                     if (isDefaultFilter(filters) == true && mRadius == DEFAULT_RADIUS)
                     {
                         getViewInterface().showEmptyScreen(StayOutboundListViewInterface.EmptyScreenType.LOCATION_DEFAULT);

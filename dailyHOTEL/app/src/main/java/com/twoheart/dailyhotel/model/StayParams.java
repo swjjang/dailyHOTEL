@@ -101,11 +101,14 @@ public class StayParams extends PlaceParams
 
         setSortType(mSort);
 
-        Location location = stayCuration.getLocation();
-        if (location != null)
+        if (Constants.SortType.DISTANCE == mSort)
         {
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
+            Location location = stayCuration.getLocation();
+            if (location != null)
+            {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }
         }
     }
 

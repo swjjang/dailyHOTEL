@@ -444,17 +444,17 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
 
                 if (GourmetSuggest.CATEGORY_LOCATION.equalsIgnoreCase(((GourmetSearchCuration) mGourmetCuration).getSuggest().categoryKey) == true)
                 {
-                    ((OnGourmetSearchResultListFragmentListener) mOnPlaceListFragmentListener).onShowActivityEmptyView(false);
+                    mOnPlaceListFragmentListener.onShowActivityEmptyView(false);
 
                     GourmetSearchResultListFragment.this.onGourmetList(list, page, totalCount, maxCount, categoryCodeMap, categorySequenceMap, false);
                 } else
                 {
                     if (list == null || list.size() == 0)
                     {
-                        ((OnGourmetSearchResultListFragmentListener) mOnPlaceListFragmentListener).onShowActivityEmptyView(true);
+                        mOnPlaceListFragmentListener.onShowActivityEmptyView(true);
                     } else
                     {
-                        ((OnGourmetSearchResultListFragmentListener) mOnPlaceListFragmentListener).onShowActivityEmptyView(false);
+                        mOnPlaceListFragmentListener.onShowActivityEmptyView(false);
 
                         GourmetSearchResultListFragment.this.onGourmetList(list, page, totalCount, maxCount, categoryCodeMap, categorySequenceMap, false);
                     }

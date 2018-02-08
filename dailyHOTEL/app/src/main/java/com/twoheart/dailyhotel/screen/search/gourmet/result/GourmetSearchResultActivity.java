@@ -83,7 +83,12 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_PLACEBOOKINGDAY, gourmetBookingDay);
         intent.putExtra(INTENT_EXTRA_DATA_INPUTTEXT, inputText);
         intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcel(gourmetSuggest));
-        intent.putExtra(INTENT_EXTRA_DATA_SORT_TYPE, sortType.name());
+
+        if (sortType != null)
+        {
+            intent.putExtra(INTENT_EXTRA_DATA_SORT_TYPE, sortType.name());
+        }
+
         intent.putExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
 
         return intent;
@@ -243,6 +248,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 gourmetBookingDay.setVisitDay(data.getStringExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME));
 
                 GourmetSuggestParcel gourmetSuggestParcel = data.getParcelableExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_SUGGEST);
+                mInputText = data.getStringExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_KEYWORD);
 
                 if (gourmetSuggestParcel == null)
                 {
@@ -254,6 +260,14 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 if (gourmetSuggest == null)
                 {
                     return;
+                }
+
+                if (GourmetSuggest.CATEGORY_LOCATION.equalsIgnoreCase(gourmetSuggest.categoryKey) == true)
+                {
+                    mGourmetSearchCuration.getCurationOption().setDefaultSortType(SortType.DISTANCE);
+                } else
+                {
+                    mGourmetSearchCuration.getCurationOption().setDefaultSortType(SortType.DEFAULT);
                 }
 
                 mGourmetSearchCuration.setSuggest(gourmetSuggest);
@@ -624,7 +638,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
         if (mPlaceSearchResultLayout.hasCampaignTag() == false)
         {
-            addCompositeDisposable(mCampaignTagRemoteImpl.getCampaignTagList(ServiceType.HOTEL.name()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<CampaignTag>>()
+            addCompositeDisposable(mCampaignTagRemoteImpl.getCampaignTagList(ServiceType.GOURMET.name()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<CampaignTag>>()
             {
                 @Override
                 public void accept(ArrayList<CampaignTag> campaignTagList) throws Exception
