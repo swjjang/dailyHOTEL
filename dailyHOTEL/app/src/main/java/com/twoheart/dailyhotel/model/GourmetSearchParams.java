@@ -67,13 +67,16 @@ public class GourmetSearchParams extends GourmetParams
             term = gourmetSuggest.displayName;
         }
 
-        radius = gourmetSearchCuration.getRadius();
-
-        Location location = gourmetSearchCuration.getLocation();
-        if (location != null)
+        if (Constants.SortType.DISTANCE == mSort)
         {
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
+            radius = gourmetSearchCuration.getRadius();
+
+            Location location = gourmetSearchCuration.getLocation();
+            if (location != null)
+            {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }
         }
     }
 

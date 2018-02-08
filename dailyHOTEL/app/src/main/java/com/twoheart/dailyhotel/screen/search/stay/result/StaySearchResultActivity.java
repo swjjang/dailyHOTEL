@@ -87,7 +87,12 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         intent.putExtra(NAME_INTENT_EXTRA_DATA_TODAYDATETIME, todayDateTime);
         intent.putExtra(INTENT_EXTRA_DATA_INPUTTEXT, inputText);
         intent.putExtra(INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(staySuggest));
-        intent.putExtra(INTENT_EXTRA_DATA_SORT_TYPE, sortType.name());
+
+        if (sortType != null)
+        {
+            intent.putExtra(INTENT_EXTRA_DATA_SORT_TYPE, sortType.name());
+        }
+
         intent.putExtra(INTENT_EXTRA_DATA_CALL_BY_SCREEN, callByScreen);
 
         return intent;
@@ -249,6 +254,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 stayBookingDay.setCheckOutDay(data.getStringExtra(ResearchStayActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME));
 
                 StaySuggestParcel staySuggestParcel = data.getParcelableExtra(ResearchStayActivity.INTENT_EXTRA_DATA_SUGGEST);
+                mInputText = data.getStringExtra(ResearchStayActivity.INTENT_EXTRA_DATA_KEYWORD);
 
                 if (staySuggestParcel == null)
                 {
@@ -260,6 +266,14 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 if (staySuggest == null)
                 {
                     return;
+                }
+
+                if (StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(staySuggest.categoryKey) == true)
+                {
+                    mStaySearchCuration.getCurationOption().setDefaultSortType(SortType.DISTANCE);
+                } else
+                {
+                    mStaySearchCuration.getCurationOption().setDefaultSortType(SortType.DEFAULT);
                 }
 
                 mStaySearchCuration.setSuggest(staySuggest);

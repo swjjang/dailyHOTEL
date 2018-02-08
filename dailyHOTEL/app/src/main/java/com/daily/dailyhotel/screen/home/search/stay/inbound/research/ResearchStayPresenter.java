@@ -297,6 +297,7 @@ public class ResearchStayPresenter extends BaseExceptionPresenter<ResearchStayAc
             intent.putExtra(ResearchStayActivity.INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, mSearchModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT));
             intent.putExtra(ResearchStayActivity.INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME, mSearchModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
             intent.putExtra(ResearchStayActivity.INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(mSearchModel.suggest.getValue()));
+            intent.putExtra(ResearchStayActivity.INTENT_EXTRA_DATA_KEYWORD, mSearchModel.inputString);
 
             setResult(Activity.RESULT_OK, intent);
             onBackClick();
