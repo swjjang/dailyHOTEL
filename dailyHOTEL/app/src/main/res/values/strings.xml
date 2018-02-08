@@ -1163,6 +1163,9 @@
     <string name="coupon_toolbar_button_text">쿠폰코드등록</string>
     <string name="coupon_history_day_of_use">사용일</string>
     <string name="coupon_history_expiration_date">만료일</string>
+    <string name="label_coupon_stay_inbound">국내스테이</string>
+    <string name="label_coupon_stay_outbound">해외스테이</string>
+    <string name="label_coupon_gourmet">고메</string>
 
     <string name="label_coupon_sorting">할인쿠폰 보기</string>
     <string name="label_select_coupon">할인쿠폰 선택</string>
