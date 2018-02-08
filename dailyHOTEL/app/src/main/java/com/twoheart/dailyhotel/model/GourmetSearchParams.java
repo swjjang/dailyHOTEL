@@ -57,12 +57,14 @@ public class GourmetSearchParams extends GourmetParams
         mSort = gourmetCurationOption.getSortType();
         setSortType(mSort);
 
-        if (GourmetSuggest.CATEGORY_LOCATION.equalsIgnoreCase(gourmetSearchCuration.getSuggest().categoryKey) == true)
+        GourmetSuggest gourmetSuggest = gourmetSearchCuration.getSuggest();
+
+        if (gourmetSuggest == null || GourmetSuggest.CATEGORY_LOCATION.equalsIgnoreCase(gourmetSuggest.categoryKey) == true)
         {
             term = null;
         } else
         {
-            term = gourmetSearchCuration.getSuggest() == null ? null : gourmetSearchCuration.getSuggest().displayName;
+            term = gourmetSuggest.displayName;
         }
 
         radius = gourmetSearchCuration.getRadius();
