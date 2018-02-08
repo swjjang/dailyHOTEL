@@ -29,6 +29,7 @@ import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
 import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.daily.dailyhotel.parcel.analytics.GourmetDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
+import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
 import com.daily.dailyhotel.screen.home.campaigntag.gourmet.GourmetCampaignTagListActivity;
@@ -387,8 +388,8 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                 if (resultCode == Activity.RESULT_OK && data != null)
                 {
                     StayOutboundSuggestParcel suggestParcel = data.getParcelableExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
-                    String keyword = data.getStringExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
-                    String clickType = data.getStringExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_CLICK_TYPE);
+                    mSearchModel.stayOutboundViewModel.inputString = data.getStringExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
+                    mSearchModel.stayOutboundViewModel.clickType = data.getStringExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_CLICK_TYPE);
 
                     if (suggestParcel != null)
                     {
@@ -809,11 +810,15 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
     @Override
     public void onStayOutboundDoSearchClick()
     {
+        StayOutboundListAnalyticsParam analyticsParam = new StayOutboundListAnalyticsParam();
+        analyticsParam.keyword = mSearchModel.stayOutboundViewModel.inputString;
+        analyticsParam.analyticsClickType = mSearchModel.stayOutboundViewModel.clickType;
+
         startActivityForResult(StayOutboundListActivity.newInstance(getActivity(), mSearchModel.stayOutboundViewModel.suggest.getValue()//
             , mSearchModel.stayOutboundViewModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mSearchModel.stayOutboundViewModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mSearchModel.stayOutboundViewModel.people.getValue().numberOfAdults//
-            , mSearchModel.stayOutboundViewModel.people.getValue().getChildAgeList(), null)//
+            , mSearchModel.stayOutboundViewModel.people.getValue().getChildAgeList(), analyticsParam)//
             , SearchActivity.REQUEST_CODE_STAY_OUTBOUND_SEARCH_RESULT);
     }
 

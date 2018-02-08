@@ -1073,7 +1073,6 @@
     <string name="label_googlemap">구글 지도</string>
 
     <!-- New Search -->
-    <string name="label_search_description">어떤 항목으로\n검색하시겠어요?</string>
     <string name="label_search_do_search">검색하기</string>
     <string name="label_search_stay_title">국내스테이를\n검색하시겠어요?</string>
     <string name="label_search_stayoutbound_title">해외스테이를\n검색하시겠어요?</string>
@@ -1084,17 +1083,20 @@
     <string name="label_search_search_stay">국내스테이 검색</string>
     <string name="label_search_stay_suggest_hint">국내스테이명 또는 지역명 입력</string>
     <string name="label_search_stay_popular_search_tag">국내스테이 인기검색 태그</string>
+    <string name="message_search_stay_description">어떤 항목으로\n검색하시겠어요?</string>
 
 
     <string name="label_search_stayoutbound">해외스테이</string>
     <string name="label_search_search_stayoutbound">해외스테이 검색</string>
     <string name="label_search_stayoutbound_suggest_hint">해외스테이명 또는 지역명 입력</string>
     <string name="label_search_stayoutbound_popular_area">해외스테이 인기지역</string>
+    <string name="message_search_stayoutbound_description">어떤 항목으로\n검색하시겠어요?</string>
 
     <string name="label_search_gourmet">고메</string>
     <string name="label_search_search_gourmet">고메 검색</string>
     <string name="label_search_gourmet_suggest_hint">국내 레스토랑명 또는 지역명 입력</string>
     <string name="label_search_gourmet_popular_search_tag">고메 인기검색 태그</string>
+    <string name="message_search_gourmet_description">어떤 항목으로\n검색하시겠어요?</string>
 
     <!-- New Search Result -->
     <string name="label_searchresult_search_stayoutbound">해외스테이 검색</string>
@@ -1108,10 +1110,12 @@
     <string name="message_searchresult_stay_empty_message01">내 주변 스테이가 없습니다.</string>
     <string name="message_searchresult_stay_empty_message02">검색조건을 변경해서 다시 검색해보세요.</string>
 
-    <string name="message_searchresult_stay_filter_empty_message01">해당 조건에 일치하는 업체가 없습니다.</string>
+    <string name="message_searchresult_stay_filter_empty_message01">해당 조건에 일치하는 스테이가 없습니다.</string>
     <string name="message_searchresult_stay_filter_empty_message02">반경 범위를 변경하거나\n필터 설정 조건을 변경하여 검색해보세요.</string>
 
-    <string name="message_searchresult_gourmet_empty_message01">내 주변 레스토랑이 없습니다.</string>
+    <string name="message_searchresult_gourmet_filter_empty_message01">해당 조건에 일치하는 고메가 없습니다.</string>
+
+    <string name="message_searchresult_gourmet_empty_message01">내 주변 고메가 없습니다.</string>
 
     <string name="message_searchresult_stay_empty_subtitle">검색어나 조건을 변경하여 검색해보세요.\n더 구체적인 단어로도 검색이 가능해요.\n(예: 수영장 있는 호텔, 파티룸)</string>
     <string name="message_searchresult_stay_outbound_empty_subtitle">검색어나 조건을 변경하여 검색해보세요.\n한글, 영문 둘다 검색이 가능해요.\n(예. 도시, 지역, 역, 호텔 등)</string>
