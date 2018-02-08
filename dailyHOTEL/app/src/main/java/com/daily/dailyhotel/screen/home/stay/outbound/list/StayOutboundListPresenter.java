@@ -140,6 +140,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     {
         void setAnalyticsParam(StayOutboundListAnalyticsParam analyticsParam);
 
+        StayOutboundListAnalyticsParam getAnalyticsParam();
+
         void onScreen(Activity activity);
 
         void onEventStayClick(Activity activity, int index, boolean provideRewardSticker, boolean dailyChoice);
@@ -693,6 +695,14 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                         ArrayList<Integer> arrayList = data.getIntegerArrayListExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHILD_LIST);
 
                         setPeople(numberOfAdults, arrayList);
+
+                        StayOutboundListAnalyticsParam analyticsParam = mAnalytics.getAnalyticsParam();
+
+                        if (analyticsParam != null)
+                        {
+                            analyticsParam.keyword = data.getStringExtra(ResearchStayOutboundActivity.INTENT_EXTRA_DATA_KEYWORD);
+                            analyticsParam.analyticsClickType = data.getStringExtra(ResearchStayOutboundActivity.INTENT_EXTRA_DATA_CLICK_TYPE);
+                        }
                     } catch (Exception e)
                     {
                         ExLog.e(e.toString());

@@ -36,6 +36,8 @@ public class ResearchStayOutboundActivity extends BaseActivity<ResearchStayOutbo
     public static final String INTENT_EXTRA_DATA_SUGGEST = "suggest";
     public static final String INTENT_EXTRA_DATA_NUMBER_OF_ADULTS = "numberOfAdults";
     public static final String INTENT_EXTRA_DATA_CHILD_LIST = "childList";
+    public static final String INTENT_EXTRA_DATA_KEYWORD = "keyword";
+    public static final String INTENT_EXTRA_DATA_CLICK_TYPE = "clickType";
 
     public static Intent newInstance(Context context, String openDateTime, String closeDateTime, String currentDateTime, String dailyDateTime//
     , String checkInDateTime, String checkOutDateTime, StayOutboundSuggest suggest, int numberOfAdults, ArrayList<Integer> childList)

@@ -78,6 +78,7 @@ public class SearchViewModel extends ViewModel
         public MutableLiveData<StayOutboundSuggest> suggest = new MutableLiveData<>();
         public MutableLiveData<People> people = new MutableLiveData<>();
         public String inputString;
+        public String clickType;
 
         public static class SearchStayOutboundViewModelFactory implements ViewModelProvider.Factory
         {
