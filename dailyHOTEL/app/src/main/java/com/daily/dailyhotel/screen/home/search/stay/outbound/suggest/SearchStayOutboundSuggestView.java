@@ -119,8 +119,8 @@ public class SearchStayOutboundSuggestView //
 
         viewDataBinding.keywordEditText.addTextChangedListener(mTextWatcher);
 
-        viewDataBinding.deleteTextView.setVisibility(View.INVISIBLE);
-        viewDataBinding.deleteTextView.setOnClickListener(this);
+        viewDataBinding.deleteImageView.setVisibility(View.INVISIBLE);
+        viewDataBinding.deleteImageView.setOnClickListener(this);
     }
 
     private void initRecyclerLayout(final ActivityStayOutboundSearchSuggestDataBinding viewDataBinding)
@@ -552,7 +552,7 @@ public class SearchStayOutboundSuggestView //
                 getEventListener().onSuggestClick(stayOutboundSuggest);
                 break;
 
-            case R.id.deleteTextView:
+            case R.id.deleteImageView:
                 setKeywordEditText(null);
                 showKeyboard();
                 break;
@@ -583,7 +583,7 @@ public class SearchStayOutboundSuggestView //
 
             if (length == 0)
             {
-                getViewDataBinding().deleteTextView.setVisibility(View.INVISIBLE);
+                getViewDataBinding().deleteImageView.setVisibility(View.INVISIBLE);
                 getViewDataBinding().voiceSearchView.setVisibility(View.VISIBLE);
             } else
             {
@@ -602,7 +602,7 @@ public class SearchStayOutboundSuggestView //
                     return;
                 }
 
-                getViewDataBinding().deleteTextView.setVisibility(View.VISIBLE);
+                getViewDataBinding().deleteImageView.setVisibility(View.VISIBLE);
                 getViewDataBinding().voiceSearchView.setVisibility(View.GONE);
             }
 

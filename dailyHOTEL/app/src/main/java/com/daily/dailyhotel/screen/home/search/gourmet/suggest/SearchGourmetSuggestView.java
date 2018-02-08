@@ -116,8 +116,8 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
 
         viewDataBinding.keywordEditText.addTextChangedListener(mTextWatcher);
 
-        viewDataBinding.deleteTextView.setVisibility(View.INVISIBLE);
-        viewDataBinding.deleteTextView.setOnClickListener(this);
+        viewDataBinding.deleteImageView.setVisibility(View.INVISIBLE);
+        viewDataBinding.deleteImageView.setOnClickListener(this);
     }
 
     private void initRecyclerLayout(final ActivitySearchGourmetSuggestDataBinding viewDataBinding)
@@ -515,7 +515,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
                 getEventListener().onSuggestClick(gourmetSuggest);
                 break;
 
-            case R.id.deleteTextView:
+            case R.id.deleteImageView:
                 setKeywordEditText(null);
                 showKeyboard();
                 break;
@@ -546,7 +546,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
 
             if (length == 0)
             {
-                getViewDataBinding().deleteTextView.setVisibility(View.INVISIBLE);
+                getViewDataBinding().deleteImageView.setVisibility(View.INVISIBLE);
                 getViewDataBinding().voiceSearchView.setVisibility(View.VISIBLE);
             } else
             {
@@ -565,7 +565,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
                     return;
                 }
 
-                getViewDataBinding().deleteTextView.setVisibility(View.VISIBLE);
+                getViewDataBinding().deleteImageView.setVisibility(View.VISIBLE);
                 getViewDataBinding().voiceSearchView.setVisibility(View.GONE);
             }
 

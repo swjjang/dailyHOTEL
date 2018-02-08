@@ -126,8 +126,8 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
         viewDataBinding.keywordEditText.addTextChangedListener(mTextWatcher);
 
-        viewDataBinding.deleteTextView.setVisibility(View.INVISIBLE);
-        viewDataBinding.deleteTextView.setOnClickListener(this);
+        viewDataBinding.deleteImageView.setVisibility(View.INVISIBLE);
+        viewDataBinding.deleteImageView.setOnClickListener(this);
     }
 
     private void initRecyclerLayout(final ActivitySearchStaySuggestDataBinding viewDataBinding)
@@ -650,7 +650,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
                 getEventListener().onSuggestClick(staySuggest);
                 break;
 
-            case R.id.deleteTextView:
+            case R.id.deleteImageView:
                 setKeywordEditText(null);
                 showKeyboard();
                 break;
@@ -681,7 +681,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
 
             if (length == 0)
             {
-                getViewDataBinding().deleteTextView.setVisibility(View.INVISIBLE);
+                getViewDataBinding().deleteImageView.setVisibility(View.INVISIBLE);
                 getViewDataBinding().voiceSearchView.setVisibility(View.VISIBLE);
             } else
             {
@@ -700,7 +700,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
                     return;
                 }
 
-                getViewDataBinding().deleteTextView.setVisibility(View.VISIBLE);
+                getViewDataBinding().deleteImageView.setVisibility(View.VISIBLE);
                 getViewDataBinding().voiceSearchView.setVisibility(View.GONE);
             }
 

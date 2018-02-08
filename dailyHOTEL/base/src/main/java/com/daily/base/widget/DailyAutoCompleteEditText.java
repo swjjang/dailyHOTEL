@@ -170,12 +170,12 @@ public class DailyAutoCompleteEditText extends AppCompatAutoCompleteTextView
 
         if (drawables == null)
         {
-            setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.search_ic_01_delete, 0);
+            setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.vector_ic_delete_circle, 0);
         } else
         {
             Context context = getContext();
 
-            Drawable rightDrawable = AppCompatDrawableManager.get().getDrawable(context, R.drawable.search_ic_01_delete);
+            Drawable rightDrawable = AppCompatDrawableManager.get().getDrawable(context, R.drawable.vector_ic_delete_circle);
             setCompoundDrawablesWithIntrinsicBounds(drawables[DRAWABLE_LEFT], drawables[DRAWABLE_TOP], rightDrawable, drawables[DRAWABLE_BOTTOM]);
         }
     }
