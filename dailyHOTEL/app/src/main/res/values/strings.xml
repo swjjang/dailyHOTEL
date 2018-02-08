@@ -1073,7 +1073,6 @@
     <string name="label_googlemap">구글 지도</string>
 
     <!-- New Search -->
-    <string name="label_search_description">어떤 항목으로\n검색하시겠어요?</string>
     <string name="label_search_do_search">검색하기</string>
     <string name="label_search_stay_title">국내스테이를\n검색하시겠어요?</string>
     <string name="label_search_stayoutbound_title">해외스테이를\n검색하시겠어요?</string>
@@ -1084,17 +1083,20 @@
     <string name="label_search_search_stay">국내스테이 검색</string>
     <string name="label_search_stay_suggest_hint">국내스테이명 또는 지역명 입력</string>
     <string name="label_search_stay_popular_search_tag">국내스테이 인기검색 태그</string>
+    <string name="message_search_stay_description">어떤 항목으로\n검색하시겠어요?</string>
 
 
     <string name="label_search_stayoutbound">해외스테이</string>
     <string name="label_search_search_stayoutbound">해외스테이 검색</string>
     <string name="label_search_stayoutbound_suggest_hint">해외스테이명 또는 지역명 입력</string>
     <string name="label_search_stayoutbound_popular_area">해외스테이 인기지역</string>
+    <string name="message_search_stayoutbound_description">어떤 항목으로\n검색하시겠어요?</string>
 
     <string name="label_search_gourmet">고메</string>
     <string name="label_search_search_gourmet">고메 검색</string>
     <string name="label_search_gourmet_suggest_hint">국내 레스토랑명 또는 지역명 입력</string>
     <string name="label_search_gourmet_popular_search_tag">고메 인기검색 태그</string>
+    <string name="message_search_gourmet_description">어떤 항목으로\n검색하시겠어요?</string>
 
     <!-- New Search Result -->
     <string name="label_searchresult_search_stayoutbound">해외스테이 검색</string>

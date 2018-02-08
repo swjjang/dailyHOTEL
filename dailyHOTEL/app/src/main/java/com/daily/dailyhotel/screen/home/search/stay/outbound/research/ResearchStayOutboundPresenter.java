@@ -22,10 +22,10 @@ import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.screen.home.search.SearchViewModel;
+import com.daily.dailyhotel.screen.home.search.stay.outbound.suggest.SearchStayOutboundSuggestActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.calendar.StayOutboundCalendarActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.daily.dailyhotel.screen.home.stay.outbound.people.SelectPeopleActivity;
-import com.daily.dailyhotel.screen.home.search.stay.outbound.suggest.SearchStayOutboundSuggestActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
@@ -222,6 +222,7 @@ public class ResearchStayOutboundPresenter extends BaseExceptionPresenter<Resear
                         StayOutboundSuggestParcel suggestParcel = data.getParcelableExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_SUGGEST);
                         mSearchModel.suggest.setValue(suggestParcel.getSuggest());
                         mSearchModel.inputString = data.getStringExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_KEYWORD);
+                        mSearchModel.clickType = data.getStringExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_CLICK_TYPE);
                     } catch (Exception e)
                     {
                         ExLog.d(e.toString());
@@ -365,6 +366,8 @@ public class ResearchStayOutboundPresenter extends BaseExceptionPresenter<Resear
             intent.putExtra(ResearchStayOutboundActivity.INTENT_EXTRA_DATA_SUGGEST, new StayOutboundSuggestParcel(mSearchModel.suggest.getValue()));
             intent.putExtra(ResearchStayOutboundActivity.INTENT_EXTRA_DATA_NUMBER_OF_ADULTS, mSearchModel.people.getValue().numberOfAdults);
             intent.putExtra(ResearchStayOutboundActivity.INTENT_EXTRA_DATA_CHILD_LIST, mSearchModel.people.getValue().getChildAgeList());
+            intent.putExtra(ResearchStayOutboundActivity.INTENT_EXTRA_DATA_KEYWORD, mSearchModel.inputString);
+            intent.putExtra(ResearchStayOutboundActivity.INTENT_EXTRA_DATA_CLICK_TYPE, mSearchModel.clickType);
 
             setResult(Activity.RESULT_OK, intent);
             onBackClick();

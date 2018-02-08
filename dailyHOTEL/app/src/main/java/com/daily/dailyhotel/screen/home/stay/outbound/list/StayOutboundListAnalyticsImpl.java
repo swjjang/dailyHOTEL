@@ -20,6 +20,12 @@ public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.
     }
 
     @Override
+    public StayOutboundListAnalyticsParam getAnalyticsParam()
+    {
+        return mAnalyticsParam;
+    }
+
+    @Override
     public void onScreen(Activity activity)
     {
         if (activity == null)
