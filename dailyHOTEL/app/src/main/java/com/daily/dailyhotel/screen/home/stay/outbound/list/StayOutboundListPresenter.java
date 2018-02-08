@@ -271,8 +271,10 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                                 break;
                         }
 
-                        setRefresh(true);
-                        onRefresh(true);
+                        notifyFilterChanged();
+                        notifyToolbarChanged();
+
+                        onRefreshAll(true);
                     }
                 }, new Consumer<Throwable>()
                 {
@@ -328,13 +330,16 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         getViewInterface().setViewTypeOptionImage(ViewState.MAP);
 
-        if (StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == false)
+        if (mDailyDeepLink == null)
         {
-            getViewInterface().setRadiusVisible(false);
-        } else
-        {
-            getViewInterface().setRadiusVisible(true);
-            getViewInterface().setRadius(mRadius);
+            if (StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == false)
+            {
+                getViewInterface().setRadiusVisible(false);
+            } else
+            {
+                getViewInterface().setRadiusVisible(true);
+                getViewInterface().setRadius(mRadius);
+            }
         }
     }
 

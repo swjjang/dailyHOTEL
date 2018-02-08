@@ -139,9 +139,8 @@ public class DailyExternalDeepLink extends DailyDeepLink
 
 
     // Version
-
     private static final int MINIMUM_VERSION_CODE = 3;
-    private static final int MAXIMUM_VERSION_CODE = 22;
+    private static final int MAXIMUM_VERSION_CODE = 23;
 
     private int mVersionCode;
 

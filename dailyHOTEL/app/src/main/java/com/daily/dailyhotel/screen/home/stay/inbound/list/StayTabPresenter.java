@@ -1064,7 +1064,7 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
 
     boolean moveDeepLinkStayList(List<StayAreaGroup> stayDistrictList, CommonDateTime commonDateTime, DailyDeepLink dailyDeepLink)
     {
-        if (dailyDeepLink == null)
+        if (commonDateTime == null && dailyDeepLink == null)
         {
             return false;
         }
@@ -1076,32 +1076,14 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                 DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
 
                 String categoryCode = externalDeepLink.getCategoryCode();
-                String date = externalDeepLink.getDate();
-                int datePlus = externalDeepLink.getDatePlus();
-
                 StayFilter stayFilter = mStayViewModel.stayFilter.getValue() == null ? new StayFilter().resetFilter() : mStayViewModel.stayFilter.getValue();
                 stayFilter.sortType = StayFilter.SortType.valueOf(externalDeepLink.getSorting().name());
                 mStayViewModel.stayFilter.setValue(stayFilter);
 
                 getViewInterface().setOptionFilterSelected(mStayViewModel.stayFilter.getValue().isDefaultFilter() == false);
 
-                int nights = 1;
                 int provinceIndex;
                 int areaIndex;
-
-                try
-                {
-                    nights = Integer.parseInt(externalDeepLink.getNights());
-                } catch (Exception e)
-                {
-                    ExLog.d(e.toString());
-                } finally
-                {
-                    if (nights <= 0)
-                    {
-                        nights = 1;
-                    }
-                }
 
                 try
                 {
@@ -1145,23 +1127,9 @@ public class StayTabPresenter extends BaseExceptionPresenter<StayTabActivity, St
                     }
                 }
 
-                StayBookDateTime stayBookDateTime = new StayBookDateTime();
-
-                if (DailyTextUtils.isTextEmpty(date) == false)
-                {
-                    Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
-                    stayBookDateTime.setCheckInDateTime(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
-                } else if (datePlus >= 0)
-                {
-                    stayBookDateTime.setCheckInDateTime(commonDateTime.dailyDateTime, datePlus);
-                } else
-                {
-                    stayBookDateTime.setCheckInDateTime(commonDateTime.dailyDateTime);
-                }
-
-                stayBookDateTime.setCheckOutDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), nights);
-
+                StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime, externalDeepLink);
                 setStayBookDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
+
                 notifyDateTextChanged();
                 notifyRegionTextChanged();
                 notifyCategoryChanged();

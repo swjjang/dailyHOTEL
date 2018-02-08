@@ -1416,7 +1416,7 @@ public class GourmetMainActivity extends PlaceMainActivity
 
     boolean moveDeepLinkGourmetList(List<Province> provinceList, List<Area> areaList, TodayDateTime todayDateTime, DailyDeepLink dailyDeepLink)
     {
-        if (dailyDeepLink == null)
+        if (todayDateTime == null || dailyDeepLink == null)
         {
             return false;
         }
@@ -1426,9 +1426,6 @@ public class GourmetMainActivity extends PlaceMainActivity
             if (dailyDeepLink.isExternalDeepLink() == true)
             {
                 DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) dailyDeepLink;
-
-                String date = externalDeepLink.getDate();
-                int datePlus = externalDeepLink.getDatePlus();
 
                 GourmetCurationOption gourmetCurationOption = (GourmetCurationOption) mGourmetCuration.getCurationOption();
                 gourmetCurationOption.setSortType(externalDeepLink.getSorting());
@@ -1465,20 +1462,7 @@ public class GourmetMainActivity extends PlaceMainActivity
                 mGourmetCuration.setProvince(selectedProvince);
                 mPlaceMainLayout.setToolbarRegionText(selectedProvince.name);
 
-                GourmetBookingDay gourmetBookingDay = new GourmetBookingDay();
-
-                if (DailyTextUtils.isTextEmpty(date) == false)
-                {
-                    Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
-                    gourmetBookingDay.setVisitDay(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT));
-                } else if (datePlus >= 0)
-                {
-                    gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime, datePlus);
-                } else
-                {
-                    gourmetBookingDay.setVisitDay(todayDateTime.dailyDateTime);
-                }
-
+                GourmetBookingDay gourmetBookingDay = externalDeepLink.getGourmetBookDateTime(todayDateTime.getCommonDateTime(), externalDeepLink).getGourmetBookingDay();
                 mGourmetCuration.setGourmetBookingDay(gourmetBookingDay);
 
                 ((GourmetMainLayout) mPlaceMainLayout).setToolbarDateText(gourmetBookingDay);
