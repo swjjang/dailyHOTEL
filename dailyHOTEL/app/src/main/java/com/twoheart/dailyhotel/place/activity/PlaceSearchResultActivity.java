@@ -45,6 +45,7 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
     public static final String INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME = "checkInDateTime";
     public static final String INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME = "checkOutDateTime";
     public static final String INTENT_EXTRA_DATA_VISIT_DATE_TIME = "visitDateTime";
+    public static final String INTENT_EXTRA_DATA_SORT_TYPE = "sortType";
 
     public static final double DEFAULT_SEARCH_RADIUS = 10d;
 

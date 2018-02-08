@@ -69,7 +69,6 @@ import com.twoheart.dailyhotel.screen.home.category.list.StayCategoryTabActivity
 import com.twoheart.dailyhotel.screen.home.category.nearby.StayCategoryNearByActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionGourmetActivity;
 import com.twoheart.dailyhotel.screen.home.collection.CollectionStayActivity;
-import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
 import com.twoheart.dailyhotel.screen.hotel.preview.StayPreviewActivity;
 import com.twoheart.dailyhotel.screen.information.terms.LocationTermsActivity;
 import com.twoheart.dailyhotel.screen.information.terms.PrivacyActivity;
@@ -562,15 +561,11 @@ public class HomeFragment extends BaseMenuNavigationFragment
                     ExLog.e(e.toString());
                 }
             } else if (externalDeepLink.isHotelListView() == true//
-                || externalDeepLink.isHotelDetailView() == true//
-                || externalDeepLink.isHotelSearchView() == true//
-                || externalDeepLink.isHotelSearchResultView() == true)
+                || externalDeepLink.isHotelDetailView() == true)
             {
                 onStayClick(true, externalDeepLink);
             } else if (externalDeepLink.isGourmetListView() == true//
-                || externalDeepLink.isGourmetDetailView() == true//
-                || externalDeepLink.isGourmetSearchView() == true//
-                || externalDeepLink.isGourmetSearchResultView() == true)
+                || externalDeepLink.isGourmetDetailView() == true)
             {
                 onGourmetClick(true, externalDeepLink);
             } else if (externalDeepLink.isRecentlyWatchHotelView() == true)
@@ -618,30 +613,19 @@ public class HomeFragment extends BaseMenuNavigationFragment
                         }
                     }
                 }
-            } else if (externalDeepLink.isStayOutboundSearchResultView() == true)
+            } else if (externalDeepLink.isSearchHomeView() == true//
+                || externalDeepLink.isStayOutboundSearchResultView() == true //
+                || externalDeepLink.isCampaignTagListView() == true//
+                || externalDeepLink.isHotelSearchResultView() == true//
+                || externalDeepLink.isGourmetSearchResultView() == true)
             {
                 try
                 {
                     Intent intent = SearchActivity.newInstance(mBaseActivity, dailyDeepLink.getDeepLink());
-                    startActivityForResult(intent, Constants.CODE_RESULT_ACTIVITY_STAY_OUTBOUND_SEARCH);
+                    startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_SEARCH);
                 } catch (Exception e)
                 {
                     ExLog.e(e.toString());
-                }
-            } else if (externalDeepLink.isCampaignTagListView() == true)
-            {
-                String placeType = externalDeepLink.getPlaceType();
-                if (DailyTextUtils.isTextEmpty(placeType) == false)
-                {
-                    switch (externalDeepLink.getPlaceType())
-                    {
-                        case DailyDeepLink.GOURMET:
-                            onGourmetClick(true, externalDeepLink);
-
-                            break;
-                        case DailyDeepLink.STAY:
-                            onStayClick(true, externalDeepLink);
-                    }
                 }
             } else if (externalDeepLink.isPlaceDetailView() == true)
             {
@@ -1752,7 +1736,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
 
             StaySuggest staySuggest = new StaySuggest(StaySuggest.MENU_TYPE_LOCATION, StaySuggest.CATEGORY_LOCATION, null);
 
-            Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, stayBookingDay, null, staySuggest, AnalyticsManager.Screen.HOME);
+            Intent intent = StaySearchResultActivity.newInstance(mBaseActivity, mTodayDateTime, stayBookingDay, null, staySuggest, null, AnalyticsManager.Screen.HOME);
             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
         } catch (Exception e)
         {
@@ -1779,7 +1763,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
             stayBookingDay.setCheckInDay(mTodayDateTime.dailyDateTime);
             stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
 
-            mBaseActivity.startActivityForResult(com.daily.dailyhotel.screen.home.search.SearchActivity.newInstance(mBaseActivity, ServiceType.HOTEL), Constants.CODE_REQUEST_ACTIVITY_SEARCH);
+            mBaseActivity.startActivityForResult(SearchActivity.newInstance(mBaseActivity, ServiceType.HOTEL), Constants.CODE_REQUEST_ACTIVITY_SEARCH);
 
             AnalyticsManager.getInstance(mBaseActivity).recordEvent(//
                 AnalyticsManager.Category.SEARCH, AnalyticsManager.Action.SEARCH_BUTTON_CLICK,//

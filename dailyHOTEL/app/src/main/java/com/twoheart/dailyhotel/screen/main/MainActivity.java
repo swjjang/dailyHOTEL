@@ -1400,11 +1400,9 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                         || externalDeepLink.isHomeRecommendationPlaceListView() == true//
                         || externalDeepLink.isHotelListView() == true//
                         || externalDeepLink.isHotelDetailView() == true//
-                        || externalDeepLink.isHotelSearchView() == true//
                         || externalDeepLink.isHotelSearchResultView() == true//
                         || externalDeepLink.isGourmetListView() == true//
                         || externalDeepLink.isGourmetDetailView() == true//
-                        || externalDeepLink.isGourmetSearchView() == true//
                         || externalDeepLink.isGourmetSearchResultView() == true//
                         || externalDeepLink.isRecentlyWatchHotelView() == true//
                         || externalDeepLink.isRecentlyWatchGourmetView() == true//
@@ -1414,6 +1412,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                         || externalDeepLink.isStayOutboundSearchResultView() == true//
                         || externalDeepLink.isCampaignTagListView() == true //
                         || externalDeepLink.isPlaceDetailView() == true //
+                        || externalDeepLink.isSearchHomeView() == true//
                         )
                     {
                         mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, true, bundle);
