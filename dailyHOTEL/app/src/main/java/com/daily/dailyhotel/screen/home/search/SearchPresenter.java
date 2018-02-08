@@ -120,14 +120,17 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             return true;
         }
 
-        try
+        if (intent.hasExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK) == true)
         {
-            mDailyDeepLink = DailyDeepLink.getNewInstance(Uri.parse(intent.getStringExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK)));
-        } catch (Exception e)
-        {
-            mDailyDeepLink = null;
+            try
+            {
+                mDailyDeepLink = DailyDeepLink.getNewInstance(Uri.parse(intent.getStringExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK)));
+            } catch (Exception e)
+            {
+                mDailyDeepLink = null;
 
-            return false;
+                return false;
+            }
         }
 
         if (mDailyDeepLink == null || mDailyDeepLink.isExternalDeepLink() == false)
@@ -1118,7 +1121,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
     void startStayCampaignTag(int index, String campaignTag, String checkInDateTime, String checkOutDateTime)
     {
-        if (index <= 0 || DailyTextUtils.isTextEmpty(campaignTag, checkInDateTime, checkOutDateTime) == true)
+        if (index <= 0 || DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
         {
             return;
         }
@@ -1130,7 +1133,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
     void startGourmetCampaignTag(int index, String campaignTag, String visitDateTime)
     {
-        if (index <= 0 || DailyTextUtils.isTextEmpty(campaignTag, visitDateTime) == true)
+        if (index <= 0 || DailyTextUtils.isTextEmpty(visitDateTime) == true)
         {
             return;
         }
