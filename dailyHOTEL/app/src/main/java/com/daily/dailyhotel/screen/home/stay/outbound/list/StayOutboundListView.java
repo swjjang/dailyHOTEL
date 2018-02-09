@@ -116,6 +116,8 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         void onSearchStayClick();
 
         void onSearchGourmetClick();
+
+        void onPopularAreaClick(StayOutboundSuggest stayOutboundSuggest);
     }
 
     public StayOutboundListView(BaseActivity baseActivity, StayOutboundListView.OnEventListener listener)
@@ -1277,6 +1279,8 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
 
         areaCardView.setTitleText(stayOutboundSuggest.display);
         areaCardView.setSubTitleText(stayOutboundSuggest.country);
+        areaCardView.setTag(stayOutboundSuggest);
+        areaCardView.setOnClickListener(v -> getEventListener().onPopularAreaClick((StayOutboundSuggest) v.getTag()));
 
         return areaCardView;
     }

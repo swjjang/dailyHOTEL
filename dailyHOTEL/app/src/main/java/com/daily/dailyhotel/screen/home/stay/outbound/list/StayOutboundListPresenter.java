@@ -1455,6 +1455,19 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         finish(Constants.CODE_RESULT_ACTIVITY_SEARCH_GOURMET);
     }
 
+    @Override
+    public void onPopularAreaClick(StayOutboundSuggest stayOutboundSuggest)
+    {
+        if (lock() == true)
+        {
+            return;
+        }
+
+        mStayOutboundSuggest = stayOutboundSuggest;
+
+        finish(Activity.RESULT_OK);
+    }
+
     private void finish(int resultCode)
     {
         Intent intent = new Intent();
@@ -1811,12 +1824,12 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         try
         {
-            String subTitleText = String.format(Locale.KOREA, "%s - %s, %d박   %s"//
+            String subTitleText = String.format(Locale.KOREA, "%s - %s, %d박 돋 %s"//
                 , mStayBookDateTime.getCheckInDateTime("M.d(EEE)")//
                 , mStayBookDateTime.getCheckOutDateTime("M.d(EEE)")//
                 , mStayBookDateTime.getNights(), mPeople.toTooShortString(getActivity()));
 
-            int startIndex = subTitleText.indexOf('박') + 1;
+            int startIndex = subTitleText.indexOf('돋');
 
             SpannableString spannableString = new SpannableString(subTitleText);
             spannableString.setSpan(new DailyImageSpan(getActivity(), R.drawable.shape_filloval_cababab, DailyImageSpan.ALIGN_VERTICAL_CENTER), startIndex, startIndex + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
