@@ -1117,9 +1117,9 @@
 
     <string name="message_searchresult_gourmet_empty_message01">내 주변 고메가 없습니다.</string>
 
-    <string name="message_searchresult_stay_empty_subtitle">검색어나 조건을 변경하여 검색해보세요.\n더 구체적인 단어로도 검색이 가능해요.\n(예: 수영장 있는 호텔, 파티룸)</string>
+    <string name="message_searchresult_stay_empty_subtitle">검색어나 조건을 변경하여 검색해보세요.\n더 구체적인 단어로도 검색이 가능해요.\n(예. 수영장 있는 호텔, 파티룸)</string>
     <string name="message_searchresult_stay_outbound_empty_subtitle">검색어나 조건을 변경하여 검색해보세요.\n한글, 영문 둘다 검색이 가능해요.\n(예. 도시, 지역, 역, 호텔 등)</string>
-    <string name="message_searchresult_gourmet_empty_subtitle">검색어나 조건을 변경하여 검색해보세요.\n더 구체적인 단어로도 검색이 가능해요.\n(예. 호텔 중식, 주차가능한 뷔페)</string>
+    <string name="message_searchresult_gourmet_empty_subtitle">검색어나 조건을 변경하여 검색해보세요.\n(예. 레스토랑명, 지역명 등)</string>
 
     <!--New Search Suggest -->
     <string name="label_search_nearby_title">현재 위치로 설정</string>
@@ -1441,7 +1441,6 @@
     <string name="message_gourmet_product_detail_change_cart_other_visit_day">다른 방문일을 선택하시면\n기존 메뉴는 모두 삭제됩니다.\n삭제하고 새로 추가하시겠어요?</string>
     <string name="message_gourmet_product_detail_after_visit_day">방문시간이 지난 메뉴는 구매하실 수 없어 모두 삭제됩니다.</string>
     <string name="message_gourmet_product_detail_insufficient_quantity">남은 수량이 부족하여 구매하실 수 없으니 다시 확인해주세요.</string>
-    <string name="message_gourmet_product_detail_sold_out">선택하신 메뉴 중 판매가 완료된 상품이 있으니 다시 확인 후 구매해주세요.</string>
 
     <!-- Happy Talk -->
     <string name="label_select_category">선택</string>

@@ -26,7 +26,7 @@ public interface StayOutboundListViewInterface extends BaseBlurViewInterface
 
     void setToolbarTitle(String title);
 
-    void setToolbarTitle(String titleText, String subTitleText);
+    void setToolbarTitle(String titleText, CharSequence subTitleText);
 
     void setRadius(float radius);
 
