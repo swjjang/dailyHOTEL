@@ -101,10 +101,14 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     public static final int STATUS_SOLD_OUT = 3;
     public static final int STATUS_FINISH = 4;
 
+    private static final int VALID_GOURMET_CART_NONE = -1;
     private static final int VALID_GOURMET_CART_DEFAULT = 0;
     private static final int INVALID_GOURMET_CART_VISIT_TIME = 1;
     private static final int INVALID_GOURMET_CART_QUANTITY = 2;
     private static final int INVALID_GOURMET_SOLD_OUT = 3;
+    private static final int INVALID_GOURMET_CART_CHANGED_PRICE = 4; // 카트 가격이 변동 되는 경우
+    private static final int INVALID_GOURMET_CHANGED_PRICE = 5; // 가격이 변동 되는 경우
+
 
     public static final String FULL_TIME = "FULL_TIME";
 
@@ -1622,10 +1626,6 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         getViewInterface().setGourmetDetail(mGourmetBookDateTime, mGourmetDetail, mOperationTimeList//
             , mReviewScores != null ? mReviewScores.reviewScoreTotalCount : 0, SHOWN_MENU_COUNT);
 
-        // 리스트 가격 변동은 진입시 한번 만 한다.
-        checkChangedPrice(mIsDeepLink, mGourmetDetail, mPriceFromList, mCheckChangedPrice == false);
-        mCheckChangedPrice = true;
-
         // 선택된 방이 없으면 처음 방으로 한다.
         if (mGourmetDetail.getGourmetMenuList() == null || mGourmetDetail.getGourmetMenuList().size() == 0)
         {
@@ -1826,11 +1826,74 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         mAnalytics.onEventCalendarClick(getActivity());
     }
 
-    private void checkChangedPrice(boolean isDeepLink, GourmetDetail gourmetDetail, int listViewPrice, boolean compareListPrice)
+    //    private void checkChangedPrice(boolean isDeepLink, GourmetDetail gourmetDetail, int listViewPrice, boolean compareListPrice)
+    //    {
+    //        if (gourmetDetail == null)
+    //        {
+    //            return;
+    //        }
+    //
+    //        // 판매 완료 혹은 가격이 변동되었는지 조사한다
+    //        List<GourmetMenu> menuList = gourmetDetail.getGourmetMenuList();
+    //
+    //        if (menuList == null || menuList.size() == 0)
+    //        {
+    //            if (mSoldOutFromList == false)
+    //            {
+    //                Intent intent = new Intent();
+    //                intent.putExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_SOLD_OUT, true);
+    //                setResult(BaseActivity.RESULT_CODE_REFRESH, intent);
+    //            }
+    //
+    //            getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_detail_sold_out)//
+    //                , getString(R.string.label_changing_date)//
+    //                , v -> onCalendarClick(), null, true);
+    //
+    //            mAnalytics.onEventChangedPrice(getActivity(), isDeepLink, gourmetDetail.name, true);
+    //        } else
+    //        {
+    //            if (isDeepLink == false && compareListPrice == true)
+    //            {
+    //                boolean hasPrice = false;
+    //
+    //                if (listViewPrice == GourmetDetailActivity.NONE_PRICE)
+    //                {
+    //                    hasPrice = true;
+    //                } else
+    //                {
+    //                    for (GourmetMenu menu : menuList)
+    //                    {
+    //                        if (listViewPrice == menu.discountPrice)
+    //                        {
+    //                            hasPrice = true;
+    //                            break;
+    //                        }
+    //                    }
+    //                }
+    //
+    //                if (hasPrice == false)
+    //                {
+    //                    if (mSoldOutFromList == false)
+    //                    {
+    //                        Intent intent = new Intent();
+    //                        intent.putExtra(GourmetDetailActivity.INTENT_EXTRA_DATA_CHANGED_PRICE, true);
+    //                        setResult(BaseActivity.RESULT_CODE_REFRESH, intent);
+    //                    }
+    //
+    //                    getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_detail_changed_price)//
+    //                        , getString(R.string.dialog_btn_text_confirm), null);
+    //
+    //                    mAnalytics.onEventChangedPrice(getActivity(), isDeepLink, gourmetDetail.name, false);
+    //                }
+    //            }
+    //        }
+    //    }
+
+    private int checkChangedPrice(boolean isDeepLink, GourmetDetail gourmetDetail, int listViewPrice, boolean compareListPrice)
     {
         if (gourmetDetail == null)
         {
-            return;
+            return INVALID_GOURMET_SOLD_OUT;
         }
 
         // 판매 완료 혹은 가격이 변동되었는지 조사한다
@@ -1845,11 +1908,9 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 setResult(BaseActivity.RESULT_CODE_REFRESH, intent);
             }
 
-            getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_detail_sold_out)//
-                , getString(R.string.label_changing_date)//
-                , v -> onCalendarClick(), null, true);
-
             mAnalytics.onEventChangedPrice(getActivity(), isDeepLink, gourmetDetail.name, true);
+
+            return INVALID_GOURMET_SOLD_OUT;
         } else
         {
             if (isDeepLink == false && compareListPrice == true)
@@ -1884,9 +1945,13 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                         , getString(R.string.dialog_btn_text_confirm), null);
 
                     mAnalytics.onEventChangedPrice(getActivity(), isDeepLink, gourmetDetail.name, false);
+
+                    return INVALID_GOURMET_CHANGED_PRICE;
                 }
             }
         }
+
+        return VALID_GOURMET_CART_DEFAULT;
     }
 
     private void onRefresh(Observable<Boolean> observable, Disposable disposable)
@@ -1940,7 +2005,12 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                     disposable.dispose();
                 }
 
-                switch (validGourmetCart(mGourmetIndex, gourmetCart))
+                int checkPriceResult = checkChangedPrice(mIsDeepLink, mGourmetDetail, mPriceFromList, mCheckChangedPrice == false);
+                mCheckChangedPrice = false;
+
+                int validCartResult = validGourmetCart(mGourmetIndex, gourmetCart, mGourmetDetail.getGourmetMenuList());
+
+                switch (validCartResult)
                 {
                     case INVALID_GOURMET_CART_VISIT_TIME:
                         showClearCartDialog(getString(R.string.message_gourmet_product_detail_after_visit_day));
@@ -1951,6 +2021,27 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                         break;
 
                     case INVALID_GOURMET_SOLD_OUT:
+                        addCompositeDisposable(mCartLocalImpl.clearGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                        {
+                            @Override
+                            public void accept(Boolean aBoolean) throws Exception
+                            {
+                                getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_detail_sold_out_has_cart)//
+                                    , getString(R.string.label_changing_date)//
+                                    , v -> onCalendarClick(), null, true);
+                            }
+                        }));
+                        break;
+
+                    case INVALID_GOURMET_CART_CHANGED_PRICE:
+                        addCompositeDisposable(mCartLocalImpl.setGourmetCart(gourmetCart).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+                        {
+                            @Override
+                            public void accept(Boolean aBoolean) throws Exception
+                            {
+                                getViewInterface().showSimpleDialog(null, getString(R.string.message_gourmet_detail_changed_price_has_cart), getString(R.string.dialog_btn_text_confirm), null);
+                            }
+                        }));
                         break;
 
                     default:
@@ -1959,6 +2050,20 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                         if (DailyPreference.getInstance(getActivity()).isWishTooltip() == true)
                         {
                             showWishTooltip();
+                        }
+
+                        switch(checkPriceResult)
+                        {
+                            case INVALID_GOURMET_SOLD_OUT:
+                                getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_detail_sold_out_has_cart)//
+                                    , getString(R.string.label_changing_date)//
+                                    , v -> onCalendarClick(), null, true);
+                                break;
+
+                            case INVALID_GOURMET_CHANGED_PRICE:
+                                getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_detail_changed_price)//
+                                    , getString(R.string.dialog_btn_text_confirm), null);
+                                break;
                         }
                         break;
                 }
@@ -2065,11 +2170,11 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
      * @param gourmetCart
      * @return
      */
-    int validGourmetCart(int gourmetIndex, GourmetCart gourmetCart) throws Exception
+    int validGourmetCart(int gourmetIndex, GourmetCart gourmetCart, List<GourmetMenu> gourmetMenuList) throws Exception
     {
         if (gourmetCart == null || gourmetCart.getMenuCount() == 0)
         {
-            return VALID_GOURMET_CART_DEFAULT;
+            return VALID_GOURMET_CART_NONE;
         }
 
         if (gourmetCart.gourmetIndex != gourmetIndex)
@@ -2091,7 +2196,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             return VALID_GOURMET_CART_DEFAULT;
         }
 
-        if (mOperationTimeList == null || mOperationTimeList.size() == 0)
+        if (mOperationTimeList == null || mOperationTimeList.size() == 0 || gourmetMenuList == null || gourmetMenuList.size() == 0)
         {
             return INVALID_GOURMET_SOLD_OUT;
         }
@@ -2102,12 +2207,14 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             return INVALID_GOURMET_CART_VISIT_TIME;
         } else
         {
+            boolean changedPrice = false;
+
             for (GourmetCartMenu gourmetCartMenu : gourmetCart.getMenuList())
             {
                 boolean hasMenu = false;
                 boolean hasOrderQuantity = false;
 
-                for (GourmetMenu gourmetMenu : mGourmetDetail.getGourmetMenuList())
+                for (GourmetMenu gourmetMenu : gourmetMenuList)
                 {
                     if (gourmetCartMenu.index == gourmetMenu.index)
                     {
@@ -2118,14 +2225,26 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                         {
                             hasOrderQuantity = true;
                         }
+
+                        if (gourmetCartMenu.discountPrice != gourmetMenu.discountPrice)
+                        {
+                            changedPrice = true;
+
+                            gourmetCartMenu.price = gourmetMenu.price;
+                            gourmetCartMenu.discountPrice = gourmetMenu.discountPrice;
+                        }
                     }
                 }
-
 
                 if (hasMenu == false || hasOrderQuantity == false)
                 {
                     return INVALID_GOURMET_CART_QUANTITY;
                 }
+            }
+
+            if (changedPrice == true)
+            {
+                return INVALID_GOURMET_CART_CHANGED_PRICE;
             }
         }
 
