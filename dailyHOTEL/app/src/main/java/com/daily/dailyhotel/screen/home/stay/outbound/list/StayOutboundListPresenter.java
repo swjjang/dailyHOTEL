@@ -1465,7 +1465,9 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         mStayOutboundSuggest = stayOutboundSuggest;
 
-        finish(Activity.RESULT_OK);
+        notifyToolbarChanged();
+
+        onRefreshAll(true);
     }
 
     private void finish(int resultCode)
