@@ -196,8 +196,7 @@
             android:id="@+id/emptyScrollView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/white"
-            android:fillViewport="true"
+            android:background="@color/default_background"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -207,6 +206,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/white"
                 android:orientation="vertical">
 
                 <com.daily.base.widget.DailyImageView
@@ -346,6 +346,11 @@
                             dailyFont:style="Medium"/>
                     </FrameLayout>
                 </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/default_line_cf0f0f0"/>
             </LinearLayout>
         </ScrollView>
 

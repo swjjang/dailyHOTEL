@@ -538,7 +538,7 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
     }
 
     @Override
-    public int getRecentlySuggestEntryCount()
+    public int getRecentlySuggestAllEntryCount()
     {
         if (mRecentlySuggestListAdapter == null)
         {
@@ -591,18 +591,6 @@ public class SearchStaySuggestView extends BaseDialogView<SearchStaySuggestView.
         }
 
         mRecentlySuggestListAdapter.removeItem(position);
-        mRecentlySuggestListAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void removeRecentlySection(int menuType)
-    {
-        if (mRecentlySuggestListAdapter == null)
-        {
-            return;
-        }
-
-        mRecentlySuggestListAdapter.removeSection(menuType);
         mRecentlySuggestListAdapter.notifyDataSetChanged();
     }
 

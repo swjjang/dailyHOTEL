@@ -205,6 +205,12 @@ public class StayRecentlySuggestListAdapter extends RecyclerView.Adapter<Recycle
         }
 
         ObjectItem removeItem = mSuggestList.remove(position);
+        StaySuggest staySuggest = removeItem.getItem();
+
+        if (staySuggest != null)
+        {
+            checkAndRemoveSection(staySuggest.menuType);
+        }
 
         if (mSuggestList.size() == 1)
         {
@@ -215,41 +221,42 @@ public class StayRecentlySuggestListAdapter extends RecyclerView.Adapter<Recycle
             }
         }
 
-        StaySuggest staySuggest = removeItem.getItem();
         return staySuggest;
     }
 
-    public void removeSection(int menuType)
+    private void checkAndRemoveSection(int menuType)
     {
         if (mSuggestList == null || mSuggestList.size() == 0)
         {
             return;
         }
 
+        int sectionPosition = -1;
+        boolean hasEntry = false;
+
         for (int i = 0; i < mSuggestList.size(); i++)
         {
             ObjectItem item = mSuggestList.get(i);
-            if (ObjectItem.TYPE_SECTION != item.mType)
-            {
-                continue;
-            }
-
             StaySuggest staySuggest = item.getItem();
-            if (staySuggest == null || menuType != staySuggest.menuType)
+
+            if (staySuggest == null || staySuggest.menuType != menuType)
             {
                 continue;
             }
 
-            mSuggestList.remove(i);
+            if (ObjectItem.TYPE_ENTRY == item.mType)
+            {
+                hasEntry = true;
+                break;
+            } else if (ObjectItem.TYPE_SECTION == item.mType)
+            {
+                sectionPosition = i;
+            }
         }
 
-        if (mSuggestList.size() == 1)
+        if (hasEntry == false && sectionPosition >= 0 && sectionPosition < mSuggestList.size())
         {
-            ObjectItem checkItem = mSuggestList.get(0);
-            if (checkItem.mType == ObjectItem.TYPE_FOOTER_VIEW)
-            {
-                mSuggestList.remove(0);
-            }
+            mSuggestList.remove(sectionPosition);
         }
     }
 

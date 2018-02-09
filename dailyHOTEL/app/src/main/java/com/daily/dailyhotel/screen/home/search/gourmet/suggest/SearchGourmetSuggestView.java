@@ -403,7 +403,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
     }
 
     @Override
-    public int getRecentlySuggestEntryCount()
+    public int getRecentlySuggestAllEntryCount()
     {
         if (mRecentlySuggestListAdapter == null)
         {
@@ -456,18 +456,6 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
         }
 
         mRecentlySuggestListAdapter.removeItem(position);
-        mRecentlySuggestListAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void removeRecentlySection(int menuType)
-    {
-        if (mRecentlySuggestListAdapter == null)
-        {
-            return;
-        }
-
-        mRecentlySuggestListAdapter.removeSection(menuType);
         mRecentlySuggestListAdapter.notifyDataSetChanged();
     }
 

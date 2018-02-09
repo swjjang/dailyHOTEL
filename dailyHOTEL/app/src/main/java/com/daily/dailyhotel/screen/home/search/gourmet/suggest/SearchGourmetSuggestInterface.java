@@ -21,7 +21,7 @@ public interface SearchGourmetSuggestInterface extends BaseDialogViewInterface
 
     void setPopularAreaSuggests(GourmetSuggest locationSuggest, List<GourmetSuggest> gourmetSuggestList);
 
-    int getRecentlySuggestEntryCount();
+    int getRecentlySuggestAllEntryCount();
 
     void setKeywordEditHint(String hint);
 
@@ -30,8 +30,6 @@ public interface SearchGourmetSuggestInterface extends BaseDialogViewInterface
     void setVoiceSearchEnabled(boolean enabled);
 
     void removeRecentlyItem(int position);
-
-    void removeRecentlySection(int menuType);
 
     void setNearbyGourmetSuggest(GourmetSuggest nearbyGourmetSuggest);
 }

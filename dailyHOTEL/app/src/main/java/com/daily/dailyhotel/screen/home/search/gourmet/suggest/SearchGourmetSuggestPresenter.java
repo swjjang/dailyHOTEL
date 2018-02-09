@@ -26,7 +26,6 @@ import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
-import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.remote.GoogleAddressRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
@@ -671,30 +670,20 @@ public class SearchGourmetSuggestPresenter //
 
         getViewInterface().removeRecentlyItem(position);
 
+        if (getViewInterface().getRecentlySuggestAllEntryCount() == 0)
+        {
+            setRecentlySuggestList(null);
+            notifyDataSetChanged();
+        }
+
         if (GourmetSuggest.MENU_TYPE_RECENTLY_GOURMET == gourmetSuggest.menuType)
         {
             addCompositeDisposable(mRecentlyLocalImpl.deleteRecentlyItem(Constants.ServiceType.GOURMET, gourmetSuggest.gourmetIndex) //
-                .flatMap(new Function<Boolean, ObservableSource<ArrayList<RecentlyDbPlace>>>()
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                 {
                     @Override
-                    public ObservableSource<ArrayList<RecentlyDbPlace>> apply(Boolean aBoolean) throws Exception
+                    public void accept(Boolean aBoolean) throws Exception
                     {
-                        return mRecentlyLocalImpl.getRecentlyTypeList(Constants.ServiceType.GOURMET);
-                    }
-                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<RecentlyDbPlace>>()
-                {
-                    @Override
-                    public void accept(ArrayList<RecentlyDbPlace> recentlyDbPlaces) throws Exception
-                    {
-                        if (getViewInterface().getRecentlySuggestEntryCount() == 0)
-                        {
-                            setRecentlySuggestList(null);
-                            notifyDataSetChanged();
-                        } else if (recentlyDbPlaces.size() == 0)
-                        {
-                            getViewInterface().removeRecentlySection(GourmetSuggest.MENU_TYPE_RECENTLY_GOURMET);
-                        }
-
                         unLockAll();
                     }
                 }, new Consumer<Throwable>()
@@ -716,16 +705,6 @@ public class SearchGourmetSuggestPresenter //
             }
 
             mDailyRecentSearches.remove(keyword);
-
-            if (getViewInterface().getRecentlySuggestEntryCount() == 0)
-            {
-                setRecentlySuggestList(null);
-                notifyDataSetChanged();
-            } else if (mDailyRecentSearches.size() == 0)
-            {
-                getViewInterface().removeRecentlySection(GourmetSuggest.MENU_TYPE_RECENTLY_SEARCH);
-            }
-
             DailyPreference.getInstance(getActivity()).setGourmetRecentSearches(mDailyRecentSearches.toString());
 
             unLockAll();

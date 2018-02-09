@@ -1951,7 +1951,6 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                         break;
 
                     case INVALID_GOURMET_SOLD_OUT:
-                        showClearCartDialog(getString(R.string.message_gourmet_product_detail_sold_out));
                         break;
 
                     default:
