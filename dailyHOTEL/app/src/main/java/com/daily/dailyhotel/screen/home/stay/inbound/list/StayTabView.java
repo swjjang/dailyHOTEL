@@ -384,6 +384,12 @@ public class StayTabView extends BaseDialogView<StayTabInterface.OnEventListener
         getEventListener().onFilterClick();
     }
 
+    @Override
+    public void setCategoryVisible(boolean visible)
+    {
+        setCategoryTabLayoutVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
     private void initToolbar(ActivityStayTabDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)

@@ -452,8 +452,8 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
                     getViewInterface().setFloatingActionViewVisible(notDefaultFilter);
                     getViewInterface().setFloatingActionViewTypeMapEnabled(false);
-
                     getViewInterface().setEmptyViewVisible(true, notDefaultFilter);
+                    getFragment().getFragmentEventListener().setCategoryVisible(false);
 
                     mAnalytics.onScreen(getActivity(), null, mStayViewModel.stayBookDateTime.getValue(), mCategory.code, mStayViewModel.stayFilter.getValue(), mStayViewModel.stayRegion.getValue());
                 } else
@@ -462,6 +462,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
 
                     getViewInterface().setFloatingActionViewVisible(true);
                     getViewInterface().setFloatingActionViewTypeMapEnabled(true);
+                    getFragment().getFragmentEventListener().setCategoryVisible(true);
 
                     if (listSize < MAXIMUM_NUMBER_PER_PAGE)
                     {

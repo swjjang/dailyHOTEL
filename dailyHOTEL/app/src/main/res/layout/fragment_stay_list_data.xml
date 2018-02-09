@@ -42,6 +42,8 @@
             android:id="@+id/emptyView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/toolbar_height"
+            android:fillViewport="true"
             android:visibility="gone"/>
     </FrameLayout>
 </layout>
