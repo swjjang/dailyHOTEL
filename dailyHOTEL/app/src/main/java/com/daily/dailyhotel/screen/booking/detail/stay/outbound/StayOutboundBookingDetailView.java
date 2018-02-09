@@ -1168,6 +1168,15 @@ public class StayOutboundBookingDetailView extends BaseDialogView<StayOutboundBo
             dataBinding.bonusLayout.setVisibility(View.GONE);
         }
 
+        if (stayOutboundBookingDetail.couponAmount > 0)
+        {
+            dataBinding.couponLayout.setVisibility(View.VISIBLE);
+            dataBinding.couponTextView.setText("- " + DailyTextUtils.getPriceFormat(context, stayOutboundBookingDetail.couponAmount, false));
+        } else
+        {
+            dataBinding.couponLayout.setVisibility(View.GONE);
+        }
+
         dataBinding.totalPriceTextView.setText(DailyTextUtils.getPriceFormat(context, stayOutboundBookingDetail.paymentPrice, false));
 
         if (stayOutboundBookingDetail.fee > 0)

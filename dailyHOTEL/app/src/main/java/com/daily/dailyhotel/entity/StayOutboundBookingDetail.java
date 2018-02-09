@@ -19,6 +19,7 @@ public class StayOutboundBookingDetail extends Configurations
 
     public int paymentPrice;
     public int bonus;
+    public int couponAmount;
     public int totalPrice;
     public double fee;
 
