@@ -66,7 +66,7 @@ public class RefundRemoteImpl extends BaseRemoteImpl implements RefundInterface
                     {
                         if (stayOutboundRefundDetailDataBaseDto.msgCode == 100 && stayOutboundRefundDetailDataBaseDto.data != null)
                         {
-                            stayOutboundRefundDetail = stayOutboundRefundDetailDataBaseDto.data.getStayOutboundBookingDetail();
+                            stayOutboundRefundDetail = stayOutboundRefundDetailDataBaseDto.data.getStayOutboundRefundDetail();
                         } else
                         {
                             throw new BaseException(stayOutboundRefundDetailDataBaseDto.msgCode, stayOutboundRefundDetailDataBaseDto.msg);

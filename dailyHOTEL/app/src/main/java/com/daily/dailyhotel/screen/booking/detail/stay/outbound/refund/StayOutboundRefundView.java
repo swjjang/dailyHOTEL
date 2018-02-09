@@ -483,6 +483,15 @@ public class StayOutboundRefundView extends BaseDialogView<StayOutboundRefundVie
             dataBinding.bonusLayout.setVisibility(View.GONE);
         }
 
+        if (stayOutboundRefundDetail.couponAmount > 0)
+        {
+            dataBinding.couponLayout.setVisibility(View.VISIBLE);
+            dataBinding.couponTextView.setText("- " + DailyTextUtils.getPriceFormat(context, stayOutboundRefundDetail.couponAmount, false));
+        } else
+        {
+            dataBinding.couponLayout.setVisibility(View.GONE);
+        }
+
         dataBinding.totalPriceTextView.setText(DailyTextUtils.getPriceFormat(context, stayOutboundRefundDetail.paymentPrice, false));
     }
 }
