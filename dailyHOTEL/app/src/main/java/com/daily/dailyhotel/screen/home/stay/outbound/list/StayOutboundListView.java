@@ -197,7 +197,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
     }
 
     @Override
-    public void setToolbarTitle(String titleText, String subTitleText)
+    public void setToolbarTitle(String titleText, CharSequence subTitleText)
     {
         if (getViewDataBinding() == null)
         {

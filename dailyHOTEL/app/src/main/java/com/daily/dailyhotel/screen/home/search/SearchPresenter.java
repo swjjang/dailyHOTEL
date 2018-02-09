@@ -673,6 +673,11 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
     @Override
     public void onStaySuggestClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
+
         try
         {
             startActivityForResult(SearchStaySuggestActivity.newInstance(getActivity()//
@@ -702,6 +707,11 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
     @Override
     public void onStayDoSearchClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
+
         try
         {
             startActivityForResult(StaySearchResultActivity.newInstance(getActivity(), mSearchModel.commonDateTime.getValue().getTodayDateTime()//
@@ -751,12 +761,22 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
     @Override
     public void onStayOutboundSuggestClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
+
         startActivityForResult(SearchStayOutboundSuggestActivity.newInstance(getActivity(), ""), SearchActivity.REQUEST_CODE_STAY_OUTBOUND_SUGGEST);
     }
 
     @Override
     public void onStayOutboundCalendarClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
+
         final int DAYS_OF_MAXCOUNT = 365;
         final int NIGHTS_OF_MAXCOUNT = 28;
 
@@ -808,6 +828,11 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
     @Override
     public void onStayOutboundDoSearchClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
+
         StayOutboundListAnalyticsParam analyticsParam = new StayOutboundListAnalyticsParam();
         analyticsParam.keyword = mSearchModel.stayOutboundViewModel.inputString;
         analyticsParam.analyticsClickType = mSearchModel.stayOutboundViewModel.clickType;
@@ -855,6 +880,11 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
     @Override
     public void onGourmetSuggestClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
+
         try
         {
             startActivityForResult(SearchGourmetSuggestActivity.newInstance(getActivity()//
@@ -883,6 +913,11 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
     @Override
     public void onGourmetDoSearchClick()
     {
+        if (lock() == true)
+        {
+            return;
+        }
+
         try
         {
             startActivityForResult(GourmetSearchResultActivity.newInstance(getActivity(), mSearchModel.commonDateTime.getValue().getTodayDateTime()//

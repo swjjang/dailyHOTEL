@@ -65,15 +65,10 @@ public class GourmetSearchResultListLayout extends GourmetListLayout
 
             if (GourmetSuggest.CATEGORY_LOCATION.equalsIgnoreCase(((GourmetSearchCuration) mGourmetCuration).getSuggest().categoryKey) == true)
             {
-                if((GourmetCurationOption.isDefaultFilter() == true && ((GourmetSearchCuration) mGourmetCuration).getRadius() == PlaceSearchResultActivity.DEFAULT_SEARCH_RADIUS))
+                if ((GourmetCurationOption.isDefaultFilter() == true && ((GourmetSearchCuration) mGourmetCuration).getRadius() == PlaceSearchResultActivity.DEFAULT_SEARCH_RADIUS))
                 {
                     mEmptyView.setVisibility(View.VISIBLE);
                     mFilterEmptyView.setVisibility(View.GONE);
-                    ((OnEventListener) mOnEventListener).onBottomOptionVisible(false);
-                } else if(GourmetCurationOption.isDefaultFilter() == true)
-                {
-                    mEmptyView.setVisibility(View.GONE);
-                    mFilterEmptyView.setVisibility(View.VISIBLE);
                     ((OnEventListener) mOnEventListener).onBottomOptionVisible(false);
                 } else
                 {
@@ -83,7 +78,7 @@ public class GourmetSearchResultListLayout extends GourmetListLayout
                 }
             } else
             {
-                if(GourmetCurationOption.isDefaultFilter() == true)
+                if (GourmetCurationOption.isDefaultFilter() == true)
                 {
                     mEmptyView.setVisibility(View.VISIBLE);
                     mFilterEmptyView.setVisibility(View.GONE);
@@ -238,13 +233,25 @@ public class GourmetSearchResultListLayout extends GourmetListLayout
         switch (categoryKey)
         {
             case GourmetSuggest.CATEGORY_LOCATION:
-                setLocationTypeEmptyView(mEmptyView);
-                setLocationTypeFilterEmptyView(mFilterEmptyView);
+                if (mGourmetCuration.getCurationOption().isDefaultFilter() == true//
+                    && ((GourmetSearchCuration) mGourmetCuration).getRadius() == PlaceSearchResultActivity.DEFAULT_SEARCH_RADIUS)
+                {
+                    setLocationTypeEmptyView(mEmptyView);
+                } else
+                {
+                    setLocationTypeFilterEmptyView(mFilterEmptyView);
+                }
                 break;
 
             default:
-                setDefaultTypeEmptyView(mEmptyView);
-                setDefaultTypeFilterEmptyView(mFilterEmptyView);
+                if (mGourmetCuration.getCurationOption().isDefaultFilter() == true//
+                    && ((GourmetSearchCuration) mGourmetCuration).getRadius() == PlaceSearchResultActivity.DEFAULT_SEARCH_RADIUS)
+                {
+                    setDefaultTypeEmptyView(mEmptyView);
+                } else
+                {
+                    setDefaultTypeFilterEmptyView(mFilterEmptyView);
+                }
                 break;
         }
     }

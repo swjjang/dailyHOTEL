@@ -31,6 +31,7 @@ public class ResearchStayActivity extends BaseActivity<ResearchStayPresenter>
     public static final String INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME = "checkInDateTime";
     public static final String INTENT_EXTRA_DATA_CHECK_OUT_DATE_TIME = "checkOutDateTime";
     public static final String INTENT_EXTRA_DATA_SUGGEST = "suggest";
+    public static final String INTENT_EXTRA_DATA_KEYWORD = "keyword";
 
     public static Intent newInstance(Context context, String openDateTime, String closeDateTime, String currentDateTime, String dailyDateTime//
         , String checkInDateTime, String checkOutDateTime, StaySuggest suggest)

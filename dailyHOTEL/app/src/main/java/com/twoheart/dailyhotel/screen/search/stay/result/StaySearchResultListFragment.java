@@ -15,7 +15,6 @@ import com.twoheart.dailyhotel.model.PlaceViewItem;
 import com.twoheart.dailyhotel.model.Stay;
 import com.twoheart.dailyhotel.model.StaySearchCuration;
 import com.twoheart.dailyhotel.model.StaySearchParams;
-import com.twoheart.dailyhotel.place.activity.PlaceSearchResultActivity;
 import com.twoheart.dailyhotel.place.base.BaseNetworkController;
 import com.twoheart.dailyhotel.place.layout.PlaceListLayout;
 import com.twoheart.dailyhotel.screen.hotel.list.StayListFragment;
@@ -443,11 +442,21 @@ public class StaySearchResultListFragment extends StayListFragment
 
                 ((OnStaySearchResultListFragmentListener) mOnPlaceListFragmentListener).onStayListCount(totalCount);
 
-                // 카테고리 개수가 실제로 존재하거나 혹은 주변 검색인데 필터, 반경이 디폴트 값이 아닌 경우
-                if ((categoryList != null && categoryList.size() > 0)//
-                    || StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(((StaySearchCuration) mStayCuration).getSuggest().categoryKey) == true)
+                if (StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(((StaySearchCuration) mStayCuration).getSuggest().categoryKey) == true)
                 {
                     StaySearchResultListFragment.this.onStayList(list, page, false, activeReward);
+                } else
+                {
+                    if (Category.ALL.code.equalsIgnoreCase(mStayCuration.getCategory().code) == true)
+                    {
+                        if (mStayCuration.getCurationOption().isDefaultFilter() == true)
+                        {
+                            StaySearchResultListFragment.this.onStayList(list, page, false, activeReward);
+                        }
+                    } else
+                    {
+                        StaySearchResultListFragment.this.onStayList(list, page, false, activeReward);
+                    }
                 }
             } else
             {

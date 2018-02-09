@@ -120,8 +120,10 @@ public class SuggestLocalImpl implements SuggestLocalInterface
     }
 
     @Override
-    public Observable<List<StayOutboundSuggest>> getRecentlyStayOutboundSuggestList()
+    public Observable<List<StayOutboundSuggest>> getRecentlyStayOutboundSuggestList(int maxCount)
     {
+        maxCount = maxCount < 1 ? DailyDb.MAX_RECENT_PLACE_COUNT : maxCount;
+
         return Observable.defer(new Callable<ObservableSource<List<StayOutboundSuggest>>>()
         {
             @Override
