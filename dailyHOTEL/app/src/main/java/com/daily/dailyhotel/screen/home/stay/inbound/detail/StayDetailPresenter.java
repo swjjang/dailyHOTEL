@@ -71,10 +71,8 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -294,56 +292,11 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                             return;
                         }
 
-                        try
-                        {
-                            nights = Integer.parseInt(externalDeepLink.getNights());
-                        } catch (Exception e)
-                        {
-                            Crashlytics.log(externalDeepLink.getDeepLink());
-                            Crashlytics.logException(e);
-                        } finally
-                        {
-                            if (nights <= 0)
-                            {
-                                nights = 1;
-                            }
-                        }
+                        StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime, externalDeepLink);
+                        setStayBookDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
 
-                        String date = externalDeepLink.getDate();
-                        int datePlus = externalDeepLink.getDatePlus();
-                        String week = externalDeepLink.getWeek();
                         mShowCalendar = externalDeepLink.isShowCalendar();
                         mShowTrueVR = externalDeepLink.isShowVR();
-
-                        if (DailyTextUtils.isTextEmpty(date) == false)
-                        {
-                            if (Integer.parseInt(date) > Integer.parseInt(DailyCalendar.convertDateFormatString(commonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd")))
-                            {
-                                Date checkInDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
-
-                                setStayBookDateTime(DailyCalendar.format(checkInDate, DailyCalendar.ISO_8601_FORMAT), 0, nights);
-                            } else
-                            {
-                                setStayBookDateTime(commonDateTime.dailyDateTime, 0, 1);
-                            }
-                        } else if (DailyTextUtils.isTextEmpty(week) == false)
-                        {
-                            String searchDateTime = DailyCalendar.searchClosedDayOfWeek(commonDateTime.currentDateTime, week.toCharArray());
-
-                            if (DailyTextUtils.isTextEmpty(searchDateTime) == false)
-                            {
-                                setStayBookDateTime(searchDateTime, 0, nights);
-                            } else
-                            {
-                                setStayBookDateTime(commonDateTime.dailyDateTime, 0, 1);
-                            }
-                        } else if (datePlus >= 0)
-                        {
-                            setStayBookDateTime(commonDateTime.dailyDateTime, datePlus, nights);
-                        } else
-                        {
-                            setStayBookDateTime(commonDateTime.dailyDateTime, 0, 1);
-                        }
 
                         mDailyDeepLink.clear();
                         mDailyDeepLink = null;

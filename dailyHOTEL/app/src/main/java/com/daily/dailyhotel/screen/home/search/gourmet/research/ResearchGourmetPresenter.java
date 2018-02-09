@@ -120,7 +120,7 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
     @Override
     public void onPostCreate()
     {
-        getViewInterface().setToolbarTitle(getString(R.string.label_search_gourmet));
+        getViewInterface().setToolbarTitle(getString(R.string.label_search_search_gourmet));
 
         if (mSearchModel.suggest.getValue() == null || DailyTextUtils.isTextEmpty(mSearchModel.suggest.getValue().displayName) == true)
         {
@@ -296,6 +296,7 @@ public class ResearchGourmetPresenter extends BaseExceptionPresenter<ResearchGou
             Intent intent = new Intent();
             intent.putExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_VISIT_DATE_TIME, mSearchModel.bookDateTime.getValue().getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
             intent.putExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcel(mSearchModel.suggest.getValue()));
+            intent.putExtra(ResearchGourmetActivity.INTENT_EXTRA_DATA_KEYWORD, mSearchModel.inputString);
 
             setResult(Activity.RESULT_OK, intent);
             onBackClick();

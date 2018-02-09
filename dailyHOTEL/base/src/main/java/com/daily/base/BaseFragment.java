@@ -81,13 +81,13 @@ public abstract class BaseFragment<T1 extends BaseFragmentPresenter, T2 extends 
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState)
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)
     {
-        super.onActivityCreated(savedInstanceState);
+        super.onViewCreated(view, savedInstanceState);
 
         if (mPresenter != null)
         {
-            mPresenter.onActivityCreated(savedInstanceState);
+            mPresenter.onViewCreated(view, savedInstanceState);
         }
 
         if (mCompleteCreatedSubject != null)

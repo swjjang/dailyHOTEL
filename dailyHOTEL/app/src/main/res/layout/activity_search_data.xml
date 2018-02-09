@@ -29,6 +29,20 @@
             app:layout_constraintTop_toTopOf="@+id/toolbarView"
             app:srcCompat="@drawable/navibar_ic_back_01_black"/>
 
+        <com.daily.base.widget.DailyTextView
+            android:id="@+id/searchTitleTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="1dp"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            app:layout_constraintLeft_toLeftOf="@+id/topImageView"
+            app:layout_constraintRight_toRightOf="@+id/topImageView"
+            app:layout_constraintTop_toBottomOf="@+id/fakeBackImageView"
+            dailyFont:style="Medium"/>
+
         <android.support.design.widget.CoordinatorLayout
             android:id="@+id/coordinatorLayout"
             android:layout_width="0dp"
@@ -54,7 +68,7 @@
                     android:layout_marginTop="126dp"
                     android:background="@drawable/search_box_top"
                     android:minHeight="@dimen/toolbar_height"
-                    app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                     <com.daily.base.widget.DailyTextView
                         android:id="@+id/staySearchTextView"
@@ -379,7 +393,7 @@
                         android:id="@+id/searchGourmetTextView"
                         android:layout_width="0dp"
                         android:layout_height="44dp"
-                        android:layout_marginTop="14dp"
+                        android:layout_marginTop="13dp"
                         android:background="@drawable/selector_button_default_background"
                         android:gravity="center"
                         android:text="@string/label_search_do_search"
@@ -389,22 +403,27 @@
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/gourmetCalendarBackgroundView"/>
                 </android.support.constraint.ConstraintLayout>
+            </android.support.design.widget.AppBarLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/appBarLayout"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                <com.daily.base.widget.DailyViewPager
+                    android:id="@+id/viewPager"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="1px"
+                    android:layout_height="match_parent"/>
 
                 <View
                     android:id="@+id/searchBoxShadowView"
                     android:layout_width="match_parent"
-                    android:layout_height="18dp"
+                    android:layout_height="16dp"
                     android:layout_gravity="center_horizontal"
                     android:background="@drawable/search_box_shadow"/>
-            </android.support.design.widget.AppBarLayout>
-
-            <com.daily.base.widget.DailyViewPager
-                android:id="@+id/viewPager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/appBarLayout"
-                android:background="@color/white"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+            </FrameLayout>
         </android.support.design.widget.CoordinatorLayout>
 
         <com.daily.dailyhotel.view.DailyToolbarView

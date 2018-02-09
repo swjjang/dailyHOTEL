@@ -33,12 +33,6 @@ public class CommonDateTime
 
     public TodayDateTime getTodayDateTime()
     {
-        TodayDateTime todayDateTime = new TodayDateTime();
-        todayDateTime.openDateTime = openDateTime;
-        todayDateTime.closeDateTime = closeDateTime;
-        todayDateTime.currentDateTime = currentDateTime;
-        todayDateTime.dailyDateTime = dailyDateTime;
-
-        return todayDateTime;
+        return new TodayDateTime(openDateTime, closeDateTime, currentDateTime, dailyDateTime);
     }
 }

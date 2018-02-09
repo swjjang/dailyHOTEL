@@ -82,13 +82,16 @@ public class StaySearchParams extends StayParams
             term = staySearchCuration.getSuggest() == null ? null : staySearchCuration.getSuggest().displayName;
         }
 
-        radius = staySearchCuration.getRadius();
-
-        Location location = staySearchCuration.getLocation();
-        if (location != null)
+        if (Constants.SortType.DISTANCE == mSort)
         {
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
+            radius = staySearchCuration.getRadius();
+
+            Location location = staySearchCuration.getLocation();
+            if (location != null)
+            {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }
         }
     }
 

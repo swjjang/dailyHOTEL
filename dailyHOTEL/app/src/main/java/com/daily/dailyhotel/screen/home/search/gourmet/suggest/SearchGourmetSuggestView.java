@@ -16,7 +16,6 @@ import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
 import com.daily.base.OnBaseEventListener;
 import com.daily.base.util.DailyTextUtils;
-import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.ObjectItem;
@@ -33,8 +32,9 @@ import io.reactivex.Observable;
 public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSuggestView.OnEventListener, ActivitySearchGourmetSuggestDataBinding> //
     implements SearchGourmetSuggestInterface, View.OnClickListener
 {
-    private SuggestListAdapter mSuggestListAdapter;
-    private RecentlySuggestListAdapter mRecentlySuggestListAdapter;
+    private GourmetSuggestListAdapter mSuggestListAdapter;
+    private GourmetRecentlySuggestListAdapter mRecentlySuggestListAdapter;
+    private GourmetPopularSuggestListAdapter mPopularSuggestListAdapter;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -43,8 +43,6 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
         void onSuggestClick(GourmetSuggest gourmetSuggest);
 
         void onRecentlySuggestClick(GourmetSuggest gourmetSuggest);
-
-        void onDeleteAllRecentlySuggest(boolean skipLock);
 
         void onDeleteRecentlySuggest(int position, GourmetSuggest gourmetSuggest);
 
@@ -68,36 +66,11 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
             return;
         }
 
-        initScrollLayout(viewDataBinding);
         initSearchToolbarLayout(viewDataBinding);
-        initSuggestLayout(viewDataBinding);
-        initRecentlySuggestLayout(viewDataBinding);
+        initRecyclerLayout(viewDataBinding);
 
         viewDataBinding.progressBar.getIndeterminateDrawable().setColorFilter(getColor(R.color.default_probressbar), PorterDuff.Mode.SRC_IN);
         setProgressBarVisible(false);
-    }
-
-    private void initScrollLayout(final ActivitySearchGourmetSuggestDataBinding viewDataBinding)
-    {
-        if (viewDataBinding == null)
-        {
-            return;
-        }
-
-        viewDataBinding.nearbyDataBinding.bottomDivider.setVisibility(View.VISIBLE);
-
-        viewDataBinding.nearbyDataBinding.nearbyLayout.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                GourmetSuggest gourmetSuggest = (GourmetSuggest) view.getTag();
-
-                getEventListener().onNearbyClick(gourmetSuggest);
-            }
-        });
-
-        viewDataBinding.descriptionTextView.setText(R.string.label_search_suggest_recently_empty_description_type_gourmet);
     }
 
     private void initSearchToolbarLayout(final ActivitySearchGourmetSuggestDataBinding viewDataBinding)
@@ -121,7 +94,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
                         {
                             getEventListener().onSearchSuggest(v.getText().toString());
                         }
-                        return true;
+                        return false;
 
                     default:
                         return false;
@@ -143,11 +116,11 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
 
         viewDataBinding.keywordEditText.addTextChangedListener(mTextWatcher);
 
-        viewDataBinding.deleteTextView.setVisibility(View.INVISIBLE);
-        viewDataBinding.deleteTextView.setOnClickListener(this);
+        viewDataBinding.deleteImageView.setVisibility(View.INVISIBLE);
+        viewDataBinding.deleteImageView.setOnClickListener(this);
     }
 
-    private void initSuggestLayout(final ActivitySearchGourmetSuggestDataBinding viewDataBinding)
+    private void initRecyclerLayout(final ActivitySearchGourmetSuggestDataBinding viewDataBinding)
     {
         if (viewDataBinding == null)
         {
@@ -196,26 +169,25 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
                 }
             }
         });
-
-        setSuggestListAdapter();
     }
 
-    private void setSuggestListAdapter()
+
+    @Override
+    public void setToolbarTitle(String title)
+    {
+    }
+
+    @Override
+    public void setSuggests(List<GourmetSuggest> gourmetSuggestList)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        if (getViewDataBinding().suggestsRecyclerView.getAdapter() != null)
-        {
-            ExLog.d("sam : " + getViewDataBinding().suggestsRecyclerView.getAdapter().toString());
-            return;
-        }
-
         if (mSuggestListAdapter == null)
         {
-            mSuggestListAdapter = new SuggestListAdapter(getContext(), new View.OnClickListener()
+            mSuggestListAdapter = new GourmetSuggestListAdapter(getContext(), new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -228,139 +200,9 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
                     }
                 }
             });
-
-            getViewDataBinding().suggestsRecyclerView.setAdapter(mSuggestListAdapter);
-        }
-    }
-
-    private void initRecentlySuggestLayout(final ActivitySearchGourmetSuggestDataBinding viewDataBinding)
-    {
-        if (viewDataBinding == null)
-        {
-            return;
         }
 
-        viewDataBinding.recentlySuggestRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        EdgeEffectColor.setEdgeGlowColor(viewDataBinding.recentlySuggestRecyclerView, getColor(R.color.default_over_scroll_edge));
-        viewDataBinding.recentlySuggestRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
-        {
-            private int mDistance;
-            private boolean mIsHide;
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
-            {
-                if (newState != RecyclerView.SCROLL_STATE_DRAGGING)
-                {
-                    mDistance = 0;
-                }
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
-            {
-                if (mIsHide == true)
-                {
-                    mDistance = 0;
-                    return;
-                }
-
-                int defaultValue = ScreenUtils.dpToPx(getContext(), 41);
-
-                mDistance += dy;
-
-                if (mDistance > defaultValue == true)
-                {
-                    mDistance = 0;
-                    mIsHide = true;
-
-                    InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputMethodManager.hideSoftInputFromWindow(recyclerView.getWindowToken(), 0);
-
-                    Observable.just(false).delaySubscription(1, TimeUnit.SECONDS).subscribe(isHide -> mIsHide = isHide);
-                }
-            }
-        });
-
-        setRecentlySuggestListAdapter();
-    }
-
-    private void setRecentlySuggestListAdapter()
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        if (getViewDataBinding().recentlySuggestRecyclerView.getAdapter() != null)
-        {
-            return;
-        }
-
-        if (mRecentlySuggestListAdapter == null)
-        {
-            mRecentlySuggestListAdapter = new RecentlySuggestListAdapter(getContext(), new RecentlySuggestListAdapter.OnRecentlySuggestListener()
-            {
-                @Override
-                public void onItemClick(int position, GourmetSuggest gourmetSuggest)
-                {
-                    getEventListener().onRecentlySuggestClick(gourmetSuggest);
-                }
-
-                @Override
-                public void onDeleteClick(int position, GourmetSuggest gourmetSuggest)
-                {
-                    getEventListener().onDeleteRecentlySuggest(position, gourmetSuggest);
-                }
-
-                @Override
-                public void onDeleteAllClick()
-                {
-                    getEventListener().onDeleteAllRecentlySuggest(false);
-                }
-
-                @Override
-                public void onNearbyClick(GourmetSuggest gourmetSuggest)
-                {
-                    getEventListener().onNearbyClick(gourmetSuggest);
-                }
-            });
-        }
-
-        getViewDataBinding().recentlySuggestRecyclerView.setAdapter(mRecentlySuggestListAdapter);
-    }
-
-    @Override
-    public void setToolbarTitle(String title)
-    {
-    }
-
-    @Override
-    public void setSuggestsVisible(boolean visible)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        if (visible == true)
-        {
-            getViewDataBinding().suggestsRecyclerView.setVisibility(View.VISIBLE);
-        } else
-        {
-            getViewDataBinding().suggestsRecyclerView.setVisibility(View.GONE);
-        }
-    }
-
-    @Override
-    public void setSuggests(List<GourmetSuggest> gourmetSuggestList)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
-        }
-
-        setSuggestListAdapter();
+        getViewDataBinding().suggestsRecyclerView.setAdapter(mSuggestListAdapter);
 
         List<ObjectItem> objectItemList = new ArrayList<>();
 
@@ -458,41 +300,48 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
     }
 
     @Override
-    public void setRecentlySuggestVisible(boolean visible)
+    public void setRecentlySuggests(GourmetSuggest locationSuggest, List<GourmetSuggest> gourmetSuggestList)
     {
         if (getViewDataBinding() == null)
         {
             return;
         }
 
-        if (visible == true)
+        if (mRecentlySuggestListAdapter == null)
         {
-            getViewDataBinding().recentlySuggestRecyclerView.setVisibility(View.VISIBLE);
-        } else
-        {
-            getViewDataBinding().recentlySuggestRecyclerView.setVisibility(View.GONE);
-        }
-    }
+            mRecentlySuggestListAdapter = new GourmetRecentlySuggestListAdapter(getContext(), new GourmetRecentlySuggestListAdapter.OnRecentlySuggestListener()
+            {
+                @Override
+                public void onItemClick(int position, GourmetSuggest gourmetSuggest)
+                {
+                    getEventListener().onRecentlySuggestClick(gourmetSuggest);
+                }
 
-    @Override
-    public void setRecentlySuggests(List<GourmetSuggest> gourmetSuggestList)
-    {
-        if (getViewDataBinding() == null)
-        {
-            return;
+                @Override
+                public void onDeleteClick(int position, GourmetSuggest gourmetSuggest)
+                {
+                    getEventListener().onDeleteRecentlySuggest(position, gourmetSuggest);
+                }
+
+                @Override
+                public void onNearbyClick(GourmetSuggest gourmetSuggest)
+                {
+                    getEventListener().onNearbyClick(gourmetSuggest);
+                }
+            });
         }
 
-        setRecentlySuggestListAdapter();
+        getViewDataBinding().suggestsRecyclerView.setAdapter(mRecentlySuggestListAdapter);
 
         List<ObjectItem> objectItemList = new ArrayList<>();
 
+        if (locationSuggest != null)
+        {
+            objectItemList.add(new ObjectItem(ObjectItem.TYPE_LOCATION_VIEW, locationSuggest));
+        }
+
         if (gourmetSuggestList != null && gourmetSuggestList.size() > 0)
         {
-            // 현재 위치 검색 추가
-            objectItemList.add(new ObjectItem(ObjectItem.TYPE_LOCATION_VIEW //
-                , new GourmetSuggest(GourmetSuggest.MENU_TYPE_LOCATION //
-                , GourmetSuggest.CATEGORY_LOCATION, null)));
-
             for (GourmetSuggest gourmetSuggest : gourmetSuggestList)
             {
                 if (DailyTextUtils.isTextEmpty(gourmetSuggest.categoryKey))
@@ -509,6 +358,48 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
 
         mRecentlySuggestListAdapter.setAll(objectItemList);
         mRecentlySuggestListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setPopularAreaSuggests(GourmetSuggest locationSuggest, List<GourmetSuggest> gourmetSuggestList)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (mPopularSuggestListAdapter == null)
+        {
+            mPopularSuggestListAdapter = new GourmetPopularSuggestListAdapter(getContext(), new GourmetPopularSuggestListAdapter.OnPopularSuggestListener()
+            {
+                @Override
+                public void onNearbyClick(GourmetSuggest gourmetSuggest)
+                {
+                    getEventListener().onNearbyClick(gourmetSuggest);
+                }
+            });
+        }
+
+        getViewDataBinding().suggestsRecyclerView.setAdapter(mPopularSuggestListAdapter);
+
+        List<ObjectItem> objectItemList = new ArrayList<>();
+
+        if (locationSuggest != null)
+        {
+            objectItemList.add(new ObjectItem(ObjectItem.TYPE_LOCATION_VIEW //
+                , locationSuggest));
+        }
+
+        if (gourmetSuggestList != null && gourmetSuggestList.size() > 0)
+        {
+            for (GourmetSuggest gourmetSuggest : gourmetSuggestList)
+            {
+                objectItemList.add(new ObjectItem(ObjectItem.TYPE_ENTRY, gourmetSuggest));
+            }
+        }
+
+        mPopularSuggestListAdapter.setAll(objectItemList);
+        mPopularSuggestListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -581,28 +472,23 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
     }
 
     @Override
-    public void setNearbyGourmetSuggest(boolean isAgreePermission, GourmetSuggest nearbyGourmetSuggest)
+    public void setNearbyGourmetSuggest(GourmetSuggest locationSuggest)
     {
-        String descriptionText = null;
-        if (isAgreePermission == false)
+        if (locationSuggest == null)
         {
-            descriptionText = getString(R.string.label_search_nearby_description);
-        } else
-        {
-            descriptionText = nearbyGourmetSuggest != null ? nearbyGourmetSuggest.displayName : null;
+            return;
         }
 
         if (mRecentlySuggestListAdapter != null)
         {
-            mRecentlySuggestListAdapter.setNearByGourmetSuggest(nearbyGourmetSuggest);
+            mRecentlySuggestListAdapter.setNearByGourmetSuggest(locationSuggest);
             mRecentlySuggestListAdapter.notifyDataSetChanged();
         }
 
-        if (getViewDataBinding() != null)
+        if (mPopularSuggestListAdapter != null)
         {
-            getViewDataBinding().nearbyDataBinding.nearbyLayout.setTag(nearbyGourmetSuggest);
-            getViewDataBinding().nearbyDataBinding.descriptionTextView.setText(descriptionText);
-            getViewDataBinding().nearbyDataBinding.descriptionTextView.setVisibility(DailyTextUtils.isTextEmpty(descriptionText) ? View.GONE : View.VISIBLE);
+            mPopularSuggestListAdapter.setNearByGourmetSuggest(locationSuggest);
+            mPopularSuggestListAdapter.notifyDataSetChanged();
         }
     }
 
@@ -629,11 +515,9 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
                 getEventListener().onSuggestClick(gourmetSuggest);
                 break;
 
-            case R.id.deleteTextView:
-                setSuggest(null);
-                setSuggests(null);
-                setSuggestsVisible(false);
-                getEventListener().setCheckVoiceSearchEnabled();
+            case R.id.deleteImageView:
+                setKeywordEditText(null);
+                showKeyboard();
                 break;
         }
     }
@@ -662,7 +546,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
 
             if (length == 0)
             {
-                getViewDataBinding().deleteTextView.setVisibility(View.INVISIBLE);
+                getViewDataBinding().deleteImageView.setVisibility(View.INVISIBLE);
                 getViewDataBinding().voiceSearchView.setVisibility(View.VISIBLE);
             } else
             {
@@ -681,7 +565,7 @@ public class SearchGourmetSuggestView extends BaseDialogView<SearchGourmetSugges
                     return;
                 }
 
-                getViewDataBinding().deleteTextView.setVisibility(View.VISIBLE);
+                getViewDataBinding().deleteImageView.setVisibility(View.VISIBLE);
                 getViewDataBinding().voiceSearchView.setVisibility(View.GONE);
             }
 

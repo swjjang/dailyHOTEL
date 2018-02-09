@@ -6,11 +6,7 @@ import android.os.Parcelable;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonIgnore;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.daily.base.util.ExLog;
-import com.twoheart.dailyhotel.util.DailyCalendar;
-
-import java.util.Date;
-import java.util.TimeZone;
+import com.daily.dailyhotel.entity.CommonDateTime;
 
 @JsonObject
 public class TodayDateTime implements Parcelable
@@ -54,25 +50,9 @@ public class TodayDateTime implements Parcelable
         this.dailyDateTime = dailyDateTime;
     }
 
-    /**
-     * getTime 시에 Java에서는 GMT 0시간으로 처리 되도록 되어있다. 특정 시간을 부여하면 해당 long값에 더해진 값으로 반환된다.
-     * 기존에 시간값을 정리하는데 미정리된 부분들을 처리하기 위한 메소드.
-     *
-     * @return
-     */
-    public long getCurrentTime()
+    public CommonDateTime getCommonDateTime()
     {
-        try
-        {
-            Date date = DailyCalendar.convertDate(currentDateTime, DailyCalendar.ISO_8601_FORMAT, TimeZone.getTimeZone("GMT+09:00"));
-
-            return date.getTime();
-        } catch (Exception e)
-        {
-            ExLog.d(e.toString());
-        }
-
-        return 0;
+        return new CommonDateTime(openDateTime, closeDateTime, currentDateTime, dailyDateTime);
     }
 
     @Override

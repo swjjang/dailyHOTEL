@@ -128,6 +128,8 @@ public class SearchGourmetFragmentView extends BaseFragmentDialogView<SearchGour
         getViewDataBinding().recently01View.setVisibility(flag);
         getViewDataBinding().recently02View.setVisibility(flag);
         getViewDataBinding().recently03View.setVisibility(flag);
+
+        getViewDataBinding().popularSearchTagTextView.setPadding(0, visible ? ScreenUtils.dpToPx(getContext(), 15) : 0, 0, 0);
     }
 
     private View getTagView(CampaignTag campaignTag)

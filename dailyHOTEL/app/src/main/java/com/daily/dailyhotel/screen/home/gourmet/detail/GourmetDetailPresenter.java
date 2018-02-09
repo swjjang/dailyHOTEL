@@ -74,10 +74,8 @@ import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 
@@ -87,7 +85,6 @@ import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function6;
 import io.reactivex.functions.Function7;
 import io.reactivex.schedulers.Schedulers;
 
@@ -107,6 +104,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
     private static final int VALID_GOURMET_CART_DEFAULT = 0;
     private static final int INVALID_GOURMET_CART_VISIT_TIME = 1;
     private static final int INVALID_GOURMET_CART_QUANTITY = 2;
+    private static final int INVALID_GOURMET_SOLD_OUT = 3;
 
     public static final String FULL_TIME = "FULL_TIME";
 
@@ -302,41 +300,10 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                             return;
                         }
 
-
-                        String date = externalDeepLink.getDate();
-                        int datePlus = externalDeepLink.getDatePlus();
-                        String week = externalDeepLink.getWeek();
                         mShowCalendar = externalDeepLink.isShowCalendar();
                         mShowTrueVR = externalDeepLink.isShowVR();
 
-                        if (DailyTextUtils.isTextEmpty(date) == false)
-                        {
-                            if (Integer.parseInt(date) > Integer.parseInt(DailyCalendar.convertDateFormatString(commonDateTime.currentDateTime, DailyCalendar.ISO_8601_FORMAT, "yyyyMMdd")))
-                            {
-                                Date visitDate = DailyCalendar.convertDate(date, "yyyyMMdd", TimeZone.getTimeZone("GMT+09:00"));
-                                setGourmetBookDateTime(DailyCalendar.format(visitDate, DailyCalendar.ISO_8601_FORMAT));
-                            } else
-                            {
-                                setGourmetBookDateTime(commonDateTime.dailyDateTime);
-                            }
-                        } else if (DailyTextUtils.isTextEmpty(week) == false)
-                        {
-                            String searchDateTime = DailyCalendar.searchClosedDayOfWeek(commonDateTime.currentDateTime, week.toCharArray());
-
-                            if (DailyTextUtils.isTextEmpty(searchDateTime) == false)
-                            {
-                                setGourmetBookDateTime(searchDateTime);
-                            } else
-                            {
-                                setGourmetBookDateTime(commonDateTime.dailyDateTime);
-                            }
-                        } else if (datePlus >= 0)
-                        {
-                            setGourmetBookDateTime(commonDateTime.dailyDateTime, datePlus);
-                        } else
-                        {
-                            setGourmetBookDateTime(commonDateTime.dailyDateTime);
-                        }
+                        setGourmetBookDateTime(externalDeepLink.getGourmetBookDateTime(commonDateTime, externalDeepLink).getVisitDateTime(DailyCalendar.ISO_8601_FORMAT));
 
                         mDailyDeepLink.clear();
                         mDailyDeepLink = null;
@@ -1971,10 +1938,6 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             @Override
             public void accept(@io.reactivex.annotations.NonNull GourmetCart gourmetCart) throws Exception
             {
-                notifyGourmetDetailChanged();
-                notifyOperationTimeChanged();
-                notifyWishChanged();
-
                 if (disposable != null)
                 {
                     disposable.dispose();
@@ -1983,52 +1946,16 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                 switch (validGourmetCart(mGourmetIndex, gourmetCart))
                 {
                     case INVALID_GOURMET_CART_VISIT_TIME:
-                    {
-                        String message = getString(R.string.message_gourmet_product_detail_after_visit_day);
-
-                        addCompositeDisposable(mCartLocalImpl.clearGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
-                        {
-                            @Override
-                            public void accept(Boolean aBoolean) throws Exception
-                            {
-                                getViewInterface().showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
-                            }
-                        }, new Consumer<Throwable>()
-                        {
-                            @Override
-                            public void accept(Throwable throwable) throws Exception
-                            {
-                                getViewInterface().showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
-                            }
-                        }));
-
-                        getViewInterface().setToolbarCartMenusVisible(false);
+                        showClearCartDialog(getString(R.string.message_gourmet_product_detail_after_visit_day));
                         break;
-                    }
 
                     case INVALID_GOURMET_CART_QUANTITY:
-                    {
-                        String message = getString(R.string.message_gourmet_product_detail_insufficient_quantity);
-
-                        addCompositeDisposable(mCartLocalImpl.clearGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
-                        {
-                            @Override
-                            public void accept(Boolean aBoolean) throws Exception
-                            {
-                                getViewInterface().showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
-                            }
-                        }, new Consumer<Throwable>()
-                        {
-                            @Override
-                            public void accept(Throwable throwable) throws Exception
-                            {
-                                getViewInterface().showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
-                            }
-                        }));
-
-                        getViewInterface().setToolbarCartMenusVisible(false);
+                        showClearCartDialog(getString(R.string.message_gourmet_product_detail_insufficient_quantity));
                         break;
-                    }
+
+                    case INVALID_GOURMET_SOLD_OUT:
+                        showClearCartDialog(getString(R.string.message_gourmet_product_detail_sold_out));
+                        break;
 
                     default:
                         setToolbarGourmetCart(gourmetCart);
@@ -2039,6 +1966,10 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                         }
                         break;
                 }
+
+                notifyGourmetDetailChanged();
+                notifyOperationTimeChanged();
+                notifyWishChanged();
 
                 unLockAll();
 
@@ -2164,6 +2095,11 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             return VALID_GOURMET_CART_DEFAULT;
         }
 
+        if (mOperationTimeList == null || mOperationTimeList.size() == 0)
+        {
+            return INVALID_GOURMET_SOLD_OUT;
+        }
+
         // 방문 시간 체크, 첫번째 운영 시간 보다 작으면 안됨.
         if (DailyCalendar.compareDateTime(gourmetCart.visitTime, mOperationTimeList.get(0)) < 0)
         {
@@ -2212,7 +2148,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         }
     }
 
-    protected void startPayment(GourmetDetail gourmetDetail, GourmetCart gourmetCart)
+    private void startPayment(GourmetDetail gourmetDetail, GourmetCart gourmetCart)
     {
         if (gourmetDetail == null || gourmetCart == null || gourmetCart.getMenuCount() == 0)
         {
@@ -2221,5 +2157,26 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
         startActivityForResult(GourmetPaymentActivity.newInstance(getActivity(), gourmetCart, mAnalytics.getStayPaymentAnalyticsParam(gourmetDetail, gourmetCart))//
             , GourmetDetailActivity.REQUEST_CODE_PAYMENT);
+    }
+
+    void showClearCartDialog(String message)
+    {
+        addCompositeDisposable(mCartLocalImpl.clearGourmetCart().observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
+        {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception
+            {
+                getViewInterface().showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
+            {
+                getViewInterface().showSimpleDialog(null, message, getString(R.string.dialog_btn_text_confirm), null);
+            }
+        }));
+
+        getViewInterface().setToolbarCartMenusVisible(false);
     }
 }

@@ -127,6 +127,8 @@ public class SearchStayOutboundFragmentView extends BaseFragmentDialogView<Searc
         getViewDataBinding().recently01View.setVisibility(flag);
         getViewDataBinding().recently02View.setVisibility(flag);
         getViewDataBinding().recently03View.setVisibility(flag);
+
+        getViewDataBinding().popularAreaTextView.setPadding(0, visible ? ScreenUtils.dpToPx(getContext(), 15) : 0, 0, 0);
     }
 
     private View getAreaView(int index, StayOutboundSuggest stayOutboundSuggest)

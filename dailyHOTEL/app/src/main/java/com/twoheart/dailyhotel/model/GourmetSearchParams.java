@@ -57,21 +57,26 @@ public class GourmetSearchParams extends GourmetParams
         mSort = gourmetCurationOption.getSortType();
         setSortType(mSort);
 
-        if (GourmetSuggest.CATEGORY_LOCATION.equalsIgnoreCase(gourmetSearchCuration.getSuggest().categoryKey) == true)
+        GourmetSuggest gourmetSuggest = gourmetSearchCuration.getSuggest();
+
+        if (gourmetSuggest == null || GourmetSuggest.CATEGORY_LOCATION.equalsIgnoreCase(gourmetSuggest.categoryKey) == true)
         {
             term = null;
         } else
         {
-            term = gourmetSearchCuration.getSuggest() == null ? null : gourmetSearchCuration.getSuggest().displayName;
+            term = gourmetSuggest.displayName;
         }
 
-        radius = gourmetSearchCuration.getRadius();
-
-        Location location = gourmetSearchCuration.getLocation();
-        if (location != null)
+        if (Constants.SortType.DISTANCE == mSort)
         {
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
+            radius = gourmetSearchCuration.getRadius();
+
+            Location location = gourmetSearchCuration.getLocation();
+            if (location != null)
+            {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }
         }
     }
 

@@ -6,11 +6,14 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.SharedElementCallback;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.view.View;
 
 import com.daily.base.BaseActivity;
@@ -18,6 +21,7 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.exception.DuplicateRunException;
 import com.daily.base.exception.PermissionException;
 import com.daily.base.exception.ProviderException;
+import com.daily.base.util.DailyImageSpan;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
@@ -56,6 +60,8 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.screen.common.PermissionManagerActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
+import com.twoheart.dailyhotel.util.DailyDeepLink;
+import com.twoheart.dailyhotel.util.DailyExternalDeepLink;
 import com.twoheart.dailyhotel.util.Util;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
@@ -119,6 +125,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
     private Disposable mChangedLocationDisposable;
 
+    private DailyDeepLink mDailyDeepLink;
+
     enum ViewState
     {
         MAP,
@@ -139,6 +147,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     public interface StayOutboundListAnalyticsInterface extends BaseAnalyticsInterface
     {
         void setAnalyticsParam(StayOutboundListAnalyticsParam analyticsParam);
+
+        StayOutboundListAnalyticsParam getAnalyticsParam();
 
         void onScreen(Activity activity);
 
@@ -207,6 +217,77 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         if (intent.hasExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK) == true)
         {
+            mAnalytics.setAnalyticsParam(new StayOutboundListAnalyticsParam());
+
+            try
+            {
+                mDailyDeepLink = DailyDeepLink.getNewInstance(Uri.parse(intent.getStringExtra(BaseActivity.INTENT_EXTRA_DATA_DEEPLINK)));
+            } catch (Exception e)
+            {
+                mDailyDeepLink = null;
+
+                return false;
+            }
+
+            if (mDailyDeepLink != null && mDailyDeepLink.isExternalDeepLink() == true)
+            {
+                setRefresh(false);
+
+                lock();
+
+                addCompositeDisposable(mCommonRemoteImpl.getCommonDateTime().subscribe(new Consumer<CommonDateTime>()
+                {
+                    @Override
+                    public void accept(CommonDateTime commonDateTime) throws Exception
+                    {
+                        DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) mDailyDeepLink;
+
+                        StayOutboundSuggest stayOutboundSuggest = new StayOutboundSuggest();
+                        stayOutboundSuggest.id = Long.parseLong(externalDeepLink.getIndex());
+                        stayOutboundSuggest.categoryKey = externalDeepLink.getCategoryKey();
+                        stayOutboundSuggest.display = externalDeepLink.getTitle();
+                        setSuggest(stayOutboundSuggest);
+
+                        StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime, externalDeepLink);
+                        setStayBookDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
+
+                        setPeople(People.DEFAULT_ADULTS, null);
+
+                        Constants.SortType sortType = externalDeepLink.getSorting();
+
+                        switch (sortType)
+                        {
+                            case HIGH_PRICE:
+                                setFilter(StayOutboundFilters.SortType.HIGH_PRICE, -1);
+                                break;
+
+                            case LOW_PRICE:
+                                setFilter(StayOutboundFilters.SortType.LOW_PRICE, -1);
+                                break;
+
+                            case SATISFACTION:
+                                setFilter(StayOutboundFilters.SortType.SATISFACTION, -1);
+                                break;
+
+                            default:
+                                setFilter(StayOutboundFilters.SortType.RECOMMENDATION, -1);
+                                break;
+                        }
+
+                        notifyFilterChanged();
+                        notifyToolbarChanged();
+
+                        onRefreshAll(true);
+                    }
+                }, new Consumer<Throwable>()
+                {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception
+                    {
+                        onHandleErrorAndFinish(throwable);
+                    }
+                }));
+            }
         } else if (intent.hasExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_SUGGEST) == true)
         {
             StayOutboundSuggestParcel stayOutboundSuggestParcel = intent.getParcelableExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_SUGGEST);
@@ -226,9 +307,15 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
             setPeople(numberOfAdults, childAgeList);
 
+            if (mStayOutboundSuggest != null && StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == true)
+            {
+                setFilter(StayOutboundFilters.SortType.DISTANCE, 0, 0);
+            }
+
             mAnalytics.setAnalyticsParam(intent.getParcelableExtra(BaseActivity.INTENT_EXTRA_DATA_ANALYTICS));
         } else if (intent.hasExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_KEYWORD) == true)
         {
+
         } else
         {
             return false;
@@ -250,13 +337,16 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         getViewInterface().setViewTypeOptionImage(ViewState.MAP);
 
-        if (StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == false)
+        if (mDailyDeepLink == null)
         {
-            getViewInterface().setRadiusVisible(false);
-        } else
-        {
-            getViewInterface().setRadiusVisible(true);
-            getViewInterface().setRadius(mRadius);
+            if (StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == false)
+            {
+                getViewInterface().setRadiusVisible(false);
+            } else
+            {
+                getViewInterface().setRadiusVisible(true);
+                getViewInterface().setRadius(mRadius);
+            }
         }
     }
 
@@ -693,6 +783,14 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                         ArrayList<Integer> arrayList = data.getIntegerArrayListExtra(StayOutboundListActivity.INTENT_EXTRA_DATA_CHILD_LIST);
 
                         setPeople(numberOfAdults, arrayList);
+
+                        StayOutboundListAnalyticsParam analyticsParam = mAnalytics.getAnalyticsParam();
+
+                        if (analyticsParam != null)
+                        {
+                            analyticsParam.keyword = data.getStringExtra(ResearchStayOutboundActivity.INTENT_EXTRA_DATA_KEYWORD);
+                            analyticsParam.analyticsClickType = data.getStringExtra(ResearchStayOutboundActivity.INTENT_EXTRA_DATA_CLICK_TYPE);
+                        }
                     } catch (Exception e)
                     {
                         ExLog.e(e.toString());
@@ -1708,9 +1806,17 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         try
         {
-            getViewInterface().setToolbarTitle(title, String.format(Locale.KOREA, "%s - %s, %s"//
+            String subTitleText = String.format(Locale.KOREA, "%s - %s, %d박   %s"//
                 , mStayBookDateTime.getCheckInDateTime("M.d(EEE)")//
-                , mStayBookDateTime.getCheckOutDateTime("M.d(EEE)"), mPeople.toShortString(getActivity())));
+                , mStayBookDateTime.getCheckOutDateTime("M.d(EEE)")//
+                , mStayBookDateTime.getNights(), mPeople.toTooShortString(getActivity()));
+
+            int startIndex = subTitleText.indexOf('박') + 1;
+
+            SpannableString spannableString = new SpannableString(subTitleText);
+            spannableString.setSpan(new DailyImageSpan(getActivity(), R.drawable.shape_filloval_cababab, DailyImageSpan.ALIGN_VERTICAL_CENTER), startIndex, startIndex + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            getViewInterface().setToolbarTitle(title, spannableString);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -1773,7 +1879,6 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                     }
                 } else
                 {
-
                     if (isDefaultFilter(filters) == true && mRadius == DEFAULT_RADIUS)
                     {
                         getViewInterface().showEmptyScreen(StayOutboundListViewInterface.EmptyScreenType.LOCATION_DEFAULT);

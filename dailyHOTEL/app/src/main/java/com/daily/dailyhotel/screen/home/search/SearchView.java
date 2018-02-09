@@ -68,13 +68,14 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         {
             private final int DP_32 = ScreenUtils.dpToPx(getContext(), 32);
             private final int DP_173 = ScreenUtils.dpToPx(getContext(), 173);
-            private final int DP_18 = ScreenUtils.dpToPx(getContext(), 18);
+            private final int DP_16 = ScreenUtils.dpToPx(getContext(), 16);
             private final int DP_14 = ScreenUtils.dpToPx(getContext(), 14);
+            private final int DP_12 = ScreenUtils.dpToPx(getContext(), 12);
             private final int DP_15 = ScreenUtils.dpToPx(getContext(), 15);
             private final int DP_4 = ScreenUtils.dpToPx(getContext(), 4);
             private final int DP_27 = ScreenUtils.dpToPx(getContext(), 27);
             private final int TOOLBAR_HEIGHT = getDimensionPixelSize(R.dimen.toolbar_height);
-            private final int ANIMATION_HEIGHT = TOOLBAR_HEIGHT / 2;
+            private final int ANIMATION_HEIGHT = TOOLBAR_HEIGHT;
 
             private int mVerticalOffset = Integer.MAX_VALUE;
 
@@ -115,7 +116,8 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
                     getViewDataBinding().gourmetLayout.setPadding(paddingWidth, DP_14, paddingWidth, DP_15);
 
                     getViewDataBinding().searchBoxShadowView.getLayoutParams().width = layoutWidth;
-                    getViewDataBinding().searchBoxShadowView.getLayoutParams().height = (int) (DP_4 + DP_14 * vector);
+                    getViewDataBinding().searchBoxShadowView.getLayoutParams().height = (int) (DP_4 + DP_12 * vector);
+                    getViewDataBinding().searchBoxShadowView.requestLayout();
 
                     getViewDataBinding().appBarLayout.requestLayout();
                 } else if (DP_173 + verticalOffset > ANIMATION_HEIGHT && getViewDataBinding().staySearchTextView.getAlpha() != 1.0f)
@@ -136,7 +138,8 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
                     getViewDataBinding().gourmetLayout.setPadding(DP_27, DP_14, DP_27, DP_15);
 
                     getViewDataBinding().searchBoxShadowView.getLayoutParams().width = AppBarLayout.LayoutParams.MATCH_PARENT;
-                    getViewDataBinding().searchBoxShadowView.getLayoutParams().height = DP_18;
+                    getViewDataBinding().searchBoxShadowView.getLayoutParams().height = DP_16;
+                    getViewDataBinding().searchBoxShadowView.requestLayout();
 
                     getViewDataBinding().appBarLayout.requestLayout();
                 }
@@ -150,7 +153,11 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
                     getViewDataBinding().toolbarView.setAlpha(0f);
                 }
 
+                getViewDataBinding().searchTitleTextView.setTranslationY(verticalOffset / 2);
                 getViewDataBinding().topImageView.setTranslationY(verticalOffset / 2);
+
+
+                //                getViewDataBinding().searchBoxShadowView.setTranslationY(getViewDataBinding().appBarLayout.getBottom());
             }
         });
 
@@ -245,6 +252,7 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         }
 
         getViewDataBinding().topImageView.setImageResource(R.drawable.search_bg_stay);
+        getViewDataBinding().searchTitleTextView.setText(R.string.message_search_stay_description);
 
         getViewDataBinding().stayLayout.setVisibility(View.VISIBLE);
         getViewDataBinding().stayOutboundLayout.setVisibility(View.GONE);
@@ -320,6 +328,7 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         }
 
         getViewDataBinding().topImageView.setImageResource(R.drawable.search_bg_ob);
+        getViewDataBinding().searchTitleTextView.setText(R.string.message_search_stayoutbound_description);
 
         getViewDataBinding().stayLayout.setVisibility(View.GONE);
         getViewDataBinding().stayOutboundLayout.setVisibility(View.VISIBLE);
@@ -406,6 +415,7 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         }
 
         getViewDataBinding().topImageView.setImageResource(R.drawable.search_bg_gourmet);
+        getViewDataBinding().searchTitleTextView.setText(R.string.message_search_gourmet_description);
 
         getViewDataBinding().stayLayout.setVisibility(View.GONE);
         getViewDataBinding().stayOutboundLayout.setVisibility(View.GONE);

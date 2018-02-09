@@ -97,13 +97,9 @@ public class StayOutboundSuggestsData
             return regionStayOutboundSuggestList;
         }
 
-        StayOutboundSuggest stayOutboundSuggest = new StayOutboundSuggest(0, context.getString(R.string.label_search_suggest_popular_area));
-        stayOutboundSuggest.menuType = StayOutboundSuggest.MENU_TYPE_POPULAR_AREA;
-        regionStayOutboundSuggestList.add(stayOutboundSuggest);
-
         for (StayOutboundSuggestData stayOutboundSuggestData : regionSuggestDataList)
         {
-            stayOutboundSuggest = stayOutboundSuggestData.getSuggests();
+            StayOutboundSuggest stayOutboundSuggest = stayOutboundSuggestData.getSuggests();
             stayOutboundSuggest.menuType = StayOutboundSuggest.MENU_TYPE_POPULAR_AREA;
             regionStayOutboundSuggestList.add(stayOutboundSuggest);
         }

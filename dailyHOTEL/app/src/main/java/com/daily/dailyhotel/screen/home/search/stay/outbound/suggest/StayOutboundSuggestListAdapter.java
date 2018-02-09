@@ -24,7 +24,7 @@ import java.util.List;
  * Created by android_sam on 2018. 2. 2..
  */
 
-public class SuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class StayOutboundSuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
     private Context mContext;
     View.OnClickListener mOnClickListener;
@@ -32,7 +32,7 @@ public class SuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private String mKeyword;
     private List<ObjectItem> mSuggestList;
 
-    public SuggestListAdapter(Context context, View.OnClickListener listener)
+    public StayOutboundSuggestListAdapter(Context context, View.OnClickListener listener)
     {
         mContext = context;
         mOnClickListener = listener;
@@ -45,6 +45,17 @@ public class SuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     {
         switch (viewType)
         {
+            case ObjectItem.TYPE_HEADER_VIEW:
+            {
+                ListRowSearchSuggestTypeEntryDataBinding dataBinding //
+                    = DataBindingUtil.inflate(LayoutInflater.from(mContext) //
+                    , R.layout.list_row_search_suggest_type_entry_data, parent, false);
+
+                DirectViewHolder entryViewHolder = new DirectViewHolder(dataBinding);
+
+                return entryViewHolder;
+            }
+
             case ObjectItem.TYPE_SECTION:
             {
                 ListRowSearchSuggestTypeSectionDataBinding dataBinding //
@@ -83,6 +94,10 @@ public class SuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         switch (item.mType)
         {
+            case ObjectItem.TYPE_HEADER_VIEW:
+                onBindViewHolder((DirectViewHolder) holder, item, position);
+                break;
+
             case ObjectItem.TYPE_SECTION:
                 onBindViewHolder((SectionViewHolder) holder, item, position);
                 break;
@@ -136,6 +151,51 @@ public class SuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
 
         return mSuggestList.get(position);
+    }
+
+    private void onBindViewHolder(DirectViewHolder holder, ObjectItem item, int position)
+    {
+        StayOutboundSuggest stayOutboundSuggest = item.getItem();
+
+        holder.itemView.getRootView().setTag(stayOutboundSuggest);
+
+        holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
+        holder.dataBinding.deleteImageView.setVisibility(View.GONE);
+        holder.dataBinding.priceTextView.setVisibility(View.GONE);
+        holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_07_recent);
+        holder.dataBinding.bottomDivider.setVisibility(View.VISIBLE);
+        holder.dataBinding.deleteImageView.setVisibility(View.GONE);
+
+        if (DailyTextUtils.isTextEmpty(stayOutboundSuggest.display) == true)
+        {
+            holder.dataBinding.titleTextView.setText(null);
+        } else
+        {
+            String text = mContext.getString(R.string.label_search_suggest_direct_search_format, stayOutboundSuggest.display);
+            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(text);
+
+            if (DailyTextUtils.isTextEmpty(mKeyword) == false)
+            {
+                int fromIndex = 0;
+                do
+                {
+                    int startIndex = text.indexOf(mKeyword, fromIndex);
+
+                    if (startIndex < 0)
+                    {
+                        break;
+                    }
+
+                    int endIndex = startIndex + mKeyword.length();
+                    fromIndex = endIndex;
+
+                    spannableStringBuilder.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), //
+                        startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                } while (true);
+            }
+
+            holder.dataBinding.titleTextView.setText(spannableStringBuilder);
+        }
     }
 
     private void onBindViewHolder(SectionViewHolder holder, ObjectItem item, int position)
@@ -223,6 +283,20 @@ public class SuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             default:
                 holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_01_region);
                 break;
+        }
+    }
+
+    class DirectViewHolder extends RecyclerView.ViewHolder
+    {
+        ListRowSearchSuggestTypeEntryDataBinding dataBinding;
+
+        public DirectViewHolder(ListRowSearchSuggestTypeEntryDataBinding dataBinding)
+        {
+            super(dataBinding.getRoot());
+
+            this.dataBinding = dataBinding;
+
+            dataBinding.getRoot().setOnClickListener(mOnClickListener);
         }
     }
 

@@ -70,6 +70,7 @@ public class StaySearchResultListLayout extends StayListLayout
                 {
                     mEmptyView.setVisibility(View.VISIBLE);
                     mFilterEmptyView.setVisibility(View.GONE);
+                    ((OnEventListener) mOnEventListener).onBottomOptionVisible(false);
                 } else
                 {
                     mEmptyView.setVisibility(View.GONE);
@@ -233,13 +234,25 @@ public class StaySearchResultListLayout extends StayListLayout
         switch (categoryKey)
         {
             case StaySuggest.CATEGORY_LOCATION:
-                setLocationTypeEmptyView(mEmptyView);
-                setLocationTypeFilterEmptyView(mFilterEmptyView);
+                if (mStayCuration.getCurationOption().isDefaultFilter() == true//
+                    && ((StaySearchCuration) mStayCuration).getRadius() == PlaceSearchResultActivity.DEFAULT_SEARCH_RADIUS)
+                {
+                    setLocationTypeEmptyView(mEmptyView);
+                } else
+                {
+                    setLocationTypeFilterEmptyView(mFilterEmptyView);
+                }
                 break;
 
             default:
-                setDefaultTypeEmptyView(mEmptyView);
-                setDefaultTypeFilterEmptyView(mFilterEmptyView);
+                if (mStayCuration.getCurationOption().isDefaultFilter() == true//
+                    && ((StaySearchCuration) mStayCuration).getRadius() == PlaceSearchResultActivity.DEFAULT_SEARCH_RADIUS)
+                {
+                    setDefaultTypeEmptyView(mEmptyView);
+                } else
+                {
+                    setDefaultTypeFilterEmptyView(mFilterEmptyView);
+                }
                 break;
         }
     }
@@ -288,7 +301,7 @@ public class StaySearchResultListLayout extends StayListLayout
         TextView messageTextView01 = view.findViewById(R.id.messageTextView01);
         TextView messageTextView02 = view.findViewById(R.id.messageTextView02);
 
-        messageTextView01.setText(R.string.message_not_exist_filters);
+        messageTextView01.setText(R.string.message_searchresult_stay_filter_empty_message01);
         messageTextView02.setText(R.string.message_changing_option);
 
         View changeRegionView = view.findViewById(R.id.changeRegionView);
@@ -317,7 +330,6 @@ public class StaySearchResultListLayout extends StayListLayout
             return;
         }
 
-
         TextView filterMessageTextView01 = view.findViewById(R.id.filterMessageTextView01);
         TextView filterMessageTextView02 = view.findViewById(R.id.filterMessageTextView02);
 
@@ -340,7 +352,7 @@ public class StaySearchResultListLayout extends StayListLayout
         TextView filterMessageTextView01 = view.findViewById(R.id.filterMessageTextView01);
         TextView filterMessageTextView02 = view.findViewById(R.id.filterMessageTextView02);
 
-        filterMessageTextView01.setText(R.string.message_not_exist_filters);
+        filterMessageTextView01.setText(R.string.message_searchresult_stay_filter_empty_message01);
         filterMessageTextView02.setText(R.string.message_changing_filter_option);
 
         TextView buttonView = view.findViewById(R.id.buttonView);

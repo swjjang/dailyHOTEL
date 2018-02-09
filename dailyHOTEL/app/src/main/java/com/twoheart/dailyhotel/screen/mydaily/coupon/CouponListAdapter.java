@@ -250,6 +250,7 @@ public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
 
             dataBinding.useableStayTextView.setVisibility(coupon.availableInStay ? View.VISIBLE : View.GONE);
+            dataBinding.useableStayOutboundTextView.setVisibility(coupon.availableInOverseas ? View.VISIBLE : View.GONE);
             dataBinding.useableGourmetTextView.setVisibility(coupon.availableInGourmet == true ? View.VISIBLE : View.GONE);
 
             String couponNotice = mContext.getString(R.string.coupon_notice_text);

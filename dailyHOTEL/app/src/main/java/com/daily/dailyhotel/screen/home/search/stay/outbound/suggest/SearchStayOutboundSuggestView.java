@@ -33,9 +33,9 @@ public class SearchStayOutboundSuggestView //
     extends BaseDialogView<SearchStayOutboundSuggestView.OnEventListener, ActivityStayOutboundSearchSuggestDataBinding> //
     implements SearchStayOutboundSuggestViewInterface, View.OnClickListener
 {
-    private SuggestListAdapter mSuggestListAdapter;
-    private RecentlySuggestListAdapter mRecentlySuggestListAdapter;
-    private PopularSuggestListAdapter mPopularSuggestListAdapter;
+    private StayOutboundSuggestListAdapter mSuggestListAdapter;
+    private StayOutboundRecentlySuggestListAdapter mRecentlySuggestListAdapter;
+    private StayOutboundPopularSuggestListAdapter mPopularSuggestListAdapter;
 
     public interface OnEventListener extends OnBaseEventListener
     {
@@ -46,8 +46,6 @@ public class SearchStayOutboundSuggestView //
         void onRecentlySuggestClick(StayOutboundSuggest stayOutboundSuggest);
 
         void onPopularSuggestClick(StayOutboundSuggest stayOutboundSuggest);
-
-        void onDeleteAllRecentlySuggest(boolean skipLock);
 
         void onDeleteRecentlySuggest(int position, StayOutboundSuggest stayOutboundSuggest);
 
@@ -99,7 +97,7 @@ public class SearchStayOutboundSuggestView //
                         {
                             getEventListener().onSearchSuggest(v.getText().toString());
                         }
-                        return true;
+                        return false;
 
                     default:
                         return false;
@@ -121,8 +119,8 @@ public class SearchStayOutboundSuggestView //
 
         viewDataBinding.keywordEditText.addTextChangedListener(mTextWatcher);
 
-        viewDataBinding.deleteTextView.setVisibility(View.INVISIBLE);
-        viewDataBinding.deleteTextView.setOnClickListener(this);
+        viewDataBinding.deleteImageView.setVisibility(View.INVISIBLE);
+        viewDataBinding.deleteImageView.setOnClickListener(this);
     }
 
     private void initRecyclerLayout(final ActivityStayOutboundSearchSuggestDataBinding viewDataBinding)
@@ -191,7 +189,7 @@ public class SearchStayOutboundSuggestView //
 
         if (mSuggestListAdapter == null)
         {
-            mSuggestListAdapter = new SuggestListAdapter(getContext(), new View.OnClickListener()
+            mSuggestListAdapter = new StayOutboundSuggestListAdapter(getContext(), new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
@@ -325,7 +323,7 @@ public class SearchStayOutboundSuggestView //
 
         if (mRecentlySuggestListAdapter == null)
         {
-            mRecentlySuggestListAdapter = new RecentlySuggestListAdapter(getContext(), new RecentlySuggestListAdapter.OnRecentlySuggestListener()
+            mRecentlySuggestListAdapter = new StayOutboundRecentlySuggestListAdapter(getContext(), new StayOutboundRecentlySuggestListAdapter.OnRecentlySuggestListener()
             {
                 @Override
                 public void onItemClick(int position, StayOutboundSuggest stayOutboundSuggest)
@@ -337,12 +335,6 @@ public class SearchStayOutboundSuggestView //
                 public void onDeleteClick(int position, StayOutboundSuggest stayOutboundSuggest)
                 {
                     getEventListener().onDeleteRecentlySuggest(position, stayOutboundSuggest);
-                }
-
-                @Override
-                public void onDeleteAllClick()
-                {
-                    getEventListener().onDeleteAllRecentlySuggest(false);
                 }
 
                 @Override
@@ -392,7 +384,7 @@ public class SearchStayOutboundSuggestView //
 
         if (mPopularSuggestListAdapter == null)
         {
-            mPopularSuggestListAdapter = new PopularSuggestListAdapter(getContext(), new PopularSuggestListAdapter.OnPopularSuggestListener()
+            mPopularSuggestListAdapter = new StayOutboundPopularSuggestListAdapter(getContext(), new StayOutboundPopularSuggestListAdapter.OnPopularSuggestListener()
             {
                 @Override
                 public void onItemClick(int position, StayOutboundSuggest stayOutboundSuggest)
@@ -560,8 +552,9 @@ public class SearchStayOutboundSuggestView //
                 getEventListener().onSuggestClick(stayOutboundSuggest);
                 break;
 
-            case R.id.deleteTextView:
+            case R.id.deleteImageView:
                 setKeywordEditText(null);
+                showKeyboard();
                 break;
         }
     }
@@ -590,7 +583,7 @@ public class SearchStayOutboundSuggestView //
 
             if (length == 0)
             {
-                getViewDataBinding().deleteTextView.setVisibility(View.INVISIBLE);
+                getViewDataBinding().deleteImageView.setVisibility(View.INVISIBLE);
                 getViewDataBinding().voiceSearchView.setVisibility(View.VISIBLE);
             } else
             {
@@ -609,7 +602,7 @@ public class SearchStayOutboundSuggestView //
                     return;
                 }
 
-                getViewDataBinding().deleteTextView.setVisibility(View.VISIBLE);
+                getViewDataBinding().deleteImageView.setVisibility(View.VISIBLE);
                 getViewDataBinding().voiceSearchView.setVisibility(View.GONE);
             }
 

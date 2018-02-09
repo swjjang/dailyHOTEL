@@ -76,40 +76,50 @@
             app:layout_constraintRight_toLeftOf="@+id/stateTextView"
             app:layout_constraintTop_toBottomOf="@id/couponNameTextView"/>
 
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/useableStayTextView"
-            android:layout_width="38dp"
-            android:layout_height="15dp"
-            android:layout_alignParentBottom="true"
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
             android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:layout_marginTop="6dp"
-            android:background="@color/default_background_ceaeaea"
-            android:gravity="center"
-            android:text="@string/label_stay"
-            android:textColor="@color/default_text_c929292"
-            android:textSize="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/expireTextView"/>
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/expireTextView">
 
-        <com.daily.base.widget.DailyTextView
-            android:id="@+id/useableGourmetTextView"
-            android:layout_width="29dp"
-            android:layout_height="15dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="15dp"
-            android:layout_marginLeft="1dp"
-            android:layout_marginTop="6dp"
-            android:background="@color/default_background_ceaeaea"
-            android:gravity="center"
-            android:text="@string/label_gourmet"
-            android:textColor="@color/default_text_c929292"
-            android:textSize="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/useableStayTextView"
-            app:layout_constraintTop_toBottomOf="@id/expireTextView"
-            app:layout_goneMarginLeft="15dp"/>
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/useableStayTextView"
+                android:layout_width="56dp"
+                android:layout_height="15dp"
+                android:background="@color/default_background_ceaeaea"
+                android:gravity="center"
+                android:text="@string/label_coupon_stay_inbound"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="10dp"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/useableStayOutboundTextView"
+                android:layout_width="56dp"
+                android:layout_height="15dp"
+                android:layout_marginLeft="1dp"
+                android:background="@color/default_background_ceaeaea"
+                android:gravity="center"
+                android:text="@string/label_coupon_stay_outbound"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="10dp"/>
+
+            <com.daily.base.widget.DailyTextView
+                android:id="@+id/useableGourmetTextView"
+                android:layout_width="29dp"
+                android:layout_height="15dp"
+                android:layout_marginLeft="1dp"
+                android:background="@color/default_background_ceaeaea"
+                android:gravity="center"
+                android:text="@string/label_coupon_gourmet"
+                android:textColor="@color/default_text_c929292"
+                android:textSize="10dp"/>
+        </LinearLayout>
 
         <View
             android:id="@+id/bottomLineView"

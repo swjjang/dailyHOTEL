@@ -16,7 +16,7 @@ public interface SuggestLocalInterface
 
     Observable<StayOutboundSuggest> getRecentlyStayOutboundSuggest();
 
-    Observable<List<StayOutboundSuggest>> getRecentlyStayOutboundSuggestList();
+    Observable<List<StayOutboundSuggest>> getRecentlyStayOutboundSuggestList(int maxCount);
 
     Observable<String> getRecentlyStayOutboundSuggestKeyword(final long id);
 

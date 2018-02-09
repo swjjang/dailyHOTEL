@@ -21,7 +21,7 @@ import java.util.List;
  * Created by android_sam on 2018. 2. 2..
  */
 
-public class PopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class StayPopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
     public interface OnPopularSuggestListener
     {
@@ -33,7 +33,7 @@ public class PopularSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
 
     private List<ObjectItem> mSuggestList;
 
-    public PopularSuggestListAdapter(Context context, OnPopularSuggestListener listener)
+    public StayPopularSuggestListAdapter(Context context, OnPopularSuggestListener listener)
     {
         mContext = context;
         this.mListener = listener;

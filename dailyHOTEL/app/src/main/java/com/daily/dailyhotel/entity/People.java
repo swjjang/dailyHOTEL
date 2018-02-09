@@ -156,6 +156,35 @@ public class People
         return stringBuilder.toString();
     }
 
+    public String toTooShortString(Context context)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        if (context == null)
+        {
+            return stringBuilder.toString();
+        }
+
+        stringBuilder.append(context.getString(R.string.label_people_adult));
+        stringBuilder.append(numberOfAdults);
+
+        int childCount;
+
+        if (mChildAgeList == null)
+        {
+            childCount = 0;
+        } else
+        {
+            childCount = mChildAgeList.size();
+        }
+
+        stringBuilder.append(", ");
+        stringBuilder.append(context.getString(R.string.label_people_child));
+        stringBuilder.append(childCount);
+
+        return stringBuilder.toString();
+    }
+
     private JSONObject getJsonObject() throws Exception
     {
         JSONObject jsonObject = new JSONObject();

@@ -57,10 +57,6 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout
     protected Spinner mDistanceFilterSpinner;
     DistanceFilterAdapter mDistanceFilterAdapter;
 
-    Constants.ANIMATION_STATUS mAnimationStatus = Constants.ANIMATION_STATUS.SHOW_END;
-    Constants.ANIMATION_STATE mAnimationState = Constants.ANIMATION_STATE.END;
-    ValueAnimator mValueAnimator;
-
     protected String mCallByScreen;
 
     public interface OnEventListener extends OnBaseEventListener

@@ -32,6 +32,7 @@ public class ResearchGourmetActivity extends BaseActivity<ResearchGourmetPresent
 
     public static final String INTENT_EXTRA_DATA_VISIT_DATE_TIME = "visitDateTime";
     public static final String INTENT_EXTRA_DATA_SUGGEST = "suggest";
+    public static final String INTENT_EXTRA_DATA_KEYWORD = "keyword";
 
     public static Intent newInstance(Context context, String openDateTime, String closeDateTime, String currentDateTime, String dailyDateTime//
     , String visitDateTime, GourmetSuggest suggest)

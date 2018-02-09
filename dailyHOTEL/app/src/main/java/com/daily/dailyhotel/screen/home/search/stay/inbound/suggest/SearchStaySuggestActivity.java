@@ -24,6 +24,8 @@ public class SearchStaySuggestActivity extends BaseActivity<SearchStaySuggestPre
     public static final int REQUEST_CODE_SETTING_LOCATION = 10001;
     public static final int REQUEST_CODE_PERMISSION_MANAGER = 10002;
 
+    public static final int RECENTLY_PLACE_MAX_REQUEST_COUNT = 10;
+
     public static Intent newInstance(Context context, String keyword, String checkInDate, String checkOutDate)
     {
         Intent intent = new Intent(context, SearchStaySuggestActivity.class);

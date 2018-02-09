@@ -65,15 +65,10 @@ public class GourmetSearchResultListLayout extends GourmetListLayout
 
             if (GourmetSuggest.CATEGORY_LOCATION.equalsIgnoreCase(((GourmetSearchCuration) mGourmetCuration).getSuggest().categoryKey) == true)
             {
-                if((GourmetCurationOption.isDefaultFilter() == true && ((GourmetSearchCuration) mGourmetCuration).getRadius() == PlaceSearchResultActivity.DEFAULT_SEARCH_RADIUS))
+                if ((GourmetCurationOption.isDefaultFilter() == true && ((GourmetSearchCuration) mGourmetCuration).getRadius() == PlaceSearchResultActivity.DEFAULT_SEARCH_RADIUS))
                 {
                     mEmptyView.setVisibility(View.VISIBLE);
                     mFilterEmptyView.setVisibility(View.GONE);
-                    ((OnEventListener) mOnEventListener).onBottomOptionVisible(false);
-                } else if(GourmetCurationOption.isDefaultFilter() == true)
-                {
-                    mEmptyView.setVisibility(View.GONE);
-                    mFilterEmptyView.setVisibility(View.VISIBLE);
                     ((OnEventListener) mOnEventListener).onBottomOptionVisible(false);
                 } else
                 {
@@ -83,7 +78,7 @@ public class GourmetSearchResultListLayout extends GourmetListLayout
                 }
             } else
             {
-                if(GourmetCurationOption.isDefaultFilter() == true)
+                if (GourmetCurationOption.isDefaultFilter() == true)
                 {
                     mEmptyView.setVisibility(View.VISIBLE);
                     mFilterEmptyView.setVisibility(View.GONE);
@@ -238,13 +233,25 @@ public class GourmetSearchResultListLayout extends GourmetListLayout
         switch (categoryKey)
         {
             case GourmetSuggest.CATEGORY_LOCATION:
-                setLocationTypeEmptyView(mEmptyView);
-                setLocationTypeFilterEmptyView(mFilterEmptyView);
+                if (mGourmetCuration.getCurationOption().isDefaultFilter() == true//
+                    && ((GourmetSearchCuration) mGourmetCuration).getRadius() == PlaceSearchResultActivity.DEFAULT_SEARCH_RADIUS)
+                {
+                    setLocationTypeEmptyView(mEmptyView);
+                } else
+                {
+                    setLocationTypeFilterEmptyView(mFilterEmptyView);
+                }
                 break;
 
             default:
-                setDefaultTypeEmptyView(mEmptyView);
-                setDefaultTypeFilterEmptyView(mFilterEmptyView);
+                if (mGourmetCuration.getCurationOption().isDefaultFilter() == true//
+                    && ((GourmetSearchCuration) mGourmetCuration).getRadius() == PlaceSearchResultActivity.DEFAULT_SEARCH_RADIUS)
+                {
+                    setDefaultTypeEmptyView(mEmptyView);
+                } else
+                {
+                    setDefaultTypeFilterEmptyView(mFilterEmptyView);
+                }
                 break;
         }
     }
@@ -293,7 +300,7 @@ public class GourmetSearchResultListLayout extends GourmetListLayout
         TextView messageTextView01 = view.findViewById(R.id.messageTextView01);
         TextView messageTextView02 = view.findViewById(R.id.messageTextView02);
 
-        messageTextView01.setText(R.string.message_not_exist_filters);
+        messageTextView01.setText(R.string.message_searchresult_gourmet_empty_message01);
         messageTextView02.setText(R.string.message_changing_option);
 
         View changeRegionView = view.findViewById(R.id.changeRegionView);
@@ -326,7 +333,7 @@ public class GourmetSearchResultListLayout extends GourmetListLayout
         TextView filterMessageTextView01 = view.findViewById(R.id.filterMessageTextView01);
         TextView filterMessageTextView02 = view.findViewById(R.id.filterMessageTextView02);
 
-        filterMessageTextView01.setText(R.string.message_searchresult_stay_filter_empty_message01);
+        filterMessageTextView01.setText(R.string.message_searchresult_gourmet_filter_empty_message01);
         filterMessageTextView02.setText(R.string.message_searchresult_stay_filter_empty_message02);
 
         TextView buttonView = view.findViewById(R.id.buttonView);
@@ -345,7 +352,7 @@ public class GourmetSearchResultListLayout extends GourmetListLayout
         TextView filterMessageTextView01 = view.findViewById(R.id.filterMessageTextView01);
         TextView filterMessageTextView02 = view.findViewById(R.id.filterMessageTextView02);
 
-        filterMessageTextView01.setText(R.string.message_not_exist_filters);
+        filterMessageTextView01.setText(R.string.message_searchresult_gourmet_filter_empty_message01);
         filterMessageTextView02.setText(R.string.message_changing_filter_option);
 
         TextView buttonView = view.findViewById(R.id.buttonView);
