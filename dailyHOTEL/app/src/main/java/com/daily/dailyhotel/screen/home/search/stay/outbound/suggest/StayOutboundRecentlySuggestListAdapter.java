@@ -167,33 +167,6 @@ public class StayOutboundRecentlySuggestListAdapter extends RecyclerView.Adapter
         return count;
     }
 
-    public int getEntryCount(int menuType)
-    {
-        if (mSuggestList == null || mSuggestList.size() == 0 || menuType < StayOutboundSuggest.MENU_TYPE_DIRECT)
-        {
-            return 0;
-        }
-
-        int count = 0;
-        for (ObjectItem item : mSuggestList)
-        {
-            if (ObjectItem.TYPE_ENTRY != item.mType)
-            {
-                continue;
-            }
-
-            StayOutboundSuggest stayOutboundSuggest = item.getItem();
-            if (menuType != stayOutboundSuggest.menuType)
-            {
-                continue;
-            }
-
-            count++;
-        }
-
-        return count;
-    }
-
     public void setAll(List<ObjectItem> objectItemList)
     {
         if (mSuggestList == null)
@@ -232,6 +205,12 @@ public class StayOutboundRecentlySuggestListAdapter extends RecyclerView.Adapter
         }
 
         ObjectItem removeItem = mSuggestList.remove(position);
+        StayOutboundSuggest stayOutboundSuggest = removeItem.getItem();
+
+        if (stayOutboundSuggest != null)
+        {
+            checkAndRemoveSection(stayOutboundSuggest.menuType);
+        }
 
         if (mSuggestList.size() == 1)
         {
@@ -242,41 +221,42 @@ public class StayOutboundRecentlySuggestListAdapter extends RecyclerView.Adapter
             }
         }
 
-        StayOutboundSuggest stayOutboundSuggest = removeItem.getItem();
         return stayOutboundSuggest;
     }
 
-    public void removeSection(int menuType)
+    private void checkAndRemoveSection(int menuType)
     {
         if (mSuggestList == null || mSuggestList.size() == 0)
         {
             return;
         }
 
+        int sectionPosition = -1;
+        boolean hasEntry = false;
+
         for (int i = 0; i < mSuggestList.size(); i++)
         {
             ObjectItem item = mSuggestList.get(i);
-            if (ObjectItem.TYPE_SECTION != item.mType)
-            {
-                continue;
-            }
-
             StayOutboundSuggest stayOutboundSuggest = item.getItem();
-            if (stayOutboundSuggest == null || menuType != stayOutboundSuggest.menuType)
+
+            if (stayOutboundSuggest == null || stayOutboundSuggest.menuType != menuType)
             {
                 continue;
             }
 
-            mSuggestList.remove(i);
+            if (ObjectItem.TYPE_ENTRY == item.mType)
+            {
+                hasEntry = true;
+                break;
+            } else if (ObjectItem.TYPE_SECTION == item.mType)
+            {
+                sectionPosition = i;
+            }
         }
 
-        if (mSuggestList.size() == 1)
+        if (hasEntry == false && sectionPosition >= 0 && sectionPosition < mSuggestList.size())
         {
-            ObjectItem checkItem = mSuggestList.get(0);
-            if (checkItem.mType == ObjectItem.TYPE_FOOTER_VIEW)
-            {
-                mSuggestList.remove(0);
-            }
+            mSuggestList.remove(sectionPosition);
         }
     }
 

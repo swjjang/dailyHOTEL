@@ -894,9 +894,6 @@ public class SearchStaySuggestPresenter //
         {
             setRecentlySuggestList(null);
             notifyDataSetChanged();
-        } else if (getViewInterface().getRecentlySuggestEntryCount(staySuggest.menuType) == 0)
-        {
-            getViewInterface().removeRecentlySection(staySuggest.menuType);
         }
 
         if (StaySuggest.MENU_TYPE_RECENTLY_STAY == staySuggest.menuType)

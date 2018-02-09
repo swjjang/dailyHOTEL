@@ -674,9 +674,6 @@ public class SearchGourmetSuggestPresenter //
         {
             setRecentlySuggestList(null);
             notifyDataSetChanged();
-        } else if (getViewInterface().getRecentlySuggestEntryCount(gourmetSuggest.menuType) == 0)
-        {
-            getViewInterface().removeRecentlySection(gourmetSuggest.menuType);
         }
 
         if (GourmetSuggest.MENU_TYPE_RECENTLY_GOURMET == gourmetSuggest.menuType)

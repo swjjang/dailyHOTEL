@@ -25,8 +25,6 @@ public interface SearchStayOutboundSuggestInterface extends BaseDialogViewInterf
 
     int getRecentlySuggestAllEntryCount();
 
-    int getRecentlySuggestEntryCount(int menuType);
-
     void setKeywordEditHint(String hint);
 
     void setKeywordEditText(String text);
@@ -34,8 +32,6 @@ public interface SearchStayOutboundSuggestInterface extends BaseDialogViewInterf
     void setVoiceSearchEnabled(boolean enabled);
 
     void removeRecentlyItem(int position);
-
-    void removeRecentlySection(int menuType);
 
     void setNearbyStaySuggest(StayOutboundSuggest nearbyStayOutboundSuggest);
 }

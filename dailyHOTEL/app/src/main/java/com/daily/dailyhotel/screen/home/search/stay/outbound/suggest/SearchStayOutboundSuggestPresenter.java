@@ -709,9 +709,6 @@ public class SearchStayOutboundSuggestPresenter //
         {
             setRecentlySuggestList(null);
             notifyDataSetChanged();
-        } else if (getViewInterface().getRecentlySuggestEntryCount(stayOutboundSuggest.menuType) == 0)
-        {
-            getViewInterface().removeRecentlySection(stayOutboundSuggest.menuType);
         }
 
         if (StayOutboundSuggest.MENU_TYPE_RECENTLY_STAY == stayOutboundSuggest.menuType)

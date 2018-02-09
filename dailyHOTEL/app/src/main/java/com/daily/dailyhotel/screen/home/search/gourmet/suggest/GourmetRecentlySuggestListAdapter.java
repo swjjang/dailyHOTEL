@@ -167,33 +167,6 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
         return count;
     }
 
-    public int getEntryCount(int menuType)
-    {
-        if (mSuggestList == null || mSuggestList.size() == 0 || menuType < GourmetSuggest.MENU_TYPE_DIRECT)
-        {
-            return 0;
-        }
-
-        int count = 0;
-        for (ObjectItem item : mSuggestList)
-        {
-            if (ObjectItem.TYPE_ENTRY != item.mType)
-            {
-                continue;
-            }
-
-            GourmetSuggest gourmetSuggest = item.getItem();
-            if (menuType != gourmetSuggest.menuType)
-            {
-                continue;
-            }
-
-            count++;
-        }
-
-        return count;
-    }
-
     public void setAll(List<ObjectItem> objectItemList)
     {
         if (mSuggestList == null)
@@ -232,6 +205,12 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
         }
 
         ObjectItem removeItem = mSuggestList.remove(position);
+        GourmetSuggest gourmetSuggest = removeItem.getItem();
+
+        if (gourmetSuggest != null)
+        {
+            checkAndRemoveSection(gourmetSuggest.menuType);
+        }
 
         if (mSuggestList.size() == 1)
         {
@@ -242,41 +221,42 @@ public class GourmetRecentlySuggestListAdapter extends RecyclerView.Adapter<Recy
             }
         }
 
-        GourmetSuggest gourmetSuggest = removeItem.getItem();
         return gourmetSuggest;
     }
 
-    public void removeSection(int menuType)
+    private void checkAndRemoveSection(int menuType)
     {
         if (mSuggestList == null || mSuggestList.size() == 0)
         {
             return;
         }
 
+        int sectionPosition = -1;
+        boolean hasEntry = false;
+
         for (int i = 0; i < mSuggestList.size(); i++)
         {
             ObjectItem item = mSuggestList.get(i);
-            if (ObjectItem.TYPE_SECTION != item.mType)
-            {
-                continue;
-            }
-
             GourmetSuggest gourmetSuggest = item.getItem();
-            if (gourmetSuggest == null || menuType != gourmetSuggest.menuType)
+
+            if (gourmetSuggest == null || gourmetSuggest.menuType != menuType)
             {
                 continue;
             }
 
-            mSuggestList.remove(i);
+            if (ObjectItem.TYPE_ENTRY == item.mType)
+            {
+                hasEntry = true;
+                break;
+            } else if (ObjectItem.TYPE_SECTION == item.mType)
+            {
+                sectionPosition = i;
+            }
         }
 
-        if (mSuggestList.size() == 1)
+        if (hasEntry == false && sectionPosition >= 0 && sectionPosition < mSuggestList.size())
         {
-            ObjectItem checkItem = mSuggestList.get(0);
-            if (checkItem.mType == ObjectItem.TYPE_FOOTER_VIEW)
-            {
-                mSuggestList.remove(0);
-            }
+            mSuggestList.remove(sectionPosition);
         }
     }
 

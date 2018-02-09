@@ -23,8 +23,6 @@ public interface SearchGourmetSuggestInterface extends BaseDialogViewInterface
 
     int getRecentlySuggestAllEntryCount();
 
-    int getRecentlySuggestEntryCount(int menuType);
-
     void setKeywordEditHint(String hint);
 
     void setKeywordEditText(String text);
@@ -32,8 +30,6 @@ public interface SearchGourmetSuggestInterface extends BaseDialogViewInterface
     void setVoiceSearchEnabled(boolean enabled);
 
     void removeRecentlyItem(int position);
-
-    void removeRecentlySection(int menuType);
 
     void setNearbyGourmetSuggest(GourmetSuggest nearbyGourmetSuggest);
 }
