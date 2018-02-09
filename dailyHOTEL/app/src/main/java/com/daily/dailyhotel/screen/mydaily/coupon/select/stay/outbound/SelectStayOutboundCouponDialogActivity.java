@@ -47,9 +47,9 @@ public class SelectStayOutboundCouponDialogActivity extends BaseActivity<SelectS
     {
         overridePendingTransition(R.anim.hold, R.anim.hold);
 
-        super.onCreate(savedInstanceState);
-
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        super.onCreate(savedInstanceState);
     }
 
     @NonNull

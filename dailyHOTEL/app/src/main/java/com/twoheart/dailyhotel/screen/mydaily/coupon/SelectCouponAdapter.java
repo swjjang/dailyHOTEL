@@ -139,6 +139,7 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
 
         // 스테이, 고메 쿠폰인지
         holder.dataBinding.useableStayTextView.setVisibility(coupon.availableInStay ? View.VISIBLE : View.GONE);
+        holder.dataBinding.useableStayOutboundTextView.setVisibility(coupon.availableInOverseas == true ? View.VISIBLE : View.GONE);
         holder.dataBinding.useableGourmetTextView.setVisibility(coupon.availableInGourmet == true ? View.VISIBLE : View.GONE);
 
         setDownLoadLayout(holder, coupon.type == Coupon.Type.REWARD, coupon.isDownloaded);
@@ -249,6 +250,7 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
             holder.dataBinding.expireTextView.setTextColor(mContext.getResources().getColor(R.color.default_text_c929292));
 
             holder.dataBinding.useableStayTextView.setAlpha(1.0f);
+            holder.dataBinding.useableStayOutboundTextView.setAlpha(1.0f);
             holder.dataBinding.useableGourmetTextView.setAlpha(1.0f);
             holder.dataBinding.downloadCouponLayout.setVisibility(View.GONE);
 
@@ -262,6 +264,7 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
             holder.dataBinding.expireTextView.setTextColor(color);
 
             holder.dataBinding.useableStayTextView.setAlpha(0.5f);
+            holder.dataBinding.useableStayOutboundTextView.setAlpha(0.5f);
             holder.dataBinding.useableGourmetTextView.setAlpha(0.5f);
             holder.dataBinding.downloadCouponLayout.setVisibility(View.VISIBLE);
         }

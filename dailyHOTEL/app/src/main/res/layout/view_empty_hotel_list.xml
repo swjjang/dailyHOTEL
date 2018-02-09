@@ -7,7 +7,6 @@
         android:id="@+id/emptyLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/calendarAndDistanceLayout"
         android:fillViewport="true"
         android:visibility="gone">
 

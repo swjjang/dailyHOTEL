@@ -174,25 +174,23 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
         final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
         final String API = Constants.UNENCRYPTED_URL ? "api/v2/outbound/coupons/by-user"//
-            : "";
+            : "NjIkMSQzMSQ4MiQ1MSQxMyQzNSQxNCQ0JDUyJDg4JDU4JDQ4JDI1JDE1JDQ3JA==$QOkUNyMERDOTE0DKMMjdCQ0QzNM0ExMkQwMEPVGSMDVDNzQU0MkJFENzVEzNRjTBEQUMxRjg1MTLQ4NDRGMTJENUM3NUEUS3M0M3OQ==$";
 
-        return mDailyMobileService.getStayOutboundCouponListByPayment(Crypto.getUrlDecoderEx(URL), stayIndex, rateCode, rateKey, roomBedTypId, checkInDateTime, checkOutDateTime) //
+        return mDailyMobileService.getStayOutboundCouponListByPayment(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API), stayIndex, rateCode, rateKey, roomBedTypId, checkInDateTime, checkOutDateTime) //
             .subscribeOn(Schedulers.io()).map(new Function<BaseDto<CouponsData>, Coupons>()
             {
                 @Override
                 public Coupons apply(BaseDto<CouponsData> couponsDataBaseDto) throws Exception
                 {
-                    Coupons coupons = new Coupons();
+                    Coupons coupons;
 
                     if (couponsDataBaseDto != null)
                     {
                         if (couponsDataBaseDto.msgCode == 100 && couponsDataBaseDto.data != null)
                         {
                             CouponsData couponsData = couponsDataBaseDto.data;
-                            if (couponsData != null)
-                            {
-                                coupons = couponsData.getCoupons();
-                            }
+
+                            coupons = couponsData == null ? new Coupons() : couponsData.getCoupons();
                         } else
                         {
                             throw new BaseException(couponsDataBaseDto.msgCode, couponsDataBaseDto.msg);

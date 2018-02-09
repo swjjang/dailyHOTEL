@@ -175,6 +175,7 @@
             android:id="@+id/emptyView"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:fillViewport="true"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
