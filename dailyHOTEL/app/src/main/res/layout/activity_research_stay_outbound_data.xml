@@ -118,7 +118,7 @@
                 android:id="@+id/searchStayOutboundTextView"
                 android:layout_width="0dp"
                 android:layout_height="44dp"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/selector_button_default_background"
                 android:gravity="center"
                 android:text="@string/label_search_do_search"
