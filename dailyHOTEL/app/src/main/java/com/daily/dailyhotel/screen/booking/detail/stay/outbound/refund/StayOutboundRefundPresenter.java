@@ -30,7 +30,9 @@ import io.reactivex.functions.Consumer;
  * Created by sheldon
  * Clean Architecture
  */
-public class StayOutboundRefundPresenter extends BaseExceptionPresenter<StayOutboundRefundActivity, StayOutboundRefundInterface> implements StayOutboundRefundView.OnEventListener
+public class StayOutboundRefundPresenter //
+    extends BaseExceptionPresenter<StayOutboundRefundActivity, StayOutboundRefundInterface> //
+    implements StayOutboundRefundView.OnEventListener
 {
     private StayOutboundRefundAnalyticsInterface mAnalytics;
 

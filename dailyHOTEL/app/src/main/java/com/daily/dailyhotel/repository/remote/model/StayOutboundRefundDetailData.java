@@ -61,12 +61,15 @@ public class StayOutboundRefundDetailData
     @JsonField(name = "bonus")
     public int bonus;
 
+    @JsonField(name = "couponAmount")
+    public int couponAmount;
+
     public StayOutboundRefundDetailData()
     {
 
     }
 
-    public StayOutboundRefundDetail getStayOutboundBookingDetail()
+    public StayOutboundRefundDetail getStayOutboundRefundDetail()
     {
         StayOutboundRefundDetail stayOutboundRefundDetail = new StayOutboundRefundDetail();
 
@@ -77,6 +80,7 @@ public class StayOutboundRefundDetailData
         stayOutboundRefundDetail.address = hotelAddress;
         stayOutboundRefundDetail.paymentPrice = paymentAmount;
         stayOutboundRefundDetail.bonus = bonus;
+        stayOutboundRefundDetail.couponAmount = couponAmount;
         stayOutboundRefundDetail.totalPrice = total;
         stayOutboundRefundDetail.refundStatus = StayOutboundBookingDetail.RefundType.valueOf(refundStatus);
         stayOutboundRefundDetail.checkInDate = checkinDate;

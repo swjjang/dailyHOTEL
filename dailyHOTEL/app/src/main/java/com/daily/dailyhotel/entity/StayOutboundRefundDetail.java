@@ -13,6 +13,7 @@ public class StayOutboundRefundDetail
     public String address;
     public int paymentPrice;
     public int bonus;
+    public int couponAmount;
     public int totalPrice;
     public StayOutboundBookingDetail.RefundType refundStatus;
     public String checkInDate;
