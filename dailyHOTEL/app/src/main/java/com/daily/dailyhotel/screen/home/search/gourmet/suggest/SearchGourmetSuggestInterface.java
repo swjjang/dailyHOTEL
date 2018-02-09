@@ -21,7 +21,9 @@ public interface SearchGourmetSuggestInterface extends BaseDialogViewInterface
 
     void setPopularAreaSuggests(GourmetSuggest locationSuggest, List<GourmetSuggest> gourmetSuggestList);
 
-    int getRecentlySuggestEntryCount();
+    int getRecentlySuggestAllEntryCount();
+
+    int getRecentlySuggestEntryCount(int menuType);
 
     void setKeywordEditHint(String hint);
 

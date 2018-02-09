@@ -167,6 +167,33 @@ public class StayOutboundRecentlySuggestListAdapter extends RecyclerView.Adapter
         return count;
     }
 
+    public int getEntryCount(int menuType)
+    {
+        if (mSuggestList == null || mSuggestList.size() == 0 || menuType < StayOutboundSuggest.MENU_TYPE_DIRECT)
+        {
+            return 0;
+        }
+
+        int count = 0;
+        for (ObjectItem item : mSuggestList)
+        {
+            if (ObjectItem.TYPE_ENTRY != item.mType)
+            {
+                continue;
+            }
+
+            StayOutboundSuggest stayOutboundSuggest = item.getItem();
+            if (menuType != stayOutboundSuggest.menuType)
+            {
+                continue;
+            }
+
+            count++;
+        }
+
+        return count;
+    }
+
     public void setAll(List<ObjectItem> objectItemList)
     {
         if (mSuggestList == null)

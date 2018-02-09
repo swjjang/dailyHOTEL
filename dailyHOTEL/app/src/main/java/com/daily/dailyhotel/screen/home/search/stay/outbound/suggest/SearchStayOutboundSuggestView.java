@@ -31,7 +31,7 @@ import io.reactivex.Observable;
 
 public class SearchStayOutboundSuggestView //
     extends BaseDialogView<SearchStayOutboundSuggestView.OnEventListener, ActivityStayOutboundSearchSuggestDataBinding> //
-    implements SearchStayOutboundSuggestViewInterface, View.OnClickListener
+    implements SearchStayOutboundSuggestInterface, View.OnClickListener
 {
     private StayOutboundSuggestListAdapter mSuggestListAdapter;
     private StayOutboundRecentlySuggestListAdapter mRecentlySuggestListAdapter;
@@ -431,7 +431,7 @@ public class SearchStayOutboundSuggestView //
     }
 
     @Override
-    public int getRecentlySuggestEntryCount()
+    public int getRecentlySuggestAllEntryCount()
     {
         if (mRecentlySuggestListAdapter == null)
         {
@@ -439,6 +439,17 @@ public class SearchStayOutboundSuggestView //
         }
 
         return mRecentlySuggestListAdapter.getEntryCount();
+    }
+
+    @Override
+    public int getRecentlySuggestEntryCount(int menuType)
+    {
+        if (mRecentlySuggestListAdapter == null)
+        {
+            return 0;
+        }
+
+        return mRecentlySuggestListAdapter.getEntryCount(menuType);
     }
 
     @Override

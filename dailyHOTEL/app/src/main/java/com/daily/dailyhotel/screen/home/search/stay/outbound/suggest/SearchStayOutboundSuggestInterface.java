@@ -5,7 +5,7 @@ import com.daily.dailyhotel.entity.StayOutboundSuggest;
 
 import java.util.List;
 
-public interface SearchStayOutboundSuggestViewInterface extends BaseDialogViewInterface
+public interface SearchStayOutboundSuggestInterface extends BaseDialogViewInterface
 {
     void setSuggests(List<StayOutboundSuggest> stayOutboundSuggestList);
 
@@ -23,7 +23,9 @@ public interface SearchStayOutboundSuggestViewInterface extends BaseDialogViewIn
 
     void setPopularAreaSuggests(StayOutboundSuggest locationSuggest, List<StayOutboundSuggest> stayOutboundSuggestList);
 
-    int getRecentlySuggestEntryCount();
+    int getRecentlySuggestAllEntryCount();
+
+    int getRecentlySuggestEntryCount(int menuType);
 
     void setKeywordEditHint(String hint);
 

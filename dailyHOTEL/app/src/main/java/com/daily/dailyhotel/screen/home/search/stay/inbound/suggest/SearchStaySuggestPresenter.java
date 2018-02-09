@@ -30,7 +30,6 @@ import com.daily.dailyhotel.parcel.GourmetSuggestParcel;
 import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
 import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
-import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.remote.GoogleAddressRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
@@ -891,30 +890,23 @@ public class SearchStaySuggestPresenter //
 
         getViewInterface().removeRecentlyItem(position);
 
+        if (getViewInterface().getRecentlySuggestAllEntryCount() == 0)
+        {
+            setRecentlySuggestList(null);
+            notifyDataSetChanged();
+        } else if (getViewInterface().getRecentlySuggestEntryCount(staySuggest.menuType) == 0)
+        {
+            getViewInterface().removeRecentlySection(staySuggest.menuType);
+        }
+
         if (StaySuggest.MENU_TYPE_RECENTLY_STAY == staySuggest.menuType)
         {
             addCompositeDisposable(mRecentlyLocalImpl.deleteRecentlyItem(Constants.ServiceType.HOTEL, staySuggest.stayIndex) //
-                .flatMap(new Function<Boolean, ObservableSource<ArrayList<RecentlyDbPlace>>>()
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                 {
                     @Override
-                    public ObservableSource<ArrayList<RecentlyDbPlace>> apply(Boolean aBoolean) throws Exception
+                    public void accept(Boolean aBoolean) throws Exception
                     {
-                        return mRecentlyLocalImpl.getRecentlyTypeList(Constants.ServiceType.HOTEL);
-                    }
-                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<RecentlyDbPlace>>()
-                {
-                    @Override
-                    public void accept(ArrayList<RecentlyDbPlace> recentlyDbPlaces) throws Exception
-                    {
-                        if (getViewInterface().getRecentlySuggestEntryCount() == 0)
-                        {
-                            setRecentlySuggestList(null);
-                            notifyDataSetChanged();
-                        } else if (recentlyDbPlaces.size() == 0)
-                        {
-                            getViewInterface().removeRecentlySection(StaySuggest.MENU_TYPE_RECENTLY_STAY);
-                        }
-
                         unLockAll();
                     }
                 }, new Consumer<Throwable>()
@@ -936,16 +928,6 @@ public class SearchStaySuggestPresenter //
             }
 
             mDailyRecentSearches.remove(keyword);
-
-            if (getViewInterface().getRecentlySuggestEntryCount() == 0)
-            {
-                setRecentlySuggestList(null);
-                notifyDataSetChanged();
-            } else if (mDailyRecentSearches.size() == 0)
-            {
-                getViewInterface().removeRecentlySection(StaySuggest.MENU_TYPE_RECENTLY_SEARCH);
-            }
-
             DailyPreference.getInstance(getActivity()).setHotelRecentSearches(mDailyRecentSearches.toString());
 
             unLockAll();

@@ -167,6 +167,33 @@ public class StayRecentlySuggestListAdapter extends RecyclerView.Adapter<Recycle
         return count;
     }
 
+    public int getEntryCount(int menuType)
+    {
+        if (mSuggestList == null || mSuggestList.size() == 0 || menuType < StaySuggest.MENU_TYPE_DIRECT)
+        {
+            return 0;
+        }
+
+        int count = 0;
+        for (ObjectItem item : mSuggestList)
+        {
+            if (ObjectItem.TYPE_ENTRY != item.mType)
+            {
+                continue;
+            }
+
+            StaySuggest staySuggest = item.getItem();
+            if (menuType != staySuggest.menuType)
+            {
+                continue;
+            }
+
+            count++;
+        }
+
+        return count;
+    }
+
     public void setAll(List<ObjectItem> objectItemList)
     {
         if (mSuggestList == null)

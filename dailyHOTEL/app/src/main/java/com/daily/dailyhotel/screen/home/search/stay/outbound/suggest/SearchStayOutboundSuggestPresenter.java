@@ -23,11 +23,9 @@ import com.daily.dailyhotel.base.BaseExceptionPresenter;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StayOutbounds;
-import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.local.SuggestLocalImpl;
-import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.remote.GoogleAddressRemoteImpl;
 import com.daily.dailyhotel.repository.remote.RecentlyRemoteImpl;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
@@ -62,7 +60,7 @@ import io.reactivex.schedulers.Schedulers;
  * Clean Architecture
  */
 public class SearchStayOutboundSuggestPresenter //
-    extends BaseExceptionPresenter<SearchStayOutboundSuggestActivity, SearchStayOutboundSuggestViewInterface> //
+    extends BaseExceptionPresenter<SearchStayOutboundSuggestActivity, SearchStayOutboundSuggestInterface> //
     implements SearchStayOutboundSuggestView.OnEventListener
 {
     private SearchStayOutboundSuggestAnalyticsInterface mAnalytics;
@@ -103,7 +101,7 @@ public class SearchStayOutboundSuggestPresenter //
 
     @NonNull
     @Override
-    protected SearchStayOutboundSuggestViewInterface createInstanceViewInterface()
+    protected SearchStayOutboundSuggestInterface createInstanceViewInterface()
     {
         return new SearchStayOutboundSuggestView(getActivity(), this);
     }
@@ -707,30 +705,23 @@ public class SearchStayOutboundSuggestPresenter //
 
         getViewInterface().removeRecentlyItem(position);
 
+        if (getViewInterface().getRecentlySuggestAllEntryCount() == 0)
+        {
+            setRecentlySuggestList(null);
+            notifyDataSetChanged();
+        } else if (getViewInterface().getRecentlySuggestEntryCount(stayOutboundSuggest.menuType) == 0)
+        {
+            getViewInterface().removeRecentlySection(stayOutboundSuggest.menuType);
+        }
+
         if (StayOutboundSuggest.MENU_TYPE_RECENTLY_STAY == stayOutboundSuggest.menuType)
         {
             addCompositeDisposable(mRecentlyLocalImpl.deleteRecentlyItem(Constants.ServiceType.OB_STAY, (int) stayOutboundSuggest.id) //
-                .flatMap(new Function<Boolean, ObservableSource<ArrayList<RecentlyDbPlace>>>()
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                 {
                     @Override
-                    public ObservableSource<ArrayList<RecentlyDbPlace>> apply(Boolean aBoolean) throws Exception
+                    public void accept(Boolean aBoolean) throws Exception
                     {
-                        return mRecentlyLocalImpl.getRecentlyTypeList(Constants.ServiceType.OB_STAY);
-                    }
-                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<RecentlyDbPlace>>()
-                {
-                    @Override
-                    public void accept(ArrayList<RecentlyDbPlace> recentlyDbPlaces) throws Exception
-                    {
-                        if (getViewInterface().getRecentlySuggestEntryCount() == 0)
-                        {
-                            setRecentlySuggestList(null);
-                            notifyDataSetChanged();
-                        } else if (recentlyDbPlaces.size() == 0)
-                        {
-                            getViewInterface().removeRecentlySection(StaySuggest.MENU_TYPE_RECENTLY_STAY);
-                        }
-
                         unLockAll();
                     }
                 }, new Consumer<Throwable>()
@@ -744,27 +735,11 @@ public class SearchStayOutboundSuggestPresenter //
         } else
         {
             addCompositeDisposable(mSuggestLocalImpl.deleteRecentlyStayOutboundSuggest(stayOutboundSuggest.id) //
-                .flatMap(new Function<Boolean, ObservableSource<List<StayOutboundSuggest>>>()
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Boolean>()
                 {
                     @Override
-                    public ObservableSource<List<StayOutboundSuggest>> apply(Boolean aBoolean) throws Exception
+                    public void accept(Boolean aBoolean) throws Exception
                     {
-                        return mSuggestLocalImpl.getRecentlyStayOutboundSuggestList(SearchStayOutboundSuggestActivity.RECENTLY_PLACE_MAX_REQUEST_COUNT);
-                    }
-                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<List<StayOutboundSuggest>>()
-                {
-                    @Override
-                    public void accept(List<StayOutboundSuggest> stayOutboundSuggestList) throws Exception
-                    {
-                        if (getViewInterface().getRecentlySuggestEntryCount() == 0)
-                        {
-                            setRecentlySuggestList(null);
-                            notifyDataSetChanged();
-                        } else if (stayOutboundSuggestList.size() == 0)
-                        {
-                            getViewInterface().removeRecentlySection(StaySuggest.MENU_TYPE_RECENTLY_SEARCH);
-                        }
-
                         unLockAll();
                     }
                 }, new Consumer<Throwable>()
