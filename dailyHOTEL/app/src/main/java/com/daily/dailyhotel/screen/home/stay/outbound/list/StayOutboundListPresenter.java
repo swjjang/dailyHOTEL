@@ -309,7 +309,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
             if (mStayOutboundSuggest != null && StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == true)
             {
-                setFilter(StayOutboundFilters.SortType.DISTANCE, 0, 0);
+                setFilter(StayOutboundFilters.SortType.DISTANCE, mStayOutboundSuggest.latitude, mStayOutboundSuggest.longitude);
             }
 
             mAnalytics.setAnalyticsParam(intent.getParcelableExtra(BaseActivity.INTENT_EXTRA_DATA_ANALYTICS));
@@ -578,7 +578,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                             }
                         } else
                         {
-                            setRefresh(true);
+                            onRefreshAll(true);
                         }
                     }
                 }
@@ -629,7 +629,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                             }
                         } else
                         {
-                            setRefresh(true);
+                            onRefreshAll(true);
                         }
                     }
                 }
@@ -684,7 +684,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                             }
                         } else
                         {
-                            setRefresh(true);
+                            onRefreshAll(true);
                         }
                     }
                 }
@@ -735,7 +735,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                         break;
 
                     case com.daily.base.BaseActivity.RESULT_CODE_REFRESH:
-                        setRefresh(true);
+                        onRefreshAll(true);
                         break;
                 }
                 break;
@@ -756,7 +756,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                         break;
 
                     case com.daily.base.BaseActivity.RESULT_CODE_REFRESH:
-                        setRefresh(true);
+                        onRefreshAll(true);
                         break;
                 }
                 break;
@@ -784,6 +784,11 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
                         setPeople(numberOfAdults, arrayList);
 
+                        if (mStayOutboundSuggest != null && StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == true)
+                        {
+                            setFilter(StayOutboundFilters.SortType.DISTANCE, mStayOutboundSuggest.latitude, mStayOutboundSuggest.longitude);
+                        }
+
                         StayOutboundListAnalyticsParam analyticsParam = mAnalytics.getAnalyticsParam();
 
                         if (analyticsParam != null)
@@ -809,7 +814,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
                         notifyToolbarChanged();
 
-                        setRefresh(true);
+                        onRefreshAll(true);
                         break;
                 }
                 break;
