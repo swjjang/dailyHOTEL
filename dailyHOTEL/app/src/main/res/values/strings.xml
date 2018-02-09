@@ -1117,7 +1117,7 @@
 
     <string name="message_searchresult_gourmet_empty_message01">내 주변 고메가 없습니다.</string>
 
-    <string name="message_searchresult_stay_empty_subtitle">검색어나 조건을 변경하여 검색해보세요.\n더 구체적인 단어로도 검색이 가능해요.\n(예: 수영장 있는 호텔, 파티룸)</string>
+    <string name="message_searchresult_stay_empty_subtitle">검색어나 조건을 변경하여 검색해보세요.\n더 구체적인 단어로도 검색이 가능해요.\n(예. 수영장 있는 호텔, 파티룸)</string>
     <string name="message_searchresult_stay_outbound_empty_subtitle">검색어나 조건을 변경하여 검색해보세요.\n한글, 영문 둘다 검색이 가능해요.\n(예. 도시, 지역, 역, 호텔 등)</string>
     <string name="message_searchresult_gourmet_empty_subtitle">검색어나 조건을 변경하여 검색해보세요.\n(예. 레스토랑명, 지역명 등)</string>
 
@@ -1245,7 +1245,9 @@
     <string name="message_stay_detail_changed_price">일부 객실의 요금이\n변동되었습니다.\n객실 금액을\n한번 더 확인해주시고\n원하시는 객실이 없으면\n날짜를 변경해보세요.</string>
     <string name="message_stay_detail_sold_out">마지막 객실이 방금 판매 완료되었습니다.\n날짜를 변경하거나 다른 스테이를 확인해주세요.</string>
     <string name="message_gourmet_detail_changed_price">일부 상품의 요금이\n변동되었습니다.\n상품 금액을\n한번 더 확인해주시고\n원하시는 상품이 없으면\n날짜를 변경해보세요.</string>
+    <string name="message_gourmet_detail_changed_price_has_cart">일부 상품의 요금이 변동되었습니다.\n결제 전 다시 한번 확인해주세요.</string>
     <string name="message_gourmet_detail_sold_out">마지막 상품이 방금 판매 완료되었습니다.\n날짜를 변경하거나 다른 레스토랑을 확인해주세요.</string>
+    <string name="message_gourmet_detail_sold_out_has_cart">판매가 완료되어 구매하실 수 없습니다.\n날짜를 변경하시거나 다른 레스토랑을 확인해주세요.</string>
     <string name="message_stay_used_data_guide">3G/LTE 환경에서는\n데이터 사용료가 발생할 수 있습니다.</string>
     <string name="message_stay_waiting_reservation_guide"><![CDATA[해당 예약은 확정 예약이 아닌 <font color=0xb70038>대기 예약</font>으로, 결제 완료 시 예약대기 상태이며, <font color=0xb70038>예약확정 여부가 문자로 발송됩니다.</font>]]></string>
 
@@ -1444,7 +1446,6 @@
     <string name="message_gourmet_product_detail_change_cart_other_visit_day">다른 방문일을 선택하시면\n기존 메뉴는 모두 삭제됩니다.\n삭제하고 새로 추가하시겠어요?</string>
     <string name="message_gourmet_product_detail_after_visit_day">방문시간이 지난 메뉴는 구매하실 수 없어 모두 삭제됩니다.</string>
     <string name="message_gourmet_product_detail_insufficient_quantity">남은 수량이 부족하여 구매하실 수 없으니 다시 확인해주세요.</string>
-    <string name="message_gourmet_product_detail_sold_out">선택하신 메뉴 중 판매가 완료된 상품이 있으니 다시 확인 후 구매해주세요.</string>
 
     <!-- Happy Talk -->
     <string name="label_select_category">선택</string>

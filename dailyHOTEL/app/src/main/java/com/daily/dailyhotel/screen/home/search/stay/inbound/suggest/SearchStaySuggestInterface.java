@@ -27,7 +27,7 @@ public interface SearchStaySuggestInterface extends BaseDialogViewInterface
 
     void setPopularAreaSuggests(StaySuggest locationSuggest, List<StaySuggest> staySuggestList);
 
-    int getRecentlySuggestEntryCount();
+    int getRecentlySuggestAllEntryCount();
 
     void setKeywordEditHint(String hint);
 
@@ -36,8 +36,6 @@ public interface SearchStaySuggestInterface extends BaseDialogViewInterface
     void setVoiceSearchEnabled(boolean enabled);
 
     void removeRecentlyItem(int position);
-
-    void removeRecentlySection(int menuType);
 
     void setNearbyStaySuggest(StaySuggest nearbyStaySuggest);
 }

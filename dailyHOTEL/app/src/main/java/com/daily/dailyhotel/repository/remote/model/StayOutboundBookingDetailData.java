@@ -88,6 +88,9 @@ public class StayOutboundBookingDetailData
     @JsonField(name = "bonus")
     public int bonus;
 
+    @JsonField(name = "couponAmount")
+    public int couponAmount;
+
     @JsonField(name = "fee")
     public double fee;
 
@@ -125,6 +128,7 @@ public class StayOutboundBookingDetailData
         stayOutboundBookingDetail.longitude = longitude;
         stayOutboundBookingDetail.paymentPrice = paymentAmount;
         stayOutboundBookingDetail.bonus = bonus;
+        stayOutboundBookingDetail.couponAmount = couponAmount;
         stayOutboundBookingDetail.totalPrice = total;
         stayOutboundBookingDetail.fee = fee;
         stayOutboundBookingDetail.setPeople(new People(numberOfAdults, childrenAges));

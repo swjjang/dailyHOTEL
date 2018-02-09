@@ -441,28 +441,9 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
                 }
 
                 ((OnGourmetSearchResultListFragmentListener) mOnPlaceListFragmentListener).onGourmetListCount(totalCount);
-
-                if (GourmetSuggest.CATEGORY_LOCATION.equalsIgnoreCase(((GourmetSearchCuration) mGourmetCuration).getSuggest().categoryKey) == true)
-                {
-                    mOnPlaceListFragmentListener.onShowActivityEmptyView(false);
-
-                    GourmetSearchResultListFragment.this.onGourmetList(list, page, totalCount, maxCount, categoryCodeMap, categorySequenceMap, false);
-                } else
-                {
-                    if (list == null || list.size() == 0)
-                    {
-                        mOnPlaceListFragmentListener.onShowActivityEmptyView(true);
-                    } else
-                    {
-                        mOnPlaceListFragmentListener.onShowActivityEmptyView(false);
-
-                        GourmetSearchResultListFragment.this.onGourmetList(list, page, totalCount, maxCount, categoryCodeMap, categorySequenceMap, false);
-                    }
-                }
-            } else
-            {
-                GourmetSearchResultListFragment.this.onGourmetList(list, page, totalCount, maxCount, categoryCodeMap, categorySequenceMap, false);
             }
+
+            GourmetSearchResultListFragment.this.onGourmetList(list, page, totalCount, maxCount, categoryCodeMap, categorySequenceMap, false);
 
             if (mViewType == ViewType.MAP)
             {

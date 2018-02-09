@@ -52,6 +52,9 @@ public class StayOutboundReceiptData
     @JsonField(name = "bonus")
     public int bonus;
 
+    @JsonField(name = "couponAmount")
+    public int couponAmount;
+
     @JsonField(name = "description")
     public String description;
 
@@ -75,6 +78,7 @@ public class StayOutboundReceiptData
         stayOutboundReceipt.paymentAmount = paymentAmount;
         stayOutboundReceipt.totalPrice = total;
         stayOutboundReceipt.bonus = bonus;
+        stayOutboundReceipt.coupon = couponAmount;
         stayOutboundReceipt.checkInDate = checkinDate;
         stayOutboundReceipt.checkOutDate = checkoutDate;
         stayOutboundReceipt.comment = description;

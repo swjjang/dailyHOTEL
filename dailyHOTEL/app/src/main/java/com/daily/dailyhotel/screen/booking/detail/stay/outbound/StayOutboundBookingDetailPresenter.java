@@ -78,7 +78,9 @@ import static io.reactivex.schedulers.Schedulers.io;
  * Created by sheldon
  * Clean Architecture
  */
-public class StayOutboundBookingDetailPresenter extends BaseExceptionPresenter<StayOutboundBookingDetailActivity, StayOutboundBookingDetailInterface> implements StayOutboundBookingDetailView.OnEventListener
+public class StayOutboundBookingDetailPresenter //
+    extends BaseExceptionPresenter<StayOutboundBookingDetailActivity, StayOutboundBookingDetailInterface> //
+    implements StayOutboundBookingDetailView.OnEventListener
 {
     StayOutboundBookingAnalyticsInterface mAnalytics;
 

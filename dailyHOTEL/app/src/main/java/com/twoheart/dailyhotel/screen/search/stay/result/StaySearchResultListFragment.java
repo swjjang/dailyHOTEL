@@ -441,27 +441,9 @@ public class StaySearchResultListFragment extends StayListFragment
                 }
 
                 ((OnStaySearchResultListFragmentListener) mOnPlaceListFragmentListener).onStayListCount(totalCount);
-
-                if (StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(((StaySearchCuration) mStayCuration).getSuggest().categoryKey) == true)
-                {
-                    StaySearchResultListFragment.this.onStayList(list, page, false, activeReward);
-                } else
-                {
-                    if (Category.ALL.code.equalsIgnoreCase(mStayCuration.getCategory().code) == true)
-                    {
-                        if (mStayCuration.getCurationOption().isDefaultFilter() == true)
-                        {
-                            StaySearchResultListFragment.this.onStayList(list, page, false, activeReward);
-                        }
-                    } else
-                    {
-                        StaySearchResultListFragment.this.onStayList(list, page, false, activeReward);
-                    }
-                }
-            } else
-            {
-                StaySearchResultListFragment.this.onStayList(list, page, false, activeReward);
             }
+
+            StaySearchResultListFragment.this.onStayList(list, page, false, activeReward);
 
             if (mViewType == ViewType.MAP)
             {
