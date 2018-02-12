@@ -970,7 +970,16 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         {
             case LIST:
             {
-                Intent intent = StayOutboundFilterActivity.newInstance(getActivity(), mStayOutboundFilters, true, true);
+                Intent intent;
+
+                if (StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == true)
+                {
+                    intent = StayOutboundFilterActivity.newInstance(getActivity(), mStayOutboundFilters, false, true);
+                } else
+                {
+                    intent = StayOutboundFilterActivity.newInstance(getActivity(), mStayOutboundFilters, true, true);
+                }
+
                 startActivityForResult(intent, StayOutboundListActivity.REQUEST_CODE_FILTER);
 
                 mAnalytics.onEventFilterClick(getActivity());
