@@ -325,7 +325,10 @@ public class StayAreaListPresenter extends BaseExceptionPresenter<StayAreaListAc
                     mAreaGroupPosition = 0;
                 }
 
-                getViewInterface().setSelectedAreaGroup(mAreaGroupPosition);
+                if (mAreaGroupPosition != 0)
+                {
+                    getViewInterface().setSelectedAreaGroup(mAreaGroupPosition);
+                }
 
                 unLockAll();
             }

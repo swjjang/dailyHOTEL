@@ -365,8 +365,8 @@ public class StayAreaListView extends BaseDialogView<StayAreaListView.OnEventLis
 
         // 푸터
         View footerView = new View(getContext());
-        footerView.setBackgroundResource(R.drawable.layerlist_divider);
-        AbsListView.LayoutParams footerLayoutParams = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(getContext(), 12));
+        footerView.setBackgroundResource(R.drawable.layerlist_top_divider);
+        AbsListView.LayoutParams footerLayoutParams = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.dpToPx(getContext(), 11));
         footerView.setLayoutParams(footerLayoutParams);
 
         listView.addFooterView(footerView);
