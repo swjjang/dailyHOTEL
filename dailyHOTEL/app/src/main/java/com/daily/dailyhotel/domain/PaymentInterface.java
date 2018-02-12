@@ -31,7 +31,7 @@ public interface PaymentInterface
 
     Observable<PaymentResult> getStayOutboundPaymentTypeEasy(int index, JSONObject jsonObject);
 
-    Observable<PaymentResult> getStayOutboundPaymentTypeBonus(int index, JSONObject jsonObject);
+    Observable<PaymentResult> getStayOutboundPaymentTypeFree(int index, String saleType, JSONObject jsonObject);
 
     Observable<String> getStayOutboundHasDuplicatePayment(int index, JSONObject jsonObject);
 

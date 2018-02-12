@@ -3,7 +3,6 @@ package com.daily.dailyhotel.parcel;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.daily.dailyhotel.entity.Bank;
 import com.daily.dailyhotel.entity.Coupon;
 
 /**
@@ -37,6 +36,7 @@ public class CouponParcel implements Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flag)
     {
+        dest.writeInt(mCoupon.amount);
         dest.writeString(mCoupon.title);
         dest.writeString(mCoupon.validFrom);
         dest.writeString(mCoupon.validTo);
@@ -63,6 +63,7 @@ public class CouponParcel implements Parcelable
     {
         mCoupon = new Coupon();
 
+        mCoupon.amount = in.readInt();
         mCoupon.title = in.readString();
         mCoupon.validFrom = in.readString();
         mCoupon.validTo = in.readString();

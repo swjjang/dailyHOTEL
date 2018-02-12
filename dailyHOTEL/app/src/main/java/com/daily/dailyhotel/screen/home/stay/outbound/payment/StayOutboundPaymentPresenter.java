@@ -377,7 +377,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
         CouponParcel couponParcel = savedInstanceState.getParcelable("selectedCoupon");
 
-        if(couponParcel != null)
+        if (couponParcel != null)
         {
             mSelectedCoupon = couponParcel.getCoupon();
         }
@@ -546,8 +546,12 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
                     if (resultCode == Activity.RESULT_OK)
                     {
-                        Coupon coupon = data.getParcelableExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_SELECT_COUPON);
-                        setCoupon(coupon);
+                        CouponParcel couponParcel = data.getParcelableExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_SELECT_COUPON);
+
+                        if (couponParcel != null)
+                        {
+                            setCoupon(couponParcel.getCoupon());
+                        }
                     } else
                     {
                         setCoupon(null);
@@ -1140,7 +1144,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                 , mRateCode, mRateKey, mRoomTypeCode, mRoomBedTypeId, mPeople//
                 , mSaleType, mUserSimpleInformation.bonus, mSelectedCoupon, mGuest, mStayOutboundPayment.totalPrice, mVendorType, null);
 
-            addCompositeDisposable(mPaymentRemoteImpl.getStayOutboundPaymentTypeBonus(mStayIndex, jsonObject).subscribe(new Consumer<PaymentResult>()
+            addCompositeDisposable(mPaymentRemoteImpl.getStayOutboundPaymentTypeFree(mStayIndex, PAYMENT_TYPE.toLowerCase(), jsonObject).subscribe(new Consumer<PaymentResult>()
             {
                 @Override
                 public void accept(@io.reactivex.annotations.NonNull PaymentResult paymentResult) throws Exception
@@ -1584,6 +1588,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     discountPrice = 0;
 
                     getViewInterface().setBonus(false, mUserSimpleInformation.bonus, 0);
+                    getViewInterface().setCoupon(false, 0, false);
                     getViewInterface().setDepositSticker(hasDepositSticker());
                     break;
             }
@@ -2331,8 +2336,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             return;
         }
 
-        addCompositeDisposable(mCouponRemoteImpl.getStayOutboundCouponListByPayment(stayIndex, rateCode
-            , rateKey, roomTypeCode//
+        addCompositeDisposable(mCouponRemoteImpl.getStayOutboundCouponListByPayment(stayIndex, rateCode, rateKey, roomTypeCode//
             , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)) //
             .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Coupons>()
             {

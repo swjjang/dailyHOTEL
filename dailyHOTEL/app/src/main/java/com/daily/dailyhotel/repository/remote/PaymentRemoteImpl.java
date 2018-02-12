@@ -290,15 +290,16 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
     }
 
     @Override
-    public Observable<PaymentResult> getStayOutboundPaymentTypeBonus(int index, JSONObject jsonObject)
+    public Observable<PaymentResult> getStayOutboundPaymentTypeFree(int index, String saleType, JSONObject jsonObject)
     {
         final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
-        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotels/{hotelId}/room-reservation-payments/bonus"//
-            : "MTE5JDI0JDg1JDI1JDcyJDE5JDckNTUkNiQxOTckMTE3JDYyJDE0MiQ2MyQxNTIkODgk$OTdFMECFHDNDY2MkQ1NENQGQTNEYPQTg5RTczNjQwRjA4RjZCMjZBRkURzREI4DSOTREQ0M3Mjc4OEUYyNDFERjUX4ODg5OODI1NTlENUY0RDEwQTg2NzVENJzgyM0IwOTAC3NUUzNDM2NjVJGQzkxODkY5Q0E2NzEyOUQ0QzdBRTlEMDU2RUYzMDU0RUYyQTI5OTE2NDQ5FREVFOTk0QTM0QzQ2MjQxNTA0Ng==$";
+        final String API = Constants.UNENCRYPTED_URL ? "api/v1/outbound/hotels/{hotelId}/room-reservation-payments/{saleType}"//
+            : "NzkkMTk5JDUzJDE5OSQ4MCQzMyQxNTYkMTkkOTckMTE5JDEyMCQyMTUkMTY0JDE2NiQxMTUkMTQzJA==$QzBFMjE3RTMzQjAzRjFXEM0E4MjFFRkQyQBThBOUYyNUEzRDM4NjZGQWzJEMjZEODM5QTRCM0I0MjIwMTUXU2RDQ2Qzg0M0ZFNQUQ5QUMyM0U5ODM1RGjRFMKTUY2RTMxQzA0MEI5MjlFRkYFENEE4M0M0NDAzMkJFPMDUQ1BQjg0QzI3ODBGNTMzMjE0QzExQzg2N0YwNzE1MTIwRJjIUyRjJCWNTY0OTczRA==$";
 
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{hotelId}", Integer.toString(index));
+        urlParams.put("{saleType}", saleType);
 
         return mDailyMobileService.getStayOutboundPaymentTypeBonus(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API, urlParams), jsonObject) //
             .subscribeOn(Schedulers.io()).map(paymentResultDataBaseDto ->

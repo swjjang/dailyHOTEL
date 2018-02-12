@@ -58,24 +58,6 @@ public class SelectStayOutboundCouponDialogView extends BaseDialogView<SelectSta
 
         EdgeEffectColor.setEdgeGlowColor(viewDataBinding.recyclerView, getColor(R.color.default_over_scroll_edge));
 
-        viewDataBinding.positiveTextView.setEnabled(false);
-
-        viewDataBinding.negativeTextView.setOnClickListener(v -> getEventListener().onBackClick());
-        viewDataBinding.positiveTextView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (mSelectStayOutboundCouponDialogAdapter == null)
-                {
-                    return;
-                }
-
-                getEventListener().onConfirm(mSelectStayOutboundCouponDialogAdapter.getItem(mSelectStayOutboundCouponDialogAdapter.getSelectPosition()));
-            }
-        });
-        viewDataBinding.confirmTextView.setOnClickListener(v -> getEventListener().onBackClick());
-
         setVisible(false);
     }
 
@@ -88,7 +70,6 @@ public class SelectStayOutboundCouponDialogView extends BaseDialogView<SelectSta
         }
 
     }
-
 
     @Override
     public void setVisible(boolean visible)
@@ -140,6 +121,27 @@ public class SelectStayOutboundCouponDialogView extends BaseDialogView<SelectSta
             mSelectStayOutboundCouponDialogAdapter.setAll(couponList);
             mSelectStayOutboundCouponDialogAdapter.notifyDataSetChanged();
         }
+
+        getViewDataBinding().positiveTextView.setText(R.string.dialog_btn_text_select);
+        getViewDataBinding().positiveTextView.setEnabled(false);
+        getViewDataBinding().negativeTextView.setText(R.string.dialog_btn_text_cancel);
+
+        getViewDataBinding().positiveTextView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                int selectPosition = mSelectStayOutboundCouponDialogAdapter.getSelectPosition();
+                Coupon coupon = mSelectStayOutboundCouponDialogAdapter.getItem(selectPosition);
+
+                getEventListener().onConfirm(coupon);
+            }
+        });
+
+        getViewDataBinding().negativeTextView.setOnClickListener(v -> getEventListener().onBackClick());
+
+        getViewDataBinding().oneButtonLayout.setVisibility(View.GONE);
+        getViewDataBinding().twoButtonLayout.setVisibility(View.VISIBLE);
     }
 
     private class BackgroundDrawable extends Drawable
