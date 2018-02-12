@@ -64,7 +64,8 @@ public class StayFilterActivity extends BaseActivity<StayFilterPresenter>
         return intent;
     }
 
-    public static Intent newInstance(Context context, String checkInDateTime, String checkOutDateTime, StayTabPresenter.ViewType viewType, StayFilter stayFilter, StayRegion stayRegion, ArrayList<String> categories, Location location, double radius, String searchWord)
+    public static Intent newInstance(Context context, String checkInDateTime, String checkOutDateTime, StayTabPresenter.ViewType viewType//
+        , StayFilter stayFilter, StayRegion stayRegion, ArrayList<String> categories, Location location, double radius, String searchWord)
     {
         Intent intent = new Intent(context, StayFilterActivity.class);
         intent.putExtra(INTENT_EXTRA_DATA_CHECK_IN_DATE_TIME, checkInDateTime);

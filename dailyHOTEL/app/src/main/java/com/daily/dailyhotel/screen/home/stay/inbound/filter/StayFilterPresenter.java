@@ -143,14 +143,14 @@ public class StayFilterPresenter extends BaseExceptionPresenter<StayFilterActivi
 
         mViewType = Constants.ViewType.valueOf(viewType);
 
-        StayFilterParcel stayFitlerParcel = intent.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_STAY_FILTER);
+        StayFilterParcel stayFilterParcel = intent.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_STAY_FILTER);
 
-        if (stayFitlerParcel == null)
+        if (stayFilterParcel == null)
         {
             return false;
         }
 
-        mStayFilter = stayFitlerParcel.getStayFilter();
+        mStayFilter = stayFilterParcel.getStayFilter();
 
         StayRegionParcel stayRegionParcel = intent.getParcelableExtra(StayFilterActivity.INTENT_EXTRA_DATA_STAY_REGION);
 
