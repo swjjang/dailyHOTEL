@@ -61,6 +61,7 @@ import java.util.Locale;
 
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
@@ -874,7 +875,14 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
 
         mSearchModel.stayOutboundViewModel.suggest.setValue(stayOutboundSuggest);
 
-        unLockAll();
+        addCompositeDisposable(getViewInterface().getStayOutboundSuggestAnimation().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Action()
+        {
+            @Override
+            public void run() throws Exception
+            {
+                unLockAll();
+            }
+        }));
     }
 
     @Override

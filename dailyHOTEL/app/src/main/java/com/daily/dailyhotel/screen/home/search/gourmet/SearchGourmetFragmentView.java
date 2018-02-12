@@ -64,6 +64,7 @@ public class SearchGourmetFragmentView extends BaseFragmentDialogView<SearchGour
             if (recentlyList != null && recentlyList.size() > i)
             {
                 recentlyCardView[i].setVisibility(View.VISIBLE);
+                recentlyCardView[i].setBackgroundResource(R.drawable.selector_background_drawable_cf8f8f9_cffffff);
 
                 RecentlyDbPlace recentlyDbPlace = recentlyList.get(i);
 
