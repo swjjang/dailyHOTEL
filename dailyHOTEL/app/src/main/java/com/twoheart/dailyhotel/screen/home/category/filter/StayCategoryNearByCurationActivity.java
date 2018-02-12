@@ -77,17 +77,17 @@ public class StayCategoryNearByCurationActivity extends StayCategoryCurationActi
         RadioButton radioButton = mSortRadioGroup.findViewById(R.id.regionCheckView);
         RadioButton emptyCheckView = mSortRadioGroup.findViewById(R.id.emptyCheckView);
 
-        if (mSearchType == SearchType.LOCATION)
-        {
-            radioButton.setVisibility(View.GONE);
-            emptyCheckView.setVisibility(View.INVISIBLE);
-        } else
-        {
-            radioButton.setText(R.string.label_sort_by_rank);
-            radioButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.f_ic_sort_06, 0, 0);
+        //        if (mSearchType == SearchType.LOCATION)
+        //        {
+        //            radioButton.setVisibility(View.GONE);
+        //            emptyCheckView.setVisibility(View.INVISIBLE);
+        //        } else
+        //        {
+        radioButton.setText(R.string.label_sort_by_rank);
+        radioButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.f_ic_sort_06, 0, 0);
 
-            emptyCheckView.setVisibility(View.GONE);
-        }
+        emptyCheckView.setVisibility(View.GONE);
+        //        }
 
         if (viewType == ViewType.MAP)
         {
