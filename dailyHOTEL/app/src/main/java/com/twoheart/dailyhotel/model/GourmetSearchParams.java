@@ -67,7 +67,7 @@ public class GourmetSearchParams extends GourmetParams
             term = gourmetSuggest.displayName;
         }
 
-        if (Constants.SortType.DISTANCE == mSort)
+        if (Constants.SortType.DISTANCE == mSort || GourmetSuggest.CATEGORY_LOCATION.equalsIgnoreCase(gourmetSuggest.categoryKey) == true)
         {
             radius = gourmetSearchCuration.getRadius();
 
