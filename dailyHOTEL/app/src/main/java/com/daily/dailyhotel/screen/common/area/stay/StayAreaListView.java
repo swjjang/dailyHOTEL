@@ -328,7 +328,7 @@ public class StayAreaListView extends BaseDialogView<StayAreaListView.OnEventLis
 
         if (mStayAreaListAdapter.getChildren(groupPosition) == null)
         {
-            getViewDataBinding().expandableListView.setSelectedGroup(groupPosition);
+            //            getViewDataBinding().expandableListView.setSelectedGroup(groupPosition);
         } else
         {
             getViewDataBinding().expandableListView.expandGroup(groupPosition);
