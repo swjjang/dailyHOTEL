@@ -125,7 +125,7 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
 
     @Override
     public Observable<StayOutbounds> getList(StayBookDateTime stayBookDateTime, double latitude, double longitude, float radius//
-        , People people, StayOutboundFilters stayOutboundFilters, int numberOfResults, String cacheKey, String cacheLocation, String customerSessionId)
+        , People people, StayOutboundFilters stayOutboundFilters, int numberOfResults, boolean mapScreen, String cacheKey, String cacheLocation, String customerSessionId)
     {
         JSONObject jsonObject = new JSONObject();
 
@@ -133,6 +133,14 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
 
         /// 디폴트 인자들
         String sort;
+
+        if (mapScreen == true)
+        {
+            sort = StayOutboundFilters.SortType.RECOMMENDATION.getValue();
+        } else
+        {
+            sort = stayOutboundFilters != null && stayOutboundFilters.sortType != null ? stayOutboundFilters.sortType.getValue() : "DEFAULT";
+        }
 
         try
         {
@@ -163,7 +171,7 @@ public class StayOutboundRemoteImpl extends BaseRemoteImpl implements StayOutbou
             jsonObject.put("searchRadius", searchRadius < MIN_RADIUS ? MIN_RADIUS : searchRadius);
             jsonObject.put("searchRadiusUnit", "KM");
 
-            jsonObject.put("sort", "DEFAULT");
+            jsonObject.put("sort", sort);
         } catch (Exception e)
         {
             ExLog.e(e.toString());

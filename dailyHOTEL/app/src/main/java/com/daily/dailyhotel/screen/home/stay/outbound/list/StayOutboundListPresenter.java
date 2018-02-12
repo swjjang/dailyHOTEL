@@ -837,11 +837,11 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         if (StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == false)
         {
             observable = mStayOutboundRemoteImpl.getList(mStayBookDateTime, mStayOutboundSuggest.id, mStayOutboundSuggest.categoryKey//
-                , mPeople, mStayOutboundFilters, NUMBER_OF_RESULTS, mCacheKey, mCacheLocation, mCustomerSessionId);
+                , mPeople, mStayOutboundFilters, NUMBER_OF_RESULTS, mCacheKey, mCacheLocation, mCustomerSessionId).observeOn(AndroidSchedulers.mainThread());
         } else
         {
             observable = mStayOutboundRemoteImpl.getList(mStayBookDateTime, mStayOutboundFilters.latitude, mStayOutboundFilters.longitude, mRadius//
-                , mPeople, mStayOutboundFilters, NUMBER_OF_RESULTS, mCacheKey, mCacheLocation, mCustomerSessionId);
+                , mPeople, mStayOutboundFilters, NUMBER_OF_RESULTS, false, mCacheKey, mCacheLocation, mCustomerSessionId).observeOn(AndroidSchedulers.mainThread());
         }
 
         addCompositeDisposable(Observable.zip(mCommonRemoteImpl.getCommonDateTime()//
@@ -852,7 +852,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 DailyRemoteConfigPreference.getInstance(getActivity()).setKeyRemoteConfigRewardStickerEnabled(stayOutbounds.activeReward);
 
                 return stayOutbounds;
-            }).subscribe(stayOutbounds ->
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(stayOutbounds ->
         {
             mAnalytics.onEventList(getActivity(), mStayOutboundSuggest.display, stayOutbounds.getStayOutbound().size());
 
@@ -970,7 +970,16 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         {
             case LIST:
             {
-                Intent intent = StayOutboundFilterActivity.newInstance(getActivity(), mStayOutboundFilters, true, true);
+                Intent intent;
+
+                if (StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == true)
+                {
+                    intent = StayOutboundFilterActivity.newInstance(getActivity(), mStayOutboundFilters, false, true);
+                } else
+                {
+                    intent = StayOutboundFilterActivity.newInstance(getActivity(), mStayOutboundFilters, true, true);
+                }
+
                 startActivityForResult(intent, StayOutboundListActivity.REQUEST_CODE_FILTER);
 
                 mAnalytics.onEventFilterClick(getActivity());
@@ -1145,11 +1154,11 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             if (StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == false)
             {
                 observable = mStayOutboundRemoteImpl.getList(mStayBookDateTime, mStayOutboundSuggest.id, mStayOutboundSuggest.categoryKey//
-                    , mPeople, mStayOutboundFilters, NUMBER_OF_RESULTS, mCacheKey, mCacheLocation, mCustomerSessionId);
+                    , mPeople, mStayOutboundFilters, NUMBER_OF_RESULTS, mCacheKey, mCacheLocation, mCustomerSessionId).observeOn(AndroidSchedulers.mainThread());
             } else
             {
                 observable = mStayOutboundRemoteImpl.getList(mStayBookDateTime, mStayOutboundFilters.latitude, mStayOutboundFilters.longitude, mRadius//
-                    , mPeople, mStayOutboundFilters, NUMBER_OF_RESULTS, mCacheKey, mCacheLocation, mCustomerSessionId);
+                    , mPeople, mStayOutboundFilters, NUMBER_OF_RESULTS, false, mCacheKey, mCacheLocation, mCustomerSessionId).observeOn(AndroidSchedulers.mainThread());
             }
 
             addCompositeDisposable(observable.subscribe(stayOutbounds ->
@@ -1361,10 +1370,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             {
                 getViewInterface().setMapProgressBarVisible(true);
 
-                //                ExLog.d("pinkred : " + latLng.latitude + ", " + latLng.longitude + ", " + radius + ", " + zoom);
-
                 return mStayOutboundRemoteImpl.getList(mStayBookDateTime, latLng.latitude, latLng.longitude, radius//
-                    , mPeople, mStayOutboundFilters, numberOfResults, null, null, null);
+                    , mPeople, mStayOutboundFilters, numberOfResults, true, null, null, null);
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<StayOutbounds>()
         {
