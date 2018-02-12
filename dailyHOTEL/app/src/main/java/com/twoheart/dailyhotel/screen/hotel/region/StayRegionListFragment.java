@@ -9,6 +9,7 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 import java.util.HashMap;
 import java.util.Map;
 
+@Deprecated
 public class StayRegionListFragment extends PlaceRegionListFragment
 {
     @Override
