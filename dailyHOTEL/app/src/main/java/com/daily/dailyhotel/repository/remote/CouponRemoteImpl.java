@@ -207,7 +207,7 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
                         {
                             CouponsData couponsData = couponsDataBaseDto.data;
 
-                            coupons = couponsData == null ? new Coupons() : couponsData.getCoupons();
+                            coupons = couponsData == null || couponsData.getCoupons() == null ? new Coupons() : couponsData.getCoupons();
                         } else
                         {
                             throw new BaseException(couponsDataBaseDto.msgCode, couponsDataBaseDto.msg);

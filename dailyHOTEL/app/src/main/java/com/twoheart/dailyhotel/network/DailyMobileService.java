@@ -1044,7 +1044,7 @@ public interface DailyMobileService
                                                                 @Query("checkIn") String checkIn, @Query("checkOut") String checkOut);
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
-    @GET()
+    @POST()
     Observable<BaseDto<CouponsData>> getStayOutboundCouponListByPayment(@Url String mobileAPI, @Body JSONObject jsonObject);
 
 
