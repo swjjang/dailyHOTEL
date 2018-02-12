@@ -36,7 +36,7 @@ public class SelectStayOutboundCouponDialogPresenter extends BaseExceptionPresen
     int mStayIndex;
     String mStayName;
     StayBookDateTime mStayBookDateTime;
-    String mRateCode, mRateKey, mRoomTypeCode;
+    String mRateCode, mRateKey, mRoomTypeCode, mVendorType;
     int mMaxCouponAmount;
 
     public SelectStayOutboundCouponDialogPresenter(@NonNull SelectStayOutboundCouponDialogActivity activity)
@@ -99,6 +99,7 @@ public class SelectStayOutboundCouponDialogPresenter extends BaseExceptionPresen
         mRateCode = intent.getStringExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_RATE_CODE);
         mRateKey = intent.getStringExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_RATE_KEY);
         mRoomTypeCode = intent.getStringExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_ROOM_TYPE_CODE);
+        mVendorType = intent.getStringExtra(SelectStayOutboundCouponDialogActivity.INTENT_EXTRA_DATA_VENDOR_TYPE);
 
 
         if (DailyTextUtils.isTextEmpty(mRateCode, mRateKey, mRoomTypeCode) == true)
@@ -190,9 +191,12 @@ public class SelectStayOutboundCouponDialogPresenter extends BaseExceptionPresen
         setRefresh(false);
         screenLock(showProgress);
 
-        addCompositeDisposable(mCouponRemoteImpl.getStayOutboundCouponListByPayment(mStayIndex, mRateCode, mRateKey, mRoomTypeCode//
-            , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
-            , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Coupons>()
+        final String DATE_FORMAT = "yyyy-MM-dd";
+
+
+        addCompositeDisposable(mCouponRemoteImpl.getStayOutboundCouponListByPayment(mStayBookDateTime.getCheckInDateTime(DATE_FORMAT)//
+            , mStayBookDateTime.getCheckOutDateTime(DATE_FORMAT)
+            , mStayIndex, mRateCode, mRateKey, mRoomTypeCode, mVendorType).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Coupons>()
         {
             @Override
             public void accept(Coupons coupons) throws Exception

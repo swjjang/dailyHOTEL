@@ -169,14 +169,31 @@ public class CouponRemoteImpl extends BaseRemoteImpl implements CouponInterface
     }
 
     @Override
-    public Observable<Coupons> getStayOutboundCouponListByPayment(int stayIndex, String rateCode, String rateKey, String roomBedTypId, String checkInDateTime, String checkOutDateTime)
+    public Observable<Coupons> getStayOutboundCouponListByPayment(String checkInDate, String checkOutDate//
+        , int stayIndex, String rateCode, String rateKey, String roomTypeCode, String vendorType)
     {
         final String URL = Constants.DEBUG ? DailyPreference.getInstance(mContext).getBaseOutBoundUrl() : Setting.getOutboundServerUrl();
 
-        final String API = Constants.UNENCRYPTED_URL ? "api/v2/outbound/coupons/by-user"//
-            : "NjIkMSQzMSQ4MiQ1MSQxMyQzNSQxNCQ0JDUyJDg4JDU4JDQ4JDI1JDE1JDQ3JA==$QOkUNyMERDOTE0DKMMjdCQ0QzNM0ExMkQwMEPVGSMDVDNzQU0MkJFENzVEzNRjTBEQUMxRjg1MTLQ4NDRGMTJENUM3NUEUS3M0M3OQ==$";
+        final String API = Constants.UNENCRYPTED_URL ? "api/v2/outbound/payment/coupons"//
+            : "MjAkNzMkMzEkODAkMjUkODUkOTAkOSQxMyQ5NSQyMSQ3NyQ4MyQ4JDg3JDI2JA==$MTE1OUU4VNEDFBMNEJENzAB3MMSjVFVNEJEOEPJEQ0Q1N0Y4N0RDOTVFQUIzN0NGQTM2M0M3MzZDOTdIGYNkQMxNAJzZDRNjIzXQQI==$";
 
-        return mDailyMobileService.getStayOutboundCouponListByPayment(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API), stayIndex, rateCode, rateKey, roomBedTypId, checkInDateTime, checkOutDateTime) //
+        JSONObject jsonObject = new JSONObject();
+
+        try
+        {
+            jsonObject.put("arrivalDate", checkInDate);
+            jsonObject.put("departureDate", checkOutDate);
+            jsonObject.put("outboundHotelId", Integer.toString(stayIndex));
+            jsonObject.put("rateCode", rateCode);
+            jsonObject.put("rateKey", rateKey);
+            jsonObject.put("roomTypeCode", roomTypeCode);
+            jsonObject.put("vendorType", vendorType);
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
+        }
+
+        return mDailyMobileService.getStayOutboundCouponListByPayment(Crypto.getUrlDecoderEx(URL) + Crypto.getUrlDecoderEx(API), jsonObject) //
             .subscribeOn(Schedulers.io()).map(new Function<BaseDto<CouponsData>, Coupons>()
             {
                 @Override

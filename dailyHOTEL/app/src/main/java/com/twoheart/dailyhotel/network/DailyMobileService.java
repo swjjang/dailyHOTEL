@@ -1045,10 +1045,7 @@ public interface DailyMobileService
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET()
-    Observable<BaseDto<CouponsData>> getStayOutboundCouponListByPayment(@Url String mobileAPI//
-        , @Query("hotelIdx") int stayIndex, @Query("rateCode") String rateCode//
-        , @Query("rateKey") String rateKey, @Query("roomBedTypId") String roomBedTypId//
-        , @Query("checkIn") String checkInDate, @Query("checkOut") String checkOutDate);
+    Observable<BaseDto<CouponsData>> getStayOutboundCouponListByPayment(@Url String mobileAPI, @Body JSONObject jsonObject);
 
 
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})

@@ -671,7 +671,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             }
         }));
 
-        getMaxCouponAmount(mStayIndex, mRateCode, mRateKey, mRoomTypeCode, mStayBookDateTime);
+        getMaxCouponAmount(mStayBookDateTime, mStayIndex, mRateCode, mRateKey, mRoomTypeCode, mVendorType);
     }
 
     @Override
@@ -799,7 +799,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                         , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                         , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                         , mStayIndex, mStayName//
-                        , mStayOutboundPayment.rateCode, mStayOutboundPayment.rateKey, mStayOutboundPayment.roomTypeCode);
+                        , mStayOutboundPayment.rateCode, mStayOutboundPayment.rateKey, mStayOutboundPayment.roomTypeCode, mVendorType);
 
                     startActivityForResult(intent, StayOutboundPaymentActivity.REQUEST_CODE_COUPON_LIST);
                 } else
@@ -2331,30 +2331,31 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             }, false);
     }
 
-    void getMaxCouponAmount(int stayIndex, String rateCode, String rateKey, String roomTypeCode, StayBookDateTime stayBookDateTime)
+    void getMaxCouponAmount(StayBookDateTime stayBookDateTime, int stayIndex, String rateCode, String rateKey, String roomTypeCode, String vendorType)
     {
         if (stayBookDateTime == null)
         {
             return;
         }
 
-        addCompositeDisposable(mCouponRemoteImpl.getStayOutboundCouponListByPayment(stayIndex, rateCode, rateKey, roomTypeCode//
-            , stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)) //
-            .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Coupons>()
+        final String DATE_FORMAT = "yyyy-MM-dd";
+
+        addCompositeDisposable(mCouponRemoteImpl.getStayOutboundCouponListByPayment(stayBookDateTime.getCheckInDateTime(DATE_FORMAT)//
+            , stayBookDateTime.getCheckOutDateTime(DATE_FORMAT), stayIndex, rateCode, rateKey, roomTypeCode, vendorType).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Coupons>()
+        {
+            @Override
+            public void accept(Coupons coupons) throws Exception
             {
-                @Override
-                public void accept(Coupons coupons) throws Exception
-                {
-                    setMaxCouponAmount(coupons.maxCouponAmount, false);
-                }
-            }, new Consumer<Throwable>()
+                setMaxCouponAmount(coupons.maxCouponAmount, false);
+            }
+        }, new Consumer<Throwable>()
+        {
+            @Override
+            public void accept(Throwable throwable) throws Exception
             {
-                @Override
-                public void accept(Throwable throwable) throws Exception
-                {
-                    setMaxCouponAmount(0, true);
-                }
-            }));
+                setMaxCouponAmount(0, true);
+            }
+        }));
     }
 
     void setMaxCouponAmount(int maxCouponAmount, boolean isError)
