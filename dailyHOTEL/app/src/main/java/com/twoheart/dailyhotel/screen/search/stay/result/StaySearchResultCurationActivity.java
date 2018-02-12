@@ -87,7 +87,7 @@ public class StaySearchResultCurationActivity extends StayCurationActivity
         emptyCheckView.setVisibility(View.GONE);
         //        }
 
-        if (viewType == ViewType.MAP || StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(((StaySearchCuration) mStayCuration).getSuggest().categoryKey) == true)
+        if (viewType == ViewType.MAP)
         {
             setDisabledSortLayout(view, mSortRadioGroup);
             return;
