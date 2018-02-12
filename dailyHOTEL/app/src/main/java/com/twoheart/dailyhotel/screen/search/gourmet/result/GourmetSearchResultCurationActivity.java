@@ -62,7 +62,7 @@ public class GourmetSearchResultCurationActivity extends GourmetCurationActivity
         emptyCheckView.setVisibility(View.GONE);
         //        }
 
-        if (viewType == ViewType.MAP || GourmetSuggest.CATEGORY_LOCATION.equalsIgnoreCase(((GourmetSearchCuration) mGourmetCuration).getSuggest().categoryKey) == true)
+        if (viewType == ViewType.MAP)
         {
             setDisabledSortLayout(view, mSortRadioGroup);
             return;

@@ -82,7 +82,7 @@ public class StaySearchParams extends StayParams
             term = staySearchCuration.getSuggest() == null ? null : staySearchCuration.getSuggest().displayName;
         }
 
-        if (Constants.SortType.DISTANCE == mSort)
+        if (Constants.SortType.DISTANCE == mSort || StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(staySearchCuration.getSuggest().categoryKey) == true)
         {
             radius = staySearchCuration.getRadius();
 
