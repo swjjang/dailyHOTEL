@@ -290,6 +290,16 @@
                     </RadioGroup>
                 </LinearLayout>
 
+                <com.daily.base.widget.DailyTextView
+                    android:id="@+id/leaveDailyTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12dp"
+                    android:textColor="@color/default_text_c929292"
+                    android:layout_marginTop="15dp"
+                    android:text="회원 탈퇴하려면 여기를 눌러주세요."
+                    />
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="7dp"

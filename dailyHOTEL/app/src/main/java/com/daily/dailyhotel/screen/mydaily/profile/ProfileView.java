@@ -1,5 +1,11 @@
 package com.daily.dailyhotel.screen.mydaily.profile;
 
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.RadioGroup;
 
@@ -32,6 +38,8 @@ public class ProfileView extends BaseDialogView<ProfileView.OnEventListener, Act
         void doLogout();
 
         void doValidMonthChange(int month);
+
+        void onLeaveDailyClick();
     }
 
     public ProfileView(BaseActivity baseActivity, ProfileView.OnEventListener listener)
@@ -131,6 +139,30 @@ public class ProfileView extends BaseDialogView<ProfileView.OnEventListener, Act
         });
 
         // 개인정보 변경의 경우 리스너를 재 연결 해야 해서 따로 구현
+
+        ClickableSpan clickableSpan = new ClickableSpan()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                getEventListener().onLeaveDailyClick();
+            }
+        };
+
+        String fullText = getString(R.string.label_leave_daily_full_text);
+        String filterText = getString(R.string.label_leave_daily_linked_text);
+        int start = fullText.indexOf(filterText);
+        int end = start + filterText.length();
+
+        SpannableString spannableString = new SpannableString(fullText);
+        spannableString.setSpan(clickableSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new UnderlineSpan(), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new ForegroundColorSpan(getColor(R.color.default_text_c929292)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        viewDataBinding.leaveDailyTextView.setText(spannableString);
+
+        viewDataBinding.leaveDailyTextView.setClickable(true);
+        viewDataBinding.leaveDailyTextView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     @Override
