@@ -16,6 +16,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Response;
 
+@Deprecated
 public class StayRegionListNetworkController extends PlaceRegionListNetworkController
 {
     private BaseActivity mBaseActivity;

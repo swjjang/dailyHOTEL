@@ -7,6 +7,7 @@ import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 
 public interface SearchInterface
@@ -36,6 +37,8 @@ public interface SearchInterface
         void setSearchStayOutboundPeopleText(String text);
 
         void setSearchStayOutboundButtonEnabled(boolean enabled);
+
+        Completable getStayOutboundSuggestAnimation();
 
 
         void showSearchGourmet();
