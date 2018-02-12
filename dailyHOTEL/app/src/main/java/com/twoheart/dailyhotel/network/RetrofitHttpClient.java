@@ -19,6 +19,7 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okio.Buffer;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
@@ -104,7 +105,17 @@ public class RetrofitHttpClient implements Constants
                     ExLog.d("url : " + request.url());
                 } else
                 {
-                    ExLog.d("url : " + request.url() + ", body : " + request.body().toString());
+                    try
+                    {
+                        Buffer buffer = new Buffer();
+                        request.body().writeTo(buffer);
+                        byte[] jsonByte = new byte[(int) request.body().contentLength()];
+                        buffer.read(jsonByte);
+                        ExLog.d("url : " + request.url() + ", body : " + new String(jsonByte));
+                    } catch (Exception e)
+                    {
+                        ExLog.e(e.toString());
+                    }
                 }
             }
 
