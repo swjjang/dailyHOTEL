@@ -392,7 +392,7 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
     }
 
     @Override
-    public Observable<PaymentResult> getStayPaymentTypeBonus(JSONObject jsonObject)
+    public Observable<PaymentResult> getStayPaymentTypeFree(JSONObject jsonObject)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v4/booking/hotel/daily/only"//
             : "MzgkNDUkMyQyOSQ2MiQyNCQxNiQ0OSQ0OSQxNCQxMSQ3NyQ2MSQyMCQ0MSQxMyQ=$RTAU0NEFCRjFRQDQQzgAzIOTE0NjAJxMDAxSMEU3NTRU4RUIM0RkE0KXDNjRDMThEEOTQxNzPdBN0VGRkJVCNTgyMzMyN0ZGQzYzOA==$";
@@ -544,7 +544,7 @@ public class PaymentRemoteImpl extends BaseRemoteImpl implements PaymentInterfac
      * @return
      */
     @Override
-    public Observable<PaymentResult> getGourmetPaymentTypeBonus(JSONObject jsonObject)
+    public Observable<PaymentResult> getGourmetPaymentTypeFree(JSONObject jsonObject)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v5/booking/gourmet/daily/only"//
             : "NTgkNDYkOTckNzIkMTI2JDQ4JDExOCQ3JDQxJDExNiQ0OSQxMDEkODAkNjgkMzEkMTA2JA==$QkJCQ0IG5QUM1QjQzQkM5MTg5RjVFQTJQ2NzkyNkE4RQkE2RkLRIUwNjhCNjM1NTGQ4RDYVFMjdDMkJU0NEzRDNjVCODQ4OUZBNjdEMDOcJN1MTA4MThCQjgwNWjdBMAEE1NjNCNkNI3ODBD$";

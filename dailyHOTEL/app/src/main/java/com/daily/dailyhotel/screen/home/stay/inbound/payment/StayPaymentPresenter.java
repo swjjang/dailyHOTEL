@@ -78,6 +78,12 @@ import io.reactivex.functions.Function4;
  */
 public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActivity, StayPaymentInterface> implements StayPaymentView.OnEventListener
 {
+    private static final int MIN_AMOUNT_FOR_BONUS_USAGE = 20000; // 보너스를 사용하기 위한 최소 주문 가격
+
+    // 1000원 미만 결제시에 간편/일반 결제 불가 - 쿠폰 또는 적립금 전체 사용이 아닌경우 조건 추가
+    private static final int CARD_MIN_PRICE = 1000;
+    private static final int PHONE_MAX_PRICE = 500000;
+
     // 서버로 해당 문자열 그대로 보냄.(수정 금지)
     static final String UNKNOWN = "UNKNOWN";
     static final String WALKING = "WALKING";
@@ -99,12 +105,6 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
     @interface SaleType
     {
     }
-
-    private static final int MIN_AMOUNT_FOR_BONUS_USAGE = 20000; // 보너스를 사용하기 위한 최소 주문 가격
-
-    // 1000원 미만 결제시에 간편/일반 결제 불가 - 쿠폰 또는 적립금 전체 사용이 아닌경우 조건 추가
-    private static final int CARD_MIN_PRICE = 1000;
-    private static final int PHONE_MAX_PRICE = 500000;
 
     StayPaymentAnalyticsInterface mAnalytics;
 
@@ -1262,7 +1262,7 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                 , mSaleType, mUserSimpleInformation.bonus, couponCode, mGuest//
                 , mStayPayment.totalPrice, mTransportationType, null);
 
-            addCompositeDisposable(mPaymentRemoteImpl.getStayPaymentTypeBonus(jsonObject).subscribe(new Consumer<PaymentResult>()
+            addCompositeDisposable(mPaymentRemoteImpl.getStayPaymentTypeFree(jsonObject).subscribe(new Consumer<PaymentResult>()
             {
                 @Override
                 public void accept(@io.reactivex.annotations.NonNull PaymentResult paymentResult) throws Exception

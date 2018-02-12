@@ -895,7 +895,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
     @Override
     public void onEasyCardManagerClick()
     {
-        if (lock() == true)
+        if (mSelectedCard == null || lock() == true)
         {
             return;
         }
@@ -1561,6 +1561,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     discountPrice = 0;
 
                     getViewInterface().setBonus(false, mUserSimpleInformation.bonus, 0);
+                    getViewInterface().setCoupon(false, 0, false);
                     getViewInterface().setDepositSticker(false);
                     break;
 
@@ -1569,6 +1570,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
                     discountPrice = paymentPrice < 0 ? mStayOutboundPayment.totalPrice : mUserSimpleInformation.bonus;
 
                     getViewInterface().setBonus(true, mUserSimpleInformation.bonus, discountPrice);
+                    getViewInterface().setCoupon(false, 0, false);
                     getViewInterface().setDepositSticker(false);
                     break;
 
