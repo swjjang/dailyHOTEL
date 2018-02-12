@@ -552,4 +552,10 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
             }
         }));
     }
+
+    @Override
+    public void onLeaveDailyClick()
+    {
+        DailyToast.showToast(getActivity(), "회원 탈퇴 화면 연결 필요!", DailyToast.LENGTH_LONG);
+    }
 }

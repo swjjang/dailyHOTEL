@@ -34,7 +34,7 @@
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="2"
-                android:textColor="@drawable/selector_selectarea_titlecolor"
+                android:textColor="@color/default_text_c323232"
                 android:textSize="13dp"/>
 
             <com.daily.base.widget.DailyTextView
@@ -78,7 +78,7 @@
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="2"
-                android:textColor="@drawable/selector_selectarea_titlecolor"
+                android:textColor="@color/default_text_c323232"
                 android:textSize="13dp"/>
 
             <com.daily.base.widget.DailyTextView
