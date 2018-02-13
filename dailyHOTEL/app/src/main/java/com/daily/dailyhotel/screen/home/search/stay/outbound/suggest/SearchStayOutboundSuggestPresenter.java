@@ -420,6 +420,14 @@ public class SearchStayOutboundSuggestPresenter //
 
     private void setSuggestList(List<StayOutboundSuggest> suggestList)
     {
+        if (suggestList != null && suggestList.size() > 0)
+        {
+            for (StayOutboundSuggest suggest : suggestList)
+            {
+                suggest.menuType = StayOutboundSuggest.MENU_TYPE_SUGGEST;
+            }
+        }
+
         mSuggestList = suggestList;
     }
 
@@ -873,7 +881,6 @@ public class SearchStayOutboundSuggestPresenter //
                                 staySuggest.areaName = address.shortAddress;
                                 staySuggest.latitude = mLocationSuggest.latitude;
                                 staySuggest.longitude = mLocationSuggest.longitude;
-                                staySuggest.areaName = address.shortAddress;
 
                                 startFinishAction(staySuggest, mKeyword, null);
                             } else
