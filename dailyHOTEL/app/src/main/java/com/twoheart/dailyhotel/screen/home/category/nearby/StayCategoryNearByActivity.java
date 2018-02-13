@@ -645,28 +645,12 @@ public class StayCategoryNearByActivity extends BaseActivity
 
         try
         {
-            String action = null;
-
-            if (AnalyticsManager.Screen.SEARCH_MAIN.equalsIgnoreCase(mCallByScreen) == true)
-            {
-                action = (isEmpty == true) ? AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND : AnalyticsManager.Action.AROUND_SEARCH_CLICKED;
-                params.put(AnalyticsManager.KeyType.SEARCH_PATH, AnalyticsManager.ValueType.AROUND);
-                params.put(AnalyticsManager.KeyType.SEARCH_WORD, address);
-                params.put(AnalyticsManager.KeyType.SEARCH_RESULT, address);
-
-
-            } else if (AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC.equalsIgnoreCase(mCallByScreen) == true)
-            {
-                action = (isEmpty == true) ? AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND_LOCATIONLIST : AnalyticsManager.Action.AROUND_SEARCH_CLICKED_LOCATIONLIST;
-            } else if (AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL.equalsIgnoreCase(mCallByScreen) == true)
-            {
-                action = (isEmpty == true) ? AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND_LOCATIONLIST : AnalyticsManager.Action.AROUND_SEARCH_CLICKED_LOCATIONLIST;
-            }
+            String action = isEmpty ? AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND_LOCATIONLIST : AnalyticsManager.Action.AROUND_SEARCH_CLICKED_LOCATIONLIST;
 
             if (DailyTextUtils.isTextEmpty(action) == false)
             {
                 AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SEARCH_//
-                    , action, address, params);
+                    , action + "_stay", address, params);
             }
         } catch (Exception e)
         {

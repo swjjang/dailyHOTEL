@@ -24,17 +24,18 @@ public class StaySuggest
 
     private static final String SEARCH_SEPARATOR = " > ";
 
-    public int stayIndex;
-    public String stayName;
-    public String regionName;
-    public String provinceName;
-    public String displayName;
-    public int discountAveragePrice;
-    public int availableRooms;
-    public double latitude;
-    public double longitude;
-    public String categoryKey;
-    public int menuType;
+    public int stayIndex; // 업장 인덱스
+    public String stayName; // 업장 명
+    public String regionName; // 대지역 명 (예  서울)
+    public String provinceName; // 중지역 명 (예 강남구/서초구)
+    public String displayName; // 전체 이름 ( 지역 명의 경우 역삼1동)
+    public String address; // 전체 주소 - Suggest 화면 에서는 location 타입일때 diplayName 대신 address 사용
+    public int discountAveragePrice; // 판매 가격 - 업장타입일때
+    public int availableRooms; // 사용 가능 룸 개수
+    public double latitude; // 위도
+    public double longitude; // 경도
+    public String categoryKey; // 객체 종류 - 호텔/위치/역/지역/직접검색 등
+    public int menuType; // 검색어 입력창에서 선택 된 메뉴 - 주로 Analytics 에서 사용,  선택된 메뉴가 필요할때 사용
 
     public StaySuggest()
     {

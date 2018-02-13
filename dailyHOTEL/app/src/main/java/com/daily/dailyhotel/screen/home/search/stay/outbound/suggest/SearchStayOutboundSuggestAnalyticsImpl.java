@@ -67,16 +67,4 @@ public class SearchStayOutboundSuggestAnalyticsImpl implements SearchStayOutboun
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.OB_SEARCH_RECENT //
             , suggestDisplayName, keyword, null);
     }
-
-    @Override
-    public void onEventPopularSuggestClick(Activity activity, String suggestDisplayName)
-    {
-        if (activity == null || DailyTextUtils.isTextEmpty(suggestDisplayName) == true)
-        {
-            return;
-        }
-
-        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.OB_SEARCH_RECOMMEND //
-            , suggestDisplayName, AnalyticsManager.ValueType.EMPTY, null);
-    }
 }

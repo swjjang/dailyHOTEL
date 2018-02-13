@@ -21,10 +21,8 @@ import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.remote.SuggestRemoteImpl;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
 import com.daily.dailyhotel.screen.home.search.SearchViewModel;
-import com.daily.dailyhotel.screen.home.stay.outbound.detail.StayOutboundDetailActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -197,7 +195,7 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
     }
 
     @Override
-    public void onRecentlySearchResultDeleteClick(int index)
+    public void onRecentlySearchResultDeleteClick(int index, String stayName)
     {
         if (lock() == true)
         {
@@ -209,6 +207,8 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
             @Override
             public ObservableSource<ArrayList<RecentlyDbPlace>> apply(Boolean aBoolean) throws Exception
             {
+                mAnalytics.onEventRecentlyDeleteClick(getActivity(), stayName);
+
                 return mRecentlyLocalImpl.getRecentlyTypeList(Constants.ServiceType.OB_STAY);
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<RecentlyDbPlace>>()
@@ -283,6 +283,8 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
                     getViewInterface().setRecentlySearchResultVisible(true);
                     getViewInterface().setRecentlySearchResultList(recentlyDbPlaces);
                 }
+
+                mAnalytics.onEventRecentlyList(getActivity(), recentlyDbPlaces.size() == 0);
             }
         }, new Consumer<Throwable>()
         {
@@ -290,6 +292,8 @@ public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresen
             public void accept(Throwable throwable) throws Exception
             {
                 getViewInterface().setRecentlySearchResultVisible(false);
+
+                mAnalytics.onEventRecentlyList(getActivity(), true);
 
                 ExLog.e(throwable.toString());
             }

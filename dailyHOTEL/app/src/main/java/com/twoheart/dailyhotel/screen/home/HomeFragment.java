@@ -425,7 +425,7 @@ public class HomeFragment extends BaseMenuNavigationFragment
                             stayBookingDay.setCheckOutDay(mTodayDateTime.dailyDateTime, 1);
 
                             Intent intent = StayCategoryNearByActivity.newInstance(mBaseActivity //
-                                , mTodayDateTime, stayBookingDay, null, dailyCategoryType, AnalyticsManager.Screen.HOME);
+                                , mTodayDateTime, stayBookingDay, null, dailyCategoryType, AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC);
                             startActivityForResult(intent, Constants.CODE_REQUEST_ACTIVITY_SEARCH_RESULT);
                         } catch (Exception e)
                         {

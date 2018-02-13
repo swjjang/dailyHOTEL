@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import com.daily.base.util.DailyTextUtils;
 import com.daily.dailyhotel.entity.StayOutbound;
+import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
@@ -26,14 +27,16 @@ public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.
     }
 
     @Override
-    public void onScreen(Activity activity)
+    public void onScreen(Activity activity, boolean empty)
     {
         if (activity == null)
         {
             return;
         }
 
-        AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.DAILYHOTEL_HOTELLIST_OUTBOUND, null);
+        String screenName = empty ? "SearchResultView_Empty_ob" : "SearchResultView_ob";
+
+        AnalyticsManager.getInstance(activity).recordScreen(activity, screenName, null);
     }
 
     @Override
@@ -70,9 +73,9 @@ public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.
     }
 
     @Override
-    public void onEventList(Activity activity, String suggest, int size)
+    public void onEventList(Activity activity, StayOutboundSuggest suggest, int size)
     {
-        if (activity == null || DailyTextUtils.isTextEmpty(suggest) == true || mAnalyticsParam == null)
+        if (activity == null || suggest == null || mAnalyticsParam == null)
         {
             return;
         }
@@ -81,7 +84,7 @@ public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.
         String keyword = DailyTextUtils.isTextEmpty(mAnalyticsParam.keyword) ? AnalyticsManager.ValueType.EMPTY : mAnalyticsParam.keyword;
 
         AnalyticsManager.getInstance(activity).recordEvent(size == 0 ? AnalyticsManager.Category.OB_SEARCH_NO_RESULT : AnalyticsManager.Category.OB_SEARCH_RESULT//
-            , suggest, keyword, null);
+            , suggest.display, keyword, null);
 
         if (AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECENT.equalsIgnoreCase(category) == false //
             && AnalyticsManager.Category.OB_SEARCH_ORIGIN_AUTO.equalsIgnoreCase(category) == false//
@@ -90,7 +93,44 @@ public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.
             category = AnalyticsManager.Category.OB_SEARCH_ORIGIN_ETC;
         }
 
-        AnalyticsManager.getInstance(activity).recordEvent(category, suggest, keyword, null);
+        AnalyticsManager.getInstance(activity).recordEvent(category, suggest.display, keyword, null);
+
+        if (StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(suggest.categoryKey) == true)
+        {
+            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
+                , size == 0 ? "AroundSearchNotFound_LocationList_ob" : "AroundSearchClicked_LocationList_ob"//
+                , suggest.display, null);
+        }
+
+        switch (suggest.menuType)
+        {
+            case StayOutboundSuggest.MENU_TYPE_RECENTLY_SEARCH:
+            {
+                String recentlyAction = size == 0 ? AnalyticsManager.Action.RECENT_KEYWORD_NOT_FOUND : AnalyticsManager.Action.RECENT_KEYWORD;
+
+                AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
+                    , recentlyAction + "_ob", suggest.display, null);
+                break;
+            }
+
+            case StayOutboundSuggest.MENU_TYPE_SUGGEST:
+            {
+                String suggestCategory = size == 0 ? AnalyticsManager.Category.AUTO_SEARCH_NOT_FOUND : AnalyticsManager.Category.AUTO_SEARCH;
+
+                AnalyticsManager.getInstance(activity).recordEvent(suggestCategory//
+                    , "ob_" + suggest.display, mAnalyticsParam.keyword, null);
+                break;
+            }
+
+            case StayOutboundSuggest.MENU_TYPE_POPULAR_AREA:
+            {
+                String popularCategory = size == 0 ? AnalyticsManager.Category.OB_SEARCH_RECOMMEND_NO_RESULT : AnalyticsManager.Category.OB_SEARCH_RECOMMEND;
+
+                AnalyticsManager.getInstance(activity).recordEvent(popularCategory//
+                    , suggest.display, null, null);
+                break;
+            }
+        }
     }
 
     @Override
@@ -153,6 +193,80 @@ public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION_//
             , AnalyticsManager.Action.MEMBER_SELECT, null, null);
+    }
+
+    @Override
+    public void onEventStayClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
+            , "no_result_switch_screen", "ob_stay", null);
+    }
+
+    @Override
+    public void onEventGourmetClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
+            , "no_result_switch_screen", "ob_gourmet", null);
+    }
+
+    @Override
+    public void onEventPopularAreaClick(Activity activity, String areaName)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
+            , "no_result_switch_screen_location_ob", areaName, null);
+    }
+
+    @Override
+    public void onEventChangedRadius(Activity activity, String areaName)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
+            , "ob_around_result_range_change", areaName, null);
+    }
+
+    @Override
+    public void onEventResearchClick(Activity activity, StayOutboundSuggest suggest)
+    {
+        if (activity == null || suggest == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
+            , "ob_research", null, null);
+
+
+        switch (suggest.menuType)
+        {
+            case StayOutboundSuggest.MENU_TYPE_LOCATION:
+                AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
+                    , "ob_around_result_research", suggest.display, null);
+                break;
+
+            default:
+                AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
+                    , "ob_research", null, null);
+                break;
+        }
     }
 
     @Override
