@@ -62,4 +62,15 @@ public class SearchStaySuggestAnalyticsImpl implements SearchStaySuggestPresente
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH, "ob_keywords_in_domestic", keyword, null);
     }
+
+    @Override
+    public void onLocationSearchNoAddressClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_, "around_no_result", "현재위치", null);
+    }
 }

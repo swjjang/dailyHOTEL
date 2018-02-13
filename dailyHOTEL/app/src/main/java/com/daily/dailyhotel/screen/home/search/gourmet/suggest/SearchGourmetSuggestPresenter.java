@@ -95,6 +95,8 @@ public class SearchGourmetSuggestPresenter //
         void onDeleteRecentlySearch(Activity activity, String keyword);
 
         void onVoiceSearchClick(Activity activity);
+
+        void onLocationSearchNoAddressClick(Activity activity);
     }
 
     public SearchGourmetSuggestPresenter(@NonNull SearchGourmetSuggestActivity activity)
@@ -868,6 +870,15 @@ public class SearchGourmetSuggestPresenter //
                             unLockAll();
 
                             getViewInterface().setSuggest(mLocationSuggest.address);
+
+                            try
+                            {
+                                mAnalytics.onLocationSearchNoAddressClick(getActivity());
+                            } catch (Exception e)
+                            {
+                                ExLog.d(e.getMessage());
+                            }
+
                             startFinishAction(mLocationSuggest, mKeyword, null);
                         }
                     }));

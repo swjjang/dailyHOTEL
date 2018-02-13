@@ -89,6 +89,8 @@ public class SearchStayOutboundSuggestPresenter //
         void onDeleteRecentlySearch(Activity activity, String keyword);
 
         void onVoiceSearchClick(Activity activity);
+
+        void onLocationSearchNoAddressClick(Activity activity);
     }
 
     public SearchStayOutboundSuggestPresenter(@NonNull SearchStayOutboundSuggestActivity activity)
@@ -911,6 +913,15 @@ public class SearchStayOutboundSuggestPresenter //
                             unLockAll();
 
                             getViewInterface().setSuggest(mLocationSuggest.display);
+
+                            try
+                            {
+                                mAnalytics.onLocationSearchNoAddressClick(getActivity());
+                            } catch (Exception e)
+                            {
+                                ExLog.d(e.getMessage());
+                            }
+
                             startFinishAction(mLocationSuggest, mKeyword, null);
                         }
                     }));

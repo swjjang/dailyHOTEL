@@ -109,6 +109,8 @@ public class SearchStaySuggestPresenter //
         void onGourmetSuggestClick(Activity activity, String keyword);
 
         void onStayOutboundSuggestClick(Activity activity, String keyword);
+
+        void onLocationSearchNoAddressClick(Activity activity);
     }
 
     public SearchStaySuggestPresenter(@NonNull SearchStaySuggestActivity activity)
@@ -1190,6 +1192,15 @@ public class SearchStaySuggestPresenter //
                             unLockAll();
 
                             getViewInterface().setSuggest(mLocationSuggest.address);
+
+                            try
+                            {
+                                mAnalytics.onLocationSearchNoAddressClick(getActivity());
+                            } catch (Exception e)
+                            {
+                                ExLog.d(e.getMessage());
+                            }
+
                             startFinishAction(mLocationSuggest, mKeyword, null);
                         }
                     }));
