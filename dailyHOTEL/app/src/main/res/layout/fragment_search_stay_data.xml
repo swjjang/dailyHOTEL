@@ -1,4 +1,5 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
+
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
@@ -25,22 +26,22 @@
                 android:id="@+id/recently01View"
                 android:layout_width="match_parent"
                 android:layout_height="58dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"/>
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"/>
 
             <com.daily.dailyhotel.view.DailySearchRecentlyCardView
                 android:id="@+id/recently02View"
                 android:layout_width="match_parent"
                 android:layout_height="58dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"/>
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"/>
 
             <com.daily.dailyhotel.view.DailySearchRecentlyCardView
                 android:id="@+id/recently03View"
                 android:layout_width="match_parent"
                 android:layout_height="58dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"/>
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"/>
 
             <com.daily.base.widget.DailyTextView
                 android:id="@+id/popularSearchTagTextView"

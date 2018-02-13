@@ -10,8 +10,7 @@
         android:id="@+id/topDivider"
         android:layout_width="match_parent"
         android:layout_height="10dp"
-        android:background="@color/default_background"
-        />
+        android:background="@color/default_background"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -59,6 +58,5 @@
             android:layout_height="1px"
             android:layout_alignParentBottom="true"
             android:background="@color/selectarea_underline"/>
-
     </RelativeLayout>
 </LinearLayout>

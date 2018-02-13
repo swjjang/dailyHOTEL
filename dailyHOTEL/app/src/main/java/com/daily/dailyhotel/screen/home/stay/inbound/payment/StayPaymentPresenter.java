@@ -1733,6 +1733,25 @@ public class StayPaymentPresenter extends BaseExceptionPresenter<StayPaymentActi
                             phoneEnabled = false;
                             break;
                     }
+                } else
+                {
+                    switch (mSaleType)
+                    {
+                        case NONE:
+                        case BONUS:
+                            break;
+
+                        case COUPON:
+                            if (mSelectedCoupon.type == Coupon.Type.REWARD)
+                            {
+                                phoneEnabled = false;
+                            }
+                            break;
+
+                        case STICKER:
+                        default:
+                            break;
+                    }
                 }
 
                 // 리모트에서 조절되는 부분

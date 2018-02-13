@@ -414,7 +414,14 @@ public class ResearchStayOutboundPresenter extends BaseExceptionPresenter<Resear
 
         mSearchModel.suggest.setValue(stayOutboundSuggest);
 
-        unLockAll();
+        addCompositeDisposable(getViewInterface().getSuggestAnimation().subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Action()
+        {
+            @Override
+            public void run() throws Exception
+            {
+                unLockAll();
+            }
+        }));
     }
 
     private void initViewModel(BaseActivity activity)

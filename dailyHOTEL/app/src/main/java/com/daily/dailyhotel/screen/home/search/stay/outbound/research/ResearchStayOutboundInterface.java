@@ -6,6 +6,7 @@ import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 
 public interface ResearchStayOutboundInterface
@@ -23,6 +24,8 @@ public interface ResearchStayOutboundInterface
         void setSearchButtonEnabled(boolean enabled);
 
         Observable getCompleteCreatedFragment();
+
+        Completable getSuggestAnimation();
     }
 
     interface OnEventListener extends OnBaseEventListener
