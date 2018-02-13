@@ -256,6 +256,8 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
             return;
         }
 
+        getViewDataBinding().appBarLayout.setExpanded(true, true);
+
         getViewDataBinding().topImageView.setImageResource(R.drawable.search_bg_stay);
         getViewDataBinding().searchTitleTextView.setText(R.string.message_search_stay_description);
 
@@ -331,6 +333,8 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         {
             return;
         }
+
+        getViewDataBinding().appBarLayout.setExpanded(true, true);
 
         getViewDataBinding().topImageView.setImageResource(R.drawable.search_bg_ob);
         getViewDataBinding().searchTitleTextView.setText(R.string.message_search_stayoutbound_description);
@@ -421,10 +425,10 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
 
         ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(getViewDataBinding().stayOutboundSuggestBackgroundView, View.ALPHA, 1.0f, 0.5f, 1.0f);
         ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(getViewDataBinding().stayOutboundSuggestTextView, View.ALPHA, 1.0f, 0.5f, 1.0f);
-        ObjectAnimator objectAnimator3 = ObjectAnimator.ofFloat(getViewDataBinding().stayOutboundSuggestBackgroundView, View.SCALE_X, 1.0f, 0.95f, 1.0f);
-        ObjectAnimator objectAnimator4 = ObjectAnimator.ofFloat(getViewDataBinding().stayOutboundSuggestBackgroundView, View.SCALE_Y, 1.0f, 0.95f, 1.0f);
-        ObjectAnimator objectAnimator5 = ObjectAnimator.ofFloat(getViewDataBinding().stayOutboundSuggestTextView, View.SCALE_X, 1.0f, 0.95f, 1.0f);
-        ObjectAnimator objectAnimator6 = ObjectAnimator.ofFloat(getViewDataBinding().stayOutboundSuggestTextView, View.SCALE_Y, 1.0f, 0.95f, 1.0f);
+        ObjectAnimator objectAnimator3 = ObjectAnimator.ofFloat(getViewDataBinding().stayOutboundSuggestBackgroundView, View.SCALE_X, 1.0f, 0.97f, 1.0f);
+        ObjectAnimator objectAnimator4 = ObjectAnimator.ofFloat(getViewDataBinding().stayOutboundSuggestBackgroundView, View.SCALE_Y, 1.0f, 0.97f, 1.0f);
+        ObjectAnimator objectAnimator5 = ObjectAnimator.ofFloat(getViewDataBinding().stayOutboundSuggestTextView, View.SCALE_X, 1.0f, 0.97f, 1.0f);
+        ObjectAnimator objectAnimator6 = ObjectAnimator.ofFloat(getViewDataBinding().stayOutboundSuggestTextView, View.SCALE_Y, 1.0f, 0.97f, 1.0f);
 
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.setDuration(200);
@@ -475,6 +479,8 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         {
             return;
         }
+
+        getViewDataBinding().appBarLayout.setExpanded(true, true);
 
         getViewDataBinding().topImageView.setImageResource(R.drawable.search_bg_gourmet);
         getViewDataBinding().searchTitleTextView.setText(R.string.message_search_gourmet_description);

@@ -156,7 +156,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         void onEventDestroy(Activity activity);
 
-        void onEventList(Activity activity, String suggest, int size);
+        void onEventList(Activity activity, StayOutboundSuggest suggest, int size);
 
         void onEventWishClick(Activity activity, int stayIndex, boolean isWish);
 
@@ -167,6 +167,12 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         void onEventCalendarClick(Activity activity);
 
         void onEventPeopleClick(Activity activity);
+
+        void onEventStayClick(Activity activity);
+
+        void onEventGourmetClick(Activity activity);
+
+        void onEventPopularAreaClick(Activity activity, String areaName);
 
         StayOutboundDetailAnalyticsParam getDetailAnalyticsParam(StayOutbound stayOutbound, String grade, int rankingPosition, int listSize);
     }
@@ -854,7 +860,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 return stayOutbounds;
             }).observeOn(AndroidSchedulers.mainThread()).subscribe(stayOutbounds ->
         {
-            mAnalytics.onEventList(getActivity(), mStayOutboundSuggest.display, stayOutbounds.getStayOutbound().size());
+            mAnalytics.onEventList(getActivity(), mStayOutboundSuggest, stayOutbounds.getStayOutbound().size());
 
             onStayOutbounds(stayOutbounds);
 
@@ -1440,6 +1446,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         }
 
         finish(Constants.CODE_RESULT_ACTIVITY_SEARCH_STAY);
+
+        mAnalytics.onEventStayClick(getActivity());
     }
 
     @Override
@@ -1451,6 +1459,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         }
 
         finish(Constants.CODE_RESULT_ACTIVITY_SEARCH_GOURMET);
+
+        mAnalytics.onEventGourmetClick(getActivity());
     }
 
     @Override
@@ -1466,6 +1476,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         notifyToolbarChanged();
 
         onRefreshAll(true);
+
+        mAnalytics.onEventPopularAreaClick(getActivity(), stayOutboundSuggest.name);
     }
 
     private void finish(int resultCode)

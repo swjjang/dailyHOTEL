@@ -183,9 +183,9 @@ public class GourmetPopularSuggestListAdapter extends RecyclerView.Adapter<Recyc
 
         holder.dataBinding.bottomDivider.setVisibility(View.VISIBLE);
 
-        holder.dataBinding.descriptionTextView.setText(gourmetSuggest.displayName);
+        holder.dataBinding.descriptionTextView.setText(gourmetSuggest.address);
 
-        if (DailyTextUtils.isTextEmpty(gourmetSuggest.displayName) == true)
+        if (DailyTextUtils.isTextEmpty(gourmetSuggest.address) == true)
         {
             holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
         } else

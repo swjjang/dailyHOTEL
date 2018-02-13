@@ -41,15 +41,11 @@ public class GourmetCampaignTagListAnalyticsImpl implements GourmetCampaignTagLi
         params.put(AnalyticsManager.KeyType.TAG, tagIndex);
         params.put(AnalyticsManager.KeyType.NUM_OF_SEARCH_RESULTS_RETURNED, Integer.toString(listCount));
 
-        if (listCount == 0)
-        {
-            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH //
-                , AnalyticsManager.Action.TAG_SEARCH_NOT_FOUND, tagIndex, params);
-        } else
-        {
-            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH //
-                , AnalyticsManager.Action.TAG_SEARCH, tagIndex, params);
-        }
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH //
+            , listCount == 0 ? AnalyticsManager.Action.TAG_SEARCH_NOT_FOUND : AnalyticsManager.Action.TAG_SEARCH, tagIndex, params);
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH //
+            , listCount == 0 ? AnalyticsManager.Action.TAG_SEARCH_NOT_FOUND + "_gourmet" : AnalyticsManager.Action.TAG_SEARCH + "_gourmet", tagIndex, null);
     }
 
     @Override
