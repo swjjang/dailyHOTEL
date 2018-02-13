@@ -1,6 +1,8 @@
 package com.daily.dailyhotel.screen.home.search.stay.inbound;
 
 
+import android.app.Activity;
+
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BaseFragmentDialogViewInterface;
 import com.daily.base.OnBaseEventListener;
@@ -28,7 +30,7 @@ public interface SearchStayFragmentInterface
 
     interface OnEventListener extends OnBaseEventListener
     {
-        void onRecentlySearchResultDeleteClick(int index);
+        void onRecentlySearchResultDeleteClick(int index, String stayName);
 
         void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace);
 
@@ -37,5 +39,8 @@ public interface SearchStayFragmentInterface
 
     interface AnalyticsInterface extends BaseAnalyticsInterface
     {
+        void onEventRecentlyList(Activity activity, boolean empty);
+
+        void onEventRecentlyDeleteClick(Activity activity, String stayName);
     }
 }
