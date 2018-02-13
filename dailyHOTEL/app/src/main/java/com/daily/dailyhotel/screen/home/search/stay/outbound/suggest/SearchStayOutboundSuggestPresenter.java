@@ -91,6 +91,10 @@ public class SearchStayOutboundSuggestPresenter //
         void onVoiceSearchClick(Activity activity);
 
         void onLocationSearchNoAddressClick(Activity activity);
+
+        void onRecentlySearchList(Activity activity, boolean hasData);
+
+        void onRecentlyStayOutboundList(Activity activity, boolean hasData);
     }
 
     public SearchStayOutboundSuggestPresenter(@NonNull SearchStayOutboundSuggestActivity activity)
@@ -315,6 +319,17 @@ public class SearchStayOutboundSuggestPresenter //
                     // 최근 본업장, 최근 검색어
                     List<StayOutboundSuggest> mergeList = getRecentlySuggestList(stayOutbounds, stayOutboundRecentlySuggestList);
                     setRecentlySuggestList(mergeList);
+
+                    try
+                    {
+                        mAnalytics.onRecentlySearchList(getActivity(), stayOutboundRecentlySuggestList != null && stayOutboundRecentlySuggestList.size() > 0);
+
+                        List<StayOutbound> stayOutboundList = stayOutbounds == null ? null : stayOutbounds.getStayOutbound();
+                        mAnalytics.onRecentlyStayOutboundList(getActivity(), stayOutboundList != null && stayOutboundList.size() > 0);
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.getMessage());
+                    }
 
                     return mergeList;
                 }

@@ -111,6 +111,10 @@ public class SearchStaySuggestPresenter //
         void onStayOutboundSuggestClick(Activity activity, String keyword);
 
         void onLocationSearchNoAddressClick(Activity activity);
+
+        void onRecentlySearchList(Activity activity, boolean hasData);
+
+        void onRecentlyStayList(Activity activity, boolean hasData);
     }
 
     public SearchStaySuggestPresenter(@NonNull SearchStaySuggestActivity activity)
@@ -400,6 +404,15 @@ public class SearchStaySuggestPresenter //
 
                     List<StaySuggest> recentlySuggestList = getRecentlySuggestList(keywordList, stayList);
                     setRecentlySuggestList(recentlySuggestList);
+
+                    try
+                    {
+                        mAnalytics.onRecentlySearchList(getActivity(), keywordList != null && keywordList.size() > 0);
+                        mAnalytics.onRecentlyStayList(getActivity(), stayList != null && stayList.size() > 0);
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.getMessage());
+                    }
 
                     return recentlySuggestList;
                 }
