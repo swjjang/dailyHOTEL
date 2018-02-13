@@ -90,6 +90,11 @@ public class SearchGourmetSuggestPresenter //
 
     public interface SearchGourmetSuggestAnalyticsInterface extends BaseAnalyticsInterface
     {
+        void onSearchSuggestList(Activity activity, String keyword, boolean hasGourmetSuggestList);
+
+        void onDeleteRecentlySearch(Activity activity, String keyword);
+
+        void onVoiceSearchClick(Activity activity);
     }
 
     public SearchGourmetSuggestPresenter(@NonNull SearchGourmetSuggestActivity activity)
@@ -557,6 +562,15 @@ public class SearchGourmetSuggestPresenter //
 
                         getViewInterface().setProgressBarVisible(false);
                         unLockAll();
+
+                        try
+                        {
+                            boolean hasGourmetSuggestList = gourmetSuggestList != null && gourmetSuggestList.size() > 0;
+                            mAnalytics.onSearchSuggestList(getActivity(), keyword, hasGourmetSuggestList);
+                        } catch (Exception e)
+                        {
+                            ExLog.d(e.getMessage());
+                        }
                     }
                 }, new Consumer<Throwable>()
                 {
@@ -568,6 +582,14 @@ public class SearchGourmetSuggestPresenter //
 
                         getViewInterface().setProgressBarVisible(false);
                         unLockAll();
+
+                        try
+                        {
+                            mAnalytics.onSearchSuggestList(getActivity(), keyword, false);
+                        } catch (Exception e)
+                        {
+                            ExLog.d(e.getMessage());
+                        }
                     }
                 });
 
@@ -710,6 +732,14 @@ public class SearchGourmetSuggestPresenter //
             DailyPreference.getInstance(getActivity()).setGourmetRecentSearches(mDailyRecentSearches.toString());
 
             unLockAll();
+
+            try
+            {
+                mAnalytics.onDeleteRecentlySearch(getActivity(), keyword.name);
+            } catch (Exception e)
+            {
+                ExLog.d(e.getMessage());
+            }
         }
     }
 
@@ -735,6 +765,14 @@ public class SearchGourmetSuggestPresenter //
         {
             DailyToast.showToast(getActivity(), R.string.message_search_suggest_voice_search_error, DailyToast.LENGTH_SHORT);
             getViewInterface().setVoiceSearchEnabled(false);
+        }
+
+        try
+        {
+            mAnalytics.onVoiceSearchClick(getActivity());
+        } catch (Exception e)
+        {
+            ExLog.d(e.getMessage());
         }
     }
 
@@ -796,43 +834,43 @@ public class SearchGourmetSuggestPresenter //
 
                 addCompositeDisposable(mGoogleAddressRemoteImpl.getLocationAddress(location.getLatitude(), location.getLongitude()) //
                     .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GoogleAddress>()
-                {
-                    @Override
-                    public void accept(GoogleAddress address) throws Exception
                     {
-                        mLocationSuggest.address = address.address;
-                        mLocationSuggest.displayName = address.shortAddress;
-
-                        getViewInterface().setNearbyGourmetSuggest(mLocationSuggest);
-
-                        if (isUserClick == false)
+                        @Override
+                        public void accept(GoogleAddress address) throws Exception
                         {
-                            return;
+                            mLocationSuggest.address = address.address;
+                            mLocationSuggest.displayName = address.shortAddress;
+
+                            getViewInterface().setNearbyGourmetSuggest(mLocationSuggest);
+
+                            if (isUserClick == false)
+                            {
+                                return;
+                            }
+
+                            unLockAll();
+
+                            getViewInterface().setSuggest(mLocationSuggest.address);
+                            startFinishAction(mLocationSuggest, mKeyword, null);
                         }
-
-                        unLockAll();
-
-                        getViewInterface().setSuggest(mLocationSuggest.address);
-                        startFinishAction(mLocationSuggest, mKeyword, null);
-                    }
-                }, new Consumer<Throwable>()
-                {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception
+                    }, new Consumer<Throwable>()
                     {
-                        getViewInterface().setNearbyGourmetSuggest(mLocationSuggest);
-
-                        if (isUserClick == false)
+                        @Override
+                        public void accept(Throwable throwable) throws Exception
                         {
-                            return;
+                            getViewInterface().setNearbyGourmetSuggest(mLocationSuggest);
+
+                            if (isUserClick == false)
+                            {
+                                return;
+                            }
+
+                            unLockAll();
+
+                            getViewInterface().setSuggest(mLocationSuggest.address);
+                            startFinishAction(mLocationSuggest, mKeyword, null);
                         }
-
-                        unLockAll();
-
-                        getViewInterface().setSuggest(mLocationSuggest.address);
-                        startFinishAction(mLocationSuggest, mKeyword, null);
-                    }
-                }));
+                    }));
 
             }
         }, new Consumer<Throwable>()
