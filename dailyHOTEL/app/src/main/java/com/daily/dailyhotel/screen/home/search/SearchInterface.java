@@ -102,6 +102,8 @@ public interface SearchInterface
 
     interface AnalyticsInterface extends BaseAnalyticsInterface
     {
+        void onScreen(Activity activity);
+
         void onEventStayClick(Activity activity);
 
         void onEventStayOutboundClick(Activity activity);
@@ -109,15 +111,21 @@ public interface SearchInterface
         void onEventGourmetClick(Activity activity);
 
 
+        void onEventStaySuggestClick(Activity activity);
+
         void onEventStayDoSearch(Activity activity, StaySuggest suggest);
 
         void onEventStayCalendarClick(Activity activity);
 
 
+        void onEventStayOutboundSuggestClick(Activity activity);
+
         void onEventStayOutboundDoSearch(Activity activity, StayOutboundSuggest suggest);
 
         void onEventStayOutboundPeopleClick(Activity activity);
 
+
+        void onEventGourmetSuggestClick(Activity activity);
 
         void onEventGourmetDoSearch(Activity activity, GourmetSuggest suggest);
     }

@@ -650,7 +650,7 @@ public class StayCategoryNearByActivity extends BaseActivity
             if (DailyTextUtils.isTextEmpty(action) == false)
             {
                 AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SEARCH_//
-                    , action, address, params);
+                    , action + "_stay", address, params);
             }
         } catch (Exception e)
         {

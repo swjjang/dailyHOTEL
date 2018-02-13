@@ -261,6 +261,8 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
     {
         super.onStart();
 
+        mAnalytics.onScreen(getActivity());
+
         if (isRefresh() == true)
         {
             onRefresh(true);
@@ -691,6 +693,8 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                 , null //
                 , mSearchModel.stayViewModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mSearchModel.stayViewModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)), SearchActivity.REQUEST_CODE_STAY_SUGGEST);
+
+            mAnalytics.onEventStaySuggestClick(getActivity());
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -778,6 +782,8 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         }
 
         startActivityForResult(SearchStayOutboundSuggestActivity.newInstance(getActivity(), ""), SearchActivity.REQUEST_CODE_STAY_OUTBOUND_SUGGEST);
+
+        mAnalytics.onEventStayOutboundSuggestClick(getActivity());
     }
 
     @Override
@@ -913,6 +919,8 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                 , null //
                 , mSearchModel.gourmetViewModel.bookDateTime.getValue().getVisitDateTime(DailyCalendar.ISO_8601_FORMAT))//
                 , SearchActivity.REQUEST_CODE_GOURMET_SUGGEST);
+
+            mAnalytics.onEventGourmetSuggestClick(getActivity());
         } catch (Exception e)
         {
             ExLog.e(e.toString());

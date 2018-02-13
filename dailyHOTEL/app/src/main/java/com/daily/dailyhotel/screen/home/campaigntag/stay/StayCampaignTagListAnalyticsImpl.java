@@ -45,11 +45,10 @@ public class StayCampaignTagListAnalyticsImpl implements StayCampaignTagListPres
         params.put(AnalyticsManager.KeyType.TAG, tagIndex);
         params.put(AnalyticsManager.KeyType.NUM_OF_SEARCH_RESULTS_RETURNED, Integer.toString(listCount));
 
-        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH //
-            , listCount == 0 ? AnalyticsManager.Action.TAG_SEARCH_NOT_FOUND : AnalyticsManager.Action.TAG_SEARCH, tagIndex, params);
+        String action = listCount == 0 ? AnalyticsManager.Action.TAG_SEARCH_NOT_FOUND : AnalyticsManager.Action.TAG_SEARCH;
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH //
-            , listCount == 0 ? AnalyticsManager.Action.TAG_SEARCH_NOT_FOUND + "_stay" : AnalyticsManager.Action.TAG_SEARCH + "_stay", tagIndex, null);
+            , action + "_stay", tagIndex, null);
     }
 
     @Override

@@ -10,6 +10,17 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 public class SearchAnalyticsImpl implements SearchInterface.AnalyticsInterface
 {
     @Override
+    public void onScreen(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.SEARCH_MAIN, null);
+    }
+
+    @Override
     public void onEventStayClick(Activity activity)
     {
         if (activity == null)
@@ -43,6 +54,18 @@ public class SearchAnalyticsImpl implements SearchInterface.AnalyticsInterface
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
             , AnalyticsManager.Action.SEARCH_SCREEN, "SwitchingGourmet", null);
+    }
+
+    @Override
+    public void onEventStaySuggestClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
+            , "stay_search_try", null, null);
     }
 
     @Override
@@ -95,6 +118,18 @@ public class SearchAnalyticsImpl implements SearchInterface.AnalyticsInterface
     }
 
     @Override
+    public void onEventStayOutboundSuggestClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
+            , "ob_search_try", null, null);
+    }
+
+    @Override
     public void onEventStayOutboundDoSearch(Activity activity, StayOutboundSuggest suggest)
     {
         if (activity == null)
@@ -141,6 +176,18 @@ public class SearchAnalyticsImpl implements SearchInterface.AnalyticsInterface
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.NAVIGATION//
             , AnalyticsManager.Action.MEMBER_SELECT, null, null);
+    }
+
+    @Override
+    public void onEventGourmetSuggestClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
+            , "gourmet_search_try", null, null);
     }
 
     @Override

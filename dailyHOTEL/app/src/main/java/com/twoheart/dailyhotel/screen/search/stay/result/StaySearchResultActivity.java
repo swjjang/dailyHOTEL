@@ -699,7 +699,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 params.put(AnalyticsManager.KeyType.DISTRICT, area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name);
             }
 
-            AnalyticsManager.getInstance(StaySearchResultActivity.this).recordScreen(StaySearchResultActivity.this, screen, null, params);
+            AnalyticsManager.getInstance(StaySearchResultActivity.this).recordScreen(StaySearchResultActivity.this, screen + "_stay", null, params);
 
             if (AnalyticsManager.Screen.HOME.equalsIgnoreCase(mCallByScreen) == true)
             {
@@ -955,6 +955,9 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                     ? mAddress : mStaySearchCuration.getSuggest().displayName;
                 AnalyticsManager.getInstance(StaySearchResultActivity.this) //
                     .recordEvent(AnalyticsManager.Category.NAVIGATION, action, label, null);
+
+                AnalyticsManager.getInstance(StaySearchResultActivity.this) //
+                    .recordEvent(AnalyticsManager.Category.SEARCH_, "stay_around_result_range_change", mStaySearchCuration.getSuggest().displayName, null);
             } catch (Exception e)
             {
                 if (Constants.DEBUG == true)
@@ -1043,6 +1046,20 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 , mStaySearchCuration.getStayBookingDay().getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
                 , mStaySearchCuration.getStayBookingDay().getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
                 , mStaySearchCuration.getSuggest()), CODE_REQUEST_ACTIVITY_STAY_RESEARCH);
+
+
+            switch(mStaySearchCuration.getSuggest().menuType)
+            {
+                case StaySuggest.MENU_TYPE_LOCATION:
+                    AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
+                        , "stay_around_result_research", mStaySearchCuration.getSuggest().displayName, null);
+                    break;
+
+                default:
+                    AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
+                        , "stay_research", null, null);
+                    break;
+            }
         }
 
         @Override
@@ -1587,6 +1604,8 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 }
 
                 mPlaceSearchResultLayout.setScreenVisible(ScreenType.LIST);
+
+                recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT);
             }
 
             StayBookingDay stayBookingDay = mStaySearchCuration.getStayBookingDay();
