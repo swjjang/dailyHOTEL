@@ -7,6 +7,7 @@ import com.daily.base.exception.BaseException;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.domain.GoogleAddressInterface;
+import com.daily.dailyhotel.entity.GoogleAddress;
 import com.daily.dailyhotel.repository.remote.model.GoogleAddressComponentsData;
 import com.daily.dailyhotel.repository.remote.model.GoogleAddressData;
 import com.twoheart.dailyhotel.network.dto.GoogleMapListDto;
@@ -26,25 +27,29 @@ import io.reactivex.schedulers.Schedulers;
 
 public class GoogleAddressRemoteImpl extends BaseRemoteImpl implements GoogleAddressInterface
 {
+    private static final String KEY_COUNTRY = "country";
+    private static final String KEY_SUBLOCALITY_LEVEL_2 = "sublocality_level_2";
+    private static final String KEY_ADMINISTRATIVE_AREA_LEVEL_1 = "administrative_area_level_1";
+
     public GoogleAddressRemoteImpl(@NonNull Context context)
     {
         super(context);
     }
 
     @Override
-    public Observable<String> getLocationAddress(double latitude, double longitude)
+    public Observable<GoogleAddress> getLocationAddress(double latitude, double longitude)
     {
         final String url = String.format(Locale.KOREA, "https://maps.googleapis.com/maps/api/geocode/json?latlng=%s,%s&location_type=APPROXIMATE&result_type=sublocality_level_2|administrative_area_level_1&key=%s&language=ko"//
             , Double.toString(latitude)//
             , Double.toString(longitude)//
             , Crypto.getUrlDecoderEx(Constants.GOOGLE_MAP_KEY));
 
-        return mDailyMobileService.getSearchAddress(url).subscribeOn(Schedulers.io()).map(new Function<GoogleMapListDto<GoogleAddressData>, String>()
+        return mDailyMobileService.getSearchAddress(url).subscribeOn(Schedulers.io()).map(new Function<GoogleMapListDto<GoogleAddressData>, GoogleAddress>()
         {
             @Override
-            public String apply(GoogleMapListDto<GoogleAddressData> googleAddressDataGoogleMapListDto) throws Exception
+            public GoogleAddress apply(GoogleMapListDto<GoogleAddressData> googleAddressDataGoogleMapListDto) throws Exception
             {
-                String address = null;
+                GoogleAddress googleAddress;
 
                 if (googleAddressDataGoogleMapListDto != null)
                 {
@@ -54,9 +59,7 @@ public class GoogleAddressRemoteImpl extends BaseRemoteImpl implements GoogleAdd
 
                         if ("OK".equalsIgnoreCase(googleAddressDataGoogleMapListDto.status) == true && list != null)
                         {
-                            GoogleAddressComponentsData countryComponentsData = getCountryComponentsData(list);
-
-                            address = getAddressName(countryComponentsData, list);
+                            googleAddress = getGoogleAddress(list);
                         } else
                         {
                             throw new BaseException(-1, null);
@@ -70,27 +73,57 @@ public class GoogleAddressRemoteImpl extends BaseRemoteImpl implements GoogleAdd
                     throw new BaseException(-1, null);
                 }
 
-                return address;
+                return googleAddress;
             }
         });
     }
 
-    private String getAddressName(GoogleAddressComponentsData countryComponentsData, List<GoogleAddressData> googleAddressDataList)
+    private GoogleAddress getGoogleAddress(List<GoogleAddressData> googleAddressDataList)
     {
         if (googleAddressDataList == null || googleAddressDataList.size() == 0)
         {
             return null;
         }
 
-        if (countryComponentsData == null)
+        GoogleAddress googleAddress = new GoogleAddress();
+
+        GoogleAddressComponentsData countryData = getComponentsData(KEY_COUNTRY, googleAddressDataList);
+        GoogleAddressComponentsData subLocalityData = getComponentsData(KEY_SUBLOCALITY_LEVEL_2, googleAddressDataList);
+        GoogleAddressComponentsData adminstrativeData = getComponentsData(KEY_ADMINISTRATIVE_AREA_LEVEL_1, googleAddressDataList);
+
+        googleAddress.country = countryData == null ? null : countryData.longName;
+        googleAddress.shortCountry = countryData == null ? null : countryData.shortName;
+
+        if (countryData == null)
         {
-            return googleAddressDataList.get(0).formattedAddress;
+            googleAddress.address = googleAddressDataList.get(0).formattedAddress;
+            return googleAddress;
+        }
+
+        boolean isKr = "KR".equalsIgnoreCase(countryData.shortName);
+
+        if (isKr == true)
+        {
+            if (subLocalityData != null)
+            {
+                googleAddress.shortAddress = subLocalityData.longName;
+            } else if (adminstrativeData != null)
+            {
+                googleAddress.shortAddress = adminstrativeData.longName;
+            }
+        } else
+        {
+            if (adminstrativeData != null)
+            {
+                googleAddress.shortAddress = adminstrativeData.longName;
+            } else if (subLocalityData != null)
+            {
+                googleAddress.shortAddress = subLocalityData.longName;
+            }
         }
 
         String address = null;
-
-        boolean isKr = "KR".equalsIgnoreCase(countryComponentsData.shortName);
-        String searchType = isKr ? "sublocality_level_2" : "administrative_area_level_1";
+        String searchType = isKr ? KEY_SUBLOCALITY_LEVEL_2 : KEY_ADMINISTRATIVE_AREA_LEVEL_1;
 
         for (GoogleAddressData googleAddressData : googleAddressDataList)
         {
@@ -103,20 +136,22 @@ public class GoogleAddressRemoteImpl extends BaseRemoteImpl implements GoogleAdd
 
         if (DailyTextUtils.isTextEmpty(address) == false)
         {
-            ExLog.d("sam - origin : " + address + " , country : " + countryComponentsData.longName + " , trim Address : " + address.replace(countryComponentsData.longName, "").trim());
+            ExLog.d("sam - origin : " + address + " , country : " + countryData.longName + " , trim Address : " + address.replace(countryData.longName, "").trim());
 
             if (isKr)
             {
-                address = address.replace(countryComponentsData.longName, "").trim();
+                address = address.replace(countryData.longName, "").trim();
             }
         }
 
-        return address;
+        googleAddress.address = address;
+
+        return googleAddress;
     }
 
-    private GoogleAddressComponentsData getCountryComponentsData(List<GoogleAddressData> googleAddressDataList)
+    private GoogleAddressComponentsData getComponentsData(String key, List<GoogleAddressData> googleAddressDataList)
     {
-        if (googleAddressDataList == null || googleAddressDataList.size() == 0)
+        if (googleAddressDataList == null || googleAddressDataList.size() == 0 || DailyTextUtils.isTextEmpty(key))
         {
             return null;
         }
@@ -129,7 +164,7 @@ public class GoogleAddressRemoteImpl extends BaseRemoteImpl implements GoogleAdd
 
         for (GoogleAddressComponentsData data : list)
         {
-            if (data.types.contains("country") == true)
+            if (data.types.contains(key) == true)
             {
                 return data;
             }

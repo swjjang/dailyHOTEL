@@ -41,6 +41,7 @@ public class StaySuggestParcel implements Parcelable
         dest.writeString(mStaySuggest.stayName);
         dest.writeString(mStaySuggest.regionName);
         dest.writeString(mStaySuggest.provinceName);
+        dest.writeString(mStaySuggest.areaName);
         dest.writeString(mStaySuggest.displayName);
         dest.writeInt(mStaySuggest.discountAveragePrice);
         dest.writeInt(mStaySuggest.availableRooms);
@@ -58,6 +59,7 @@ public class StaySuggestParcel implements Parcelable
         mStaySuggest.stayName = in.readString();
         mStaySuggest.regionName = in.readString();
         mStaySuggest.provinceName = in.readString();
+        mStaySuggest.areaName = in.readString();
         mStaySuggest.displayName = in.readString();
         mStaySuggest.discountAveragePrice = in.readInt();
         mStaySuggest.availableRooms = in.readInt();

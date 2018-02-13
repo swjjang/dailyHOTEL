@@ -21,6 +21,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.GoogleAddress;
 import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.RecentlyPlace;
 import com.daily.dailyhotel.entity.StayBookDateTime;
@@ -1075,12 +1076,13 @@ public class SearchStaySuggestPresenter //
                 mLocationSuggest.longitude = location.getLongitude();
 
                 addCompositeDisposable(mGoogleAddressRemoteImpl.getLocationAddress(location.getLatitude(), location.getLongitude()) //
-                    .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<String>()
+                    .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GoogleAddress>()
                     {
                         @Override
-                        public void accept(String address) throws Exception
+                        public void accept(GoogleAddress address) throws Exception
                         {
-                            mLocationSuggest.displayName = address;
+                            mLocationSuggest.displayName = address.address;
+                            mLocationSuggest.areaName = address.shortAddress;
 
                             getViewInterface().setNearbyStaySuggest(mLocationSuggest);
 
@@ -1092,7 +1094,22 @@ public class SearchStaySuggestPresenter //
                             unLockAll();
 
                             getViewInterface().setSuggest(mLocationSuggest.displayName);
-                            startFinishAction(mLocationSuggest, mKeyword, null);
+
+                            if ("KR".equalsIgnoreCase(address.shortCountry))
+                            {
+                                startFinishAction(mLocationSuggest, mKeyword, null);
+                            } else {
+                                StayOutboundSuggest stayOutboundSuggest = new StayOutboundSuggest(0, mLocationSuggest.displayName);
+                                stayOutboundSuggest.categoryKey = StayOutboundSuggest.CATEGORY_LOCATION;
+                                stayOutboundSuggest.menuType = StayOutboundSuggest.MENU_TYPE_LOCATION;
+                                stayOutboundSuggest.latitude = mLocationSuggest.latitude;
+                                stayOutboundSuggest.longitude = mLocationSuggest.longitude;
+                                stayOutboundSuggest.country = address.country;
+                                stayOutboundSuggest.city = address.shortAddress;
+
+                                startFinishAction(stayOutboundSuggest, mKeyword, null);
+                            }
+
                         }
                     }, new Consumer<Throwable>()
                     {

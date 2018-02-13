@@ -21,6 +21,7 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.GoogleAddress;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.RecentlyPlace;
@@ -792,12 +793,14 @@ public class SearchGourmetSuggestPresenter //
                 mLocationSuggest.latitude = location.getLatitude();
                 mLocationSuggest.longitude = location.getLongitude();
 
-                addCompositeDisposable(mGoogleAddressRemoteImpl.getLocationAddress(location.getLatitude(), location.getLongitude()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<String>()
+                addCompositeDisposable(mGoogleAddressRemoteImpl.getLocationAddress(location.getLatitude(), location.getLongitude()) //
+                    .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GoogleAddress>()
                 {
                     @Override
-                    public void accept(String address) throws Exception
+                    public void accept(GoogleAddress address) throws Exception
                     {
-                        mLocationSuggest.displayName = address;
+                        mLocationSuggest.displayName = address.address;
+                        mLocationSuggest.areaName = address.shortAddress;
 
                         getViewInterface().setNearbyGourmetSuggest(mLocationSuggest);
 

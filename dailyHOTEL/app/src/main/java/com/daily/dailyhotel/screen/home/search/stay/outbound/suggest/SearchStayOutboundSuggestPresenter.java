@@ -20,10 +20,13 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.GoogleAddress;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StayOutbounds;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
+import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.local.SuggestLocalImpl;
 import com.daily.dailyhotel.repository.remote.GoogleAddressRemoteImpl;
@@ -690,6 +693,16 @@ public class SearchStayOutboundSuggestPresenter //
         finish();
     }
 
+    private void startFinishAction(StaySuggest staySuggest, String keyword, String analyticsClickType)
+    {
+        Intent intent = new Intent();
+        intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(staySuggest));
+        intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
+
+        setResult(Constants.CODE_RESULT_ACTIVITY_SEARCH_STAY, intent);
+        finish();
+    }
+
     @Override
     public void onDeleteRecentlySuggest(int position, StayOutboundSuggest stayOutboundSuggest)
     {
@@ -833,12 +846,13 @@ public class SearchStayOutboundSuggestPresenter //
                 mLocationSuggest.longitude = location.getLongitude();
 
                 addCompositeDisposable(mGoogleAddressRemoteImpl.getLocationAddress(location.getLatitude(), location.getLongitude()) //
-                    .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<String>()
+                    .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GoogleAddress>()
                     {
                         @Override
-                        public void accept(String address) throws Exception
+                        public void accept(GoogleAddress address) throws Exception
                         {
-                            mLocationSuggest.display = address;
+                            mLocationSuggest.display = address.address;
+                            mLocationSuggest.city = address.shortAddress;
 
                             getViewInterface().setNearbyStaySuggest(mLocationSuggest);
 
@@ -850,7 +864,22 @@ public class SearchStayOutboundSuggestPresenter //
                             unLockAll();
 
                             getViewInterface().setSuggest(mLocationSuggest.display);
-                            startFinishAction(mLocationSuggest, mKeyword, null);
+
+                            if ("KR".equalsIgnoreCase(address.shortCountry))
+                            {
+                                StaySuggest staySuggest = new StaySuggest( //
+                                    StaySuggest.MENU_TYPE_LOCATION, StaySuggest.CATEGORY_LOCATION, address.address);
+
+                                staySuggest.areaName = address.shortAddress;
+                                staySuggest.latitude = mLocationSuggest.latitude;
+                                staySuggest.longitude = mLocationSuggest.longitude;
+                                staySuggest.areaName = address.shortAddress;
+
+                                startFinishAction(staySuggest, mKeyword, null);
+                            } else
+                            {
+                                startFinishAction(mLocationSuggest, mKeyword, null);
+                            }
                         }
                     }, new Consumer<Throwable>()
                     {
