@@ -85,6 +85,8 @@ public class SearchStayOutboundSuggestPresenter //
     public interface SearchStayOutboundSuggestAnalyticsInterface extends BaseAnalyticsInterface
     {
         void onSearchSuggestList(Activity activity, String keyword, boolean hasStayOutboundSuggestList);
+
+        void onDeleteRecentlySearch(Activity activity, String keyword);
     }
 
     public SearchStayOutboundSuggestPresenter(@NonNull SearchStayOutboundSuggestActivity activity)
@@ -756,6 +758,14 @@ public class SearchStayOutboundSuggestPresenter //
                         unLockAll();
                     }
                 }));
+
+            try
+            {
+                mAnalytics.onDeleteRecentlySearch(getActivity(), stayOutboundSuggest.display);
+            } catch (Exception e)
+            {
+                ExLog.d(e.getMessage());
+            }
         }
     }
 

@@ -101,6 +101,8 @@ public class SearchStaySuggestPresenter //
     public interface SearchStaySuggestAnalyticsInterface extends BaseAnalyticsInterface
     {
         void onSearchSuggestList(Activity activity, String keyword, boolean hasStaySuggestList);
+
+        void onDeleteRecentlySearch(Activity activity, String keyword);
     }
 
     public SearchStaySuggestPresenter(@NonNull SearchStaySuggestActivity activity)
@@ -950,6 +952,14 @@ public class SearchStaySuggestPresenter //
             DailyPreference.getInstance(getActivity()).setHotelRecentSearches(mDailyRecentSearches.toString());
 
             unLockAll();
+
+            try
+            {
+                mAnalytics.onDeleteRecentlySearch(getActivity(), keyword.name);
+            } catch (Exception e)
+            {
+                ExLog.d(e.getMessage());
+            }
         }
     }
 

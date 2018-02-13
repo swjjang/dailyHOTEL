@@ -91,6 +91,8 @@ public class SearchGourmetSuggestPresenter //
     public interface SearchGourmetSuggestAnalyticsInterface extends BaseAnalyticsInterface
     {
         void onSearchSuggestList(Activity activity, String keyword, boolean hasGourmetSuggestList);
+
+        void onDeleteRecentlySearch(Activity activity, String keyword);
     }
 
     public SearchGourmetSuggestPresenter(@NonNull SearchGourmetSuggestActivity activity)
@@ -728,6 +730,14 @@ public class SearchGourmetSuggestPresenter //
             DailyPreference.getInstance(getActivity()).setGourmetRecentSearches(mDailyRecentSearches.toString());
 
             unLockAll();
+
+            try
+            {
+                mAnalytics.onDeleteRecentlySearch(getActivity(), keyword.name);
+            } catch (Exception e)
+            {
+                ExLog.d(e.getMessage());
+            }
         }
     }
 
