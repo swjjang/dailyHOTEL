@@ -16,7 +16,7 @@ public class SearchGourmetSuggestAnalyticsImpl implements SearchGourmetSuggestPr
 
         String category = hasGourmetSuggestList ? AnalyticsManager.Category.AUTO_SEARCH_LIST : AnalyticsManager.Category.AUTO_SEARCH_LIST_NO_RESULT;
 
-        AnalyticsManager.getInstance(activity).recordEvent(category, keyword, null, null);
+        AnalyticsManager.getInstance(activity).recordEvent(category, keyword, "gourmet", null);
     }
 
     @Override

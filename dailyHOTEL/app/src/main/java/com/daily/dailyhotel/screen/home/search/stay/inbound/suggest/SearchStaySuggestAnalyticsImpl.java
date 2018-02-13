@@ -16,7 +16,7 @@ public class SearchStaySuggestAnalyticsImpl implements SearchStaySuggestPresente
 
         String category = hasStaySuggestList ? AnalyticsManager.Category.AUTO_SEARCH_LIST : AnalyticsManager.Category.AUTO_SEARCH_LIST_NO_RESULT;
 
-        AnalyticsManager.getInstance(activity).recordEvent(category, keyword, null, null);
+        AnalyticsManager.getInstance(activity).recordEvent(category, keyword, "stay", null);
     }
 
     @Override
