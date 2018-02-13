@@ -150,13 +150,13 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         StayOutboundListAnalyticsParam getAnalyticsParam();
 
-        void onScreen(Activity activity);
+        void onScreen(Activity activity, boolean empty);
 
         void onEventStayClick(Activity activity, int index, boolean provideRewardSticker, boolean dailyChoice);
 
         void onEventDestroy(Activity activity);
 
-        void onEventList(Activity activity, String suggest, int size);
+        void onEventList(Activity activity, StayOutboundSuggest suggest, int size);
 
         void onEventWishClick(Activity activity, int stayIndex, boolean isWish);
 
@@ -167,6 +167,16 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         void onEventCalendarClick(Activity activity);
 
         void onEventPeopleClick(Activity activity);
+
+        void onEventStayClick(Activity activity);
+
+        void onEventGourmetClick(Activity activity);
+
+        void onEventPopularAreaClick(Activity activity, String areaName);
+
+        void onEventChangedRadius(Activity activity, String areaName);
+
+        void onEventResearchClick(Activity activity, StayOutboundSuggest suggest);
 
         StayOutboundDetailAnalyticsParam getDetailAnalyticsParam(StayOutbound stayOutbound, String grade, int rankingPosition, int listSize);
     }
@@ -354,8 +364,6 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     public void onStart()
     {
         super.onStart();
-
-        mAnalytics.onScreen(getActivity());
 
         if (isRefresh() == true)
         {
@@ -854,7 +862,9 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 return stayOutbounds;
             }).observeOn(AndroidSchedulers.mainThread()).subscribe(stayOutbounds ->
         {
-            mAnalytics.onEventList(getActivity(), mStayOutboundSuggest.display, stayOutbounds.getStayOutbound().size());
+            mAnalytics.onScreen(getActivity(), stayOutbounds.getStayOutbound().size() == 0);
+
+            mAnalytics.onEventList(getActivity(), mStayOutboundSuggest, stayOutbounds.getStayOutbound().size());
 
             onStayOutbounds(stayOutbounds);
 
@@ -1303,6 +1313,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mStayOutboundSuggest, mPeople.numberOfAdults, mPeople.getChildAgeList()), StayOutboundListActivity.REQUEST_CODE_RESEARCH);
+
+        mAnalytics.onEventResearchClick(getActivity(), mStayOutboundSuggest);
     }
 
     @Override
@@ -1429,6 +1441,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         mRadius = radius;
 
         onRefreshAll(true);
+
+        mAnalytics.onEventChangedRadius(getActivity(), mStayOutboundSuggest.display);
     }
 
     @Override
@@ -1440,6 +1454,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         }
 
         finish(Constants.CODE_RESULT_ACTIVITY_SEARCH_STAY);
+
+        mAnalytics.onEventStayClick(getActivity());
     }
 
     @Override
@@ -1451,6 +1467,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         }
 
         finish(Constants.CODE_RESULT_ACTIVITY_SEARCH_GOURMET);
+
+        mAnalytics.onEventGourmetClick(getActivity());
     }
 
     @Override
@@ -1466,6 +1484,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         notifyToolbarChanged();
 
         onRefreshAll(true);
+
+        mAnalytics.onEventPopularAreaClick(getActivity(), stayOutboundSuggest.name);
     }
 
     private void finish(int resultCode)

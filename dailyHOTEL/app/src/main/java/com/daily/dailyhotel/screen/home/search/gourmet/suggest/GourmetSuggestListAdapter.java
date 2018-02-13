@@ -259,7 +259,7 @@ public class GourmetSuggestListAdapter extends RecyclerView.Adapter<RecyclerView
         switch (gourmetSuggest.categoryKey)
         {
             case GourmetSuggest.CATEGORY_GOURMET:
-                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_02_hotel);
+                holder.dataBinding.iconImageView.setVectorImageResource(R.drawable.vector_search_ic_03_gourmet);
 
                 if (GourmetSuggest.MENU_TYPE_RECENTLY_GOURMET == gourmetSuggest.menuType)
                 {

@@ -261,6 +261,8 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
     {
         super.onStart();
 
+        mAnalytics.onScreen(getActivity());
+
         if (isRefresh() == true)
         {
             onRefresh(true);
@@ -647,6 +649,8 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         }
 
         mSearchModel.serviceType.setValue(Constants.ServiceType.HOTEL);
+
+        mAnalytics.onEventStayClick(getActivity());
     }
 
     @Override
@@ -658,6 +662,8 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         }
 
         mSearchModel.serviceType.setValue(Constants.ServiceType.OB_STAY);
+
+        mAnalytics.onEventStayOutboundClick(getActivity());
     }
 
     @Override
@@ -669,6 +675,8 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         }
 
         mSearchModel.serviceType.setValue(Constants.ServiceType.GOURMET);
+
+        mAnalytics.onEventGourmetClick(getActivity());
     }
 
     @Override
@@ -703,6 +711,8 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             , mSearchModel.stayViewModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mSearchModel.stayViewModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT) //
             , StayCalendarActivity.DEFAULT_DOMESTIC_CALENDAR_DAY_OF_MAX_COUNT, AnalyticsManager.ValueType.SEARCH, true, true), SearchActivity.REQUEST_CODE_STAY_CALENDAR);
+
+        mAnalytics.onEventStayCalendarClick(getActivity());
     }
 
     @Override
@@ -719,6 +729,8 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                 , mSearchModel.stayViewModel.bookDateTime.getValue().getStayBookingDay()//
                 , mSearchModel.stayViewModel.inputString, mSearchModel.stayViewModel.suggest.getValue(), null, AnalyticsManager.Screen.SEARCH_MAIN)//
                 , SearchActivity.REQUEST_CODE_STAY_SEARCH_RESULT);
+
+            mAnalytics.onEventStayDoSearch(getActivity(), mSearchModel.stayViewModel.suggest.getValue());
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -824,6 +836,8 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         }
 
         startActivityForResult(intent, SearchActivity.REQUEST_CODE_STAY_OUTBOUND_PEOPLE);
+
+        mAnalytics.onEventStayOutboundPeopleClick(getActivity());
     }
 
     @Override
@@ -844,6 +858,8 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             , mSearchModel.stayOutboundViewModel.people.getValue().numberOfAdults//
             , mSearchModel.stayOutboundViewModel.people.getValue().getChildAgeList(), analyticsParam)//
             , SearchActivity.REQUEST_CODE_STAY_OUTBOUND_SEARCH_RESULT);
+
+        mAnalytics.onEventStayOutboundDoSearch(getActivity(), mSearchModel.stayOutboundViewModel.suggest.getValue());
     }
 
     @Override
@@ -932,6 +948,8 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
                 , mSearchModel.gourmetViewModel.bookDateTime.getValue().getGourmetBookingDay()//
                 , mSearchModel.gourmetViewModel.inputString, mSearchModel.gourmetViewModel.suggest.getValue(), null, AnalyticsManager.Screen.SEARCH_MAIN)//
                 , SearchActivity.REQUEST_CODE_GOURMET_SEARCH_RESULT);
+
+            mAnalytics.onEventGourmetDoSearch(getActivity(), mSearchModel.gourmetViewModel.suggest.getValue());
         } catch (Exception e)
         {
             ExLog.e(e.toString());

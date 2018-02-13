@@ -385,59 +385,6 @@ public class StaySearchResultListFragment extends StayListFragment
                 {
                     ((OnStaySearchResultListFragmentListener) mOnPlaceListFragmentListener).onCategoryList(categoryList);
                     mOnPlaceListFragmentListener.onSearchCountUpdate(totalCount, maxCount);
-
-                    Observable.just(totalCount).subscribe(new Consumer<Integer>()
-                    {
-                        @Override
-                        public void accept(@NonNull Integer integer) throws Exception
-                        {
-                            int soldOutCount = 0;
-                            for (Stay stay : list)
-                            {
-                                if (stay.availableRooms == 0)
-                                {
-                                    soldOutCount++;
-                                }
-                            }
-
-                            StaySearchCuration staySearchCuration = ((StaySearchCuration) mStayCuration);
-
-                            switch (staySearchCuration.getSuggest().categoryKey)
-                            {
-                                //                                case AUTOCOMPLETE:
-                                case StaySuggest.CATEGORY_STAY:
-                                case StaySuggest.CATEGORY_REGION:
-                                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.AUTO_SEARCH_RESULT//
-                                        , staySearchCuration.getSuggest().displayName, integer.toString(), soldOutCount, null);
-                                    break;
-
-
-                                //                                case LOCATION:
-                                case StaySuggest.CATEGORY_LOCATION:
-                                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NEARBY_SEARCH_RESULT//
-                                        , ((StaySearchCuration) mStayCuration).getSuggest().displayName, integer.toString(), soldOutCount, null);
-                                    break;
-
-                                //                                case RECENTLY_KEYWORD:
-                                //                                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.RECENT_SEARCH_RESULT//
-                                //                                        , ((StaySearchCuration) mStayCuration).getKeyword().name, integer.toString(), soldOutCount, null);
-                                //                                    break;
-
-                                //                                case SEARCHES:
-                                case StaySuggest.CATEGORY_DIRECT:
-                                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.KEYWORD_SEARCH_RESULT//
-                                        , staySearchCuration.getSuggest().displayName, integer.toString(), soldOutCount, null);
-                                    break;
-                            }
-                        }
-                    }, new Consumer<Throwable>()
-                    {
-                        @Override
-                        public void accept(@NonNull Throwable throwable) throws Exception
-                        {
-
-                        }
-                    });
                 }
 
                 ((OnStaySearchResultListFragmentListener) mOnPlaceListFragmentListener).onStayListCount(totalCount);

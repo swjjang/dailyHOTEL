@@ -1,5 +1,7 @@
 package com.daily.dailyhotel.domain;
 
+import com.daily.dailyhotel.entity.GoogleAddress;
+
 import io.reactivex.Observable;
 
 /**
@@ -8,5 +10,5 @@ import io.reactivex.Observable;
 
 public interface GoogleAddressInterface
 {
-    Observable<String> getLocationAddress(double latitude, double longitude);
+    Observable<GoogleAddress> getLocationAddress(double latitude, double longitude);
 }

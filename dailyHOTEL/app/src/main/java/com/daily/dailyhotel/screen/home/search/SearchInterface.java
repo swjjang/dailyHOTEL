@@ -1,10 +1,14 @@
 package com.daily.dailyhotel.screen.home.search;
 
+import android.app.Activity;
+
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BaseDialogViewInterface;
 import com.daily.base.OnBaseEventListener;
 import com.daily.dailyhotel.entity.CampaignTag;
+import com.daily.dailyhotel.entity.GourmetSuggest;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 
 import io.reactivex.Completable;
@@ -23,7 +27,6 @@ public interface SearchInterface
         void setSearchStayCalendarText(String text);
 
         void setSearchStayButtonEnabled(boolean enabled);
-
 
 
         void showSearchStayOutbound();
@@ -99,5 +102,25 @@ public interface SearchInterface
 
     interface AnalyticsInterface extends BaseAnalyticsInterface
     {
+        void onScreen(Activity activity);
+
+        void onEventStayClick(Activity activity);
+
+        void onEventStayOutboundClick(Activity activity);
+
+        void onEventGourmetClick(Activity activity);
+
+
+        void onEventStayDoSearch(Activity activity, StaySuggest suggest);
+
+        void onEventStayCalendarClick(Activity activity);
+
+
+        void onEventStayOutboundDoSearch(Activity activity, StayOutboundSuggest suggest);
+
+        void onEventStayOutboundPeopleClick(Activity activity);
+
+
+        void onEventGourmetDoSearch(Activity activity, GourmetSuggest suggest);
     }
 }

@@ -176,4 +176,37 @@ public class ProfileRemoteImpl extends BaseRemoteImpl implements ProfileInterfac
                 }
             });
     }
+
+    @Override
+    public Observable<Boolean> getCheckPassword(String password)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v5/users/check/password"//
+            : "ODAkMjckNzMkMyQ3MSQ1OCQ0OSQ1NiQxMCQ0OCQ5NyQxMSQ1NSQ2NyQ0JDQ3JA==$NjZIJDN0QzNPDTFFREQzNjM3OEEyMzUH3QUQzNjQ5M0I5QzYBEQCkQL5QRTI4RWEE3UNDTA4ODM0QkM3OTThFVNkVGMTU0ZRjdFMA=E=$";
+
+        return mDailyMobileService.getCheckPassword(Crypto.getUrlDecoderEx(API), password) //
+         .subscribeOn(Schedulers.io()).map(new Function<BaseDto<Object>, Boolean>()
+            {
+                @Override
+                public Boolean apply(BaseDto<Object> objectBaseDto) throws Exception
+                {
+                    boolean isSuccess;
+                    if (objectBaseDto != null)
+                    {
+                        // 이 요청은 메세지 코드만 판단
+                        if (objectBaseDto.msgCode == 100)
+                        {
+                            isSuccess = true;
+                        } else
+                        {
+                            throw new BaseException(objectBaseDto.msgCode, objectBaseDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(-1, null);
+                    }
+
+                    return isSuccess;
+                }
+            });
+    }
 }

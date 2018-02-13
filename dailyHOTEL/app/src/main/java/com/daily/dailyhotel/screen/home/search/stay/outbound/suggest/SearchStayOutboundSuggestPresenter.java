@@ -20,10 +20,13 @@ import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
 import com.daily.dailyhotel.base.BaseExceptionPresenter;
+import com.daily.dailyhotel.entity.GoogleAddress;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.entity.StayOutbounds;
+import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
+import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.local.SuggestLocalImpl;
 import com.daily.dailyhotel.repository.remote.GoogleAddressRemoteImpl;
@@ -90,8 +93,6 @@ public class SearchStayOutboundSuggestPresenter //
         void onEventSuggestClick(Activity activity, String suggestDisplayName, String keyword);
 
         void onEventRecentlySuggestClick(Activity activity, String suggestDisplayName, String keyword);
-
-        void onEventPopularSuggestClick(Activity activity, String suggestDisplayName);
     }
 
     public SearchStayOutboundSuggestPresenter(@NonNull SearchStayOutboundSuggestActivity activity)
@@ -417,6 +418,14 @@ public class SearchStayOutboundSuggestPresenter //
 
     private void setSuggestList(List<StayOutboundSuggest> suggestList)
     {
+        if (suggestList != null && suggestList.size() > 0)
+        {
+            for (StayOutboundSuggest suggest : suggestList)
+            {
+                suggest.menuType = StayOutboundSuggest.MENU_TYPE_SUGGEST;
+            }
+        }
+
         mSuggestList = suggestList;
     }
 
@@ -651,14 +660,6 @@ public class SearchStayOutboundSuggestPresenter //
                 @Override
                 public void accept(Boolean aBoolean) throws Exception
                 {
-                    try
-                    {
-                        mAnalytics.onEventPopularSuggestClick(getActivity(), stayOutboundSuggest.display);
-                    } catch (Exception e)
-                    {
-                        ExLog.d(e.getMessage());
-                    }
-
                     startFinishAction(stayOutboundSuggest, mKeyword, AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECOMMEND);
                 }
             }, new Consumer<Throwable>()
@@ -666,14 +667,6 @@ public class SearchStayOutboundSuggestPresenter //
                 @Override
                 public void accept(Throwable throwable) throws Exception
                 {
-                    try
-                    {
-                        mAnalytics.onEventPopularSuggestClick(getActivity(), stayOutboundSuggest.display);
-                    } catch (Exception e)
-                    {
-                        ExLog.d(e.getMessage());
-                    }
-
                     startFinishAction(stayOutboundSuggest, mKeyword, AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECOMMEND);
                 }
             }));
@@ -687,6 +680,16 @@ public class SearchStayOutboundSuggestPresenter //
         intent.putExtra(SearchStayOutboundSuggestActivity.INTENT_EXTRA_DATA_CLICK_TYPE, DailyTextUtils.isTextEmpty(analyticsClickType) ? "" : analyticsClickType);
 
         setResult(Activity.RESULT_OK, intent);
+        finish();
+    }
+
+    private void startFinishAction(StaySuggest staySuggest, String keyword, String analyticsClickType)
+    {
+        Intent intent = new Intent();
+        intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(staySuggest));
+        intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_KEYWORD, keyword);
+
+        setResult(Constants.CODE_RESULT_ACTIVITY_SEARCH_STAY, intent);
         finish();
     }
 
@@ -833,12 +836,13 @@ public class SearchStayOutboundSuggestPresenter //
                 mLocationSuggest.longitude = location.getLongitude();
 
                 addCompositeDisposable(mGoogleAddressRemoteImpl.getLocationAddress(location.getLatitude(), location.getLongitude()) //
-                    .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<String>()
+                    .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<GoogleAddress>()
                     {
                         @Override
-                        public void accept(String address) throws Exception
+                        public void accept(GoogleAddress address) throws Exception
                         {
-                            mLocationSuggest.display = address;
+                            mLocationSuggest.display = address.address;
+                            mLocationSuggest.city = address.shortAddress;
 
                             getViewInterface().setNearbyStaySuggest(mLocationSuggest);
 
@@ -850,7 +854,21 @@ public class SearchStayOutboundSuggestPresenter //
                             unLockAll();
 
                             getViewInterface().setSuggest(mLocationSuggest.display);
-                            startFinishAction(mLocationSuggest, mKeyword, null);
+
+                            if ("KR".equalsIgnoreCase(address.shortCountry))
+                            {
+                                StaySuggest staySuggest = new StaySuggest( //
+                                    StaySuggest.MENU_TYPE_LOCATION, StaySuggest.CATEGORY_LOCATION, address.shortAddress);
+                                staySuggest.address = address.address;
+
+                                staySuggest.latitude = mLocationSuggest.latitude;
+                                staySuggest.longitude = mLocationSuggest.longitude;
+
+                                startFinishAction(staySuggest, mKeyword, null);
+                            } else
+                            {
+                                startFinishAction(mLocationSuggest, mKeyword, null);
+                            }
                         }
                     }, new Consumer<Throwable>()
                     {

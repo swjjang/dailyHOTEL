@@ -571,6 +571,10 @@ public interface DailyMobileService
     @POST("{mobileAPI}")
     Observable<BaseDto<UserData>> updateUserInformation(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @FieldMap Map<String, String> params);
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST("{mobileAPI}")
+    Observable<BaseDto<Object>> getCheckPassword(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("pw") String password);
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // SuggestRemoteImpl
     /////////////////////////////////////////////////////////////////////////////////////////////////

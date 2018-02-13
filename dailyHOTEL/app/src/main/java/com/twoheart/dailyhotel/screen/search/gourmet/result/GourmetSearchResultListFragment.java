@@ -24,9 +24,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -371,73 +368,7 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
 
                 if (page <= 1)
                 {
-                    Observable.just(totalCount).subscribe(new Consumer<Integer>()
-                    {
-                        @Override
-                        public void accept(@NonNull Integer integer) throws Exception
-                        {
-                            int soldOutCount = 0;
-                            for (Gourmet gourmet : list)
-                            {
-                                if (gourmet.availableTicketNumbers == 0 || gourmet.availableTicketNumbers < gourmet.minimumOrderQuantity || gourmet.expired == true)
-                                {
-                                    soldOutCount++;
-                                }
-                            }
 
-                            GourmetSearchCuration gourmetSearchCuration = ((GourmetSearchCuration) mGourmetCuration);
-
-                            switch (gourmetSearchCuration.getSuggest().categoryKey)
-                            {
-                                case GourmetSuggest.CATEGORY_GOURMET:
-                                case GourmetSuggest.CATEGORY_REGION:
-                                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.AUTO_SEARCH_RESULT//
-                                        , gourmetSearchCuration.getSuggest().displayName, integer.toString(), soldOutCount, null);
-                                    break;
-
-
-                                case GourmetSuggest.CATEGORY_LOCATION:
-                                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NEARBY_SEARCH_RESULT//
-                                        , ((GourmetSearchCuration) mGourmetCuration).getSuggest().displayName, integer.toString(), soldOutCount, null);
-                                    break;
-
-                                case GourmetSuggest.CATEGORY_DIRECT:
-                                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.KEYWORD_SEARCH_RESULT//
-                                        , ((GourmetSearchCuration) mGourmetCuration).getSuggest().displayName, integer.toString(), soldOutCount, null);
-                                    break;
-                            }
-
-                            //                            switch (mSearchType)
-                            //                            {
-                            //                                case AUTOCOMPLETE:
-                            //                                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.AUTO_SEARCH_RESULT//
-                            //                                        , ((GourmetSearchCuration) mGourmetCuration).getSuggest().displayName, integer.toString(), soldOutCount, null);
-                            //                                    break;
-                            //
-                            //                                case LOCATION:
-                            //                                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.NEARBY_SEARCH_RESULT//
-                            //                                        , ((GourmetSearchCuration) mGourmetCuration).getSuggest().displayName, integer.toString(), soldOutCount, null);
-                            //                                    break;
-                            //
-                            //                                case RECENTLY_KEYWORD:
-                            //                                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.RECENT_SEARCH_RESULT//
-                            //                                        , ((GourmetSearchCuration) mGourmetCuration).getKeyword().name, integer.toString(), soldOutCount, null);
-                            //                                    break;
-                            //
-                            //                                case SEARCHES:
-                            //                                    AnalyticsManager.getInstance(getContext()).recordEvent(AnalyticsManager.Category.KEYWORD_SEARCH_RESULT//
-                            //                                        , ((GourmetSearchCuration) mGourmetCuration).getKeyword().name, integer.toString(), soldOutCount, null);
-                            //                                    break;
-                            //                            }
-                        }
-                    }, new Consumer<Throwable>()
-                    {
-                        @Override
-                        public void accept(@NonNull Throwable throwable) throws Exception
-                        {
-
-                        }
-                    });
                 }
 
                 ((OnGourmetSearchResultListFragmentListener) mOnPlaceListFragmentListener).onGourmetListCount(totalCount);

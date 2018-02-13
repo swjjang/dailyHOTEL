@@ -39,7 +39,7 @@ public class ProfileView extends BaseDialogView<ProfileView.OnEventListener, Act
 
         void doValidMonthChange(int month);
 
-        void onLeaveDailyClick();
+        void onLeaveDailyClick(User user);
     }
 
     public ProfileView(BaseActivity baseActivity, ProfileView.OnEventListener listener)
@@ -145,7 +145,8 @@ public class ProfileView extends BaseDialogView<ProfileView.OnEventListener, Act
             @Override
             public void onClick(View view)
             {
-                getEventListener().onLeaveDailyClick();
+                User user = (User) view.getTag();
+                getEventListener().onLeaveDailyClick(user);
             }
         };
 
@@ -281,6 +282,9 @@ public class ProfileView extends BaseDialogView<ProfileView.OnEventListener, Act
         });
 
         setPrivacyValidMonth(user.dataRetentionInMonth);
+
+        // 회원 탈퇴를 위한 user 정보 저장
+        getViewDataBinding().leaveDailyTextView.setTag(user);
     }
 
     private void updateSocialUserInformation(User user)
@@ -357,6 +361,9 @@ public class ProfileView extends BaseDialogView<ProfileView.OnEventListener, Act
         getViewDataBinding().passwordUnderLine.setVisibility(View.GONE);
 
         setPrivacyValidMonth(user.dataRetentionInMonth);
+
+        // 회원 탈퇴를 위한 user 정보 저장
+        getViewDataBinding().leaveDailyTextView.setTag(user);
     }
 
     private void setPrivacyValidMonth(int month)

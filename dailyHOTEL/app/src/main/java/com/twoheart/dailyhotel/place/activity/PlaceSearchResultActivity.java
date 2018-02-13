@@ -556,18 +556,28 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
         }
     }
 
-    protected void recordEventSearchResultByRecentKeyword(String displayName, boolean isEmpty, Map<String, String> params)
+    protected void recordEventSearchResultByRecentKeyword(String displayName, boolean isEmpty, Constants.ServiceType serviceType, Map<String, String> params)
     {
         String action = (isEmpty == true) ? AnalyticsManager.Action.RECENT_KEYWORD_NOT_FOUND : AnalyticsManager.Action.RECENT_KEYWORD;
         params.put(AnalyticsManager.KeyType.SEARCH_PATH, AnalyticsManager.ValueType.RECENT);
         params.put(AnalyticsManager.KeyType.SEARCH_WORD, displayName);
         params.put(AnalyticsManager.KeyType.SEARCH_RESULT, displayName);
 
-        AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
-            , action, displayName, params);
+        switch (serviceType)
+        {
+            case GOURMET:
+                AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
+                    , action + "_gourmet", displayName, null);
+                break;
+
+            case HOTEL:
+                AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
+                    , action + "_stay", displayName, null);
+                break;
+        }
     }
 
-    protected void recordEventSearchResultByKeyword(String displayName, boolean isEmpty, Map<String, String> params)
+    protected void recordEventSearchResultByKeyword(String displayName, boolean isEmpty, Constants.ServiceType serviceType, Map<String, String> params)
     {
         String action = (isEmpty == true) ? AnalyticsManager.Action.KEYWORD_NOT_FOUND : AnalyticsManager.Action.KEYWORD_;
 
@@ -575,11 +585,21 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
         params.put(AnalyticsManager.KeyType.SEARCH_WORD, displayName);
         params.put(AnalyticsManager.KeyType.SEARCH_RESULT, displayName);
 
-        AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
-            , action, displayName, params);
+        switch (serviceType)
+        {
+            case GOURMET:
+                AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
+                    , action + "_gourmet", displayName, null);
+                break;
+
+            case HOTEL:
+                AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
+                    , action + "_stay", displayName, null);
+                break;
+        }
     }
 
-    protected void recordEventSearchResultByAutoSearch(String displayName, String inputText, boolean isEmpty, Map<String, String> params)
+    protected void recordEventSearchResultByAutoSearch(String displayName, String inputText, boolean isEmpty, Constants.ServiceType serviceType, Map<String, String> params)
     {
         String category = (isEmpty == true) ? AnalyticsManager.Category.AUTO_SEARCH_NOT_FOUND : AnalyticsManager.Category.AUTO_SEARCH;
 
@@ -587,7 +607,17 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
         params.put(AnalyticsManager.KeyType.SEARCH_WORD, inputText);
         params.put(AnalyticsManager.KeyType.SEARCH_RESULT, displayName);
 
-        AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(category//
-            , displayName, inputText, params);
+        switch (serviceType)
+        {
+            case GOURMET:
+                AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(category//
+                    , "gourmet_" + displayName, inputText, null);
+                break;
+
+            case HOTEL:
+                AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(category//
+                    , "stay_" + displayName, inputText, null);
+                break;
+        }
     }
 }

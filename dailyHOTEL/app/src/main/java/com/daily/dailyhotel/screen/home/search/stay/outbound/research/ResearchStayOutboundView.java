@@ -157,10 +157,10 @@ public class ResearchStayOutboundView extends BaseDialogView<ResearchStayOutboun
 
         ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(getViewDataBinding().stayOutboundSuggestBackgroundView, View.ALPHA, 1.0f, 0.5f, 1.0f);
         ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(getViewDataBinding().stayOutboundSuggestTextView, View.ALPHA, 1.0f, 0.5f, 1.0f);
-        ObjectAnimator objectAnimator3 = ObjectAnimator.ofFloat(getViewDataBinding().stayOutboundSuggestBackgroundView, View.SCALE_X, 1.0f, 0.95f, 1.0f);
-        ObjectAnimator objectAnimator4 = ObjectAnimator.ofFloat(getViewDataBinding().stayOutboundSuggestBackgroundView, View.SCALE_Y, 1.0f, 0.95f, 1.0f);
-        ObjectAnimator objectAnimator5 = ObjectAnimator.ofFloat(getViewDataBinding().stayOutboundSuggestTextView, View.SCALE_X, 1.0f, 0.95f, 1.0f);
-        ObjectAnimator objectAnimator6 = ObjectAnimator.ofFloat(getViewDataBinding().stayOutboundSuggestTextView, View.SCALE_Y, 1.0f, 0.95f, 1.0f);
+        ObjectAnimator objectAnimator3 = ObjectAnimator.ofFloat(getViewDataBinding().stayOutboundSuggestBackgroundView, View.SCALE_X, 1.0f, 0.97f, 1.0f);
+        ObjectAnimator objectAnimator4 = ObjectAnimator.ofFloat(getViewDataBinding().stayOutboundSuggestBackgroundView, View.SCALE_Y, 1.0f, 0.97f, 1.0f);
+        ObjectAnimator objectAnimator5 = ObjectAnimator.ofFloat(getViewDataBinding().stayOutboundSuggestTextView, View.SCALE_X, 1.0f, 0.97f, 1.0f);
+        ObjectAnimator objectAnimator6 = ObjectAnimator.ofFloat(getViewDataBinding().stayOutboundSuggestTextView, View.SCALE_Y, 1.0f, 0.97f, 1.0f);
 
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.setDuration(200);
