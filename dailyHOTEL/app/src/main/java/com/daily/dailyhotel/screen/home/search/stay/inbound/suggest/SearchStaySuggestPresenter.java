@@ -100,6 +100,11 @@ public class SearchStaySuggestPresenter //
 
     public interface SearchStaySuggestAnalyticsInterface extends BaseAnalyticsInterface
     {
+        void onSearchSuggestList(Activity activity, String keyword, boolean hasStaySuggestList);
+
+        void onDeleteRecentlySearch(Activity activity, String keyword);
+
+        void onVoiceSearchClick(Activity activity);
     }
 
     public SearchStaySuggestPresenter(@NonNull SearchStaySuggestActivity activity)
@@ -600,6 +605,8 @@ public class SearchStaySuggestPresenter //
                 @Override
                 public void accept(List list) throws Exception
                 {
+                    boolean hasStaySuggestList = false;
+
                     if (list != null && list.size() > 0)
                     {
                         if (list.get(0) instanceof StayOutboundSuggest)
@@ -610,6 +617,7 @@ public class SearchStaySuggestPresenter //
                             setGourmetSuggestList(list);
                         } else
                         {
+                            hasStaySuggestList = true;
                             setSuggestList(list);
                         }
                     } else
@@ -621,6 +629,14 @@ public class SearchStaySuggestPresenter //
 
                     getViewInterface().setProgressBarVisible(false);
                     unLockAll();
+
+                    try
+                    {
+                        mAnalytics.onSearchSuggestList(getActivity(), keyword, hasStaySuggestList);
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.getMessage());
+                    }
                 }
             }, new Consumer<Throwable>()
             {
@@ -632,6 +648,14 @@ public class SearchStaySuggestPresenter //
 
                     getViewInterface().setProgressBarVisible(false);
                     unLockAll();
+
+                    try
+                    {
+                        mAnalytics.onSearchSuggestList(getActivity(), keyword, false);
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.getMessage());
+                    }
                 }
             });
 
@@ -930,6 +954,14 @@ public class SearchStaySuggestPresenter //
             DailyPreference.getInstance(getActivity()).setHotelRecentSearches(mDailyRecentSearches.toString());
 
             unLockAll();
+
+            try
+            {
+                mAnalytics.onDeleteRecentlySearch(getActivity(), keyword.name);
+            } catch (Exception e)
+            {
+                ExLog.d(e.getMessage());
+            }
         }
     }
 
@@ -955,6 +987,14 @@ public class SearchStaySuggestPresenter //
         {
             DailyToast.showToast(getActivity(), R.string.message_search_suggest_voice_search_error, DailyToast.LENGTH_SHORT);
             getViewInterface().setVoiceSearchEnabled(false);
+        }
+
+        try
+        {
+            mAnalytics.onVoiceSearchClick(getActivity());
+        } catch (Exception e)
+        {
+            ExLog.d(e.getMessage());
         }
     }
 
@@ -1099,7 +1139,8 @@ public class SearchStaySuggestPresenter //
                             if ("KR".equalsIgnoreCase(address.shortCountry))
                             {
                                 startFinishAction(mLocationSuggest, mKeyword, null);
-                            } else {
+                            } else
+                            {
                                 StayOutboundSuggest stayOutboundSuggest = new StayOutboundSuggest(0, mLocationSuggest.address);
                                 stayOutboundSuggest.categoryKey = StayOutboundSuggest.CATEGORY_LOCATION;
                                 stayOutboundSuggest.menuType = StayOutboundSuggest.MENU_TYPE_LOCATION;

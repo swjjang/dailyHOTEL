@@ -1211,6 +1211,7 @@ public class AnalyticsManager
 
         //
         public static final String AUTO_SEARCH_LIST = "auto_search_list";
+        public static final String AUTO_SEARCH_LIST_NO_RESULT = "auto_search_list_no_result";
         public static final String AUTO_SEARCH_RESULT = "auto_search_result";
         public static final String KEYWORD_SEARCH_RESULT = "keyword_search_result";
         public static final String NEARBY_SEARCH_RESULT = "nearby_search_result";

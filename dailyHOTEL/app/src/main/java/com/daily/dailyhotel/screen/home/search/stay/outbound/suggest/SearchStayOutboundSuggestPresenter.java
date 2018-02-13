@@ -84,15 +84,11 @@ public class SearchStayOutboundSuggestPresenter //
 
     public interface SearchStayOutboundSuggestAnalyticsInterface extends BaseAnalyticsInterface
     {
-        void onEventSuggestEmpty(Activity activity, String keyword);
+        void onSearchSuggestList(Activity activity, String keyword, boolean hasStayOutboundSuggestList);
 
-        void onEventCloseClick(Activity activity);
+        void onDeleteRecentlySearch(Activity activity, String keyword);
 
-        void onEventDeleteAllRecentlySuggestClick(Activity activity);
-
-        void onEventSuggestClick(Activity activity, String suggestDisplayName, String keyword);
-
-        void onEventRecentlySuggestClick(Activity activity, String suggestDisplayName, String keyword);
+        void onVoiceSearchClick(Activity activity);
     }
 
     public SearchStayOutboundSuggestPresenter(@NonNull SearchStayOutboundSuggestActivity activity)
@@ -213,8 +209,6 @@ public class SearchStayOutboundSuggestPresenter //
     @Override
     public boolean onBackPressed()
     {
-        mAnalytics.onEventCloseClick(getActivity());
-
         return super.onBackPressed();
     }
 
@@ -437,7 +431,6 @@ public class SearchStayOutboundSuggestPresenter //
             {
                 getViewInterface().setSuggests(mSuggestList);
                 getViewInterface().setEmptySuggestsVisible(true);
-                mAnalytics.onEventSuggestEmpty(getActivity(), mKeyword);
                 return;
             }
 
@@ -515,6 +508,15 @@ public class SearchStayOutboundSuggestPresenter //
 
                         getViewInterface().setProgressBarVisible(false);
                         unLockAll();
+
+                        try
+                        {
+                            boolean hasStayOutboundSuggestList = stayOutboundSuggests != null && stayOutboundSuggests.size() > 0;
+                            mAnalytics.onSearchSuggestList(getActivity(), keyword, hasStayOutboundSuggestList);
+                        } catch (Exception e)
+                        {
+                            ExLog.d(e.getMessage());
+                        }
                     }
                 }, new Consumer<Throwable>()
                 {
@@ -526,6 +528,14 @@ public class SearchStayOutboundSuggestPresenter //
 
                         getViewInterface().setProgressBarVisible(false);
                         unLockAll();
+
+                        try
+                        {
+                            mAnalytics.onSearchSuggestList(getActivity(), keyword, false);
+                        } catch (Exception e)
+                        {
+                            ExLog.d(e.getMessage());
+                        }
                     }
                 });
 
@@ -554,7 +564,7 @@ public class SearchStayOutboundSuggestPresenter //
                 {
                     try
                     {
-                        mAnalytics.onEventSuggestClick(getActivity(), stayOutboundSuggest.display, mKeyword);
+
                     } catch (Exception e)
                     {
                         ExLog.d(e.getMessage());
@@ -569,7 +579,7 @@ public class SearchStayOutboundSuggestPresenter //
                 {
                     try
                     {
-                        mAnalytics.onEventSuggestClick(getActivity(), stayOutboundSuggest.display, mKeyword);
+
                     } catch (Exception e)
                     {
                         ExLog.d(e.getMessage());
@@ -615,7 +625,7 @@ public class SearchStayOutboundSuggestPresenter //
                 {
                     try
                     {
-                        mAnalytics.onEventRecentlySuggestClick(getActivity(), stayOutboundSuggest.display, keyword);
+
                     } catch (Exception e)
                     {
                         ExLog.d(e.getMessage());
@@ -630,7 +640,7 @@ public class SearchStayOutboundSuggestPresenter //
                 {
                     try
                     {
-                        mAnalytics.onEventRecentlySuggestClick(getActivity(), stayOutboundSuggest.display, "");
+
                     } catch (Exception e)
                     {
                         ExLog.d(e.getMessage());
@@ -750,6 +760,14 @@ public class SearchStayOutboundSuggestPresenter //
                         unLockAll();
                     }
                 }));
+
+            try
+            {
+                mAnalytics.onDeleteRecentlySearch(getActivity(), stayOutboundSuggest.display);
+            } catch (Exception e)
+            {
+                ExLog.d(e.getMessage());
+            }
         }
     }
 
@@ -775,6 +793,14 @@ public class SearchStayOutboundSuggestPresenter //
         {
             DailyToast.showToast(getActivity(), R.string.message_search_suggest_voice_search_error, DailyToast.LENGTH_SHORT);
             getViewInterface().setVoiceSearchEnabled(false);
+        }
+
+        try
+        {
+            mAnalytics.onVoiceSearchClick(getActivity());
+        } catch (Exception e)
+        {
+            ExLog.d(e.getMessage());
         }
     }
 
