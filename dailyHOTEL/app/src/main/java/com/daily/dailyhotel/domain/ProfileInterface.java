@@ -20,4 +20,6 @@ public interface ProfileInterface
     Observable<UserTracking> getTracking();
 
     Observable<User> updateUserInformation(Map<String, String> params);
+
+    Observable<Boolean> getCheckPassword(String password);
 }

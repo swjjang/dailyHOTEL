@@ -18,6 +18,7 @@ import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.entity.UserBenefit;
 import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
+import com.daily.dailyhotel.screen.mydaily.profile.password.CheckPasswordActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
 import com.facebook.login.LoginManager;
@@ -554,8 +555,20 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
     }
 
     @Override
-    public void onLeaveDailyClick()
+    public void onLeaveDailyClick(User user)
     {
-        DailyToast.showToast(getActivity(), "회원 탈퇴 화면 연결 필요!", DailyToast.LENGTH_LONG);
+        if (getActivity() == null || user == null || DailyHotel.isLogin() == false)
+        {
+            return;
+        }
+
+        if (Constants.DAILY_USER.equalsIgnoreCase(user.userType))
+        {
+            Intent intent = CheckPasswordActivity.newInstance(getActivity());
+            startActivityForResult(intent, ProfileActivity.REQUEST_CODE_CHECK_PASSWORD);
+        } else {
+            DailyToast.showToast(getActivity(), "회원탈퇴 화면 바로 호출", DailyToast.LENGTH_SHORT);
+        }
+
     }
 }

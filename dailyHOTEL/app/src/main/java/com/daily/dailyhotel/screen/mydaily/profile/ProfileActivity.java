@@ -20,6 +20,7 @@ public class ProfileActivity extends BaseActivity<ProfilePresenter>
     public static final int REQUEST_CODE_EDIT_PROFILE = 10000;
     public static final int REQUEST_CODE_EDIT_PROFILE_BIRTHDAY = 10001;
     public static final int REQUEST_CODE_LOGIN = 10002;
+    public static final int REQUEST_CODE_CHECK_PASSWORD = 10003;
 
     public static Intent newInstance(Context context, String deepLink)
     {

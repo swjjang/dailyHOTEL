@@ -1778,4 +1778,12 @@
         <item>만 16세</item>
         <item>만 17세</item>
     </string-array>
+
+    <!-- Check Password -->
+    <string name="label_check_password_title">비밀번호 확인</string>
+    <string name="label_check_password_hint">비밀번호 입력</string>
+    <string name="message_check_password_error">비밀번호가 일치하지 않습니다.</string>
+
+    <!-- Leave Daily -->
+    <string name="label_leave_daily">회원 탈퇴</string>
 </resources>
