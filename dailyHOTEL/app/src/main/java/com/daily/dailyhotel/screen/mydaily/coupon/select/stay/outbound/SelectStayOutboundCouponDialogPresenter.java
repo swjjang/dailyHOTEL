@@ -292,14 +292,15 @@ public class SelectStayOutboundCouponDialogPresenter extends BaseExceptionPresen
             @Override
             public void accept(Boolean aBoolean) throws Exception
             {
-
+                setRefresh(true);
+                onRefresh(true);
             }
         }, new Consumer<Throwable>()
         {
             @Override
             public void accept(Throwable throwable) throws Exception
             {
-
+                onHandleError(throwable);
             }
         }));
     }
