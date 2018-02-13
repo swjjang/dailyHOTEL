@@ -87,6 +87,8 @@ public class SearchStayOutboundSuggestPresenter //
         void onSearchSuggestList(Activity activity, String keyword, boolean hasStayOutboundSuggestList);
 
         void onDeleteRecentlySearch(Activity activity, String keyword);
+
+        void onVoiceSearchClick(Activity activity);
     }
 
     public SearchStayOutboundSuggestPresenter(@NonNull SearchStayOutboundSuggestActivity activity)
@@ -791,6 +793,14 @@ public class SearchStayOutboundSuggestPresenter //
         {
             DailyToast.showToast(getActivity(), R.string.message_search_suggest_voice_search_error, DailyToast.LENGTH_SHORT);
             getViewInterface().setVoiceSearchEnabled(false);
+        }
+
+        try
+        {
+            mAnalytics.onVoiceSearchClick(getActivity());
+        } catch (Exception e)
+        {
+            ExLog.d(e.getMessage());
         }
     }
 

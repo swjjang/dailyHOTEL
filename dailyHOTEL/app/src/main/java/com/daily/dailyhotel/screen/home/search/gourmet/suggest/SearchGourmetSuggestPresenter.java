@@ -93,6 +93,8 @@ public class SearchGourmetSuggestPresenter //
         void onSearchSuggestList(Activity activity, String keyword, boolean hasGourmetSuggestList);
 
         void onDeleteRecentlySearch(Activity activity, String keyword);
+
+        void onVoiceSearchClick(Activity activity);
     }
 
     public SearchGourmetSuggestPresenter(@NonNull SearchGourmetSuggestActivity activity)
@@ -763,6 +765,14 @@ public class SearchGourmetSuggestPresenter //
         {
             DailyToast.showToast(getActivity(), R.string.message_search_suggest_voice_search_error, DailyToast.LENGTH_SHORT);
             getViewInterface().setVoiceSearchEnabled(false);
+        }
+
+        try
+        {
+            mAnalytics.onVoiceSearchClick(getActivity());
+        } catch (Exception e)
+        {
+            ExLog.d(e.getMessage());
         }
     }
 

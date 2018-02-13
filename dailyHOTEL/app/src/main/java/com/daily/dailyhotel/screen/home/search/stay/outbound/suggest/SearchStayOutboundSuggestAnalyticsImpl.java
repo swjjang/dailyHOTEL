@@ -29,4 +29,15 @@ public class SearchStayOutboundSuggestAnalyticsImpl implements SearchStayOutboun
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_, "recent_search_history_delete", keyword, null);
     }
+
+    @Override
+    public void onVoiceSearchClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_, "voice_search", "ob", null);
+    }
 }

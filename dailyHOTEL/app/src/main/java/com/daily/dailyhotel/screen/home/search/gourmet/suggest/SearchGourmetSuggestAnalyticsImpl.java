@@ -29,4 +29,15 @@ public class SearchGourmetSuggestAnalyticsImpl implements SearchGourmetSuggestPr
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_, "recent_search_history_delete", keyword, null);
     }
+
+    @Override
+    public void onVoiceSearchClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_, "voice_search", "gourmet", null);
+    }
 }

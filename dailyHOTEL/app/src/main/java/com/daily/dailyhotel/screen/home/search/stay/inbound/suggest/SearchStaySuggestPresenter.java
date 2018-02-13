@@ -103,6 +103,8 @@ public class SearchStaySuggestPresenter //
         void onSearchSuggestList(Activity activity, String keyword, boolean hasStaySuggestList);
 
         void onDeleteRecentlySearch(Activity activity, String keyword);
+
+        void onVoiceSearchClick(Activity activity);
     }
 
     public SearchStaySuggestPresenter(@NonNull SearchStaySuggestActivity activity)
@@ -985,6 +987,14 @@ public class SearchStaySuggestPresenter //
         {
             DailyToast.showToast(getActivity(), R.string.message_search_suggest_voice_search_error, DailyToast.LENGTH_SHORT);
             getViewInterface().setVoiceSearchEnabled(false);
+        }
+
+        try
+        {
+            mAnalytics.onVoiceSearchClick(getActivity());
+        } catch (Exception e)
+        {
+            ExLog.d(e.getMessage());
         }
     }
 
