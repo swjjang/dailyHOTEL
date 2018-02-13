@@ -191,7 +191,7 @@ public class SearchGourmetFragmentPresenter extends BasePagerFragmentPresenter<S
     }
 
     @Override
-    public void onRecentlySearchResultDeleteClick(int index)
+    public void onRecentlySearchResultDeleteClick(int index, String gourmetName)
     {
         if (lock() == true)
         {
@@ -203,6 +203,8 @@ public class SearchGourmetFragmentPresenter extends BasePagerFragmentPresenter<S
             @Override
             public ObservableSource<ArrayList<RecentlyDbPlace>> apply(Boolean aBoolean) throws Exception
             {
+                mAnalytics.onEventRecentlyDeleteClick(getActivity(), gourmetName);
+
                 return mRecentlyLocalImpl.getRecentlyTypeList(Constants.ServiceType.GOURMET);
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<RecentlyDbPlace>>()
@@ -270,6 +272,8 @@ public class SearchGourmetFragmentPresenter extends BasePagerFragmentPresenter<S
                     getViewInterface().setRecentlySearchResultVisible(true);
                     getViewInterface().setRecentlySearchResultList(recentlyDbPlaces);
                 }
+
+                mAnalytics.onEventRecentlyList(getActivity(), recentlyDbPlaces.size() == 0);
             }
         }, new Consumer<Throwable>()
         {
@@ -277,6 +281,8 @@ public class SearchGourmetFragmentPresenter extends BasePagerFragmentPresenter<S
             public void accept(Throwable throwable) throws Exception
             {
                 getViewInterface().setRecentlySearchResultVisible(false);
+
+                mAnalytics.onEventRecentlyList(getActivity(), true);
 
                 ExLog.e(throwable.toString());
             }

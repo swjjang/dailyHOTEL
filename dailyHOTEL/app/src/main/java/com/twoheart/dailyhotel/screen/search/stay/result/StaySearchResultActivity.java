@@ -138,7 +138,13 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                         mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
                         mPlaceSearchResultLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
 
-                        mNetworkController.requestAddress(mStaySearchCuration.getLocation());
+                        if (DailyTextUtils.isTextEmpty(mStaySearchCuration.getSuggest().displayName) == true)
+                        {
+                            mNetworkController.requestAddress(mStaySearchCuration.getLocation());
+                        } else
+                        {
+                            mOnNetworkControllerListener.onResponseAddress(mStaySearchCuration.getSuggest().displayName);
+                        }
                     }
                 } catch (Exception e)
                 {
@@ -714,31 +720,12 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
         try
         {
-            String action = null;
-
-            if (AnalyticsManager.Screen.SEARCH_MAIN.equalsIgnoreCase(mCallByScreen) == true)
-            {
-                action = (isEmpty == true) ? AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND : AnalyticsManager.Action.AROUND_SEARCH_CLICKED;
-                params.put(AnalyticsManager.KeyType.SEARCH_PATH, AnalyticsManager.ValueType.AROUND);
-                params.put(AnalyticsManager.KeyType.SEARCH_WORD, address);
-                params.put(AnalyticsManager.KeyType.SEARCH_RESULT, address);
-
-
-            } else if (AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_DOMESTIC.equalsIgnoreCase(mCallByScreen) == true)
-            {
-                action = (isEmpty == true) ? AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND_LOCATIONLIST : AnalyticsManager.Action.AROUND_SEARCH_CLICKED_LOCATIONLIST;
-            } else if (AnalyticsManager.Screen.DAILYHOTEL_LIST_REGION_GLOBAL.equalsIgnoreCase(mCallByScreen) == true)
-            {
-                action = (isEmpty == true) ? AnalyticsManager.Action.AROUND_SEARCH_NOT_FOUND_LOCATIONLIST : AnalyticsManager.Action.AROUND_SEARCH_CLICKED_LOCATIONLIST;
-            }
-
-            if (DailyTextUtils.isTextEmpty(action) == false)
-            {
-                AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SEARCH_//
-                    , action, address, params);
-            }
+            AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SEARCH_//
+                , isEmpty ? "AroundSearchNotFound_LocationList_stay" : "AroundSearchClicked_LocationList_stay"//
+                , mStaySearchCuration.getSuggest().displayName, null);
         } catch (Exception e)
         {
+            ExLog.e(e.toString());
         }
     }
 
@@ -1067,6 +1054,9 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             }
 
             finish(Constants.CODE_RESULT_ACTIVITY_SEARCH_STAYOUTBOUND);
+
+            AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
+                , "no_result_switch_screen", "stay_ob", null);
         }
 
         @Override
@@ -1078,6 +1068,9 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             }
 
             finish(Constants.CODE_RESULT_ACTIVITY_SEARCH_GOURMET);
+
+            AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
+                , "no_result_switch_screen", "stay_gourmet", null);
         }
 
         @Override
@@ -1094,6 +1087,9 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 , mStaySearchCuration.getStayBookingDay().getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)));
 
             finish();
+
+            AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
+                , "no_result_switch_screen_location_stay", Integer.toString(campaignTag.index), null);
         }
     };
 
@@ -1637,18 +1633,33 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                         }
                     }
                     break;
+                //
+                //                case StaySuggest.CATEGORY_STAY:
+                //                case StaySuggest.CATEGORY_REGION:
+                //                    recordEventSearchResultByAutoSearch(mStaySearchCuration.getSuggest().displayName, mInputText, isShow, params);
+                //                    break;
+                //
+                //                case StaySuggest.CATEGORY_DIRECT:
+                //
+                //                    break;
+                //
+                //                default:
+                //                    recordEventSearchResultByKeyword(mStaySearchCuration.getSuggest().displayName, isShow, params);
+                //                    break;
+            }
 
-                case StaySuggest.CATEGORY_STAY:
-                case StaySuggest.CATEGORY_REGION:
-                    recordEventSearchResultByAutoSearch(mStaySearchCuration.getSuggest().displayName, mInputText, isShow, params);
+            switch (mStaySearchCuration.getSuggest().menuType)
+            {
+                case StaySuggest.MENU_TYPE_RECENTLY_SEARCH:
+                    recordEventSearchResultByRecentKeyword(mStaySearchCuration.getSuggest().displayName, isShow, ServiceType.HOTEL, params);
                     break;
 
-                case StaySuggest.CATEGORY_DIRECT:
-                    recordEventSearchResultByRecentKeyword(mStaySearchCuration.getSuggest().displayName, isShow, params);
+                case StaySuggest.MENU_TYPE_DIRECT:
+                    recordEventSearchResultByKeyword(mStaySearchCuration.getSuggest().displayName, isShow, ServiceType.HOTEL, params);
                     break;
 
-                default:
-                    recordEventSearchResultByKeyword(mStaySearchCuration.getSuggest().displayName, isShow, params);
+                case StaySuggest.MENU_TYPE_SUGGEST:
+                    recordEventSearchResultByAutoSearch(mStaySearchCuration.getSuggest().displayName, mInputText, isShow, ServiceType.HOTEL, params);
                     break;
             }
         }

@@ -93,8 +93,6 @@ public class SearchStayOutboundSuggestPresenter //
         void onEventSuggestClick(Activity activity, String suggestDisplayName, String keyword);
 
         void onEventRecentlySuggestClick(Activity activity, String suggestDisplayName, String keyword);
-
-        void onEventPopularSuggestClick(Activity activity, String suggestDisplayName);
     }
 
     public SearchStayOutboundSuggestPresenter(@NonNull SearchStayOutboundSuggestActivity activity)
@@ -654,14 +652,6 @@ public class SearchStayOutboundSuggestPresenter //
                 @Override
                 public void accept(Boolean aBoolean) throws Exception
                 {
-                    try
-                    {
-                        mAnalytics.onEventPopularSuggestClick(getActivity(), stayOutboundSuggest.display);
-                    } catch (Exception e)
-                    {
-                        ExLog.d(e.getMessage());
-                    }
-
                     startFinishAction(stayOutboundSuggest, mKeyword, AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECOMMEND);
                 }
             }, new Consumer<Throwable>()
@@ -669,14 +659,6 @@ public class SearchStayOutboundSuggestPresenter //
                 @Override
                 public void accept(Throwable throwable) throws Exception
                 {
-                    try
-                    {
-                        mAnalytics.onEventPopularSuggestClick(getActivity(), stayOutboundSuggest.display);
-                    } catch (Exception e)
-                    {
-                        ExLog.d(e.getMessage());
-                    }
-
                     startFinishAction(stayOutboundSuggest, mKeyword, AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECOMMEND);
                 }
             }));

@@ -72,7 +72,7 @@ public class SearchStayFragmentView extends BaseFragmentDialogView<SearchStayFra
                 recentlyCardView[i].setIcon(R.drawable.vector_search_ic_08_history);
                 recentlyCardView[i].setNameText(recentlyDbPlace.name);
                 recentlyCardView[i].setDateText(null);
-                recentlyCardView[i].setOnDeleteClickListener(v -> getEventListener().onRecentlySearchResultDeleteClick(recentlyDbPlace.index));
+                recentlyCardView[i].setOnDeleteClickListener(v -> getEventListener().onRecentlySearchResultDeleteClick(recentlyDbPlace.index, recentlyDbPlace.name));
             } else
             {
                 recentlyCardView[i].setVisibility(View.GONE);

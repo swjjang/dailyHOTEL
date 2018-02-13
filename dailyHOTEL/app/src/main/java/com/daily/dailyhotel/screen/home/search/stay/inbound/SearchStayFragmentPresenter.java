@@ -195,7 +195,7 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
     }
 
     @Override
-    public void onRecentlySearchResultDeleteClick(int index)
+    public void onRecentlySearchResultDeleteClick(int index, String stayName)
     {
         if (lock() == true)
         {
@@ -207,6 +207,8 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
             @Override
             public ObservableSource<ArrayList<RecentlyDbPlace>> apply(Boolean aBoolean) throws Exception
             {
+                mAnalytics.onEventRecentlyDeleteClick(getActivity(), stayName);
+
                 return mRecentlyLocalImpl.getRecentlyTypeList(Constants.ServiceType.HOTEL);
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ArrayList<RecentlyDbPlace>>()
@@ -274,6 +276,8 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
                     getViewInterface().setRecentlySearchResultVisible(true);
                     getViewInterface().setRecentlySearchResultList(recentlyDbPlaces);
                 }
+
+                mAnalytics.onEventRecentlyList(getActivity(), recentlyDbPlaces.size() == 0);
             }
         }, new Consumer<Throwable>()
         {
@@ -281,6 +285,8 @@ public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<Sear
             public void accept(Throwable throwable) throws Exception
             {
                 getViewInterface().setRecentlySearchResultVisible(false);
+
+                mAnalytics.onEventRecentlyList(getActivity(), true);
 
                 ExLog.e(throwable.toString());
             }
