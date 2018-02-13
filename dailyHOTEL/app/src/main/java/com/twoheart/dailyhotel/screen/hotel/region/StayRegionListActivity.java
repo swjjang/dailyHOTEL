@@ -34,6 +34,7 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Response;
 
+@Deprecated
 public class StayRegionListActivity extends PlaceRegionListActivity
 {
     public static final String INTENT_EXTRA_DATA_PROVINCE_INDEX = "provinceIndex";

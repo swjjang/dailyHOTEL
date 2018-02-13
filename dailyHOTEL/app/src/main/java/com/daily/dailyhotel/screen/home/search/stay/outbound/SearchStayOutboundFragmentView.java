@@ -58,6 +58,7 @@ public class SearchStayOutboundFragmentView extends BaseFragmentDialogView<Searc
             if (recentlyList != null && recentlyList.size() > i)
             {
                 recentlyCardView[i].setVisibility(View.VISIBLE);
+                recentlyCardView[i].setBackgroundResource(R.drawable.selector_background_drawable_cf8f8f9_cffffff);
 
                 RecentlyDbPlace recentlyDbPlace = recentlyList.get(i);
 
@@ -138,7 +139,11 @@ public class SearchStayOutboundFragmentView extends BaseFragmentDialogView<Searc
             return null;
         }
 
+        final int DP_15 = ScreenUtils.dpToPx(getContext(), 15);
+
         DailySearchStayOutboundAreaCardView areaCardView = new DailySearchStayOutboundAreaCardView(getContext());
+        areaCardView.setPadding(DP_15, 0, DP_15, 0);
+        areaCardView.setBackgroundResource(R.drawable.selector_background_drawable_cf8f8f9_cffffff);
         areaCardView.setTitleText(stayOutboundSuggest.display);
         areaCardView.setSubTitleText(stayOutboundSuggest.country);
         areaCardView.setTag(stayOutboundSuggest);
