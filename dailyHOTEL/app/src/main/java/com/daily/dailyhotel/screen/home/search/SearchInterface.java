@@ -102,6 +102,8 @@ public interface SearchInterface
 
     interface AnalyticsInterface extends BaseAnalyticsInterface
     {
+        void onScreen(Activity activity);
+
         void onEventStayClick(Activity activity);
 
         void onEventStayOutboundClick(Activity activity);

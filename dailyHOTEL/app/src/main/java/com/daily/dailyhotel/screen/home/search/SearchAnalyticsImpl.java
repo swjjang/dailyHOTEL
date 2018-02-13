@@ -10,6 +10,17 @@ import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 public class SearchAnalyticsImpl implements SearchInterface.AnalyticsInterface
 {
     @Override
+    public void onScreen(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordScreen(activity, AnalyticsManager.Screen.SEARCH_MAIN, null);
+    }
+
+    @Override
     public void onEventStayClick(Activity activity)
     {
         if (activity == null)

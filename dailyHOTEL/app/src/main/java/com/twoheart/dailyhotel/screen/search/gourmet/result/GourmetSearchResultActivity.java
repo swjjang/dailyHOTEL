@@ -704,7 +704,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
             }
 
-            AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(GourmetSearchResultActivity.this, screen, null, params);
+            AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordScreen(GourmetSearchResultActivity.this, screen + "_gourmet", null, params);
         } catch (Exception e)
         {
         }
@@ -946,6 +946,9 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                     ? mAddress : mGourmetSearchCuration.getSuggest().displayName;
                 AnalyticsManager.getInstance(GourmetSearchResultActivity.this) //
                     .recordEvent(AnalyticsManager.Category.NAVIGATION, action, label, null);
+
+                AnalyticsManager.getInstance(GourmetSearchResultActivity.this) //
+                    .recordEvent(AnalyticsManager.Category.SEARCH_, "gourmet_around_result_range_change", mGourmetSearchCuration.getSuggest().displayName, null);
             } catch (Exception e)
             {
                 if (Constants.DEBUG == true)
@@ -995,6 +998,19 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                 , mTodayDateTime.currentDateTime, mTodayDateTime.dailyDateTime//
                 , mGourmetSearchCuration.getGourmetBookingDay().getVisitDay(DailyCalendar.ISO_8601_FORMAT)//
                 , mGourmetSearchCuration.getSuggest()), CODE_REQUEST_ACTIVITY_GOURMET_RESEARCH);
+
+            switch (mGourmetSearchCuration.getSuggest().menuType)
+            {
+                case GourmetSuggest.MENU_TYPE_LOCATION:
+                    AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
+                        , "gourmet_around_result_research", mGourmetSearchCuration.getSuggest().displayName, null);
+                    break;
+
+                default:
+                    AnalyticsManager.getInstance(GourmetSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
+                        , "gourmet_research", null, null);
+                    break;
+            }
         }
 
         @Override
@@ -1516,6 +1532,8 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             {
                 mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
                 mPlaceSearchResultLayout.setScreenVisible(ScreenType.LIST);
+
+                recordScreenSearchResult(AnalyticsManager.Screen.SEARCH_RESULT);
             }
 
             GourmetBookingDay gourmetBookingDay = mGourmetSearchCuration.getGourmetBookingDay();

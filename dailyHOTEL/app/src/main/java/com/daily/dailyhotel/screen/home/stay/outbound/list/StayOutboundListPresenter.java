@@ -150,7 +150,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         StayOutboundListAnalyticsParam getAnalyticsParam();
 
-        void onScreen(Activity activity);
+        void onScreen(Activity activity, boolean empty);
 
         void onEventStayClick(Activity activity, int index, boolean provideRewardSticker, boolean dailyChoice);
 
@@ -173,6 +173,10 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         void onEventGourmetClick(Activity activity);
 
         void onEventPopularAreaClick(Activity activity, String areaName);
+
+        void onEventChangedRadius(Activity activity, String areaName);
+
+        void onEventResearchClick(Activity activity, StayOutboundSuggest suggest);
 
         StayOutboundDetailAnalyticsParam getDetailAnalyticsParam(StayOutbound stayOutbound, String grade, int rankingPosition, int listSize);
     }
@@ -360,8 +364,6 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     public void onStart()
     {
         super.onStart();
-
-        mAnalytics.onScreen(getActivity());
 
         if (isRefresh() == true)
         {
@@ -860,6 +862,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
                 return stayOutbounds;
             }).observeOn(AndroidSchedulers.mainThread()).subscribe(stayOutbounds ->
         {
+            mAnalytics.onScreen(getActivity(), stayOutbounds.getStayOutbound().size() == 0);
+
             mAnalytics.onEventList(getActivity(), mStayOutboundSuggest, stayOutbounds.getStayOutbound().size());
 
             onStayOutbounds(stayOutbounds);
@@ -1309,6 +1313,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
             , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
             , mStayOutboundSuggest, mPeople.numberOfAdults, mPeople.getChildAgeList()), StayOutboundListActivity.REQUEST_CODE_RESEARCH);
+
+        mAnalytics.onEventResearchClick(getActivity(), mStayOutboundSuggest);
     }
 
     @Override
@@ -1435,6 +1441,8 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         mRadius = radius;
 
         onRefreshAll(true);
+
+        mAnalytics.onEventChangedRadius(getActivity(), mStayOutboundSuggest.display);
     }
 
     @Override

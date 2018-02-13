@@ -563,9 +563,6 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
         params.put(AnalyticsManager.KeyType.SEARCH_WORD, displayName);
         params.put(AnalyticsManager.KeyType.SEARCH_RESULT, displayName);
 
-        AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
-            , action, displayName, params);
-
         switch (serviceType)
         {
             case GOURMET:
@@ -588,9 +585,6 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
         params.put(AnalyticsManager.KeyType.SEARCH_WORD, displayName);
         params.put(AnalyticsManager.KeyType.SEARCH_RESULT, displayName);
 
-        AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
-            , action, displayName, params);
-
         switch (serviceType)
         {
             case GOURMET:
@@ -612,9 +606,6 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
         params.put(AnalyticsManager.KeyType.SEARCH_PATH, AnalyticsManager.ValueType.AUTO);
         params.put(AnalyticsManager.KeyType.SEARCH_WORD, inputText);
         params.put(AnalyticsManager.KeyType.SEARCH_RESULT, displayName);
-
-        AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(category//
-            , displayName, inputText, params);
 
         switch (serviceType)
         {

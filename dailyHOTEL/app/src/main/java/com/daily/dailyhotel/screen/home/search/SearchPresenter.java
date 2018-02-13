@@ -261,6 +261,8 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
     {
         super.onStart();
 
+        mAnalytics.onScreen(getActivity());
+
         if (isRefresh() == true)
         {
             onRefresh(true);
