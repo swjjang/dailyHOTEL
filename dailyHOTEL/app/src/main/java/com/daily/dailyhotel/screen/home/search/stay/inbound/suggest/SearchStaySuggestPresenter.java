@@ -105,6 +105,10 @@ public class SearchStaySuggestPresenter //
         void onDeleteRecentlySearch(Activity activity, String keyword);
 
         void onVoiceSearchClick(Activity activity);
+
+        void onGourmetSuggestClick(Activity activity, String keyword);
+
+        void onStayOutboundSuggestClick(Activity activity, String keyword);
     }
 
     public SearchStaySuggestPresenter(@NonNull SearchStaySuggestActivity activity)
@@ -788,6 +792,15 @@ public class SearchStaySuggestPresenter //
         }
 
         getViewInterface().setSuggest(gourmetSuggest.displayName);
+
+        try
+        {
+            mAnalytics.onGourmetSuggestClick(getActivity(), mKeyword);
+        } catch (Exception e)
+        {
+            ExLog.d(e.getMessage());
+        }
+
         startFinishAction(gourmetSuggest, mKeyword, null);
     }
 
@@ -815,6 +828,15 @@ public class SearchStaySuggestPresenter //
         }
 
         getViewInterface().setSuggest(stayOutboundSuggest.display);
+
+        try
+        {
+            mAnalytics.onStayOutboundSuggestClick(getActivity(), mKeyword);
+        } catch (Exception e)
+        {
+            ExLog.d(e.getMessage());
+        }
+
         startFinishAction(stayOutboundSuggest, mKeyword, null);
     }
 

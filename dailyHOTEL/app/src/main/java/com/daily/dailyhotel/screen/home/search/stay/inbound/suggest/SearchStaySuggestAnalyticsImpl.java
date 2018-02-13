@@ -40,4 +40,26 @@ public class SearchStaySuggestAnalyticsImpl implements SearchStaySuggestPresente
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_, "voice_search", "stay", null);
     }
+
+    @Override
+    public void onGourmetSuggestClick(Activity activity, String keyword)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH, "gourmet_keywords", keyword, null);
+    }
+
+    @Override
+    public void onStayOutboundSuggestClick(Activity activity, String keyword)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH, "ob_keywords_in_domestic", keyword, null);
+    }
 }
