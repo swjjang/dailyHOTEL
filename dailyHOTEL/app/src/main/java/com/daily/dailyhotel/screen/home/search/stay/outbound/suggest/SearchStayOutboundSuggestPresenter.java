@@ -858,9 +858,9 @@ public class SearchStayOutboundSuggestPresenter //
                             if ("KR".equalsIgnoreCase(address.shortCountry))
                             {
                                 StaySuggest staySuggest = new StaySuggest( //
-                                    StaySuggest.MENU_TYPE_LOCATION, StaySuggest.CATEGORY_LOCATION, address.address);
+                                    StaySuggest.MENU_TYPE_LOCATION, StaySuggest.CATEGORY_LOCATION, address.shortAddress);
+                                staySuggest.address = address.address;
 
-                                staySuggest.areaName = address.shortAddress;
                                 staySuggest.latitude = mLocationSuggest.latitude;
                                 staySuggest.longitude = mLocationSuggest.longitude;
 

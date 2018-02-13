@@ -27,8 +27,8 @@ public class GourmetSuggest
     public String gourmetName; // 업장 명
     public String regionName; // 대지역 명 (예  서울)
     public String provinceName; // 중지역 명 (예 강남구/서초구)
-    public String areaName; // 소지역 명 - 검색 등의 화면에서 표시 될 이름 (예 역삼1동)
-    public String displayName; // 전체 이름 ( 지역 명의 경우 서울시 강남구 역삼1동)
+    public String displayName; // 전체 이름 ( 지역 명의 경우 역삼1동)
+    public String address; // 주소
     public int discountPrice; // 판매가
     public int availableTickets; // 사용가능 티켓수
     public boolean isExpired; // 마감 여부

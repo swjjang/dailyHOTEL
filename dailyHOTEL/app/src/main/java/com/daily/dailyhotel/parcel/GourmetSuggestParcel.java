@@ -41,8 +41,8 @@ public class GourmetSuggestParcel implements Parcelable
         dest.writeString(mGourmetSuggest.gourmetName);
         dest.writeString(mGourmetSuggest.regionName);
         dest.writeString(mGourmetSuggest.provinceName);
-        dest.writeString(mGourmetSuggest.areaName);
         dest.writeString(mGourmetSuggest.displayName);
+        dest.writeString(mGourmetSuggest.address);
         dest.writeInt(mGourmetSuggest.discountPrice);
         dest.writeInt(mGourmetSuggest.availableTickets);
         dest.writeInt(mGourmetSuggest.isExpired ? 1 : 0);
@@ -61,8 +61,8 @@ public class GourmetSuggestParcel implements Parcelable
         mGourmetSuggest.gourmetName = in.readString();
         mGourmetSuggest.regionName = in.readString();
         mGourmetSuggest.provinceName = in.readString();
-        mGourmetSuggest.areaName = in.readString();
         mGourmetSuggest.displayName = in.readString();
+        mGourmetSuggest.address = in.readString();
         mGourmetSuggest.discountPrice = in.readInt();
         mGourmetSuggest.availableTickets = in.readInt();
         mGourmetSuggest.isExpired = in.readInt() == 1;

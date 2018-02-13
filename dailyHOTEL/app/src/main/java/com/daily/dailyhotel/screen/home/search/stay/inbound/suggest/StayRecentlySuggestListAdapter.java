@@ -306,9 +306,9 @@ public class StayRecentlySuggestListAdapter extends RecyclerView.Adapter<Recycle
 
         holder.dataBinding.bottomDivider.setVisibility(View.VISIBLE);
 
-        holder.dataBinding.descriptionTextView.setText(staySuggest.displayName);
+        holder.dataBinding.descriptionTextView.setText(staySuggest.address);
 
-        if (DailyTextUtils.isTextEmpty(staySuggest.displayName) == true)
+        if (DailyTextUtils.isTextEmpty(staySuggest.address) == true)
         {
             holder.dataBinding.descriptionTextView.setVisibility(View.GONE);
         } else

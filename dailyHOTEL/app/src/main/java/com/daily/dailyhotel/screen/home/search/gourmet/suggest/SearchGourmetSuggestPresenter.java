@@ -119,7 +119,8 @@ public class SearchGourmetSuggestPresenter //
         boolean isAgreeLocation = DailyPreference.getInstance(activity).isAgreeTermsOfLocation();
 
         mLocationSuggest = new GourmetSuggest(GourmetSuggest.MENU_TYPE_LOCATION, GourmetSuggest.CATEGORY_LOCATION //
-            , isAgreeLocation ? getString(R.string.label_search_nearby_empty_address) : getString(R.string.label_search_nearby_description));
+            , null);
+        mLocationSuggest.address = isAgreeLocation ? getString(R.string.label_search_nearby_empty_address) : getString(R.string.label_search_nearby_description);
 
         List<GourmetSuggest> popularList = new ArrayList<>();
         popularList.add(new GourmetSuggest(0, "", getString(R.string.label_search_suggest_recently_empty_description_type_gourmet)));
@@ -789,7 +790,7 @@ public class SearchGourmetSuggestPresenter //
             @Override
             public void accept(Location location) throws Exception
             {
-                mLocationSuggest.displayName = getString(R.string.label_search_nearby_empty_address);
+                mLocationSuggest.address = getString(R.string.label_search_nearby_empty_address);
                 mLocationSuggest.latitude = location.getLatitude();
                 mLocationSuggest.longitude = location.getLongitude();
 
@@ -799,8 +800,8 @@ public class SearchGourmetSuggestPresenter //
                     @Override
                     public void accept(GoogleAddress address) throws Exception
                     {
-                        mLocationSuggest.displayName = address.address;
-                        mLocationSuggest.areaName = address.shortAddress;
+                        mLocationSuggest.address = address.address;
+                        mLocationSuggest.displayName = address.shortAddress;
 
                         getViewInterface().setNearbyGourmetSuggest(mLocationSuggest);
 
@@ -811,7 +812,7 @@ public class SearchGourmetSuggestPresenter //
 
                         unLockAll();
 
-                        getViewInterface().setSuggest(mLocationSuggest.displayName);
+                        getViewInterface().setSuggest(mLocationSuggest.address);
                         startFinishAction(mLocationSuggest, mKeyword, null);
                     }
                 }, new Consumer<Throwable>()
@@ -828,7 +829,7 @@ public class SearchGourmetSuggestPresenter //
 
                         unLockAll();
 
-                        getViewInterface().setSuggest(mLocationSuggest.displayName);
+                        getViewInterface().setSuggest(mLocationSuggest.address);
                         startFinishAction(mLocationSuggest, mKeyword, null);
                     }
                 }));
@@ -839,14 +840,14 @@ public class SearchGourmetSuggestPresenter //
             @Override
             public void accept(Throwable throwable) throws Exception
             {
-                String displayName = null;
+                String address = null;
 
                 if (throwable instanceof PermissionException)
                 {
-                    displayName = getString(R.string.label_search_nearby_description);
+                    address = getString(R.string.label_search_nearby_description);
                 }
 
-                mLocationSuggest.displayName = displayName;
+                mLocationSuggest.address = address;
 
                 getViewInterface().setNearbyGourmetSuggest(mLocationSuggest);
 
