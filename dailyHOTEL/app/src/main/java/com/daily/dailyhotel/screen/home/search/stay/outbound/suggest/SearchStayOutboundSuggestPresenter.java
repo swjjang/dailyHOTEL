@@ -84,15 +84,7 @@ public class SearchStayOutboundSuggestPresenter //
 
     public interface SearchStayOutboundSuggestAnalyticsInterface extends BaseAnalyticsInterface
     {
-        void onEventSuggestEmpty(Activity activity, String keyword);
-
-        void onEventCloseClick(Activity activity);
-
-        void onEventDeleteAllRecentlySuggestClick(Activity activity);
-
-        void onEventSuggestClick(Activity activity, String suggestDisplayName, String keyword);
-
-        void onEventRecentlySuggestClick(Activity activity, String suggestDisplayName, String keyword);
+        void onSearchSuggestList(Activity activity, String keyword, boolean hasStayOutboundSuggestList);
     }
 
     public SearchStayOutboundSuggestPresenter(@NonNull SearchStayOutboundSuggestActivity activity)
@@ -213,8 +205,6 @@ public class SearchStayOutboundSuggestPresenter //
     @Override
     public boolean onBackPressed()
     {
-        mAnalytics.onEventCloseClick(getActivity());
-
         return super.onBackPressed();
     }
 
@@ -437,7 +427,6 @@ public class SearchStayOutboundSuggestPresenter //
             {
                 getViewInterface().setSuggests(mSuggestList);
                 getViewInterface().setEmptySuggestsVisible(true);
-                mAnalytics.onEventSuggestEmpty(getActivity(), mKeyword);
                 return;
             }
 
@@ -515,6 +504,15 @@ public class SearchStayOutboundSuggestPresenter //
 
                         getViewInterface().setProgressBarVisible(false);
                         unLockAll();
+
+                        try
+                        {
+                            boolean hasStayOutboundSuggestList = stayOutboundSuggests != null && stayOutboundSuggests.size() > 0;
+                            mAnalytics.onSearchSuggestList(getActivity(), keyword, hasStayOutboundSuggestList);
+                        } catch (Exception e)
+                        {
+                            ExLog.d(e.getMessage());
+                        }
                     }
                 }, new Consumer<Throwable>()
                 {
@@ -526,6 +524,14 @@ public class SearchStayOutboundSuggestPresenter //
 
                         getViewInterface().setProgressBarVisible(false);
                         unLockAll();
+
+                        try
+                        {
+                            mAnalytics.onSearchSuggestList(getActivity(), keyword, false);
+                        } catch (Exception e)
+                        {
+                            ExLog.d(e.getMessage());
+                        }
                     }
                 });
 
@@ -554,7 +560,7 @@ public class SearchStayOutboundSuggestPresenter //
                 {
                     try
                     {
-                        mAnalytics.onEventSuggestClick(getActivity(), stayOutboundSuggest.display, mKeyword);
+
                     } catch (Exception e)
                     {
                         ExLog.d(e.getMessage());
@@ -569,7 +575,7 @@ public class SearchStayOutboundSuggestPresenter //
                 {
                     try
                     {
-                        mAnalytics.onEventSuggestClick(getActivity(), stayOutboundSuggest.display, mKeyword);
+
                     } catch (Exception e)
                     {
                         ExLog.d(e.getMessage());
@@ -615,7 +621,7 @@ public class SearchStayOutboundSuggestPresenter //
                 {
                     try
                     {
-                        mAnalytics.onEventRecentlySuggestClick(getActivity(), stayOutboundSuggest.display, keyword);
+
                     } catch (Exception e)
                     {
                         ExLog.d(e.getMessage());
@@ -630,7 +636,7 @@ public class SearchStayOutboundSuggestPresenter //
                 {
                     try
                     {
-                        mAnalytics.onEventRecentlySuggestClick(getActivity(), stayOutboundSuggest.display, "");
+
                     } catch (Exception e)
                     {
                         ExLog.d(e.getMessage());

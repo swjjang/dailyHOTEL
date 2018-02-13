@@ -100,6 +100,7 @@ public class SearchStaySuggestPresenter //
 
     public interface SearchStaySuggestAnalyticsInterface extends BaseAnalyticsInterface
     {
+        void onSearchSuggestList(Activity activity, String keyword, boolean hasStaySuggestList);
     }
 
     public SearchStaySuggestPresenter(@NonNull SearchStaySuggestActivity activity)
@@ -600,6 +601,8 @@ public class SearchStaySuggestPresenter //
                 @Override
                 public void accept(List list) throws Exception
                 {
+                    boolean hasStaySuggestList = false;
+
                     if (list != null && list.size() > 0)
                     {
                         if (list.get(0) instanceof StayOutboundSuggest)
@@ -610,6 +613,7 @@ public class SearchStaySuggestPresenter //
                             setGourmetSuggestList(list);
                         } else
                         {
+                            hasStaySuggestList = true;
                             setSuggestList(list);
                         }
                     } else
@@ -621,6 +625,14 @@ public class SearchStaySuggestPresenter //
 
                     getViewInterface().setProgressBarVisible(false);
                     unLockAll();
+
+                    try
+                    {
+                        mAnalytics.onSearchSuggestList(getActivity(), keyword, hasStaySuggestList);
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.getMessage());
+                    }
                 }
             }, new Consumer<Throwable>()
             {
@@ -632,6 +644,14 @@ public class SearchStaySuggestPresenter //
 
                     getViewInterface().setProgressBarVisible(false);
                     unLockAll();
+
+                    try
+                    {
+                        mAnalytics.onSearchSuggestList(getActivity(), keyword, false);
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.getMessage());
+                    }
                 }
             });
 
@@ -1099,7 +1119,8 @@ public class SearchStaySuggestPresenter //
                             if ("KR".equalsIgnoreCase(address.shortCountry))
                             {
                                 startFinishAction(mLocationSuggest, mKeyword, null);
-                            } else {
+                            } else
+                            {
                                 StayOutboundSuggest stayOutboundSuggest = new StayOutboundSuggest(0, mLocationSuggest.address);
                                 stayOutboundSuggest.categoryKey = StayOutboundSuggest.CATEGORY_LOCATION;
                                 stayOutboundSuggest.menuType = StayOutboundSuggest.MENU_TYPE_LOCATION;

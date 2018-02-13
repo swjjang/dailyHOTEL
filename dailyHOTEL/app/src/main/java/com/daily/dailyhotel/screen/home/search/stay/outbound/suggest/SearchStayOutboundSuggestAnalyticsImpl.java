@@ -2,69 +2,20 @@ package com.daily.dailyhotel.screen.home.search.stay.outbound.suggest;
 
 import android.app.Activity;
 
-import com.daily.base.util.DailyTextUtils;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
 
 public class SearchStayOutboundSuggestAnalyticsImpl implements SearchStayOutboundSuggestPresenter.SearchStayOutboundSuggestAnalyticsInterface
 {
     @Override
-    public void onEventSuggestEmpty(Activity activity, String keyword)
-    {
-        if (activity == null || DailyTextUtils.isTextEmpty(keyword) == true)
-        {
-            return;
-        }
-
-        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.AUTOSEARCHNOTFOUND_OUTBOUND//
-            , keyword, AnalyticsManager.ValueType.EMPTY, null);
-    }
-
-    @Override
-    public void onEventCloseClick(Activity activity)
+    public void onSearchSuggestList(Activity activity, String keyword, boolean hasStayOutboundSuggestList)
     {
         if (activity == null)
         {
             return;
         }
 
-        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH//
-            , AnalyticsManager.Action.SEARCH_CANCEL, null, null);
-    }
+        String category = hasStayOutboundSuggestList ? AnalyticsManager.Category.AUTO_SEARCH_LIST : AnalyticsManager.Category.AUTO_SEARCH_LIST_NO_RESULT;
 
-    @Override
-    public void onEventDeleteAllRecentlySuggestClick(Activity activity)
-    {
-        if (activity == null)
-        {
-            return;
-        }
-
-        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH//
-            , AnalyticsManager.Action.SEARCH_HISTORY_DELETE, null, null);
-
-    }
-
-    @Override
-    public void onEventSuggestClick(Activity activity, String suggestDisplayName, String keyword)
-    {
-        if (activity == null || DailyTextUtils.isTextEmpty(suggestDisplayName) == true)
-        {
-            return;
-        }
-
-        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.OB_SEARCH_AUTO_SEARCH //
-            , suggestDisplayName, keyword, null);
-    }
-
-    @Override
-    public void onEventRecentlySuggestClick(Activity activity, String suggestDisplayName, String keyword)
-    {
-        if (activity == null || DailyTextUtils.isTextEmpty(suggestDisplayName) == true)
-        {
-            return;
-        }
-
-        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.OB_SEARCH_RECENT //
-            , suggestDisplayName, keyword, null);
+        AnalyticsManager.getInstance(activity).recordEvent(category, keyword, null, null);
     }
 }
