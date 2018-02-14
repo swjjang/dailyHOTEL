@@ -67,15 +67,11 @@ public class SnsActivity extends BaseActivity implements View.OnClickListener
 
     private void initSnsLayout()
     {
-        View facebookView = findViewById(R.id.facebookLinkView);
-        View instagramView = findViewById(R.id.instagramLinkView);
-        View naverView = findViewById(R.id.naverLinkView);
-        View youtubeLinkView = findViewById(R.id.youtubeLinkView);
-
-        facebookView.setOnClickListener(this);
-        instagramView.setOnClickListener(this);
-        naverView.setOnClickListener(this);
-        youtubeLinkView.setOnClickListener(this);
+        findViewById(R.id.facebookLinkView).setOnClickListener(this);
+        findViewById(R.id.naverLinkView).setOnClickListener(this);
+        findViewById(R.id.youtubeLinkView).setOnClickListener(this);
+        findViewById(R.id.stayInstagramLinkView).setOnClickListener(this);
+        findViewById(R.id.gourmetInstagramLinkView).setOnClickListener(this);
     }
 
     @Override
@@ -94,7 +90,7 @@ public class SnsActivity extends BaseActivity implements View.OnClickListener
         overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
-    public void startFacebook()
+    private void startFacebook()
     {
         if (lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -123,7 +119,7 @@ public class SnsActivity extends BaseActivity implements View.OnClickListener
             , AnalyticsManager.Action.FACEBOOK_CLICK, null, null);
     }
 
-    public void startInstagram()
+    private void startStayInstagram()
     {
         if (lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -134,13 +130,13 @@ public class SnsActivity extends BaseActivity implements View.OnClickListener
 
         try
         {
-            intent.setData(Uri.parse("instagram://user?username=dailyhotel_korea"));
+            intent.setData(Uri.parse("instagram://user?username=dailyhotel_official"));
             startActivity(intent);
         } catch (Exception e)
         {
             try
             {
-                intent.setData(Uri.parse("http://www.instagram.com/dailyhotel_korea"));
+                intent.setData(Uri.parse("https://www.instagram.com/dailyhotel_official/"));
                 startActivity(intent);
             } catch (ActivityNotFoundException e1)
             {
@@ -151,7 +147,35 @@ public class SnsActivity extends BaseActivity implements View.OnClickListener
             , AnalyticsManager.Action.INSTAGRAM_CLICK, null, null);
     }
 
-    public void startNaverBlog()
+    private void startGourmetInstagram()
+    {
+        if (lockUiComponentAndIsLockUiComponent() == true)
+        {
+            return;
+        }
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+
+        try
+        {
+            intent.setData(Uri.parse("instagram://user?username=dailygourmet_official"));
+            startActivity(intent);
+        } catch (Exception e)
+        {
+            try
+            {
+                intent.setData(Uri.parse("https://www.instagram.com/dailygourmet_official/"));
+                startActivity(intent);
+            } catch (ActivityNotFoundException e1)
+            {
+            }
+        }
+
+        AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.NAVIGATION//
+            , AnalyticsManager.Action.INSTAGRAM_CLICK, null, null);
+    }
+
+    private void startNaverBlog()
     {
         if (lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -179,7 +203,7 @@ public class SnsActivity extends BaseActivity implements View.OnClickListener
             , AnalyticsManager.Action.BLOG_CLICK, null, null);
     }
 
-    public void startYouTube()
+    private void startYouTube()
     {
         if (lockUiComponentAndIsLockUiComponent() == true)
         {
@@ -216,16 +240,20 @@ public class SnsActivity extends BaseActivity implements View.OnClickListener
                 startFacebook();
                 break;
 
-            case R.id.instagramLinkView:
-                startInstagram();
-                break;
-
             case R.id.naverLinkView:
                 startNaverBlog();
                 break;
 
             case R.id.youtubeLinkView:
                 startYouTube();
+                break;
+
+            case R.id.stayInstagramLinkView:
+                startStayInstagram();
+                break;
+
+            case R.id.gourmetInstagramLinkView:
+                startGourmetInstagram();
                 break;
         }
     }

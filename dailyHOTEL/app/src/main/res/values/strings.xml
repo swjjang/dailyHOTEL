@@ -476,7 +476,8 @@
     <string name="frag_recent_places">최근 확인한 스테이/고메</string>
 
     <string name="label_link_facebook">데일리 페이스북</string>
-    <string name="label_link_instagram">데일리 인스타그램</string>
+    <string name="label_link_hotel_instagram">데일리호텔 인스타그램</string>
+    <string name="label_link_gourmet_instagram">데일리고메 인스타그램</string>
     <string name="label_link_naver">데일리 포스트</string>
     <string name="label_link_youtube">데일리 유튜브</string>
 
