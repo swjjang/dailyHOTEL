@@ -534,6 +534,27 @@ public class AppboyManager extends BaseAnalyticsManager
             {
                 ExLog.d(TAG + " : " + EventName.TAG_SEARCH_TERM + ", " + appboyProperties.forJsonPut().toString());
             }
+        } else if (AnalyticsManager.Category.SEARCH_.equalsIgnoreCase(category) == true//
+            || AnalyticsManager.Category.AUTO_SEARCH_NOT_FOUND.equalsIgnoreCase(category) == true //
+            || AnalyticsManager.Category.AUTO_SEARCH.equalsIgnoreCase(category) == true)
+        {
+            if (params != null)
+            {
+                AppboyProperties appboyProperties = new AppboyProperties();
+
+                appboyProperties.addProperty(AnalyticsManager.KeyType.USER_IDX, getUserIndex());
+                appboyProperties.addProperty(AnalyticsManager.KeyType.KEYWORD, params.get(AnalyticsManager.KeyType.SEARCH_RESULT));
+                appboyProperties.addProperty(AnalyticsManager.KeyType.NUM_OF_SEARCH_RESULTS_RETURNED, params.get(AnalyticsManager.KeyType.SEARCH_COUNT));
+                appboyProperties.addProperty(AnalyticsManager.KeyType.CATEGORY, params.get(AnalyticsManager.KeyType.PLACE_TYPE));
+                appboyProperties.addProperty(AnalyticsManager.KeyType.COUNTRY, params.get(AnalyticsManager.KeyType.COUNTRY));
+
+                mAppboy.logCustomEvent(EventName.SEARCH_TERM, appboyProperties);
+
+                if (DEBUG == true)
+                {
+                    ExLog.d(TAG + " : " + EventName.SEARCH_TERM + ", " + appboyProperties.forJsonPut().toString());
+                }
+            }
         }
     }
 

@@ -720,9 +720,11 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
         try
         {
+            params.put(AnalyticsManager.KeyType.SEARCH_PATH, AnalyticsManager.ValueType.AROUND);
+
             AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SEARCH_//
                 , isEmpty ? "AroundSearchNotFound_LocationList_stay" : "AroundSearchClicked_LocationList_stay"//
-                , mStaySearchCuration.getSuggest().displayName, null);
+                , mStaySearchCuration.getSuggest().displayName, params);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -1048,7 +1050,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
                 , mStaySearchCuration.getSuggest()), CODE_REQUEST_ACTIVITY_STAY_RESEARCH);
 
 
-            switch(mStaySearchCuration.getSuggest().menuType)
+            switch (mStaySearchCuration.getSuggest().menuType)
             {
                 case StaySuggest.MENU_TYPE_LOCATION:
                     AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
@@ -1629,6 +1631,9 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
                     StayArea area = region.getArea();
                     params.put(AnalyticsManager.KeyType.DISTRICT, area == null || area.index == StayArea.ALL ? AnalyticsManager.ValueType.ALL_LOCALE_KR : area.name);
+                } else
+                {
+                    params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
                 }
 
                 params.put(AnalyticsManager.KeyType.SEARCH_COUNT, Integer.toString(mSearchCount > mSearchMaxCount ? mSearchMaxCount : mSearchCount));
