@@ -22,6 +22,9 @@ public class CouponData
     @JsonField(name = "couponType")
     public String couponType; // 이벤트 웹뷰, 쿠폰주의사항 사용용 쿠폰 코드 - 쿠폰별 유니크 코드
 
+    @JsonField(name = "userCouponIdx")
+    public String userCouponIdx;
+
     @JsonField(name = "isDownloaded")
     public boolean isDownloaded; // 유저가 다운로드 했는지 여부 ,,
 
@@ -78,6 +81,7 @@ public class CouponData
         coupon.title = title;
         coupon.description = description;
         coupon.couponCode = couponCode;
+        coupon.userCouponIndex = userCouponIdx;
 
         try
         {

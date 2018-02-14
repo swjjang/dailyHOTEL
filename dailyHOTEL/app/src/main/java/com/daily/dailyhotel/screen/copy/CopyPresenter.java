@@ -13,13 +13,9 @@ import com.twoheart.dailyhotel.R;
  * Created by sheldon
  * Clean Architecture
  */
-public class CopyPresenter extends BaseExceptionPresenter<CopyActivity, CopyInterface> implements CopyView.OnEventListener
+public class CopyPresenter extends BaseExceptionPresenter<CopyActivity, CopyInterface.ViewInterface> implements CopyInterface.OnEventListener
 {
-    private CopyAnalyticsInterface mAnalytics;
-
-    public interface CopyAnalyticsInterface extends BaseAnalyticsInterface
-    {
-    }
+    private CopyInterface.AnalyticsInterface mAnalytics;
 
     public CopyPresenter(@NonNull CopyActivity activity)
     {
@@ -28,7 +24,7 @@ public class CopyPresenter extends BaseExceptionPresenter<CopyActivity, CopyInte
 
     @NonNull
     @Override
-    protected CopyInterface createInstanceViewInterface()
+    protected CopyInterface.ViewInterface createInstanceViewInterface()
     {
         return new CopyView(getActivity(), this);
     }
@@ -46,7 +42,7 @@ public class CopyPresenter extends BaseExceptionPresenter<CopyActivity, CopyInte
     @Override
     public void setAnalytics(BaseAnalyticsInterface analytics)
     {
-        mAnalytics = (CopyAnalyticsInterface) analytics;
+        mAnalytics = (CopyInterface.AnalyticsInterface) analytics;
     }
 
     @Override

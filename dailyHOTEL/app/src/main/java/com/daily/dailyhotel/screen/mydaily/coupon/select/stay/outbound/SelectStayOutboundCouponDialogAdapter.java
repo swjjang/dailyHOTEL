@@ -1,4 +1,4 @@
-package com.twoheart.dailyhotel.screen.mydaily.coupon;
+package com.daily.dailyhotel.screen.mydaily.coupon.select.stay.outbound;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -10,19 +10,16 @@ import android.view.ViewGroup;
 import com.crashlytics.android.Crashlytics;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.entity.Coupon;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.LayoutSelectCouponDataBinding;
-import com.twoheart.dailyhotel.model.Coupon;
 import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import java.text.ParseException;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Created by android_sam on 2016. 5. 26..
- */
-public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapter.SelectCouponViewHolder>
+public class SelectStayOutboundCouponDialogAdapter extends RecyclerView.Adapter<SelectStayOutboundCouponDialogAdapter.SelectCouponViewHolder>
 {
     private Context mContext;
     private List<Coupon> mList;
@@ -37,7 +34,7 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
         void updatePositiveButton();
     }
 
-    public SelectCouponAdapter(Context context, List<Coupon> list, OnCouponItemListener listener)
+    public SelectStayOutboundCouponDialogAdapter(Context context, List<Coupon> list, OnCouponItemListener listener)
     {
         mContext = context;
         mList = list;
@@ -94,7 +91,7 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
 
 
     @Override
-    public SelectCouponAdapter.SelectCouponViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    public SelectStayOutboundCouponDialogAdapter.SelectCouponViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         LayoutSelectCouponDataBinding viewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.layout_select_coupon_data, parent, false);
 
@@ -102,7 +99,7 @@ public class SelectCouponAdapter extends RecyclerView.Adapter<SelectCouponAdapte
     }
 
     @Override
-    public void onBindViewHolder(SelectCouponAdapter.SelectCouponViewHolder holder, int position)
+    public void onBindViewHolder(SelectStayOutboundCouponDialogAdapter.SelectCouponViewHolder holder, int position)
     {
         Coupon coupon = getItem(position);
 

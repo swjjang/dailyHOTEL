@@ -2,16 +2,11 @@ package com.daily.dailyhotel.screen.copy;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.BaseDialogView;
-import com.daily.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.databinding.ActivityCopyDataBinding;
 
-public class CopyView extends BaseDialogView<CopyView.OnEventListener, ActivityCopyDataBinding> implements CopyInterface
+public class CopyView extends BaseDialogView<CopyInterface.OnEventListener, ActivityCopyDataBinding> implements CopyInterface.ViewInterface
 {
-    public interface OnEventListener extends OnBaseEventListener
-    {
-    }
-
-    public CopyView(BaseActivity baseActivity, CopyView.OnEventListener listener)
+    public CopyView(BaseActivity baseActivity, CopyInterface.OnEventListener listener)
     {
         super(baseActivity, listener);
     }

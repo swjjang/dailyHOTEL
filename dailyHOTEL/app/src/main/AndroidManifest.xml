@@ -956,11 +956,17 @@
             android:screenOrientation="portrait"/>
 
         <activity
+            android:name="com.daily.dailyhotel.screen.mydaily.coupon.select.stay.outbound.SelectStayOutboundCouponDialogActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Translucent"/>
+
+        <activity
             android:name="com.daily.dailyhotel.screen.mydaily.profile.password.CheckPasswordActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
-        <!--  com.daily.dailyhotel.... -->
 
         <activity android:name="kr.co.kcp.android.payment.standard.ResultRcvActivity">
             <intent-filter>

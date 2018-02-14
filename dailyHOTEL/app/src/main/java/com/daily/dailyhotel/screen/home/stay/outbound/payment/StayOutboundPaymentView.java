@@ -48,6 +48,8 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
 
         void onBonusClick(boolean selected);
 
+        void onCouponClick(boolean selected);
+
         void onDepositStickerClick(boolean selected);
 
         void onEasyCardManagerClick();
@@ -135,6 +137,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         getViewDataBinding().cheeringLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
+    @Override
     public void setCardEventVisible(boolean visible)
     {
         if (getViewDataBinding() == null)
@@ -246,6 +249,24 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
         getViewDataBinding().informationView.setBonus(selected ? discountPrice : 0);
     }
 
+    @Override
+    public void setCoupon(boolean selected, int couponPrice, boolean rewardCoupon)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        setCouponSelected(selected);
+        getViewDataBinding().informationView.setCoupon(couponPrice);
+
+        getViewDataBinding().informationView.setUsedRewardCouponVisible(rewardCoupon);
+
+        if (rewardCoupon == true)
+        {
+            getViewDataBinding().informationView.setUsedRewardCouponText(getString(R.string.message_payment_used_reward_coupon, DailyTextUtils.getPriceFormat(getContext(), couponPrice, false)));
+        }
+    }
 
     @Override
     public void setDepositSticker(boolean selected)
@@ -476,6 +497,39 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
     }
 
     @Override
+    public void setMaxCouponAmountText(int maxCouponAmount)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().informationView.setMaxCouponAmount(maxCouponAmount);
+    }
+
+    @Override
+    public void setMaxCouponAmountVisible(boolean isVisible)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().informationView.setMaxCouponAmountVisible(isVisible);
+    }
+
+    @Override
+    public void setCouponEnabled(boolean enabled)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().informationView.setCouponEnabled(enabled);
+    }
+
+    @Override
     public void showAgreeTermDialog(DailyBookingPaymentTypeView.PaymentType paymentType//
         , View.OnClickListener onClickListener, DialogInterface.OnCancelListener cancelListener)
     {
@@ -490,6 +544,7 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
             case CARD:
             case PHONE:
             case VBANK:
+            case FREE:
                 showSimpleDialog(getPaymentAgreeLayout(onClickListener), cancelListener, null, true);
                 break;
 
@@ -626,9 +681,10 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
             return;
         }
 
-        getViewDataBinding().informationView.setDiscountTypeVisible(true, false);
+        getViewDataBinding().informationView.setDiscountTypeVisible(true, true);
 
         setBonusSelected(false);
+        setCouponSelected(false);
         setDepositStickerSelected(false);
 
         getViewDataBinding().informationView.setDepositStickerDescriptionText(getString(R.string.message_booking_reward_warning02));
@@ -768,6 +824,79 @@ public class StayOutboundPaymentView extends BaseDialogView<StayOutboundPaymentV
                     }
 
                     getEventListener().onBonusClick(getViewDataBinding().informationView.isBonusSelected() == false);
+                }
+            });
+        }
+    }
+
+    private void setCouponSelected(boolean selected)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        //selected가 true enabled가 false일수는 없다.
+        if (getViewDataBinding().informationView.isCouponEnabled() == false)
+        {
+            return;
+        }
+
+        if (selected == true)
+        {
+            getViewDataBinding().informationView.setCouponSelected(true);
+            getViewDataBinding().informationView.setOnCouponClickListener(null);
+            getViewDataBinding().informationView.setOnCouponTabClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (getViewDataBinding() == null)
+                    {
+                        return;
+                    }
+
+                    if (getViewDataBinding().informationView.isCouponEnabled() == false)
+                    {
+                        return;
+                    }
+
+                    getEventListener().onCouponClick(getViewDataBinding().informationView.isCouponSelected() == false);
+                }
+            });
+        } else
+        {
+            getViewDataBinding().informationView.setCouponSelected(false);
+            getViewDataBinding().informationView.setOnCouponClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (getViewDataBinding().informationView.isCouponEnabled() == false)
+                    {
+                        return;
+                    }
+
+                    getEventListener().onCouponClick(true);
+                }
+            });
+
+            getViewDataBinding().informationView.setOnCouponTabClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (getViewDataBinding() == null)
+                    {
+                        return;
+                    }
+
+                    if (getViewDataBinding().informationView.isCouponEnabled() == false)
+                    {
+                        return;
+                    }
+
+                    getEventListener().onCouponClick(getViewDataBinding().informationView.isCouponSelected() == false);
                 }
             });
         }

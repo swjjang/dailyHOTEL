@@ -309,6 +309,9 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                     @Override
                     public void accept(Throwable throwable) throws Exception
                     {
+                        Crashlytics.log(mDailyDeepLink.getDeepLink());
+                        Crashlytics.logException(throwable);
+
                         onHandleError(throwable);
                     }
                 }));

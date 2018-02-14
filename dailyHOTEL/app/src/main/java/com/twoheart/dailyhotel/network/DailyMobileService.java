@@ -1044,8 +1044,17 @@ public interface DailyMobileService
     @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
     @GET("{mobileAPI}")
     Observable<BaseDto<CouponsData>> getStayCouponListByPayment(@Path(value = "mobileAPI", encoded = true) String mobileAPI, //
-                                                                @Query("hotelIdx") int stayIndex, @Query("roomIdx") int roomIndex, //
+                                                                @Query("stayIndex") int stayIndex, @Query("roomIdx") int roomIndex, //
                                                                 @Query("checkIn") String checkIn, @Query("checkOut") String checkOut);
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @POST()
+    Observable<BaseDto<CouponsData>> getStayOutboundCouponListByPayment(@Url String mobileAPI, @Body JSONObject jsonObject);
+
+
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @PUT("{mobileAPI}")
+    Observable<BaseDto<Object>> getDownloadCoupon(@Path(value = "mobileAPI", encoded = true) String mobileAPI, @Query("couponCode") String couponCode);
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////

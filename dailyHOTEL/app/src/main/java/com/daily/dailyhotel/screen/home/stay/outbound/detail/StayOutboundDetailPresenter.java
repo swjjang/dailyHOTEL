@@ -258,7 +258,16 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
 
                         DailyExternalDeepLink externalDeepLink = (DailyExternalDeepLink) mDailyDeepLink;
 
-                        mStayIndex = Integer.parseInt(externalDeepLink.getIndex());
+                        try
+                        {
+                            mStayIndex = Integer.parseInt(externalDeepLink.getIndex());
+                        } catch (Exception e)
+                        {
+                            Crashlytics.log(externalDeepLink.getDeepLink());
+                            Crashlytics.logException(e);
+                            finish();
+                            return;
+                        }
 
                         StayBookDateTime stayBookDateTime = externalDeepLink.getStayBookDateTime(commonDateTime, externalDeepLink);
                         setStayBookDateTime(stayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT), stayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT));
@@ -277,6 +286,9 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
                     @Override
                     public void accept(Throwable throwable) throws Exception
                     {
+                        Crashlytics.log(mDailyDeepLink.getDeepLink());
+                        Crashlytics.logException(throwable);
+                        
                         onHandleError(throwable);
                     }
                 }));

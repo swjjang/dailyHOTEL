@@ -1,7 +1,20 @@
 package com.daily.dailyhotel.screen.copy;
 
+import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BaseDialogViewInterface;
+import com.daily.base.OnBaseEventListener;
 
-public interface CopyInterface extends BaseDialogViewInterface
+public interface CopyInterface
 {
+    interface ViewInterface extends BaseDialogViewInterface
+    {
+    }
+
+    interface OnEventListener extends OnBaseEventListener
+    {
+    }
+
+    interface AnalyticsInterface extends BaseAnalyticsInterface
+    {
+    }
 }

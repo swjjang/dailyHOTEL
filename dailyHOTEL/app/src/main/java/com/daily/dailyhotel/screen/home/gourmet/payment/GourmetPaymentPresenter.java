@@ -1250,7 +1250,7 @@ public class GourmetPaymentPresenter extends BaseExceptionPresenter<GourmetPayme
         {
             JSONObject jsonObject = getPaymentJSONObject(mGourmetCart, mSaleType, mUserSimpleInformation.bonus, couponCode, mGuest, mPersons, totalPrice, null);
 
-            addCompositeDisposable(mPaymentRemoteImpl.getGourmetPaymentTypeBonus(jsonObject).subscribe(new Consumer<PaymentResult>()
+            addCompositeDisposable(mPaymentRemoteImpl.getGourmetPaymentTypeFree(jsonObject).subscribe(new Consumer<PaymentResult>()
             {
                 @Override
                 public void accept(@io.reactivex.annotations.NonNull PaymentResult paymentResult) throws Exception

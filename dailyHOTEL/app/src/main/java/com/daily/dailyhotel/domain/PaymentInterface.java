@@ -31,13 +31,13 @@ public interface PaymentInterface
 
     Observable<PaymentResult> getStayOutboundPaymentTypeEasy(int index, JSONObject jsonObject);
 
-    Observable<PaymentResult> getStayOutboundPaymentTypeBonus(int index, JSONObject jsonObject);
+    Observable<PaymentResult> getStayOutboundPaymentTypeFree(int index, String saleType, JSONObject jsonObject);
 
     Observable<String> getStayOutboundHasDuplicatePayment(int index, JSONObject jsonObject);
 
     Observable<PaymentResult> getStayPaymentTypeEasy(JSONObject jsonObject);
 
-    Observable<PaymentResult> getStayPaymentTypeBonus(JSONObject jsonObject);
+    Observable<PaymentResult> getStayPaymentTypeFree(JSONObject jsonObject);
 
     Observable<StayRefundPolicy> getStayRefundPolicy(StayBookDateTime stayBookDateTime, int stayIndex, int roomIndex);
 
@@ -45,5 +45,5 @@ public interface PaymentInterface
 
     Observable<PaymentResult> getGourmetPaymentTypeEasy(JSONObject jsonObject);
 
-    Observable<PaymentResult> getGourmetPaymentTypeBonus(JSONObject jsonObject);
+    Observable<PaymentResult> getGourmetPaymentTypeFree(JSONObject jsonObject);
 }
