@@ -3,12 +3,16 @@ package com.daily.dailyhotel.screen.home.stay.outbound.list;
 import android.app.Activity;
 
 import com.daily.base.util.DailyTextUtils;
+import com.daily.base.util.ExLog;
+import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.entity.StayOutbound;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundDetailAnalyticsParam;
 import com.daily.dailyhotel.parcel.analytics.StayOutboundListAnalyticsParam;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.util.analytics.AnalyticsManager;
+
+import java.util.HashMap;
 
 public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.StayOutboundListAnalyticsInterface
 {
@@ -73,63 +77,91 @@ public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.
     }
 
     @Override
-    public void onEventList(Activity activity, StayOutboundSuggest suggest, int size)
+    public void onEventList(Activity activity, StayBookDateTime stayBookDateTime, StayOutboundSuggest suggest, int size)
     {
-        if (activity == null || suggest == null || mAnalyticsParam == null)
+        if (activity == null || stayBookDateTime == null || suggest == null || mAnalyticsParam == null)
         {
             return;
         }
 
-        String category = mAnalyticsParam.analyticsClickType;
-        String keyword = DailyTextUtils.isTextEmpty(mAnalyticsParam.keyword) ? AnalyticsManager.ValueType.EMPTY : mAnalyticsParam.keyword;
-
-        AnalyticsManager.getInstance(activity).recordEvent(size == 0 ? AnalyticsManager.Category.OB_SEARCH_NO_RESULT : AnalyticsManager.Category.OB_SEARCH_RESULT//
-            , suggest.display, keyword, null);
-
-        if (AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECENT.equalsIgnoreCase(category) == false //
-            && AnalyticsManager.Category.OB_SEARCH_ORIGIN_AUTO.equalsIgnoreCase(category) == false//
-            && AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECOMMEND.equalsIgnoreCase(category) == false)
+        try
         {
-            category = AnalyticsManager.Category.OB_SEARCH_ORIGIN_ETC;
-        }
+            String category = mAnalyticsParam.analyticsClickType;
+            String keyword = DailyTextUtils.isTextEmpty(mAnalyticsParam.keyword) ? AnalyticsManager.ValueType.EMPTY : mAnalyticsParam.keyword;
 
-        AnalyticsManager.getInstance(activity).recordEvent(category, suggest.display, keyword, null);
+            AnalyticsManager.getInstance(activity).recordEvent(size == 0 ? AnalyticsManager.Category.OB_SEARCH_NO_RESULT : AnalyticsManager.Category.OB_SEARCH_RESULT//
+                , suggest.display, keyword, null);
 
-        if (StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(suggest.categoryKey) == true)
-        {
-            AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
-                , size == 0 ? "AroundSearchNotFound_LocationList_ob" : "AroundSearchClicked_LocationList_ob"//
-                , suggest.display, null);
-        }
-
-        switch (suggest.menuType)
-        {
-            case StayOutboundSuggest.MENU_TYPE_RECENTLY_SEARCH:
+            if (AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECENT.equalsIgnoreCase(category) == false //
+                && AnalyticsManager.Category.OB_SEARCH_ORIGIN_AUTO.equalsIgnoreCase(category) == false//
+                && AnalyticsManager.Category.OB_SEARCH_ORIGIN_RECOMMEND.equalsIgnoreCase(category) == false)
             {
-                String recentlyAction = size == 0 ? AnalyticsManager.Action.RECENT_KEYWORD_NOT_FOUND : AnalyticsManager.Action.RECENT_KEYWORD;
-
-                AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
-                    , recentlyAction + "_ob", suggest.display, null);
-                break;
+                category = AnalyticsManager.Category.OB_SEARCH_ORIGIN_ETC;
             }
 
-            case StayOutboundSuggest.MENU_TYPE_SUGGEST:
-            {
-                String suggestCategory = size == 0 ? AnalyticsManager.Category.AUTO_SEARCH_NOT_FOUND : AnalyticsManager.Category.AUTO_SEARCH;
+            AnalyticsManager.getInstance(activity).recordEvent(category, suggest.display, keyword, null);
 
-                AnalyticsManager.getInstance(activity).recordEvent(suggestCategory//
-                    , "ob_" + suggest.display, mAnalyticsParam.keyword, null);
-                break;
+            HashMap<String, String> params = new HashMap<>();
+            params.put(AnalyticsManager.KeyType.CHECK_IN, stayBookDateTime.getCheckInDateTime("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.CHECK_OUT, stayBookDateTime.getCheckOutDateTime("yyyy-MM-dd"));
+            params.put(AnalyticsManager.KeyType.COUNTRY, "outbound");
+            params.put(AnalyticsManager.KeyType.LENGTH_OF_STAY, Integer.toString(stayBookDateTime.getNights()));
+            params.put(AnalyticsManager.KeyType.PLACE_TYPE, AnalyticsManager.ValueType.STAY);
+
+            if (mAnalyticsParam != null)
+            {
+                params.put(AnalyticsManager.KeyType.SEARCH_WORD, mAnalyticsParam.keyword);
             }
 
-            case StayOutboundSuggest.MENU_TYPE_POPULAR_AREA:
-            {
-                String popularCategory = size == 0 ? AnalyticsManager.Category.OB_SEARCH_RECOMMEND_NO_RESULT : AnalyticsManager.Category.OB_SEARCH_RECOMMEND;
+            params.put(AnalyticsManager.KeyType.SEARCH_COUNT, Integer.toString(size));
+            params.put(AnalyticsManager.KeyType.SEARCH_RESULT, suggest.display);
 
-                AnalyticsManager.getInstance(activity).recordEvent(popularCategory//
-                    , suggest.display, null, null);
-                break;
+            switch (suggest.menuType)
+            {
+                case StayOutboundSuggest.MENU_TYPE_LOCATION:
+                {
+                    params.put(AnalyticsManager.KeyType.SEARCH_PATH, AnalyticsManager.ValueType.AROUND);
+
+                    AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
+                        , size == 0 ? "AroundSearchNotFound_LocationList_ob" : "AroundSearchClicked_LocationList_ob"//
+                        , suggest.display, params);
+                    break;
+                }
+
+                case StayOutboundSuggest.MENU_TYPE_RECENTLY_SEARCH:
+                {
+                    params.put(AnalyticsManager.KeyType.SEARCH_PATH, AnalyticsManager.ValueType.RECENT);
+
+                    String recentlyAction = size == 0 ? AnalyticsManager.Action.RECENT_KEYWORD_NOT_FOUND : AnalyticsManager.Action.RECENT_KEYWORD;
+
+                    AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
+                        , recentlyAction + "_ob", suggest.display, params);
+                    break;
+                }
+
+                case StayOutboundSuggest.MENU_TYPE_SUGGEST:
+                {
+                    params.put(AnalyticsManager.KeyType.SEARCH_PATH, AnalyticsManager.ValueType.AUTO);
+
+                    String suggestCategory = size == 0 ? AnalyticsManager.Category.AUTO_SEARCH_NOT_FOUND : AnalyticsManager.Category.AUTO_SEARCH;
+
+                    AnalyticsManager.getInstance(activity).recordEvent(suggestCategory//
+                        , "ob_" + suggest.display, mAnalyticsParam.keyword, params);
+                    break;
+                }
+
+                case StayOutboundSuggest.MENU_TYPE_POPULAR_AREA:
+                {
+                    String popularCategory = size == 0 ? AnalyticsManager.Category.OB_SEARCH_RECOMMEND_NO_RESULT : AnalyticsManager.Category.OB_SEARCH_RECOMMEND;
+
+                    AnalyticsManager.getInstance(activity).recordEvent(popularCategory//
+                        , suggest.display, null, params);
+                    break;
+                }
             }
+        } catch (Exception e)
+        {
+            ExLog.e(e.toString());
         }
     }
 

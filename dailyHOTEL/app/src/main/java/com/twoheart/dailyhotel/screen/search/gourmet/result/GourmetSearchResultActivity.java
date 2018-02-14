@@ -719,9 +719,11 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
 
         try
         {
+            params.put(AnalyticsManager.KeyType.SEARCH_PATH, AnalyticsManager.ValueType.AROUND);
+
             AnalyticsManager.getInstance(this).recordEvent(AnalyticsManager.Category.SEARCH_//
                 , isEmpty ? "AroundSearchNotFound_LocationList_gourmet" : "AroundSearchClicked_LocationList_gourmet"//
-                , mGourmetSearchCuration.getSuggest().displayName, null);
+                , mGourmetSearchCuration.getSuggest().displayName, params);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -1557,6 +1559,9 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
                     params.put(AnalyticsManager.KeyType.COUNTRY, province.isOverseas ? AnalyticsManager.ValueType.OVERSEAS : AnalyticsManager.ValueType.DOMESTIC);
                     params.put(AnalyticsManager.KeyType.PROVINCE, province.name);
                     params.put(AnalyticsManager.KeyType.DISTRICT, AnalyticsManager.ValueType.ALL_LOCALE_KR);
+                } else
+                {
+                    params.put(AnalyticsManager.KeyType.COUNTRY, AnalyticsManager.ValueType.DOMESTIC);
                 }
 
                 params.put(AnalyticsManager.KeyType.SEARCH_COUNT, Integer.toString(mSearchCount > mSearchMaxCount ? mSearchMaxCount : mSearchCount));
