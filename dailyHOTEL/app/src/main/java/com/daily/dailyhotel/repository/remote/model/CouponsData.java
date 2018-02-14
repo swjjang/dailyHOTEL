@@ -27,6 +27,11 @@ public class CouponsData
     {
         ArrayList<Coupon> couponList = new ArrayList<>();
 
+        if (coupons == null || coupons.size() == 0)
+        {
+            return couponList;
+        }
+
         for (CouponData couponData : coupons)
         {
             Coupon coupon = couponData.getCoupon(serverDate);
