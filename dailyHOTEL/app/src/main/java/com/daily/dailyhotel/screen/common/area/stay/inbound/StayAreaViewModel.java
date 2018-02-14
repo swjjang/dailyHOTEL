@@ -1,0 +1,39 @@
+package com.daily.dailyhotel.screen.common.area.stay.inbound;
+
+
+import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProvider;
+import android.support.annotation.NonNull;
+
+import com.daily.dailyhotel.entity.StayAreaGroup;
+import com.daily.dailyhotel.repository.remote.model.CommonDateTimeData;
+
+import java.util.List;
+
+/**
+ * Created by sheldon
+ * Clean Architecture
+ */
+public class StayAreaViewModel extends ViewModel
+{
+    MutableLiveData<List<StayAreaGroup>> areaList = new MutableLiveData<>();
+    MutableLiveData<List<StayAreaGroup>> subwayList = new MutableLiveData<>();
+    MutableLiveData<CommonDateTimeData> commonDateTime = new MutableLiveData<>();
+
+    static class StayAreaViewModelFactory implements ViewModelProvider.Factory
+    {
+        public StayAreaViewModelFactory()
+        {
+        }
+
+        @NonNull
+        @Override
+        public StayAreaViewModel create(@NonNull Class modelClass)
+        {
+            StayAreaViewModel viewModel = new StayAreaViewModel();
+
+            return viewModel;
+        }
+    }
+}

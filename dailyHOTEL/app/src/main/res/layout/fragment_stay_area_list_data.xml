@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.twoheart.dailyhotel.widget.DailyAnimatedExpandableListView
+        android:id="@+id/expandableListView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="@null"
+        android:fadingEdge="none"
+        android:groupIndicator="@android:color/transparent"
+        android:listSelector="@android:color/transparent"
+        android:smoothScrollbar="true"/>
+</layout>

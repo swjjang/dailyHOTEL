@@ -894,6 +894,13 @@
     <string name="label_region_around_stay">내 주변 스테이 보기</string>
     <string name="message_region_search_date">방문하실 날짜가 맞나요?</string>
 
+    <string name="label_area_subway">지하철역</string>
+    <string name="label_area_capital_area">수도권</string>
+    <string name="label_area_busan">부산</string>
+    <string name="label_area_daegu">대구</string>
+    <string name="label_area_gwangju">광주</string>
+    <string name="label_area_daejeon">대전</string>
+
     <!-- Main Tab -->
     <string name="label_selecteday">선택 날짜</string>
 
