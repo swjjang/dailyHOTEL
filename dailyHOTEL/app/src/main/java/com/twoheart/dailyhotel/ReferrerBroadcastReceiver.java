@@ -11,5 +11,6 @@ public class ReferrerBroadcastReceiver extends BroadcastReceiver
     {
         (new com.google.android.gms.analytics.CampaignTrackingReceiver()).onReceive(context, intent);
         (new com.adjust.sdk.AdjustReferrerReceiver()).onReceive(context, intent);
+        (new com.kakao.ad.tracker.KakaoAdInstallReferrerReceiver()).onReceive(context, intent);
     }
 }
