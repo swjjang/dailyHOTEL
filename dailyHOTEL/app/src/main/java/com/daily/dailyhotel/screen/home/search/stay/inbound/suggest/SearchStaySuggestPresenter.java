@@ -105,6 +105,16 @@ public class SearchStaySuggestPresenter //
         void onDeleteRecentlySearch(Activity activity, String keyword);
 
         void onVoiceSearchClick(Activity activity);
+
+        void onGourmetSuggestClick(Activity activity, String keyword);
+
+        void onStayOutboundSuggestClick(Activity activity, String keyword);
+
+        void onLocationSearchNoAddressClick(Activity activity);
+
+        void onRecentlySearchList(Activity activity, boolean hasData);
+
+        void onRecentlyStayList(Activity activity, boolean hasData);
     }
 
     public SearchStaySuggestPresenter(@NonNull SearchStaySuggestActivity activity)
@@ -394,6 +404,15 @@ public class SearchStaySuggestPresenter //
 
                     List<StaySuggest> recentlySuggestList = getRecentlySuggestList(keywordList, stayList);
                     setRecentlySuggestList(recentlySuggestList);
+
+                    try
+                    {
+                        mAnalytics.onRecentlySearchList(getActivity(), keywordList != null && keywordList.size() > 0);
+                        mAnalytics.onRecentlyStayList(getActivity(), stayList != null && stayList.size() > 0);
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.getMessage());
+                    }
 
                     return recentlySuggestList;
                 }
@@ -788,6 +807,15 @@ public class SearchStaySuggestPresenter //
         }
 
         getViewInterface().setSuggest(gourmetSuggest.displayName);
+
+        try
+        {
+            mAnalytics.onGourmetSuggestClick(getActivity(), mKeyword);
+        } catch (Exception e)
+        {
+            ExLog.d(e.getMessage());
+        }
+
         startFinishAction(gourmetSuggest, mKeyword, null);
     }
 
@@ -815,6 +843,15 @@ public class SearchStaySuggestPresenter //
         }
 
         getViewInterface().setSuggest(stayOutboundSuggest.display);
+
+        try
+        {
+            mAnalytics.onStayOutboundSuggestClick(getActivity(), mKeyword);
+        } catch (Exception e)
+        {
+            ExLog.d(e.getMessage());
+        }
+
         startFinishAction(stayOutboundSuggest, mKeyword, null);
     }
 
@@ -1168,6 +1205,15 @@ public class SearchStaySuggestPresenter //
                             unLockAll();
 
                             getViewInterface().setSuggest(mLocationSuggest.address);
+
+                            try
+                            {
+                                mAnalytics.onLocationSearchNoAddressClick(getActivity());
+                            } catch (Exception e)
+                            {
+                                ExLog.d(e.getMessage());
+                            }
+
                             startFinishAction(mLocationSuggest, mKeyword, null);
                         }
                     }));

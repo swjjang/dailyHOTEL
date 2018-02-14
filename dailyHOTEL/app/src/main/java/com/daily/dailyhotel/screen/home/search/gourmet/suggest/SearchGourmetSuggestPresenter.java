@@ -95,6 +95,12 @@ public class SearchGourmetSuggestPresenter //
         void onDeleteRecentlySearch(Activity activity, String keyword);
 
         void onVoiceSearchClick(Activity activity);
+
+        void onLocationSearchNoAddressClick(Activity activity);
+
+        void onRecentlySearchList(Activity activity, boolean hasData);
+
+        void onRecentlyGourmetList(Activity activity, boolean hasData);
     }
 
     public SearchGourmetSuggestPresenter(@NonNull SearchGourmetSuggestActivity activity)
@@ -354,6 +360,15 @@ public class SearchGourmetSuggestPresenter //
 
                     List<GourmetSuggest> recentlySuggestList = getRecentlySuggestList(keywordList, gourmetList);
                     setRecentlySuggestList(recentlySuggestList);
+
+                    try
+                    {
+                        mAnalytics.onRecentlySearchList(getActivity(), keywordList != null && keywordList.size() > 0);
+                        mAnalytics.onRecentlyGourmetList(getActivity(), gourmetList != null && gourmetList.size() > 0);
+                    } catch (Exception e)
+                    {
+                        ExLog.d(e.getMessage());
+                    }
 
                     return recentlySuggestList;
                 }
@@ -868,6 +883,15 @@ public class SearchGourmetSuggestPresenter //
                             unLockAll();
 
                             getViewInterface().setSuggest(mLocationSuggest.address);
+
+                            try
+                            {
+                                mAnalytics.onLocationSearchNoAddressClick(getActivity());
+                            } catch (Exception e)
+                            {
+                                ExLog.d(e.getMessage());
+                            }
+
                             startFinishAction(mLocationSuggest, mKeyword, null);
                         }
                     }));

@@ -40,4 +40,63 @@ public class SearchStaySuggestAnalyticsImpl implements SearchStaySuggestPresente
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_, "voice_search", "stay", null);
     }
+
+    @Override
+    public void onGourmetSuggestClick(Activity activity, String keyword)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH, "gourmet_keywords", keyword, null);
+    }
+
+    @Override
+    public void onStayOutboundSuggestClick(Activity activity, String keyword)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH, "ob_keywords_in_domestic", keyword, null);
+    }
+
+    @Override
+    public void onLocationSearchNoAddressClick(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_, "around_no_result", "현재위치", null);
+    }
+
+    @Override
+    public void onRecentlySearchList(Activity activity, boolean hasData)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        String action = hasData ? "yes_recent_search" : "no_recent_search";
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_, action, "stay", null);
+    }
+
+    @Override
+    public void onRecentlyStayList(Activity activity, boolean hasData)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        String action = hasData ? "yes_recent_checked_search" : "no_recent_checked_search";
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_, action, "stay", null);
+    }
 }

@@ -559,6 +559,7 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
     protected void recordEventSearchResultByRecentKeyword(String displayName, boolean isEmpty, Constants.ServiceType serviceType, Map<String, String> params)
     {
         String action = (isEmpty == true) ? AnalyticsManager.Action.RECENT_KEYWORD_NOT_FOUND : AnalyticsManager.Action.RECENT_KEYWORD;
+
         params.put(AnalyticsManager.KeyType.SEARCH_PATH, AnalyticsManager.ValueType.RECENT);
         params.put(AnalyticsManager.KeyType.SEARCH_WORD, displayName);
         params.put(AnalyticsManager.KeyType.SEARCH_RESULT, displayName);
@@ -567,12 +568,12 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
         {
             case GOURMET:
                 AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
-                    , action + "_gourmet", displayName, null);
+                    , action + "_gourmet", displayName, params);
                 break;
 
             case HOTEL:
                 AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
-                    , action + "_stay", displayName, null);
+                    , action + "_stay", displayName, params);
                 break;
         }
     }
@@ -589,12 +590,12 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
         {
             case GOURMET:
                 AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
-                    , action + "_gourmet", displayName, null);
+                    , action + "_gourmet", displayName, params);
                 break;
 
             case HOTEL:
                 AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
-                    , action + "_stay", displayName, null);
+                    , action + "_stay", displayName, params);
                 break;
         }
     }
@@ -611,12 +612,12 @@ public abstract class PlaceSearchResultActivity extends BaseActivity
         {
             case GOURMET:
                 AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(category//
-                    , "gourmet_" + displayName, inputText, null);
+                    , "gourmet_" + displayName, inputText, params);
                 break;
 
             case HOTEL:
                 AnalyticsManager.getInstance(PlaceSearchResultActivity.this).recordEvent(category//
-                    , "stay_" + displayName, inputText, null);
+                    , "stay_" + displayName, inputText, params);
                 break;
         }
     }
