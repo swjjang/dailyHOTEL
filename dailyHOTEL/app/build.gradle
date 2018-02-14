@@ -271,6 +271,9 @@ dependencies {
     // 다른앱 프로세스 보기
     implementation 'com.jaredrummler:android-processes:1.0.9'
 
+    // 카카오 광고 SDK
+    implementation 'com.kakao.ad:tracker:0.2.4@aar'
+
     //
 //    debugCompile 'com.facebook.stetho:stetho:1.4.1'
 //    debugCompile 'com.facebook.stetho:stetho-okhttp3:1.4.1'

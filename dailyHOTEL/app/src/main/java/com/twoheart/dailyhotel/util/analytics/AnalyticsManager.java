@@ -27,6 +27,7 @@ public class AnalyticsManager
     private AppboyManager mAppboyManager;
     private AdjustManager mAdjustManager;
     private FirebaseManager mFirebaseManager;
+    private KakaoManager mKakaoManager;
     private List<BaseAnalyticsManager> mAnalyticsManagerList;
 
     public synchronized static AnalyticsManager getInstance(Context context)
@@ -93,6 +94,14 @@ public class AnalyticsManager
             ExLog.d(e.toString());
         }
 
+        try
+        {
+            mKakaoManager = new KakaoManager(context);
+        } catch (Exception e)
+        {
+            ExLog.d(e.toString());
+        }
+
         if (mGoogleAnalyticsManager != null)
         {
             mAnalyticsManagerList.add(mGoogleAnalyticsManager);
@@ -116,6 +125,11 @@ public class AnalyticsManager
         if (mFirebaseManager != null)
         {
             mAnalyticsManagerList.add(mFirebaseManager);
+        }
+
+        if (mKakaoManager != null)
+        {
+            mAnalyticsManagerList.add(mKakaoManager);
         }
     }
 
