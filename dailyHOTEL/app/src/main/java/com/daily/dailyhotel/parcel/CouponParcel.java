@@ -50,8 +50,7 @@ public class CouponParcel implements Parcelable
         dest.writeString(mCoupon.stayTo);
         dest.writeString(mCoupon.downloadedAt);
         dest.writeString(mCoupon.description);
-        dest.writeInt(mCoupon.availableInDomestic ? 1 : 0);
-        dest.writeInt(mCoupon.availableInOverseas ? 1 : 0);
+        dest.writeInt(mCoupon.availableInOutboundHotel ? 1 : 0);
         dest.writeInt(mCoupon.availableInStay ? 1 : 0);
         dest.writeInt(mCoupon.availableInGourmet ? 1 : 0);
         dest.writeInt(mCoupon.isRedeemed ? 1 : 0);
@@ -77,8 +76,7 @@ public class CouponParcel implements Parcelable
         mCoupon.stayTo = in.readString();
         mCoupon.downloadedAt = in.readString();
         mCoupon.description = in.readString();
-        mCoupon.availableInDomestic = in.readInt() == 1;
-        mCoupon.availableInOverseas = in.readInt() == 1;
+        mCoupon.availableInOutboundHotel = in.readInt() == 1;
         mCoupon.availableInStay = in.readInt() == 1;
         mCoupon.availableInGourmet = in.readInt() == 1;
         mCoupon.isRedeemed = in.readInt() == 1;

@@ -31,8 +31,7 @@ public class Coupon implements Parcelable
     public String downloadedAt; // 유저가 해당 쿠폰을 다운로드한 시각
     public String disabledAt; // 쿠폰 사용 완료 또는 만료된 시각 (쿠폰 상태가 완료되면, 없어집니다.)
     public String description; // 쿠폰 설명
-    public boolean availableInDomestic; // 국내 업소만 쿠폰 적용 여부
-    public boolean availableInOverseas; // 해외 업소만 쿠폰 적용 여부
+    public boolean availableInOutboundHotel; // 해외 업소만 쿠폰 적용 여부
     public boolean availableInStay; // 호텔 쿠폰인지 여부 (아이콘으로 쓰세요)
     public boolean availableInGourmet; // 고메 쿠폰인지 여부 (아이콘으로 쓰세요)
     public boolean isRedeemed; // 이미 사용한 쿠폰인지 여부
@@ -56,8 +55,8 @@ public class Coupon implements Parcelable
                   String serverDate, String couponCode, String stayFrom, String stayTo, //
                   //                  String downloadedAt, boolean availableInDomestic, boolean availableInOverseas, //
                   //                  boolean availableInStay, boolean availableInGourmet)
-                  String downloadedAt, String disabledAt, boolean availableInDomestic, boolean availableInOverseas, //
-                  boolean availableInStay, boolean availableInGourmet, boolean isRedeemed, boolean isExpired, Coupon.Type couponType)
+                  String downloadedAt, String disabledAt, //
+                  boolean availableInStay, boolean availableInOutboundHotel, boolean availableInGourmet, boolean isRedeemed, boolean isExpired, Coupon.Type couponType)
     {
         this.amount = amount;
         this.title = title;
@@ -72,8 +71,7 @@ public class Coupon implements Parcelable
         this.stayTo = stayTo;
         this.downloadedAt = downloadedAt;
         this.disabledAt = disabledAt;
-        this.availableInDomestic = availableInDomestic;
-        this.availableInOverseas = availableInOverseas;
+        this.availableInOutboundHotel = availableInOutboundHotel;
         this.availableInStay = availableInStay;
         this.availableInGourmet = availableInGourmet;
         this.isRedeemed = isRedeemed;
@@ -102,8 +100,7 @@ public class Coupon implements Parcelable
         downloadedAt = coupon.downloadedAt; // 유저가 해당 쿠폰을 다운로드한 시각
         disabledAt = coupon.disabledAt; // 쿠폰 사용 완료 또는 만료된 시각 (쿠폰 상태가 완료되면, 없어집니다.)
         description = coupon.description; // 쿠폰 설명
-        availableInDomestic = coupon.availableInDomestic; // 국내 업소만 쿠폰 적용 여부
-        availableInOverseas = coupon.availableInOverseas; // 해외 업소만 쿠폰 적용 여부
+        availableInOutboundHotel = coupon.availableInOutboundHotel; // 해외 업소만 쿠폰 적용 여부
         availableInStay = coupon.availableInStay; // 호텔 쿠폰인지 여부 (아이콘으로 쓰세요)
         availableInGourmet = coupon.availableInGourmet; // 고메 쿠폰인지 여부 (아이콘으로 쓰세요)
         isRedeemed = coupon.isRedeemed; // 이미 사용한 쿠폰인지 여부
@@ -131,8 +128,7 @@ public class Coupon implements Parcelable
         dest.writeString(stayTo);
         dest.writeString(downloadedAt);
         dest.writeString(disabledAt);
-        dest.writeInt(availableInDomestic == true ? 1 : 0);
-        dest.writeInt(availableInOverseas == true ? 1 : 0);
+        dest.writeInt(availableInOutboundHotel == true ? 1 : 0);
         dest.writeInt(availableInStay == true ? 1 : 0);
         dest.writeInt(availableInGourmet == true ? 1 : 0);
         dest.writeInt(isRedeemed == true ? 1 : 0);
@@ -159,8 +155,7 @@ public class Coupon implements Parcelable
         stayTo = in.readString();
         downloadedAt = in.readString();
         disabledAt = in.readString();
-        availableInDomestic = in.readInt() == 1;
-        availableInOverseas = in.readInt() == 1;
+        availableInOutboundHotel = in.readInt() == 1;
         availableInStay = in.readInt() == 1;
         availableInGourmet = in.readInt() == 1;
         isRedeemed = in.readInt() == 1;

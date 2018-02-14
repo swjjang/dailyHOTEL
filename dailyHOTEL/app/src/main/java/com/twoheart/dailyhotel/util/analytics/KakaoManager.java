@@ -240,14 +240,7 @@ public class KakaoManager extends BaseAnalyticsManager
         Product product = new Product();
         product.name = params.get(AnalyticsManager.KeyType.PLACE_INDEX);
         product.price = Double.parseDouble(params.get(AnalyticsManager.KeyType.PAYMENT_PRICE));
-
-        try
-        {
-            product.quantity = Integer.parseInt(params.get(AnalyticsManager.KeyType.PLACE_COUNT));
-        } catch (Exception e)
-        {
-            product.quantity = 1;
-        }
+        product.quantity = 1;
 
         event.setProducts(new ArrayList(Arrays.asList(product)));
 

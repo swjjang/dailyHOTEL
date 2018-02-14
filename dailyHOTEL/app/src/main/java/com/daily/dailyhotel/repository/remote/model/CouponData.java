@@ -52,11 +52,8 @@ public class CouponData
     @JsonField(name = "amountMinimum")
     public int amountMinimum; // 최소주문금액 ,,,
 
-    @JsonField(name = "availableInDomestic")
-    public boolean availableInDomestic; // 국내 업소만 쿠폰 적용 여부
-
-    @JsonField(name = "availableInOverseas")
-    public boolean availableInOverseas; // 해외 업소만 쿠폰 적용 여부
+    @JsonField(name = "availableInOutboundHotel")
+    public boolean availableInOutboundHotel; // 해외 업소만 쿠폰 적용 여부
 
     @JsonField(name = "availableInHotel")
     public boolean availableInStay; // 호텔 쿠폰인지 여부 (아이콘으로 쓰세요)
@@ -100,8 +97,7 @@ public class CouponData
         coupon.validTo = validTo;
         coupon.amount = amount;
         coupon.amountMinimum = amountMinimum;
-        coupon.availableInDomestic = availableInDomestic;
-        coupon.availableInOverseas = availableInOverseas;
+        coupon.availableInOutboundHotel = availableInOutboundHotel;
         coupon.availableInStay = availableInStay;
         coupon.availableInGourmet = availableInGourmet;
         coupon.availableItem = availableItem;

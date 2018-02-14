@@ -24,8 +24,7 @@ public class Coupon
     public String downloadedAt; // 유저가 해당 쿠폰을 다운로드한 시각
     public String disabledAt; // 쿠폰 사용 완료 또는 만료된 시각 (쿠폰 상태가 완료되면, 없어집니다.)
     public String description; // 쿠폰 설명
-    public boolean availableInDomestic; // 국내 업소만 쿠폰 적용 여부
-    public boolean availableInOverseas; // 해외 업소만 쿠폰 적용 여부
+    public boolean availableInOutboundHotel; // 해외 업소만 쿠폰 적용 여부
     public boolean availableInStay; // 호텔 쿠폰인지 여부 (아이콘으로 쓰세요)
     public boolean availableInGourmet; // 고메 쿠폰인지 여부 (아이콘으로 쓰세요)
     public boolean isRedeemed; // 이미 사용한 쿠폰인지 여부

@@ -76,10 +76,7 @@ public class CouponUtil
         public static final String DISABLE_AT = "disabledAt";
 
         // coupon object type
-        public static final String AVAILABLE_IN_DOMESTIC = "availableInDomestic";
-
-        // coupon object type
-        public static final String AVAILABLE_IN_OVERSEAS = "availableInOverseas";
+        public static final String AVAILABLE_IN_OUTBOUNDHOTEL = "availableInOutboundHotel";
 
         // coupon object type
         public static final String AVAILABLE_IN_STAY = "availableInHotel";
@@ -135,8 +132,7 @@ public class CouponUtil
         String stayTo = null;
         String downloadedAt = null;
         //        String disabledAt = null;
-        boolean availableInDomestic = false;
-        boolean availableInOverseas = false;
+        boolean availableInOutboundHotel = false;
         boolean availableInHotel = false;
         boolean availableInGourmet = false;
         //        boolean isRedeemed = false;
@@ -178,14 +174,9 @@ public class CouponUtil
         //                disabledAt = jsonObject.getString(Type.DISABLE_AT);
         //            }
 
-        if (jsonObject.has(Type.AVAILABLE_IN_DOMESTIC))
+        if (jsonObject.has(Type.AVAILABLE_IN_OUTBOUNDHOTEL))
         {
-            availableInDomestic = jsonObject.getBoolean(Type.AVAILABLE_IN_DOMESTIC);
-        }
-
-        if (jsonObject.has(Type.AVAILABLE_IN_OVERSEAS))
-        {
-            availableInOverseas = jsonObject.getBoolean(Type.AVAILABLE_IN_OVERSEAS);
+            availableInOutboundHotel = jsonObject.getBoolean(Type.AVAILABLE_IN_OUTBOUNDHOTEL);
         }
 
         if (jsonObject.has(Type.AVAILABLE_IN_STAY))
@@ -227,8 +218,8 @@ public class CouponUtil
         coupon = new Coupon(amount, title, validFrom, //
             validTo, amountMinimum, isDownloaded, availableItem, //
             serverDate, couponCode, stayFrom, stayTo, //
-            downloadedAt, null, availableInDomestic, availableInOverseas, //
-            availableInHotel, availableInGourmet, false, false, couponType);
+            downloadedAt, null,//
+            availableInHotel, availableInOutboundHotel, availableInGourmet, false, false, couponType);
 
         return coupon;
     }
@@ -267,8 +258,7 @@ public class CouponUtil
 
     private static CouponHistory getCouponHistory(JSONObject jsonObject) throws Exception
     {
-        boolean availableInDomestic = false;
-        boolean availableInOverseas = false;
+        boolean availableInOutboundHotel = false;
         boolean availableInHotel = false;
         boolean availableInGourmet = false;
 
@@ -283,15 +273,9 @@ public class CouponUtil
         String title = jsonObject.getString(Type.TITLE);
         String disabledAt = jsonObject.getString(Type.DISABLED_AT); // 사용한 날짜 (ISO-8601)
 
-
-        if (jsonObject.has(Type.AVAILABLE_IN_DOMESTIC))
+        if (jsonObject.has(Type.AVAILABLE_IN_OUTBOUNDHOTEL))
         {
-            availableInDomestic = jsonObject.getBoolean(Type.AVAILABLE_IN_DOMESTIC);
-        }
-
-        if (jsonObject.has(Type.AVAILABLE_IN_OVERSEAS))
-        {
-            availableInOverseas = jsonObject.getBoolean(Type.AVAILABLE_IN_OVERSEAS);
+            availableInOutboundHotel = jsonObject.getBoolean(Type.AVAILABLE_IN_OUTBOUNDHOTEL);
         }
 
         if (jsonObject.has(Type.AVAILABLE_IN_STAY))
@@ -305,8 +289,7 @@ public class CouponUtil
         }
 
         CouponHistory couponHistory = new CouponHistory(amount, title, validFrom, validTo, //
-            amountMinimum, isExpired, isRedeemed, disabledAt, availableInDomestic, //
-            availableInOverseas, availableInHotel, availableInGourmet);
+            amountMinimum, isExpired, isRedeemed, disabledAt, availableInHotel, availableInOutboundHotel, availableInGourmet);
 
         return couponHistory;
     }

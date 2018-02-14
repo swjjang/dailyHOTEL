@@ -155,7 +155,7 @@ public class CouponHistoryListAdapter extends RecyclerView.Adapter<RecyclerView.
 
         holder.dataBinding.expireTextView.setText(builder.toString());
         holder.dataBinding.useableStayTextView.setVisibility(coupon.availableInStay ? View.VISIBLE : View.GONE);
-        holder.dataBinding.useableStayOutboundTextView.setVisibility(coupon.availableInOverseas ? View.VISIBLE : View.GONE);
+        holder.dataBinding.useableStayOutboundTextView.setVisibility(coupon.availableInOutboundHotel ? View.VISIBLE : View.GONE);
         holder.dataBinding.useableGourmetTextView.setVisibility(coupon.availableInGourmet == true ? View.VISIBLE : View.GONE);
 
         // 마지막 라인 굵기 수정

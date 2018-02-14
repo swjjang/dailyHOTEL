@@ -20,8 +20,7 @@ public class CouponHistory extends Coupon
     // Coupon History
     public CouponHistory(int amount, String title, String validFrom, String validTo, //
                          int amountMinimum, boolean isExpired, boolean isRedeemed, String disabledAt, //
-                         boolean availableInDomestic, boolean availableInOverseas,//
-                         boolean availableInStay, boolean availableInGourmet)
+                         boolean availableInStay, boolean availableInOutboundHotel, boolean availableInGourmet)
     {
         this.amount = amount; //
         this.title = title; //
@@ -31,8 +30,7 @@ public class CouponHistory extends Coupon
         this.isExpired = isExpired; //
         this.isRedeemed = isRedeemed; //
         this.disabledAt = disabledAt; //
-        this.availableInDomestic = availableInDomestic;
-        this.availableInOverseas = availableInOverseas;
+        this.availableInOutboundHotel = availableInOutboundHotel;
         this.availableInStay = availableInStay;
         this.availableInGourmet = availableInGourmet;
     }
