@@ -139,7 +139,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
 
         StayPaymentAnalyticsParam getStayPaymentAnalyticsParam(StayDetail stayDetail, StayRoom stayRoom);
 
-        void onScreen(Activity activity, StayBookDateTime stayBookDateTime, StayDetail stayDetail, int priceFromList);
+        Disposable onScreen(Activity activity, StayBookDateTime stayBookDateTime, StayDetail stayDetail, int priceFromList);
 
         void onScreenRoomList(Activity activity, StayBookDateTime stayBookDateTime, StayDetail stayDetail, int priceFromList);
 
@@ -497,6 +497,8 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
                     return true;
                 }
         }
+
+        addCompositeDisposable(mAnalytics.onScreen(getActivity(), mStayBookDateTime, mStayDetail, mPriceFromList));
 
         return super.onBackPressed();
     }
@@ -1518,7 +1520,7 @@ public class StayDetailPresenter extends BaseExceptionPresenter<StayDetailActivi
     {
         mStayDetail = stayDetail;
 
-        mAnalytics.onScreen(getActivity(), mStayBookDateTime, mStayDetail, mPriceFromList);
+        addCompositeDisposable(mAnalytics.onScreen(getActivity(), mStayBookDateTime, mStayDetail, mPriceFromList));
     }
 
     void setTrueVRList(List<TrueVR> trueVRList)
