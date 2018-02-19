@@ -44,9 +44,7 @@ public class MultiGeometry implements Geometry {
 
         //convert unknown geometry type (due to GeoJSON types) to Geometry type
         ArrayList geometriesList = new ArrayList();
-        for (Geometry geometry : geometries) {
-            geometriesList.add(geometry);
-        }
+        geometriesList.addAll(geometries);
 
         mGeometries = geometriesList;
     }

@@ -42,15 +42,15 @@ public class StayListFragmentView extends BaseBlurFragmentView<StayListFragmentI
     private static final int VIEWPAGER_HEIGHT_DP = 115;
     private static final int VIEWPAGER_PAGE_MARGIN_DP = 5;
 
-    private StayListAdapter mStayListAdapter;
+    StayListAdapter mStayListAdapter;
 
-    private StayMapFragment mStayMapFragment;
+    StayMapFragment mStayMapFragment;
 
-    private StayMapViewPagerAdapter mViewPagerAdapter;
+    StayMapViewPagerAdapter mViewPagerAdapter;
 
     ValueAnimator mValueAnimator;
 
-    private DailyFloatingActionView mFloatingActionView;
+    DailyFloatingActionView mFloatingActionView;
 
     public StayListFragmentView(StayListFragmentInterface.OnEventListener listener)
     {

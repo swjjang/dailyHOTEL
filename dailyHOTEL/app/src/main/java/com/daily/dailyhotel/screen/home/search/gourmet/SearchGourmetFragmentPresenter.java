@@ -37,7 +37,7 @@ import io.reactivex.functions.Function;
 public class SearchGourmetFragmentPresenter extends BasePagerFragmentPresenter<SearchGourmetFragment, SearchGourmetFragmentInterface.ViewInterface>//
     implements SearchGourmetFragmentInterface.OnEventListener
 {
-    private SearchGourmetFragmentInterface.AnalyticsInterface mAnalytics;
+    SearchGourmetFragmentInterface.AnalyticsInterface mAnalytics;
 
     RecentlyLocalImpl mRecentlyLocalImpl;
     CampaignTagRemoteImpl mCampaignTagRemoteImpl;

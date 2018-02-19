@@ -29,7 +29,7 @@ public class StayPopularSuggestListAdapter extends RecyclerView.Adapter<Recycler
     }
 
     private Context mContext;
-    private OnPopularSuggestListener mListener;
+    OnPopularSuggestListener mListener;
 
     private List<ObjectItem> mSuggestList;
 

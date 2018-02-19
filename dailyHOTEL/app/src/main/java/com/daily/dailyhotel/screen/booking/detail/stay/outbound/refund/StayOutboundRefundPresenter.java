@@ -34,7 +34,7 @@ public class StayOutboundRefundPresenter //
     extends BaseExceptionPresenter<StayOutboundRefundActivity, StayOutboundRefundInterface> //
     implements StayOutboundRefundView.OnEventListener
 {
-    private StayOutboundRefundAnalyticsInterface mAnalytics;
+    StayOutboundRefundAnalyticsInterface mAnalytics;
 
     RefundRemoteImpl mRefundRemoteImpl;
 

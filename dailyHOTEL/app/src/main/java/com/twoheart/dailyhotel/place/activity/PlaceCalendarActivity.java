@@ -113,11 +113,11 @@ public abstract class PlaceCalendarActivity extends BaseActivity implements View
             String[] holidays = calendarHolidays.split("\\,");
             mHolidayList = new ArrayList<>();
 
-            for (int i = 0; i < holidays.length; i++)
+            for (String holiday : holidays)
             {
                 try
                 {
-                    mHolidayList.add(Integer.parseInt(holidays[i]));
+                    mHolidayList.add(Integer.parseInt(holiday));
                 } catch (NumberFormatException e)
                 {
                     ExLog.e(e.toString());

@@ -16,7 +16,6 @@ import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
 import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
-import com.daily.dailyhotel.screen.home.stay.outbound.search.StayOutboundSearchActivity;
 import com.daily.dailyhotel.storage.database.DailyDb;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
@@ -615,7 +614,7 @@ public class StaySearchFragment extends PlaceSearchFragment
             return;
         }
 
-//        startActivity(SearchActivity.newInstance(getContext()));
+        //        startActivity(SearchActivity.newInstance(getContext()));
     }
 
     public void startGourmetSearch(String keyword)

@@ -15,18 +15,13 @@ import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.util.ExLog;
 import com.daily.dailyhotel.base.BasePagerFragmentPresenter;
 import com.daily.dailyhotel.entity.CampaignTag;
-import com.daily.dailyhotel.parcel.analytics.StayDetailAnalyticsParam;
 import com.daily.dailyhotel.repository.local.RecentlyLocalImpl;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
 import com.daily.dailyhotel.repository.remote.CampaignTagRemoteImpl;
-import com.daily.dailyhotel.screen.home.campaigntag.stay.StayCampaignTagListActivity;
 import com.daily.dailyhotel.screen.home.search.SearchActivity;
-import com.daily.dailyhotel.screen.home.search.SearchPresenter;
 import com.daily.dailyhotel.screen.home.search.SearchViewModel;
-import com.daily.dailyhotel.screen.home.stay.inbound.detail.StayDetailActivity;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.DailyCalendar;
 
 import java.util.ArrayList;
 
@@ -42,7 +37,7 @@ import io.reactivex.functions.Function;
 public class SearchStayFragmentPresenter extends BasePagerFragmentPresenter<SearchStayFragment, SearchStayFragmentInterface.ViewInterface>//
     implements SearchStayFragmentInterface.OnEventListener
 {
-    private SearchStayFragmentInterface.AnalyticsInterface mAnalytics;
+    SearchStayFragmentInterface.AnalyticsInterface mAnalytics;
 
     RecentlyLocalImpl mRecentlyLocalImpl;
     CampaignTagRemoteImpl mCampaignTagRemoteImpl;

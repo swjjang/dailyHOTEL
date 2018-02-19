@@ -565,20 +565,19 @@ public abstract class PlaceSearchFragment extends BaseFragment
 
     /**
      * Showing google speech input dialog
-     * */
-    protected void promptSpeechInput() {
+     */
+    protected void promptSpeechInput()
+    {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
-            "검색어를 말씀하세요!");
-        try {
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "검색어를 말씀하세요!");
+        try
+        {
             startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT);
-        } catch (ActivityNotFoundException a) {
-            DailyToast.showToast(getActivity(),
-                "이기기는 음성검색을 지원하지 않습니다.",
-                DailyToast.LENGTH_SHORT);
+        } catch (ActivityNotFoundException a)
+        {
+            DailyToast.showToast(getActivity(), "이기기는 음성검색을 지원하지 않습니다.", DailyToast.LENGTH_SHORT);
         }
     }
 }

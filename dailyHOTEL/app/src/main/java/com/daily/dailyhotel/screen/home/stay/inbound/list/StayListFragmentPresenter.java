@@ -80,7 +80,7 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
     static final int PAGE_NONE = -1;
     static final int PAGE_FINISH = Integer.MAX_VALUE;
 
-    private StayListFragmentInterface.AnalyticsInterface mAnalytics;
+    StayListFragmentInterface.AnalyticsInterface mAnalytics;
 
     StayRemoteImpl mStayRemoteImpl;
 

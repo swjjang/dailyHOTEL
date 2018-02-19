@@ -4,12 +4,9 @@ import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
-import com.daily.base.BaseActivity;
-import com.daily.base.BaseDialogViewInterface;
 import com.daily.base.BaseFragment;
 import com.daily.base.BaseFragmentDialogViewInterface;
 import com.daily.base.BaseFragmentPresenter;
-import com.daily.base.BasePresenter;
 import com.daily.base.exception.BaseException;
 import com.daily.base.util.ExLog;
 import com.daily.base.widget.DailyToast;
