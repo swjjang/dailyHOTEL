@@ -189,17 +189,15 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.GONE);
             mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
 
-            if (GourmetSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mGourmetSearchCuration.getSuggest().categoryKey)//
-                && mGourmetSearchCuration.getLocation() == null)
+            if (GourmetSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mGourmetSearchCuration.getSuggest().categoryKey) == true)
             {
                 mGourmetSearchCuration.getCurationOption().setSortType(SortType.DISTANCE);
                 mGourmetSearchCuration.setRadius(DEFAULT_SEARCH_RADIUS);
 
-                searchMyLocation();
-            } else
-            {
-                mPlaceSearchResultLayout.setCategoryTabLayout(getSupportFragmentManager(), new ArrayList<Category>(), null, mOnGourmetListFragmentListener);
+                mPlaceSearchResultLayout.setSelectionSpinner(mGourmetSearchCuration.getRadius());
             }
+
+            mPlaceSearchResultLayout.setCategoryTabLayout(getSupportFragmentManager(), new ArrayList<Category>(), null, mOnGourmetListFragmentListener);
         }
     }
 
