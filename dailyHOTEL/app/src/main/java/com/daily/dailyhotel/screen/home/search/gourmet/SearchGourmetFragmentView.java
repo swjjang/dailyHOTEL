@@ -5,6 +5,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.daily.base.BaseFragmentDialogView;
 import com.daily.base.util.ScreenUtils;
@@ -130,7 +131,9 @@ public class SearchGourmetFragmentView extends BaseFragmentDialogView<SearchGour
         getViewDataBinding().recently02View.setVisibility(flag);
         getViewDataBinding().recently03View.setVisibility(flag);
 
-        getViewDataBinding().popularSearchTagTextView.setPadding(0, visible ? ScreenUtils.dpToPx(getContext(), 15) : 0, 0, 0);
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) getViewDataBinding().popularSearchTagTextView.getLayoutParams();
+        layoutParams.topMargin = visible ? ScreenUtils.dpToPx(getContext(), 15) : 0;
+        getViewDataBinding().popularSearchTagTextView.setLayoutParams(layoutParams);
     }
 
     private View getTagView(CampaignTag campaignTag)
