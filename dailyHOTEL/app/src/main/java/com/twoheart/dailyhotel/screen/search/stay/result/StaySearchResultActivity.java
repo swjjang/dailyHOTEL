@@ -192,17 +192,15 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             mPlaceSearchResultLayout.setCategoryTabLayoutVisibility(View.INVISIBLE);
             mPlaceSearchResultLayout.setScreenVisible(ScreenType.NONE);
 
-            if (StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStaySearchCuration.getSuggest().categoryKey)//
-                && mStaySearchCuration.getLocation() == null)
+            if (StaySuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStaySearchCuration.getSuggest().categoryKey) == true)
             {
                 mStaySearchCuration.getCurationOption().setSortType(SortType.DISTANCE);
                 mStaySearchCuration.setRadius(DEFAULT_SEARCH_RADIUS);
 
-                searchMyLocation();
-            } else
-            {
-                mPlaceSearchResultLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
+                mPlaceSearchResultLayout.setSelectionSpinner(mStaySearchCuration.getRadius());
             }
+
+            mPlaceSearchResultLayout.setCategoryAllTabLayout(getSupportFragmentManager(), mOnStayListFragmentListener);
         }
     }
 
