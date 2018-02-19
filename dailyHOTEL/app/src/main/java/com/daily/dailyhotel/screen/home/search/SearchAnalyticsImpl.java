@@ -65,7 +65,7 @@ public class SearchAnalyticsImpl implements SearchInterface.AnalyticsInterface
         }
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
-            , "stay_search_try", null, null);
+            , "search_try", AnalyticsManager.ValueType.STAY, null);
     }
 
     @Override
@@ -126,7 +126,7 @@ public class SearchAnalyticsImpl implements SearchInterface.AnalyticsInterface
         }
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
-            , "ob_search_try", null, null);
+            , "search_try", "ob", null);
     }
 
     @Override
@@ -187,7 +187,7 @@ public class SearchAnalyticsImpl implements SearchInterface.AnalyticsInterface
         }
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
-            , "gourmet_search_try", null, null);
+            , "search_try", AnalyticsManager.ValueType.GOURMET, null);
     }
 
     @Override
