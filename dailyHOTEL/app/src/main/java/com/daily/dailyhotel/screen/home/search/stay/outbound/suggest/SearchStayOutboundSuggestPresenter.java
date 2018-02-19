@@ -97,6 +97,8 @@ public class SearchStayOutboundSuggestPresenter //
         void onRecentlyStayOutboundList(Activity activity, boolean hasData);
 
         void onDeleteRecentlyStayOutbound(Activity activity);
+
+        void onScreen(Activity activity);
     }
 
     public SearchStayOutboundSuggestPresenter(@NonNull SearchStayOutboundSuggestActivity activity)
@@ -192,6 +194,14 @@ public class SearchStayOutboundSuggestPresenter //
         if (isRefresh() == true)
         {
             onRefresh(true);
+        }
+
+        try
+        {
+            mAnalytics.onScreen(getActivity());
+        } catch (Exception e)
+        {
+            ExLog.d(e.getMessage());
         }
     }
 

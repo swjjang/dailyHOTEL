@@ -117,6 +117,8 @@ public class SearchStaySuggestPresenter //
         void onRecentlyStayList(Activity activity, boolean hasData);
 
         void onDeleteRecentlyStay(Activity activity);
+
+        void onScreen(Activity activity);
     }
 
     public SearchStaySuggestPresenter(@NonNull SearchStaySuggestActivity activity)
@@ -261,6 +263,14 @@ public class SearchStaySuggestPresenter //
         if (isRefresh() == true)
         {
             onRefresh(true);
+        }
+
+        try
+        {
+            mAnalytics.onScreen(getActivity());
+        } catch (Exception e)
+        {
+            ExLog.d(e.getMessage());
         }
     }
 

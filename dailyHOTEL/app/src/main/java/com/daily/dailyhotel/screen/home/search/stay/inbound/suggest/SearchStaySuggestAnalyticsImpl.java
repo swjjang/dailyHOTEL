@@ -110,4 +110,15 @@ public class SearchStaySuggestAnalyticsImpl implements SearchStaySuggestPresente
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_, "recent_search_place_delete", "stay", null);
     }
+
+    @Override
+    public void onScreen(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordScreen(activity, "Search_quering", null);
+    }
 }
