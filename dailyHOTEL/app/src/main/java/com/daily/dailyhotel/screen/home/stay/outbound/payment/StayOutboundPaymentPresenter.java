@@ -1348,7 +1348,6 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
 
                 case COUPON:
                     jsonObject.put("couponCode", coupon.couponCode);
-                    jsonObject.put("userCouponIdx", coupon.userCouponIndex);
                     jsonObject.put("rewardSticker", false);
                     break;
 

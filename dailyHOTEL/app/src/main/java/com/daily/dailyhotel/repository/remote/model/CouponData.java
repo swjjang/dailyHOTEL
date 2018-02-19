@@ -78,7 +78,6 @@ public class CouponData
         coupon.title = title;
         coupon.description = description;
         coupon.couponCode = couponCode;
-        coupon.userCouponIndex = userCouponIdx;
 
         try
         {

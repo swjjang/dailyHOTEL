@@ -281,10 +281,4 @@ public class KakaoManager extends BaseAnalyticsManager
     {
 
     }
-
-    @Override
-    void onSearch(String keyword, String autoKeyword, String category, int resultCount)
-    {
-
-    }
 }

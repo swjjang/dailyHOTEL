@@ -45,7 +45,6 @@ public class CouponParcel implements Parcelable
         dest.writeString(mCoupon.availableItem);
         dest.writeString(mCoupon.serverDate);
         dest.writeString(mCoupon.couponCode);
-        dest.writeString(mCoupon.userCouponIndex);
         dest.writeString(mCoupon.stayFrom);
         dest.writeString(mCoupon.stayTo);
         dest.writeString(mCoupon.downloadedAt);
@@ -71,7 +70,6 @@ public class CouponParcel implements Parcelable
         mCoupon.availableItem = in.readString();
         mCoupon.serverDate = in.readString();
         mCoupon.couponCode = in.readString();
-        mCoupon.userCouponIndex = in.readString();
         mCoupon.stayFrom = in.readString();
         mCoupon.stayTo = in.readString();
         mCoupon.downloadedAt = in.readString();
