@@ -246,7 +246,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
 
         setStatus(STATUS_NONE);
 
-        setVisitTime(FULL_TIME);
+        setVisitTime(FULL_TIME, false);
 
         setRefresh(false);
     }
@@ -1467,7 +1467,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
             return;
         }
 
-        setVisitTime(visitTime);
+        setVisitTime(visitTime, true);
 
         notifyOperationTimeChanged();
 
@@ -1562,11 +1562,14 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
         mAnalytics.onScreen(getActivity(), mGourmetBookDateTime, gourmetDetail, mPriceFromList);
     }
 
-    void setVisitTime(String visitTime)
+    void setVisitTime(String visitTime, boolean clicked)
     {
         mVisitTime = visitTime;
 
-        mAnalytics.onEventVisitTimeClick(getActivity(), visitTime);
+        if (clicked == true)
+        {
+            mAnalytics.onEventVisitTimeClick(getActivity(), visitTime);
+        }
     }
 
     void setOperationTimes(CommonDateTime commonDateTime, GourmetBookDateTime gourmetBookDateTime, List<GourmetMenu> gourmetMenuList)
@@ -1991,7 +1994,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                     setTrueVRList(trueVRList);
                     setGourmetDetail(gourmetDetail);
                     setOperationTimes(commonDateTime, mGourmetBookDateTime, gourmetDetail.getGourmetMenuList());
-                    setVisitTime(FULL_TIME);
+                    setVisitTime(FULL_TIME, false);
 
                     return gourmetCart;
                 }
@@ -2052,7 +2055,7 @@ public class GourmetDetailPresenter extends BaseExceptionPresenter<GourmetDetail
                             showWishTooltip();
                         }
 
-                        switch(checkPriceResult)
+                        switch (checkPriceResult)
                         {
                             case INVALID_GOURMET_SOLD_OUT:
                                 getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.message_gourmet_detail_sold_out_has_cart)//

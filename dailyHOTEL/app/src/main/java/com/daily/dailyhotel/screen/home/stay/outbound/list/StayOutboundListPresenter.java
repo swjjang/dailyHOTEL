@@ -156,7 +156,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         void onEventDestroy(Activity activity);
 
-        void onEventList(Activity activity, StayOutboundSuggest suggest, int size);
+        void onEventList(Activity activity, StayBookDateTime stayBookDateTime, StayOutboundSuggest suggest, int size);
 
         void onEventWishClick(Activity activity, int stayIndex, boolean isWish);
 
@@ -864,7 +864,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         {
             mAnalytics.onScreen(getActivity(), stayOutbounds.getStayOutbound().size() == 0);
 
-            mAnalytics.onEventList(getActivity(), mStayOutboundSuggest, stayOutbounds.getStayOutbound().size());
+            mAnalytics.onEventList(getActivity(), mStayBookDateTime, mStayOutboundSuggest, stayOutbounds.getStayOutbound().size());
 
             onStayOutbounds(stayOutbounds);
 
