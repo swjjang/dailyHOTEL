@@ -9,18 +9,16 @@ import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
 import com.daily.base.util.ScreenUtils;
-import com.daily.base.widget.DailyImageView;
 import com.daily.dailyhotel.view.DailyFloatingActionView;
+import com.daily.dailyhotel.view.DailySearchToolbarView;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.model.Category;
 import com.twoheart.dailyhotel.model.time.StayBookingDay;
@@ -30,7 +28,6 @@ import com.twoheart.dailyhotel.place.base.OnBaseEventListener;
 import com.twoheart.dailyhotel.place.fragment.PlaceListFragment;
 import com.twoheart.dailyhotel.screen.search.stay.result.StaySearchResultListFragment;
 import com.twoheart.dailyhotel.util.Constants;
-import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -43,8 +40,7 @@ import java.util.Locale;
 
 public class StayCategoryNearByLayout extends BaseBlurLayout
 {
-    private View mToolbar;
-    TextView mCalendarTextView;
+    DailySearchToolbarView mToolbarView;
     private View mSearchLocationLayout;
     private View mResultLayout;
 
@@ -54,7 +50,6 @@ public class StayCategoryNearByLayout extends BaseBlurLayout
     protected ViewPager mViewPager;
     protected PlaceListFragmentPagerAdapter mFragmentPagerAdapter;
 
-    protected Spinner mDistanceFilterSpinner;
     DistanceFilterAdapter mDistanceFilterAdapter;
 
     public interface OnEventListener extends OnBaseEventListener
@@ -120,41 +115,38 @@ public class StayCategoryNearByLayout extends BaseBlurLayout
 
     private void initToolbarLayout(View view)
     {
-        mToolbar = view.findViewById(R.id.toolbarLayout);
+        mToolbarView = view.findViewById(R.id.toolbarView);
 
-        View backView = mToolbar.findViewById(R.id.backImageView);
-        backView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).finish(Activity.RESULT_CANCELED));
-
-        View titleBackgroundView = view.findViewById(R.id.titleBackgroundView);
-        titleBackgroundView.setOnClickListener(v -> ((StayCategoryNearByLayout.OnEventListener) mOnEventListener).onDateClick());
-
-        DailyImageView titleIconImageView = view.findViewById(R.id.titleIconImageView);
-        titleIconImageView.setVectorImageResource(R.drawable.search_ic_01_date);
-
-        mCalendarTextView = view.findViewById(R.id.calendarTextView);
-        mDistanceFilterSpinner = view.findViewById(R.id.distanceSpinner);
-
-        CharSequence[] strings = mContext.getResources().getTextArray(R.array.search_result_distance_array);
-        mDistanceFilterAdapter = new DistanceFilterAdapter(mContext, R.layout.list_row_search_result_spinner, strings);
-
-        mDistanceFilterAdapter.setDropDownViewResource(R.layout.list_row_search_result_sort_dropdown_item);
-        mDistanceFilterSpinner.setAdapter(mDistanceFilterAdapter);
-        mDistanceFilterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        mToolbarView.setOnToolbarListener(new DailySearchToolbarView.OnToolbarListener()
         {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            public void onTitleClick()
+            {
+                ((StayCategoryNearByLayout.OnEventListener) mOnEventListener).onDateClick();
+            }
+
+            @Override
+            public void onBackClick()
+            {
+                ((OnEventListener) mOnEventListener).finish(Activity.RESULT_CANCELED);
+            }
+
+            @Override
+            public void onRadiusSelected(int position)
             {
                 mDistanceFilterAdapter.setSelection(position);
 
                 ((StayCategoryNearByLayout.OnEventListener) mOnEventListener).onItemSelectedSpinner(getSpinnerRadiusValue(position));
             }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent)
-            {
-
-            }
         });
+
+        mToolbarView.setTitleImageResource(R.drawable.search_ic_01_date);
+
+        CharSequence[] strings = mContext.getResources().getTextArray(R.array.search_result_distance_array);
+        mDistanceFilterAdapter = new DistanceFilterAdapter(mContext, R.layout.list_row_search_result_spinner, strings);
+        mDistanceFilterAdapter.setDropDownViewResource(R.layout.list_row_search_result_sort_dropdown_item);
+
+        mToolbarView.setRadiusAdapter(mDistanceFilterAdapter);
     }
 
     private void initCategoryTabLayout(View view)
@@ -165,7 +157,7 @@ public class StayCategoryNearByLayout extends BaseBlurLayout
 
     void setCalendarText(StayBookingDay stayBookingDay)
     {
-        if (stayBookingDay == null)
+        if (mToolbarView == null || stayBookingDay == null)
         {
             return;
         }
@@ -178,7 +170,7 @@ public class StayCategoryNearByLayout extends BaseBlurLayout
                 , stayBookingDay.getCheckInDay(dateFormat)//
                 , stayBookingDay.getCheckOutDay(dateFormat), nights);
 
-            mCalendarTextView.setText(date);
+            mToolbarView.setSubTitleText(date);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
@@ -187,15 +179,12 @@ public class StayCategoryNearByLayout extends BaseBlurLayout
 
     public void setToolbarTitle(String title)
     {
-        TextView titleView = mToolbar.findViewById(R.id.titleView);
-
-        if (titleView == null)
+        if (mToolbarView == null)
         {
-            Util.restartApp(mContext);
             return;
         }
 
-        titleView.setText(title);
+        mToolbarView.setTitleText(title);
     }
 
     private void initSearchLocationLayout(View view)
@@ -435,34 +424,26 @@ public class StayCategoryNearByLayout extends BaseBlurLayout
 
     public void setSpinnerVisible(boolean visible)
     {
-        if (mDistanceFilterSpinner == null)
+        if (mToolbarView == null)
         {
             return;
         }
 
-        int flag = visible ? View.VISIBLE : View.GONE;
-
-        mDistanceFilterSpinner.setVisibility(flag);
-        mDistanceFilterSpinner.setEnabled(visible);
+        mToolbarView.setRadiusVisible(visible);
     }
 
     public void showSpinner()
     {
-        if (mDistanceFilterSpinner == null)
+        if (mToolbarView == null)
         {
             return;
         }
 
-        mDistanceFilterSpinner.performClick();
+        mToolbarView.showRadiusPopup();
     }
 
     double getSpinnerRadiusValue(int spinnerPosition)
     {
-        if (mDistanceFilterSpinner == null)
-        {
-            return 0d;
-        }
-
         double radius;
 
         switch (spinnerPosition)
@@ -497,7 +478,7 @@ public class StayCategoryNearByLayout extends BaseBlurLayout
 
     public void setSelectionSpinner(double radius)
     {
-        if (mDistanceFilterSpinner == null)
+        if (mToolbarView == null)
         {
             return;
         }
@@ -521,7 +502,7 @@ public class StayCategoryNearByLayout extends BaseBlurLayout
             position = 0; // 0.5km
         }
 
-        mDistanceFilterSpinner.setSelection(position);
+        mToolbarView.setRadius(position);
     }
 
     public void setScreenVisible(StayCategoryNearByActivity.ScreenType screenType)
