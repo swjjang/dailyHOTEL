@@ -1371,18 +1371,6 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         }
 
         @Override
-        public void onGourmetListCount(int count)
-        {
-            try
-            {
-                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).onSearch(mGourmetSearchCuration.getSuggest().displayName, null, "gourmet", count);
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
-        }
-
-        @Override
         public void onResearchClick()
         {
             mOnEventListener.onResearchClick();
