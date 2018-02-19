@@ -812,7 +812,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
             startActivityForResult(StayOutboundCalendarActivity.newInstance(getActivity()//
                 , mSearchModel.stayOutboundViewModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mSearchModel.stayOutboundViewModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , startDateTime, endDateTime, NIGHTS_OF_MAXCOUNT, AnalyticsManager.ValueType.SEARCH, true, ScreenUtils.dpToPx(getActivity(), 77), true), SearchActivity.REQUEST_CODE_STAY_OUTBOUND_CALENDAR);
+                , startDateTime, endDateTime, NIGHTS_OF_MAXCOUNT, AnalyticsManager.ValueType.SEARCH, true, ScreenUtils.dpToPx(getActivity(), 41), true), SearchActivity.REQUEST_CODE_STAY_OUTBOUND_CALENDAR);
         } catch (Exception e)
         {
             ExLog.e(e.toString());
