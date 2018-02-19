@@ -530,7 +530,7 @@ public class StayCategoryNearByActivity extends BaseActivity
 
         try
         {
-            mStayCategoryNearByLayout.setToolbarTitle("");
+            mStayCategoryNearByLayout.setToolbarTitle(getString(R.string.label_current_location));
 
             mStayCategoryNearByLayout.setSpinnerVisible(true);
 

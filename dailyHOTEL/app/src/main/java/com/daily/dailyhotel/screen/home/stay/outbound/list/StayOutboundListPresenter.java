@@ -1843,6 +1843,11 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         String title = mStayOutboundSuggest.id == 0 ? DailyTextUtils.isTextEmpty(mStayOutboundSuggest.city) == true ? mStayOutboundSuggest.display : mStayOutboundSuggest.city : mStayOutboundSuggest.display;
 
+        if (StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == true && DailyTextUtils.isTextEmpty(title) == true)
+        {
+            title = getString(R.string.label_current_location);
+        }
+
         try
         {
             String subTitleText = String.format(Locale.KOREA, "%s - %s, %d박 돋 %s"//
