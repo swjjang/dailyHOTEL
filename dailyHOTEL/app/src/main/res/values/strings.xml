@@ -696,7 +696,6 @@
     <string name="message_payment_dont_reward_sticker_used_bonus_coupon_payment_phone">적립금, 할인쿠폰, 휴대폰 결제 수단 선택 시\n스티커 적립을 할 수 없습니다.</string>
     <string name="message_payment_dont_reward_sticker_used_bonus_payment_phone">적립금, 휴대폰 결제 수단 선택 시\n스티커 적립을 할 수 없습니다.</string>
     <string name="message_thankyou_dont_reward_sticker_used_bonus_coupon_payment_phone">(적립금, 할인쿠폰, 휴대폰 결제 수단 선택 시)</string>
-    <string name="message_thankyou_dont_reward_sticker_used_bonus_payment_phone">(적립금, 휴대폰 결제 수단 선택 시)</string>
 
     <!-- Payment Activity -->
     <string name="act_payment_isp_error">ISP 결제 오류</string>
@@ -1683,6 +1682,7 @@
 
     <!-- Campaign Tag -->
     <string name="message_campaign_tag_finished">종료된 #태그입니다.</string>
+    <string name="message_campaign_tag_empty">날짜나 인기검색 태그를 변경하여 검색해 보세요.</string>
     <string name="message_campaign_tag_recheck_connection">연결 화면을 다시 확인해주세요.</string>
     <string name="message_campaign_empty_popup_message">현재 모든 예약이 완료되었습니다.\n다른 날짜로 확인해보겠어요?</string>
     <string name="message_empty_search_card_format">%1$s가 없습니다.</string>
