@@ -696,7 +696,6 @@
     <string name="message_payment_dont_reward_sticker_used_bonus_coupon_payment_phone">적립금, 할인쿠폰, 휴대폰 결제 수단 선택 시\n스티커 적립을 할 수 없습니다.</string>
     <string name="message_payment_dont_reward_sticker_used_bonus_payment_phone">적립금, 휴대폰 결제 수단 선택 시\n스티커 적립을 할 수 없습니다.</string>
     <string name="message_thankyou_dont_reward_sticker_used_bonus_coupon_payment_phone">(적립금, 할인쿠폰, 휴대폰 결제 수단 선택 시)</string>
-    <string name="message_thankyou_dont_reward_sticker_used_bonus_payment_phone">(적립금, 휴대폰 결제 수단 선택 시)</string>
 
     <!-- Payment Activity -->
     <string name="act_payment_isp_error">ISP 결제 오류</string>

@@ -1299,7 +1299,7 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
             if (hasDepositSticker() == true)
             {
                 descriptionTitle = getString(R.string.message_payment_dont_reward_sticker);
-                descriptionMessage = getString(R.string.message_thankyou_dont_reward_sticker_used_bonus_payment_phone);
+                descriptionMessage = getString(R.string.message_thankyou_dont_reward_sticker_used_bonus_coupon_payment_phone);
             } else
             {
                 descriptionTitle = getString(R.string.message_payment_dont_reward_sticker);
