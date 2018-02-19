@@ -1448,18 +1448,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         }
 
         @Override
-        public void onStayListCount(int count)
-        {
-            try
-            {
-                AnalyticsManager.getInstance(StaySearchResultActivity.this).onSearch(mStaySearchCuration.getSuggest().displayName, null, "stay", count);
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
-        }
-
-        @Override
         public void onResearchClick()
         {
             mOnEventListener.onResearchClick();

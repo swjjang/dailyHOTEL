@@ -37,8 +37,6 @@ public class StaySearchResultListFragment extends StayListFragment
     {
         void onCategoryList(List<Category> categoryList);
 
-        void onStayListCount(int count);
-
         void onResearchClick();
 
         void onRadiusClick();
@@ -383,8 +381,6 @@ public class StaySearchResultListFragment extends StayListFragment
                     ((OnStaySearchResultListFragmentListener) mOnPlaceListFragmentListener).onCategoryList(categoryList);
                     mOnPlaceListFragmentListener.onSearchCountUpdate(totalCount, maxCount);
                 }
-
-                ((OnStaySearchResultListFragmentListener) mOnPlaceListFragmentListener).onStayListCount(totalCount);
             }
 
             StaySearchResultListFragment.this.onStayList(list, page, false, activeReward);
