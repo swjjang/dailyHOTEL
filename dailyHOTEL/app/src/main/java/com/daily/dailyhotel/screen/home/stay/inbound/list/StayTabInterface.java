@@ -2,7 +2,6 @@ package com.daily.dailyhotel.screen.home.stay.inbound.list;
 
 import android.app.Activity;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentManager;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.BaseDialogViewInterface;

@@ -1202,7 +1202,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         });
     }
 
-    private void setMenuBarLayoutTranslationY(float dy)
+    void setMenuBarLayoutTranslationY(float dy)
     {
         if (getViewDataBinding() == null)
         {
@@ -1217,7 +1217,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         }
     }
 
-    private void resetMenuBarLayoutTranslation()
+    void resetMenuBarLayoutTranslation()
     {
         if (getViewDataBinding() == null)
         {
@@ -1233,7 +1233,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
         }
     }
 
-    private float getSpinnerRadiusValue(int spinnerPosition)
+    float getSpinnerRadiusValue(int spinnerPosition)
     {
         if (getViewDataBinding() == null)
         {

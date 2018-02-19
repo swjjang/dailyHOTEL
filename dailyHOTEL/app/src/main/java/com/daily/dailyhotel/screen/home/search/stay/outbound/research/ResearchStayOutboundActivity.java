@@ -8,9 +8,7 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
 import com.daily.dailyhotel.entity.StayOutboundSuggest;
-import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.parcel.StayOutboundSuggestParcel;
-import com.daily.dailyhotel.parcel.StaySuggestParcel;
 import com.twoheart.dailyhotel.R;
 
 import java.util.ArrayList;
@@ -40,7 +38,7 @@ public class ResearchStayOutboundActivity extends BaseActivity<ResearchStayOutbo
     public static final String INTENT_EXTRA_DATA_CLICK_TYPE = "clickType";
 
     public static Intent newInstance(Context context, String openDateTime, String closeDateTime, String currentDateTime, String dailyDateTime//
-    , String checkInDateTime, String checkOutDateTime, StayOutboundSuggest suggest, int numberOfAdults, ArrayList<Integer> childList)
+        , String checkInDateTime, String checkOutDateTime, StayOutboundSuggest suggest, int numberOfAdults, ArrayList<Integer> childList)
     {
         Intent intent = new Intent(context, ResearchStayOutboundActivity.class);
 

@@ -33,7 +33,7 @@ public class StayOutboundPopularSuggestListAdapter extends RecyclerView.Adapter<
     }
 
     private Context mContext;
-    private OnPopularSuggestListener mListener;
+    OnPopularSuggestListener mListener;
 
     private List<ObjectItem> mSuggestList;
 

@@ -58,7 +58,7 @@ public class IconGenerator {
         mContext = context;
         mContainer = (ViewGroup) LayoutInflater.from(mContext).inflate(R.layout.amu_text_bubble, null);
         mRotationLayout = (RotationLayout) mContainer.getChildAt(0);
-        mContentView = mTextView = (TextView) mRotationLayout.findViewById(R.id.amu_text);
+        mContentView = mTextView = mRotationLayout.findViewById(R.id.amu_text);
         setStyle(STYLE_DEFAULT);
     }
 

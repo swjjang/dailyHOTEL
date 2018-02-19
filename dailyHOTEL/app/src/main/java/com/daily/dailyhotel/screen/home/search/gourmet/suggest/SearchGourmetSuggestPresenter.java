@@ -70,23 +70,23 @@ public class SearchGourmetSuggestPresenter //
     extends BaseExceptionPresenter<SearchGourmetSuggestActivity, SearchGourmetSuggestInterface> //
     implements SearchGourmetSuggestView.OnEventListener
 {
-    private SearchGourmetSuggestAnalyticsInterface mAnalytics;
+    SearchGourmetSuggestAnalyticsInterface mAnalytics;
 
     private SuggestRemoteImpl mSuggestRemoteImpl;
-    private RecentlyRemoteImpl mRecentlyRemoteImpl;
+    RecentlyRemoteImpl mRecentlyRemoteImpl;
     private RecentlyLocalImpl mRecentlyLocalImpl;
-    private GoogleAddressRemoteImpl mGoogleAddressRemoteImpl;
+    GoogleAddressRemoteImpl mGoogleAddressRemoteImpl;
     private Disposable mSuggestDisposable;
 
-    private DailyRecentSearches mDailyRecentSearches;
+    DailyRecentSearches mDailyRecentSearches;
     private GourmetBookDateTime mGourmetBookDateTime;
     private List<GourmetSuggest> mPopularAreaList; // 일단 형식만 맞추기 위해 - 기본 화면을 대신 적용
     private List<GourmetSuggest> mRecentlySuggestList;
     private List<GourmetSuggest> mSuggestList;
-    private GourmetSuggest mLocationSuggest;
-    private String mKeyword;
+    GourmetSuggest mLocationSuggest;
+    String mKeyword;
 
-    private DailyLocationExFactory mDailyLocationExFactory;
+    DailyLocationExFactory mDailyLocationExFactory;
 
     public interface SearchGourmetSuggestAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -402,7 +402,7 @@ public class SearchGourmetSuggestPresenter //
         mPopularAreaList = popularAreaList;
     }
 
-    private List<GourmetSuggest> getRecentlySuggestList(List<Keyword> keywordList, List<RecentlyPlace> recentlyPlaceList)
+    List<GourmetSuggest> getRecentlySuggestList(List<Keyword> keywordList, List<RecentlyPlace> recentlyPlaceList)
     {
         // 최근 검색어
         ArrayList<GourmetSuggest> recentlySuggestList = new ArrayList<>();
@@ -433,17 +433,17 @@ public class SearchGourmetSuggestPresenter //
         return recentlySuggestList;
     }
 
-    private void setRecentlySuggestList(List<GourmetSuggest> recentlySuggestList)
+    void setRecentlySuggestList(List<GourmetSuggest> recentlySuggestList)
     {
         mRecentlySuggestList = recentlySuggestList;
     }
 
-    private void setSuggestList(List<GourmetSuggest> suggestList)
+    void setSuggestList(List<GourmetSuggest> suggestList)
     {
         mSuggestList = suggestList;
     }
 
-    private void notifyDataSetChanged()
+    void notifyDataSetChanged()
     {
         if (DailyTextUtils.isTextEmpty(mKeyword) == false)
         {
@@ -684,7 +684,7 @@ public class SearchGourmetSuggestPresenter //
         DailyPreference.getInstance(getActivity()).setGourmetRecentSearches(mDailyRecentSearches.toString());
     }
 
-    private void startFinishAction(GourmetSuggest gourmetSuggest, String keyword, String analyticsClickType)
+    void startFinishAction(GourmetSuggest gourmetSuggest, String keyword, String analyticsClickType)
     {
         Intent intent = new Intent();
         intent.putExtra(SearchGourmetSuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new GourmetSuggestParcel(gourmetSuggest));
@@ -823,7 +823,7 @@ public class SearchGourmetSuggestPresenter //
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private void startSearchMyLocation(boolean isUserClick)
+    void startSearchMyLocation(boolean isUserClick)
     {
         Observable<Location> observable = searchMyLocation(isUserClick);
 

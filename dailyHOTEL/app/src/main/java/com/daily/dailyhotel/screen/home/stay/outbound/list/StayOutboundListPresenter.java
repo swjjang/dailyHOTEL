@@ -105,7 +105,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
     private CommonDateTime mCommonDateTime;
     StayBookDateTime mStayBookDateTime;
 
-    private StayOutboundSuggest mStayOutboundSuggest;
+    StayOutboundSuggest mStayOutboundSuggest;
     People mPeople;
     StayOutboundFilters mStayOutboundFilters;
     float mRadius = DEFAULT_RADIUS;
@@ -125,7 +125,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
     private Disposable mChangedLocationDisposable;
 
-    private DailyDeepLink mDailyDeepLink;
+    DailyDeepLink mDailyDeepLink;
 
     enum ViewState
     {
@@ -1501,7 +1501,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         onBackClick();
     }
 
-    private void setPeople(int numberOfAdults, ArrayList<Integer> childAgeList)
+    void setPeople(int numberOfAdults, ArrayList<Integer> childAgeList)
     {
         if (mPeople == null)
         {
@@ -1527,7 +1527,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
      * @param checkInDateTime  ISO-8601
      * @param checkOutDateTime ISO-8601
      */
-    private void setStayBookDateTime(String checkInDateTime, String checkOutDateTime)
+    void setStayBookDateTime(String checkInDateTime, String checkOutDateTime)
     {
         if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
         {
@@ -1549,12 +1549,12 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         }
     }
 
-    private void setSuggest(StayOutboundSuggest stayOutboundSuggest)
+    void setSuggest(StayOutboundSuggest stayOutboundSuggest)
     {
         mStayOutboundSuggest = stayOutboundSuggest;
     }
 
-    private void setFilter(StayOutboundFilters.SortType sortType, int rating)
+    void setFilter(StayOutboundFilters.SortType sortType, int rating)
     {
         if (mStayOutboundFilters == null)
         {
@@ -1834,7 +1834,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
         }
     }
 
-    private void notifyToolbarChanged()
+    void notifyToolbarChanged()
     {
         if (mStayBookDateTime == null)
         {

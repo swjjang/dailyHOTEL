@@ -1541,7 +1541,7 @@ public class StayOutboundDetailPresenter extends BaseExceptionPresenter<StayOutb
      * @param checkInDateTime  ISO-8601
      * @param checkOutDateTime ISO-8601
      */
-    private void setStayBookDateTime(String checkInDateTime, String checkOutDateTime)
+    void setStayBookDateTime(String checkInDateTime, String checkOutDateTime)
     {
         if (DailyTextUtils.isTextEmpty(checkInDateTime, checkOutDateTime) == true)
         {

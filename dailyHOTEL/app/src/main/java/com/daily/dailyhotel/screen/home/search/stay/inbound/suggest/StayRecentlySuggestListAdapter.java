@@ -35,7 +35,7 @@ public class StayRecentlySuggestListAdapter extends RecyclerView.Adapter<Recycle
     }
 
     private Context mContext;
-    private OnRecentlySuggestListener mListener;
+    OnRecentlySuggestListener mListener;
 
     private List<ObjectItem> mSuggestList;
 

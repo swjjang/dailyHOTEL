@@ -390,7 +390,7 @@ public class PolyUtil {
         dists[0] = 1;
         dists[n - 1] = 1;
         double maxDist;
-        double dist = 0.0;
+        double dist;
         int[] current;
 
         if (n > 2) {

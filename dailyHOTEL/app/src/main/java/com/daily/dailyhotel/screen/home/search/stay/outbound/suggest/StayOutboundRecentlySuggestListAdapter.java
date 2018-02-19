@@ -35,7 +35,7 @@ public class StayOutboundRecentlySuggestListAdapter extends RecyclerView.Adapter
     }
 
     private Context mContext;
-    private OnRecentlySuggestListener mListener;
+    OnRecentlySuggestListener mListener;
 
     private List<ObjectItem> mSuggestList;
 

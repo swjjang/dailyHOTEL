@@ -71,7 +71,8 @@ public class GourmetSuggest
 
             regionName = splitArray[0];
             gourmetName = splitArray[1];
-        } else {
+        } else
+        {
             categoryKey = CATEGORY_REGION;
 
             regionName = splitArray[0];

@@ -85,7 +85,7 @@ public class PreCachingAlgorithmDecorator<T extends ClusterItem> implements Algo
         return mAlgorithm.getItems();
     }
 
-    private Set<? extends Cluster<T>> getClustersInternal(int discreteZoom) {
+    Set<? extends Cluster<T>> getClustersInternal(int discreteZoom) {
         Set<? extends Cluster<T>> results;
         mCacheLock.readLock().lock();
         results = mCache.get(discreteZoom);

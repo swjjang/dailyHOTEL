@@ -39,7 +39,7 @@ import io.reactivex.functions.Function;
 public class SearchStayOutboundFragmentPresenter extends BasePagerFragmentPresenter<SearchStayOutboundFragment, SearchStayOutboundFragmentInterface.ViewInterface>//
     implements SearchStayOutboundFragmentInterface.OnEventListener
 {
-    private SearchStayOutboundFragmentInterface.AnalyticsInterface mAnalytics;
+    SearchStayOutboundFragmentInterface.AnalyticsInterface mAnalytics;
 
     RecentlyLocalImpl mRecentlyLocalImpl;
     SuggestRemoteImpl mSuggestRemoteImpl;

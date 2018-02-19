@@ -66,21 +66,21 @@ public class SearchStayOutboundSuggestPresenter //
     extends BaseExceptionPresenter<SearchStayOutboundSuggestActivity, SearchStayOutboundSuggestInterface> //
     implements SearchStayOutboundSuggestView.OnEventListener
 {
-    private SearchStayOutboundSuggestAnalyticsInterface mAnalytics;
+    SearchStayOutboundSuggestAnalyticsInterface mAnalytics;
     private SuggestRemoteImpl mSuggestRemoteImpl;
-    private SuggestLocalImpl mSuggestLocalImpl;
-    private RecentlyRemoteImpl mRecentlyRemoteImpl;
+    SuggestLocalImpl mSuggestLocalImpl;
+    RecentlyRemoteImpl mRecentlyRemoteImpl;
     private RecentlyLocalImpl mRecentlyLocalImpl;
-    private GoogleAddressRemoteImpl mGoogleAddressRemoteImpl;
+    GoogleAddressRemoteImpl mGoogleAddressRemoteImpl;
     private Disposable mSuggestDisposable;
 
     private List<StayOutboundSuggest> mPopularAreaList;
     private List<StayOutboundSuggest> mRecentlySuggestList;
     private List<StayOutboundSuggest> mSuggestList;
-    private StayOutboundSuggest mLocationSuggest;
-    private String mKeyword;
+    StayOutboundSuggest mLocationSuggest;
+    String mKeyword;
 
-    private DailyLocationExFactory mDailyLocationExFactory;
+    DailyLocationExFactory mDailyLocationExFactory;
 
     public interface SearchStayOutboundSuggestAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -358,7 +358,7 @@ public class SearchStayOutboundSuggestPresenter //
         }));
     }
 
-    private void setPopularAreaList(List<StayOutboundSuggest> popularAreaList)
+    void setPopularAreaList(List<StayOutboundSuggest> popularAreaList)
     {
         mPopularAreaList = popularAreaList;
     }
@@ -400,7 +400,7 @@ public class SearchStayOutboundSuggestPresenter //
         return stayOutboundSuggestList;
     }
 
-    private List<StayOutboundSuggest> getRecentlySuggestList(StayOutbounds stayOutbounds, List<StayOutboundSuggest> recentlySuggestList)
+    List<StayOutboundSuggest> getRecentlySuggestList(StayOutbounds stayOutbounds, List<StayOutboundSuggest> recentlySuggestList)
     {
         List<StayOutboundSuggest> mergeList = new ArrayList<>();
 
@@ -422,12 +422,12 @@ public class SearchStayOutboundSuggestPresenter //
         return mergeList;
     }
 
-    private void setRecentlySuggestList(List<StayOutboundSuggest> recentlySuggestList)
+    void setRecentlySuggestList(List<StayOutboundSuggest> recentlySuggestList)
     {
         mRecentlySuggestList = recentlySuggestList;
     }
 
-    private void setSuggestList(List<StayOutboundSuggest> suggestList)
+    void setSuggestList(List<StayOutboundSuggest> suggestList)
     {
         if (suggestList != null && suggestList.size() > 0)
         {
@@ -440,7 +440,7 @@ public class SearchStayOutboundSuggestPresenter //
         mSuggestList = suggestList;
     }
 
-    private void notifyDataSetChanged()
+    void notifyDataSetChanged()
     {
         if (DailyTextUtils.isTextEmpty(mKeyword) == false)
         {
@@ -710,7 +710,7 @@ public class SearchStayOutboundSuggestPresenter //
         finish();
     }
 
-    private void startFinishAction(StaySuggest staySuggest, String keyword, String analyticsClickType)
+    void startFinishAction(StaySuggest staySuggest, String keyword, String analyticsClickType)
     {
         Intent intent = new Intent();
         intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(staySuggest));
@@ -853,7 +853,7 @@ public class SearchStayOutboundSuggestPresenter //
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private void startSearchMyLocation(boolean isUserClick)
+    void startSearchMyLocation(boolean isUserClick)
     {
         Observable<Location> observable = searchMyLocation(isUserClick);
 

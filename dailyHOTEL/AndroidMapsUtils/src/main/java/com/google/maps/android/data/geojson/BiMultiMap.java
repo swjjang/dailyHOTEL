@@ -17,6 +17,7 @@ import java.util.Map;
  */
 public class BiMultiMap<K> extends HashMap<K, Object> {
 
+    private static final long serialVersionUID = -4465895560283235026L;
     private final Map<Object, K> mValuesToKeys = new HashMap<>();
 
     @Override
