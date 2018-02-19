@@ -141,24 +141,28 @@ public class SearchAnalyticsImpl implements SearchInterface.AnalyticsInterface
 
         switch (suggest.menuType)
         {
-            case StaySuggest.MENU_TYPE_DIRECT:
+            case StayOutboundSuggest.MENU_TYPE_DIRECT:
                 action += "direct";
                 break;
 
-            case StaySuggest.MENU_TYPE_LOCATION:
+            case StayOutboundSuggest.MENU_TYPE_LOCATION:
                 action += "around";
                 break;
 
-            case StaySuggest.MENU_TYPE_RECENTLY_SEARCH:
+            case StayOutboundSuggest.MENU_TYPE_RECENTLY_SEARCH:
                 action += "recent";
                 break;
 
-            case StaySuggest.MENU_TYPE_RECENTLY_STAY:
+            case StayOutboundSuggest.MENU_TYPE_RECENTLY_STAY:
                 action += "recent_checked";
                 break;
 
-            case StaySuggest.MENU_TYPE_SUGGEST:
+            case StayOutboundSuggest.MENU_TYPE_SUGGEST:
                 action += "auto";
+                break;
+
+            case StayOutboundSuggest.MENU_TYPE_POPULAR_AREA:
+                action += "recommend";
                 break;
         }
 
@@ -202,23 +206,23 @@ public class SearchAnalyticsImpl implements SearchInterface.AnalyticsInterface
 
         switch (suggest.menuType)
         {
-            case StaySuggest.MENU_TYPE_DIRECT:
+            case GourmetSuggest.MENU_TYPE_DIRECT:
                 action += "direct";
                 break;
 
-            case StaySuggest.MENU_TYPE_LOCATION:
+            case GourmetSuggest.MENU_TYPE_LOCATION:
                 action += "around";
                 break;
 
-            case StaySuggest.MENU_TYPE_RECENTLY_SEARCH:
+            case GourmetSuggest.MENU_TYPE_RECENTLY_SEARCH:
                 action += "recent";
                 break;
 
-            case StaySuggest.MENU_TYPE_RECENTLY_STAY:
+            case GourmetSuggest.MENU_TYPE_RECENTLY_GOURMET:
                 action += "recent_checked";
                 break;
 
-            case StaySuggest.MENU_TYPE_SUGGEST:
+            case GourmetSuggest.MENU_TYPE_SUGGEST:
                 action += "auto";
                 break;
         }

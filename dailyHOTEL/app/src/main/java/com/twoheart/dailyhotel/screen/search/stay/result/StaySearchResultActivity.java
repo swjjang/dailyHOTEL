@@ -530,7 +530,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             switch (mStaySearchCuration.getSuggest().categoryKey)
             {
                 case StaySuggest.CATEGORY_LOCATION:
-                    mPlaceSearchResultLayout.setToolbarTitle("");
+                    mPlaceSearchResultLayout.setToolbarTitle(getString(R.string.label_current_location));
 
                     mPlaceSearchResultLayout.setSpinnerVisible(true);
                     break;
