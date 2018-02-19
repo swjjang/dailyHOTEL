@@ -3,7 +3,6 @@ package com.twoheart.dailyhotel.screen.home.category.nearby;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.daily.dailyhotel.entity.StaySuggest;
 import com.daily.dailyhotel.screen.common.dialog.call.CallDialogActivity;
 import com.daily.dailyhotel.screen.common.dialog.wish.WishDialogActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;

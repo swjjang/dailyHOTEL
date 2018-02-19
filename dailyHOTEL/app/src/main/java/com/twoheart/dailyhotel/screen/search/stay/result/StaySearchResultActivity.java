@@ -590,7 +590,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         finish();
     }
 
-    private void showEmptyLayout()
+    void showEmptyLayout()
     {
         if (mPlaceSearchResultLayout == null)
         {

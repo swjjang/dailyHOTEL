@@ -76,27 +76,27 @@ public class SearchStaySuggestPresenter //
     extends BaseExceptionPresenter<SearchStaySuggestActivity, SearchStaySuggestInterface> //
     implements SearchStaySuggestView.OnEventListener
 {
-    private SearchStaySuggestAnalyticsInterface mAnalytics;
+    SearchStaySuggestAnalyticsInterface mAnalytics;
 
     private SuggestRemoteImpl mSuggestRemoteImpl;
-    private RecentlyRemoteImpl mRecentlyRemoteImpl;
+    RecentlyRemoteImpl mRecentlyRemoteImpl;
     private RecentlyLocalImpl mRecentlyLocalImpl;
-    private GoogleAddressRemoteImpl mGoogleAddressRemoteImpl;
+    GoogleAddressRemoteImpl mGoogleAddressRemoteImpl;
     private Disposable mSuggestDisposable;
 
-    private DailyRecentSearches mDailyRecentSearches;
+    DailyRecentSearches mDailyRecentSearches;
     private StayBookDateTime mStayBookDateTime;
     private List<StaySuggest> mPopularAreaList; // 일단 형식만 맞추기 위해 - 기본 화면을 대신 적용
     private List<StaySuggest> mRecentlySuggestList;
     private List<StaySuggest> mSuggestList;
     private List<GourmetSuggest> mGourmetSuggestList;
     private List<StayOutboundSuggest> mStayOutboundSuggestList;
-    private ArrayList<String> mStayOutboundKeywordList;
-    private ArrayList<String> mGourmetKeywordList;
-    private StaySuggest mLocationSuggest;
-    private String mKeyword;
+    ArrayList<String> mStayOutboundKeywordList;
+    ArrayList<String> mGourmetKeywordList;
+    StaySuggest mLocationSuggest;
+    String mKeyword;
 
-    private DailyLocationExFactory mDailyLocationExFactory;
+    DailyLocationExFactory mDailyLocationExFactory;
 
     public interface SearchStaySuggestAnalyticsInterface extends BaseAnalyticsInterface
     {
@@ -115,6 +115,10 @@ public class SearchStaySuggestPresenter //
         void onRecentlySearchList(Activity activity, boolean hasData);
 
         void onRecentlyStayList(Activity activity, boolean hasData);
+
+        void onDeleteRecentlyStay(Activity activity);
+
+        void onScreen(Activity activity);
     }
 
     public SearchStaySuggestPresenter(@NonNull SearchStaySuggestActivity activity)
@@ -259,6 +263,14 @@ public class SearchStaySuggestPresenter //
         if (isRefresh() == true)
         {
             onRefresh(true);
+        }
+
+        try
+        {
+            mAnalytics.onScreen(getActivity());
+        } catch (Exception e)
+        {
+            ExLog.d(e.getMessage());
         }
     }
 
@@ -446,7 +458,7 @@ public class SearchStaySuggestPresenter //
         mPopularAreaList = popularAreaList;
     }
 
-    private List<StaySuggest> getRecentlySuggestList(List<Keyword> keywordList, List<RecentlyPlace> recentlyPlaceList)
+    List<StaySuggest> getRecentlySuggestList(List<Keyword> keywordList, List<RecentlyPlace> recentlyPlaceList)
     {
         // 최근 검색어
         ArrayList<StaySuggest> recentlySuggestList = new ArrayList<>();
@@ -477,27 +489,27 @@ public class SearchStaySuggestPresenter //
         return recentlySuggestList;
     }
 
-    private void setRecentlySuggestList(List<StaySuggest> recentlySuggestList)
+    void setRecentlySuggestList(List<StaySuggest> recentlySuggestList)
     {
         mRecentlySuggestList = recentlySuggestList;
     }
 
-    private void setSuggestList(List<StaySuggest> suggestList)
+    void setSuggestList(List<StaySuggest> suggestList)
     {
         mSuggestList = suggestList;
     }
 
-    private void setGourmetSuggestList(List<GourmetSuggest> suggestList)
+    void setGourmetSuggestList(List<GourmetSuggest> suggestList)
     {
         mGourmetSuggestList = suggestList;
     }
 
-    private void setStayOutboundSuggestList(List<StayOutboundSuggest> suggestList)
+    void setStayOutboundSuggestList(List<StayOutboundSuggest> suggestList)
     {
         mStayOutboundSuggestList = suggestList;
     }
 
-    private void notifyDataSetChanged()
+    void notifyDataSetChanged()
     {
         if (DailyTextUtils.isTextEmpty(mKeyword) == false)
         {
@@ -728,7 +740,7 @@ public class SearchStaySuggestPresenter //
             }).observeOn(Schedulers.io());
     }
 
-    private Observable getGourmetSuggestList(String visitDate, String keyword)
+    Observable getGourmetSuggestList(String visitDate, String keyword)
     {
         return mSuggestRemoteImpl.getSuggestsByGourmet(visitDate, keyword)//
             .map(new Function<Pair<String, ArrayList<GourmetKeyword>>, List<GourmetSuggest>>()
@@ -759,7 +771,7 @@ public class SearchStaySuggestPresenter //
             }).observeOn(Schedulers.io());
     }
 
-    private Observable getStayOutboundSuggestList(String keyword)
+    Observable getStayOutboundSuggestList(String keyword)
     {
         return mSuggestRemoteImpl.getRegionSuggestsByStayOutbound(keyword).observeOn(Schedulers.io());
     }
@@ -908,7 +920,7 @@ public class SearchStaySuggestPresenter //
         DailyPreference.getInstance(getActivity()).setHotelRecentSearches(mDailyRecentSearches.toString());
     }
 
-    private void startFinishAction(StaySuggest staySuggest, String keyword, String analyticsClickType)
+    void startFinishAction(StaySuggest staySuggest, String keyword, String analyticsClickType)
     {
         Intent intent = new Intent();
         intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new StaySuggestParcel(staySuggest));
@@ -928,7 +940,7 @@ public class SearchStaySuggestPresenter //
         finish();
     }
 
-    private void startFinishAction(StayOutboundSuggest stayOutboundSuggest, String keyword, String analyticsClickType)
+    void startFinishAction(StayOutboundSuggest stayOutboundSuggest, String keyword, String analyticsClickType)
     {
         Intent intent = new Intent();
         intent.putExtra(SearchStaySuggestActivity.INTENT_EXTRA_DATA_SUGGEST, new StayOutboundSuggestParcel(stayOutboundSuggest));
@@ -977,6 +989,14 @@ public class SearchStaySuggestPresenter //
                         unLockAll();
                     }
                 }));
+
+            try
+            {
+                mAnalytics.onDeleteRecentlyStay(getActivity());
+            } catch (Exception e)
+            {
+                ExLog.d(e.getMessage());
+            }
         } else
         {
             // 최근 검색어
@@ -1129,7 +1149,7 @@ public class SearchStaySuggestPresenter //
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private void startSearchMyLocation(boolean isUserClick)
+    void startSearchMyLocation(boolean isUserClick)
     {
         Observable<Location> observable = searchMyLocation(isUserClick);
 

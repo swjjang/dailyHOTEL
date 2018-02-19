@@ -301,9 +301,9 @@ public class RewardView extends BaseDialogView<RewardView.OnEventListener, Activ
 
         final int campaignViewsLength = stickerViews.length;
 
-        for (int i = 0; i < campaignViewsLength; i++)
+        for (View stickerView : stickerViews)
         {
-            if (stickerViews[i].getVisibility() == View.VISIBLE)
+            if (stickerView.getVisibility() == View.VISIBLE)
             {
                 campaignCount++;
             } else

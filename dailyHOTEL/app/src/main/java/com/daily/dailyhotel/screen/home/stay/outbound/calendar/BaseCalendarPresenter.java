@@ -203,11 +203,11 @@ public abstract class BaseCalendarPresenter<T1 extends BaseActivity, T2 extends 
         int length = holidaysSplit.length;
         SparseIntArray holidaySparseIntArray = new SparseIntArray(length);
 
-        for (int i = 0; i < length; i++)
+        for (String holidaySplit : holidaysSplit)
         {
             try
             {
-                int holiday = Integer.parseInt(holidaysSplit[i]);
+                int holiday = Integer.parseInt(holidaySplit);
                 holidaySparseIntArray.put(holiday, holiday);
             } catch (NumberFormatException e)
             {

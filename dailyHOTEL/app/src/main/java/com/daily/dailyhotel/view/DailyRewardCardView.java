@@ -201,9 +201,9 @@ public class DailyRewardCardView extends ConstraintLayout
 
         final int rewardViewsLength = rewardViews.length;
 
-        for (int i = 0; i < rewardViewsLength; i++)
+        for (View rewardView : rewardViews)
         {
-            rewardViews[i].setVisibility(GONE);
+            rewardView.setVisibility(GONE);
         }
 
         final int campaignViewsLength = campaignViews.length;
@@ -308,9 +308,9 @@ public class DailyRewardCardView extends ConstraintLayout
 
         final int campaignViewsLength = campaignViews.length;
 
-        for (int i = 0; i < campaignViewsLength; i++)
+        for (View campaignView : campaignViews)
         {
-            campaignViews[i].setVisibility(GONE);
+            campaignView.setVisibility(GONE);
         }
     }
 
@@ -429,9 +429,9 @@ public class DailyRewardCardView extends ConstraintLayout
 
         final int campaignViewsLength = campaignViews.length;
 
-        for (int i = 0; i < campaignViewsLength; i++)
+        for (View campaignView : campaignViews)
         {
-            if (campaignViews[i].getVisibility() == VISIBLE)
+            if (campaignView.getVisibility() == VISIBLE)
             {
                 campaignCount++;
             } else

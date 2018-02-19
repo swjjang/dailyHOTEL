@@ -1124,7 +1124,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         mSearchModel.stayOutboundViewModel.people.setValue(mSearchModel.stayOutboundViewModel.people.getValue());
     }
 
-    private void showSearchStay()
+    void showSearchStay()
     {
         if (mSearchModel.stayViewModel.suggest.getValue() == null || DailyTextUtils.isTextEmpty(mSearchModel.stayViewModel.suggest.getValue().displayName) == true)
         {
@@ -1144,7 +1144,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         getViewInterface().showSearchStay();
     }
 
-    private void showSearchStayOutbound()
+    void showSearchStayOutbound()
     {
         if (mSearchModel.stayOutboundViewModel.suggest.getValue() == null || DailyTextUtils.isTextEmpty(mSearchModel.stayOutboundViewModel.suggest.getValue().display) == true)
         {
@@ -1164,7 +1164,7 @@ public class SearchPresenter extends BaseExceptionPresenter<SearchActivity, Sear
         getViewInterface().showSearchStayOutbound();
     }
 
-    private void showSearchGourmet()
+    void showSearchGourmet()
     {
         if (mSearchModel.gourmetViewModel.suggest.getValue() == null || DailyTextUtils.isTextEmpty(mSearchModel.gourmetViewModel.suggest.getValue().displayName) == true)
         {

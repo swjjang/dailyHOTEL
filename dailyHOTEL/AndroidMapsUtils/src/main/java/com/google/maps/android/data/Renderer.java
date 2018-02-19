@@ -92,7 +92,7 @@ public class Renderer {
 
     private boolean mLayerOnMap;
 
-    private Context mContext;
+    Context mContext;
 
     private ArrayList<KmlContainer> mContainers;
 
@@ -901,7 +901,7 @@ public class Renderer {
 
             public View getInfoContents(Marker arg0) {
                 View view =  LayoutInflater.from(mContext).inflate(R.layout.amu_info_window, null);
-                TextView infoWindowText = (TextView) view.findViewById(R.id.window);
+                TextView infoWindowText = view.findViewById(R.id.window);
                 if (arg0.getSnippet() != null) {
                     infoWindowText.setText(Html.fromHtml(arg0.getTitle() + "<br>" + arg0.getSnippet()));
                 } else {

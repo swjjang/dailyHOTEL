@@ -6,8 +6,6 @@ import com.daily.base.OnBaseFragmentEventListener;
 import com.daily.dailyhotel.base.BasePagerFragment;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.repository.local.model.RecentlyDbPlace;
-import com.daily.dailyhotel.screen.home.search.SearchPresenter;
-import com.twoheart.dailyhotel.databinding.FragmentSearchStayDataBinding;
 
 public class SearchStayFragment extends BasePagerFragment<SearchStayFragmentPresenter, SearchStayFragment.OnEventListener>
 {

@@ -28,7 +28,7 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
     public static final int RESULT_CODE_BACK = -10004; // 한단계 뒤로 이동
     public static final int RESULT_CODE_DATA_CHANGED = -10005; // 데이터가 변동되었다.
 
-    private BasePresenter mPresenter;
+    private T1 mPresenter;
 
     private boolean mScreenTouchEnabled = true;
 
@@ -78,7 +78,7 @@ public abstract class BaseActivity<T1 extends BasePresenter> extends AppCompatAc
             mPresenter = createInstancePresenter();
         }
 
-        return (T1) mPresenter;
+        return mPresenter;
     }
 
     @Override

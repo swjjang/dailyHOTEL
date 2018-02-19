@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.daily.base.BaseActivity;
-import com.twoheart.dailyhotel.model.time.PlaceBookingDay;
 
 public class StayOutboundCalendarActivity extends BaseActivity<StayOutboundCalendarPresenter>
 {

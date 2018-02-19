@@ -2,9 +2,6 @@ package com.twoheart.dailyhotel.model;
 
 import android.os.Parcel;
 
-import com.daily.dailyhotel.entity.StaySuggest;
-import com.daily.dailyhotel.parcel.StaySuggestParcel;
-
 public class StayCategoryNearByCuration extends StayCategoryCuration
 {
     private double mRadius;

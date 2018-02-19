@@ -44,8 +44,8 @@ public class StayOutboundListActivity extends BaseActivity<StayOutboundListPrese
     /**
      * @param context
      * @param stayOutboundSuggest
-     * @param checkInDateTime  ISO-8601
-     * @param checkOutDateTime ISO-8601
+     * @param checkInDateTime     ISO-8601
+     * @param checkOutDateTime    ISO-8601
      * @param numberOfAdults
      * @param childAgeList
      * @return

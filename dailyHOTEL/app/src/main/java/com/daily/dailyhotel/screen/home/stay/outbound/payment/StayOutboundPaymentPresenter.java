@@ -320,7 +320,10 @@ public class StayOutboundPaymentPresenter extends BaseExceptionPresenter<StayOut
         outState.putInt("saleType", mSaleType);
         outState.putBoolean("agreedThirdPartyTerms", mAgreedThirdPartyTerms);
 
-        outState.putParcelable("selectedCoupon", new CouponParcel(mSelectedCoupon));
+        if (mSelectedCoupon != null)
+        {
+            outState.putParcelable("selectedCoupon", new CouponParcel(mSelectedCoupon));
+        }
 
         if (mAnalytics != null)
         {

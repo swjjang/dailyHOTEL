@@ -14,9 +14,9 @@ public class GoogleAddressComponentsData
     @JsonField(name = "long_name")
     public String longName;
 
-     @JsonField(name = "short_name")
+    @JsonField(name = "short_name")
     public String shortName;
 
-     @JsonField(name = "types")
+    @JsonField(name = "types")
     public List<String> types;
 }

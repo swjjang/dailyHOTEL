@@ -77,4 +77,26 @@ public class SearchGourmetSuggestAnalyticsImpl implements SearchGourmetSuggestPr
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_, action, "gourmet", null);
     }
+
+    @Override
+    public void onDeleteRecentlyGourmet(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_, "recent_search_place_delete", "gourmet", null);
+    }
+
+    @Override
+    public void onScreen(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordScreen(activity, "Search_quering", null);
+    }
 }

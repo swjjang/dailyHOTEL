@@ -259,7 +259,7 @@ public class GourmetRemoteImpl extends BaseRemoteImpl implements GourmetInterfac
     public Observable<List<TrueVR>> getTrueVR(int gourmetIndex)
     {
         final String API = Constants.UNENCRYPTED_URL ? "api/v3/gourmet/{restaurantIdx}/vr-list"//
-                : "MzckNDckNzgkNTQkNzMkMTAzJDk0JDc2JDExOSQzMCQ2NiQ2NiQ5NyQxMzgkMCQ4NyQ=$IQ0ExNUQ1OTRBNUVDNkY2MjhFNkQ4OTWg0QURCRITk3RkFFNjBQzMTA0ONkFBRkYwRDHZdEODI1OTQg3IODZCBRIDE3QzgzQkYxTMSUQzOUYzMEEZGRkJCRkVFMUJHBQTk5NDQ4N0JEMNENG$";
+            : "MzckNDckNzgkNTQkNzMkMTAzJDk0JDc2JDExOSQzMCQ2NiQ2NiQ5NyQxMzgkMCQ4NyQ=$IQ0ExNUQ1OTRBNUVDNkY2MjhFNkQ4OTWg0QURCRITk3RkFFNjBQzMTA0ONkFBRkYwRDHZdEODI1OTQg3IODZCBRIDE3QzgzQkYxTMSUQzOUYzMEEZGRkJCRkVFMUJHBQTk5NDQ4N0JEMNENG$";
 
         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("{restaurantIdx}", Integer.toString(gourmetIndex));
