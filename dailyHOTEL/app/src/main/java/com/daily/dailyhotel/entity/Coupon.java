@@ -17,7 +17,6 @@ public class Coupon
     public String availableItem; // 사용가능처 ,,
     public String serverDate; // 서버시간 ,,
     public String couponCode; // 이벤트 웹뷰, 쿠폰주의사항 사용용 쿠폰 코드 - 쿠폰별 유니크 코드
-    public String userCouponIndex;
     public String stayFrom; // 투숙일 정보 - 시작일
     public String stayTo; // 투숙일 정보 - 종료일
 

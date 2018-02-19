@@ -114,6 +114,7 @@
     <string name="label_download_coupon_price">%1$s 할인쿠폰 다운받기</string>
     <string name="label_event">EVENT</string>
     <string name="label_delete">삭제</string>
+    <string name="label_current_location">현재위치</string>
 
     <string name="label_count_stay">%1$d개 스테이</string>
     <string name="label_count_gourmet">%1$d개 고메</string>

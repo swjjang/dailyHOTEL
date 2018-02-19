@@ -529,7 +529,7 @@ public class StayOutboundSearchPresenter extends BaseExceptionPresenter<StayOutb
             Intent intent = StayOutboundCalendarActivity.newInstance(getActivity()//
                 , mStayBookDateTime.getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mStayBookDateTime.getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
-                , startDateTime, endDateTime, NIGHTS_OF_MAXCOUNT, AnalyticsManager.ValueType.SEARCH, true, ScreenUtils.dpToPx(getActivity(), 77), true);
+                , startDateTime, endDateTime, NIGHTS_OF_MAXCOUNT, AnalyticsManager.ValueType.SEARCH, true, ScreenUtils.dpToPx(getActivity(), 41), true);
 
             startActivityForResult(intent, StayOutboundSearchActivity.REQUEST_CODE_CALENDAR);
         } catch (Exception e)

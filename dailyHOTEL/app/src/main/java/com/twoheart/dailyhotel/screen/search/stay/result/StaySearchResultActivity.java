@@ -515,7 +515,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
 
         if (AnalyticsManager.Screen.HOME.equalsIgnoreCase(mCallByScreen) == true)
         {
-            mPlaceSearchResultLayout.setToolbarTitleIcon(R.drawable.search_ic_01_date);
+            mPlaceSearchResultLayout.setToolbarTitleImageResourc(R.drawable.search_ic_01_date);
         }
 
         StayBookingDay stayBookingDay = mStaySearchCuration.getStayBookingDay();
@@ -530,7 +530,7 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             switch (mStaySearchCuration.getSuggest().categoryKey)
             {
                 case StaySuggest.CATEGORY_LOCATION:
-                    mPlaceSearchResultLayout.setToolbarTitle("");
+                    mPlaceSearchResultLayout.setToolbarTitle(getString(R.string.label_current_location));
 
                     mPlaceSearchResultLayout.setSpinnerVisible(true);
                     break;
@@ -1444,18 +1444,6 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             } else
             {
                 showEmptyLayout();
-            }
-        }
-
-        @Override
-        public void onStayListCount(int count)
-        {
-            try
-            {
-                AnalyticsManager.getInstance(StaySearchResultActivity.this).onSearch(mStaySearchCuration.getSuggest().displayName, null, "stay", count);
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
             }
         }
 

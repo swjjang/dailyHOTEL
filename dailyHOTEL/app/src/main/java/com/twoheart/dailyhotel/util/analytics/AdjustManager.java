@@ -877,12 +877,6 @@ public class AdjustManager extends BaseAnalyticsManager
         }
     }
 
-    @Override
-    void onSearch(String keyword, String autoKeyword, String category, int resultCount)
-    {
-
-    }
-
     private String getMemberType(String userType)
     {
         if (DailyTextUtils.isTextEmpty(userType) == true)

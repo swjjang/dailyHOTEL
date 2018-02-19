@@ -565,7 +565,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             switch (mGourmetSearchCuration.getSuggest().categoryKey)
             {
                 case GourmetSuggest.CATEGORY_LOCATION:
-                    mPlaceSearchResultLayout.setToolbarTitle("");
+                    mPlaceSearchResultLayout.setToolbarTitle(getString(R.string.label_current_location));
 
                     mPlaceSearchResultLayout.setSpinnerVisible(true);
                     break;
@@ -1368,18 +1368,6 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
         public void onCalendarClick()
         {
             mOnEventListener.onDateClick();
-        }
-
-        @Override
-        public void onGourmetListCount(int count)
-        {
-            try
-            {
-                AnalyticsManager.getInstance(GourmetSearchResultActivity.this).onSearch(mGourmetSearchCuration.getSuggest().displayName, null, "gourmet", count);
-            } catch (Exception e)
-            {
-                ExLog.d(e.toString());
-            }
         }
 
         @Override

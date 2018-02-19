@@ -324,7 +324,7 @@ public class ResearchStayOutboundPresenter extends BaseExceptionPresenter<Resear
                 , mSearchModel.bookDateTime.getValue().getCheckInDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , mSearchModel.bookDateTime.getValue().getCheckOutDateTime(DailyCalendar.ISO_8601_FORMAT)//
                 , startDateTime, endDateTime, NIGHTS_OF_MAXCOUNT, AnalyticsManager.ValueType.SEARCH//
-                , true, ScreenUtils.dpToPx(getActivity(), 77), true)//
+                , true, ScreenUtils.dpToPx(getActivity(), 41), true)//
                 , ResearchStayOutboundActivity.REQUEST_CODE_CALENDAR);
         } catch (Exception e)
         {

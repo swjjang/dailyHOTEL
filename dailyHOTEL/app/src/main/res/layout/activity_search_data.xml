@@ -36,7 +36,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginTop="4dp"
-            android:letterSpacing="-0.02dp"
+            android:letterSpacing="-0.02"
             android:textColor="@color/white"
             android:textSize="20dp"
             app:layout_constraintLeft_toLeftOf="@+id/topImageView"

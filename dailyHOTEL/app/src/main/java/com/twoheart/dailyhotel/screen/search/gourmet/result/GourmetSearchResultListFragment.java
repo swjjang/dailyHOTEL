@@ -34,8 +34,6 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
 
     public interface OnGourmetSearchResultListFragmentListener extends OnGourmetListFragmentListener
     {
-        void onGourmetListCount(int count);
-
         void onResearchClick();
 
         void onRadiusClick();
@@ -370,8 +368,6 @@ public class GourmetSearchResultListFragment extends GourmetListFragment
                 {
 
                 }
-
-                ((OnGourmetSearchResultListFragmentListener) mOnPlaceListFragmentListener).onGourmetListCount(totalCount);
             }
 
             GourmetSearchResultListFragment.this.onGourmetList(list, page, totalCount, maxCount, categoryCodeMap, categorySequenceMap, false);
