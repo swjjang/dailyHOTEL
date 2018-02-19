@@ -515,6 +515,11 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
             return;
         }
 
+        if (AnalyticsManager.Screen.HOME.equalsIgnoreCase(mCallByScreen) == true)
+        {
+            mPlaceSearchResultLayout.setToolbarTitleIcon(R.drawable.search_ic_01_date);
+        }
+
         StayBookingDay stayBookingDay = mStaySearchCuration.getStayBookingDay();
 
         if (stayBookingDay == null)
@@ -1038,29 +1043,36 @@ public class StaySearchResultActivity extends PlaceSearchResultActivity
         @Override
         public void onResearchClick()
         {
-            if (lockUiComponentAndIsLockUiComponent() == true)
+            // 홈에서 온 경우에는 달력을 띄운다.
+            if (AnalyticsManager.Screen.HOME.equalsIgnoreCase(mCallByScreen) == true)
             {
-                return;
-            }
-
-            startActivityForResult(ResearchStayActivity.newInstance(StaySearchResultActivity.this, mTodayDateTime.openDateTime, mTodayDateTime.closeDateTime//
-                , mTodayDateTime.currentDateTime, mTodayDateTime.dailyDateTime//
-                , mStaySearchCuration.getStayBookingDay().getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
-                , mStaySearchCuration.getStayBookingDay().getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
-                , mStaySearchCuration.getSuggest()), CODE_REQUEST_ACTIVITY_STAY_RESEARCH);
-
-
-            switch (mStaySearchCuration.getSuggest().menuType)
+                onDateClick();
+            } else
             {
-                case StaySuggest.MENU_TYPE_LOCATION:
-                    AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
-                        , "stay_around_result_research", mStaySearchCuration.getSuggest().displayName, null);
-                    break;
+                if (lockUiComponentAndIsLockUiComponent() == true)
+                {
+                    return;
+                }
 
-                default:
-                    AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
-                        , "stay_research", null, null);
-                    break;
+                startActivityForResult(ResearchStayActivity.newInstance(StaySearchResultActivity.this, mTodayDateTime.openDateTime, mTodayDateTime.closeDateTime//
+                    , mTodayDateTime.currentDateTime, mTodayDateTime.dailyDateTime//
+                    , mStaySearchCuration.getStayBookingDay().getCheckInDay(DailyCalendar.ISO_8601_FORMAT)//
+                    , mStaySearchCuration.getStayBookingDay().getCheckOutDay(DailyCalendar.ISO_8601_FORMAT)//
+                    , mStaySearchCuration.getSuggest()), CODE_REQUEST_ACTIVITY_STAY_RESEARCH);
+
+
+                switch (mStaySearchCuration.getSuggest().menuType)
+                {
+                    case StaySuggest.MENU_TYPE_LOCATION:
+                        AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
+                            , "stay_around_result_research", mStaySearchCuration.getSuggest().displayName, null);
+                        break;
+
+                    default:
+                        AnalyticsManager.getInstance(StaySearchResultActivity.this).recordEvent(AnalyticsManager.Category.SEARCH_//
+                            , "stay_research", null, null);
+                        break;
+                }
             }
         }
 
