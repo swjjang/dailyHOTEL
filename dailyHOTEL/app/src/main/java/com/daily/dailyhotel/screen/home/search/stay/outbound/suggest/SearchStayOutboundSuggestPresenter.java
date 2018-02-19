@@ -95,6 +95,8 @@ public class SearchStayOutboundSuggestPresenter //
         void onRecentlySearchList(Activity activity, boolean hasData);
 
         void onRecentlyStayOutboundList(Activity activity, boolean hasData);
+
+        void onDeleteRecentlyStayOutbound(Activity activity);
     }
 
     public SearchStayOutboundSuggestPresenter(@NonNull SearchStayOutboundSuggestActivity activity)
@@ -759,6 +761,14 @@ public class SearchStayOutboundSuggestPresenter //
                         unLockAll();
                     }
                 }));
+
+            try
+            {
+                mAnalytics.onDeleteRecentlyStayOutbound(getActivity());
+            } catch (Exception e)
+            {
+                ExLog.d(e.getMessage());
+            }
         } else
         {
             addCompositeDisposable(mSuggestLocalImpl.deleteRecentlyStayOutboundSuggest(stayOutboundSuggest.id) //

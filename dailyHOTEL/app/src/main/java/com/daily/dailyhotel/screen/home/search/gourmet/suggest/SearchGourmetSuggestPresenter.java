@@ -101,6 +101,8 @@ public class SearchGourmetSuggestPresenter //
         void onRecentlySearchList(Activity activity, boolean hasData);
 
         void onRecentlyGourmetList(Activity activity, boolean hasData);
+
+        void onDeleteRecentlyGourmet(Activity activity);
     }
 
     public SearchGourmetSuggestPresenter(@NonNull SearchGourmetSuggestActivity activity)
@@ -733,6 +735,14 @@ public class SearchGourmetSuggestPresenter //
                         unLockAll();
                     }
                 }));
+
+            try
+            {
+                mAnalytics.onDeleteRecentlyGourmet(getActivity());
+            } catch (Exception e)
+            {
+                ExLog.d(e.getMessage());
+            }
         } else
         {
             // 최근 검색어

@@ -77,4 +77,15 @@ public class SearchStayOutboundSuggestAnalyticsImpl implements SearchStayOutboun
 
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_, action, "ob", null);
     }
+
+    @Override
+    public void onDeleteRecentlyStayOutbound(Activity activity)
+    {
+        if (activity == null)
+        {
+            return;
+        }
+
+        AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_, "recent_search_place_delete", "ob", null);
+    }
 }

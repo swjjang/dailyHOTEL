@@ -115,6 +115,8 @@ public class SearchStaySuggestPresenter //
         void onRecentlySearchList(Activity activity, boolean hasData);
 
         void onRecentlyStayList(Activity activity, boolean hasData);
+
+        void onDeleteRecentlyStay(Activity activity);
     }
 
     public SearchStaySuggestPresenter(@NonNull SearchStaySuggestActivity activity)
@@ -977,6 +979,14 @@ public class SearchStaySuggestPresenter //
                         unLockAll();
                     }
                 }));
+
+            try
+            {
+                mAnalytics.onDeleteRecentlyStay(getActivity());
+            } catch (Exception e)
+            {
+                ExLog.d(e.getMessage());
+            }
         } else
         {
             // 최근 검색어
