@@ -604,8 +604,8 @@ public class StayCampaignTagListPresenter extends BaseExceptionPresenter<StayCam
 
         try
         {
-            String checkInDate = stayBookDateTime.getCheckInDateTime("yyyy.MM.dd(EEE)");
-            String checkOutDate = stayBookDateTime.getCheckOutDateTime("yyyy.MM.dd(EEE)");
+            String checkInDate = stayBookDateTime.getCheckInDateTime("MM.dd(EEE)");
+            String checkOutDate = stayBookDateTime.getCheckOutDateTime("MM.dd(EEE)");
 
             int nights = stayBookDateTime.getNights();
 

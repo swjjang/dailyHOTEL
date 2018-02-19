@@ -112,6 +112,7 @@ public class StayCampaignListAdapter extends RecyclerView.Adapter<RecyclerView.V
             case PlaceViewItem.TYPE_EMPTY_VIEW:
             {
                 ViewEmptyCampaignTagListBinding dataBinding = DataBindingUtil.inflate(inflater, R.layout.view_empty_campaign_tag_list, parent, false);
+                dataBinding.emptyIconImageView.setImageResource(R.drawable.no_hotel_ic);
 
                 return new EmptyViewHolder(dataBinding);
             }

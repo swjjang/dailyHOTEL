@@ -577,7 +577,7 @@ public class GourmetCampaignTagListPresenter //
 
         try
         {
-            return gourmetBookDateTime.getVisitDateTime("yyyy.MM.dd(EEE)");
+            return gourmetBookDateTime.getVisitDateTime("MM.dd(EEE)");
         } catch (Exception e)
         {
             ExLog.e(e.toString());
