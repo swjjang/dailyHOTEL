@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ExLog;
 import com.daily.base.util.FontManager;
+import com.daily.base.widget.DailyImageView;
 import com.daily.dailyhotel.entity.CampaignTag;
 import com.daily.dailyhotel.view.DailyFloatingActionView;
 import com.twoheart.dailyhotel.R;
@@ -42,6 +43,7 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout
     private ScrollView mEmptyScrollView;
     private View mSearchLocationLayout;
     private View mResultLayout;
+    private DailyImageView mTitleIconImageView;
 
     protected DailyFloatingActionView mFloatingActionView;
 
@@ -131,6 +133,8 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout
         View titleBackgroundView = view.findViewById(R.id.titleBackgroundView);
         titleBackgroundView.setOnClickListener(v -> ((OnEventListener) mOnEventListener).onResearchClick());
 
+        mTitleIconImageView = view.findViewById(R.id.titleIconImageView);
+
         mCalendarTextView = view.findViewById(R.id.calendarTextView);
         mDistanceFilterSpinner = view.findViewById(R.id.distanceSpinner);
 
@@ -161,6 +165,16 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout
     {
         mCategoryTabLayout = view.findViewById(R.id.categoryTabLayout);
         mViewPager = view.findViewById(R.id.viewPager);
+    }
+
+    public void setToolbarTitleIcon(int resId)
+    {
+        if (mTitleIconImageView == null)
+        {
+            return;
+        }
+
+        mTitleIconImageView.setVectorImageResource(resId);
     }
 
     public void setCalendarText(String date)
