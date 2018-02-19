@@ -101,6 +101,10 @@ public class SearchGourmetSuggestPresenter //
         void onRecentlySearchList(Activity activity, boolean hasData);
 
         void onRecentlyGourmetList(Activity activity, boolean hasData);
+
+        void onDeleteRecentlyGourmet(Activity activity);
+
+        void onScreen(Activity activity);
     }
 
     public SearchGourmetSuggestPresenter(@NonNull SearchGourmetSuggestActivity activity)
@@ -216,6 +220,14 @@ public class SearchGourmetSuggestPresenter //
         if (isRefresh() == true)
         {
             onRefresh(true);
+        }
+
+        try
+        {
+            mAnalytics.onScreen(getActivity());
+        } catch (Exception e)
+        {
+            ExLog.d(e.getMessage());
         }
     }
 
@@ -733,6 +745,14 @@ public class SearchGourmetSuggestPresenter //
                         unLockAll();
                     }
                 }));
+
+            try
+            {
+                mAnalytics.onDeleteRecentlyGourmet(getActivity());
+            } catch (Exception e)
+            {
+                ExLog.d(e.getMessage());
+            }
         } else
         {
             // 최근 검색어
