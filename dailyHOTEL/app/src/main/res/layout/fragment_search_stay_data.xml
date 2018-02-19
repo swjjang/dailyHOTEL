@@ -50,7 +50,6 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:gravity="center_vertical"
-                android:paddingTop="15dp"
                 android:text="@string/label_search_stay_popular_search_tag"
                 android:textColor="@color/default_text_cc5c5c5"
                 android:textSize="13dp"/>
