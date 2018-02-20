@@ -10,16 +10,12 @@ import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.ScaleXSpan;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -27,7 +23,6 @@ import android.widget.TextView;
 
 import com.daily.base.BaseActivity;
 import com.daily.base.OnBaseEventListener;
-import com.daily.base.util.DailyTextUtils;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.base.BaseBlurView;
 import com.daily.dailyhotel.entity.ObjectItem;
@@ -37,6 +32,7 @@ import com.daily.dailyhotel.screen.home.stay.outbound.list.map.StayOutboundMapFr
 import com.daily.dailyhotel.screen.home.stay.outbound.list.map.StayOutboundMapViewPagerAdapter;
 import com.daily.dailyhotel.view.DailyFloatingActionView;
 import com.daily.dailyhotel.view.DailySearchStayOutboundAreaCardView;
+import com.daily.dailyhotel.view.DailySearchToolbarView;
 import com.daily.dailyhotel.view.DailyStayOutboundCardView;
 import com.google.android.gms.maps.model.LatLng;
 import com.twoheart.dailyhotel.R;
@@ -206,8 +202,8 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
             return;
         }
 
-        getViewDataBinding().titleView.setText(titleText);
-        getViewDataBinding().calendarTextView.setText(subTitleText);
+        getViewDataBinding().toolbarView.setTitleText(titleText);
+        getViewDataBinding().toolbarView.setSubTitleText(subTitleText);
     }
 
     @Override
@@ -234,7 +230,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
             position = 0; // 1km
         }
 
-        getViewDataBinding().distanceSpinner.setSelection(position);
+        getViewDataBinding().toolbarView.setRadiusSpinnerSelection(position);
     }
 
     @Override
@@ -245,7 +241,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
             return;
         }
 
-        getViewDataBinding().distanceSpinner.setVisibility(visible ? View.VISIBLE : View.GONE);
+        getViewDataBinding().toolbarView.setRadiusSpinnerVisible(visible);
     }
 
     @Override
@@ -256,46 +252,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
             return;
         }
 
-        getViewDataBinding().calendarTextView.post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                int viewWidth = getViewDataBinding().calendarTextView.getWidth()//
-                    - (getViewDataBinding().calendarTextView.getCompoundDrawablePadding() * 2)//
-                    - getViewDataBinding().calendarTextView.getCompoundDrawables()[0].getIntrinsicWidth()//
-                    - getViewDataBinding().calendarTextView.getCompoundDrawables()[2].getIntrinsicWidth()//
-                    - getViewDataBinding().calendarTextView.getPaddingLeft()//
-                    - getViewDataBinding().calendarTextView.getPaddingRight();
-
-                final float width = DailyTextUtils.getTextWidth(getContext(), calendarText, 13d, getViewDataBinding().calendarTextView.getTypeface());
-
-                if (viewWidth > width)
-                {
-                    getViewDataBinding().calendarTextView.setText(calendarText);
-                } else
-                {
-                    float scaleX = 1f;
-                    float scaleWidth;
-
-                    for (int i = 99; i >= 60; i--)
-                    {
-                        scaleX = (float) i / 100;
-                        scaleWidth = DailyTextUtils.getScaleTextWidth(getContext(), calendarText, 13d, scaleX, getViewDataBinding().calendarTextView.getTypeface());
-
-                        if (viewWidth > scaleWidth)
-                        {
-                            break;
-                        }
-                    }
-
-                    SpannableString spannableString = new SpannableString(calendarText);
-                    spannableString.setSpan(new ScaleXSpan(scaleX), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                    getViewDataBinding().calendarTextView.setText(spannableString);
-                }
-            }
-        });
+        getViewDataBinding().toolbarView.setSubTitleText(calendarText);
     }
 
     @Override
@@ -1038,7 +995,7 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
             return;
         }
 
-        getViewDataBinding().distanceSpinner.performClick();
+        getViewDataBinding().toolbarView.showRadiusSpinnerPopup();
     }
 
     private void showViewPagerAnimation()
@@ -1176,28 +1133,37 @@ public class StayOutboundListView extends BaseBlurView<StayOutboundListView.OnEv
             return;
         }
 
-        viewDataBinding.backImageView.setOnClickListener(v -> getEventListener().onBackClick());
-        viewDataBinding.titleBackgroundView.setOnClickListener(v -> getEventListener().onResearchClick());
-
         CharSequence[] strings = getContext().getResources().getTextArray(R.array.search_result_stayoutbound_distance_array);
         RadiusArrayAdapter radiusArrayAdapter = new RadiusArrayAdapter(getContext(), R.layout.list_row_search_result_spinner, strings);
-
         radiusArrayAdapter.setDropDownViewResource(R.layout.list_row_search_result_sort_dropdown_item);
-        viewDataBinding.distanceSpinner.setAdapter(radiusArrayAdapter);
-        viewDataBinding.distanceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+
+        viewDataBinding.toolbarView.setRadiusSpinnerAdapter(radiusArrayAdapter);
+        viewDataBinding.toolbarView.setOnToolbarListener(new DailySearchToolbarView.OnToolbarListener()
         {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            public void onTitleClick()
             {
-                radiusArrayAdapter.setSelection(position);
-
-                getEventListener().onChangedRadius(getSpinnerRadiusValue(position));
+                getEventListener().onResearchClick();
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent)
+            public void onBackClick()
             {
+                getEventListener().onBackClick();
+            }
 
+            @Override
+            public void onSelectedRadiusPosition(int position)
+            {
+                if (getViewDataBinding() == null)
+                {
+                    return;
+                }
+
+                RadiusArrayAdapter radiusArrayAdapter = (RadiusArrayAdapter) getViewDataBinding().toolbarView.getRadiusSpinnerAdapter();
+                radiusArrayAdapter.setSelection(position);
+
+                getEventListener().onChangedRadius(getSpinnerRadiusValue(position));
             }
         });
     }

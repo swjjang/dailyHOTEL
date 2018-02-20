@@ -24,13 +24,8 @@ public class SearchViewModel extends ViewModel
     public MutableLiveData<CommonDateTime> commonDateTime = new MutableLiveData<>();
     public MutableLiveData<Constants.ServiceType> serviceType = new MutableLiveData<>();
 
-    // Stay
     public SearchStayViewModel stayViewModel;
-
-    // Stayoutbound
     public SearchStayOutboundViewModel stayOutboundViewModel;
-
-    // Gourmet
     public SearchGourmetViewModel gourmetViewModel;
 
     static class SearchViewModelFactory implements ViewModelProvider.Factory
@@ -118,7 +113,6 @@ public class SearchViewModel extends ViewModel
                 return viewModel;
             }
         }
-
     }
 }
 

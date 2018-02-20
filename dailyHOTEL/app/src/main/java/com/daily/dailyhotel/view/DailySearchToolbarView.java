@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.SpinnerAdapter;
 
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.DailyViewSearchToolbarDataBinding;
@@ -108,7 +109,7 @@ public class DailySearchToolbarView extends ConstraintLayout
         mToolbarListener = listener;
     }
 
-    public void setTitleText(String text)
+    public void setTitleText(CharSequence text)
     {
         if (mViewDataBinding == null)
         {
@@ -118,7 +119,7 @@ public class DailySearchToolbarView extends ConstraintLayout
         mViewDataBinding.titleTextView.setText(text);
     }
 
-    public void setSubTitleText(String text)
+    public void setSubTitleText(CharSequence text)
     {
         if (mViewDataBinding == null)
         {
@@ -148,7 +149,7 @@ public class DailySearchToolbarView extends ConstraintLayout
         mViewDataBinding.radiusSpinner.setVisibility(visible ? VISIBLE : GONE);
     }
 
-    public void setRadiusSpinnerAdapter(ArrayAdapter adapter)
+    public void setRadiusSpinnerAdapter(SpinnerAdapter adapter)
     {
         if (mViewDataBinding == null)
         {
@@ -158,7 +159,12 @@ public class DailySearchToolbarView extends ConstraintLayout
         mViewDataBinding.radiusSpinner.setAdapter(adapter);
     }
 
-    public void setRadiusSpinner(int position)
+    public SpinnerAdapter getRadiusSpinnerAdapter()
+    {
+        return mViewDataBinding == null ? null : mViewDataBinding.radiusSpinner.getAdapter();
+    }
+
+    public void setRadiusSpinnerSelection(int position)
     {
         if (mViewDataBinding == null)
         {

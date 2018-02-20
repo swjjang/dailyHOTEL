@@ -15,7 +15,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.StayBookDateTime;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
-import com.daily.dailyhotel.view.DailyCampaignTagTitleView;
+import com.daily.dailyhotel.view.DailySearchToolbarView;
 import com.facebook.imagepipeline.nativecode.NativeBlurFilter;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityPlaceCampaignTagListDataBinding;
@@ -66,10 +66,10 @@ public class StayCampaignTagListView //
             return;
         }
 
-        viewDataBinding.campaignTitleLayout.setOnEventListener(new DailyCampaignTagTitleView.OnEventListener()
+        viewDataBinding.toolbarView.setOnToolbarListener(new DailySearchToolbarView.OnToolbarListener()
         {
             @Override
-            public void onCalendarClick()
+            public void onTitleClick()
             {
                 getEventListener().onCalendarClick();
             }
@@ -78,6 +78,12 @@ public class StayCampaignTagListView //
             public void onBackClick()
             {
                 getEventListener().onBackClick();
+            }
+
+            @Override
+            public void onSelectedRadiusPosition(int position)
+            {
+
             }
         });
 
@@ -112,7 +118,7 @@ public class StayCampaignTagListView //
             return;
         }
 
-        getViewDataBinding().campaignTitleLayout.setTitleText(title);
+        getViewDataBinding().toolbarView.setTitleText(title);
     }
 
     @Override
@@ -137,7 +143,7 @@ public class StayCampaignTagListView //
                 }
             }
 
-            getViewDataBinding().campaignTitleLayout.setResultCount(resultCount);
+            setResultCount(resultCount);
         }
 
         int nights;
@@ -166,7 +172,7 @@ public class StayCampaignTagListView //
             return;
         }
 
-        getViewDataBinding().campaignTitleLayout.setCalendarText(text);
+        getViewDataBinding().toolbarView.setSubTitleText(text);
     }
 
     @Override
@@ -301,6 +307,23 @@ public class StayCampaignTagListView //
                 }
             }
         });
+    }
+
+    private void setResultCount(int count)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (count > 0)
+        {
+            getViewDataBinding().resultCountTextView.setText(getString(R.string.label_searchresult_resultcount, count));
+            getViewDataBinding().resultCountTextView.setVisibility(View.VISIBLE);
+        } else
+        {
+            getViewDataBinding().resultCountTextView.setVisibility(View.GONE);
+        }
     }
 
     public interface OnEventListener extends OnBaseEventListener
