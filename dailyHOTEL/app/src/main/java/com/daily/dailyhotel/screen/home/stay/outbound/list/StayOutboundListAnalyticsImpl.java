@@ -286,7 +286,6 @@ public class StayOutboundListAnalyticsImpl implements StayOutboundListPresenter.
         AnalyticsManager.getInstance(activity).recordEvent(AnalyticsManager.Category.SEARCH_//
             , "ob_research", null, null);
 
-
         switch (suggest.menuType)
         {
             case StayOutboundSuggest.MENU_TYPE_LOCATION:
