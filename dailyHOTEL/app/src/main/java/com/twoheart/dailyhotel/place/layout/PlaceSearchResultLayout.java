@@ -643,7 +643,7 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout
             position = 0; // 0.5km
         }
 
-        mToolbarView.setRadiusSpinner(position);
+        mToolbarView.setRadiusSpinnerSelection(position);
     }
 
     public void setScreenVisible(PlaceSearchResultActivity.ScreenType screenType)

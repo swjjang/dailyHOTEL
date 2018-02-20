@@ -863,6 +863,7 @@ public class SearchGourmetSuggestPresenter //
             @Override
             public void accept(Location location) throws Exception
             {
+                mLocationSuggest.displayName = getString(R.string.label_search_nearby_empty_address);
                 mLocationSuggest.address = getString(R.string.label_search_nearby_empty_address);
                 mLocationSuggest.latitude = location.getLatitude();
                 mLocationSuggest.longitude = location.getLongitude();

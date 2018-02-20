@@ -502,7 +502,7 @@ public class StayCategoryNearByLayout extends BaseBlurLayout
             position = 0; // 0.5km
         }
 
-        mToolbarView.setRadiusSpinner(position);
+        mToolbarView.setRadiusSpinnerSelection(position);
     }
 
     public void setScreenVisible(StayCategoryNearByActivity.ScreenType screenType)

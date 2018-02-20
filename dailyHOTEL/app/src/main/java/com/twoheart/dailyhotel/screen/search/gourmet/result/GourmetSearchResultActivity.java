@@ -565,7 +565,7 @@ public class GourmetSearchResultActivity extends PlaceSearchResultActivity
             switch (mGourmetSearchCuration.getSuggest().categoryKey)
             {
                 case GourmetSuggest.CATEGORY_LOCATION:
-                    mPlaceSearchResultLayout.setToolbarTitle(getString(R.string.label_current_location));
+                    mPlaceSearchResultLayout.setToolbarTitle(getString(R.string.label_search_nearby_empty_address));
 
                     mPlaceSearchResultLayout.setSpinnerVisible(true);
                     break;

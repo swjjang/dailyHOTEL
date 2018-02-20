@@ -15,7 +15,7 @@ import com.daily.base.util.ExLog;
 import com.daily.base.util.ScreenUtils;
 import com.daily.dailyhotel.entity.GourmetBookDateTime;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
-import com.daily.dailyhotel.view.DailyCampaignTagTitleView;
+import com.daily.dailyhotel.view.DailySearchToolbarView;
 import com.facebook.imagepipeline.nativecode.NativeBlurFilter;
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivityPlaceCampaignTagListDataBinding;
@@ -66,10 +66,10 @@ public class GourmetCampaignTagListView //
             return;
         }
 
-        viewDataBinding.campaignTitleLayout.setOnEventListener(new DailyCampaignTagTitleView.OnEventListener()
+        viewDataBinding.toolbarView.setOnToolbarListener(new DailySearchToolbarView.OnToolbarListener()
         {
             @Override
-            public void onCalendarClick()
+            public void onTitleClick()
             {
                 getEventListener().onCalendarClick();
             }
@@ -78,6 +78,12 @@ public class GourmetCampaignTagListView //
             public void onBackClick()
             {
                 getEventListener().onBackClick();
+            }
+
+            @Override
+            public void onSelectedRadiusPosition(int position)
+            {
+
             }
         });
 
@@ -112,7 +118,7 @@ public class GourmetCampaignTagListView //
             return;
         }
 
-        getViewDataBinding().campaignTitleLayout.setTitleText(title);
+        getViewDataBinding().toolbarView.setTitleText(title);
     }
 
     @Override
@@ -137,7 +143,7 @@ public class GourmetCampaignTagListView //
                 }
             }
 
-            getViewDataBinding().campaignTitleLayout.setResultCount(resultCount);
+            setResultCount(resultCount);
         }
 
         mRecyclerAdapter.setAll(placeViewItemList);
@@ -154,7 +160,7 @@ public class GourmetCampaignTagListView //
             return;
         }
 
-        getViewDataBinding().campaignTitleLayout.setCalendarText(text);
+        getViewDataBinding().toolbarView.setSubTitleText(text);
     }
 
     @Override
@@ -289,6 +295,23 @@ public class GourmetCampaignTagListView //
                 }
             }
         });
+    }
+
+    private void setResultCount(int count)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        if (count > 0)
+        {
+            getViewDataBinding().resultCountTextView.setText(getString(R.string.label_searchresult_resultcount, count));
+            getViewDataBinding().resultCountTextView.setVisibility(View.VISIBLE);
+        } else
+        {
+            getViewDataBinding().resultCountTextView.setVisibility(View.GONE);
+        }
     }
 
     public interface OnEventListener extends OnBaseEventListener

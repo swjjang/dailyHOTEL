@@ -1845,7 +1845,7 @@ public class StayOutboundListPresenter extends BaseExceptionPresenter<StayOutbou
 
         if (StayOutboundSuggest.CATEGORY_LOCATION.equalsIgnoreCase(mStayOutboundSuggest.categoryKey) == true && DailyTextUtils.isTextEmpty(title) == true)
         {
-            title = getString(R.string.label_current_location);
+            title = getString(R.string.label_search_nearby_empty_address);
         }
 
         try
