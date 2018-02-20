@@ -24,7 +24,7 @@ public class DailySearchToolbarView extends ConstraintLayout
 
         void onBackClick();
 
-        void onRadiusSelected(int position);
+        void onSelectedRadiusPosition(int position);
     }
 
     public DailySearchToolbarView(Context context)
@@ -46,81 +46,6 @@ public class DailySearchToolbarView extends ConstraintLayout
         super(context, attrs, defStyleAttr);
 
         initLayout(context);
-    }
-
-    public void setOnToolbarListener(OnToolbarListener listener)
-    {
-        mToolbarListener = listener;
-    }
-
-    public void setTitleText(String text)
-    {
-        if (mViewDataBinding == null)
-        {
-            return;
-        }
-
-        mViewDataBinding.titleTextView.setText(text);
-    }
-
-    public void setSubTitleText(String text)
-    {
-        if (mViewDataBinding == null)
-        {
-            return;
-        }
-
-        mViewDataBinding.subTitleTextView.setText(text);
-    }
-
-    public void setTitleImageResource(int resId)
-    {
-        if (mViewDataBinding == null)
-        {
-            return;
-        }
-
-        mViewDataBinding.titleIconImageView.setVectorImageResource(resId);
-    }
-
-    public void setRadiusVisible(boolean visible)
-    {
-        if (mViewDataBinding == null)
-        {
-            return;
-        }
-
-        mViewDataBinding.radiusSpinner.setVisibility(visible ? VISIBLE : GONE);
-    }
-
-    public void setRadiusAdapter(ArrayAdapter adapter)
-    {
-        if (mViewDataBinding == null)
-        {
-            return;
-        }
-
-        mViewDataBinding.radiusSpinner.setAdapter(adapter);
-    }
-
-    public void setRadius(int position)
-    {
-        if (mViewDataBinding == null)
-        {
-            return;
-        }
-
-        mViewDataBinding.radiusSpinner.setSelection(position);
-    }
-
-    public void showRadiusPopup()
-    {
-        if (mViewDataBinding == null)
-        {
-            return;
-        }
-
-        mViewDataBinding.radiusSpinner.performClick();
     }
 
     private void initLayout(Context context)
@@ -167,7 +92,7 @@ public class DailySearchToolbarView extends ConstraintLayout
                     return;
                 }
 
-                mToolbarListener.onRadiusSelected(position);
+                mToolbarListener.onSelectedRadiusPosition(position);
             }
 
             @Override
@@ -176,5 +101,80 @@ public class DailySearchToolbarView extends ConstraintLayout
 
             }
         });
+    }
+
+    public void setOnToolbarListener(OnToolbarListener listener)
+    {
+        mToolbarListener = listener;
+    }
+
+    public void setTitleText(String text)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.titleTextView.setText(text);
+    }
+
+    public void setSubTitleText(String text)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.subTitleTextView.setText(text);
+    }
+
+    public void setTitleImageResource(int resId)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.titleIconImageView.setVectorImageResource(resId);
+    }
+
+    public void setRadiusSpinnerVisible(boolean visible)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.radiusSpinner.setVisibility(visible ? VISIBLE : GONE);
+    }
+
+    public void setRadiusSpinnerAdapter(ArrayAdapter adapter)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.radiusSpinner.setAdapter(adapter);
+    }
+
+    public void setRadiusSpinner(int position)
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.radiusSpinner.setSelection(position);
+    }
+
+    public void showRadiusSpinnerPopup()
+    {
+        if (mViewDataBinding == null)
+        {
+            return;
+        }
+
+        mViewDataBinding.radiusSpinner.performClick();
     }
 }
