@@ -134,8 +134,6 @@ public class DailyHotel extends android.support.multidex.MultiDexApplication imp
         new CartLocalImpl(getApplicationContext()).clearGourmetCart().subscribe();
 
         registerActivityLifecycleCallbacks(new DailyActivityLifecycleCallbacks());
-
-        AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.DEVICE_INFO, "android", Build.MODEL, null);
     }
 
     private void initializeAnalytics(Context context)
