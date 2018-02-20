@@ -21,9 +21,6 @@ import com.daily.dailyhotel.screen.home.search.stay.outbound.SearchStayOutboundF
 import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.databinding.ActivitySearchDataBinding;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.reactivex.Completable;
 import io.reactivex.CompletableObserver;
 import io.reactivex.Observable;
@@ -33,7 +30,6 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
     implements SearchInterface.ViewInterface
 {
     BaseFragmentPagerAdapter mSearchFragmentPagerAdapter;
-
     SearchStayFragment mSearchStayFragment;
     SearchGourmetFragment mSearchGourmetFragment;
     SearchStayOutboundFragment mSearchStayOutboundFragment;
@@ -52,35 +48,79 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         }
 
         initToolbar(viewDataBinding);
+        initStayLayout(viewDataBinding);
+        initStayOutboundLayout(viewDataBinding);
+        initGourmetLayout(viewDataBinding);
+        initAppBarLayout(viewDataBinding);
+        initViewPageLayout(viewDataBinding);
+    }
+
+    private void initToolbar(ActivitySearchDataBinding viewDataBinding)
+    {
+        if (viewDataBinding == null)
+        {
+            return;
+        }
+
+        viewDataBinding.toolbarView.setOnBackClickListener(v -> getEventListener().onBackClick());
+    }
+
+    private void initStayLayout(ActivitySearchDataBinding viewDataBinding)
+    {
+        if (viewDataBinding == null)
+        {
+            return;
+        }
 
         viewDataBinding.staySearchTextView.setOnClickListener(v -> getEventListener().onStayClick());
         viewDataBinding.staySuggestTextView.setOnClickListener(v -> getEventListener().onStaySuggestClick());
         viewDataBinding.stayCalendarTextView.setOnClickListener(v -> getEventListener().onStayCalendarClick());
         viewDataBinding.searchStayTextView.setOnClickListener(v -> getEventListener().onStayDoSearchClick());
+    }
+
+    private void initStayOutboundLayout(ActivitySearchDataBinding viewDataBinding)
+    {
+        if (viewDataBinding == null)
+        {
+            return;
+        }
 
         viewDataBinding.stayOutboundSearchTextView.setOnClickListener(v -> getEventListener().onStayOutboundClick());
         viewDataBinding.stayOutboundSuggestTextView.setOnClickListener(v -> getEventListener().onStayOutboundSuggestClick());
         viewDataBinding.stayOutboundCalendarTextView.setOnClickListener(v -> getEventListener().onStayOutboundCalendarClick());
         viewDataBinding.peopleBackgroundView.setOnClickListener(v -> getEventListener().onStayOutboundPeopleClick());
         viewDataBinding.searchStayOutboundTextView.setOnClickListener(v -> getEventListener().onStayOutboundDoSearchClick());
+    }
+
+    private void initGourmetLayout(ActivitySearchDataBinding viewDataBinding)
+    {
+        if (viewDataBinding == null)
+        {
+            return;
+        }
 
         viewDataBinding.gourmetSearchTextView.setOnClickListener(v -> getEventListener().onGourmetClick());
         viewDataBinding.gourmetSuggestTextView.setOnClickListener(v -> getEventListener().onGourmetSuggestClick());
         viewDataBinding.gourmetCalendarTextView.setOnClickListener(v -> getEventListener().onGourmetCalendarClick());
         viewDataBinding.searchGourmetTextView.setOnClickListener(v -> getEventListener().onGourmetDoSearchClick());
+    }
+
+    private void initAppBarLayout(ActivitySearchDataBinding viewDataBinding)
+    {
+        if (viewDataBinding == null)
+        {
+            return;
+        }
 
         viewDataBinding.appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener()
         {
-            private final int DP_32 = ScreenUtils.dpToPx(getContext(), 32);
+            private final int DP_32 = ScreenUtils.dpToPx(getContext(), 32); // 레이아웃이 양쪽으로 화면보더 더 늘어나야하는 길이
             private final int DP_173 = ScreenUtils.dpToPx(getContext(), 173);
             private final int DP_16 = ScreenUtils.dpToPx(getContext(), 16);
-            private final int DP_14 = ScreenUtils.dpToPx(getContext(), 14);
             private final int DP_12 = ScreenUtils.dpToPx(getContext(), 12);
-            private final int DP_15 = ScreenUtils.dpToPx(getContext(), 15);
             private final int DP_4 = ScreenUtils.dpToPx(getContext(), 4);
             private final int DP_27 = ScreenUtils.dpToPx(getContext(), 27);
             private final int TOOLBAR_HEIGHT = getDimensionPixelSize(R.dimen.toolbar_height);
-            private final int ANIMATION_HEIGHT = TOOLBAR_HEIGHT;
 
             private int mVerticalOffset = Integer.MAX_VALUE;
 
@@ -90,68 +130,33 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
                 if (mVerticalOffset == verticalOffset)
                 {
                     return;
-                } else
-                {
-                    mVerticalOffset = verticalOffset;
                 }
 
-                if (DP_173 + verticalOffset < ANIMATION_HEIGHT)
+                mVerticalOffset = verticalOffset;
+
+                if (DP_173 + verticalOffset < TOOLBAR_HEIGHT)
                 {
-                    int totalHeight = ANIMATION_HEIGHT;
-                    int value = DP_173 + verticalOffset;
-                    float vector = (float) value / totalHeight;
-                    float backVector = 1.0f - vector;
-
-                    getViewDataBinding().staySearchTextView.setAlpha(vector);
-                    getViewDataBinding().stayOutboundSearchTextView.setAlpha(vector);
-                    getViewDataBinding().gourmetSearchTextView.setAlpha(vector);
-
+                    final int value = DP_173 + verticalOffset;
+                    final float vector = (float) value / TOOLBAR_HEIGHT;
+                    final float backVector = 1.0f - vector;
                     final int layoutWidth = (int) (ScreenUtils.getScreenWidth(getContext()) + DP_32 * backVector);
                     final int paddingWidth = DP_27 + (int) (DP_4 * backVector);
 
-                    getViewDataBinding().categoryLayout.getLayoutParams().width = layoutWidth;
-
-                    getViewDataBinding().stayLayout.getLayoutParams().width = layoutWidth;
-                    getViewDataBinding().stayLayout.setPadding(paddingWidth, DP_14, paddingWidth, DP_15);
-
-                    getViewDataBinding().stayOutboundLayout.getLayoutParams().width = layoutWidth;
-                    getViewDataBinding().stayOutboundLayout.setPadding(paddingWidth, DP_14, paddingWidth, DP_15);
-
-                    getViewDataBinding().gourmetLayout.getLayoutParams().width = layoutWidth;
-                    getViewDataBinding().gourmetLayout.setPadding(paddingWidth, DP_14, paddingWidth, DP_15);
-
-                    getViewDataBinding().searchBoxShadowView.getLayoutParams().width = layoutWidth;
-                    getViewDataBinding().searchBoxShadowView.getLayoutParams().height = (int) (DP_4 + DP_12 * vector);
-                    getViewDataBinding().searchBoxShadowView.requestLayout();
+                    setCategoryLayoutValueForAnimation(vector, layoutWidth, paddingWidth);
+                    setBoxShadowViewValueForAnimation(layoutWidth, (int) (DP_4 + DP_12 * vector));
 
                     getViewDataBinding().appBarLayout.requestLayout();
-                } else if (DP_173 + verticalOffset > ANIMATION_HEIGHT && getViewDataBinding().staySearchTextView.getAlpha() != 1.0f)
+                } else if (DP_173 + verticalOffset > TOOLBAR_HEIGHT && getViewDataBinding().staySearchTextView.getAlpha() != 1.0f)
                 {
-                    getViewDataBinding().staySearchTextView.setAlpha(1.0f);
-                    getViewDataBinding().stayOutboundSearchTextView.setAlpha(1.0f);
-                    getViewDataBinding().gourmetSearchTextView.setAlpha(1.0f);
-
-                    getViewDataBinding().categoryLayout.getLayoutParams().width = AppBarLayout.LayoutParams.MATCH_PARENT;
-
-                    getViewDataBinding().stayLayout.getLayoutParams().width = AppBarLayout.LayoutParams.MATCH_PARENT;
-                    getViewDataBinding().stayLayout.setPadding(DP_27, DP_14, DP_27, DP_15);
-
-                    getViewDataBinding().stayOutboundLayout.getLayoutParams().width = AppBarLayout.LayoutParams.MATCH_PARENT;
-                    getViewDataBinding().stayOutboundLayout.setPadding(DP_27, DP_14, DP_27, DP_15);
-
-                    getViewDataBinding().gourmetLayout.getLayoutParams().width = AppBarLayout.LayoutParams.MATCH_PARENT;
-                    getViewDataBinding().gourmetLayout.setPadding(DP_27, DP_14, DP_27, DP_15);
-
-                    getViewDataBinding().searchBoxShadowView.getLayoutParams().width = AppBarLayout.LayoutParams.MATCH_PARENT;
-                    getViewDataBinding().searchBoxShadowView.getLayoutParams().height = DP_16;
-                    getViewDataBinding().searchBoxShadowView.requestLayout();
+                    setCategoryLayoutValueForAnimation(1.0f, AppBarLayout.LayoutParams.MATCH_PARENT, DP_27);
+                    setBoxShadowViewValueForAnimation(AppBarLayout.LayoutParams.MATCH_PARENT, DP_16);
 
                     getViewDataBinding().appBarLayout.requestLayout();
                 }
 
-                if (ANIMATION_HEIGHT - verticalOffset > 0)
+                if (TOOLBAR_HEIGHT - verticalOffset > 0)
                 {
-                    float vector = (float) -verticalOffset / ANIMATION_HEIGHT;
+                    float vector = (float) -verticalOffset / TOOLBAR_HEIGHT;
                     getViewDataBinding().toolbarView.setAlpha(vector);
                 } else if (getViewDataBinding().toolbarView.getAlpha() != 0.0f)
                 {
@@ -160,71 +165,165 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
 
                 getViewDataBinding().searchTitleTextView.setTranslationY(verticalOffset / 2);
                 getViewDataBinding().topImageView.setTranslationY(verticalOffset / 2);
-
-
-                //                getViewDataBinding().searchBoxShadowView.setTranslationY(getViewDataBinding().appBarLayout.getBottom());
             }
         });
+    }
 
-        mSearchFragmentPagerAdapter = new BaseFragmentPagerAdapter<BasePagerFragment>(getSupportFragmentManager());
-
-        List<BasePagerFragment> list = new ArrayList<>();
-
-        mSearchStayFragment = new SearchStayFragment();
-        mSearchStayFragment.setOnFragmentEventListener(new SearchStayFragment.OnEventListener()
+    private void initViewPageLayout(ActivitySearchDataBinding viewDataBinding)
+    {
+        if (viewDataBinding == null)
         {
-            @Override
-            public void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
-            {
-                getEventListener().onStayRecentlySearchResultClick(recentlyDbPlace);
-            }
+            return;
+        }
 
-            @Override
-            public void onPopularTagClick(CampaignTag campaignTag)
-            {
-                getEventListener().onStayPopularTagClick(campaignTag);
-            }
-        });
-
-        mSearchStayOutboundFragment = new SearchStayOutboundFragment();
-        mSearchStayOutboundFragment.setOnFragmentEventListener(new SearchStayOutboundFragment.OnEventListener()
+        if (mSearchFragmentPagerAdapter == null)
         {
-            @Override
-            public void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
-            {
-                getEventListener().onStayOutboundRecentlySearchResultClick(recentlyDbPlace);
-            }
+            mSearchFragmentPagerAdapter = new BaseFragmentPagerAdapter<BasePagerFragment>(getSupportFragmentManager());
+            mSearchFragmentPagerAdapter.addFragment(getStayFragment());
+            mSearchFragmentPagerAdapter.addFragment(getStayOutboundFragment());
+            mSearchFragmentPagerAdapter.addFragment(getGourmetFragment());
+        }
 
-            @Override
-            public void onPopularAreaClick(StayOutboundSuggest stayOutboundSuggest)
-            {
-                getEventListener().onStayOutboundPopularAreaClick(stayOutboundSuggest);
-            }
-        });
+        viewDataBinding.viewPager.setOffscreenPageLimit(3);
+        viewDataBinding.viewPager.setPagingEnabled(false);
+        viewDataBinding.viewPager.setAdapter(mSearchFragmentPagerAdapter);
+    }
 
-        mSearchGourmetFragment = new SearchGourmetFragment();
-        mSearchGourmetFragment.setOnFragmentEventListener(new SearchGourmetFragment.OnEventListener()
+    private SearchStayFragment getStayFragment()
+    {
+        if (mSearchStayFragment == null)
         {
-            @Override
-            public void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
+            mSearchStayFragment = new SearchStayFragment();
+            mSearchStayFragment.setOnFragmentEventListener(new SearchStayFragment.OnEventListener()
             {
-                getEventListener().onGourmetRecentlySearchResultClick(recentlyDbPlace);
-            }
+                @Override
+                public void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
+                {
+                    getEventListener().onStayRecentlySearchResultClick(recentlyDbPlace);
+                }
 
-            @Override
-            public void onPopularTagClick(CampaignTag campaignTag)
+                @Override
+                public void onPopularTagClick(CampaignTag campaignTag)
+                {
+                    getEventListener().onStayPopularTagClick(campaignTag);
+                }
+            });
+        }
+
+        return mSearchStayFragment;
+    }
+
+    private SearchStayOutboundFragment getStayOutboundFragment()
+    {
+        if (mSearchStayOutboundFragment == null)
+        {
+            mSearchStayOutboundFragment = new SearchStayOutboundFragment();
+            mSearchStayOutboundFragment.setOnFragmentEventListener(new SearchStayOutboundFragment.OnEventListener()
             {
-                getEventListener().onGourmetPopularTagClick(campaignTag);
-            }
-        });
+                @Override
+                public void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
+                {
+                    getEventListener().onStayOutboundRecentlySearchResultClick(recentlyDbPlace);
+                }
 
-        mSearchFragmentPagerAdapter.addFragment(mSearchStayFragment);
-        mSearchFragmentPagerAdapter.addFragment(mSearchStayOutboundFragment);
-        mSearchFragmentPagerAdapter.addFragment(mSearchGourmetFragment);
+                @Override
+                public void onPopularAreaClick(StayOutboundSuggest stayOutboundSuggest)
+                {
+                    getEventListener().onStayOutboundPopularAreaClick(stayOutboundSuggest);
+                }
+            });
+        }
 
-        getViewDataBinding().viewPager.setOffscreenPageLimit(3);
-        getViewDataBinding().viewPager.setPagingEnabled(false);
-        getViewDataBinding().viewPager.setAdapter(mSearchFragmentPagerAdapter);
+        return mSearchStayOutboundFragment;
+    }
+
+    private SearchGourmetFragment getGourmetFragment()
+    {
+        if (mSearchGourmetFragment == null)
+        {
+            mSearchGourmetFragment = new SearchGourmetFragment();
+            mSearchGourmetFragment.setOnFragmentEventListener(new SearchGourmetFragment.OnEventListener()
+            {
+                @Override
+                public void onRecentlySearchResultClick(RecentlyDbPlace recentlyDbPlace)
+                {
+                    getEventListener().onGourmetRecentlySearchResultClick(recentlyDbPlace);
+                }
+
+                @Override
+                public void onPopularTagClick(CampaignTag campaignTag)
+                {
+                    getEventListener().onGourmetPopularTagClick(campaignTag);
+                }
+            });
+        }
+
+        return mSearchGourmetFragment;
+    }
+
+    void setCategoryLayoutValueForAnimation(float alpha, int layoutWidth, int paddingWidth)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().categoryLayout.getLayoutParams().width = layoutWidth;
+
+        setStayLayoutValueForAnimation(alpha, layoutWidth, paddingWidth);
+        setStayOutboundLayoutValueForAnimation(alpha, layoutWidth, paddingWidth);
+        setGourmetLayoutValueForAnimation(alpha, layoutWidth, paddingWidth);
+    }
+
+    private void setStayLayoutValueForAnimation(float alpha, int layoutWidth, int paddingWidth)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().staySearchTextView.setAlpha(alpha);
+        getViewDataBinding().stayLayout.getLayoutParams().width = layoutWidth;
+        getViewDataBinding().stayLayout.setPadding(paddingWidth, getViewDataBinding().stayLayout.getPaddingTop()//
+            , paddingWidth, getViewDataBinding().stayLayout.getPaddingBottom());
+    }
+
+    private void setStayOutboundLayoutValueForAnimation(float alpha, int layoutWidth, int paddingWidth)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().stayOutboundSearchTextView.setAlpha(alpha);
+        getViewDataBinding().stayOutboundLayout.getLayoutParams().width = layoutWidth;
+        getViewDataBinding().stayOutboundLayout.setPadding(paddingWidth, getViewDataBinding().stayOutboundLayout.getPaddingTop()//
+            , paddingWidth, getViewDataBinding().stayOutboundLayout.getPaddingBottom());
+    }
+
+    private void setGourmetLayoutValueForAnimation(float alpha, int layoutWidth, int paddingWidth)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().gourmetSearchTextView.setAlpha(alpha);
+         getViewDataBinding().gourmetLayout.getLayoutParams().width = layoutWidth;
+        getViewDataBinding().gourmetLayout.setPadding(paddingWidth, getViewDataBinding().gourmetLayout.getPaddingTop()//
+            , paddingWidth, getViewDataBinding().gourmetLayout.getPaddingBottom());
+    }
+
+    void setBoxShadowViewValueForAnimation(int width, int height)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().searchBoxShadowView.getLayoutParams().width = width;
+        getViewDataBinding().searchBoxShadowView.getLayoutParams().height = height;
+        getViewDataBinding().searchBoxShadowView.requestLayout();
     }
 
     @Override
@@ -238,16 +337,6 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         getViewDataBinding().toolbarView.setTitleText(title);
     }
 
-    private void initToolbar(ActivitySearchDataBinding viewDataBinding)
-    {
-        if (viewDataBinding == null)
-        {
-            return;
-        }
-
-        viewDataBinding.toolbarView.setOnBackClickListener(v -> getEventListener().onBackClick());
-    }
-
     @Override
     public void showSearchStay()
     {
@@ -256,30 +345,17 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
             return;
         }
 
-        getViewDataBinding().appBarLayout.setExpanded(true, true);
+        setToolbarTitle(getString(R.string.label_search_search_stay));
 
+        getViewDataBinding().appBarLayout.setExpanded(true, true);
         getViewDataBinding().topImageView.setImageResource(R.drawable.search_bg_stay);
         getViewDataBinding().searchTitleTextView.setText(R.string.message_search_stay_description);
 
-        getViewDataBinding().stayLayout.setVisibility(View.VISIBLE);
-        getViewDataBinding().stayOutboundLayout.setVisibility(View.GONE);
-        getViewDataBinding().gourmetLayout.setVisibility(View.GONE);
-
-        getViewDataBinding().staySearchTextView.setSelected(true);
-        getViewDataBinding().stayOutboundSearchTextView.setSelected(false);
-        getViewDataBinding().gourmetSearchTextView.setSelected(false);
+        setStaySelected(true);
+        setStayOutboundSelected(false);
+        setGourmetSelected(false);
 
         getViewDataBinding().viewPager.setCurrentItem(0, false);
-
-        setToolbarTitle(getString(R.string.label_search_search_stay));
-
-        mSearchStayFragment.onSelected();
-        mSearchStayOutboundFragment.onUnselected();
-        mSearchGourmetFragment.onUnselected();
-
-        getViewDataBinding().staySearchTextView.setTypeface(FontManager.getInstance(getContext()).getBoldTypeface());
-        getViewDataBinding().stayOutboundSearchTextView.setTypeface(FontManager.getInstance(getContext()).getMediumTypeface());
-        getViewDataBinding().gourmetSearchTextView.setTypeface(FontManager.getInstance(getContext()).getMediumTypeface());
     }
 
     @Override
@@ -334,30 +410,17 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
             return;
         }
 
-        getViewDataBinding().appBarLayout.setExpanded(true, true);
+        setToolbarTitle(getString(R.string.label_search_search_stayoutbound));
 
+        getViewDataBinding().appBarLayout.setExpanded(true, true);
         getViewDataBinding().topImageView.setImageResource(R.drawable.search_bg_ob);
         getViewDataBinding().searchTitleTextView.setText(R.string.message_search_stayoutbound_description);
 
-        getViewDataBinding().stayLayout.setVisibility(View.GONE);
-        getViewDataBinding().stayOutboundLayout.setVisibility(View.VISIBLE);
-        getViewDataBinding().gourmetLayout.setVisibility(View.GONE);
-
-        getViewDataBinding().staySearchTextView.setSelected(false);
-        getViewDataBinding().stayOutboundSearchTextView.setSelected(true);
-        getViewDataBinding().gourmetSearchTextView.setSelected(false);
+        setStaySelected(false);
+        setStayOutboundSelected(true);
+        setGourmetSelected(false);
 
         getViewDataBinding().viewPager.setCurrentItem(1, false);
-
-        setToolbarTitle(getString(R.string.label_search_search_stayoutbound));
-
-        mSearchStayFragment.onUnselected();
-        mSearchStayOutboundFragment.onSelected();
-        mSearchGourmetFragment.onUnselected();
-
-        getViewDataBinding().staySearchTextView.setTypeface(FontManager.getInstance(getContext()).getMediumTypeface());
-        getViewDataBinding().stayOutboundSearchTextView.setTypeface(FontManager.getInstance(getContext()).getBoldTypeface());
-        getViewDataBinding().gourmetSearchTextView.setTypeface(FontManager.getInstance(getContext()).getMediumTypeface());
     }
 
     @Override
@@ -437,7 +500,7 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         return new Completable()
         {
             @Override
-            protected void subscribeActual(CompletableObserver s)
+            protected void subscribeActual(CompletableObserver observer)
             {
                 animatorSet.addListener(new Animator.AnimatorListener()
                 {
@@ -451,7 +514,7 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
                     {
                         animatorSet.removeAllListeners();
 
-                        s.onComplete();
+                        observer.onComplete();
                     }
 
                     @Override
@@ -480,30 +543,17 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
             return;
         }
 
-        getViewDataBinding().appBarLayout.setExpanded(true, true);
+        setToolbarTitle(getString(R.string.label_search_search_gourmet));
 
+        getViewDataBinding().appBarLayout.setExpanded(true, true);
         getViewDataBinding().topImageView.setImageResource(R.drawable.search_bg_gourmet);
         getViewDataBinding().searchTitleTextView.setText(R.string.message_search_gourmet_description);
 
-        getViewDataBinding().stayLayout.setVisibility(View.GONE);
-        getViewDataBinding().stayOutboundLayout.setVisibility(View.GONE);
-        getViewDataBinding().gourmetLayout.setVisibility(View.VISIBLE);
-
-        getViewDataBinding().staySearchTextView.setSelected(false);
-        getViewDataBinding().stayOutboundSearchTextView.setSelected(false);
-        getViewDataBinding().gourmetSearchTextView.setSelected(true);
+        setStaySelected(false);
+        setStayOutboundSelected(false);
+        setGourmetSelected(true);
 
         getViewDataBinding().viewPager.setCurrentItem(2, false);
-
-        setToolbarTitle(getString(R.string.label_search_search_gourmet));
-
-        mSearchStayFragment.onUnselected();
-        mSearchStayOutboundFragment.onUnselected();
-        mSearchGourmetFragment.onSelected();
-
-        getViewDataBinding().staySearchTextView.setTypeface(FontManager.getInstance(getContext()).getMediumTypeface());
-        getViewDataBinding().stayOutboundSearchTextView.setTypeface(FontManager.getInstance(getContext()).getMediumTypeface());
-        getViewDataBinding().gourmetSearchTextView.setTypeface(FontManager.getInstance(getContext()).getBoldTypeface());
     }
 
     @Override
@@ -562,5 +612,68 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
                     return true;
                 }
             });
+    }
+
+    private void setStaySelected(boolean selected)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().stayLayout.setVisibility(selected ? View.VISIBLE : View.GONE);
+        getViewDataBinding().staySearchTextView.setSelected(selected);
+
+        if (selected == true)
+        {
+            mSearchStayFragment.onSelected();
+            getViewDataBinding().staySearchTextView.setTypeface(FontManager.getInstance(getContext()).getBoldTypeface());
+        } else
+        {
+            mSearchStayFragment.onUnselected();
+            getViewDataBinding().staySearchTextView.setTypeface(FontManager.getInstance(getContext()).getMediumTypeface());
+        }
+    }
+
+    private void setStayOutboundSelected(boolean selected)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().stayOutboundLayout.setVisibility(selected ? View.VISIBLE : View.GONE);
+        getViewDataBinding().stayOutboundSearchTextView.setSelected(selected);
+
+        if (selected == true)
+        {
+            mSearchStayOutboundFragment.onSelected();
+            getViewDataBinding().stayOutboundSearchTextView.setTypeface(FontManager.getInstance(getContext()).getBoldTypeface());
+        } else
+        {
+            mSearchStayOutboundFragment.onUnselected();
+            getViewDataBinding().stayOutboundSearchTextView.setTypeface(FontManager.getInstance(getContext()).getMediumTypeface());
+        }
+    }
+
+    private void setGourmetSelected(boolean selected)
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().gourmetLayout.setVisibility(selected ? View.VISIBLE : View.GONE);
+        getViewDataBinding().gourmetSearchTextView.setSelected(selected);
+
+        if (selected == true)
+        {
+            mSearchGourmetFragment.onSelected();
+            getViewDataBinding().gourmetSearchTextView.setTypeface(FontManager.getInstance(getContext()).getBoldTypeface());
+        } else
+        {
+            mSearchGourmetFragment.onUnselected();
+            getViewDataBinding().gourmetSearchTextView.setTypeface(FontManager.getInstance(getContext()).getMediumTypeface());
+        }
     }
 }
