@@ -111,14 +111,14 @@ public class SuggestRemoteImpl extends BaseRemoteImpl implements SuggestInterfac
                     {
                         if (stayKeywordBaseListDto.msgCode == 100 && stayKeywordBaseListDto.data != null)
                         {
-                            for (StayKeyword keyword : stayKeywordBaseListDto.data)
+                            for (StayKeyword stayKeyword : stayKeywordBaseListDto.data)
                             {
-                                if (keyword.index > 0)
+                                if (stayKeyword.index > 0)
                                 {
-                                    keyword.icon = PlaceSearchLayout.HOTEL_ICON;
+                                    stayKeyword.icon = PlaceSearchLayout.HOTEL_ICON;
                                 }
 
-                                pair.second.add(keyword);
+                                pair.second.add(stayKeyword);
                             }
                         } else
                         {
@@ -152,14 +152,14 @@ public class SuggestRemoteImpl extends BaseRemoteImpl implements SuggestInterfac
                     {
                         if (gourmetKeywordBaseListDto.msgCode == 100 && gourmetKeywordBaseListDto.data != null)
                         {
-                            for (GourmetKeyword keyword : gourmetKeywordBaseListDto.data)
+                            for (GourmetKeyword gourmetKeyword : gourmetKeywordBaseListDto.data)
                             {
-                                if (keyword.index > 0)
+                                if (gourmetKeyword.index > 0)
                                 {
-                                    keyword.icon = PlaceSearchLayout.GOURMET_ICON;
+                                    gourmetKeyword.icon = PlaceSearchLayout.GOURMET_ICON;
                                 }
 
-                                pair.second.add(keyword);
+                                pair.second.add(gourmetKeyword);
                             }
                         } else
                         {
