@@ -78,6 +78,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
 
     private static final String REWARD_V21 = "reward"; // 마이데일리 데일리리워드
     private static final String SEARCH_HOME_V23 = "searchHome"; // 검색 홈
+    private static final String LOGIN_V24 = "login"; // 검색 홈
 
 
     // Param
@@ -140,7 +141,7 @@ public class DailyExternalDeepLink extends DailyDeepLink
 
     // Version
     private static final int MINIMUM_VERSION_CODE = 3;
-    private static final int MAXIMUM_VERSION_CODE = 23;
+    private static final int MAXIMUM_VERSION_CODE = 24;
 
     private int mVersionCode;
 
@@ -246,6 +247,16 @@ public class DailyExternalDeepLink extends DailyDeepLink
         }
 
         return value;
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    // Version 24
+    ///////////////////////////////////////////////////////////////////////////////////
+
+    public boolean isLoginView()
+    {
+        return equalsView(23, LOGIN_V24);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////

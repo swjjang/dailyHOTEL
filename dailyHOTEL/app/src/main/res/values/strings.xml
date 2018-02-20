@@ -1419,6 +1419,7 @@
     <string name="code_home_category_resort">resort</string>
     <string name="code_home_category_guest_house">guest_house</string>
     <string name="code_home_category_nearby">nearby</string>
+    <string name="message_home_closed_sns_session">OOOO에서 연결을 해제하셔서 로그아웃됩니다. 신규계정으로 다시 로그인하시겠습니까?</string>
 
 
     <!-- Gourmet Product List -->
