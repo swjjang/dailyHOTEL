@@ -18,6 +18,7 @@ import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.entity.UserBenefit;
 import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
+import com.daily.dailyhotel.screen.mydaily.profile.leave.LeaveDailyActivity;
 import com.daily.dailyhotel.screen.mydaily.profile.password.CheckPasswordActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
@@ -268,6 +269,16 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
                     finish();
                 }
                 break;
+            }
+
+            case ProfileActivity.REQUEST_CODE_CHECK_PASSWORD:
+            {
+                if (resultCode == Activity.RESULT_OK)
+                {
+                    //                    DailyToast.showToast(getActivity(), "회원탈퇴 화면 바로 호출", DailyToast.LENGTH_SHORT);
+                    Intent intent = LeaveDailyActivity.newInstance(getActivity());
+                    startActivity(intent);
+                }
             }
         }
     }
@@ -566,9 +577,11 @@ public class ProfilePresenter extends BaseExceptionPresenter<ProfileActivity, Pr
         {
             Intent intent = CheckPasswordActivity.newInstance(getActivity());
             startActivityForResult(intent, ProfileActivity.REQUEST_CODE_CHECK_PASSWORD);
-        } else {
-            DailyToast.showToast(getActivity(), "회원탈퇴 화면 바로 호출", DailyToast.LENGTH_SHORT);
+        } else
+        {
+            //            DailyToast.showToast(getActivity(), "회원탈퇴 화면 바로 호출", DailyToast.LENGTH_SHORT);
+            Intent intent = LeaveDailyActivity.newInstance(getActivity());
+            startActivity(intent);
         }
-
     }
 }

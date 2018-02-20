@@ -20,6 +20,7 @@ import com.daily.dailyhotel.repository.remote.model.GourmetMultiBookingDetailDat
 import com.daily.dailyhotel.repository.remote.model.GourmetOldWaitingDepositData;
 import com.daily.dailyhotel.repository.remote.model.GourmetPaymentData;
 import com.daily.dailyhotel.repository.remote.model.GourmetReceiptData;
+import com.daily.dailyhotel.repository.remote.model.LeaveInfoData;
 import com.daily.dailyhotel.repository.remote.model.NotificationData;
 import com.daily.dailyhotel.repository.remote.model.OldRefundData;
 import com.daily.dailyhotel.repository.remote.model.PaymentResultData;
@@ -587,6 +588,9 @@ public interface DailyMobileService
     @GET()
     Observable<BaseDto<StayOutboundSuggestsData>> getPopularAreaSuggestsByStayOutbound(@Url String mobileAPI);
 
+    @Headers({"Accept: application/json;charset=UTF-8", "Content-type: application/json;charset=UTF-8"})
+    @GET("{mobileAPI}")
+    Observable<BaseDto<LeaveInfoData>> getLeaveInfo(@Path(value = "mobileAPI", encoded = true) String mobileAPI);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // StayOutboundRemoteImpl

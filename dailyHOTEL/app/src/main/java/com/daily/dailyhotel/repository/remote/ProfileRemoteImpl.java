@@ -5,10 +5,12 @@ import android.support.annotation.NonNull;
 
 import com.daily.base.exception.BaseException;
 import com.daily.dailyhotel.domain.ProfileInterface;
+import com.daily.dailyhotel.entity.LeaveInfo;
 import com.daily.dailyhotel.entity.User;
 import com.daily.dailyhotel.entity.UserBenefit;
 import com.daily.dailyhotel.entity.UserSimpleInformation;
 import com.daily.dailyhotel.entity.UserTracking;
+import com.daily.dailyhotel.repository.remote.model.LeaveInfoData;
 import com.daily.dailyhotel.repository.remote.model.UserData;
 import com.daily.dailyhotel.repository.remote.model.UserTrackingData;
 import com.twoheart.dailyhotel.network.dto.BaseDto;
@@ -184,7 +186,7 @@ public class ProfileRemoteImpl extends BaseRemoteImpl implements ProfileInterfac
             : "ODAkMjckNzMkMyQ3MSQ1OCQ0OSQ1NiQxMCQ0OCQ5NyQxMSQ1NSQ2NyQ0JDQ3JA==$NjZIJDN0QzNPDTFFREQzNjM3OEEyMzUH3QUQzNjQ5M0I5QzYBEQCkQL5QRTI4RWEE3UNDTA4ODM0QkM3OTThFVNkVGMTU0ZRjdFMA=E=$";
 
         return mDailyMobileService.getCheckPassword(Crypto.getUrlDecoderEx(API), password) //
-         .subscribeOn(Schedulers.io()).map(new Function<BaseDto<Object>, Boolean>()
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<Object>, Boolean>()
             {
                 @Override
                 public Boolean apply(BaseDto<Object> objectBaseDto) throws Exception
@@ -206,6 +208,46 @@ public class ProfileRemoteImpl extends BaseRemoteImpl implements ProfileInterfac
                     }
 
                     return isSuccess;
+                }
+            });
+    }
+
+    @Override
+    public Observable<LeaveInfo> getLeaveInfo()
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v6/users/leave/info"//
+            : "NTkkMTQkNzIkNzUkNTkkODQkMjIkOTIkNDQkOTAkNiQ1MSQxNSQyOCQ5NCQ2NCQ=$NUFDREJQ5NkQ2RUSGU5RjU3MFEM3WNkJDRENEQTdGMDk1N0UQ1MkQW4NDg5MzQ2NWDCNYCQkIzN0YzRjCZEGMEYyOEIL0OUMDNGMQw==$";
+
+        return mDailyMobileService.getLeaveInfo(Crypto.getUrlDecoderEx(API)) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<LeaveInfoData>, LeaveInfo>()
+            {
+                @Override
+                public LeaveInfo apply(BaseDto<LeaveInfoData> leaveInfoDataBaseDto) throws Exception
+                {
+                    LeaveInfo leaveInfo;
+
+                    if (leaveInfoDataBaseDto != null)
+                    {
+                        if (leaveInfoDataBaseDto.data != null)
+                        {
+                            leaveInfo = leaveInfoDataBaseDto.data.getLeaveInfo();
+                            leaveInfo.msg = leaveInfoDataBaseDto.msg;
+                            leaveInfo.msgCode = leaveInfoDataBaseDto.msgCode;
+
+                            if (leaveInfoDataBaseDto.msgCode != 100 && leaveInfoDataBaseDto.msgCode != 101)
+                            {
+                                throw new BaseException(leaveInfoDataBaseDto.msgCode, leaveInfoDataBaseDto.msg);
+                            }
+                        } else
+                        {
+                            throw new BaseException(leaveInfoDataBaseDto.msgCode, leaveInfoDataBaseDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(-1, null);
+                    }
+
+                    return leaveInfo;
                 }
             });
     }

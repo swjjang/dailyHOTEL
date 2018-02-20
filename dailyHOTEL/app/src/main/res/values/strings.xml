@@ -1787,5 +1787,11 @@
     <string name="message_check_password_error">비밀번호가 일치하지 않습니다.</string>
 
     <!-- Leave Daily -->
-    <string name="label_leave_daily">회원 탈퇴</string>
+    <string name="label_leave_daily">회원탈퇴</string>
+    <string name="label_leave_daily_sticker_title">스티커 현황</string>
+    <string name="label_leave_daily_reason_title">탈퇴 사유</string>
+    <string name="label_leave_daily_reason_message_hint">탈퇴 사유를 선택해주세요.</string>
+    <string name="label_leave_daily_policy_title">탈퇴 전 꼭 확인 하세요!</string>
+    <string name="label_leave_daily_agreement">동의합니다.</string>
+    <string name="label_leave_daily_do_leave">탈퇴하기</string>
 </resources>

@@ -309,6 +309,7 @@
     <color name="default_background_cf7f7f8">#f7f7f8</color>
     <color name="default_placeholder">#e6e6e7</color>
     <color name="default_background_cdb2353_alpha_92">#eadb2353</color>
+    <color name="default_background_cfff9ef">#fff9ef</color>
 
     <color name="default_popup_button_background_cb70038">#B70038</color>
     <color name="default_popup_button_background_ce8e8e9">#e8e8e9</color>
