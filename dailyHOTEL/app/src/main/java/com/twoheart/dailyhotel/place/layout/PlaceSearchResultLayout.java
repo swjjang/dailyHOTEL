@@ -135,7 +135,7 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout
             }
 
             @Override
-            public void onRadiusSelected(int position)
+            public void onSelectedRadiusPosition(int position)
             {
                 mDistanceFilterAdapter.setSelection(position);
 
@@ -147,7 +147,7 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout
         mDistanceFilterAdapter = new DistanceFilterAdapter(mContext, R.layout.list_row_search_result_spinner, strings);
         mDistanceFilterAdapter.setDropDownViewResource(R.layout.list_row_search_result_sort_dropdown_item);
 
-        mToolbarView.setRadiusAdapter(mDistanceFilterAdapter);
+        mToolbarView.setRadiusSpinnerAdapter(mDistanceFilterAdapter);
     }
 
     private void initCategoryTabLayout(View view)
@@ -570,7 +570,7 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout
             return;
         }
 
-        mToolbarView.setRadiusVisible(visible);
+        mToolbarView.setRadiusSpinnerVisible(visible);
     }
 
     public void showSpinner()
@@ -580,7 +580,7 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout
             return;
         }
 
-        mToolbarView.showRadiusPopup();
+        mToolbarView.showRadiusSpinnerPopup();
     }
 
     double getSpinnerRadiusValue(int spinnerPosition)
@@ -643,7 +643,7 @@ public abstract class PlaceSearchResultLayout extends BaseBlurLayout
             position = 0; // 0.5km
         }
 
-        mToolbarView.setRadius(position);
+        mToolbarView.setRadiusSpinner(position);
     }
 
     public void setScreenVisible(PlaceSearchResultActivity.ScreenType screenType)

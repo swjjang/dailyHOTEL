@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -215,6 +216,8 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
         {
             AnalyticsManager.getInstance(this).setPushEnabled(false, null);
         }
+
+        AnalyticsManager.getInstance(getApplicationContext()).recordEvent(AnalyticsManager.Category.DEVICE_INFO, "android", Build.MODEL, null);
     }
 
     @Override
