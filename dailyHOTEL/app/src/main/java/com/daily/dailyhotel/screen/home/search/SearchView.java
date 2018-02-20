@@ -309,7 +309,7 @@ public class SearchView extends BaseDialogView<SearchInterface.OnEventListener, 
         }
 
         getViewDataBinding().gourmetSearchTextView.setAlpha(alpha);
-         getViewDataBinding().gourmetLayout.getLayoutParams().width = layoutWidth;
+        getViewDataBinding().gourmetLayout.getLayoutParams().width = layoutWidth;
         getViewDataBinding().gourmetLayout.setPadding(paddingWidth, getViewDataBinding().gourmetLayout.getPaddingTop()//
             , paddingWidth, getViewDataBinding().gourmetLayout.getPaddingBottom());
     }
