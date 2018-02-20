@@ -112,7 +112,7 @@ public class PlaceSearchResultNetworkController extends BaseNetworkController
 
                 if (searchJSONObject == null)
                 {
-                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAddress(mContext.getString(R.string.label_search_no_address));
+                    ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAddress(mContext.getString(R.string.label_search_nearby_empty_address));
                 } else
                 {
                     String shortName = searchJSONObject.getString("short_name");
@@ -124,7 +124,7 @@ public class PlaceSearchResultNetworkController extends BaseNetworkController
             } catch (Exception e)
             {
                 ExLog.e(e.toString());
-                ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAddress(mContext.getString(R.string.label_search_no_address));
+                ((OnNetworkControllerListener) mOnNetworkControllerListener).onResponseAddress(mContext.getString(R.string.label_search_nearby_empty_address));
             }
         }
 
