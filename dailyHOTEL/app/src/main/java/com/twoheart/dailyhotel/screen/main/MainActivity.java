@@ -31,6 +31,7 @@ import com.daily.base.util.VersionUtils;
 import com.daily.base.widget.DailyImageView;
 import com.daily.dailyhotel.entity.Configurations;
 import com.daily.dailyhotel.repository.remote.CommonRemoteImpl;
+import com.daily.dailyhotel.screen.home.stay.inbound.list.StayTabActivity;
 import com.daily.dailyhotel.storage.preference.DailyPreference;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.daily.dailyhotel.storage.preference.DailyUserPreference;
@@ -46,7 +47,6 @@ import com.twoheart.dailyhotel.screen.common.CloseOnBackPressed;
 import com.twoheart.dailyhotel.screen.common.ExitActivity;
 import com.twoheart.dailyhotel.screen.gourmet.list.GourmetMainActivity;
 import com.twoheart.dailyhotel.screen.home.HomeFragment;
-import com.twoheart.dailyhotel.screen.hotel.list.StayMainActivity;
 import com.twoheart.dailyhotel.screen.review.ReviewActivity;
 import com.twoheart.dailyhotel.util.Constants;
 import com.twoheart.dailyhotel.util.DailyCalendar;
@@ -531,7 +531,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                     case CODE_RESULT_ACTIVITY_STAY_LIST:
                         mMainFragmentManager.select(false, MainFragmentManager.INDEX_HOME_FRAGMENT, false, null);
 
-                        startActivityForResult(StayMainActivity.newInstance(this, null), Constants.CODE_REQUEST_ACTIVITY_STAY);
+                        startActivityForResult(StayTabActivity.newInstance(this, null), Constants.CODE_REQUEST_ACTIVITY_STAY);
                         break;
 
                     case CODE_RESULT_ACTIVITY_GOURMET_LIST:
@@ -1046,7 +1046,7 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
         switch (changeScreen)
         {
             case Constants.CODE_RESULT_ACTIVITY_STAY_LIST:
-                startActivityForResult(StayMainActivity.newInstance(this, null), Constants.CODE_REQUEST_ACTIVITY_STAY);
+                startActivityForResult(StayTabActivity.newInstance(this, null), Constants.CODE_REQUEST_ACTIVITY_STAY);
                 break;
 
             case Constants.CODE_RESULT_ACTIVITY_GOURMET_LIST:
