@@ -298,6 +298,11 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
     @Override
     public void onSelected()
     {
+        if (getFragment().isAdded() == false || mViewType == null || mStayViewModel == null)
+        {
+            return;
+        }
+
         if (mStayViewModel.viewType.getValue() != mViewType)
         {
             setViewType(mStayViewModel.viewType.getValue());
@@ -330,6 +335,11 @@ public class StayListFragmentPresenter extends BasePagerFragmentPresenter<StayLi
     @Override
     public void onUnselected()
     {
+        if (mViewType == null || getFragment().isAdded() == false)
+        {
+            return;
+        }
+
         switch (mViewType)
         {
             case LIST:
