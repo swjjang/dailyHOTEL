@@ -25,4 +25,6 @@ public interface ProfileInterface
     Observable<Boolean> getCheckPassword(String password);
 
     Observable<LeaveInfo> getLeaveInfo();
+
+    Observable<Boolean> doUserLeaveDaily(int leaveReasonIdx);
 }

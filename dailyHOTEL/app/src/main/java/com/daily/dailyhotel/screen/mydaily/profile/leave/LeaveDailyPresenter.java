@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.View;
 
 import com.daily.base.BaseAnalyticsInterface;
 import com.daily.base.exception.BaseException;
@@ -13,6 +14,9 @@ import com.daily.dailyhotel.entity.LeaveInfo;
 import com.daily.dailyhotel.entity.LeaveReason;
 import com.daily.dailyhotel.parcel.LeaveReasonParcel;
 import com.daily.dailyhotel.parcel.ListDialogItemParcel;
+import com.daily.dailyhotel.repository.local.ConfigLocalImpl;
+import com.daily.dailyhotel.repository.remote.FacebookRemoteImpl;
+import com.daily.dailyhotel.repository.remote.KakaoRemoteImpl;
 import com.daily.dailyhotel.repository.remote.ProfileRemoteImpl;
 import com.daily.dailyhotel.screen.common.dialog.list.BaseListDialogActivity;
 import com.daily.dailyhotel.screen.common.web.DailyWebActivity;
@@ -20,6 +24,7 @@ import com.daily.dailyhotel.screen.mydaily.reward.RewardActivity;
 import com.daily.dailyhotel.storage.preference.DailyRemoteConfigPreference;
 import com.twoheart.dailyhotel.DailyHotel;
 import com.twoheart.dailyhotel.R;
+import com.twoheart.dailyhotel.util.Util;
 
 import java.util.ArrayList;
 
@@ -284,14 +289,36 @@ public class LeaveDailyPresenter extends BaseExceptionPresenter<LeaveDailyActivi
         ListDialogItemParcel selectedParcel = mSelectedReason == null //
             ? null : new ListDialogItemParcel(mSelectedReason.reason, new LeaveReasonParcel(mSelectedReason));
 
-        Intent intent = BaseListDialogActivity.newInstance(getActivity() , getString(R.string.label_leave_daily_leave_reason_title), selectedParcel, parcelList);
+        Intent intent = BaseListDialogActivity.newInstance(getActivity(), getString(R.string.label_leave_daily_leave_reason_title), selectedParcel, parcelList);
         startActivityForResult(intent, LeaveDailyActivity.REQUEST_CODE_LEAVE_REASON);
     }
 
     @Override
     public void onLeaveButtonClick()
     {
+        if (mSelectedReason == null || lock() == true)
+        {
+            return;
+        }
 
+        getViewInterface().showSimpleDialog(getString(R.string.dialog_notice2), getString(R.string.dialog_message_check_leave_daily)//
+            , getString(R.string.dialog_btn_text_yes), getString(R.string.dialog_btn_text_no), new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    screenLock(true);
+
+                    addCompositeDisposable(mProfileRemoteImpl.doUserLeaveDaily(mSelectedReason.index).observeOn(AndroidSchedulers.mainThread()) //
+                        .subscribe(aBoolean -> addCompositeDisposable(new ConfigLocalImpl(getActivity()).clear().subscribe(object ->
+                        {
+                            new FacebookRemoteImpl().logOut();
+                            new KakaoRemoteImpl().logOut();
+
+                            Util.restartApp(getActivity());
+                        })), throwable -> onHandleError(throwable)));
+                }
+            }, null, dialogInterface -> unLockAll(), null, true);
     }
 
     @Override

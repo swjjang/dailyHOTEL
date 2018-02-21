@@ -251,4 +251,37 @@ public class ProfileRemoteImpl extends BaseRemoteImpl implements ProfileInterfac
                 }
             });
     }
+
+    @Override
+    public Observable<Boolean> doUserLeaveDaily(int leaveReasonIdx)
+    {
+        final String API = Constants.UNENCRYPTED_URL ? "api/v6/users/leave"//
+            : "NjQkMjUkNDQkNjYkNzQkNDUkMjQkODIkNjIkNTIkNzkkOTEkNzUkMjQkMTAkMjEk$QzU3RkQxQzGIwNjE0ODE2KNEI0XRQJUVDQjIyMjc4NTlDQTcPX5QTQ4WMDUxMEI1NTUc0MEM1RLRjFXFQTFWg5QjcF2OTM0JNTQ0Mg==$";
+
+        return mDailyMobileService.doUserLeaveDaily(Crypto.getUrlDecoderEx(API), leaveReasonIdx) //
+            .subscribeOn(Schedulers.io()).map(new Function<BaseDto<Object>, Boolean>()
+            {
+                @Override
+                public Boolean apply(BaseDto<Object> objectBaseDto) throws Exception
+                {
+                    boolean isSuccess;
+
+                    if (objectBaseDto != null)
+                    {
+                        if (objectBaseDto.msgCode == 100)
+                        {
+                            isSuccess = true;
+                        } else
+                        {
+                            throw new BaseException(objectBaseDto.msgCode, objectBaseDto.msg);
+                        }
+                    } else
+                    {
+                        throw new BaseException(-1, null);
+                    }
+
+                    return isSuccess;
+                }
+            });
+    }
 }
