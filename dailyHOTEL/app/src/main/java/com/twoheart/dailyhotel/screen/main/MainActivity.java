@@ -1317,6 +1317,8 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
         @Override
         public void onCheckServerResponse(String title, String message)
         {
+            ExLog.d("sam : title = " + title + " , message = " + message);
+
             mDelayTimeHandler.removeMessages(0);
 
             // 메시지가 있을때 무조건 팝업을 발생한다.
@@ -1328,6 +1330,8 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                         @Override
                         public void accept(Configurations configurations) throws Exception
                         {
+                            ExLog.d("sam : configurations = " + configurations.activeReward);
+
                             unLockUI();
 
                             DailyRemoteConfigPreference.getInstance(MainActivity.this).setKeyRemoteConfigRewardStickerEnabled(configurations.activeReward);
@@ -1341,6 +1345,8 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                                         mNetworkController.requestVersion();
                                     } else
                                     {
+                                        ExLog.d("sam : requestVersion  not call");
+
                                         checkAppVersion(currentVersion, forceVersion);
                                     }
 
@@ -1353,6 +1359,8 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                         @Override
                         public void accept(Throwable throwable) throws Exception
                         {
+                            ExLog.d("sam : " + throwable.toString());
+
                             onHandleError(throwable);
                         }
                     }));
