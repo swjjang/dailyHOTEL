@@ -1386,9 +1386,11 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
 
             Observable<Boolean> checkUserLoginObservable;
 
+            final String userType;
+
             if (DailyHotel.isLogin() == true)
             {
-                String userType = DailyUserPreference.getInstance(MainActivity.this).getType();
+                userType = DailyUserPreference.getInstance(MainActivity.this).getType();
 
                 if (DailyTextUtils.isTextEmpty(userType) == false)
                 {
@@ -1412,6 +1414,8 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                 }
             } else
             {
+                userType = null;
+
                 checkUserLoginObservable = Observable.just(true);
             }
 
@@ -1438,31 +1442,29 @@ public class MainActivity extends BaseActivity implements Constants, BaseMenuNav
                         new FacebookRemoteImpl().logOut();
                         new KakaoRemoteImpl().logOut();
 
-                        unLockUI();
+                        if (Constants.KAKAO_USER.equalsIgnoreCase(userType) == true)
+                        {
+                            unLockUI();
 
-                        showSimpleDialog(null//
-                            , getString(R.string.message_home_closed_sns_session)//
-                            , getString(R.string.dialog_btn_text_yes)//
-                            , getString(R.string.dialog_btn_text_no)//
-                            , new View.OnClickListener()//
-                            {
-                                @Override
-                                public void onClick(View v)
+                            showSimpleDialog(null//
+                                , getString(R.string.message_home_closed_sns_session)//
+                                , getString(R.string.dialog_btn_text_confirm)//
+                                , null, new DialogInterface.OnDismissListener()
                                 {
-                                    Intent intent = new Intent(MainActivity.this, LauncherActivity.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    intent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=24&v=login"));
+                                    @Override
+                                    public void onDismiss(DialogInterface dialog)
+                                    {
+                                        Intent intent = new Intent(MainActivity.this, LauncherActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        intent.setData(Uri.parse("dailyhotel://dailyhotel.co.kr?vc=24&v=login"));
 
-                                    startActivity(intent);
-                                }
-                            }, new View.OnClickListener()
-                            {
-                                @Override
-                                public void onClick(View v)
-                                {
-                                    processFinishSplash();
-                                }
-                            }, false);
+                                        startActivity(intent);
+                                    }
+                                });
+                        } else
+                        {
+                            processFinishSplash();
+                        }
                     } else
                     {
                         processFinishSplash();
