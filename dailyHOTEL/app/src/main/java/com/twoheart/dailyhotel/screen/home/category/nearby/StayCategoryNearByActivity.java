@@ -1351,11 +1351,6 @@ public class StayCategoryNearByActivity extends BaseActivity
         @Override
         public void onCalendarClick()
         {
-            if (lockUiComponentAndIsLockUiComponent() == true)
-            {
-                return;
-            }
-
             mOnEventListener.onDateClick();
         }
 
