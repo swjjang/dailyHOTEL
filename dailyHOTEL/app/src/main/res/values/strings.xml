@@ -1419,6 +1419,7 @@
     <string name="code_home_category_resort">resort</string>
     <string name="code_home_category_guest_house">guest_house</string>
     <string name="code_home_category_nearby">nearby</string>
+    <string name="message_home_closed_sns_session">카카오 계정 연결이 해제되어 해당계정으로 이용하실 수 없습니다.</string>
 
 
     <!-- Gourmet Product List -->
