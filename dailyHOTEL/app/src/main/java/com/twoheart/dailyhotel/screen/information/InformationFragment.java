@@ -18,6 +18,7 @@ import com.twoheart.dailyhotel.R;
 import com.twoheart.dailyhotel.place.base.BaseActivity;
 import com.twoheart.dailyhotel.place.base.BaseMenuNavigationFragment;
 import com.twoheart.dailyhotel.screen.event.EventListActivity;
+import com.twoheart.dailyhotel.screen.event.EventWebActivity;
 import com.twoheart.dailyhotel.screen.information.notice.NoticeListActivity;
 import com.twoheart.dailyhotel.screen.information.terms.TermsNPolicyActivity;
 import com.twoheart.dailyhotel.screen.main.MainActivity;
@@ -321,8 +322,8 @@ public class InformationFragment extends BaseMenuNavigationFragment implements C
 
             BaseActivity baseActivity = (BaseActivity) getActivity();
 
-            baseActivity.startActivityForResult(DailyWebActivity.newInstance(baseActivity, getString(R.string.label_daily_true_awards)//
-                , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStaticUrlDailyTrueAwards()), Constants.CODE_REQUEST_ACTIVITY_DAILY_AWARDS);
+            baseActivity.startActivityForResult(EventWebActivity.newInstance(baseActivity, EventWebActivity.SourceType.EVENT//
+                , DailyRemoteConfigPreference.getInstance(getActivity()).getKeyRemoteConfigStaticUrlDailyTrueAwards(), getString(R.string.label_daily_true_awards)), Constants.CODE_REQUEST_ACTIVITY_DAILY_AWARDS);
 
             AnalyticsManager.getInstance(baseActivity).recordEvent(AnalyticsManager.Category.TRUE_AWARDS //
                 , AnalyticsManager.Action.SEE_MORE, null, null);
