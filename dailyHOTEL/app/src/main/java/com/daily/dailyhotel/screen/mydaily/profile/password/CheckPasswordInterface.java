@@ -4,4 +4,7 @@ import com.daily.base.BaseDialogViewInterface;
 
 public interface CheckPasswordInterface extends BaseDialogViewInterface
 {
+    void showKeyboard();
+
+    void hideKeyboard();
 }

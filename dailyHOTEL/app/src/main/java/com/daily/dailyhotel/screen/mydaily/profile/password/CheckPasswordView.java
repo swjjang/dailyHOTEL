@@ -1,10 +1,12 @@
 package com.daily.dailyhotel.screen.mydaily.profile.password;
 
+import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -109,6 +111,7 @@ public class CheckPasswordView extends BaseDialogView<CheckPasswordView.OnEventL
                 switch (actionId)
                 {
                     case EditorInfo.IME_ACTION_DONE:
+                        hideKeyboard();
                         viewDataBinding.confirmView.performClick();
                         return true;
 
@@ -165,5 +168,39 @@ public class CheckPasswordView extends BaseDialogView<CheckPasswordView.OnEventL
 
             labelView.setSelected(false);
         }
+    }
+
+    @Override
+    public void showKeyboard()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        getViewDataBinding().passwordEditText.setFocusable(true);
+        getViewDataBinding().passwordEditText.setFocusableInTouchMode(true);
+        getViewDataBinding().passwordEditText.requestFocus();
+        getViewDataBinding().passwordEditText.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.showSoftInput(getViewDataBinding().passwordEditText, InputMethodManager.SHOW_IMPLICIT);
+            }
+        }, 500);
+    }
+
+    @Override
+    public void hideKeyboard()
+    {
+        if (getViewDataBinding() == null)
+        {
+            return;
+        }
+
+        InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(getViewDataBinding().passwordEditText.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 }

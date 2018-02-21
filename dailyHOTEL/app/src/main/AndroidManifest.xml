@@ -960,7 +960,8 @@
             android:name="com.daily.dailyhotel.screen.mydaily.profile.password.CheckPasswordActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible|adjustPan"/>
 
         <activity
             android:name="com.daily.dailyhotel.screen.mydaily.profile.leave.LeaveDailyActivity"
